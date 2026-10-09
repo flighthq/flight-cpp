@@ -2264,6 +2264,23 @@
       "unblocks": "Completes generation of the canonical glass preset and the @flighthq/materials contract used by material-showcase and other real PBR Scene3D examples.",
       "expires": "when Flight separates transmissionVolume before the ExtendedPbrMaterial boundary upstream or flight-compiler proves overwritten spread members cannot reach the constructed target.",
       "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "compiler-nested-import-forward-closure",
+      "dependency": "flight-compiler",
+      "patch": "compiler-nested-import-forward-closure.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "an early collection alias that expands an imported union names the union declaration module's imported reference owners before any declaration or include makes those nested names visible",
+      "rewrite": "Extends early forward-declaration discovery from direct imports in the emitted module to nested import bindings exposed by an alias expansion, resolving those bindings through the existing session-wide import-owner index.",
+      "equivalence": "The change emits declarations only for the exact class or interface declarations already selected by module resolution and already named by the generated alias. A forward declaration adds no storage or behavior; it only makes each existing reference owner nameable before the include cycle. Ambiguous, missing, aliased, structural-row, facet, and external-projection owners retain the existing handling.",
+      "verification": "A backend regression must expand a six-slot imported union collection and place forwards for all nested owners before the defining include. Focused Texture.ts generation must produce those declarations, and the cohesive generated texture.hpp must pass a C++ syntax check.",
+      "whyNotUpstreamFirst": "This is a target header-order correctness defect in the pinned compiler and is needed for the existing exact TextureSourceValue carrier to compile in native Scene3D material and renderer paths.",
+      "unblocks": "Makes TextureSourceCubeFaces and downstream real PBR material headers compile without hand-editing generated headers or collapsing concrete texture-source identity.",
+      "expires": "when flight-compiler computes early forward-declaration closure across nested imported aliases upstream.",
+      "appliedOn": "2026-10-09"
     }
   ]
 }

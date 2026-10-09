@@ -1,0 +1,107 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -33504,6 +33504,82 @@ describe('C++ compiler backend', () => {
+     expect(a.indexOf(forward)).toBeLessThan(a.indexOf(include));
+   });
+ 
++  it('forward declares nested imported union owners before an early collection alias', () => {
++    const moduleResolution: CompilerModuleResolutionPlan = {
++      edges: [
++        {
++          specifier: './sources.js',
++          target: { packageName: '@flighthq/types', source: 'packages/types/src/sources.ts' },
++        },
++        {
++          specifier: './sourceValue.js',
++          target: { packageName: '@flighthq/types', source: 'packages/types/src/sourceValue.ts' },
++        },
++      ],
++      schema: 'flight-compiler-module-resolution/1',
++    };
++    const modules = lowerTypeScriptSources(
++      [
++        {
++          packageName: '@flighthq/types',
++          sourceFile: ts.createSourceFile(
++            '/flight/packages/types/src/sources.ts',
++            `export interface Source { readonly kind: string }
++             export interface Bitmap extends Source { readonly bytes: Uint8Array }
++             export interface Image extends Source { readonly url: string }`,
++            ts.ScriptTarget.Latest,
++            true,
++          ),
++          upstreamDirectory: '/flight',
++        },
++        {
++          packageName: '@flighthq/types',
++          sourceFile: ts.createSourceFile(
++            '/flight/packages/types/src/sourceValue.ts',
++            `import type { Bitmap, Image, Source } from './sources.js';
++             export type SourceValue = Source | Bitmap | Image;`,
++            ts.ScriptTarget.Latest,
++            true,
++          ),
++          upstreamDirectory: '/flight',
++        },
++        {
++          packageName: '@flighthq/types',
++          sourceFile: ts.createSourceFile(
++            '/flight/packages/types/src/texture.ts',
++            `import type { SourceValue } from './sourceValue.js';
++             export type Faces = readonly [
++               SourceValue | null,
++               SourceValue | null,
++               SourceValue | null,
++               SourceValue | null,
++               SourceValue | null,
++               SourceValue | null
++             ];`,
++            ts.ScriptTarget.Latest,
++            true,
++          ),
++          upstreamDirectory: '/flight',
++        },
++      ],
++      moduleResolution,
++    ).map((result) => result.module);
++    const texture = createCppCompilerBackend().createEmissionSession!({
++      moduleResolution,
++      modules,
++      options: { runtimeProfile: 'flight-cpp' },
++    }).emitModule(modules[2]!)[0]!.contents;
++    const include = texture.indexOf('#include "source_value.hpp"');
++
++    expect(include).toBeGreaterThan(-1);
++    for (const name of ['Bitmap', 'Image', 'Source']) {
++      const forward = texture.indexOf(`namespace flighthq_types { struct ${name}; }`);
++      expect(forward).toBeGreaterThan(-1);
++      expect(forward).toBeLessThan(include);
++    }
++    expect(texture.indexOf('using Faces =')).toBeLessThan(include);
++  });
++
+   it('publishes a cyclic alias after opening an imported alias chain', () => {
+     const moduleResolution: CompilerModuleResolutionPlan = {
+       edges: [
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -1516,9 +1516,14 @@ function collectCppEarlyForwardDeclarationCpp(
+     default:
+       return;
+   }
+-  // `getCppDirectBindingOwner` deliberately excludes import bindings, and an imported alias is
+-  // exactly the case this walk exists for, so an import resolves through its own owner index.
+-  const owner = getCppDirectBindingOwner(type, context) ?? getCppImportedBindingDeclarationCpp(type, context);
++  // `getCppDirectBindingOwner` deliberately excludes import bindings. A direct import resolves from
++  // the current module, while an alias expansion can expose the import bindings owned by the alias's
++  // declaring module. Those nested bindings have to use the session-wide owner index: the current
++  // module never wrote their import specifiers, but the emitted early alias still names their owners.
++  const owner =
++    getCppDirectBindingOwner(type, context) ??
++    getCppImportedBindingDeclarationCpp(type, context) ??
++    getCppReexportedImportedBindingDeclarationCpp(type, context);
+   if (owner && getCppModuleIdentityKey(owner.module) !== getCppModuleIdentityKey(context.module)) {
+     if (owner.declaration.kind === 'typeAlias') {
+       const key = `${getCppModuleIdentityKey(owner.module)}\0${owner.declaration.binding.id}`;
