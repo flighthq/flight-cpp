@@ -1,0 +1,32 @@
+diff --git a/packages/scene3d-gl/src/renderGlScene3D.ts b/packages/scene3d-gl/src/renderGlScene3D.ts
+--- a/packages/scene3d-gl/src/renderGlScene3D.ts
++++ b/packages/scene3d-gl/src/renderGlScene3D.ts
+@@ -425,7 +425,9 @@ function createDrawEntry(): GlScene3DDrawEntry {
+   };
+ }
+ 
+-const PROXY_DEFAULT_MATERIAL: StandardMaterial = { kind: StandardMaterialKind };
++// Placeholder material used until a subset supplies its resolved material, and for a default-kind
++// fallback with no concrete material. Renderers treat it as their untextured defaults.
++const DEFAULT_MATERIAL: StandardMaterial = { kind: StandardMaterialKind };
+ 
+ // The reused per-draw proxy handed to a renderer's draw. Owned by renderGlScene3D, valid only for the
+ // duration of the draw call it is passed to; renderers must not retain it.
+@@ -434,15 +436,11 @@ const proxy: Scene3DRenderProxy = {
+   colorScaleBias: null,
+   jointMatrices: null,
+   normalMatrices: null,
+-  material: PROXY_DEFAULT_MATERIAL,
++  material: DEFAULT_MATERIAL,
+   normalMatrix: createMatrix3() as Matrix3,
+   subset: { indexCount: 0, indexOffset: 0 },
+   worldMatrix: createMatrix4() as Matrix4,
+ };
+ 
+-// Placeholder material for proxy.material when a subset resolved to the default-kind fallback with
+-// no concrete material; the renderer treats a default/null material as its untextured defaults.
+-const DEFAULT_MATERIAL: StandardMaterial = { kind: StandardMaterialKind };
+-
+ // Assigns a stable integer to each unique (renderer, material) pair within one frame. Entries with
+ // the same key sort together, so the opaque pass minimizes bind() calls regardless of scene-graph
+ // order. Cleared at the start of each renderGlScene3D.

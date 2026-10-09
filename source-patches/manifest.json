@@ -1023,6 +1023,23 @@
       "unblocks": "Allows the real indexed and non-indexed mesh upload paths, including derived wireframe buffers, to emit without calling length or element access on optional native storage.",
       "expires": "when flight-compiler preserves readonly structural-property presence across repeated reads and conditional element access, or Flight adopts the explicit guarded form upstream.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-gl-single-default-material",
+      "dependency": "flight",
+      "patch": "scene3d-gl-single-default-material.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/scene3d-gl/src/renderGlScene3D.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (StandardMaterial | StandardMaterial -> flight::Ref<flight::types::StandardMaterial>)",
+      "rewrite": "Uses one module-owned StandardMaterial placeholder for both the reusable draw proxy's initial value and the absent-subset fallback instead of constructing two indistinguishable placeholder owners.",
+      "equivalence": "The proxy placeholder is overwritten before every renderer draw and, by the documented contract, is never retained by a renderer. Both previous objects carried only the same StandardMaterial kind and selected the same default renderer behavior. Sharing that immutable placeholder changes no subset resolution, renderer lookup, draw entry, bind, sort, GL call, or externally observable material identity.",
+      "verification": "The patch composes after the concrete MaterialValue path and reduces the two statically indistinguishable StandardMaterial declarations to one exact owner. Full Scene3D GL regeneration supplies the module refusal and generated-header checks.",
+      "whyNotUpstreamFirst": "The two constants were implementation placeholders rather than distinct semantic materials. A single immutable placeholder is target-neutral and states their existing equivalence without teaching the emitter to pretend two same-carrier union domains are distinguishable.",
+      "unblocks": "Allows renderGlScene3D's real opaque, blended, instanced, and fallback traversal to share one exact default material owner in generated C++.",
+      "expires": "when flight-compiler can prove same-carrier singleton domains identical, or Flight adopts the shared placeholder upstream.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }
