@@ -1,0 +1,23 @@
+diff --git a/packages/scene3d/src/prepareScene3DMorph.ts b/packages/scene3d/src/prepareScene3DMorph.ts
+index 642f1c5..3d1b156 100644
+--- a/packages/scene3d/src/prepareScene3DMorph.ts
++++ b/packages/scene3d/src/prepareScene3DMorph.ts
+@@ -23,8 +23,7 @@ export function prepareScene3DMorph(scene: Readonly<NodeAny>): void {
+ 
+   // Structural mesh test (carries geometry), so it holds for meshes created with a custom kind — the
+   // same discrimination the render walk uses.
+-  const mesh = scene as unknown as Mesh;
+-  if (mesh.geometry != null) updateMeshMorph(mesh);
++  if (isSceneMorphMesh(scene)) updateMeshMorph(scene);
+ 
+   const children = getNodeRuntime(scene).children;
+   if (children !== null) {
+@@ -33,3 +32,7 @@ export function prepareScene3DMorph(scene: Readonly<NodeAny>): void {
+     }
+   }
+ }
++
++function isSceneMorphMesh(node: Readonly<NodeAny>): node is Readonly<Mesh> {
++  return 'geometry' in node && node.geometry != null;
++}
+

@@ -1227,6 +1227,40 @@
       "unblocks": "Allows createNode3D, every mesh constructor, and all real Scene3D transform and appearance consumers to share the same exact runtime owner without casting between unrelated flattened C++ records.",
       "expires": "when Flight declares the exact Node3D runtime slot and constructs that owner upstream, or native interface intersections preserve their runtime owner identity through the base Node slot automatically.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-morph-capability-guard",
+      "dependency": "flight",
+      "patch": "scene3d-morph-capability-guard.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/scene3d/src/prepareScene3DMorph.ts",
+      "package": "@flighthq/scene3d",
+      "answers": "refusal",
+      "refusal": "a structural assertion from the readonly row Readonly<NodeAny> to the writable row Mesh claims mutation the source refused",
+      "rewrite": "Replaces the NodeAny-to-Mesh assertion with the same geometry-in-node structural predicate used by the backend-neutral Scene3D render walk, then passes its readonly Mesh view to updateMeshMorph.",
+      "equivalence": "The old branch invoked updateMeshMorph exactly when geometry was non-null after an unchecked cast. The guard reads that same property and has the same truth value; updateMeshMorph already accepts Readonly<Mesh>, mutates only the referenced geometry runtime, and remains a no-op when morph is absent. Traversal, disabled-subtree handling, child order, and geometry identity are unchanged.",
+      "verification": "The patch composes after the complete Flight stack and reports no errors for prepareScene3DMorph under a focused strict TypeScript program; only the checkout's unavailable ambient WebGPU declarations prevent a package-wide typecheck. Full regeneration supplies the native predicate check.",
+      "whyNotUpstreamFirst": "The existing function read a readonly graph but asserted a writable Mesh even though its callee already accepts a readonly view. The explicit capability predicate is a target-neutral const-correctness repair shared with Flight's own render traversal.",
+      "unblocks": "Allows the real per-frame morph preparation pass to discover geometry-bearing scene nodes without laundering write authority or casting unrelated flattened native owners.",
+      "expires": "when Flight uses its structural mesh predicate here upstream, or the native compiler retains checked concrete node owners through heterogeneous traversal automatically.",
+      "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-gl-particle-capability-guard",
+      "dependency": "flight",
+      "patch": "scene3d-gl-particle-capability-guard.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/scene3d-gl/src/glParticleEmitter3D.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "a structural assertion from the readonly row Readonly<NodeAny> to the writable row ParticleEmitter3D claims mutation the source refused",
+      "rewrite": "Validates the particle kind together with its data and blendMode capabilities in a typed readonly predicate, and keeps the traversal scratch array readonly through the draw path.",
+      "equivalence": "Every createParticleEmitter3D result has the same kind, data, and blendMode fields, so all real emitters are collected in the same preorder. The extra checks only reject malformed objects that previously borrowed the kind but could not be drawn safely. The same node identities, particle data, blend selection, shader uploads, draw order, and GL calls remain, with no copy or mutable recovery.",
+      "verification": "The patch composes after the complete Flight stack and reports no errors for glParticleEmitter3D under a focused strict TypeScript program; only unavailable ambient WebGPU declarations remain outside the module. Full regeneration supplies the native capability-narrowing check.",
+      "whyNotUpstreamFirst": "The draw path only reads emitter state, yet the old assertion recovered a writable owner from a readonly heterogeneous node. A checked readonly capability guard is a target-neutral correction and also validates custom input more accurately than kind alone.",
+      "unblocks": "Allows the real SDL WebGL particle traversal and instanced quad draw path to retain readonly emitter ownership without a native cast.",
+      "expires": "when Flight adopts the capability predicate upstream, or the native compiler retains checked concrete node owners through heterogeneous traversal automatically.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }

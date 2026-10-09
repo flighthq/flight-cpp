@@ -1,0 +1,37 @@
+diff --git a/packages/scene3d-gl/src/glParticleEmitter3D.ts b/packages/scene3d-gl/src/glParticleEmitter3D.ts
+index eea4bff..d03e668 100644
+--- a/packages/scene3d-gl/src/glParticleEmitter3D.ts
++++ b/packages/scene3d-gl/src/glParticleEmitter3D.ts
+@@ -191,11 +191,9 @@ function ensureInstanceCapacity(shader: GlParticle3DShader, gl: GlContext, count
+   gl.bufferData(gl.ARRAY_BUFFER, newSize * 4, gl.DYNAMIC_DRAW);
+ }
+ 
+-function collectParticleEmitter3DNodes(node: Readonly<NodeAny>, out: ParticleEmitter3D[]): void {
++function collectParticleEmitter3DNodes(node: Readonly<NodeAny>, out: Readonly<ParticleEmitter3D>[]): void {
+   if (!node.enabled) return;
+-  if (node.kind === ParticleEmitter3DKind) {
+-    out.push(node as unknown as ParticleEmitter3D);
+-  }
++  if (isSceneParticleEmitter3D(node)) out.push(node);
+   const children = getNodeRuntime(node).children;
+   if (children !== null) {
+     for (let i = 0; i < children.length; i++) {
+@@ -204,6 +202,10 @@ function collectParticleEmitter3DNodes(node: Readonly<NodeAny>, out: ParticleEmi
+   }
+ }
+ 
++function isSceneParticleEmitter3D(node: Readonly<NodeAny>): node is Readonly<ParticleEmitter3D> {
++  return node.kind === ParticleEmitter3DKind && 'blendMode' in node && 'data' in node;
++}
++
+ // ParticleBlendMode uses serialized lowercase spellings; translate them to the canonical fixed-function
+ // BlendMode family so particles and surface meshes share render-gl's one overridable realization table.
+ // Assumes gl.BLEND is already enabled.
+@@ -437,5 +439,5 @@ export function drawGlScene3DParticleEmitter3Ds(
+   invalidateGlRenderStateCache(state);
+ }
+ 
+-const emitterScratch: ParticleEmitter3D[] = [];
++const emitterScratch: Readonly<ParticleEmitter3D>[] = [];
+ const shaderCache = new WeakMap<GlRenderState, GlParticle3DShader>();
+
