@@ -1,7 +1,7 @@
 diff --git a/packages/scene3d-gl/src/glEnvironmentCube.ts b/packages/scene3d-gl/src/glEnvironmentCube.ts
 --- a/packages/scene3d-gl/src/glEnvironmentCube.ts
 +++ b/packages/scene3d-gl/src/glEnvironmentCube.ts
-@@ -7,12 +7,25 @@ import type {
+@@ -7,5 +7,6 @@ import type {
    GlRenderState,
    GlScene3DRuntime,
    ImageResource,
@@ -9,27 +9,6 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentCube.ts b/packages/scene3d-gl/
 +  Texture,
 +  TextureSourceValue,
  } from '@flighthq/types/contract';
- import { BitmapTextureSourceKind, ImageTextureSourceKind } from '@flighthq/types/contract';
--
-+
- import { getGlScene3DRuntime } from './glScene3DRuntime';
--
-+
-+type GlEnvironmentImage = Bitmap | ImageResource;
-+type GlEnvironmentCubeTexture = CubeTexture & {
-+  sources: readonly [
-+    GlEnvironmentImage,
-+    GlEnvironmentImage,
-+    GlEnvironmentImage,
-+    GlEnvironmentImage,
-+    GlEnvironmentImage,
-+    GlEnvironmentImage,
-+  ];
-+};
-+
- // Frees the cached source radiance cubemap for `state` and clears its identity/version stamps, so the
- // next ensureGlEnvironmentSourceCube uploads again. Automatic invalidation handles ordinary source
- // changes; this explicit verb is for callers that know the GPU copy is stale independently of the
 @@ -20,8 +33,9 @@ import { getGlScene3DRuntime } from './glScene3DRuntime';
  // released to GC. A no-op when nothing is cached, and safe to call twice.
  export function destroyGlEnvironmentSourceCube(state: GlRenderState): void {
@@ -93,7 +72,8 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentCube.ts b/packages/scene3d-gl/
 @@ -121,12 +140,13 @@ export function updateGlEnvironmentCubeFace(
  // A face is uploadable when it carries pixels in either representation: a decoded `source` element or
  // raw CPU `data` (a generated Bitmap). A cube is complete only when all six faces are uploadable.
- function getGlEnvironmentSourceCubeFaceVersions(cube: Readonly<CubeTexture>): readonly number[] {
+-function getGlEnvironmentSourceCubeFaceVersions(cube: Readonly<CubeTexture>): readonly number[] {
++function getGlEnvironmentSourceCubeFaceVersions(cube: CubeTexture): readonly number[] {
 -  return cube.sources.map((source) => source?.version ?? -1);
 +  const versions: number[] = [];
 +  for (const source of cube.sources) versions.push(source === null ? -1 : source.version);
@@ -104,21 +84,18 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentCube.ts b/packages/scene3d-gl/
 -function hasGlCubeFacePixels(cube: Readonly<CubeTexture>): boolean {
 -  for (let face = 0; face < 6; face++) {
 -    const image = cube.sources[face];
-+function hasGlCubeFacePixels(cube: Readonly<CubeTexture>): cube is Readonly<GlEnvironmentCubeTexture> {
++function hasGlCubeFacePixels(cube: CubeTexture): boolean {
 +  for (const image of cube.sources) {
      if (image === null || (image.kind !== ImageTextureSourceKind && image.kind !== BitmapTextureSourceKind)) {
        return false;
      }
-@@ -134,9 +154,13 @@ function hasGlCubeFacePixels(cube: Readonly<CubeTexture>): boolean {
+@@ -134,9 +154,10 @@ function hasGlCubeFacePixels(cube: Readonly<CubeTexture>): boolean {
    return true;
  }
 -
 +
 -function isGlEnvironmentSourceCubeCurrent(runtime: Readonly<GlScene3DRuntime>, cube: Readonly<CubeTexture>): boolean {
-+function isGlEnvironmentSourceCubeCurrent(
-+  runtime: Readonly<GlScene3DRuntime>,
-+  cube: Readonly<GlEnvironmentCubeTexture>,
-+): boolean {
++function isGlEnvironmentSourceCubeCurrent(runtime: Readonly<GlScene3DRuntime>, cube: CubeTexture): boolean {
 +  const texture: WebGLTexture | null = runtime.environmentSourceCube;
    if (
 -    runtime.environmentSourceCube === null ||
@@ -126,12 +103,13 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentCube.ts b/packages/scene3d-gl/
      runtime.environmentSourceTexture !== cube ||
      runtime.environmentSourceTextureVersion !== cube.version ||
      runtime.environmentSourceCubeFaceVersions.length !== 6
-@@ -144,7 +168,7 @@ function isGlEnvironmentSourceCubeCurrent(runtime: Readonly<GlScene3DRuntime>, c
+@@ -144,7 +168,8 @@ function isGlEnvironmentSourceCubeCurrent(runtime: Readonly<GlScene3DRuntime>, c
      return false;
    }
    for (let face = 0; face < 6; face++) {
 -    if (runtime.environmentSourceCubeFaceVersions[face] !== cube.sources[face]?.version) return false;
-+    if (runtime.environmentSourceCubeFaceVersions[face] !== cube.sources[face].version) return false;
++    const source = cube.sources[face];
++    if (source === null || runtime.environmentSourceCubeFaceVersions[face] !== source.version) return false;
    }
    return true;
  }
