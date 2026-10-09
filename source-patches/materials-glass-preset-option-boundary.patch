@@ -1,0 +1,67 @@
+diff --git a/packages/materials/src/materialPresets.ts b/packages/materials/src/materialPresets.ts
+--- a/packages/materials/src/materialPresets.ts
++++ b/packages/materials/src/materialPresets.ts
+@@ -1,6 +1,7 @@
+ import type {
+   ExtendedPbrMaterial,
+   GlassExtendedPbrMaterialOptions,
++  PbrExtensionValue,
+   StandardPbrMaterial,
+ } from '@flighthq/types/contract';
+ 
+@@ -40,20 +41,42 @@ export function createCarbonStandardPbrMaterial(opts?: Readonly<Partial<Standard
+ // Clear glass preset composed from a standard metallic-roughness property block and a transmission
+ // volume descriptor. Metallic: 0 · roughness: 0 · IOR: 1.5 · transmission: 1 · baseColor: white.
+-export function createGlassExtendedPbrMaterial(opts?: Readonly<GlassExtendedPbrMaterialOptions>): ExtendedPbrMaterial {
++export function createGlassExtendedPbrMaterial(
++  opts: Readonly<GlassExtendedPbrMaterialOptions> = {},
++): ExtendedPbrMaterial {
++  const extensions: PbrExtensionValue[] = [];
++  extensions.push(
++    createTransmissionVolumePbrExtension({
++      attenuationColor: opts.transmissionVolume?.attenuationColor,
++      attenuationDistance: opts.transmissionVolume?.attenuationDistance,
++      ior: opts.transmissionVolume?.ior ?? 1.5,
++      thickness: opts.transmissionVolume?.thickness,
++      thicknessMap: opts.transmissionVolume?.thicknessMap,
++      thicknessMapUvSet: opts.transmissionVolume?.thicknessMapUvSet,
++      transmission: opts.transmissionVolume?.transmission ?? 1,
++      transmissionMap: opts.transmissionVolume?.transmissionMap,
++      transmissionMapUvSet: opts.transmissionVolume?.transmissionMapUvSet,
++    }),
++  );
+   return createExtendedPbrMaterial({
+-    ...opts,
++    alphaCutoff: opts.alphaCutoff,
++    alphaMode: opts.alphaMode,
++    blendMode: opts.blendMode,
++    doubleSided: opts.doubleSided,
+-    extensions: [
+-      createTransmissionVolumePbrExtension({
+-        ior: 1.5,
+-        transmission: 1,
+-        ...opts?.transmissionVolume,
+-      }),
+-    ],
++    extensions,
+     standard: createStandardPbrMaterialProperties({
+-      baseColor: 0xffffffff,
+-      metallic: 0,
+-      roughness: 0,
+-      ...opts?.standard,
++      alphaMap: opts.standard?.alphaMap,
++      baseColor: opts.standard?.baseColor ?? 0xffffffff,
++      baseColorMap: opts.standard?.baseColorMap,
++      emissive: opts.standard?.emissive,
++      emissiveMap: opts.standard?.emissiveMap,
++      emissiveStrength: opts.standard?.emissiveStrength,
++      metallic: opts.standard?.metallic ?? 0,
++      metallicRoughnessMap: opts.standard?.metallicRoughnessMap,
++      normalMap: opts.standard?.normalMap,
++      normalScale: opts.standard?.normalScale,
++      occlusionMap: opts.standard?.occlusionMap,
++      occlusionStrength: opts.standard?.occlusionStrength,
++      roughness: opts.standard?.roughness ?? 0,
+     }),
+   });
+ }

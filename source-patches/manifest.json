@@ -2213,6 +2213,57 @@
       "unblocks": "Preserves the real nullable CanvasRenderingContext2D result through finishCanvasRenderSurface without a profile-wide getContext guess.",
       "expires": "when flight-compiler derives literal-selected HTMLCanvasElement getContext results generally or includes equivalent 2d overload evidence upstream.",
       "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "compiler-owner-preserving-named-write",
+      "dependency": "flight-compiler",
+      "patch": "compiler-owner-preserving-named-write.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "owner-preserving dynamic named-property writes are unconditionally refused even though the flight-cpp runtime exposes a checked NamedProperties::set(String, Any) operation on the same retained row owner",
+      "rewrite": "Lowers the double-cast named-view assignment lane through NamedProperties::set after evaluating the owner, key, and value once in source order; only values exactly representable in flight::Any enter the call, and a rejected key or incompatible cell type throws instead of creating side storage or dropping the write.",
+      "equivalence": "The view retains the original object owner. NamedProperties::set writes only an already-declared cell after exact erased-type recovery and invokes the owner's existing named-write hook, so successful assignments update the same member visible to typed readers. Receiver, key, and value are each evaluated once in JavaScript order, and the assignment expression returns the authored value. A native carrier mismatch fails observably rather than silently diverging.",
+      "verification": "Backend regressions must emit the checked setter for the generic owner-preserving view and the Material copy shape while retaining the existing refusal for unrelated single-cast record storage. The compiler build, runtime structural-row tests, and focused material.ts generation must pass.",
+      "whyNotUpstreamFirst": "The runtime contract already exists and is directly tested in flight-cpp; this pinned compiler revision still describes the view as read-only and therefore cannot consume the supported ABI.",
+      "unblocks": "Emits the shared material clone, copy, equality, base construction, and exact generic construction module used by every real classic, PBR, unlit, and custom Scene3D material path.",
+      "expires": "when flight-compiler lowers owner-preserving dynamic assignments through the checked NamedProperties setter upstream.",
+      "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "materials-named-standard-block-clone",
+      "dependency": "flight",
+      "patch": "materials-named-standard-block-clone.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/materials/src/material.ts",
+      "package": "@flighthq/materials",
+      "answers": "refusal",
+      "refusal": "the standard PBR sub-block's generic object spread produces an anonymous structural value that cannot enter flight::Any for the checked owner-preserving named-property write",
+      "rewrite": "Names the existing StandardPbrMaterialProperties value at the guarded standard key and shallow-clones it with an explicit helper that returns the declared block owner before performing the same dynamic destination write.",
+      "equivalence": "The helper allocates one fresh plain object and copies every StandardPbrMaterialProperties field exactly once in declaration order. Scalar values are copied by value and texture references are shared, exactly like the former object spread. The branch retains the same standard-key, non-null, and object guards; all other keys and the final kind write are unchanged.",
+      "verification": "The complete source patch stack must apply and reverse cleanly, focused material.ts generation must emit with zero refusals, and the generated helper must copy all thirteen declared standard PBR fields before the checked named write.",
+      "whyNotUpstreamFirst": "The named helper is target-neutral and documents the one intentionally nested material value, but it is pinned here because the native runtime deliberately does not erase anonymous structural rows into flight::Any.",
+      "unblocks": "Allows the common material module to emit without weakening the shallow-copy behavior used by extended PBR materials.",
+      "expires": "when Flight adopts an explicitly typed standard-block clone or flight-compiler can carry anonymous structural object identity through checked erased assignment.",
+      "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "materials-glass-preset-option-boundary",
+      "dependency": "flight",
+      "patch": "materials-glass-preset-option-boundary.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/materials/src/materialPresets.ts",
+      "package": "@flighthq/materials",
+      "answers": "refusal",
+      "refusal": "spreading GlassExtendedPbrMaterialOptions into the narrower ExtendedPbrMaterial construction row carries the extension-only transmissionVolume option into a target that does not declare it",
+      "rewrite": "Defaults the optional input to the same empty object, passes only its four declared surface options into the extended-material construction, and places the transmission extension in an explicitly typed PbrExtensionValue array before supplying it with the completed standard block.",
+      "equivalence": "The transient options object is not retained or enumerated by createExtendedPbrMaterial. transmissionVolume was previously an ignored extra property at that boundary and is now omitted there, while the same four surface values are read and normalized by createSurfaceMaterial. The standard partial block and transmission option still enter the same constructors with the same defaults and overrides. The local array is the same fresh one-element array formerly created inline, containing the identical extension object in the identical order.",
+      "verification": "The complete source patch stack must apply and reverse cleanly, focused materialPresets.ts generation must emit with zero refusals, the generated glass preset must call the real transmission-volume extension, standard-property, and extended-material constructors, and full @flighthq/materials generation must report zero primary material refusals.",
+      "whyNotUpstreamFirst": "The explicit option boundary is target-neutral and makes the extension-only role of transmissionVolume unambiguous without requiring object-rest lowering.",
+      "unblocks": "Completes generation of the canonical glass preset and the @flighthq/materials contract used by material-showcase and other real PBR Scene3D examples.",
+      "expires": "when Flight separates transmissionVolume before the ExtendedPbrMaterial boundary upstream or flight-compiler proves overwritten spread members cannot reach the constructed target.",
+      "appliedOn": "2026-10-09"
     }
   ]
 }

@@ -1,0 +1,45 @@
+diff --git a/packages/materials/src/material.ts b/packages/materials/src/material.ts
+--- a/packages/materials/src/material.ts
++++ b/packages/materials/src/material.ts
+@@ -1,5 +1,5 @@
+ import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
+-import type { Kind, Material, EntityConstruction } from '@flighthq/types/contract';
++import type { Kind, Material, EntityConstruction, StandardPbrMaterialProperties } from '@flighthq/types/contract';
+ 
+ // Structural shallow clone of any material entity. Scalar fields and kind are copied by
+ // value; Texture/map handle references are shared (they are not owned by the material).
+@@ -65,13 +65,33 @@ function copyMaterialFields(dst: Material, src: Readonly<Material>, kind: Kind):
+   for (const key of Object.keys(srcFields)) {
+     if (key === 'kind') continue;
+     const value = srcFields[key];
+     if (key === 'standard' && value != null && typeof value === 'object') {
+       // Shallow-copy the StandardPbrMaterialProperties block into an existing or new object.
+-      dstFields[key] = { ...(value as object) };
++      dstFields[key] = cloneStandardPbrMaterialProperties(value as StandardPbrMaterialProperties);
+     } else {
+       dstFields[key] = value;
+     }
+   }
+   // Ensure `kind` is always the source kind (the caller may have already set it, but verify).
+   dstFields['kind'] = kind;
+ }
++
++function cloneStandardPbrMaterialProperties(
++  source: Readonly<StandardPbrMaterialProperties>,
++): StandardPbrMaterialProperties {
++  return {
++    alphaMap: source.alphaMap,
++    baseColor: source.baseColor,
++    baseColorMap: source.baseColorMap,
++    emissive: source.emissive,
++    emissiveMap: source.emissiveMap,
++    emissiveStrength: source.emissiveStrength,
++    metallic: source.metallic,
++    metallicRoughnessMap: source.metallicRoughnessMap,
++    normalMap: source.normalMap,
++    normalScale: source.normalScale,
++    occlusionMap: source.occlusionMap,
++    occlusionStrength: source.occlusionStrength,
++    roughness: source.roughness,
++  };
++}

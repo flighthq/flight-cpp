@@ -1,0 +1,129 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -9166,9 +9166,7 @@ describe('the flight-cpp backend', () => {
+       ),
+     ];
+     const equality = emitIrModuleCpp(results[0]!.module, { runtimeProfile: 'flight-cpp' }).contents;
+-    const copy = captureBackendEmissionFailure(() =>
+-      emitIrModuleCpp(results[1]!.module, { runtimeProfile: 'flight-cpp' }),
+-    );
++    const copy = emitIrModuleCpp(results[1]!.module, { runtimeProfile: 'flight-cpp' }).contents;
+     const sourceRead = emitIrModuleCpp(results[2]!.module, { runtimeProfile: 'flight-cpp' }).contents;
+     const exactOwner = emitIrModuleCpp(results[3]!.module, { runtimeProfile: 'flight-cpp' }).contents;
+     const exactRecord = emitIrModuleCpp(results[4]!.module, { runtimeProfile: 'flight-cpp' }).contents;
+@@ -9188,15 +9186,10 @@ describe('the flight-cpp backend', () => {
+       expect(output).not.toContain('materialize');
+     }
+ 
+-    expect(copy.rule).toBe('cpp-named-properties-write-unsupported');
+-    expect(copy.classification).toBe('target-runtime');
+-    expect(copy.message).toContain('owner-preserving view of Material');
+-    expect(copy.message).toContain('Material remains the concrete object carrier and is not Record storage');
+-    expect(copy.message).toContain('NamedProperties::set(String, Any) contract');
+-    expect(copy.message).toContain('finite union of declared member names');
+-    expect(copy.message).toContain('will not cast between owners, copy into replacement storage');
+-    expect(copy.message).toContain('materialize a replacement owner');
+-    expect(copy.message).toContain('or add side storage');
++    expect(copy).toContain('flight::named_properties(named_write_receiver).set(');
++    expect(copy).toContain('throw std::logic_error("Flight named-property write rejected key or value")');
++    expect(copy).not.toContain('flight::Record<flight::String, flight::Any>');
++    expect(copy).not.toContain('materialize');
+ 
+     expect(exactOwner).toContain('return material;');
+     expect(exactRecord).toContain('return value;');
+@@ -30070,7 +30063,7 @@ describe('the flight-cpp backend', () => {
+     expect(contents).not.toContain('}()) = value');
+   });
+ 
+-  it('attributes an open named-property write to the missing target-runtime mutation contract', () => {
++  it('routes an open owner-preserving named-property write through the checked runtime contract', () => {
+     const result = lower(
+       'open-named-property-write.ts',
+       `interface Effect { kind: string; amount?: number }
+@@ -30079,16 +30072,13 @@ describe('the flight-cpp backend', () => {
+          view[key] = value;
+        }`,
+     );
+-    const failure = captureBackendEmissionFailure(() =>
+-      emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }),
+-    );
++    const emitted = emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
+ 
+-    // Unlike the finite-key case above, `string` supplies no declared-member set to dispatch. The
+-    // runtime view retains the exact row owner without materializing a Record, but deliberately has no
+-    // setter, so the missing capability belongs to the target runtime rather than the union compiler.
+-    expect(failure.rule).toBe('cpp-named-properties-write-unsupported');
+-    expect(failure.classification).toBe('target-runtime');
+-    expect(failure.message).toContain('owner-preserving checked NamedProperties::set(String, Any) contract');
+-    expect(failure.message).toContain('finite union of declared member names');
++    // The runtime retains the exact row owner, accepts only an existing cell of the exact erased type,
++    // and reports a rejected key or value so the generated path never invents side storage.
++    expect(emitted).toContain('flight::named_properties(named_write_receiver).set(');
++    expect(emitted).toContain('throw std::logic_error("Flight named-property write rejected key or value")');
++    expect(emitted).not.toContain('flight::Record<flight::String, flight::Any>');
++    expect(emitted).not.toContain('materialize');
+   });
+ 
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -3496,24 +3496,44 @@ function emitExpression(
+           'cpp-external-numeric-property-view-write',
+         );
+       }
+-      // The named-property view is the read side only, and that is the point of it: a name that was
+-      // never declared cannot become a way to mutate the object behind it. A write through the view is
+-      // refused here rather than emitted as a `get` on the left of an assignment, which would be an
+-      // rvalue and would not compile anyway.
+-      // The double cast is the view idiom the source writes to make a dynamic named read type-check;
+-      // a single cast of an object spread is the clone lane's, and its refusals are its own.
++      // A double cast through unknown is the source's marker for an owner-preserving dynamic named
++      // view. NamedProperties::set checks that the existing owner declares the key and that the erased
++      // value recovers as that cell's exact type. Failure is observable rather than becoming side
++      // storage or a dropped write.
+       const namedPropertiesWriteSource =
+         expression.left.kind === 'element'
+           ? getCppNamedPropertiesErasedMarkerViewSourceCpp(expression.left.object, context)
+           : undefined;
+-      if (namedPropertiesWriteSource) {
+-        const sourceType = getIrExpressionTypeEvidenceCpp(namedPropertiesWriteSource, context);
+-        const sourceOwner = sourceType ? describeDeclaredIrTypeForDiagnosticCpp(sourceType) : 'source object';
+-        emissionError(
+-          context,
+-          `a dynamic named-property write through the owner-preserving view of ${sourceOwner} requires target-runtime mutation support: ${sourceOwner} remains the concrete object carrier and is not Record storage, flight::NamedProperties is deliberately read-only, and this key has no finite declared member set the compiler can dispatch. For an intentionally open extension domain, declare mutable string-indexed storage on the base/output type and construct every owner in that carrier; a registry of keys or roles cannot recover cells on an owner that lacks them. Otherwise add an owner-preserving checked NamedProperties::set(String, Any) contract, or keep the key as a finite union of declared member names and assign through the typed object. Two things a reader tries here do not work and one does: adding an index signature to a type that DECLARES members does not make it that record carrier -- the declared members keep it a closed owner and the dynamic write still has no cell -- while a carrier whose storage IS the record is mutable and lowers, and assigning through the declared members lowers too. The compiler will not cast between owners, copy into replacement storage, materialize a replacement owner, or add side storage`,
+-          'cpp-named-properties-write-unsupported',
+-        );
++      if (namedPropertiesWriteSource && expression.left.kind === 'element') {
++        if (expression.operator !== '=') {
++          emissionError(
++            context,
++            'an owner-preserving dynamic named-property view supports exact assignment only',
++            'cpp-named-properties-compound-write-unsupported',
++          );
++        }
++        const valueType = getIrExpressionTypeEvidenceCpp(expression.right, context);
++        if (!valueType) {
++          emissionError(
++            context,
++            'an owner-preserving dynamic named-property write requires represented value type evidence',
++            'cpp-named-properties-write-value-unrepresented',
++          );
++        }
++        const assignmentValue = getGeneratedTargetName('assignment_value', context);
++        const erasedValue = emitCppAnyConstructionFromValueCpp(assignmentValue, valueType, context);
++        if (!erasedValue) {
++          emissionError(
++            context,
++            'an owner-preserving dynamic named-property write requires a value representable in flight::Any',
++            'cpp-named-properties-write-value-unrepresented',
++          );
++        }
++        const receiver = getGeneratedTargetName('named_write_receiver', context);
++        const key = getGeneratedTargetName('named_write_key', context);
++        context.includes.add('flight/structural_ref.hpp');
++        context.includes.add('stdexcept');
++        return `([&]() { const auto& ${receiver} = ${emitExpression(namedPropertiesWriteSource, context)}; const auto ${key} = ${emitExpression(expression.left.index, context, { kind: 'primitive', name: 'string' })}; auto ${assignmentValue} = ${emitExpression(expression.right, context, valueType)}; if (!flight::named_properties(${receiver}).set(${key}, ${erasedValue})) throw std::logic_error("Flight named-property write rejected key or value"); return ${assignmentValue}; }())`;
+       }
+       const dynamicNamedReferenceWrite =
+         expression.left.kind === 'element'
