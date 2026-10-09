@@ -1,0 +1,24 @@
+diff --git a/packages/types/src/RegistryTable.ts b/packages/types/src/RegistryTable.ts
+--- a/packages/types/src/RegistryTable.ts
++++ b/packages/types/src/RegistryTable.ts
+@@ -16,9 +16,16 @@ export type RegistryId = string;
+ // at every site that has never heard of tombstones, so neither can fail a build. This union is NOT
+ // assignable to `T`, so the only way to reach a value is to narrow, and the only way to narrow is to
+ // have handled both cases.
+-export type RegistryTableEntry<T> =
+-  | { readonly state: typeof RegistryEntryState.Bound; readonly value: T }
+-  | { readonly state: typeof RegistryEntryState.Tombstoned };
++interface BoundRegistryTableEntry<T> {
++  readonly state: typeof RegistryEntryState.Bound;
++  readonly value: T;
++}
++
++interface TombstonedRegistryTableEntry {
++  readonly state: typeof RegistryEntryState.Tombstoned;
++}
++
++export type RegistryTableEntry<T> = BoundRegistryTableEntry<T> | TombstonedRegistryTableEntry;
+-
++
+ // The discriminant values, as a const object plus its derived type — the spelling `SceneCoverage` and
+ // the rest of this package already use. The union of shapes above cannot collapse into a const object,

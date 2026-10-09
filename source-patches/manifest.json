@@ -1686,6 +1686,23 @@
       "unblocks": "Gives the real persistent registry constructors and replacement operations stable entity owners used by GL material, texture, blend, modifier, and PBR-extension registries.",
       "expires": "when Flight names its entity-backed registry table products upstream, or flight-compiler can lower these generic object intersections without a named carrier.",
       "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "registry-named-entry-arms",
+      "dependency": "flight",
+      "patch": "registry-named-entry-arms.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/types/src/RegistryTable.ts",
+      "package": "@flighthq/types and @flighthq/registry",
+      "answers": "refusal",
+      "refusal": "a readonly overlay RegistryTableEntry arm and the destination RegistryTableEntry map arm acquire sibling anonymous C++ owners even though they name the same generic discriminated-union member",
+      "rewrite": "Names the existing bound and tombstoned RegistryTableEntry object arms as private interfaces and defines the exported union from those exact declarations.",
+      "equivalence": "The exported RegistryTableEntry union has the same two closed shapes, readonly fields, bound value payload, tombstone absence, literal discriminants, generic parameter, assignability, JavaScript object representation, and object identity. The arm interfaces are private implementation names only; no value is copied or reconstructed and no public API member is added or removed.",
+      "verification": "The complete Flight patch stack must apply and reverse cleanly, and focused native registryTable regeneration must retain the same entry object while copying overlay map entries without a contextual-union owner refusal.",
+      "whyNotUpstreamFirst": "Naming existing discriminated-union arms is target-neutral, but it is pinned here because the native backend currently needs the declaration identity to follow a generic arm through readonly iteration into its original union alias.",
+      "unblocks": "Preserves registry entry owners through persistent table composition, including bound renderer/resolver callbacks and tombstones used by the real GL registries.",
+      "expires": "when Flight names these entry arms upstream, or flight-compiler preserves anonymous imported generic-union arm identity across readonly collection iteration.",
+      "appliedOn": "2026-10-09"
     }
   ]
 }
