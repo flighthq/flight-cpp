@@ -1,0 +1,12 @@
+diff --git a/packages/texture/src/texture.ts b/packages/texture/src/texture.ts
+--- a/packages/texture/src/texture.ts
++++ b/packages/texture/src/texture.ts
+@@ -475,7 +475,7 @@ export function transformTextureUv(out: Vector2Like, texture: Readonly<TextureLi
+ 
+ // Every dimension shares these, so the leaf and the switching constructor cannot drift on a default.
+ function applyCommonTextureFields(
+-  out: { -readonly [K in keyof TextureLike]: TextureLike[K] },
++  out: Texture,
+   fields: ReturnType<typeof createCommonTextureFields>,
+ ): void {
+   out.colorSpace = fields.colorSpace;

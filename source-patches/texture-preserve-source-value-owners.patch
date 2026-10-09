@@ -1,0 +1,72 @@
+diff --git a/packages/texture/src/texture.ts b/packages/texture/src/texture.ts
+--- a/packages/texture/src/texture.ts
++++ b/packages/texture/src/texture.ts
+@@ -3,15 +3,20 @@ import { cloneVector2, copyVector2, createVector2, inverseMatrix3 } from '@flight
+ import type {
+   CreateTexture2DOptions,
+   CreateTextureOptions,
+   EntityConstruction,
+   ImageResourceReference,
+   Matrix3Like,
+   Texture,
+   Texture2D,
++  Texture2DArray,
++  Texture3D,
++  TextureCube,
+   TextureLike,
+   TextureSource,
+   TextureSourceCubeFaces,
++  TextureSourceValue,
+   TextureSourceKind,
+   TextureUvTransform,
+   Vector2Like,
++  VoxelGrid,
+ } from '@flighthq/types/contract';
+@@ -20,13 +25,31 @@ import { cloneSampler, copySampler, createSampler, equalsSampler } from './sampl
+ 
+ const HALF_PI = Math.PI / 2;
+ 
++function getFirstTexture2DSource(texture: Readonly<Texture2D>): TextureSource | null {
++  return texture.source;
++}
++
++function getFirstTexture3DSource(texture: Readonly<Texture3D>): VoxelGrid | null {
++  return texture.source;
++}
++
++function getFirstTexture2DArraySource(texture: Readonly<Texture2DArray>): TextureSource | null {
++  return texture.sources.find((source) => source !== null) ?? null;
++}
++
++function getFirstTextureCubeSource(texture: Readonly<TextureCube>): TextureSourceValue | null {
++  return texture.sources.find((source) => source !== null) ?? null;
++}
++
+-function getFirstTextureSource(texture: Readonly<TextureLike>): TextureSource | null {
++function getFirstTextureSource(texture: Readonly<TextureLike>): TextureSourceValue | null {
+   switch (texture.dimension) {
+-    case '2d':
+-    case '3d':
+-      return texture.source;
+-    case '2d-array':
+-    case 'cube':
+-      return texture.sources.find((source) => source !== null) ?? null;
++    case '2d':
++      return getFirstTexture2DSource(texture);
++    case '3d':
++      return getFirstTexture3DSource(texture);
++    case '2d-array':
++      return getFirstTexture2DArraySource(texture);
++    case 'cube':
++      return getFirstTextureCubeSource(texture);
+   }
+ }
+@@ -225,7 +248,7 @@ export function getTextureInverseUvMatrix(out: Matrix3Like, texture: Readonly<Te
+ 
+ // Returns the first active source. Array and cube textures yield their first bound layer/face;
+ // unbound and entirely incomplete textures return null.
+-export function getTextureSource(texture: Readonly<TextureLike>): TextureSource | null {
++export function getTextureSource(texture: Readonly<TextureLike>): TextureSourceValue | null {
+   return getFirstTextureSource(texture);
+ }
+ 

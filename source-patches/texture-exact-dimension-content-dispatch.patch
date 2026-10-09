@@ -1,0 +1,44 @@
+diff --git a/packages/texture/src/texture.ts b/packages/texture/src/texture.ts
+--- a/packages/texture/src/texture.ts
++++ b/packages/texture/src/texture.ts
+@@ -375,19 +375,33 @@ export function setTextureSource(texture: TextureLike, source: TextureSource | n
+   texture.version = (texture.version + 1) >>> 0;
+ }
+ 
++function equalsTexture2DContent(a: Readonly<Texture2D>, b: Readonly<Texture2D>): boolean {
++  return a.source === b.source;
++}
++
++function equalsTexture2DArrayContent(a: Readonly<Texture2DArray>, b: Readonly<Texture2DArray>): boolean {
++  return a.sources.length === b.sources.length && a.sources.every((source, index) => source === b.sources[index]);
++}
++
++function equalsTexture3DContent(a: Readonly<Texture3D>, b: Readonly<Texture3D>): boolean {
++  return a.source === b.source;
++}
++
++function equalsTextureCubeContent(a: Readonly<TextureCube>, b: Readonly<TextureCube>): boolean {
++  return a.sources.length === b.sources.length && a.sources.every((source, index) => source === b.sources[index]);
++}
++
+ function equalsTextureContent(a: Readonly<TextureLike>, b: Readonly<TextureLike>): boolean {
+   if (a.dimension !== b.dimension) return false;
+   switch (a.dimension) {
+     case '2d':
++      return b.dimension === '2d' && equalsTexture2DContent(a, b);
++    case '2d-array':
++      return b.dimension === '2d-array' && equalsTexture2DArrayContent(a, b);
+     case '3d':
+-      return b.dimension === a.dimension && a.source === b.source;
+-    case '2d-array':
++      return b.dimension === '3d' && equalsTexture3DContent(a, b);
+     case 'cube':
+-      return (
+-        b.dimension === a.dimension &&
+-        a.sources.length === b.sources.length &&
+-        a.sources.every((source, index) => source === b.sources[index])
+-      );
++      return b.dimension === 'cube' && equalsTextureCubeContent(a, b);
+   }
+ }
+ 

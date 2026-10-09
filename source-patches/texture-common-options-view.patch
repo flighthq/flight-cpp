@@ -1,0 +1,51 @@
+diff --git a/packages/texture/src/texture.ts b/packages/texture/src/texture.ts
+--- a/packages/texture/src/texture.ts
++++ b/packages/texture/src/texture.ts
+@@ -167,6 +167,10 @@ type CreateTexture2DArrayOptions = Extract<CreateTextureOptions, { dimension: '2
+ type CreateTexture2DArrayOptions = Extract<CreateTextureOptions, { dimension: '2d-array' }>;
+ type CreateTexture3DOptions = Extract<CreateTextureOptions, { dimension: '3d' }>;
+ type CreateTextureCubeOptions = Extract<CreateTextureOptions, { dimension: 'cube' }>;
++type CommonTextureOptions = Pick<
++  CreateTexture2DOptions,
++  'colorSpace' | 'flipX' | 'flipY' | 'sampler' | 'uvOffset' | 'uvRotation' | 'uvScale' | 'version'
++>;
+ 
+ export function createTexture(opts?: Readonly<CreateTexture2DOptions>): Texture2D;
+ export function createTexture(opts: Readonly<CreateTexture2DArrayOptions>): Extract<Texture, { dimension: '2d-array' }>;
+@@ -177,10 +181,10 @@ export function createTexture(opts: Readonly<CreateTextureCubeOptions>): Extract
+ // Builds a flat Texture union. Two-dimensional content is the default and retains a null source
+ // sentinel during the loader migration; non-2D variants are selected by their required dimension.
+ export function createTexture(opts?: Readonly<CreateTextureOptions>): Texture {
+-  const common = createCommonTextureFields(opts);
+   let texture: Texture;
+   switch (opts?.dimension) {
+     case '2d-array': {
++      const common = createCommonTextureFields(opts);
+       const out = allocateEntity<Extract<Texture, { dimension: '2d-array' }>>();
+       applyCommonTextureFields(out, common);
+       out.dimension = '2d-array';
+@@ -190,6 +194,7 @@ export function createTexture(opts?: Readonly<CreateTextureOptions>): Texture {
+       break;
+     }
+     case '3d': {
++      const common = createCommonTextureFields(opts);
+       const out = allocateEntity<Extract<Texture, { dimension: '3d' }>>();
+       applyCommonTextureFields(out, common);
+       out.dimension = '3d';
+@@ -199,6 +204,7 @@ export function createTexture(opts?: Readonly<CreateTextureOptions>): Texture {
+       break;
+     }
+     case 'cube': {
++      const common = createCommonTextureFields(opts);
+       const out = allocateEntity<Extract<Texture, { dimension: 'cube' }>>();
+       applyCommonTextureFields(out, common);
+       out.dimension = 'cube';
+@@ -542,7 +548,7 @@ function applyCommonTextureFields(
+   out.version = fields.version;
+ }
+ 
+-function createCommonTextureFields(opts?: Readonly<CreateTextureOptions>) {
++function createCommonTextureFields(opts?: Readonly<CommonTextureOptions>) {
+   return {
+     colorSpace: opts?.colorSpace ?? 'srgb',
+     flipX: opts?.flipX ?? false,

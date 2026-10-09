@@ -1,0 +1,104 @@
+diff --git a/packages/texture/src/texture.ts b/packages/texture/src/texture.ts
+--- a/packages/texture/src/texture.ts
++++ b/packages/texture/src/texture.ts
+@@ -8,8 +8,12 @@ import type {
+   Texture,
+   Texture2D,
+   Texture2DArray,
++  Texture2DArrayLike,
++  Texture2DLike,
+   Texture3D,
++  Texture3DLike,
+   TextureCube,
++  TextureCubeLike,
+   TextureLike,
+   TextureSource,
+   TextureSourceCubeFaces,
+@@ -70,35 +74,59 @@ export function cloneTexture(source: Readonly<TextureLike>): Texture {
+   };
+   switch (source.dimension) {
+-    case '2d': {
+-      const out = allocateEntity<Texture2D>();
+-      applyCommonTextureFields(out, common);
+-      out.dimension = '2d';
+-      out.source = source.source;
+-      return finishEntity(out) as Texture2D;
+-    }
+-    case '2d-array': {
+-      const out = allocateEntity<Extract<Texture, { dimension: '2d-array' }>>();
+-      applyCommonTextureFields(out, common);
+-      out.dimension = '2d-array';
+-      out.sources = source.sources.slice();
+-      return finishEntity(out) as Extract<Texture, { dimension: '2d-array' }>;
+-    }
+-    case '3d': {
+-      const out = allocateEntity<Extract<Texture, { dimension: '3d' }>>();
+-      applyCommonTextureFields(out, common);
+-      out.dimension = '3d';
+-      out.source = source.source;
+-      return finishEntity(out) as Extract<Texture, { dimension: '3d' }>;
+-    }
+-    case 'cube': {
+-      const out = allocateEntity<Extract<Texture, { dimension: 'cube' }>>();
+-      applyCommonTextureFields(out, common);
+-      out.dimension = 'cube';
+-      out.sources = source.sources.slice() as unknown as TextureSourceCubeFaces;
+-      return finishEntity(out) as Extract<Texture, { dimension: 'cube' }>;
+-    }
++    case '2d':
++      return cloneTexture2D(source, common);
++    case '2d-array':
++      return cloneTexture2DArray(source, common);
++    case '3d':
++      return cloneTexture3D(source, common);
++    case 'cube':
++      return cloneTextureCube(source, common);
+   }
+ }
++
++function cloneTexture2D(
++  source: Readonly<Texture2DLike>,
++  common: ReturnType<typeof createCommonTextureFields>,
++): Texture2D {
++  const out = allocateEntity<Texture2D>();
++  applyCommonTextureFields(out, common);
++  out.dimension = '2d';
++  out.source = source.source;
++  return finishEntity(out) as Texture2D;
++}
++
++function cloneTexture2DArray(
++  source: Readonly<Texture2DArrayLike>,
++  common: ReturnType<typeof createCommonTextureFields>,
++): Texture2DArray {
++  const out = allocateEntity<Texture2DArray>();
++  applyCommonTextureFields(out, common);
++  out.dimension = '2d-array';
++  out.sources = source.sources.slice();
++  return finishEntity(out) as Texture2DArray;
++}
++
++function cloneTexture3D(
++  source: Readonly<Texture3DLike>,
++  common: ReturnType<typeof createCommonTextureFields>,
++): Texture3D {
++  const out = allocateEntity<Texture3D>();
++  applyCommonTextureFields(out, common);
++  out.dimension = '3d';
++  out.source = source.source;
++  return finishEntity(out) as Texture3D;
++}
++
++function cloneTextureCube(
++  source: Readonly<TextureCubeLike>,
++  common: ReturnType<typeof createCommonTextureFields>,
++): TextureCube {
++  const out = allocateEntity<TextureCube>();
++  applyCommonTextureFields(out, common);
++  out.dimension = 'cube';
++  out.sources = source.sources.slice() as unknown as TextureSourceCubeFaces;
++  return finishEntity(out) as TextureCube;
++}
+ 
+ // Copies every mutable field from source into a same-dimension out. Dimension is creation-time
+ // identity and never shape-shifts; source identities remain shared.

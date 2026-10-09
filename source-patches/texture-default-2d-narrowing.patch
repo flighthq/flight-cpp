@@ -1,0 +1,15 @@
+diff --git a/packages/texture/src/texture.ts b/packages/texture/src/texture.ts
+--- a/packages/texture/src/texture.ts
++++ b/packages/texture/src/texture.ts
+@@ -211,7 +211,10 @@ export function createTexture(opts?: Readonly<CreateTextureOptions>): Texture {
+     // The 2D case returns straight from the leaf, which attaches the resource itself — falling through
+     // to the shared attach below would push the same texture onto the resource twice.
++    case '2d':
++      return createTexture2D(opts);
+     default:
+-      return createTexture2D(opts as Readonly<CreateTexture2DOptions> | undefined);
++      if (opts === undefined) return createTexture2D();
++      return createTexture2D(opts);
+   }
+   attachTextureToResource(texture, opts?.resource);
+   return texture;

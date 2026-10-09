@@ -1,0 +1,48 @@
+diff --git a/packages/texture/src/texture.ts b/packages/texture/src/texture.ts
+--- a/packages/texture/src/texture.ts
++++ b/packages/texture/src/texture.ts
+@@ -44,6 +44,10 @@ function getFirstTextureCubeSource(texture: Readonly<TextureCube>): TextureSourc
+   return texture.sources.find((source) => source !== null) ?? null;
+ }
+ 
++function cloneTextureSourceCubeFaces(sources: TextureSourceCubeFaces): TextureSourceCubeFaces {
++  return [sources[0], sources[1], sources[2], sources[3], sources[4], sources[5]];
++}
++
+ function getFirstTextureSource(texture: Readonly<TextureLike>): TextureSourceValue | null {
+   switch (texture.dimension) {
+     case '2d':
+@@ -123,7 +127,7 @@ function cloneTextureCube(
+   const out = allocateEntity<TextureCube>();
+   applyCommonTextureFields(out, common);
+   out.dimension = 'cube';
+-  out.sources = source.sources.slice() as unknown as TextureSourceCubeFaces;
++  out.sources = cloneTextureSourceCubeFaces(source.sources);
+   return finishEntity(out) as TextureCube;
+ }
+ 
+@@ -157,7 +161,7 @@ export function copyTexture(out: TextureLike, source: Readonly<TextureLike>): vo
+       break;
+     case 'cube':
+       if (source.dimension !== 'cube') throw new Error('copyTexture requires matching dimensions');
+-      out.sources = source.sources.slice() as unknown as TextureSourceCubeFaces;
++      out.sources = cloneTextureSourceCubeFaces(source.sources);
+       break;
+   }
+   out.uvRotation = uvRotation;
+@@ -204,14 +208,7 @@ export function createTexture(opts?: Readonly<CreateTextureOptions>): Texture {
+       const out = allocateEntity<Extract<Texture, { dimension: 'cube' }>>();
+       applyCommonTextureFields(out, common);
+       out.dimension = 'cube';
+-      out.sources = (opts.sources?.slice() ?? [
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-        null,
+-      ]) as unknown as TextureSourceCubeFaces;
++      out.sources = opts.sources ? cloneTextureSourceCubeFaces(opts.sources) : [null, null, null, null, null, null];
+       texture = finishEntity(out) as Extract<Texture, { dimension: 'cube' }>;
+       break;
+     }

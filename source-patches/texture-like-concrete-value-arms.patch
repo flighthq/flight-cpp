@@ -1,12 +1,53 @@
 diff --git a/packages/types/src/Texture.ts b/packages/types/src/Texture.ts
 --- a/packages/types/src/Texture.ts
 +++ b/packages/types/src/Texture.ts
-@@ -54,3 +54,6 @@
- type TextureLikeFrom<Type extends Texture> = Type extends Texture ? EntityWithoutRuntime<Type> : never;
--
--export type TextureLike = TextureLikeFrom<Texture>;
+@@ -36,21 +36,33 @@ export interface Texture2D extends TextureCommon {
+   source: TextureSource | null;
+ }
+
+-export type Texture =
+-  | Texture2D
+-  | (TextureCommon & {
+-      readonly dimension: '2d-array';
+-      sources: readonly (TextureSource | null)[];
+-    })
+-  | (TextureCommon & {
+-      readonly dimension: '3d';
+-      source: VoxelGrid | null;
+-    })
+-  | (TextureCommon & {
+-      readonly dimension: 'cube';
+-      sources: TextureSourceCubeFaces;
+-    });
++export interface Texture2DArray extends TextureCommon {
++  readonly dimension: '2d-array';
++  sources: readonly (TextureSource | null)[];
++}
 +
-+// Retain the concrete runtime Texture alternatives beside their serializable structural views. Every
-+// Texture already satisfies its corresponding TextureLike arm, so this redundant union changes no
-+// TypeScript value or JavaScript representation; it preserves the exact owner on invariant targets.
-+export type TextureLike = Texture | TextureLikeFrom<Texture>;
++export interface Texture3D extends TextureCommon {
++  readonly dimension: '3d';
++  source: VoxelGrid | null;
++}
++
++export interface TextureCube extends TextureCommon {
++  readonly dimension: 'cube';
++  sources: TextureSourceCubeFaces;
++}
+
+-type TextureLikeFrom<Type extends Texture> = Type extends Texture ? EntityWithoutRuntime<Type> : never;
++export type Texture = Texture2D | Texture2DArray | Texture3D | TextureCube;
+
+-export type TextureLike = TextureLikeFrom<Texture>;
++export type Texture2DLike = EntityWithoutRuntime<Texture2D>;
++export type Texture2DArrayLike = EntityWithoutRuntime<Texture2DArray>;
++export type Texture3DLike = EntityWithoutRuntime<Texture3D>;
++export type TextureCubeLike = EntityWithoutRuntime<TextureCube>;
++
++// Each runtime-free arm names the same structural view the former distributive conditional produced.
++// A live Texture still satisfies its corresponding view, while invariant targets retain the named
++// dimension owner instead of one anonymous conditional arm.
++export type TextureLike =
++  | Texture2DLike
++  | Texture2DArrayLike
++  | Texture3DLike
++  | TextureCubeLike;

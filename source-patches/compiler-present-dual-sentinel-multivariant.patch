@@ -1,0 +1,86 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -12940,7 +12940,14 @@ function emitCppPresentBindingStorageValueCpp(
+   const bindingType = getCppBindingTypeCpp(bindingId, context);
+   const union = bindingType ? getIrUnionTypeCpp(bindingType, context, new Set()) : undefined;
+   const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
+-  const narrowedType = context.narrowedBindingTypes.get(bindingId) ?? expression.narrowedType;
++  const narrowedType =
++    context.narrowedBindingTypes.get(bindingId) ??
++    expression.narrowedType ??
++    (expression.presence === 'narrowedPresent' && union
++      ? createIrTypeEvidenceUnionCpp(
++          union.types.filter((member) => member.kind !== 'null' && member.kind !== 'undefined'),
++        )
++      : undefined);
+   const nestedOptionalMember =
+     plan && narrowedType ? emitCppNarrowedNestedUnionMemberCpp(binding, plan, narrowedType, context) : undefined;
+   if (nestedOptionalMember) return nestedOptionalMember;
+@@ -12949,7 +12956,35 @@ function emitCppPresentBindingStorageValueCpp(
+     const matchingSlots = narrowedSlot
+       ? plan.valueSlots.filter((slot) => slot.representationKey === narrowedSlot.representationKey)
+       : plan.valueSlots;
+     if (matchingSlots.length !== 1) {
++      const narrowedUnion =
++        narrowedType && !hasIrTypeAbsentMember(narrowedType)
++          ? getIrUnionTypeCpp(narrowedType, context, new Set())
++          : undefined;
++      const narrowedPlan = narrowedUnion ? getCppUnionRepresentationPlan(narrowedUnion, context) : undefined;
++      const mappings =
++        narrowedPlan?.kind === 'multiVariant'
++          ? narrowedPlan.valueSlots.map((target) => {
++              const sources = plan.valueSlots.filter((source) => source.targetType === target.targetType);
++              return sources.length === 1 ? { source: sources[0]!, target } : undefined;
++            })
++          : [];
++      if (
++        narrowedUnion &&
++        narrowedPlan?.kind === 'multiVariant' &&
++        mappings.length > 1 &&
++        mappings.every((mapping) => mapping !== undefined)
++      ) {
++        const carrier = emitUnionTypeCpp(narrowedUnion, context);
++        const source = getGeneratedTargetName('presentUnionSource', context);
++        const branches = mappings.map(
++          (mapping) =>
++            `if (const auto* alternative = std::get_if<${mapping!.source.targetType}>(&${source})) return ${carrier}{std::in_place_type<${mapping!.target.targetType}>, *alternative};`,
++        );
++        context.includes.add('stdexcept');
++        context.includes.add('variant');
++        return `([&]() -> ${carrier} { const auto& ${source} = ${binding}; ${branches.join(' ')} throw std::logic_error("present union holds an absent or excluded alternative"); }())`;
++      }
+       emissionError(
+         context,
+         'dual-sentinel presence narrowing requires one remaining C++ value domain: the storage carries both null and undefined beside SEVERAL value alternatives, so a presence test leaves more than one possible value and the emitter has no single read to emit for it. Declare the member with one concrete representation -- `readonly number[]` rather than `readonly number[] | Uint16Array | Uint32Array` -- and read it through a coalesce whose result is declared; that shape lowers, which the control beside this rule shows',
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -19780,7 +19780,27 @@ int main() {
+ 
+     expect(emitted).toContain('std::optional<flight::String>{std::visit(');
+   });
+ 
++  it('projects a common property after both sentinels are excluded from a heterogeneous carrier', () => {
++    const module = lower(
++      'nullable-variant-property-evidence.ts',
++      `type Source =
++         | { readonly kind: 'image'; readonly source: string; readonly width: number }
++         | { readonly depth: number; readonly kind: 'voxel'; readonly width: number };
++       export function sourceWidth(source: Source | null | undefined): number {
++         if (source === null) return -1;
++         if (source === undefined) return -1;
++         return source.width;
++       }`,
++    ).module;
++
++    const emitted = emitIrModuleCpp(module, { runtimeProfile: 'flight-cpp' }).contents;
++
++    expect(emitted).toContain('present union holds an absent or excluded alternative');
++    expect(emitted).toContain('std::visit');
++    expect(emitted).toContain('return value->width;');
++  });
++
+   it('selects the current imported sprite texture arm before reading its source', () => {
+     const moduleResolution: CompilerModuleResolutionPlan = {
+       edges: [

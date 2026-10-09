@@ -1,0 +1,15 @@
+diff --git a/packages/texture/src/texture.ts b/packages/texture/src/texture.ts
+--- a/packages/texture/src/texture.ts
++++ b/packages/texture/src/texture.ts
+@@ -185,7 +185,10 @@ export function equalsTexture(
+   a: Readonly<TextureLike> | null | undefined,
+   b: Readonly<TextureLike> | null | undefined,
+ ): boolean {
+-  if (!a || !b) return false;
++  if (a === null) return false;
++  if (a === undefined) return false;
++  if (b === null) return false;
++  if (b === undefined) return false;
+   if (a === b) return true;
+   return (
+     a.colorSpace === b.colorSpace &&

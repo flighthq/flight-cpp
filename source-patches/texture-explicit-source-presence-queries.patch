@@ -1,0 +1,36 @@
+diff --git a/packages/texture/src/texture.ts b/packages/texture/src/texture.ts
+--- a/packages/texture/src/texture.ts
++++ b/packages/texture/src/texture.ts
+@@ -203,7 +203,9 @@ export function equalsTexture(
+ 
+ // Returns the height declared by the active source, or -1 when unbound.
+ export function getTextureHeight(texture: Readonly<TextureLike>): number {
+-  return getFirstTextureSource(texture)?.height ?? -1;
++  const source = getFirstTextureSource(texture);
++  if (source === null) return -1;
++  return source.height;
+ }
+ 
+ // Composes the KHR_texture_transform fields and inverts the result, producing the matrix that maps
+@@ -225,7 +227,9 @@ export function getTextureSource(texture: Readonly<TextureLike>): TextureSource
+ 
+ // Returns the open resolver key declared by the texture's active source, or null when unbound.
+ export function getTextureSourceKind(texture: Readonly<TextureLike>): TextureSourceKind | null {
+-  return getFirstTextureSource(texture)?.kind ?? null;
++  const source = getFirstTextureSource(texture);
++  if (source === null) return null;
++  return source.kind;
+ }
+ 
+ // Composes the KHR_texture_transform fields (uvOffset, uvRotation, uvScale) into the 3×3 matrix
+@@ -309,7 +313,9 @@ export function getTextureViewSize(out: Vector2Like, texture: Readonly<TextureLi
+ 
+ // Returns the width declared by the active source, or -1 when unbound.
+ export function getTextureWidth(texture: Readonly<TextureLike>): number {
+-  return getFirstTextureSource(texture)?.width ?? -1;
++  const source = getFirstTextureSource(texture);
++  if (source === null) return -1;
++  return source.width;
+ }
+ 
+ // True when the texture declares at least one source.

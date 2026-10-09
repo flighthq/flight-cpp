@@ -1,0 +1,166 @@
+diff --git a/packages/texture/src/texture.ts b/packages/texture/src/texture.ts
+--- a/packages/texture/src/texture.ts
++++ b/packages/texture/src/texture.ts
+@@ -5,10 +5,12 @@ import type {
+   CreateTexture2DOptions,
+   CreateTexture3DOptions,
+   CreateTextureCubeOptions,
+-  CreateTextureOptions,
+   EntityConstruction,
+   ImageResourceReference,
+   Matrix3Like,
++  Sampler,
++  TextureColorSpace,
++  Vector2,
+   Texture,
+   Texture2D,
+   Texture2DArray,
+@@ -177,32 +179,107 @@ type CommonTextureOptions = Pick<
+ >;
+ type Texture2DSourceOptions = Pick<CreateTexture2DOptions, 'source'>;
+ 
++interface TextureResourceOptions {
++  readonly resource?: ImageResourceReference | null;
++}
++
++interface CreateTexture2DOptionsView {
++  colorSpace?: TextureColorSpace;
++  readonly dimension?: '2d';
++  flipX?: boolean;
++  flipY?: boolean;
++  readonly resource?: ImageResourceReference | null;
++  sampler?: Sampler;
++  source?: TextureSource | null;
++  uvOffset?: Vector2;
++  uvRotation?: number;
++  uvScale?: Vector2;
++  version?: number;
++}
++
++interface CreateTexture2DArrayOptionsView {
++  colorSpace?: TextureColorSpace;
++  readonly dimension: '2d-array';
++  flipX?: boolean;
++  flipY?: boolean;
++  readonly resource?: ImageResourceReference | null;
++  sampler?: Sampler;
++  sources?: readonly (TextureSource | null)[];
++  uvOffset?: Vector2;
++  uvRotation?: number;
++  uvScale?: Vector2;
++  version?: number;
++}
++
++interface CreateTexture3DOptionsView {
++  colorSpace?: TextureColorSpace;
++  readonly dimension: '3d';
++  flipX?: boolean;
++  flipY?: boolean;
++  readonly resource?: ImageResourceReference | null;
++  sampler?: Sampler;
++  source?: VoxelGrid | null;
++  uvOffset?: Vector2;
++  uvRotation?: number;
++  uvScale?: Vector2;
++  version?: number;
++}
++
++interface CreateTextureCubeOptionsView {
++  colorSpace?: TextureColorSpace;
++  readonly dimension: 'cube';
++  flipX?: boolean;
++  flipY?: boolean;
++  readonly resource?: ImageResourceReference | null;
++  sampler?: Sampler;
++  sources?: TextureSourceCubeFaces;
++  uvOffset?: Vector2;
++  uvRotation?: number;
++  uvScale?: Vector2;
++  version?: number;
++}
++
++type CreateTextureOptionsView =
++  | CreateTexture2DOptionsView
++  | CreateTexture2DArrayOptionsView
++  | CreateTexture3DOptionsView
++  | CreateTextureCubeOptionsView;
++
++function getTextureResource(opts?: Readonly<TextureResourceOptions>): ImageResourceReference | null | undefined {
++  if (opts === undefined) return undefined;
++  return opts.resource;
++}
++
+ export function createTexture(opts?: Readonly<CreateTexture2DOptions>): Texture2D;
+ export function createTexture(opts: Readonly<CreateTexture2DArrayOptions>): Texture2DArray;
+ export function createTexture(opts: Readonly<CreateTexture3DOptions>): Texture3D;
+ export function createTexture(opts: Readonly<CreateTextureCubeOptions>): TextureCube;
+ // Builds a flat Texture union. Two-dimensional content is the default and retains a null source
+ // sentinel during the loader migration; non-2D variants are selected by their required dimension.
+-export function createTexture(opts?: Readonly<CreateTextureOptions>): Texture {
+-  let texture: Texture;
+-  switch (opts?.dimension) {
++export function createTexture(opts?: Readonly<CreateTextureOptionsView>): Texture {
++  if (opts === undefined) return createTexture2D();
++  switch (opts.dimension) {
+     case '2d-array': {
+       const common = createCommonTextureFields(opts);
+       const out = allocateEntity<Texture2DArray>();
+       applyCommonTextureFields(out, common);
+       out.dimension = '2d-array';
+-      out.sources = opts.sources?.slice() ?? [];
+-      texture = finishEntity(out) as Texture2DArray;
+-      break;
++      const sources: readonly (TextureSource | null)[] = opts.sources?.slice() ?? [];
++      out.sources = sources;
++      const texture: Texture2DArray = finishEntity(out) as Texture2DArray;
++      attachTextureToResource(texture, getTextureResource(opts));
++      return texture;
+     }
+     case '3d': {
+       const common = createCommonTextureFields(opts);
+       const out = allocateEntity<Texture3D>();
+       applyCommonTextureFields(out, common);
+       out.dimension = '3d';
+-      out.source = opts.source ?? null;
+-      texture = finishEntity(out) as Texture3D;
+-      break;
++      const source: VoxelGrid | null = opts.source ?? null;
++      out.source = source;
++      const texture: Texture3D = finishEntity(out) as Texture3D;
++      attachTextureToResource(texture, getTextureResource(opts));
++      return texture;
+     }
+     case 'cube': {
+       const common = createCommonTextureFields(opts);
+@@ -210,19 +287,17 @@ export function createTexture(opts?: Readonly<CreateTextureOptions>): Texture {
+       applyCommonTextureFields(out, common);
+       out.dimension = 'cube';
+       out.sources = opts.sources ? cloneTextureSourceCubeFaces(opts.sources) : [null, null, null, null, null, null];
+-      texture = finishEntity(out) as TextureCube;
+-      break;
++      const texture: TextureCube = finishEntity(out) as TextureCube;
++      attachTextureToResource(texture, getTextureResource(opts));
++      return texture;
+     }
+     // The 2D case returns straight from the leaf, which attaches the resource itself — falling through
+     // to the shared attach below would push the same texture onto the resource twice.
+     case '2d':
+       return createTexture2D(opts);
+     default:
+-      if (opts === undefined) return createTexture2D();
+       return createTexture2D(opts);
+   }
+-  attachTextureToResource(texture, opts?.resource);
+-  return texture;
+ }
+ 
+ // The two-dimensional leaf. 2D is the dimension a caller reaches for by default, and naming it gets a
+@@ -233,7 +308,7 @@ export function createTexture2D(opts?: Readonly<CreateTexture2DOptions>): Texture2D {
+   const out = allocateEntity<Texture2D>();
+   initializeTexture2D(out, opts);
+   const texture = finishEntity(out) as Texture2D;
+-  attachTextureToResource(texture, opts?.resource);
++  attachTextureToResource(texture, getTextureResource(opts));
+   return texture;
+ }
+ 

@@ -1,0 +1,115 @@
+diff --git a/packages/types/src/CreateTextureOptions.ts b/packages/types/src/CreateTextureOptions.ts
+--- a/packages/types/src/CreateTextureOptions.ts
++++ b/packages/types/src/CreateTextureOptions.ts
+@@ -1,5 +1,11 @@
+ import type { ImageResourceReference } from './ImageResourceReference';
+-import type { TextureLike } from './Texture';
++import type {
++  Texture2DArrayLike,
++  Texture2DLike,
++  Texture3DLike,
++  TextureCubeLike,
++  TextureLike,
++} from './Texture';
+ 
+ type CreateTextureVariantOptions<Type extends TextureLike> = Type extends TextureLike
+   ? Omit<Partial<Type>, 'dimension'> &
+@@ -6,12 +12,19 @@ type CreateTextureVariantOptions<Type extends TextureLike> = Type extends Textur
+       (Type['dimension'] extends '2d' ? { readonly dimension?: '2d' } : { readonly dimension: Type['dimension'] })
+   : never;
+ 
+-export type CreateTextureOptions = CreateTextureVariantOptions<TextureLike> & {
++type CreateTextureOptionsFor<Type extends TextureLike> = CreateTextureVariantOptions<Type> & {
+   readonly resource?: ImageResourceReference | null;
+ };
+ 
+-// The two-dimensional variant on its own, so a caller that knows the dimension can name the options it
+-// is actually passing rather than the union of all four. Kept as a projection of CreateTextureOptions
+-// rather than a hand-written twin: a field added to the union appears here without a second edit, and
+-// the two cannot drift.
+-export type CreateTexture2DOptions = Extract<CreateTextureOptions, { dimension?: '2d' }>;
++// Each dimension keeps the same distributive Partial/Omit construction while naming the exact option
++// owner that overloads, constructors, and discriminant branches exchange.
++export type CreateTexture2DOptions = CreateTextureOptionsFor<Texture2DLike>;
++export type CreateTexture2DArrayOptions = CreateTextureOptionsFor<Texture2DArrayLike>;
++export type CreateTexture3DOptions = CreateTextureOptionsFor<Texture3DLike>;
++export type CreateTextureCubeOptions = CreateTextureOptionsFor<TextureCubeLike>;
++
++export type CreateTextureOptions =
++  | CreateTexture2DOptions
++  | CreateTexture2DArrayOptions
++  | CreateTexture3DOptions
++  | CreateTextureCubeOptions;
+diff --git a/packages/texture/src/texture.ts b/packages/texture/src/texture.ts
+--- a/packages/texture/src/texture.ts
++++ b/packages/texture/src/texture.ts
+@@ -1,7 +1,10 @@
+ import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
+ import { cloneVector2, copyVector2, createVector2, inverseMatrix3 } from '@flighthq/geometry/contract';
+ import type {
++  CreateTexture2DArrayOptions,
+   CreateTexture2DOptions,
++  CreateTexture3DOptions,
++  CreateTextureCubeOptions,
+   CreateTextureOptions,
+   EntityConstruction,
+   ImageResourceReference,
+@@ -167,9 +170,6 @@ export function copyTexture(out: TextureLike, source: Readonly<TextureLike>): vo
+   out.version = version;
+ }
+ 
+-type CreateTexture2DArrayOptions = Extract<CreateTextureOptions, { dimension: '2d-array' }>;
+-type CreateTexture3DOptions = Extract<CreateTextureOptions, { dimension: '3d' }>;
+-type CreateTextureCubeOptions = Extract<CreateTextureOptions, { dimension: 'cube' }>;
+ type CommonTextureOptions = Pick<
+   CreateTexture2DOptions,
+   'colorSpace' | 'flipX' | 'flipY' | 'sampler' | 'uvOffset' | 'uvRotation' | 'uvScale' | 'version'
+@@ -178,9 +178,9 @@ type CommonTextureOptions = Pick<
+ >;
+ 
+ export function createTexture(opts?: Readonly<CreateTexture2DOptions>): Texture2D;
+-export function createTexture(opts: Readonly<CreateTexture2DArrayOptions>): Extract<Texture, { dimension: '2d-array' }>;
+-export function createTexture(opts: Readonly<CreateTexture3DOptions>): Extract<Texture, { dimension: '3d' }>;
+-export function createTexture(opts: Readonly<CreateTextureCubeOptions>): Extract<Texture, { dimension: 'cube' }>;
++export function createTexture(opts: Readonly<CreateTexture2DArrayOptions>): Texture2DArray;
++export function createTexture(opts: Readonly<CreateTexture3DOptions>): Texture3D;
++export function createTexture(opts: Readonly<CreateTextureCubeOptions>): TextureCube;
+ // Builds a flat Texture union. Two-dimensional content is the default and retains a null source
+ // sentinel during the loader migration; non-2D variants are selected by their required dimension.
+ export function createTexture(opts?: Readonly<CreateTextureOptions>): Texture {
+@@ -190,29 +190,29 @@ export function createTexture(opts?: Readonly<CreateTextureOptions>): Texture {
+   switch (opts?.dimension) {
+     case '2d-array': {
+       const common = createCommonTextureFields(opts);
+-      const out = allocateEntity<Extract<Texture, { dimension: '2d-array' }>>();
++      const out = allocateEntity<Texture2DArray>();
+       applyCommonTextureFields(out, common);
+       out.dimension = '2d-array';
+       out.sources = opts.sources?.slice() ?? [];
+-      texture = finishEntity(out) as Extract<Texture, { dimension: '2d-array' }>;
++      texture = finishEntity(out) as Texture2DArray;
+       break;
+     }
+     case '3d': {
+       const common = createCommonTextureFields(opts);
+-      const out = allocateEntity<Extract<Texture, { dimension: '3d' }>>();
++      const out = allocateEntity<Texture3D>();
+       applyCommonTextureFields(out, common);
+       out.dimension = '3d';
+       out.source = opts.source ?? null;
+-      texture = finishEntity(out) as Extract<Texture, { dimension: '3d' }>;
++      texture = finishEntity(out) as Texture3D;
+       break;
+     }
+     case 'cube': {
+       const common = createCommonTextureFields(opts);
+-      const out = allocateEntity<Extract<Texture, { dimension: 'cube' }>>();
++      const out = allocateEntity<TextureCube>();
+       applyCommonTextureFields(out, common);
+       out.dimension = 'cube';
+       out.sources = opts.sources ? cloneTextureSourceCubeFaces(opts.sources) : [null, null, null, null, null, null];
+-      texture = finishEntity(out) as Extract<Texture, { dimension: 'cube' }>;
++      texture = finishEntity(out) as TextureCube;
+       break;
+     }
+     // The 2D case returns straight from the leaf, which attaches the resource itself — falling through

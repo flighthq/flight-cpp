@@ -1,0 +1,80 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -16849,8 +16849,9 @@ function emitContextualUnionExpressionCpp(
+     // definitions are NOT emitted here -- the declaring module's own header defines them, and this
+     // module already includes it through the ordinary import path. The two halves are one change: a
+     // qualified name without the suppression would leave a duplicate, and the suppression without the
+     // qualification would name a type this module does not have.
++    const ownerExpectedType = getCppContextualUnionTypeInDeclaringModuleCpp(expectedType, context);
+     const ownerContext: EmitContext = { ...context, anonymousStructs: new Map(), module: owner };
+-    const emitted = emitContextualUnionExpressionInContextCpp(expression, expectedType, ownerContext);
++    const emitted = emitContextualUnionExpressionInContextCpp(expression, ownerExpectedType, ownerContext);
+     return emitted === undefined ? undefined : qualifyCppDeclaringModuleTypeCpp(emitted, ownerContext);
+   }
+@@ -16858,6 +16859,25 @@ function emitContextualUnionExpressionCpp(
+   return emitContextualUnionExpressionInContextCpp(expression, expectedType, context);
+ }
+ 
++function getCppContextualUnionTypeInDeclaringModuleCpp(
++  expectedType: Readonly<IrType>,
++  context: EmitContext,
++): Readonly<IrType> {
++  const alias =
++    expectedType.kind === 'union' ? getCppOptionalImportedUnionValueAliasCpp(expectedType, context) : expectedType;
++  if (!alias || alias.kind !== 'named') return expectedType;
++  const target = resolveCppTypeAliasTarget(alias, context);
++  if (!target || target.kind !== 'union') return expectedType;
++  if (expectedType.kind !== 'union') return target;
++  return {
++    kind: 'union',
++    types: [
++      ...target.types,
++      ...expectedType.types.filter((member) => member.kind === 'null' || member.kind === 'undefined'),
++    ],
++  };
++}
++
+ // The member read whose receiver resolved to a shape with no members, seen through the layers a contextual
+ // union construction wraps it in -- an optional chain and the nullish coalescing that supplies the
+ // absence. It is the difference between "this read's type evidence is missing" and "there was nothing here
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -26848,7 +26848,7 @@ int main() {
+           target: { packageName: '@flighthq/types', source: 'packages/types/src/Texture.ts' },
+         },
+         {
+-          importedNames: ['Bitmap', 'Image'],
++          importedNames: ['Bitmap', 'Image', 'Source'],
+           specifier: '@flighthq/types/contract',
+           target: { packageName: '@flighthq/types', source: 'packages/types/src/sources.ts' },
+         },
+@@ -26917,14 +26917,17 @@ int main() {
+         source(
+           '@flighthq/scene3d-gl',
+           'consumer.ts',
+-          `import type { Bitmap, Cube, Image, SourceValue } from '@flighthq/types/contract';
++          `import type { Bitmap, Cube, Image, Source, SourceValue } from '@flighthq/types/contract';
+            export function versions(cube: Cube): readonly number[] {
+              void cube;
+              return [];
+            }
+            export function payloadSize(source: SourceValue): number {
+              if (source.kind === 'bitmap') return (source as Bitmap).data.length;
+              if (source.kind === 'image') return (source as Image).source.length;
+              return 0;
++           }
++           export function retainSource(source: Source | null): SourceValue | null {
++             return source;
+            }`,
+         ),
+@@ -26936,6 +26939,8 @@ int main() {
+     expect(emitted).toContain('inline flight::Array<double> versions');
+     expect(emitted).toContain('std::get<flight::Ref<flighthq_types::Bitmap>>');
+     expect(emitted).toContain('std::get<flight::Ref<flighthq_types::Image>>');
++    expect(emitted).toContain('inline std::optional<flighthq_types::SourceValue> retain_source');
++    expect(emitted).toContain('std::in_place_type<flight::Ref<flighthq_types::Source>>');
+   });
+ 
+   it('emits tuple types and tuple access with std::get', () => {
