@@ -1,0 +1,16 @@
+diff --git a/packages/lighting/src/sceneForwardLights.ts b/packages/lighting/src/sceneForwardLights.ts
+--- a/packages/lighting/src/sceneForwardLights.ts
++++ b/packages/lighting/src/sceneForwardLights.ts
+@@ -115,10 +115,10 @@ function selectStrongestLights(
+ }
+ 
+ const scratchSelectedPointIndices = new Int32Array(MAX_FORWARD_LIGHTS);
+-const scratchSelectedPointLights: Readonly<PointLight | SpotLight>[] = new Array(MAX_FORWARD_LIGHTS);
++const scratchSelectedPointLights: Readonly<PointLight | SpotLight>[] = [];
+ const scratchSelectedPointScores = new Float64Array(MAX_FORWARD_LIGHTS);
+ const scratchSelectedPointPriorities = new Float64Array(MAX_FORWARD_LIGHTS);
+ const scratchSelectedSpotIndices = new Int32Array(MAX_FORWARD_LIGHTS);
+-const scratchSelectedSpotLights: Readonly<PointLight | SpotLight>[] = new Array(MAX_FORWARD_LIGHTS);
++const scratchSelectedSpotLights: Readonly<PointLight | SpotLight>[] = [];
+ const scratchSelectedSpotScores = new Float64Array(MAX_FORWARD_LIGHTS);
+ const scratchSelectedSpotPriorities = new Float64Array(MAX_FORWARD_LIGHTS);
