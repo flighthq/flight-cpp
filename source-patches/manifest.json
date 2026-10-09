@@ -1431,6 +1431,23 @@
       "unblocks": "Removes the repeated geometry-presence refusal from real mesh cloning, material/kind discovery, world bounds, frustum culling, morph preparation, and shadow rendering paths.",
       "expires": "when flight-compiler recognizes an in-operator plus nullable member test as the same readonly partial-capability proof, or Flight adopts this direct capability guard upstream.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-exact-owner-boundaries",
+      "dependency": "flight",
+      "patch": "scene3d-exact-owner-boundaries.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "Scene3D node traits/construction, billboards, meshes, animation, document assembly, appearance, instance colors, and opt-in diagnostics",
+      "package": "@flighthq/scene3d and @flighthq/types",
+      "answers": "refusal",
+      "refusal": "the full Scene3D closure leaves nine direct package refusals: Node3D runtime parent/child storage erases the exact Node3D owner, billboard and mesh initialization options reach a wider optional owner, graph consumers assert erased nodes back to Node3D or Mesh, instance-color initialization rereads optional storage before assignment, document node arrays erase Mesh owners, and diagnostic data erases a numeric array into Record<string, unknown>",
+      "rewrite": "Keeps Node3D's exact runtime slot on its concrete type alias and uses the runtime trait symbol to recover Node3D only after checking base Node parent/child storage, retains Node3D/Mesh document alternatives until a readonly geometry guard selects Mesh, replaces node and mesh recovery assertions with runtime-checked owners or readonly capability guards, names the newly allocated instance-color payload before storing it, gives billboard and mesh constructors the same Node3D initialization option shape they forward, declares optional initialization results before assignment, and keeps the degenerate-camera warning message while omitting its unrepresentable auxiliary matrix-array field.",
+      "equivalence": "Scene graph objects, runtimes, transforms, colors, geometry, materials, skins, morph weights, animations, names, kinds, parent/child identities, and constructor defaults are unchanged for valid Scene3D graphs. Base Node parent/child values whose runtime trait is not Node3D now take the existing root fallback or are skipped instead of being asserted into invalid Scene3D nodes. Billboard and mesh construction additionally accept the Node3D alpha/visible fields already handled by their shared initializer. The guard warning keeps the same key, level, message, once-only behavior, and trigger; only the extra structured view array is omitted because LogData's erased Record cell cannot carry its native array representation.",
+      "verification": "The patch applies after all 87 preceding Flight source patches, and the focused strict Scene3D TypeScript check reports no errors in the changed modules apart from unavailable ambient WebGPU declarations elsewhere in the imported Types closure. Native @flighthq/scene3d regeneration emits 20/21 Scene3D modules, up from 12/21, while retaining 21/21 Node and 16/16 Mesh; the sole remaining direct Scene3D refusal is the pre-existing open Object.assign material copy in sceneDocument.ts.",
+      "whyNotUpstreamFirst": "These declarations and local guards describe owners the constructors and arrays already hold; they remove unchecked recovery without introducing a native-only representation. The one diagnostic-field omission is isolated to opt-in failure reporting and does not affect scene behavior or rendering.",
+      "unblocks": "Targets the nine direct Scene3D package refusals remaining after Node and Mesh reach complete native closure, including the real mesh/material, billboard, animation, skin, morph, and instance paths needed by the upstream examples.",
+      "expires": "when Flight preserves Node3D and Mesh owners through these construction/storage boundaries and uses representable structured diagnostic values upstream, or flight-compiler can retain the same checked owners and erased array value automatically.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }
