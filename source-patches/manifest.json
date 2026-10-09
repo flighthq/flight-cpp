@@ -1346,6 +1346,23 @@
       "unblocks": "Removes the base runtime-owner refusal that cascades through every Scene2D and Scene3D hierarchy consumer, while retaining concrete node traits across add/remove/reorder and sibling traversal paths.",
       "expires": "when Flight constructs NodeRuntime directly and carries NodeOf<Traits> through its mutable hierarchy APIs upstream, or the native compiler can preserve those exact owners through the weaker factories and readonly assertions.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "node-exact-capability-runtimes",
+      "dependency": "flight",
+      "patch": "node-exact-capability-runtimes.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "node transform, bounds, color-adjustment, revision, ordering, fit, hierarchy, traversal, and their capability type contracts",
+      "package": "@flighthq/node",
+      "answers": "refusal",
+      "refusal": "transform and bounds paths erase exact runtime slots through getEntityRuntime and then assert readonly EntityRuntime back to writable capability runtimes; remaining node collections and callbacks similarly erase NodeOf<Traits> before mutation",
+      "rewrite": "Declares exact transform and bounds runtime slots on their structural node capability types, carries NodeOf<Traits> through node callbacks, revisions, ordering, fit contexts, and read APIs, gives base initialization a concrete data-bearing options shape, avoids readonly/mutable carrier rebinds in ancestry walks, and sorts order-list entry indices instead of erasing heterogeneous nodes into shared scratch.",
+      "equivalence": "All annotations erase in JavaScript. The same runtime objects, matrices, rectangles, child arrays, revisions, adjustments, callbacks, signals, node identities, and data factories are used. Order-list sorting uses the same last-entry identity map, keys, tie break, child slots, and writes; it retains integer entry indices instead of the equivalent node references. Direct symbol reads return the identical runtime object previously returned by getEntityRuntime, without granting write authority through a readonly accessor.",
+      "verification": "The patch applies after the complete Flight source stack. Focused strict TypeScript programs for @flighthq/node and Scene3D report zero relevant errors, with only unavailable ambient WebGPU declarations outside scope. Native @flighthq/node regeneration emits 1101/1147 dependency-closure modules and 18/21 Node modules, up from 1097/1147 and 14/21; the remaining three direct Node refusals are isolated computed-symbol accesses in bounds and transform caches.",
+      "whyNotUpstreamFirst": "These capability types already promise that transform and bounds nodes own the corresponding runtime caches, and NodeRuntime children plus NodeOrderList entries already contain trait-bearing nodes. Naming those actual slots and values is a target-neutral contract correction, not a target-specific representation escape.",
+      "unblocks": "Removes the node data-owner, hierarchy, traversal, revision, color-adjustment, scene-fit, and child-order refusals beneath both Canvas Scene2D and WebGL Scene3D, leaving only the three explicit transform/bounds cache-access modules to solve.",
+      "expires": "when Flight exposes exact runtime slots on its structural node capabilities and retains NodeOf/Data owners across these APIs upstream, or the native compiler preserves the same checked owners through the weaker base interfaces automatically.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }
