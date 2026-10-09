@@ -910,6 +910,23 @@
       "appliedOn": "2026-10-08"
     },
     {
+      "id": "compiler-scoped-emission-semantic-context",
+      "dependency": "flight-compiler",
+      "patch": "compiler-scoped-emission-semantic-context.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-orchestration/src/compilerPackageCompilation.ts",
+      "package": "@flighthq/compiler-orchestration",
+      "answers": "diagnostic",
+      "refusal": "a scoped C++ emission session receives only selected output modules, so imported aliases and exact owners from lowered but unselected dependencies degrade to unresolved nominal carriers",
+      "rewrite": "Separates the dependency-complete semantic module context from the emit-path-selected output loop and passes the complete emittable context to the backend session.",
+      "equivalence": "Every source is lowered and every selected module is emitted exactly as before. Unselected modules still produce no output and remain reported as skipped; they now contribute only the type and owner declarations the documented scoped-analysis contract already promises. Unscoped runs have identical context and output module sets.",
+      "verification": "A focused orchestration regression selects only an importing consumer, verifies both consumer and provider reach the emission session, verifies only the consumer file is written, and retains the provider's skipped report status. All 41 compiler-orchestration tests pass.",
+      "whyNotUpstreamFirst": "The pinned compiler exposes emitPathPrefixes expressly for bounded corpus diagnosis, but its session construction contradicts that API's analysis contract. This narrowly versioned patch repairs the pinned implementation while preserving its output filter.",
+      "unblocks": "Allows bounded Scene3D GL and Canvas emission runs to retain exact material, texture, node, and callback owners from their dependency modules, reducing a 30–40 minute full-closure diagnostic loop to the requested package's emit phase without generating false refusals.",
+      "expires": "when flight-compiler passes the complete analyzed semantic module set to scoped backend emission sessions upstream.",
+      "appliedOn": "2026-10-08"
+    },
+    {
       "id": "renderable-concrete-node-arms",
       "dependency": "flight",
       "patch": "renderable-concrete-node-arms.patch",

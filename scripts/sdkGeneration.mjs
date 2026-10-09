@@ -65,6 +65,13 @@ const requestedPackages = options
   .filter((option) => option.startsWith('--package='))
   .map((option) => option.slice('--package='.length))
   .filter((name) => name.length > 0);
+// Diagnostic output scoping supplied directly to the compiler. All package sources are still lowered and
+// available for type/module resolution; only matching source paths enter the expensive C++ emission pass.
+// This deliberately does not change --package's dependency-closed output contract.
+const emitPathPrefixes = options
+  .filter((option) => option.startsWith('--emit-path-prefix='))
+  .map((option) => option.slice('--emit-path-prefix='.length))
+  .filter((prefix) => prefix.length > 0);
 const bindingProfileOptions = options
   .filter((option) => option.startsWith('--binding-profile='))
   .map((option) => option.slice('--binding-profile='.length));
@@ -78,6 +85,7 @@ const unknown = options.filter(
     option !== '--no-best-effort' &&
     option !== '--progress' &&
     !option.startsWith('--package=') &&
+    !option.startsWith('--emit-path-prefix=') &&
     !option.startsWith('--binding-profile=') &&
     !option.startsWith('--output='),
 );
@@ -321,6 +329,7 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
       })),
       schema: 'flight-compiler-package-graph/1',
     },
+    ...(emitPathPrefixes.length > 0 ? { emitPathPrefixes } : {}),
     moduleResolution: createCompilerModuleResolutionPlan(inventory),
     ...(traceProgress
       ? {
