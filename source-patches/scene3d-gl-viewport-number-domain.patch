@@ -1,0 +1,13 @@
+diff --git a/packages/scene3d-gl/src/glViewportAspect.ts b/packages/scene3d-gl/src/glViewportAspect.ts
+--- a/packages/scene3d-gl/src/glViewportAspect.ts
++++ b/packages/scene3d-gl/src/glViewportAspect.ts
+@@ -5,7 +5,7 @@ import type { GlRenderState } from '@flighthq/types/contract';
+ // internal backend fact: callers provide a camera, while the current destination determines mapping.
+ export function getGlScene3DViewportAspect(state: Readonly<GlRenderState>): number {
+   const viewport = getGlRenderStateRuntime(state).renderTargetViewport;
+-  const width = viewport?.width ?? state.gl.drawingBufferWidth;
+-  const height = viewport?.height ?? state.gl.drawingBufferHeight;
++  const width = +(viewport?.width ?? state.gl.drawingBufferWidth);
++  const height = +(viewport?.height ?? state.gl.drawingBufferHeight);
+   return width > 0 && height > 0 ? width / height : 1;
+ }

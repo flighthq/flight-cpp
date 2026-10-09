@@ -1040,6 +1040,23 @@
       "unblocks": "Allows renderGlScene3D's real opaque, blended, instanced, and fallback traversal to share one exact default material owner in generated C++.",
       "expires": "when flight-compiler can prove same-carrier singleton domains identical, or Flight adopts the shared placeholder upstream.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-gl-viewport-number-domain",
+      "dependency": "flight",
+      "patch": "scene3d-gl-viewport-number-domain.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/scene3d-gl/src/glViewportAspect.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (GLsizei | primitive -> double)",
+      "rewrite": "Applies JavaScript's unary numeric identity to each viewport fallback after nullish selection, making the result's one authored number domain explicit.",
+      "equivalence": "Both operands are already JavaScript numbers. Unary plus therefore preserves every finite value, infinity, NaN, and signed zero while leaving nullish selection and property-read order unchanged. The same width, height, positivity checks, division, and fallback aspect are evaluated.",
+      "verification": "The compiler's unary-plus regression proves numeric operands emit as identity. Full Scene3D GL regeneration supplies the external GLsizei/primitive union refusal and generated-header checks.",
+      "whyNotUpstreamFirst": "Web IDL's GLsizei and TypeScript number are one JavaScript numeric domain but arrive through distinct static declarations. The source-level identity states their existing normalization without adding a target-specific cast or runtime branch.",
+      "unblocks": "Allows camera projection and prepared Scene3D traversal to derive aspect from either an active render target or the SDL GL drawing buffer.",
+      "expires": "when flight-compiler coalesces Web IDL numeric aliases with primitive number domains, or Flight adopts the explicit numeric normalization upstream.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }
