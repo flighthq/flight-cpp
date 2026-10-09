@@ -1,0 +1,48 @@
+diff --git a/packages/types/src/CanvasTextureResolver.ts b/packages/types/src/CanvasTextureResolver.ts
+--- a/packages/types/src/CanvasTextureResolver.ts
++++ b/packages/types/src/CanvasTextureResolver.ts
+@@ -3,6 +3,7 @@ import type { CanvasRenderSurfaceCreator } from './CanvasRenderSurface';
+ import type { CanvasRenderSurface } from './CanvasRenderSurface';
+ import type { Kind } from './Entity';
+ import type { Entity } from './Entity';
++import type { HostImageSource } from './HostImageSource';
+ import type { RenderRegistryTable } from './RenderRegistrySignals';
+ import type { Texture } from './Texture';
+ import type { TextureSourceKind } from './TextureSourceKind';
+@@ -10,6 +11,6 @@ export type CanvasTextureResolver = (
+   resolvers: CanvasTextureResolvers,
+   texture: Readonly<Texture>,
+-) => CanvasImageSource | null;
++) => HostImageSource | null;
+ 
+ // Turns a Texture into something a 2D context can draw: the per-source-kind registry, plus the caches
+ // that make repeated resolution cheap.
+@@ -40,7 +41,7 @@ export interface CanvasTextureResolvers extends Entity {
+       flipX: boolean;
+       flipY: boolean;
+       imageVersion: number;
+-      source: CanvasImageSource;
++      source: HostImageSource;
+       textureVersion: number;
+       uvOffsetX: number;
+       uvOffsetY: number;
+diff --git a/packages/scene2d-canvas/src/canvasTextureResolver.ts b/packages/scene2d-canvas/src/canvasTextureResolver.ts
+--- a/packages/scene2d-canvas/src/canvasTextureResolver.ts
++++ b/packages/scene2d-canvas/src/canvasTextureResolver.ts
+@@ -6,6 +6,7 @@ import type {
+   CanvasRenderSurfaceOptions,
+   CanvasTextureResolver,
+   CanvasTextureResolvers,
++  HostImageSource,
+   RenderState,
+   Texture,
+   TextureSourceKind,
+@@ -95,7 +96,7 @@ export function registerCanvasTextureResolver(
+ export function resolveCanvasTexture(
+   resolvers: CanvasTextureResolvers,
+   texture: Readonly<Texture>,
+-): CanvasImageSource | null {
++): HostImageSource | null {
+   if (texture.dimension !== '2d') return null;
+   const source = texture.source;
+   if (source === null) return null;

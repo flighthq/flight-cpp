@@ -1,0 +1,14 @@
+diff --git a/packages/scene2d-canvas/src/canvasTextureResolver.ts b/packages/scene2d-canvas/src/canvasTextureResolver.ts
+--- a/packages/scene2d-canvas/src/canvasTextureResolver.ts
++++ b/packages/scene2d-canvas/src/canvasTextureResolver.ts
+@@ -38,7 +38,9 @@ import { acquireCanvasRenderSurface, destroyCanvasRenderSurface } from './canvasR
+ // The closure reads the emitter at call time, so the order against enabling guards does not matter.
+ export function connectCanvasTextureResolverMisses(resolvers: CanvasTextureResolvers, state: RenderState): void {
+   const runtime = getRenderStateRuntime(state);
+-  resolvers.registryMiss = (registry, kind) => runtime.registryMiss?.(registry, kind);
++  resolvers.registryMiss = (registry, kind): void => {
++    runtime.registryMiss?.(registry, kind);
++  };
+ }
+ 
+ export function createCanvasTextureResolvers(

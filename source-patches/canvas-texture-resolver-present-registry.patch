@@ -1,0 +1,16 @@
+diff --git a/packages/scene2d-canvas/src/canvasTextureResolver.ts b/packages/scene2d-canvas/src/canvasTextureResolver.ts
+--- a/packages/scene2d-canvas/src/canvasTextureResolver.ts
++++ b/packages/scene2d-canvas/src/canvasTextureResolver.ts
+@@ -80,7 +80,11 @@ export function registerCanvasTextureResolver(
+   sourceKind: TextureSourceKind,
+   resolver: CanvasTextureResolver | null,
+ ): void {
+-  const registry = (resolvers.registry ??= new Map());
++  let registry = resolvers.registry;
++  if (registry == null) {
++    registry = new Map();
++    resolvers.registry = registry;
++  }
+   if (resolver === null) registry.delete(sourceKind);
+   else registry.set(sourceKind, resolver);
+ }

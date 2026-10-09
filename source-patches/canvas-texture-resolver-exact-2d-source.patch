@@ -1,0 +1,22 @@
+diff --git a/packages/scene2d-canvas/src/canvasTextureResolver.ts b/packages/scene2d-canvas/src/canvasTextureResolver.ts
+--- a/packages/scene2d-canvas/src/canvasTextureResolver.ts
++++ b/packages/scene2d-canvas/src/canvasTextureResolver.ts
+@@ -1,6 +1,5 @@
+ import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
+ import { getRenderStateRuntime } from '@flighthq/render/contract';
+-import { getTextureSourceKind } from '@flighthq/texture/contract';
+ import type {
+   CanvasRenderSurface,
+   CanvasRenderSurfaceCreator,
+@@ -88,8 +87,9 @@ export function resolveCanvasTexture(
+   texture: Readonly<Texture>,
+ ): CanvasImageSource | null {
+   if (texture.dimension !== '2d') return null;
+-  const sourceKind = getTextureSourceKind(texture);
+-  if (sourceKind === null) return null;
++  const source = texture.source;
++  if (source === null) return null;
++  const sourceKind = source.kind;
+   const resolver = resolvers.registry?.get(sourceKind);
+   if (resolver === undefined) {
+     resolvers.registryMiss?.(RenderRegistryTable.TextureResolver, sourceKind);

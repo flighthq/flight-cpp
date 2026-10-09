@@ -1,0 +1,516 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -13349,6 +13349,100 @@ export interface CanvasTextureResolvers extends Entity {
+     expect(resolved).not.toContain('reinterpret_cast');
+   });
+ 
++  it('keeps an imported host-image alias intact for a contextual callable result', () => {
++    const moduleResolution: CompilerModuleResolutionPlan = {
++      edges: [
++        {
++          specifier: './host-image',
++          target: { packageName: '@flighthq/types', source: 'packages/types/src/host-image.ts' },
++        },
++      ],
++      schema: 'flight-compiler-module-resolution/1',
++    };
++    const source = (file: string, body: string) => ({
++      packageName: '@flighthq/types',
++      sourceFile: ts.createSourceFile(`/flight/packages/types/src/${file}`, body, ts.ScriptTarget.Latest, true),
++      upstreamDirectory: '/flight',
++    });
++    const results = lowerTypeScriptSources(
++      [
++        source(
++          'host-image.ts',
++          `export type HostImageSource = CanvasImageSource;
++           export interface CanvasTextureResolvers { readonly marker: string; }
++           export interface Texture { readonly dimension: string; }
++           export type CanvasTextureResolver = (
++             resolvers: CanvasTextureResolvers,
++             texture: Readonly<Texture>,
++           ) => HostImageSource | null;`,
++        ),
++        source(
++          'consumer.ts',
++          `import type {
++             CanvasTextureResolver,
++             CanvasTextureResolvers,
++             HostImageSource,
++             Texture,
++           } from './host-image';
++           export function resolveCanvasTexture(
++             resolver: CanvasTextureResolver,
++             resolvers: CanvasTextureResolvers,
++             texture: Readonly<Texture>,
++           ): HostImageSource | null {
++             return resolver(resolvers, texture);
++           }`,
++        ),
++      ],
++      moduleResolution,
++    );
++    const imageSources = [
++      'CanvasImageSource',
++      'HTMLImageElement',
++      'HTMLVideoElement',
++      'ImageBitmap',
++      'OffscreenCanvas',
++      'SVGImageElement',
++      'VideoFrame',
++    ];
++    const externalBindings = {
++      bindings: [
++        ...imageSources.map((sourceName) => ({
++          headers: ['host/image.hpp'],
++          nullability: 'non-null' as const,
++          ownership: 'shared' as const,
++          sourceName,
++          space: 'type' as const,
++          targetName: 'host::ImageSource',
++        })),
++        {
++          headers: ['host/canvas.hpp'],
++          nullability: 'non-null' as const,
++          ownership: 'shared' as const,
++          sourceName: 'HTMLCanvasElement',
++          space: 'type' as const,
++          targetName: 'host::CanvasSurface',
++        },
++      ],
++      schema: 'flight-cpp-external-bindings/1' as const,
++    };
++    const session = createCppCompilerBackend().createEmissionSession!({
++      moduleResolution,
++      modules: results.map((result) => result.module),
++      options: { externalBindings, runtimeProfile: 'flight-cpp' },
++    });
++    const consumer = results.find((result) => result.module.source.endsWith('consumer.ts'))!;
++    const contents = session.emitModule(consumer.module)[0]!.contents;
++
++    expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
++    expect(contents).toContain('return resolver(resolvers,');
++    expect(contents).toContain('std::optional<flight::Ref<flighthq_types::HostImageSource>>');
++    expect(contents).not.toContain('std::variant');
++    expect(contents).not.toContain('HTMLImageElement');
++    expect(contents).not.toContain('flight::Any');
++    expect(contents).not.toContain('static_cast');
++    expect(contents).not.toContain('reinterpret_cast');
++  });
++
+   it('separates MeshGeometry index input absence from required nullable live storage', () => {
+     // The two typed-array widths are runtime-native value alternatives. Required null and optional
+     // undefined each need one outer absence, while the current optional-nullable construction input needs
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -4224,7 +4224,10 @@ function emitExpression(
+       const invocation = `${invocationTarget}${emitCppTypeArguments(typeArguments, context)}(${args.join(', ')})`;
+       const returnType = getIrCallReturnTypeCpp(expression, context);
+       const returnUnion = returnType ? getIrUnionTypeCpp(returnType, context, new Set()) : undefined;
+-      const returnPlan = returnUnion ? getCppUnionRepresentationPlan(returnUnion, context) : undefined;
++      const returnPlan =
++        expression.presence === 'narrowedPresent' && returnUnion
++          ? getCppUnionRepresentationPlan(returnUnion, context)
++          : undefined;
+       return expression.presence === 'narrowedPresent' && returnPlan?.kind === 'optionalSingle'
+         ? `${invocation}.value()`
+         : invocation;
+@@ -11544,6 +11547,7 @@ function getCppNonNullableType(
+   if (resolvingAliases.has(bindingId)) return type;
+   const alias = resolveCppTypeAliasTarget(type, context);
+   if (!alias) return type;
++  if (isCppImportedUnionAliasAbiCarrierCpp(type, alias, context)) return type;
+   const nextResolvingAliases = new Set(resolvingAliases);
+   nextResolvingAliases.add(bindingId);
+   return getCppNonNullableType(alias, context, nextResolvingAliases);
+@@ -16683,6 +16687,17 @@ function getCppUnionRepresentationPlan(
+   context: EmitContext,
+ ): Exclude<ReturnType<typeof createCppUnionRepresentationPlan>, { kind: 'refused' }> {
+   const plan = createCppUnionRepresentationPlan(type, {
++    isExactAbiCarrier(runtimeType) {
++      return (
++        runtimeType.kind === 'named' &&
++        runtimeType.reference.kind === 'ambient' &&
++        getCompilerExternalBindingEvidenceCpp(
++          runtimeType.reference.name,
++          'type',
++          context.options.externalBindings,
++        ) !== undefined
++      );
++    },
+     resolveAliasTarget(typeReference) {
+       return resolveCppTypeAliasTarget(typeReference, context);
+     },
+@@ -16714,6 +16729,57 @@ function getCppUnionRepresentationPlan(
+   return plan;
+ }
+ 
++function isCppImportedUnionAliasAbiCarrierCpp(
++  type: Readonly<Extract<IrType, { kind: 'named' }>>,
++  alias: Readonly<IrType>,
++  context: EmitContext,
++): boolean {
++  if (type.reference.kind !== 'binding' || type.reference.binding.kind !== 'import') return false;
++  const isolatedContext = { ...context, anonymousStructs: new Map(), includes: new Set<string>() };
++  const visit = (candidate: Readonly<IrType>, resolvingAliases: ReadonlySet<string>): boolean => {
++    if (candidate.kind === 'union') {
++      return (
++        createCppUnionRepresentationPlan(candidate, {
++          resolveAliasTarget(typeReference) {
++            return resolveCppTypeAliasTarget(typeReference, isolatedContext);
++          },
++          resolveRuntimeIdentityKey(runtimeType) {
++            return getCppUnionRuntimeIdentityKeyCpp(runtimeType, isolatedContext);
++          },
++          resolveRuntimeDomain(runtimeType) {
++            return getIrTypeRuntimeDomainCpp(runtimeType, isolatedContext, new Set());
++          },
++          resolveTargetType(runtimeType) {
++            return emitType(runtimeType, isolatedContext);
++          },
++        }).kind === 'refused' || candidate.types.some((member) => visit(member, resolvingAliases))
++      );
++    }
++    if (candidate.kind === 'function') {
++      return (
++        visit(candidate.returns, resolvingAliases) ||
++        candidate.parameters.some((parameter) => visit(parameter.type, resolvingAliases))
++      );
++    }
++    if (candidate.kind !== 'named') return false;
++    if (
++      candidate.reference.kind === 'ambient' &&
++      getCompilerExternalBindingEvidenceCpp(candidate.reference.name, 'type', context.options.externalBindings) !==
++        undefined
++    ) {
++      return true;
++    }
++    const aliasKey =
++      candidate.reference.kind === 'binding'
++        ? candidate.reference.binding.id
++        : normalizeCompilerStructuralValueCanonical(candidate);
++    if (resolvingAliases.has(aliasKey)) return false;
++    const nested = resolveCppTypeAliasTarget(candidate, isolatedContext);
++    return nested ? visit(nested, new Set(resolvingAliases).add(aliasKey)) : false;
++  };
++  return visit(alias, new Set([type.reference.binding.id]));
++}
++
+ function getCppUnionRuntimeIdentityKeyCpp(type: Readonly<IrType>, context: EmitContext): string {
+   if (type.kind !== 'named' || type.reference.kind !== 'binding' || type.reference.binding.kind !== 'import') {
+     return normalizeCompilerStructuralValueCanonical(type);
+@@ -16754,6 +16820,8 @@ function getCppUnionAliasDeclarationOwnerCpp(
+   const alias =
+     expectedType.kind === 'union' ? getCppOptionalImportedUnionValueAliasCpp(expectedType, context) : expectedType;
+   if (!alias || alias.kind !== 'named' || alias.reference.kind !== 'binding') return undefined;
++  const aliasTarget = resolveCppTypeAliasTarget(alias, context);
++  if (aliasTarget && isCppImportedUnionAliasAbiCarrierCpp(alias, aliasTarget, context)) return undefined;
+   const reference = alias.reference;
+   // Only an import crosses a module boundary. A local alias and an inline union keep their own
+   // ownership, which is what they already had.
+@@ -16967,7 +17035,9 @@ function emitContextualUnionExpressionInContextCpp(
+   expectedType: Readonly<IrType>,
+   context: EmitContext,
+ ): string | undefined {
+-  const union = getIrUnionTypeCpp(expectedType, context, new Set());
++  const union =
++    getCppOptionalImportedAliasCarrierUnionCpp(expectedType, context) ??
++    getIrUnionTypeCpp(expectedType, context, new Set());
+   if (!union || expression.kind === 'conditional') return undefined;
+   const plan = getCppUnionRepresentationPlan(union, context);
+   if (
+@@ -17077,6 +17147,9 @@ function emitContextualUnionExpressionInContextCpp(
+     }
+   }
+   assertIrExpressionHasNoDualSentinelOptionalChainCpp(expression, context);
++  if (expression.kind === 'call' && isCppExactImportedCarrierCallResultCpp(expression, union, context)) {
++    return emitExpression(expression, context, undefined, false);
++  }
+   if (
+     (expression.kind === 'call' && (expression.optional || expression.semantics.optionalChain)) ||
+     (expression.kind === 'element' && (expression.optional || expression.semantics.optionalChain)) ||
+@@ -17224,7 +17297,9 @@ function emitContextualUnionExpressionInContextCpp(
+       `cpp-contextual-union-missing-expression-type:${plan.kind}`,
+     );
+   }
+-  const expressionUnion = getIrUnionTypeCpp(expressionType, context, new Set());
++  const expressionUnion =
++    getCppOptionalImportedAliasCarrierUnionCpp(expressionType, context) ??
++    getIrUnionTypeCpp(expressionType, context, new Set());
+   if (expressionUnion) {
+     const expressionPlan = getCppUnionRepresentationPlan(expressionUnion, context);
+     if (
+@@ -20770,6 +20845,7 @@ function getIrTypeRuntimeDomainCpp(
+   }
+   const alias = resolveCppTypeAliasTarget(type, context);
+   if (!alias) return type;
++  if (isCppImportedUnionAliasAbiCarrierCpp(type, alias, context)) return type;
+   const nextResolvingAliases = new Set(resolvingAliases);
+   nextResolvingAliases.add(bindingId);
+   return getIrTypeRuntimeDomainCpp(alias, context, nextResolvingAliases);
+@@ -29005,17 +29081,73 @@ function getCppOptionalImportedUnionValueAliasCpp(
+   const values = type.types.filter((member) => member.kind !== 'null' && member.kind !== 'undefined');
+   if (sentinels.length !== 1 || values.length !== 1) return undefined;
+   const value = getCppIdentityPreservingUtilityArgument(values[0]!) ?? values[0];
++  const alias = value?.kind === 'named' ? resolveCppTypeAliasTarget(value, context) : undefined;
+   if (
+     value?.kind !== 'named' ||
+     value.reference.kind !== 'binding' ||
+     value.reference.binding.kind !== 'import' ||
+-    resolveCppTypeAliasTarget(value, context)?.kind !== 'union'
++    !alias ||
++    (alias.kind !== 'union' && !isCppImportedUnionAliasAbiCarrierCpp(value, alias, context))
+   ) {
+     return undefined;
+   }
+   return value;
+ }
+ 
++function getCppOptionalImportedAliasCarrierUnionCpp(
++  type: Readonly<IrType>,
++  context: EmitContext,
++): Readonly<Extract<IrType, { kind: 'union' }>> | undefined {
++  if (type.kind !== 'union') return undefined;
++  const alias = getCppOptionalImportedUnionValueAliasCpp(type, context);
++  const aliasTarget = alias ? resolveCppTypeAliasTarget(alias, context) : undefined;
++  if (!alias || !aliasTarget || !isCppImportedUnionAliasAbiCarrierCpp(alias, aliasTarget, context)) return undefined;
++  const absentMembers = type.types.filter(
++    (member): member is Extract<IrType, { kind: 'null' | 'undefined' }> =>
++      member.kind === 'null' || member.kind === 'undefined',
++  );
++  if (!absentMembers[0]) return undefined;
++  return { kind: 'union', types: [alias, absentMembers[0], ...absentMembers.slice(1)] };
++}
++
++function isCppExactImportedCarrierCallResultCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'call' }>>,
++  expectedUnion: Readonly<Extract<IrType, { kind: 'union' }>>,
++  context: EmitContext,
++): boolean {
++  const expectedAlias = getCppOptionalImportedUnionValueAliasCpp(expectedUnion, context);
++  const expectedTarget = expectedAlias ? resolveCppTypeAliasTarget(expectedAlias, context) : undefined;
++  if (!expectedAlias || !expectedTarget || !isCppImportedUnionAliasAbiCarrierCpp(expectedAlias, expectedTarget, context)) {
++    return false;
++  }
++  const calleeType = getIrExpressionTypeEvidenceCpp(expression.callee, context);
++  const returns = calleeType ? getCppCallableReturnType(calleeType, context, new Set()) : undefined;
++  if (!returns || returns.kind !== 'union') return false;
++  const expectedSentinels = expectedUnion.types.filter(
++    (member): member is Extract<IrType, { kind: 'null' | 'undefined' }> =>
++      member.kind === 'null' || member.kind === 'undefined',
++  );
++  const returnSentinels = returns.types.filter(
++    (member): member is Extract<IrType, { kind: 'null' | 'undefined' }> =>
++      member.kind === 'null' || member.kind === 'undefined',
++  );
++  const returnValues = returns.types.filter((member) => member.kind !== 'null' && member.kind !== 'undefined');
++  if (
++    expectedSentinels.length !== 1 ||
++    returnSentinels.length !== 1 ||
++    expectedSentinels[0]!.kind !== returnSentinels[0]!.kind ||
++    returnValues.length !== 1 ||
++    returnValues[0]!.kind !== 'named'
++  ) {
++    return false;
++  }
++  const returnTarget = resolveCppTypeAliasTarget(returnValues[0], context);
++  return (
++    returnTarget !== undefined &&
++    normalizeCompilerStructuralValueCanonical(returnTarget) === normalizeCompilerStructuralValueCanonical(expectedTarget)
++  );
++}
++
+ function hasIndexedRuntimeReceiverCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'element' }>>,
+   context: EmitContext,
+diff --git a/packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.test.ts b/packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.test.ts
+--- a/packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.test.ts
++++ b/packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.test.ts
+@@ -191,6 +191,74 @@ describe('createCppUnionRepresentationPlan', () => {
+     });
+   });
+ 
++  it('preserves only imported aliases that contain a same-target union collision', () => {
++    const resolver = namedImportedAlias('CanvasTextureResolver');
++    const hostImage = namedImportedAlias('HostImageSource');
++    const canvasImage = namedAmbient('CanvasImageSource');
++    const textureSource = namedImportedAlias('TextureSourceValue');
++    const kind = namedImportedAlias('TextureSourceKind');
++    if (
++      resolver.reference.kind !== 'binding' ||
++      hostImage.reference.kind !== 'binding' ||
++      textureSource.reference.kind !== 'binding' ||
++      kind.reference.kind !== 'binding'
++    ) {
++      throw new Error('Expected imported aliases');
++    }
++    const aliases = new Map<string, Readonly<IrType>>([
++      [
++        resolver.reference.binding.id,
++        {
++          kind: 'function',
++          parameters: [],
++          returns: union(hostImage, { kind: 'null' }),
++          typeParameters: [],
++        },
++      ],
++      [hostImage.reference.binding.id, canvasImage],
++      [textureSource.reference.binding.id, union(namedAmbient('Bitmap'), namedAmbient('ImageResource'))],
++      [kind.reference.binding.id, primitive('string')],
++    ]);
++    const target = (type: Readonly<IrType>): string => {
++      if (type === resolver) return 'flighthq_types::CanvasTextureResolver';
++      if (type === textureSource) return 'flighthq_types::TextureSourceValue';
++      if (type.kind === 'named' && type.reference.kind === 'ambient') {
++        return type.reference.name === 'Bitmap' || type.reference.name === 'ImageResource'
++          ? `flighthq_types::${type.reference.name}`
++          : 'host::ImageSource';
++      }
++      return getTargetType(type);
++    };
++
++    expect(
++      createPlan(
++        union(resolver, { kind: 'undefined' }),
++        aliases,
++        target,
++        () => undefined,
++        undefined,
++        (type) =>
++          type.kind === 'named' &&
++          type.reference.kind === 'ambient' &&
++          type.reference.name === 'CanvasImageSource',
++      ),
++    ).toMatchObject({
++      kind: 'optionalSingle',
++      valueSlots: [{ runtimeType: resolver, targetType: 'flighthq_types::CanvasTextureResolver' }],
++    });
++    expect(createPlan(union(textureSource, { kind: 'null' }), aliases, target)).toMatchObject({
++      kind: 'optionalVariant',
++      valueSlots: [
++        { runtimeType: namedAmbient('Bitmap'), targetType: 'flighthq_types::Bitmap' },
++        { runtimeType: namedAmbient('ImageResource'), targetType: 'flighthq_types::ImageResource' },
++      ],
++    });
++    expect(createPlan(union(kind, primitive('string')), aliases, target)).toMatchObject({
++      kind: 'singleValue',
++      valueSlots: [{ runtimeType: primitive('string'), targetType: 'std::string' }],
++    });
++  });
++
+   it('returns order-independent deeply immutable evidence without changing caller input', () => {
+     const firstInput = union(primitive('string'), { kind: 'undefined' }, primitive('number'));
+     const secondInput = union(primitive('number'), primitive('string'), { kind: 'undefined' });
+@@ -216,10 +284,16 @@ function createPlan(
+   resolveTargetType: (type: Readonly<IrType>) => string = getTargetType,
+   resolveRuntimeDomain: (type: Readonly<IrType>) => Readonly<IrType> | undefined = () => undefined,
+   resolveRuntimeIdentityKey?: (type: Readonly<IrType>) => string,
++  isExactAbiCarrier?: (type: Readonly<IrType>) => boolean,
+ ) {
+   return createCppUnionRepresentationPlan(type, {
++    ...(isExactAbiCarrier ? { isExactAbiCarrier } : {}),
+     resolveAliasTarget(typeReference) {
+-      return typeReference.reference.kind === 'binding' ? aliases.get(typeReference.reference.binding.id) : undefined;
++      return aliases.get(
++        typeReference.reference.kind === 'binding'
++          ? typeReference.reference.binding.id
++          : `ambient:${typeReference.reference.name}`,
++      );
+     },
+     ...(resolveRuntimeIdentityKey ? { resolveRuntimeIdentityKey } : {}),
+     resolveRuntimeDomain,
+@@ -271,6 +345,29 @@ function namedAlias(name: string): IrTypeReference {
+   };
+ }
+ 
++function namedImportedAlias(name: string): IrTypeReference {
++  return {
++    kind: 'named',
++    reference: {
++      binding: {
++        column: 1,
++        fingerprint: `sha256:${name}`,
++        id: `import:${name}`,
++        kind: 'import',
++        line: 1,
++        name,
++        packageName: '@flighthq/consumer',
++        scope: 'module',
++        source: 'consumer.ts',
++        space: 'type',
++      },
++      kind: 'binding',
++      path: [],
++    },
++    typeArguments: [],
++  };
++}
++
+ function namedAmbient(name: string): IrTypeReference {
+   return { kind: 'named', reference: { kind: 'ambient', name }, typeArguments: [] };
+ }
+diff --git a/packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.ts b/packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.ts
+--- a/packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.ts
++++ b/packages/compiler-backend-cpp/src/cppUnionRepresentationPlan.ts
+@@ -25,6 +25,7 @@ type CppUnionRepresentationPlan =
+     }>;
+ 
+ interface CppUnionRepresentationPlanningCapabilities {
++  readonly isExactAbiCarrier?: (type: Readonly<IrType>) => boolean;
+   readonly resolveAliasTarget: (type: Readonly<IrTypeReference>) => Readonly<IrType> | undefined;
+   readonly resolveRuntimeIdentityKey?: (type: Readonly<IrType>) => string;
+   readonly resolveRuntimeDomain: (type: Readonly<IrType>) => Readonly<IrType> | undefined;
+@@ -153,6 +154,38 @@ function cloneCppUnionRepresentationPlan<T extends CppUnionRepresentationPlan>(p
+   return clone;
+ }
+ 
++function hasCppUnionTargetCollisionInType(
++  type: Readonly<IrType>,
++  capabilities: Readonly<CppUnionRepresentationPlanningCapabilities>,
++  resolvingAliases: ReadonlySet<string>,
++): boolean {
++  if (type.kind === 'union') {
++    return (
++      createCppUnionRepresentationPlan(type, capabilities).kind === 'refused' ||
++      type.types.some((member) => hasCppUnionTargetCollisionInType(member, capabilities, resolvingAliases))
++    );
++  }
++  if (type.kind === 'function') {
++    return (
++      hasCppUnionTargetCollisionInType(type.returns, capabilities, resolvingAliases) ||
++      type.parameters.some((parameter) =>
++        hasCppUnionTargetCollisionInType(parameter.type, capabilities, resolvingAliases),
++      )
++    );
++  }
++  if (type.kind !== 'named') return false;
++  if (capabilities.isExactAbiCarrier?.(type)) return true;
++  const aliasKey =
++    type.reference.kind === 'binding'
++      ? type.reference.binding.id
++      : normalizeCompilerStructuralValueCanonical(type);
++  if (resolvingAliases.has(aliasKey)) return false;
++  const alias = capabilities.resolveAliasTarget(type);
++  return alias
++    ? hasCppUnionTargetCollisionInType(alias, capabilities, new Set(resolvingAliases).add(aliasKey))
++    : false;
++}
++
+ function collectRuntimeAlternativeCpp(
+   type: Readonly<IrType>,
+   sourceAlternative: Readonly<IrType>,
+@@ -177,7 +210,11 @@ function collectRuntimeAlternativeCpp(
+   if (type.kind === 'named' && type.reference.kind === 'binding' && type.typeArguments.length === 0) {
+     const bindingId = type.reference.binding.id;
+     const aliasTarget = capabilities.resolveAliasTarget(type);
+-    if (aliasTarget && !resolvingAliases.has(bindingId)) {
++    const importedCollisionCarrier =
++      type.reference.binding.kind === 'import' &&
++      aliasTarget !== undefined &&
++      hasCppUnionTargetCollisionInType(aliasTarget, capabilities, new Set(resolvingAliases).add(bindingId));
++    if (aliasTarget && !importedCollisionCarrier && !resolvingAliases.has(bindingId)) {
+       const nextResolvingAliases = new Set(resolvingAliases);
+       nextResolvingAliases.add(bindingId);
+       collectRuntimeAlternativeCpp(aliasTarget, sourceAlternative, capabilities, inventory, nextResolvingAliases);

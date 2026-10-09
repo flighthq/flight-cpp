@@ -1,0 +1,65 @@
+diff --git a/packages/scene2d-canvas/src/canvasTextureResolver.ts b/packages/scene2d-canvas/src/canvasTextureResolver.ts
+--- a/packages/scene2d-canvas/src/canvasTextureResolver.ts
++++ b/packages/scene2d-canvas/src/canvasTextureResolver.ts
+@@ -20,7 +20,10 @@ export function acquireCanvasTextureResolverSurface(
+   options: Readonly<CanvasRenderSurfaceOptions>,
+ ): CanvasRenderSurface | null {
+   const surface = acquireCanvasRenderSurface(resolvers.surfaceCreator, options);
+-  if (surface !== null) _ownedSurfaces.get(resolvers)?.add(surface);
++  if (surface !== null) {
++    const surfaces = _ownedSurfaces.get(resolvers);
++    if (surfaces !== undefined) surfaces.add(surface);
++  }
+   return surface;
+ }
+ 
+@@ -37,8 +40,8 @@ export function acquireCanvasTextureResolverSurface(
+ // The closure reads the emitter at call time, so the order against enabling guards does not matter.
+ export function connectCanvasTextureResolverMisses(resolvers: CanvasTextureResolvers, state: RenderState): void {
+   const runtime = getRenderStateRuntime(state);
+   resolvers.registryMiss = (registry, kind): void => {
+-    runtime.registryMiss?.(registry, kind);
++    if (runtime.registryMiss !== null) runtime.registryMiss(registry, kind);
+   };
+ }
+ 
+@@ -53,10 +56,11 @@ export function createCanvasTextureResolvers(
+ export function destroyCanvasTextureResolvers(resolvers: CanvasTextureResolvers): void {
+   const surfaces = _ownedSurfaces.get(resolvers);
+   if (surfaces === undefined) return;
+   _ownedSurfaces.delete(resolvers);
+   for (const surface of surfaces) destroyCanvasRenderSurface(surface);
+   surfaces.clear();
+-  resolvers.registry?.clear();
++  const registry = resolvers.registry;
++  if (registry != null) registry.clear();
+   resolvers.registry = null;
+   resolvers.registryMiss = null;
+ }
+@@ -91,15 +95,24 @@ export function registerCanvasTextureResolver(
+ export function resolveCanvasTexture(
+   resolvers: CanvasTextureResolvers,
+   texture: Readonly<Texture>,
+ ): CanvasImageSource | null {
+   if (texture.dimension !== '2d') return null;
+   const source = texture.source;
+   if (source === null) return null;
+   const sourceKind = source.kind;
+-  const resolver = resolvers.registry?.get(sourceKind);
++  const registry = resolvers.registry;
++  if (registry == null) {
++    if (resolvers.registryMiss != null) {
++      resolvers.registryMiss(RenderRegistryTable.TextureResolver, sourceKind);
++    }
++    return null;
++  }
++  const resolver = registry.get(sourceKind);
+   if (resolver === undefined) {
+-    resolvers.registryMiss?.(RenderRegistryTable.TextureResolver, sourceKind);
++    if (resolvers.registryMiss != null) {
++      resolvers.registryMiss(RenderRegistryTable.TextureResolver, sourceKind);
++    }
+     return null;
+   }
+   return resolver(resolvers, texture);
+ }
