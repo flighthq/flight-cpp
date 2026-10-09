@@ -89,7 +89,7 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentCube.ts b/packages/scene3d-gl/
    }
 @@ -137,7 +145,13 @@ function hasGlCubeFacePixels(cube: Readonly<CubeTexture>): boolean {
 -function isGlEnvironmentSourceCubeCurrent(runtime: Readonly<GlScene3DRuntime>, cube: Readonly<CubeTexture>): boolean {
-+function isGlEnvironmentSourceCubeCurrent(runtime: Readonly<GlScene3DRuntime>, cube: CubeTexture): boolean {
++function isGlEnvironmentSourceCubeCurrent(runtime: GlScene3DRuntime, cube: CubeTexture): boolean {
 +  const texture: WebGLTexture | null = runtime.environmentSourceCube;
 +  const trackedCube: Texture | null = runtime.environmentSourceTexture;
 +  const trackedVersion: number = runtime.environmentSourceTextureVersion;
