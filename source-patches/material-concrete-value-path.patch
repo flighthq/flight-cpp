@@ -72,17 +72,21 @@ diff --git a/packages/scene3d-gl/src/glMeshProgram.ts b/packages/scene3d-gl/src/
 index c19a6e1..1b7a43b 100644
 --- a/packages/scene3d-gl/src/glMeshProgram.ts
 +++ b/packages/scene3d-gl/src/glMeshProgram.ts
-@@ -9,3 +9,3 @@ import type {
+@@ -9,7 +9,6 @@ import type {
    GlRenderState,
 -  Material,
 +  MaterialValue,
    MeshGeometry,
+   Scene3DRenderProxy,
+-  SurfaceMaterial,
+   TextureLike,
+ } from '@flighthq/types/contract';
 @@ -332,4 +332,4 @@ export function setGlMeshViewProjection(
  // registry falls back to anyway.
 -function isGlMeshAlphaCoverage(material: Readonly<Material> | null): boolean {
 -  return material !== null && (material as Readonly<SurfaceMaterial>).alphaMode === 'blend';
 +function isGlMeshAlphaCoverage(material: Readonly<MaterialValue> | null): boolean {
-+  return material !== null && (material as Readonly<Partial<SurfaceMaterial>>).alphaMode === 'blend';
++  return material !== null && material.alphaMode === 'blend';
  }
 @@ -470,3 +470,3 @@ export function uploadGlMeshDrawAlpha(
    alpha: number,
@@ -162,14 +166,15 @@ index ab3dc3a..b8dd423 100644
    Mesh,
 -  MeshSubset,
    Scene3DLightsLike,
-@@ -30,2 +28,3 @@ import type {
+@@ -30,3 +28,3 @@ import type {
    Scene3DRenderProxy,
 +  StandardMaterial,
-   SurfaceMaterial,
+-  SurfaceMaterial,
+   GlScene3DDrawEntry,
 @@ -170,3 +169,3 @@ export function renderGlScene3D(
    // Pass 1: opaque + mask subsets sorted by material. No blending; depth-write on (set by bind).
 -  let boundMaterial: Readonly<Material> | null | undefined = undefined;
-+  let boundMaterial: Readonly<MaterialValue> | null | undefined = undefined;
++  let boundMaterial: Readonly<MaterialValue> | null = null;
    let boundLightBlock: Readonly<Scene3DLightBlock> | null = null;
 @@ -179,4 +178,4 @@ export function renderGlScene3D(
    for (let i = 0; i < opaqueDrawList.length; i++) {
@@ -178,6 +183,11 @@ index ab3dc3a..b8dd423 100644
 +    const entry = opaqueDrawList[i];
 +    const worldMatrix = entry.worldMatrix;
      setMatrix3NormalFromMatrix4(scratchNormalMatrix, worldMatrix);
+@@ -231,3 +230,3 @@ export function renderGlScene3D(
+-    boundMaterial = undefined;
++    boundMaterial = null;
+     boundLightBlock = null;
+     boundRenderer = null;
 @@ -238,4 +237,4 @@ export function renderGlScene3D(
      for (let i = 0; i < blendedDrawList.length; i++) {
 -      const entry = blendedDrawList[i] as DrawEntry;
@@ -190,15 +200,17 @@ index ab3dc3a..b8dd423 100644
 -function isBlendedMaterial(material: Readonly<Material>): boolean {
 -  return (material as Readonly<SurfaceMaterial>).alphaMode === 'blend';
 +function isBlendedMaterial(material: Readonly<MaterialValue>): boolean {
-+  return (material as Readonly<Partial<SurfaceMaterial>>).alphaMode === 'blend';
++  return material.alphaMode === 'blend';
  }
-@@ -375,4 +374,4 @@ function isBlendedMaterial(material: Readonly<Material>): boolean {
+@@ -375,6 +374,5 @@ function isBlendedMaterial(material: Readonly<Material>): boolean {
  // declares alphaMode 'blend'.
 -function applyGlSurfaceBlendMode(state: GlRenderState, material: Readonly<Material>): void {
 -  const surface = material as Readonly<SurfaceMaterial>;
 +function applyGlSurfaceBlendMode(state: GlRenderState, material: Readonly<MaterialValue>): void {
-+  const surface = material as Readonly<Partial<SurfaceMaterial>>;
    const blendMode =
+-    surface.alphaMode === 'blend' && typeof surface.blendMode === 'string' ? surface.blendMode : BlendMode.Normal;
++    material.alphaMode === 'blend' ? resolveAuthoredBlendMode(material.blendMode) : BlendMode.Normal;
+   if (state.applyBlendMode === null) enableGlBlendModeSupport(state);
 @@ -389,3 +388,3 @@ function hasExcessForwardLights(lights: Readonly<Scene3DLightsLike>): boolean {
  // slot is absent/null (the registry then falls back to StandardMaterialKind, or skips the subset).
 -function resolveSubsetMaterial(mesh: Readonly<Mesh>, subsetIndex: number): Readonly<Material> | null {
@@ -247,7 +259,7 @@ index ab3dc3a..b8dd423 100644
 -function acquireSortKey(renderer: object, material: object): number {
 +function acquireSortKey(renderer: GlMeshMaterialRenderer, material: Readonly<MaterialValue>): number {
    let rk = sortKeyMap.get(renderer);
-@@ -517,3 +502,3 @@ function resolveInstancedMeshSubsetMaterial(
+@@ -517,3 +500,3 @@ function resolveInstancedMeshSubsetMaterial(
    subsetIndex: number,
 -): Readonly<Material> | null {
 +): Readonly<MaterialValue> | null {
@@ -469,6 +481,18 @@ index 1d31818..afd4a8c 100644
 -  materials: (Material | null)[];
 +  materials: (MaterialValue | null)[];
    version: number;
+diff --git a/packages/types/src/Material.ts b/packages/types/src/Material.ts
+--- a/packages/types/src/Material.ts
++++ b/packages/types/src/Material.ts
+@@ -17,4 +17,8 @@ export interface Material extends Entity {
+ export interface Material extends Entity {
+   readonly kind: Kind;
++  // Optional capabilities used by surface-aware backends; non-surface and vendor materials may omit them.
++  // SurfaceMaterial makes both required. Keeping them here preserves open-kind duck typing without a cast.
++  alphaMode?: 'blend' | 'mask' | 'opaque';
++  blendMode?: string;
+   // The authored material name — an importer preserves the source file's material identity here
+   // (an MTL `newmtl`, a glTF `material.name`, a 3DS material chunk), so a material stays
 diff --git a/packages/types/src/MaterialValue.ts b/packages/types/src/MaterialValue.ts
 new file mode 100644
 index 0000000..f9ba745
