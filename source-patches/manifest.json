@@ -1074,6 +1074,23 @@
       "unblocks": "Allows camera projection and prepared Scene3D traversal to derive aspect from either an active render target or the SDL GL drawing buffer.",
       "expires": "when flight-compiler coalesces Web IDL numeric aliases with primitive number domains, or Flight adopts the explicit numeric normalization upstream.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-gl-explicit-environment-carriers",
+      "dependency": "flight",
+      "patch": "scene3d-gl-explicit-environment-carriers.patch",
+      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "module": "packages/scene3d-gl/src/glEnvironmentCube.ts and glEnvironmentIblBake.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "contextual optionalSingle construction lacks expression evidence for the cube-face version map, and inferred new Map storage expands GlBakeProgram into an incompatible anonymous structural owner",
+      "rewrite": "Builds the six face-version numbers with an explicit null branch and gives the newly allocated IBL program map its already-declared Map<string, GlBakeProgram> type arguments.",
+      "equivalence": "The loop visits the same source array in order and appends exactly source.version for a present face or -1 for null, matching the previous map and optional-chain expression. The generic Map arguments erase in JavaScript; the same empty map is allocated, stored under the same render-state key, populated with the same program records, and destroyed through the same cache.",
+      "verification": "The patch composes after the complete Flight source-patch stack. Full Scene3D GL regeneration verifies both environment modules emit, after which generated headers are compiled with the SDL GL binding profile.",
+      "whyNotUpstreamFirst": "Both refusals are caused by the pinned emitter losing contextual carrier evidence across concise inference constructs. The expanded forms are target-neutral statements of types and branches the TypeScript source already guarantees.",
+      "unblocks": "Allows source environment cubemaps and the irradiance, prefilter, and BRDF IBL bake programs used by real PBR materials to reach generated C++.",
+      "expires": "when flight-compiler preserves optional expression evidence in array map callbacks and declared Map owner types through empty construction, or Flight adopts the explicit forms upstream.",
+      "appliedOn": "2026-10-08"
     }
   ]
 }

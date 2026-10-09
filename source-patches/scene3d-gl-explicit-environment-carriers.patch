@@ -1,0 +1,26 @@
+diff --git a/packages/scene3d-gl/src/glEnvironmentCube.ts b/packages/scene3d-gl/src/glEnvironmentCube.ts
+--- a/packages/scene3d-gl/src/glEnvironmentCube.ts
++++ b/packages/scene3d-gl/src/glEnvironmentCube.ts
+@@ -121,7 +121,9 @@ export function updateGlEnvironmentCubeFace(
+ // A face is uploadable when it carries pixels in either representation: a decoded `source` element or
+ // raw CPU `data` (a generated Bitmap). A cube is complete only when all six faces are uploadable.
+ function getGlEnvironmentSourceCubeFaceVersions(cube: Readonly<CubeTexture>): readonly number[] {
+-  return cube.sources.map((source) => source?.version ?? -1);
++  const versions: number[] = [];
++  for (const source of cube.sources) versions.push(source === null ? -1 : source.version);
++  return versions;
+ }
+ 
+ function hasGlCubeFacePixels(cube: Readonly<CubeTexture>): boolean {
+diff --git a/packages/scene3d-gl/src/glEnvironmentIblBake.ts b/packages/scene3d-gl/src/glEnvironmentIblBake.ts
+--- a/packages/scene3d-gl/src/glEnvironmentIblBake.ts
++++ b/packages/scene3d-gl/src/glEnvironmentIblBake.ts
+@@ -237,7 +237,7 @@ function ensureGlBakeProgram(state: GlRenderState, key: string, fragment: string
+   const gl = state.gl;
+   let byState = _bakePrograms.get(state);
+   if (byState === undefined) {
+-    byState = new Map();
++    byState = new Map<string, GlBakeProgram>();
+     _bakePrograms.set(state, byState);
+   }
+   let baked = byState.get(key);
