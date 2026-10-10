@@ -107,24 +107,39 @@ inline void ensure_instance_capacity(flight::Ref<GlParticle3DShader> shader, fli
   gl.buffer_data(gl.array_buffer, (new_size * 4.0), gl.dynamic_draw);
 }
 
-inline bool is_scene_particle_emitter3_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::NodeAny>>> node) {
-  return (((flight::row_get<flight::RowKey<"kind">>(node) == flight::types::particle_emitter3_dkind) && (flight::String("blendMode") in node)) && (flight::String("data") in node));
+inline bool is_scene_particle_emitter3_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>> node) {
+  return flight::row_get<flight::RowKey<"kind">>(node) ==
+             flight::types::particle_emitter3_dkind &&
+         static_cast<bool>(node.template shared_exact_object<
+                           flight::types::ParticleEmitter3D>());
 }
 
-inline void collect_particle_emitter3_dnodes(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::NodeAny>>> node, flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter3D>>>>> out) {
+inline void collect_particle_emitter3_dnodes(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>> node, flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitter3D>>>>> out) {
   if (!flight::row_get<flight::RowKey<"enabled">>(node)) {
     return;
   }
   if (is_scene_particle_emitter3_d(node)) {
-    out.push(node);
+    auto emitter = node.template shared_exact_object<
+        flight::types::ParticleEmitter3D>();
+    out.push(flight::structural_ref_cast<flight::StructuralRef<
+                 flight::RowReadonly<flight::RowOf<flight::Ref<
+                     flight::types::ParticleEmitter3D>>>>>(
+        flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<
+            flight::types::ParticleEmitter3D>>>>(emitter)));
   }
-  std::optional<flight::Array<flight::types::NodeOf<flight::Ref<flight::types::NodeTraits>>>> children = flight::row_get<flight::RowKey<"children">>(flight::node::get_node_runtime<flight::Ref<flight::types::NodeTraits>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::NodeTraits>>>>>>::from_owner(node.shared_owner())));
+  auto runtime = flight::node::transform3d_detail::runtime(node);
+  auto children = runtime->children;
   if (children.has_value()) {
     {
       double i = 0.0;
       while ((i < static_cast<double>(children.value().size()))) {
         {
-          collect_particle_emitter3_dnodes(children.value().element(i), out);
+          collect_particle_emitter3_dnodes(
+              flight::structural_ref_cast<flight::StructuralRef<
+                  flight::RowReadonly<flight::RowOf<flight::Ref<
+                      flight::types::Node3D>>>>>(
+                  children.value().element(i)),
+              out);
         }
         (i += 1.0);
       }
@@ -332,7 +347,7 @@ inline void draw_gl_scene3_dparticle_emitter3_ds(flight::Ref<flight::types::GlRe
   auto shader = ensure_particle3_dshader(state);
   flight::host_sdl::WebGl2Context gl = state->gl;
   gl.use_program(shader->program);
-  gl.uniform_matrix4fv(shader->loc_view_projection, false, flight::row_get<flight::RowKey<"m">>(list->view_projection), std::nullopt, std::nullopt);
+  gl.uniform_matrix4fv(shader->loc_view_projection, false, flight::row_get<flight::RowKey<"m">>(list->view_projection));
   flight::Float32Array vm = flight::row_get<flight::RowKey<"view">>(camera)->m;
   gl.uniform3f(shader->loc_camera_right, vm.get_index(0.0), vm.get_index(4.0), vm.get_index(8.0));
   gl.uniform3f(shader->loc_camera_up, vm.get_index(1.0), vm.get_index(5.0), vm.get_index(9.0));
