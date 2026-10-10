@@ -296,6 +296,7 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
   static constexpr std::uint32_t cw = 2304;
   static constexpr std::uint32_t decr_wrap = 34056;
   static constexpr std::uint32_t depth24_stencil8 = 35056;
+  static constexpr std::uint32_t depth = 6145;
   static constexpr std::uint32_t depth_buffer_bit = 256;
   static constexpr std::uint32_t depth_func_constant = 2932;
   static constexpr std::uint32_t depth_stencil = 34041;
@@ -368,6 +369,7 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
   static constexpr std::uint32_t src_alpha_saturate = 776;
   static constexpr std::uint32_t src_color = 768;
   static constexpr std::uint32_t static_draw = 0x88E4;
+  static constexpr std::uint32_t stencil = 6146;
   static constexpr std::uint32_t stencil_back_fail = 34817;
   static constexpr std::uint32_t stencil_back_func = 34816;
   static constexpr std::uint32_t stencil_back_pass_depth_fail = 34818;
@@ -499,6 +501,11 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       std::uint32_t buffer,
       int draw_buffer,
       const Array<double>& values,
+      std::size_t source_offset = 0) const;
+  void clear_bufferiv(
+      std::uint32_t buffer,
+      int draw_buffer,
+      const Int32Array& values,
       std::size_t source_offset = 0) const;
   void clear_depth(float depth) const;
   void color_mask(bool red, bool green, bool blue, bool alpha) const;

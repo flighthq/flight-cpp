@@ -95,7 +95,7 @@ inline void draw_gl_environment_skybox(flight::Ref<flight::types::GlRenderState>
   gl.disable(gl.depth_test);
   gl.disable(gl.blend);
   gl.use_program(sky->program);
-  gl.uniform_matrix4fv(sky->loc_inverse_view_projection, false, flight::row_get<flight::RowKey<"inverseViewProjection">>(camera)->m, std::nullopt, std::nullopt);
+  gl.uniform_matrix4fv(sky->loc_inverse_view_projection, false, flight::row_get<flight::RowKey<"inverseViewProjection">>(camera)->m);
   gl.uniform1f(sky->loc_intensity, flight::row_get<flight::RowKey<"intensity">>(environment));
   gl.active_texture(gl.texture0);
   gl.bind_texture(gl.texture_cube_map, cube.value());

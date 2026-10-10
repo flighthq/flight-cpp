@@ -257,12 +257,12 @@ inline void bake_gl_environment_ibl_from_source(flight::Ref<flight::types::GlRen
   }
   flight::host_sdl::WebGlFramebuffer fbo = runtime->ibl_bake_framebuffer.value();
   std::optional<flight::host_sdl::WebGlFramebuffer> prev_framebuffer = static_cast<std::optional<flight::host_sdl::WebGlFramebuffer>>(gl.get_parameter(gl.framebuffer_binding));
-  flight::Int32Array prev_viewport = static_cast<flight::Int32Array>(gl.get_parameter(gl.viewport));
+  flight::Array<double> prev_viewport = static_cast<flight::Array<double>>(gl.get_parameter(gl.viewport_constant));
   const bool prev_depth_test = gl.is_enabled(gl.depth_test);
-  const bool prev_cull_face = gl.is_enabled(gl.cull_face);
+  const bool prev_cull_face = gl.is_enabled(gl.cull_face_constant);
   const bool prev_blend = gl.is_enabled(gl.blend);
   gl.disable(gl.depth_test);
-  gl.disable(gl.cull_face);
+  gl.disable(gl.cull_face_constant);
   gl.disable(gl.blend);
   flight::host_sdl::WebGlTexture irradiance_cube = bake_gl_irradiance(state, fbo, source_cube);
   auto object_pattern_value = bake_gl_prefiltered(state, fbo, source_cube);
@@ -270,13 +270,13 @@ inline void bake_gl_environment_ibl_from_source(flight::Ref<flight::types::GlRen
   const double prefiltered_mip_count = object_pattern_value->prefiltered_mip_count;
   flight::host_sdl::WebGlTexture brdf_lut = ([&]() -> flight::host_sdl::WebGlTexture { auto nullish_coalesce_left = ([&]() -> std::optional<flight::host_sdl::WebGlTexture> { auto optional_chain_receiver = runtime->ibl; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->brdf_lut; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return bake_gl_brdf_lut(state, fbo); }());
   gl.bind_framebuffer(gl.framebuffer, prev_framebuffer);
-  gl.viewport(prev_viewport.get_index(0.0), prev_viewport.get_index(1.0), prev_viewport.get_index(2.0), prev_viewport.get_index(3.0));
+  gl.viewport(static_cast<int>(prev_viewport.element(0)), static_cast<int>(prev_viewport.element(1)), static_cast<int>(prev_viewport.element(2)), static_cast<int>(prev_viewport.element(3)));
   gl.bind_vertex_array(nullptr);
   if (prev_depth_test) {
     gl.enable(gl.depth_test);
   }
   if (prev_cull_face) {
-    gl.enable(gl.cull_face);
+    gl.enable(gl.cull_face_constant);
   }
   if (prev_blend) {
     gl.enable(gl.blend);

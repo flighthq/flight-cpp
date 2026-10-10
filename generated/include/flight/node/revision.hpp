@@ -14,6 +14,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types { template <typename Traits> struct Node; }
 namespace flight::types { template <typename Traits> struct NodeRuntime; }
 
+namespace flight::node {
+template <typename Traits>
+inline void compute_node_world_transform_revision(
+    std::shared_ptr<flight::types::NodeRuntime<Traits>> runtime,
+    std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<
+        std::shared_ptr<flight::types::NodeRuntime<Traits>>>>>> parent_runtime =
+        std::nullopt);
+} // namespace flight::node
+
 #include <flight/types/contract.hpp>
 #include <flight/node/node.hpp>
 
@@ -128,7 +137,7 @@ inline void invalidate_node(flight::types::NodeOf<Traits> target) {
 inline double world_transform_revision_counter = 0.0;
 
 template <typename Traits>
-inline void compute_node_world_transform_revision(std::shared_ptr<flight::types::NodeRuntime<Traits>> runtime, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>>> parent_runtime = std::nullopt) {
+inline void compute_node_world_transform_revision(std::shared_ptr<flight::types::NodeRuntime<Traits>> runtime, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>>> parent_runtime) {
   (runtime->world_transform_using_local_transform_id = runtime->local_transform_id);
   (runtime->world_transform_using_parent_transform_id = (flight::to_boolean(parent_runtime) ? flight::row_get<flight::RowKey<"worldTransformId">>(parent_runtime.value()) : 0.0));
   (world_transform_revision_counter = flight::unsigned_right_shift((world_transform_revision_counter + 1.0), 0.0));

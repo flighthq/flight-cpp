@@ -1,0 +1,634 @@
+// Native completion of render-gl/src/glRenderTarget.ts at the pinned Flight revision.
+#pragma once
+
+#include <algorithm>
+#include <cmath>
+#include <optional>
+#include <type_traits>
+#include <variant>
+
+#include <flight/entity/entity.hpp>
+#include <flight/geometry/matrix_pool.hpp>
+#include <flight/render/render_target.hpp>
+#include <flight/render_gl/gl_draw.hpp>
+#include <flight/render_gl/gl_render_state.hpp>
+#include <flight/render_gl/gl_shader.hpp>
+#include <flight/types/gl_render_pass.hpp>
+#include <flight/types/gl_render_target.hpp>
+#include <flight/types/matrix.hpp>
+#include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/render_target.hpp>
+
+namespace flight::render_gl {
+
+using flight::types::GlContext;
+using flight::types::GlRenderPass;
+using flight::types::GlRenderState;
+using flight::types::GlRenderStateRuntime;
+using flight::types::GlScreenRenderTarget;
+using flight::types::GlShaderLocations;
+using flight::types::GlTextureRealization;
+using flight::types::GlTextureRenderTarget;
+using flight::types::Matrix;
+using flight::types::RenderProxy2D;
+using flight::types::RenderTargetAxes;
+using flight::types::RenderTargetColorSpace;
+using flight::types::RenderTargetDescriptor;
+using flight::types::RenderTargetExplanation;
+using flight::types::RenderTargetFormat;
+using flight::types::RenderTargetFormatPolicy;
+using flight::types::ResolvedRenderTargetDescriptor;
+
+struct GlTextureRenderTargetStorage : public flight::ReferenceEnabled {
+  double width;
+  double height;
+  RenderTargetFormat format;
+  double color_attachments;
+  flight::Array<RenderTargetFormat> color_formats;
+  double sample_count;
+  flight::types::RenderTargetDepth depth;
+  RenderTargetColorSpace color_space;
+  flight::host_sdl::WebGlFramebuffer framebuffer;
+  std::optional<flight::host_sdl::WebGlFramebuffer> resolve_framebuffer;
+  flight::Array<flight::host_sdl::WebGlTexture> textures;
+  std::optional<flight::host_sdl::WebGlTexture> depth_texture;
+  flight::Array<flight::host_sdl::WebGlRenderbuffer> color_renderbuffers;
+  std::optional<flight::host_sdl::WebGlRenderbuffer> depth_stencil_renderbuffer;
+};
+
+inline flight::Ref<GlScreenRenderTarget> create_gl_screen_render_target(GlContext gl) {
+  return flight::make_ref<GlScreenRenderTarget>(GlScreenRenderTarget{
+      .entity_runtime_key = std::nullopt,
+      .height = static_cast<double>(gl.drawing_buffer_height()),
+      .width = static_cast<double>(gl.drawing_buffer_width()),
+      .gl = gl,
+      .framebuffer = flight::null,
+      .color_attachments = 1.0,
+      .color_space = flight::String("srgb")});
+}
+
+inline void destroy_gl_texture_render_target(
+    flight::Ref<GlTextureRenderTarget> target) {
+  const auto gl = target->gl;
+  gl.delete_framebuffer(target->framebuffer);
+  if (target->resolve_framebuffer.has_value()) {
+    gl.delete_framebuffer(target->resolve_framebuffer.value());
+  }
+  for (const auto& texture : target->textures) gl.delete_texture(texture);
+  for (const auto& renderbuffer : target->color_renderbuffers) {
+    gl.delete_renderbuffer(renderbuffer);
+  }
+  if (target->depth_texture.has_value()) {
+    gl.delete_texture(target->depth_texture.value());
+  }
+  if (target->depth_stencil_renderbuffer.has_value()) {
+    gl.delete_renderbuffer(target->depth_stencil_renderbuffer.value());
+  }
+}
+
+inline bool declare_gl_render_target_color_space(
+    flight::Ref<GlRenderState> state,
+    RenderTargetColorSpace color_space) {
+  auto runtime = get_gl_render_state_runtime(state);
+  return std::visit(
+      [&](auto& selected) -> bool {
+        using Selected = std::remove_cvref_t<decltype(selected)>;
+        if constexpr (std::same_as<Selected, flight::Null> ||
+                      std::same_as<Selected, flight::Undefined>) {
+          return false;
+        } else {
+          selected->color_space = color_space;
+          return true;
+        }
+      },
+      runtime->current_render_target);
+}
+
+inline flight::Array<double> build_draw_buffers(GlContext gl, double count) {
+  flight::Array<double> buffers;
+  for (double index = 0.0; index < count; index += 1.0) {
+    buffers.push(static_cast<double>(gl.color_attachment0) + index);
+  }
+  return buffers;
+}
+
+inline flight::Array<double> build_single_draw_buffer(
+    GlContext gl,
+    double selected_index,
+    double count) {
+  flight::Array<double> buffers;
+  for (double index = 0.0; index < count; index += 1.0) {
+    buffers.push(index == selected_index
+                     ? static_cast<double>(gl.color_attachment0) + index
+                     : static_cast<double>(gl.none));
+  }
+  return buffers;
+}
+
+inline bool is_float_render_target_format(const RenderTargetFormat& format) {
+  return format == flight::String("rgba16f") ||
+         format == flight::String("rgba32f");
+}
+
+inline bool is_gl_render_target_format_supported_by_context(
+    GlContext gl,
+    const RenderTargetFormat& format) {
+  return !is_float_render_target_format(format) ||
+         gl.get_extension(flight::String("EXT_color_buffer_float")).has_value();
+}
+
+inline bool is_gl_render_target_format_supported(
+    flight::Ref<GlRenderState> state,
+    const RenderTargetFormat& format) {
+  return is_gl_render_target_format_supported_by_context(state->gl, format);
+}
+
+inline flight::Ref<RenderTargetAxes> copy_render_target_axes(
+    flight::Ref<RenderTargetAxes> axes) {
+  return flight::make_ref<RenderTargetAxes>(RenderTargetAxes{
+      .width = axes->width,
+      .height = axes->height,
+      .format = axes->format,
+      .color_attachments = axes->color_attachments,
+      .color_formats = axes->color_formats.slice(),
+      .sample_count = axes->sample_count,
+      .depth = axes->depth,
+      .color_space = axes->color_space});
+}
+
+inline flight::Ref<RenderTargetAxes> get_gl_texture_render_target_axes(
+    flight::Ref<GlTextureRenderTarget> target) {
+  return flight::make_ref<RenderTargetAxes>(RenderTargetAxes{
+      .width = target->width,
+      .height = target->height,
+      .format = target->format,
+      .color_attachments = target->color_attachments,
+      .color_formats = target->color_formats.slice(),
+      .sample_count = target->sample_count,
+      .depth = target->depth,
+      .color_space = target->color_space});
+}
+
+inline void set_gl_texture_render_target_axes(
+    flight::Ref<GlTextureRenderTarget> target,
+    flight::Ref<RenderTargetAxes> axes) {
+  target->width = axes->width;
+  target->height = axes->height;
+  target->format = axes->format;
+  target->color_attachments = axes->color_attachments;
+  target->color_formats = axes->color_formats.slice();
+  target->sample_count = axes->sample_count;
+  target->depth = axes->depth;
+  target->color_space = axes->color_space;
+}
+
+inline std::optional<RenderTargetFormat> resolve_renderable_format(
+    GlContext gl,
+    const RenderTargetFormat& format,
+    const RenderTargetFormatPolicy& format_policy) {
+  if (is_gl_render_target_format_supported_by_context(gl, format)) return format;
+  if (format_policy == flight::String("preferred")) {
+    return flight::String("rgba8");
+  }
+  return std::nullopt;
+}
+
+inline std::optional<flight::Ref<RenderTargetAxes>>
+resolve_effective_gl_render_target_axes(
+    GlContext gl,
+    flight::Ref<ResolvedRenderTargetDescriptor> requested,
+    const RenderTargetFormatPolicy& format_policy) {
+  double max_samples = 1.0;
+  if (requested->sample_count > 1.0) {
+    const double reported = static_cast<double>(gl.get_parameter(gl.max_samples));
+    if (std::isfinite(reported)) max_samples = flight::maximum(1.0, std::floor(reported));
+  }
+  const double sample_count = flight::minimum(requested->sample_count, max_samples);
+  flight::Array<RenderTargetFormat> color_formats;
+  for (const auto& format : requested->color_formats) {
+    auto effective = resolve_renderable_format(gl, format, format_policy);
+    if (!effective.has_value()) return std::nullopt;
+    color_formats.push(effective.value());
+  }
+  auto depth = requested->depth;
+  if (depth == flight::String("depth-stencil-sampled") && sample_count > 1.0) {
+    depth = flight::String("depth-stencil");
+  }
+  return flight::make_ref<RenderTargetAxes>(RenderTargetAxes{
+      .width = requested->width,
+      .height = requested->height,
+      .format = color_formats.element(0.0),
+      .color_attachments = requested->color_attachments,
+      .color_formats = color_formats,
+      .sample_count = sample_count,
+      .depth = depth,
+      .color_space = requested->color_space});
+}
+
+template <typename Descriptor>
+inline std::optional<flight::Ref<RenderTargetAxes>> resolve_gl_render_target_axes(
+    flight::Ref<GlRenderState> state,
+    const Descriptor& descriptor,
+    RenderTargetFormatPolicy format_policy = flight::String("preferred")) {
+  return resolve_effective_gl_render_target_axes(
+      state->gl,
+      flight::render::resolve_render_target_descriptor(descriptor),
+      format_policy);
+}
+
+struct GlMappedRenderTargetFormat : public flight::ReferenceEnabled {
+  std::uint32_t internal_format;
+  std::uint32_t format;
+  std::uint32_t type;
+};
+
+inline flight::Ref<GlMappedRenderTargetFormat> map_gl_format(
+    GlContext gl,
+    const RenderTargetFormat& format) {
+  if (format == flight::String("rgba16f")) {
+    return flight::make_ref<GlMappedRenderTargetFormat>(
+        GlMappedRenderTargetFormat{
+            .internal_format = gl.rgba16_f,
+            .format = gl.rgba,
+            .type = gl.half_float});
+  }
+  if (format == flight::String("rgba32f")) {
+    return flight::make_ref<GlMappedRenderTargetFormat>(
+        GlMappedRenderTargetFormat{
+            .internal_format = gl.rgba32_f,
+            .format = gl.rgba,
+            .type = gl.float_});
+  }
+  return flight::make_ref<GlMappedRenderTargetFormat>(
+      GlMappedRenderTargetFormat{
+          .internal_format = gl.rgba8,
+          .format = gl.rgba,
+          .type = gl.unsigned_byte});
+}
+
+inline flight::host_sdl::WebGlTexture allocate_gl_texture_render_target_storage(
+    flight::Ref<GlRenderState> state,
+    flight::Ref<GlTextureRenderTargetStorage> target) {
+  const auto gl = state->gl;
+  const bool multisampled = target->sample_count > 1.0;
+  bool uses_float = is_float_render_target_format(target->format);
+  for (const auto& format : target->color_formats) {
+    uses_float = uses_float || is_float_render_target_format(format);
+  }
+  if (uses_float) {
+    (void)gl.get_extension(flight::String("EXT_color_buffer_float"));
+  }
+  const auto resolve_framebuffer =
+      multisampled ? gl.create_framebuffer() : target->framebuffer;
+  gl.bind_framebuffer(gl.framebuffer, resolve_framebuffer);
+  for (double index = 0.0; index < target->color_attachments; index += 1.0) {
+    const auto mapped = map_gl_format(gl, target->color_formats.element(index));
+    const auto texture = gl.create_texture();
+    gl.bind_texture(gl.texture_2_d, texture);
+    gl.tex_image2_d(
+        gl.texture_2_d, 0, static_cast<int>(mapped->internal_format),
+        static_cast<int>(target->width), static_cast<int>(target->height), 0,
+        mapped->format, mapped->type, nullptr);
+    const auto filter = state->allow_smoothing ? gl.linear : gl.nearest;
+    gl.tex_parameteri(gl.texture_2_d, gl.texture_min_filter, filter);
+    gl.tex_parameteri(gl.texture_2_d, gl.texture_mag_filter, filter);
+    gl.tex_parameteri(gl.texture_2_d, gl.texture_wrap_s, gl.clamp_to_edge);
+    gl.tex_parameteri(gl.texture_2_d, gl.texture_wrap_t, gl.clamp_to_edge);
+    gl.framebuffer_texture2_d(
+        gl.framebuffer,
+        static_cast<std::uint32_t>(static_cast<double>(gl.color_attachment0) + index),
+        gl.texture_2_d, texture, 0);
+    target->textures.push(texture);
+  }
+  const auto texture = target->textures.element(0.0);
+  if (target->color_attachments > 1.0) {
+    gl.draw_buffers(build_draw_buffers(gl, target->color_attachments));
+  }
+  if (multisampled) {
+    gl.bind_framebuffer(gl.framebuffer, target->framebuffer);
+    for (double index = 0.0; index < target->color_attachments; index += 1.0) {
+      const auto renderbuffer = gl.create_renderbuffer();
+      gl.bind_renderbuffer(gl.renderbuffer, renderbuffer);
+      const auto mapped = map_gl_format(gl, target->color_formats.element(index));
+      gl.renderbuffer_storage_multisample(
+          gl.renderbuffer, static_cast<int>(target->sample_count),
+          mapped->internal_format, static_cast<int>(target->width),
+          static_cast<int>(target->height));
+      gl.framebuffer_renderbuffer(
+          gl.framebuffer,
+          static_cast<std::uint32_t>(static_cast<double>(gl.color_attachment0) + index),
+          gl.renderbuffer, renderbuffer);
+      target->color_renderbuffers.push(renderbuffer);
+    }
+    if (target->color_attachments > 1.0) {
+      gl.draw_buffers(build_draw_buffers(gl, target->color_attachments));
+    }
+    target->resolve_framebuffer = resolve_framebuffer;
+  }
+  if (target->depth != flight::String("none")) {
+    const bool sampled = target->depth == flight::String("depth-stencil-sampled");
+    if (sampled) {
+      const auto depth_texture = gl.create_texture();
+      gl.bind_texture(gl.texture_2_d, depth_texture);
+      gl.tex_image2_d(
+          gl.texture_2_d, 0, static_cast<int>(gl.depth24_stencil8),
+          static_cast<int>(target->width), static_cast<int>(target->height), 0,
+          gl.depth_stencil, gl.unsigned_int_24_8, nullptr);
+      gl.tex_parameteri(gl.texture_2_d, gl.texture_min_filter, gl.nearest);
+      gl.tex_parameteri(gl.texture_2_d, gl.texture_mag_filter, gl.nearest);
+      gl.bind_framebuffer(gl.framebuffer, target->framebuffer);
+      gl.framebuffer_texture2_d(
+          gl.framebuffer, gl.depth_stencil_attachment, gl.texture_2_d,
+          depth_texture, 0);
+      target->depth_texture = depth_texture;
+    } else {
+      const auto renderbuffer = gl.create_renderbuffer();
+      gl.bind_renderbuffer(gl.renderbuffer, renderbuffer);
+      if (multisampled) {
+        gl.renderbuffer_storage_multisample(
+            gl.renderbuffer, static_cast<int>(target->sample_count),
+            gl.depth24_stencil8, static_cast<int>(target->width),
+            static_cast<int>(target->height));
+      } else {
+        gl.renderbuffer_storage(
+            gl.renderbuffer, gl.depth24_stencil8,
+            static_cast<int>(target->width), static_cast<int>(target->height));
+      }
+      gl.bind_framebuffer(gl.framebuffer, target->framebuffer);
+      gl.framebuffer_renderbuffer(
+          gl.framebuffer, gl.depth_stencil_attachment, gl.renderbuffer,
+          renderbuffer);
+      target->depth_stencil_renderbuffer = renderbuffer;
+    }
+  }
+  gl.bind_renderbuffer(gl.renderbuffer, nullptr);
+  gl.bind_texture(gl.texture_2_d, nullptr);
+  return texture;
+}
+
+inline flight::Ref<GlTextureRenderTarget> make_gl_texture_render_target(
+    flight::Ref<GlRenderState> state,
+    flight::Ref<ResolvedRenderTargetDescriptor> requested,
+    flight::Ref<RenderTargetAxes> effective) {
+  const auto gl = state->gl;
+  const auto storage = flight::make_ref<GlTextureRenderTargetStorage>(
+      GlTextureRenderTargetStorage{
+          .width = effective->width,
+          .height = effective->height,
+          .format = effective->format,
+          .color_attachments = effective->color_attachments,
+          .color_formats = effective->color_formats.slice(),
+          .sample_count = effective->sample_count,
+          .depth = effective->depth,
+          .color_space = effective->color_space,
+          .framebuffer = gl.create_framebuffer(),
+          .resolve_framebuffer = std::nullopt,
+          .textures = {},
+          .depth_texture = std::nullopt,
+          .color_renderbuffers = {},
+          .depth_stencil_renderbuffer = std::nullopt});
+  const auto texture = allocate_gl_texture_render_target_storage(state, storage);
+  auto target = flight::make_ref<GlTextureRenderTarget>(GlTextureRenderTarget{
+      .entity_runtime_key = std::nullopt,
+      .height = storage->height,
+      .width = storage->width,
+      .gl = gl,
+      .framebuffer = storage->framebuffer,
+      .color_attachments = storage->color_attachments,
+      .color_space = storage->color_space,
+      .requested_axes = flight::make_ref<RenderTargetAxes>(RenderTargetAxes{
+          .width = requested->width,
+          .height = requested->height,
+          .format = requested->format,
+          .color_attachments = requested->color_attachments,
+          .color_formats = requested->color_formats.slice(),
+          .sample_count = requested->sample_count,
+          .depth = requested->depth,
+          .color_space = requested->color_space}),
+      .format = storage->format,
+      .color_formats = storage->color_formats.slice(),
+      .depth = storage->depth,
+      .sample_count = storage->sample_count,
+      .resolve_framebuffer = storage->resolve_framebuffer,
+      .textures = storage->textures,
+      .texture = texture,
+      .depth_texture = storage->depth_texture,
+      .color_renderbuffers = storage->color_renderbuffers,
+      .depth_stencil_renderbuffer = storage->depth_stencil_renderbuffer});
+  const auto runtime = get_gl_render_state_runtime(state);
+  gl.bind_framebuffer(gl.framebuffer, runtime->current_framebuffer);
+  bind_gl_texture_realization(state, std::nullopt);
+  return target;
+}
+
+template <typename Descriptor>
+inline std::optional<flight::Ref<GlTextureRenderTarget>>
+create_gl_texture_render_target(
+    flight::Ref<GlRenderState> state,
+    const Descriptor& descriptor,
+    const RenderTargetFormatPolicy& format_policy) {
+  const auto requested = flight::render::resolve_render_target_descriptor(descriptor);
+  const auto effective = resolve_effective_gl_render_target_axes(
+      state->gl, requested, format_policy);
+  if (!effective.has_value()) return std::nullopt;
+  return make_gl_texture_render_target(state, requested, effective.value());
+}
+
+template <typename Descriptor>
+inline flight::Ref<GlTextureRenderTarget> create_gl_texture_render_target(
+    flight::Ref<GlRenderState> state,
+    const Descriptor& descriptor) {
+  return create_gl_texture_render_target(
+             state, descriptor, flight::String("preferred"))
+      .value();
+}
+
+template <typename Descriptor>
+inline flight::Ref<GlTextureRenderTarget> create_gl_texture_render_target(
+    flight::Ref<GlRenderState> state,
+    const Descriptor& descriptor,
+    std::nullopt_t) {
+  return create_gl_texture_render_target(state, descriptor);
+}
+
+inline void resize_gl_texture_render_target(
+    flight::Ref<GlRenderState> state,
+    flight::Ref<GlTextureRenderTarget> target,
+    double width,
+    double height) {
+  auto requested = flight::make_ref<ResolvedRenderTargetDescriptor>(
+      ResolvedRenderTargetDescriptor{
+          .width = flight::maximum(1.0, std::ceil(width)),
+          .height = flight::maximum(1.0, std::ceil(height)),
+          .format = target->requested_axes->format,
+          .color_attachments = target->requested_axes->color_attachments,
+          .color_formats = target->requested_axes->color_formats.slice(),
+          .sample_count = target->requested_axes->sample_count,
+          .depth = target->requested_axes->depth,
+          .color_space = target->requested_axes->color_space});
+  const auto effective = resolve_effective_gl_render_target_axes(
+      state->gl, requested, flight::String("preferred"));
+  if (!effective.has_value()) return;
+  if (effective.value()->width == target->width &&
+      effective.value()->height == target->height) {
+    return;
+  }
+  const auto gl = state->gl;
+  for (const auto& texture : target->textures) gl.delete_texture(texture);
+  for (const auto& renderbuffer : target->color_renderbuffers) {
+    gl.delete_renderbuffer(renderbuffer);
+  }
+  if (target->depth_texture.has_value()) gl.delete_texture(*target->depth_texture);
+  if (target->depth_stencil_renderbuffer.has_value()) {
+    gl.delete_renderbuffer(*target->depth_stencil_renderbuffer);
+  }
+  if (target->resolve_framebuffer.has_value() &&
+      target->resolve_framebuffer.value() != target->framebuffer) {
+    gl.delete_framebuffer(target->resolve_framebuffer.value());
+  }
+  target->textures = {};
+  target->color_renderbuffers = {};
+  target->depth_texture = std::nullopt;
+  target->depth_stencil_renderbuffer = std::nullopt;
+  target->resolve_framebuffer = std::nullopt;
+  target->requested_axes = flight::make_ref<RenderTargetAxes>(RenderTargetAxes{
+      .width = requested->width,
+      .height = requested->height,
+      .format = requested->format,
+      .color_attachments = requested->color_attachments,
+      .color_formats = requested->color_formats.slice(),
+      .sample_count = requested->sample_count,
+      .depth = requested->depth,
+      .color_space = requested->color_space});
+  set_gl_texture_render_target_axes(target, effective.value());
+  const auto storage = flight::make_ref<GlTextureRenderTargetStorage>(
+      GlTextureRenderTargetStorage{
+          .width = target->width,
+          .height = target->height,
+          .format = target->format,
+          .color_attachments = target->color_attachments,
+          .color_formats = target->color_formats,
+          .sample_count = target->sample_count,
+          .depth = target->depth,
+          .color_space = target->color_space,
+          .framebuffer = target->framebuffer,
+          .resolve_framebuffer = target->resolve_framebuffer,
+          .textures = target->textures,
+          .depth_texture = target->depth_texture,
+          .color_renderbuffers = target->color_renderbuffers,
+          .depth_stencil_renderbuffer = target->depth_stencil_renderbuffer});
+  target->texture = allocate_gl_texture_render_target_storage(state, storage);
+  target->resolve_framebuffer = storage->resolve_framebuffer;
+  target->textures = storage->textures;
+  target->depth_texture = storage->depth_texture;
+  target->color_renderbuffers = storage->color_renderbuffers;
+  target->depth_stencil_renderbuffer = storage->depth_stencil_renderbuffer;
+  const auto runtime = get_gl_render_state_runtime(state);
+  gl.bind_framebuffer(gl.framebuffer, runtime->current_framebuffer);
+  bind_gl_texture_realization(state, std::nullopt);
+}
+
+inline void resolve_gl_texture_render_target(
+    flight::Ref<GlRenderState> state,
+    flight::Ref<GlTextureRenderTarget> target) {
+  if (target->sample_count <= 1.0 ||
+      !target->resolve_framebuffer.has_value()) {
+    return;
+  }
+  const auto runtime = get_gl_render_state_runtime(state);
+  const auto gl = state->gl;
+  const auto* scissor = std::get_if<flight::Ref<flight::types::GlScissorRect>>(
+      &runtime->current_scissor_rect);
+  try {
+    if (scissor) gl.disable(gl.scissor_test);
+    gl.bind_framebuffer(gl.read_framebuffer, target->framebuffer);
+    gl.bind_framebuffer(gl.draw_framebuffer, target->resolve_framebuffer.value());
+    for (double index = 0.0; index < static_cast<double>(target->textures.size());
+         index += 1.0) {
+      gl.read_buffer(static_cast<std::uint32_t>(
+          static_cast<double>(gl.color_attachment0) + index));
+      gl.draw_buffers(build_single_draw_buffer(
+          gl, index, static_cast<double>(target->textures.size())));
+      gl.blit_framebuffer(
+          0, 0, static_cast<int>(target->width), static_cast<int>(target->height),
+          0, 0, static_cast<int>(target->width), static_cast<int>(target->height),
+          gl.color_buffer_bit, gl.nearest);
+    }
+  } catch (...) {
+    gl.bind_framebuffer(gl.read_framebuffer, runtime->current_framebuffer);
+    gl.bind_framebuffer(gl.draw_framebuffer, runtime->current_framebuffer);
+    if (scissor) {
+      gl.enable(gl.scissor_test);
+      gl.scissor(
+          static_cast<int>((*scissor)->x), static_cast<int>((*scissor)->y),
+          static_cast<int>((*scissor)->width),
+          static_cast<int>((*scissor)->height));
+    }
+    runtime->context->current_texture_realization = std::nullopt;
+    throw;
+  }
+  gl.bind_framebuffer(gl.read_framebuffer, runtime->current_framebuffer);
+  gl.bind_framebuffer(gl.draw_framebuffer, runtime->current_framebuffer);
+  if (scissor) {
+    gl.enable(gl.scissor_test);
+    gl.scissor(
+        static_cast<int>((*scissor)->x), static_cast<int>((*scissor)->y),
+        static_cast<int>((*scissor)->width),
+        static_cast<int>((*scissor)->height));
+  }
+  runtime->context->current_texture_realization = std::nullopt;
+  gl.flush();
+}
+
+inline flight::Ref<RenderTargetExplanation> explain_gl_texture_render_target(
+    flight::Ref<GlTextureRenderTarget> target) {
+  const auto requested = copy_render_target_axes(target->requested_axes);
+  const auto effective = get_gl_texture_render_target_axes(target);
+  return flight::make_ref<RenderTargetExplanation>(RenderTargetExplanation{
+      .differences = flight::render::explain_render_target_axes(
+          requested, effective),
+      .effective = flight::StructuralRef<flight::RowReadonly<
+          flight::RowOf<flight::Ref<RenderTargetAxes>>>>(effective),
+      .requested = flight::StructuralRef<flight::RowReadonly<
+          flight::RowOf<flight::Ref<RenderTargetAxes>>>>(requested)});
+}
+
+template <typename Target, typename Transform>
+inline void draw_gl_texture_render_target_result(
+    flight::Ref<GlRenderPass> pass,
+    flight::Ref<RenderProxy2D> render_proxy,
+    const Target& target,
+    const Transform& transform) {
+  const double width = flight::row_get<flight::RowKey<"width">>(target);
+  const double height = flight::row_get<flight::RowKey<"height">>(target);
+  if (width <= 0.0 || height <= 0.0) return;
+  const auto state = pass->state;
+  const auto runtime = get_gl_render_state_runtime(state);
+  use_gl_program(state, std::nullopt);
+  if (state->apply_blend_mode.has_value()) {
+    state->apply_blend_mode.value()(state, render_proxy->blend_mode);
+  }
+  const auto gl = pass->gl;
+  const auto locations = runtime->context->current_shader.value()->locations.value();
+  bind_gl_texture_realization(
+      state,
+      flight::make_ref<GlTextureRealization>(GlTextureRealization{
+          .straight_alpha = false,
+          .texture = flight::row_get<flight::RowKey<"texture">>(target)}));
+  const auto quad_transform = flight::geometry::acquire_matrix();
+  flight::geometry::multiply_matrix(quad_transform, render_proxy->transform2_d, transform);
+  set_gl_attributes(gl, locations);
+  set_gl_matrix_from_transform(
+      gl, locations, runtime->matrix_array, quad_transform,
+      runtime->render_target_viewport.has_value()
+          ? runtime->render_target_viewport.value()->width
+          : static_cast<double>(gl.drawing_buffer_width()),
+      runtime->render_target_viewport.has_value()
+          ? runtime->render_target_viewport.value()->height
+          : static_cast<double>(gl.drawing_buffer_height()));
+  set_gl_base_uniforms(gl, locations, render_proxy);
+  flight::geometry::release_matrix(quad_transform);
+  draw_gl_quad(state, 0.0, 0.0, width, height, 0.0, 1.0, 1.0, 0.0);
+}
+
+} // namespace flight::render_gl

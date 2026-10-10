@@ -26,6 +26,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/matrix.hpp>
 
+#include <flight/types/render_target.hpp>
+
 namespace flight::render {
 
 using flight::geometry::create_matrix;
@@ -37,6 +39,10 @@ using flight::types::MatrixLike;
 using flight::types::Node2D;
 using flight::types::RectangleLike;
 using flight::types::RenderEffectPadding;
+using flight::types::RenderTargetAxes;
+using flight::types::RenderTargetAxisDifference;
+using flight::types::RenderTargetDescriptor;
+using flight::types::ResolvedRenderTargetDescriptor;
 
 inline void compute_render_cache_transform(flight::Ref<MatrixLike> out_cache_transform, flight::Ref<RectangleLike> bounds, std::optional<double> content_x = std::nullopt, std::optional<double> content_y = std::nullopt) {
   content_x = content_x.value_or(0.0);
@@ -98,6 +104,51 @@ inline flight::Ref<width_height_6a2b928b7d011b27> compute_render_target_size(fli
 //   
 // cpp emission failed for @flighthq/render/packages/render/src/renderTarget.ts: ambient value Array member from
 // has no C++ binding
+
+template <typename Descriptor>
+inline flight::Ref<ResolvedRenderTargetDescriptor> resolve_render_target_descriptor(
+    const Descriptor& descriptor) {
+  const double width = flight::maximum(
+      1.0, std::ceil(flight::row_get<flight::RowKey<"width">>(descriptor)));
+  const double height = flight::maximum(
+      1.0, std::ceil(flight::row_get<flight::RowKey<"height">>(descriptor)));
+  const auto requested_attachments =
+      flight::row_get<flight::RowKey<"colorAttachments">>(descriptor);
+  const double color_attachments = flight::maximum(
+      1.0, std::ceil(requested_attachments.value_or(1.0)));
+  const auto requested_format = flight::row_get<flight::RowKey<"format">>(descriptor);
+  const flight::String default_format =
+      requested_format.value_or(flight::String("rgba8"));
+  const auto requested_formats =
+      flight::row_get<flight::RowKey<"colorFormats">>(descriptor);
+  flight::Array<flight::String> color_formats;
+  for (std::size_t index = 0;
+       index < static_cast<std::size_t>(color_attachments);
+       ++index) {
+    if (requested_formats.has_value() && index < requested_formats->size()) {
+      color_formats.push(requested_formats->element(static_cast<double>(index)));
+    } else {
+      color_formats.push(default_format);
+    }
+  }
+  const auto requested_samples =
+      flight::row_get<flight::RowKey<"sampleCount">>(descriptor);
+  const auto requested_depth =
+      flight::row_get<flight::RowKey<"depth">>(descriptor);
+  const auto requested_color_space =
+      flight::row_get<flight::RowKey<"colorSpace">>(descriptor);
+  return flight::make_ref<ResolvedRenderTargetDescriptor>(
+      ResolvedRenderTargetDescriptor{
+          .width = width,
+          .height = height,
+          .format = color_formats.element(0.0),
+          .color_attachments = color_attachments,
+          .color_formats = color_formats,
+          .sample_count = flight::maximum(
+              1.0, std::ceil(requested_samples.value_or(1.0))),
+          .depth = requested_depth.value_or(flight::String("none")),
+          .color_space = requested_color_space.value_or(flight::String("srgb"))});
+}
 
 inline flight::Ref<Matrix> temp_inv_local = create_matrix(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
@@ -197,5 +248,59 @@ inline void compute_scene2_drender_target_transform(flight::Ref<MatrixLike> out_
 //   // support), so Canvas/GL/WGPU cannot independently reinterpret the descriptor's optional axes.
 // cpp emission failed for @flighthq/render/packages/render/src/renderTarget.ts: contextual multiVariant
 // construction requires expression type evidence
+
+inline flight::Array<flight::Ref<RenderTargetAxisDifference>>
+explain_render_target_axes(
+    flight::Ref<RenderTargetAxes> requested,
+    flight::Ref<RenderTargetAxes> effective) {
+  using AxisValue = std::variant<flight::Array<flight::String>, double, flight::String>;
+  flight::Array<flight::Ref<RenderTargetAxisDifference>> differences;
+  const auto add_number = [&](const char* axis, double requested_value,
+                              double effective_value) {
+    if (requested_value == effective_value) return;
+    differences.push(flight::make_ref<RenderTargetAxisDifference>(
+        RenderTargetAxisDifference{
+            .axis = flight::String(axis),
+            .effective = AxisValue{std::in_place_type<double>, effective_value},
+            .requested = AxisValue{std::in_place_type<double>, requested_value}}));
+  };
+  const auto add_string = [&](const char* axis, const flight::String& requested_value,
+                              const flight::String& effective_value) {
+    if (requested_value == effective_value) return;
+    differences.push(flight::make_ref<RenderTargetAxisDifference>(
+        RenderTargetAxisDifference{
+            .axis = flight::String(axis),
+            .effective = AxisValue{std::in_place_type<flight::String>, effective_value},
+            .requested = AxisValue{std::in_place_type<flight::String>, requested_value}}));
+  };
+  add_number("width", requested->width, effective->width);
+  add_number("height", requested->height, effective->height);
+  add_string("format", requested->format, effective->format);
+  add_number(
+      "colorAttachments", requested->color_attachments,
+      effective->color_attachments);
+  bool formats_equal = requested->color_formats.size() ==
+                       effective->color_formats.size();
+  for (std::size_t index = 0;
+       formats_equal && index < requested->color_formats.size(); ++index) {
+    formats_equal = requested->color_formats.element(static_cast<double>(index)) ==
+                    effective->color_formats.element(static_cast<double>(index));
+  }
+  if (!formats_equal) {
+    differences.push(flight::make_ref<RenderTargetAxisDifference>(
+        RenderTargetAxisDifference{
+            .axis = flight::String("colorFormats"),
+            .effective = AxisValue{
+                std::in_place_type<flight::Array<flight::String>>,
+                effective->color_formats.slice()},
+            .requested = AxisValue{
+                std::in_place_type<flight::Array<flight::String>>,
+                requested->color_formats.slice()}}));
+  }
+  add_number("sampleCount", requested->sample_count, effective->sample_count);
+  add_string("depth", requested->depth, effective->depth);
+  add_string("colorSpace", requested->color_space, effective->color_space);
+  return differences;
+}
 
 } // namespace flight::render

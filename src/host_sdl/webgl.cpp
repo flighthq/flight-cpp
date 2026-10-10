@@ -739,6 +739,19 @@ void WebGl2Context::clear_bufferfv(
       buffer, draw_buffer, data.data());
 }
 
+void WebGl2Context::clear_bufferiv(
+    std::uint32_t buffer,
+    int draw_buffer,
+    const Int32Array& values,
+    std::size_t source_offset) const {
+  const auto data = values.span();
+  if (source_offset >= data.size()) {
+    throw std::range_error("clearBufferiv source does not contain a value");
+  }
+  gl_function<PFNGLCLEARBUFFERIVPROC>(*this, "glClearBufferiv")(
+      buffer, draw_buffer, data.data() + source_offset);
+}
+
 void WebGl2Context::clear_depth(float depth) const {
   gl_function<PFNGLCLEARDEPTHFPROC>(*this, "glClearDepthf")(depth);
 }

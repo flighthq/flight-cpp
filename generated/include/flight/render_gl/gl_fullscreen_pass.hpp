@@ -25,19 +25,28 @@ struct FillProgram;
 #include <flight/render_gl/gl_draw.hpp>
 #include <flight/render_gl/gl_program.hpp>
 #include <flight/render_gl/gl_render_state.hpp>
+#include <flight/types/gl_fullscreen_program.hpp>
+#include <flight/types/gl_render_target.hpp>
+#include <flight/types/render_target_clear.hpp>
 
 namespace flight::render_gl {
 
+using flight::types::GlContext;
+using flight::types::GlFullscreenProgram;
+using flight::types::GlRenderState;
+using flight::types::GlRenderStateRuntime;
+using flight::types::GlRenderTarget;
+
 inline const flight::String fullscreen_vertex_src = flight::String("#version 300 es\nin vec2 a_position;\nin vec2 a_texCoord;\nout vec2 v_texCoord;\nvoid main() {\n  gl_Position = vec4(a_position, 0.0, 1.0);\n  v_texCoord = a_texCoord;\n}");
 
-inline flight::Ref<GlFullscreenProgram> compile_gl_fullscreen_program(flight::Ref<GlContext> gl, flight::String fragment_source) {
+inline flight::Ref<GlFullscreenProgram> compile_gl_fullscreen_program(GlContext gl, flight::String fragment_source) {
   flight::host_sdl::WebGlProgram program = create_gl_program(gl, fullscreen_vertex_src, fragment_source, flight::String("Fullscreen pass"));
   flight::Array<flight::host_sdl::WebGlUniformLocation> textures = flight::Array<flight::host_sdl::WebGlUniformLocation>{};
   {
     double i = 0.0;
     while ((i < 8.0)) {
       {
-        std::optional<flight::host_sdl::WebGlUniformLocation> loc = gl->get_uniform_location(program, flight::String("u_texture") + flight::to_string(i) + flight::String(""));
+        std::optional<flight::host_sdl::WebGlUniformLocation> loc = gl.get_uniform_location(program, flight::String("u_texture") + flight::to_string(i) + flight::String(""));
         if (flight::to_boolean(loc)) {
           textures.push(loc.value());
         }
@@ -45,11 +54,12 @@ inline flight::Ref<GlFullscreenProgram> compile_gl_fullscreen_program(flight::Re
       (i += 1.0);
     }
   }
-  std::optional<flight::host_sdl::WebGlUniformLocation> single = gl->get_uniform_location(program, flight::String("u_texture"));
+  std::optional<flight::host_sdl::WebGlUniformLocation> single = gl.get_uniform_location(program, flight::String("u_texture"));
   if (flight::to_boolean(((static_cast<double>(textures.size()) == 0.0) && single))) {
     textures.push(single.value());
   }
-  return flight::make_ref<GlFullscreenProgram>(GlFullscreenProgram{.program = program, .loc_position = gl->get_attrib_location(program, flight::String("a_position")), .loc_tex_coord = gl->get_attrib_location(program, flight::String("a_texCoord")), .texture = ([&]() -> flight::host_sdl::WebGlUniformLocation { auto nullish_coalesce_left = textures.get(0.0); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return single.value(); }()), .textures = textures});
+  const auto texture = textures.size() != 0 ? textures.element(0.0) : single.value();
+  return flight::make_ref<GlFullscreenProgram>(GlFullscreenProgram{.program = program, .loc_position = static_cast<double>(gl.get_attrib_location(program, flight::String("a_position"))), .loc_tex_coord = static_cast<double>(gl.get_attrib_location(program, flight::String("a_texCoord"))), .texture = texture, .textures = textures});
 }
 
 
@@ -75,18 +85,45 @@ inline flight::Ref<GlFullscreenProgram> compile_gl_fullscreen_program(flight::Re
 // cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glFullscreenPass.ts: dual-sentinel optional
 // property result requires one represented member value domain
 
+inline void bind_gl_render_target(
+    flight::Ref<GlRenderState> state,
+    std::optional<flight::Ref<GlRenderTarget>> target) {
+  const auto runtime = get_gl_render_state_runtime(state);
+  const auto gl = state->gl;
+  const auto framebuffer = target.has_value()
+                               ? target.value()->framebuffer
+                               : std::optional<flight::host_sdl::WebGlFramebuffer>{};
+  if (runtime->current_framebuffer != framebuffer) {
+    gl.bind_framebuffer(gl.framebuffer, framebuffer);
+    runtime->current_framebuffer = framebuffer;
+  }
+  const double width = target.has_value()
+                           ? target.value()->width
+                           : static_cast<double>(gl.drawing_buffer_width());
+  const double height = target.has_value()
+                            ? target.value()->height
+                            : static_cast<double>(gl.drawing_buffer_height());
+  gl.viewport(0, 0, static_cast<int>(width), static_cast<int>(height));
+  runtime->render_target_viewport = target.has_value()
+      ? std::optional<flight::Ref<flight::types::GlViewportRect>>{
+            flight::make_ref<flight::types::GlViewportRect>(
+                flight::types::GlViewportRect{
+                    .height = height, .width = width, .x = 0.0, .y = 0.0})}
+      : std::nullopt;
+}
+
 inline flight::WeakMap<flight::Ref<GlContext>, flight::host_sdl::WebGlVertexArrayObject> quad_vaos = flight::WeakMap<flight::Ref<GlContext>, flight::host_sdl::WebGlVertexArrayObject>();
 
 inline void draw_gl_fullscreen_quad(flight::Ref<GlRenderState> state, flight::Ref<GlFullscreenProgram> program) {
   flight::Ref<GlRenderStateRuntime> runtime = get_gl_render_state_runtime(state);
-  flight::Ref<GlContext> gl = state->gl;
+  GlContext gl = state->gl;
   const auto quad_vao_capture = flight::make_binding_cell(std::optional<flight::host_sdl::WebGlVertexArrayObject>{quad_vaos.get(gl)});
   if (!quad_vao_capture.read_binding().has_value()) {
-    quad_vao_capture.rebind(std::optional<flight::host_sdl::WebGlVertexArrayObject>{gl->create_vertex_array()});
+    quad_vao_capture.rebind(std::optional<flight::host_sdl::WebGlVertexArrayObject>{gl.create_vertex_array()});
     quad_vaos.set(gl, quad_vao_capture.read_binding().value());
-    runtime->context.teardowns.push([=](flight::Ref<GlContext> owner_gl) { return owner_gl->delete_vertex_array(quad_vao_capture.read_binding().value()); });
+    runtime->context->teardowns.push([=](GlContext owner_gl) { return owner_gl.delete_vertex_array(quad_vao_capture.read_binding().value()); });
   }
-  gl->bind_vertex_array(quad_vao_capture.read_binding().value());
+  gl.bind_vertex_array(quad_vao_capture.read_binding().value());
   flight::Float32Array v = runtime->quad_vertex_data;
   ([&]() { auto&& typed_array = v; const auto typed_index = 0.0; const auto typed_value = -1.0; return typed_array.set_index(typed_index, typed_value); }());
   ([&]() { auto&& typed_array_2 = v; const auto typed_index_2 = 1.0; const auto typed_value_2 = -1.0; return typed_array_2.set_index(typed_index_2, typed_value_2); }());
@@ -104,85 +141,86 @@ inline void draw_gl_fullscreen_quad(flight::Ref<GlRenderState> state, flight::Re
   ([&]() { auto&& typed_array_14 = v; const auto typed_index_14 = 13.0; const auto typed_value_14 = 1.0; return typed_array_14.set_index(typed_index_14, typed_value_14); }());
   ([&]() { auto&& typed_array_15 = v; const auto typed_index_15 = 14.0; const auto typed_value_15 = 0.0; return typed_array_15.set_index(typed_index_15, typed_value_15); }());
   ([&]() { auto&& typed_array_16 = v; const auto typed_index_16 = 15.0; const auto typed_value_16 = 1.0; return typed_array_16.set_index(typed_index_16, typed_value_16); }());
-  gl->bind_buffer(gl->array_buffer, runtime->context.quad_vertex_buffer);
-  gl->buffer_sub_data(gl->array_buffer, 0.0, v);
-  gl->bind_buffer(gl->element_array_buffer, runtime->context.quad_index_buffer);
-  gl->enable_vertex_attrib_array(program->loc_position);
-  gl->enable_vertex_attrib_array(program->loc_tex_coord);
-  gl->vertex_attrib_pointer(program->loc_position, 2.0, gl->float_, false, 16.0, 0.0);
-  gl->vertex_attrib_pointer(program->loc_tex_coord, 2.0, gl->float_, false, 16.0, 8.0);
-  gl->draw_elements(gl->triangles, 6.0, gl->unsigned_short, 0.0);
-  gl->bind_vertex_array(nullptr);
+  gl.bind_buffer(gl.array_buffer, runtime->context->quad_vertex_buffer);
+  gl.buffer_sub_data(gl.array_buffer, 0, v);
+  gl.bind_buffer(gl.element_array_buffer, runtime->context->quad_index_buffer);
+  gl.enable_vertex_attrib_array(static_cast<std::uint32_t>(program->loc_position));
+  gl.enable_vertex_attrib_array(static_cast<std::uint32_t>(program->loc_tex_coord));
+  gl.vertex_attrib_pointer(static_cast<std::uint32_t>(program->loc_position), 2, gl.float_, false, 16, 0);
+  gl.vertex_attrib_pointer(static_cast<std::uint32_t>(program->loc_tex_coord), 2, gl.float_, false, 16, 8);
+  gl.draw_elements(gl.triangles, 6, gl.unsigned_short, 0);
+  gl.bind_vertex_array(nullptr);
 }
 
-inline void draw_gl_fullscreen_pass(flight::Ref<GlRenderState> state, flight::Ref<GlFullscreenProgram> program, flight::Array<flight::host_sdl::WebGlTexture> inputs, std::optional<flight::Ref<GlRenderTarget>> dest, std::function<void(flight::Ref<GlContext>, flight::Ref<GlFullscreenProgram>)> set_uniforms) {
+inline void draw_gl_fullscreen_pass(flight::Ref<GlRenderState> state, flight::Ref<GlFullscreenProgram> program, flight::Array<flight::host_sdl::WebGlTexture> inputs, std::optional<flight::Ref<GlRenderTarget>> dest, std::function<void(GlContext, flight::Ref<GlFullscreenProgram>)> set_uniforms) {
   flight::Ref<GlRenderStateRuntime> runtime = get_gl_render_state_runtime(state);
-  flight::Ref<GlContext> gl = state->gl;
-  if ((([&]() -> std::optional<flight::host_sdl::WebGlProgram> { auto optional_chain_receiver = runtime->context.current_shader; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->program; }()) != program->program)) {
-    gl->use_program(program->program);
+  GlContext gl = state->gl;
+  if ((([&]() -> std::optional<flight::host_sdl::WebGlProgram> { auto optional_chain_receiver = runtime->context->current_shader; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->program; }()) != program->program)) {
+    gl.use_program(program->program);
   }
-  (runtime->context.current_shader = {.locations = nullptr, .program = program->program});
+  runtime->context->current_shader = flight::make_ref<flight::types::GlBoundShader>(
+      flight::types::GlBoundShader{.locations = std::nullopt, .program = program->program});
   bind_gl_render_target(state, dest);
   {
     double i = 0.0;
     while ((i < static_cast<double>(inputs.size()))) {
       {
-        gl->active_texture((gl->texture0 + i));
-        gl->bind_texture(gl->texture_2_d, inputs.element(i));
+        gl.active_texture(static_cast<std::uint32_t>(gl.texture0 + i));
+        gl.bind_texture(gl.texture_2_d, inputs.element(i));
         if (flight::to_boolean(program->textures.element(i))) {
-          gl->uniform1i(program->textures.element(i), i);
+          gl.uniform1i(program->textures.element(i), static_cast<int>(i));
         }
       }
       (i += 1.0);
     }
   }
-  gl->active_texture(gl->texture0);
-  (runtime->context.current_texture_realization = nullptr);
-  const bool blend_enabled = gl->is_enabled(gl->blend);
-  const bool cull_face_enabled = gl->is_enabled(gl->cull_face);
-  const bool depth_test_enabled = gl->is_enabled(gl->depth_test);
-  const bool depth_write_enabled = (gl->get_parameter(gl->depth_writemask) != false);
+  gl.active_texture(gl.texture0);
+  (runtime->context->current_texture_realization = std::nullopt);
+  const bool blend_enabled = gl.is_enabled(gl.blend);
+  const bool cull_face_enabled = gl.is_enabled(gl.cull_face_constant);
+  const bool depth_test_enabled = gl.is_enabled(gl.depth_test);
+  const bool depth_write_enabled = (gl.get_parameter(gl.depth_writemask) != false);
   if (!blend_enabled) {
-    gl->enable(gl->blend);
+    gl.enable(gl.blend);
   }
   if (cull_face_enabled) {
-    gl->disable(gl->cull_face);
+    gl.disable(gl.cull_face_constant);
   }
   if (depth_test_enabled) {
-    gl->disable(gl->depth_test);
+    gl.disable(gl.depth_test);
   }
   if (depth_write_enabled) {
-    gl->depth_mask(false);
+    gl.depth_mask(false);
   }
-  (runtime->context.current_blend_signature = nullptr);
-  apply_gl_blend_mode(state, nullptr);
+  (runtime->context->current_blend_signature = std::nullopt);
+  apply_gl_blend_mode(state, std::nullopt);
   set_uniforms(gl, program);
   draw_gl_fullscreen_quad(state, program);
-  (runtime->context.current_blend_signature = nullptr);
-  apply_gl_blend_mode(state, nullptr);
+  (runtime->context->current_blend_signature = std::nullopt);
+  apply_gl_blend_mode(state, std::nullopt);
   if (depth_write_enabled) {
-    gl->depth_mask(true);
+    gl.depth_mask(true);
   }
   if (depth_test_enabled) {
-    gl->enable(gl->depth_test);
+    gl.enable(gl.depth_test);
   }
   if (cull_face_enabled) {
-    gl->enable(gl->cull_face);
+    gl.enable(gl.cull_face_constant);
   }
   if (!blend_enabled) {
-    gl->disable(gl->blend);
+    gl.disable(gl.blend);
   }
   {
     double i_2 = 0.0;
     while ((i_2 < static_cast<double>(inputs.size()))) {
       {
-        gl->active_texture((gl->texture0 + i_2));
-        gl->bind_texture(gl->texture_2_d, nullptr);
+        gl.active_texture(static_cast<std::uint32_t>(gl.texture0 + i_2));
+        gl.bind_texture(gl.texture_2_d, nullptr);
       }
       (i_2 += 1.0);
     }
   }
-  gl->active_texture(gl->texture0);
+  gl.active_texture(gl.texture0);
 }
 
 inline flight::Float32Array clear_rgba = flight::Float32Array(4.0);
@@ -191,31 +229,31 @@ inline flight::Float32Array clear_depth = flight::Float32Array(1.0);
 
 inline flight::Int32Array clear_stencil = flight::Int32Array(1.0);
 
-inline void clear_gl_depth_stencil(flight::Ref<GlContext> gl, std::optional<double> depth, std::optional<double> stencil, bool save_restore) {
-  const bool depth_mask_was = ((save_restore && depth.has_value()) ? (gl->get_parameter(gl->depth_writemask) != false) : true);
+inline void clear_gl_depth_stencil(GlContext gl, std::optional<double> depth, std::optional<double> stencil, bool save_restore) {
+  const bool depth_mask_was = ((save_restore && depth.has_value()) ? (gl.get_parameter(gl.depth_writemask) != false) : true);
   if ((depth.has_value() && stencil.has_value())) {
     if (!depth_mask_was) {
-      gl->depth_mask(true);
+      gl.depth_mask(true);
     }
-    gl->clear_bufferfi(gl->depth_stencil, 0.0, depth.value(), stencil.value());
+    gl.clear_bufferfi(gl.depth_stencil, 0, static_cast<float>(depth.value()), static_cast<int>(stencil.value()));
   }
   else {
     if (depth.has_value()) {
       if (!depth_mask_was) {
-        gl->depth_mask(true);
+        gl.depth_mask(true);
       }
       ([&]() { auto&& typed_array_17 = clear_depth; const auto typed_index_17 = 0.0; const auto typed_value_17 = depth.value(); return typed_array_17.set_index(typed_index_17, typed_value_17); }());
-      gl->clear_bufferfv(gl->depth, 0.0, clear_depth, std::nullopt);
+      gl.clear_bufferfv(gl.depth, 0, clear_depth, 0);
     }
     else {
       if (stencil.has_value()) {
         ([&]() { auto&& typed_array_18 = clear_stencil; const auto typed_index_18 = 0.0; const auto typed_value_18 = stencil.value(); return typed_array_18.set_index(typed_index_18, typed_value_18); }());
-        gl->clear_bufferiv(gl->stencil, 0.0, clear_stencil, std::nullopt);
+        gl.clear_bufferiv(gl.stencil, 0, clear_stencil, 0);
       }
     }
   }
   if ((save_restore && !depth_mask_was)) {
-    gl->depth_mask(false);
+    gl.depth_mask(false);
   }
 }
 
@@ -254,6 +292,36 @@ inline void clear_gl_depth_stencil(flight::Ref<GlContext> gl, std::optional<doub
 // cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glFullscreenPass.ts: contextual
 // optionalSingle construction requires expression type evidence
 
+template <typename Target, typename Clear>
+inline void clear_gl_render_target(const Target& target, const Clear& clear) {
+  const auto gl = flight::row_get<flight::RowKey<"gl">>(target);
+  gl.bind_framebuffer(
+      gl.framebuffer, flight::row_get<flight::RowKey<"framebuffer">>(target));
+  gl.viewport(
+      0, 0,
+      static_cast<int>(flight::row_get<flight::RowKey<"width">>(target)),
+      static_cast<int>(flight::row_get<flight::RowKey<"height">>(target)));
+  const bool scissor_was = gl.is_enabled(gl.scissor_test);
+  if (scissor_was) gl.disable(gl.scissor_test);
+  const auto color = flight::row_get<flight::RowKey<"color">>(clear);
+  if (color.has_value()) {
+    for (double component = 0.0; component < 4.0; component += 1.0) {
+      clear_rgba.set_index(component, color.value().element(component));
+    }
+    const double attachments =
+        flight::row_get<flight::RowKey<"colorAttachments">>(target);
+    for (double index = 0.0; index < attachments; index += 1.0) {
+      gl.clear_bufferfv(gl.color, static_cast<int>(index), clear_rgba);
+    }
+  }
+  clear_gl_depth_stencil(
+      gl,
+      flight::row_get<flight::RowKey<"depth">>(clear),
+      flight::row_get<flight::RowKey<"stencil">>(clear),
+      true);
+  if (scissor_was) gl.enable(gl.scissor_test);
+}
+
 
 // NOT GENERATED: function clearGlRenderTargetAttachments -- source line 61
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
@@ -289,6 +357,39 @@ inline void clear_gl_depth_stencil(flight::Ref<GlContext> gl, std::optional<doub
 // cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glFullscreenPass.ts: contextual
 // optionalSingle construction requires expression type evidence
 
+template <typename Target, typename Clear>
+inline void clear_gl_render_target_attachments(
+    const Target& target,
+    const Clear& clear) {
+  const auto gl = flight::row_get<flight::RowKey<"gl">>(target);
+  gl.bind_framebuffer(
+      gl.framebuffer, flight::row_get<flight::RowKey<"framebuffer">>(target));
+  gl.viewport(
+      0, 0,
+      static_cast<int>(flight::row_get<flight::RowKey<"width">>(target)),
+      static_cast<int>(flight::row_get<flight::RowKey<"height">>(target)));
+  const bool scissor_was = gl.is_enabled(gl.scissor_test);
+  if (scissor_was) gl.disable(gl.scissor_test);
+  const auto colors = flight::row_get<flight::RowKey<"colors">>(clear);
+  if (colors.has_value()) {
+    for (double index = 0.0;
+         index < static_cast<double>(colors.value().size()); index += 1.0) {
+      const auto rgba = colors.value().element(index);
+      if (!rgba.has_value()) continue;
+      for (double component = 0.0; component < 4.0; component += 1.0) {
+        clear_rgba.set_index(component, rgba.value().element(component));
+      }
+      gl.clear_bufferfv(gl.color, static_cast<int>(index), clear_rgba);
+    }
+  }
+  clear_gl_depth_stencil(
+      gl,
+      flight::row_get<flight::RowKey<"depth">>(clear),
+      flight::row_get<flight::RowKey<"stencil">>(clear),
+      true);
+  if (scissor_was) gl.enable(gl.scissor_test);
+}
+
 struct FillProgram : public flight::ReferenceEnabled {
   flight::Ref<GlFullscreenProgram> fullscreen;
   flight::host_sdl::WebGlProgram gl_program;
@@ -297,9 +398,9 @@ struct FillProgram : public flight::ReferenceEnabled {
 
 inline const flight::String fill_fragment_src = flight::String("#version 300 es\nprecision highp float;\nuniform vec4 u_color;\nout vec4 o_color;\nvoid main() {\n  o_color = u_color;\n}");
 
-inline flight::Ref<FillProgram> compile_fill_program(flight::Ref<GlContext> gl) {
+inline flight::Ref<FillProgram> compile_fill_program(GlContext gl) {
   flight::Ref<GlFullscreenProgram> fullscreen = compile_gl_fullscreen_program(gl, fill_fragment_src);
-  return flight::make_ref<FillProgram>(FillProgram{.fullscreen = fullscreen, .gl_program = fullscreen->program, .loc_color = gl->get_uniform_location(fullscreen->program, flight::String("u_color")).value()});
+  return flight::make_ref<FillProgram>(FillProgram{.fullscreen = fullscreen, .gl_program = fullscreen->program, .loc_color = gl.get_uniform_location(fullscreen->program, flight::String("u_color")).value()});
 }
 
 inline flight::WeakMap<flight::Ref<GlContext>, flight::Ref<FillProgram>> fill_programs = flight::WeakMap<flight::Ref<GlContext>, flight::Ref<FillProgram>>();
