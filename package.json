@@ -27,6 +27,7 @@
     "examples:generate": "node ./scripts/upstreamExampleGeneration.mjs",
     "examples:generate:check": "node ./scripts/upstreamExampleGeneration.mjs --check",
     "examples:run": "node ./scripts/exampleRun.mjs",
+    "emission-repairs:oracle": "node ./scripts/emissionRepairsOracle.mjs",
     "facets:oracle": "node ./scripts/conditionalFacetOracle.mjs",
     "headless:oracle": "node ./scripts/headlessProfileOracle.mjs",
     "host-capability:oracle": "node ./scripts/hostCapabilityOracle.mjs",

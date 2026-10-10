@@ -189,17 +189,21 @@ export function applyEmissionRepairs(repairs, files) {
   // guard against a pair of repairs that undo each other, which would otherwise spin forever; it has
   // never been reached, and reaching it is a declaration bug rather than a condition to tolerate.
   const rounds = 8;
+  let lastTouched = [];
   for (let round = 0; round < rounds; round += 1) {
-    const changed = applyOneRound(repairs, files, applied);
-    if (!changed) return applied;
+    lastTouched = applyOneRound(repairs, files, applied);
+    if (lastTouched.length === 0) return applied;
   }
   throw new Error(
     `Emission repairs did not reach a fixed point in ${String(rounds)} rounds, which means two repairs are ` +
-      'rewriting each other. Check the most recently added entries in repairs/emission-repairs.json.',
+      'rewriting each other. Repairs still changing output in the final round: ' +
+      [...new Set(lastTouched)].join(', '),
   );
 }
 
-// One pass over every file. Returns whether anything changed, and records each file a repair touched.
+// One pass over every file. Returns the repair/file pairs that changed, and records each file a repair
+// touched. Naming the pairs is important when the fixed-point guard fires: without them a full SDK run
+// can spend hours emitting modules and then report only that one of hundreds of declarations oscillated.
 // Kind -> handler. A table for the same reason `REQUIRED_FIELDS` is one: the ternary chain this
 // replaced had reached eleven branches, and a reader could no longer tell which branch a kind fell
 // into -- which is exactly how `repeat-alias-declaration` was given the wrong insertion point twice.
@@ -325,11 +329,22 @@ function respellRuntimeCall(contents, repair) {
 // supplies the full old and new token sequences, keeping each repair local and idempotent.
 function respellExact(contents, repair) {
   if (!contents.includes(repair.from)) return undefined;
+  // A replacement may deliberately retain the old token as a suffix: a module-private `is_object`
+  // becomes `bitmap_font_json_is_object`. A plain replaceAll is correct for the first round but sees
+  // that suffix again in the next fixed-point round and grows the name forever. Preserve spans already
+  // equal to the declared replacement and rewrite only the text between them. This also avoids a
+  // handler-specific identifier heuristic: other declared exact repairs include punctuation and whole
+  // expressions, for which word-boundary matching would be wrong.
+  if (repair.to.includes(repair.from)) {
+    const parts = contents.split(repair.to);
+    const repaired = parts.map((part) => part.replaceAll(repair.from, repair.to)).join(repair.to);
+    return repaired === contents ? undefined : repaired;
+  }
   return contents.replaceAll(repair.from, repair.to);
 }
 
 function applyOneRound(repairs, files, applied) {
-  let changed = false;
+  const touched = [];
   for (const file of files) {
     for (const [index, repair] of repairs.entries()) {
       if (!file.path.startsWith(repair.appliesTo)) continue;
@@ -339,13 +354,13 @@ function applyOneRound(repairs, files, applied) {
       const repaired = handler(contents, repair);
       if (repaired === undefined) continue;
       file.contents = repaired;
-      changed = true;
+      touched.push(`${repair.id} (${file.path})`);
       // A repair can legitimately touch one file across two rounds; the record is a set of files, not a
       // count of rewrites, so the same path must not appear twice.
       if (!applied[index].files.includes(file.path)) applied[index].files.push(file.path);
     }
   }
-  return changed;
+  return touched;
 }
 
 // Aliases ONE named anonymous structural struct to ONE named type in flight::types, by declaration.
