@@ -57,6 +57,18 @@ set(UPSTREAM_EXAMPLES_BLOCKED_SCENE3D_GL
   scene_picking
 )
 
+# A target removed after an audit can leave an executable in an existing build tree, making a
+# blocked port look current even though no target can produce it. Remove only those precisely named
+# generated artifacts when configuring this directory; source files and promoted targets are never
+# touched.
+foreach(example IN LISTS
+    UPSTREAM_EXAMPLES_AWAITING_FAITHFUL_SDL_PORT
+    UPSTREAM_EXAMPLES_BLOCKED_SCENE3D_GL)
+  file(REMOVE
+    "${CMAKE_CURRENT_BINARY_DIR}/flight_cpp_upstream_${example}${CMAKE_EXECUTABLE_SUFFIX}"
+  )
+endforeach()
+
 set(_flight_cpp_upstream_inventory
   ${UPSTREAM_EXAMPLES}
   ${UPSTREAM_GL_EXAMPLES}

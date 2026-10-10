@@ -33,16 +33,53 @@
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <exception>
+#include <fstream>
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <optional>
+#include <stdexcept>
+#include <string>
 #include <string_view>
 #include <thread>
 #include <utility>
 #include <variant>
 
 namespace {
+
+struct FrameCapture final {
+  int width;
+  int height;
+  flight::Uint8Array rgba;
+  std::size_t pixels_different_from_corner;
+  std::uint8_t minimum_red;
+  std::uint8_t maximum_red;
+  std::uint8_t minimum_green;
+  std::uint8_t maximum_green;
+  std::uint8_t minimum_blue;
+  std::uint8_t maximum_blue;
+};
+
+void write_ppm(const FrameCapture& capture, const std::string& path) {
+  std::ofstream output(path, std::ios::binary);
+  if (!output) throw std::runtime_error("could not open capture output: " + path);
+  output << "P6\n" << capture.width << ' ' << capture.height << "\n255\n";
+  // OpenGL's origin is at the lower left; PPM readers expect the first row at the top.
+  for (int y = capture.height - 1; y >= 0; --y) {
+    for (int x = 0; x < capture.width; ++x) {
+      const auto offset = static_cast<std::size_t>((y * capture.width + x) * 4);
+      const char rgb[] = {
+          static_cast<char>(capture.rgba[offset]),
+          static_cast<char>(capture.rgba[offset + 1]),
+          static_cast<char>(capture.rgba[offset + 2]),
+      };
+      output.write(rgb, 3);
+    }
+  }
+  if (!output) throw std::runtime_error("could not write capture output: " + path);
+}
 
 template <typename Value>
 using Readonly = flight::StructuralRef<
@@ -289,7 +326,7 @@ class Scene3DExample final {
         scene_.controller, scene_.camera, 1.0);
   }
 
-  int run(bool smoke) {
+  int run(bool smoke, const std::optional<std::string>& capture_path) {
     using namespace std::chrono_literals;
     std::size_t frames = 0;
     bool running = true;
@@ -315,7 +352,30 @@ class Scene3DExample final {
       previous = now;
       flight::camera_controls::update_orbit_camera_controller(
           scene_.controller, scene_.camera, delta_time);
-      render();
+      auto capture = render(smoke || (capture_path.has_value() && !captured_));
+      if (capture.has_value()) {
+        const auto& frame = capture.value();
+        std::cout << "scene3d framebuffer: " << frame.width << 'x' << frame.height
+                  << ", RGB ranges "
+                  << static_cast<unsigned int>(frame.minimum_red) << '-'
+                  << static_cast<unsigned int>(frame.maximum_red) << ", "
+                  << static_cast<unsigned int>(frame.minimum_green) << '-'
+                  << static_cast<unsigned int>(frame.maximum_green) << ", "
+                  << static_cast<unsigned int>(frame.minimum_blue) << '-'
+                  << static_cast<unsigned int>(frame.maximum_blue)
+                  << ", pixels different from corner "
+                  << frame.pixels_different_from_corner << '\n';
+        if (capture_path.has_value() && !captured_) {
+          write_ppm(frame, capture_path.value());
+          captured_ = true;
+        }
+        const auto minimum_coverage =
+            static_cast<std::size_t>(frame.width * frame.height) / 1000U;
+        if (smoke && frame.pixels_different_from_corner < minimum_coverage) {
+          throw std::runtime_error(
+              "Scene3D produced an effectively uniform framebuffer");
+        }
+      }
       gl_.present();
 
       ++frames;
@@ -326,13 +386,24 @@ class Scene3DExample final {
   }
 
  private:
-  void render() {
+  void require_no_gl_error(std::string_view stage) const {
+    const auto error = gl_.get_error();
+    if (error != gl_.no_error) {
+      throw std::runtime_error(
+          "OpenGL error after " + std::string(stage) + ": " +
+          std::to_string(error));
+    }
+  }
+
+  [[nodiscard]] std::optional<FrameCapture> render(bool capture_frame) {
+    require_no_gl_error("initialization or previous frame");
     flight::render::prepare_scene3_drender(
         state_, scene_.root, scene_.camera, scene_.lights);
     flight::scene3d_gl::draw_gl_scene3_dshadow_map(
         state_, readonly(scene_.root), readonly(scene_.shadow_camera),
         std::optional<Readonly<flight::types::DirectionalLight>>{
             readonly(scene_.directional_light)});
+    require_no_gl_error("shadow-map pass");
 
     auto clear = flight::make_ref<flight::types::RenderTargetClear>();
     clear->color = flight::Array<double>{
@@ -342,17 +413,72 @@ class Scene3DExample final {
     clear->stencil = std::nullopt;
     auto pass = flight::effects_gl::begin_gl_effect_state(
         state_, pipeline_, readonly(clear), flight::String("linear"));
+    require_no_gl_error("effects target setup");
     gl_.depth_mask(true);
     gl_.clear_depth(1.0);
     gl_.clear(gl_.depth_buffer_bit);
     flight::scene3d_gl::render_gl_scene3_d(
         pass, readonly(scene_.root), readonly(scene_.camera),
         readonly(scene_.lights));
+    require_no_gl_error("main Scene3D pass");
     flight::effects_gl::end_gl_effect_state(
         pass, pipeline_,
         flight::Array<std::variant<
             flight::Ref<flight::types::Adjustment>,
             flight::Ref<flight::types::RenderEffect>>>{});
+    require_no_gl_error("effects presentation");
+
+    if (!capture_frame) return std::nullopt;
+
+    gl_.finish();
+    require_no_gl_error("frame completion");
+    const int width = gl_.drawing_buffer_width();
+    const int height = gl_.drawing_buffer_height();
+    flight::Uint8Array rgba(
+        static_cast<std::size_t>(width) * static_cast<std::size_t>(height) * 4U);
+    gl_.read_pixels(
+        0, 0, width, height, gl_.rgba, gl_.unsigned_byte,
+        flight::ArrayBufferView(rgba));
+    require_no_gl_error("framebuffer readback");
+
+    const std::uint8_t corner_red = rgba[0];
+    const std::uint8_t corner_green = rgba[1];
+    const std::uint8_t corner_blue = rgba[2];
+    std::size_t different = 0;
+    std::uint8_t minimum_red = std::numeric_limits<std::uint8_t>::max();
+    std::uint8_t maximum_red = 0;
+    std::uint8_t minimum_green = std::numeric_limits<std::uint8_t>::max();
+    std::uint8_t maximum_green = 0;
+    std::uint8_t minimum_blue = std::numeric_limits<std::uint8_t>::max();
+    std::uint8_t maximum_blue = 0;
+    for (std::size_t offset = 0; offset < rgba.size(); offset += 4U) {
+      const auto red = rgba[offset];
+      const auto green = rgba[offset + 1U];
+      const auto blue = rgba[offset + 2U];
+      minimum_red = std::min(minimum_red, red);
+      maximum_red = std::max(maximum_red, red);
+      minimum_green = std::min(minimum_green, green);
+      maximum_green = std::max(maximum_green, green);
+      minimum_blue = std::min(minimum_blue, blue);
+      maximum_blue = std::max(maximum_blue, blue);
+      const int distance =
+          std::abs(static_cast<int>(red) - static_cast<int>(corner_red)) +
+          std::abs(static_cast<int>(green) - static_cast<int>(corner_green)) +
+          std::abs(static_cast<int>(blue) - static_cast<int>(corner_blue));
+      if (distance > 6) ++different;
+    }
+    return FrameCapture{
+        .width = width,
+        .height = height,
+        .rgba = std::move(rgba),
+        .pixels_different_from_corner = different,
+        .minimum_red = minimum_red,
+        .maximum_red = maximum_red,
+        .minimum_green = minimum_green,
+        .maximum_green = maximum_green,
+        .minimum_blue = minimum_blue,
+        .maximum_blue = maximum_blue,
+    };
   }
 
   flight::host_sdl::Host host_;
@@ -363,6 +489,7 @@ class Scene3DExample final {
   flight::Ref<flight::types::GlRenderState> state_;
   flight::Ref<flight::types::GlEffectState> pipeline_;
   bool dragging_{false};
+  bool captured_{false};
   double previous_x_{0.0};
   double previous_y_{0.0};
 };
@@ -370,13 +497,22 @@ class Scene3DExample final {
 } // namespace
 
 int main(int argc, char** argv) {
-  if (argc > 2 || (argc == 2 && std::string_view(argv[1]) != "--smoke")) {
-    std::cerr << "usage: flight_cpp_upstream_scene3d [--smoke]\n";
-    return 2;
+  bool smoke = false;
+  std::optional<std::string> capture_path;
+  for (int argument = 1; argument < argc; ++argument) {
+    const std::string_view value(argv[argument]);
+    if (value == "--smoke") {
+      smoke = true;
+    } else if (value == "--capture" && argument + 1 < argc) {
+      capture_path = argv[++argument];
+    } else {
+      std::cerr << "usage: flight_cpp_upstream_scene3d [--smoke] "
+                   "[--capture output.ppm]\n";
+      return 2;
+    }
   }
   try {
-    const bool smoke = argc == 2;
-    return Scene3DExample(smoke).run(smoke);
+    return Scene3DExample(smoke).run(smoke, capture_path);
   } catch (const std::exception& error) {
     std::cerr << "Flight SDL scene3d failed: " << error.what() << '\n';
     return 1;

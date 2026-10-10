@@ -2582,6 +2582,22 @@
       "remaining": "Other material families, Scene2D GL renderers, modifiers, and PBR extensions must be added only after their native paths compile and run.",
       "expires": "when the complete Scene2D and Scene3D default registry closure compiles against the native value-type GL context.",
       "authoredOn": "2026-10-10"
+    },
+    {
+      "id": "scene3d-gl-pbr-program-lit-location-spread",
+      "path": "flight/scene3d_gl/gl_pbr_program_cache.hpp",
+      "package": "@flighthq/scene3d-gl",
+      "status": "complete",
+      "supplies": "packages/scene3d-gl/src/glPbrProgramCache.ts",
+      "derivedFrom": "782ed41b007b617276976d940284bb86902b1b92fda9f1e3184259e30ea48bb2",
+      "reason": "The emitted compileGlPbrProgram resolves GlLitProgram locations but drops the source object spread when constructing the flattened GlPbrProgram, leaving every camera, light, shadow, and IBL uniform location absent. All sampler uniforms consequently retain GLSL's unit-zero default, so mixed sampler2D/samplerCube programs fail every native draw with GL_INVALID_OPERATION.",
+      "change": "Copies all flattened GlLitProgram uniform locations onto the concrete GlPbrProgram returned by the otherwise generated compiler path.",
+      "equivalence": "This is the direct native representation of the upstream return object's ...litLocations spread; shader source, compilation, caching, material locations, and binding behavior are unchanged.",
+      "whyNotAPatchOrRepair": "The TypeScript spread is already correct. A declaration insertion cannot replace the emitted aggregate's missing inherited field initializers, and changing source spelling would only work around a C++ object-spread lowering defect.",
+      "unblocks": "StandardPbr draws receive real camera/light uniforms and distinct shadow/IBL sampler units instead of failing validation and producing a black Scene3D frame.",
+      "remaining": "None for the base StandardPbr program at this pin.",
+      "expires": "when object spread into a flattened generated program preserves all inherited GlLitProgram members.",
+      "authoredOn": "2026-10-10"
     }
   ]
 }
