@@ -2,26 +2,55 @@
 #pragma once
 #include <flight/structural_ref.hpp>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/contract.hpp>
+namespace flight::types { struct AnimatedNormalModifier; }
+namespace flight::types { struct DissolveModifier; }
+namespace flight::types { struct EmissiveModifier; }
+namespace flight::types { struct EnvReflectModifier; }
+namespace flight::types { struct FogModifier; }
+namespace flight::types { struct GlModifierSnippet; }
+namespace flight::types { struct Modifier; }
+namespace flight::types { struct ModifierDefinition; }
+namespace flight::types { struct ModifierRegistry; }
+namespace flight::types { struct RimModifier; }
+namespace flight::types { struct ToonModifier; }
+namespace flight::types { struct VertexDisplaceModifier; }
+namespace flight::types { struct WgpuModifierSnippet; }
+
+#include <flight/types/animated_normal_modifier.hpp>
+#include <flight/types/dissolve_modifier.hpp>
+#include <flight/types/emissive_modifier.hpp>
+#include <flight/types/env_reflect_modifier.hpp>
+#include <flight/types/fog_modifier.hpp>
+#include <flight/types/gl_modifier_snippet.hpp>
+#include <flight/types/modifier.hpp>
+#include <flight/types/modifier_definition.hpp>
+#include <flight/types/modifier_kind.hpp>
+#include <flight/types/modifier_registry.hpp>
+#include <flight/types/modifier_value.hpp>
+#include <flight/types/rim_modifier.hpp>
+#include <flight/types/toon_modifier.hpp>
+#include <flight/types/vertex_displace_modifier.hpp>
+#include <flight/types/wgpu_modifier_snippet.hpp>
 #include <flight/shading/modifier_registry.hpp>
 
 namespace flight::shading {
 
-inline flight::Array<flight::String> get_unregistered_modifier_kinds(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>> registry, flight::Array<flight::Ref<flight::types::Modifier>> stack) {
+inline flight::Array<flight::String> get_unregistered_modifier_kinds(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>> registry, flight::Array<flight::types::ModifierValue> stack) {
   flight::Array<flight::String> unregistered = flight::Array<flight::String>{};
   for (auto modifier : stack) {
-    if (flight::shading::resolve_modifier(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>>>(registry), modifier->kind).has_value()) {
+    if (flight::shading::resolve_modifier(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>>>(registry), std::visit([](const auto& value) { return value->kind; }, modifier)).has_value()) {
       continue;
     }
-    if (unregistered.includes(modifier->kind)) {
+    if (unregistered.includes(std::visit([](const auto& value) { return value->kind; }, modifier))) {
       continue;
     }
-    unregistered.push(modifier->kind);
+    unregistered.push(std::visit([](const auto& value) { return value->kind; }, modifier));
   }
   return unregistered;
 }

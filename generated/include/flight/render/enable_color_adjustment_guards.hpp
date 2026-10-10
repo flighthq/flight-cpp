@@ -4,7 +4,9 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function enableColorAdjustmentGuards -- source line 18
+#include <flight/any.hpp>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -32,7 +34,7 @@ inline void warn_unsupported_color_adjustment() {
 
 
 // NOT GENERATED: function enableColorAdjustmentGuards -- source line 18
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:multiVariant [compiler-restriction]
 //
 // The source it stood for:
 //   export function enableColorAdjustmentGuards(state: RenderState): void {
@@ -48,9 +50,7 @@ inline void warn_unsupported_color_adjustment() {
 //     }
 //   }
 //   
-// cpp emission failed for @flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts: intersection
-// types require C++ multiple-inheritance lowering: no shape for SlotTable (argument
-// ColorAdjustmentUnsupportedGuard has no shape either), Entity. Declare the object shape the code reads rather
-// than intersecting a conjunct that has none
+// cpp emission failed for @flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts: contextual
+// multiVariant construction requires expression type evidence
 
 } // namespace flight::render

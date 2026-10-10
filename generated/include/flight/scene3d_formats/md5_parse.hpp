@@ -6,7 +6,6 @@
 //   missing: function parseMeshBlock -- source line 752
 //   missing: function parseJointsBlock -- source line 643
 //   missing: function parseMd5Mesh -- source line 198
-//   missing: function importMd5Mesh -- source line 146
 #include <cmath>
 #include <cstdint>
 #include <flight/boolean.hpp>
@@ -30,6 +29,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/mesh/mesh_geometry_operations.hpp>
 
 #include <flight/mesh/mesh_geometry_attributes.hpp>
+
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
 
 #include <flight/geometry/vector3.hpp>
 
@@ -65,12 +66,16 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/image_resource_reference.hpp>
 
+#include <flight/types/animation_clip.hpp>
+
 namespace flight::scene3d_formats {
 
 using flight::scene3d::create_scene3_dfrom_document;
 
 using flight::mesh::get_mesh_geometry_triangle_count;
 using flight::mesh::get_vertex_attribute_float_offset;
+
+using flight::importdiagnostics::report_import_diagnostic;
 
 using flight::geometry::compose_matrix4;
 using flight::geometry::conjugate_quaternion;
@@ -83,6 +88,7 @@ using flight::geometry::rotate_vector3_by_quaternion;
 using flight::geometry::set_quaternion;
 using flight::geometry::set_vector3;
 
+using flight::types::AnimationClip;
 using flight::types::ImageResourceReference;
 using flight::types::ImportDiagnostic;
 using flight::types::ImportDiagnosticSeverity;
@@ -94,6 +100,7 @@ using flight::types::Md5Vertex;
 using flight::types::Md5Weight;
 using flight::types::MeshGeometry;
 using flight::types::MeshTriangleVertexIndices;
+using flight::types::Node3D;
 using flight::types::Quaternion;
 using flight::types::QuaternionLike;
 using flight::types::Scene3D;
@@ -999,65 +1006,21 @@ inline flight::Ref<Scene3D> create_scene3_dfrom_md5_mesh(flight::String source, 
   return create_scene3_dfrom_document(parse_md5_mesh(source, diagnostics));
 }
 
-
-// NOT GENERATED: function importMd5Mesh -- source line 146
-// refusal: cpp-intersection-member-shapeless [source-portability]
-//
-// The source it stood for:
-//   export function importMd5Mesh(
-//     meshSource: string,
-//     animSource?: string | null,
-//     diagnostics?: ImportDiagnostic[],
-//   ): Scene3D {
-//     const scene = createScene3DFromMd5Mesh(meshSource, diagnostics);
-//     if (animSource == null) return scene;
-//   
-//     const joints = findScene3DSkeletonJoints(scene.root);
-//     if (joints === null) {
-//       // Drop, not Skip. Skip means a RECOGNIZED-but-unsupported feature was ignored — a gap in what this
-//       // importer implements. Skeletal animation IS implemented; what failed is the DATA, a caller pairing an
-//       // .md5anim with a mesh that carries no skeleton to bind it to. The animation is lost, which is Drop by
-//       // definition, and the distinction is load-bearing: a Skip here exempts itself from every severity-based
-//       // "did the importer complain" check.
-//       reportImportDiagnostic(
-//         diagnostics,
-//         ImportDiagnosticSeverity.Drop,
-//         'md5mesh.animation-no-skeleton',
-//         'importMd5Mesh',
-//       );
-//       return scene;
-//     }
-//   
-//     const clip = parseMd5Anim(animSource, joints, diagnostics);
-//     if (clip !== null) scene.animations.default = clip;
-//     return scene;
-//   }
-//   
-//   // Parses an id Tech 4 MD5 mesh file (.md5mesh) into a format-neutral Scene3DDocument. The ASCII
-//   // line-oriented format contains a skeleton (joints) and one or more mesh sections. Each mesh section
-//   // becomes one document Mesh node (skinned layout, joints0/weights0), and the joints become a "skeleton"
-//   // group + joint node subtree in the document `nodes` table plus one entry in `skins` (joints by node
-//   // index, inverse-bind per joint). The subtlety that MD5 skinning gets wrong: .md5mesh joint transforms
-//   // are ABSOLUTE (object-space), but .md5anim frames are parent-RELATIVE — so each joint node here carries
-//   // its parent-RELATIVE local transform (parent × child rebuilds the absolute world), while parseMd5Anim
-//   // drives its already-relative values onto the same joints. Both then pose one consistent hierarchy. The
-//   // skin's inverse-bind is derived directly from the ABSOLUTE bind world (the document requires it explicit,
-//   // where the live scene path let createSkeleton3D derive it from the joint nodes' world transforms).
-//   //
-//   // Vertex positions are computed from weighted joint influences: for each vertex, the final position is the
-//   // sum of each weight's bias multiplied by the joint-space-transformed weight position plus the joint
-//   // position. MD5's per-section `shader` becomes a BlinnPhongMaterial (the id Tech texture-and-lighting
-//   // model) whose diffuseMap references the shader path as an unresolved External ref — the parser
-//   // references, it does not load; resolution is @flighthq/scene3d-resources's explicit step.
-//   //
-//   // MD5 splits mesh and animation across two files, so the document's `animations` table is empty. Use the
-//   // `importMd5Mesh(meshSource, animSource?)` composer to bind a paired `.md5anim` in one call, or compose
-//   // onto the assembled scene directly:
-//   // `scene.animations['walk'] = parseMd5Anim(animSource, findScene3DSkeletonJoints(scene.root)!)`.
-//   //
-//   // Malformed lines record a diagnostic and are skipped; the function never throws on bad input.
-// cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/md5Parse.ts: intersection types
-// require C++ multiple-inheritance lowering: no shape for Node (argument Node3DTraits has no shape either),
-// Node3DTraits. Declare the object shape the code reads rather than intersecting a conjunct that has none
+inline flight::Ref<Scene3D> import_md5_mesh(flight::String mesh_source, std::optional<std::optional<flight::String>> anim_source = std::nullopt, std::optional<flight::Array<flight::Ref<ImportDiagnostic>>> diagnostics = std::nullopt) {
+  flight::Ref<Scene3D> scene = create_scene3_dfrom_md5_mesh(mesh_source, diagnostics);
+  if (([&]() { const auto& presence_operand = anim_source; return !presence_operand.has_value() || !presence_operand.value().has_value(); }())) {
+    return scene;
+  }
+  std::optional<flight::Array<flight::Ref<Node3D>>> joints = find_scene3_dskeleton_joints(scene->root);
+  if (!joints.has_value()) {
+    report_import_diagnostic(diagnostics, import_diagnostic_severity.drop, flight::String("md5mesh.animation-no-skeleton"), flight::String("importMd5Mesh"), std::nullopt);
+    return scene;
+  }
+  std::optional<flight::Ref<AnimationClip>> clip = parse_md5_anim(anim_source.value(), joints.value(), diagnostics);
+  if (clip.has_value()) {
+    (scene->animations.default_ = clip.value());
+  }
+  return scene;
+}
 
 } // namespace flight::scene3d_formats

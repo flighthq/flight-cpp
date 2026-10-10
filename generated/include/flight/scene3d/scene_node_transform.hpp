@@ -13,6 +13,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types { struct Entity; }
 namespace flight::types { struct HasTransform3D; }
 namespace flight::types { struct Matrix4; }
+namespace flight::types { struct Node3D; }
 namespace flight::types { struct Node3DTraits; }
 namespace flight::types { struct Vector3; }
 namespace flight::types { template <typename Traits> struct Node; }
@@ -29,11 +30,12 @@ namespace flight::types { template <typename Traits> struct Node; }
 namespace flight::scene3d {
 
 using flight::types::Matrix4;
+using flight::types::Node3D;
 using flight::types::Vector3;
 
 inline flight::Ref<flight::types::Matrix4> scratch_matrix = flight::geometry::create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-inline void set_node3_dlook_at(flight::types::Node3D node, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> eye, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> up) {
+inline void set_node3_dlook_at(flight::Ref<flight::types::Node3D> node, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> eye, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Vector3Like>>> up) {
   const double eye_x = flight::row_get<flight::RowKey<"x">>(eye);
   const double eye_y = flight::row_get<flight::RowKey<"y">>(eye);
   const double eye_z = flight::row_get<flight::RowKey<"z">>(eye);
@@ -77,7 +79,7 @@ inline void set_node3_dlook_at(flight::types::Node3D node, flight::StructuralRef
   ([&]() { auto&& typed_array_14 = m; const auto typed_index_14 = 13.0; const auto typed_value_14 = eye_y; return typed_array_14.set_index(typed_index_14, typed_value_14); }());
   ([&]() { auto&& typed_array_15 = m; const auto typed_index_15 = 14.0; const auto typed_value_15 = eye_z; return typed_array_15.set_index(typed_index_15, typed_value_15); }());
   ([&]() { auto&& typed_array_16 = m; const auto typed_index_16 = 15.0; const auto typed_value_16 = 1.0; return typed_array_16.set_index(typed_index_16, typed_value_16); }());
-  flight::node::set_node_local_matrix4(node, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_matrix)));
+  flight::node::set_node_local_matrix4(flight::structural_ref_cast<flight::types::Transform3DNode<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(node)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Matrix4Like>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix4>>>>(scratch_matrix)));
 }
 
 } // namespace flight::scene3d

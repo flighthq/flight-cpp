@@ -17,6 +17,7 @@ namespace flight::types { struct Scene2D; }
 namespace flight::types { struct Vector2; }
 namespace flight::types { template <typename NodeType> struct SelectionState; }
 namespace flight::types { template <typename T> struct Signal; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 template <typename NodeType = flight::types::NodeAny>

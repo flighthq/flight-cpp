@@ -2,6 +2,7 @@
 #pragma once
 #include <flight/structural_ref.hpp>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -23,13 +24,13 @@ namespace flight::socket {
 inline std::optional<flight::types::SocketSendFailureExplanation> explain_socket_send_failure(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Socket>>>> socket) {
   auto runtime = flight::row_get<flight::RowKey<"runtime">>(socket);
   if (runtime->disposed) {
-    return std::optional<flight::types::SocketSendFailureExplanation>{std::in_place, std::in_place_type<flight::Ref<flight::types::reason_ready_state_url_4c395d9d6de96e91>>, flight::make_ref<flight::types::reason_ready_state_url_4c395d9d6de96e91>(flight::types::reason_ready_state_url_4c395d9d6de96e91{.reason = flight::String("disposed"), .ready_state = flight::String("closed"), .url = flight::row_get<flight::RowKey<"url">>(socket)})};
+    return std::optional<std::variant<flight::Ref<flight::types::reason_ready_state_url_2ebfee753ffeb581>, flight::Ref<flight::types::reason_ready_state_url_95ff795a054094f6>, flight::Ref<flight::types::reason_ready_state_url_4c395d9d6de96e91>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::reason_ready_state_url_4c395d9d6de96e91>>, flight::make_ref<flight::types::reason_ready_state_url_4c395d9d6de96e91>(flight::types::reason_ready_state_url_4c395d9d6de96e91{.reason = flight::String("disposed"), .ready_state = flight::String("closed"), .url = flight::row_get<flight::RowKey<"url">>(socket)})};
   }
   if (!runtime->connection.has_value()) {
-    return std::optional<flight::types::SocketSendFailureExplanation>{std::in_place, std::in_place_type<flight::Ref<flight::types::reason_ready_state_url_2ebfee753ffeb581>>, flight::make_ref<flight::types::reason_ready_state_url_2ebfee753ffeb581>(flight::types::reason_ready_state_url_2ebfee753ffeb581{.reason = flight::String("no-connection"), .ready_state = runtime->ready_state, .url = flight::row_get<flight::RowKey<"url">>(socket)})};
+    return std::optional<std::variant<flight::Ref<flight::types::reason_ready_state_url_2ebfee753ffeb581>, flight::Ref<flight::types::reason_ready_state_url_95ff795a054094f6>, flight::Ref<flight::types::reason_ready_state_url_4c395d9d6de96e91>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::reason_ready_state_url_2ebfee753ffeb581>>, flight::make_ref<flight::types::reason_ready_state_url_2ebfee753ffeb581>(flight::types::reason_ready_state_url_2ebfee753ffeb581{.reason = flight::String("no-connection"), .ready_state = runtime->ready_state, .url = flight::row_get<flight::RowKey<"url">>(socket)})};
   }
   if ((runtime->ready_state != flight::String("open"))) {
-    return std::optional<flight::types::SocketSendFailureExplanation>{std::in_place, std::in_place_type<flight::Ref<flight::types::reason_ready_state_url_95ff795a054094f6>>, flight::make_ref<flight::types::reason_ready_state_url_95ff795a054094f6>(flight::types::reason_ready_state_url_95ff795a054094f6{.reason = flight::String("not-open"), .ready_state = runtime->ready_state, .url = flight::row_get<flight::RowKey<"url">>(socket)})};
+    return std::optional<std::variant<flight::Ref<flight::types::reason_ready_state_url_2ebfee753ffeb581>, flight::Ref<flight::types::reason_ready_state_url_95ff795a054094f6>, flight::Ref<flight::types::reason_ready_state_url_4c395d9d6de96e91>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::reason_ready_state_url_95ff795a054094f6>>, flight::make_ref<flight::types::reason_ready_state_url_95ff795a054094f6>(flight::types::reason_ready_state_url_95ff795a054094f6{.reason = flight::String("not-open"), .ready_state = runtime->ready_state, .url = flight::row_get<flight::RowKey<"url">>(socket)})};
   }
   return std::nullopt;
 }

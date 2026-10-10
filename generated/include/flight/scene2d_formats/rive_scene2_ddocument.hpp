@@ -10,7 +10,29 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/blend_mode.hpp>
+#include <flight/types/texture.hpp>
+
+#include <flight/types/rive_document.hpp>
+
+#include <flight/types/path_boolean_kernel.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+namespace flight::types { struct EmbeddedImageResourceReference; }
+namespace flight::types { struct ExternalImageResourceReference; }
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct PathBooleanKernel; }
+namespace flight::types { struct RiveArtboardImport; }
+namespace flight::types { struct RiveDocumentImportResult; }
+namespace flight::types { struct RiveFileAsset; }
+namespace flight::types { struct RiveScene2DDocumentResult; }
+namespace flight::types { struct Scene2DSlotReference; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 #include <flight/entity/entity.hpp>
 #include <flight/image/image_resource_reference.hpp>
@@ -23,97 +45,23 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene2d_formats {
 
-using flight::types::blend_mode;
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_95B8B467441EC19B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_95B8B467441EC19B
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  flight::types::TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
-  flight::String dimension;
-  flight::Array<std::optional<flight::Ref<flight::types::TextureSource>>> sources;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_95B8B467441EC19B
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCE_B54DC1BFFA369663
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCE_B54DC1BFFA369663
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663 : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  flight::types::TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
-  flight::String dimension;
-  std::optional<flight::Ref<flight::types::VoxelGrid>> source;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCE_B54DC1BFFA369663
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_AE19201647327EBA
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_AE19201647327EBA
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  flight::types::TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
-  flight::String dimension;
-  flight::types::TextureSourceCubeFaces sources;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_AE19201647327EBA
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_FEF90E79BFD2F38D
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_FEF90E79BFD2F38D
-struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_fef90e79bfd2f38d : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::Node2DData>> data;
-  bool enabled;
-  flight::String kind;
-  std::optional<flight::String> name;
-  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>> entity_runtime_key;
-  double alpha;
-  bool visible;
-  std::optional<flight::String> blend_mode;
-  std::optional<flight::Ref<flight::types::ClipRegion>> clip;
-  std::optional<flight::Ref<flight::types::Material>> material;
-  std::optional<flight::Ref<flight::types::MaterialData>> material_data;
-  double pivot_x;
-  double pivot_y;
-  double rotation;
-  double scale_x;
-  double scale_y;
-  double skew_x;
-  double skew_y;
-  double x;
-  double y;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_FEF90E79BFD2F38D
+using flight::types::ImportDiagnostic;
+using flight::types::PathBooleanKernel;
+using flight::types::RiveFileAsset;
+using flight::types::Texture2D;
 
 inline flight::Array<flight::types::Texture> collect_rive_textures_for_asset(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveDocumentImportResult>>>> imported, double asset_index) {
   flight::Array<flight::types::Texture> textures = flight::Array<flight::types::Texture>{};
   for (auto artboard : flight::row_get<flight::RowKey<"artboards">>(imported)) {
     std::function<void(flight::types::Node2D)> walk = [=](flight::types::Node2D node) {
-  std::optional<flight::types::Texture> texture = flight::scene2d_formats::get_rive_image_texture(node);
+  std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>> texture = flight::scene2d_formats::get_rive_image_texture(node);
   if ((texture.has_value() && (flight::scene2d_formats::get_rive_image_asset_index(node) == asset_index))) {
     textures.push(texture.value());
   }
   {
     double index = 0.0;
     while ((index < flight::node::get_node_child_count(node))) {
-      walk(flight::structural_ref_cast<flight::types::Node2D>(flight::node::get_node_child_at<flight::Ref<flight::types::Node2DTraits>>(node, index)));
+      walk(flight::structural_ref_cast<flight::types::Node2D>(flight::node::get_node_child_at(node, index)));
       (index += 1.0);
     }
   }
@@ -187,7 +135,7 @@ inline void collect_rive_slots(flight::types::Node2D node, flight::SequenceView<
     double index = 0.0;
     while ((index < flight::node::get_node_child_count(node))) {
       {
-        collect_rive_slots(flight::structural_ref_cast<flight::types::Node2D>(flight::node::get_node_child_at<flight::Ref<flight::types::Node2DTraits>>(node, index)), artboards, slots);
+        collect_rive_slots(flight::structural_ref_cast<flight::types::Node2D>(flight::node::get_node_child_at(node, index)), artboards, slots);
       }
       (index += 1.0);
     }
@@ -209,7 +157,7 @@ inline std::optional<flight::Ref<flight::types::RiveScene2DDocumentResult>> crea
   }
   flight::types::DisplayObject root = flight::scene2d::create_display_object(flight::make_structural_ref<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::types::DisplayObject>>>>(flight::row_field<flight::RowKey<"name">>(std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, flight::String("Rive")})));
   for (auto artboard : imported->artboards) {
-    flight::node::add_node_child<flight::Ref<flight::types::Node2DTraits>>(root, artboard->root);
+    flight::node::add_node_child(root, artboard->root);
   }
   flight::types::EntityConstruction<flight::Ref<flight::types::RiveScene2DDocumentResult>> out = flight::entity::allocate_entity<flight::Ref<flight::types::RiveScene2DDocumentResult>>();
   initialize_rive_scene2_ddocument_result(out, root, imported, create_rive_image_resources(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveDocumentImportResult>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveDocumentImportResult>>>>(imported)), diagnostics), create_rive_slots(imported->artboards));

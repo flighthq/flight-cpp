@@ -27,7 +27,7 @@ struct BitmapReadbackResolution : public flight::ReferenceEnabled {
   flight::types::BitmapReadbackBlockReason reason;
 };
 
-inline flight::Ref<BitmapReadbackResolution> resolve_bitmap_readback(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostBitmapReadbackCapability>>>> host_bitmap_readback, flight::Ref<flight::types::HostImageSource> source, double width, double height, flight::types::BitmapReadbackMode mode) {
+inline flight::Ref<BitmapReadbackResolution> resolve_bitmap_readback(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostBitmapReadbackCapability>>>> host_bitmap_readback, flight::types::HostImageSource source, double width, double height, flight::types::BitmapReadbackMode mode) {
   if (((width <= 0.0) || (height <= 0.0))) {
     return flight::make_ref<BitmapReadbackResolution>(BitmapReadbackResolution{.bitmap = std::nullopt, .reason = flight::String("empty-size")});
   }

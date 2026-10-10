@@ -9,11 +9,13 @@
 #include <limits>
 #include <optional>
 #include <random>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Bitmap; }
 namespace flight::types { struct BitmapFont; }
 namespace flight::types { struct BitmapFontCharRecord; }
 namespace flight::types { struct BitmapFontKerningPair; }
@@ -21,29 +23,39 @@ namespace flight::types { struct BitmapFontKerningRecord; }
 namespace flight::types { struct BitmapFontPageRecord; }
 namespace flight::types { struct BitmapFontParseOptions; }
 namespace flight::types { struct BitmapFontRecord; }
+namespace flight::types { struct CompressedImageResource; }
+namespace flight::types { struct ExternalTexture; }
 namespace flight::types { struct GlyphEntry; }
 namespace flight::types { struct GlyphMetrics; }
+namespace flight::types { struct ImageResource; }
 namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct RenderTarget; }
 namespace flight::types { struct Sampler; }
 namespace flight::types { struct Texture2D; }
 namespace flight::types { struct TextureAtlas; }
 namespace flight::types { struct TextureAtlasRegion; }
 namespace flight::types { struct TextureSource; }
 namespace flight::types { struct Vector2; }
+namespace flight::types { struct VoxelGrid; }
 
 #include <flight/bitmapfont/bitmap_font.hpp>
-#include <flight/types/alpha_type.hpp>
+#include <flight/types/bitmap.hpp>
 #include <flight/types/bitmap_font.hpp>
 #include <flight/types/bitmap_font_record.hpp>
+#include <flight/types/compressed_image_resource.hpp>
+#include <flight/types/external_texture.hpp>
 #include <flight/types/glyph_source.hpp>
+#include <flight/types/image_resource.hpp>
 #include <flight/types/import_diagnostic.hpp>
+#include <flight/types/render_target.hpp>
 #include <flight/types/sampler.hpp>
 #include <flight/types/texture.hpp>
 #include <flight/types/texture_atlas.hpp>
 #include <flight/types/texture_atlas_region.hpp>
 #include <flight/types/texture_source.hpp>
-#include <flight/types/texture_source_kind.hpp>
+#include <flight/types/texture_source_value.hpp>
 #include <flight/types/vector2.hpp>
+#include <flight/types/voxel_grid.hpp>
 #include <flight/bitmapfont_formats/bitmap_font_record.hpp>
 
 namespace flight::bitmapfont_formats {
@@ -171,9 +183,9 @@ inline flight::String format_bitmap_font_fnt(flight::StructuralRef<flight::RowRe
   const double line_height = ((flight::row_get<flight::RowKey<"ascent">>(metrics) + flight::row_get<flight::RowKey<"descent">>(metrics)) + flight::row_get<flight::RowKey<"lineGap">>(metrics));
   const double base = flight::row_get<flight::RowKey<"ascent">>(metrics);
   auto primary_texture = ([&]() -> std::optional<flight::Ref<flight::types::Texture2D>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"pages">>(font).get(0.0); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->texture; }());
-  auto primary_image = (primary_texture.has_value() ? std::optional{primary_texture.value()->source} : std::nullopt);
-  const double scale_w = (primary_image.has_value() ? primary_image.value()->width : 0.0);
-  const double scale_h = (primary_image.has_value() ? primary_image.value()->height : 0.0);
+  std::optional<std::variant<flight::Ref<flight::types::VoxelGrid>, flight::Ref<flight::types::TextureSource>, flight::Ref<flight::types::ExternalTexture>, flight::Ref<flight::types::Bitmap>, flight::Ref<flight::types::CompressedImageResource>, flight::Ref<flight::types::RenderTarget>, flight::Ref<flight::types::ImageResource>>> primary_image = (primary_texture.has_value() ? std::optional{primary_texture.value()->source} : std::nullopt);
+  const double scale_w = (primary_image.has_value() ? primary_image.value().width : 0.0);
+  const double scale_h = (primary_image.has_value() ? primary_image.value().height : 0.0);
   const double page_count = flight::maximum(static_cast<double>(flight::row_get<flight::RowKey<"pages">>(font).size()), 1.0);
   flight::Array<flight::String> lines = flight::Array<flight::String>{};
   lines.push(flight::String("info face=\"\" size=") + flight::to_string(line_height) + flight::String(" bold=0 italic=0 charset=\"\" unicode=1 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=0,0 outline=0"));

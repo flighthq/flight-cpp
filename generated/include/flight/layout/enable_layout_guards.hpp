@@ -8,9 +8,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/layout.hpp>
+
+namespace flight::types { struct LayoutResolutionExplanation; }
+namespace flight::types { struct LayoutState; }
+
 #include <flight/types/contract.hpp>
 
 namespace flight::layout {
+
+using flight::types::LayoutState;
 
 inline void enable_layout_guards(flight::Ref<flight::types::LayoutState> state, flight::types::LayoutResolutionGuard warning_sink) {
   (state->guard = std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LayoutResolutionExplanation>>>>)>>{warning_sink});

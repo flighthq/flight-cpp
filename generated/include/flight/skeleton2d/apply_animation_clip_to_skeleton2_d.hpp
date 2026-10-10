@@ -10,10 +10,25 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/skeleton2_danimation_target.hpp>
+
+#include <flight/types/skeleton2_d.hpp>
+
+#include <flight/types/animation_channel.hpp>
+
+namespace flight::types { struct AnimationChannel; }
+namespace flight::types { struct AnimationClip; }
+namespace flight::types { struct Skeleton2D; }
+namespace flight::types { struct Skeleton2DAnimationTarget; }
+
 #include <flight/types/contract.hpp>
 #include <flight/skeleton2d/skeleton2d_animation_target.hpp>
 
 namespace flight::skeleton2d {
+
+using flight::types::AnimationChannel;
+using flight::types::Skeleton2D;
+using flight::types::Skeleton2DAnimationTarget;
 
 inline void apply_animation_clip_to_skeleton2_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationClip>>>> clip, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>> setup, flight::Ref<flight::types::Skeleton2D> pose, double time) {
   if ((setup == flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton2D>>>>(pose))) {

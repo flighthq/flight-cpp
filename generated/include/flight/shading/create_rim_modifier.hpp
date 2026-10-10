@@ -7,6 +7,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct RimModifier; }
+namespace flight::types { struct RimModifierOptions; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/shading/modifier.hpp>

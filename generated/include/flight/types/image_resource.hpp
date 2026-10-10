@@ -36,7 +36,7 @@ struct ImageResource : public flight::ReferenceEnabled {
   flight::String kind;
   double version;
   double width;
-  flight::Ref<flight::types::HostImageSource> source;
+  flight::types::HostImageSource source;
 };
 
 struct HostImageCapability : public flight::ReferenceEnabled {

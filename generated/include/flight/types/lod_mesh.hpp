@@ -7,15 +7,16 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 namespace flight::types { struct Mesh; }
-namespace flight::types { struct Node3DTraits; }
+namespace flight::types { struct Node3D; }
+namespace flight::types { struct Node3DRuntime; }
 namespace flight::types { struct NodeData; }
 namespace flight::types { struct Quaternion; }
 namespace flight::types { struct Vector3; }
-namespace flight::types { template <typename Traits> struct NodeRuntime; }
 
 namespace flight::types {
 struct LodLevel;
 struct LodMesh;
+using LodMeshRuntime = flight::Ref<flight::types::Node3DRuntime>;
 } // namespace flight::types
 
 #include <flight/types/mesh.hpp>
@@ -38,7 +39,7 @@ struct LodMesh : public flight::ReferenceEnabled {
   bool enabled;
   flight::String kind;
   std::optional<flight::String> name;
-  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node3DTraits>>>> entity_runtime_key;
+  std::optional<flight::Ref<flight::types::Node3DRuntime>> entity_runtime_key;
   double alpha;
   bool visible;
   flight::Ref<flight::types::Vector3> position;
@@ -47,8 +48,6 @@ struct LodMesh : public flight::ReferenceEnabled {
   double active_level_index;
   flight::Array<flight::Ref<LodLevel>> levels;
 };
-
-using LodMeshRuntime = flight::Ref<flight::types::Node3DRuntime>;
 
 inline const flight::String lod_mesh_kind = flight::String("LodMesh");
 

@@ -12,10 +12,35 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/renderer.hpp>
+
+#include <flight/types/render_state.hpp>
+
+namespace flight::types { struct CatalogEntry; }
+namespace flight::types { struct CatalogRegistration; }
+namespace flight::types { struct FallbackRemediableSceneCoverageEntry; }
+namespace flight::types { struct FallbackUnavailableSceneCoverageEntry; }
+namespace flight::types { struct RenderRegistries; }
+namespace flight::types { struct RenderState; }
+namespace flight::types { struct RenderStateRuntime; }
+namespace flight::types { struct Renderer; }
+namespace flight::types { struct SatisfiedSceneCoverageEntry; }
+namespace flight::types { struct Scene2DKindUsage; }
+namespace flight::types { struct TombstonedRegistryTableEntry; }
+namespace flight::types { struct UnavailableSceneCoverageEntry; }
+namespace flight::types { struct UnregisteredSceneCoverageEntry; }
+namespace flight::types { template <typename K> struct CanvasShapeCommand; }
+namespace flight::types { template <typename T> struct BoundRegistryTableEntry; }
+namespace flight::types { template <typename T> struct KeyedTable; }
+
 #include <flight/types/contract.hpp>
 #include <flight/render/render_state.hpp>
 
 namespace flight::render {
+
+using flight::types::RenderState;
+using flight::types::RenderStateRuntime;
+using flight::types::Renderer;
 
 inline std::optional<flight::Ref<flight::types::CatalogRegistration>> find_catalog_registration(std::optional<flight::Array<flight::Ref<flight::types::CatalogEntry>>> catalog, flight::String kind, flight::types::RenderRegistryTable registry) {
   if (!catalog.has_value()) {
@@ -46,44 +71,6 @@ inline flight::types::SceneCoverageEntry create_shortfall_entry(std::optional<fl
   }
   return {.coverage = (fallback ? flight::types::scene_coverage->fallback_remediable : flight::types::scene_coverage->unregistered), .module = registration.value()->module, .registrar = registration.value()->registrar};
 }
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_STATE_701E8465BD6197E1
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_STATE_701E8465BD6197E1
-struct state_701e8465bd6197e1 : public flight::ReferenceEnabled {
-  flight::String state;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_STATE_701E8465BD6197E1
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_STATE_VALUE_9E291F7FBD8278F3
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_STATE_VALUE_9E291F7FBD8278F3
-struct state_value_9e291f7fbd8278f3 : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::Ref<flight::types::Renderer> value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_STATE_VALUE_9E291F7FBD8278F3
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_STATE_VALUE_F3287522B0A34D2E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_STATE_VALUE_F3287522B0A34D2E
-struct state_value_f3287522b0a34d2e : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::Ref<flight::types::Renderer> value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_STATE_VALUE_F3287522B0A34D2E
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_STATE_CF243C159232B529
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_STATE_CF243C159232B529
-struct state_cf243c159232b529 : public flight::ReferenceEnabled {
-  flight::String state;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_STATE_CF243C159232B529
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_STATE_VALUE_0DE19D58A8C125E4
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_STATE_VALUE_0DE19D58A8C125E4
-struct state_value_0de19d58a8c125e4 : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::Ref<flight::types::CanvasShapeCommand<flight::types::ShapeCommandKey>> value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_STATE_VALUE_0DE19D58A8C125E4
 
 inline bool collect_scene2_dcoverage_gaps(std::optional<flight::Array<flight::types::SceneCoverageEntry>> out, flight::Ref<flight::types::RenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2DKindUsage>>>> usage, bool stop_at_first, std::optional<flight::Array<flight::Ref<flight::types::CatalogEntry>>> catalog) {
   bool found = false;

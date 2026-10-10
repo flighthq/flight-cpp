@@ -6,6 +6,7 @@
 //   missing: variable (binding) -- source line 90
 //   missing: function getMotionBlurPipeline -- source line 81
 //   missing: variable (binding) -- source line 71
+#include <flight/any.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <functional>
 #include <optional>
@@ -14,22 +15,21 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { struct WgpuEffectPipeline; struct WgpuRenderState; } namespace flight::effects_wgpu { inline flight::Ref<flight::types::WgpuEffectPipeline> get_motion_blur_pipeline(flight::Ref<flight::types::WgpuRenderState> state); }
+#include <flight/types/wgpu_render_state.hpp>
 
 #include <flight/types/motion_blur_effect.hpp>
-
-#include <flight/types/wgpu_render_state.hpp>
 
 #include <flight/effects_wgpu/wgpu_effect_pass.hpp>
 #include <flight/effects_wgpu/wgpu_effect_texel_scale.hpp>
 #include <flight/effects_wgpu/wgpu_render_effect_registry.hpp>
 
-namespace flight::effects_wgpu {
 
-using flight::types::MotionBlurEffect;
+namespace flight::types { struct WgpuEffectPipeline; struct WgpuRenderState; } namespace flight::effects_wgpu { inline flight::Ref<flight::types::WgpuEffectPipeline> get_motion_blur_pipeline(flight::Ref<flight::types::WgpuRenderState> state); }
+namespace flight::effects_wgpu {
 
 extern const flight::types::WgpuRenderEffectRunner default_wgpu_motion_blur_effect_runner;
 
+using flight::types::MotionBlurEffect;
 using flight::types::WgpuRenderState;
 
 
@@ -63,6 +63,13 @@ inline const flight::String motion_blur_fragment_wgsl = flight::String("\nstruct
 // cpp emission failed for @flighthq/effects-wgpu/packages/effects-wgpu/src/wgpuMotionBlurEffect.ts: intersection
 // types require C++ multiple-inheritance lowering: no shape for Entity. Declare the object shape the code reads
 // rather than intersecting a conjunct that has none
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_VIEW_AE807D425AE0F5DE
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_VIEW_AE807D425AE0F5DE
+struct view_ae807d425ae0f5de : public flight::ReferenceEnabled {
+  flight::Any view;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_VIEW_AE807D425AE0F5DE
 
 inline void apply_motion_blur_effect_to_wgpu(flight::Ref<WgpuRenderState> state, flight::Ref<WgpuTextureRenderTarget> source, flight::Ref<WgpuTextureRenderTarget> dest, std::optional<flight::host_sdl::WgpuTexture> velocity_texture, flight::Ref<MotionBlurEffect> effect) {
   const double intensity = effect->intensity.value_or(1.0);

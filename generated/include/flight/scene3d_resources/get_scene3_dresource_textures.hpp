@@ -53,7 +53,10 @@ inline void get_scene3_dresource_textures(flight::Array<flight::Ref<Texture>> ou
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_RESOURCES_BINDING_UID_06E64A362B012722
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_RESOURCES_BINDING_UID_06E64A362B012722
-using binding_uid_06e64a362b012722 = flight::types::binding_uid_06e64a362b012722;
+struct binding_uid_06e64a362b012722 : public flight::ReferenceEnabled {
+  std::optional<flight::ErasedRef> binding;
+  std::optional<flight::String> uid;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_RESOURCES_BINDING_UID_06E64A362B012722
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_RESOURCES_ENTITY_RUNTIME_KEY_KIND_MESSAGE_NAME_76C9F641B04D5A05

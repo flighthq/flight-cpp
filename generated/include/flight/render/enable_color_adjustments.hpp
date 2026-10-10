@@ -9,6 +9,7 @@
 //   missing: variable (binding) -- source line 154
 //   missing: function updateRenderProxyColorScaleBias -- source line 47
 //   missing: function enableColorAdjustments -- source line 26
+#include <flight/any.hpp>
 #include <flight/weak_set.hpp>
 #include <functional>
 #include <optional>
@@ -202,7 +203,7 @@ inline flight::Array<double> resolve_inherited_color_matrix(std::variant<flight:
 
 
 // NOT GENERATED: function enableColorAdjustments -- source line 26
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:multiVariant [compiler-restriction]
 //
 // The source it stood for:
 //   export function enableColorAdjustments(state: RenderState): void {
@@ -226,8 +227,7 @@ inline flight::Array<double> resolve_inherited_color_matrix(std::variant<flight:
 //   // Matrix-tier channel mixing travels through `resolvedColorMatrix`. A non-matrix operation that cannot
 //   // be represented by either path leaves `colorAdjustmentsUnsupported` set, invoking the shakeable guard
 //   // so unsupported adjustment data is reported rather than silently discarded.
-// cpp emission failed for @flighthq/render/packages/render/src/enableColorAdjustments.ts: intersection types
-// require C++ multiple-inheritance lowering: no shape for SlotTable (argument function has no shape either),
-// Entity. Declare the object shape the code reads rather than intersecting a conjunct that has none
+// cpp emission failed for @flighthq/render/packages/render/src/enableColorAdjustments.ts: contextual
+// multiVariant construction requires expression type evidence
 
 } // namespace flight::render

@@ -3,6 +3,7 @@
 #include <cmath>
 #include <concepts>
 #include <cstddef>
+#include <cstdint>
 #include <functional>
 #include <iterator>
 #include <memory>
@@ -86,6 +87,8 @@ class SequenceView {
       : length(this),
         identity_(other.identity_),
         float32_array_backed_(other.float32_array_backed_),
+        uint16_array_backed_(other.uint16_array_backed_),
+        uint32_array_backed_(other.uint32_array_backed_),
         size_(other.size_),
         get_(other.get_) {}
 
@@ -93,12 +96,16 @@ class SequenceView {
       : length(this),
         identity_(std::exchange(other.identity_, nullptr)),
         float32_array_backed_(std::exchange(other.float32_array_backed_, false)),
+        uint16_array_backed_(std::exchange(other.uint16_array_backed_, false)),
+        uint32_array_backed_(std::exchange(other.uint32_array_backed_, false)),
         size_(std::move(other.size_)),
         get_(std::move(other.get_)) {}
 
   SequenceView& operator=(const SequenceView& other) {
     identity_ = other.identity_;
     float32_array_backed_ = other.float32_array_backed_;
+    uint16_array_backed_ = other.uint16_array_backed_;
+    uint32_array_backed_ = other.uint32_array_backed_;
     size_ = other.size_;
     get_ = other.get_;
     return *this;
@@ -107,6 +114,8 @@ class SequenceView {
   SequenceView& operator=(SequenceView&& other) noexcept {
     identity_ = std::exchange(other.identity_, nullptr);
     float32_array_backed_ = std::exchange(other.float32_array_backed_, false);
+    uint16_array_backed_ = std::exchange(other.uint16_array_backed_, false);
+    uint32_array_backed_ = std::exchange(other.uint32_array_backed_, false);
     size_ = std::move(other.size_);
     get_ = std::move(other.get_);
     return *this;
@@ -126,6 +135,8 @@ class SequenceView {
   SequenceView(TypedArray<SourceValue> source)
       : identity_(source.identity()),
         float32_array_backed_(std::same_as<std::remove_cv_t<SourceValue>, float>),
+        uint16_array_backed_(std::same_as<std::remove_cv_t<SourceValue>, std::uint16_t>),
+        uint32_array_backed_(std::same_as<std::remove_cv_t<SourceValue>, std::uint32_t>),
         size_([source] { return source.size(); }),
         get_([source](size_type index) { return Value(source[index]); }) {}
 
@@ -182,6 +193,12 @@ class SequenceView {
   // query only: it introduces none of the optional- or index-like names used by generic probes.
   [[nodiscard]] bool is_float32_array_backed() const noexcept {
     return float32_array_backed_;
+  }
+  [[nodiscard]] bool is_uint16_array_backed() const noexcept {
+    return uint16_array_backed_;
+  }
+  [[nodiscard]] bool is_uint32_array_backed() const noexcept {
+    return uint32_array_backed_;
   }
   [[nodiscard]] const_iterator begin() const noexcept { return const_iterator(this, 0); }
   [[nodiscard]] const_iterator end() const { return const_iterator(this, size()); }
@@ -240,6 +257,8 @@ class SequenceView {
 
   const void* identity_{nullptr};
   bool float32_array_backed_{false};
+  bool uint16_array_backed_{false};
+  bool uint32_array_backed_{false};
   std::function<size_type()> size_;
   std::function<Value(size_type)> get_;
 };

@@ -22,7 +22,7 @@ namespace flight::types { struct ImageResource; }
 
 namespace flight::bitmap {
 
-inline std::optional<flight::Ref<flight::types::Bitmap>> create_bitmap_from_image_source(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostBitmapReadbackCapability>>>> host_bitmap_readback, flight::Ref<flight::types::HostImageSource> source, double width, double height) {
+inline std::optional<flight::Ref<flight::types::Bitmap>> create_bitmap_from_image_source(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostBitmapReadbackCapability>>>> host_bitmap_readback, flight::types::HostImageSource source, double width, double height) {
   return flight::bitmap::resolve_bitmap_readback(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostBitmapReadbackCapability>>>>>(host_bitmap_readback), source, width, height, flight::String("bitmap"))->bitmap;
 }
 

@@ -874,7 +874,7 @@ inline void transpose_matrix4(flight::types::Matrix4Like out, flight::Structural
 inline flight::Float32Array identity_flight_value_variable__u00005f__u00005f_identity_flight_private_9a2bd1a340e90edf = flight::Float32Array(flight::Array{1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0});
 
 inline flight::Ref<flight::types::Matrix4> create_matrix4(std::optional<double> m00 = std::nullopt, std::optional<double> m01 = std::nullopt, std::optional<double> m02 = std::nullopt, std::optional<double> m03 = std::nullopt, std::optional<double> m10 = std::nullopt, std::optional<double> m11 = std::nullopt, std::optional<double> m12 = std::nullopt, std::optional<double> m13 = std::nullopt, std::optional<double> m20 = std::nullopt, std::optional<double> m21 = std::nullopt, std::optional<double> m22 = std::nullopt, std::optional<double> m23 = std::nullopt, std::optional<double> m30 = std::nullopt, std::optional<double> m31 = std::nullopt, std::optional<double> m32 = std::nullopt, std::optional<double> m33 = std::nullopt) {
-  flight::Float32Array m = flight::Float32Array(identity_flight_value_variable__u00005f__u00005f_identity_flight_private_9a2bd1a340e90edf);
+  flight::Float32Array m = identity_flight_value_variable__u00005f__u00005f_identity_flight_private_9a2bd1a340e90edf.slice();
   if (m00.has_value()) {
     ([&]() { auto&& typed_array_221 = m; const auto typed_index_221 = 0.0; const auto typed_value_221 = m00.value(); return typed_array_221.set_index(typed_index_221, typed_value_221); }());
   }

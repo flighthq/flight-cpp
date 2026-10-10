@@ -11,29 +11,28 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
+namespace flight::types { struct Material; }
+namespace flight::types { struct RenderRegistrySignals; }
+namespace flight::types { struct TombstonedRegistryTableEntry; }
+namespace flight::types { struct WgpuMaterialRenderer; }
+namespace flight::types { struct WgpuRenderRegistries; }
+namespace flight::types { struct WgpuRenderState; }
+namespace flight::types { struct WgpuRenderStateRuntime; }
+namespace flight::types { template <typename T> struct BoundRegistryTableEntry; }
+namespace flight::types { template <typename T> struct KeyedTable; }
+
 #include <flight/registry/registry_table.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 
 namespace flight::render_wgpu {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_VALUE_7563F61231885C96
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_VALUE_7563F61231885C96
-struct state_value_7563f61231885c96 : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::Ref<flight::types::WgpuMaterialRenderer> value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_VALUE_7563F61231885C96
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_CF243C159232B529
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_CF243C159232B529
-struct state_cf243c159232b529 : public flight::ReferenceEnabled {
-  flight::String state;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_CF243C159232B529
+using flight::types::WgpuRenderState;
 
 inline std::optional<flight::Ref<flight::types::WgpuMaterialRenderer>> get_wgpu_material_renderer(flight::Ref<flight::types::WgpuRenderState> state, flight::String kind) {
-  auto entry = flight::render_wgpu::get_wgpu_render_state_runtime(state)->registries->material_renderers->entries.get(kind);
+  std::optional<flight::types::RegistryTableEntry<flight::Ref<flight::types::WgpuMaterialRenderer>>> entry = flight::render_wgpu::get_wgpu_render_state_runtime(state)->registries->material_renderers->entries.get(kind);
   return ((entry.has_value() && entry.value().index() == 0) ? std::optional<flight::Ref<flight::types::WgpuMaterialRenderer>>{std::get<0>(entry.value())->value} : std::nullopt);
 }
 
@@ -41,14 +40,6 @@ inline void register_wgpu_material_renderer(flight::Ref<flight::types::WgpuRende
   auto runtime = flight::render_wgpu::get_wgpu_render_state_runtime(state);
   (runtime->registries->material_renderers = flight::registry::with_registry_table_entry<flight::Ref<flight::types::WgpuMaterialRenderer>>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::WgpuMaterialRenderer>>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::WgpuMaterialRenderer>>>>>>(runtime->registries->material_renderers)), kind, renderer));
 }
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_VALUE_71C9064FFF7B22E3
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_VALUE_71C9064FFF7B22E3
-struct state_value_71c9064fff7b22e3 : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::Ref<flight::types::WgpuMaterialRenderer> value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_VALUE_71C9064FFF7B22E3
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_CALLABLE_CLEAR_SIGNALS_525C5788111D88F4
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_CALLABLE_CLEAR_SIGNALS_525C5788111D88F4

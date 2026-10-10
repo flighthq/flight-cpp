@@ -1,4 +1,4 @@
-// Runtime completion of the generated partial sceneNode module.
+// Runtime completion of scene3d/src/sceneNode.ts for flattened C++ owners.
 #pragma once
 
 #include <algorithm>
@@ -11,15 +11,26 @@
 #include <flight/geometry/vector3.hpp>
 #include <flight/node/node.hpp>
 #include <flight/runtime.hpp>
+#include <flight/signals/emitter.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/node3_d.hpp>
 #include <flight/types/node_signals.hpp>
 
 namespace flight::scene3d {
 
-using Node3DBaseRuntime =
-    flight::types::NodeRuntime<flight::Ref<flight::types::Node3DTraits>>;
-using Node3DBaseRuntimeOwner = std::shared_ptr<Node3DBaseRuntime>;
+using Node3DTraits = flight::Ref<flight::types::Node3DTraits>;
+using Node3DView = flight::types::NodeOf<Node3DTraits>;
+using Node3DBaseRuntime = flight::types::NodeRuntime<Node3DTraits>;
+using Node3DBaseRuntimeOwner = flight::Ref<Node3DBaseRuntime>;
+
+struct enabled_name_alpha_visible_6eed4c0384cbbf3f
+    : public flight::ReferenceEnabled {
+  std::optional<bool> enabled;
+  std::variant<flight::String, flight::Null, flight::Undefined> name{
+      std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<double> alpha;
+  std::optional<bool> visible;
+};
 
 namespace detail {
 
@@ -48,7 +59,8 @@ template <typename Value>
 }
 
 template <typename Value>
-[[nodiscard]] std::optional<flight::String> optional_string(const Value& value) {
+[[nodiscard]] std::optional<flight::String> optional_string(
+    const Value& value) {
   if constexpr (std::same_as<std::remove_cvref_t<Value>, flight::String>) {
     return value;
   } else if constexpr (requires { value.has_value(); value.value(); }) {
@@ -75,7 +87,8 @@ template <typename Options>
 }
 
 template <typename Options>
-[[nodiscard]] std::optional<flight::String> option_name(const Options& options) {
+[[nodiscard]] std::optional<flight::String> option_name(
+    const Options& options) {
   if constexpr (requires { options.has_value(); options.value(); }) {
     if (!options.has_value()) return std::nullopt;
     return option_name(options.value());
@@ -110,21 +123,34 @@ template <typename Options>
   }
 }
 
-template <typename Schema>
-[[nodiscard]] Node3DBaseRuntimeOwner base_runtime(
-    const flight::StructuralRef<Schema>& source) {
-  auto runtime = flight::row_get<Node3DBaseRuntimeOwner>(
-      source, flight::types::entity_runtime_key);
-  if (runtime) return runtime;
-  const auto slot = flight::row_get<std::optional<Node3DBaseRuntimeOwner>>(
-      source, flight::types::entity_runtime_key);
-  return slot.value_or(nullptr);
+template <typename Runtime>
+[[nodiscard]] Node3DBaseRuntimeOwner base_runtime_alias(
+    const std::shared_ptr<Runtime>& runtime) {
+  return std::reinterpret_pointer_cast<Node3DBaseRuntime>(runtime);
 }
 
-} // namespace detail
+template <typename Runtime>
+inline void bind_base_runtime_alias(
+    const std::shared_ptr<flight::RowOwner>& owner,
+    const std::shared_ptr<Runtime>& runtime) {
+  if (!owner) throw std::bad_weak_ptr();
+  owner->set_dynamic_value(
+      flight::types::entity_runtime_key,
+      std::optional<Node3DBaseRuntimeOwner>{base_runtime_alias(runtime)});
+}
+
+template <typename Value, typename Runtime>
+inline void bind_base_runtime_alias(const std::shared_ptr<Value>& source,
+                                    const std::shared_ptr<Runtime>& runtime) {
+  const auto row = flight::StructuralRef<
+      flight::RowWritable<flight::RowOf<flight::Ref<Value>>>>(source);
+  bind_base_runtime_alias(row.shared_owner(), runtime);
+}
+
+}  // namespace detail
 
 template <typename Runtime>
-inline void initialize_node3_druntime(const flight::Ref<Runtime>& runtime) {
+inline void initialize_node3_druntime(const std::shared_ptr<Runtime>& runtime) {
   runtime->binding = std::nullopt;
   runtime->uid = std::nullopt;
   runtime->color_adjustments = std::nullopt;
@@ -164,54 +190,104 @@ inline void initialize_node3_druntime(const flight::Ref<Runtime>& runtime) {
 
 inline flight::Ref<flight::types::Node3DRuntime> create_node3_druntime() {
   auto runtime = flight::make_ref<flight::types::Node3DRuntime>();
-  initialize_node3_druntime<flight::types::Node3DRuntime>(runtime);
+  initialize_node3_druntime(runtime);
   return runtime;
 }
 
+template <typename Runtime, typename Out, typename Options, typename Factory>
+inline void initialize_node3_d(const Out& out, flight::String kind,
+                               const Options& options, Factory create_runtime) {
+  const auto runtime = create_runtime();
+  flight::row_set<flight::RowKey<"data">>(
+      out, std::optional<flight::Ref<flight::types::NodeData>>{});
+  flight::row_set<flight::RowKey<"enabled">>(
+      out, detail::option_enabled(options).value_or(true));
+  flight::row_set<flight::RowKey<"kind">>(out, std::move(kind));
+  flight::row_set<flight::RowKey<"name">>(out, detail::option_name(options));
+  flight::row_set<flight::RowKey<"alpha">>(
+      out, detail::option_alpha(options).value_or(1.0));
+  flight::row_set<flight::RowKey<"visible">>(
+      out, detail::option_visible(options).value_or(true));
+  flight::row_set<flight::RowKey<"position">>(
+      out, flight::geometry::create_vector3(std::nullopt, std::nullopt,
+                                            std::nullopt));
+  flight::row_set<flight::RowKey<"rotation">>(
+      out, flight::geometry::create_quaternion(
+               std::nullopt, std::nullopt, std::nullopt, std::nullopt));
+  flight::row_set<flight::RowKey<"scale">>(
+      out, flight::geometry::create_vector3(1.0, 1.0, 1.0));
+  flight::row_set(out, flight::types::entity_runtime_key, runtime);
+  detail::bind_base_runtime_alias(out.shared_owner(), runtime);
+}
+
 template <typename Options>
-inline flight::types::Node3D create_node3_d(
-    flight::types::Kind kind, const Options& options) {
+inline flight::Ref<flight::types::Node3D> create_node3_d(
+    flight::String kind, const Options& options) {
   auto runtime = create_node3_druntime();
-  auto out = flight::make_structural_ref<flight::types::Node3D::schema_type>(
-      flight::row_field<flight::RowKey<"data">>(
-          std::optional<flight::Ref<flight::types::NodeData>>{}),
-      flight::row_field<flight::RowKey<"enabled">>(
-          detail::option_enabled(options).value_or(true)),
-      flight::row_field<flight::RowKey<"kind">>(std::move(kind)),
-      flight::row_field<flight::RowKey<"name">>(detail::option_name(options)),
-      flight::row_field<flight::RowKey<"alpha">>(
-          detail::option_alpha(options).value_or(1.0)),
-      flight::row_field<flight::RowKey<"visible">>(
-          detail::option_visible(options).value_or(true)),
-      flight::row_field<flight::RowKey<"position">>(
-          flight::geometry::create_vector3(std::nullopt, std::nullopt, std::nullopt)),
-      flight::row_field<flight::RowKey<"rotation">>(
-          flight::geometry::create_quaternion(
-              std::nullopt, std::nullopt, std::nullopt, std::nullopt)),
-      flight::row_field<flight::RowKey<"scale">>(
-          flight::geometry::create_vector3(1.0, 1.0, 1.0)));
-  flight::row_set(
-      out, flight::types::entity_runtime_key,
-      std::reinterpret_pointer_cast<Node3DBaseRuntime>(runtime));
+  auto out = flight::make_ref<flight::types::Node3D>(flight::types::Node3D{
+      .data = std::nullopt,
+      .enabled = detail::option_enabled(options).value_or(true),
+      .kind = std::move(kind),
+      .name = detail::option_name(options),
+      .entity_runtime_key = runtime,
+      .alpha = detail::option_alpha(options).value_or(1.0),
+      .visible = detail::option_visible(options).value_or(true),
+      .position = flight::geometry::create_vector3(
+          std::nullopt, std::nullopt, std::nullopt),
+      .rotation = flight::geometry::create_quaternion(
+          std::nullopt, std::nullopt, std::nullopt, std::nullopt),
+      .scale = flight::geometry::create_vector3(1.0, 1.0, 1.0),
+  });
+  detail::bind_base_runtime_alias(out, runtime);
   return out;
 }
 
-inline flight::types::Node3D create_node3_d(
-    flight::types::Kind kind = flight::types::node3_dkind) {
-  return create_node3_d(kind, std::nullopt);
+inline flight::Ref<flight::types::Node3D> create_node3_d(
+    std::optional<flight::String> kind = std::nullopt,
+    std::optional<flight::Ref<enabled_name_alpha_visible_6eed4c0384cbbf3f>>
+        options = std::nullopt) {
+  return create_node3_d(kind.value_or(flight::types::node3_dkind), options);
 }
+
+template <typename Value>
+inline Node3DView node3_dview(const std::shared_ptr<Value>& source) {
+  if (!source) throw std::invalid_argument("Node3D source must be non-null");
+  if constexpr (requires { source->entity_runtime_key; }) {
+    if (!source->entity_runtime_key.has_value() ||
+        !source->entity_runtime_key.value()) {
+      throw std::logic_error("Node3D has no runtime owner");
+    }
+    detail::bind_base_runtime_alias(source,
+                                    source->entity_runtime_key.value());
+  }
+  const auto row = flight::StructuralRef<
+      flight::RowWritable<flight::RowOf<flight::Ref<Value>>>>(source);
+  return Node3DView::from_owner(row.shared_owner());
+}
+
+inline Node3DView node3_dview(const Node3DView& source) { return source; }
 
 template <typename Schema>
 inline flight::Ref<flight::types::Node3DRuntime> get_node3_druntime(
     const flight::StructuralRef<Schema>& source) {
-  const auto runtime = detail::base_runtime(source);
-  if (!runtime) throw std::logic_error("Node3D has no runtime owner");
-  return std::reinterpret_pointer_cast<flight::types::Node3DRuntime>(runtime);
+  const auto runtime = flight::row_get<std::optional<Node3DBaseRuntimeOwner>>(
+      source, flight::types::entity_runtime_key);
+  if (!runtime.has_value() || !runtime.value()) {
+    throw std::logic_error("Node3D has no runtime owner");
+  }
+  return std::reinterpret_pointer_cast<flight::types::Node3DRuntime>(
+      runtime.value());
 }
 
-template <typename Schema>
+template <typename Value>
+inline flight::Ref<flight::types::Node3DRuntime> get_node3_druntime(
+    const std::shared_ptr<Value>& source) {
+  return get_node3_druntime(node3_dview(source));
+}
+
+template <typename Source>
 inline flight::Ref<flight::types::NodeSignals> enable_node3_dsignals(
-    const flight::StructuralRef<Schema>& source) {
+    const Source& source) {
   auto runtime = get_node3_druntime(source);
   if (!runtime->node_signals.has_value()) {
     runtime->node_signals = flight::node::create_node_signals();
@@ -219,38 +295,27 @@ inline flight::Ref<flight::types::NodeSignals> enable_node3_dsignals(
   return runtime->node_signals.value();
 }
 
-template <typename Schema>
-inline std::optional<flight::Ref<flight::types::NodeSignals>> get_node3_dsignals(
-    const flight::StructuralRef<Schema>& source) {
+template <typename Source>
+inline std::optional<flight::Ref<flight::types::NodeSignals>>
+get_node3_dsignals(const Source& source) {
   return get_node3_druntime(source)->node_signals;
 }
 
-template <typename Value>
-inline flight::types::Node3D node3_dview(
-    const std::shared_ptr<Value>& source) {
-  return flight::structural_ref_cast<flight::types::Node3D>(
-      flight::StructuralRef<
-          flight::RowWritable<flight::RowOf<std::shared_ptr<Value>>>>(source));
-}
-
-inline flight::types::Node3D node3_dview(
-    const flight::types::Node3D& source) {
-  return source;
-}
-
-inline std::optional<flight::types::Node3D> get_node3_dparent(
-    const flight::types::Node3D& source) {
+template <typename Source>
+inline std::optional<Node3DView> get_node3_dparent(const Source& source) {
   return get_node3_druntime(source)->parent;
 }
 
-inline double get_node3_dchild_count(const flight::types::Node3D& source) {
+template <typename Source>
+inline double get_node3_dchild_count(const Source& source) {
   const auto& children = get_node3_druntime(source)->children;
   return children.has_value() ? static_cast<double>(children.value().size())
                               : 0.0;
 }
 
-inline std::optional<flight::types::Node3D> get_node3_dchild_at(
-    const flight::types::Node3D& source, double index) {
+template <typename Source>
+inline std::optional<Node3DView> get_node3_dchild_at(const Source& source,
+                                                    double index) {
   const auto& children = get_node3_druntime(source)->children;
   if (!children.has_value() || index < 0.0 ||
       index >= static_cast<double>(children.value().size())) {
@@ -259,61 +324,79 @@ inline std::optional<flight::types::Node3D> get_node3_dchild_at(
   return children.value().element(index);
 }
 
-inline void invalidate_node3_dworld_bounds(
-    const flight::types::Node3D& source) {
-  auto current = std::optional<flight::types::Node3D>{source};
+template <typename Value>
+inline bool is_node3_d(const std::shared_ptr<Value>& source) {
+  return static_cast<bool>(source) && requires { source->position; source->rotation;
+                                                 source->scale; };
+}
+
+inline flight::types::NodeAny node3_dany(const Node3DView& source) {
+  auto native = source.shared_native_object();
+  if (!native) return nullptr;
+  auto* node = reinterpret_cast<flight::types::Node<flight::Any>*>(native.get());
+  return flight::types::NodeAny(std::move(native), node);
+}
+
+inline void invalidate_node3_dworld_bounds(const Node3DView& source) {
+  auto current = std::optional<Node3DView>{source};
   while (current.has_value()) {
     const auto runtime = get_node3_druntime(current.value());
-    runtime->world_bounds_using_local_bounds_id = -1.0;
     runtime->world_bounds_using_world_transform_id = -1.0;
+    runtime->world_bounds_using_local_bounds_id = -1.0;
     current = runtime->parent;
   }
 }
 
-inline flight::types::Node3D remove_node3_dchild(
-    const flight::types::Node3D& target,
-    const flight::types::Node3D& child) {
-  auto target_runtime = get_node3_druntime(target);
-  auto child_runtime = get_node3_druntime(child);
+inline Node3DView remove_node3_dchild(const Node3DView& target,
+                                     const Node3DView& child) {
+  if (!child) return child;
+
+  const auto target_runtime = get_node3_druntime(target);
+  const auto child_runtime = get_node3_druntime(child);
   if (!target_runtime->children.has_value() ||
       !child_runtime->parent.has_value() ||
       child_runtime->parent.value() != target) {
     return child;
   }
+
   auto& children = target_runtime->children.value();
-  const auto index = children.find_index(
-      [&](const auto& candidate) { return candidate == child; });
   child_runtime->parent = std::nullopt;
+  if (child_runtime->node_signals.has_value()) {
+    flight::signals::emit_signal<std::function<void()>>(
+        child_runtime->node_signals.value()->on_parent_changed);
+  }
   child_runtime->parent_reference_id = flight::unsigned_right_shift(
       child_runtime->parent_reference_id + 1.0, 0.0);
   child_runtime->world_transform_using_parent_transform_id = -1.0;
-  if (child_runtime->node_signals.has_value()) {
-    child_runtime->node_signals.value()->on_parent_changed->emit();
-  }
-  if (index >= 0.0) {
+
+  const double index = children.index_of(child);
+  if (index != -1.0) {
     (void)children.splice(index, 1.0);
     target_runtime->children_id = flight::unsigned_right_shift(
         target_runtime->children_id + 1.0, 0.0);
     invalidate_node3_dworld_bounds(target);
   }
+
   if (target_runtime->node_signals.has_value()) {
-    target_runtime->node_signals.value()->on_children_changed->emit();
+    const auto& signals = target_runtime->node_signals.value();
+    flight::signals::emit_signal<std::function<void(flight::types::NodeAny)>>(
+        signals->on_child_removed, node3_dany(child));
+    flight::signals::emit_signal<std::function<void()>>(
+        signals->on_children_changed);
   }
   return child;
 }
 
-inline flight::types::Node3D add_node3_dchild_at(
-    const flight::types::Node3D& target,
-    const flight::types::Node3D& child, double index) {
-  if (!target || !child) {
+inline Node3DView add_node3_dchild_at(const Node3DView& target,
+                                     const Node3DView& child, double index) {
+  if (!child) {
     throw flight::TypeError(flight::String("Parameter child must be non-null"));
   }
-  if (target == child) {
+  if (child == target) {
     throw flight::TypeError(
         flight::String("An object cannot be added as a child of itself"));
   }
-  for (auto current = std::optional<flight::types::Node3D>{target};
-       current.has_value();
+  for (auto current = std::optional<Node3DView>{target}; current.has_value();
        current = get_node3_druntime(current.value())->parent) {
     if (current.value() == child) {
       throw flight::TypeError(flight::String(
@@ -321,24 +404,30 @@ inline flight::types::Node3D add_node3_dchild_at(
     }
   }
 
-  auto target_runtime = get_node3_druntime(target);
-  const double count = target_runtime->children.has_value()
-                           ? static_cast<double>(
-                                 target_runtime->children.value().size())
-                           : 0.0;
-  if (index < 0.0 || index > count) {
+  const auto target_runtime = get_node3_druntime(target);
+  const double child_count = target_runtime->children.has_value()
+                                 ? static_cast<double>(
+                                       target_runtime->children.value().size())
+                                 : 0.0;
+  if (index < 0.0 || index > child_count) {
     throw flight::RangeError(
         flight::String("The supplied index is out of bounds."));
   }
-  auto child_runtime = get_node3_druntime(child);
+  if (!target_runtime->can_add_child(target, child)) {
+    throw flight::TypeError(
+        flight::String("The specified parent object cannot add this child"));
+  }
+  if (!target_runtime->children.has_value()) {
+    target_runtime->children = flight::Array<Node3DView>{};
+  }
+
+  auto& children = target_runtime->children.value();
+  const auto child_runtime = get_node3_druntime(child);
   const auto previous_parent = child_runtime->parent;
   bool was_child = false;
-  if (previous_parent.has_value() && previous_parent.value() == target &&
-      target_runtime->children.has_value()) {
-    auto& children = target_runtime->children.value();
-    const double previous_index = children.find_index(
-        [&](const auto& candidate) { return candidate == child; });
-    if (previous_index >= 0.0) {
+  if (previous_parent.has_value() && previous_parent.value() == target) {
+    const double previous_index = children.index_of(child);
+    if (previous_index != -1.0) {
       was_child = true;
       const double destination =
           std::min(index, static_cast<double>(children.size()) - 1.0);
@@ -349,93 +438,116 @@ inline flight::types::Node3D add_node3_dchild_at(
     remove_node3_dchild(previous_parent.value(), child);
   }
 
-  if (!target_runtime->children.has_value()) {
-    target_runtime->children = flight::Array<flight::types::Node3D>{};
-  }
-  (void)target_runtime->children.value().splice(index, 0.0, child);
+  (void)children.splice(index, 0.0, child);
   target_runtime->children_id = flight::unsigned_right_shift(
       target_runtime->children_id + 1.0, 0.0);
-  if (!was_child) {
-    invalidate_node3_dworld_bounds(target);
-  }
-  if (target_runtime->node_signals.has_value()) {
-    target_runtime->node_signals.value()->on_children_changed->emit();
-  }
+  if (!was_child) invalidate_node3_dworld_bounds(target);
 
+  if (target_runtime->node_signals.has_value()) {
+    flight::signals::emit_signal<std::function<void()>>(
+        target_runtime->node_signals.value()->on_children_changed);
+  }
   if (!previous_parent.has_value() || previous_parent.value() != target) {
     child_runtime->parent = target;
+    if (target_runtime->node_signals.has_value()) {
+      flight::signals::emit_signal<std::function<void(flight::types::NodeAny)>>(
+          target_runtime->node_signals.value()->on_child_added,
+          node3_dany(child));
+    }
+    if (child_runtime->node_signals.has_value()) {
+      flight::signals::emit_signal<std::function<void()>>(
+          child_runtime->node_signals.value()->on_parent_changed);
+    }
     child_runtime->parent_reference_id = flight::unsigned_right_shift(
         child_runtime->parent_reference_id + 1.0, 0.0);
     child_runtime->world_transform_using_parent_transform_id = -1.0;
-    if (child_runtime->node_signals.has_value()) {
-      child_runtime->node_signals.value()->on_parent_changed->emit();
-    }
   }
   return child;
 }
 
-} // namespace flight::scene3d
+}  // namespace flight::scene3d
 
 namespace flight::node {
 
-inline flight::types::Node3D add_node_child(
-    const flight::types::Node3D& target,
-    const flight::types::Node3D& child) {
+inline flight::scene3d::Node3DView add_node_child(
+    const flight::scene3d::Node3DView& target,
+    const flight::scene3d::Node3DView& child) {
   return flight::scene3d::add_node3_dchild_at(
       target, child, flight::scene3d::get_node3_dchild_count(target));
 }
 
-template <typename Child>
-inline flight::types::Node3D add_node_child(
-    const flight::types::Node3D& target,
+template <typename Parent, typename Child>
+inline flight::scene3d::Node3DView add_node_child(
+    const std::shared_ptr<Parent>& target,
     const std::shared_ptr<Child>& child) {
-  return add_node_child(target, flight::scene3d::node3_dview(child));
+  const auto target_view = flight::scene3d::node3_dview(target);
+  const auto child_view = flight::scene3d::node3_dview(child);
+  return flight::scene3d::add_node3_dchild_at(
+      target_view, child_view,
+      flight::scene3d::get_node3_dchild_count(target_view));
 }
 
-inline flight::types::Node3D add_node_child_at(
-    const flight::types::Node3D& target,
-    const flight::types::Node3D& child, double index) {
+inline flight::scene3d::Node3DView add_node_child_at(
+    const flight::scene3d::Node3DView& target,
+    const flight::scene3d::Node3DView& child, double index) {
   return flight::scene3d::add_node3_dchild_at(target, child, index);
 }
 
-template <typename Child>
-inline flight::types::Node3D add_node_child_at(
-    const flight::types::Node3D& target,
-    const std::shared_ptr<Child>& child, double index) {
-  return add_node_child_at(target, flight::scene3d::node3_dview(child), index);
+template <typename Parent, typename Child>
+inline flight::scene3d::Node3DView add_node_child_at(
+    const std::shared_ptr<Parent>& target,
+    const std::shared_ptr<Child>& child,
+    double index) {
+  const auto target_view = flight::scene3d::node3_dview(target);
+  const auto child_view = flight::scene3d::node3_dview(child);
+  return flight::scene3d::add_node3_dchild_at(target_view, child_view, index);
 }
 
-inline std::optional<flight::types::Node3D> get_node_parent(
-    const flight::types::Node3D& source) {
+inline std::optional<flight::scene3d::Node3DView> get_node_parent(
+    const flight::scene3d::Node3DView& source) {
   return flight::scene3d::get_node3_dparent(source);
 }
 
 template <typename Source>
-inline std::optional<flight::types::Node3D> get_node_parent(
+inline std::optional<flight::scene3d::Node3DView> get_node_parent(
     const std::shared_ptr<Source>& source) {
-  return get_node_parent(flight::scene3d::node3_dview(source));
+  return flight::scene3d::get_node3_dparent(source);
 }
 
-inline double get_node_child_count(const flight::types::Node3D& source) {
+inline double get_node_child_count(
+    const flight::scene3d::Node3DView& source) {
   return flight::scene3d::get_node3_dchild_count(source);
 }
 
-inline std::optional<flight::types::Node3D> get_node_child_at(
-    const flight::types::Node3D& source, double index) {
+template <typename Source>
+inline double get_node_child_count(const std::shared_ptr<Source>& source) {
+  return flight::scene3d::get_node3_dchild_count(source);
+}
+
+inline std::optional<flight::scene3d::Node3DView> get_node_child_at(
+    const flight::scene3d::Node3DView& source, double index) {
   return flight::scene3d::get_node3_dchild_at(source, index);
 }
 
-inline flight::types::Node3D remove_node_child(
-    const flight::types::Node3D& target,
-    const flight::types::Node3D& child) {
+template <typename Source>
+inline std::optional<flight::scene3d::Node3DView> get_node_child_at(
+    const std::shared_ptr<Source>& source, double index) {
+  return flight::scene3d::get_node3_dchild_at(source, index);
+}
+
+inline flight::scene3d::Node3DView remove_node_child(
+    const flight::scene3d::Node3DView& target,
+    const flight::scene3d::Node3DView& child) {
   return flight::scene3d::remove_node3_dchild(target, child);
 }
 
-template <typename Child>
-inline flight::types::Node3D remove_node_child(
-    const flight::types::Node3D& target,
+template <typename Parent, typename Child>
+inline flight::scene3d::Node3DView remove_node_child(
+    const std::shared_ptr<Parent>& target,
     const std::shared_ptr<Child>& child) {
-  return remove_node_child(target, flight::scene3d::node3_dview(child));
+  const auto target_view = flight::scene3d::node3_dview(target);
+  const auto child_view = flight::scene3d::node3_dview(child);
+  return flight::scene3d::remove_node3_dchild(target_view, child_view);
 }
 
-} // namespace flight::node
+}  // namespace flight::node

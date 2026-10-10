@@ -17,6 +17,18 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 namespace flight::swf { struct SwfReader; }
+namespace flight::types { struct AbcConstantPool; }
+namespace flight::types { struct AbcFile; }
+namespace flight::types { struct AbcInstance; }
+namespace flight::types { struct AbcInstruction; }
+namespace flight::types { struct AbcMethodBody; }
+namespace flight::types { struct AbcMultiname; }
+namespace flight::types { struct AbcNamespace; }
+namespace flight::types { struct AbcTrait; }
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct MovieClip; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::swf {
 struct SwfFrameCommand;

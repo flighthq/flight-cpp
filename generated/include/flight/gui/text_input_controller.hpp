@@ -10,7 +10,32 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/signal.hpp>
+
+namespace flight::types { struct InputKeyboardData; }
+namespace flight::types { struct InputTextData; }
+namespace flight::types { struct KeyboardEventData; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct PointerEventData; }
+namespace flight::types { struct RichText; }
+namespace flight::types { struct RichTextData; }
+namespace flight::types { struct RichTextRuntime; }
+namespace flight::types { struct TextFieldChangeEvent; }
+namespace flight::types { struct TextFieldSignals; }
+namespace flight::types { struct TextInputController; }
+namespace flight::types { struct TextInputControllerOptions; }
+namespace flight::types { struct TextInputControllerSignals; }
+namespace flight::types { struct TextInputManager; }
+namespace flight::types { struct TextInputSource; }
+namespace flight::types { struct TextInputState; }
+namespace flight::types { struct TextLayoutResult; }
+namespace flight::types { template <typename N, typename P> struct NodeInteractiveStateTransition; }
+namespace flight::types { template <typename T> struct Signal; }
+namespace flight::types { template <typename Traits> struct Node; }
+
 namespace flight::gui {
+
+using flight::types::Signal;
 struct TextInputControllerFields;
 } // namespace flight::gui
 

@@ -15,10 +15,43 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/transform3_d.hpp>
+
+#include <flight/types/scene3_ddocument.hpp>
+
+#include <flight/types/perspective_projection_options.hpp>
+
+#include <flight/types/orthographic_projection_options.hpp>
+
+#include <flight/types/gltf_schema.hpp>
+
+#include <flight/types/gltf_extension.hpp>
+
+namespace flight::types { struct GltfCamera; }
+namespace flight::types { struct GltfCoreFeatureContext; }
+namespace flight::types { struct GltfCoreFeatureHandler; }
+namespace flight::types { struct GltfNode; }
+namespace flight::types { struct OrthographicProjection; }
+namespace flight::types { struct OrthographicProjectionOptions; }
+namespace flight::types { struct PerspectiveProjection; }
+namespace flight::types { struct PerspectiveProjectionOptions; }
+namespace flight::types { struct Scene3DDocument; }
+namespace flight::types { struct Scene3DDocumentCamera; }
+namespace flight::types { struct Transform3D; }
+
 #include <flight/camera/projection.hpp>
 #include <flight/types/contract.hpp>
 
 namespace flight::scene3d_formats {
+
+using flight::types::GltfCoreFeatureContext;
+using flight::types::GltfCoreFeatureHandler;
+using flight::types::GltfNode;
+using flight::types::OrthographicProjectionOptions;
+using flight::types::PerspectiveProjectionOptions;
+using flight::types::Scene3DDocument;
+using flight::types::Scene3DDocumentCamera;
+using flight::types::Transform3D;
 
 inline flight::Array<flight::Ref<flight::types::Scene3DDocumentCamera>> build_gltf_cameras(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GltfCoreFeatureContext>>>> context) {
   flight::Array<flight::Ref<flight::types::Scene3DDocumentCamera>> cameras = flight::Array<flight::Ref<flight::types::Scene3DDocumentCamera>>{};

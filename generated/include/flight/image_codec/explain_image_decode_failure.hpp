@@ -10,6 +10,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct DecodedImage; }
+namespace flight::types { struct ImageDecodeOptions; }
+
 #include <flight/types/image_decode_failure_explanation.hpp>
 #include <flight/types/image_decoder.hpp>
 #include <flight/image_codec/detect_image_mime_type.hpp>
@@ -20,10 +23,10 @@ namespace flight::image_codec {
 inline std::optional<flight::types::ImageDecodeFailureExplanation> explain_image_decode_failure(flight::Uint8Array bytes, std::optional<flight::String> mime_type = std::nullopt) {
   const std::optional<flight::String> type = ([&]() -> std::optional<flight::String> { auto nullish_coalesce_left = mime_type; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return flight::image_codec::detect_image_mime_type(std::variant<flight::ArrayBuffer, flight::Uint8Array>{std::in_place_type<flight::Uint8Array>, bytes}); }());
   if (!type.has_value()) {
-    return std::optional<flight::types::ImageDecodeFailureExplanation>{std::in_place, std::in_place_type<flight::Ref<flight::types::mime_type_reason_1aad5b9add090b2e>>, flight::make_ref<flight::types::mime_type_reason_1aad5b9add090b2e>(flight::types::mime_type_reason_1aad5b9add090b2e{.mime_type = flight::null, .reason = flight::String("mime-type-undetected")})};
+    return std::optional<std::variant<flight::Ref<flight::types::mime_type_reason_1aad5b9add090b2e>, flight::Ref<flight::types::mime_type_reason_cc3d746a1e0569de>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::mime_type_reason_1aad5b9add090b2e>>, flight::make_ref<flight::types::mime_type_reason_1aad5b9add090b2e>(flight::types::mime_type_reason_1aad5b9add090b2e{.mime_type = flight::null, .reason = flight::String("mime-type-undetected")})};
   }
   if (!flight::image_codec::get_image_decoder(type.value()).has_value()) {
-    return std::optional<flight::types::ImageDecodeFailureExplanation>{std::in_place, std::in_place_type<flight::Ref<flight::types::mime_type_reason_cc3d746a1e0569de>>, flight::make_ref<flight::types::mime_type_reason_cc3d746a1e0569de>(flight::types::mime_type_reason_cc3d746a1e0569de{.mime_type = type.value(), .reason = flight::String("decoder-not-registered")})};
+    return std::optional<std::variant<flight::Ref<flight::types::mime_type_reason_1aad5b9add090b2e>, flight::Ref<flight::types::mime_type_reason_cc3d746a1e0569de>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::mime_type_reason_cc3d746a1e0569de>>, flight::make_ref<flight::types::mime_type_reason_cc3d746a1e0569de>(flight::types::mime_type_reason_cc3d746a1e0569de{.mime_type = type.value(), .reason = flight::String("decoder-not-registered")})};
   }
   return std::nullopt;
 }

@@ -19,12 +19,27 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/libgdx_particle_schema.hpp>
 
+#include <flight/types/particle_emitter_config.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct LibgdxActiveRangeValue; }
+namespace flight::types { struct LibgdxParseOptions; }
+namespace flight::types { struct LibgdxParseResult; }
+namespace flight::types { struct LibgdxParticleDocument; }
+namespace flight::types { struct LibgdxRangeValue; }
+namespace flight::types { struct ParticleEmitterConfig; }
+
 #include <flight/importdiagnostics/import_diagnostic_collector.hpp>
 #include <flight/math/constants.hpp>
 #include <flight/particles/particle_emitter_config.hpp>
 #include <flight/types/contract.hpp>
 
 namespace flight::particles_formats {
+
+using flight::types::ImportDiagnostic;
+using flight::types::ParticleEmitterConfig;
 
 using LibgdxSection = flight::Map<flight::String, flight::String>;
 

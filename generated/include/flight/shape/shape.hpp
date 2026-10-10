@@ -15,6 +15,7 @@
 //   missing: function createShapeRuntime -- source line 56
 //   missing: function createShape -- source line 46
 #include <cstddef>
+#include <flight/any.hpp>
 #include <optional>
 #include <flight/runtime.hpp>
 

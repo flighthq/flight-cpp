@@ -16,7 +16,22 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/rive_document.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct RiveCoreObject; }
+namespace flight::types { struct RiveDocument; }
+namespace flight::types { struct RiveDocumentHeader; }
+namespace flight::types { struct RiveProperty; }
+namespace flight::types { struct RivePropertyFieldType; }
+
 namespace flight::scene2d_formats {
+
+using flight::types::ImportDiagnostic;
+using flight::types::RiveCoreObject;
+using flight::types::RiveProperty;
 struct RiveCursor;
 } // namespace flight::scene2d_formats
 

@@ -8,10 +8,21 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/spine_binary_registry.hpp>
+
+namespace flight::types { struct SpineBinaryRegistry; }
+namespace flight::types { struct SpineBinarySectionContext; }
+namespace flight::types { struct SpineBinarySectionHandlerEntry; }
+namespace flight::types { struct SpineBinaryTimelineContext; }
+namespace flight::types { struct SpineBinaryTimelineHandlerEntry; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/contract.hpp>
 
 namespace flight::skeleton2d_formats {
+
+using flight::types::SpineBinarySectionContext;
+using flight::types::SpineBinaryTimelineContext;
 
 inline std::optional<std::function<void(flight::Ref<flight::types::SpineBinarySectionContext>)>> get_spine_binary_section_handler(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpineBinaryRegistry>>>> registry, flight::String kind) {
   return ([&]() -> std::optional<flight::types::SpineBinarySectionHandler> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"sectionHandlers">>(registry).find([=](flight::Ref<flight::types::SpineBinarySectionHandlerEntry> entry) { return (entry->kind == kind); }); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->handle; }());

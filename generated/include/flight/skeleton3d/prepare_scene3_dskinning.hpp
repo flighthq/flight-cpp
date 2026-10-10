@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function prepareMeshSkinning -- source line 28
 //   missing: function prepareScene3DSkinning -- source line 62
+#include <flight/any.hpp>
 #include <flight/boolean.hpp>
 #include <variant>
 #include <flight/runtime.hpp>

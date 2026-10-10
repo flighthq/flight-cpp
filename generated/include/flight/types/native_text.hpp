@@ -78,9 +78,9 @@ struct NativeTextData : public flight::ReferenceEnabled {
   double width;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_3A6DB5D81FBDA5F4
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_3A6DB5D81FBDA5F4
-struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_3a6db5d81fbda5f4 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_0F7CB90FAD5A89B3
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_0F7CB90FAD5A89B3
+struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_0f7cb90fad5a89b3 : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::Node2DData>> data;
   bool enabled;
   flight::String kind;
@@ -102,7 +102,7 @@ struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_m
   double x;
   double y;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_3A6DB5D81FBDA5F4
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_0F7CB90FAD5A89B3
 
 struct NativeTextRuntime : public flight::ReferenceEnabled {
   std::optional<flight::ErasedRef> binding;
@@ -114,7 +114,7 @@ struct NativeTextRuntime : public flight::ReferenceEnabled {
   double appearance_id;
   double bounds_using_local_bounds_id;
   double bounds_using_local_transform_id;
-  std::function<bool(std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>, std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>)> can_add_child;
+  std::function<bool(flight::types::NodeOf<flight::Ref<flight::types::Node2DTraits>>, flight::types::NodeOf<flight::Ref<flight::types::Node2DTraits>>)> can_add_child;
   std::optional<flight::Array<flight::types::NodeOf<flight::Ref<flight::types::Node2DTraits>>>> children;
   double children_id;
   std::optional<flight::Ref<flight::types::NodeTraitsKey<flight::Ref<flight::types::Node2DTraits>>>> traits;

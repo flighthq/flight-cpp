@@ -18,6 +18,7 @@ namespace flight::types { struct TextInputManager; }
 namespace flight::types { struct TextInputSource; }
 namespace flight::types { template <typename N, typename P> struct NodeInteractiveStateTransition; }
 namespace flight::types { template <typename T> struct Signal; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct TextInputController;

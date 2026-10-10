@@ -5,12 +5,12 @@
 #include <flight/boolean.hpp>
 #include <flight/error.hpp>
 #include <flight/number.hpp>
+#include <flight/sequence_view.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <limits>
 #include <optional>
 #include <random>
-#include <tuple>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -147,7 +147,8 @@ inline flight::Ref<flight::types::MeshGeometry> build_canonical_mesh_geometry(fl
   }
   flight::Uint32Array index_array = flight::Uint32Array(static_cast<double>(indices.size()));
   index_array.set(indices);
-  auto geometry = flight::mesh::create_mesh_geometry(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometryOptions>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometryOptions>>>>(flight::row_field<flight::RowKey<"indices">>(std::variant<flight::Uint16Array, flight::Uint32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Uint32Array>, index_array}), flight::row_field<flight::RowKey<"layout">>(canonical_vertex_layout), flight::row_field<flight::RowKey<"vertices">>(vertices))));
+  flight::SequenceView<double> index_source = index_array;
+  auto geometry = flight::mesh::create_mesh_geometry(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometryOptions>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometryOptions>>>>(flight::row_field<flight::RowKey<"indices">>(std::variant<flight::SequenceView<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::SequenceView<double>>, index_source}), flight::row_field<flight::RowKey<"layout">>(canonical_vertex_layout), flight::row_field<flight::RowKey<"vertices">>(vertices))));
   flight::mesh::compute_mesh_geometry_tangents(geometry, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(geometry)), std::nullopt);
   flight::mesh::refresh_mesh_geometry_bounds(geometry);
   return geometry;
@@ -395,16 +396,7 @@ inline flight::Ref<flight::types::MeshGeometry> create_icosphere_mesh_geometry(s
   const double subs = normalize_mesh_count(subdivisions.value(), 0.0, 6.0);
   const double phi_2 = ((1.0 + std::sqrt(5.0)) * 0.5);
   const double scale = (1.0 / std::sqrt((1.0 + (phi_2 * phi_2))));
-  flight::Array<flight::Array<double>> base_verts = static_cast<flight::Array<flight::Array<double>>>(flight::Array{std::make_tuple(-1.0, phi_2, 0.0), std::make_tuple(1.0, phi_2, 0.0), std::make_tuple(-1.0, -phi_2, 0.0), std::make_tuple(1.0, -phi_2, 0.0), std::make_tuple(0.0, -1.0, phi_2), std::make_tuple(0.0, 1.0, phi_2), std::make_tuple(0.0, -1.0, -phi_2), std::make_tuple(0.0, 1.0, -phi_2), std::make_tuple(phi_2, 0.0, -1.0), std::make_tuple(phi_2, 0.0, 1.0), std::make_tuple(-phi_2, 0.0, -1.0), std::make_tuple(-phi_2, 0.0, 1.0)}).map([=](flight::Array<double> parameter_pattern_value) {
-  double x;
-  double y;
-  double z;
-  flight::Array<double> array_pattern_value = parameter_pattern_value;
-  (x = array_pattern_value.element(0.0));
-  (y = array_pattern_value.element(1.0));
-  (z = array_pattern_value.element(2.0));
-  return std::make_tuple((x * scale), (y * scale), (z * scale));
-});
+  flight::Array<flight::Array<double>> base_verts = flight::Array<flight::Array<double>>{flight::Array<double>{-scale, (phi_2 * scale), 0.0}, flight::Array<double>{scale, (phi_2 * scale), 0.0}, flight::Array<double>{-scale, (-phi_2 * scale), 0.0}, flight::Array<double>{scale, (-phi_2 * scale), 0.0}, flight::Array<double>{0.0, -scale, (phi_2 * scale)}, flight::Array<double>{0.0, scale, (phi_2 * scale)}, flight::Array<double>{0.0, -scale, (-phi_2 * scale)}, flight::Array<double>{0.0, scale, (-phi_2 * scale)}, flight::Array<double>{(phi_2 * scale), 0.0, -scale}, flight::Array<double>{(phi_2 * scale), 0.0, scale}, flight::Array<double>{(-phi_2 * scale), 0.0, -scale}, flight::Array<double>{(-phi_2 * scale), 0.0, scale}};
   flight::Array<flight::Array<double>> verts = base_verts.map([=](flight::Array<double> v) {
   return static_cast<flight::Array<double>>(([&]() { auto tuple_spread_value = v; return flight::Array<double>{tuple_spread_value.element(0.0), tuple_spread_value.element(1.0), tuple_spread_value.element(2.0)}; })());
 });

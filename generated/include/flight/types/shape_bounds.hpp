@@ -10,7 +10,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Matrix; }
 namespace flight::types { struct Shape; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
 
 namespace flight::types {
 struct ShapeCommandArgumentCursor;
@@ -30,7 +35,7 @@ namespace flight::types {
 
 struct ShapeCommandArgumentCursor : public flight::ReferenceEnabled {
   double length;
-  std::function<std::variant<flight::Array<double>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>, flight::Ref<flight::types::Matrix>, flight::Ref<Texture2D>, bool, double, flight::String, flight::Null, flight::Undefined>(double)> get_argument;
+  std::function<std::variant<flight::Array<double>, flight::Ref<Texture2DArray>, flight::Ref<flight::types::Matrix>, flight::Ref<TextureCube>, flight::Ref<Texture2D>, flight::Ref<Texture3D>, bool, double, flight::String, flight::Null, flight::Undefined>(double)> get_argument;
 };
 
 struct ShapeBoundsContext : public flight::ReferenceEnabled {

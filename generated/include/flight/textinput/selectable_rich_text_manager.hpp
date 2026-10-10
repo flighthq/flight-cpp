@@ -11,12 +11,27 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/text_layout.hpp>
+
+#include <flight/types/rich_text.hpp>
+
+namespace flight::types { struct InputKeyboardData; }
+namespace flight::types { struct RichText; }
+namespace flight::types { struct RichTextData; }
+namespace flight::types { struct RichTextRuntime; }
+namespace flight::types { struct SelectableRichTextManager; }
+namespace flight::types { struct TextLayoutResult; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/text/rich_text.hpp>
 #include <flight/textlayout/rich_text_query.hpp>
 #include <flight/types/contract.hpp>
 
 namespace flight::textinput {
+
+using flight::types::RichText;
+using flight::types::RichTextData;
+using flight::types::TextLayoutResult;
 
 inline void dispatch_selectable_rich_text_wheel(flight::Ref<flight::types::SelectableRichTextManager> manager, double delta_lines) {
   auto target = manager->focused;

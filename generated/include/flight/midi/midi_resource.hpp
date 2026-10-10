@@ -89,7 +89,7 @@ inline std::optional<flight::Ref<MidiAccessResourceState>> get_midi_access_resou
   return access_states.get(access);
 }
 
-inline std::optional<std::variant<flight::Ref<MidiOutputPortResourceState>, flight::Ref<MidiInputPortResourceState>>> get_midi_port_resource_state(flight::types::MidiPort port) {
+inline std::optional<MidiPortResourceState> get_midi_port_resource_state(flight::types::MidiPort port) {
   return port_states.get(port);
 }
 

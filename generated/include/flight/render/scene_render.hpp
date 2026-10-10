@@ -3,14 +3,13 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function resolveScene3DViewportAspect -- source line 456
-//   missing: function setScene3DViewProjectionMatrix4 -- source line 422
-//   missing: function packScene3DLightBlock -- source line 72
-//   missing: function isSceneInstancedMesh -- source line 502
-//   missing: function isSceneMesh -- source line 506
-//   missing: function ensureInstancedMeshLocalBounds -- source line 298
-//   missing: function isMeshVisible -- source line 323
-//   missing: function collectVisibleMeshes -- source line 203
+//   missing: function resolveScene3DViewportAspect -- source line 438
+//   missing: function packScene3DLightBlock -- source line 69
+//   missing: function isSceneInstancedMesh -- source line 484
+//   missing: function isSceneMesh -- source line 488
+//   missing: function ensureInstancedMeshLocalBounds -- source line 295
+//   missing: function isMeshVisible -- source line 320
+//   missing: function collectVisibleMeshes -- source line 200
 #include <cmath>
 #include <cstddef>
 #include <flight/boolean.hpp>
@@ -144,7 +143,7 @@ struct PreparedScene3D : public flight::ReferenceEnabled {
 inline const double default_viewport_aspect = 1.0;
 
 
-// NOT GENERATED: function resolveScene3DViewportAspect -- source line 456
+// NOT GENERATED: function resolveScene3DViewportAspect -- source line 438
 //
 // The source it stood for:
 //   function resolveScene3DViewportAspect(camera: Readonly<Camera3D>, viewportAspect: number | undefined): number {
@@ -251,39 +250,19 @@ inline void pack_spot_light(flight::Float32Array data, double offset, flight::Re
 
 inline flight::Ref<Matrix4> scratch_projection = create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-
-// NOT GENERATED: function setScene3DViewProjectionMatrix4 -- source line 422
-//
-// The source it stood for:
-//   function setScene3DViewProjectionMatrix4(out: Matrix4, camera: Readonly<Camera3D>, aspect: number): void {
-//     const projection = camera.projection;
-//     if (projection.kind === 'perspective') {
-//       setPerspectiveMatrix4(scratchProjection, Math.tan(projection.fovY * 0.5), aspect, camera.near, camera.far);
-//     } else if (projection.kind === 'raw') {
-//       copyMatrix4(scratchProjection, projection.matrix);
-//     } else {
-//       setOrthographicMatrix4(
-//         scratchProjection,
-//         -projection.halfWidth,
-//         projection.halfWidth,
-//         -projection.halfHeight,
-//         projection.halfHeight,
-//         camera.near,
-//         camera.far,
-//       );
-//     }
-//     applyScene3DProjectionJitter(scratchProjection, camera.jitter.x, camera.jitter.y);
-//     if (camera.nearClipPlane) applyObliqueNearClipPlane(scratchProjection, camera.nearClipPlane);
-//     multiplyMatrix4(out, scratchProjection, camera.view);
-//   }
-//   
-// cpp emission failed for @flighthq/render/packages/render/src/sceneRender.ts: union member test requires a C++
-// variant binding
+inline void set_scene3_dview_projection_matrix4(flight::Ref<Matrix4> out, flight::Ref<Camera3D> camera, double aspect) {
+  set_projection_matrix4(scratch_projection, camera->projection, aspect, camera->near, camera->far);
+  apply_scene3_dprojection_jitter(scratch_projection, camera->jitter.x, camera->jitter.y);
+  if (flight::to_boolean(camera->near_clip_plane)) {
+    apply_oblique_near_clip_plane(scratch_projection, camera->near_clip_plane);
+  }
+  multiply_matrix4(out, scratch_projection, camera->view);
+}
 
 inline flight::Float32Array scratch_light_data = flight::Float32Array(scene_light_block_floats);
 
 
-// NOT GENERATED: function packScene3DLightBlock -- source line 72
+// NOT GENERATED: function packScene3DLightBlock -- source line 69
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -380,7 +359,7 @@ inline flight::Float32Array scratch_light_data = flight::Float32Array(scene_ligh
 // construction requires expression type evidence
 
 
-// NOT GENERATED: function isSceneInstancedMesh -- source line 502
+// NOT GENERATED: function isSceneInstancedMesh -- source line 484
 // refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:
@@ -392,7 +371,7 @@ inline flight::Float32Array scratch_light_data = flight::Float32Array(scene_ligh
 // no absence channel in the emitted C++ storage for property
 
 
-// NOT GENERATED: function isSceneMesh -- source line 506
+// NOT GENERATED: function isSceneMesh -- source line 488
 // refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:
@@ -408,7 +387,7 @@ inline flight::Array<flight::Ref<Node3D>> collect_stack = flight::Array<flight::
 inline flight::Ref<Aabb> scratch_instance_bounds = create_aabb(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
 
-// NOT GENERATED: function ensureInstancedMeshLocalBounds -- source line 298
+// NOT GENERATED: function ensureInstancedMeshLocalBounds -- source line 295
 // refusal: cpp-reference-assertion-without-heritage [target-runtime]
 //
 // The source it stood for:
@@ -449,7 +428,7 @@ inline bool is_instanced_mesh_visible(flight::Ref<InstancedMesh> mesh, flight::R
 inline std::optional<std::function<void(flight::Ref<Mesh>)>> skinned_bounds_guard = std::nullopt;
 
 
-// NOT GENERATED: function isMeshVisible -- source line 323
+// NOT GENERATED: function isMeshVisible -- source line 320
 // refusal: cpp-reference-assertion-without-heritage [target-runtime]
 //
 // The source it stood for:
@@ -484,7 +463,7 @@ inline std::optional<std::function<void(flight::Ref<Mesh>)>> skinned_bounds_guar
 // replacement row, or invent side storage
 
 
-// NOT GENERATED: function collectVisibleMeshes -- source line 203
+// NOT GENERATED: function collectVisibleMeshes -- source line 200
 // refusal: cpp-reference-assertion-without-heritage [target-runtime]
 //
 // The source it stood for:

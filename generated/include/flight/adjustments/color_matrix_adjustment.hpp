@@ -26,6 +26,15 @@ namespace flight::adjustments {
 using kind_6fea82d7aa842443 = flight::types::kind_6fea82d7aa842443;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_KIND_6FEA82D7AA842443
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_ENTITY_RUNTIME_KEY_KIND_COLOR_MATRIX_302C33FFEEEBCAB3
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_ENTITY_RUNTIME_KEY_KIND_COLOR_MATRIX_302C33FFEEEBCAB3
+struct entity_runtime_key_kind_color_matrix_302c33ffeeebcab3 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  std::optional<flight::String> kind;
+  std::optional<flight::Array<double>> color_matrix;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_ENTITY_RUNTIME_KEY_KIND_COLOR_MATRIX_302C33FFEEEBCAB3
+
 inline std::optional<flight::Array<double>> get_adjustment_color_matrix(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<kind_6fea82d7aa842443>>>> operation) {
   std::optional<flight::Array<double>> matrix = flight::row_get<flight::RowKey<"colorMatrix">>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::ColorMatrixAdjustment>>>>>>(operation));
   return ((flight::is_array(matrix) && (static_cast<double>(matrix.value().size()) == flight::adjustments::color_matrix_length)) ? std::optional<flight::Array<double>>{matrix.value()} : std::nullopt);

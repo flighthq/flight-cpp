@@ -7,6 +7,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/node.hpp>
+
+namespace flight::types { struct Adjustment; }
+namespace flight::types { struct ColorAdjustmentRuntime; }
+namespace flight::types { struct ColorScaleBias; }
+namespace flight::types { struct TintAdjustment; }
+namespace flight::types { template <typename Traits> struct Node; }
+namespace flight::types { template <typename Traits> struct NodeRuntime; }
+
 #include <flight/adjustments/color_adjustment_resolution.hpp>
 #include <flight/adjustments/tint_adjustment.hpp>
 #include <flight/materials/color_scale_bias.hpp>
@@ -16,8 +25,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::node {
 
+using flight::types::NodeRuntime;
+
+using flight::types::Node;
+
 template <typename Traits>
-inline std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>> get_node_color_adjustments(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>> source) {
+inline std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>> get_node_color_adjustments(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>>> source) {
   return flight::row_get<flight::RowKey<"colorAdjustments">>(flight::node::get_node_runtime<Traits>(source));
 }
 
@@ -37,24 +50,24 @@ inline void resolve_node_color_adjustments(flight::Ref<flight::types::ColorAdjus
 }
 
 template <typename Traits>
-inline void add_node_color_adjustment(std::shared_ptr<flight::types::Node<Traits>> source, flight::Ref<flight::types::Adjustment> adjustment) {
-  flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>> runtime = flight::structural_ref_cast<std::shared_ptr<flight::types::NodeRuntime<Traits>>>(flight::node::get_node_runtime<Traits>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>(source))));
-  std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>> current = flight::row_get<flight::RowKey<"colorAdjustments">>(runtime);
-  flight::row_set<flight::RowKey<"colorAdjustments">>(runtime, (!current.has_value() ? std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>>{flight::Array<flight::Ref<flight::types::Adjustment>>{adjustment}} : std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>>{([&]() { flight::Array<flight::Ref<flight::types::Adjustment>> array_spread_result; for (const auto& array_spread_item : current.value()) { array_spread_result.push(array_spread_item); } array_spread_result.push(adjustment); return array_spread_result; }())}));
+inline void add_node_color_adjustment(flight::types::NodeOf<Traits> source, flight::Ref<flight::types::Adjustment> adjustment) {
+  auto runtime = flight::node::get_mutable_node_runtime<Traits>(flight::structural_ref_cast<std::shared_ptr<flight::types::Node<Traits>>>(source));
+  std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>> current = runtime->color_adjustments;
+  (runtime->color_adjustments = (!current.has_value() ? std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>>{flight::Array<flight::Ref<flight::types::Adjustment>>{adjustment}} : std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>>{([&]() { flight::Array<flight::Ref<flight::types::Adjustment>> array_spread_result; for (const auto& array_spread_item : current.value()) { array_spread_result.push(array_spread_item); } array_spread_result.push(adjustment); return array_spread_result; }())}));
   resolve_node_color_adjustments(runtime);
   flight::node::invalidate_node_appearance<Traits>(source);
 }
 
 template <typename Traits>
-inline void set_node_color_adjustments(std::shared_ptr<flight::types::Node<Traits>> source, std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>> value) {
-  flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>> runtime = flight::structural_ref_cast<std::shared_ptr<flight::types::NodeRuntime<Traits>>>(flight::node::get_node_runtime<Traits>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>(source))));
-  flight::row_set<flight::RowKey<"colorAdjustments">>(runtime, value);
+inline void set_node_color_adjustments(flight::types::NodeOf<Traits> source, std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>> value) {
+  auto runtime = flight::node::get_mutable_node_runtime<Traits>(flight::structural_ref_cast<std::shared_ptr<flight::types::Node<Traits>>>(source));
+  (runtime->color_adjustments = value);
   resolve_node_color_adjustments(runtime);
   flight::node::invalidate_node_appearance<Traits>(source);
 }
 
 template <typename Traits>
-inline void set_node_color_adjustments_tint(std::shared_ptr<flight::types::Node<Traits>> source, double tint) {
+inline void set_node_color_adjustments_tint(flight::types::NodeOf<Traits> source, double tint) {
   set_node_color_adjustments<Traits>(source, std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>>{flight::Array<flight::Ref<flight::types::Adjustment>>{flight::adjustments::create_tint_adjustment(tint)}});
 }
 

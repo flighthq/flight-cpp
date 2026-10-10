@@ -10,7 +10,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct SurfaceMaterial; }
 namespace flight::types { struct Texture2D; }
-namespace flight::types { struct TextureCommon; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
 
 namespace flight::types {
 struct EmissiveMaterial;
@@ -27,10 +29,10 @@ namespace flight::types {
 struct EmissiveMaterial : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String kind;
-  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  double alpha_cutoff;
   flight::Ref<flight::types::MaterialAlphaMode> alpha_mode;
   flight::String blend_mode;
+  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  double alpha_cutoff;
   bool double_sided;
   double emissive;
   std::optional<flight::types::Texture> emissive_map;

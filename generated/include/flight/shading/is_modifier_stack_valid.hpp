@@ -6,16 +6,24 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AnimatedNormalModifier; }
+namespace flight::types { struct DissolveModifier; }
+namespace flight::types { struct EmissiveModifier; }
+namespace flight::types { struct EnvReflectModifier; }
+namespace flight::types { struct FogModifier; }
 namespace flight::types { struct Modifier; }
 namespace flight::types { struct ModifierRegistry; }
+namespace flight::types { struct RimModifier; }
+namespace flight::types { struct ToonModifier; }
+namespace flight::types { struct VertexDisplaceModifier; }
 
-#include <flight/types/modifier.hpp>
 #include <flight/types/modifier_registry.hpp>
+#include <flight/types/modifier_value.hpp>
 #include <flight/shading/get_unregistered_modifier_kinds.hpp>
 
 namespace flight::shading {
 
-inline bool is_modifier_stack_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>> registry, flight::Array<flight::Ref<flight::types::Modifier>> stack) {
+inline bool is_modifier_stack_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>> registry, flight::Array<flight::types::ModifierValue> stack) {
   return (static_cast<double>(flight::shading::get_unregistered_modifier_kinds(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>>>(registry), stack).size()) == 0.0);
 }
 

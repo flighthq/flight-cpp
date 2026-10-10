@@ -10,6 +10,7 @@
 //   missing: function renderWgpuVelocity -- source line 292
 #include <cmath>
 #include <flight/any.hpp>
+#include <flight/erased_ref.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/weak_map.hpp>
 #include <functional>
@@ -45,8 +46,8 @@ inline flight::Ref<WgpuTextureRenderTarget> create_wgpu_velocity_target(flight::
 //     return entry?.state === RegistryEntryState.Bound ? entry.value : null;
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuVelocity.ts: typeOf types require
-// C++ type computation lowering
+// cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuVelocity.ts: union member test
+// must identify exactly one C++ optional value alternative
 
 inline void register_wgpu_velocity_writer(flight::Ref<WgpuRenderState> state, flight::Ref<Kind> kind, flight::Ref<WgpuVelocityWriter> writer) {
   flight::Ref<WgpuRenderStateRuntime> runtime = get_wgpu_render_state_runtime(state);

@@ -9,6 +9,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { struct Vector3; }
+namespace flight::types { struct VertexDisplaceModifier; }
+namespace flight::types { struct VertexDisplaceModifierOptions; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/shading/modifier.hpp>
@@ -16,57 +24,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::shading {
 
 inline flight::types::Vector3Like default_direction = flight::make_ref<flight::types::Vector3>(flight::types::Vector3{.x = 1.0, .y = 0.0, .z = 0.0});
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHADING_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_95B8B467441EC19B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHADING_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_95B8B467441EC19B
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  flight::types::TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
-  flight::String dimension;
-  flight::Array<std::optional<flight::Ref<flight::types::TextureSource>>> sources;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHADING_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_95B8B467441EC19B
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHADING_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCE_B54DC1BFFA369663
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHADING_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCE_B54DC1BFFA369663
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663 : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  flight::types::TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
-  flight::String dimension;
-  std::optional<flight::Ref<flight::types::VoxelGrid>> source;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHADING_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCE_B54DC1BFFA369663
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHADING_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_AE19201647327EBA
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHADING_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_AE19201647327EBA
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  flight::types::TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
-  flight::String dimension;
-  flight::types::TextureSourceCubeFaces sources;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHADING_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_AE19201647327EBA
 
 inline void initialize_vertex_displace_modifier(flight::types::EntityConstruction<flight::Ref<flight::types::VertexDisplaceModifier>> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VertexDisplaceModifierOptions>>>> options) {
   flight::shading::initialize_modifier<flight::Ref<flight::types::VertexDisplaceModifier>>(out, flight::types::vertex_displace_modifier_kind, flight::types::modifier_slot->vertex);
@@ -79,7 +36,7 @@ inline void initialize_vertex_displace_modifier(flight::types::EntityConstructio
     flight::row_set<flight::RowKey<"axis">>(out, std::optional<flight::Ref<flight::types::Vector3>>{flight::row_get<flight::RowKey<"axis">>(options).value()});
   }
   if (flight::row_get<flight::RowKey<"map">>(options).has_value()) {
-    flight::row_set<flight::RowKey<"map">>(out, std::visit([&](const auto& contextual_union_value) -> std::optional<flight::types::Texture> { using contextual_union_value_type = std::decay_t<decltype(contextual_union_value)>; if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b>>) return std::optional<flight::types::Texture>{std::in_place, std::in_place_type<flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663>>) return std::optional<flight::types::Texture>{std::in_place, std::in_place_type<flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>>) return std::optional<flight::types::Texture>{std::in_place, std::in_place_type<flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>>, contextual_union_value}; else return std::optional<flight::types::Texture>{std::in_place, std::in_place_type<flight::Ref<flight::types::Texture2D>>, contextual_union_value}; }, flight::row_get<flight::RowKey<"map">>(options).value()));
+    flight::row_set<flight::RowKey<"map">>(out, std::visit([&](const auto& contextual_union_value) -> std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>> { using contextual_union_value_type = std::decay_t<decltype(contextual_union_value)>; if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::Texture2DArray>>) return std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::Texture2DArray>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::TextureCube>>) return std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::TextureCube>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::Texture2D>>) return std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::Texture2D>>, contextual_union_value}; else return std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::Texture3D>>, contextual_union_value}; }, flight::row_get<flight::RowKey<"map">>(options).value()));
   }
 }
 

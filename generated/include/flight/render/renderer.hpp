@@ -14,12 +14,53 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/renderer.hpp>
 
+#include <flight/types/render_state.hpp>
+
+#include <flight/types/render_proxy.hpp>
+
+#include <flight/types/render_effect_padding.hpp>
+
+#include <flight/types/render_cache.hpp>
+
+#include <flight/types/node3_d.hpp>
+
+#include <flight/types/node.hpp>
+
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Node3D; }
+namespace flight::types { struct Path; }
+namespace flight::types { struct PathMesh; }
+namespace flight::types { struct RenderCache; }
+namespace flight::types { struct RenderEffect; }
+namespace flight::types { struct RenderEffectPadding; }
+namespace flight::types { struct RenderProxy; }
+namespace flight::types { struct RenderRegistries; }
+namespace flight::types { struct RenderState; }
+namespace flight::types { struct RenderStateRuntime; }
+namespace flight::types { struct Renderer; }
+namespace flight::types { struct RendererData; }
+namespace flight::types { struct Scene2DClipHooks; }
+namespace flight::types { struct StrokeStyle; }
+namespace flight::types { struct TombstonedRegistryTableEntry; }
+namespace flight::types { template <typename K> struct CanvasShapeCommand; }
+namespace flight::types { template <typename T> struct BoundRegistryTableEntry; }
+namespace flight::types { template <typename T> struct KeyedTable; }
+namespace flight::types { template <typename T> struct SlotTable; }
+namespace flight::types { template <typename Traits> struct Node; }
+
 #include <flight/registry/registry_table.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/render/render_state.hpp>
 
 namespace flight::render {
 
+using flight::types::Node;
+using flight::types::Node3D;
+using flight::types::RenderCache;
+using flight::types::RenderEffectPadding;
+using flight::types::RenderProxy;
+using flight::types::RenderState;
+using flight::types::RenderStateRuntime;
 using flight::types::Renderer;
 
 inline void copy_render_state_registrations(flight::Ref<flight::types::RenderState> target, flight::Ref<flight::types::RenderState> source) {

@@ -27,9 +27,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects_canvas {
 
-using flight::types::composite_operator;
-
 extern const flight::types::CanvasRenderEffectRunner default_canvas_composite_effect_runner;
+
+using flight::types::composite_operator;
 
 using flight::types::CanvasRenderState;
 using flight::types::CanvasTextureRenderTarget;

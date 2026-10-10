@@ -12,6 +12,7 @@ namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct Node2DTraits; }
 namespace flight::types { struct RenderEffect; }
 namespace flight::types { struct Scene2DDocument; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct SwfDocumentImport;

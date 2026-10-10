@@ -4,16 +4,15 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function collectPendingTextureOwners -- source line 82
-//   missing: function revealScene3DResourcesOnResolve -- source line 35
-#include <cstddef>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
-#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
+
+#include <flight/signals/slot.hpp>
 
 #include <flight/types/texture.hpp>
 
@@ -33,6 +32,8 @@ namespace flight::scene3d_resources {
 
 using flight::types::resource_resolution_state;
 
+using flight::signals::disconnect_signal;
+
 using flight::types::EasingFunction;
 using flight::types::Material;
 using flight::types::Node3D;
@@ -40,6 +41,7 @@ using flight::types::ResourceResolutionState;
 using flight::types::Scene3D;
 using flight::types::Scene3DResourceResolver;
 using flight::types::Scene3DResourceResolverWithRuntime;
+using flight::types::Scene3DResourceSignals;
 using flight::types::Texture;
 struct Scene3DResourceRevealOwner;
 } // namespace flight::scene3d_resources
@@ -57,7 +59,7 @@ struct Scene3DResourceRevealOwner : public flight::ReferenceEnabled {
 
 
 // NOT GENERATED: function collectPendingTextureOwners -- source line 82
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-type-assertion-unidentified [source-portability]
 //
 // The source it stood for:
 //   function collectPendingTextureOwners(
@@ -103,13 +105,9 @@ struct Scene3DResourceRevealOwner : public flight::ReferenceEnabled {
 //   }
 //   
 // cpp emission failed for
-// @flighthq/scene3d-resources/packages/scene3d-resources/src/revealScene3DResourcesOnResolve.ts: a reference
-// assertion from std::shared_ptr<Node<flight::Ref<Node3DTraits>>> to flight::Ref<Node3D> has no heritage to cast
-// along: the declarations share no emitted C++ class-heritage path (source interface and intersection
-// relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner
-// that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
-// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
-// replacement row, or invent side storage
+// @flighthq/scene3d-resources/packages/scene3d-resources/src/revealScene3DResourcesOnResolve.ts: type assertion
+// target must identify exactly one C++ variant alternative: target std::optional<flight::Ref<Material>> against
+// [flight::Ref<MaterialValue>]
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_RESOURCES_EASE_B8DCD4723C34153E
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_RESOURCES_EASE_B8DCD4723C34153E
@@ -125,54 +123,36 @@ struct texture_fb3f2ce1b96ed5f5 : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_RESOURCES_TEXTURE_FB3F2CE1B96ED5F5
 
-
-// NOT GENERATED: function revealScene3DResourcesOnResolve -- source line 35
-// refusal: cpp-intersection-member-shapeless [source-portability]
-//
-// The source it stood for:
-//   export function revealScene3DResourcesOnResolve(
-//     resolver: Scene3DResourceResolverWithRuntime,
-//     scene: Readonly<Scene3D>,
-//     tweenManager: TweenManager,
-//     options?: Readonly<Scene3DResourceRevealOptions>,
-//   ): () => void {
-//     const fadeSeconds = options?.fadeSeconds ?? 0.4;
-//     const from = options?.from ?? 0;
-//     const tweenOptions = options?.ease !== undefined ? { ease: options.ease } : undefined;
-//   
-//     const ownersByTexture = new Map<Texture, Scene3DResourceRevealOwner[]>();
-//     const owners: Scene3DResourceRevealOwner[] = [];
-//     collectPendingTextureOwners(scene, resolver, ownersByTexture, owners);
-//     for (const owner of owners) {
-//       owner.node.alpha = from;
-//     }
-//   
-//     const signals = enableScene3DResourceSignals(resolver);
-//     const slot = (event: Readonly<{ texture: Texture }>): void => {
-//       const textureOwners = ownersByTexture.get(event.texture);
-//       if (textureOwners === undefined) return;
-//       // A resource must emit at most one terminal event for a Texture, but deleting here also makes the
-//       // reveal atom robust to a caller manually replaying or forwarding the same event.
-//       ownersByTexture.delete(event.texture);
-//       for (const owner of textureOwners) {
-//         owner.pending.delete(event.texture);
-//         if (owner.pending.size === 0) {
-//           createTween(tweenManager, owner.node, fadeSeconds, { alpha: 1 }, tweenOptions);
-//         }
-//       }
-//     };
-//     connectSignal(signals.onResourceResolved, slot);
-//     connectSignal(signals.onResourceFailed, slot);
-//     return () => {
-//       disconnectSignal(signals.onResourceResolved, slot);
-//       disconnectSignal(signals.onResourceFailed, slot);
-//     };
-//   }
-//   
-// cpp emission failed for
-// @flighthq/scene3d-resources/packages/scene3d-resources/src/revealScene3DResourcesOnResolve.ts: intersection
-// types require C++ multiple-inheritance lowering: no shape for Node (argument Node3DTraits has no shape
-// either), Node3DTraits. Declare the object shape the code reads rather than intersecting a conjunct that has
-// none
+inline std::function<void()> reveal_scene3_dresources_on_resolve(flight::Ref<Scene3DResourceResolverWithRuntime> resolver, flight::Ref<Scene3D> scene, flight::Ref<TweenManager> tween_manager, std::optional<flight::Ref<Scene3DResourceRevealOptions>> options = std::nullopt) {
+  const double fade_seconds = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->fade_seconds; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.4; }());
+  const double from = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->from; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
+  auto tween_options = (([&]() -> std::optional<flight::Ref<EasingFunction>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->ease; }()).has_value() ? std::optional{flight::make_ref<ease_b8dcd4723c34153e>(ease_b8dcd4723c34153e{.ease = options.value()->ease})} : std::nullopt);
+  auto owners_by_texture = flight::Map<flight::Ref<Texture>, flight::Array<flight::Ref<Scene3DResourceRevealOwner>>>();
+  flight::Array<flight::Ref<Scene3DResourceRevealOwner>> owners = flight::Array<flight::Ref<Scene3DResourceRevealOwner>>{};
+  collect_pending_texture_owners(scene, resolver, owners_by_texture, owners);
+  for (auto owner : owners) {
+    (owner->node->alpha = from);
+  }
+  flight::Ref<Scene3DResourceSignals> signals = enable_scene3_dresource_signals(resolver);
+  std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<texture_fb3f2ce1b96ed5f5>>>>)> slot = [=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<texture_fb3f2ce1b96ed5f5>>>> event) {
+  auto texture_owners = owners_by_texture.get(flight::row_get<flight::RowKey<"texture">>(event));
+  if (!texture_owners.has_value()) {
+    return;
+  }
+  owners_by_texture.erase(flight::row_get<flight::RowKey<"texture">>(event));
+  for (auto owner : texture_owners.value()) {
+    owner->pending.erase(flight::row_get<flight::RowKey<"texture">>(event));
+    if ((static_cast<double>(owner->pending.size()) == 0.0)) {
+      create_tween(tween_manager, owner->node, fade_seconds, flight::make_ref<NumericProps<flight::Ref<Node3D>>>(NumericProps<flight::Ref<Node3D>>{.alpha = 1.0}), tween_options);
+    }
+  }
+};
+  connect_signal(signals->on_resource_resolved, slot, std::nullopt);
+  connect_signal(signals->on_resource_failed, slot, std::nullopt);
+  return [=]() {
+  disconnect_signal(signals->on_resource_resolved, slot);
+  disconnect_signal(signals->on_resource_failed, slot);
+};
+}
 
 } // namespace flight::scene3d_resources

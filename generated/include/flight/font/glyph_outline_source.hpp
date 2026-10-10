@@ -176,6 +176,12 @@ inline void initialize_glyph_rasterizer_backend_from_glyph_outline_source(flight
 });
 }
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_FONT_ANONYMOUS_3E6B344A3B6BD77E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_FONT_ANONYMOUS_3E6B344A3B6BD77E
+struct anonymous_3e6b344a3b6bd77e : public flight::ReferenceEnabled {
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_FONT_ANONYMOUS_3E6B344A3B6BD77E
+
 inline flight::Ref<flight::types::HostGlyphRasterizerCapability> allocate_glyph_rasterizer_backend_from_glyph_outline_source(flight::Ref<flight::types::GlyphOutlineSource> source) {
   auto out = flight::make_ref<flight::types::HostGlyphRasterizerCapability>(flight::types::HostGlyphRasterizerCapability{});
   initialize_glyph_rasterizer_backend_from_glyph_outline_source(out, source);

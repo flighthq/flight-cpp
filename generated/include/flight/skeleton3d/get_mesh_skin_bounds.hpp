@@ -14,6 +14,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct Entity; }
 namespace flight::types { struct MeshSkinBindPose; }
+namespace flight::types { struct Node3D; }
 namespace flight::types { struct Skeleton3D; }
 namespace flight::types { struct Vector3; }
 
@@ -27,6 +28,7 @@ namespace flight::types { struct Vector3; }
 
 namespace flight::skeleton3d {
 
+using flight::types::Node3D;
 using flight::types::Skeleton3D;
 
 inline void get_mesh_skin_exact_bounds(flight::Ref<flight::types::AabbLike> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshSkinBindPose>>>> bind_pose, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton3D>>>> skeleton) {

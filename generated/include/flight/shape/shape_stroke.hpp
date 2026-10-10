@@ -11,6 +11,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
+#include <flight/types/path.hpp>
+
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct Path; }
+namespace flight::types { struct ShapeStrokeRegion; }
+namespace flight::types { struct StrokeStyle; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/shape/shape_command_geometry.hpp>
@@ -18,56 +29,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::shape {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_95B8B467441EC19B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_95B8B467441EC19B
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  flight::types::TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
-  flight::String dimension;
-  flight::Array<std::optional<flight::Ref<flight::types::TextureSource>>> sources;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_95B8B467441EC19B
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCE_B54DC1BFFA369663
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCE_B54DC1BFFA369663
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663 : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  flight::types::TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
-  flight::String dimension;
-  std::optional<flight::Ref<flight::types::VoxelGrid>> source;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCE_B54DC1BFFA369663
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_AE19201647327EBA
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_AE19201647327EBA
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  flight::types::TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
-  flight::String dimension;
-  flight::types::TextureSourceCubeFaces sources;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_AE19201647327EBA
+using flight::types::Path;
 
 inline bool has_non_solid_shape_stroke(flight::Array<flight::types::ShapeCommandToken> commands) {
   double i = 0.0;

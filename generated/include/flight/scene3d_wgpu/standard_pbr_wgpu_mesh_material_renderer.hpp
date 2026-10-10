@@ -5,11 +5,13 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: variable (binding) -- source line 236
 //   missing: variable (binding) -- source line 240
+//   missing: function ensureWgpuPbrMaterialBindGroup -- source line 77
 //   missing: variable (binding) -- source line 199
 #include <flight/host_sdl/wgpu.hpp>
 #include <functional>
 #include <optional>
 #include <tuple>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -29,6 +31,12 @@ inline const double wgpu_pbr_material_uniform_floats = 48.0;
 inline flight::Ref<WgpuPbrDefineKey> build_wgpu_pbr_standard_define_key(std::optional<flight::Ref<StandardPbrMaterialProperties>> standard, std::optional<flight::Ref<SurfaceMaterial>> surface) {
   return flight::make_ref<WgpuPbrDefineKey>(WgpuPbrDefineKey{.alpha_mask_enabled = (surface.has_value() && (surface.value()->alpha_mode == flight::String("mask"))), .anisotropy_enabled = false, .clearcoat_enabled = false, .double_sided = (surface.has_value() && surface.value()->double_sided), .has_alpha_map = (((surface.has_value() && (surface.value()->alpha_mode != flight::String("opaque"))) && standard.has_value()) && is_wgpu_texture_ready(standard.value()->alpha_map)), .has_base_color_map = (standard.has_value() && is_wgpu_texture_ready(standard.value()->base_color_map)), .has_emissive_map = (standard.has_value() && is_wgpu_texture_ready(standard.value()->emissive_map)), .has_metallic_roughness_map = (standard.has_value() && is_wgpu_texture_ready(standard.value()->metallic_roughness_map)), .has_normal_map = (standard.has_value() && is_wgpu_texture_ready(standard.value()->normal_map)), .has_occlusion_map = (standard.has_value() && is_wgpu_texture_ready(standard.value()->occlusion_map)), .iridescence_enabled = false, .sheen_enabled = false, .specular_enabled = false, .subsurface_enabled = false, .transmission_enabled = false});
 }
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_ANONYMOUS_3E6B344A3B6BD77E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_ANONYMOUS_3E6B344A3B6BD77E
+struct anonymous_3e6b344a3b6bd77e : public flight::ReferenceEnabled {
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_ANONYMOUS_3E6B344A3B6BD77E
 
 inline flight::Ref<StandardPbrMaterial> fallback_material = flight::make_ref<StandardPbrMaterial>(StandardPbrMaterial{});
 
@@ -113,24 +121,55 @@ inline void write_wgpu_pbr_material_uniform(flight::Ref<WgpuRenderState> state, 
 // holes; use an explicit fill value, build the array with push, or use Array.from when every element should be
 // present
 
-inline flight::Ref<WgpuMaterialBinding> ensure_wgpu_pbr_material_bind_group(flight::Ref<WgpuRenderState> state, flight::Ref<WgpuPbrPipeline> pipeline, flight::Ref<void> key, std::optional<flight::Ref<StandardPbrMaterialProperties>> standard) {
-  auto base_color_map = (standard.has_value() ? standard.value()->base_color_map : nullptr);
-  (sampler_scratch.element(0.0) = get_wgpu_material_sampler(state, base_color_map));
-  (sampler_scratch.element(1.0) = get_wgpu_material_sampler(state, (standard.has_value() ? standard.value()->metallic_roughness_map : nullptr)));
-  (sampler_scratch.element(2.0) = get_wgpu_material_sampler(state, (standard.has_value() ? standard.value()->normal_map : nullptr)));
-  (sampler_scratch.element(3.0) = get_wgpu_material_sampler(state, (standard.has_value() ? standard.value()->occlusion_map : nullptr)));
-  (sampler_scratch.element(4.0) = get_wgpu_material_sampler(state, (standard.has_value() ? standard.value()->emissive_map : nullptr)));
-  (sampler_scratch.element(5.0) = get_wgpu_material_sampler(state, (standard.has_value() ? standard.value()->alpha_map : nullptr)));
-  (view_scratch.element(0.0) = resolve_wgpu_material_texture_view(state, base_color_map));
-  (view_scratch.element(1.0) = resolve_wgpu_material_texture_view(state, (standard.has_value() ? standard.value()->metallic_roughness_map : nullptr)));
-  (view_scratch.element(2.0) = resolve_wgpu_material_texture_view(state, (standard.has_value() ? standard.value()->normal_map : nullptr)));
-  (view_scratch.element(3.0) = resolve_wgpu_material_texture_view(state, (standard.has_value() ? standard.value()->occlusion_map : nullptr)));
-  (view_scratch.element(4.0) = resolve_wgpu_material_texture_view(state, (standard.has_value() ? standard.value()->emissive_map : nullptr)));
-  (view_scratch.element(5.0) = resolve_wgpu_material_texture_view(state, (standard.has_value() ? standard.value()->alpha_map : nullptr)));
-  flight::Ref<WgpuMaterialBinding> binding = ensure_wgpu_per_map_material_binding(state, key, pipeline->material_bind_group_layout, (wgpu_pbr_material_uniform_floats * 4.0), sampler_scratch, view_scratch);
-  stash_wgpu_uv_transform(state, (standard.has_value() ? standard.value()->base_color_map : nullptr));
-  return binding;
-}
+
+// NOT GENERATED: function ensureWgpuPbrMaterialBindGroup -- source line 77
+// refusal: cpp-contextual-union-missing-expression-type:optionalVariant [compiler-restriction]
+//
+// The source it stood for:
+//   export function ensureWgpuPbrMaterialBindGroup(
+//     state: WgpuRenderState,
+//     pipeline: Readonly<WgpuPbrPipeline>,
+//     key: object,
+//     standard: Readonly<StandardPbrMaterialProperties> | null,
+//   ): WgpuMaterialBinding {
+//     const baseColorMap = standard !== null ? standard.baseColorMap : null;
+//     // Re-resolve the primary (base-color) sampler + the six standard-block map views every bind (base-color,
+//     // metallic-roughness, normal, occlusion, emissive, alpha) into a REUSED module scratch — no per-bind
+//     // allocation — so ensureWgpuPerMapMaterialBinding can rebuild the bind group only when one differs.
+//     // Each view is paired with its own cached sampler, matching GL's per-Texture sampler contract.
+//     _samplerScratch[0] = getWgpuMaterialSampler(state, baseColorMap);
+//     _samplerScratch[1] = getWgpuMaterialSampler(state, standard !== null ? standard.metallicRoughnessMap : null);
+//     _samplerScratch[2] = getWgpuMaterialSampler(state, standard !== null ? standard.normalMap : null);
+//     _samplerScratch[3] = getWgpuMaterialSampler(state, standard !== null ? standard.occlusionMap : null);
+//     _samplerScratch[4] = getWgpuMaterialSampler(state, standard !== null ? standard.emissiveMap : null);
+//     _samplerScratch[5] = getWgpuMaterialSampler(state, standard !== null ? standard.alphaMap : null);
+//     _viewScratch[0] = resolveWgpuMaterialTextureView(state, baseColorMap);
+//     _viewScratch[1] = resolveWgpuMaterialTextureView(state, standard !== null ? standard.metallicRoughnessMap : null);
+//     _viewScratch[2] = resolveWgpuMaterialTextureView(state, standard !== null ? standard.normalMap : null);
+//     _viewScratch[3] = resolveWgpuMaterialTextureView(state, standard !== null ? standard.occlusionMap : null);
+//     _viewScratch[4] = resolveWgpuMaterialTextureView(state, standard !== null ? standard.emissiveMap : null);
+//     _viewScratch[5] = resolveWgpuMaterialTextureView(state, standard !== null ? standard.alphaMap : null);
+//     const binding = ensureWgpuPerMapMaterialBinding(
+//       state,
+//       key,
+//       pipeline.materialBindGroupLayout,
+//       WGPU_PBR_MATERIAL_UNIFORM_FLOATS * 4,
+//       _samplerScratch,
+//       _viewScratch,
+//     );
+//     // The base-color map's uv transform drives the shared vertex-scene2d uv every standard map samples.
+//     // Runs every bind (standard + each extension routes through here), so the stash is always fresh.
+//     stashWgpuUvTransform(state, standard !== null ? standard.baseColorMap : null);
+//     return binding;
+//   }
+//   
+//   // Returns the shared MaterialBlock scratch the standard + extension packers write into. The extension
+//   // renderers fill the base block via writeWgpuPbrStandardBlock and their own factors via index into the
+//   // returned array, then upload it. Reused across binds (bind is not a hot inner loop, and one draw is
+//   // recorded before the next bind overwrites it).
+// cpp emission failed for
+// @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/standardPbrWgpuMeshMaterialRenderer.ts: contextual
+// optionalVariant construction requires expression type evidence
 
 
 // NOT GENERATED: variable (binding) -- source line 199

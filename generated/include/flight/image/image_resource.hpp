@@ -70,7 +70,7 @@ inline flight::Ref<flight::types::CompressedImageResource> create_compressed_ima
 inline flight::Ref<flight::types::HostImageDimensions> measured = flight::make_ref<flight::types::HostImageDimensions>(flight::types::HostImageDimensions{.height = 0.0, .width = 0.0});
 
 inline void update_image_resource_size(flight::Ref<flight::types::ImageResource> resource) {
-  flight::Ref<flight::types::HostImageSource> source = resource->source;
+  flight::types::HostImageSource source = resource->source;
   if (false) {
     return;
   }
@@ -83,7 +83,7 @@ inline void update_image_resource_size(flight::Ref<flight::types::ImageResource>
   (resource->width = measured->width);
 }
 
-inline flight::Ref<flight::types::ImageResource> create_image_resource(flight::Ref<flight::types::HostImageSource> image) {
+inline flight::Ref<flight::types::ImageResource> create_image_resource(flight::types::HostImageSource image) {
   flight::types::EntityConstruction<flight::Ref<flight::types::ImageResource>> resource = flight::entity::allocate_entity<flight::Ref<flight::types::ImageResource>>();
   flight::row_set<flight::RowKey<"alphaType">>(resource, decoded_alpha_type);
   flight::row_set<flight::RowKey<"gamut">>(resource, decoded_gamut);

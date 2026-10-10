@@ -7,7 +7,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Bitmap; }
+namespace flight::types { struct CompressedImageResource; }
+namespace flight::types { struct ExternalTexture; }
+namespace flight::types { struct ImageResource; }
+namespace flight::types { struct RenderTarget; }
 namespace flight::types { struct Sampler; }
+namespace flight::types { struct TextureSource; }
+namespace flight::types { struct VoxelGrid; }
 
 namespace flight::types {
 struct CreateCubeTextureOptions;

@@ -151,26 +151,6 @@ inline flight::types::PermissionQueryOutcome project_storage_persistence_query(f
   throw std::logic_error("Flight function completed without a value");
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_04283969300F4D75
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_04283969300F4D75
-struct reason_state_04283969300f4d75 : public flight::ReferenceEnabled {
-  flight::String reason;
-  flight::types::PermissionState state;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_04283969300F4D75
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_CB1644DADD3DF85E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_CB1644DADD3DF85E
-using reason_state_cb1644dadd3df85e = flight::types::reason_state_cb1644dadd3df85e;
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_CB1644DADD3DF85E
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_601E8879DBDC359D
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_601E8879DBDC359D
-struct reason_601e8879dbdc359d : public flight::ReferenceEnabled {
-  flight::types::PermissionQueryFailureReason reason;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_601E8879DBDC359D
-
 inline flight::Task<flight::types::PermissionQueryOutcome> query_storage_persistence_permission(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostPreferencesPersistenceQueryCapability>>>>> capability) {
   if (!capability.has_value()) {
     co_return std::variant<flight::Ref<flight::types::reason_601e8879dbdc359d>, flight::Ref<flight::types::reason_state_04283969300f4d75>, flight::Ref<flight::types::reason_state_cb1644dadd3df85e>>{std::in_place_type<flight::Ref<flight::types::reason_601e8879dbdc359d>>, flight::make_ref<flight::types::reason_601e8879dbdc359d>(flight::types::reason_601e8879dbdc359d{.reason = flight::String("unsupported")})};
@@ -185,6 +165,29 @@ inline flight::Task<flight::types::PermissionQueryOutcome> query_storage_persist
     co_return std::variant<flight::Ref<flight::types::reason_601e8879dbdc359d>, flight::Ref<flight::types::reason_state_04283969300f4d75>, flight::Ref<flight::types::reason_state_cb1644dadd3df85e>>{std::in_place_type<flight::Ref<flight::types::reason_601e8879dbdc359d>>, flight::make_ref<flight::types::reason_601e8879dbdc359d>(flight::types::reason_601e8879dbdc359d{.reason = flight::String("operation-failed")})};
   }
 }
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_04283969300F4D75
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_04283969300F4D75
+struct reason_state_04283969300f4d75 : public flight::ReferenceEnabled {
+  flight::String reason;
+  flight::types::PermissionState state;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_04283969300F4D75
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_CB1644DADD3DF85E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_CB1644DADD3DF85E
+struct reason_state_cb1644dadd3df85e : public flight::ReferenceEnabled {
+  flight::String reason;
+  std::optional<flight::types::PermissionState> state;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_CB1644DADD3DF85E
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_601E8879DBDC359D
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_601E8879DBDC359D
+struct reason_601e8879dbdc359d : public flight::ReferenceEnabled {
+  flight::types::PermissionQueryFailureReason reason;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_601E8879DBDC359D
 
 inline flight::Task<flight::types::PermissionQueryOutcome> query_permission_state(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<PermissionQueryOrigins>>>> origins, flight::String name) {
   if ((name == flight::String("notifications"))) {
@@ -234,18 +237,6 @@ inline flight::types::PermissionRequestOutcome project_storage_persistence_reque
   }
   throw std::logic_error("Flight function completed without a value");
 }
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_CC6A9749EE69E3E5
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_CC6A9749EE69E3E5
-using reason_state_cc6a9749ee69e3e5 = flight::types::reason_state_cc6a9749ee69e3e5;
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_CC6A9749EE69E3E5
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_8F6F7A7043C292D4
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_8F6F7A7043C292D4
-struct reason_8f6f7a7043c292d4 : public flight::ReferenceEnabled {
-  flight::types::PermissionRequestFailureReason reason;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_8F6F7A7043C292D4
 
 inline flight::Task<flight::types::PermissionRequestOutcome> request_storage_persistence_permission(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostPreferencesPersistenceRequestCapability>>>>> capability) {
   if (!capability.has_value()) {

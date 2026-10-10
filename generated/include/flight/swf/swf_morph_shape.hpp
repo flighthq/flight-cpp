@@ -70,6 +70,7 @@
 //   type { Kind } from '@flighthq/types/contract'
 //   type { Adjustment } from '@flighthq/types/contract'
 //   type { ColorScaleBias } from '@flighthq/types/contract'
+//   type { NodeOf } from '@flighthq/types/contract'
 //   type { Node } from '@flighthq/types/contract'
 //   type { BlendMode } from '@flighthq/types/contract'
 //   type { ClipRegion } from '@flighthq/types/contract'

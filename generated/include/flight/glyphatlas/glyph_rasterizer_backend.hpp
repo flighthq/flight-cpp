@@ -33,6 +33,12 @@ inline void initialize_stub_glyph_rasterizer_backend(flight::Ref<flight::types::
 });
 }
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_GLYPHATLAS_ANONYMOUS_3E6B344A3B6BD77E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_GLYPHATLAS_ANONYMOUS_3E6B344A3B6BD77E
+struct anonymous_3e6b344a3b6bd77e : public flight::ReferenceEnabled {
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_GLYPHATLAS_ANONYMOUS_3E6B344A3B6BD77E
+
 inline flight::Ref<flight::types::HostGlyphRasterizerCapability> allocate_stub_glyph_rasterizer_backend() {
   auto out = flight::make_ref<flight::types::HostGlyphRasterizerCapability>(flight::types::HostGlyphRasterizerCapability{});
   initialize_stub_glyph_rasterizer_backend(out);

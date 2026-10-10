@@ -12,6 +12,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct Entity; }
 namespace flight::types { struct EntityRuntime; }
+namespace flight::types { struct TombstonedRegistryTableEntry; }
+namespace flight::types { template <typename T> struct BoundRegistryTableEntry; }
 namespace flight::types { template <typename T> struct KeyedTable; }
 namespace flight::types { template <typename T> struct Signal; }
 namespace flight::types { template <typename Traits> struct Node; }

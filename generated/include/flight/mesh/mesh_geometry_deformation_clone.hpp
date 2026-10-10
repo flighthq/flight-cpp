@@ -12,6 +12,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct Aabb; }
 namespace flight::types { struct MeshGeometry; }
+namespace flight::types { struct MeshGeometryRuntime; }
 namespace flight::types { struct MeshMorphBindPose; }
 namespace flight::types { struct MeshSkinBindPose; }
 namespace flight::types { struct MeshSubset; }
@@ -31,6 +32,7 @@ namespace flight::mesh {
 
 using flight::types::Aabb;
 using flight::types::MeshGeometry;
+using flight::types::MeshGeometryRuntime;
 using flight::types::MeshMorphBindPose;
 using flight::types::MeshSkinBindPose;
 using flight::types::MeshSubset;

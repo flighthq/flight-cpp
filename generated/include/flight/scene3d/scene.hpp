@@ -13,16 +13,14 @@ namespace flight::types { struct AnimationClip; }
 namespace flight::types { struct EmbeddedImageResourceReference; }
 namespace flight::types { struct Entity; }
 namespace flight::types { struct ExternalImageResourceReference; }
-namespace flight::types { struct Node3DTraits; }
+namespace flight::types { struct Node3D; }
 namespace flight::types { struct Scene3D; }
 namespace flight::types { struct Scene3DMetadata; }
-namespace flight::types { template <typename Traits> struct Node; }
 
 #include <flight/entity/entity.hpp>
 #include <flight/types/animation_clip.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/image_resource_reference.hpp>
-#include <flight/types/node.hpp>
 #include <flight/types/node3_d.hpp>
 #include <flight/types/scene3_d.hpp>
 #include <flight/types/scene3_dmetadata.hpp>
@@ -30,6 +28,7 @@ namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::scene3d {
 
+using flight::types::Node3D;
 using flight::types::Scene3D;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENABLED_NAME_F1ABECE853AC935C
@@ -41,7 +40,7 @@ struct enabled_name_f1abece853ac935c : public flight::ReferenceEnabled {
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENABLED_NAME_F1ABECE853AC935C
 
 inline void initialize_scene3_d(flight::types::EntityConstruction<flight::Ref<flight::types::Scene3D>> out, std::optional<flight::Ref<enabled_name_f1abece853ac935c>> obj = std::nullopt) {
-  flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node3DTraits>>>> root = flight::scene3d::create_node3_d(flight::types::node3_dkind, obj);
+  auto root = flight::scene3d::create_node3_d(flight::types::node3_dkind, obj);
   flight::row_set<flight::RowKey<"animations">>(out, flight::Record<flight::String, flight::Ref<flight::types::AnimationClip>>{});
   flight::row_set<flight::RowKey<"metadata">>(out, std::nullopt);
   flight::row_set<flight::RowKey<"resources">>(out, flight::Array<flight::types::ImageResourceReference>{});

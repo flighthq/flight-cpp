@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/boolean.hpp>
+#include <flight/erased_ref.hpp>
 #include <optional>
 #include <random>
 #include <flight/runtime.hpp>
@@ -28,7 +29,7 @@ using flight::types::MarqueeSelectionRuntime;
 using flight::types::Rectangle;
 
 inline flight::Ref<MarqueeSelection> create_marquee_selection() {
-  flight::Ref<MarqueeSelection> selection = flight::make_ref<MarqueeSelection>(MarqueeSelection{});
+  flight::Ref<MarqueeSelection> selection = flight::erased_ref_as<MarqueeSelection>({});
   flight::Ref<MarqueeSelectionRuntime> runtime = flight::make_ref<MarqueeSelectionRuntime>(MarqueeSelectionRuntime{.active = false, .binding = nullptr, .rectangle = create_rectangle(std::nullopt, std::nullopt, std::nullopt, std::nullopt), .start_x = 0.0, .start_y = 0.0});
   (selection->entity_runtime_key = runtime);
   return selection;

@@ -9,11 +9,24 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/render_proxy2_d.hpp>
+
+#include <flight/types/dom_render_state.hpp>
+
+namespace flight::types { struct DomRenderState; }
+namespace flight::types { struct DomRenderStateRuntime; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct RenderProxy2D; }
+
 #include <flight/types/contract.hpp>
 #include <flight/scene2d_dom/dom_render_state.hpp>
 #include <flight/scene2d_dom/dom_transform.hpp>
 
 namespace flight::scene2d_dom {
+
+using flight::types::DomRenderState;
+using flight::types::DomRenderStateRuntime;
+using flight::types::RenderProxy2D;
 
 inline void apply_dom_style(flight::Ref<flight::types::DomRenderState> state, flight::host_sdl::HtmlElement element, flight::Ref<flight::types::RenderProxy2D> node) {
   flight::scene2d_dom::set_dom_transform(element, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(node->transform2_d)), state->round_pixels);

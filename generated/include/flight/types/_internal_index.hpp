@@ -315,6 +315,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/gl_texture_descriptor.hpp>
 #include <flight/types/gl_texture_filter_kind.hpp>
 #include <flight/types/gl_texture_resolver.hpp>
+#include <flight/types/gl_texture_value.hpp>
 #include <flight/types/gl_texture_wrap_kind.hpp>
 #include <flight/types/gl_toon_program.hpp>
 #include <flight/types/gl_unlit_program.hpp>
@@ -363,6 +364,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/host_message_dialog.hpp>
 #include <flight/types/host_prompt_dialog.hpp>
 #include <flight/types/texture_source.hpp>
+#include <flight/types/texture_source_value.hpp>
 #include <flight/types/image_channel.hpp>
 #include <flight/types/host_bitmap_encode.hpp>
 #include <flight/types/bitmap_encode_failure_explanation.hpp>
@@ -418,6 +420,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/lasso_selection.hpp>
 #include <flight/types/lifecycle.hpp>
 #include <flight/types/light.hpp>
+#include <flight/types/light_value.hpp>
 #include <flight/types/light_layer_mask.hpp>
 #include <flight/types/light_probe.hpp>
 #include <flight/types/light_unit.hpp>
@@ -439,6 +442,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/marquee_selection.hpp>
 #include <flight/types/matcap_material.hpp>
 #include <flight/types/material.hpp>
+#include <flight/types/material_value.hpp>
 #include <flight/types/material_conversion_explanation.hpp>
 #include <flight/types/matrix.hpp>
 #include <flight/types/matrix3.hpp>
@@ -463,8 +467,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/mesh_skin_bind_pose.hpp>
 #include <flight/types/methods_of.hpp>
 #include <flight/types/modifier.hpp>
+#include <flight/types/modifier_definition_value.hpp>
 #include <flight/types/modifier_kind.hpp>
 #include <flight/types/modifier_slot.hpp>
+#include <flight/types/modifier_value.hpp>
 #include <flight/types/morph_target.hpp>
 #include <flight/types/morph_shape.hpp>
 #include <flight/types/morph_shape_animation_target.hpp>

@@ -10,7 +10,27 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/rive_document.hpp>
+
+#include <flight/types/matrix.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct RiveArtboardGraph; }
+namespace flight::types { struct RiveCoreObject; }
+namespace flight::types { struct RiveProperty; }
+namespace flight::types { struct RiveWeightedPoint; }
+namespace flight::types { struct Skin2D; }
+
 namespace flight::scene2d_formats {
+
+using flight::types::ImportDiagnostic;
+using flight::types::Matrix;
+using flight::types::RiveArtboardGraph;
+using flight::types::RiveCoreObject;
+using flight::types::RiveProperty;
 struct RiveTendonBone;
 } // namespace flight::scene2d_formats
 

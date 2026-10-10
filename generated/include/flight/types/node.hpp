@@ -6,6 +6,7 @@
 #include <flight/symbol.hpp>
 #include <functional>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -22,6 +23,8 @@ namespace flight::types { struct NodeSignals; }
 
 namespace flight::types {
 struct NodeData;
+template <typename Data = flight::Ref<NodeData>>
+struct NodeInitialization;
 struct NodeTraits;
 template <typename Traits = flight::Ref<NodeTraits>>
 struct Node;
@@ -51,6 +54,13 @@ namespace flight::types {
 
 struct NodeData : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+};
+
+template <typename Data>
+struct NodeInitialization : public flight::ReferenceEnabled {
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<Data>>>>> data;
+  std::optional<bool> enabled;
+  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
 
 struct NodeTraits : public flight::ReferenceEnabled {
@@ -84,7 +94,7 @@ struct NodeRuntime : public flight::ReferenceEnabled {
   double appearance_id;
   double bounds_using_local_bounds_id;
   double bounds_using_local_transform_id;
-  std::function<bool(std::shared_ptr<Node<Traits>>, std::shared_ptr<Node<Traits>>)> can_add_child;
+  std::function<bool(NodeOf<Traits>, NodeOf<Traits>)> can_add_child;
   std::optional<flight::Array<NodeOf<Traits>>> children;
   double children_id;
   std::optional<NodeTraitsKey<Traits>> traits;

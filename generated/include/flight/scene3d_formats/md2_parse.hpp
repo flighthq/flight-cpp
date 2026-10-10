@@ -6,6 +6,7 @@
 //   missing: function buildMd2ActionClip -- source line 505
 //   missing: function readMd2Frames -- source line 381
 //   missing: function parseMd2 -- source line 65
+#include <flight/any.hpp>
 #include <flight/boolean.hpp>
 #include <flight/data_view.hpp>
 #include <flight/number.hpp>

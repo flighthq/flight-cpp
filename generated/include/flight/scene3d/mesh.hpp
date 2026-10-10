@@ -10,8 +10,46 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/node_signals.hpp>
+
+#include <flight/types/node3_d.hpp>
+
+#include <flight/types/matrix4.hpp>
+
+#include <flight/types/material.hpp>
+
 #include <flight/types/entity.hpp>
 
+namespace flight::types { struct BlinnPhongMaterial; }
+namespace flight::types { struct CustomShaderMaterial; }
+namespace flight::types { struct DepthMaterial; }
+namespace flight::types { struct EmissiveMaterial; }
+namespace flight::types { struct ExtendedPbrMaterial; }
+namespace flight::types { struct LambertMaterial; }
+namespace flight::types { struct MatcapMaterial; }
+namespace flight::types { struct Material; }
+namespace flight::types { struct Matrix4; }
+namespace flight::types { struct Mesh; }
+namespace flight::types { struct MeshGeometry; }
+namespace flight::types { struct MeshMorph; }
+namespace flight::types { struct MeshRuntime; }
+namespace flight::types { struct MorphTarget; }
+namespace flight::types { struct Node3D; }
+namespace flight::types { struct Node3DRuntime; }
+namespace flight::types { struct NodeSignals; }
+namespace flight::types { struct NormalMaterial; }
+namespace flight::types { struct PhongMaterial; }
+namespace flight::types { struct ShadedMaterial; }
+namespace flight::types { struct Skin; }
+namespace flight::types { struct SpecularGlossinessPbrMaterial; }
+namespace flight::types { struct StandardMaterial; }
+namespace flight::types { struct StandardPbrMaterial; }
+namespace flight::types { struct ToonMaterial; }
+namespace flight::types { struct UnlitMaterial; }
+namespace flight::types { struct VertexColorMaterial; }
+namespace flight::types { struct WireframeMaterial; }
+
+#include <flight/entity/entity.hpp>
 #include <flight/mesh/mesh_geometry_deformation_clone.hpp>
 #include <flight/node/node.hpp>
 #include <flight/node/node_transform3d.hpp>
@@ -20,30 +58,42 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene3d {
 
+using flight::types::Material;
+using flight::types::Matrix4;
+using flight::types::Node3D;
+using flight::types::NodeSignals;
 using flight::types::entity_runtime_key;
 
 using flight::types::MeshKind;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENABLED_NAME_F1ABECE853AC935C
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENABLED_NAME_F1ABECE853AC935C
-struct enabled_name_f1abece853ac935c : public flight::ReferenceEnabled {
+inline flight::Ref<flight::types::MeshRuntime> create_mesh_runtime() {
+  flight::Ref<flight::types::MeshRuntime> out = flight::make_ref<flight::types::MeshRuntime>(*flight::scene3d::create_node3_druntime());
+  return out;
+}
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENABLED_NAME_ALPHA_VISIBLE_6EED4C0384CBBF3F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENABLED_NAME_ALPHA_VISIBLE_6EED4C0384CBBF3F
+struct enabled_name_alpha_visible_6eed4c0384cbbf3f : public flight::ReferenceEnabled {
   std::optional<bool> enabled;
   std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<double> alpha;
+  std::optional<bool> visible;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENABLED_NAME_F1ABECE853AC935C
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_ENABLED_NAME_ALPHA_VISIBLE_6EED4C0384CBBF3F
 
-inline flight::Ref<flight::types::Mesh> create_mesh(flight::Ref<flight::types::MeshGeometry> geometry, flight::Array<std::optional<flight::Ref<flight::types::Material>>> materials, std::optional<flight::String> kind = std::nullopt, std::optional<flight::Ref<enabled_name_f1abece853ac935c>> obj = std::nullopt) {
+inline flight::Ref<flight::types::Mesh> create_mesh(flight::Ref<flight::types::MeshGeometry> geometry, flight::Array<std::optional<flight::types::MaterialValue>> materials, std::optional<flight::String> kind = std::nullopt, std::optional<flight::Ref<enabled_name_alpha_visible_6eed4c0384cbbf3f>> obj = std::nullopt) {
   kind = kind.value_or(flight::types::mesh_kind);
-  flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Mesh>>>> mesh = flight::structural_ref_cast<flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Mesh>>>>>(flight::scene3d::create_node3_d(kind.value(), obj));
+  flight::types::EntityConstruction<flight::Ref<flight::types::Mesh>> mesh = flight::entity::allocate_entity<flight::Ref<flight::types::Mesh>>();
+  flight::scene3d::initialize_node3_d<flight::Ref<flight::types::MeshRuntime>>(mesh, kind.value(), obj, create_mesh_runtime);
   flight::row_set<flight::RowKey<"geometry">>(mesh, geometry);
   flight::row_set<flight::RowKey<"materials">>(mesh, materials);
-  return mesh;
+  return flight::entity::finish_entity<flight::Ref<flight::types::Mesh>>(mesh);
 }
 
 inline flight::Ref<flight::types::Mesh> clone_mesh(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Mesh>>>> source) {
   const bool has_deformation = (!((std::holds_alternative<flight::Null>(flight::row_get<flight::RowKey<"skin">>(source)) || std::holds_alternative<flight::Undefined>(flight::row_get<flight::RowKey<"skin">>(source)))) || !((std::holds_alternative<flight::Null>(flight::row_get<flight::RowKey<"morph">>(source)) || std::holds_alternative<flight::Undefined>(flight::row_get<flight::RowKey<"morph">>(source)))));
   auto geometry = (has_deformation ? flight::mesh::clone_mesh_geometry_for_deformation(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>(flight::row_get<flight::RowKey<"geometry">>(source)))) : flight::row_get<flight::RowKey<"geometry">>(source));
-  auto clone = create_mesh(geometry, flight::row_get<flight::RowKey<"materials">>(source).slice(), flight::row_get<flight::RowKey<"kind">>(source), flight::make_ref<enabled_name_f1abece853ac935c>(enabled_name_f1abece853ac935c{.enabled = std::optional<bool>{flight::row_get<flight::RowKey<"enabled">>(source)}, .name = ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source = flight::row_get<flight::RowKey<"name">>(source); if (!contextual_union_source.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source.value()}; }())}));
+  auto clone = create_mesh(geometry, flight::row_get<flight::RowKey<"materials">>(source).slice(), flight::row_get<flight::RowKey<"kind">>(source), flight::make_ref<enabled_name_alpha_visible_6eed4c0384cbbf3f>(enabled_name_alpha_visible_6eed4c0384cbbf3f{.enabled = std::optional<bool>{flight::row_get<flight::RowKey<"enabled">>(source)}, .name = ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto contextual_union_source = flight::row_get<flight::RowKey<"name">>(source); if (!contextual_union_source.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, contextual_union_source.value()}; }())}));
   (clone->alpha = flight::row_get<flight::RowKey<"alpha">>(source));
   flight::node::set_node_transform3_d(flight::structural_ref_cast<flight::types::Transform3DNode<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Mesh>>>>(clone)), source);
   if (flight::node::is_node_local_matrix4_detached(source)) {
@@ -59,7 +109,7 @@ inline flight::Ref<flight::types::Mesh> clone_mesh(flight::StructuralRef<flight:
 }
 
 inline flight::Ref<flight::types::NodeSignals> enable_mesh_signals(flight::Ref<flight::types::Mesh> source) {
-  return flight::node::enable_node_signals<flight::Ref<flight::types::NodeTraits>>(source);
+  return flight::node::enable_node_signals<flight::Ref<flight::types::NodeTraits>>(flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::NodeTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Mesh>>>>(source)));
 }
 
 inline flight::types::MeshDeformer get_mesh_deformer(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Mesh>>>> source) {
@@ -73,35 +123,35 @@ inline flight::types::MeshDeformer get_mesh_deformer(flight::StructuralRef<fligh
 }
 
 inline flight::Ref<flight::types::MeshRuntime> get_mesh_runtime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Mesh>>>> source) {
-  return flight::scene3d::get_node3_druntime(source);
+  return flight::row_get<std::optional<flight::Ref<flight::types::MeshRuntime>>>(source, flight::types::entity_runtime_key).value();
 }
 
 inline std::optional<flight::Ref<flight::types::NodeSignals>> get_mesh_signals(flight::Ref<flight::types::Mesh> source) {
   return flight::node::get_node_signals<flight::Ref<flight::types::NodeTraits>>(source);
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_GEOMETRY_MATERIALS_MORPH_SKIN_90A015234A8F2DFF
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_GEOMETRY_MATERIALS_MORPH_SKIN_90A015234A8F2DFF
-struct data_enabled_kind_name_entity_runtime_key_alpha_visible_position_rotation_scale_geometry_materials_morph_skin_90a015234a8f2dff : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_GEOMETRY_MATERIALS_MORPH_SKIN_25500DCA18A89AF6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_GEOMETRY_MATERIALS_MORPH_SKIN_25500DCA18A89AF6
+struct data_enabled_kind_name_entity_runtime_key_alpha_visible_position_rotation_scale_geometry_materials_morph_skin_25500dca18a89af6 : public flight::ReferenceEnabled {
   std::variant<flight::Ref<flight::types::NodeData>, flight::Null, flight::Undefined> data = std::variant<flight::Ref<flight::types::NodeData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::optional<bool> enabled;
   std::optional<flight::String> kind;
   std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node3DTraits>>>> entity_runtime_key;
+  std::optional<flight::Ref<flight::types::MeshRuntime>> entity_runtime_key;
   std::optional<double> alpha;
   std::optional<bool> visible;
   std::optional<flight::Ref<flight::types::Vector3>> position;
   std::optional<flight::Ref<flight::types::Quaternion>> rotation;
   std::optional<flight::Ref<flight::types::Vector3>> scale;
   std::optional<flight::Ref<flight::types::MeshGeometry>> geometry;
-  std::optional<flight::Array<std::optional<flight::Ref<flight::types::Material>>>> materials;
+  std::optional<flight::Array<std::optional<flight::types::MaterialValue>>> materials;
   std::variant<flight::Ref<flight::types::MeshMorph>, flight::Null, flight::Undefined> morph = std::variant<flight::Ref<flight::types::MeshMorph>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::variant<flight::Ref<flight::types::Skin>, flight::Null, flight::Undefined> skin = std::variant<flight::Ref<flight::types::Skin>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_GEOMETRY_MATERIALS_MORPH_SKIN_90A015234A8F2DFF
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_GEOMETRY_MATERIALS_MORPH_SKIN_25500DCA18A89AF6
 
 inline bool is_mesh(flight::Any source) {
-  return ((([&]() { const auto& presence_operand = source; return !presence_operand.is_nullish(); }()) && (source.type_of() == flight::String("object"))) && ([&]() -> flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_position_rotation_scale_geometry_materials_morph_skin_90a015234a8f2dff> { const auto& erased_value = source; auto erased_object = erased_value.object_if<data_enabled_kind_name_entity_runtime_key_alpha_visible_position_rotation_scale_geometry_materials_morph_skin_90a015234a8f2dff>(); if (!erased_object) throw std::logic_error("erased value does not hold the asserted object type"); return erased_object; }())->geometry.has_value());
+  return ((([&]() { const auto& presence_operand = source; return !presence_operand.is_nullish(); }()) && (source.type_of() == flight::String("object"))) && ([&]() -> flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_position_rotation_scale_geometry_materials_morph_skin_25500dca18a89af6> { const auto& erased_value = source; auto erased_object = erased_value.object_if<data_enabled_kind_name_entity_runtime_key_alpha_visible_position_rotation_scale_geometry_materials_morph_skin_25500dca18a89af6>(); if (!erased_object) throw std::logic_error("erased value does not hold the asserted object type"); return erased_object; }())->geometry.has_value());
 }
 
 } // namespace flight::scene3d

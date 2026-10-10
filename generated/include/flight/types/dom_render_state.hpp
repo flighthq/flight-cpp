@@ -22,8 +22,12 @@ namespace flight::types { struct Bitmap; }
 namespace flight::types { struct DomScene2DRectangle; }
 namespace flight::types { struct ImageSurfaceCreator; }
 namespace flight::types { struct Matrix; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Node3D; }
 namespace flight::types { struct Path; }
 namespace flight::types { struct PathMesh; }
+namespace flight::types { struct RenderCache; }
+namespace flight::types { struct RenderEffect; }
 namespace flight::types { struct RenderEffectPadding; }
 namespace flight::types { struct RenderProxy2D; }
 namespace flight::types { struct RenderProxy; }
@@ -34,9 +38,14 @@ namespace flight::types { struct RenderStateRuntime; }
 namespace flight::types { struct Renderer; }
 namespace flight::types { struct Scene2DClipHooks; }
 namespace flight::types { struct StrokeStyle; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
 namespace flight::types { template <typename K> struct CanvasShapeCommand; }
 namespace flight::types { template <typename T> struct KeyedTable; }
 namespace flight::types { template <typename T> struct SlotTable; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct DomRenderState;

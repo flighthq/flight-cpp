@@ -5,11 +5,18 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/spine_binary_registry.hpp>
+
+namespace flight::types { struct SpineBinaryRegistry; }
+namespace flight::types { struct SpineBinaryTimelineContext; }
+
 #include <flight/types/contract.hpp>
 #include <flight/skeleton2d_formats/spine_binary_parse.hpp>
 #include <flight/skeleton2d_formats/spine_binary_registry.hpp>
 
 namespace flight::skeleton2d_formats {
+
+using flight::types::SpineBinaryTimelineContext;
 
 inline void spine_binary_bone_timeline_handler(flight::Ref<flight::types::SpineBinaryTimelineContext> context) {
   flight::skeleton2d_formats::spine_binary_bone_timeline_reader(context);

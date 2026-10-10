@@ -471,29 +471,17 @@ inline void set_quad_batch_transform_type(flight::Ref<QuadBatch> target, flight:
   (data->transform_type = new_type);
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_QUADBATCH_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_AF1F918F97747DFB
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_QUADBATCH_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_AF1F918F97747DFB
-struct can_add_child_compute_local_bounds_rectangle_af1f918f97747dfb : public flight::ReferenceEnabled {
-  std::optional<std::function<bool(std::shared_ptr<Node<flight::Ref<Node2DTraits>>>, std::shared_ptr<Node<flight::Ref<Node2DTraits>>>)>> can_add_child;
-  std::optional<std::function<void(flight::Ref<Rectangle>, flight::Ref<BoundsNodeAny>)>> compute_local_bounds_rectangle;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_QUADBATCH_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_AF1F918F97747DFB
-
 
 // NOT GENERATED: variable (binding) -- source line 617
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   const defaultMethods: Partial<MethodsOf<QuadBatchRuntime>> = {
 //     computeLocalBoundsRectangle: copyLocalBoundsRectangle,
 //   };
 //   
-// cpp emission failed for @flighthq/quadbatch/packages/quadbatch/src/quadBatch.ts: contextual union callable
-// value type std::function<void(flight::Ref<Rectangle>, flight::Ref<Node>)> agrees with no alternative's
-// signature: the destination holds [std::function<void(flight::Ref<Rectangle>, flight::Ref<BoundsNodeAny>)>]. A
-// callable is a represented domain, so the obstacle is that the destination's signature cannot call this one.
-// Declare the value's parameters so the destination's signature supplies them, and its result as one the
-// destination holds
+// cpp emission failed for @flighthq/quadbatch/packages/quadbatch/src/quadBatch.ts: Partial<T> requires a
+// statically resolvable C++ object shape; T is named
 
 
 // NOT GENERATED: function createQuadBatchRuntime -- source line 207

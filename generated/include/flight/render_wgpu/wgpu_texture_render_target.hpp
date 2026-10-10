@@ -13,18 +13,28 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_target.hpp>
+
 #include <flight/types/wgpu_render_state.hpp>
 
-namespace flight::types { struct WgpuRenderState; struct WgpuTextureEntry; } namespace flight::render_wgpu { template <typename RenderProxy, typename Transform> inline void draw_wgpu_quad_with_transform(flight::Ref<flight::types::WgpuRenderState> state, RenderProxy render_proxy, Transform transform, flight::Ref<flight::types::WgpuTextureEntry> texture_entry, double x0, double y0, double x1, double y1, double u0, double v0, double u1, double v1); }
+namespace flight::types { struct Material; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct WgpuRenderState; }
+namespace flight::types { struct WgpuRenderStateRuntime; }
+namespace flight::types { struct WgpuTextureEntry; }
+namespace flight::types { struct WgpuTextureRenderTarget; }
 
 #include <flight/entity/entity.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/render_wgpu/wgpu_draw.hpp>
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 
+
+namespace flight::types { struct WgpuRenderState; struct WgpuTextureEntry; } namespace flight::render_wgpu { template <typename RenderProxy, typename Transform> inline void draw_wgpu_quad_with_transform(flight::Ref<flight::types::WgpuRenderState> state, RenderProxy render_proxy, Transform transform, flight::Ref<flight::types::WgpuTextureEntry> texture_entry, double x0, double y0, double x1, double y1, double u0, double v0, double u1, double v1); }
 namespace flight::render_wgpu {
 
 using flight::types::WgpuRenderState;
+using flight::types::WgpuTextureRenderTarget;
 
 inline void destroy_wgpu_texture_render_target(flight::Ref<flight::types::WgpuTextureRenderTarget> target) {
   target->texture.destroy();

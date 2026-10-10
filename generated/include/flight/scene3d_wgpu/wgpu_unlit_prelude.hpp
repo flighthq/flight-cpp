@@ -2,13 +2,12 @@
 #pragma once
 #include <cstddef>
 #include <flight/any.hpp>
-#include <flight/boolean.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/string.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
-#include <tuple>
+#include <type_traits>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -21,6 +20,19 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/wgpu_render_state.hpp>
 
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { struct WgpuMaterialBinding; }
+namespace flight::types { struct WgpuMeshPipeline; }
+namespace flight::types { struct WgpuRenderState; }
+namespace flight::types { struct WgpuScene3DRuntime; }
+namespace flight::types { struct WgpuSkinningAdapter; }
+namespace flight::types { struct WgpuUnlitDefineKey; }
+namespace flight::types { struct WgpuUnlitPipeline; }
+
+#include <flight/types/contract.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_fragment_tail.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp>
 #include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
@@ -37,42 +49,42 @@ struct buffer_f593a54db11caca9 : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_BUFFER_F593A54DB11CACA9
 
-inline flight::host_sdl::WgpuBindGroup create_wgpu_unlit_bind_group(flight::Ref<WgpuRenderState> state, flight::Ref<WgpuUnlitPipeline> pipeline, flight::host_sdl::WgpuBuffer buffer, flight::host_sdl::WgpuSampler sampler, flight::host_sdl::WgpuTextureView view) {
-  return state->device.create_bind_group({.layout = pipeline->material_bind_group_layout, .entries = flight::Array{{.binding = 0.0, .resource = std::variant<flight::host_sdl::WgpuSampler, flight::host_sdl::WgpuTextureView, flight::Ref<buffer_f593a54db11caca9>>{std::in_place_type<flight::Ref<buffer_f593a54db11caca9>>, flight::make_ref<buffer_f593a54db11caca9>(buffer_f593a54db11caca9{.buffer = buffer})}}, {.binding = 1.0, .resource = std::variant<flight::host_sdl::WgpuSampler, flight::host_sdl::WgpuTextureView, flight::Ref<buffer_f593a54db11caca9>>{std::in_place_type<flight::host_sdl::WgpuSampler>, sampler}}, {.binding = 2.0, .resource = std::variant<flight::host_sdl::WgpuSampler, flight::host_sdl::WgpuTextureView, flight::Ref<buffer_f593a54db11caca9>>{std::in_place_type<flight::host_sdl::WgpuTextureView>, view}}}});
+inline flight::host_sdl::WgpuBindGroup create_wgpu_unlit_bind_group(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuUnlitPipeline>>>> pipeline, flight::host_sdl::WgpuBuffer buffer, flight::host_sdl::WgpuSampler sampler, flight::host_sdl::WgpuTextureView view) {
+  return state->device.create_bind_group({.layout = flight::row_get<flight::RowKey<"materialBindGroupLayout">>(pipeline), .entries = flight::Array{{.binding = 0.0, .resource = std::variant<flight::host_sdl::WgpuSampler, flight::host_sdl::WgpuTextureView, flight::Ref<buffer_f593a54db11caca9>>{std::in_place_type<flight::Ref<buffer_f593a54db11caca9>>, flight::make_ref<buffer_f593a54db11caca9>(buffer_f593a54db11caca9{.buffer = buffer})}}, {.binding = 1.0, .resource = std::variant<flight::host_sdl::WgpuSampler, flight::host_sdl::WgpuTextureView, flight::Ref<buffer_f593a54db11caca9>>{std::in_place_type<flight::host_sdl::WgpuSampler>, sampler}}, {.binding = 2.0, .resource = std::variant<flight::host_sdl::WgpuSampler, flight::host_sdl::WgpuTextureView, flight::Ref<buffer_f593a54db11caca9>>{std::in_place_type<flight::host_sdl::WgpuTextureView>, view}}}});
 }
 
-inline flight::String build_wgpu_unlit_define_key(flight::Ref<WgpuUnlitDefineKey> key) {
-  return flight::String("") + flight::to_string((flight::to_boolean(key->alpha_mask_enabled) ? flight::String("m") : flight::String("-"))) + flight::String("") + flight::to_string((flight::to_boolean(key->double_sided) ? flight::String("d") : flight::String("-"))) + flight::String("") + flight::to_string((flight::to_boolean(key->has_color_map) ? flight::String("c") : flight::String("-"))) + flight::String("");
+inline flight::String build_wgpu_unlit_define_key(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuUnlitDefineKey>>>> key) {
+  return flight::String("") + flight::to_string((flight::row_get<flight::RowKey<"alphaMaskEnabled">>(key) ? flight::String("m") : flight::String("-"))) + flight::String("") + flight::to_string((flight::row_get<flight::RowKey<"doubleSided">>(key) ? flight::String("d") : flight::String("-"))) + flight::String("") + flight::to_string((flight::row_get<flight::RowKey<"hasColorMap">>(key) ? flight::String("c") : flight::String("-"))) + flight::String("");
 }
 
 inline const double unlit_uniform_bytes = 32.0;
 
-inline flight::Ref<WgpuMaterialBinding> ensure_wgpu_unlit_binding(flight::Ref<WgpuRenderState> state, flight::Ref<WgpuUnlitPipeline> pipeline, flight::Ref<void> material_key, flight::host_sdl::WgpuSampler sampler, flight::host_sdl::WgpuTextureView view) {
-  flight::Ref<WgpuScene3DRuntime> scene = get_wgpu_scene3_druntime(state);
-  std::optional<flight::Ref<WgpuMaterialBinding>> binding = scene->material_bind_groups.get(material_key);
+inline flight::Ref<flight::types::WgpuMaterialBinding> ensure_wgpu_unlit_binding(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuUnlitPipeline>>>> pipeline, flight::Ref<void> material_key, flight::host_sdl::WgpuSampler sampler, flight::host_sdl::WgpuTextureView view) {
+  auto scene = flight::scene3d_wgpu::get_wgpu_scene3_druntime(state);
+  std::optional<flight::Ref<flight::types::WgpuMaterialBinding>> binding = scene->material_bind_groups.get(material_key);
   if (!binding.has_value()) {
     auto buffer = state->device.create_buffer({.size = unlit_uniform_bytes, .usage = flight::bitwise_or(flight::host_sdl::wgpu_buffer_usage_uniform, flight::host_sdl::wgpu_buffer_usage_copy_dst)});
-    (binding = flight::make_ref<WgpuMaterialBinding>(WgpuMaterialBinding{.bind_group = create_wgpu_unlit_bind_group(state, pipeline, buffer, sampler, view), .buffer = buffer, .sampler = sampler, .views = flight::Array{view}}));
+    (binding = flight::make_ref<flight::types::WgpuMaterialBinding>(flight::types::WgpuMaterialBinding{.bind_group = create_wgpu_unlit_bind_group(state, pipeline, buffer, sampler, view), .buffer = buffer, .sampler = std::optional<flight::host_sdl::WgpuSampler>{sampler}, .views = std::optional<flight::Array<flight::host_sdl::WgpuTextureView>>{flight::Array<flight::host_sdl::WgpuTextureView>{view}}}));
     scene->material_bind_groups.set(material_key, binding.value());
   }
   else {
-    if ((((binding.value()->sampler != sampler) || (([&]() -> std::optional<flight::host_sdl::WgpuTextureView> { auto optional_chain_receiver = binding.value()->views; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().get(0.0); }()) != view)) || (([&]() -> std::optional<double> { auto optional_chain_receiver = binding.value()->views; if (!optional_chain_receiver.has_value()) return std::nullopt; return static_cast<double>(optional_chain_receiver.value().size()); }()).value_or(0.0) != 1.0))) {
+    if ((((binding.value()->sampler != sampler) || (([&]() -> std::optional<flight::host_sdl::WgpuTextureView> { auto optional_chain_receiver = binding.value()->views; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().get(0.0); }()) != view)) || (([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = binding.value()->views; if (!optional_chain_receiver.has_value()) return std::nullopt; return static_cast<double>(optional_chain_receiver.value().size()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()) != 1.0))) {
       (binding.value()->bind_group = create_wgpu_unlit_bind_group(state, pipeline, binding.value()->buffer, sampler, view));
-      (binding.value()->sampler = sampler);
-      ([&]() { auto&& assignment_target = binding.value()->views; if (!assignment_target.has_value()) assignment_target = flight::Array{view}; return assignment_target.value(); }());
-      (binding.value()->views.element(0.0) = view);
-      ([&]() { auto&& assignment_receiver = binding.value()->views; const auto assignment_value = 1.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
+      (binding.value()->sampler = std::optional<flight::host_sdl::WgpuSampler>{sampler});
+      ([&]() { auto&& assignment_target = binding.value()->views; if (!assignment_target.has_value()) assignment_target = std::optional<flight::Array<flight::host_sdl::WgpuTextureView>>{flight::Array<flight::host_sdl::WgpuTextureView>{view}}; return assignment_target.value(); }());
+      (binding.value()->views.value().element(0.0) = view);
+      ([&]() { auto&& assignment_receiver = binding.value()->views.value(); const auto assignment_value = 1.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
     }
   }
   return binding.value();
 }
 
-inline const flight::String unlit_wgsl_body = flight::String("") + flight::to_string(wgpu_mesh_fragment_tail) + flight::String("\nstruct UnlitMaterial {\n  color : vec4f,   // linear rgba\n  params : vec4f,  // x = intensity, y = alphaCutoff\n};\n\n@group(2) @binding(0) var<uniform> material : UnlitMaterial;\n@group(2) @binding(1) var materialSampler : sampler;\n@group(2) @binding(2) var colorTexture : texture_2d<f32>;\n\n@fragment fn fs_main(in : VertexOutput) -> @location(0) vec4f {\n  var color = material.color * in.instanceColor;\n  if (HAS_COLOR_MAP) {\n    let sampled = textureSample(colorTexture, materialSampler, in.uv);\n    color = vec4f(color.rgb * sampled.rgb, color.a * sampled.a);\n  }\n  if (ALPHA_MASK && color.a < material.params.y) {\n    discard;\n  }\n  if (ALPHA_MASK) {\n    color.a = 1.0;\n  }\n  return flightPremultipliedOutput(vec4f(color.rgb * material.params.x, flightMeshCoverage(color.a, in.objectAlpha, draw.params.y)));\n}\n");
+inline const flight::String unlit_wgsl_body = flight::String("") + flight::to_string(flight::scene3d_wgpu::wgpu_mesh_fragment_tail) + flight::String("\nstruct UnlitMaterial {\n  color : vec4f,   // linear rgba\n  params : vec4f,  // x = intensity, y = alphaCutoff\n};\n\n@group(2) @binding(0) var<uniform> material : UnlitMaterial;\n@group(2) @binding(1) var materialSampler : sampler;\n@group(2) @binding(2) var colorTexture : texture_2d<f32>;\n\n@fragment fn fs_main(in : VertexOutput) -> @location(0) vec4f {\n  var color = material.color * in.instanceColor;\n  if (HAS_COLOR_MAP) {\n    let sampled = textureSample(colorTexture, materialSampler, in.uv);\n    color = vec4f(color.rgb * sampled.rgb, color.a * sampled.a);\n  }\n  if (ALPHA_MASK && color.a < material.params.y) {\n    discard;\n  }\n  if (ALPHA_MASK) {\n    color.a = 1.0;\n  }\n  return flightPremultipliedOutput(vec4f(color.rgb * material.params.x, flightMeshCoverage(color.a, in.objectAlpha, draw.params.y)));\n}\n");
 
-inline flight::String get_wgpu_unlit_module_source_for_key(flight::Ref<WgpuUnlitDefineKey> key, std::optional<bool> skinned = std::nullopt, std::optional<std::optional<flight::Ref<WgpuSkinningAdapter>>> skinning = std::nullopt) {
+inline flight::String get_wgpu_unlit_module_source_for_key(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuUnlitDefineKey>>>> key, std::optional<bool> skinned = std::nullopt, std::optional<std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuSkinningAdapter>>>>>> skinning = std::nullopt) {
   skinned = skinned.value_or(false);
   skinning = skinning.value_or(std::nullopt);
-  return flight::String("const ALPHA_MASK : bool = ") + flight::to_string((flight::to_boolean(key->alpha_mask_enabled) ? flight::String("true") : flight::String("false"))) + flight::String(";\n") + flight::String("const HAS_COLOR_MAP : bool = ") + flight::to_string((flight::to_boolean(key->has_color_map) ? flight::String("true") : flight::String("false"))) + flight::String(";\n") + get_wgpu_mesh_prelude_wgsl(skinned.value(), skinning.value()) + unlit_wgsl_body;
+  return flight::String("const ALPHA_MASK : bool = ") + flight::to_string((flight::row_get<flight::RowKey<"alphaMaskEnabled">>(key) ? flight::String("true") : flight::String("false"))) + flight::String(";\n") + flight::String("const HAS_COLOR_MAP : bool = ") + flight::to_string((flight::row_get<flight::RowKey<"hasColorMap">>(key) ? flight::String("true") : flight::String("false"))) + flight::String(";\n") + flight::scene3d_wgpu::get_wgpu_mesh_prelude_wgsl(skinned.value(), skinning.value()) + unlit_wgsl_body;
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_TYPE_DA5EB69D1C0EE021
@@ -104,44 +116,44 @@ struct blended_double_sided_extra_bind_group_layout_format_ibl_bind_group_layout
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_BLENDED_DOUBLE_SIDED_EXTRA_BIND_GROUP_LAYOUT_FORMAT_IBL_BIND_GROUP_LAYOUT_MATERIAL_BIND_GROUP_LAYOUT_MODULE_PBR_SAMPLE_BIND_GROUP_LAYOUT_SHADOW_BIND_GROUP_LAYOUT_SKINNED_TOPOLOGY_7D2A6CDCFFFA81C0
 
-inline flight::Ref<WgpuUnlitPipeline> compile_wgpu_unlit_pipeline(flight::Ref<WgpuRenderState> state, flight::Ref<WgpuUnlitDefineKey> key, flight::String format, std::optional<bool> blended = std::nullopt, std::optional<bool> skinned = std::nullopt) {
+inline flight::Ref<flight::types::WgpuUnlitPipeline> compile_wgpu_unlit_pipeline(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuUnlitDefineKey>>>> key, flight::String format, std::optional<bool> blended = std::nullopt, std::optional<bool> skinned = std::nullopt) {
   blended = blended.value_or(false);
   skinned = skinned.value_or(false);
   flight::host_sdl::WgpuDevice device = state->device;
-  auto module = device.create_shader_module({.code = get_wgpu_unlit_module_source_for_key(key, skinned.value(), get_wgpu_skinning_adapter(state))});
+  auto module = device.create_shader_module({.code = get_wgpu_unlit_module_source_for_key(key, skinned.value(), ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuSkinningAdapter>>>>> { auto contextual_union_source = flight::scene3d_wgpu::get_wgpu_skinning_adapter(state); if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuSkinningAdapter>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuSkinningAdapter>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::WgpuSkinningAdapter>>>>(contextual_union_source.value()))}; }()))});
   auto material_bind_group_layout = device.create_bind_group_layout({.entries = flight::Array{{.binding = 0.0, .visibility = flight::host_sdl::wgpu_shader_stage_fragment, .buffer = flight::make_ref<type_da5eb69d1c0ee021>(type_da5eb69d1c0ee021{.type = flight::String("uniform")})}, {.binding = 1.0, .visibility = flight::host_sdl::wgpu_shader_stage_fragment, .sampler = flight::make_ref<type_da5eb69d1c0ee021>(type_da5eb69d1c0ee021{.type = flight::String("filtering")})}, {.binding = 2.0, .visibility = flight::host_sdl::wgpu_shader_stage_fragment, .texture = flight::make_ref<sample_type_056ee483a28c4f4f>(sample_type_056ee483a28c4f4f{.sample_type = flight::String("float")})}}});
-  return create_wgpu_mesh_pipeline(state, flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<blended_double_sided_extra_bind_group_layout_format_ibl_bind_group_layout_material_bind_group_layout_module_pbr_sample_bind_group_layout_shadow_bind_group_layout_skinned_topology_7d2a6cdcfffa81c0>>>>(flight::row_field<flight::RowKey<"blended">>(std::optional<bool>{blended.value()}), flight::row_field<flight::RowKey<"doubleSided">>(key->double_sided), flight::row_field<flight::RowKey<"format">>(format), flight::row_field<flight::RowKey<"materialBindGroupLayout">>(material_bind_group_layout), flight::row_field<flight::RowKey<"module">>(module), flight::row_field<flight::RowKey<"skinned">>(std::optional<bool>{skinned.value()})));
+  return ([&]() -> flight::Ref<flight::types::WgpuUnlitPipeline> { const auto structural_record_source = flight::scene3d_wgpu::create_wgpu_mesh_pipeline(state, flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<blended_double_sided_extra_bind_group_layout_format_ibl_bind_group_layout_material_bind_group_layout_module_pbr_sample_bind_group_layout_shadow_bind_group_layout_skinned_topology_7d2a6cdcfffa81c0>>>>(flight::row_field<flight::RowKey<"blended">>(std::optional<bool>{blended.value()}), flight::row_field<flight::RowKey<"doubleSided">>(flight::row_get<flight::RowKey<"doubleSided">>(key)), flight::row_field<flight::RowKey<"format">>(format), flight::row_field<flight::RowKey<"materialBindGroupLayout">>(material_bind_group_layout), flight::row_field<flight::RowKey<"module">>(module), flight::row_field<flight::RowKey<"skinned">>(std::optional<bool>{skinned.value()}))); return flight::make_ref<flight::types::WgpuUnlitPipeline>(flight::types::WgpuUnlitPipeline{.entity_runtime_key = structural_record_source->entity_runtime_key, .hasIblGroup = structural_record_source->hasIblGroup, .hasPbrSampleGroup = structural_record_source->hasPbrSampleGroup, .hasShadowGroup = structural_record_source->hasShadowGroup, .materialBindGroupLayout = structural_record_source->materialBindGroupLayout, .pipeline = structural_record_source->pipeline, .skinned = structural_record_source->skinned}); }());
 }
 
-inline flight::Ref<WgpuUnlitPipeline> ensure_wgpu_unlit_pipeline(flight::Ref<WgpuRenderState> state, flight::Ref<WgpuUnlitDefineKey> key, flight::String format) {
-  return ensure_wgpu_scene3_dpipeline(state, flight::String("unlit:") + flight::to_string(format) + flight::String("|") + flight::to_string(build_wgpu_unlit_define_key(key)) + flight::String(""), [=](bool blended, bool skinned) { return compile_wgpu_unlit_pipeline(state, key, format, blended, skinned); });
+inline flight::Ref<flight::types::WgpuUnlitPipeline> ensure_wgpu_unlit_pipeline(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuUnlitDefineKey>>>> key, flight::String format) {
+  return flight::scene3d_wgpu::ensure_wgpu_scene3_dpipeline<flight::Ref<flight::types::WgpuUnlitPipeline>>(state, flight::String("unlit:") + flight::to_string(format) + flight::String("|") + flight::to_string(build_wgpu_unlit_define_key(key)) + flight::String(""), [=](bool blended, bool skinned) { return compile_wgpu_unlit_pipeline(state, key, format, blended, skinned); });
 }
 
-inline flight::Float32Array scratch = flight::Float32Array((unlit_uniform_bytes / 4.0));
+inline flight::Float32Array scratch_flight_value_variable__u00005f_scratch_flight_private_3a814ee703f07f83 = flight::Float32Array((unlit_uniform_bytes / 4.0));
 
-inline void write_wgpu_unlit_uniform(flight::Ref<WgpuRenderState> state, flight::Ref<WgpuMaterialBinding> binding, flight::Ref<LinearColor> color, double intensity, double alpha_cutoff) {
-  ([&]() { auto&& typed_array = scratch; const auto typed_index = 0.0; const auto typed_value = std::get<0>(color); return typed_array.set_index(typed_index, typed_value); }());
-  ([&]() { auto&& typed_array_2 = scratch; const auto typed_index_2 = 1.0; const auto typed_value_2 = std::get<1>(color); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
-  ([&]() { auto&& typed_array_3 = scratch; const auto typed_index_3 = 2.0; const auto typed_value_3 = std::get<2>(color); return typed_array_3.set_index(typed_index_3, typed_value_3); }());
-  ([&]() { auto&& typed_array_4 = scratch; const auto typed_index_4 = 3.0; const auto typed_value_4 = std::get<3>(color); return typed_array_4.set_index(typed_index_4, typed_value_4); }());
-  ([&]() { auto&& typed_array_5 = scratch; const auto typed_index_5 = 4.0; const auto typed_value_5 = intensity; return typed_array_5.set_index(typed_index_5, typed_value_5); }());
-  ([&]() { auto&& typed_array_6 = scratch; const auto typed_index_6 = 5.0; const auto typed_value_6 = alpha_cutoff; return typed_array_6.set_index(typed_index_6, typed_value_6); }());
-  ([&]() { auto&& typed_array_7 = scratch; const auto typed_index_7 = 6.0; const auto typed_value_7 = 0.0; return typed_array_7.set_index(typed_index_7, typed_value_7); }());
-  ([&]() { auto&& typed_array_8 = scratch; const auto typed_index_8 = 7.0; const auto typed_value_8 = 0.0; return typed_array_8.set_index(typed_index_8, typed_value_8); }());
-  state->device.queue.write_buffer(binding->buffer, 0.0, scratch.buffer, 0.0, unlit_uniform_bytes);
+inline void write_wgpu_unlit_uniform(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuMaterialBinding>>>> binding, flight::types::LinearColor color, double intensity, double alpha_cutoff) {
+  ([&]() { auto&& typed_array = scratch_flight_value_variable__u00005f_scratch_flight_private_3a814ee703f07f83; const auto typed_index = 0.0; const auto typed_value = color.element(0.0); return typed_array.set_index(typed_index, typed_value); }());
+  ([&]() { auto&& typed_array_2 = scratch_flight_value_variable__u00005f_scratch_flight_private_3a814ee703f07f83; const auto typed_index_2 = 1.0; const auto typed_value_2 = color.element(1.0); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
+  ([&]() { auto&& typed_array_3 = scratch_flight_value_variable__u00005f_scratch_flight_private_3a814ee703f07f83; const auto typed_index_3 = 2.0; const auto typed_value_3 = color.element(2.0); return typed_array_3.set_index(typed_index_3, typed_value_3); }());
+  ([&]() { auto&& typed_array_4 = scratch_flight_value_variable__u00005f_scratch_flight_private_3a814ee703f07f83; const auto typed_index_4 = 3.0; const auto typed_value_4 = color.element(3.0); return typed_array_4.set_index(typed_index_4, typed_value_4); }());
+  ([&]() { auto&& typed_array_5 = scratch_flight_value_variable__u00005f_scratch_flight_private_3a814ee703f07f83; const auto typed_index_5 = 4.0; const auto typed_value_5 = intensity; return typed_array_5.set_index(typed_index_5, typed_value_5); }());
+  ([&]() { auto&& typed_array_6 = scratch_flight_value_variable__u00005f_scratch_flight_private_3a814ee703f07f83; const auto typed_index_6 = 5.0; const auto typed_value_6 = alpha_cutoff; return typed_array_6.set_index(typed_index_6, typed_value_6); }());
+  ([&]() { auto&& typed_array_7 = scratch_flight_value_variable__u00005f_scratch_flight_private_3a814ee703f07f83; const auto typed_index_7 = 6.0; const auto typed_value_7 = 0.0; return typed_array_7.set_index(typed_index_7, typed_value_7); }());
+  ([&]() { auto&& typed_array_8 = scratch_flight_value_variable__u00005f_scratch_flight_private_3a814ee703f07f83; const auto typed_index_8 = 7.0; const auto typed_value_8 = 0.0; return typed_array_8.set_index(typed_index_8, typed_value_8); }());
+  state->device.queue.write_buffer(flight::row_get<flight::RowKey<"buffer">>(binding), 0.0, scratch_flight_value_variable__u00005f_scratch_flight_private_3a814ee703f07f83.buffer, 0.0, unlit_uniform_bytes);
 }
 
-inline flight::host_sdl::WgpuBindGroup bind_wgpu_unlit_surface(flight::Ref<WgpuRenderState> state, flight::Ref<WgpuUnlitPipeline> pipeline, flight::Ref<void> material_key, flight::Ref<LinearColor> color, double intensity, double alpha_cutoff, std::optional<flight::Ref<Texture>> color_map) {
-  auto sampler = get_wgpu_material_sampler(state, color_map);
-  auto view = resolve_wgpu_material_texture_view(state, color_map);
-  flight::Ref<WgpuMaterialBinding> binding = ensure_wgpu_unlit_binding(state, pipeline, material_key, sampler, view);
-  write_wgpu_unlit_uniform(state, binding, color, intensity, alpha_cutoff);
-  stash_wgpu_uv_transform(state, color_map);
+inline flight::host_sdl::WgpuBindGroup bind_wgpu_unlit_surface(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuUnlitPipeline>>>> pipeline, flight::Ref<void> material_key, flight::types::LinearColor color, double intensity, double alpha_cutoff, std::optional<flight::types::Texture> color_map) {
+  auto sampler = flight::scene3d_wgpu::get_wgpu_material_sampler(state, color_map);
+  auto view = flight::scene3d_wgpu::resolve_wgpu_material_texture_view(state, color_map);
+  auto binding = ensure_wgpu_unlit_binding(state, pipeline, material_key, sampler, view);
+  write_wgpu_unlit_uniform(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuMaterialBinding>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::WgpuMaterialBinding>>>>(binding)), color, intensity, alpha_cutoff);
+  flight::scene3d_wgpu::stash_wgpu_uv_transform(state, color_map);
   return binding->bind_group;
 }
 
-inline flight::host_sdl::WgpuBindGroup bind_wgpu_unlit_video_surface(flight::Ref<WgpuRenderState> state, flight::Ref<WgpuUnlitPipeline> pipeline, flight::Ref<void> material_key, flight::Ref<LinearColor> color, double intensity, double alpha_cutoff, flight::Ref<Texture> color_map) {
-  return bind_wgpu_unlit_surface(state, pipeline, material_key, color, intensity, alpha_cutoff, std::optional<flight::Ref<Texture>>{color_map});
+inline flight::host_sdl::WgpuBindGroup bind_wgpu_unlit_video_surface(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuUnlitPipeline>>>> pipeline, flight::Ref<void> material_key, flight::types::LinearColor color, double intensity, double alpha_cutoff, flight::types::Texture color_map) {
+  return bind_wgpu_unlit_surface(state, pipeline, material_key, color, intensity, alpha_cutoff, std::visit([&](const auto& contextual_union_value) -> std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>> { using contextual_union_value_type = std::decay_t<decltype(contextual_union_value)>; if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::Texture2DArray>>) return std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::Texture2DArray>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::TextureCube>>) return std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::TextureCube>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<flight::types::Texture2D>>) return std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::Texture2D>>, contextual_union_value}; else return std::optional<std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>>{std::in_place, std::in_place_type<flight::Ref<flight::types::Texture3D>>, contextual_union_value}; }, color_map));
 }
 
 } // namespace flight::scene3d_wgpu

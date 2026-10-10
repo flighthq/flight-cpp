@@ -21,6 +21,7 @@
 #include <random>
 #include <stdexcept>
 #include <tuple>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -31,7 +32,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::render_wgpu {
 
 using flight::types::WgpuTextureBindings;
-
 using flight::types::WgpuRenderState;
 struct WgpuCompressedFormatInfo;
 } // namespace flight::render_wgpu
@@ -62,7 +62,7 @@ inline void initialize_wgpu_texture_entry(flight::Ref<EntityConstruction<flight:
 
 
 // NOT GENERATED: function registerWgpuCompressedTextureDecoder -- source line 72
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:multiVariant [compiler-restriction]
 //
 // The source it stood for:
 //   export function registerWgpuCompressedTextureDecoder(
@@ -78,10 +78,8 @@ inline void initialize_wgpu_texture_entry(flight::Ref<EntityConstruction<flight:
 //     };
 //   }
 //   
-// cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuCompressedTexture.ts: intersection
-// types require C++ multiple-inheritance lowering: no shape for SlotTable (argument WgpuCompressedTextureDecoder
-// has no shape either), Entity. Declare the object shape the code reads rather than intersecting a conjunct that
-// has none
+// cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuCompressedTexture.ts: contextual
+// multiVariant construction requires expression type evidence
 
 inline flight::Uint8ClampedArray premultiply_rgba8(flight::Uint8ClampedArray data) {
   flight::Uint8ClampedArray out = flight::Uint8ClampedArray(static_cast<double>(data.size()));
@@ -410,7 +408,7 @@ inline std::optional<flight::String> get_wgpu_compressed_texture_format_for_colo
 
 
 // NOT GENERATED: function registerWgpuCompressedTextureUpload -- source line 85
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:multiVariant [compiler-restriction]
 //
 // The source it stood for:
 //   export function registerWgpuCompressedTextureUpload(state: WgpuRenderState, uploader?: null): void {
@@ -427,9 +425,7 @@ inline std::optional<flight::String> get_wgpu_compressed_texture_format_for_colo
 //   // 2D, cubemap, and 2D-array shapes; the RGBA fallback intentionally covers plain 2D only, matching GL.
 //   // A still-supercompressed payload, volume, cubemap-array, missing feature without decoder, or malformed
 //   // level list returns null without creating a texture.
-// cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuCompressedTexture.ts: intersection
-// types require C++ multiple-inheritance lowering: no shape for SlotTable (argument
-// WgpuCompressedTextureUploader has no shape either), Entity. Declare the object shape the code reads rather
-// than intersecting a conjunct that has none
+// cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuCompressedTexture.ts: contextual
+// multiVariant construction requires expression type evidence
 
 } // namespace flight::render_wgpu

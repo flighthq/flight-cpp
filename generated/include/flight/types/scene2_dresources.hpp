@@ -11,18 +11,19 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { template <typename Traits> struct Node; }
-
+namespace flight::types { struct AudioResource; }
 namespace flight::types { struct EmbeddedAudioResourceReference; }
 namespace flight::types { struct EmbeddedImageResourceReference; }
 namespace flight::types { struct Entity; }
 namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct ExternalAudioResourceReference; }
 namespace flight::types { struct ExternalImageResourceReference; }
+namespace flight::types { struct ImageResource; }
 namespace flight::types { struct Node2DTraits; }
 namespace flight::types { struct Scene2DDocument; }
 namespace flight::types { struct Scene2DSlotReference; }
 namespace flight::types { template <typename T> struct Signal; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct Scene2DDocumentFetchProgress;

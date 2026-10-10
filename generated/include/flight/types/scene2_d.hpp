@@ -11,6 +11,7 @@ namespace flight::types { struct Entity; }
 namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct Node2DTraits; }
 namespace flight::types { struct Scene2DSignals; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct Scene2D;

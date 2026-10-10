@@ -13,12 +13,31 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/morph_shape.hpp>
+
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct MorphShape; }
+namespace flight::types { struct MorphShapeColorEndpoint; }
+namespace flight::types { struct MorphShapeColorPaintBinding; }
+namespace flight::types { struct MorphShapeData; }
+namespace flight::types { struct MorphShapeGradientEndpoint; }
+namespace flight::types { struct MorphShapeGradientPaintBinding; }
+namespace flight::types { struct MorphShapeLineEndpoint; }
+namespace flight::types { struct MorphShapeLinePaintBinding; }
+namespace flight::types { struct MorphShapeTexturePaintBinding; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+
 #include <flight/geometry/matrix.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/shape/explain_morph_shape_gradient_endpoints.hpp>
 #include <flight/shape/shape_commands.hpp>
 
 namespace flight::shape {
+
+using flight::types::MorphShape;
 
 inline double interpolate_number(double start, double end, double progress) {
   if ((progress == 0.0)) {
@@ -51,57 +70,6 @@ inline double interpolate_rgba(double start, double end, double progress) {
   return flight::unsigned_right_shift(flight::bitwise_or(flight::bitwise_or(flight::bitwise_or(flight::left_shift(r, 24.0), flight::left_shift(g, 16.0)), flight::left_shift(b, 8.0)), a), 0.0);
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_95B8B467441EC19B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_95B8B467441EC19B
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  flight::types::TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
-  flight::String dimension;
-  flight::Array<std::optional<flight::Ref<flight::types::TextureSource>>> sources;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_95B8B467441EC19B
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCE_B54DC1BFFA369663
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCE_B54DC1BFFA369663
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663 : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  flight::types::TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
-  flight::String dimension;
-  std::optional<flight::Ref<flight::types::VoxelGrid>> source;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCE_B54DC1BFFA369663
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_AE19201647327EBA
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_AE19201647327EBA
-struct entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  bool flip_x;
-  bool flip_y;
-  flight::Ref<flight::types::Vector2> uv_offset;
-  double uv_rotation;
-  flight::Ref<flight::types::Vector2> uv_scale;
-  flight::types::TextureColorSpace color_space;
-  flight::Ref<flight::types::Sampler> sampler;
-  double version;
-  flight::String dimension;
-  flight::types::TextureSourceCubeFaces sources;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHAPE_ENTITY_RUNTIME_KEY_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_COLOR_SPACE_SAMPLER_VERSION_DIMENSION_SOURCES_AE19201647327EBA
-
 inline void sample_morph_shape_paint_binding(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MorphShapeData>>>> data, flight::types::MorphShapePaintBinding binding, double progress) {
   flight::Array<flight::types::ShapeCommandToken> commands = flight::row_get<flight::RowKey<"commands">>(data);
   const double i = std::visit([](const auto& value) { return value->command_index; }, binding);
@@ -109,17 +77,17 @@ inline void sample_morph_shape_paint_binding(flight::StructuralRef<flight::RowRe
     if ((commands.element(i) != flight::String("beginFill"))) {
       return;
     }
-    (commands.element((i + 2.0)) = std::optional<std::variant<flight::Array<double>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>, flight::Ref<flight::types::Matrix>, flight::Ref<flight::types::Texture2D>, bool, double, flight::String>>{std::in_place, std::in_place_type<double>, interpolate_rgba(std::get<1>(binding)->start_color, std::get<1>(binding)->end_color, progress)});
-    (commands.element((i + 3.0)) = std::optional<std::variant<flight::Array<double>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>, flight::Ref<flight::types::Matrix>, flight::Ref<flight::types::Texture2D>, bool, double, flight::String>>{std::in_place, std::in_place_type<double>, interpolate_number(std::get<1>(binding)->start_alpha, std::get<1>(binding)->end_alpha, progress)});
+    (commands.element((i + 2.0)) = std::optional<std::variant<flight::Array<double>, flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::Matrix>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, bool, double, flight::String>>{std::in_place, std::in_place_type<double>, interpolate_rgba(std::get<1>(binding)->start_color, std::get<1>(binding)->end_color, progress)});
+    (commands.element((i + 3.0)) = std::optional<std::variant<flight::Array<double>, flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::Matrix>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, bool, double, flight::String>>{std::in_place, std::in_place_type<double>, interpolate_number(std::get<1>(binding)->start_alpha, std::get<1>(binding)->end_alpha, progress)});
     return;
   }
   if (binding.index() == 3) {
     if ((commands.element(i) != flight::String("lineStyle"))) {
       return;
     }
-    (commands.element((i + 2.0)) = std::optional<std::variant<flight::Array<double>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>, flight::Ref<flight::types::Matrix>, flight::Ref<flight::types::Texture2D>, bool, double, flight::String>>{std::in_place, std::in_place_type<double>, interpolate_number(std::get<3>(binding)->start_thickness, std::get<3>(binding)->end_thickness, progress)});
-    (commands.element((i + 3.0)) = std::optional<std::variant<flight::Array<double>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>, flight::Ref<flight::types::Matrix>, flight::Ref<flight::types::Texture2D>, bool, double, flight::String>>{std::in_place, std::in_place_type<double>, interpolate_rgba(std::get<3>(binding)->start_color, std::get<3>(binding)->end_color, progress)});
-    (commands.element((i + 4.0)) = std::optional<std::variant<flight::Array<double>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>, flight::Ref<flight::types::Matrix>, flight::Ref<flight::types::Texture2D>, bool, double, flight::String>>{std::in_place, std::in_place_type<double>, interpolate_number(std::get<3>(binding)->start_alpha, std::get<3>(binding)->end_alpha, progress)});
+    (commands.element((i + 2.0)) = std::optional<std::variant<flight::Array<double>, flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::Matrix>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, bool, double, flight::String>>{std::in_place, std::in_place_type<double>, interpolate_number(std::get<3>(binding)->start_thickness, std::get<3>(binding)->end_thickness, progress)});
+    (commands.element((i + 3.0)) = std::optional<std::variant<flight::Array<double>, flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::Matrix>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, bool, double, flight::String>>{std::in_place, std::in_place_type<double>, interpolate_rgba(std::get<3>(binding)->start_color, std::get<3>(binding)->end_color, progress)});
+    (commands.element((i + 4.0)) = std::optional<std::variant<flight::Array<double>, flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::Matrix>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, bool, double, flight::String>>{std::in_place, std::in_place_type<double>, interpolate_number(std::get<3>(binding)->start_alpha, std::get<3>(binding)->end_alpha, progress)});
     return;
   }
   if ((commands.element(i) != std::visit([](const auto& value) -> flight::String { using Value = std::remove_cvref_t<decltype(value)>; if constexpr (std::is_same_v<Value, flight::Ref<flight::types::MorphShapeGradientPaintBinding>> || std::is_same_v<Value, flight::Ref<flight::types::MorphShapeTexturePaintBinding>>) return value->command_key; else throw std::logic_error("control-flow-excluded variant property alternative"); }, binding))) {
@@ -147,7 +115,7 @@ inline void sample_morph_shape_paint_binding(flight::StructuralRef<flight::RowRe
   if (((matrix.has_value() && std::get<2>(binding)->start_matrix.has_value()) && std::get<2>(binding)->end_matrix.has_value())) {
     sample_matrix(matrix.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(std::get<2>(binding)->start_matrix.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(std::get<2>(binding)->end_matrix.value())), progress);
   }
-  (commands.element((i + 9.0)) = std::optional<std::variant<flight::Array<double>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>, flight::Ref<flight::types::Matrix>, flight::Ref<flight::types::Texture2D>, bool, double, flight::String>>{std::in_place, std::in_place_type<double>, interpolate_number(std::get<2>(binding)->start_focal_point_ratio, std::get<2>(binding)->end_focal_point_ratio, progress)});
+  (commands.element((i + 9.0)) = std::optional<std::variant<flight::Array<double>, flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::Matrix>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, bool, double, flight::String>>{std::in_place, std::in_place_type<double>, interpolate_number(std::get<2>(binding)->start_focal_point_ratio, std::get<2>(binding)->end_focal_point_ratio, progress)});
 }
 
 inline void append_morph_shape_begin_fill(flight::Ref<flight::types::MorphShape> shape, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MorphShapeColorEndpoint>>>> start, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MorphShapeColorEndpoint>>>> end) {

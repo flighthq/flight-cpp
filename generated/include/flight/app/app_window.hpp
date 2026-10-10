@@ -19,6 +19,45 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/shell.hpp>
 
+#include <flight/types/render_state.hpp>
+
+namespace flight::types { struct AppWindow; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct HostElementFullscreenCapability; }
+namespace flight::types { struct HostGlCapability; }
+namespace flight::types { struct HostInputDropFileCapability; }
+namespace flight::types { struct HostInputFocusCapability; }
+namespace flight::types { struct HostInputPointerLockCapability; }
+namespace flight::types { struct HostInputTargetCapability; }
+namespace flight::types { struct HostScreenChangeCapability; }
+namespace flight::types { struct HostSurfaceResizeCapability; }
+namespace flight::types { struct HostWindowAppearanceCapability; }
+namespace flight::types { struct HostWindowAttachCapability; }
+namespace flight::types { struct HostWindowAttentionCapability; }
+namespace flight::types { struct HostWindowContentProtectionCapability; }
+namespace flight::types { struct HostWindowFocusCapability; }
+namespace flight::types { struct HostWindowFullscreenCapability; }
+namespace flight::types { struct HostWindowGeometryCapability; }
+namespace flight::types { struct HostWindowHierarchyCapability; }
+namespace flight::types { struct HostWindowLifecycleCapability; }
+namespace flight::types { struct HostWindowProgressCapability; }
+namespace flight::types { struct HostWindowShadowCapability; }
+namespace flight::types { struct HostWindowShellCapability; }
+namespace flight::types { struct HostWindowSizeConstraintsCapability; }
+namespace flight::types { struct HostWindowStateCapability; }
+namespace flight::types { struct HostWindowVisibilityCapability; }
+namespace flight::types { struct HostWindowZOrderCapability; }
+namespace flight::types { struct InputTargetHandle; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct RenderState; }
+namespace flight::types { struct ScreenChangeEvent; }
+namespace flight::types { struct ScreenChangedMetrics; }
+namespace flight::types { struct Surface; }
+namespace flight::types { struct WindowBounds; }
+namespace flight::types { struct WindowOptions; }
+namespace flight::types { template <typename T> struct Signal; }
+namespace flight::types { template <typename T> struct SignalData; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/signals/emitter.hpp>
 #include <flight/signals/signal.hpp>
@@ -28,6 +67,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::app {
 
 using flight::signals::create_signal;
+
+using flight::types::RenderState;
 
 inline const flight::Symbol k_close = flight::Symbol(std::nullopt);
 

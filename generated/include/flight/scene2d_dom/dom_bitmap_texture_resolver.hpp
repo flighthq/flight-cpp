@@ -5,11 +5,13 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function resolveDomBitmapTexture -- source line 18
 //   missing: function registerDomBitmapTextureResolver -- source line 9
-#include <flight/any.hpp>
 #include <flight/host_sdl/image.hpp>
 #include <flight/host_sdl/webgl.hpp>
+#include <flight/weak_map.hpp>
 #include <functional>
 #include <optional>
+#include <stdexcept>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -24,9 +26,13 @@ namespace flight::scene2d_dom {
 
 using flight::types::DomRenderState;
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_DOM_ELEMENT_VERSION_02719FB3B3A4E4E7
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_DOM_ELEMENT_VERSION_02719FB3B3A4E4E7
+using element_version_02719fb3b3a4e4e7 = flight::types::element_version_02719fb3b3a4e4e7;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_DOM_ELEMENT_VERSION_02719FB3B3A4E4E7
+
 
 // NOT GENERATED: function resolveDomBitmapTexture -- source line 18
-// refusal: cpp-type-assertion-unidentified [source-portability]
 //
 // The source it stood for:
 //   function resolveDomBitmapTexture(
@@ -49,9 +55,8 @@ using flight::types::DomRenderState;
 //     return entry.element;
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domBitmapTextureResolver.ts: type
-// assertion target must identify exactly one C++ variant alternative: target std::optional<flight::Ref<Bitmap>>
-// against [flight::Ref<TextureSource>]
+// cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domBitmapTextureResolver.ts: flight-cpp
+// WeakMap construction requires explicit or contextual type arguments
 
 
 // NOT GENERATED: function registerDomBitmapTextureResolver -- source line 9

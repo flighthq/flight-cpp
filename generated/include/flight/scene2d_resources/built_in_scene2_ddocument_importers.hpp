@@ -11,6 +11,19 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/image_resource_reference.hpp>
+
+namespace flight::types { struct EmbeddedImageResourceReference; }
+namespace flight::types { struct ExternalImageResourceReference; }
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct LottieDocumentImportResult; }
+namespace flight::types { struct PathBooleanKernel; }
+namespace flight::types { struct RiveScene2DDocumentResult; }
+namespace flight::types { struct Scene2DDocument; }
+namespace flight::types { struct Scene2DDocumentImportContext; }
+namespace flight::types { struct Scene2DDocumentImporterRegistry; }
+namespace flight::types { struct Scene2DSlotReference; }
+
 #include <flight/scene2d_formats/lottie_document.hpp>
 #include <flight/scene2d_formats/rive_scene2_ddocument.hpp>
 #include <flight/scene2d_formats/svg_document.hpp>
@@ -19,6 +32,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/scene2d_resources/scene2_ddocument_importer_registry.hpp>
 
 namespace flight::scene2d_resources {
+
+using flight::types::ExternalImageResourceReference;
 
 inline std::optional<flight::Ref<flight::types::Scene2DDocument>> import_rive_document(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PathBooleanKernel>>>> path_boolean_kernel, flight::Uint8Array source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2DDocumentImportContext>>>> context) {
   flight::Array<flight::Ref<flight::types::ImportDiagnostic>> diagnostics = flight::Array<flight::Ref<flight::types::ImportDiagnostic>>{};

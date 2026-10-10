@@ -14,9 +14,41 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/path/dash_path.hpp>
 
+#include <flight/types/shape.hpp>
+
+#include <flight/types/rive_import_registry.hpp>
+
+#include <flight/types/rive_document.hpp>
+
+#include <flight/types/path.hpp>
+
+#include <flight/types/matrix.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct Path; }
+namespace flight::types { struct RiveArtboardGraph; }
+namespace flight::types { struct RiveCoreObject; }
+namespace flight::types { struct RiveImportRegistry; }
+namespace flight::types { struct RivePathRecord; }
+namespace flight::types { struct RiveProperty; }
+namespace flight::types { struct Shape; }
+
 namespace flight::scene2d_formats {
 
 using flight::path::dash_path;
+
+using flight::types::ImportDiagnostic;
+using flight::types::Matrix;
+using flight::types::Path;
+using flight::types::RiveArtboardGraph;
+using flight::types::RiveCoreObject;
+using flight::types::RiveImportRegistry;
+using flight::types::RivePathRecord;
+using flight::types::RiveProperty;
+using flight::types::Shape;
 struct RiveGradientPaint;
 struct RiveTrim;
 struct RiveDashLength;

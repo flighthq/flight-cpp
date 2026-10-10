@@ -12,6 +12,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/entity.hpp>
+
 namespace flight::types { struct CanvasRenderPass; }
 namespace flight::types { struct CanvasRenderState; }
 namespace flight::types { struct CanvasRenderSurface; }
@@ -24,7 +26,6 @@ namespace flight::types { struct RenderTarget; }
 namespace flight::types { struct RenderTargetClear; }
 namespace flight::types { struct RenderTexture; }
 namespace flight::types { struct Sampler; }
-namespace flight::types { struct TextureSource; }
 namespace flight::types { struct Vector2; }
 
 #include <flight/types/alpha_type.hpp>
@@ -37,8 +38,8 @@ namespace flight::types { struct Vector2; }
 #include <flight/types/render_target_clear.hpp>
 #include <flight/types/render_texture.hpp>
 #include <flight/types/sampler.hpp>
-#include <flight/types/texture_source.hpp>
 #include <flight/types/texture_source_kind.hpp>
+#include <flight/types/texture_source_value.hpp>
 #include <flight/types/vector2.hpp>
 #include <flight/scene2d_canvas/canvas_render_pass.hpp>
 #include <flight/scene2d_canvas/canvas_render_state.hpp>
@@ -46,6 +47,8 @@ namespace flight::types { struct Vector2; }
 #include <flight/scene2d_canvas/canvas_texture_render_target.hpp>
 
 namespace flight::scene2d_canvas {
+
+using flight::types::entity_runtime_key;
 
 using flight::types::CanvasRenderPass;
 using flight::types::CanvasRenderState;

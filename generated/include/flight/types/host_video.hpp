@@ -3,7 +3,6 @@
 #include <flight/abort.hpp>
 #include <flight/any.hpp>
 #include <flight/blob.hpp>
-#include <flight/host_sdl/image.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -24,31 +23,31 @@ struct HostVideoCapability;
 namespace flight::types {
 
 struct HostVideoCapability : public flight::ReferenceEnabled {
-  std::optional<std::function<void(flight::Ref<flight::types::HostImageSource>, std::function<void()>)>> add_ended_listener;
-  std::optional<std::function<std::optional<flight::host_sdl::ImageSource>(flight::Any)>> attach_stream;
+  std::optional<std::function<void(flight::types::HostImageSource, std::function<void()>)>> add_ended_listener;
+  std::optional<std::function<std::optional<flight::types::HostImageSource>(flight::Any)>> attach_stream;
   std::function<bool(flight::String)> can_play_type;
   std::optional<std::function<flight::String(flight::Blob)>> create_object_url;
-  std::optional<std::function<std::optional<flight::host_sdl::ImageSource>()>> create_video_element;
-  std::optional<std::function<double(flight::Ref<flight::types::HostImageSource>)>> get_current_time;
-  std::optional<std::function<double(flight::Ref<flight::types::HostImageSource>)>> get_duration;
-  std::optional<std::function<double(flight::Ref<flight::types::HostImageSource>)>> get_height;
-  std::optional<std::function<bool(flight::Ref<flight::types::HostImageSource>)>> get_loop;
-  std::optional<std::function<bool(flight::Ref<flight::types::HostImageSource>)>> get_muted;
-  std::optional<std::function<double(flight::Ref<flight::types::HostImageSource>)>> get_playback_rate;
-  std::optional<std::function<double(flight::Ref<flight::types::HostImageSource>)>> get_volume;
-  std::optional<std::function<double(flight::Ref<flight::types::HostImageSource>)>> get_width;
-  std::optional<std::function<bool(flight::Ref<flight::types::HostImageSource>)>> is_ready;
-  std::optional<std::function<flight::Task<flight::Ref<flight::types::HostImageSource>>(flight::String, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResourceLoadOptions>>>>>, std::optional<flight::AbortSignal>)>> load_url;
-  std::optional<std::function<void(flight::Ref<flight::types::HostImageSource>)>> pause;
-  std::optional<std::function<flight::Task<void>(flight::Ref<flight::types::HostImageSource>)>> play;
-  std::optional<std::function<void(flight::Ref<flight::types::HostImageSource>)>> release_element;
-  std::optional<std::function<void(flight::Ref<flight::types::HostImageSource>, std::function<void()>)>> remove_ended_listener;
+  std::optional<std::function<std::optional<flight::types::HostImageSource>()>> create_video_element;
+  std::optional<std::function<double(flight::types::HostImageSource)>> get_current_time;
+  std::optional<std::function<double(flight::types::HostImageSource)>> get_duration;
+  std::optional<std::function<double(flight::types::HostImageSource)>> get_height;
+  std::optional<std::function<bool(flight::types::HostImageSource)>> get_loop;
+  std::optional<std::function<bool(flight::types::HostImageSource)>> get_muted;
+  std::optional<std::function<double(flight::types::HostImageSource)>> get_playback_rate;
+  std::optional<std::function<double(flight::types::HostImageSource)>> get_volume;
+  std::optional<std::function<double(flight::types::HostImageSource)>> get_width;
+  std::optional<std::function<bool(flight::types::HostImageSource)>> is_ready;
+  std::optional<std::function<flight::Task<flight::types::HostImageSource>(flight::String, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResourceLoadOptions>>>>>, std::optional<flight::AbortSignal>)>> load_url;
+  std::optional<std::function<void(flight::types::HostImageSource)>> pause;
+  std::optional<std::function<flight::Task<void>(flight::types::HostImageSource)>> play;
+  std::optional<std::function<void(flight::types::HostImageSource)>> release_element;
+  std::optional<std::function<void(flight::types::HostImageSource, std::function<void()>)>> remove_ended_listener;
   std::optional<std::function<void(flight::String)>> revoke_object_url;
-  std::optional<std::function<void(flight::Ref<flight::types::HostImageSource>, double)>> set_current_time;
-  std::optional<std::function<void(flight::Ref<flight::types::HostImageSource>, bool)>> set_loop;
-  std::optional<std::function<void(flight::Ref<flight::types::HostImageSource>, bool)>> set_muted;
-  std::optional<std::function<void(flight::Ref<flight::types::HostImageSource>, double)>> set_playback_rate;
-  std::optional<std::function<void(flight::Ref<flight::types::HostImageSource>, double)>> set_volume;
+  std::optional<std::function<void(flight::types::HostImageSource, double)>> set_current_time;
+  std::optional<std::function<void(flight::types::HostImageSource, bool)>> set_loop;
+  std::optional<std::function<void(flight::types::HostImageSource, bool)>> set_muted;
+  std::optional<std::function<void(flight::types::HostImageSource, double)>> set_playback_rate;
+  std::optional<std::function<void(flight::types::HostImageSource, double)>> set_volume;
 };
 
 } // namespace flight::types

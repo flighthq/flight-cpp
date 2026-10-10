@@ -3,8 +3,6 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function createPhysics2DCollider -- source line 177
-//   missing: function invalidatePhysics2DCollider -- source line 399
 //   missing: function hydratePhysics2DWorld -- source line 281
 #include <cmath>
 #include <cstdint>
@@ -132,33 +130,13 @@ inline void initialize_physics2_dcollider(flight::Ref<EntityConstruction<flight:
   (out->world = world);
 }
 
-
-// NOT GENERATED: function createPhysics2DCollider -- source line 177
-// refusal: cpp-intersection-member-shapeless [source-portability]
-//
-// The source it stood for:
-//   export function createPhysics2DCollider(
-//     local: CollisionBuiltInShape2D,
-//     material: Physics2DMaterial,
-//     sensor = false,
-//     filter?: Readonly<Physics2DCollisionFilter>,
-//   ): Physics2DCollider {
-//     const ownedLocal = clonePhysics2DLocalShape(local);
-//     const out = allocateEntity<Physics2DCollider>();
-//     initializePhysics2DCollider(
-//       out,
-//       filter === undefined ? { categoryBits: 1, maskBits: 0xffffffff, groupIndex: 0 } : { ...filter },
-//       ownedLocal,
-//       { ...material },
-//       sensor,
-//       createPhysics2DColliderWorldShape(ownedLocal),
-//     );
-//     return finishEntity(out);
-//   }
-//   
-// cpp emission failed for @flighthq/physics2d/packages/physics2d/src/world.ts: intersection types require C++
-// multiple-inheritance lowering: no shape for CollisionCircle2D, Entity. Declare the object shape the code reads
-// rather than intersecting a conjunct that has none
+inline flight::Ref<Physics2DCollider> create_physics2_dcollider(flight::Ref<CollisionBuiltInShape2D> local, flight::Ref<Physics2DMaterial> material, std::optional<bool> sensor = std::nullopt, std::optional<flight::Ref<Physics2DCollisionFilter>> filter = std::nullopt) {
+  sensor = sensor.value_or(false);
+  flight::Ref<CollisionBuiltInShape2D> owned_local = clone_physics2_dlocal_shape(local);
+  flight::Ref<EntityConstruction<flight::Ref<Physics2DCollider>>> out = allocate_entity<flight::Ref<Physics2DCollider>>();
+  initialize_physics2_dcollider(out, (!filter.has_value() ? flight::make_ref<Physics2DCollisionFilter>(Physics2DCollisionFilter{.category_bits = 1.0, .mask_bits = 4294967295.0, .group_index = 0.0}) : flight::make_ref<Physics2DCollisionFilter>(*filter.value())), owned_local, flight::make_ref<Physics2DMaterial>(*material), sensor.value(), create_physics2_dcollider_world_shape(owned_local));
+  return finish_entity(out);
+}
 
 inline void initialize_rigid_body2_d(flight::Ref<EntityConstruction<flight::Ref<RigidBody2D>>> out, double angle, flight::Ref<Physics2DBodyType> type, double x, double y) {
   (out->angle = angle);
@@ -439,46 +417,27 @@ inline flight::Ref<Physics2DCollider> add_physics2_dcollider(flight::Ref<Physics
   return collider;
 }
 
-
-// NOT GENERATED: function invalidatePhysics2DCollider -- source line 399
-// refusal: cpp-intersection-member-shapeless [source-portability]
-//
-// The source it stood for:
-//   export function invalidatePhysics2DCollider(
-//     world: Physics2DWorld,
-//     body: RigidBody2D,
-//     collider: Physics2DCollider,
-//   ): boolean {
-//     assertPhysics2DWorldNotStepping(world);
-//     const bodyOwner = physics2DBodyOwners.get(body);
-//     if (bodyOwner !== undefined && bodyOwner !== world) return false;
-//     if (body.colliders.indexOf(collider) < 0) return false;
-//     const inWorld = world.bodyByIndex.get(body.index) === body;
-//     if (inWorld) _invalidatePhysics2DBodyConstraints(world, body.index);
-//     collider.world = createPhysics2DColliderWorldShape(collider.local);
-//     updateRigidBody2DMassData(body);
-//     if (inWorld) {
-//       _wakePhysics2DBodyFromTopology(body);
-//       synchronizePhysics2DBroadphase(world);
-//     }
-//     return true;
-//   }
-//   
-//   // The canonical order of a body pair: lower index first. Every contact in the world is created through
-//   // this, which is what discharges the ordering obligation `@flighthq/collision` cannot.
-//   //
-//   // Collision resolves contact points on the reference shape's surface and, for two shapes of the same
-//   // kind, ties toward its first argument — so passing a pair the other way round moves the points to the
-//   // opposite surface and renumbers their feature ids. Broadphase pair order follows insertion and movement
-//   // history, so without a canonical order the warm-start cache silently resets whenever a body is added
-//   // mid-simulation. The order has to come from persistent identity rather than geometry, because any order
-//   // derived from coordinates flips the moment those coordinates cross.
-//   //
-//   // It returns a boolean rather than sorting in place so the caller keeps both the ordered pair and the
-//   // knowledge of whether it was reversed, which the collider indices must follow.
-// cpp emission failed for @flighthq/physics2d/packages/physics2d/src/world.ts: intersection types require C++
-// multiple-inheritance lowering: no shape for CollisionCircle2D, Entity. Declare the object shape the code reads
-// rather than intersecting a conjunct that has none
+inline bool invalidate_physics2_dcollider(flight::Ref<Physics2DWorld> world, flight::Ref<RigidBody2D> body, flight::Ref<Physics2DCollider> collider) {
+  assert_physics2_dworld_not_stepping(world);
+  std::optional<flight::Ref<Physics2DWorld>> body_owner = physics2_dbody_owners.get(body);
+  if ((body_owner.has_value() && (body_owner.value() != world))) {
+    return false;
+  }
+  if ((body->colliders.index_of(collider) < 0.0)) {
+    return false;
+  }
+  const bool in_world = (world->body_by_index.get(body->index) == body);
+  if (in_world) {
+    invalidate_physics2_dbody_constraints(world, body->index);
+  }
+  (collider->world = create_physics2_dcollider_world_shape(collider->local));
+  update_rigid_body2_dmass_data(body);
+  if (in_world) {
+    wake_physics2_dbody_from_topology(body);
+    synchronize_physics2_dbroadphase(world);
+  }
+  return true;
+}
 
 inline bool remove_physics2_dcollider(flight::Ref<Physics2DWorld> world, flight::Ref<RigidBody2D> body, flight::Ref<Physics2DCollider> collider) {
   assert_physics2_dworld_not_stepping(world);

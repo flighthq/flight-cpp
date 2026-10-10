@@ -353,6 +353,13 @@ inline void initialize_host(flight::types::EntityConstruction<flight::Structural
   flight::row_set<flight::RowKey<"window">>(out, static_cast<flight::Ref<flight::types::HostWindowCapabilities>>(flight::row_get<flight::RowKey<"window">>(capabilities).value_or(flight::make_ref<anonymous_bbb5ab6ffe89be03<Capabilities>>(anonymous_bbb5ab6ffe89be03<Capabilities>{}))));
 }
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_HOST_ANONYMOUS_84A02EB3C29C2787
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_HOST_ANONYMOUS_84A02EB3C29C2787
+template <typename Capabilities>
+struct anonymous_84a02eb3c29c2787 : public flight::ReferenceEnabled {
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_HOST_ANONYMOUS_84A02EB3C29C2787
+
 template <typename Capabilities>
 inline flight::StructuralRef<flight::RowMerge<flight::RowOf<flight::Ref<flight::types::Host>>, flight::RowOf<Capabilities>>> create_host(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<Capabilities>>>> capabilities = std::nullopt) {
   capabilities = capabilities.value_or(flight::make_ref<Capabilities>(Capabilities{}));

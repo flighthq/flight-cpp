@@ -24,6 +24,16 @@ using flight::types::CommandBinding;
 using flight::types::CommandHistory;
 using flight::types::CompositeCommand;
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COMMAND_ENTITY_RUNTIME_KEY_KIND_LABEL_CHILDREN_189188DD8CDE8BD9
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COMMAND_ENTITY_RUNTIME_KEY_KIND_LABEL_CHILDREN_189188DD8CDE8BD9
+struct entity_runtime_key_kind_label_children_189188dd8cde8bd9 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  std::optional<flight::String> kind;
+  std::optional<flight::String> label;
+  std::optional<flight::Array<flight::Ref<flight::types::Command>>> children;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_COMMAND_ENTITY_RUNTIME_KEY_KIND_LABEL_CHILDREN_189188DD8CDE8BD9
+
 inline std::optional<flight::String> find_missing_command_kind(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CommandHistory>>>> history, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Command>>>> command) {
   if (!flight::command::get_command_binding(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CommandHistory>>>>>(history), flight::row_get<flight::RowKey<"kind">>(command)).has_value()) {
     return std::optional<flight::String>{flight::row_get<flight::RowKey<"kind">>(command)};

@@ -17,8 +17,6 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/texture.hpp>
-
 #include <flight/types/updater.hpp>
 
 namespace flight::updater {
@@ -73,7 +71,10 @@ inline flight::Ref<AppUpdateInstallOutcome> install_ok = flight::structural_ref_
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_BINDING_UID_06E64A362B012722
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_BINDING_UID_06E64A362B012722
-using binding_uid_06e64a362b012722 = flight::types::binding_uid_06e64a362b012722;
+struct binding_uid_06e64a362b012722 : public flight::ReferenceEnabled {
+  std::optional<flight::ErasedRef> binding;
+  std::optional<flight::String> uid;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_BINDING_UID_06E64A362B012722
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_DOWNLOAD_SIZE_BYTES_IS_MANDATORY_MINIMUM_OS_VERSION_NOTES_RELEASE_DATE_SHA512_VERSION_96DDB2B7F4E8E02B

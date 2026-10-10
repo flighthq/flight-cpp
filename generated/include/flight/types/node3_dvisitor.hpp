@@ -8,12 +8,10 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { template <typename Traits> struct Node; }
-
-namespace flight::types { struct Node3DTraits; }
+namespace flight::types { struct Node3D; }
 
 namespace flight::types {
-using Node3DVisitor = std::function<std::variant<bool, void>(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<Node3DTraits>>>>, flight::RowOf<flight::Ref<Node3DTraits>>>>>, double)>;
+using Node3DVisitor = std::function<std::variant<bool, void>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>>, double)>;
 } // namespace flight::types
 
 #include <flight/types/node3_d.hpp>

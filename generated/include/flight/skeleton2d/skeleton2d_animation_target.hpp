@@ -255,7 +255,7 @@ inline const flight::String step_interpolation = flight::String("Step");
 
 
 // NOT GENERATED: function getSkeleton2DAnimationTargetBinderRegistry -- source line 256
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
 //   function getSkeleton2DAnimationTargetBinderRegistry(): KeyedTable<Skeleton2DAnimationTargetBinder> {
@@ -266,10 +266,8 @@ inline const flight::String step_interpolation = flight::String("Step");
 //     return _binders;
 //   }
 //   
-// cpp emission failed for @flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts:
-// intersection types require C++ multiple-inheritance lowering: no shape for KeyedTable (argument
-// Skeleton2DAnimationTargetBinder has no shape either), Entity. Declare the object shape the code reads rather
-// than intersecting a conjunct that has none
+// cpp emission failed for @flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts: contextual
+// optionalSingle construction requires expression type evidence
 
 inline std::optional<flight::Ref<Skeleton2DAnimationTargetBinder>> get_skeleton2_danimation_target_binder(flight::Ref<Skeleton2DAnimationTargetKind> kind) {
   return get_registry_table_entry(get_skeleton2_danimation_target_binder_registry(), kind);
@@ -283,7 +281,7 @@ inline flight::Array<flight::Ref<Skeleton2DAnimationTargetKind>> get_skeleton2_d
 
 
 // NOT GENERATED: function registerSkeleton2DAnimationTargetBinder -- source line 112
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
 //   export function registerSkeleton2DAnimationTargetBinder(
@@ -293,14 +291,12 @@ inline flight::Array<flight::Ref<Skeleton2DAnimationTargetKind>> get_skeleton2_d
 //     _binders = withRegistryTableEntry(getSkeleton2DAnimationTargetBinderRegistry(), kind, bind);
 //   }
 //   
-// cpp emission failed for @flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts:
-// intersection types require C++ multiple-inheritance lowering: no shape for KeyedTable (argument
-// Skeleton2DAnimationTargetBinder has no shape either), Entity. Declare the object shape the code reads rather
-// than intersecting a conjunct that has none
+// cpp emission failed for @flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts: contextual
+// optionalSingle construction requires expression type evidence
 
 
 // NOT GENERATED: function unregisterSkeleton2DAnimationTargetBinder -- source line 119
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
 //   export function unregisterSkeleton2DAnimationTargetBinder(kind: Skeleton2DAnimationTargetKind): void {
@@ -310,9 +306,7 @@ inline flight::Array<flight::Ref<Skeleton2DAnimationTargetKind>> get_skeleton2_d
 //   // Composes one bone channel's sampled delta onto the setup bone. Translate, rotate and shear ADD; scale
 //   // MULTIPLIES. Reading from `setup` rather than from `pose` is what keeps a clip blendable and what stops
 //   // re-applying it from accumulating across frames.
-// cpp emission failed for @flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts:
-// intersection types require C++ multiple-inheritance lowering: no shape for KeyedTable (argument
-// Skeleton2DAnimationTargetBinder has no shape either), Entity. Declare the object shape the code reads rather
-// than intersecting a conjunct that has none
+// cpp emission failed for @flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts: contextual
+// optionalSingle construction requires expression type evidence
 
 } // namespace flight::skeleton2d

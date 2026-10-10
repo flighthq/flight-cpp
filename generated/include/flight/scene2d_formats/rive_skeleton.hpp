@@ -11,6 +11,19 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/rive_import_registry.hpp>
+
+#include <flight/types/rive_document.hpp>
+
+namespace flight::types { struct Bone2D; }
+namespace flight::types { struct RiveArtboardGraph; }
+namespace flight::types { struct RiveArtboardImportContext; }
+namespace flight::types { struct RiveCoreObject; }
+namespace flight::types { struct RiveImportRegistry; }
+namespace flight::types { struct RiveProperty; }
+namespace flight::types { struct RiveSkeleton2DImport; }
+namespace flight::types { struct Skeleton2D; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/math/constants.hpp>
 #include <flight/skeleton2d/skeleton2d.hpp>
@@ -19,6 +32,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/scene2d_formats/rive_import_registry.hpp>
 
 namespace flight::scene2d_formats {
+
+using flight::types::RiveArtboardGraph;
+using flight::types::RiveArtboardImportContext;
+using flight::types::RiveCoreObject;
+using flight::types::RiveImportRegistry;
+using flight::types::RiveProperty;
 
 inline void initialize_rive_skeleton2_dimport(flight::types::EntityConstruction<flight::Ref<flight::types::RiveSkeleton2DImport>> out, flight::Array<double> bone_indices, flight::Ref<flight::types::Skeleton2D> skeleton) {
   flight::row_set<flight::RowKey<"boneIndices">>(out, bone_indices);

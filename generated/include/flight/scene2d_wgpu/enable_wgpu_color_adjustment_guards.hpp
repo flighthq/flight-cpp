@@ -4,7 +4,9 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function enableWgpuColorAdjustmentGuards -- source line 17
+#include <flight/any.hpp>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -26,7 +28,7 @@ inline void warn_wgpu_color_adjustment_not_enabled() {
 
 
 // NOT GENERATED: function enableWgpuColorAdjustmentGuards -- source line 17
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:multiVariant [compiler-restriction]
 //
 // The source it stood for:
 //   export function enableWgpuColorAdjustmentGuards(state: WgpuRenderState): void {
@@ -42,8 +44,6 @@ inline void warn_wgpu_color_adjustment_not_enabled() {
 //   }
 //   
 // cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/enableWgpuColorAdjustmentGuards.ts:
-// intersection types require C++ multiple-inheritance lowering: no shape for SlotTable (argument
-// WgpuColorAdjustmentMaterialFeatureGuard has no shape either), Entity. Declare the object shape the code reads
-// rather than intersecting a conjunct that has none
+// contextual multiVariant construction requires expression type evidence
 
 } // namespace flight::scene2d_wgpu

@@ -11,13 +11,17 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct DomRenderState; }
 namespace flight::types { struct Texture2D; }
-namespace flight::types { struct TextureCommon; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+
+namespace flight::types {
+using DomTextureResolver = std::function<std::optional<flight::host_sdl::ImageSource>(flight::Ref<flight::types::DomRenderState>, std::variant<flight::Ref<Texture2DArray>, flight::Ref<TextureCube>, flight::Ref<Texture2D>, flight::Ref<Texture3D>>)>;
+} // namespace flight::types
 
 #include <flight/types/dom_render_state.hpp>
 #include <flight/types/texture.hpp>
 
 namespace flight::types {
-
-using DomTextureResolver = std::function<std::optional<flight::host_sdl::ImageSource>(flight::Ref<flight::types::DomRenderState>, flight::types::Texture)>;
 
 } // namespace flight::types

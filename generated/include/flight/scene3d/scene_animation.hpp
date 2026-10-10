@@ -10,6 +10,29 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/vector3.hpp>
+
+#include <flight/types/quaternion.hpp>
+
+#include <flight/types/node3_d.hpp>
+
+namespace flight::types { struct AnimationChannel; }
+namespace flight::types { struct AnimationClip; }
+namespace flight::types { struct AnimationTrack; }
+namespace flight::types { struct MeshMorph; }
+namespace flight::types { struct Node3D; }
+namespace flight::types { struct Quaternion; }
+namespace flight::types { struct Scene3DAnimationTarget; }
+namespace flight::types { struct Vector3; }
+
+namespace flight::scene3d {
+
+using flight::types::Node3D;
+using flight::types::Quaternion;
+using flight::types::Vector3;
+struct SceneAnimationMorphProbe;
+} // namespace flight::scene3d
+
 #include <flight/animation/animation_track.hpp>
 #include <flight/geometry/quaternion.hpp>
 #include <flight/geometry/vector3.hpp>
@@ -17,6 +40,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/contract.hpp>
 
 namespace flight::scene3d {
+
+struct SceneAnimationMorphProbe : public flight::ReferenceEnabled {
+  bool enabled;
+  std::variant<flight::Ref<flight::types::MeshMorph>, flight::Null, flight::Undefined> morph = std::variant<flight::Ref<flight::types::MeshMorph>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+};
 
 inline flight::Array<double> scratch = flight::Array<double>{0.0, 0.0, 0.0, 0.0};
 
@@ -27,13 +55,14 @@ inline void apply_animation_clip_to_scene3_d(flight::StructuralRef<flight::RowRe
     while ((i < static_cast<double>(channels.size()))) {
       {
         auto channel = channels.element(i);
-        auto target = ([&]() -> std::optional<flight::Ref<flight::types::Scene3DAnimationTarget>> { const auto& erased_value = channel->target_ref; if (static_cast<bool>(erased_value.object_if<flight::types::Scene3DAnimationTarget>())) return std::optional<flight::Ref<flight::types::Scene3DAnimationTarget>>{erased_value.object_if<flight::types::Scene3DAnimationTarget>()}; if (erased_value.is_nullish()) return std::nullopt; throw std::logic_error("erased value holds no alternative this union represents"); }());
-        if (((!target.has_value() || (flight::String("object") != flight::String("object"))) || false)) {
+        auto target = ([&]() -> flight::Ref<flight::types::Scene3DAnimationTarget> { const auto& erased_value = channel->target_ref; auto erased_object = erased_value.object_if<flight::types::Scene3DAnimationTarget>(); if (!erased_object) throw std::logic_error("erased value does not hold the asserted object type"); return erased_object; }());
+        if (((false || (flight::String("object") != flight::String("object"))) || false)) {
           (i += 1.0);
           continue;
         }
-        if ((target.value()->path == flight::String("Weights"))) {
-          auto morph = ([&]() -> std::variant<flight::Ref<flight::types::MeshMorph>, flight::Null, flight::Undefined> { auto optional_property = flight::row_get<flight::RowKey<"morph">>(flight::structural_ref_cast<flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Mesh>>>>>(target.value()->node)); if (std::holds_alternative<flight::Undefined>(optional_property)) return std::variant<flight::Ref<flight::types::MeshMorph>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property)) return std::variant<flight::Ref<flight::types::MeshMorph>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<flight::types::MeshMorph>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::MeshMorph>>, std::get<flight::Ref<flight::types::MeshMorph>>(optional_property)}; }());
+        if ((target->path == flight::String("Weights"))) {
+          flight::Ref<SceneAnimationMorphProbe> mesh = target->node;
+          auto morph = ([&]() -> std::variant<flight::Ref<flight::types::MeshMorph>, flight::Null, flight::Undefined> { auto optional_property = mesh->morph; if (std::holds_alternative<flight::Undefined>(optional_property)) return std::variant<flight::Ref<flight::types::MeshMorph>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property)) return std::variant<flight::Ref<flight::types::MeshMorph>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<flight::types::MeshMorph>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::MeshMorph>>, std::get<flight::Ref<flight::types::MeshMorph>>(optional_property)}; }());
           if ((std::holds_alternative<flight::Null>(morph) || std::holds_alternative<flight::Undefined>(morph))) {
             (i += 1.0);
             continue;
@@ -45,19 +74,19 @@ inline void apply_animation_clip_to_scene3_d(flight::StructuralRef<flight::RowRe
           }
         }
         flight::animation::sample_animation_track(std::variant<flight::Array<double>, flight::Float32Array>{std::in_place_type<flight::Array<double>>, scratch}, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationTrack>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AnimationTrack>>>>(channel->track)), time);
-        flight::types::Node3D node = target.value()->node;
-        if ((target.value()->path == flight::String("Translation"))) {
-          flight::geometry::set_vector3(flight::row_get<flight::RowKey<"position">>(node), scratch.element(0.0), scratch.element(1.0), scratch.element(2.0));
+        auto node = target->node;
+        if ((target->path == flight::String("Translation"))) {
+          flight::geometry::set_vector3(node->position, scratch.element(0.0), scratch.element(1.0), scratch.element(2.0));
         }
         else {
-          if ((target.value()->path == flight::String("Scale"))) {
-            flight::geometry::set_vector3(flight::row_get<flight::RowKey<"scale">>(node), scratch.element(0.0), scratch.element(1.0), scratch.element(2.0));
+          if ((target->path == flight::String("Scale"))) {
+            flight::geometry::set_vector3(node->scale, scratch.element(0.0), scratch.element(1.0), scratch.element(2.0));
           }
           else {
-            flight::geometry::set_quaternion(flight::row_get<flight::RowKey<"rotation">>(node), scratch.element(0.0), scratch.element(1.0), scratch.element(2.0), scratch.element(3.0));
+            flight::geometry::set_quaternion(node->rotation, scratch.element(0.0), scratch.element(1.0), scratch.element(2.0), scratch.element(3.0));
           }
         }
-        flight::node::invalidate_node_local_transform(node);
+        flight::node::invalidate_node_local_transform(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(node)));
       }
       (i += 1.0);
     }

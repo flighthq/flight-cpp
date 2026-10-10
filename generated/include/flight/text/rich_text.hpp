@@ -32,8 +32,6 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/texture.hpp>
-
 #include <flight/textlayout/text_format_range.hpp>
 
 #include <flight/textlayout/rich_text_query.hpp>
@@ -70,8 +68,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/node.hpp>
 
-#include <flight/types/has_bounds_rectangle.hpp>
-
 #include <flight/types/entity.hpp>
 
 #include <flight/text/text_label.hpp>
@@ -99,7 +95,6 @@ using flight::signals::create_signal;
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
 
-using flight::types::BoundsNodeAny;
 using flight::types::EntityConstruction;
 using flight::types::Node;
 using flight::types::Node2DTraits;
@@ -529,18 +524,9 @@ inline void set_rich_text_width(flight::Ref<RichText> source, double value) {
   invalidate_node_local_bounds(source);
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_BUILD_TEXT_LAYOUT_PARAMS_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_0D2A71471EE1BC2B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_BUILD_TEXT_LAYOUT_PARAMS_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_0D2A71471EE1BC2B
-struct build_text_layout_params_can_add_child_compute_local_bounds_rectangle_0d2a71471ee1bc2b : public flight::ReferenceEnabled {
-  std::optional<std::function<flight::Ref<TextLayoutParams>(flight::Ref<TextLabel>, flight::Ref<TextMeasureFunction>)>> build_text_layout_params;
-  std::optional<std::function<bool(std::shared_ptr<Node<flight::Ref<Node2DTraits>>>, std::shared_ptr<Node<flight::Ref<Node2DTraits>>>)>> can_add_child;
-  std::optional<std::function<void(flight::Ref<Rectangle>, flight::Ref<BoundsNodeAny>)>> compute_local_bounds_rectangle;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_BUILD_TEXT_LAYOUT_PARAMS_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_0D2A71471EE1BC2B
-
 
 // NOT GENERATED: variable (binding) -- source line 581
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   const defaultMethods: Partial<MethodsOf<RichTextRuntime>> = {
@@ -549,11 +535,8 @@ struct build_text_layout_params_can_add_child_compute_local_bounds_rectangle_0d2
 //   
 //   // A content change always re-rasterizes the field. It only changes the field's bounds when autoSize
 //   // is active; a fixed field (autoSize 'none') keeps its user-set width/height, so bounds stay put.
-// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: contextual union callable value type
-// std::function<void(flight::Ref<Rectangle>, flight::Ref<Node>)> agrees with no alternative's signature: the
-// destination holds [std::function<void(flight::Ref<Rectangle>, flight::Ref<BoundsNodeAny>)>]. A callable is a
-// represented domain, so the obstacle is that the destination's signature cannot call this one. Declare the
-// value's parameters so the destination's signature supplies them, and its result as one the destination holds
+// cpp emission failed for @flighthq/text/packages/text/src/richText.ts: Partial<T> requires a statically
+// resolvable C++ object shape; T is named
 
 
 // NOT GENERATED: function createRichTextRuntime -- source line 141
@@ -860,7 +843,10 @@ inline void replace_rich_text_string(flight::Ref<RichText> source, double begin_
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_BINDING_UID_06E64A362B012722
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_BINDING_UID_06E64A362B012722
-using binding_uid_06e64a362b012722 = flight::types::binding_uid_06e64a362b012722;
+struct binding_uid_06e64a362b012722 : public flight::ReferenceEnabled {
+  std::optional<flight::ErasedRef> binding;
+  std::optional<flight::String> uid;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_BINDING_UID_06E64A362B012722
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_ENTITY_RUNTIME_KEY_END_FORMAT_START_6DE16897DAC8963B

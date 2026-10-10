@@ -28,7 +28,7 @@ struct BitmapReadbackOutcome : public flight::ReferenceEnabled {
 };
 
 struct HostBitmapReadbackCapability : public flight::ReferenceEnabled {
-  std::function<flight::Ref<BitmapReadbackOutcome>(flight::Ref<flight::types::HostImageSource>, double, double, BitmapReadbackMode)> read_bitmap;
+  std::function<flight::Ref<BitmapReadbackOutcome>(flight::types::HostImageSource, double, double, BitmapReadbackMode)> read_bitmap;
 };
 
 } // namespace flight::types

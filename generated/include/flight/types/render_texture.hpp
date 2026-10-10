@@ -10,7 +10,6 @@ namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct RenderTarget; }
 namespace flight::types { struct Sampler; }
 namespace flight::types { struct Texture2D; }
-namespace flight::types { struct TextureSource; }
 namespace flight::types { struct Vector2; }
 
 namespace flight::types {
@@ -19,7 +18,7 @@ struct RenderTexture;
 
 #include <flight/types/render_target.hpp>
 #include <flight/types/texture.hpp>
-#include <flight/types/texture_source.hpp>
+#include <flight/types/texture_source_value.hpp>
 #include <flight/types/sampler.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/vector2.hpp>

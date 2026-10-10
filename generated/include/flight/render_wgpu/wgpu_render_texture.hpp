@@ -19,48 +19,45 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { struct RenderTexture; struct WgpuRenderState; struct WgpuTextureRenderTarget; } namespace flight::render_wgpu { inline std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>>> get_wgpu_render_texture_target(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTexture>>>> render_texture); }
-
-#include <flight/types/render_target_clear.hpp>
-
-namespace flight::types { struct RenderTexture; struct WgpuRenderState; struct WgpuRenderTextureEntry; } namespace flight::render_wgpu { inline flight::Ref<flight::types::WgpuRenderTextureEntry> ensure_wgpu_render_texture_entry(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::RenderTexture> render_texture); }
-
-namespace flight::types { struct RenderTexture; struct WgpuRenderState; struct WgpuRenderTextureEntry; } namespace flight::render_wgpu { inline std::optional<flight::Ref<flight::types::WgpuRenderTextureEntry>> get_wgpu_render_texture_entry(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::RenderTexture> render_texture); }
-
-#include <flight/types/render_texture.hpp>
-
-#include <flight/types/render_target.hpp>
+#include <flight/render_wgpu/wgpu_render_state.hpp>
 
 #include <flight/types/wgpu_render_texture.hpp>
 
 #include <flight/types/wgpu_render_target.hpp>
 
-#include <flight/render_wgpu/wgpu_render_state.hpp>
-
 #include <flight/types/wgpu_render_state.hpp>
 
 #include <flight/types/wgpu_render_pass.hpp>
+
+#include <flight/types/render_texture.hpp>
+
+#include <flight/types/render_target_clear.hpp>
+
+#include <flight/types/render_target.hpp>
 
 #include <flight/render_wgpu/wgpu_render_pass.hpp>
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 #include <flight/render_wgpu/wgpu_texture_render_target.hpp>
 
+
+namespace flight::types { struct RenderTexture; struct WgpuRenderState; struct WgpuRenderTextureEntry; } namespace flight::render_wgpu { inline std::optional<flight::Ref<flight::types::WgpuRenderTextureEntry>> get_wgpu_render_texture_entry(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::RenderTexture> render_texture); }
+
+namespace flight::types { struct RenderTexture; struct WgpuRenderState; struct WgpuTextureRenderTarget; } namespace flight::render_wgpu { inline std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuTextureRenderTarget>>>>> get_wgpu_render_texture_target(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTexture>>>> render_texture); }
+
+namespace flight::types { struct RenderTexture; struct WgpuRenderState; struct WgpuRenderTextureEntry; } namespace flight::render_wgpu { inline flight::Ref<flight::types::WgpuRenderTextureEntry> ensure_wgpu_render_texture_entry(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::RenderTexture> render_texture); }
 namespace flight::render_wgpu {
 
-using flight::types::RenderTargetClear;
+using flight::render_wgpu::get_wgpu_render_state_runtime;
 
+using flight::types::WgpuRenderState;
+using flight::types::WgpuRenderTextureGuard;
 using flight::types::WgpuRenderTextureExplanation;
 using flight::types::WgpuRenderTextureEntry;
 using flight::types::WgpuRenderTextureStatus;
 using flight::types::RenderTexture;
 using flight::types::RenderTargetFormat;
-
-using flight::types::WgpuRenderTextureGuard;
+using flight::types::RenderTargetClear;
 using flight::types::WgpuTextureRenderTarget;
-
-using flight::render_wgpu::get_wgpu_render_state_runtime;
-
-using flight::types::WgpuRenderState;
 using flight::types::WgpuRenderPass;
 
 

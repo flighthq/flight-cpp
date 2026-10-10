@@ -13,12 +13,26 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/capacitor_api.hpp>
 
+#include <flight/types/wgpu_skinning_adapter.hpp>
+
+#include <flight/types/wgpu_render_state.hpp>
+
+namespace flight::types { struct WgpuMaterialBinding; }
+namespace flight::types { struct WgpuMeshPipeline; }
+namespace flight::types { struct WgpuRenderState; }
+namespace flight::types { struct WgpuScene3DRuntime; }
+namespace flight::types { struct WgpuSkinningAdapter; }
+namespace flight::types { struct WgpuWireframePipeline; }
+
 #include <flight/types/contract.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_fragment_tail.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp>
 #include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
 
 namespace flight::scene3d_wgpu {
+
+using flight::types::WgpuRenderState;
+using flight::types::WgpuSkinningAdapter;
 
 inline const double wireframe_uniform_bytes = 32.0;
 

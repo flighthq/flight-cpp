@@ -3,6 +3,7 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
+//   missing: function disposeGizmoState -- source line 177
 //   missing: function createGizmoState -- source line 122
 #include <cmath>
 #include <cstddef>
@@ -20,8 +21,6 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 #include <flight/math/constants.hpp>
-
-#include <flight/types/node.hpp>
 
 #include <flight/signals/slot.hpp>
 
@@ -51,8 +50,6 @@ inline const double& rad_to_deg = flight::math::rad_to_deg_flight_value_variable
 
 inline const double& deg_to_rad = flight::math::deg_to_rad_flight_value_variable__u000044__u000045__u000047__u00005f__u000054__u00004f__u00005f__u000052__u000041__u000044__flight_source_ad5040a7d8c07bd3;
 
-using flight::types::NodeOf;
-
 using flight::signals::connect_signal;
 using flight::signals::disconnect_signal;
 using flight::signals::emit_signal;
@@ -72,7 +69,6 @@ using flight::types::Scene2D;
 using flight::types::SelectionState;
 using flight::types::Shape;
 using flight::types::Vector2Like;
-using flight::types::Node2DTraits;
 
 using flight::node::invalidate_node_appearance;
 using flight::node::invalidate_node_local_transform;
@@ -216,31 +212,28 @@ inline flight::Ref<GizmoRuntime<NodeType>> get_gizmo_runtime(flight::Ref<GizmoSt
   return static_cast<flight::Ref<GizmoRuntime<NodeType>>>(state->entity_runtime_key);
 }
 
-template <typename NodeType>
-inline void dispose_gizmo_state(flight::Ref<GizmoState<NodeType>> state) {
-  flight::Ref<GizmoRuntime<NodeType>> runtime = get_gizmo_runtime<NodeType>(state);
-  if (runtime->disposed) {
-    return;
-  }
-  finish_gizmo_transform<NodeType>(runtime);
-  (runtime->disposed = true);
-  {
-    double i = (static_cast<double>(runtime->cleanups.size()) - 1.0);
-    while ((i >= 0.0)) {
-      runtime->cleanups.element(i)();
-      (i -= 1.0);
-    }
-  }
-  ([&]() { auto&& assignment_receiver = runtime->cleanups; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
-  std::optional<flight::Ref<NodeOf<flight::Ref<Node2DTraits>>>> parent = get_node_parent(runtime->overlay_root);
-  if (parent.has_value()) {
-    remove_node_child(parent.value(), runtime->overlay_root);
-  }
-  (runtime->camera = std::nullopt);
-  (runtime->features = std::nullopt);
-  (runtime->overlay = std::nullopt);
-  (runtime->selection = std::nullopt);
-}
+
+// NOT GENERATED: function disposeGizmoState -- source line 177
+// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
+//
+// The source it stood for:
+//   export function disposeGizmoState<NodeType extends HierarchyNodeAny>(state: GizmoState<NodeType>): void {
+//     const runtime = getGizmoRuntime(state);
+//     if (runtime.disposed) return;
+//     finishGizmoTransform(runtime);
+//     runtime.disposed = true;
+//     for (let i = runtime.cleanups.length - 1; i >= 0; i--) runtime.cleanups[i]();
+//     runtime.cleanups.length = 0;
+//     const parent = getNodeParent(runtime.overlayRoot);
+//     if (parent !== null) removeNodeChild(parent, runtime.overlayRoot);
+//     runtime.camera = null;
+//     runtime.features = null;
+//     runtime.overlay = null;
+//     runtime.selection = null;
+//   }
+//   
+// cpp emission failed for @flighthq/gizmo/packages/gizmo/src/gizmoState.ts: a presence test against null has no
+// absence channel in the emitted C++ storage for identifier
 
 template <typename NodeType>
 inline flight::Ref<GizmoMode> get_gizmo_mode(flight::Ref<GizmoState<NodeType>> state) {

@@ -11,24 +11,20 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct EmbeddedImageResourceReference; }
 namespace flight::types { struct ExternalImageResourceReference; }
-namespace flight::types { struct Sampler; }
 namespace flight::types { struct Scene3D; }
 namespace flight::types { struct Scene3DResourceResolverWithRuntime; }
 namespace flight::types { struct Scene3DResources; }
 namespace flight::types { struct Texture2D; }
-namespace flight::types { struct TextureCommon; }
-namespace flight::types { struct TextureSource; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
 namespace flight::types { struct UpdateScene3DResourceStreamingOptions; }
-namespace flight::types { struct VoxelGrid; }
 
 #include <flight/image/image_resource_reference.hpp>
 #include <flight/types/image_resource_reference.hpp>
-#include <flight/types/sampler.hpp>
 #include <flight/types/scene3_d.hpp>
 #include <flight/types/scene3_dresources.hpp>
 #include <flight/types/texture.hpp>
-#include <flight/types/texture_source.hpp>
-#include <flight/types/voxel_grid.hpp>
 #include <flight/scene3d_resources/get_scene3_dresource_textures.hpp>
 #include <flight/scene3d_resources/resolve_scene3_dresources.hpp>
 
@@ -37,7 +33,6 @@ namespace flight::scene3d_resources {
 using flight::types::Scene3D;
 using flight::types::Scene3DResourceResolverWithRuntime;
 using flight::types::Scene3DResources;
-using flight::types::TextureSource;
 using flight::types::UpdateScene3DResourceStreamingOptions;
 
 inline double retry_failed_scene3_dresources(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3D>>>> scene, flight::Ref<flight::types::Scene3DResourceResolverWithRuntime> resolver, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::UpdateScene3DResourceStreamingOptions>>>>> options = std::nullopt) {

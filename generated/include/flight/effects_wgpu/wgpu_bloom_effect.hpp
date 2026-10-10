@@ -26,10 +26,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects_wgpu {
 
-using flight::types::WgpuRenderTargetPool;
-
 extern const flight::types::WgpuRenderEffectRunner default_wgpu_bloom_effect_runner;
 
+using flight::types::WgpuRenderTargetPool;
 using flight::types::WgpuRenderState;
 
 

@@ -18,8 +18,6 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { struct WgpuRenderState; struct WgpuTextureRenderTarget; } namespace flight::effects_wgpu { inline void apply_wgpu_gaussian_blur_pass(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::WgpuTextureRenderTarget> source, flight::Ref<flight::types::WgpuTextureRenderTarget> dest, double sigma, double radius, double dir_x, double dir_y); }
-
 #include <flight/types/wgpu_render_state.hpp>
 
 #include <flight/effects_wgpu/wgpu_effect_pass.hpp>
@@ -27,6 +25,8 @@ namespace flight::types { struct WgpuRenderState; struct WgpuTextureRenderTarget
 #include <flight/effects_wgpu/wgpu_effect_texel_scale.hpp>
 #include <flight/effects_wgpu/wgpu_render_effect_registry.hpp>
 
+
+namespace flight::types { struct WgpuRenderState; struct WgpuTextureRenderTarget; } namespace flight::effects_wgpu { inline void apply_wgpu_gaussian_blur_pass(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::WgpuTextureRenderTarget> source, flight::Ref<flight::types::WgpuTextureRenderTarget> dest, double sigma, double radius, double dir_x, double dir_y); }
 namespace flight::effects_wgpu {
 
 extern const flight::types::WgpuRenderEffectRunner default_wgpu_blur_effect_runner;

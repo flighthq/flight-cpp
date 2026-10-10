@@ -3,11 +3,10 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function applyDocumentSkins -- source line 106
-//   missing: function attachDocumentAnimations -- source line 154
-//   missing: function materializeDocumentMaterial -- source line 193
-//   missing: function buildDocumentNode -- source line 204
-//   missing: function buildDocumentNodes -- source line 174
+//   missing: function attachDocumentAnimations -- source line 157
+//   missing: function materializeDocumentMaterial -- source line 196
+//   missing: function buildDocumentNode -- source line 207
+//   missing: function applyDocumentSkins -- source line 108
 #include <functional>
 #include <optional>
 #include <variant>
@@ -38,10 +37,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/entity.hpp>
 
-#include <flight/scene3d/mesh.hpp>
-#include <flight/scene3d/scene.hpp>
-#include <flight/scene3d/scene_node.hpp>
-
 namespace flight::scene3d {
 
 using flight::geometry::set_quaternion;
@@ -60,6 +55,16 @@ using flight::types::Scene3DDocumentNode;
 using flight::types::Skeleton3D;
 using flight::types::Transform3D;
 using flight::types::entity_runtime_key;
+struct DocumentMeshProbe;
+} // namespace flight::scene3d
+
+#include <flight/scene3d/mesh.hpp>
+#include <flight/scene3d/scene.hpp>
+#include <flight/scene3d/scene_node.hpp>
+
+namespace flight::scene3d {
+
+using Scene3DDocumentNodeValue = std::variant<flight::Ref<Mesh>, flight::Ref<Node3D>>;
 
 inline void assign_skeleton3_dfields(flight::Ref<EntityConstruction<flight::Ref<Skeleton3D>>> out, flight::Float32Array inverse_bind_matrices, flight::Float32Array joint_matrices, flight::Array<flight::Ref<Node3D>> joints, std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined> names, flight::Float32Array normal_matrices) {
   (out->inverse_bind_matrices = inverse_bind_matrices);
@@ -77,20 +82,116 @@ inline void apply_document_node_transform(flight::Ref<Node3D> node, flight::Ref<
   invalidate_node_local_transform(node);
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_SKELETON_SKELETON_ROOT_DA38524EA17F6332
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_SKELETON_SKELETON_ROOT_DA38524EA17F6332
-struct skeleton_skeleton_root_da38524ea17f6332 : public flight::ReferenceEnabled {
-  flight::Ref<Skeleton3D> skeleton;
-  flight::Null skeleton_root;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_SKELETON_SKELETON_ROOT_DA38524EA17F6332
 
-
-// NOT GENERATED: function applyDocumentSkins -- source line 106
-// refusal: cpp-contextual-union-value-type-unrepresented [source-portability]
+// NOT GENERATED: function attachDocumentAnimations -- source line 157
+// refusal: cpp-call-argument-missing [compiler-restriction]
 //
 // The source it stood for:
-//   function applyDocumentSkins(document: Readonly<Scene3DDocument>, nodes: readonly Node3D[]): void {
+//   function attachDocumentAnimations(document: Readonly<Scene3DDocument>, nodes: readonly Node3D[], scene: Scene3D): void {
+//     for (let a = 0; a < document.animations.length; a++) {
+//       const source = document.animations[a];
+//       const channels: AnimationChannel[] = [];
+//       for (let c = 0; c < source.channels.length; c++) {
+//         const channel = source.channels[c];
+//         const node = nodes[channel.node];
+//         if (node === undefined) continue;
+//         const target: Scene3DAnimationTarget = { node, path: channel.path };
+//         channels.push(createAnimationChannel(channel.track, target));
+//       }
+//       if (channels.length === 0) continue;
+//       scene.animations[source.name ?? `animation${a}`] = createAnimationClip(channels, source.duration);
+//     }
+//   }
+//   
+//   // Builds one Node3D per document node (a Mesh when the node names a mesh index, a transform-only group
+//   // otherwise), applies each authored transform, and wires the child index lists — returning the node pool
+//   // that skins and animations resolve their indices against. Node identity never leaves the assembler; the
+//   // document addresses everything by index.
+// cpp emission failed for @flighthq/scene3d/packages/scene3d/src/sceneDocument.ts: missing required call
+// argument at position 2
+
+inline bool is_material_entity(flight::Ref<MaterialLike> source) {
+  return (entity_runtime_key in source);
+}
+
+
+// NOT GENERATED: function materializeDocumentMaterial -- source line 196
+//
+// The source it stood for:
+//   function materializeDocumentMaterial(source: MaterialLike): Material {
+//     if (isMaterialEntity(source)) return source;
+//     return Object.assign(createMaterial(source.kind), source);
+//   }
+//   
+// cpp emission failed for @flighthq/scene3d/packages/scene3d/src/sceneDocument.ts: Object.assign requires one
+// closed callable-object target and an exact compatible object literal source
+
+
+// NOT GENERATED: function buildDocumentNode -- source line 207
+// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
+//
+// The source it stood for:
+//   function buildDocumentNode(
+//     node: Readonly<Scene3DDocumentNode>,
+//     meshes: Readonly<Scene3DDocument['meshes']>,
+//     materials: readonly Material[],
+//   ): Scene3DDocumentNodeValue {
+//     if (node.mesh === undefined) return createNode3D(node.kind, { name: node.name });
+//     const documentMesh = meshes[node.mesh];
+//     const meshMaterials: (Material | null)[] = documentMesh.materials.map((index) => materials[index] ?? null);
+//     const mesh = createMesh(documentMesh.geometry, meshMaterials, node.kind, { name: node.name });
+//     if (documentMesh.morph != null) mesh.morph = documentMesh.morph;
+//     return mesh;
+//   }
+//   
+// cpp emission failed for @flighthq/scene3d/packages/scene3d/src/sceneDocument.ts: a presence test against
+// undefined has no absence channel in the emitted C++ storage for property
+
+inline flight::Array<Scene3DDocumentNodeValue> build_document_nodes(flight::Ref<Scene3DDocument> document) {
+  flight::Array<flight::Ref<Scene3DDocumentMesh>> meshes = document->meshes;
+  flight::Array<flight::Ref<Material>> materials = document->materials.map(materialize_document_material);
+  flight::Array<Scene3DDocumentNodeValue> nodes = document->nodes.map([=](flight::Ref<Scene3DDocumentNode> node) -> std::variant<flight::Ref<Mesh>, flight::Ref<Node3D>> { return build_document_node(node, meshes, materials); });
+  {
+    double i = 0.0;
+    while ((i < static_cast<double>(document->nodes.size()))) {
+      {
+        apply_document_node_transform(nodes.element(i), document->nodes.element(i));
+        flight::Array<double> children = document->nodes.element(i).children;
+        {
+          double c = 0.0;
+          while ((c < static_cast<double>(children.size()))) {
+            {
+              std::optional<std::variant<flight::Ref<Mesh>, flight::Ref<Node3D>>> child = nodes.get(children.element(c));
+              if (child.has_value()) {
+                add_node_child(nodes.element(i), child.value());
+              }
+            }
+            (c += 1.0);
+          }
+        }
+      }
+      (i += 1.0);
+    }
+  }
+  return nodes;
+}
+
+struct DocumentMeshProbe : public flight::ReferenceEnabled {
+  bool enabled;
+  std::optional<flight::Ref<MeshGeometry>> geometry;
+};
+
+inline bool is_document_mesh(Scene3DDocumentNodeValue node) {
+  flight::Ref<DocumentMeshProbe> candidate = node;
+  return candidate->geometry.has_value();
+}
+
+
+// NOT GENERATED: function applyDocumentSkins -- source line 108
+// refusal: cpp-collection-argument-multiple-present-domains [source-portability]
+//
+// The source it stood for:
+//   function applyDocumentSkins(document: Readonly<Scene3DDocument>, nodes: readonly Scene3DDocumentNodeValue[]): void {
 //     const skins: (Skin | null)[] = document.skins.map((skin) => {
 //       const joints: Node3D[] = [];
 //       const names: string[] = [];
@@ -130,7 +231,8 @@ struct skeleton_skeleton_root_da38524ea17f6332 : public flight::ReferenceEnabled
 //       const skinIndex = document.meshes[meshIndex]?.skin;
 //       if (skinIndex === undefined) continue;
 //       const skin = skins[skinIndex];
-//       if (skin !== null) (nodes[i] as unknown as Mesh).skin = skin;
+//       const node = nodes[i];
+//       if (skin !== null && isDocumentMesh(node)) node.skin = skin;
 //     }
 //   }
 //   
@@ -138,110 +240,13 @@ struct skeleton_skeleton_root_da38524ea17f6332 : public flight::ReferenceEnabled
 //   // map by name (falling back to `animation${i}`). The document carries each channel's target as a node index
 //   // plus Scene3DAnimationPath (the animation core's clip is target-free); here they become live
 //   // Scene3DAnimationTarget bindings against the built nodes.
-// cpp emission failed for @flighthq/scene3d/packages/scene3d/src/sceneDocument.ts: contextual union value type
-// flight::Ref<skeleton_skeleton_root_da38524ea17f6332> is not a represented runtime domain: the value leaves a
-// member the destination requires optional or absent, or gives it an incompatible type, so it is not the shape
-// an alternative declares. The fresh outer literal still contains a member whose inferred owner or value domain
-// does not match the selected declared arm. Give that nested value the arm's declared member type at its own
-// construction site, or make every required member compatible there; the compiler will not insert a cast, hidden
-// copy, or side object.
-
-
-// NOT GENERATED: function attachDocumentAnimations -- source line 154
-// refusal: cpp-call-argument-missing [compiler-restriction]
-//
-// The source it stood for:
-//   function attachDocumentAnimations(document: Readonly<Scene3DDocument>, nodes: readonly Node3D[], scene: Scene3D): void {
-//     for (let a = 0; a < document.animations.length; a++) {
-//       const source = document.animations[a];
-//       const channels: AnimationChannel[] = [];
-//       for (let c = 0; c < source.channels.length; c++) {
-//         const channel = source.channels[c];
-//         const node = nodes[channel.node];
-//         if (node === undefined) continue;
-//         const target: Scene3DAnimationTarget = { node, path: channel.path };
-//         channels.push(createAnimationChannel(channel.track, target));
-//       }
-//       if (channels.length === 0) continue;
-//       scene.animations[source.name ?? `animation${a}`] = createAnimationClip(channels, source.duration);
-//     }
-//   }
-//   
-//   // Builds one Node3D per document node (a Mesh when the node names a mesh index, a transform-only group
-//   // otherwise), applies each authored transform, and wires the child index lists — returning the node pool
-//   // that skins and animations resolve their indices against. Node identity never leaves the assembler; the
-//   // document addresses everything by index.
-// cpp emission failed for @flighthq/scene3d/packages/scene3d/src/sceneDocument.ts: missing required call
-// argument at position 2
-
-inline bool is_material_entity(flight::Ref<MaterialLike> source) {
-  return (entity_runtime_key in source);
-}
-
-
-// NOT GENERATED: function materializeDocumentMaterial -- source line 193
-//
-// The source it stood for:
-//   function materializeDocumentMaterial(source: MaterialLike): Material {
-//     if (isMaterialEntity(source)) return source;
-//     return Object.assign(createMaterial(source.kind), source);
-//   }
-//   
-// cpp emission failed for @flighthq/scene3d/packages/scene3d/src/sceneDocument.ts: Object.assign requires one
-// closed callable-object target and an exact compatible object literal source
-
-
-// NOT GENERATED: function buildDocumentNode -- source line 204
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   function buildDocumentNode(
-//     node: Readonly<Scene3DDocumentNode>,
-//     meshes: Readonly<Scene3DDocument['meshes']>,
-//     materials: readonly Material[],
-//   ): Node3D {
-//     if (node.mesh === undefined) return createNode3D(node.kind, { name: node.name });
-//     const documentMesh = meshes[node.mesh];
-//     const meshMaterials: (Material | null)[] = documentMesh.materials.map((index) => materials[index] ?? null);
-//     const mesh = createMesh(documentMesh.geometry, meshMaterials, node.kind, { name: node.name });
-//     if (documentMesh.morph != null) mesh.morph = documentMesh.morph;
-//     return mesh as unknown as Node3D;
-//   }
-//   
-// cpp emission failed for @flighthq/scene3d/packages/scene3d/src/sceneDocument.ts: a presence test against
-// undefined has no absence channel in the emitted C++ storage for property
-
-
-// NOT GENERATED: function buildDocumentNodes -- source line 174
-// refusal: cpp-intersection-member-shapeless [source-portability]
-//
-// The source it stood for:
-//   function buildDocumentNodes(document: Readonly<Scene3DDocument>): Node3D[] {
-//     const meshes = document.meshes;
-//     const materials = document.materials.map(materializeDocumentMaterial);
-//     const nodes: Node3D[] = document.nodes.map((node) => buildDocumentNode(node, meshes, materials));
-//     for (let i = 0; i < document.nodes.length; i++) {
-//       applyDocumentNodeTransform(nodes[i], document.nodes[i]);
-//       const children = document.nodes[i].children;
-//       for (let c = 0; c < children.length; c++) {
-//         const child = nodes[children[c]];
-//         if (child !== undefined) addNodeChild(nodes[i], child);
-//       }
-//     }
-//     return nodes;
-//   }
-//   
-//   // A document accepts serializable MaterialLike literals, while a live Mesh requires Material entities.
-//   // Preserve an entity supplied by an importer so material sharing and batching identity survive assembly;
-//   // otherwise copy the structural fields onto the canonical material entity rather than installing the
-//   // caller's plain document object into the live scene.
-// cpp emission failed for @flighthq/scene3d/packages/scene3d/src/sceneDocument.ts: intersection types require
-// C++ multiple-inheritance lowering: no shape for Node (argument Node3DTraits has no shape either),
-// Node3DTraits. Declare the object shape the code reads rather than intersecting a conjunct that has none
+// cpp emission failed for @flighthq/scene3d/packages/scene3d/src/sceneDocument.ts: collection member push
+// argument from optional C++ storage has represented present carriers [flight::Ref<Mesh>, flight::Ref<Node3D>].
+// Narrow the value to one alternative push accepts, or declare the collection over the union the value has
 
 inline flight::Ref<Scene3D> create_scene3_dfrom_document(flight::Ref<Scene3DDocument> document, std::optional<double> scene_index = std::nullopt) {
   scene_index = scene_index.value_or(0.0);
-  flight::Array<flight::Ref<Node3D>> nodes = build_document_nodes(document);
+  flight::Array<Scene3DDocumentNodeValue> nodes = build_document_nodes(document);
   apply_document_skins(document, nodes);
   flight::Ref<Scene3D> scene = create_scene3_d(std::nullopt);
   flight::Array<double> roots = ([&]() -> flight::Array<double> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<double>> { auto optional_chain_receiver = document->scenes.get(scene_index.value()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->root_nodes; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::Array<double>{}; }());
@@ -249,7 +254,7 @@ inline flight::Ref<Scene3D> create_scene3_dfrom_document(flight::Ref<Scene3DDocu
     double r = 0.0;
     while ((r < static_cast<double>(roots.size()))) {
       {
-        std::optional<flight::Ref<Node3D>> node = nodes.get(roots.element(r));
+        std::optional<Scene3DDocumentNodeValue> node = nodes.get(roots.element(r));
         if (node.has_value()) {
           add_node_child(scene->root, node.value());
         }
@@ -264,7 +269,7 @@ inline flight::Ref<Scene3D> create_scene3_dfrom_document(flight::Ref<Scene3DDocu
 }
 
 inline flight::Array<flight::Ref<Scene3D>> create_scene3_ds_from_document(flight::Ref<Scene3DDocument> document) {
-  flight::Array<flight::Ref<Node3D>> nodes = build_document_nodes(document);
+  flight::Array<Scene3DDocumentNodeValue> nodes = build_document_nodes(document);
   apply_document_skins(document, nodes);
   flight::Array<flight::Ref<Scene3D>> scenes = flight::Array<flight::Ref<Scene3D>>{};
   {
@@ -277,7 +282,7 @@ inline flight::Array<flight::Ref<Scene3D>> create_scene3_ds_from_document(flight
           double r = 0.0;
           while ((r < static_cast<double>(roots.size()))) {
             {
-              std::optional<flight::Ref<Node3D>> node = nodes.get(roots.element(r));
+              std::optional<Scene3DDocumentNodeValue> node = nodes.get(roots.element(r));
               if (node.has_value()) {
                 add_node_child(scene->root, node.value());
               }

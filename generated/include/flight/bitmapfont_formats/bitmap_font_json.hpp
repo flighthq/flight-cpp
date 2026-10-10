@@ -17,8 +17,6 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { struct BitmapFontRecord; struct ImportDiagnostic; } namespace flight::bitmapfont_formats { inline std::optional<flight::Ref<flight::types::BitmapFontRecord>> parse_bitmap_font_json_record(flight::String text, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics); }
-
 #include <flight/types/import_diagnostic.hpp>
 
 #include <flight/types/bitmap_font_record.hpp>
@@ -27,6 +25,8 @@ namespace flight::types { struct BitmapFontRecord; struct ImportDiagnostic; } na
 
 #include <flight/bitmapfont_formats/bitmap_font_record.hpp>
 
+
+namespace flight::types { struct BitmapFontRecord; struct ImportDiagnostic; } namespace flight::bitmapfont_formats { inline std::optional<flight::Ref<flight::types::BitmapFontRecord>> parse_bitmap_font_json_record(flight::String text, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics); }
 namespace flight::bitmapfont_formats {
 
 using flight::types::BitmapFont;

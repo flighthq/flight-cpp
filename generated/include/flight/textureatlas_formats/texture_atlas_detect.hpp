@@ -10,6 +10,7 @@
 //   missing: function detectTextureAtlasFormat -- source line 129
 #include <flight/any.hpp>
 #include <flight/json.hpp>
+#include <flight/record.hpp>
 #include <flight/regexp.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -163,7 +164,7 @@ inline void bind_texture_atlas_format(flight::Ref<TextureAtlasFormatKind> kind, 
 
 
 // NOT GENERATED: function getRegistry -- source line 51
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
 //   function getRegistry(): KeyedTable<RegisteredFormatEntry> {
@@ -189,14 +190,12 @@ inline void bind_texture_atlas_format(flight::Ref<TextureAtlasFormatKind> kind, 
 //   }
 //   
 // cpp emission failed for
-// @flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasDetect.ts: intersection types
-// require C++ multiple-inheritance lowering: no shape for KeyedTable (argument RegisteredFormatEntry has a
-// shape, so the wrapper is the gap), Entity. Declare the object shape the code reads rather than intersecting a
-// conjunct that has none
+// @flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasDetect.ts: contextual
+// optionalSingle construction requires expression type evidence
 
 
 // NOT GENERATED: function bindTextureAtlasFormat -- source line 198
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
 //   function bindTextureAtlasFormat(kind: TextureAtlasFormatKind, entry: FormatEntry): void {
@@ -209,10 +208,8 @@ inline void bind_texture_atlas_format(flight::Ref<TextureAtlasFormatKind> kind, 
 //   }
 //   
 // cpp emission failed for
-// @flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasDetect.ts: intersection types
-// require C++ multiple-inheritance lowering: no shape for KeyedTable (argument object has a shape, so the
-// wrapper is the gap), Entity. Declare the object shape the code reads rather than intersecting a conjunct that
-// has none
+// @flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasDetect.ts: contextual
+// optionalSingle construction requires expression type evidence
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTUREATLAS_FORMATS_DETECT_PARSE_50F05419570DD48D
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTUREATLAS_FORMATS_DETECT_PARSE_50F05419570DD48D
@@ -238,7 +235,7 @@ inline void register_texture_atlas_format(flight::Ref<TextureAtlasFormatKind> ki
 
 
 // NOT GENERATED: function unregisterTextureAtlasFormat -- source line 194
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
 //   export function unregisterTextureAtlasFormat(kind: TextureAtlasFormatKind): void {
@@ -246,10 +243,8 @@ inline void register_texture_atlas_format(flight::Ref<TextureAtlasFormatKind> ki
 //   }
 //   
 // cpp emission failed for
-// @flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasDetect.ts: intersection types
-// require C++ multiple-inheritance lowering: no shape for KeyedTable (argument RegisteredFormatEntry has a
-// shape, so the wrapper is the gap), Entity. Declare the object shape the code reads rather than intersecting a
-// conjunct that has none
+// @flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasDetect.ts: contextual
+// optionalSingle construction requires expression type evidence
 
 inline flight::Array<std::tuple<flight::Ref<TextureAtlasFormatKind>, flight::Ref<RegisteredFormatEntry>>> get_texture_atlas_formats_in_detection_order() {
   flight::Array<std::tuple<flight::Ref<TextureAtlasFormatKind>, flight::Ref<RegisteredFormatEntry>>> formats = flight::Array<std::tuple<flight::Ref<TextureAtlasFormatKind>, flight::Ref<RegisteredFormatEntry>>>{};

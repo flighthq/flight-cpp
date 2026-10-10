@@ -87,8 +87,8 @@ struct CustomMaterialLayouts : public flight::ReferenceEnabled {
 //   // registry follows the GL lifetime rule: last source write wins before compilation, while an already
 //   // compiled shaderKey remains cached; use a new key to compile edited WGSL.
 // cpp emission failed for
-// @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/customShaderWgpuMeshMaterialRenderer.ts: typeOf types require
-// C++ type computation lowering
+// @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/customShaderWgpuMeshMaterialRenderer.ts: union member test
+// must identify exactly one C++ optional value alternative
 
 inline void register_wgpu_custom_material_shader(flight::Ref<WgpuRenderState> state, flight::String shader_key, flight::Ref<WgpuCustomMaterialShaderSource> wgsl_source) {
   flight::Ref<WgpuRenderStateRuntime> runtime = get_wgpu_render_state_runtime(state);

@@ -7,41 +7,28 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { struct TextureResolutionExplanation; }
+namespace flight::types { struct TombstonedRegistryTableEntry; }
+namespace flight::types { struct WgpuRenderRegistries; }
+namespace flight::types { struct WgpuRenderState; }
+namespace flight::types { struct WgpuRenderStateRuntime; }
+namespace flight::types { struct WgpuTextureEntry; }
+namespace flight::types { template <typename T> struct BoundRegistryTableEntry; }
+namespace flight::types { template <typename T> struct KeyedTable; }
+
 #include <flight/texture/texture.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 
 namespace flight::render_wgpu {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_701E8465BD6197E1
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_701E8465BD6197E1
-struct state_701e8465bd6197e1 : public flight::ReferenceEnabled {
-  flight::String state;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_701E8465BD6197E1
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_VALUE_5B77D81549DC3051
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_VALUE_5B77D81549DC3051
-struct state_value_5b77d81549dc3051 : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::types::WgpuTextureResolver value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_VALUE_5B77D81549DC3051
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_VALUE_43C6949F71E68363
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_VALUE_43C6949F71E68363
-struct state_value_43c6949f71e68363 : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::types::WgpuTextureResolver value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_VALUE_43C6949F71E68363
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_CF243C159232B529
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_CF243C159232B529
-struct state_cf243c159232b529 : public flight::ReferenceEnabled {
-  flight::String state;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_STATE_CF243C159232B529
+using flight::types::WgpuRenderState;
 
 inline flight::Ref<flight::types::TextureResolutionExplanation> explain_wgpu_texture_resolution(flight::Ref<flight::types::WgpuRenderState> state, flight::types::TextureLike texture) {
   const std::optional<flight::String> kind = flight::texture::get_texture_source_kind(texture);

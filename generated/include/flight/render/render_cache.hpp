@@ -18,10 +18,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/scene2_drenderer.hpp>
 
-namespace flight::types { struct RenderCache; struct RenderCacheAdapter; } namespace flight::render { inline flight::Ref<flight::types::RenderCacheAdapter> create_render_cache_adapter(std::optional<flight::Ref<flight::types::RenderCache>> cache = std::nullopt); }
-
-namespace flight::types { struct RenderProxyAdapter; } namespace flight::render { inline bool is_render_cache_adapter(std::optional<flight::Ref<flight::types::RenderProxyAdapter>> value); }
-
 #include <flight/geometry/matrix.hpp>
 
 #include <flight/signals/signal.hpp>
@@ -49,6 +45,10 @@ namespace flight::types { struct RenderProxyAdapter; } namespace flight::render 
 #include <flight/render/renderer.hpp>
 #include <flight/render/render_proxy_adapter.hpp>
 
+
+namespace flight::types { struct RenderProxyAdapter; } namespace flight::render { inline bool is_render_cache_adapter(std::optional<flight::Ref<flight::types::RenderProxyAdapter>> value); }
+
+namespace flight::types { struct RenderCache; struct RenderCacheAdapter; } namespace flight::render { inline flight::Ref<flight::types::RenderCacheAdapter> create_render_cache_adapter(std::optional<flight::Ref<flight::types::RenderCache>> cache = std::nullopt); }
 namespace flight::render {
 
 inline void register_render_cache_renderer(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Scene2DRenderer> renderer);

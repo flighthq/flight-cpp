@@ -24,6 +24,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/wgpu_render_pass.hpp>
 
+#include <flight/types/render_target_clear.hpp>
+
 #include <flight/entity/entity.hpp>
 
 #include <flight/render_wgpu/wgpu_frame.hpp>
@@ -36,9 +38,11 @@ namespace flight::render_wgpu {
 using flight::render_wgpu::get_wgpu_render_state_runtime;
 
 using flight::types::WgpuRenderState;
+using flight::types::RenderTargetClear;
 using flight::types::WgpuScreenRenderTarget;
 using flight::types::WgpuRenderPassViewport;
 using flight::types::WgpuRenderTarget;
+using flight::types::WgpuTextureRenderTarget;
 using flight::types::WgpuRenderPass;
 
 using flight::entity::allocate_entity;

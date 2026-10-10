@@ -9,7 +9,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct RendererData; }
 namespace flight::types { struct Texture2D; }
-namespace flight::types { struct TextureCommon; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
 
 namespace flight::types {
 struct SpriteIdentityRendererData;

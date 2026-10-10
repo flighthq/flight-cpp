@@ -12,19 +12,48 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AnisotropyPbrExtension; }
+namespace flight::types { struct BlinnPhongMaterial; }
+namespace flight::types { struct ClearcoatPbrExtension; }
+namespace flight::types { struct ColorScaleBias; }
+namespace flight::types { struct CustomShaderMaterial; }
+namespace flight::types { struct DepthMaterial; }
+namespace flight::types { struct EmissiveMaterial; }
+namespace flight::types { struct ExtendedPbrMaterial; }
+namespace flight::types { struct GlMeshMaterialRenderer; }
 namespace flight::types { struct GlMeshProgram; }
 namespace flight::types { struct GlPbrTransmissionSceneColor; }
 namespace flight::types { struct GlRenderState; }
 namespace flight::types { struct GlSkinPaletteTexture; }
 namespace flight::types { struct GlTextureRenderTarget; }
+namespace flight::types { struct IridescencePbrExtension; }
+namespace flight::types { struct LambertMaterial; }
+namespace flight::types { struct MatcapMaterial; }
+namespace flight::types { struct Material; }
 namespace flight::types { struct Matrix4; }
 namespace flight::types { struct Mesh; }
-namespace flight::types { struct MeshGeometry; }
+namespace flight::types { struct MeshSubset; }
+namespace flight::types { struct NormalMaterial; }
 namespace flight::types { struct PbrExtension; }
+namespace flight::types { struct PhongMaterial; }
 namespace flight::types { struct Scene3DLightBlock; }
 namespace flight::types { struct Scene3DLights; }
+namespace flight::types { struct ShadedMaterial; }
+namespace flight::types { struct SheenPbrExtension; }
+namespace flight::types { struct SpecularGlossinessPbrMaterial; }
+namespace flight::types { struct SpecularPbrExtension; }
+namespace flight::types { struct StandardMaterial; }
+namespace flight::types { struct StandardPbrMaterial; }
 namespace flight::types { struct Texture2D; }
-namespace flight::types { struct TextureCommon; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { struct ToonMaterial; }
+namespace flight::types { struct TransmissionVolumePbrExtension; }
+namespace flight::types { struct UnlitMaterial; }
+namespace flight::types { struct VertexColorMaterial; }
+namespace flight::types { struct WireframeMaterial; }
+namespace flight::types { struct WrappedDiffusePbrExtension; }
 
 namespace flight::types {
 struct GlScene3DShadow;
@@ -34,12 +63,15 @@ struct GlScene3DRuntime;
 struct GlMeshUpload;
 } // namespace flight::types
 
+#include <flight/types/color_scale_bias.hpp>
+#include <flight/types/gl_mesh_material_renderer.hpp>
 #include <flight/types/gl_mesh_program.hpp>
 #include <flight/types/gl_pbr_transmission_scene_color.hpp>
 #include <flight/types/gl_render_state.hpp>
 #include <flight/types/gl_render_target.hpp>
 #include <flight/types/gl_skin_palette_texture.hpp>
 #include <flight/types/matrix4.hpp>
+#include <flight/types/material_value.hpp>
 #include <flight/types/mesh.hpp>
 #include <flight/types/mesh_geometry.hpp>
 #include <flight/types/pbr_extension.hpp>
@@ -69,27 +101,16 @@ struct GlScene3DIbl : public flight::ReferenceEnabled {
 
 struct GlScene3DDrawEntry : public flight::ReferenceEnabled {
   double alpha;
-  std::optional<flight::ErasedRef> color_matrix;
-  std::optional<flight::ErasedRef> color_scale_bias;
+  std::optional<flight::Array<double>> color_matrix;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ColorScaleBias>>>>> color_scale_bias;
   double depth;
-  flight::Ref<flight::types::Scene3DLightBlock> light_block;
-  flight::ErasedRef material;
-  flight::ErasedRef mesh;
-  flight::ErasedRef renderer;
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DLightBlock>>>> light_block;
+  flight::types::MaterialValue material;
+  flight::Ref<flight::types::Mesh> mesh;
+  flight::Ref<flight::types::GlMeshMaterialRenderer> renderer;
   double sort_key;
-  flight::ErasedRef subset;
-  flight::ErasedRef world_matrix;
-};
-
-struct GlMeshUpload : public flight::ReferenceEnabled {
-  std::optional<flight::host_sdl::WebGlBuffer> index_buffer;
-  double index_count;
-  double index_type;
-  double primitive_mode;
-  std::optional<bool> skin_bind_uploaded;
-  flight::host_sdl::WebGlVertexArrayObject vao;
-  double version;
-  flight::host_sdl::WebGlBuffer vertex_buffer;
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshSubset>>>> subset;
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>> world_matrix;
 };
 
 struct GlScene3DRuntime : public flight::ReferenceEnabled {
@@ -115,9 +136,9 @@ struct GlScene3DRuntime : public flight::ReferenceEnabled {
   std::variant<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Scene3DLightsLike>>>)>, flight::Null, flight::Undefined> forward_light_selection_guard = std::variant<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::Scene3DLightsLike>>>)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   flight::Array<flight::Ref<GlScene3DDrawEntry>> opaque_draw_list;
   flight::Array<flight::Ref<GlScene3DDrawEntry>> opaque_pool;
-  std::variant<std::function<void(flight::Array<flight::Ref<flight::types::PbrExtension>>)>, flight::Null, flight::Undefined> pbr_extension_guard = std::variant<std::function<void(flight::Array<flight::Ref<flight::types::PbrExtension>>)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<std::function<void(flight::Array<flight::types::PbrExtensionValue>)>, flight::Null, flight::Undefined> pbr_extension_guard = std::variant<std::function<void(flight::Array<flight::types::PbrExtensionValue>)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::optional<flight::Ref<flight::types::GlPbrTransmissionSceneColor>> pbr_transmission_scene_color;
-  flight::Map<flight::String, flight::Ref<flight::types::GlMeshProgram>> program_cache;
+  flight::Map<flight::String, flight::ErasedRef> program_cache;
   std::optional<flight::Ref<GlScene3DShadow>> shadow;
   std::optional<flight::Ref<flight::types::GlTextureRenderTarget>> shadow_target;
   std::optional<flight::Ref<flight::types::GlSkinPaletteTexture>> instance_palette;
@@ -125,7 +146,18 @@ struct GlScene3DRuntime : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::GlSkinPaletteTexture>> skin_palette;
   std::optional<flight::Ref<flight::types::GlSkinPaletteTexture>> skin_normal_palette;
   double time;
-  flight::WeakMap<flight::Ref<flight::types::MeshGeometry>, flight::Ref<GlMeshUpload>> upload_cache;
+  flight::WeakMap<flight::Ref<void>, flight::ErasedRef> upload_cache;
+};
+
+struct GlMeshUpload : public flight::ReferenceEnabled {
+  std::optional<flight::host_sdl::WebGlBuffer> index_buffer;
+  double index_count;
+  double index_type;
+  double primitive_mode;
+  std::optional<bool> skin_bind_uploaded;
+  flight::host_sdl::WebGlVertexArrayObject vao;
+  double version;
+  flight::host_sdl::WebGlBuffer vertex_buffer;
 };
 
 } // namespace flight::types

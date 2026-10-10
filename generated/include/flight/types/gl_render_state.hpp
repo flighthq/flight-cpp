@@ -16,6 +16,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/texture.hpp>
 
 namespace flight::types { struct ColorScaleBias; }
+namespace flight::types { struct CompressedImageResource; }
+namespace flight::types { struct Entity; }
 namespace flight::types { struct GlContextRuntime; }
 namespace flight::types { struct GlContextState; }
 namespace flight::types { struct GlCubeRenderTarget; }
@@ -28,6 +30,7 @@ namespace flight::types { struct GlRenderEffectRegistration; }
 namespace flight::types { struct GlRenderPass; }
 namespace flight::types { struct GlRenderTarget; }
 namespace flight::types { struct GlRenderTextureExplanation; }
+namespace flight::types { struct GlShader; }
 namespace flight::types { struct GlShaderLocations; }
 namespace flight::types { struct GlShapeMesh; }
 namespace flight::types { struct GlTextureRealization; }
@@ -35,8 +38,12 @@ namespace flight::types { struct GlVelocityContext; }
 namespace flight::types { struct ImageSurfaceCreator; }
 namespace flight::types { struct Material; }
 namespace flight::types { struct Matrix; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Node3D; }
 namespace flight::types { struct Path; }
 namespace flight::types { struct PathMesh; }
+namespace flight::types { struct RenderCache; }
+namespace flight::types { struct RenderEffect; }
 namespace flight::types { struct RenderEffectPadding; }
 namespace flight::types { struct RenderProxy2D; }
 namespace flight::types { struct RenderProxy; }
@@ -44,14 +51,20 @@ namespace flight::types { struct RenderRegistries; }
 namespace flight::types { struct RenderRegistrySignals; }
 namespace flight::types { struct RenderState; }
 namespace flight::types { struct RenderStateRuntime; }
+namespace flight::types { struct RenderTexture; }
 namespace flight::types { struct Renderer; }
 namespace flight::types { struct Sampler; }
 namespace flight::types { struct Scene2DClipHooks; }
 namespace flight::types { struct StrokeStyle; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
 namespace flight::types { struct TintMaterialData; }
 namespace flight::types { template <typename K> struct CanvasShapeCommand; }
 namespace flight::types { template <typename T> struct KeyedTable; }
 namespace flight::types { template <typename T> struct SlotTable; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct GlRenderState;
@@ -69,7 +82,7 @@ struct GlShapeMeshColorScaleBiasShader;
 struct GlScissorRect;
 struct GlViewportRect;
 struct GlTextureRealization;
-using GlTextureResolver = std::function<std::optional<flight::Ref<GlTextureRealization>>(flight::Ref<flight::types::GlRenderState>, flight::types::TextureLike, bool, flight::types::TextureColorSpace)>;
+using GlTextureResolver = std::function<std::optional<flight::Ref<GlTextureRealization>>(flight::Ref<flight::types::GlRenderState>, std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderTexture>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Texture2DArray>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Texture2D>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Texture3D>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TextureCube>>>>>, bool, flight::String)>;
 using GlBlendFactor = flight::String;
 using GlBlendEquation = flight::String;
 using GlColorAdjustmentMaterialFeatureGuard = std::function<void(flight::Ref<GlRenderState>, std::variant<flight::Array<double>, flight::Ref<flight::types::ColorScaleBias>, flight::Ref<flight::types::TintMaterialData>>)>;
@@ -107,18 +120,18 @@ using GlColorAdjustmentMaterialFeatureGuard = std::function<void(flight::Ref<GlR
 #include <flight/types/scene2_drenderer.hpp>
 #include <flight/types/image_surface.hpp>
 #include <flight/types/matrix.hpp>
-#include <flight/types/canvas_shape_registry.hpp>
-#include <flight/types/render_proxy.hpp>
 #include <flight/types/renderable.hpp>
+#include <flight/types/render_proxy_adapter.hpp>
+#include <flight/types/render_proxy.hpp>
+#include <flight/types/render_registry_signals.hpp>
+#include <flight/types/canvas_shape_registry.hpp>
 #include <flight/types/render_effect_padding.hpp>
 #include <flight/types/renderer.hpp>
 #include <flight/types/path.hpp>
 #include <flight/types/stroke_style.hpp>
 #include <flight/types/path_mesh.hpp>
-#include <flight/types/render_proxy_adapter.hpp>
-#include <flight/types/render_registry_signals.hpp>
-#include <flight/types/render_state.hpp>
 #include <flight/types/blend_mode.hpp>
+#include <flight/types/render_state.hpp>
 #include <flight/types/registry_table.hpp>
 #include <flight/types/render_proxy2_d.hpp>
 #include <flight/types/entity.hpp>
@@ -213,7 +226,7 @@ struct GlViewportRect : public flight::ReferenceEnabled {
 };
 
 struct GlRenderState : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::RenderStateRuntime>> entity_runtime_key;
+  std::optional<flight::Ref<GlRenderStateRuntime>> entity_runtime_key;
   bool allow_smoothing;
   double current_clip_depth;
   std::optional<flight::Ref<flight::types::Scene2DClipHooks>> display_object_clip_hooks;
@@ -229,6 +242,14 @@ struct GlRenderState : public flight::ReferenceEnabled {
   flight::host_sdl::WebGl2Context gl;
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GlRenderRegistries>>>> registries;
 };
+
+inline flight::Ref<GlRenderStateRuntime> read_gl_render_state_runtime_owner(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GlRenderState>>>> owner) {
+  return flight::row_get<std::optional<flight::Ref<GlRenderStateRuntime>>>(owner, flight::types::entity_runtime_key).value();
+}
+
+inline void write_gl_render_state_runtime_owner(flight::types::EntityConstruction<flight::Ref<GlRenderState>> owner, flight::Ref<GlRenderStateRuntime> runtime) {
+  flight::row_set(owner, flight::types::entity_runtime_key, std::optional<flight::Ref<GlRenderStateRuntime>>{runtime});
+}
 
 struct GlRenderRegistries : public flight::ReferenceEnabled {
   std::optional<std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::CanvasShapeCommand<flight::types::ShapeCommandKey>>>>> canvas_shape_commands;
@@ -257,9 +278,9 @@ struct GlRenderRegistries : public flight::ReferenceEnabled {
   std::shared_ptr<flight::types::KeyedTable<flight::types::GlVelocityWriter>> velocity_writers;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_D33545783F2E3EBC
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_D33545783F2E3EBC
-struct callable_clear_signals_d33545783f2e3ebc : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_7EA687C6E4DA0FAA
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_7EA687C6E4DA0FAA
+struct callable_clear_signals_7ea687c6e4da0faa : public flight::ReferenceEnabled {
   std::function<void(flight::Ref<flight::types::RenderRegistryTable>, flight::String)> callable;
   std::function<void()> clear;
   flight::Ref<flight::types::RenderRegistrySignals> signals;
@@ -267,7 +288,7 @@ struct callable_clear_signals_d33545783f2e3ebc : public flight::ReferenceEnabled
     return callable(argument_0, argument_1);
   }
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_D33545783F2E3EBC
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_7EA687C6E4DA0FAA
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_PROGRAM_BIND_LOCATIONS_88CB6A4173D252CD
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_PROGRAM_BIND_LOCATIONS_88CB6A4173D252CD
@@ -286,7 +307,7 @@ struct GlRenderStateRuntime : public flight::ReferenceEnabled {
   flight::WeakMap<flight::Ref<flight::types::Renderable>, flight::Ref<flight::types::RenderProxyAdapter>> render_proxy_adapter_map;
   flight::WeakMap<flight::Ref<flight::types::Renderable>, flight::Ref<flight::types::RenderProxy>> render_proxy_map;
   flight::Set<flight::Ref<flight::types::Renderable>> render_proxy_sources;
-  flight::Ref<std::optional<flight::Ref<callable_clear_signals_d33545783f2e3ebc>>> registry_miss;
+  flight::Ref<std::optional<flight::Ref<callable_clear_signals_7ea687c6e4da0faa>>> registry_miss;
   flight::Ref<GlRenderRegistries> registries;
   double renderer_map_id;
   flight::Array<flight::Ref<flight::types::Renderable>> temp_stack;

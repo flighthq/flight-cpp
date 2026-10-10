@@ -15,12 +15,20 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 #include <flight/types/capacitor_api.hpp>
+
 #include <flight/types/wgpu_render_state.hpp>
+
+namespace flight::types { struct WgpuDeviceRuntime; }
+namespace flight::types { struct WgpuDeviceRuntimeResources; }
+namespace flight::types { struct WgpuRenderState; }
+namespace flight::types { struct WgpuRenderStateRuntime; }
 
 #include <flight/types/contract.hpp>
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 
 namespace flight::render_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline double get_wgpu_mip_level_count(double width, double height) {
   return (1.0 + std::floor(std::log2(flight::maximum(1.0, width, height))));

@@ -89,14 +89,9 @@ inline flight::Ref<flight::types::MeshGeometry> convert_mesh_geometry_layout(
         },
         source->indices.value());
   }
-  return create_mesh_geometry(flight::make_ref<flight::types::MeshGeometryOptions>(
-      flight::types::MeshGeometryOptions{
-          .indices = std::move(indices),
-          .layout = std::move(target_layout),
-          .subsets = source->subsets,
-          .topology = source->topology,
-          .vertices = std::move(dst_vertices),
-      }));
+  return create_mesh_geometry_from_fields(
+      std::move(indices), std::move(target_layout), source->subsets,
+      source->topology, std::move(dst_vertices));
 }
 
 inline flight::Ref<flight::types::VertexAttributeLayout> canonical_mesh_geometry_layout =

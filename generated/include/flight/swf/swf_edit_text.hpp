@@ -10,6 +10,11 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 namespace flight::swf { struct SwfReader; }
+namespace flight::types { struct RichText; }
+namespace flight::types { struct RichTextContent; }
+namespace flight::types { struct RichTextData; }
+namespace flight::types { struct TextFormat; }
+namespace flight::types { struct TextFormatRange; }
 
 namespace flight::swf {
 struct SwfEditTextField;

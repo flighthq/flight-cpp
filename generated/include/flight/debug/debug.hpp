@@ -16,10 +16,6 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { struct DebugOptions; } namespace flight::debug { inline void enable_debug(std::optional<flight::Ref<flight::types::DebugOptions>> options); }
-
-namespace flight::types { struct RenderState; } namespace flight::render { inline void enable_color_adjustment_guards(flight::Ref<flight::types::RenderState> state); }
-
 #include <flight/render/render_registry_guards.hpp>
 
 #include <flight/render/enable_color_adjustment_guards.hpp>
@@ -32,6 +28,10 @@ namespace flight::types { struct RenderState; } namespace flight::render { inlin
 
 #include <flight/types/debug.hpp>
 
+
+namespace flight::types { struct RenderState; } namespace flight::render { inline void enable_color_adjustment_guards(flight::Ref<flight::types::RenderState> state); }
+
+namespace flight::types { struct DebugOptions; } namespace flight::debug { inline void enable_debug(std::optional<flight::Ref<flight::types::DebugOptions>> options); }
 namespace flight::debug {
 
 using flight::render::enable_color_adjustment_guards;

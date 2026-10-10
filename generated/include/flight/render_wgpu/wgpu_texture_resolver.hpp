@@ -4,27 +4,27 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function resolveWgpuTexture -- source line 69
-//   missing: function resolveWgpuBitmapTexture -- source line 86
 //   missing: function registerWgpuBitmapTextureResolver -- source line 35
-//   missing: function resolveWgpuCompressedImageTexture -- source line 98
 //   missing: function registerWgpuCompressedImageTextureResolver -- source line 39
-//   missing: function resolveWgpuImageTexture -- source line 108
 //   missing: function registerWgpuImageTextureResolver -- source line 43
 //   missing: function resolveWgpuRenderTexture -- source line 120
 //   missing: function registerWgpuRenderTextureResolver -- source line 47
-//   missing: variable (binding) -- source line 124
 #include <functional>
 #include <optional>
+#include <stdexcept>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/render_target.hpp>
-
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 
 #include <flight/types/wgpu_render_state.hpp>
+
+#include <flight/types/render_texture.hpp>
+
+#include <flight/types/render_target.hpp>
 
 #include <flight/render_wgpu/wgpu_draw.hpp>
 #include <flight/render_wgpu/wgpu_render_state.hpp>
@@ -32,11 +32,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::render_wgpu {
 
-using flight::types::RenderTargetColorSpace;
-
 using flight::render_wgpu::get_wgpu_render_state_runtime;
 
+using flight::types::RenderTargetColorSpace;
 using flight::types::WgpuRenderState;
+using flight::types::RenderTexture;
 
 inline void register_wgpu_texture_resolver(flight::Ref<WgpuRenderState> state, flight::Ref<TextureSourceKind> source_kind, std::optional<flight::Ref<WgpuTextureResolver>> resolver) {
   flight::Ref<WgpuRenderStateRuntime> runtime = get_wgpu_render_state_runtime(state);
@@ -65,29 +65,13 @@ inline void register_wgpu_texture_resolver(flight::Ref<WgpuRenderState> state, f
 //     return entry.value(state, texture, premultiply, getTextureSampleColorSpace(texture.colorSpace, workingColorSpace));
 //   }
 //   
-// cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuTextureResolver.ts: typeOf types
-// require C++ type computation lowering
+// cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuTextureResolver.ts: union member
+// test must identify exactly one C++ optional value alternative
 
-
-// NOT GENERATED: function resolveWgpuBitmapTexture -- source line 86
-// refusal: cpp-type-assertion-unidentified [source-portability]
-//
-// The source it stood for:
-//   function resolveWgpuBitmapTexture(
-//     state: WgpuRenderState,
-//     texture: Readonly<TextureLike>,
-//     premultiply: boolean,
-//     colorSpace: TextureColorSpace,
-//   ): WgpuTextureEntry | null {
-//     const bitmap = getTextureSource(texture) as Readonly<Bitmap> | null;
-//     return bitmap === null
-//       ? null
-//       : bindWgpuBitmapTexture(state, bitmap, texture.sampler.mipmaps, premultiply, colorSpace);
-//   }
-//   
-// cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuTextureResolver.ts: type assertion
-// target must identify exactly one C++ variant alternative: target std::optional<flight::Ref<Bitmap>> against
-// [flight::Ref<TextureSource>]
+inline std::optional<flight::Ref<WgpuTextureEntry>> resolve_wgpu_bitmap_texture(flight::Ref<WgpuRenderState> state, flight::Ref<TextureLike> texture, bool premultiply, flight::Ref<TextureColorSpace> color_space) {
+  std::optional<flight::Ref<Bitmap>> bitmap = ([&]() -> std::optional<flight::Ref<Bitmap>> { const auto& narrowed_union = get_texture_source(texture); if (!narrowed_union.has_value()) return std::nullopt; if (const auto* alternative = std::get_if<flight::Ref<Bitmap>>(&narrowed_union.value())) return std::optional<flight::Ref<Bitmap>>{*alternative}; throw std::logic_error("asserted union alternative is not present in the value"); }());
+  return (!bitmap.has_value() ? std::nullopt : std::optional<flight::Ref<WgpuTextureEntry>>{bind_wgpu_bitmap_texture(state, bitmap.value(), texture->sampler.mipmaps, premultiply, color_space)});
+}
 
 
 // NOT GENERATED: function registerWgpuBitmapTextureResolver -- source line 35
@@ -102,24 +86,10 @@ inline void register_wgpu_texture_resolver(flight::Ref<WgpuRenderState> state, f
 // union value type std::function<std::optional<flight::Ref<WgpuTextureEntry>>(flight::Ref<WgpuRenderState>,
 // flight::Ref<TextureLike>, bool, flight::Ref<TextureColorSpace>)> is not a represented runtime domain
 
-
-// NOT GENERATED: function resolveWgpuCompressedImageTexture -- source line 98
-// refusal: cpp-type-assertion-unidentified [source-portability]
-//
-// The source it stood for:
-//   function resolveWgpuCompressedImageTexture(
-//     state: WgpuRenderState,
-//     texture: Readonly<TextureLike>,
-//     _premultiply: boolean,
-//     colorSpace: TextureColorSpace,
-//   ): WgpuTextureEntry | null {
-//     const image = getTextureSource(texture) as Readonly<CompressedImageResource> | null;
-//     return image === null ? null : bindWgpuCompressedImageTexture(state, image, colorSpace);
-//   }
-//   
-// cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuTextureResolver.ts: type assertion
-// target must identify exactly one C++ variant alternative: target
-// std::optional<flight::Ref<CompressedImageResource>> against [flight::Ref<TextureSource>]
+inline std::optional<flight::Ref<WgpuTextureEntry>> resolve_wgpu_compressed_image_texture(flight::Ref<WgpuRenderState> state, flight::Ref<TextureLike> texture, bool premultiply, flight::Ref<TextureColorSpace> color_space) {
+  std::optional<flight::Ref<CompressedImageResource>> image = ([&]() -> std::optional<flight::Ref<CompressedImageResource>> { const auto& narrowed_union_2 = get_texture_source(texture); if (!narrowed_union_2.has_value()) return std::nullopt; if (const auto* alternative = std::get_if<flight::Ref<CompressedImageResource>>(&narrowed_union_2.value())) return std::optional<flight::Ref<CompressedImageResource>>{*alternative}; throw std::logic_error("asserted union alternative is not present in the value"); }());
+  return (!image.has_value() ? std::nullopt : bind_wgpu_compressed_image_texture(state, image.value(), color_space));
+}
 
 
 // NOT GENERATED: function registerWgpuCompressedImageTextureResolver -- source line 39
@@ -134,26 +104,10 @@ inline void register_wgpu_texture_resolver(flight::Ref<WgpuRenderState> state, f
 // union value type std::function<std::optional<flight::Ref<WgpuTextureEntry>>(flight::Ref<WgpuRenderState>,
 // flight::Ref<TextureLike>, bool, flight::Ref<TextureColorSpace>)> is not a represented runtime domain
 
-
-// NOT GENERATED: function resolveWgpuImageTexture -- source line 108
-// refusal: cpp-type-assertion-unidentified [source-portability]
-//
-// The source it stood for:
-//   function resolveWgpuImageTexture(
-//     state: WgpuRenderState,
-//     texture: Readonly<TextureLike>,
-//     premultiply: boolean,
-//     colorSpace: TextureColorSpace,
-//   ): WgpuTextureEntry | null {
-//     const image = getTextureSource(texture) as Readonly<ImageResource> | null;
-//     return image === null
-//       ? null
-//       : bindWgpuImageResourceTexture(state, image, texture.sampler.mipmaps, premultiply, colorSpace);
-//   }
-//   
-// cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuTextureResolver.ts: type assertion
-// target must identify exactly one C++ variant alternative: target std::optional<flight::Ref<ImageResource>>
-// against [flight::Ref<TextureSource>]
+inline std::optional<flight::Ref<WgpuTextureEntry>> resolve_wgpu_image_texture(flight::Ref<WgpuRenderState> state, flight::Ref<TextureLike> texture, bool premultiply, flight::Ref<TextureColorSpace> color_space) {
+  std::optional<flight::Ref<ImageResource>> image = ([&]() -> std::optional<flight::Ref<ImageResource>> { const auto& narrowed_union_3 = get_texture_source(texture); if (!narrowed_union_3.has_value()) return std::nullopt; if (const auto* alternative = std::get_if<flight::Ref<ImageResource>>(&narrowed_union_3.value())) return std::optional<flight::Ref<ImageResource>>{*alternative}; throw std::logic_error("asserted union alternative is not present in the value"); }());
+  return (!image.has_value() ? std::nullopt : bind_wgpu_image_resource_texture(state, image.value(), texture->sampler.mipmaps, premultiply, color_space));
+}
 
 
 // NOT GENERATED: function registerWgpuImageTextureResolver -- source line 43
@@ -206,30 +160,6 @@ inline void register_standard_wgpu_texture_resolvers(flight::Ref<WgpuRenderState
   register_wgpu_render_texture_resolver(state);
 }
 
-
-// NOT GENERATED: variable (binding) -- source line 124
-// refusal: cpp-intersection-member-shapeless [source-portability]
-//
-// The source it stood for:
-//   const _standardWgpuTextureResolvers = withRegistryTableEntry(
-//     withRegistryTableEntry(
-//       withRegistryTableEntry(
-//         createKeyedTable<WgpuTextureResolver>('WgpuTextureResolver', 'Unregistered'),
-//         BitmapTextureSourceKind,
-//         resolveWgpuBitmapTexture,
-//       ),
-//       ImageTextureSourceKind,
-//       resolveWgpuImageTexture,
-//     ),
-//     RenderTargetTextureSourceKind,
-//     resolveWgpuRenderTexture,
-//   );
-//   
-//   export { _standardWgpuTextureResolvers as standardWgpuTextureResolvers };
-//   
-// cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuTextureResolver.ts: intersection
-// types require C++ multiple-inheritance lowering: no shape for KeyedTable (argument resolveWgpuImageTexture has
-// no shape either), Entity. Declare the object shape the code reads rather than intersecting a conjunct that has
-// none
+inline auto standard_wgpu_texture_resolvers = with_registry_table_entry(with_registry_table_entry(with_registry_table_entry(create_keyed_table<flight::Ref<WgpuTextureResolver>>(flight::String("WgpuTextureResolver"), flight::String("Unregistered")), bitmap_texture_source_kind, resolve_wgpu_bitmap_texture), image_texture_source_kind, resolve_wgpu_image_texture), render_target_texture_source_kind, resolve_wgpu_render_texture);
 
 } // namespace flight::render_wgpu

@@ -110,11 +110,16 @@
 //   type { Entity } from '@flighthq/types/contract'
 //   type { TextureLike } from '@flighthq/types/contract'
 //   type { Texture2D } from '@flighthq/types/contract'
+//   type { Texture2DArray } from '@flighthq/types/contract'
+//   type { Texture3D } from '@flighthq/types/contract'
+//   type { TextureCube } from '@flighthq/types/contract'
+//   type { RenderTarget } from '@flighthq/types/contract'
 //   type { VoxelGrid } from '@flighthq/types/contract'
-//   type { TextureSourceCubeFaces } from '@flighthq/types/contract'
 //   type { HostImageSource } from '@flighthq/types/contract'
-//   type { Sampler } from '@flighthq/types/contract'
 //   type { Vector2 } from '@flighthq/types/contract'
+//   type { Sampler } from '@flighthq/types/contract'
+//   type { TextureSourceValue } from '@flighthq/types/contract'
+//   type { TextureSourceCubeFaces } from '@flighthq/types/contract'
 //   type { TextureFilter } from '@flighthq/types/contract'
 //   type { TextureWrap } from '@flighthq/types/contract'
 //   type { MaterialData } from '@flighthq/types/contract'
@@ -123,6 +128,8 @@
 //   type { WgpuColorAdjustmentMaterialFeature } from '@flighthq/types/contract'
 //   type { WgpuColorAdjustmentMaterialFeatureGuard } from '@flighthq/types/contract'
 //   type { RegistryTableEntry } from '@flighthq/types/contract'
+//   type { BoundRegistryTableEntry } from '@flighthq/types/contract'
+//   type { TombstonedRegistryTableEntry } from '@flighthq/types/contract'
 
 namespace flight::render_wgpu {
 

@@ -1357,21 +1357,6 @@
       "authoredOn": "2026-10-08"
     },
     {
-      "id": "materials-pbr-optional-texture-variants",
-      "path": "flight/materials/pbr_materials.hpp",
-      "package": "@flighthq/materials",
-      "status": "complete",
-      "derivedFrom": "956e2284258a750b0d039f8e237a036e5449a8fc71aea68b39204c487fb6268d",
-      "reason": "The emitter passes optional<Texture> to std::get_if throughout the PBR constructors, and flattens StandardPbrMaterial and StandardPbrMaterialProperties into separate nominal owners even though the source private initializer accepts the former through structural interface inheritance.",
-      "change": "Uses the runtime optional_variant_get_if adapter for every generated Texture alternative and makes only the private shared initializer generic over its target and options carriers; its generated field-assignment body is otherwise unchanged.",
-      "equivalence": "Absent textures remain absent; a present texture returns only its active generated variant arm with the same reference identity. The private template accepts the same two upstream structural shapes and writes the same thirteen common fields from the same options. Color conversion, scalar defaults, field order, exact owners, and object identity remain generated from the upstream source.",
-      "whyNotAPatchOrRepair": "The invalid expressions must be replaced; insertion-only repairs cannot redirect std::get_if through represented optional storage, and target-neutral typed locals were measured and emitted the same invalid probes.",
-      "unblocks": "pbr_materials.hpp compiles and supplies the real Standard PBR, specular-glossiness PBR, property-block, and conversion functions despite flattened nominal C++ interface owners.",
-      "remaining": "None in this module.",
-      "expires": "when optional union narrowing emits access to the contained variant.",
-      "authoredOn": "2026-10-08"
-    },
-    {
       "id": "materials-unlit-optional-texture-variants",
       "path": "flight/materials/unlit_materials.hpp",
       "package": "@flighthq/materials",

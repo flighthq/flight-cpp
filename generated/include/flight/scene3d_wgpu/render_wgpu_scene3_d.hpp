@@ -17,6 +17,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/layout.hpp>
+
 #include <flight/types/wgpu_skinning_adapter.hpp>
 
 #include <flight/types/wgpu_render_state.hpp>
@@ -87,7 +89,7 @@ inline bool has_excess_forward_lights(flight::Ref<Scene3DLightsLike> lights) {
 }
 
 inline std::optional<flight::Ref<Material>> resolve_subset_material(flight::Ref<Mesh> mesh, double subset_index) {
-  flight::Array<std::optional<flight::Ref<Material>>> materials = mesh.materials;
+  flight::Array<std::optional<flight::Ref<MaterialValue>>> materials = mesh.materials;
   return ((subset_index < static_cast<double>(materials.size())) ? std::optional{materials.element(subset_index)} : std::nullopt);
 }
 
@@ -146,6 +148,11 @@ inline flight::Ref<LinearColor> scratch_instance_color = flight::Array{0.0, 0.0,
 //   // duration of the draw call it is passed to; renderers must not retain it.
 // cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/renderWgpuScene3D.ts: contextual
 // optionalSingle construction requires expression type evidence
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_KIND_6FEA82D7AA842443
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_KIND_6FEA82D7AA842443
+using kind_6fea82d7aa842443 = flight::types::kind_6fea82d7aa842443;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_KIND_6FEA82D7AA842443
 
 inline flight::Ref<Scene3DRenderProxy> proxy = flight::make_ref<Scene3DRenderProxy>(Scene3DRenderProxy{.alpha = 1.0, .color_matrix = nullptr, .color_scale_bias = nullptr, .joint_matrices = nullptr, .normal_matrices = nullptr, .material = flight::make_ref<Material>(Material{.kind = standard_material_kind}), .normal_matrix = create_matrix3(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt), .subset = flight::make_ref<MeshSubset>(MeshSubset{.index_count = 0.0, .index_offset = 0.0}), .world_matrix = create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt)});
 
@@ -276,7 +283,7 @@ inline flight::Ref<Matrix3> scratch_normal_matrix = create_matrix3(std::nullopt,
 
 
 // NOT GENERATED: function renderWgpuScene3D -- source line 67
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
 //   export function renderWgpuScene3D(
@@ -400,12 +407,7 @@ inline flight::Ref<Matrix3> scratch_normal_matrix = create_matrix3(std::nullopt,
 //     runtime.activeSkinnedRun = false;
 //   }
 //   
-// cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/renderWgpuScene3D.ts: a reference
-// assertion from flight::Ref<Matrix4Like> to flight::Ref<Matrix4> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/renderWgpuScene3D.ts: contextual
+// optionalSingle construction requires expression type evidence
 
 } // namespace flight::scene3d_wgpu

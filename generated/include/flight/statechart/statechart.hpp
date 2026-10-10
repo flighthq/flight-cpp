@@ -16,6 +16,17 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Statechart; }
+namespace flight::types { struct StatechartCondition; }
+namespace flight::types { struct StatechartInput; }
+namespace flight::types { struct StatechartInstance; }
+namespace flight::types { struct StatechartRegion; }
+namespace flight::types { struct StatechartSignals; }
+namespace flight::types { struct StatechartState; }
+namespace flight::types { struct StatechartTransition; }
+namespace flight::types { struct StatechartTransitionExplanation; }
+namespace flight::types { template <typename T> struct Signal; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/types/contract.hpp>
 

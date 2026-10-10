@@ -11,11 +11,21 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
+namespace flight::types { struct PointLight; }
+namespace flight::types { struct Scene3DLights; }
+namespace flight::types { struct SpotLight; }
+namespace flight::types { struct WgpuRenderState; }
+namespace flight::types { struct WgpuScene3DRuntime; }
+
 #include <flight/log/log.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
 
 namespace flight::scene3d_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline bool are_wgpu_scene3_dforward_light_selection_guards_enabled(flight::Ref<flight::types::WgpuRenderState> state) {
   return !((std::holds_alternative<flight::Null>(flight::scene3d_wgpu::get_wgpu_scene3_druntime(state)->forward_light_selection_guard) || std::holds_alternative<flight::Undefined>(flight::scene3d_wgpu::get_wgpu_scene3_druntime(state)->forward_light_selection_guard)));

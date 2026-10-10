@@ -13,7 +13,31 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/texture_atlas_region.hpp>
+
+#include <flight/types/spritesheet_frame_data.hpp>
+
+#include <flight/types/spritesheet_data.hpp>
+
+#include <flight/types/spritesheet_animation_data.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct LibgdxAtlasParseOptions; }
+namespace flight::types { struct SpritesheetAnimationData; }
+namespace flight::types { struct SpritesheetData; }
+namespace flight::types { struct SpritesheetFrameData; }
+namespace flight::types { struct TextureAtlas; }
+namespace flight::types { struct TextureAtlasRegion; }
+
 namespace flight::spritesheet_formats {
+
+using flight::types::ImportDiagnostic;
+using flight::types::SpritesheetAnimationData;
+using flight::types::SpritesheetData;
+using flight::types::SpritesheetFrameData;
+using flight::types::TextureAtlasRegion;
 struct LibgdxPage;
 struct LibgdxRegion;
 } // namespace flight::spritesheet_formats

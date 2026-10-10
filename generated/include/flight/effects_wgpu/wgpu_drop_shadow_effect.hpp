@@ -19,11 +19,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/render_wgpu/wgpu_render_target_pool.hpp>
 
-#include <flight/types/drop_shadow_effect.hpp>
-
 #include <flight/types/wgpu_render_target.hpp>
 
 #include <flight/types/wgpu_render_state.hpp>
+
+#include <flight/types/drop_shadow_effect.hpp>
 
 #include <flight/effects_wgpu/wgpu_effect_blit_shader.hpp>
 #include <flight/effects_wgpu/wgpu_effect_box_blur.hpp>
@@ -33,15 +33,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects_wgpu {
 
+extern const flight::types::WgpuRenderEffectRunner default_wgpu_drop_shadow_effect_runner;
+
 using flight::render_wgpu::acquire_wgpu_texture_render_target;
 using flight::render_wgpu::release_wgpu_texture_render_target;
 
 using flight::types::DropShadowEffect;
-
 using flight::types::WgpuRenderTargetPool;
-
-extern const flight::types::WgpuRenderEffectRunner default_wgpu_drop_shadow_effect_runner;
-
 using flight::types::WgpuRenderState;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_WIDTH_HEIGHT_FORMAT_3E01490122355EDD

@@ -8,6 +8,18 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/particle_format_codec.hpp>
+
+#include <flight/types/particle_emitter_config.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct ParseParticleConfigOptions; }
+namespace flight::types { struct ParticleConfigParseResult; }
+namespace flight::types { struct ParticleEmitterConfig; }
+namespace flight::types { struct ParticleFormatCodec; }
+
 #include <flight/importdiagnostics/import_diagnostic_collector.hpp>
 #include <flight/particles/particle_emitter_config.hpp>
 #include <flight/types/contract.hpp>
@@ -15,6 +27,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/particles_formats/format_registry.hpp>
 
 namespace flight::particles_formats {
+
+using flight::types::ImportDiagnostic;
+using flight::types::ParticleEmitterConfig;
+using flight::types::ParticleFormatCodec;
 
 inline flight::Ref<flight::types::ParticleEmitterConfig> parse_particle_config(flight::String text, std::optional<flight::Ref<flight::types::ParseParticleConfigOptions>> options = std::nullopt) {
   std::optional<flight::String> format = flight::particles_formats::detect_particle_format(text);

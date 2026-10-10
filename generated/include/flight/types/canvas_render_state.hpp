@@ -22,10 +22,15 @@ namespace flight::types { struct CanvasRenderSurfaceCreator; }
 namespace flight::types { struct CanvasRenderTarget; }
 namespace flight::types { struct CanvasTextureRenderTarget; }
 namespace flight::types { struct CanvasTextureResolvers; }
+namespace flight::types { struct Entity; }
 namespace flight::types { struct ImageSurfaceCreator; }
 namespace flight::types { struct Matrix; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Node3D; }
 namespace flight::types { struct Path; }
 namespace flight::types { struct PathMesh; }
+namespace flight::types { struct RenderCache; }
+namespace flight::types { struct RenderEffect; }
 namespace flight::types { struct RenderEffectPadding; }
 namespace flight::types { struct RenderProxy2D; }
 namespace flight::types { struct RenderProxy; }
@@ -39,6 +44,7 @@ namespace flight::types { struct StrokeStyle; }
 namespace flight::types { template <typename K> struct CanvasShapeCommand; }
 namespace flight::types { template <typename T> struct KeyedTable; }
 namespace flight::types { template <typename T> struct SlotTable; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct CanvasRenderState;
@@ -53,31 +59,43 @@ struct CanvasRenderStateRuntime;
 #include <flight/types/canvas_render_surface.hpp>
 #include <flight/types/canvas_render_target.hpp>
 #include <flight/types/canvas_texture_resolver.hpp>
+#include <flight/types/entity.hpp>
 #include <flight/types/registry_table.hpp>
 #include <flight/types/render_proxy2_d.hpp>
 #include <flight/types/render_state.hpp>
 #include <flight/types/scene2_drenderer.hpp>
 #include <flight/types/image_surface.hpp>
 #include <flight/types/matrix.hpp>
-#include <flight/types/canvas_shape_registry.hpp>
-#include <flight/types/render_proxy.hpp>
 #include <flight/types/renderable.hpp>
+#include <flight/types/render_proxy_adapter.hpp>
+#include <flight/types/render_proxy.hpp>
+#include <flight/types/render_registry_signals.hpp>
+#include <flight/types/canvas_shape_registry.hpp>
 #include <flight/types/render_effect_padding.hpp>
 #include <flight/types/renderer.hpp>
 #include <flight/types/path.hpp>
 #include <flight/types/stroke_style.hpp>
 #include <flight/types/path_mesh.hpp>
-#include <flight/types/render_proxy_adapter.hpp>
-#include <flight/types/entity.hpp>
-#include <flight/types/render_registry_signals.hpp>
-#include <flight/types/render_state.hpp>
 #include <flight/types/blend_mode.hpp>
+#include <flight/types/render_state.hpp>
 #include <flight/types/registry_table.hpp>
 #include <flight/types/render_proxy2_d.hpp>
+#include <flight/types/entity.hpp>
 
 namespace flight::types {
 
-struct CanvasRenderState : public RenderState {
+struct CanvasRenderState : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<CanvasRenderStateRuntime>> entity_runtime_key;
+  bool allow_smoothing;
+  double current_clip_depth;
+  std::optional<flight::Ref<flight::types::Scene2DClipHooks>> display_object_clip_hooks;
+  double pixel_ratio;
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageSurfaceCreator>>>>> image_surface_provider;
+  double render_alpha;
+  std::optional<flight::String> render_blend_mode;
+  std::optional<flight::Ref<flight::types::Matrix>> render_transform2_d;
+  flight::Ref<flight::types::Scene3DGraphSyncPolicy> scene_graph_sync_policy;
+  bool round_pixels;
   std::optional<std::function<void(flight::Ref<CanvasRenderState>, std::optional<flight::String>)>> apply_blend_mode;
   std::optional<std::function<std::optional<flight::String>(flight::Ref<CanvasRenderState>, flight::Ref<flight::types::RenderProxy2D>)>> canvas_css_filter_resolver;
   flight::host_sdl::GlCanvas canvas;
@@ -85,15 +103,22 @@ struct CanvasRenderState : public RenderState {
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CanvasRenderRegistries>>>> registries;
 };
 
-struct CanvasRenderRegistries : public RenderRegistries {
+struct CanvasRenderRegistries : public flight::ReferenceEnabled {
+  std::optional<std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::CanvasShapeCommand<flight::types::ShapeCommandKey>>>>> canvas_shape_commands;
+  std::optional<std::shared_ptr<flight::types::SlotTable<std::function<void(flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::RenderProxy>, std::optional<flight::Ref<flight::types::RenderProxy>>)>>>> color_adjustments;
+  std::optional<std::shared_ptr<flight::types::SlotTable<flight::Ref<flight::types::ColorAdjustmentUnsupportedGuard>>>> color_adjustment_unsupported_guard;
+  std::optional<std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::RenderEffectPaddingResolver>>>> effect_padding_resolvers;
+  std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::Renderer>>> renderers;
+  std::optional<std::shared_ptr<flight::types::SlotTable<flight::Ref<flight::types::RenderRootGuard>>>> render_root_guard;
+  std::optional<std::shared_ptr<flight::types::SlotTable<flight::Ref<flight::types::StrokeTessellator>>>> stroke_tessellator;
   std::variant<std::function<void(flight::Ref<CanvasRenderState>, std::optional<flight::String>)>, flight::Null, flight::Undefined> blend_mode_application = std::variant<std::function<void(flight::Ref<CanvasRenderState>, std::optional<flight::String>)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::optional<std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::CanvasMaterialRenderer>>>> material_renderers;
   std::shared_ptr<flight::types::KeyedTable<flight::types::CanvasRenderEffectRunner>> render_effects;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_28EB95EF35DA39DB
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_28EB95EF35DA39DB
-struct callable_clear_signals_28eb95ef35da39db : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_A3A45D7F113629D3
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_A3A45D7F113629D3
+struct callable_clear_signals_a3a45d7f113629d3 : public flight::ReferenceEnabled {
   std::function<void(flight::Ref<flight::types::RenderRegistryTable>, flight::String)> callable;
   std::function<void()> clear;
   flight::Ref<flight::types::RenderRegistrySignals> signals;
@@ -101,10 +126,20 @@ struct callable_clear_signals_28eb95ef35da39db : public flight::ReferenceEnabled
     return callable(argument_0, argument_1);
   }
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_28EB95EF35DA39DB
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_A3A45D7F113629D3
 
-struct CanvasRenderStateRuntime : public RenderStateRuntime {
+struct CanvasRenderStateRuntime : public flight::ReferenceEnabled {
+  std::optional<flight::ErasedRef> binding;
+  std::optional<flight::String> uid;
+  double current_frame_id;
+  std::optional<std::function<void(flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::Renderable>, flight::Ref<flight::types::RenderProxy2D>)>> render_adapt_hook;
+  flight::WeakMap<flight::Ref<flight::types::Renderable>, flight::Ref<flight::types::RenderProxyAdapter>> render_proxy_adapter_map;
+  flight::WeakMap<flight::Ref<flight::types::Renderable>, flight::Ref<flight::types::RenderProxy>> render_proxy_map;
+  flight::Set<flight::Ref<flight::types::Renderable>> render_proxy_sources;
+  flight::Ref<std::optional<flight::Ref<callable_clear_signals_a3a45d7f113629d3>>> registry_miss;
   flight::Ref<CanvasRenderRegistries> registries;
+  double renderer_map_id;
+  flight::Array<flight::Ref<flight::types::Renderable>> temp_stack;
   flight::Array<flight::Ref<flight::types::CanvasRenderPass>> pass_stack;
   std::optional<flight::Ref<flight::types::CanvasRenderTarget>> current_render_target;
   double current_alpha;
@@ -116,5 +151,13 @@ struct CanvasRenderStateRuntime : public RenderStateRuntime {
   flight::Array<std::function<void(flight::Ref<CanvasRenderState>)>> teardowns;
   std::optional<flight::Map<flight::String, flight::Ref<flight::types::CanvasTextureRenderTarget>>> canvas_blend_effect_backdrops;
 };
+
+inline flight::Ref<CanvasRenderStateRuntime> read_canvas_render_state_runtime_owner(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<CanvasRenderState>>>> owner) {
+  return flight::row_get<std::optional<flight::Ref<CanvasRenderStateRuntime>>>(owner, flight::types::entity_runtime_key).value();
+}
+
+inline void write_canvas_render_state_runtime_owner(flight::types::EntityConstruction<flight::Ref<CanvasRenderState>> owner, flight::Ref<CanvasRenderStateRuntime> runtime) {
+  flight::row_set(owner, flight::types::entity_runtime_key, std::optional<flight::Ref<CanvasRenderStateRuntime>>{runtime});
+}
 
 } // namespace flight::types

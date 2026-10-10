@@ -32,6 +32,12 @@ inline flight::Ref<LinearColor> specular = flight::Array{0.0, 0.0, 0.0, 0.0};
 
 inline flight::Ref<LinearColor> white = flight::Array{1.0, 1.0, 1.0, 1.0};
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_ANONYMOUS_3E6B344A3B6BD77E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_ANONYMOUS_3E6B344A3B6BD77E
+struct anonymous_3e6b344a3b6bd77e : public flight::ReferenceEnabled {
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_ANONYMOUS_3E6B344A3B6BD77E
+
 inline flight::Ref<PhongMaterial> fallback_material = flight::make_ref<PhongMaterial>(PhongMaterial{});
 
 

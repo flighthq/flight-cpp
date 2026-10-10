@@ -13,6 +13,7 @@ namespace flight::types { struct Node2DTraits; }
 namespace flight::types { struct TimelineCueRegistry; }
 namespace flight::types { struct TimelineSignals; }
 namespace flight::types { struct TimelineSource; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct Timeline;

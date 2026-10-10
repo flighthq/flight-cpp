@@ -12,7 +12,7 @@ namespace flight::types { struct EmbeddedImageResourceReference; }
 namespace flight::types { struct Entity; }
 namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct ExternalImageResourceReference; }
-namespace flight::types { struct Node3DTraits; }
+namespace flight::types { struct Node3D; }
 namespace flight::types { struct Scene3DMetadata; }
 
 namespace flight::types {
@@ -34,7 +34,7 @@ struct Scene3D : public flight::ReferenceEnabled {
   flight::Record<flight::String, flight::Ref<flight::types::AnimationClip>> animations;
   std::optional<flight::Ref<flight::types::Scene3DMetadata>> metadata;
   flight::Array<flight::types::ImageResourceReference> resources;
-  flight::types::Node3D root;
+  flight::Ref<flight::types::Node3D> root;
 };
 
 } // namespace flight::types

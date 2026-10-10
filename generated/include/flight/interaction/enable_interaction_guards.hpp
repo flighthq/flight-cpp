@@ -11,6 +11,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/node.hpp>
+
+namespace flight::types { struct InteractionHitEligibility; }
+namespace flight::types { struct NodeTraits; }
+namespace flight::types { template <typename Traits> struct Node; }
+namespace flight::types { template <typename Traits> struct NodeRuntime; }
+
 #include <flight/log/log.hpp>
 #include <flight/node/node.hpp>
 #include <flight/types/contract.hpp>
@@ -18,6 +25,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/interaction/node_interaction_state.hpp>
 
 namespace flight::interaction {
+
+using flight::types::NodeRuntime;
+using flight::types::NodeTraits;
 
 inline void disable_interaction_guards() {
   flight::interaction::set_interaction_connect_guard(std::nullopt);

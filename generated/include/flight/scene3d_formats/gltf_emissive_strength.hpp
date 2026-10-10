@@ -4,6 +4,7 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: variable (binding) -- source line 9
+#include <flight/any.hpp>
 #include <flight/record.hpp>
 #include <functional>
 #include <optional>

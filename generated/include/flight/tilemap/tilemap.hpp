@@ -20,7 +20,6 @@
 #include <cstdint>
 #include <flight/sequence_view.hpp>
 #include <flight/symbol.hpp>
-#include <functional>
 #include <optional>
 #include <random>
 #include <flight/runtime.hpp>
@@ -50,8 +49,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/material.hpp>
 
-#include <flight/types/has_bounds_rectangle.hpp>
-
 #include <flight/types/entity.hpp>
 
 #include <flight/entity/entity.hpp>
@@ -65,7 +62,6 @@ using flight::types::TilemapData;
 using flight::types::TilemapRuntime;
 using flight::types::TilemapSignals;
 using flight::types::Node2DTraits;
-using flight::types::BoundsNodeAny;
 using flight::types::MaterialData;
 using flight::types::EntityConstruction;
 using flight::types::Node;
@@ -308,28 +304,17 @@ inline void resize_tilemap(flight::Ref<Tilemap> tilemap, double columns, double 
 // cpp emission failed for @flighthq/tilemap/packages/tilemap/src/tilemap.ts: contextual union value type
 // flight::Array is not a represented runtime domain
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TILEMAP_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_A749868D54F33869
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TILEMAP_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_A749868D54F33869
-struct can_add_child_compute_local_bounds_rectangle_a749868d54f33869 : public flight::ReferenceEnabled {
-  std::optional<std::function<bool(std::shared_ptr<Node<flight::Ref<Node2DTraits>>>, std::shared_ptr<Node<flight::Ref<Node2DTraits>>>)>> can_add_child;
-  std::optional<std::function<void(flight::Ref<Rectangle>, flight::Ref<BoundsNodeAny>)>> compute_local_bounds_rectangle;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TILEMAP_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_A749868D54F33869
-
 
 // NOT GENERATED: variable (binding) -- source line 261
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   const defaultMethods: Partial<MethodsOf<TilemapRuntime>> = {
 //     computeLocalBoundsRectangle: computeTilemapLocalBoundsRectangle,
 //   };
 //   
-// cpp emission failed for @flighthq/tilemap/packages/tilemap/src/tilemap.ts: contextual union callable value
-// type std::function<void(flight::Ref<Rectangle>, flight::Ref<Node>)> agrees with no alternative's signature:
-// the destination holds [std::function<void(flight::Ref<Rectangle>, flight::Ref<BoundsNodeAny>)>]. A callable is
-// a represented domain, so the obstacle is that the destination's signature cannot call this one. Declare the
-// value's parameters so the destination's signature supplies them, and its result as one the destination holds
+// cpp emission failed for @flighthq/tilemap/packages/tilemap/src/tilemap.ts: Partial<T> requires a statically
+// resolvable C++ object shape; T is named
 
 
 // NOT GENERATED: function createTilemapRuntime -- source line 65

@@ -16,9 +16,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/voxel_grid.hpp>
+
 #include <flight/types/texture_source.hpp>
 
 #include <flight/types/texture.hpp>
+
+#include <flight/types/render_target.hpp>
+
+#include <flight/types/image_resource.hpp>
 
 #include <flight/types/cube_texture.hpp>
 
@@ -28,9 +34,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::texture {
 
 using flight::types::CubeTexture;
+using flight::types::ImageResource;
+using flight::types::RenderTarget;
 using flight::types::Texture;
 using flight::types::TextureSource;
 using flight::types::TextureSourceCubeFaces;
+using flight::types::VoxelGrid;
 
 inline flight::Ref<TextureSourceCubeFaces> get_cube_sources(flight::Ref<CubeTexture> texture) {
   return texture->sources;
@@ -58,7 +67,7 @@ inline void copy_cube_texture(flight::Ref<CubeTexture> out, flight::Ref<CubeText
 
 
 // NOT GENERATED: function createCubeTexture -- source line 23
-// refusal: cpp-typescript-utility-unexpanded:Extract [compiler-restriction]
+// refusal: cpp-reference-assertion-without-heritage [target-runtime]
 //
 // The source it stood for:
 //   export function createCubeTexture(opts?: Readonly<CreateCubeTextureOptions>): CubeTexture {
@@ -70,8 +79,12 @@ inline void copy_cube_texture(flight::Ref<CubeTexture> out, flight::Ref<CubeText
 //     }) as CubeTexture;
 //   }
 //   
-// cpp emission failed for @flighthq/texture/packages/texture/src/cubeTexture.ts: Extract was not resolved before
-// emission and has no C++ lowering
+// cpp emission failed for @flighthq/texture/packages/texture/src/cubeTexture.ts: a reference assertion from
+// flight::Ref<TextureCube> to flight::Ref<CubeTexture> has no heritage to cast along: the declarations share no
+// emitted C++ class-heritage path (source interface and intersection relationships flatten into independent
+// owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the
+// exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target
+// owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
 
 inline bool equals_cube_texture(std::variant<flight::Ref<CubeTexture>, flight::Null, flight::Undefined> a, std::variant<flight::Ref<CubeTexture>, flight::Null, flight::Undefined> b) {
   if (((std::holds_alternative<flight::Null>(a) || std::holds_alternative<flight::Undefined>(a)) || (std::holds_alternative<flight::Null>(b) || std::holds_alternative<flight::Undefined>(b)))) {
@@ -82,7 +95,7 @@ inline bool equals_cube_texture(std::variant<flight::Ref<CubeTexture>, flight::N
 
 
 // NOT GENERATED: function getCubeTextureFaceSize -- source line 40
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
+// refusal: cpp-contextual-union-missing-expression-type:optionalVariant [compiler-restriction]
 //
 // The source it stood for:
 //   export function getCubeTextureFaceSize(cube: Readonly<CubeTexture>): number {
@@ -94,11 +107,11 @@ inline bool equals_cube_texture(std::variant<flight::Ref<CubeTexture>, flight::N
 //     return -1;
 //   }
 //   
-// cpp emission failed for @flighthq/texture/packages/texture/src/cubeTexture.ts: contextual optionalSingle
+// cpp emission failed for @flighthq/texture/packages/texture/src/cubeTexture.ts: contextual optionalVariant
 // construction requires expression type evidence
 
 inline bool is_cube_texture_complete(flight::Ref<CubeTexture> cube) {
-  return get_cube_sources(cube)->every([=](std::optional<flight::Ref<TextureSource>> face) { return face.has_value(); });
+  return get_cube_sources(cube)->every([=](std::optional<std::variant<flight::Ref<TextureSource>, flight::Ref<Bitmap>, flight::Ref<CompressedImageResource>, flight::Ref<ExternalTexture>, flight::Ref<ImageResource>, flight::Ref<RenderTarget>, flight::Ref<VoxelGrid>>> face) { return face.has_value(); });
 }
 
 

@@ -9,6 +9,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::path { struct StrokePathGeometry; }
 namespace flight::path { struct StrokePathPieceGeometry; }
+namespace flight::types { struct Path; }
+namespace flight::types { struct StrokePathTessellationExplanation; }
+namespace flight::types { struct StrokeStyle; }
 
 #include <flight/types/contract.hpp>
 #include <flight/path/stroke_path_geometry.hpp>

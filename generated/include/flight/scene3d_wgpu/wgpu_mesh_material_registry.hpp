@@ -9,29 +9,27 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
+namespace flight::types { struct Material; }
+namespace flight::types { struct TombstonedRegistryTableEntry; }
+namespace flight::types { struct WgpuMeshMaterialRenderer; }
+namespace flight::types { struct WgpuRenderRegistries; }
+namespace flight::types { struct WgpuRenderState; }
+namespace flight::types { struct WgpuRenderStateRuntime; }
+namespace flight::types { template <typename T> struct BoundRegistryTableEntry; }
+namespace flight::types { template <typename T> struct KeyedTable; }
+
 #include <flight/registry/registry_table.hpp>
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 #include <flight/types/contract.hpp>
 
 namespace flight::scene3d_wgpu {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_563BE0B27963288E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_563BE0B27963288E
-struct state_value_563be0b27963288e : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::Ref<flight::types::WgpuMeshMaterialRenderer> value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_563BE0B27963288E
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_CF243C159232B529
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_CF243C159232B529
-struct state_cf243c159232b529 : public flight::ReferenceEnabled {
-  flight::String state;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_CF243C159232B529
+using flight::types::WgpuRenderState;
 
 inline std::optional<flight::Ref<flight::types::WgpuMeshMaterialRenderer>> get_wgpu_mesh_material_renderer(flight::Ref<flight::types::WgpuRenderState> state, flight::String kind) {
-  auto entry = flight::render_wgpu::get_wgpu_render_state_runtime(state)->registries->mesh_material_renderers->entries.get(kind);
+  std::optional<flight::types::RegistryTableEntry<flight::Ref<flight::types::WgpuMeshMaterialRenderer>>> entry = flight::render_wgpu::get_wgpu_render_state_runtime(state)->registries->mesh_material_renderers->entries.get(kind);
   return ((entry.has_value() && entry.value().index() == 0) ? std::optional<flight::Ref<flight::types::WgpuMeshMaterialRenderer>>{std::get<0>(entry.value())->value} : std::nullopt);
 }
 
@@ -39,14 +37,6 @@ inline void register_wgpu_mesh_material_renderer(flight::Ref<flight::types::Wgpu
   auto runtime = flight::render_wgpu::get_wgpu_render_state_runtime(state);
   (runtime->registries->mesh_material_renderers = flight::registry::with_registry_table_entry<flight::Ref<flight::types::WgpuMeshMaterialRenderer>>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::WgpuMeshMaterialRenderer>>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::WgpuMeshMaterialRenderer>>>>>>(runtime->registries->mesh_material_renderers)), kind, renderer));
 }
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_A79A299CC3BFC768
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_A79A299CC3BFC768
-struct state_value_a79a299cc3bfc768 : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::Ref<flight::types::WgpuMeshMaterialRenderer> value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_A79A299CC3BFC768
 
 inline std::optional<flight::Ref<flight::types::WgpuMeshMaterialRenderer>> resolve_wgpu_mesh_material_renderer(flight::Ref<flight::types::WgpuRenderState> state, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>> material) {
   flight::Map<flight::String, flight::types::RegistryTableEntry<flight::Ref<flight::types::WgpuMeshMaterialRenderer>>> entries = flight::render_wgpu::get_wgpu_render_state_runtime(state)->registries->mesh_material_renderers->entries;

@@ -9,6 +9,7 @@
 //   missing: function appendMeshDocument -- source line 718
 #include <cmath>
 #include <cstdint>
+#include <flight/any.hpp>
 #include <flight/boolean.hpp>
 #include <flight/data_view.hpp>
 #include <flight/record.hpp>

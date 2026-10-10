@@ -22,6 +22,12 @@ namespace flight::scene3d_wgpu {
 
 using flight::types::WgpuRenderState;
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_ANONYMOUS_3E6B344A3B6BD77E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_ANONYMOUS_3E6B344A3B6BD77E
+struct anonymous_3e6b344a3b6bd77e : public flight::ReferenceEnabled {
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_ANONYMOUS_3E6B344A3B6BD77E
+
 inline flight::Ref<NormalMaterial> fallback_material = flight::make_ref<NormalMaterial>(NormalMaterial{});
 
 

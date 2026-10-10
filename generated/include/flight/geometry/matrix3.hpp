@@ -513,7 +513,7 @@ inline void write_matrix3_to_float32_array(flight::Float32Array out, double offs
 inline flight::Float32Array identity_flight_value_variable__u00005f__u00005f_identity_flight_private_50ef829cd94ebb40 = flight::Float32Array(flight::Array{1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0});
 
 inline flight::Ref<flight::types::Matrix3> create_matrix3(std::optional<double> m00 = std::nullopt, std::optional<double> m01 = std::nullopt, std::optional<double> m02 = std::nullopt, std::optional<double> m10 = std::nullopt, std::optional<double> m11 = std::nullopt, std::optional<double> m12 = std::nullopt, std::optional<double> m20 = std::nullopt, std::optional<double> m21 = std::nullopt, std::optional<double> m22 = std::nullopt) {
-  flight::Float32Array m = flight::Float32Array(identity_flight_value_variable__u00005f__u00005f_identity_flight_private_50ef829cd94ebb40);
+  flight::Float32Array m = identity_flight_value_variable__u00005f__u00005f_identity_flight_private_50ef829cd94ebb40.slice();
   if (m00.has_value()) {
     ([&]() { auto&& typed_array_115 = m; const auto typed_index_115 = 0.0; const auto typed_value_115 = m00.value(); return typed_array_115.set_index(typed_index_115, typed_value_115); }());
   }

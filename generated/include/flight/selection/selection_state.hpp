@@ -10,6 +10,7 @@
 //   missing: function removeNodeFromSelection -- source line 82
 //   missing: function selectAllNodes -- source line 98
 //   missing: function selectNode -- source line 130
+#include <flight/erased_ref.hpp>
 #include <functional>
 #include <optional>
 #include <flight/runtime.hpp>
@@ -36,7 +37,7 @@ using flight::types::SelectionStateRuntime;
 
 template <typename NodeType = flight::Ref<HierarchyNodeAny>>
 inline flight::Ref<SelectionState<NodeType>> create_selection_state() {
-  flight::Ref<SelectionState<NodeType>> state = flight::make_ref<SelectionState<NodeType>>(SelectionState<NodeType>{});
+  flight::Ref<SelectionState<NodeType>> state = flight::erased_ref_as<SelectionState<NodeType>>({});
   flight::Ref<SelectionStateRuntime<NodeType>> runtime = flight::make_ref<SelectionStateRuntime<NodeType>>(SelectionStateRuntime<NodeType>{.active_node = nullptr, .binding = nullptr, .selected_node_set = flight::Set<NodeType>(), .selected_nodes = flight::Array<NodeType>{}, .signals = flight::make_ref<SelectionSignals<NodeType>>(SelectionSignals<NodeType>{.on_active_change = create_signal<std::function<void(std::optional<flight::Ref<HierarchyNodeAny>>)>>(), .on_change = create_signal<std::function<void(flight::Array<NodeType>)>>()})});
   (state->entity_runtime_key = runtime);
   return state;

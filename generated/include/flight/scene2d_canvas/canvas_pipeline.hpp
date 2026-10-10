@@ -6,6 +6,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct CanvasRenderEffectContext; }
+namespace flight::types { struct CanvasRenderRegistries; }
+namespace flight::types { struct RenderEffect; }
+namespace flight::types { struct Renderer; }
+namespace flight::types { template <typename T> struct KeyedTable; }
+
 #include <flight/registry/registry_table.hpp>
 #include <flight/types/contract.hpp>
 
@@ -13,9 +19,15 @@ namespace flight::scene2d_canvas {
 
 inline void initialize_empty_canvas_render_registries(flight::Ref<flight::types::CanvasRenderRegistries> out) {
   (out->stroke_tessellator = std::nullopt);
-  (out->render_effects = flight::registry::create_keyed_table<flight::types::CanvasRenderEffectRunner>(flight::String("CanvasRenderEffect"), flight::String("Unregistered")));
-  (out->renderers = flight::registry::create_keyed_table<flight::Ref<flight::types::Renderer>>(flight::String("NodeRenderer"), flight::String("Unregistered")));
+  (out->render_effects = flight::registry::create_keyed_table(flight::String("CanvasRenderEffect"), flight::String("Unregistered")));
+  (out->renderers = flight::registry::create_keyed_table(flight::String("NodeRenderer"), flight::String("Unregistered")));
 }
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_ANONYMOUS_3E6B344A3B6BD77E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_ANONYMOUS_3E6B344A3B6BD77E
+struct anonymous_3e6b344a3b6bd77e : public flight::ReferenceEnabled {
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_ANONYMOUS_3E6B344A3B6BD77E
 
 inline flight::Ref<flight::types::CanvasRenderRegistries> allocate_empty_canvas_render_registries() {
   auto out = flight::make_ref<flight::types::CanvasRenderRegistries>(flight::types::CanvasRenderRegistries{});

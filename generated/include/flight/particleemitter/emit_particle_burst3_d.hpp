@@ -11,6 +11,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/particle_emitter2_d.hpp>
+
+namespace flight::types { struct ParticleEmitter3D; }
+namespace flight::types { struct ParticleEmitterConfig; }
+namespace flight::types { struct ParticleEmitterData; }
+namespace flight::types { struct ParticleEmitterState; }
+
 #include <flight/particles/curve.hpp>
 #include <flight/particles/particle_emitter_state.hpp>
 #include <flight/particles/particle_spawn_offset.hpp>
@@ -18,6 +25,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/particleemitter/particle_emitter3_d.hpp>
 
 namespace flight::particleemitter {
+
+using flight::types::ParticleEmitterData;
 
 inline const double particle_transform_stride_flight_value_variable__u000050__u000041__u000052__u000054__u000049__u000043__u00004c__u000045__u00005f__u000054__u000052__u000041__u00004e__u000053__u000046__u00004f__u000052__u00004d__u00005f__u000053__u000054__u000052__u000049__u000044__u000045__flight_private_e17ad31a122c0226 = 4.0;
 

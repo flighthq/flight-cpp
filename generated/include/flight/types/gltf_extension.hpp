@@ -16,7 +16,9 @@ namespace flight::types { struct GltfTextureInfo; }
 namespace flight::types { struct ImportDiagnostic; }
 namespace flight::types { struct Scene3DDocument; }
 namespace flight::types { struct Texture2D; }
-namespace flight::types { struct TextureCommon; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
 namespace flight::types { struct Transform3D; }
 
 namespace flight::types {

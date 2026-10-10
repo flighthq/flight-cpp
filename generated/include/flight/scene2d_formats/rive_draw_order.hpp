@@ -10,7 +10,21 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/blend_mode.hpp>
+#include <flight/types/rive_import_registry.hpp>
+
+#include <flight/types/rive_document.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct RiveArtboardGraph; }
+namespace flight::types { struct RiveArtboardImportContext; }
+namespace flight::types { struct RiveCoreObject; }
+namespace flight::types { struct RiveImportRegistry; }
+namespace flight::types { struct RiveProperty; }
+namespace flight::types { template <typename Traits> struct Node; }
+namespace flight::types { template <typename Traits> struct NodeOrderList; }
 
 #include <flight/importdiagnostics/import_diagnostic_collector.hpp>
 #include <flight/node/hierarchy.hpp>
@@ -20,7 +34,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene2d_formats {
 
-using flight::types::blend_mode;
+using flight::types::ImportDiagnostic;
+using flight::types::RiveArtboardGraph;
+using flight::types::RiveArtboardImportContext;
+using flight::types::RiveCoreObject;
+using flight::types::RiveImportRegistry;
+using flight::types::RiveProperty;
 
 inline std::optional<double> read_rive_draw_id(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>> object, double key) {
   auto property = flight::row_get<flight::RowKey<"properties">>(object).find([=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == key); });
@@ -66,32 +85,6 @@ inline std::optional<flight::Ref<is_above_node_d8a361336d3722c7>> resolve_rive_d
   return std::optional<flight::Ref<is_above_node_d8a361336d3722c7>>{flight::make_ref<is_above_node_d8a361336d3722c7>(is_above_node_d8a361336d3722c7{.is_above = (read_rive_draw_id(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(target)), rive_placement_value) == rive_placement_after), .node = drawable.value()})};
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_AB6632AB2286FF57
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_AB6632AB2286FF57
-struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_ab6632ab2286ff57 : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::Node2DData>> data;
-  bool enabled;
-  flight::String kind;
-  std::optional<flight::String> name;
-  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>> entity_runtime_key;
-  double alpha;
-  bool visible;
-  std::optional<flight::String> blend_mode;
-  std::optional<flight::Ref<flight::types::ClipRegion>> clip;
-  std::optional<flight::Ref<flight::types::Material>> material;
-  std::optional<flight::Ref<flight::types::MaterialData>> material_data;
-  double pivot_x;
-  double pivot_y;
-  double rotation;
-  double scale_x;
-  double scale_y;
-  double skew_x;
-  double skew_y;
-  double x;
-  double y;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_FORMATS_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_AB6632AB2286FF57
-
 inline void apply_rive_draw_order(flight::Array<std::optional<flight::types::Node2D>> nodes, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveArtboardGraph>>>> artboard, flight::types::DisplayObject root, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
   auto lists = flight::Map<flight::types::Node2D, std::shared_ptr<flight::types::NodeOrderList<flight::Ref<flight::types::Node2DTraits>>>>();
   {
@@ -112,8 +105,8 @@ inline void apply_rive_draw_order(flight::Array<std::optional<flight::types::Nod
             continue;
           }
         }
-        std::optional<flight::types::Node2D> parent = flight::structural_ref_cast<flight::types::Node2D>(flight::node::get_node_parent<flight::Ref<flight::types::Node2DTraits>>(governed.value()).value());
-        if ((!parent.has_value() || (parent.value() != flight::node::get_node_parent<flight::Ref<flight::types::Node2DTraits>>(target.value()->node)))) {
+        std::optional<flight::types::Node2D> parent = static_cast<std::optional<flight::types::Node2D>>(flight::node::get_node_parent(governed.value()));
+        if ((!parent.has_value() || (parent.value() != flight::node::get_node_parent(target.value()->node)))) {
           flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("rive.draw-rule-crosses-parent"), flight::String("applyRiveDrawOrder"), std::nullopt);
           {
             (index += 1.0);
@@ -127,10 +120,10 @@ inline void apply_rive_draw_order(flight::Array<std::optional<flight::types::Nod
           lists.set(parent.value(), list.value());
         }
         if (target.value()->is_above) {
-          flight::node::set_node_order_list_entry_above<flight::Ref<flight::types::Node2DTraits>>(list.value(), flight::structural_ref_cast<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>(governed.value()), target.value()->node);
+          flight::node::set_node_order_list_entry_above<flight::Ref<flight::types::Node2DTraits>>(list.value(), governed.value(), target.value()->node);
         }
         else {
-          flight::node::set_node_order_list_entry_below<flight::Ref<flight::types::Node2DTraits>>(list.value(), flight::structural_ref_cast<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>(governed.value()), target.value()->node);
+          flight::node::set_node_order_list_entry_below<flight::Ref<flight::types::Node2DTraits>>(list.value(), governed.value(), target.value()->node);
         }
       }
       (index += 1.0);

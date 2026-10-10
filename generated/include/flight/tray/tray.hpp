@@ -311,6 +311,14 @@ inline flight::Ref<TrayEventAttachResult> on_tray_menu_selection(flight::Ref<Hos
   return attach_tray_event<flight::Ref<TrayMenuSelectionEvent>>(host_tray_menu_selection_events, tray, listener);
 }
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TRAY_OUTCOME_FFC01D98CC0198BC
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TRAY_OUTCOME_FFC01D98CC0198BC
+template <typename Provider, typename Result>
+struct outcome_ffc01d98cc0198bc : public flight::ReferenceEnabled {
+  flight::String outcome;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TRAY_OUTCOME_FFC01D98CC0198BC
+
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TRAY_ERROR_OUTCOME_A8C907E8A016A45C
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TRAY_ERROR_OUTCOME_A8C907E8A016A45C
 template <typename Provider, typename Result>

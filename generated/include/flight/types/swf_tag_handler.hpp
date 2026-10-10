@@ -13,6 +13,7 @@ namespace flight::types { struct AudioResource; }
 namespace flight::types { struct GlyphOutlineSource; }
 namespace flight::types { struct ImportDiagnostic; }
 namespace flight::types { struct MorphShape; }
+namespace flight::types { struct Node2DTraits; }
 namespace flight::types { struct RenderEffect; }
 namespace flight::types { struct RichText; }
 namespace flight::types { struct Shape; }
@@ -20,6 +21,7 @@ namespace flight::types { struct Texture2D; }
 namespace flight::types { struct TimelineAudioCue; }
 namespace flight::types { struct TimelineCue; }
 namespace flight::types { struct TimelineLabel; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct SwfTagReader;

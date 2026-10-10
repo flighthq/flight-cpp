@@ -11,23 +11,24 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { struct Node3DTraits; }
+#include <flight/types/skeleton3_d.hpp>
+
+#include <flight/types/node3_d.hpp>
+
+namespace flight::types { struct Node3D; }
 namespace flight::types { struct Skeleton3D; }
-namespace flight::types { template <typename Traits> struct Node; }
 
 #include <flight/log/log.hpp>
-#include <flight/types/log.hpp>
-#include <flight/types/node.hpp>
-#include <flight/types/node3_d.hpp>
-#include <flight/types/skeleton3_d.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/skeleton3d/skeleton3d.hpp>
 
 namespace flight::skeleton3d {
 
+using flight::types::Node3D;
 using flight::types::Skeleton3D;
 
 inline void warn_on_degenerate_skeleton3_dbind_pose(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Skeleton3D>>>> skeleton, double joint_index) {
-  flight::log::log_once(flight::String("skeleton3d:degenerate-bind-pose:") + flight::to_string(joint_index) + flight::String(""), flight::types::LogLevel::Warn, flight::types::LogData{std::in_place_type<flight::Record<flight::String, flight::Any>>, flight::Record<flight::String, flight::Any>{{flight::String("joint"), ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"joints">>(skeleton).get(joint_index); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"name">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("<unnamed>"); }())}, {flight::String("jointIndex"), joint_index}, {flight::String("message"), flight::String("setSkeleton3DBindPose: a joint has no invertible world matrix, so its inverse-bind entry was set to identity and that joint will not deform — a zero scale on the joint or an ancestor is the usual cause, and an imported rig can carry one.")}}}, std::nullopt);
+  flight::log::log_once(flight::String("skeleton3d:degenerate-bind-pose:") + flight::to_string(joint_index) + flight::String(""), flight::types::LogLevel::Warn, flight::types::LogData{std::in_place_type<flight::Record<flight::String, flight::Any>>, flight::Record<flight::String, flight::Any>{{flight::String("joint"), ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"joints">>(skeleton).get(joint_index); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->name; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("<unnamed>"); }())}, {flight::String("jointIndex"), joint_index}, {flight::String("message"), flight::String("setSkeleton3DBindPose: a joint has no invertible world matrix, so its inverse-bind entry was set to identity and that joint will not deform — a zero scale on the joint or an ancestor is the usual cause, and an imported rig can carry one.")}}}, std::nullopt);
 }
 
 inline bool skeleton3_dguards_enabled = false;

@@ -6,10 +6,18 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
+namespace flight::types { struct WgpuBitmapShader; }
+namespace flight::types { struct WgpuRenderState; }
+namespace flight::types { struct WgpuRenderStateRuntime; }
+
 #include <flight/types/contract.hpp>
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 
 namespace flight::render_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline void register_wgpu_bitmap_shader(flight::Ref<flight::types::WgpuRenderState> state, flight::Ref<flight::types::WgpuBitmapShader> shader) {
   (flight::render_wgpu::get_wgpu_render_state_runtime(state)->default_bitmap_shader = std::optional<flight::Ref<flight::types::WgpuBitmapShader>>{shader});

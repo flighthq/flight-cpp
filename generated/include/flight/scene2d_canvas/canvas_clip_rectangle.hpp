@@ -6,10 +6,24 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/rectangle.hpp>
+
+#include <flight/types/matrix.hpp>
+
+#include <flight/types/canvas_render_state.hpp>
+
+namespace flight::types { struct CanvasRenderState; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct Rectangle; }
+
 #include <flight/types/contract.hpp>
 #include <flight/scene2d_canvas/canvas_transform.hpp>
 
 namespace flight::scene2d_canvas {
+
+using flight::types::CanvasRenderState;
+using flight::types::Matrix;
+using flight::types::Rectangle;
 
 inline void pop_canvas_clip_rectangle(flight::Ref<flight::types::CanvasRenderState> state) {
   state->context.restore();

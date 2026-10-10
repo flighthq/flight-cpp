@@ -5,7 +5,6 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function ensureWgpuQuadBatchResources -- source line 92
 //   missing: function packWgpuQuadBatchMaterialInstance -- source line 287
-//   missing: function recordWgpuQuadBatchColorScaleBias -- source line 364
 //   missing: function createWgpuTextureSamplerBindGroup -- source line 461
 //   missing: function flushWgpuQuadBatchWriter -- source line 135
 #include <cmath>
@@ -17,6 +16,7 @@
 #include <flight/weak_map.hpp>
 #include <optional>
 #include <random>
+#include <stdexcept>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -230,34 +230,17 @@ inline flight::String get_wgpu_quad_batch_prelude_wgsl() {
 // cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuQuadBatchWriter.ts: contextual
 // optionalSingle construction requires expression type evidence
 
-
-// NOT GENERATED: function recordWgpuQuadBatchColorScaleBias -- source line 364
-// refusal: cpp-dual-sentinel-multi-alternative-narrowing-unrepresented [source-portability]
-//
-// The source it stood for:
-//   export function recordWgpuQuadBatchColorScaleBias(
-//     state: WgpuRenderState,
-//     colorScaleBias: ColorScaleBias | TintMaterialData | readonly number[] | null | undefined,
-//     instanceIndex: number,
-//   ): void {
-//     const runtime = getWgpuRenderStateRuntime(state);
-//     const fold = getWgpuColorAdjustmentMaterialFeature(state);
-//     if (fold != null) {
-//       fold.record(runtime, colorScaleBias, instanceIndex);
-//       return;
-//     }
-//     if (colorScaleBias != null) getWgpuColorAdjustmentMaterialFeatureGuard(state)?.(state, colorScaleBias);
-//   }
-//   
-//   // Resets the per-frame buffer-pool cursor so the next frame reclaims slots from the start. Must be
-//   // called once at the start of each frame's batch work — the screen frame via beginWgpuRenderPass,
-//   // and the offscreen cache bake via refreshWgpuRenderCache (the bake flushes on its own state).
-// cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuQuadBatchWriter.ts: dual-sentinel
-// presence narrowing requires one remaining C++ value domain: the storage carries both null and undefined beside
-// SEVERAL value alternatives, so a presence test leaves more than one possible value and the emitter has no
-// single read to emit for it. Declare the member with one concrete representation -- `readonly number[]` rather
-// than `readonly number[] | Uint16Array | Uint32Array` -- and read it through a coalesce whose result is
-// declared; that shape lowers, which the control beside this rule shows
+inline void record_wgpu_quad_batch_color_scale_bias(flight::Ref<WgpuRenderState> state, std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>, flight::Null, flight::Undefined> color_scale_bias, double instance_index) {
+  flight::Ref<WgpuRenderStateRuntime> runtime = get_wgpu_render_state_runtime(state);
+  std::optional<flight::Ref<WgpuColorAdjustmentMaterialFeature>> fold = get_wgpu_color_adjustment_material_feature(state);
+  if (fold.has_value()) {
+    fold.value()->record(runtime, color_scale_bias, instance_index);
+    return;
+  }
+  if (!((std::holds_alternative<flight::Null>(color_scale_bias) || std::holds_alternative<flight::Undefined>(color_scale_bias)))) {
+    ([&]() { auto optional_chain_receiver = get_wgpu_color_adjustment_material_feature_guard(state); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(state, ([&]() -> std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>> { const auto& present_union_source = color_scale_bias; if (const auto* alternative = std::get_if<flight::Array<double>>(&present_union_source)) return std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>{std::in_place_type<flight::Array<double>>, *alternative}; if (const auto* alternative = std::get_if<flight::Ref<ColorScaleBias>>(&present_union_source)) return std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>{std::in_place_type<flight::Ref<ColorScaleBias>>, *alternative}; if (const auto* alternative = std::get_if<flight::Ref<TintMaterialData>>(&present_union_source)) return std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>{std::in_place_type<flight::Ref<TintMaterialData>>, *alternative}; throw std::logic_error("present union holds an absent or excluded alternative"); }())); }());
+  }
+}
 
 inline void reset_wgpu_quad_batch_writer_buffer_pool(flight::Ref<WgpuRenderState> state) {
   (get_wgpu_render_state_runtime(state)->quad_batch_writer_buffer_cursor = 0.0);

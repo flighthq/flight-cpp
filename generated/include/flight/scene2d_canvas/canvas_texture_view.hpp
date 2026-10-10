@@ -3,32 +3,46 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/canvas_2d.hpp>
-#include <flight/host_sdl/image.hpp>
 #include <flight/number.hpp>
 #include <flight/structural_ref.hpp>
 #include <limits>
 #include <optional>
 #include <random>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Bitmap; }
+namespace flight::types { struct CompressedImageResource; }
+namespace flight::types { struct ExternalTexture; }
+namespace flight::types { struct ImageResource; }
 namespace flight::types { struct Matrix3; }
+namespace flight::types { struct RenderTarget; }
 namespace flight::types { struct Sampler; }
 namespace flight::types { struct Texture2D; }
 namespace flight::types { struct TextureSource; }
 namespace flight::types { struct TextureUvTransform; }
 namespace flight::types { struct Vector2; }
+namespace flight::types { struct VoxelGrid; }
 
 #include <flight/geometry/matrix3.hpp>
 #include <flight/texture/texture.hpp>
+#include <flight/types/bitmap.hpp>
+#include <flight/types/compressed_image_resource.hpp>
+#include <flight/types/external_texture.hpp>
+#include <flight/types/host_image_source.hpp>
+#include <flight/types/image_resource.hpp>
 #include <flight/types/matrix3.hpp>
+#include <flight/types/render_target.hpp>
 #include <flight/types/sampler.hpp>
 #include <flight/types/texture.hpp>
 #include <flight/types/texture_source.hpp>
+#include <flight/types/texture_source_value.hpp>
 #include <flight/types/texture_uv_transform.hpp>
 #include <flight/types/vector2.hpp>
+#include <flight/types/voxel_grid.hpp>
 
 namespace flight::scene2d_canvas {
 
@@ -40,9 +54,10 @@ inline bool is_cardinal_uv_transform(double a, double b, double c, double d) {
 
 inline flight::Ref<flight::types::Matrix3> texture_uv_matrix = flight::geometry::create_matrix3(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
 
-inline void draw_canvas_texture_view(flight::CanvasRenderingContext2D context, flight::host_sdl::ImageSource source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Texture2D>>>> texture, double view_width, double view_height) {
-  const double backing_width = flight::texture::get_texture_width(texture);
-  const double backing_height = flight::texture::get_texture_height(texture);
+inline void draw_canvas_texture_view(flight::CanvasRenderingContext2D context, flight::types::HostImageSource source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Texture2D>>>> texture, double view_width, double view_height) {
+  std::optional<flight::types::TextureSourceValue> texture_source = flight::row_get<flight::RowKey<"source">>(texture);
+  const double backing_width = (!texture_source.has_value() ? -1.0 : std::visit([](const auto& value) { return value->width; }, texture_source.value()));
+  const double backing_height = (!texture_source.has_value() ? -1.0 : std::visit([](const auto& value) { return value->height; }, texture_source.value()));
   if (((((backing_width <= 0.0) || (backing_height <= 0.0)) || (view_width <= 0.0)) || (view_height <= 0.0))) {
     return;
   }

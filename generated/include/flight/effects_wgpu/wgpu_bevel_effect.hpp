@@ -19,17 +19,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/color/pack_color.hpp>
-
 #include <flight/render_wgpu/wgpu_render_target_pool.hpp>
 
-#include <flight/types/bevel_effect.hpp>
-
-namespace flight::types { struct WgpuEffectPipeline; struct WgpuRenderState; } namespace flight::effects_wgpu { inline flight::Ref<flight::types::WgpuEffectPipeline> get_wgpu_bevel_composite_shader(flight::Ref<flight::types::WgpuRenderState> state); }
+#include <flight/color/pack_color.hpp>
 
 #include <flight/types/wgpu_render_target.hpp>
 
 #include <flight/types/wgpu_render_state.hpp>
+
+#include <flight/types/bevel_effect.hpp>
 
 #include <flight/effects_wgpu/wgpu_effect_blit_shader.hpp>
 #include <flight/effects_wgpu/wgpu_effect_box_blur.hpp>
@@ -37,20 +35,20 @@ namespace flight::types { struct WgpuEffectPipeline; struct WgpuRenderState; } n
 #include <flight/effects_wgpu/wgpu_effect_tint_shader.hpp>
 #include <flight/effects_wgpu/wgpu_render_effect_registry.hpp>
 
+
+namespace flight::types { struct WgpuEffectPipeline; struct WgpuRenderState; } namespace flight::effects_wgpu { inline flight::Ref<flight::types::WgpuEffectPipeline> get_wgpu_bevel_composite_shader(flight::Ref<flight::types::WgpuRenderState> state); }
 namespace flight::effects_wgpu {
 
-using flight::color::get_color_alpha;
-using flight::color::get_color_rgb;
+extern const flight::types::WgpuRenderEffectRunner default_wgpu_bevel_effect_runner;
 
 using flight::render_wgpu::acquire_wgpu_texture_render_target;
 using flight::render_wgpu::release_wgpu_texture_render_target;
 
+using flight::color::get_color_alpha;
+using flight::color::get_color_rgb;
+
 using flight::types::BevelEffect;
-
 using flight::types::WgpuRenderTargetPool;
-
-extern const flight::types::WgpuRenderEffectRunner default_wgpu_bevel_effect_runner;
-
 using flight::types::WgpuRenderState;
 
 inline const flight::String bevel_composite_wgsl = flight::String("\nstruct Uniforms {\n  highlight : vec4f,\n  shadow : vec4f,\n  offset : vec2f,\n  intensity : f32,\n  clipMode : f32,\n}\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var fieldTex : texture_2d<f32>;\n@group(1) @binding(1) var fieldSmp : sampler;\n@group(2) @binding(0) var srcTex : texture_2d<f32>;\n@group(2) @binding(1) var srcSmp : sampler;\n\nfn sampleField(uv : vec2f) -> f32 {\n  if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) { return 0.0; }\n  return textureSampleLevel(fieldTex, fieldSmp, uv, 0.0).a;\n}\n\n@fragment\nfn fs_main(@location(0) uv : vec2f) -> @location(0) vec4f {\n  let lit = sampleField(uv - uni.offset);\n  let shade = sampleField(uv + uni.offset);\n  let gradient = lit - shade;\n  let srcA = textureSampleLevel(srcTex, srcSmp, uv, 0.0).a;\n  let isHighlight = gradient >= 0.0;\n  let color = select(uni.shadow.xyz, uni.highlight.xyz, isHighlight);\n  let colorAlpha = select(uni.shadow.w, uni.highlight.w, isHighlight);\n  var clip = 1.0;\n  if (uni.clipMode == 1.0) { clip = srcA; }\n  else if (uni.clipMode == 2.0) { clip = 1.0 - srcA; }\n  let edge = min(1.0, abs(gradient) * uni.intensity);\n  let a = edge * colorAlpha * clip;\n  return vec4f(color * a, a);\n}");

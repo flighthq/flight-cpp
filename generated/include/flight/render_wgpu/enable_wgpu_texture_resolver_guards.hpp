@@ -10,12 +10,19 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
+namespace flight::types { struct WgpuRenderState; }
+namespace flight::types { struct WgpuRenderStateRuntime; }
+
 #include <flight/log/log.hpp>
 #include <flight/render/render_registry_guards.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 
 namespace flight::render_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline bool are_wgpu_texture_resolver_guards_enabled(flight::Ref<flight::types::WgpuRenderState> state) {
   return flight::render::are_render_registries_guards_enabled(state);

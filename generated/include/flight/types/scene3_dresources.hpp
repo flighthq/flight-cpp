@@ -16,13 +16,16 @@ namespace flight::types { struct Entity; }
 namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct ExternalImageResourceReference; }
 namespace flight::types { struct GltfExtensionHandler; }
+namespace flight::types { struct ImageResource; }
 namespace flight::types { struct ImportDiagnostic; }
 namespace flight::types { struct Material; }
 namespace flight::types { struct PbrExtension; }
 namespace flight::types { struct ResourceLoader; }
 namespace flight::types { struct Scene3D; }
 namespace flight::types { struct Texture2D; }
-namespace flight::types { struct TextureCommon; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
 namespace flight::types { struct TextureSource; }
 namespace flight::types { template <typename T> struct Signal; }
 
@@ -46,6 +49,8 @@ struct Scene3DResources;
 struct Scene3DResourceWorkingSet;
 struct UpdateScene3DResourceStreamingOptions;
 struct Scene3DResourceRevealOptions;
+using Scene3DMaterialTextureLister = std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>, flight::Array<std::variant<flight::Ref<Texture2DArray>, flight::Ref<TextureCube>, flight::Ref<Texture2D>, flight::Ref<Texture3D>>>)>;
+using Scene3DPbrExtensionTextureLister = std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PbrExtension>>>>, flight::Array<std::variant<flight::Ref<Texture2DArray>, flight::Ref<TextureCube>, flight::Ref<Texture2D>, flight::Ref<Texture3D>>>)>;
 } // namespace flight::types
 
 #include <flight/types/easing_function.hpp>
@@ -63,10 +68,6 @@ struct Scene3DResourceRevealOptions;
 #include <flight/types/entity.hpp>
 
 namespace flight::types {
-
-using Scene3DMaterialTextureLister = std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>, flight::Array<flight::types::Texture>)>;
-
-using Scene3DPbrExtensionTextureLister = std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PbrExtension>>>>, flight::Array<flight::types::Texture>)>;
 
 struct Scene3DMaterialTextureRegistry : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;

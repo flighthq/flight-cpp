@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function getWgpuShapeRasterizer -- source line 6
 //   missing: function registerWgpuShapeRasterizer -- source line 14
+#include <flight/any.hpp>
 #include <optional>
 #include <variant>
 #include <flight/runtime.hpp>
@@ -35,7 +36,7 @@ using flight::types::WgpuRenderState;
 
 
 // NOT GENERATED: function registerWgpuShapeRasterizer -- source line 14
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:multiVariant [compiler-restriction]
 //
 // The source it stood for:
 //   export function registerWgpuShapeRasterizer(state: WgpuRenderState, rasterizer: ShapeRasterizer | null): void {
@@ -47,8 +48,7 @@ using flight::types::WgpuRenderState;
 //     };
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuShapeRasterizer.ts: intersection
-// types require C++ multiple-inheritance lowering: no shape for SlotTable (argument ShapeRasterizer has no shape
-// either), Entity. Declare the object shape the code reads rather than intersecting a conjunct that has none
+// cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuShapeRasterizer.ts: contextual
+// multiVariant construction requires expression type evidence
 
 } // namespace flight::scene2d_wgpu

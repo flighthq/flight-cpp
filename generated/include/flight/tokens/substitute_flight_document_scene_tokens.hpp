@@ -7,6 +7,7 @@
 //   missing: function lookup -- source line 102
 //   missing: function substituteNode -- source line 73
 #include <cmath>
+#include <flight/erased_ref.hpp>
 #include <flight/object.hpp>
 #include <flight/symbol.hpp>
 #include <functional>
@@ -152,7 +153,7 @@ inline std::optional<flight::Ref<FlightDocumentScene>> substitute_flight_documen
   if (!substituted->scene.has_value()) {
     return std::nullopt;
   }
-  return std::optional<flight::Ref<FlightDocumentScene>>{static_cast<T>({.scene = substituted->scene.value()})};
+  return std::optional<flight::Ref<FlightDocumentScene>>{flight::erased_ref_as<typename T::element_type>({.scene = substituted->scene.value()})};
 }
 
 } // namespace flight::tokens

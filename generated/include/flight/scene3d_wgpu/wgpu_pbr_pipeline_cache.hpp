@@ -12,6 +12,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/capacitor_api.hpp>
 
+#include <flight/types/wgpu_skinning_adapter.hpp>
+
+#include <flight/types/wgpu_render_state.hpp>
+
+namespace flight::types { struct WgpuColorAdjustmentMaterialFeature; }
+namespace flight::types { struct WgpuMeshPipeline; }
+namespace flight::types { struct WgpuPbrDefineKey; }
+namespace flight::types { struct WgpuPbrPipeline; }
+namespace flight::types { struct WgpuRenderState; }
+namespace flight::types { struct WgpuScene3DRuntime; }
+namespace flight::types { struct WgpuSkinningAdapter; }
+
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp>
@@ -19,6 +31,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/scene3d_wgpu/wgpu_scene3_druntime.hpp>
 
 namespace flight::scene3d_wgpu {
+
+using flight::types::WgpuRenderState;
+using flight::types::WgpuSkinningAdapter;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_TYPE_DA5EB69D1C0EE021
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_TYPE_DA5EB69D1C0EE021

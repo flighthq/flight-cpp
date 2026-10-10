@@ -10,12 +10,39 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/rive_import_registry.hpp>
+
+#include <flight/types/rive_document.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct RiveArtboardGraph; }
+namespace flight::types { struct RiveArtboardImportContext; }
+namespace flight::types { struct RiveCoreObject; }
+namespace flight::types { struct RiveCoreObjectHandler; }
+namespace flight::types { struct RiveImportRegistry; }
+namespace flight::types { struct RiveProperty; }
+namespace flight::types { struct RiveStateMachineDescriptor; }
+namespace flight::types { struct RiveStateMachineInput; }
+namespace flight::types { struct RiveStateMachineLayer; }
+namespace flight::types { struct RiveStateMachineState; }
+namespace flight::types { struct RiveStateMachineTransition; }
+
 #include <flight/importdiagnostics/import_diagnostic_collector.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene2d_formats/rive_core_types.hpp>
 #include <flight/scene2d_formats/rive_import_registry.hpp>
 
 namespace flight::scene2d_formats {
+
+using flight::types::ImportDiagnostic;
+using flight::types::RiveArtboardGraph;
+using flight::types::RiveArtboardImportContext;
+using flight::types::RiveCoreObject;
+using flight::types::RiveCoreObjectHandler;
+using flight::types::RiveImportRegistry;
+using flight::types::RiveProperty;
 
 inline double read_rive_number_flight_value_function_read_u000052_ive_u00004e_umber_flight_private_d3d740832e8690e7(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>> source, double key, double fallback) {
   auto property = flight::row_get<flight::RowKey<"properties">>(source).find([=](flight::Ref<flight::types::RiveProperty> candidate) { return (candidate->key == key); });

@@ -9,8 +9,6 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { struct FlightDocumentValue; }
-
 namespace flight::types { struct Camera3D; }
 namespace flight::types { struct Entity; }
 namespace flight::types { struct EntityRuntime; }
@@ -20,7 +18,7 @@ namespace flight::types { struct FlightDocumentLayoutDescriptor; }
 namespace flight::types { struct FlightDocumentResourceDescriptor; }
 namespace flight::types { struct FlightDocumentToken; }
 namespace flight::types { struct Node2DTraits; }
-namespace flight::types { struct Node3DTraits; }
+namespace flight::types { struct Node3D; }
 namespace flight::types { struct Scene2D; }
 namespace flight::types { struct Scene3D; }
 namespace flight::types { struct Scene3DDocumentCamera; }
@@ -28,7 +26,10 @@ namespace flight::types { struct Scene3DDocumentLight; }
 namespace flight::types { struct Scene3DLights; }
 namespace flight::types { template <typename N> struct FlightDocumentInteractiveStateBinding; }
 namespace flight::types { template <typename N> struct FlightDocumentLayoutBinding; }
+namespace flight::types { template <typename Traits> struct Node; }
 
+
+namespace flight::types { struct FlightDocumentValue; }
 namespace flight::types {
 struct FlightDocumentNode;
 struct FlightDocument;
@@ -98,8 +99,8 @@ struct FlightDocumentScene2DMaterialization : public flight::ReferenceEnabled {
 struct FlightDocumentScene3DMaterialization : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::Array<flight::Ref<flight::types::Camera3D>> cameras;
-  flight::Array<flight::Ref<flight::types::FlightDocumentInteractiveStateBinding<flight::types::Node3D>>> interactive_state_bindings;
-  flight::Array<flight::Ref<flight::types::FlightDocumentLayoutBinding<flight::types::Node3D>>> layout_bindings;
+  flight::Array<flight::Ref<flight::types::FlightDocumentInteractiveStateBinding<flight::Ref<flight::types::Node3D>>>> interactive_state_bindings;
+  flight::Array<flight::Ref<flight::types::FlightDocumentLayoutBinding<flight::Ref<flight::types::Node3D>>>> layout_bindings;
   flight::Ref<flight::types::Scene3DLights> lights;
   flight::Ref<flight::types::Scene3D> scene;
 };

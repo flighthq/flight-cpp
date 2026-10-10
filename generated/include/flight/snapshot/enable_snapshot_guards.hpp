@@ -8,6 +8,7 @@
 #include <flight/any.hpp>
 #include <flight/array_buffer.hpp>
 #include <flight/erased_ref.hpp>
+#include <flight/record.hpp>
 #include <flight/regexp.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>

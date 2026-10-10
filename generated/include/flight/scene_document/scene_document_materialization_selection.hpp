@@ -15,8 +15,6 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/texture.hpp>
-
 #include <flight/types/scene3_d.hpp>
 
 #include <flight/types/scene2_d.hpp>
@@ -65,7 +63,10 @@ inline bool is_scene_index(double value, double length) {
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE_DOCUMENT_BINDING_UID_06E64A362B012722
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE_DOCUMENT_BINDING_UID_06E64A362B012722
-using binding_uid_06e64a362b012722 = flight::types::binding_uid_06e64a362b012722;
+struct binding_uid_06e64a362b012722 : public flight::ReferenceEnabled {
+  std::optional<flight::ErasedRef> binding;
+  std::optional<flight::String> uid;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE_DOCUMENT_BINDING_UID_06E64A362B012722
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE_DOCUMENT_ENTITY_RUNTIME_KEY_ACTUAL_COLUMN_KIND_LIMIT_LINE_MODE_OFFSET_PATH_REASON_RESOURCE_KEY_TOKEN_KEY_VERSION_53EDC4ED4943CD49

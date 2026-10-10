@@ -9,11 +9,31 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/texture_atlas.hpp>
+
+#include <flight/types/bitmap_font.hpp>
+
+namespace flight::types { struct BitmapFont; }
+namespace flight::types { struct BitmapFontCharRecord; }
+namespace flight::types { struct BitmapFontData; }
+namespace flight::types { struct BitmapFontGlyphData; }
+namespace flight::types { struct BitmapFontKerningData; }
+namespace flight::types { struct BitmapFontKerningRecord; }
+namespace flight::types { struct BitmapFontPageRecord; }
+namespace flight::types { struct BitmapFontParseOptions; }
+namespace flight::types { struct BitmapFontRecord; }
+namespace flight::types { struct GlyphMetrics; }
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct TextureAtlas; }
+
 #include <flight/bitmapfont/bitmap_font.hpp>
 #include <flight/importdiagnostics/import_diagnostic_collector.hpp>
 #include <flight/types/contract.hpp>
 
 namespace flight::bitmapfont_formats {
+
+using flight::types::BitmapFontParseOptions;
+using flight::types::TextureAtlas;
 
 inline std::optional<flight::Ref<flight::types::BitmapFont>> build_bitmap_font_from_record(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapFontRecord>>>> record, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapFontParseOptions>>>>> options = std::nullopt) {
   std::optional<std::function<std::optional<flight::Ref<flight::types::TextureAtlas>>(double, flight::String)>> resolve_page = ([&]() -> std::optional<std::function<std::optional<flight::Ref<flight::types::TextureAtlas>>(double, flight::String)>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"resolvePage">>(optional_chain_receiver.value()); }());

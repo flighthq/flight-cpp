@@ -4,9 +4,7 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function cloneCollisionColliderShape3D -- source line 790
-//   missing: function createPhysics3DCollider -- source line 265
 //   missing: function isPhysics3DStaticSurfaceCollider -- source line 799
-//   missing: function invalidatePhysics3DCollider -- source line 518
 //   missing: function hydratePhysics3DWorld -- source line 365
 #include <cmath>
 #include <cstddef>
@@ -275,44 +273,13 @@ inline flight::Ref<Physics3DWorld> create_physics3_dworld(std::optional<flight::
 // cpp emission failed for @flighthq/physics3d/packages/physics3d/src/world.ts: union member test requires a C++
 // variant binding
 
-
-// NOT GENERATED: function createPhysics3DCollider -- source line 265
-// refusal: cpp-intersection-member-shapeless [source-portability]
-//
-// The source it stood for:
-//   export function createPhysics3DCollider(
-//     local: Readonly<CollisionColliderShape3D>,
-//     material?: Readonly<Physics3DMaterial>,
-//     filter?: Readonly<Physics3DCollisionFilter>,
-//     sensor = false,
-//   ): Physics3DCollider {
-//     const ownedLocal = cloneCollisionColliderShape3D(local);
-//     const out = allocateEntity<Physics3DCollider>();
-//     initializePhysics3DCollider(
-//       out,
-//       {
-//         categoryBits: filter?.categoryBits ?? 1,
-//         groupIndex: filter?.groupIndex ?? 0,
-//         maskBits: filter?.maskBits ?? 0xffff,
-//       },
-//       ownedLocal,
-//       {
-//         density: material?.density ?? 1,
-//         friction: material?.friction ?? 0.2,
-//         restitution: material?.restitution ?? 0,
-//       },
-//       sensor,
-//       createPhysics3DColliderWorldShape(ownedLocal),
-//     );
-//     return finishEntity(out);
-//   }
-//   
-//   // The default sequential-impulse tuning. Eight velocity iterations and three position iterations are
-//   // the values a Box2D-lineage solver converges acceptably at for ordinary scenes; a scene of tall stacks
-//   // wants more of the first, and one with deep initial overlap more of the second.
-// cpp emission failed for @flighthq/physics3d/packages/physics3d/src/world.ts: intersection types require C++
-// multiple-inheritance lowering: no shape for CollisionBox3D, Entity. Declare the object shape the code reads
-// rather than intersecting a conjunct that has none
+inline flight::Ref<Physics3DCollider> create_physics3_dcollider(flight::Ref<CollisionColliderShape3D> local, std::optional<flight::Ref<Physics3DMaterial>> material = std::nullopt, std::optional<flight::Ref<Physics3DCollisionFilter>> filter = std::nullopt, std::optional<bool> sensor = std::nullopt) {
+  sensor = sensor.value_or(false);
+  flight::Ref<CollisionColliderShape3D> owned_local = clone_collision_collider_shape3_d(local);
+  flight::Ref<EntityConstruction<flight::Ref<Physics3DCollider>>> out = allocate_entity<flight::Ref<Physics3DCollider>>();
+  initialize_physics3_dcollider(out, flight::make_ref<Physics3DCollisionFilter>(Physics3DCollisionFilter{.category_bits = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = filter; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->category_bits; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()), .group_index = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = filter; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->group_index; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()), .mask_bits = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = filter; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->mask_bits; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 65535.0; }())}), owned_local, flight::make_ref<Physics3DMaterial>(Physics3DMaterial{.density = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = material; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->density; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()), .friction = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = material; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->friction; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.2; }()), .restitution = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = material; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->restitution; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }())}), sensor.value(), create_physics3_dcollider_world_shape(owned_local));
+  return finish_entity(out);
+}
 
 
 // NOT GENERATED: function isPhysics3DStaticSurfaceCollider -- source line 799
@@ -524,46 +491,25 @@ inline flight::Ref<Physics3DCollider> add_physics3_dcollider(flight::Ref<Physics
   return collider;
 }
 
-
-// NOT GENERATED: function invalidatePhysics3DCollider -- source line 518
-// refusal: cpp-intersection-member-shapeless [source-portability]
-//
-// The source it stood for:
-//   export function invalidatePhysics3DCollider(
-//     world: Physics3DWorld,
-//     body: RigidBody3D,
-//     collider: Physics3DCollider,
-//   ): boolean {
-//     assertPhysics3DWorldNotStepping(world);
-//     const bodyOwner = physics3DBodyOwners.get(body);
-//     if (bodyOwner !== undefined && bodyOwner !== world) return false;
-//     if (!body.colliders.includes(collider)) return false;
-//   
-//     collider.world = createPhysics3DColliderWorldShape(collider.local);
-//     updateRigidBody3DMassData(body);
-//     refreshRigidBody3DWorldInertia(body);
-//     if (world.bodyByIndex.get(body.index) === body) {
-//       invalidatePhysics3DBodyConstraints(world, body.index);
-//       wakePhysics3DBody(body);
-//       synchronizePhysics3DBroadphase(world);
-//     }
-//     return true;
-//   }
-//   
-//   // Removes a body and every contact and joint that referenced it. Returns false when the body is not in
-//   // this world.
-//   //
-//   // Constraints go with it because a contact naming a removed body would resolve to null inside a solver
-//   // loop, and the alternative — a null check per constraint per iteration — pays on every step for a case
-//   // that only arises at removal.
-//   //
-//   // A joint dropped here leaves by the SAME two exits `removePhysics3DJoint` uses: its ownership entry is
-//   // released, and the suppression index is rebuilt. Splicing it out of the array alone leaves a joint that
-//   // no world holds but that every world still refuses to accept, and leaves the pair it connected suppressed
-//   // against a joint that no longer exists — a contact that silently never reports.
-// cpp emission failed for @flighthq/physics3d/packages/physics3d/src/world.ts: intersection types require C++
-// multiple-inheritance lowering: no shape for CollisionBox3D, Entity. Declare the object shape the code reads
-// rather than intersecting a conjunct that has none
+inline bool invalidate_physics3_dcollider(flight::Ref<Physics3DWorld> world, flight::Ref<RigidBody3D> body, flight::Ref<Physics3DCollider> collider) {
+  assert_physics3_dworld_not_stepping(world);
+  std::optional<flight::Ref<Physics3DWorld>> body_owner = physics3_dbody_owners.get(body);
+  if ((body_owner.has_value() && (body_owner.value() != world))) {
+    return false;
+  }
+  if (!body->colliders.includes(collider)) {
+    return false;
+  }
+  (collider->world = create_physics3_dcollider_world_shape(collider->local));
+  update_rigid_body3_dmass_data(body);
+  refresh_rigid_body3_dworld_inertia(body);
+  if ((world->body_by_index.get(body->index) == body)) {
+    invalidate_physics3_dbody_constraints(world, body->index);
+    wake_physics3_dbody(body);
+    synchronize_physics3_dbroadphase(world);
+  }
+  return true;
+}
 
 inline bool remove_physics3_dcollider(flight::Ref<Physics3DWorld> world, flight::Ref<RigidBody3D> body, flight::Ref<Physics3DCollider> collider) {
   assert_physics3_dworld_not_stepping(world);

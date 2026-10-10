@@ -21,6 +21,7 @@ namespace flight::types { struct RadioGroupControllerOptions; }
 namespace flight::types { struct RadioGroupControllerSignals; }
 namespace flight::types { struct ToggleController; }
 namespace flight::types { struct ToggleControllerSignals; }
+namespace flight::types { template <typename N, typename P> struct NodeInteractiveStateTransition; }
 namespace flight::types { template <typename T> struct Signal; }
 namespace flight::types { template <typename Traits> struct Node; }
 

@@ -7,41 +7,31 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/registry_table.hpp>
+
+#include <flight/types/dom_render_state.hpp>
+
+namespace flight::types { struct DomRenderRegistries; }
+namespace flight::types { struct DomRenderState; }
+namespace flight::types { struct DomRenderStateRuntime; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { struct TextureResolutionExplanation; }
+namespace flight::types { struct TombstonedRegistryTableEntry; }
+namespace flight::types { template <typename T> struct BoundRegistryTableEntry; }
+namespace flight::types { template <typename T> struct KeyedTable; }
+
 #include <flight/texture/texture.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene2d_dom/dom_render_state.hpp>
 
 namespace flight::scene2d_dom {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_DOM_STATE_701E8465BD6197E1
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_DOM_STATE_701E8465BD6197E1
-struct state_701e8465bd6197e1 : public flight::ReferenceEnabled {
-  flight::String state;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_DOM_STATE_701E8465BD6197E1
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_DOM_STATE_VALUE_13913AA57D5F7651
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_DOM_STATE_VALUE_13913AA57D5F7651
-struct state_value_13913aa57d5f7651 : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::types::DomTextureResolver value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_DOM_STATE_VALUE_13913AA57D5F7651
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_DOM_STATE_VALUE_8B2703F9E1CA851D
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_DOM_STATE_VALUE_8B2703F9E1CA851D
-struct state_value_8b2703f9e1ca851d : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::types::DomTextureResolver value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_DOM_STATE_VALUE_8B2703F9E1CA851D
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_DOM_STATE_CF243C159232B529
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_DOM_STATE_CF243C159232B529
-struct state_cf243c159232b529 : public flight::ReferenceEnabled {
-  flight::String state;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_DOM_STATE_CF243C159232B529
+using flight::types::DomRenderState;
+using flight::types::DomRenderStateRuntime;
+using flight::types::KeyedTable;
 
 inline flight::Ref<flight::types::TextureResolutionExplanation> explain_dom_texture_resolution(flight::Ref<flight::types::DomRenderState> state, flight::types::Texture texture) {
   const std::optional<flight::String> kind = flight::texture::get_texture_source_kind(texture);

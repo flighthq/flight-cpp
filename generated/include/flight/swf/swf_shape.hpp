@@ -17,6 +17,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/swf_morph_shape_paths.hpp>
 
 namespace flight::swf { struct SwfReader; }
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct Path; }
+namespace flight::types { struct Shape; }
+namespace flight::types { struct SwfMorphShapePaths; }
+namespace flight::types { struct Texture2D; }
 
 namespace flight::swf {
 struct SwfShapeEdgeRecord;
@@ -646,7 +652,7 @@ inline void append_swf_shape_style_layer(flight::Ref<flight::types::Shape> shape
       continue;
     }
     if (fill.value()->texture.has_value()) {
-      flight::shape::append_shape_begin_texture_fill(shape, std::variant<flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>, flight::Ref<flight::types::Texture2D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, fill.value()->texture.value()}, fill.value()->texture_matrix);
+      flight::shape::append_shape_begin_texture_fill(shape, std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, fill.value()->texture.value()}, fill.value()->texture_matrix);
     }
     else {
       if (!fill.value()->gradient_type.has_value()) {

@@ -13,9 +13,20 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/layout.hpp>
+
+namespace flight::types { struct LayoutResolutionExplanation; }
+namespace flight::types { struct LayoutState; }
+namespace flight::types { struct LayoutTree; }
+namespace flight::types { template <typename ContainerStyle, typename ItemStyle> struct LayoutNode; }
+
 #include <flight/types/contract.hpp>
 
 namespace flight::layout {
+
+using flight::types::LayoutNode;
+using flight::types::LayoutState;
+using flight::types::LayoutTree;
 
 inline flight::Ref<flight::types::LayoutResolutionExplanation> explanation(flight::types::LayoutResolutionFailureKind kind, double node_index, double parent_index, std::optional<flight::String> resolver_kind) {
   return flight::make_ref<flight::types::LayoutResolutionExplanation>(flight::types::LayoutResolutionExplanation{.actual_length = 0.0, .kind = kind, .node_index = node_index, .parent_index = parent_index, .required_length = 0.0, .resolver_kind = resolver_kind});
@@ -107,7 +118,7 @@ inline bool resolve_layout_tree(flight::Float32Array out, flight::Ref<flight::ty
           }
         }
         const flight::String parent_kind = nodes.element(parent_index)->kind;
-        std::optional<std::function<std::optional<flight::String>(flight::Float32Array, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LayoutTree>>>>, flight::SequenceView<double>, double, double)>> resolver = state->resolvers.get(parent_kind);
+        auto resolver = state->resolvers.get(parent_kind);
         if (!resolver.has_value()) {
           return fail_layout_resolution(state, tree, flight::types::layout_resolution_failure_kind->unregistered_kind, parent_index, -1.0, 0.0, 0.0, std::optional<flight::String>{parent_kind});
         }

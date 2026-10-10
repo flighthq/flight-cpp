@@ -9,6 +9,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types { struct Entity; }
 namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct MarkupTagEffect; }
+namespace flight::types { struct TextFormat; }
 
 namespace flight::types {
 struct MarkupTagRegistry;

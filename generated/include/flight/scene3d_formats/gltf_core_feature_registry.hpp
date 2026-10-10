@@ -6,9 +6,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/gltf_extension.hpp>
+
+namespace flight::types { struct GltfCoreFeatureHandler; }
+
 #include <flight/types/contract.hpp>
 
 namespace flight::scene3d_formats {
+
+using flight::types::GltfCoreFeatureHandler;
 
 inline void register_gltf_core_feature_handler(flight::Array<flight::Ref<flight::types::GltfCoreFeatureHandler>> handlers, flight::Ref<flight::types::GltfCoreFeatureHandler> handler) {
   const double index = handlers.find_index([=](flight::Ref<flight::types::GltfCoreFeatureHandler> registered) { return (registered->kind == handler->kind); });

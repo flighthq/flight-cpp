@@ -3,7 +3,6 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: variable (binding) -- source line 25
 //   missing: variable (binding) -- source line 74
 //   missing: variable (binding) -- source line 189
 //   missing: variable (binding) -- source line 281
@@ -14,8 +13,7 @@
 #include <flight/any.hpp>
 #include <flight/boolean.hpp>
 #include <flight/canvas_2d.hpp>
-#include <flight/host_sdl/image.hpp>
-#include <flight/host_sdl/webgl.hpp>
+#include <flight/string.hpp>
 #include <functional>
 #include <optional>
 #include <random>
@@ -66,48 +64,27 @@ using x_y_8365950bd60f783f = flight::types::x_y_8365950bd60f783f;
 
 inline flight::Ref<x_y_8365950bd60f783f> texture_fill_view_size = flight::make_ref<x_y_8365950bd60f783f>(x_y_8365950bd60f783f{.x = 0.0, .y = 0.0});
 
-
-// NOT GENERATED: variable (binding) -- source line 25
-// refusal: cpp-union-runtime-domains-erased [target-runtime]
-//
-// The source it stood for:
-//   export const defaultCanvasBeginTextureFill: CanvasShapeCommand<'beginTextureFill'> = {
-//     fillBounds: defaultShapeBoundsFlush,
-//     key: 'beginTextureFill',
-//     strokeBounds: defaultShapeBoundsFlush,
-//     draw(context, state, buf, i) {
-//       const texture = buf[i] as Texture;
-//       const matrix = buf[i + 1] as Matrix | null;
-//       if (state.hasPendingPath && (state.hasFill || state.hasStroke)) state.flush();
-//       const pattern = createBitmapPattern(context, texture, state.canvasTextureResolvers, state.allowSmoothing);
-//       state.hasFill = pattern !== null;
-//       state.fillStyle = pattern ?? '';
-//       state.fillMatrix = matrix;
-//       // A singular fill matrix takes the SAME path as no matrix at all: draw the fill untransformed.
-//       // `inverseMatrix` does not produce NaN here — it zeroes a/b/c/d and negates tx/ty — so ignoring the
-//       // return would map every fill coordinate through a defined-but-wrong matrix and paint wrong pixels
-//       // with no error and nothing to search for. Falling back to the existing untransformed path is the
-//       // honest answer: identity would silently resize and reposition the fill, which is a different wrong
-//       // answer rather than a neutral one. Importers tally the degenerate matrix at their own boundary,
-//       // where a diagnostics sink exists; this is the last line of defence for an app-supplied matrix.
-//       if (matrix !== null && inverseMatrix(_fillMatrixInverse, matrix)) {
-//         state.fillMatrixInverse = _fillMatrixInverse;
-//       } else {
-//         state.fillMatrixInverse = null;
-//       }
-//       state.bitmapSrc = resolveCanvasTextureWindowSource(state.canvasTextureResolvers, texture);
-//       getTextureViewSize(textureFillViewSize, texture);
-//       state.bitmapW = textureFillViewSize.x;
-//       state.bitmapH = textureFillViewSize.y;
-//     },
-//   };
-//   
-// cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommands.ts: C++
-// runtime contract maps distinct union domains to one carrier without a discriminator or checked projection
-// (HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame ->
-// flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each reaches
-// a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the
-// emitter does -- or provide that runtime contract
+inline flight::Ref<CanvasShapeCommand<flight::String>> default_canvas_begin_texture_fill = flight::make_ref<CanvasShapeCommand<flight::String>>(CanvasShapeCommand<flight::String>{.fill_bounds = default_shape_bounds_flush, .key = flight::String("beginTextureFill"), .stroke_bounds = default_shape_bounds_flush, .draw = [](flight::CanvasRenderingContext2D context, flight::Ref<CanvasShapeDrawState> state, flight::Array<flight::Any> buf, double i) {
+  flight::Ref<Texture> texture = ([&]() -> flight::Ref<Texture> { const auto& erased_value = buf.element(i); auto erased_object = erased_value.object_if<Texture>(); if (!erased_object) throw std::logic_error("erased value does not hold the asserted object type"); return erased_object; }());
+  std::optional<flight::Ref<Matrix>> matrix = ([&]() -> std::optional<flight::Ref<Matrix>> { const auto& erased_value_2 = buf.element((i + 1.0)); if (static_cast<bool>(erased_value_2.object_if<Matrix>())) return std::optional<flight::Ref<Matrix>>{erased_value_2.object_if<Matrix>()}; if (erased_value_2.is_nullish()) return std::nullopt; throw std::logic_error("erased value holds no alternative this union represents"); }());
+  if ((state->has_pending_path && (state->has_fill || state->has_stroke))) {
+    state->flush();
+  }
+  std::optional<flight::CanvasPattern> pattern = create_bitmap_pattern(context, texture, state->canvas_texture_resolvers, state->allow_smoothing);
+  (state->has_fill = pattern.has_value());
+  (state->fill_style = (pattern.has_value() ? pattern.value() : flight::String("")));
+  (state->fill_matrix = matrix);
+  if ((matrix.has_value() && inverse_matrix(fill_matrix_inverse, matrix.value()))) {
+    (state->fill_matrix_inverse = fill_matrix_inverse);
+  }
+  else {
+    (state->fill_matrix_inverse = nullptr);
+  }
+  (state->bitmap_src = resolve_canvas_texture_window_source(state->canvas_texture_resolvers, texture));
+  get_texture_view_size(texture_fill_view_size, texture);
+  (state->bitmap_w = texture_fill_view_size->x);
+  (state->bitmap_h = texture_fill_view_size->y);
+}});
 
 
 // NOT GENERATED: variable (binding) -- source line 74

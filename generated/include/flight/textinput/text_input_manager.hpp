@@ -11,6 +11,25 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/text_layout.hpp>
+
+#include <flight/types/text_input_state.hpp>
+
+#include <flight/types/text_input_editing_options.hpp>
+
+#include <flight/types/rich_text.hpp>
+
+namespace flight::types { struct HandleTextInputKeyboardOptions; }
+namespace flight::types { struct InputKeyboardData; }
+namespace flight::types { struct InputTextData; }
+namespace flight::types { struct RichText; }
+namespace flight::types { struct RichTextData; }
+namespace flight::types { struct RichTextRuntime; }
+namespace flight::types { struct TextInputManager; }
+namespace flight::types { struct TextInputSource; }
+namespace flight::types { struct TextInputState; }
+namespace flight::types { struct TextLayoutResult; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/signals/slot.hpp>
 #include <flight/text/rich_text.hpp>
@@ -19,6 +38,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/textinput/text_input_editing.hpp>
 
 namespace flight::textinput {
+
+using flight::types::HandleTextInputKeyboardOptions;
+using flight::types::RichText;
+using flight::types::RichTextData;
+using flight::types::TextInputState;
+using flight::types::TextLayoutResult;
 
 inline void dispatch_text_input_pointer_move(flight::Ref<flight::types::TextInputManager> manager, double x, double y) {
   auto target = manager->focused;

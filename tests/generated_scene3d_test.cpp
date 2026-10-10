@@ -33,22 +33,16 @@ int main() {
 
   const auto first = scene3d::create_node3_d();
   const auto second = scene3d::create_node3_d();
-  check(flight::row_get<flight::RowKey<"kind">>(first) == types::node3_dkind,
+  check(first->kind == types::node3_dkind,
         "Node3D construction retains the upstream default kind");
-  check(flight::row_get<flight::RowKey<"enabled">>(first) &&
-            flight::row_get<flight::RowKey<"visible">>(first) &&
-            flight::row_get<flight::RowKey<"alpha">>(first) == 1.0,
+  check(first->enabled && first->visible && first->alpha == 1.0,
         "Node3D construction applies the upstream appearance defaults");
-  check(flight::row_get<flight::RowKey<"position">>(first)->x == 0.0 &&
-            flight::row_get<flight::RowKey<"position">>(first)->y == 0.0 &&
-            flight::row_get<flight::RowKey<"position">>(first)->z == 0.0 &&
-            flight::row_get<flight::RowKey<"rotation">>(first)->w == 1.0 &&
-            flight::row_get<flight::RowKey<"scale">>(first)->x == 1.0 &&
-            flight::row_get<flight::RowKey<"scale">>(first)->y == 1.0 &&
-            flight::row_get<flight::RowKey<"scale">>(first)->z == 1.0,
+  check(first->position->x == 0.0 && first->position->y == 0.0 &&
+            first->position->z == 0.0 && first->rotation->w == 1.0 &&
+            first->scale->x == 1.0 && first->scale->y == 1.0 &&
+            first->scale->z == 1.0,
         "Node3D construction initializes identity transform storage");
-  check(flight::row_get<flight::RowKey<"position">>(first) !=
-            flight::row_get<flight::RowKey<"position">>(second),
+  check(first->position != second->position,
         "each Node3D owns independent transform values");
 
   auto options = flight::make_ref<NodeOptions>();
@@ -57,12 +51,9 @@ int main() {
   options->name = flight::String("named");
   options->visible = false;
   const auto configured = scene3d::create_node3_d(flight::String("Configured"), options);
-  check(flight::row_get<flight::RowKey<"kind">>(configured) ==
-            flight::String("Configured") &&
-            !flight::row_get<flight::RowKey<"enabled">>(configured) &&
-            !flight::row_get<flight::RowKey<"visible">>(configured) &&
-            flight::row_get<flight::RowKey<"alpha">>(configured) == 0.25 &&
-            flight::row_get<flight::RowKey<"name">>(configured) ==
+  check(configured->kind == flight::String("Configured") &&
+            !configured->enabled && !configured->visible &&
+            configured->alpha == 0.25 && configured->name ==
                 std::optional<flight::String>{flight::String("named")},
         "Node3D construction forwards the complete declared option surface");
 
@@ -170,14 +161,15 @@ int main() {
             scene3d::is_mesh(flight::Any::object(mesh)),
         "Mesh discrimination accepts concrete and erased references");
 
-  flight::row_get<flight::RowKey<"position">>(first)->x = 2.0;
+  first->position->x = 2.0;
   scene3d::get_node3_druntime(first)->local_transform_id += 1.0;
   mesh->position->x = 4.0;
   flight::node::invalidate_node_local_transform(mesh);
   flight::node::add_node_child(first, mesh);
   check(scene3d::get_node3_dchild_count(first) == 1.0 &&
             scene3d::get_node3_dparent(scene3d::node3_dview(mesh)) ==
-                std::optional<types::Node3D>{first},
+                std::optional<scene3d::Node3DView>{
+                    scene3d::node3_dview(first)},
         "Node3D hierarchy retains concrete Mesh children and parent identity");
   const auto local_matrix = flight::node::get_node_local_matrix4(mesh);
   const auto world_matrix = flight::node::get_node_world_matrix4(mesh);

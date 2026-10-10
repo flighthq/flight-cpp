@@ -5,17 +5,15 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function createShadedBinding -- source line 173
 //   missing: variable (binding) -- source line 530
-//   missing: variable (binding) -- source line 732
 //   missing: variable (binding) -- source line 756
 //   missing: variable (binding) -- source line 572
 //   missing: variable (binding) -- source line 610
-//   missing: variable (binding) -- source line 656
-//   missing: variable (binding) -- source line 681
-//   missing: variable (binding) -- source line 710
 //   missing: function resolveWgpuModifierSnippetSource -- source line 847
 //   missing: function buildModifierPlan -- source line 433
 //   missing: function bindWgpuShadedSurface -- source line 101
 //   missing: function ensureWgpuShadedPipeline -- source line 229
+#include <cmath>
+#include <cstdint>
 #include <flight/any.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <flight/string.hpp>
@@ -23,6 +21,8 @@
 #include <flight/weak_map.hpp>
 #include <functional>
 #include <optional>
+#include <random>
+#include <stdexcept>
 #include <tuple>
 #include <variant>
 #include <flight/runtime.hpp>
@@ -148,7 +148,7 @@ inline flight::String delimit_contribution(flight::String source) {
 
 
 // NOT GENERATED: variable (binding) -- source line 530
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:
 //   export const animatedNormalWgpuModifierSnippet: WgpuModifierSnippet = {
@@ -193,54 +193,21 @@ inline flight::String delimit_contribution(flight::String source) {
 //       return offset;
 //     },
 //   };
-// cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadedPrelude.ts: a reference
-// assertion from flight::Ref<Modifier> to flight::Ref<AnimatedNormalModifier> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadedPrelude.ts: a presence test
+// against null has no absence channel in the emitted C++ storage for property
 
-
-// NOT GENERATED: variable (binding) -- source line 732
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
-//
-// The source it stood for:
-//   export const toonWgpuModifierSnippet: WgpuModifierSnippet = {
-//     bind(modifier, out, base): void {
-//       const value = modifier as Readonly<ToonModifier>;
-//       out[base] = Math.max(value.steps, 2);
-//       out[base + 1] = value.smoothness ?? 0;
-//     },
-//     contribution(_modifier, _index, context): WgpuModifierContribution {
-//       const base = context.uniformBase / 4;
-//       return {
-//         source: `{
-//     let toonLum = dot(radiance, vec3f(0.2126, 0.7152, 0.0722));
-//     let toonSteps = max(material.modifierData[${base}].x, 2.0);
-//     let toonScaled = toonLum * toonSteps;
-//     let toonBand = floor(toonScaled);
-//     let toonSoft = max(material.modifierData[${base}].y, 0.0001);
-//     let toonQuant = (toonBand + smoothstep(0.5 - toonSoft, 0.5 + toonSoft, toonScaled - toonBand)) / toonSteps;
-//     radiance = radiance * select(1.0, toonQuant / toonLum, toonLum > 0.0001);
-//   }
-//   `,
-//       };
-//     },
-//     kind: ToonModifierKind,
-//     slot: ModifierSlot.Effect,
-//   };
-// cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadedPrelude.ts: a reference
-// assertion from flight::Ref<Modifier> to flight::Ref<ToonModifier> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+inline flight::Ref<WgpuModifierSnippet> toon_wgpu_modifier_snippet = flight::make_ref<WgpuModifierSnippet>(WgpuModifierSnippet{.bind = [](std::variant<flight::Ref<DissolveModifier>, flight::Ref<ToonModifier>, flight::Ref<RimModifier>, flight::Ref<EmissiveModifier>, flight::Ref<VertexDisplaceModifier>, flight::Ref<Modifier>, flight::Ref<FogModifier>, flight::Ref<EnvReflectModifier>, flight::Ref<AnimatedNormalModifier>> modifier, flight::Float32Array out, double base) {
+  flight::Ref<ToonModifier> value = std::get<flight::Ref<ToonModifier>>(modifier);
+  ([&]() { auto&& typed_array_6 = out; const auto typed_index_6 = base; const auto typed_value_6 = flight::maximum(value->steps, 2.0); return typed_array_6.set_index(typed_index_6, typed_value_6); }());
+  ([&]() { auto&& typed_array_7 = out; const auto typed_index_7 = (base + 1.0); const auto typed_value_7 = value->smoothness.value_or(0.0); return typed_array_7.set_index(typed_index_7, typed_value_7); }());
+}, .contribution = [](std::variant<flight::Ref<DissolveModifier>, flight::Ref<ToonModifier>, flight::Ref<RimModifier>, flight::Ref<EmissiveModifier>, flight::Ref<VertexDisplaceModifier>, flight::Ref<Modifier>, flight::Ref<FogModifier>, flight::Ref<EnvReflectModifier>, flight::Ref<AnimatedNormalModifier>> modifier, double index, flight::Ref<WgpuModifierCompileContext> context) {
+  const double base = (context->uniform_base / 4.0);
+  return flight::make_ref<WgpuModifierContribution>(WgpuModifierContribution{.source = flight::String("{\n  let toonLum = dot(radiance, vec3f(0.2126, 0.7152, 0.0722));\n  let toonSteps = max(material.modifierData[") + flight::to_string(base) + flight::String("].x, 2.0);\n  let toonScaled = toonLum * toonSteps;\n  let toonBand = floor(toonScaled);\n  let toonSoft = max(material.modifierData[") + flight::to_string(base) + flight::String("].y, 0.0001);\n  let toonQuant = (toonBand + smoothstep(0.5 - toonSoft, 0.5 + toonSoft, toonScaled - toonBand)) / toonSteps;\n  radiance = radiance * select(1.0, toonQuant / toonLum, toonLum > 0.0001);\n}\n")});
+}, .kind = toon_modifier_kind, .slot = modifier_slot.effect});
 
 
 // NOT GENERATED: variable (binding) -- source line 756
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:
 //   export const vertexDisplaceWgpuModifierSnippet: WgpuModifierSnippet = {
@@ -280,13 +247,8 @@ inline flight::String delimit_contribution(flight::String source) {
 //     },
 //   };
 //   
-// cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadedPrelude.ts: a reference
-// assertion from flight::Ref<Modifier> to flight::Ref<VertexDisplaceModifier> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadedPrelude.ts: a presence test
+// against undefined has no absence channel in the emitted C++ storage for property
 
 inline std::shared_ptr<KeyedTable<flight::Ref<WgpuModifierSnippet>>> get_modifier_snippet_table(flight::Ref<WgpuRenderState> state) {
   return get_wgpu_render_state_runtime(state)->registries.modifier_snippets;
@@ -354,7 +316,7 @@ inline void write_modifier_uniforms(flight::Float32Array out, double offset, fli
     double index = 0.0;
     while ((index < static_cast<double>(flight::row_get<flight::RowKey<"orderedModifiers">>(plan).size()))) {
       {
-        ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void(flight::Ref<Modifier>, flight::Float32Array, double)>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"snippets">>(plan).get(index); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->bind; }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(flight::row_get<flight::RowKey<"orderedModifiers">>(plan).element(index), out, (offset + (index * modifier_floats))); }());
+        ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void(flight::Ref<ModifierValue>, flight::Float32Array, double)>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"snippets">>(plan).get(index); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->bind; }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(flight::row_get<flight::RowKey<"orderedModifiers">>(plan).element(index), out, (offset + (index * modifier_floats))); }());
       }
       (index += 1.0);
     }
@@ -364,14 +326,14 @@ inline void write_modifier_uniforms(flight::Float32Array out, double offset, fli
 inline flight::Ref<LinearColor> color = flight::Array{0.0, 0.0, 0.0, 0.0};
 
 inline void copy_color_rgb(flight::Float32Array out, double offset) {
-  ([&]() { auto&& typed_array = out; const auto typed_index = offset; const auto typed_value = std::get<0>(color); return typed_array.set_index(typed_index, typed_value); }());
-  ([&]() { auto&& typed_array_2 = out; const auto typed_index_2 = (offset + 1.0); const auto typed_value_2 = std::get<1>(color); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
-  ([&]() { auto&& typed_array_3 = out; const auto typed_index_3 = (offset + 2.0); const auto typed_value_3 = std::get<2>(color); return typed_array_3.set_index(typed_index_3, typed_value_3); }());
+  ([&]() { auto&& typed_array_17 = out; const auto typed_index_17 = offset; const auto typed_value_17 = std::get<0>(color); return typed_array_17.set_index(typed_index_17, typed_value_17); }());
+  ([&]() { auto&& typed_array_18 = out; const auto typed_index_18 = (offset + 1.0); const auto typed_value_18 = std::get<1>(color); return typed_array_18.set_index(typed_index_18, typed_value_18); }());
+  ([&]() { auto&& typed_array_19 = out; const auto typed_index_19 = (offset + 2.0); const auto typed_value_19 = std::get<2>(color); return typed_array_19.set_index(typed_index_19, typed_value_19); }());
 }
 
 
 // NOT GENERATED: variable (binding) -- source line 572
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:
 //   export const dissolveWgpuModifierSnippet: WgpuModifierSnippet = {
@@ -412,17 +374,12 @@ inline void copy_color_rgb(flight::Float32Array out, double offset) {
 //       return offset;
 //     },
 //   };
-// cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadedPrelude.ts: a reference
-// assertion from flight::Ref<Modifier> to flight::Ref<DissolveModifier> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadedPrelude.ts: a presence test
+// against undefined has no absence channel in the emitted C++ storage for property
 
 
 // NOT GENERATED: variable (binding) -- source line 610
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:
 //   export const emissiveWgpuModifierSnippet: WgpuModifierSnippet = {
@@ -471,128 +428,49 @@ inline void copy_color_rgb(flight::Float32Array out, double offset) {
 //       return offset;
 //     },
 //   };
-// cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadedPrelude.ts: a reference
-// assertion from flight::Ref<Modifier> to flight::Ref<EmissiveModifier> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadedPrelude.ts: a presence test
+// against undefined has no absence channel in the emitted C++ storage for property
 
+inline flight::Ref<WgpuModifierSnippet> env_reflect_wgpu_modifier_snippet = flight::make_ref<WgpuModifierSnippet>(WgpuModifierSnippet{.bind = [](std::variant<flight::Ref<DissolveModifier>, flight::Ref<ToonModifier>, flight::Ref<RimModifier>, flight::Ref<EmissiveModifier>, flight::Ref<VertexDisplaceModifier>, flight::Ref<Modifier>, flight::Ref<FogModifier>, flight::Ref<EnvReflectModifier>, flight::Ref<AnimatedNormalModifier>> modifier, flight::Float32Array out, double base) {
+  flight::Ref<EnvReflectModifier> value = std::get<flight::Ref<EnvReflectModifier>>(modifier);
+  unpack_color_to_linear(color, value->tint);
+  copy_color_rgb(out, base);
+  ([&]() { auto&& typed_array_26 = out; const auto typed_index_26 = (base + 3.0); const auto typed_value_26 = value->intensity.value_or(1.0); return typed_array_26.set_index(typed_index_26, typed_value_26); }());
+  ([&]() { auto&& typed_array_27 = out; const auto typed_index_27 = (base + 4.0); const auto typed_value_27 = value->fresnel_bias.value_or(0.04); return typed_array_27.set_index(typed_index_27, typed_value_27); }());
+  ([&]() { auto&& typed_array_28 = out; const auto typed_index_28 = (base + 5.0); const auto typed_value_28 = value->roughness.value_or(0.0); return typed_array_28.set_index(typed_index_28, typed_value_28); }());
+}, .contribution = [](std::variant<flight::Ref<DissolveModifier>, flight::Ref<ToonModifier>, flight::Ref<RimModifier>, flight::Ref<EmissiveModifier>, flight::Ref<VertexDisplaceModifier>, flight::Ref<Modifier>, flight::Ref<FogModifier>, flight::Ref<EnvReflectModifier>, flight::Ref<AnimatedNormalModifier>> modifier, double index, flight::Ref<WgpuModifierCompileContext> context) {
+  const double base = (context->uniform_base / 4.0);
+  return flight::make_ref<WgpuModifierContribution>(WgpuModifierContribution{.source = flight::String("{\n  let envDirection = reflect(-shadedViewDir, normal);\n  let envMip = clamp(material.modifierData[") + flight::to_string((base + 1.0)) + flight::String("].y, 0.0, 1.0) * max(ibl.params.z, 0.0);\n  let envSample = select(material.modifierData[") + flight::to_string(base) + flight::String("].rgb, textureSampleLevel(iblPrefiltered, iblSampler, envDirection, envMip).rgb, ibl.params.x > 0.5);\n  let envFresnel = material.modifierData[") + flight::to_string((base + 1.0)) + flight::String("].x + (1.0 - material.modifierData[") + flight::to_string((base + 1.0)) + flight::String("].x) * pow(1.0 - max(dot(normal, shadedViewDir), 0.0), 5.0);\n  radiance = radiance + envSample * material.modifierData[") + flight::to_string(base) + flight::String("].rgb * (material.modifierData[") + flight::to_string(base) + flight::String("].w * envFresnel);\n}\n")});
+}, .kind = env_reflect_modifier_kind, .slot = modifier_slot.effect});
 
-// NOT GENERATED: variable (binding) -- source line 656
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
-//
-// The source it stood for:
-//   export const envReflectWgpuModifierSnippet: WgpuModifierSnippet = {
-//     bind(modifier, out, base): void {
-//       const value = modifier as Readonly<EnvReflectModifier>;
-//       unpackColorToLinear(_color, value.tint);
-//       copyColorRgb(out, base);
-//       out[base + 3] = value.intensity ?? 1;
-//       out[base + 4] = value.fresnelBias ?? 0.04;
-//       out[base + 5] = value.roughness ?? 0;
-//     },
-//     contribution(_modifier, _index, context): WgpuModifierContribution {
-//       const base = context.uniformBase / 4;
-//       return {
-//         source: `{
-//     let envDirection = reflect(-shadedViewDir, normal);
-//     let envMip = clamp(material.modifierData[${base + 1}].y, 0.0, 1.0) * max(ibl.params.z, 0.0);
-//     let envSample = select(material.modifierData[${base}].rgb, textureSampleLevel(iblPrefiltered, iblSampler, envDirection, envMip).rgb, ibl.params.x > 0.5);
-//     let envFresnel = material.modifierData[${base + 1}].x + (1.0 - material.modifierData[${base + 1}].x) * pow(1.0 - max(dot(normal, shadedViewDir), 0.0), 5.0);
-//     radiance = radiance + envSample * material.modifierData[${base}].rgb * (material.modifierData[${base}].w * envFresnel);
-//   }
-//   `,
-//       };
-//     },
-//     kind: EnvReflectModifierKind,
-//     slot: ModifierSlot.Effect,
-//   };
-// cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadedPrelude.ts: a reference
-// assertion from flight::Ref<Modifier> to flight::Ref<EnvReflectModifier> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+inline flight::Ref<WgpuModifierSnippet> fog_wgpu_modifier_snippet = flight::make_ref<WgpuModifierSnippet>(WgpuModifierSnippet{.bind = [](std::variant<flight::Ref<DissolveModifier>, flight::Ref<ToonModifier>, flight::Ref<RimModifier>, flight::Ref<EmissiveModifier>, flight::Ref<VertexDisplaceModifier>, flight::Ref<Modifier>, flight::Ref<FogModifier>, flight::Ref<EnvReflectModifier>, flight::Ref<AnimatedNormalModifier>> modifier, flight::Float32Array out, double base) {
+  flight::Ref<FogModifier> value = std::get<flight::Ref<FogModifier>>(modifier);
+  unpack_color_to_linear(color, value->color);
+  copy_color_rgb(out, base);
+  ([&]() { auto&& typed_array_29 = out; const auto typed_index_29 = (base + 4.0); const auto typed_value_29 = value->density.value_or(1.0); return typed_array_29.set_index(typed_index_29, typed_value_29); }());
+  ([&]() { auto&& typed_array_30 = out; const auto typed_index_30 = (base + 5.0); const auto typed_value_30 = value->near.value_or(0.0); return typed_array_30.set_index(typed_index_30, typed_value_30); }());
+  ([&]() { auto&& typed_array_31 = out; const auto typed_index_31 = (base + 6.0); const auto typed_value_31 = value->far.value_or(1.0); return typed_array_31.set_index(typed_index_31, typed_value_31); }());
+}, .contribution = [](std::variant<flight::Ref<DissolveModifier>, flight::Ref<ToonModifier>, flight::Ref<RimModifier>, flight::Ref<EmissiveModifier>, flight::Ref<VertexDisplaceModifier>, flight::Ref<Modifier>, flight::Ref<FogModifier>, flight::Ref<EnvReflectModifier>, flight::Ref<AnimatedNormalModifier>> modifier, double index, flight::Ref<WgpuModifierCompileContext> context) {
+  flight::Ref<FogModifier> value = std::get<flight::Ref<FogModifier>>(modifier);
+  const double base = (context->uniform_base / 4.0);
+  const flight::String distance = flight::String("length(frame.cameraPosition.xyz - in.worldPosition)");
+  const flight::String factor = ((value->mode == fog_modifier_mode.exponential) ? flight::String("1.0 - exp(-material.modifierData[") + flight::to_string((base + 1.0)) + flight::String("].x * ") + flight::to_string(distance) + flight::String(")") : ((value->mode == fog_modifier_mode.exponential2) ? flight::String("1.0 - exp(-pow(material.modifierData[") + flight::to_string((base + 1.0)) + flight::String("].x * ") + flight::to_string(distance) + flight::String(", 2.0))") : flight::String("clamp((") + flight::to_string(distance) + flight::String(" - material.modifierData[") + flight::to_string((base + 1.0)) + flight::String("].y) / max(material.modifierData[") + flight::to_string((base + 1.0)) + flight::String("].z - material.modifierData[") + flight::to_string((base + 1.0)) + flight::String("].y, 0.0001), 0.0, 1.0)")));
+  return flight::make_ref<WgpuModifierContribution>(WgpuModifierContribution{.source = flight::String("radiance = mix(radiance, material.modifierData[") + flight::to_string(base) + flight::String("].rgb, clamp(") + flight::to_string(factor) + flight::String(", 0.0, 1.0));\n")});
+}, .get_define_signature = [](std::variant<flight::Ref<DissolveModifier>, flight::Ref<ToonModifier>, flight::Ref<RimModifier>, flight::Ref<EmissiveModifier>, flight::Ref<VertexDisplaceModifier>, flight::Ref<Modifier>, flight::Ref<FogModifier>, flight::Ref<EnvReflectModifier>, flight::Ref<AnimatedNormalModifier>> modifier) {
+  return std::get<flight::Ref<FogModifier>>(modifier)->mode.value_or(fog_modifier_mode.linear);
+}, .kind = fog_modifier_kind, .slot = modifier_slot.effect});
 
-
-// NOT GENERATED: variable (binding) -- source line 681
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
-//
-// The source it stood for:
-//   export const fogWgpuModifierSnippet: WgpuModifierSnippet = {
-//     bind(modifier, out, base): void {
-//       const value = modifier as Readonly<FogModifier>;
-//       unpackColorToLinear(_color, value.color);
-//       copyColorRgb(out, base);
-//       out[base + 4] = value.density ?? 1;
-//       out[base + 5] = value.near ?? 0;
-//       out[base + 6] = value.far ?? 1;
-//     },
-//     contribution(modifier, _index, context): WgpuModifierContribution {
-//       const value = modifier as Readonly<FogModifier>;
-//       const base = context.uniformBase / 4;
-//       const distance = `length(frame.cameraPosition.xyz - in.worldPosition)`;
-//       const factor =
-//         value.mode === FogModifierMode.Exponential
-//           ? `1.0 - exp(-material.modifierData[${base + 1}].x * ${distance})`
-//           : value.mode === FogModifierMode.Exponential2
-//             ? `1.0 - exp(-pow(material.modifierData[${base + 1}].x * ${distance}, 2.0))`
-//             : `clamp((${distance} - material.modifierData[${base + 1}].y) / max(material.modifierData[${base + 1}].z - material.modifierData[${base + 1}].y, 0.0001), 0.0, 1.0)`;
-//       return {
-//         source: `radiance = mix(radiance, material.modifierData[${base}].rgb, clamp(${factor}, 0.0, 1.0));\n`,
-//       };
-//     },
-//     getDefineSignature(modifier): string {
-//       return (modifier as Readonly<FogModifier>).mode ?? FogModifierMode.Linear;
-//     },
-//     kind: FogModifierKind,
-//     slot: ModifierSlot.Effect,
-//   };
-// cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadedPrelude.ts: a reference
-// assertion from flight::Ref<Modifier> to flight::Ref<FogModifier> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
-
-
-// NOT GENERATED: variable (binding) -- source line 710
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
-//
-// The source it stood for:
-//   export const rimWgpuModifierSnippet: WgpuModifierSnippet = {
-//     bind(modifier, out, base): void {
-//       const value = modifier as Readonly<RimModifier>;
-//       unpackColorToLinear(_color, value.color);
-//       copyColorRgb(out, base);
-//       out[base + 3] = value.power ?? 3;
-//       out[base + 4] = value.intensity ?? 1;
-//       out[base + 5] = value.bias ?? 0;
-//     },
-//     contribution(_modifier, _index, context): WgpuModifierContribution {
-//       const base = context.uniformBase / 4;
-//       return {
-//         source: `{
-//     let rimFactor = clamp(material.modifierData[${base + 1}].y + material.modifierData[${base + 1}].x * pow(1.0 - max(dot(normal, shadedViewDir), 0.0), max(material.modifierData[${base}].w, 0.0001)), 0.0, 1.0);
-//     radiance = radiance + material.modifierData[${base}].rgb * rimFactor;
-//   }
-//   `,
-//       };
-//     },
-//     kind: RimModifierKind,
-//     slot: ModifierSlot.Effect,
-//   };
-// cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadedPrelude.ts: a reference
-// assertion from flight::Ref<Modifier> to flight::Ref<RimModifier> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+inline flight::Ref<WgpuModifierSnippet> rim_wgpu_modifier_snippet = flight::make_ref<WgpuModifierSnippet>(WgpuModifierSnippet{.bind = [](std::variant<flight::Ref<DissolveModifier>, flight::Ref<ToonModifier>, flight::Ref<RimModifier>, flight::Ref<EmissiveModifier>, flight::Ref<VertexDisplaceModifier>, flight::Ref<Modifier>, flight::Ref<FogModifier>, flight::Ref<EnvReflectModifier>, flight::Ref<AnimatedNormalModifier>> modifier, flight::Float32Array out, double base) {
+  flight::Ref<RimModifier> value = std::get<flight::Ref<RimModifier>>(modifier);
+  unpack_color_to_linear(color, value->color);
+  copy_color_rgb(out, base);
+  ([&]() { auto&& typed_array_32 = out; const auto typed_index_32 = (base + 3.0); const auto typed_value_32 = value->power.value_or(3.0); return typed_array_32.set_index(typed_index_32, typed_value_32); }());
+  ([&]() { auto&& typed_array_33 = out; const auto typed_index_33 = (base + 4.0); const auto typed_value_33 = value->intensity.value_or(1.0); return typed_array_33.set_index(typed_index_33, typed_value_33); }());
+  ([&]() { auto&& typed_array_34 = out; const auto typed_index_34 = (base + 5.0); const auto typed_value_34 = value->bias.value_or(0.0); return typed_array_34.set_index(typed_index_34, typed_value_34); }());
+}, .contribution = [](std::variant<flight::Ref<DissolveModifier>, flight::Ref<ToonModifier>, flight::Ref<RimModifier>, flight::Ref<EmissiveModifier>, flight::Ref<VertexDisplaceModifier>, flight::Ref<Modifier>, flight::Ref<FogModifier>, flight::Ref<EnvReflectModifier>, flight::Ref<AnimatedNormalModifier>> modifier, double index, flight::Ref<WgpuModifierCompileContext> context) {
+  const double base = (context->uniform_base / 4.0);
+  return flight::make_ref<WgpuModifierContribution>(WgpuModifierContribution{.source = flight::String("{\n  let rimFactor = clamp(material.modifierData[") + flight::to_string((base + 1.0)) + flight::String("].y + material.modifierData[") + flight::to_string((base + 1.0)) + flight::String("].x * pow(1.0 - max(dot(normal, shadedViewDir), 0.0), max(material.modifierData[") + flight::to_string(base) + flight::String("].w, 0.0001)), 0.0, 1.0);\n  radiance = radiance + material.modifierData[") + flight::to_string(base) + flight::String("].rgb * rimFactor;\n}\n")});
+}, .kind = rim_modifier_kind, .slot = modifier_slot.effect});
 
 inline void register_built_in_wgpu_modifier_snippets(flight::Ref<WgpuRenderState> state) {
   register_wgpu_modifier_snippet(state, animated_normal_wgpu_modifier_snippet);
@@ -613,7 +491,6 @@ inline bool is_wgpu_modifier_snippet_table(WgpuModifierSnippetSource registry) {
 
 
 // NOT GENERATED: function resolveWgpuModifierSnippetSource -- source line 847
-// refusal: cpp-type-assertion-unidentified [source-portability]
 //
 // The source it stood for:
 //   function resolveWgpuModifierSnippetSource(
@@ -625,9 +502,8 @@ inline bool is_wgpu_modifier_snippet_table(WgpuModifierSnippetSource registry) {
 //     return entry?.state === RegistryEntryState.Bound ? entry.value : null;
 //   }
 //   
-// cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadedPrelude.ts: type assertion
-// target must identify exactly one C++ variant alternative: target
-// std::optional<flight::Ref<WgpuModifierSnippet>> against [flight::Ref<ModifierDefinition>]
+// cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadedPrelude.ts: union member
+// test must identify exactly one C++ optional value alternative
 
 
 // NOT GENERATED: function buildModifierPlan -- source line 433
@@ -714,11 +590,11 @@ inline flight::String get_wgpu_modifier_define_key(flight::Array<flight::Ref<Mod
   if (!is_wgpu_modifier_snippet_table(registry)) {
     return get_modifier_define_key(stack, std::get<1>(registry));
   }
-  flight::Array<flight::Ref<Modifier>> ordered = order_modifier_stack(stack);
+  flight::Array<flight::Ref<ModifierValue>> ordered = order_modifier_stack(stack);
   flight::String key = flight::String("");
   for (auto modifier : ordered) {
     std::optional<flight::Ref<WgpuModifierSnippet>> snippet = resolve_wgpu_modifier_snippet_source(std::variant<std::shared_ptr<KeyedTable<flight::Ref<WgpuModifierSnippet>>>, flight::Ref<ModifierRegistry>>{std::in_place_type<std::shared_ptr<KeyedTable<flight::Ref<WgpuModifierSnippet>>>>, std::get<0>(registry)}, modifier->kind);
-    const flight::String signature = ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = ([&]() -> std::optional<std::function<flight::String(flight::Ref<Modifier>)>> { auto optional_chain_receiver = snippet; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->get_define_signature; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(modifier); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }());
+    const flight::String signature = ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = ([&]() -> std::optional<std::function<flight::String(flight::Ref<ModifierValue>)>> { auto optional_chain_receiver = snippet; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->get_define_signature; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(modifier); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }());
     const flight::String token = ((static_cast<double>(signature.length()) > 0.0) ? flight::String("") + flight::to_string(modifier->kind) + flight::String(":") + flight::to_string(signature) + flight::String("") : modifier->kind);
     (key = ((static_cast<double>(key.length()) > 0.0) ? flight::String("") + flight::to_string(key) + flight::String("+") + flight::to_string(token) + flight::String("") : token));
   }

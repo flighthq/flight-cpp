@@ -11,11 +11,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { template <typename Traits> struct Node; }
+
 #include <flight/log/log.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/node/hierarchy.hpp>
 
 namespace flight::node {
+
+using flight::types::Node;
 
 inline void warn_on_declined_reparent(std::shared_ptr<flight::types::Node<flight::Ref<flight::types::NodeTraits>>> child, std::shared_ptr<flight::types::Node<flight::Ref<flight::types::NodeTraits>>> new_parent) {
   flight::log::log_once(flight::String("node:reparent-singular-parent:") + flight::to_string(([&]() -> flight::String { auto nullish_coalesce_left = new_parent->name; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("<unnamed>"); }())) + flight::String(""), flight::types::LogLevel::Warn, flight::types::LogData{std::in_place_type<flight::Record<flight::String, flight::Any>>, flight::Record<flight::String, flight::Any>{{flight::String("child"), ([&]() -> flight::String { auto nullish_coalesce_left = child->name; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("<unnamed>"); }())}, {flight::String("message"), flight::String("reparentNode: the new parent has no invertible world matrix, so no local transform could preserve the child’s world transform — nothing was changed. A zero scale on the parent or an ancestor is the usual cause; use addNodeChild to attach without preserving world position.")}, {flight::String("newParent"), ([&]() -> flight::String { auto nullish_coalesce_left = new_parent->name; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("<unnamed>"); }())}}}, std::nullopt);

@@ -3,55 +3,84 @@
 #include <coroutine>
 #include <flight/abort.hpp>
 #include <flight/blob.hpp>
+#include <flight/structural_ref.hpp>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/texture_atlas.hpp>
+namespace flight::types { struct HostImageCapability; }
+namespace flight::types { struct ImageResource; }
+namespace flight::types { struct Sampler; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct TextureAtlas; }
+namespace flight::types { struct TextureAtlasRegion; }
+namespace flight::types { struct TextureResourceOptions; }
+namespace flight::types { struct Vector2; }
 
-#include <flight/types/image_resource.hpp>
-
+#include <flight/image/image_resource_from.hpp>
+#include <flight/texture/texture.hpp>
 #include <flight/types/create_texture_options.hpp>
-
+#include <flight/types/image_resource.hpp>
+#include <flight/types/sampler.hpp>
+#include <flight/types/texture.hpp>
+#include <flight/types/texture_atlas.hpp>
+#include <flight/types/texture_atlas_region.hpp>
+#include <flight/types/texture_source_value.hpp>
+#include <flight/types/vector2.hpp>
 #include <flight/textureatlas/texture_atlas.hpp>
 
 namespace flight::textureatlas {
 
-using flight::types::CreateTextureOptions;
 using flight::types::HostImageCapability;
 using flight::types::ImageResource;
+using flight::types::Texture2D;
 using flight::types::TextureAtlas;
+using flight::types::TextureAtlasRegion;
 
-inline flight::Ref<TextureAtlas> create_texture_atlas_from_image_resource(flight::Ref<ImageResource> resource) {
-  return create_texture_atlas({.texture = create_texture(flight::make_ref<CreateTextureOptions>(CreateTextureOptions{.dimension = flight::String("2d"), .source = resource}))});
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTUREATLAS_ENTITY_RUNTIME_KEY_IMAGE_HEIGHT_IMAGE_NAME_IMAGE_WIDTH_REGIONS_SCALE_TEXTURE_3E2AAC69DE7F960D
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTUREATLAS_ENTITY_RUNTIME_KEY_IMAGE_HEIGHT_IMAGE_NAME_IMAGE_WIDTH_REGIONS_SCALE_TEXTURE_3E2AAC69DE7F960D
+struct entity_runtime_key_image_height_image_name_image_width_regions_scale_texture_3e2aac69de7f960d : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  std::optional<double> image_height;
+  std::variant<flight::String, flight::Null, flight::Undefined> image_name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<double> image_width;
+  std::optional<flight::Array<flight::Ref<flight::types::TextureAtlasRegion>>> regions;
+  std::optional<double> scale;
+  std::variant<flight::Ref<flight::types::Texture2D>, flight::Null, flight::Undefined> texture = std::variant<flight::Ref<flight::types::Texture2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTUREATLAS_ENTITY_RUNTIME_KEY_IMAGE_HEIGHT_IMAGE_NAME_IMAGE_WIDTH_REGIONS_SCALE_TEXTURE_3E2AAC69DE7F960D
+
+inline flight::Ref<flight::types::TextureAtlas> create_texture_atlas_from_image_resource(flight::Ref<flight::types::ImageResource> resource) {
+  return flight::textureatlas::create_texture_atlas(flight::make_ref<entity_runtime_key_image_height_image_name_image_width_regions_scale_texture_3e2aac69de7f960d>(entity_runtime_key_image_height_image_name_image_width_regions_scale_texture_3e2aac69de7f960d{.texture = std::variant<flight::Ref<flight::types::Texture2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, flight::texture::create_texture({.dimension = flight::String("2d"), .source = resource})}}));
 }
 
-inline flight::Task<flight::Ref<TextureAtlas>> load_texture_atlas_from_base64(flight::Ref<HostImageCapability> host_image, flight::String base64, flight::String mime_type, std::optional<flight::AbortSignal> signal = std::nullopt) {
+inline flight::Task<flight::Ref<flight::types::TextureAtlas>> load_texture_atlas_from_base64(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageCapability>>>> host_image, flight::String base64, flight::String mime_type, std::optional<flight::AbortSignal> signal = std::nullopt) {
   {
-    auto await_value = co_await load_image_resource_from_base64(host_image, base64, mime_type, signal);
+    auto await_value = co_await flight::image::load_image_resource_from_base64(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageCapability>>>>>(host_image), base64, mime_type, signal);
     co_return create_texture_atlas_from_image_resource(await_value);
   }
 }
 
-inline flight::Task<flight::Ref<TextureAtlas>> load_texture_atlas_from_blob(flight::Ref<HostImageCapability> host_image, flight::Blob blob, std::optional<flight::AbortSignal> signal = std::nullopt) {
+inline flight::Task<flight::Ref<flight::types::TextureAtlas>> load_texture_atlas_from_blob(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageCapability>>>> host_image, flight::Blob blob, std::optional<flight::AbortSignal> signal = std::nullopt) {
   {
-    auto await_value = co_await load_image_resource_from_blob(host_image, blob, signal);
+    auto await_value = co_await flight::image::load_image_resource_from_blob(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageCapability>>>>>(host_image), blob, signal);
     co_return create_texture_atlas_from_image_resource(await_value);
   }
 }
 
-inline flight::Task<flight::Ref<TextureAtlas>> load_texture_atlas_from_bytes(flight::Ref<HostImageCapability> host_image, flight::Uint8Array bytes, std::optional<flight::String> mime_type = std::nullopt, std::optional<flight::AbortSignal> signal = std::nullopt) {
+inline flight::Task<flight::Ref<flight::types::TextureAtlas>> load_texture_atlas_from_bytes(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageCapability>>>> host_image, flight::Uint8Array bytes, std::optional<flight::String> mime_type = std::nullopt, std::optional<flight::AbortSignal> signal = std::nullopt) {
   {
-    auto await_value = co_await load_image_resource_from_bytes(host_image, bytes, mime_type, signal);
+    auto await_value = co_await flight::image::load_image_resource_from_bytes(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageCapability>>>>>(host_image), bytes, mime_type, signal);
     co_return create_texture_atlas_from_image_resource(await_value);
   }
 }
 
-inline flight::Task<flight::Ref<TextureAtlas>> load_texture_atlas_from_url(flight::Ref<HostImageCapability> host_image, flight::String url, std::optional<flight::String> cross_origin = std::nullopt, std::optional<flight::AbortSignal> signal = std::nullopt) {
+inline flight::Task<flight::Ref<flight::types::TextureAtlas>> load_texture_atlas_from_url(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageCapability>>>> host_image, flight::String url, std::optional<flight::String> cross_origin = std::nullopt, std::optional<flight::AbortSignal> signal = std::nullopt) {
   {
-    auto await_value = co_await load_image_resource_from_url(host_image, url, cross_origin, signal);
+    auto await_value = co_await flight::image::load_image_resource_from_url(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostImageCapability>>>>>(host_image), url, cross_origin, signal);
     co_return create_texture_atlas_from_image_resource(await_value);
   }
 }

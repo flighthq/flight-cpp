@@ -4,6 +4,7 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function createReadyImageResourceForTest -- source line 7
+#include <flight/any.hpp>
 #include <flight/host_sdl/image.hpp>
 #include <optional>
 #include <flight/runtime.hpp>

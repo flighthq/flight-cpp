@@ -9,9 +9,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/node.hpp>
+
 namespace flight::types { struct HasBoundsRectangle; }
 namespace flight::types { struct HasBoundsRectangleRuntime; }
 namespace flight::types { struct Rectangle; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 #include <flight/types/has_bounds_rectangle.hpp>
 #include <flight/types/methods_of.hpp>
@@ -20,6 +23,8 @@ namespace flight::types { struct Rectangle; }
 namespace flight::node {
 
 using flight::types::Rectangle;
+
+using flight::types::Node;
 
 inline void default_compute_local_bounds_rectangle(flight::Ref<flight::types::Rectangle> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BoundsNodeAny>>>> source) {
 }

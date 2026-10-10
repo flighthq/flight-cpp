@@ -6,6 +6,7 @@
 //   missing: function updateParticleEmitter2D -- source line 44
 #include <cmath>
 #include <cstdint>
+#include <flight/any.hpp>
 #include <flight/boolean.hpp>
 #include <functional>
 #include <optional>

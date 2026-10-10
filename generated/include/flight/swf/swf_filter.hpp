@@ -12,6 +12,19 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 namespace flight::swf { struct SwfReader; }
+namespace flight::types { struct Adjustment; }
+namespace flight::types { struct BevelEffect; }
+namespace flight::types { struct BlurEffect; }
+namespace flight::types { struct ColorMatrixAdjustment; }
+namespace flight::types { struct ConvolutionEffect; }
+namespace flight::types { struct DropShadowEffect; }
+namespace flight::types { struct GradientBevelEffect; }
+namespace flight::types { struct GradientGlowEffect; }
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct InnerGlowEffect; }
+namespace flight::types { struct InnerShadowEffect; }
+namespace flight::types { struct OuterGlowEffect; }
+namespace flight::types { struct RenderEffect; }
 
 #include <flight/adjustments/color_matrix_adjustment.hpp>
 #include <flight/effects/bevel_effect.hpp>

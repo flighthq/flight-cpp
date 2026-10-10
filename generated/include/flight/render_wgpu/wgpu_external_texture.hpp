@@ -3,7 +3,6 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function getExternalTextureSource -- source line 97
 //   missing: function disposeExternalWgpuTexture -- source line 46
 //   missing: function resolveExternalWgpuTexture -- source line 90
 //   missing: function createExternalWgpuTexture -- source line 17
@@ -12,6 +11,7 @@
 #include <flight/string.hpp>
 #include <flight/weak_map.hpp>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -49,23 +49,12 @@ inline flight::host_sdl::WgpuSampler get_external_wgpu_sampler(flight::Ref<WgpuR
   return get_wgpu_sampler(state, min_filter, mag_filter, sampler->wrap_u, sampler->wrap_v, mipmap_filter, sampler->anisotropy);
 }
 
-
-// NOT GENERATED: function getExternalTextureSource -- source line 97
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
-//
-// The source it stood for:
-//   function getExternalTextureSource(texture: Readonly<TextureLike>): ExternalTexture | null {
-//     if (texture.dimension !== '2d' || texture.source?.kind !== ExternalTextureSourceKind) return null;
-//     return texture.source as ExternalTexture;
-//   }
-//   
-// cpp emission failed for @flighthq/render-wgpu/packages/render-wgpu/src/wgpuExternalTexture.ts: a reference
-// assertion from flight::Ref<TextureSource> to flight::Ref<ExternalTexture> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+inline std::optional<flight::Ref<ExternalTexture>> get_external_texture_source(flight::Ref<TextureLike> texture) {
+  if (((texture->dimension != flight::String("2d")) || (([&]() -> std::optional<flight::String> { auto optional_chain_receiver = texture->source; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->kind; }()) != external_texture_source_kind))) {
+    return std::nullopt;
+  }
+  return std::optional<flight::Ref<ExternalTexture>>{std::get<flight::Ref<ExternalTexture>>(texture->source)};
+}
 
 
 // NOT GENERATED: function disposeExternalWgpuTexture -- source line 46

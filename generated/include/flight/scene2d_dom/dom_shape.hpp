@@ -50,6 +50,7 @@
 //   type { Renderer } from '@flighthq/types/contract'
 //   type { Matrix } from '@flighthq/types/contract'
 //   type { Adjustment } from '@flighthq/types/contract'
+//   type { NodeOf } from '@flighthq/types/contract'
 //   type { Node } from '@flighthq/types/contract'
 //   type { ClipRegion } from '@flighthq/types/contract'
 //   type { InteractionSignals } from '@flighthq/types/contract'

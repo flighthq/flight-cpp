@@ -4,6 +4,7 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function reconstructShapeCommandArg -- source line 123
+//   missing: function parseShapeJson -- source line 81
 #include <cmath>
 #include <flight/any.hpp>
 #include <flight/error.hpp>
@@ -123,7 +124,7 @@ inline const flight::Symbol drop_command = flight::Symbol(flight::String("shapeF
 
 
 // NOT GENERATED: function reconstructShapeCommandArg -- source line 123
-// refusal: cpp-indexed-access-unlowered [compiler-restriction]
+// refusal: cpp-optional-chain-multi-alternative-receiver-unrepresented [source-portability]
 //
 // The source it stood for:
 //   function reconstructShapeCommandArg(value: unknown, resolveTexture: ShapeJsonParseOptions['resolveTexture']): unknown {
@@ -149,8 +150,10 @@ inline const flight::Symbol drop_command = flight::Symbol(flight::String("shapeF
 //   //
 //   // Runs after reconstruction, so matrices are already Matrix values and textures already resolved, and
 //   // after the drop check, so an unresolved texture is still a dropped command rather than a parse failure.
-// cpp emission failed for @flighthq/shape-formats/packages/shape-formats/src/shapeJson.ts: indexedAccess types
-// require C++ type computation lowering: object is ShapeJsonParseOptions, index is literal
+// cpp emission failed for @flighthq/shape-formats/packages/shape-formats/src/shapeJson.ts: optional chain
+// receiver requires one concrete nullable union member: `?.` asks the receiver for one operation, and a
+// dual-sentinel storage holding several value alternatives has no single member for the question to reach.
+// Declare the receiver with one concrete representation, or coalesce it into a declared result first
 
 inline const double shape_json_format = 3.0;
 
@@ -207,8 +210,8 @@ inline flight::String format_shape_json(flight::Ref<Shape> shape, std::optional<
               args.push(flight::Any::object(flight::make_ref<a_b_c_d_tx_ty_d975cba1d9c9e6b5>(a_b_c_d_tx_ty_d975cba1d9c9e6b5{.a = value.value()->a, .b = value.value()->b, .c = value.value()->c, .d = value.value()->d, .tx = value.value()->tx, .ty = value.value()->ty})));
             }
             else {
-              if (is_serializable_scalar_or_array(flight::Any::object(value.value()))) {
-                args.push(flight::Any::object(value.value()));
+              if (is_serializable_scalar_or_array(value.value())) {
+                args.push(value.value());
               }
               else {
                 args.push(flight::Any::object(flight::make_ref<texture_903ccfc44af76098>(texture_903ccfc44af76098{.texture = flight::make_ref<index_c12afc5b9e25f3af>(index_c12afc5b9e25f3af{.index = texture_ordinal++})})));
@@ -227,61 +230,63 @@ inline flight::String format_shape_json(flight::Ref<Shape> shape, std::optional<
 
 inline flight::Record<flight::String, ShapeCommandAppender> shape_command_appenders = {{flight::String("beginTextureFill"), append_shape_begin_texture_fill}, {flight::String("beginFill"), append_shape_begin_fill}, {flight::String("beginGradientFill"), append_shape_begin_gradient_fill}, {flight::String("cubicCurveTo"), append_shape_cubic_curve_to}, {flight::String("quadraticCurveTo"), append_shape_quadratic_curve_to}, {flight::String("drawCircle"), append_shape_circle}, {flight::String("drawEllipse"), append_shape_ellipse}, {flight::String("drawPath"), append_shape_path}, {flight::String("drawRectangle"), append_shape_rectangle}, {flight::String("drawRoundedRectangle"), append_shape_rounded_rectangle}, {flight::String("drawTriangles"), append_shape_draw_triangles}, {flight::String("endFill"), append_shape_end_fill}, {flight::String("lineTextureStyle"), append_shape_line_texture_style}, {flight::String("lineGradientStyle"), append_shape_line_gradient_style}, {flight::String("lineStyle"), append_shape_line_style}, {flight::String("lineTo"), append_shape_line_to}, {flight::String("moveTo"), append_shape_move_to}};
 
-inline std::optional<flight::Ref<Shape>> parse_shape_json(flight::String text, std::optional<flight::Ref<ShapeJsonParseOptions>> options = std::nullopt) {
-  flight::JsonValue root;
-  try {
-    (root = flight::Json::parse(text));
-  }
-  catch (...) {
-    return std::nullopt;
-  }
-  if (!is_plain_object(root)) {
-    return std::nullopt;
-  }
-  if ((root.shape_format != shape_json_format)) {
-    return std::nullopt;
-  }
-  auto raw_commands = root.commands;
-  if (!flight::is_array(raw_commands)) {
-    return std::nullopt;
-  }
-  std::optional<std::function<std::optional<flight::Ref<Texture>>(flight::Ref<ShapeTextureReference>)>> resolve_texture = ([&]() -> std::optional<std::function<std::optional<flight::Ref<Texture>>(flight::Ref<ShapeTextureReference>)>> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->resolve_texture; }());
-  flight::Ref<Shape> shape = create_shape(std::nullopt);
-  for (auto entry : raw_commands) {
-    if (!is_plain_object(entry)) {
-      return std::nullopt;
-    }
-    auto key = entry.get(flight::String("key")).value();
-    auto raw_args = entry.get(flight::String("args")).value();
-    if (((key.type_of() != flight::String("string")) || !flight::is_array(raw_args))) {
-      return std::nullopt;
-    }
-    std::optional<std::function<void(flight::Ref<Shape>, flight::Array<void>)>> appender = shape_command_appenders.get(key.as_string());
-    if (!appender.has_value()) {
-      return std::nullopt;
-    }
-    flight::Array<flight::Any> args = flight::Array<flight::Any>{};
-    bool drop = false;
-    for (auto raw : raw_args) {
-      auto reconstructed = reconstruct_shape_command_arg(raw, resolve_texture);
-      if ((reconstructed == malformed_arg)) {
-        return std::nullopt;
-      }
-      if ((reconstructed == drop_command)) {
-        (drop = true);
-        break;
-      }
-      args.push(reconstructed);
-    }
-    if (drop) {
-      continue;
-    }
-    if (!is_valid_shape_command_args(key.as_string(), args)) {
-      return std::nullopt;
-    }
-    appender.value()(shape, static_cast<flight::Array<void>>(args));
-  }
-  return std::optional<flight::Ref<Shape>>{shape};
-}
+
+// NOT GENERATED: function parseShapeJson -- source line 81
+// refusal: cpp-contextual-union-inequivalent [source-portability]
+//
+// The source it stood for:
+//   export function parseShapeJson(text: string, options?: Readonly<ShapeJsonParseOptions>): Shape | null {
+//     let root: unknown;
+//     try {
+//       root = JSON.parse(text);
+//     } catch {
+//       return null;
+//     }
+//     if (!isPlainObject(root)) return null;
+//     if (root.shapeFormat !== SHAPE_JSON_FORMAT) return null;
+//     const rawCommands = root.commands;
+//     if (!Array.isArray(rawCommands)) return null;
+//   
+//     const resolveTexture = options?.resolveTexture;
+//     const shape = createShape();
+//     for (const entry of rawCommands) {
+//       if (!isPlainObject(entry)) return null;
+//       const key = entry.key;
+//       const rawArgs = entry.args;
+//       if (typeof key !== 'string' || !Array.isArray(rawArgs)) return null;
+//       const appender = SHAPE_COMMAND_APPENDERS[key];
+//       if (appender === undefined) return null;
+//   
+//       const args: unknown[] = [];
+//       let drop = false;
+//       for (const raw of rawArgs) {
+//         const reconstructed = reconstructShapeCommandArg(raw, resolveTexture);
+//         if (reconstructed === MALFORMED_ARG) return null;
+//         if (reconstructed === DROP_COMMAND) {
+//           drop = true;
+//           break;
+//         }
+//         args.push(reconstructed);
+//       }
+//       if (drop) continue;
+//       if (!isValidShapeCommandArgs(key, args)) return null;
+//       appender(shape, ...(args as never[]));
+//     }
+//     return shape;
+//   }
+//   
+//   // Rebuilds a single command argument from its serialized form. Returns `MALFORMED_ARG` for an
+//   // unrecognized object shape and `DROP_COMMAND` when a texture reference cannot be resolved.
+// cpp emission failed for @flighthq/shape-formats/packages/shape-formats/src/shapeJson.ts: contextual C++ union
+// conversion requires equivalent source union evidence: target optionalSingle carriers
+// [std::function<std::optional<std::variant<flight::Ref<Texture2DArray>, flight::Ref<Texture2D>,
+// flight::Ref<Texture3D>, flight::Ref<TextureCube>>>(flight::Ref<ShapeTextureReference>)>] from identifier
+// source optionalSingle carriers
+// [std::function<std::optional<flight::Ref<Texture>>(flight::Ref<ShapeTextureReference>)>]. Narrow or convert
+// the source expression so each of its alternatives names exactly one destination union alternative. The carrier
+// lists show which alternatives lack an exact carrier; preserve the declared collection or member union alias
+// before flow expansion. For a Map or WeakMap lookup followed by a rebind, ensure every rebound member already
+// has the declared value owner member's carrier -- a Readonly structural view does not become a mutable nominal
+// Ref.
 
 } // namespace flight::shape_formats

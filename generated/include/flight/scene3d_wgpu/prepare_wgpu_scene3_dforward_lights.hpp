@@ -21,6 +21,7 @@ namespace flight::types { struct HemisphereLight; }
 namespace flight::types { struct InstancedMesh; }
 namespace flight::types { struct Matrix4; }
 namespace flight::types { struct Mesh; }
+namespace flight::types { struct Node3D; }
 namespace flight::types { struct Node3DTraits; }
 namespace flight::types { struct PointLight; }
 namespace flight::types { struct Scene3DForwardLightSelection; }

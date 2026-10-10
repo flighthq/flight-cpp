@@ -99,7 +99,7 @@ inline void bind_spritesheet_format(flight::Ref<SpritesheetFormatKind> kind, fli
 
 
 // NOT GENERATED: function getRegistry -- source line 78
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
 //   function getRegistry(): KeyedTable<RegisteredFormatEntry> {
@@ -138,13 +138,11 @@ inline void bind_spritesheet_format(flight::Ref<SpritesheetFormatKind> kind, fli
 //    *  Returns the `SpritesheetFormatKind` of the first registered format whose
 //    *  `detect` function returns `true`, or `null` when no format is recognized. */
 // cpp emission failed for @flighthq/spritesheet-formats/packages/spritesheet-formats/src/spritesheetDetect.ts:
-// intersection types require C++ multiple-inheritance lowering: no shape for KeyedTable (argument
-// RegisteredFormatEntry has a shape, so the wrapper is the gap), Entity. Declare the object shape the code reads
-// rather than intersecting a conjunct that has none
+// contextual optionalSingle construction requires expression type evidence
 
 
 // NOT GENERATED: function bindSpritesheetFormat -- source line 178
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
 //   function bindSpritesheetFormat(kind: SpritesheetFormatKind, entry: FormatEntry): void {
@@ -157,9 +155,7 @@ inline void bind_spritesheet_format(flight::Ref<SpritesheetFormatKind> kind, fli
 //   }
 //   
 // cpp emission failed for @flighthq/spritesheet-formats/packages/spritesheet-formats/src/spritesheetDetect.ts:
-// intersection types require C++ multiple-inheritance lowering: no shape for KeyedTable (argument object has a
-// shape, so the wrapper is the gap), Entity. Declare the object shape the code reads rather than intersecting a
-// conjunct that has none
+// contextual optionalSingle construction requires expression type evidence
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_DETECT_PARSE_3CC38F2DD817DA39
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_DETECT_PARSE_3CC38F2DD817DA39
@@ -185,7 +181,7 @@ inline void register_spritesheet_format(flight::Ref<SpritesheetFormatKind> kind,
 
 
 // NOT GENERATED: function unregisterSpritesheetFormat -- source line 174
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
 //   export function unregisterSpritesheetFormat(kind: SpritesheetFormatKind): void {
@@ -193,9 +189,7 @@ inline void register_spritesheet_format(flight::Ref<SpritesheetFormatKind> kind,
 //   }
 //   
 // cpp emission failed for @flighthq/spritesheet-formats/packages/spritesheet-formats/src/spritesheetDetect.ts:
-// intersection types require C++ multiple-inheritance lowering: no shape for KeyedTable (argument
-// RegisteredFormatEntry has a shape, so the wrapper is the gap), Entity. Declare the object shape the code reads
-// rather than intersecting a conjunct that has none
+// contextual optionalSingle construction requires expression type evidence
 
 inline flight::Array<std::tuple<flight::Ref<SpritesheetFormatKind>, flight::Ref<RegisteredFormatEntry>>> get_spritesheet_formats_in_detection_order() {
   flight::Array<std::tuple<flight::Ref<SpritesheetFormatKind>, flight::Ref<RegisteredFormatEntry>>> formats = flight::Array<std::tuple<flight::Ref<SpritesheetFormatKind>, flight::Ref<RegisteredFormatEntry>>>{};

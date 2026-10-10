@@ -7,17 +7,27 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AnimatedNormalModifier; }
+namespace flight::types { struct DissolveModifier; }
+namespace flight::types { struct EmissiveModifier; }
 namespace flight::types { struct EntityRuntime; }
+namespace flight::types { struct EnvReflectModifier; }
+namespace flight::types { struct FogModifier; }
 namespace flight::types { struct Modifier; }
+namespace flight::types { struct RimModifier; }
 namespace flight::types { struct SurfaceMaterial; }
 namespace flight::types { struct Texture2D; }
-namespace flight::types { struct TextureCommon; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { struct ToonModifier; }
+namespace flight::types { struct VertexDisplaceModifier; }
 
 namespace flight::types {
 struct ShadedMaterial;
 } // namespace flight::types
 
-#include <flight/types/modifier.hpp>
+#include <flight/types/modifier_value.hpp>
 #include <flight/types/surface_material.hpp>
 #include <flight/types/texture.hpp>
 #include <flight/types/blend_mode.hpp>
@@ -29,14 +39,14 @@ namespace flight::types {
 struct ShadedMaterial : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String kind;
-  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  double alpha_cutoff;
   flight::Ref<flight::types::MaterialAlphaMode> alpha_mode;
   flight::String blend_mode;
+  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  double alpha_cutoff;
   bool double_sided;
   double diffuse;
   std::optional<flight::types::Texture> diffuse_map;
-  flight::Array<flight::Ref<flight::types::Modifier>> modifiers;
+  flight::Array<flight::types::ModifierValue> modifiers;
   std::optional<flight::types::Texture> normal_map;
   double normal_scale;
   double shininess;

@@ -797,7 +797,7 @@ inline double get_awd_specular_rgba(std::optional<double> color, double strength
 
 
 // NOT GENERATED: function resolveAwdMaterial -- source line 2338
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-contextual-union-inequivalent [source-portability]
 //
 // The source it stood for:
 //   function resolveAwdMaterial(
@@ -884,13 +884,14 @@ inline double get_awd_specular_rgba(std::optional<double> color, double strength
 //   // parser references — it does not decode: an embedded block emits an Embedded ref holding the encoded
 //   // bytes; an external block emits an External ref holding the URL. The Texture's `image` stays null
 //   // until @flighthq/scene3d-resources resolves the ref.
-// cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts: a reference
-// assertion from flight::Ref<ShadedMaterial> to flight::Ref<Material> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts: contextual C++
+// union conversion requires equivalent source union evidence: target optionalVariant carriers
+// [flight::Ref<Texture2DArray>, flight::Ref<Texture2D>, flight::Ref<Texture3D>, flight::Ref<TextureCube>] from
+// call source optionalSingle carriers [flight::Ref<Texture>]. Narrow or convert the source expression so each of
+// its alternatives names exactly one destination union alternative. The carrier lists show which alternatives
+// lack an exact carrier; preserve the declared collection or member union alias before flow expansion. For a Map
+// or WeakMap lookup followed by a rebind, ensure every rebound member already has the declared value owner
+// member's carrier -- a Readonly structural view does not become a mutable nominal Ref.
 
 inline const double awd2_tangent_handedness = -1.0;
 

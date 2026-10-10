@@ -7,11 +7,26 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/canvas_render_state.hpp>
+
+namespace flight::types { struct CanvasMaterialRenderer; }
+namespace flight::types { struct CanvasRenderState; }
+namespace flight::types { struct CatalogEntry; }
+namespace flight::types { struct CatalogRegistration; }
+namespace flight::types { struct FallbackRemediableSceneCoverageEntry; }
+namespace flight::types { struct FallbackUnavailableSceneCoverageEntry; }
+namespace flight::types { struct SatisfiedSceneCoverageEntry; }
+namespace flight::types { struct Scene2DKindUsage; }
+namespace flight::types { struct UnavailableSceneCoverageEntry; }
+namespace flight::types { struct UnregisteredSceneCoverageEntry; }
+
 #include <flight/render/explain_scene2_dcoverage.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene2d_canvas/canvas_material_registry.hpp>
 
 namespace flight::scene2d_canvas {
+
+using flight::types::CanvasRenderState;
 
 inline std::optional<flight::Ref<flight::types::CatalogRegistration>> find_catalog_registration(std::optional<flight::Array<flight::Ref<flight::types::CatalogEntry>>> catalog, flight::String kind, flight::types::RenderRegistryTable registry) {
   if (!catalog.has_value()) {

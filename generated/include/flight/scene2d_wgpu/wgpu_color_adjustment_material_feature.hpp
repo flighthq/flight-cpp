@@ -15,6 +15,7 @@
 //   missing: function getWgpuQuadBatchWriterColorMatrixModule -- source line 291
 //   missing: function resolveWgpuColorAdjustmentFlush -- source line 163
 //   missing: function registerWgpuColorAdjustmentMaterialFeature -- source line 28
+#include <flight/any.hpp>
 #include <flight/host_sdl/wgpu.hpp>
 #include <optional>
 #include <type_traits>
@@ -79,7 +80,7 @@ inline void write_identity_color_matrix(flight::Float32Array out, double offset)
   ([&]() { auto&& typed_array_4 = out; const auto typed_index_4 = offset; const auto typed_value_4 = ([&]() { auto&& typed_array_3 = out; const auto typed_index_3 = (offset + 5.0); const auto typed_value_3 = ([&]() { auto&& typed_array_2 = out; const auto typed_index_2 = (offset + 10.0); const auto typed_value_2 = ([&]() { auto&& typed_array = out; const auto typed_index = (offset + 15.0); const auto typed_value = 1.0; return typed_array.set_index(typed_index, typed_value); }()); return typed_array_2.set_index(typed_index_2, typed_value_2); }()); return typed_array_3.set_index(typed_index_3, typed_value_3); }()); return typed_array_4.set_index(typed_index_4, typed_value_4); }());
 }
 
-inline bool is_color_matrix_data(std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>> value) {
+inline bool is_color_matrix_data(std::optional<ColorAdjustmentData> value) {
   return flight::is_array(value);
 }
 
@@ -204,15 +205,15 @@ inline double get_color_bias(std::variant<flight::Ref<ColorScaleBias>, flight::R
   return std::get<0>(value)->alpha_bias;
 }
 
-inline bool equals_recorded_color_scale_bias(std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>> a, std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>> b) {
+inline bool equals_recorded_color_scale_bias(std::optional<ColorAdjustmentData> a, std::optional<ColorAdjustmentData> b) {
   if ((a == b)) {
     return true;
   }
   if ((!a.has_value() || !b.has_value())) {
     return false;
   }
-  if ((is_color_matrix_data(std::visit([&](const auto& contextual_union_value) -> std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>> { using contextual_union_value_type = std::decay_t<decltype(contextual_union_value)>; if constexpr (std::is_same_v<contextual_union_value_type, flight::Array<double>>) return std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>>{std::in_place, std::in_place_type<flight::Array<double>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<ColorScaleBias>>) return std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>>{std::in_place, std::in_place_type<flight::Ref<ColorScaleBias>>, contextual_union_value}; else return std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>>{std::in_place, std::in_place_type<flight::Ref<TintMaterialData>>, contextual_union_value}; }, a.value())) || is_color_matrix_data(std::visit([&](const auto& contextual_union_value_2) -> std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>> { using contextual_union_value_type_2 = std::decay_t<decltype(contextual_union_value_2)>; if constexpr (std::is_same_v<contextual_union_value_type_2, flight::Array<double>>) return std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>>{std::in_place, std::in_place_type<flight::Array<double>>, contextual_union_value_2}; else if constexpr (std::is_same_v<contextual_union_value_type_2, flight::Ref<ColorScaleBias>>) return std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>>{std::in_place, std::in_place_type<flight::Ref<ColorScaleBias>>, contextual_union_value_2}; else return std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>>{std::in_place, std::in_place_type<flight::Ref<TintMaterialData>>, contextual_union_value_2}; }, b.value())))) {
-    if ((!is_color_matrix_data(std::visit([&](const auto& contextual_union_value_3) -> std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>> { using contextual_union_value_type_3 = std::decay_t<decltype(contextual_union_value_3)>; if constexpr (std::is_same_v<contextual_union_value_type_3, flight::Array<double>>) return std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>>{std::in_place, std::in_place_type<flight::Array<double>>, contextual_union_value_3}; else if constexpr (std::is_same_v<contextual_union_value_type_3, flight::Ref<ColorScaleBias>>) return std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>>{std::in_place, std::in_place_type<flight::Ref<ColorScaleBias>>, contextual_union_value_3}; else return std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>>{std::in_place, std::in_place_type<flight::Ref<TintMaterialData>>, contextual_union_value_3}; }, a.value())) || !is_color_matrix_data(std::visit([&](const auto& contextual_union_value_4) -> std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>> { using contextual_union_value_type_4 = std::decay_t<decltype(contextual_union_value_4)>; if constexpr (std::is_same_v<contextual_union_value_type_4, flight::Array<double>>) return std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>>{std::in_place, std::in_place_type<flight::Array<double>>, contextual_union_value_4}; else if constexpr (std::is_same_v<contextual_union_value_type_4, flight::Ref<ColorScaleBias>>) return std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>>{std::in_place, std::in_place_type<flight::Ref<ColorScaleBias>>, contextual_union_value_4}; else return std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>>{std::in_place, std::in_place_type<flight::Ref<TintMaterialData>>, contextual_union_value_4}; }, b.value())))) {
+  if ((is_color_matrix_data(std::visit([&](const auto& contextual_union_value) -> std::optional<flight::scene2d_wgpu::ColorAdjustmentData> { using contextual_union_value_type = std::decay_t<decltype(contextual_union_value)>; if constexpr (std::is_same_v<contextual_union_value_type, flight::Array<double>>) return std::optional<flight::scene2d_wgpu::ColorAdjustmentData>{std::in_place, std::in_place_type<flight::Array<double>>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, flight::Ref<ColorScaleBias>>) return std::optional<flight::scene2d_wgpu::ColorAdjustmentData>{std::in_place, std::in_place_type<flight::Ref<ColorScaleBias>>, contextual_union_value}; else return std::optional<flight::scene2d_wgpu::ColorAdjustmentData>{std::in_place, std::in_place_type<flight::Ref<TintMaterialData>>, contextual_union_value}; }, a.value())) || is_color_matrix_data(std::visit([&](const auto& contextual_union_value_2) -> std::optional<flight::scene2d_wgpu::ColorAdjustmentData> { using contextual_union_value_type_2 = std::decay_t<decltype(contextual_union_value_2)>; if constexpr (std::is_same_v<contextual_union_value_type_2, flight::Array<double>>) return std::optional<flight::scene2d_wgpu::ColorAdjustmentData>{std::in_place, std::in_place_type<flight::Array<double>>, contextual_union_value_2}; else if constexpr (std::is_same_v<contextual_union_value_type_2, flight::Ref<ColorScaleBias>>) return std::optional<flight::scene2d_wgpu::ColorAdjustmentData>{std::in_place, std::in_place_type<flight::Ref<ColorScaleBias>>, contextual_union_value_2}; else return std::optional<flight::scene2d_wgpu::ColorAdjustmentData>{std::in_place, std::in_place_type<flight::Ref<TintMaterialData>>, contextual_union_value_2}; }, b.value())))) {
+    if ((!is_color_matrix_data(std::visit([&](const auto& contextual_union_value_3) -> std::optional<flight::scene2d_wgpu::ColorAdjustmentData> { using contextual_union_value_type_3 = std::decay_t<decltype(contextual_union_value_3)>; if constexpr (std::is_same_v<contextual_union_value_type_3, flight::Array<double>>) return std::optional<flight::scene2d_wgpu::ColorAdjustmentData>{std::in_place, std::in_place_type<flight::Array<double>>, contextual_union_value_3}; else if constexpr (std::is_same_v<contextual_union_value_type_3, flight::Ref<ColorScaleBias>>) return std::optional<flight::scene2d_wgpu::ColorAdjustmentData>{std::in_place, std::in_place_type<flight::Ref<ColorScaleBias>>, contextual_union_value_3}; else return std::optional<flight::scene2d_wgpu::ColorAdjustmentData>{std::in_place, std::in_place_type<flight::Ref<TintMaterialData>>, contextual_union_value_3}; }, a.value())) || !is_color_matrix_data(std::visit([&](const auto& contextual_union_value_4) -> std::optional<flight::scene2d_wgpu::ColorAdjustmentData> { using contextual_union_value_type_4 = std::decay_t<decltype(contextual_union_value_4)>; if constexpr (std::is_same_v<contextual_union_value_type_4, flight::Array<double>>) return std::optional<flight::scene2d_wgpu::ColorAdjustmentData>{std::in_place, std::in_place_type<flight::Array<double>>, contextual_union_value_4}; else if constexpr (std::is_same_v<contextual_union_value_type_4, flight::Ref<ColorScaleBias>>) return std::optional<flight::scene2d_wgpu::ColorAdjustmentData>{std::in_place, std::in_place_type<flight::Ref<ColorScaleBias>>, contextual_union_value_4}; else return std::optional<flight::scene2d_wgpu::ColorAdjustmentData>{std::in_place, std::in_place_type<flight::Ref<TintMaterialData>>, contextual_union_value_4}; }, b.value())))) {
       return false;
     }
     {
@@ -340,13 +341,13 @@ inline void fill_wgpu_quad_batch_writer_uniform_color_matrix(flight::Ref<WgpuRen
   {
     double i = 0.0;
     while ((i < count)) {
-      write_wgpu_color_matrix_instance(runtime, std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>>{std::in_place, std::in_place_type<flight::Array<double>>, matrix}, i);
+      write_wgpu_color_matrix_instance(runtime, std::optional<ColorAdjustmentData>{std::in_place, std::in_place_type<flight::Array<double>>, matrix}, i);
       (i += 1.0);
     }
   }
 }
 
-inline void promote_wgpu_quad_batch_writer_color_scale_bias_to_matrix(flight::Ref<WgpuRenderStateRuntime> runtime, double instance_count, std::optional<std::variant<flight::Array<double>, flight::Ref<ColorScaleBias>, flight::Ref<TintMaterialData>>> fill) {
+inline void promote_wgpu_quad_batch_writer_color_scale_bias_to_matrix(flight::Ref<WgpuRenderStateRuntime> runtime, double instance_count, std::optional<ColorAdjustmentData> fill) {
   (runtime->quad_batch_writer_color_scale_bias_mode = ct_mode_matrix);
   {
     double i = 0.0;
@@ -756,7 +757,7 @@ inline flight::Ref<WgpuColorAdjustmentMaterialFeature> wgpu_color_adjustment_mat
 
 
 // NOT GENERATED: function registerWgpuColorAdjustmentMaterialFeature -- source line 28
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:multiVariant [compiler-restriction]
 //
 // The source it stood for:
 //   export function registerWgpuColorAdjustmentMaterialFeature(state: WgpuRenderState): void {
@@ -776,9 +777,7 @@ inline flight::Ref<WgpuColorAdjustmentMaterialFeature> wgpu_color_adjustment_mat
 //   // through the per-instance storage buffer, so a whole-batch (uniform) tint is the same value on each
 //   // instance — there is no separate hardware-uniform path.
 // cpp emission failed for
-// @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuColorAdjustmentMaterialFeature.ts: intersection types
-// require C++ multiple-inheritance lowering: no shape for SlotTable (argument WgpuColorAdjustmentMaterialFeature
-// has no shape either), Entity. Declare the object shape the code reads rather than intersecting a conjunct that
-// has none
+// @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuColorAdjustmentMaterialFeature.ts: contextual
+// multiVariant construction requires expression type evidence
 
 } // namespace flight::scene2d_wgpu

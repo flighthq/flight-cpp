@@ -12,12 +12,28 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/rive_document.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct RiveArtboardGraph; }
+namespace flight::types { struct RiveCoreObject; }
+namespace flight::types { struct RiveDocument; }
+namespace flight::types { struct RiveObjectGraph; }
+namespace flight::types { struct RiveProperty; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/importdiagnostics/import_diagnostic_collector.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene2d_formats/rive_core_types.hpp>
 
 namespace flight::scene2d_formats {
+
+using flight::types::ImportDiagnostic;
+using flight::types::RiveArtboardGraph;
+using flight::types::RiveCoreObject;
+using flight::types::RiveProperty;
 
 inline void report_rive_graph_drop(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics, flight::String kind, flight::String origin, flight::Record<flight::String, double> detail) {
   flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, kind, origin, detail);

@@ -64,9 +64,10 @@ inline flight::Ref<MeshGeometry> create_mesh_geometry_from_fields(
 
 inline std::optional<flight::Ref<MeshGeometryRuntime>> get_mesh_geometry_runtime_if_present(
     const flight::Ref<MeshGeometry>& geometry) {
-  auto runtime = mesh_geometry_runtimes.get(geometry);
-  if (runtime.has_value() || !geometry->entity_runtime_key.has_value()) return runtime;
-  throw flight::Error(flight::String("mesh: the generated EntityRuntime carrier cannot recover MeshGeometryRuntime"));
+  if (geometry->entity_runtime_key.has_value()) {
+    return geometry->entity_runtime_key;
+  }
+  return mesh_geometry_runtimes.get(geometry);
 }
 
 inline void destroy_mesh_geometry_gl_data(flight::Ref<MeshGeometry> geometry) {
@@ -367,17 +368,6 @@ inline flight::Ref<MeshGeometry> create_mesh_geometry_from_fields(
         flight::make_ref<MeshSubset>(MeshSubset{.index_count = count, .index_offset = 0.0})};
   }
 
-  auto geometry = flight::make_ref<MeshGeometry>(MeshGeometry{
-      .entity_runtime_key = flight::make_ref<flight::types::EntityRuntime>(
-          flight::types::EntityRuntime{.binding = std::nullopt, .uid = std::nullopt}),
-      .bounds = std::nullopt,
-      .indices = std::move(promoted),
-      .layout = std::move(layout),
-      .subsets = std::move(subsets).value(),
-      .topology = topology.value_or(flight::String("triangle-list")),
-      .version = 0.0,
-      .vertices = std::move(vertices),
-  });
   auto runtime = flight::make_ref<MeshGeometryRuntime>();
   runtime->attribute_data_view = std::nullopt;
   runtime->binding = std::nullopt;
@@ -388,13 +378,54 @@ inline flight::Ref<MeshGeometry> create_mesh_geometry_from_fields(
   runtime->uid = std::nullopt;
   runtime->webgl_data = std::nullopt;
   runtime->webgpu_data = std::nullopt;
+  auto geometry = flight::make_ref<MeshGeometry>(MeshGeometry{
+      .entity_runtime_key = runtime,
+      .bounds = std::nullopt,
+      .indices = std::move(promoted),
+      .layout = std::move(layout),
+      .subsets = std::move(subsets).value(),
+      .topology = topology.value_or(flight::String("triangle-list")),
+      .version = 0.0,
+      .vertices = std::move(vertices),
+  });
   mesh_geometry_runtimes.set(geometry, runtime);
   return geometry;
 }
 
 inline flight::Ref<MeshGeometry> create_mesh_geometry(flight::Ref<MeshGeometryOptions> options) {
-  return create_mesh_geometry_from_fields(options->indices, options->layout, options->subsets,
-                                          options->topology, options->vertices);
+  const double vertex_count = get_vertex_count_from_layout(options->vertices, options->layout);
+  std::variant<flight::Uint16Array, flight::Uint32Array, flight::Null,
+               flight::Undefined>
+      indices{std::in_place_type<flight::Null>, flight::null};
+  std::visit(
+      [&](const auto& source) {
+        using Source = std::remove_cvref_t<decltype(source)>;
+        if constexpr (std::same_as<Source, flight::SequenceView<double>>) {
+          if (source.is_uint32_array_backed() ||
+              vertex_count > uint16_index_ceiling) {
+            flight::Uint32Array out(static_cast<double>(source.size()));
+            for (std::size_t i = 0; i < source.size(); ++i) {
+              out.set_index(static_cast<double>(i), source[i]);
+            }
+            indices = decltype(indices){std::in_place_type<flight::Uint32Array>,
+                                        std::move(out)};
+          } else {
+            flight::Uint16Array out(static_cast<double>(source.size()));
+            for (std::size_t i = 0; i < source.size(); ++i) {
+              out.set_index(static_cast<double>(i), source[i]);
+            }
+            indices = decltype(indices){std::in_place_type<flight::Uint16Array>,
+                                        std::move(out)};
+          }
+        } else if constexpr (std::same_as<Source, flight::Undefined>) {
+          indices = decltype(indices){std::in_place_type<flight::Undefined>,
+                                      flight::undefined};
+        }
+      },
+      options->indices);
+  return create_mesh_geometry_from_fields(
+      std::move(indices), options->layout, options->subsets, options->topology,
+      options->vertices);
 }
 
 template <typename Schema>

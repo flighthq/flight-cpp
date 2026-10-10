@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function getDomShapeRasterizer -- source line 7
 //   missing: function registerDomShapeRasterizer -- source line 15
+#include <flight/any.hpp>
 #include <optional>
 #include <variant>
 #include <flight/runtime.hpp>
@@ -37,7 +38,7 @@ using flight::types::DomRenderState;
 
 
 // NOT GENERATED: function registerDomShapeRasterizer -- source line 15
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:multiVariant [compiler-restriction]
 //
 // The source it stood for:
 //   export function registerDomShapeRasterizer(state: DomRenderState, rasterizer: ShapeRasterizer | null): void {
@@ -49,8 +50,7 @@ using flight::types::DomRenderState;
 //     };
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domShapeRasterizer.ts: intersection
-// types require C++ multiple-inheritance lowering: no shape for SlotTable (argument ShapeRasterizer has no shape
-// either), Entity. Declare the object shape the code reads rather than intersecting a conjunct that has none
+// cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domShapeRasterizer.ts: contextual
+// multiVariant construction requires expression type evidence
 
 } // namespace flight::scene2d_dom

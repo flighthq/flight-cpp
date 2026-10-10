@@ -5,7 +5,6 @@
 #include <flight/array_buffer.hpp>
 #include <flight/audio_buffer.hpp>
 #include <flight/audio_context.hpp>
-#include <functional>
 #include <optional>
 #include <flight/runtime.hpp>
 
@@ -26,7 +25,7 @@ using flight::types::AudioResource;
 inline flight::Task<std::optional<flight::Ref<flight::types::AudioResource>>> decode_audio_resource_bytes(std::optional<flight::AudioContext> context, flight::Uint8Array bytes, std::optional<flight::String> mime_type, flight::AbortSignal signal) {
   signal.throw_if_aborted();
   if (mime_type.has_value()) {
-    std::optional<std::function<flight::Task<std::optional<flight::Ref<flight::types::AudioResource>>>(flight::Uint8Array, flight::String, flight::AbortSignal)>> decoder = flight::audio::get_audio_decoder(mime_type.value());
+    auto decoder = flight::audio::get_audio_decoder(mime_type.value());
     if (decoder.has_value()) {
       auto resource = co_await decoder.value()(bytes, mime_type.value(), signal);
       signal.throw_if_aborted();

@@ -11,8 +11,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct Aabb; }
 namespace flight::types { struct MeshGeometry; }
+namespace flight::types { struct MeshGeometryRuntime; }
+namespace flight::types { struct MeshMorphBindPose; }
 namespace flight::types { struct MeshSkinBindPose; }
 namespace flight::types { struct MeshSubset; }
+namespace flight::types { struct Node3D; }
 namespace flight::types { struct Skeleton3D; }
 namespace flight::types { struct VertexAttribute; }
 namespace flight::types { struct VertexAttributeLayout; }
@@ -20,6 +23,7 @@ namespace flight::types { struct VertexAttributeLayout; }
 #include <flight/mesh/mesh_geometry_attributes.hpp>
 #include <flight/types/aabb.hpp>
 #include <flight/types/mesh_geometry.hpp>
+#include <flight/types/mesh_morph_bind_pose.hpp>
 #include <flight/types/mesh_skin_bind_pose.hpp>
 #include <flight/types/node3_d.hpp>
 #include <flight/types/skeleton3_d.hpp>
@@ -27,6 +31,7 @@ namespace flight::types { struct VertexAttributeLayout; }
 
 namespace flight::skeleton3d {
 
+using flight::types::Node3D;
 using flight::types::Skeleton3D;
 
 inline double float_offset_for_semantic(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VertexAttributeLayout>>>> layout, flight::String semantic) {

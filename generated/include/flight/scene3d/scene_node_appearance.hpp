@@ -7,7 +7,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/entity.hpp>
+#include <flight/types/node3_d.hpp>
+
+namespace flight::types { struct Node3D; }
+namespace flight::types { struct Node3DRuntime; }
+namespace flight::types { struct Node3DTraits; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 #include <flight/node/revision.hpp>
 #include <flight/types/contract.hpp>
@@ -15,39 +20,23 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene3d {
 
-using flight::types::entity_runtime_key;
+using flight::types::Node3D;
 
-inline void set_node3_dalpha(flight::types::Node3D source, double alpha) {
-  flight::row_set<flight::RowKey<"alpha">>(source, alpha);
-  flight::node::invalidate_node_appearance(source);
+inline void set_node3_dalpha(flight::Ref<flight::types::Node3D> source, double alpha) {
+  (source->alpha = alpha);
+  flight::node::invalidate_node_appearance(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(source)));
 }
 
 inline double world_appearance_revision_counter = 0.0;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_3F670A820ECDD29E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_3F670A820ECDD29E
-struct data_enabled_kind_name_entity_runtime_key_alpha_visible_position_rotation_scale_3f670a820ecdd29e : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::NodeData>> data;
-  bool enabled;
-  flight::String kind;
-  std::optional<flight::String> name;
-  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node3DTraits>>>> entity_runtime_key;
-  double alpha;
-  bool visible;
-  flight::Ref<flight::types::Vector3> position;
-  flight::Ref<flight::types::Quaternion> rotation;
-  flight::Ref<flight::types::Vector3> scale;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_3F670A820ECDD29E
-
-inline void ensure_node3_dworld_alpha(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node3DTraits>>>>> source) {
-  auto runtime = flight::scene3d::get_node3_druntime(source);
-  std::optional<flight::types::Node3D> parent = flight::structural_ref_cast<flight::types::Node3D>(runtime->parent.value());
+inline void ensure_node3_dworld_alpha(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>> source) {
+  auto runtime = flight::scene3d::get_node3_druntime(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>>>(source));
+  std::optional<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>>> parent = ([&]() -> std::optional<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>>> { auto contextual_union_source = runtime->parent; if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>>>{flight::structural_ref_cast<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>>>(contextual_union_source.value())}; }());
   double parent_world_alpha = 1.0;
   double parent_world_appearance_id = 0.0;
-  if (parent.has_value()) {
-    ensure_node3_dworld_alpha(parent.value());
-    auto parent_runtime = flight::scene3d::get_node3_druntime(parent.value());
+  if ((parent.has_value() && flight::scene3d::is_node3_d(parent.value()))) {
+    ensure_node3_dworld_alpha(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(parent.value())));
+    auto parent_runtime = flight::scene3d::get_node3_druntime(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(parent.value())));
     (parent_world_alpha = parent_runtime->world_alpha.value());
     (parent_world_appearance_id = parent_runtime->world_appearance_id);
   }
@@ -64,9 +53,9 @@ inline void ensure_node3_dworld_alpha(flight::StructuralRef<flight::RowReadonly<
   }
 }
 
-inline double get_node3_dworld_alpha(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node3DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node3DTraits>>>>> source) {
+inline double get_node3_dworld_alpha(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>> source) {
   ensure_node3_dworld_alpha(source);
-  return ([&]() -> double { auto nullish_coalesce_left = flight::scene3d::get_node3_druntime(source)->world_alpha; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
+  return ([&]() -> double { auto nullish_coalesce_left = flight::scene3d::get_node3_druntime(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>>>(source))->world_alpha; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
 }
 
 } // namespace flight::scene3d

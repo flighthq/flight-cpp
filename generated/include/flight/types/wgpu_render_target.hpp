@@ -49,8 +49,17 @@ struct WgpuRenderTarget : public flight::ReferenceEnabled {
   double sample_count;
 };
 
-struct WgpuScreenRenderTarget : public WgpuRenderTarget {
+struct WgpuScreenRenderTarget : public flight::ReferenceEnabled {
+  double height;
+  double width;
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  double color_attachments;
+  flight::types::RenderTargetColorSpace color_space;
   flight::host_sdl::WgpuCanvasContext context;
+  flight::host_sdl::WgpuTexture depth_stencil_texture;
+  flight::host_sdl::WgpuTextureView depth_stencil_view;
+  flight::String format;
+  double sample_count;
   bool antialias;
   std::optional<flight::host_sdl::WgpuBindGroup> antialias_resolve_bind_group;
   std::optional<flight::host_sdl::WgpuTexture> antialias_texture;
@@ -76,8 +85,17 @@ struct WgpuScreenRenderTargetOptions : public flight::ReferenceEnabled {
   std::optional<flight::String> format;
 };
 
-struct WgpuTextureRenderTarget : public WgpuRenderTarget {
+struct WgpuTextureRenderTarget : public flight::ReferenceEnabled {
+  double height;
+  double width;
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  double color_attachments;
+  flight::types::RenderTargetColorSpace color_space;
   flight::Null context;
+  flight::host_sdl::WgpuTexture depth_stencil_texture;
+  flight::host_sdl::WgpuTextureView depth_stencil_view;
+  flight::String format;
+  double sample_count;
   flight::types::WgpuTextureBindings bindings;
   double mip_level_count;
   flight::host_sdl::WgpuTexture texture;

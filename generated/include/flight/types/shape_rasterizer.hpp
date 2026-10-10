@@ -9,13 +9,20 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Matrix; }
 namespace flight::types { struct RenderState; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+
+namespace flight::types {
+using ShapeRasterizer = std::function<void(flight::CanvasRenderingContext2D, flight::Array<std::optional<std::variant<flight::Array<double>, flight::Ref<Texture2DArray>, flight::Ref<flight::types::Matrix>, flight::Ref<TextureCube>, flight::Ref<Texture2D>, flight::Ref<Texture3D>, bool, double, flight::String>>>, flight::Ref<flight::types::RenderState>)>;
+} // namespace flight::types
 
 #include <flight/types/render_state.hpp>
 #include <flight/types/shape_command.hpp>
 
 namespace flight::types {
-
-using ShapeRasterizer = std::function<void(flight::CanvasRenderingContext2D, flight::Array<flight::types::ShapeCommandToken>, flight::Ref<flight::types::RenderState>)>;
 
 } // namespace flight::types

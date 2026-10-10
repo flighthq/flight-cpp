@@ -5,8 +5,10 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function getCanvasShapeCommand -- source line 14
 //   missing: function registerCanvasShapeCommand -- source line 19
+#include <flight/any.hpp>
 #include <flight/map.hpp>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -17,8 +19,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/canvas_shape_registry.hpp>
 
 namespace flight::scene2d_canvas {
-
-inline std::optional<flight::Ref<flight::types::CanvasShapeCommand<flight::String>>> get_canvas_shape_command(flight::Ref<flight::types::RenderState> state, flight::String key);
 
 inline void register_canvas_shape_command(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::CanvasShapeCommand<>> command);
 
@@ -34,12 +34,12 @@ using flight::types::RenderState;
 //     return entry?.state === RegistryEntryState.Bound ? entry.value : null;
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts: typeOf
-// types require C++ type computation lowering
+// cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts: union
+// member test must identify exactly one C++ optional value alternative
 
 
 // NOT GENERATED: function registerCanvasShapeCommand -- source line 19
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:multiVariant [compiler-restriction]
 //
 // The source it stood for:
 //   export function registerCanvasShapeCommand<K extends ShapeCommandKey>(
@@ -53,9 +53,7 @@ using flight::types::RenderState;
 //   }
 //   
 // cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts:
-// intersection types require C++ multiple-inheritance lowering: no shape for KeyedTable (argument
-// CanvasShapeCommand has no shape either), Entity. Declare the object shape the code reads rather than
-// intersecting a conjunct that has none
+// contextual multiVariant construction requires expression type evidence
 
 inline void register_canvas_shape_commands(flight::Ref<RenderState> state, flight::Array<flight::Ref<CanvasShapeCommand<>>> commands) {
   for (auto command : commands) {

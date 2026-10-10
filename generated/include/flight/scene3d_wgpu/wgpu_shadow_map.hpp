@@ -200,6 +200,12 @@ inline flight::Array<flight::host_sdl::WgpuVertexBufferLayout> shadow_vertex_buf
 // cpp emission failed for @flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadowMap.ts: a presence test
 // against null has no absence channel in the emitted C++ storage for identifier
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_ANONYMOUS_3E6B344A3B6BD77E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_ANONYMOUS_3E6B344A3B6BD77E
+struct anonymous_3e6b344a3b6bd77e : public flight::ReferenceEnabled {
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_ANONYMOUS_3E6B344A3B6BD77E
+
 inline flight::Ref<Scene3DRenderProxy> shadow_proxy = flight::make_ref<Scene3DRenderProxy>(Scene3DRenderProxy{.joint_matrices = nullptr, .material = flight::make_ref<Material>(Material{}), .normal_matrix = create_matrix3(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt), .subset = flight::make_ref<MeshSubset>(MeshSubset{.index_count = 0.0, .index_offset = 0.0}), .world_matrix = create_matrix4(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt)});
 
 inline flight::Uint32Array dynamic_offsets = flight::Uint32Array(1.0);

@@ -77,7 +77,7 @@ inline void bind_skeleton2_dformat(flight::String kind, std::function<bool(fligh
 
 
 // NOT GENERATED: function getRegistry -- source line 26
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
 //   function getRegistry(): KeyedTable<RegisteredSkeletonFormat> {
@@ -93,13 +93,11 @@ inline void bind_skeleton2_dformat(flight::String kind, std::function<bool(fligh
 //   // A DragonBones skeleton JSON is an object carrying an `armature` array (its skeleton container). Distinct
 //   // from Spine, whose bone/slot arrays are top-level rather than nested under an armature.
 // cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeletonDetect.ts:
-// intersection types require C++ multiple-inheritance lowering: no shape for KeyedTable (argument
-// RegisteredSkeletonFormat has a shape, so the wrapper is the gap), Entity. Declare the object shape the code
-// reads rather than intersecting a conjunct that has none
+// contextual optionalSingle construction requires expression type evidence
 
 
 // NOT GENERATED: function bindSkeleton2DFormat -- source line 88
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
 //   function bindSkeleton2DFormat(
@@ -116,9 +114,7 @@ inline void bind_skeleton2_dformat(flight::String kind, std::function<bool(fligh
 //   }
 //   
 // cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeletonDetect.ts:
-// intersection types require C++ multiple-inheritance lowering: no shape for KeyedTable (argument
-// RegisteredSkeletonFormat has a shape, so the wrapper is the gap), Entity. Declare the object shape the code
-// reads rather than intersecting a conjunct that has none
+// contextual optionalSingle construction requires expression type evidence
 
 inline flight::Array<flight::String> get_skeleton2_dformat_kinds() {
   flight::Array<flight::String> kinds = flight::Array<flight::String>{};
@@ -132,7 +128,7 @@ inline void register_skeleton2_dformat(flight::String kind, std::function<bool(f
 
 
 // NOT GENERATED: function unregisterSkeleton2DFormat -- source line 84
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
 //   export function unregisterSkeleton2DFormat(kind: string): void {
@@ -140,9 +136,7 @@ inline void register_skeleton2_dformat(flight::String kind, std::function<bool(f
 //   }
 //   
 // cpp emission failed for @flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeletonDetect.ts:
-// intersection types require C++ multiple-inheritance lowering: no shape for KeyedTable (argument
-// RegisteredSkeletonFormat has a shape, so the wrapper is the gap), Entity. Declare the object shape the code
-// reads rather than intersecting a conjunct that has none
+// contextual optionalSingle construction requires expression type evidence
 
 inline flight::Array<flight::Ref<RegisteredSkeletonFormat>> get_skeleton2_dformats_in_detection_order() {
   flight::Array<flight::Ref<RegisteredSkeletonFormat>> formats = flight::Array<flight::Ref<RegisteredSkeletonFormat>>{};

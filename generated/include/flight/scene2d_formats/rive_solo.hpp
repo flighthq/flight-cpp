@@ -9,12 +9,36 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/rive_import_registry.hpp>
+
+#include <flight/types/rive_document.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct RiveArtboardGraph; }
+namespace flight::types { struct RiveArtboardImportContext; }
+namespace flight::types { struct RiveCoreObject; }
+namespace flight::types { struct RiveCoreObjectHandler; }
+namespace flight::types { struct RiveImportRegistry; }
+namespace flight::types { struct RiveProperty; }
+namespace flight::types { template <typename Traits> struct Node; }
+
 #include <flight/importdiagnostics/import_diagnostic_collector.hpp>
 #include <flight/scene2d/display_container.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene2d_formats/rive_import_registry.hpp>
 
 namespace flight::scene2d_formats {
+
+using flight::types::ImportDiagnostic;
+using flight::types::RiveArtboardGraph;
+using flight::types::RiveArtboardImportContext;
+using flight::types::RiveCoreObject;
+using flight::types::RiveCoreObjectHandler;
+using flight::types::RiveImportRegistry;
+using flight::types::RiveProperty;
 
 inline const double rive_solo_type_key_flight_value_variable__u000052__u000049__u000056__u000045__u00005f__u000053__u00004f__u00004c__u00004f__u00005f__u000054__u000059__u000050__u000045__u00005f__u00004b__u000045__u000059__flight_private_681033688deddecc = 147.0;
 

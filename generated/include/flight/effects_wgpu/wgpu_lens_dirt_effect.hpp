@@ -26,10 +26,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::effects_wgpu {
 
-using flight::types::WgpuRenderTargetPool;
-
 extern const flight::types::WgpuRenderEffectRunner default_wgpu_lens_dirt_effect_runner;
 
+using flight::types::WgpuRenderTargetPool;
 using flight::types::WgpuRenderState;
 
 inline const flight::String lens_dirt_bright_fragment_wgsl = flight::String("\nstruct Uniforms {\n  u_threshold : f32,\n  _pad0 : f32,\n  _pad1 : f32,\n  _pad2 : f32,\n}\n@group(0) @binding(0) var<uniform> uni : Uniforms;\n@group(1) @binding(0) var tex : texture_2d<f32>;\n@group(1) @binding(1) var smp : sampler;\n\n@fragment\nfn fs_main(@location(0) uv : vec2f) -> @location(0) vec4f {\n  let c = textureSampleLevel(tex, smp, uv, 0.0);\n  let lum = dot(c.rgb, vec3f(0.299, 0.587, 0.114));\n  let bright = max(0.0, lum - uni.u_threshold);\n  return vec4f(c.rgb * (bright / max(lum, 0.00001)), c.a);\n}");

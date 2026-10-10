@@ -8,12 +8,27 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
+namespace flight::types { struct ClipRegion; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Rectangle; }
+namespace flight::types { struct RenderProxy2D; }
+namespace flight::types { struct Scene2DClipHooks; }
+namespace flight::types { struct WgpuRenderState; }
+namespace flight::types { struct WgpuRenderStateRuntime; }
+namespace flight::types { template <typename Traits> struct Node; }
+
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene2d_wgpu/wgpu_clip_contours.hpp>
 #include <flight/scene2d_wgpu/wgpu_clip_rectangle.hpp>
 
 namespace flight::scene2d_wgpu {
+
+using flight::types::WgpuRenderState;
+using flight::types::WgpuRenderStateRuntime;
 
 inline void pop_one_wgpu_clip(flight::Ref<flight::types::WgpuRenderState> state) {
   auto runtime = flight::render_wgpu::get_wgpu_render_state_runtime(state);

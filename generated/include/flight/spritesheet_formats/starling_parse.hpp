@@ -14,6 +14,27 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/texture_atlas_region.hpp>
+
+#include <flight/types/spritesheet_frame_data.hpp>
+
+#include <flight/types/spritesheet_data.hpp>
+
+#include <flight/types/spritesheet_animation_data.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct SpritesheetAnimationData; }
+namespace flight::types { struct SpritesheetData; }
+namespace flight::types { struct SpritesheetFrameData; }
+namespace flight::types { struct StarlingDocument; }
+namespace flight::types { struct StarlingParseOptions; }
+namespace flight::types { struct StarlingParsed; }
+namespace flight::types { struct StarlingSubTexture; }
+namespace flight::types { struct TextureAtlas; }
+namespace flight::types { struct TextureAtlasRegion; }
+
 #include <flight/importdiagnostics/import_diagnostic_collector.hpp>
 #include <flight/spritesheet/spritesheet_data.hpp>
 #include <flight/textureatlas_formats/texture_atlas_starling_parse.hpp>
@@ -21,6 +42,12 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/contract.hpp>
 
 namespace flight::spritesheet_formats {
+
+using flight::types::ImportDiagnostic;
+using flight::types::SpritesheetAnimationData;
+using flight::types::SpritesheetData;
+using flight::types::SpritesheetFrameData;
+using flight::types::TextureAtlasRegion;
 
 inline flight::Record<flight::String, flight::String> parse_attrs(flight::String attrs) {
   flight::Record<flight::String, flight::String> result = flight::Record<flight::String, flight::String>{};

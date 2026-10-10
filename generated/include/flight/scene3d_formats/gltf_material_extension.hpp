@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function attachGltfPbrExtension -- source line 22
 //   missing: function findGltfPbrExtension -- source line 57
+#include <flight/any.hpp>
 #include <optional>
 #include <flight/runtime.hpp>
 

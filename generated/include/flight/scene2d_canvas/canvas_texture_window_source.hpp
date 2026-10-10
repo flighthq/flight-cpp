@@ -4,7 +4,6 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function resolveCanvasTextureWindowSource -- source line 11
-#include <flight/host_sdl/image.hpp>
 #include <optional>
 #include <flight/runtime.hpp>
 
@@ -39,7 +38,7 @@ inline flight::Ref<x_y_8365950bd60f783f> texture_window_view_size = flight::make
 //   export function resolveCanvasTextureWindowSource(
 //     resolvers: CanvasTextureResolvers,
 //     texture: Readonly<Texture>,
-//   ): CanvasImageSource | null {
+//   ): HostImageSource | null {
 //     if (texture.dimension !== '2d') return null;
 //     const image = texture.source;
 //     const source = resolveCanvasTexture(resolvers, texture);

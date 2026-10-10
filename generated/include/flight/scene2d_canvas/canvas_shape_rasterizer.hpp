@@ -8,8 +8,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/matrix.hpp>
+
 namespace flight::types { struct CanvasTextureResolvers; }
+namespace flight::types { struct Matrix; }
 namespace flight::types { struct RenderState; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
 
 #include <flight/types/canvas_texture_resolver.hpp>
 #include <flight/types/non_entity_create_result.hpp>
@@ -21,6 +28,7 @@ namespace flight::types { struct RenderState; }
 namespace flight::scene2d_canvas {
 
 using flight::types::CanvasTextureResolvers;
+using flight::types::Matrix;
 using flight::types::RenderState;
 
 inline flight::types::ShapeRasterizer create_canvas_shape_rasterizer(flight::Ref<flight::types::CanvasTextureResolvers> resolvers) {

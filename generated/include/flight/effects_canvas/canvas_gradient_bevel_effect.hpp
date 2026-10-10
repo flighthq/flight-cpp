@@ -15,8 +15,6 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { struct CanvasTextureRenderTarget; } namespace flight::effects_canvas { inline void clip_canvas_bevel_band(flight::Ref<flight::types::CanvasTextureRenderTarget> band, flight::Ref<flight::types::CanvasTextureRenderTarget> source, std::optional<flight::String> bevel_type); }
-
 #include <flight/types/gradient_bevel_effect.hpp>
 
 #include <flight/types/canvas_render_target.hpp>
@@ -32,6 +30,8 @@ namespace flight::types { struct CanvasTextureRenderTarget; } namespace flight::
 #include <flight/effects_canvas/canvas_render_effect_registry.hpp>
 #include <flight/effects_canvas/canvas_source_mode_compositing.hpp>
 
+
+namespace flight::types { struct CanvasTextureRenderTarget; } namespace flight::effects_canvas { inline void clip_canvas_bevel_band(flight::Ref<flight::types::CanvasTextureRenderTarget> band, flight::Ref<flight::types::CanvasTextureRenderTarget> source, std::optional<flight::String> bevel_type); }
 namespace flight::effects_canvas {
 
 extern const flight::types::CanvasRenderEffectRunner default_canvas_gradient_bevel_effect_runner;

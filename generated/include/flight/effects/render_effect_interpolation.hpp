@@ -7,6 +7,7 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/any.hpp>
+#include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
 #include <optional>
 #include <random>
@@ -55,7 +56,7 @@ inline flight::Ref<RenderEffectFieldRoles> render_effect_field_roles = flight::m
 
 
 // NOT GENERATED: function lerpRenderEffect -- source line 44
-// refusal: cpp-named-properties-write-unsupported [target-runtime]
+// refusal: cpp-named-properties-write-value-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   export function lerpRenderEffect(
@@ -115,18 +116,7 @@ inline flight::Ref<RenderEffectFieldRoles> render_effect_field_roles = flight::m
 //     return true;
 //   }
 //   
-// cpp emission failed for @flighthq/effects/packages/effects/src/renderEffectInterpolation.ts: a dynamic
-// named-property write through the owner-preserving view of RenderEffect requires target-runtime mutation
-// support: RenderEffect remains the concrete object carrier and is not Record storage, flight::NamedProperties
-// is deliberately read-only, and this key has no finite declared member set the compiler can dispatch. For an
-// intentionally open extension domain, declare mutable string-indexed storage on the base/output type and
-// construct every owner in that carrier; a registry of keys or roles cannot recover cells on an owner that lacks
-// them. Otherwise add an owner-preserving checked NamedProperties::set(String, Any) contract, or keep the key as
-// a finite union of declared member names and assign through the typed object. Two things a reader tries here do
-// not work and one does: adding an index signature to a type that DECLARES members does not make it that record
-// carrier -- the declared members keep it a closed owner and the dynamic write still has no cell -- while a
-// carrier whose storage IS the record is mutable and lowers, and assigning through the declared members lowers
-// too. The compiler will not cast between owners, copy into replacement storage, materialize a replacement
-// owner, or add side storage
+// cpp emission failed for @flighthq/effects/packages/effects/src/renderEffectInterpolation.ts: an
+// owner-preserving dynamic named-property write requires a value representable in flight::Any
 
 } // namespace flight::effects

@@ -5,7 +5,7 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { struct Node3DTraits; }
+namespace flight::types { struct Node3D; }
 
 namespace flight::types {
 struct Scene3DAnimationTarget;
@@ -17,7 +17,7 @@ struct Scene3DAnimationTarget;
 namespace flight::types {
 
 struct Scene3DAnimationTarget : public flight::ReferenceEnabled {
-  flight::types::Node3D node;
+  flight::Ref<flight::types::Node3D> node;
   flight::types::Scene3DAnimationPath path;
 };
 

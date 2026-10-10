@@ -54,6 +54,12 @@ inline double solve_metallic(double diffuse, double specular, double one_minus_s
   return flight::minimum(flight::maximum(((-b + std::sqrt(discriminant)) / (2.0 * a)), 0.0), 1.0);
 }
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_ANONYMOUS_3E6B344A3B6BD77E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_ANONYMOUS_3E6B344A3B6BD77E
+struct anonymous_3e6b344a3b6bd77e : public flight::ReferenceEnabled {
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_ANONYMOUS_3E6B344A3B6BD77E
+
 inline flight::Ref<SpecularGlossinessPbrMaterial> fallback_material = flight::make_ref<SpecularGlossinessPbrMaterial>(SpecularGlossinessPbrMaterial{});
 
 inline flight::Ref<LinearColor> diffuse_scratch = flight::Array{0.0, 0.0, 0.0, 0.0};

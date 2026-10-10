@@ -8,12 +8,23 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/skeleton3_d.hpp>
+
+namespace flight::types { struct Mesh; }
+namespace flight::types { struct MeshGeometry; }
+namespace flight::types { struct MeshMorph; }
+namespace flight::types { struct MeshSkinBindPose; }
+namespace flight::types { struct Skeleton3D; }
+namespace flight::types { struct Skin; }
+
 #include <flight/mesh/mesh_geometry.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/skeleton3d/skeleton3d.hpp>
 #include <flight/skeleton3d/skin_mesh_geometry.hpp>
 
 namespace flight::skeleton3d {
+
+using flight::types::Skeleton3D;
 
 inline void update_mesh_skin(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Mesh>>>> mesh) {
   auto skin = ([&]() -> std::variant<flight::Ref<flight::types::Skin>, flight::Null, flight::Undefined> { auto optional_property = flight::row_get<flight::RowKey<"skin">>(mesh); if (std::holds_alternative<flight::Undefined>(optional_property)) return std::variant<flight::Ref<flight::types::Skin>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property)) return std::variant<flight::Ref<flight::types::Skin>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<flight::types::Skin>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::Skin>>, std::get<flight::Ref<flight::types::Skin>>(optional_property)}; }());

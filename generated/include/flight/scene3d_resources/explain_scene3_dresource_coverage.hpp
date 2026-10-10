@@ -8,10 +8,26 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/scene3_dresources.hpp>
+
+namespace flight::types { struct CatalogEntry; }
+namespace flight::types { struct CatalogRegistration; }
+namespace flight::types { struct FallbackRemediableSceneCoverageEntry; }
+namespace flight::types { struct FallbackUnavailableSceneCoverageEntry; }
+namespace flight::types { struct SatisfiedSceneCoverageEntry; }
+namespace flight::types { struct Scene3DKindUsage; }
+namespace flight::types { struct Scene3DMaterialTextureRegistry; }
+namespace flight::types { struct Scene3DResourceResolver; }
+namespace flight::types { struct UnavailableSceneCoverageEntry; }
+namespace flight::types { struct UnregisteredSceneCoverageEntry; }
+
 #include <flight/types/contract.hpp>
 #include <flight/scene3d_resources/scene_material_texture_registry.hpp>
 
 namespace flight::scene3d_resources {
+
+using flight::types::Scene3DMaterialTextureRegistry;
+using flight::types::Scene3DResourceResolver;
 
 inline std::optional<flight::Ref<flight::types::CatalogRegistration>> find_catalog_registration(std::optional<flight::Array<flight::Ref<flight::types::CatalogEntry>>> catalog, flight::String kind, flight::types::RenderRegistryTable registry) {
   if (!catalog.has_value()) {

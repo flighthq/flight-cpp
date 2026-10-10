@@ -13,30 +13,27 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { struct RenderCache; }
-
-namespace flight::types { template <typename Traits> struct Node; }
-
-namespace flight::types { struct ColorScaleBias; }
 namespace flight::types { struct Entity; }
 namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct ImageSurfaceCreator; }
-namespace flight::types { struct Material; }
-namespace flight::types { struct MaterialData; }
 namespace flight::types { struct Matrix; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Node3D; }
 namespace flight::types { struct Path; }
 namespace flight::types { struct PathMesh; }
+namespace flight::types { struct RenderCache; }
+namespace flight::types { struct RenderEffect; }
 namespace flight::types { struct RenderEffectPadding; }
 namespace flight::types { struct RenderProxy2D; }
 namespace flight::types { struct RenderProxy; }
 namespace flight::types { struct RenderRegistrySignals; }
 namespace flight::types { struct Renderer; }
-namespace flight::types { struct RendererData; }
 namespace flight::types { struct Scene2DClipHooks; }
 namespace flight::types { struct StrokeStyle; }
 namespace flight::types { template <typename K> struct CanvasShapeCommand; }
 namespace flight::types { template <typename T> struct KeyedTable; }
 namespace flight::types { template <typename T> struct SlotTable; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct RenderState;
@@ -44,8 +41,8 @@ struct RenderRegistries;
 struct RenderStateRuntime;
 using Scene3DGraphSyncPolicy = flight::String;
 using StrokeTessellator = std::function<std::optional<flight::Ref<flight::types::PathMesh>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::StrokeStyle>>>>, std::optional<double>)>;
-using ColorAdjustmentUnsupportedGuard = std::function<void(flight::Ref<RenderState>, std::variant<flight::Ref<flight::types::RenderCache>, std::shared_ptr<Node<flight::Any>>>)>;
-using RenderRootGuard = std::function<void(flight::Ref<RenderState>, std::variant<flight::Ref<flight::types::RenderCache>, std::shared_ptr<Node<flight::Any>>>)>;
+using ColorAdjustmentUnsupportedGuard = std::function<void(flight::Ref<RenderState>, std::variant<flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<Node2DTraits>>>>, flight::RowOf<flight::Ref<Node2DTraits>>>>, flight::Ref<flight::types::RenderCache>, flight::Ref<flight::types::Node3D>, std::shared_ptr<Node<flight::Any>>>)>;
+using RenderRootGuard = std::function<void(flight::Ref<RenderState>, std::variant<flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<Node2DTraits>>>>, flight::RowOf<flight::Ref<Node2DTraits>>>>, flight::Ref<flight::types::RenderCache>, flight::Ref<flight::types::Node3D>, std::shared_ptr<Node<flight::Any>>>)>;
 } // namespace flight::types
 
 #include <flight/types/blend_mode.hpp>
@@ -65,9 +62,6 @@ using RenderRootGuard = std::function<void(flight::Ref<RenderState>, std::varian
 #include <flight/types/render_registry_signals.hpp>
 #include <flight/types/scene2_drenderer.hpp>
 #include <flight/types/stroke_style.hpp>
-#include <flight/types/color_scale_bias.hpp>
-#include <flight/types/material.hpp>
-#include <flight/types/renderer_data.hpp>
 
 namespace flight::types {
 
@@ -129,17 +123,12 @@ struct RenderStateRuntime : public flight::ReferenceEnabled {
   flight::Array<flight::types::Renderable> temp_stack;
 };
 
-inline void invoke_render_proxy_destroy_data(std::optional<flight::Ref<flight::types::RenderProxy>> proxy, flight::Ref<RenderState> state) {
-  if ((!(std::holds_alternative<flight::Null>(([&]() -> std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined> { auto optional_chain_receiver = proxy; if (!optional_chain_receiver.has_value()) return std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return ([&]() -> std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined> { auto optional_chain_projected = optional_chain_receiver.value()->renderer_data; if (!optional_chain_projected.has_value()) return std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::RendererData>>, optional_chain_projected.value()}; }()); }()))) && !(std::holds_alternative<flight::Undefined>(([&]() -> std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined> { auto optional_chain_receiver = proxy; if (!optional_chain_receiver.has_value()) return std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return ([&]() -> std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined> { auto optional_chain_projected_2 = optional_chain_receiver.value()->renderer_data; if (!optional_chain_projected_2.has_value()) return std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::RendererData>>, optional_chain_projected_2.value()}; }()); }()))))) {
-    ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void(flight::Ref<RenderState>, flight::Ref<flight::types::RendererData>)>> { auto optional_chain_receiver = proxy.value()->renderer; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->destroy_data; }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(state, proxy.value()->renderer_data.value()); }());
-  }
-}
-
 inline flight::Ref<RenderStateRuntime> read_render_state_runtime_owner(flight::Ref<RenderState> owner) {
   return owner->entity_runtime_key.value();
 }
 
-inline void write_render_state_runtime_owner(flight::types::EntityConstruction<flight::Ref<RenderState>> owner, flight::Ref<RenderStateRuntime> runtime) {
+template <typename State, typename Runtime>
+inline void write_render_state_runtime_owner(flight::types::EntityConstruction<State> owner, Runtime runtime) {
   flight::row_set(owner, flight::types::entity_runtime_key, std::optional<flight::Ref<RenderStateRuntime>>{runtime});
 }
 

@@ -9,9 +9,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/skeleton2_d.hpp>
+
+namespace flight::types { struct Skeleton2D; }
+namespace flight::types { struct Skeleton2DConstraint; }
+
 #include <flight/types/contract.hpp>
 
 namespace flight::skeleton2d {
+
+using flight::types::Skeleton2D;
 
 inline flight::Map<flight::String, flight::types::Skeleton2DConstraintSolver> solvers = flight::Map<flight::String, flight::types::Skeleton2DConstraintSolver>();
 

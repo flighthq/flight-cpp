@@ -19,8 +19,6 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/texture.hpp>
-
 #include <flight/signals/slot.hpp>
 
 #include <flight/signals/signal.hpp>
@@ -184,7 +182,10 @@ using reason_4890f49c03969010 = flight::types::reason_4890f49c03969010;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_BINDING_UID_06E64A362B012722
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_BINDING_UID_06E64A362B012722
-using binding_uid_06e64a362b012722 = flight::types::binding_uid_06e64a362b012722;
+struct binding_uid_06e64a362b012722 : public flight::ReferenceEnabled {
+  std::optional<flight::ErasedRef> binding;
+  std::optional<flight::String> uid;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_BINDING_UID_06E64A362B012722
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_ENTITY_RUNTIME_KEY_6610FB5B65ABA797

@@ -11,12 +11,21 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/morph_shape.hpp>
+
+namespace flight::types { struct AnimationChannel; }
+namespace flight::types { struct AnimationClip; }
+namespace flight::types { struct MorphShape; }
+namespace flight::types { struct MorphShapeAnimationTarget; }
+
 #include <flight/animation/animation_clip.hpp>
 #include <flight/entity/entity.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/shape/morph_shape.hpp>
 
 namespace flight::shape {
+
+using flight::types::MorphShape;
 
 inline bool apply_morph_shape_animation_sample(flight::SequenceView<double> sampled, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationChannel>>>> channel) {
   auto target = ([&]() -> std::optional<flight::Ref<flight::types::MorphShapeAnimationTarget>> { const auto& erased_value = flight::row_get<flight::RowKey<"targetRef">>(channel); if (static_cast<bool>(erased_value.object_if<flight::types::MorphShapeAnimationTarget>())) return std::optional<flight::Ref<flight::types::MorphShapeAnimationTarget>>{erased_value.object_if<flight::types::MorphShapeAnimationTarget>()}; if (erased_value.is_nullish()) return std::nullopt; throw std::logic_error("erased value holds no alternative this union represents"); }());

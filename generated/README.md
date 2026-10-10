@@ -6,8 +6,8 @@ Do not edit it by hand.
 
 Applied binding profiles: `flighthq/flight-cpp/runtime-carriers/1`, `flighthq/flight-cpp/headless/1`, `flighthq/flight-cpp/web-types/1`, `flighthq/flight-cpp/sdl-image/1`, `flighthq/flight-cpp/sdl-gl/1`, `flighthq/flight-cpp/sdl-wgpu/1`, `flighthq/flight-cpp/sdl-app/1`. Exact profile paths and SHA-256 digests are recorded in `manifest.json`.
 
-The current compiler emitted 2178 of 2709 source modules from
-150 SDK packages and refused 531. Emitted headers live under
+The current compiler emitted 2349 of 2910 source modules from
+154 SDK packages and refused 561. Emitted headers live under
 `include/flight/<package>/`; every refusal and its owning module is recorded in `refusals.json`.
 
 This is a bring-up inventory. It is intentionally committed before it forms a completely compilable SDK closure.
@@ -31,3 +31,6 @@ Generate a profile-specific inventory outside the committed portable tree with:
 ```sh
 node scripts/sdkGeneration.mjs --binding-profile=bindings/runtime.json --binding-profile=bindings/headless.json --output=out/sdk-headless
 ```
+
+Add `--progress` to print the compiler phase and module before every synchronous lowering or
+emission step. If an interrupted run stops advancing, its final line identifies the work in flight.

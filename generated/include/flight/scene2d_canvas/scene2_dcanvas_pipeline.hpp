@@ -9,6 +9,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/canvas_shape_registry.hpp>
+
+namespace flight::types { struct CanvasRenderRegistries; }
+namespace flight::types { struct Renderer; }
+namespace flight::types { template <typename K> struct CanvasShapeCommand; }
+namespace flight::types { template <typename T> struct KeyedTable; }
+
 #include <flight/registry/registry_table.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/scene2d_canvas/canvas_bitmap_text.hpp>
@@ -28,6 +35,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/scene2d_canvas/canvas_tilemap.hpp>
 
 namespace flight::scene2d_canvas {
+
+using flight::types::CanvasShapeCommand;
 
 inline std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::Renderer>>> build_scene2d_canvas_renderers() {
   auto registries = flight::scene2d_canvas::allocate_empty_canvas_render_registries();

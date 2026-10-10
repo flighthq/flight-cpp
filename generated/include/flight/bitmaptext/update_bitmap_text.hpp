@@ -21,16 +21,6 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { struct BitmapText; } namespace flight::bitmaptext { inline void update_bitmap_text(flight::Ref<flight::types::BitmapText> bitmap_text); }
-
-namespace flight::types { struct BitmapText; } namespace flight::bitmaptext { inline bool is_bitmap_text_glyph_layout_stale(flight::Ref<flight::types::BitmapText> source); }
-
-namespace flight::types { struct BitmapTextRuntime; struct GlyphSource; } namespace flight::bitmaptext { struct BitmapTextPageContext; inline std::optional<flight::Ref<BitmapTextPageContext>> ensure_bitmap_text_page(flight::Ref<flight::types::BitmapTextRuntime> runtime, flight::Ref<flight::types::GlyphSource> glyph_source, flight::Map<double, flight::Ref<BitmapTextPageContext>> pages, double page); }
-
-namespace flight::types { struct BitmapTextData; struct GlyphSource; } namespace flight::bitmaptext { struct BitmapTextLayoutResult; inline flight::Ref<BitmapTextLayoutResult> layout_bitmap_text_lines(flight::Ref<flight::types::GlyphSource> glyph_source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapTextData>>>> data); }
-
-namespace flight::types { struct BitmapTextRuntime; struct Rectangle; } namespace flight::bitmaptext { inline flight::Ref<flight::types::Rectangle> ensure_bounds_rectangle(flight::Ref<flight::types::BitmapTextRuntime> runtime); }
-
 #include <flight/textureatlas/texture_atlas_region.hpp>
 
 #include <flight/node/revision.hpp>
@@ -43,6 +33,16 @@ namespace flight::types { struct BitmapTextRuntime; struct Rectangle; } namespac
 
 #include <flight/types/bitmap_text.hpp>
 
+
+namespace flight::types { struct BitmapTextRuntime; struct Rectangle; } namespace flight::bitmaptext { inline flight::Ref<flight::types::Rectangle> ensure_bounds_rectangle(flight::Ref<flight::types::BitmapTextRuntime> runtime); }
+
+namespace flight::types { struct BitmapTextData; struct GlyphSource; } namespace flight::bitmaptext { struct BitmapTextLayoutResult; inline flight::Ref<BitmapTextLayoutResult> layout_bitmap_text_lines(flight::Ref<flight::types::GlyphSource> glyph_source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::BitmapTextData>>>> data); }
+
+namespace flight::types { struct BitmapTextRuntime; struct GlyphSource; } namespace flight::bitmaptext { struct BitmapTextPageContext; inline std::optional<flight::Ref<BitmapTextPageContext>> ensure_bitmap_text_page(flight::Ref<flight::types::BitmapTextRuntime> runtime, flight::Ref<flight::types::GlyphSource> glyph_source, flight::Map<double, flight::Ref<BitmapTextPageContext>> pages, double page); }
+
+namespace flight::types { struct BitmapText; } namespace flight::bitmaptext { inline bool is_bitmap_text_glyph_layout_stale(flight::Ref<flight::types::BitmapText> source); }
+
+namespace flight::types { struct BitmapText; } namespace flight::bitmaptext { inline void update_bitmap_text(flight::Ref<flight::types::BitmapText> bitmap_text); }
 namespace flight::bitmaptext {
 
 using flight::textureatlas::add_texture_atlas_region;

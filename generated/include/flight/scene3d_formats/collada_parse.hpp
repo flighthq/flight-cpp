@@ -7,7 +7,6 @@
 //   missing: function decodeColladaMorphsFromRoot -- source line 510
 //   missing: function decodeColladaControllersFromRoot -- source line 557
 //   missing: function buildColladaNodeWorldMatrices -- source line 1216
-//   missing: function resolveColladaCameras -- source line 1167
 //   missing: function buildColladaMeshMorph -- source line 1451
 //   missing: function parseCollada -- source line 627
 #include <cmath>
@@ -48,6 +47,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/geometry/matrix4.hpp>
 
+#include <flight/camera/projection.hpp>
+
 #include <flight/types/xml_element.hpp>
 
 #include <flight/types/vector3.hpp>
@@ -61,6 +62,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/scene3_danimation_path.hpp>
 
 #include <flight/types/point_light_options.hpp>
+
+#include <flight/types/perspective_projection_options.hpp>
+
+#include <flight/types/orthographic_projection_options.hpp>
 
 #include <flight/types/node3_d.hpp>
 
@@ -102,6 +107,9 @@ using flight::geometry::decompose_matrix4_to_transform3_d;
 using flight::geometry::multiply_matrix4;
 using flight::geometry::set_matrix4;
 
+using flight::camera::create_orthographic_projection;
+using flight::camera::create_perspective_projection;
+
 using flight::types::AnimationInterpolation;
 using flight::types::DirectionalLightOptions;
 using flight::types::EasingFunction;
@@ -114,6 +122,8 @@ using flight::types::Matrix4;
 using flight::types::Matrix4Like;
 using flight::types::MeshMorph;
 using flight::types::MorphTarget;
+using flight::types::OrthographicProjectionOptions;
+using flight::types::PerspectiveProjectionOptions;
 using flight::types::PointLightOptions;
 using flight::types::Scene3DAnimationPath;
 using flight::types::Scene3DDocument;
@@ -696,66 +706,33 @@ inline void apply_collada_root_transform(flight::Ref<Scene3DDocumentNode> node, 
 // holes; use an explicit fill value, build the array with push, or use Array.from when every element should be
 // present
 
-
-// NOT GENERATED: function resolveColladaCameras -- source line 1167
-// refusal: cpp-dual-sentinel-multi-alternative-narrowing-unrepresented [source-portability]
-//
-// The source it stood for:
-//   function resolveColladaCameras(
-//     document: Scene3DDocument,
-//     deferred: readonly ColladaDeferredCameraBinding[],
-//     definitions: ReadonlyMap<string, ColladaCameraDefinition | null>,
-//     rootNodeIndices: readonly number[],
-//     diagnostics: ImportDiagnostic[],
-//   ): void {
-//     const worldMatrices = buildColladaNodeWorldMatrices(document.nodes, rootNodeIndices);
-//     for (const binding of deferred) {
-//       const definition = definitions.get(binding.cameraId);
-//       if (definition === undefined) {
-//         reportImportDiagnostic(diagnostics, ImportDiagnosticSeverity.Drop, 'collada.missing-reference', 'parseCollada', {
-//           element: 'instance_camera',
-//           url: `#${binding.cameraId}`,
-//         });
-//         continue;
-//       }
-//       if (definition === null) continue;
-//       const worldMatrix = worldMatrices[binding.nodeIndex];
-//       if (worldMatrix === undefined) continue;
-//       const transform = createTransform3D();
-//       decomposeMatrix4ToTransform3D(transform, worldMatrix);
-//       let camera: Scene3DDocumentCamera;
-//       if (definition.kind === 'perspective') {
-//         camera = {
-//           far: definition.far,
-//           ...(definition.name !== undefined ? { name: definition.name } : {}),
-//           near: definition.near,
-//           node: binding.nodeIndex,
-//           projection: createPerspectiveProjection({ aspect: definition.aspect, fovY: definition.fovY }),
-//           transform,
-//         };
-//       } else {
-//         camera = {
-//           far: definition.far,
-//           ...(definition.name !== undefined ? { name: definition.name } : {}),
-//           near: definition.near,
-//           node: binding.nodeIndex,
-//           projection: createOrthographicProjection({
-//             halfHeight: definition.halfHeight,
-//             halfWidth: definition.halfWidth,
-//           }),
-//           transform,
-//         };
-//       }
-//       document.cameras.push(camera);
-//     }
-//   }
-//   
-// cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/colladaParse.ts: dual-sentinel
-// presence narrowing requires one remaining C++ value domain: the storage carries both null and undefined beside
-// SEVERAL value alternatives, so a presence test leaves more than one possible value and the emitter has no
-// single read to emit for it. Declare the member with one concrete representation -- `readonly number[]` rather
-// than `readonly number[] | Uint16Array | Uint32Array` -- and read it through a coalesce whose result is
-// declared; that shape lowers, which the control beside this rule shows
+inline void resolve_collada_cameras(flight::Ref<Scene3DDocument> document, flight::Array<flight::Ref<ColladaDeferredCameraBinding>> deferred, flight::Map<flight::String, std::optional<ColladaCameraDefinition>> definitions, flight::Array<double> root_node_indices, flight::Array<flight::Ref<ImportDiagnostic>> diagnostics) {
+  flight::Array<std::optional<flight::Ref<Matrix4Like>>> world_matrices = build_collada_node_world_matrices(document->nodes, root_node_indices);
+  for (auto binding : deferred) {
+    std::variant<flight::Ref<ColladaOrthographicCameraDefinition>, flight::Ref<ColladaPerspectiveCameraDefinition>, flight::Null, flight::Undefined> definition = definitions.get(binding->camera_id);
+    if (std::holds_alternative<flight::Undefined>(definition)) {
+      report_import_diagnostic(diagnostics, import_diagnostic_severity.drop, flight::String("collada.missing-reference"), flight::String("parseCollada"), {{flight::String("element"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("instance_camera")}}, {flight::String("url"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("#") + flight::to_string(binding->camera_id) + flight::String("")}}});
+      continue;
+    }
+    if (std::holds_alternative<flight::Null>(definition)) {
+      continue;
+    }
+    std::optional<std::optional<flight::Ref<Matrix4Like>>> world_matrix = world_matrices.get(binding->node_index);
+    if (!world_matrix.has_value()) {
+      continue;
+    }
+    flight::Ref<Transform3D> transform = create_transform3_d();
+    decompose_matrix4_to_transform3_d(transform, world_matrix.value());
+    flight::Ref<Scene3DDocumentCamera> camera;
+    if ((std::visit([](const auto& value) { return value->kind; }, ([&]() -> std::variant<flight::Ref<ColladaOrthographicCameraDefinition>, flight::Ref<ColladaPerspectiveCameraDefinition>> { const auto& present_union_source = definition; if (const auto* alternative = std::get_if<flight::Ref<ColladaOrthographicCameraDefinition>>(&present_union_source)) return std::variant<flight::Ref<ColladaOrthographicCameraDefinition>, flight::Ref<ColladaPerspectiveCameraDefinition>>{std::in_place_type<flight::Ref<ColladaOrthographicCameraDefinition>>, *alternative}; if (const auto* alternative = std::get_if<flight::Ref<ColladaPerspectiveCameraDefinition>>(&present_union_source)) return std::variant<flight::Ref<ColladaOrthographicCameraDefinition>, flight::Ref<ColladaPerspectiveCameraDefinition>>{std::in_place_type<flight::Ref<ColladaPerspectiveCameraDefinition>>, *alternative}; throw std::logic_error("present union holds an absent or excluded alternative"); }())) == flight::String("perspective"))) {
+      (camera = flight::make_ref<Scene3DDocumentCamera>(Scene3DDocumentCamera{.far = std::get<1>(definition)->far, .near = std::get<1>(definition)->near, .node = binding->node_index, .projection = create_perspective_projection(flight::make_ref<PerspectiveProjectionOptions>(PerspectiveProjectionOptions{.aspect = std::get<1>(definition)->aspect, .fov_y = std::get<1>(definition)->fov_y})), .transform = transform}));
+    }
+    else {
+      (camera = flight::make_ref<Scene3DDocumentCamera>(Scene3DDocumentCamera{.far = std::get<0>(definition)->far, .near = std::get<0>(definition)->near, .node = binding->node_index, .projection = create_orthographic_projection(flight::make_ref<OrthographicProjectionOptions>(OrthographicProjectionOptions{.half_height = std::get<0>(definition)->half_height, .half_width = std::get<0>(definition)->half_width})), .transform = transform}));
+    }
+    document->cameras.push(camera);
+  }
+}
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_COLOR_INTENSITY_DB2E07C88A17AB5C
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_FORMATS_COLOR_INTENSITY_DB2E07C88A17AB5C
@@ -1030,8 +1007,8 @@ inline const double collada_camera_default_near = 0.1;
 
 inline const double collada_camera_default_ortho_half_extent = 1.0;
 
-inline flight::Map<flight::String, std::optional<std::variant<flight::Ref<ColladaOrthographicCameraDefinition>, flight::Ref<ColladaPerspectiveCameraDefinition>>>> decode_collada_camera_definitions(flight::Ref<XmlElement> root, flight::Array<flight::Ref<ImportDiagnostic>> diagnostics) {
-  auto definitions = flight::Map<flight::String, std::optional<std::variant<flight::Ref<ColladaOrthographicCameraDefinition>, flight::Ref<ColladaPerspectiveCameraDefinition>>>>();
+inline flight::Map<flight::String, std::optional<ColladaCameraDefinition>> decode_collada_camera_definitions(flight::Ref<XmlElement> root, flight::Array<flight::Ref<ImportDiagnostic>> diagnostics) {
+  auto definitions = flight::Map<flight::String, std::optional<ColladaCameraDefinition>>();
   for (auto library : descendants(root, flight::String("library_cameras"))) {
     for (auto camera : children(std::optional<flight::Ref<XmlElement>>{library}, flight::String("camera"))) {
       const std::optional<flight::String> id = id_of(camera);
@@ -1414,7 +1391,7 @@ inline double build_collada_node(flight::Ref<Scene3DDocument> document, flight::
   return node_index;
 }
 
-inline void build_collada_scene_hierarchy(flight::Ref<Scene3DDocument> document, flight::Ref<XmlElement> root, flight::Map<flight::String, flight::Ref<XmlElement>> visual_scene_library, flight::Map<flight::String, flight::Ref<XmlElement>> node_library, flight::Array<double> root_transform, flight::Map<flight::String, double> geometry_id_to_mesh_index, flight::Map<flight::String, std::optional<std::variant<flight::Ref<ColladaOrthographicCameraDefinition>, flight::Ref<ColladaPerspectiveCameraDefinition>>>> camera_definitions, flight::Map<flight::String, flight::Array<double>> geometry_positions, flight::Map<flight::String, flight::Array<flight::String>> geometry_primitive_symbols, flight::Map<flight::String, double> material_indices, flight::Map<flight::String, flight::Ref<ColladaDecodedSkin>> controller_map, flight::Map<flight::String, flight::Ref<ColladaDecodedMorph>> morph_map, flight::Array<flight::Ref<ColladaDecodedAnimationChannel>> decoded_anim_channels, flight::Map<flight::String, std::optional<flight::Ref<ColladaLightDefinition>>> light_definitions, flight::Array<flight::Ref<ImportDiagnostic>> diagnostics) {
+inline void build_collada_scene_hierarchy(flight::Ref<Scene3DDocument> document, flight::Ref<XmlElement> root, flight::Map<flight::String, flight::Ref<XmlElement>> visual_scene_library, flight::Map<flight::String, flight::Ref<XmlElement>> node_library, flight::Array<double> root_transform, flight::Map<flight::String, double> geometry_id_to_mesh_index, flight::Map<flight::String, std::optional<ColladaCameraDefinition>> camera_definitions, flight::Map<flight::String, flight::Array<double>> geometry_positions, flight::Map<flight::String, flight::Array<flight::String>> geometry_primitive_symbols, flight::Map<flight::String, double> material_indices, flight::Map<flight::String, flight::Ref<ColladaDecodedSkin>> controller_map, flight::Map<flight::String, flight::Ref<ColladaDecodedMorph>> morph_map, flight::Array<flight::Ref<ColladaDecodedAnimationChannel>> decoded_anim_channels, flight::Map<flight::String, std::optional<flight::Ref<ColladaLightDefinition>>> light_definitions, flight::Array<flight::Ref<ImportDiagnostic>> diagnostics) {
   std::optional<flight::Ref<XmlElement>> scene_element = child(std::optional<flight::Ref<XmlElement>>{root}, flight::String("scene"));
   if (!scene_element.has_value()) {
     return;

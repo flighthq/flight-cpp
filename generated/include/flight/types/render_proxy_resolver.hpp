@@ -10,6 +10,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types { struct Node2DTraits; }
 namespace flight::types { struct RenderProxy2D; }
 namespace flight::types { struct RenderState; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct RenderProxyResolver;

@@ -10,6 +10,34 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/rive_import_registry.hpp>
+
+#include <flight/types/rive_document.hpp>
+
+#include <flight/types/path_boolean_kernel.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct PathBooleanKernel; }
+namespace flight::types { struct RiveAdvancedBlend; }
+namespace flight::types { struct RiveAnimationClip; }
+namespace flight::types { struct RiveArtboardGraph; }
+namespace flight::types { struct RiveArtboardImport; }
+namespace flight::types { struct RiveArtboardImportContext; }
+namespace flight::types { struct RiveCoreObject; }
+namespace flight::types { struct RiveCoreObjectHandler; }
+namespace flight::types { struct RiveDocument; }
+namespace flight::types { struct RiveDocumentImportContext; }
+namespace flight::types { struct RiveDocumentImportResult; }
+namespace flight::types { struct RiveFileAsset; }
+namespace flight::types { struct RiveImportRegistry; }
+namespace flight::types { struct RiveLayoutImport; }
+namespace flight::types { struct RiveObjectGraph; }
+namespace flight::types { struct RiveProperty; }
+namespace flight::types { struct RiveSkeleton2DImport; }
+namespace flight::types { struct RiveStateMachineDescriptor; }
+
 #include <flight/entity/entity.hpp>
 #include <flight/importdiagnostics/import_diagnostic_collector.hpp>
 #include <flight/math/constants.hpp>
@@ -24,6 +52,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/scene2d_formats/rive_object_graph.hpp>
 
 namespace flight::scene2d_formats {
+
+using flight::types::ImportDiagnostic;
+using flight::types::PathBooleanKernel;
+using flight::types::RiveArtboardGraph;
+using flight::types::RiveArtboardImportContext;
+using flight::types::RiveCoreObject;
+using flight::types::RiveCoreObjectHandler;
+using flight::types::RiveDocumentImportContext;
+using flight::types::RiveFileAsset;
+using flight::types::RiveImportRegistry;
+using flight::types::RiveLayoutImport;
+using flight::types::RiveProperty;
 
 inline void initialize_rive_document_import_result(flight::types::EntityConstruction<flight::Ref<flight::types::RiveDocumentImportResult>> out, flight::Array<flight::Ref<flight::types::RiveArtboardImport>> artboards, flight::Array<flight::Ref<flight::types::RiveFileAsset>> assets) {
   flight::row_set<flight::RowKey<"artboards">>(out, artboards);
@@ -136,7 +176,7 @@ inline std::optional<flight::types::DisplayObject> import_rive_component(flight:
   }
   apply_rive_transform(node.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)));
   apply_rive_blend_mode(node.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RiveCoreObject>>>>(object)), context->advanced_blends);
-  flight::node::add_node_child<flight::Ref<flight::types::Node2DTraits>>(([&]() -> flight::types::DisplayObject { auto nullish_coalesce_left = find_rive_display_parent(context->nodes, context->artboard->parent_indices, index); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return context->root; }()), node.value());
+  flight::node::add_node_child(([&]() -> flight::types::DisplayObject { auto nullish_coalesce_left = find_rive_display_parent(context->nodes, context->artboard->parent_indices, index); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return context->root; }()), node.value());
   return std::optional<flight::types::DisplayObject>{node.value()};
 }
 

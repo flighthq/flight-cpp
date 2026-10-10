@@ -8,7 +8,9 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct DecodedImage; }
 namespace flight::types { struct ImageEncodeFailureExplanation; }
+namespace flight::types { struct ImageEncodeOptions; }
 
 #include <flight/types/image_encode_failure_explanation.hpp>
 #include <flight/types/image_encoder.hpp>

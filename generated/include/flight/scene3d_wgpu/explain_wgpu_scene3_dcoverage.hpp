@@ -10,10 +10,36 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
+namespace flight::types { struct CatalogEntry; }
+namespace flight::types { struct CatalogRegistration; }
+namespace flight::types { struct FallbackRemediableSceneCoverageEntry; }
+namespace flight::types { struct FallbackUnavailableSceneCoverageEntry; }
+namespace flight::types { struct SatisfiedSceneCoverageEntry; }
+namespace flight::types { struct Scene3DKindUsage; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { struct TombstonedRegistryTableEntry; }
+namespace flight::types { struct UnavailableSceneCoverageEntry; }
+namespace flight::types { struct UnregisteredSceneCoverageEntry; }
+namespace flight::types { struct WgpuMeshMaterialRenderer; }
+namespace flight::types { struct WgpuModifierSnippet; }
+namespace flight::types { struct WgpuRenderRegistries; }
+namespace flight::types { struct WgpuRenderState; }
+namespace flight::types { struct WgpuRenderStateRuntime; }
+namespace flight::types { struct WgpuTextureEntry; }
+namespace flight::types { template <typename T> struct BoundRegistryTableEntry; }
+namespace flight::types { template <typename T> struct KeyedTable; }
+
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 #include <flight/types/contract.hpp>
 
 namespace flight::scene3d_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline std::optional<flight::Ref<flight::types::CatalogRegistration>> find_catalog_registration(std::optional<flight::Array<flight::Ref<flight::types::CatalogEntry>>> catalog, flight::String kind, flight::types::RenderRegistryTable registry) {
   if (!catalog.has_value()) {
@@ -44,68 +70,6 @@ inline flight::types::SceneCoverageEntry create_shortfall_entry(std::optional<fl
   }
   return {.coverage = (fallback ? flight::types::scene_coverage->fallback_remediable : flight::types::scene_coverage->unregistered), .module = registration.value()->module, .registrar = registration.value()->registrar};
 }
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_701E8465BD6197E1
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_701E8465BD6197E1
-struct state_701e8465bd6197e1 : public flight::ReferenceEnabled {
-  flight::String state;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_701E8465BD6197E1
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_8304B4D838C1EB84
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_8304B4D838C1EB84
-struct state_value_8304b4d838c1eb84 : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::Ref<flight::types::WgpuMeshMaterialRenderer> value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_8304B4D838C1EB84
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_C6849D898A4710C5
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_C6849D898A4710C5
-struct state_value_c6849d898a4710c5 : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::Ref<flight::types::WgpuMeshMaterialRenderer> value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_C6849D898A4710C5
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_CF243C159232B529
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_CF243C159232B529
-struct state_cf243c159232b529 : public flight::ReferenceEnabled {
-  flight::String state;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_CF243C159232B529
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_9B4738B09D63181C
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_9B4738B09D63181C
-struct state_value_9b4738b09d63181c : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::types::WgpuTextureResolver value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_9B4738B09D63181C
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_43C6949F71E68363
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_43C6949F71E68363
-struct state_value_43c6949f71e68363 : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::types::WgpuTextureResolver value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_43C6949F71E68363
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_C15C76D2DE854A56
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_C15C76D2DE854A56
-struct state_value_c15c76d2de854a56 : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::Ref<flight::types::WgpuModifierSnippet> value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_C15C76D2DE854A56
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_41D69B1BE7C6B39F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_41D69B1BE7C6B39F
-struct state_value_41d69b1be7c6b39f : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::Ref<flight::types::WgpuModifierSnippet> value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE3D_WGPU_STATE_VALUE_41D69B1BE7C6B39F
 
 inline bool collect_wgpu_scene3_dcoverage_gaps(std::optional<flight::Array<flight::types::SceneCoverageEntry>> out, flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DKindUsage>>>> usage, bool stop_at_first, std::optional<flight::Array<flight::Ref<flight::types::CatalogEntry>>> catalog) {
   bool found = false;

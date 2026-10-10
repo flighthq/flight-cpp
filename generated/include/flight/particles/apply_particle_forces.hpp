@@ -11,6 +11,19 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AttractorForce; }
+namespace flight::types { struct DragForce; }
+namespace flight::types { struct HasAppearance; }
+namespace flight::types { struct HasColorScaleBias; }
+namespace flight::types { struct HasTransform2D; }
+namespace flight::types { struct ParticleEmitter2D; }
+namespace flight::types { struct ParticleEmitterData; }
+namespace flight::types { struct ParticleEmitterState; }
+namespace flight::types { struct ParticleObjectsState; }
+namespace flight::types { struct TurbulenceForce; }
+namespace flight::types { struct VortexForce; }
+namespace flight::types { struct WindForce; }
+
 #include <flight/types/contract.hpp>
 #include <flight/particles/particle_emitter_state.hpp>
 

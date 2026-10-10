@@ -3,7 +3,6 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function hasUnmeasurableSvgText -- source line 397
 //   missing: function createSvgNode2DBounds -- source line 407
 //   missing: function appendPathData -- source line 1089
 //   missing: function parseSvgSpreadMethod -- source line 1532
@@ -293,24 +292,25 @@ inline std::optional<flight::String> attribute(flight::Ref<XmlElement> element, 
   return element->attributes[name].value_or(element->attributes[flight::String("xlink:") + flight::to_string(name) + flight::String("")]);
 }
 
-
-// NOT GENERATED: function hasUnmeasurableSvgText -- source line 397
-// refusal: cpp-type-assertion-unidentified [source-portability]
-//
-// The source it stood for:
-//   function hasUnmeasurableSvgText(target: Node2D): boolean {
-//     if (target.kind === TextLabelKind || target.kind === RichTextKind) return true;
-//     const childCount = getNodeChildCount(target);
-//     for (let index = 0; index < childCount; index++) {
-//       const child = getNodeChildAt(target, index) as Node2D | null;
-//       if (child !== null && hasUnmeasurableSvgText(child)) return true;
-//     }
-//     return false;
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts: type assertion
-// target must identify exactly one C++ variant alternative: target std::optional<flight::Ref<Node2D>> against
-// [flight::Ref<NodeOf<flight::Ref<Node2DTraits>>>]
+inline bool has_unmeasurable_svg_text(flight::Ref<Node2D> target) {
+  if (((target->kind == text_label_kind) || (target->kind == rich_text_kind))) {
+    return true;
+  }
+  const double child_count = get_node_child_count(target);
+  {
+    double index = 0.0;
+    while ((index < child_count)) {
+      {
+        std::optional<flight::Ref<Node2D>> child = static_cast<std::optional<flight::Ref<Node2D>>>(get_node_child_at(target, index));
+        if ((child.has_value() && has_unmeasurable_svg_text(child.value()))) {
+          return true;
+        }
+      }
+      (index += 1.0);
+    }
+  }
+  return false;
+}
 
 inline bool copy_non_empty_svg_bounds(flight::Ref<Rectangle> out, flight::Ref<Rectangle> source, bool has_bounds) {
   if (((source->width == 0.0) || (source->height == 0.0))) {

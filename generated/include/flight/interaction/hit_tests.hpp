@@ -3,6 +3,7 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
+//   missing: function hitTestNode2Ds -- source line 132
 //   missing: function hitTestGraphLocalBounds -- source line 105
 //   missing: function containsNodeClipPoint -- source line 252
 //   missing: function hitAreaContainsPoint -- source line 263
@@ -28,8 +29,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/screen.hpp>
 
-#include <flight/geometry/rectangle.hpp>
-
 #include <flight/types/node_interaction.hpp>
 
 #include <flight/types/node2_d.hpp>
@@ -44,8 +43,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::interaction {
 
-using flight::geometry::intersects_rectangle;
-
 using flight::types::HitArea;
 using flight::types::HitTestFunction;
 using flight::types::HitTestPreciseFunction;
@@ -53,12 +50,25 @@ using flight::types::Kind;
 using flight::types::Node2D;
 using flight::types::NodeAny;
 
-inline bool hit_test_node2_ds(flight::Ref<Node2D> source, flight::Ref<Node2D> other) {
-  if ((get_node_parent(source).has_value() && get_node_parent(other).has_value())) {
-    return intersects_rectangle(get_node_world_bounds_rectangle(source), get_node_world_bounds_rectangle(other));
-  }
-  return false;
-}
+
+// NOT GENERATED: function hitTestNode2Ds -- source line 132
+// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
+//
+// The source it stood for:
+//   export function hitTestNode2Ds(source: Node2D, other: Node2D): boolean {
+//     if (getNodeParent(source) !== null && getNodeParent(other) !== null) {
+//       return intersectsRectangle(getNodeWorldBoundsRectangle(source), getNodeWorldBoundsRectangle(other));
+//     }
+//     return false;
+//   }
+//   
+//   /**
+//    * Tests one node's own hit region at world-space (x, y): its `hitArea` if set, else its kind geometry
+//    * (coarse bounds, or the exact provider when `precise`). No eligibility check and no recursion — for
+//    * callers (e.g. the broadphase) that already hold an eligible, atomic candidate.
+//    **/
+// cpp emission failed for @flighthq/interaction/packages/interaction/src/hitTests.ts: a presence test against
+// null has no absence channel in the emitted C++ storage for call
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_INTERACTION_X_Y_8365950BD60F783F
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_INTERACTION_X_Y_8365950BD60F783F

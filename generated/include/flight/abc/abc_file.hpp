@@ -13,6 +13,21 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AbcClass; }
+namespace flight::types { struct AbcConstantPool; }
+namespace flight::types { struct AbcException; }
+namespace flight::types { struct AbcFile; }
+namespace flight::types { struct AbcInstance; }
+namespace flight::types { struct AbcMetadata; }
+namespace flight::types { struct AbcMetadataItem; }
+namespace flight::types { struct AbcMethod; }
+namespace flight::types { struct AbcMethodBody; }
+namespace flight::types { struct AbcMultiname; }
+namespace flight::types { struct AbcNamespace; }
+namespace flight::types { struct AbcOptionalValue; }
+namespace flight::types { struct AbcScript; }
+namespace flight::types { struct AbcTrait; }
+
 namespace flight::abc {
 struct AbcReader;
 } // namespace flight::abc

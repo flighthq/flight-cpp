@@ -18,7 +18,7 @@ namespace flight::types { struct HostBitmapReadbackCapability; }
 
 namespace flight::bitmap {
 
-inline flight::Ref<flight::types::BitmapReadbackExplanation> explain_bitmap_readback(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostBitmapReadbackCapability>>>> host_bitmap_readback, flight::Ref<flight::types::HostImageSource> source, double width, double height) {
+inline flight::Ref<flight::types::BitmapReadbackExplanation> explain_bitmap_readback(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostBitmapReadbackCapability>>>> host_bitmap_readback, flight::types::HostImageSource source, double width, double height) {
   auto outcome = flight::bitmap::resolve_bitmap_readback(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostBitmapReadbackCapability>>>>>(host_bitmap_readback), source, width, height, flight::String("probe"));
   return flight::make_ref<flight::types::BitmapReadbackExplanation>(flight::types::BitmapReadbackExplanation{.readable = (outcome->reason == flight::String("ok")), .reason = outcome->reason});
 }

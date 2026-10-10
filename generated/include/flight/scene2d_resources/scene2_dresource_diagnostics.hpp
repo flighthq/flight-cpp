@@ -9,9 +9,28 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/image_resource_reference.hpp>
+
+#include <flight/types/audio_resource_reference.hpp>
+
+namespace flight::types { struct EmbeddedAudioResourceReference; }
+namespace flight::types { struct EmbeddedImageResourceReference; }
+namespace flight::types { struct ExternalAudioResourceReference; }
+namespace flight::types { struct ExternalImageResourceReference; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Scene2DDocument; }
+namespace flight::types { struct Scene2DResourceCoverageCount; }
+namespace flight::types { struct Scene2DResourceCoverageExplanation; }
+namespace flight::types { struct Scene2DResourceFailureNotice; }
+namespace flight::types { struct Scene2DSlotReference; }
+namespace flight::types { template <typename Traits> struct Node; }
+
 #include <flight/types/contract.hpp>
 
 namespace flight::scene2d_resources {
+
+using flight::types::ExternalAudioResourceReference;
+using flight::types::ExternalImageResourceReference;
 
 inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2DResourceFailureNotice>>>>)>> guard = std::nullopt;
 

@@ -9,104 +9,114 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/node.hpp>
+
+namespace flight::types { template <typename Traits> struct Node; }
+namespace flight::types { template <typename Traits> struct NodeRuntime; }
+
 #include <flight/types/contract.hpp>
 #include <flight/node/node.hpp>
 
-namespace flight::node { template <typename Traits = flight::Ref<flight::types::NodeTraits>> inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>> get_node_runtime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>> source); }
+namespace flight::node { template <typename Traits> inline std::shared_ptr<flight::types::NodeRuntime<Traits>> get_mutable_node_runtime(std::shared_ptr<flight::types::Node<Traits>> source); }
+namespace flight::node { template <typename Traits> inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>> get_node_runtime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>> source); }
 
 namespace flight::node {
 
+using flight::types::NodeRuntime;
+
+using flight::types::Node;
+
 template <typename Traits>
-inline double get_node_appearance_revision(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>> source) {
+inline double get_node_appearance_revision(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>>> source) {
   return flight::row_get<flight::RowKey<"appearanceId">>(flight::node::get_node_runtime<Traits>(source));
 }
 
 template <typename Traits>
-inline double get_node_children_revision(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>> source) {
+inline double get_node_children_revision(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>>> source) {
   return flight::row_get<flight::RowKey<"childrenId">>(flight::node::get_node_runtime<Traits>(source));
 }
 
 template <typename Traits>
-inline double get_node_local_bounds_revision(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>> source) {
+inline double get_node_local_bounds_revision(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>>> source) {
   return flight::row_get<flight::RowKey<"localBoundsId">>(flight::node::get_node_runtime<Traits>(source));
 }
 
 template <typename Traits>
-inline double get_node_local_content_revision(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>> source) {
+inline double get_node_local_content_revision(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>>> source) {
   return flight::row_get<flight::RowKey<"localContentId">>(flight::node::get_node_runtime<Traits>(source));
 }
 
 template <typename Traits>
-inline double get_node_local_transform_revision(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>> source) {
+inline double get_node_local_transform_revision(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>>> source) {
   return flight::row_get<flight::RowKey<"localTransformId">>(flight::node::get_node_runtime<Traits>(source));
 }
 
 template <typename Traits>
-inline double get_node_parent_reference_revision(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>> source) {
+inline double get_node_parent_reference_revision(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>>> source) {
   return flight::row_get<flight::RowKey<"parentReferenceId">>(flight::node::get_node_runtime<Traits>(source));
 }
 
 template <typename Traits>
-inline double get_node_world_transform_revision(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>> source) {
+inline double get_node_world_transform_revision(flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>>> source) {
   return flight::row_get<flight::RowKey<"worldTransformId">>(flight::node::get_node_runtime<Traits>(source));
 }
 
 template <typename Traits>
-inline void invalidate_node_appearance(std::shared_ptr<flight::types::Node<Traits>> target) {
-  flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>> runtime = flight::structural_ref_cast<std::shared_ptr<flight::types::NodeRuntime<Traits>>>(flight::node::get_node_runtime<Traits>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>(target))));
-  flight::row_set<flight::RowKey<"appearanceId">>(runtime, flight::unsigned_right_shift((flight::row_get<flight::RowKey<"appearanceId">>(runtime) + 1.0), 0.0));
+inline void invalidate_node_appearance(flight::types::NodeOf<Traits> target) {
+  auto runtime = flight::node::get_mutable_node_runtime<Traits>(flight::structural_ref_cast<std::shared_ptr<flight::types::Node<Traits>>>(target));
+  (runtime->appearance_id = flight::unsigned_right_shift((runtime->appearance_id + 1.0), 0.0));
 }
 
 template <typename Traits>
-inline void invalidate_node_local_bounds(std::shared_ptr<flight::types::Node<Traits>> target) {
-  flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>> runtime = flight::structural_ref_cast<std::shared_ptr<flight::types::NodeRuntime<Traits>>>(flight::node::get_node_runtime<Traits>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>(target))));
-  flight::row_set<flight::RowKey<"localBoundsId">>(runtime, flight::unsigned_right_shift((flight::row_get<flight::RowKey<"localBoundsId">>(runtime) + 1.0), 0.0));
+inline void invalidate_node_local_bounds(flight::types::NodeOf<Traits> target) {
+  auto runtime = flight::node::get_mutable_node_runtime<Traits>(flight::structural_ref_cast<std::shared_ptr<flight::types::Node<Traits>>>(target));
+  (runtime->local_bounds_id = flight::unsigned_right_shift((runtime->local_bounds_id + 1.0), 0.0));
 }
 
 template <typename Traits>
-inline void invalidate_node_local_content(std::shared_ptr<flight::types::Node<Traits>> target) {
-  flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>> runtime = flight::structural_ref_cast<std::shared_ptr<flight::types::NodeRuntime<Traits>>>(flight::node::get_node_runtime<Traits>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>(target))));
-  flight::row_set<flight::RowKey<"localContentId">>(runtime, flight::unsigned_right_shift((flight::row_get<flight::RowKey<"localContentId">>(runtime) + 1.0), 0.0));
+inline void invalidate_node_local_content(flight::types::NodeOf<Traits> target) {
+  auto runtime = flight::node::get_mutable_node_runtime<Traits>(flight::structural_ref_cast<std::shared_ptr<flight::types::Node<Traits>>>(target));
+  (runtime->local_content_id = flight::unsigned_right_shift((runtime->local_content_id + 1.0), 0.0));
 }
 
 template <typename Traits>
-inline void invalidate_content(std::shared_ptr<flight::types::Node<Traits>> target) {
+inline void invalidate_content(flight::types::NodeOf<Traits> target) {
   invalidate_node_local_content<Traits>(target);
   invalidate_node_local_bounds<Traits>(target);
 }
 
 template <typename Traits>
-inline void invalidate_node_local_transform(std::shared_ptr<flight::types::Node<Traits>> target) {
-  flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>> runtime = flight::structural_ref_cast<std::shared_ptr<flight::types::NodeRuntime<Traits>>>(flight::node::get_node_runtime<Traits>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>(target))));
-  flight::row_set<flight::RowKey<"localTransformId">>(runtime, flight::unsigned_right_shift((flight::row_get<flight::RowKey<"localTransformId">>(runtime) + 1.0), 0.0));
+inline void invalidate_node_local_transform(flight::types::NodeOf<Traits> target) {
+  auto runtime = flight::node::get_mutable_node_runtime<Traits>(flight::structural_ref_cast<std::shared_ptr<flight::types::Node<Traits>>>(target));
+  (runtime->local_transform_id = flight::unsigned_right_shift((runtime->local_transform_id + 1.0), 0.0));
 }
 
 template <typename Traits>
-inline void invalidate_node_parent_reference(std::shared_ptr<flight::types::Node<Traits>> target) {
-  flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>> runtime = flight::structural_ref_cast<std::shared_ptr<flight::types::NodeRuntime<Traits>>>(flight::node::get_node_runtime<Traits>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>(target))));
-  flight::row_set<flight::RowKey<"parentReferenceId">>(runtime, flight::unsigned_right_shift((flight::row_get<flight::RowKey<"parentReferenceId">>(runtime) + 1.0), 0.0));
-  flight::row_set<flight::RowKey<"worldTransformUsingParentTransformId">>(runtime, -1.0);
+inline void invalidate_node_parent_reference(flight::types::NodeOf<Traits> target) {
+  auto runtime = flight::node::get_mutable_node_runtime<Traits>(flight::structural_ref_cast<std::shared_ptr<flight::types::Node<Traits>>>(target));
+  (runtime->parent_reference_id = flight::unsigned_right_shift((runtime->parent_reference_id + 1.0), 0.0));
+  (runtime->world_transform_using_parent_transform_id = -1.0);
 }
 
 template <typename Traits>
-inline void invalidate_node_render(std::shared_ptr<flight::types::Node<Traits>> target) {
+inline void invalidate_node_render(flight::types::NodeOf<Traits> target) {
   invalidate_node_appearance<Traits>(target);
   invalidate_node_local_transform<Traits>(target);
 }
 
 template <typename Traits>
-inline void invalidate_node_world_bounds(std::shared_ptr<flight::types::Node<Traits>> target) {
-  std::optional<std::shared_ptr<flight::types::Node<Traits>>> current = std::optional<std::shared_ptr<flight::types::Node<Traits>>>{target};
+inline void invalidate_node_world_bounds(flight::types::NodeOf<Traits> target) {
+  std::optional<flight::types::NodeOf<Traits>> current = std::optional<flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>, flight::RowOf<Traits>>>>{target};
   while (current.has_value()) {
-    flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>> runtime = flight::structural_ref_cast<std::shared_ptr<flight::types::NodeRuntime<Traits>>>(flight::node::get_node_runtime<Traits>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>>(current.value()))));
-    flight::row_set<flight::RowKey<"worldBoundsUsingWorldTransformId">>(runtime, -1.0);
-    flight::row_set<flight::RowKey<"worldBoundsUsingLocalBoundsId">>(runtime, -1.0);
-    (current = ([&]() -> std::optional<std::shared_ptr<flight::types::Node<Traits>>> { auto contextual_union_source = flight::row_get<flight::RowKey<"parent">>(runtime); if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<std::shared_ptr<flight::types::Node<Traits>>>{flight::structural_ref_cast<std::shared_ptr<flight::types::Node<Traits>>>(contextual_union_source.value())}; }()));
+    auto runtime = flight::node::get_mutable_node_runtime<Traits>(flight::structural_ref_cast<std::shared_ptr<flight::types::Node<Traits>>>(current.value()));
+    (runtime->world_bounds_using_world_transform_id = -1.0);
+    (runtime->world_bounds_using_local_bounds_id = -1.0);
+    (current = runtime->parent);
   }
 }
 
 template <typename Traits>
-inline void invalidate_node(std::shared_ptr<flight::types::Node<Traits>> target) {
+inline void invalidate_node(flight::types::NodeOf<Traits> target) {
   invalidate_node_appearance<Traits>(target);
   invalidate_node_local_bounds<Traits>(target);
   invalidate_node_local_content<Traits>(target);

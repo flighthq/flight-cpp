@@ -10,9 +10,19 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/matrix.hpp>
+
+#include <flight/types/canvas_render_state.hpp>
+
+namespace flight::types { struct CanvasRenderState; }
+namespace flight::types { struct Matrix; }
+
 #include <flight/types/contract.hpp>
 
 namespace flight::scene2d_canvas {
+
+using flight::types::CanvasRenderState;
+using flight::types::Matrix;
 
 inline void set_canvas_transform(flight::Ref<flight::types::CanvasRenderState> state, flight::CanvasRenderingContext2D context, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> transform) {
   if (state->round_pixels) {

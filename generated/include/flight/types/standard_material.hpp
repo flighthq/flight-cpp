@@ -25,6 +25,8 @@ inline const flight::String standard_material_kind = flight::String("StandardMat
 struct StandardMaterial : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   StandardMaterialKind kind;
+  std::optional<flight::String> alpha_mode;
+  std::optional<flight::String> blend_mode;
   std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
 

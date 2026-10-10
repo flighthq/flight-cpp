@@ -6,21 +6,21 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { struct Node3DTraits; }
+namespace flight::types { struct Node3D; }
+namespace flight::types { struct Node3DRuntime; }
 namespace flight::types { struct ParticleEmitterData; }
 namespace flight::types { struct Quaternion; }
 namespace flight::types { struct Vector3; }
-namespace flight::types { template <typename Traits> struct NodeRuntime; }
 
 namespace flight::types {
 struct ParticleEmitter3D;
+using ParticleEmitter3DRuntime = flight::Ref<flight::types::Node3DRuntime>;
 } // namespace flight::types
 
 #include <flight/types/node3_d.hpp>
 #include <flight/types/particle_emitter2_d.hpp>
 #include <flight/types/particle_emitter_config.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/node.hpp>
 #include <flight/types/node3_d.hpp>
 #include <flight/types/vector3.hpp>
 #include <flight/types/quaternion.hpp>
@@ -32,7 +32,7 @@ struct ParticleEmitter3D : public flight::ReferenceEnabled {
   bool enabled;
   flight::String kind;
   std::optional<flight::String> name;
-  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node3DTraits>>>> entity_runtime_key;
+  std::optional<flight::Ref<flight::types::Node3DRuntime>> entity_runtime_key;
   double alpha;
   bool visible;
   flight::Ref<flight::types::Vector3> position;
@@ -40,8 +40,6 @@ struct ParticleEmitter3D : public flight::ReferenceEnabled {
   flight::Ref<flight::types::Vector3> scale;
   flight::types::ParticleBlendMode blend_mode;
 };
-
-using ParticleEmitter3DRuntime = flight::Ref<flight::types::Node3DRuntime>;
 
 inline const flight::String particle_emitter3_dkind = flight::String("ParticleEmitter3D");
 

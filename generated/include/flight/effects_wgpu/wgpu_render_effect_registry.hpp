@@ -9,53 +9,37 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
+namespace flight::types { struct RenderEffect; }
+namespace flight::types { struct TombstonedRegistryTableEntry; }
+namespace flight::types { struct WgpuRenderEffectContext; }
+namespace flight::types { struct WgpuRenderEffectRegistration; }
+namespace flight::types { struct WgpuRenderRegistries; }
+namespace flight::types { struct WgpuRenderState; }
+namespace flight::types { struct WgpuRenderStateRuntime; }
+namespace flight::types { template <typename T> struct BoundRegistryTableEntry; }
+namespace flight::types { template <typename T> struct KeyedTable; }
+
 #include <flight/registry/registry_table.hpp>
 #include <flight/render_wgpu/wgpu_render_state.hpp>
 #include <flight/types/contract.hpp>
 
 namespace flight::effects_wgpu {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_STATE_VALUE_BCC4C44243ED083E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_STATE_VALUE_BCC4C44243ED083E
-struct state_value_bcc4c44243ed083e : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::Ref<flight::types::WgpuRenderEffectRegistration> value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_STATE_VALUE_BCC4C44243ED083E
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_STATE_CF243C159232B529
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_STATE_CF243C159232B529
-struct state_cf243c159232b529 : public flight::ReferenceEnabled {
-  flight::String state;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_STATE_CF243C159232B529
+using flight::types::WgpuRenderState;
 
 inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderEffectContext>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderEffect>>>>)>> get_wgpu_render_effect_runner(flight::Ref<flight::types::WgpuRenderState> state, flight::String kind) {
-  auto entry = flight::render_wgpu::get_wgpu_render_state_runtime(state)->registries->render_effects->entries.get(kind);
+  std::optional<flight::types::RegistryTableEntry<flight::Ref<flight::types::WgpuRenderEffectRegistration>>> entry = flight::render_wgpu::get_wgpu_render_state_runtime(state)->registries->render_effects->entries.get(kind);
   return ((entry.has_value() && entry.value().index() == 0) ? std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::WgpuRenderEffectContext>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderEffect>>>>)>>{std::get<0>(entry.value())->value->runner} : std::nullopt);
 }
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_STATE_701E8465BD6197E1
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_STATE_701E8465BD6197E1
-struct state_701e8465bd6197e1 : public flight::ReferenceEnabled {
-  flight::String state;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_STATE_701E8465BD6197E1
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_STATE_VALUE_B3FE8A3B1783E337
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_STATE_VALUE_B3FE8A3B1783E337
-struct state_value_b3fe8a3b1783e337 : public flight::ReferenceEnabled {
-  flight::String state;
-  flight::Ref<flight::types::WgpuRenderEffectRegistration> value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_WGPU_STATE_VALUE_B3FE8A3B1783E337
 
 inline bool has_wgpu_render_effect_runner(flight::Ref<flight::types::WgpuRenderState> state, flight::String kind) {
   return (([&]() -> std::optional<flight::String> { auto optional_chain_receiver = flight::render_wgpu::get_wgpu_render_state_runtime(state)->registries->render_effects->entries.get(kind); if (!optional_chain_receiver.has_value()) return std::nullopt; return std::visit([](const auto& value) { return value->state; }, optional_chain_receiver.value()); }()) == flight::types::registry_entry_state->bound);
 }
 
 inline bool is_wgpu_render_effect_resolvable(flight::Ref<flight::types::WgpuRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RenderEffect>>>> effect) {
-  auto entry = flight::render_wgpu::get_wgpu_render_state_runtime(state)->registries->render_effects->entries.get(flight::row_get<flight::RowKey<"kind">>(effect));
+  std::optional<flight::types::RegistryTableEntry<flight::Ref<flight::types::WgpuRenderEffectRegistration>>> entry = flight::render_wgpu::get_wgpu_render_state_runtime(state)->registries->render_effects->entries.get(flight::row_get<flight::RowKey<"kind">>(effect));
   if (!((entry.has_value() && entry.value().index() == 0))) {
     return false;
   }

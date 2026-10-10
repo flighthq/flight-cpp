@@ -94,6 +94,12 @@ inline void initialize_web_text_segmenter_backend(flight::Ref<HostTextSegmenterC
   (out->segment = segment_with_intl_segmenter);
 }
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTSEGMENT_ANONYMOUS_3E6B344A3B6BD77E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTSEGMENT_ANONYMOUS_3E6B344A3B6BD77E
+struct anonymous_3e6b344a3b6bd77e : public flight::ReferenceEnabled {
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTSEGMENT_ANONYMOUS_3E6B344A3B6BD77E
+
 inline flight::Ref<HostTextSegmenterCapability> create_web_text_segmenter_backend() {
   flight::Ref<HostTextSegmenterCapability> out = flight::make_ref<HostTextSegmenterCapability>(HostTextSegmenterCapability{});
   initialize_web_text_segmenter_backend(out);

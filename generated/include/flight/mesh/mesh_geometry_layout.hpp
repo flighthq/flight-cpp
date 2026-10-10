@@ -3,55 +3,84 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/data_view.hpp>
+#include <flight/sequence_view.hpp>
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
 #include <random>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/mesh_skin_bind_pose.hpp>
+
+#include <flight/types/mesh_morph_bind_pose.hpp>
+
 #include <flight/types/mesh_geometry_options.hpp>
 
 #include <flight/types/mesh_geometry.hpp>
 
+#include <flight/types/aabb.hpp>
+
+namespace flight::types { struct Aabb; }
+namespace flight::types { struct MeshGeometry; }
+namespace flight::types { struct MeshGeometryOptions; }
+namespace flight::types { struct MeshGeometryRuntime; }
+namespace flight::types { struct MeshMorphBindPose; }
+namespace flight::types { struct MeshSkinBindPose; }
+namespace flight::types { struct MeshSubset; }
+namespace flight::types { struct VertexAttribute; }
+namespace flight::types { struct VertexAttributeLayout; }
+
 namespace flight::mesh {
 
+using flight::types::Aabb;
 using flight::types::MeshGeometry;
 using flight::types::MeshGeometryOptions;
+using flight::types::MeshGeometryRuntime;
+using flight::types::MeshMorphBindPose;
+using flight::types::MeshSkinBindPose;
+using flight::types::MeshSubset;
 using flight::types::VertexAttribute;
 using flight::types::VertexAttributeLayout;
 struct AttributeMapping;
 } // namespace flight::mesh
 
+#include <flight/types/aabb.hpp>
+#include <flight/types/mesh_geometry.hpp>
+#include <flight/types/mesh_geometry_options.hpp>
+#include <flight/types/mesh_morph_bind_pose.hpp>
+#include <flight/types/mesh_skin_bind_pose.hpp>
 #include <flight/mesh/mesh_geometry.hpp>
 #include <flight/mesh/vertex_format.hpp>
 
 namespace flight::mesh {
 
 struct AttributeMapping : public flight::ReferenceEnabled {
-  flight::Ref<VertexAttribute> destination;
-  flight::Ref<VertexAttribute> source;
+  flight::Ref<flight::types::VertexAttribute> destination;
+  flight::Ref<flight::types::VertexAttribute> source;
   double source_byte_length;
 };
 
-inline flight::Ref<MeshGeometry> convert_mesh_geometry_layout(flight::Ref<MeshGeometry> source, flight::Ref<VertexAttributeLayout> target_layout) {
-  const double src_stride = source->layout.stride;
-  const double dst_stride = target_layout->stride;
-  const double vertex_count = ((src_stride > 0.0) ? std::floor((static_cast<double>(source->vertices.byte_length) / src_stride)) : 0.0);
+inline flight::Ref<flight::types::MeshGeometry> convert_mesh_geometry_layout(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VertexAttributeLayout>>>> target_layout) {
+  const double src_stride = flight::row_get<flight::RowKey<"layout">>(source)->stride;
+  const double dst_stride = flight::row_get<flight::RowKey<"stride">>(target_layout);
+  const double vertex_count = ((src_stride > 0.0) ? std::floor((static_cast<double>(flight::row_get<flight::RowKey<"vertices">>(source).byte_length) / src_stride)) : 0.0);
   flight::Float32Array dst_vertices = flight::Float32Array(((vertex_count * dst_stride) / 4.0));
-  flight::Uint8Array source_bytes = flight::Uint8Array(source->vertices.buffer, static_cast<double>(source->vertices.byte_offset), static_cast<double>(source->vertices.byte_length));
+  flight::Uint8Array source_bytes = flight::Uint8Array(flight::row_get<flight::RowKey<"vertices">>(source).buffer, static_cast<double>(flight::row_get<flight::RowKey<"vertices">>(source).byte_offset), static_cast<double>(flight::row_get<flight::RowKey<"vertices">>(source).byte_length));
   flight::Uint8Array destination_bytes = flight::Uint8Array(dst_vertices.buffer);
   flight::DataView source_view = flight::DataView(source_bytes.buffer, static_cast<double>(source_bytes.byte_offset), static_cast<double>(source_bytes.byte_length));
   flight::DataView destination_view = flight::DataView(destination_bytes.buffer);
   flight::Array<flight::Ref<AttributeMapping>> mappings = flight::Array<flight::Ref<AttributeMapping>>{};
-  for (auto dst_attr : target_layout->attributes) {
-    std::optional<flight::Ref<VertexAttribute>> src_attr = source->layout.attributes.find([=](flight::Ref<VertexAttribute> attribute) { return (attribute->semantic == dst_attr->semantic); });
+  for (auto dst_attr : flight::row_get<flight::RowKey<"attributes">>(target_layout)) {
+    auto src_attr = flight::row_get<flight::RowKey<"layout">>(source)->attributes.find([=](flight::Ref<flight::types::VertexAttribute> attribute) { return (attribute->semantic == dst_attr->semantic); });
     if (!src_attr.has_value()) {
       continue;
     }
-    const double source_byte_length = get_vertex_format_byte_length(src_attr.value()->format);
-    const double destination_byte_length = get_vertex_format_byte_length(dst_attr->format);
+    const double source_byte_length = flight::mesh::get_vertex_format_byte_length(src_attr.value()->format);
+    const double destination_byte_length = flight::mesh::get_vertex_format_byte_length(dst_attr->format);
     if (((((((source_byte_length == 0.0) || (destination_byte_length == 0.0)) || (src_attr.value()->byte_offset < 0.0)) || (dst_attr->byte_offset < 0.0)) || ((src_attr.value()->byte_offset + source_byte_length) > src_stride)) || ((dst_attr->byte_offset + destination_byte_length) > dst_stride))) {
       continue;
     }
@@ -68,12 +97,12 @@ inline flight::Ref<MeshGeometry> convert_mesh_geometry_layout(flight::Ref<MeshGe
             destination_bytes.set(source_bytes.subarray(source_offset, (source_offset + mapping->source_byte_length)), destination_offset);
             continue;
           }
-          const double component_count = flight::minimum(get_vertex_format_component_count(mapping->source->format), get_vertex_format_component_count(mapping->destination->format));
+          const double component_count = flight::minimum(flight::mesh::get_vertex_format_component_count(mapping->source->format), flight::mesh::get_vertex_format_component_count(mapping->destination->format));
           {
             double component = 0.0;
             while ((component < component_count)) {
               {
-                write_vertex_format_component(destination_view, destination_offset, mapping->destination->format, component, read_vertex_format_component(source_view, source_offset, mapping->source->format, component));
+                flight::mesh::write_vertex_format_component(destination_view, destination_offset, mapping->destination->format, component, flight::mesh::read_vertex_format_component(source_view, source_offset, mapping->source->format, component));
               }
               (component += 1.0);
             }
@@ -83,11 +112,20 @@ inline flight::Ref<MeshGeometry> convert_mesh_geometry_layout(flight::Ref<MeshGe
       (vertex += 1.0);
     }
   }
-  return create_mesh_geometry(flight::make_ref<MeshGeometryOptions>(MeshGeometryOptions{.indices = source->indices.value_or(std::nullopt), .layout = target_layout, .subsets = source->subsets, .topology = source->topology, .vertices = dst_vertices}));
+  std::optional<std::variant<flight::Uint16Array, flight::Uint32Array>> indices = flight::row_get<flight::RowKey<"indices">>(source);
+  if ((indices.has_value() && indices.value().index() == 0)) {
+    flight::SequenceView<double> index_source = std::get<0>(indices.value());
+    return flight::mesh::create_mesh_geometry(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometryOptions>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometryOptions>>>>(flight::row_field<flight::RowKey<"indices">>(std::variant<flight::SequenceView<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::SequenceView<double>>, index_source}), flight::row_field<flight::RowKey<"layout">>(flight::structural_ref_cast<flight::Ref<flight::types::VertexAttributeLayout>>(target_layout)), flight::row_field<flight::RowKey<"subsets">>(std::optional<flight::Array<flight::Ref<flight::types::MeshSubset>>>{flight::row_get<flight::RowKey<"subsets">>(source)}), flight::row_field<flight::RowKey<"topology">>(std::optional<flight::String>{flight::row_get<flight::RowKey<"topology">>(source)}), flight::row_field<flight::RowKey<"vertices">>(dst_vertices))));
+  }
+  if ((indices.has_value() && indices.value().index() == 1)) {
+    flight::SequenceView<double> index_source_2 = std::get<1>(indices.value());
+    return flight::mesh::create_mesh_geometry(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometryOptions>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometryOptions>>>>(flight::row_field<flight::RowKey<"indices">>(([&]() -> std::variant<flight::SequenceView<double>, flight::Null, flight::Undefined> { auto contextual_union_source = index_source_2; if (!contextual_union_source.has_value()) return std::variant<flight::SequenceView<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return std::variant<flight::SequenceView<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::SequenceView<double>>, contextual_union_source.value()}; }())), flight::row_field<flight::RowKey<"layout">>(flight::structural_ref_cast<flight::Ref<flight::types::VertexAttributeLayout>>(target_layout)), flight::row_field<flight::RowKey<"subsets">>(std::optional<flight::Array<flight::Ref<flight::types::MeshSubset>>>{flight::row_get<flight::RowKey<"subsets">>(source)}), flight::row_field<flight::RowKey<"topology">>(std::optional<flight::String>{flight::row_get<flight::RowKey<"topology">>(source)}), flight::row_field<flight::RowKey<"vertices">>(dst_vertices))));
+  }
+  return flight::mesh::create_mesh_geometry(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometryOptions>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometryOptions>>>>(flight::row_field<flight::RowKey<"layout">>(flight::structural_ref_cast<flight::Ref<flight::types::VertexAttributeLayout>>(target_layout)), flight::row_field<flight::RowKey<"subsets">>(std::optional<flight::Array<flight::Ref<flight::types::MeshSubset>>>{flight::row_get<flight::RowKey<"subsets">>(source)}), flight::row_field<flight::RowKey<"topology">>(std::optional<flight::String>{flight::row_get<flight::RowKey<"topology">>(source)}), flight::row_field<flight::RowKey<"vertices">>(dst_vertices))));
 }
 
-inline flight::Ref<VertexAttributeLayout> canonical_mesh_geometry_layout = flight::make_ref<VertexAttributeLayout>(VertexAttributeLayout{.attributes = flight::Array{flight::make_ref<VertexAttribute>(VertexAttribute{.byte_offset = 0.0, .format = flight::String("float32x3"), .semantic = flight::String("position")}), flight::make_ref<VertexAttribute>(VertexAttribute{.byte_offset = 12.0, .format = flight::String("float32x3"), .semantic = flight::String("normal")}), flight::make_ref<VertexAttribute>(VertexAttribute{.byte_offset = 24.0, .format = flight::String("float32x4"), .semantic = flight::String("tangent")}), flight::make_ref<VertexAttribute>(VertexAttribute{.byte_offset = 40.0, .format = flight::String("float32x2"), .semantic = flight::String("uv0")})}, .stride = 48.0});
+inline flight::Ref<flight::types::VertexAttributeLayout> canonical_mesh_geometry_layout = flight::make_ref<flight::types::VertexAttributeLayout>(flight::types::VertexAttributeLayout{.attributes = flight::Array<flight::Ref<flight::types::VertexAttribute>>{flight::make_ref<flight::types::VertexAttribute>(flight::types::VertexAttribute{.byte_offset = 0.0, .format = flight::String("float32x3"), .semantic = flight::String("position")}), flight::make_ref<flight::types::VertexAttribute>(flight::types::VertexAttribute{.byte_offset = 12.0, .format = flight::String("float32x3"), .semantic = flight::String("normal")}), flight::make_ref<flight::types::VertexAttribute>(flight::types::VertexAttribute{.byte_offset = 24.0, .format = flight::String("float32x4"), .semantic = flight::String("tangent")}), flight::make_ref<flight::types::VertexAttribute>(flight::types::VertexAttribute{.byte_offset = 40.0, .format = flight::String("float32x2"), .semantic = flight::String("uv0")})}, .stride = 48.0});
 
-inline flight::Ref<VertexAttributeLayout> canonical_skinned_mesh_geometry_layout = flight::make_ref<VertexAttributeLayout>(VertexAttributeLayout{.attributes = flight::Array{flight::make_ref<VertexAttribute>(VertexAttribute{.byte_offset = 0.0, .format = flight::String("float32x3"), .semantic = flight::String("position")}), flight::make_ref<VertexAttribute>(VertexAttribute{.byte_offset = 12.0, .format = flight::String("float32x3"), .semantic = flight::String("normal")}), flight::make_ref<VertexAttribute>(VertexAttribute{.byte_offset = 24.0, .format = flight::String("float32x4"), .semantic = flight::String("tangent")}), flight::make_ref<VertexAttribute>(VertexAttribute{.byte_offset = 40.0, .format = flight::String("float32x2"), .semantic = flight::String("uv0")}), flight::make_ref<VertexAttribute>(VertexAttribute{.byte_offset = 48.0, .format = flight::String("float32x4"), .semantic = flight::String("joints0")}), flight::make_ref<VertexAttribute>(VertexAttribute{.byte_offset = 64.0, .format = flight::String("float32x4"), .semantic = flight::String("weights0")})}, .stride = 80.0});
+inline flight::Ref<flight::types::VertexAttributeLayout> canonical_skinned_mesh_geometry_layout = flight::make_ref<flight::types::VertexAttributeLayout>(flight::types::VertexAttributeLayout{.attributes = flight::Array<flight::Ref<flight::types::VertexAttribute>>{flight::make_ref<flight::types::VertexAttribute>(flight::types::VertexAttribute{.byte_offset = 0.0, .format = flight::String("float32x3"), .semantic = flight::String("position")}), flight::make_ref<flight::types::VertexAttribute>(flight::types::VertexAttribute{.byte_offset = 12.0, .format = flight::String("float32x3"), .semantic = flight::String("normal")}), flight::make_ref<flight::types::VertexAttribute>(flight::types::VertexAttribute{.byte_offset = 24.0, .format = flight::String("float32x4"), .semantic = flight::String("tangent")}), flight::make_ref<flight::types::VertexAttribute>(flight::types::VertexAttribute{.byte_offset = 40.0, .format = flight::String("float32x2"), .semantic = flight::String("uv0")}), flight::make_ref<flight::types::VertexAttribute>(flight::types::VertexAttribute{.byte_offset = 48.0, .format = flight::String("float32x4"), .semantic = flight::String("joints0")}), flight::make_ref<flight::types::VertexAttribute>(flight::types::VertexAttribute{.byte_offset = 64.0, .format = flight::String("float32x4"), .semantic = flight::String("weights0")})}, .stride = 80.0});
 
 } // namespace flight::mesh

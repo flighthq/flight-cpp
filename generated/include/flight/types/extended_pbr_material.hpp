@@ -7,10 +7,17 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AnisotropyPbrExtension; }
+namespace flight::types { struct ClearcoatPbrExtension; }
 namespace flight::types { struct EntityRuntime; }
+namespace flight::types { struct IridescencePbrExtension; }
 namespace flight::types { struct PbrExtension; }
+namespace flight::types { struct SheenPbrExtension; }
+namespace flight::types { struct SpecularPbrExtension; }
 namespace flight::types { struct StandardPbrMaterialProperties; }
 namespace flight::types { struct SurfaceMaterial; }
+namespace flight::types { struct TransmissionVolumePbrExtension; }
+namespace flight::types { struct WrappedDiffusePbrExtension; }
 
 namespace flight::types {
 struct ExtendedPbrMaterial;
@@ -28,12 +35,12 @@ namespace flight::types {
 struct ExtendedPbrMaterial : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::String kind;
-  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  double alpha_cutoff;
   flight::Ref<flight::types::MaterialAlphaMode> alpha_mode;
   flight::String blend_mode;
+  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  double alpha_cutoff;
   bool double_sided;
-  flight::Array<flight::Ref<flight::types::PbrExtension>> extensions;
+  flight::Array<flight::types::PbrExtensionValue> extensions;
   flight::Ref<flight::types::StandardPbrMaterialProperties> standard;
 };
 

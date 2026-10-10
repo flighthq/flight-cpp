@@ -30,6 +30,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/geometry/matrix.hpp>
 
+#include <flight/scene2d_canvas/canvas_texture_render_target.hpp>
+
 #include <flight/types/scene2_drenderer.hpp>
 
 #include <flight/types/render_state.hpp>
@@ -71,8 +73,6 @@ using flight::node::compute_node_bounds_rectangle;
 
 inline void draw_canvas_render_cache(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy2D> render_proxy);
 
-inline const auto& create_canvas_texture_render_target = flight::scene2d_canvas::create_canvas_texture_render_target_flight_value_function_create_u000043_anvas_u000054_exture_u000052_ender_u000054_arget_flight_source_572fee2374c05737;
-
 using flight::render::compute_render_cache_transform;
 using flight::render::compute_render_target_size;
 using flight::render::compute_scene2_drender_target_transform;
@@ -82,6 +82,8 @@ using flight::render::register_render_cache_renderer;
 
 using flight::geometry::create_matrix;
 using flight::geometry::create_rectangle;
+
+inline const auto& create_canvas_texture_render_target = flight::scene2d_canvas::create_canvas_texture_render_target_flight_value_function_create_u000043_anvas_u000054_exture_u000052_ender_u000054_arget_flight_source_572fee2374c05737;
 
 using flight::types::CanvasRenderPass;
 using flight::types::CanvasRenderState;

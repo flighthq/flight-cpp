@@ -9,6 +9,9 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 namespace flight::types {
+template <typename T>
+struct BoundRegistryTableEntry;
+struct TombstonedRegistryTableEntry;
 struct RegistryTableBase;
 template <typename T>
 struct KeyedTable;
@@ -17,6 +20,8 @@ struct SlotTable;
 template <typename T>
 struct OrdinalTable;
 using RegistryId = flight::String;
+template <typename T>
+using RegistryTableEntry = std::variant<flight::Ref<BoundRegistryTableEntry<T>>, flight::Ref<TombstonedRegistryTableEntry>>;
 using RegistryEntryState = flight::String;
 using RegistryMissPolicy = flight::String;
 template <typename T>
@@ -27,25 +32,15 @@ using RegistryTable = std::variant<std::shared_ptr<KeyedTable<T>>, std::shared_p
 
 namespace flight::types {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STATE_VALUE_49C40B4F01B4314B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STATE_VALUE_49C40B4F01B4314B
 template <typename T>
-struct state_value_49c40b4f01b4314b : public flight::ReferenceEnabled {
+struct BoundRegistryTableEntry : public flight::ReferenceEnabled {
   flight::String state;
   T value;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STATE_VALUE_49C40B4F01B4314B
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STATE_FB2721E0BB344354
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STATE_FB2721E0BB344354
-template <typename T>
-struct state_fb2721e0bb344354 : public flight::ReferenceEnabled {
+struct TombstonedRegistryTableEntry : public flight::ReferenceEnabled {
   flight::String state;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STATE_FB2721E0BB344354
-
-template <typename T>
-using RegistryTableEntry = std::variant<flight::Ref<state_value_49c40b4f01b4314b<T>>, flight::Ref<state_fb2721e0bb344354<T>>>;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BOUND_TOMBSTONED_54A1DF218909E3D5
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BOUND_TOMBSTONED_54A1DF218909E3D5
@@ -70,28 +65,11 @@ struct KeyedTable : public flight::ReferenceEnabled {
   flight::String shape;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STATE_VALUE_835A3EAD37753719
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STATE_VALUE_835A3EAD37753719
-template <typename T>
-struct state_value_835a3ead37753719 : public flight::ReferenceEnabled {
-  flight::String state;
-  T value;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STATE_VALUE_835A3EAD37753719
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STATE_3C8AA9FBFEC5B0C7
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STATE_3C8AA9FBFEC5B0C7
-template <typename T>
-struct state_3c8aa9fbfec5b0c7 : public flight::ReferenceEnabled {
-  flight::String state;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_STATE_3C8AA9FBFEC5B0C7
-
 template <typename T>
 struct SlotTable : public flight::ReferenceEnabled {
   RegistryMissPolicy on_miss;
   RegistryId registry;
-  std::optional<std::variant<flight::Ref<state_value_835a3ead37753719<T>>, flight::Ref<state_3c8aa9fbfec5b0c7<T>>>> entry;
+  std::optional<RegistryTableEntry<T>> entry;
   flight::String shape;
 };
 

@@ -8,6 +8,12 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct RichText; }
+namespace flight::types { struct RichTextData; }
+namespace flight::types { struct TextInputState; }
+namespace flight::types { struct TextLayoutResult; }
+namespace flight::types { struct TextSelectionRectangle; }
+
 #include <flight/color/pack_color.hpp>
 #include <flight/textinput/text_input.hpp>
 #include <flight/textinput/text_input_editing.hpp>

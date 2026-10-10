@@ -34,7 +34,7 @@ struct reason_state_04283969300f4d75 : public flight::ReferenceEnabled {
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_STATE_CB1644DADD3DF85E
 struct reason_state_cb1644dadd3df85e : public flight::ReferenceEnabled {
   flight::String reason;
-  std::optional<flight::String> state;
+  std::optional<PermissionState> state;
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_REASON_STATE_CB1644DADD3DF85E
 

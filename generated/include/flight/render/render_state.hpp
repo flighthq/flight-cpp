@@ -2,7 +2,6 @@
 #pragma once
 #include <cstddef>
 #include <flight/any.hpp>
-#include <flight/erased_ref.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -12,11 +11,59 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/renderer.hpp>
+
 #include <flight/types/render_state.hpp>
+
+#include <flight/types/render_registry_signals.hpp>
+
+#include <flight/types/render_proxy2_d.hpp>
+
+#include <flight/types/render_proxy.hpp>
+
+#include <flight/types/render_effect_padding.hpp>
+
+#include <flight/types/render_cache.hpp>
+
+#include <flight/types/node3_d.hpp>
+
+#include <flight/types/node.hpp>
+
+#include <flight/types/matrix.hpp>
+
+namespace flight::types { struct ImageSurfaceCreator; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Node3D; }
+namespace flight::types { struct RenderCache; }
+namespace flight::types { struct RenderEffect; }
+namespace flight::types { struct RenderEffectPadding; }
+namespace flight::types { struct RenderProxy2D; }
+namespace flight::types { struct RenderProxy; }
+namespace flight::types { struct RenderRegistries; }
+namespace flight::types { struct RenderRegistrySignals; }
+namespace flight::types { struct RenderState; }
+namespace flight::types { struct RenderStateRuntime; }
+namespace flight::types { struct Renderer; }
+namespace flight::types { struct RendererData; }
+namespace flight::types { struct Scene2DClipHooks; }
+namespace flight::types { template <typename T> struct KeyedTable; }
+namespace flight::types { template <typename T> struct SlotTable; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::render {
 
+using flight::types::Matrix;
+using flight::types::Node;
+using flight::types::Node3D;
+using flight::types::RenderCache;
+using flight::types::RenderEffectPadding;
+using flight::types::RenderProxy;
+using flight::types::RenderProxy2D;
+using flight::types::RenderRegistrySignals;
 using flight::types::RenderState;
+using flight::types::RenderStateRuntime;
+using flight::types::Renderer;
 struct RenderStateInitialization;
 } // namespace flight::render
 
@@ -39,20 +86,30 @@ struct RenderStateInitialization : public flight::ReferenceEnabled {
   std::optional<bool> round_pixels;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_14E9CA6FE9F5D053
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_14E9CA6FE9F5D053
-struct callable_clear_signals_14e9ca6fe9f5d053 : public flight::ReferenceEnabled {
-  std::function<void(flight::types::RenderRegistryTable, flight::String)> callable;
-  std::function<void()> clear;
-  flight::Ref<flight::types::RenderRegistrySignals> signals;
-  void operator()(flight::types::RenderRegistryTable argument_0, flight::String argument_1) const {
-    return callable(argument_0, argument_1);
-  }
+template <typename Runtime, typename Registries>
+inline Runtime initialize_render_state_runtime(Runtime runtime, Registries registries) {
+  (runtime->binding = nullptr);
+  (runtime->current_frame_id = 0.0);
+  (runtime->render_adapt_hook = nullptr);
+  (runtime->render_proxy_adapter_map = flight::types::create_render_proxy_adapter_weak_map());
+  (runtime->render_proxy_map = flight::types::create_render_proxy_weak_map());
+  (runtime->render_proxy_sources = flight::Set<flight::types::Renderable>());
+  (runtime->registry_miss = nullptr);
+  (runtime->registries = registries);
+  (runtime->renderer_map_id = 0.0);
+  (runtime->temp_stack = flight::Array<flight::types::Renderable>{});
+  return runtime;
+}
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_ANONYMOUS_3E6B344A3B6BD77E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_ANONYMOUS_3E6B344A3B6BD77E
+struct anonymous_3e6b344a3b6bd77e : public flight::ReferenceEnabled {
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_14E9CA6FE9F5D053
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_ANONYMOUS_3E6B344A3B6BD77E
 
 inline flight::Ref<flight::types::RenderStateRuntime> create_render_state_runtime() {
-  return flight::make_ref<flight::types::RenderStateRuntime>(flight::types::RenderStateRuntime{.binding = std::nullopt, .current_frame_id = 0.0, .render_adapt_hook = std::nullopt, .render_proxy_adapter_map = flight::types::create_render_proxy_adapter_weak_map(), .render_proxy_map = flight::types::create_render_proxy_weak_map(), .render_proxy_sources = flight::Set<flight::types::Renderable>(), .registry_miss = std::nullopt, .registries = flight::make_ref<flight::types::RenderRegistries>(flight::types::RenderRegistries{.renderers = flight::registry::create_keyed_table<flight::Ref<flight::types::Renderer>>(flight::String("NodeRenderer"), flight::String("Unregistered")), .stroke_tessellator = std::nullopt}), .renderer_map_id = 0.0, .temp_stack = flight::Array<flight::types::Renderable>{}});
+  flight::Ref<flight::types::RenderRegistries> registries = flight::make_ref<flight::types::RenderRegistries>(flight::types::RenderRegistries{.renderers = flight::registry::create_keyed_table(flight::String("NodeRenderer"), flight::String("Unregistered")), .stroke_tessellator = std::nullopt});
+  return initialize_render_state_runtime<flight::Ref<flight::types::RenderStateRuntime>, flight::Ref<flight::types::RenderRegistries>>(flight::make_ref<flight::types::RenderStateRuntime>(flight::types::RenderStateRuntime{}), registries);
 }
 
 inline flight::Ref<flight::types::RenderStateRuntime> get_render_state_runtime(flight::Ref<flight::types::RenderState> state) {
@@ -60,23 +117,24 @@ inline flight::Ref<flight::types::RenderStateRuntime> get_render_state_runtime(f
 }
 
 inline std::optional<std::function<void(flight::Ref<flight::types::RenderState>, flight::types::Renderable)>> get_color_adjustment_unsupported_guard(flight::Ref<flight::types::RenderState> state) {
-  std::optional<std::shared_ptr<flight::types::SlotTable<flight::types::ColorAdjustmentUnsupportedGuard>>> table = get_render_state_runtime(state)->registries->color_adjustment_unsupported_guard;
+  auto table = get_render_state_runtime(state)->registries->color_adjustment_unsupported_guard;
   if (!table.has_value()) {
     return std::nullopt;
   }
   return flight::registry::get_registry_table_entry<flight::types::ColorAdjustmentUnsupportedGuard>(std::variant<std::shared_ptr<flight::types::KeyedTable<flight::types::ColorAdjustmentUnsupportedGuard>>, std::shared_ptr<flight::types::OrdinalTable<flight::types::ColorAdjustmentUnsupportedGuard>>, std::shared_ptr<flight::types::SlotTable<flight::types::ColorAdjustmentUnsupportedGuard>>>{std::in_place_type<std::shared_ptr<flight::types::SlotTable<flight::types::ColorAdjustmentUnsupportedGuard>>>, table.value()}, table.value()->registry);
 }
 
-inline void initialize_render_state(flight::types::EntityConstruction<flight::Ref<flight::types::RenderState>> state, std::optional<flight::Ref<RenderStateInitialization>> obj = std::nullopt) {
+template <typename State>
+inline void initialize_render_state_fields(flight::types::EntityConstruction<State> state, std::optional<flight::Ref<RenderStateInitialization>> obj = std::nullopt) {
   if (!obj.has_value()) {
     flight::row_set<flight::RowKey<"allowSmoothing">>(state, true);
     flight::row_set<flight::RowKey<"currentClipDepth">>(state, 0.0);
-    flight::row_set<flight::RowKey<"displayObjectClipHooks">>(state, std::nullopt);
+    flight::row_set<flight::RowKey<"displayObjectClipHooks">>(state, nullptr);
     flight::row_set<flight::RowKey<"pixelRatio">>(state, 1.0);
-    flight::row_set<flight::RowKey<"imageSurfaceProvider">>(state, std::nullopt);
+    flight::row_set<flight::RowKey<"imageSurfaceProvider">>(state, nullptr);
     flight::row_set<flight::RowKey<"renderAlpha">>(state, 1.0);
-    flight::row_set<flight::RowKey<"renderBlendMode">>(state, std::optional<flight::String>{flight::types::blend_mode->normal});
-    flight::row_set<flight::RowKey<"renderTransform2D">>(state, std::nullopt);
+    flight::row_set<flight::RowKey<"renderBlendMode">>(state, flight::types::blend_mode->normal);
+    flight::row_set<flight::RowKey<"renderTransform2D">>(state, nullptr);
     flight::row_set<flight::RowKey<"roundPixels">>(state, false);
     flight::row_set<flight::RowKey<"sceneGraphSyncPolicy">>(state, flight::String("refreshDerivedState"));
   }
@@ -97,14 +155,14 @@ inline void initialize_render_state(flight::types::EntityConstruction<flight::Re
     }
     auto display_object_clip_hooks = ([&]() -> std::variant<flight::Ref<flight::types::Scene2DClipHooks>, flight::Null, flight::Undefined> { auto optional_property = obj.value()->display_object_clip_hooks; if (std::holds_alternative<flight::Undefined>(optional_property)) return std::variant<flight::Ref<flight::types::Scene2DClipHooks>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property)) return std::variant<flight::Ref<flight::types::Scene2DClipHooks>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<flight::types::Scene2DClipHooks>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::Scene2DClipHooks>>, std::get<flight::Ref<flight::types::Scene2DClipHooks>>(optional_property)}; }());
     if (std::holds_alternative<flight::Undefined>(display_object_clip_hooks)) {
-      flight::row_set<flight::RowKey<"displayObjectClipHooks">>(state, std::nullopt);
+      flight::row_set<flight::RowKey<"displayObjectClipHooks">>(state, nullptr);
     }
     else {
       if (std::holds_alternative<flight::Null>(display_object_clip_hooks)) {
-        flight::row_set<flight::RowKey<"displayObjectClipHooks">>(state, std::nullopt);
+        flight::row_set<flight::RowKey<"displayObjectClipHooks">>(state, nullptr);
       }
       else {
-        flight::row_set<flight::RowKey<"displayObjectClipHooks">>(state, std::optional<flight::Ref<flight::types::Scene2DClipHooks>>{std::get<0>(display_object_clip_hooks)});
+        flight::row_set<flight::RowKey<"displayObjectClipHooks">>(state, std::get<0>(display_object_clip_hooks));
       }
     }
     const std::optional<double> pixel_ratio = obj.value()->pixel_ratio;
@@ -116,14 +174,14 @@ inline void initialize_render_state(flight::types::EntityConstruction<flight::Re
     }
     std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageSurfaceCreator>>>>, flight::Null, flight::Undefined> image_surface_provider = obj.value()->image_surface_provider;
     if (std::holds_alternative<flight::Undefined>(image_surface_provider)) {
-      flight::row_set<flight::RowKey<"imageSurfaceProvider">>(state, std::nullopt);
+      flight::row_set<flight::RowKey<"imageSurfaceProvider">>(state, nullptr);
     }
     else {
       if (std::holds_alternative<flight::Null>(image_surface_provider)) {
-        flight::row_set<flight::RowKey<"imageSurfaceProvider">>(state, std::nullopt);
+        flight::row_set<flight::RowKey<"imageSurfaceProvider">>(state, nullptr);
       }
       else {
-        flight::row_set<flight::RowKey<"imageSurfaceProvider">>(state, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ImageSurfaceCreator>>>>>{std::get<0>(image_surface_provider)});
+        flight::row_set<flight::RowKey<"imageSurfaceProvider">>(state, std::get<0>(image_surface_provider));
       }
     }
     const std::optional<double> render_alpha = obj.value()->render_alpha;
@@ -135,26 +193,26 @@ inline void initialize_render_state(flight::types::EntityConstruction<flight::Re
     }
     const std::variant<flight::String, flight::Null, flight::Undefined> render_blend_mode = ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto optional_property_2 = obj.value()->render_blend_mode; if (std::holds_alternative<flight::Undefined>(optional_property_2)) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_2)) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, std::get<flight::String>(optional_property_2)}; }());
     if (std::holds_alternative<flight::Undefined>(render_blend_mode)) {
-      flight::row_set<flight::RowKey<"renderBlendMode">>(state, std::optional<flight::String>{flight::types::blend_mode->normal});
+      flight::row_set<flight::RowKey<"renderBlendMode">>(state, flight::types::blend_mode->normal);
     }
     else {
       if (std::holds_alternative<flight::Null>(render_blend_mode)) {
-        flight::row_set<flight::RowKey<"renderBlendMode">>(state, std::optional<flight::String>{flight::types::blend_mode->normal});
+        flight::row_set<flight::RowKey<"renderBlendMode">>(state, flight::types::blend_mode->normal);
       }
       else {
-        flight::row_set<flight::RowKey<"renderBlendMode">>(state, std::optional<flight::String>{std::get<0>(render_blend_mode)});
+        flight::row_set<flight::RowKey<"renderBlendMode">>(state, std::get<0>(render_blend_mode));
       }
     }
     auto render_transform2_d = ([&]() -> std::variant<flight::Ref<flight::types::Matrix>, flight::Null, flight::Undefined> { auto optional_property_3 = obj.value()->render_transform2_d; if (std::holds_alternative<flight::Undefined>(optional_property_3)) return std::variant<flight::Ref<flight::types::Matrix>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_3)) return std::variant<flight::Ref<flight::types::Matrix>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<flight::types::Matrix>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::Matrix>>, std::get<flight::Ref<flight::types::Matrix>>(optional_property_3)}; }());
     if (std::holds_alternative<flight::Undefined>(render_transform2_d)) {
-      flight::row_set<flight::RowKey<"renderTransform2D">>(state, std::nullopt);
+      flight::row_set<flight::RowKey<"renderTransform2D">>(state, nullptr);
     }
     else {
       if (std::holds_alternative<flight::Null>(render_transform2_d)) {
-        flight::row_set<flight::RowKey<"renderTransform2D">>(state, std::nullopt);
+        flight::row_set<flight::RowKey<"renderTransform2D">>(state, nullptr);
       }
       else {
-        flight::row_set<flight::RowKey<"renderTransform2D">>(state, std::optional<flight::Ref<flight::types::Matrix>>{std::get<0>(render_transform2_d)});
+        flight::row_set<flight::RowKey<"renderTransform2D">>(state, std::get<0>(render_transform2_d));
       }
     }
     const std::optional<bool> round_pixels = obj.value()->round_pixels;
@@ -172,6 +230,17 @@ inline void initialize_render_state(flight::types::EntityConstruction<flight::Re
       flight::row_set<flight::RowKey<"sceneGraphSyncPolicy">>(state, scene_graph_sync_policy.value());
     }
   }
+}
+
+template <typename State>
+inline flight::types::EntityConstruction<State> create_derived_render_state_construction(std::optional<flight::Ref<RenderStateInitialization>> obj) {
+  flight::types::EntityConstruction<State> state = flight::entity::allocate_entity<State>();
+  initialize_render_state_fields<State>(state, obj);
+  return state;
+}
+
+inline void initialize_render_state(flight::types::EntityConstruction<flight::Ref<flight::types::RenderState>> state, std::optional<flight::Ref<RenderStateInitialization>> obj = std::nullopt) {
+  initialize_render_state_fields<flight::Ref<flight::types::RenderState>>(state, obj);
   flight::types::write_render_state_runtime_owner(state, create_render_state_runtime());
 }
 
@@ -184,7 +253,9 @@ inline flight::Ref<flight::types::RenderState> create_render_state(std::optional
 inline void dispose_render_proxy_for_shutdown(flight::Ref<flight::types::RenderState> state, flight::types::Renderable source) {
   auto runtime = get_render_state_runtime(state);
   auto proxy = runtime->render_proxy_map.get(source);
-  flight::types::invoke_render_proxy_destroy_data(proxy, state);
+  if ((!(std::holds_alternative<flight::Null>(([&]() -> std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined> { auto optional_chain_receiver = proxy; if (!optional_chain_receiver.has_value()) return std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return ([&]() -> std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined> { auto optional_chain_projected = optional_chain_receiver.value()->renderer_data; if (!optional_chain_projected.has_value()) return std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::RendererData>>, optional_chain_projected.value()}; }()); }()))) && !(std::holds_alternative<flight::Undefined>(([&]() -> std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined> { auto optional_chain_receiver = proxy; if (!optional_chain_receiver.has_value()) return std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return ([&]() -> std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined> { auto optional_chain_projected_2 = optional_chain_receiver.value()->renderer_data; if (!optional_chain_projected_2.has_value()) return std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<flight::types::RendererData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::RendererData>>, optional_chain_projected_2.value()}; }()); }()))))) {
+    ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void(flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::RendererData>)>> { auto optional_chain_receiver = proxy.value()->renderer; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->destroy_data; }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(state, proxy.value()->renderer_data.value()); }());
+  }
   runtime->render_proxy_map.erase(source);
   runtime->render_proxy_sources.erase(source);
 }
@@ -200,6 +271,18 @@ struct callable_clear_signals_0290ff0cd714aef0 : public flight::ReferenceEnabled
   }
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_0290FF0CD714AEF0
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_14E9CA6FE9F5D053
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_14E9CA6FE9F5D053
+struct callable_clear_signals_14e9ca6fe9f5d053 : public flight::ReferenceEnabled {
+  std::function<void(flight::types::RenderRegistryTable, flight::String)> callable;
+  std::function<void()> clear;
+  flight::Ref<flight::types::RenderRegistrySignals> signals;
+  void operator()(flight::types::RenderRegistryTable argument_0, flight::String argument_1) const {
+    return callable(argument_0, argument_1);
+  }
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_14E9CA6FE9F5D053
 
 inline void destroy_render_state(flight::Ref<flight::types::RenderState> state) {
   auto runtime = get_render_state_runtime(state);

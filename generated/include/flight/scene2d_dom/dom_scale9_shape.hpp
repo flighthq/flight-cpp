@@ -45,6 +45,8 @@
 //   { prepareDomElement, setDomRendererElement } from './domStyle'
 //   type { Entity } from '@flighthq/types/contract'
 //   type { NodeAny } from '@flighthq/types/contract'
+//   type { Node2D } from '@flighthq/types/contract'
+//   type { Node3D } from '@flighthq/types/contract'
 //   type { RenderCache } from '@flighthq/types/contract'
 //   type { Kind } from '@flighthq/types/contract'
 //   type { RenderProxy } from '@flighthq/types/contract'
@@ -55,6 +57,7 @@
 //   type { Renderer } from '@flighthq/types/contract'
 //   type { Matrix } from '@flighthq/types/contract'
 //   type { Adjustment } from '@flighthq/types/contract'
+//   type { NodeOf } from '@flighthq/types/contract'
 //   type { Node } from '@flighthq/types/contract'
 //   type { ClipRegion } from '@flighthq/types/contract'
 //   type { InteractionSignals } from '@flighthq/types/contract'
@@ -92,7 +95,6 @@
 //   type { HasBoundsRectangle } from '@flighthq/types/contract'
 //   type { Scale9Mapper } from '@flighthq/types/contract'
 //   type { EntityWithoutRuntime } from '@flighthq/types/contract'
-//   type { Node2D } from '@flighthq/types/contract'
 
 namespace flight::scene2d_dom {
 

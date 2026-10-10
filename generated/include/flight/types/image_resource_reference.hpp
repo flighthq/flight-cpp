@@ -15,7 +15,9 @@ namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct ImageBitmapComposition; }
 namespace flight::types { struct ImageResource; }
 namespace flight::types { struct Texture2D; }
-namespace flight::types { struct TextureCommon; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
 
 namespace flight::types {
 struct ImageResourceFailure;

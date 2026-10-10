@@ -13,7 +13,6 @@
 //   missing: variable (binding) -- source line 155
 //   missing: function createNativeTextRuntime -- source line 52
 //   missing: function createNativeText -- source line 42
-#include <functional>
 #include <optional>
 #include <flight/runtime.hpp>
 
@@ -34,8 +33,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/native_text.hpp>
 
-#include <flight/types/has_bounds_rectangle.hpp>
-
 #include <flight/types/entity.hpp>
 
 namespace flight::text {
@@ -43,7 +40,6 @@ namespace flight::text {
 using flight::node::invalidate_node_local_bounds;
 using flight::node::invalidate_node_local_content;
 
-using flight::types::BoundsNodeAny;
 using flight::types::EntityConstruction;
 using flight::types::NativeText;
 using flight::types::NativeTextData;
@@ -249,28 +245,17 @@ inline void set_native_text_width(flight::Ref<NativeText> source, double value) 
   invalidate_node_local_bounds(source);
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_B497C908967CA23C
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_B497C908967CA23C
-struct can_add_child_compute_local_bounds_rectangle_b497c908967ca23c : public flight::ReferenceEnabled {
-  std::optional<std::function<bool(std::shared_ptr<Node<flight::Ref<Node2DTraits>>>, std::shared_ptr<Node<flight::Ref<Node2DTraits>>>)>> can_add_child;
-  std::optional<std::function<void(flight::Ref<Rectangle>, flight::Ref<BoundsNodeAny>)>> compute_local_bounds_rectangle;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_B497C908967CA23C
-
 
 // NOT GENERATED: variable (binding) -- source line 155
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   const defaultMethods: Partial<MethodsOf<NativeTextRuntime>> = {
 //     computeLocalBoundsRectangle: computeNativeTextLocalBoundsRectangle,
 //   };
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: contextual union callable value type
-// std::function<void(flight::Ref<Rectangle>, flight::Ref<Node>)> agrees with no alternative's signature: the
-// destination holds [std::function<void(flight::Ref<Rectangle>, flight::Ref<BoundsNodeAny>)>]. A callable is a
-// represented domain, so the obstacle is that the destination's signature cannot call this one. Declare the
-// value's parameters so the destination's signature supplies them, and its result as one the destination holds
+// cpp emission failed for @flighthq/text/packages/text/src/nativeText.ts: Partial<T> requires a statically
+// resolvable C++ object shape; T is named
 
 
 // NOT GENERATED: function createNativeTextRuntime -- source line 52

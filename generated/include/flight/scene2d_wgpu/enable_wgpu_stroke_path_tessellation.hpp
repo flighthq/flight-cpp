@@ -7,6 +7,7 @@
 #include <flight/any.hpp>
 #include <functional>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -20,7 +21,7 @@ using flight::types::WgpuRenderState;
 
 
 // NOT GENERATED: function enableWgpuStrokePathTessellation -- source line 9
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:multiVariant [compiler-restriction]
 //
 // The source it stood for:
 //   export function enableWgpuStrokePathTessellation(state: WgpuRenderState): void {
@@ -33,8 +34,6 @@ using flight::types::WgpuRenderState;
 //   }
 //   
 // cpp emission failed for @flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/enableWgpuStrokePathTessellation.ts:
-// intersection types require C++ multiple-inheritance lowering: no shape for SlotTable (argument
-// StrokeTessellator has no shape either), Entity. Declare the object shape the code reads rather than
-// intersecting a conjunct that has none
+// contextual multiVariant construction requires expression type evidence
 
 } // namespace flight::scene2d_wgpu

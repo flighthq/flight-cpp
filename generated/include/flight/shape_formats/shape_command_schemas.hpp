@@ -8,10 +8,11 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { struct Entity; }
 namespace flight::types { struct ShapeCommandRegistry; }
 namespace flight::types { struct ShapeCommandSchemaArgument; }
+namespace flight::types { struct TombstonedRegistryTableEntry; }
 namespace flight::types { template <typename K> struct ShapeCommandSchema; }
+namespace flight::types { template <typename T> struct BoundRegistryTableEntry; }
 namespace flight::types { template <typename T> struct KeyedTable; }
 
 namespace flight::shape_formats {

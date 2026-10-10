@@ -5,6 +5,7 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function findScene3DSkeletonJoints -- source line 23
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -18,7 +19,7 @@ using flight::types::Node3D;
 
 
 // NOT GENERATED: function findScene3DSkeletonJoints -- source line 23
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-missing-expression-type:dualSentinelVariant [compiler-restriction]
 //
 // The source it stood for:
 //   export function findScene3DSkeletonJoints(root: Readonly<Node3D>): readonly Node3D[] | null {
@@ -34,9 +35,7 @@ using flight::types::Node3D;
 //     return null;
 //   }
 //   
-// cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/sceneSkeleton.ts: intersection
-// types require C++ multiple-inheritance lowering: no shape for Node (argument Node3DTraits has no shape
-// either), Node3DTraits. Declare the object shape the code reads rather than intersecting a conjunct that has
-// none
+// cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/sceneSkeleton.ts: contextual
+// dualSentinelVariant construction requires expression type evidence
 
 } // namespace flight::scene3d_formats

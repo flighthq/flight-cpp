@@ -16,7 +16,6 @@
 //   missing: variable (binding) -- source line 190
 //   missing: function createBitmapTextRuntime -- source line 67
 //   missing: function createBitmapText -- source line 46
-#include <functional>
 #include <optional>
 #include <flight/runtime.hpp>
 
@@ -31,8 +30,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/node.hpp>
 
-#include <flight/types/has_bounds_rectangle.hpp>
-
 #include <flight/types/glyph_source.hpp>
 
 #include <flight/types/bitmap_text.hpp>
@@ -46,7 +43,6 @@ using flight::types::BitmapTextAlign;
 using flight::types::BitmapTextData;
 using flight::types::BitmapTextPage;
 using flight::types::BitmapTextRuntime;
-using flight::types::BoundsNodeAny;
 using flight::types::GlyphSource;
 using flight::types::Node;
 using flight::types::Node2DTraits;
@@ -299,29 +295,17 @@ inline flight::Ref<BitmapTextPage> create_bitmap_text_page() {
   return flight::make_ref<BitmapTextPage>(BitmapTextPage{.atlas = create_texture_atlas(std::nullopt), .ids = flight::Uint16Array(), .instance_count = 0.0, .transforms = flight::Float32Array()});
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPTEXT_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_3EDA99593C3E5445
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPTEXT_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_3EDA99593C3E5445
-struct can_add_child_compute_local_bounds_rectangle_3eda99593c3e5445 : public flight::ReferenceEnabled {
-  std::optional<std::function<bool(std::shared_ptr<Node<flight::Ref<Node2DTraits>>>, std::shared_ptr<Node<flight::Ref<Node2DTraits>>>)>> can_add_child;
-  std::optional<std::function<void(flight::Ref<Rectangle>, flight::Ref<BoundsNodeAny>)>> compute_local_bounds_rectangle;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_BITMAPTEXT_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_3EDA99593C3E5445
-
 
 // NOT GENERATED: variable (binding) -- source line 190
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   const defaultMethods: Partial<MethodsOf<BitmapTextRuntime>> = {
 //     computeLocalBoundsRectangle: copyLocalBoundsRectangle,
 //   };
 //   
-// cpp emission failed for @flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts: contextual union callable
-// value type std::function<void(flight::Ref<Rectangle>, flight::Ref<Node>)> agrees with no alternative's
-// signature: the destination holds [std::function<void(flight::Ref<Rectangle>, flight::Ref<BoundsNodeAny>)>]. A
-// callable is a represented domain, so the obstacle is that the destination's signature cannot call this one.
-// Declare the value's parameters so the destination's signature supplies them, and its result as one the
-// destination holds
+// cpp emission failed for @flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts: Partial<T> requires a
+// statically resolvable C++ object shape; T is named
 
 
 // NOT GENERATED: function createBitmapTextRuntime -- source line 67

@@ -6,10 +6,34 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
+namespace flight::types { struct CompressedImageResource; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct RenderState; }
+namespace flight::types { struct Renderer; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { struct WgpuMaterialRenderer; }
+namespace flight::types { struct WgpuMeshMaterialRenderer; }
+namespace flight::types { struct WgpuModifierSnippet; }
+namespace flight::types { struct WgpuRenderEffectRegistration; }
+namespace flight::types { struct WgpuRenderRegistries; }
+namespace flight::types { struct WgpuRenderState; }
+namespace flight::types { struct WgpuSkinningAdapter; }
+namespace flight::types { struct WgpuTextureEntry; }
+namespace flight::types { struct WgpuVelocityContext; }
+namespace flight::types { template <typename T> struct KeyedTable; }
+namespace flight::types { template <typename T> struct SlotTable; }
+
 #include <flight/registry/registry_table.hpp>
 #include <flight/types/contract.hpp>
 
 namespace flight::render_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline void initialize_empty_wgpu_render_registries(flight::Ref<flight::types::WgpuRenderRegistries> out) {
   (out->compressed_texture_decoder = std::nullopt);
@@ -17,16 +41,22 @@ inline void initialize_empty_wgpu_render_registries(flight::Ref<flight::types::W
   (out->gpu_skinning = std::nullopt);
   (out->shape_rasterizer = std::nullopt);
   (out->stroke_tessellator = std::nullopt);
-  (out->custom_material_shaders = flight::registry::create_keyed_table<flight::String>(flight::String("WgpuCustomMaterialShader"), flight::String("Unregistered")));
-  (out->material_renderers = flight::registry::create_keyed_table<flight::Ref<flight::types::WgpuMaterialRenderer>>(flight::String("WgpuMaterialRenderer"), flight::String("StandardMaterial")));
-  (out->mesh_material_renderers = flight::registry::create_keyed_table<flight::Ref<flight::types::WgpuMeshMaterialRenderer>>(flight::String("WgpuMeshMaterialRenderer"), flight::String("StandardMaterial")));
-  (out->modifier_snippets = flight::registry::create_keyed_table<flight::Ref<flight::types::WgpuModifierSnippet>>(flight::String("WgpuModifierSnippet"), flight::String("Unregistered")));
+  (out->custom_material_shaders = flight::registry::create_keyed_table(flight::String("WgpuCustomMaterialShader"), flight::String("Unregistered")));
+  (out->material_renderers = flight::registry::create_keyed_table(flight::String("WgpuMaterialRenderer"), flight::String("StandardMaterial")));
+  (out->mesh_material_renderers = flight::registry::create_keyed_table(flight::String("WgpuMeshMaterialRenderer"), flight::String("StandardMaterial")));
+  (out->modifier_snippets = flight::registry::create_keyed_table(flight::String("WgpuModifierSnippet"), flight::String("Unregistered")));
   (out->modifier_snippet_revision = 0.0);
-  (out->render_effects = flight::registry::create_keyed_table<flight::Ref<flight::types::WgpuRenderEffectRegistration>>(flight::String("WgpuRenderEffect"), flight::String("Unregistered")));
-  (out->renderers = flight::registry::create_keyed_table<flight::Ref<flight::types::Renderer>>(flight::String("NodeRenderer"), flight::String("Unregistered")));
-  (out->texture_resolvers = flight::registry::create_keyed_table<flight::types::WgpuTextureResolver>(flight::String("WgpuTextureResolver"), flight::String("Unregistered")));
-  (out->velocity_writers = flight::registry::create_keyed_table<flight::types::WgpuVelocityWriter>(flight::String("WgpuVelocityWriter"), flight::String("Unregistered")));
+  (out->render_effects = flight::registry::create_keyed_table(flight::String("WgpuRenderEffect"), flight::String("Unregistered")));
+  (out->renderers = flight::registry::create_keyed_table(flight::String("NodeRenderer"), flight::String("Unregistered")));
+  (out->texture_resolvers = flight::registry::create_keyed_table(flight::String("WgpuTextureResolver"), flight::String("Unregistered")));
+  (out->velocity_writers = flight::registry::create_keyed_table(flight::String("WgpuVelocityWriter"), flight::String("Unregistered")));
 }
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_ANONYMOUS_3E6B344A3B6BD77E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_ANONYMOUS_3E6B344A3B6BD77E
+struct anonymous_3e6b344a3b6bd77e : public flight::ReferenceEnabled {
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_ANONYMOUS_3E6B344A3B6BD77E
 
 inline flight::Ref<flight::types::WgpuRenderRegistries> allocate_empty_wgpu_render_registries() {
   auto out = flight::make_ref<flight::types::WgpuRenderRegistries>(flight::types::WgpuRenderRegistries{});

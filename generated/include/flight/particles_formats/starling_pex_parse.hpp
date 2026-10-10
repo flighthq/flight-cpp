@@ -16,12 +16,30 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/starling_pex_schema.hpp>
+
+#include <flight/types/particle_emitter_config.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct ParticleEmitterConfig; }
+namespace flight::types { struct StarlingPexColor; }
+namespace flight::types { struct StarlingPexDocument; }
+namespace flight::types { struct StarlingPexParseOptions; }
+namespace flight::types { struct StarlingPexParseResult; }
+
 #include <flight/importdiagnostics/import_diagnostic_collector.hpp>
 #include <flight/math/constants.hpp>
 #include <flight/particles/particle_emitter_config.hpp>
 #include <flight/types/contract.hpp>
 
 namespace flight::particles_formats {
+
+using flight::types::ImportDiagnostic;
+using flight::types::ParticleEmitterConfig;
+using flight::types::StarlingPexColor;
+using flight::types::StarlingPexDocument;
 
 using PexDict = flight::Record<flight::String, flight::String>;
 

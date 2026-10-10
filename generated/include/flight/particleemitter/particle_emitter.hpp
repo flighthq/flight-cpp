@@ -15,7 +15,6 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/boolean.hpp>
-#include <functional>
 #include <optional>
 #include <random>
 #include <flight/runtime.hpp>
@@ -39,14 +38,11 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/node.hpp>
 
-#include <flight/types/has_bounds_rectangle.hpp>
-
 namespace flight::particleemitter {
 
 using flight::geometry::reserve_float32_array;
 using flight::geometry::reserve_uint16_array;
 
-using flight::types::BoundsNodeAny;
 using flight::types::Node;
 using flight::types::Node2DTraits;
 using flight::types::PartialNode;
@@ -434,29 +430,17 @@ inline void set_particle_emitter2_dparticle_velocity(flight::Ref<ParticleEmitter
   ([&]() { auto&& typed_array_47 = data->velocities; const auto typed_index_47 = (vt + 1.0); const auto typed_value_47 = vy; return typed_array_47.set_index(typed_index_47, typed_value_47); }());
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLEEMITTER_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_D21A83B4E8018D48
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLEEMITTER_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_D21A83B4E8018D48
-struct can_add_child_compute_local_bounds_rectangle_d21a83b4e8018d48 : public flight::ReferenceEnabled {
-  std::optional<std::function<bool(std::shared_ptr<Node<flight::Ref<Node2DTraits>>>, std::shared_ptr<Node<flight::Ref<Node2DTraits>>>)>> can_add_child;
-  std::optional<std::function<void(flight::Ref<Rectangle>, flight::Ref<BoundsNodeAny>)>> compute_local_bounds_rectangle;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLEEMITTER_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_D21A83B4E8018D48
-
 
 // NOT GENERATED: variable (binding) -- source line 403
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   const defaultMethods: Partial<MethodsOf<ParticleEmitter2DRuntime>> = {
 //     computeLocalBoundsRectangle: copyLocalBoundsRectangle,
 //   };
 //   
-// cpp emission failed for @flighthq/particleemitter/packages/particleemitter/src/particleEmitter.ts: contextual
-// union callable value type std::function<void(flight::Ref<Rectangle>, flight::Ref<Node>)> agrees with no
-// alternative's signature: the destination holds [std::function<void(flight::Ref<Rectangle>,
-// flight::Ref<BoundsNodeAny>)>]. A callable is a represented domain, so the obstacle is that the destination's
-// signature cannot call this one. Declare the value's parameters so the destination's signature supplies them,
-// and its result as one the destination holds
+// cpp emission failed for @flighthq/particleemitter/packages/particleemitter/src/particleEmitter.ts: Partial<T>
+// requires a statically resolvable C++ object shape; T is named
 
 
 // NOT GENERATED: function createParticleEmitter2DRuntime -- source line 212

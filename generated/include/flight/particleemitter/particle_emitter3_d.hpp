@@ -4,7 +4,6 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function createParticleEmitter3D -- source line 155
-//   missing: function getParticleEmitter3DRuntime -- source line 200
 #include <cmath>
 #include <cstdint>
 #include <flight/boolean.hpp>
@@ -28,8 +27,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/partial_node.hpp>
 
-#include <flight/types/node.hpp>
-
 #include <flight/particleemitter/particle_emitter.hpp>
 
 namespace flight::particleemitter {
@@ -37,7 +34,6 @@ namespace flight::particleemitter {
 using flight::geometry::reserve_float32_array;
 using flight::geometry::reserve_uint16_array;
 
-using flight::types::Node;
 using flight::types::PartialNode;
 using flight::types::ParticleEmitterData;
 using flight::types::TextureAtlas;
@@ -159,24 +155,23 @@ inline void compute_particle_emitter3_dlocal_bounds_aabb(flight::Ref<AabbLike> o
 
 
 // NOT GENERATED: function createParticleEmitter3D -- source line 155
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   export function createParticleEmitter3D(obj?: Readonly<PartialNode<ParticleEmitter3D>>): ParticleEmitter3D {
-//     const node = createNode3D(ParticleEmitter3DKind, obj) as unknown as ParticleEmitter3D;
+//     const node = allocateEntity<ParticleEmitter3D>();
+//     initializeNode3D(node, ParticleEmitter3DKind, obj, createNode3DRuntime);
 //     node.data = createParticleEmitterData(obj?.data as Readonly<Partial<ParticleEmitterData>> | undefined);
 //     node.blendMode = obj?.blendMode ?? 'normal';
-//     return node;
+//     return finishEntity(node);
 //   }
 //   
 // cpp emission failed for @flighthq/particleemitter/packages/particleemitter/src/particleEmitter3D.ts:
-// intersection types require C++ multiple-inheritance lowering: no shape for Node (argument Node3DTraits has no
-// shape either), Node3DTraits. Declare the object shape the code reads rather than intersecting a conjunct that
-// has none
+// Partial<T> requires a statically resolvable C++ object shape; T is named
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLEEMITTER_ALPHAS_ATLAS_COLORS_IDS_PARTICLE_COUNT_POSITIONS_Z_TRANSFORMS_VELOCITIES_WORLD_SPACE_BA158D9FE420972B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLEEMITTER_ALPHAS_ATLAS_COLORS_IDS_PARTICLE_COUNT_POSITIONS_Z_TRANSFORMS_VELOCITIES_WORLD_SPACE_BA158D9FE420972B
-struct alphas_atlas_colors_ids_particle_count_positions_z_transforms_velocities_world_space_ba158d9fe420972b : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLEEMITTER_ALPHAS_ATLAS_COLORS_IDS_PARTICLE_COUNT_POSITIONS_Z_TRANSFORMS_VELOCITIES_WORLD_SPACE_E05D53B3DDBB4B3F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLEEMITTER_ALPHAS_ATLAS_COLORS_IDS_PARTICLE_COUNT_POSITIONS_Z_TRANSFORMS_VELOCITIES_WORLD_SPACE_E05D53B3DDBB4B3F
+struct alphas_atlas_colors_ids_particle_count_positions_z_transforms_velocities_world_space_e05d53b3ddbb4b3f : public flight::ReferenceEnabled {
   flight::Float32Array alphas;
   std::optional<flight::Ref<TextureAtlas>> atlas;
   flight::Float32Array colors;
@@ -187,11 +182,11 @@ struct alphas_atlas_colors_ids_particle_count_positions_z_transforms_velocities_
   flight::Float32Array velocities;
   bool world_space;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLEEMITTER_ALPHAS_ATLAS_COLORS_IDS_PARTICLE_COUNT_POSITIONS_Z_TRANSFORMS_VELOCITIES_WORLD_SPACE_BA158D9FE420972B
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLEEMITTER_ALPHAS_ATLAS_COLORS_IDS_PARTICLE_COUNT_POSITIONS_Z_TRANSFORMS_VELOCITIES_WORLD_SPACE_E05D53B3DDBB4B3F
 
 inline flight::Ref<ParticleEmitter3D> clone_particle_emitter3_d(flight::Ref<ParticleEmitter3D> source) {
   flight::Ref<ParticleEmitterData> src = source->data;
-  return create_particle_emitter3_d(flight::make_ref<PartialNode<flight::Ref<ParticleEmitter3D>>>(PartialNode<flight::Ref<ParticleEmitter3D>>{.blend_mode = source->blend_mode, .data = flight::make_ref<alphas_atlas_colors_ids_particle_count_positions_z_transforms_velocities_world_space_ba158d9fe420972b>(alphas_atlas_colors_ids_particle_count_positions_z_transforms_velocities_world_space_ba158d9fe420972b{.alphas = src->alphas.slice(), .atlas = src->atlas, .colors = src->colors.slice(), .ids = src->ids.slice(), .particle_count = src->particle_count, .positions_z = src->positions_z.slice(), .transforms = src->transforms.slice(), .velocities = src->velocities.slice(), .world_space = src->world_space})}));
+  return create_particle_emitter3_d(flight::make_ref<PartialNode<flight::Ref<ParticleEmitter3D>>>(PartialNode<flight::Ref<ParticleEmitter3D>>{.blend_mode = source->blend_mode, .data = flight::make_ref<alphas_atlas_colors_ids_particle_count_positions_z_transforms_velocities_world_space_e05d53b3ddbb4b3f>(alphas_atlas_colors_ids_particle_count_positions_z_transforms_velocities_world_space_e05d53b3ddbb4b3f{.alphas = src->alphas.slice(), .atlas = src->atlas, .colors = src->colors.slice(), .ids = src->ids.slice(), .particle_count = src->particle_count, .positions_z = src->positions_z.slice(), .transforms = src->transforms.slice(), .velocities = src->velocities.slice(), .world_space = src->world_space})}));
 }
 
 inline double get_particle_emitter3_dcapacity(flight::Ref<ParticleEmitter3D> source) {
@@ -227,19 +222,9 @@ inline bool get_particle_emitter3_dparticle_velocity(flight::Ref<Vector3Like> ou
   return true;
 }
 
-
-// NOT GENERATED: function getParticleEmitter3DRuntime -- source line 200
-// refusal: cpp-intersection-member-shapeless [source-portability]
-//
-// The source it stood for:
-//   export function getParticleEmitter3DRuntime(source: Readonly<ParticleEmitter3D>): Readonly<ParticleEmitter3DRuntime> {
-//     return getNode3DRuntime(source as unknown as Node3D) as ParticleEmitter3DRuntime;
-//   }
-//   
-// cpp emission failed for @flighthq/particleemitter/packages/particleemitter/src/particleEmitter3D.ts:
-// intersection types require C++ multiple-inheritance lowering: no shape for NodeRuntime (argument Node3DTraits
-// has no shape either), HasAppearanceRuntime, HasTransform3DRuntime. Declare the object shape the code reads
-// rather than intersecting a conjunct that has none
+inline flight::Ref<ParticleEmitter3DRuntime> get_particle_emitter3_druntime(flight::Ref<ParticleEmitter3D> source) {
+  return source[entity_runtime_key];
+}
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLEEMITTER_KIND_6FEA82D7AA842443
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLEEMITTER_KIND_6FEA82D7AA842443

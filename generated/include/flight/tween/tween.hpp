@@ -10,7 +10,6 @@
 #include <functional>
 #include <optional>
 #include <random>
-#include <stdexcept>
 #include <type_traits>
 #include <variant>
 #include <flight/runtime.hpp>
@@ -82,7 +81,7 @@ inline flight::Ref<flight::types::Tween<T>> create_tween(std::variant<flight::Re
     (target = std::get<flight::ErasedRef>(manager_or_target));
     (duration = std::get<double>(target_or_duration));
     (property_map = std::get<flight::types::NumericProps<T>>(duration_or_props));
-    (options = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TweenOptions>>>>> { const auto& narrowed_union = props_or_options; if (const auto* alternative = std::get_if<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TweenOptions>>>>>(&narrowed_union)) return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TweenOptions>>>>>{*alternative}; throw std::logic_error("asserted union alternative is not present in the value"); }()));
+    (options = std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TweenOptions>>>>>(props_or_options));
   }
   auto tween = flight::tween::make_tween<T>(target, duration, property_map, options, manager->default_ease);
   flight::tween::add_tween_to_manager<T>(manager, tween, ([&]() -> bool { auto nullish_coalesce_left = ([&]() -> std::optional<bool> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"overwrite">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return true; }()), std::nullopt, std::nullopt);

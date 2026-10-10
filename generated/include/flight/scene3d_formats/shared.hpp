@@ -13,9 +13,14 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct EmbeddedImageResourceReference; }
 namespace flight::types { struct ExternalImageResourceReference; }
+namespace flight::types { struct Sampler; }
 namespace flight::types { struct SkinInfluence; }
 namespace flight::types { struct Texture2D; }
-namespace flight::types { struct TextureCommon; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { struct TextureResourceOptions; }
+namespace flight::types { struct Vector2; }
 namespace flight::types { struct VertexAttribute; }
 namespace flight::types { struct VertexAttributeLayout; }
 
@@ -23,12 +28,14 @@ namespace flight::types { struct VertexAttributeLayout; }
 #include <flight/mesh/mesh_geometry_layout.hpp>
 #include <flight/texture/texture.hpp>
 #include <flight/types/create_texture_options.hpp>
-#include <flight/types/entity.hpp>
 #include <flight/types/image_resource_reference.hpp>
 #include <flight/types/mesh_geometry.hpp>
 #include <flight/types/mutable_number_array.hpp>
+#include <flight/types/sampler.hpp>
 #include <flight/types/skin_influence.hpp>
 #include <flight/types/texture.hpp>
+#include <flight/types/texture_source_value.hpp>
+#include <flight/types/vector2.hpp>
 
 namespace flight::scene3d_formats {
 
@@ -90,7 +97,7 @@ inline flight::types::Texture create_embedded_texture_ref(flight::Uint8Array byt
     (resource = std::optional<flight::Ref<flight::types::EmbeddedImageResourceReference>>{flight::image::create_embedded_image_resource_reference(bytes, mime_type, std::nullopt)});
     ([&]() -> std::optional<double> { auto optional_chain_receiver = resources; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().push(resource.value()); }());
   }
-  return std::variant<flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>, flight::Ref<flight::types::Texture2D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, flight::texture::create_texture(std::variant<flight::Ref<flight::types::flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_source_dimension_resource_56b24da6433b9dfa>, flight::Ref<flight::types::source_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_bb75d9be0fe634b2>, flight::Ref<flight::types::sources_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_92a3fc8b0ad18cdf>, flight::Ref<flight::types::sources_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_b243142728373263>>{std::in_place_type<flight::Ref<flight::types::flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_source_dimension_resource_56b24da6433b9dfa>>, flight::make_ref<flight::types::flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_source_dimension_resource_56b24da6433b9dfa>(flight::types::flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_source_dimension_resource_56b24da6433b9dfa{.resource = std::variant<flight::Ref<flight::types::EmbeddedImageResourceReference>, flight::Ref<flight::types::ExternalImageResourceReference>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::EmbeddedImageResourceReference>>, resource.value()}})})};
+  return std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, flight::texture::create_texture({.resource = resource.value()})};
 }
 
 inline flight::types::Texture create_external_texture_ref(flight::String uri, std::optional<std::optional<flight::String>> base_path = std::nullopt, std::optional<flight::Array<flight::types::ImageResourceReference>> resources = std::nullopt) {
@@ -100,7 +107,7 @@ inline flight::types::Texture create_external_texture_ref(flight::String uri, st
     (resource = std::optional<flight::Ref<flight::types::ExternalImageResourceReference>>{flight::image::create_external_image_resource_reference(uri, base_path.value())});
     ([&]() -> std::optional<double> { auto optional_chain_receiver = resources; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().push(resource.value()); }());
   }
-  return std::variant<flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_95b8b467441ec19b>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_b54dc1bffa369663>, flight::Ref<flight::types::entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_ae19201647327eba>, flight::Ref<flight::types::Texture2D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, flight::texture::create_texture(std::variant<flight::Ref<flight::types::flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_source_dimension_resource_56b24da6433b9dfa>, flight::Ref<flight::types::source_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_bb75d9be0fe634b2>, flight::Ref<flight::types::sources_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_92a3fc8b0ad18cdf>, flight::Ref<flight::types::sources_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_b243142728373263>>{std::in_place_type<flight::Ref<flight::types::flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_source_dimension_resource_56b24da6433b9dfa>>, flight::make_ref<flight::types::flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_source_dimension_resource_56b24da6433b9dfa>(flight::types::flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_source_dimension_resource_56b24da6433b9dfa{.resource = std::variant<flight::Ref<flight::types::EmbeddedImageResourceReference>, flight::Ref<flight::types::ExternalImageResourceReference>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::ExternalImageResourceReference>>, resource.value()}})})};
+  return std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>>{std::in_place_type<flight::Ref<flight::types::Texture2D>>, flight::texture::create_texture({.resource = resource.value()})};
 }
 
 inline void negate_vec3_z(flight::Array<double> values) {

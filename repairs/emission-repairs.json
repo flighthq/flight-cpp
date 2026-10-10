@@ -4,6 +4,42 @@
   "note": "Mechanical repairs applied to compiler output so a package can ship before upstream fixes the emitter. A repair may only correct TEXT. It may never change absence, reference identity, equality, ordering, exception shape, or task settlement -- those are the contract in AGENTS.md, and a semantic repair is a lie that our own tests would then certify. Every repair declares the upstream defect it stands in for, and `npm run sdk:check` fails when a repair stops matching anything, so a repair cannot outlive the bug it answers. Two kinds exist. A declared `insert-forward-declaration` entry below names a symbol the emitter omits. The duplicate-structural-struct aliasing in scripts/emissionRepairs.mjs needs no entry because it is derived entirely from the emitted tree: it finds an anonymous structural struct defined in more than one package namespace with BYTE-IDENTICAL bodies, keeps the flight::types definition, and turns every other copy into a type alias to it. It reports what it aliased in manifest.duplicateStructuralStructAliases, and it is self-expiring -- when the emitter stops duplicating these, it finds nothing and rewrites nothing.",
   "repairs": [
     {
+      "id": "node-imported-mutable-runtime-template-default",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/node/",
+      "from": "template <typename Traits = flight::Ref<flight::types::NodeTraits>> inline std::shared_ptr<flight::types::NodeRuntime<Traits>> get_mutable_node_runtime",
+      "to": "template <typename Traits> inline std::shared_ptr<flight::types::NodeRuntime<Traits>> get_mutable_node_runtime",
+      "sourceDeclaration": "getMutableNodeRuntime<Traits extends object = NodeTraits>",
+      "diagnostic": "redefinition of default argument for class Traits",
+      "defect": "Imported function forward declarations repeat the callee's defaulted template argument in every header on a node-module include cycle. C++ permits the default on one declaration only; removing it from the forward declarations retains deduction and leaves the public definition as the canonical default owner.",
+      "expectedWhen": "always",
+      "expires": "when imported function forward declarations omit template defaults just as they already omit parameter defaults; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "node-imported-runtime-template-default",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/node/",
+      "from": "template <typename Traits = flight::Ref<flight::types::NodeTraits>> inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>> get_node_runtime",
+      "to": "template <typename Traits> inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>> get_node_runtime",
+      "sourceDeclaration": "getNodeRuntime<Traits extends object = NodeTraits>",
+      "diagnostic": "redefinition of default argument for class Traits",
+      "defect": "Imported function forward declarations repeat the callee's defaulted template argument in every header on a node-module include cycle. C++ permits the default on one declaration only; removing it from the forward declarations retains deduction and leaves the public definition as the canonical default owner.",
+      "expectedWhen": "always",
+      "expires": "when imported function forward declarations omit template defaults just as they already omit parameter defaults; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "node-default-can-add-child-specialization",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/node/node.hpp",
+      "from": "return default_node_runtime_can_add_child;",
+      "to": "return default_node_runtime_can_add_child<flight::Any>;",
+      "sourceDeclaration": "methods?.canAddChild ?? defaultNodeRuntimeCanAddChild",
+      "diagnostic": "cannot resolve overloaded function default_node_runtime_can_add_child based on conversion to std::function",
+      "defect": "The nullish fallback is a generic function value placed into a fully contextualized NodeOf<any> callback slot, but the emitter leaves the function template unspecialized. Naming the already-proven contextual type selects the same instantiation TypeScript assigns.",
+      "expectedWhen": "always",
+      "expires": "when contextual generic function values specialize from their destination callable type; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "interaction-unqualified-types-names",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/interaction/",

@@ -12,9 +12,13 @@ namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct Material; }
 namespace flight::types { struct MaterialData; }
 namespace flight::types { struct Matrix; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Node3D; }
+namespace flight::types { struct RenderCache; }
 namespace flight::types { struct RenderProxy; }
 namespace flight::types { struct Renderer; }
 namespace flight::types { struct RendererData; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct RenderProxy2D;

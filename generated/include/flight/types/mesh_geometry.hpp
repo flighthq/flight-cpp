@@ -34,7 +34,6 @@ using PrimitiveTopology = flight::String;
 #include <flight/types/entity.hpp>
 #include <flight/types/mesh_morph_bind_pose.hpp>
 #include <flight/types/mesh_skin_bind_pose.hpp>
-#include <flight/types/entity.hpp>
 
 namespace flight::types {
 
@@ -52,17 +51,6 @@ struct VertexAttributeLayout : public flight::ReferenceEnabled {
 struct MeshSubset : public flight::ReferenceEnabled {
   double index_count;
   double index_offset;
-};
-
-struct MeshGeometry : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::optional<flight::Ref<flight::types::Aabb>> bounds;
-  std::optional<std::variant<flight::Uint16Array, flight::Uint32Array>> indices;
-  flight::Ref<VertexAttributeLayout> layout;
-  flight::Array<flight::Ref<MeshSubset>> subsets;
-  PrimitiveTopology topology;
-  double version;
-  flight::Float32Array vertices;
 };
 
 struct MeshGeometryGlData : public flight::ReferenceEnabled {
@@ -93,6 +81,17 @@ struct MeshGeometryRuntime : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::MeshSkinBindPose>> skin_bind_pose;
   std::optional<flight::Ref<MeshGeometryGlData>> webgl_data;
   std::optional<flight::Ref<MeshGeometryWgpuData>> webgpu_data;
+};
+
+struct MeshGeometry : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<MeshGeometryRuntime>> entity_runtime_key;
+  std::optional<flight::Ref<flight::types::Aabb>> bounds;
+  std::optional<std::variant<flight::Uint16Array, flight::Uint32Array>> indices;
+  flight::Ref<VertexAttributeLayout> layout;
+  flight::Array<flight::Ref<MeshSubset>> subsets;
+  PrimitiveTopology topology;
+  double version;
+  flight::Float32Array vertices;
 };
 
 } // namespace flight::types

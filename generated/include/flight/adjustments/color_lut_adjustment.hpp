@@ -33,6 +33,15 @@ inline void initialize_color_lut_adjustment(flight::types::EntityConstruction<T>
 using kind_6fea82d7aa842443 = flight::types::kind_6fea82d7aa842443;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_KIND_6FEA82D7AA842443
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_ENTITY_RUNTIME_KEY_KIND_TRANSFORM_4EF0A7C6CBB94F82
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_ENTITY_RUNTIME_KEY_KIND_TRANSFORM_4EF0A7C6CBB94F82
+struct entity_runtime_key_kind_transform_4ef0a7c6cbb94f82 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  std::optional<flight::String> kind;
+  std::optional<flight::types::ColorTransformFunction> transform;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ADJUSTMENTS_ENTITY_RUNTIME_KEY_KIND_TRANSFORM_4EF0A7C6CBB94F82
+
 inline bool is_color_lut_adjustment(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<kind_6fea82d7aa842443>>>> operation) {
   return flight::row_get<flight::RowKey<"transform">>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::ColorLutAdjustment>>>>>>(operation)).has_value();
 }

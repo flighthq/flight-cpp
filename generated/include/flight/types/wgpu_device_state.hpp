@@ -19,7 +19,8 @@ struct WgpuDeviceState;
 
 namespace flight::types {
 
-struct WgpuDeviceState : public Entity {
+struct WgpuDeviceState : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   flight::host_sdl::WgpuDevice device;
 };
 

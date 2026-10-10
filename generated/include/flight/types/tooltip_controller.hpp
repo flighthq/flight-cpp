@@ -13,6 +13,7 @@ namespace flight::types { struct GuiControllerOptions; }
 namespace flight::types { struct Node2DTraits; }
 namespace flight::types { struct Vector2; }
 namespace flight::types { template <typename N, typename P> struct NodeInteractiveStateTransition; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct TooltipController;

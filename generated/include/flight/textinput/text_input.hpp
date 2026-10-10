@@ -10,10 +10,24 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/text_input_state.hpp>
+
+#include <flight/types/rich_text.hpp>
+
+namespace flight::types { struct RichText; }
+namespace flight::types { struct RichTextRuntime; }
+namespace flight::types { struct TextInputHistoryEntry; }
+namespace flight::types { struct TextInputOptions; }
+namespace flight::types { struct TextInputState; }
+
 #include <flight/text/rich_text.hpp>
 #include <flight/types/contract.hpp>
 
 namespace flight::textinput {
+
+using flight::types::RichText;
+using flight::types::TextInputHistoryEntry;
+using flight::types::TextInputState;
 
 inline void disable_text_input(flight::Ref<flight::types::RichText> node) {
   flight::row_set<flight::RowKey<"input">>(flight::structural_ref_cast<flight::Ref<flight::types::RichTextRuntime>>(flight::text::get_rich_text_runtime(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(node)))), std::nullopt);

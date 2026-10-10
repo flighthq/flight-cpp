@@ -6,35 +6,29 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { struct Node3DTraits; }
-namespace flight::types { struct Physics3DCollider; }
+#include <flight/types/physics3_d.hpp>
+
+namespace flight::types { struct Node3D; }
 namespace flight::types { struct Quaternion; }
 namespace flight::types { struct RigidBody3D; }
 namespace flight::types { struct Vector3; }
-namespace flight::types { template <typename Traits> struct Node; }
 
 #include <flight/node/revision.hpp>
-#include <flight/types/collision.hpp>
-#include <flight/types/node.hpp>
-#include <flight/types/node3_d.hpp>
-#include <flight/types/physics3_d.hpp>
-#include <flight/types/quaternion.hpp>
-#include <flight/types/vector3.hpp>
+#include <flight/types/contract.hpp>
 
 namespace flight::physics3d {
 
-using flight::types::Physics3DCollider;
 using flight::types::RigidBody3D;
 
-inline void sync_physics3_dbody_to_node3_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, flight::types::Node3D node) {
-  (flight::row_get<flight::RowKey<"position">>(node)->x = flight::row_get<flight::RowKey<"x">>(body));
-  (flight::row_get<flight::RowKey<"position">>(node)->y = flight::row_get<flight::RowKey<"y">>(body));
-  (flight::row_get<flight::RowKey<"position">>(node)->z = flight::row_get<flight::RowKey<"z">>(body));
-  (flight::row_get<flight::RowKey<"rotation">>(node)->x = flight::row_get<flight::RowKey<"orientationX">>(body));
-  (flight::row_get<flight::RowKey<"rotation">>(node)->y = flight::row_get<flight::RowKey<"orientationY">>(body));
-  (flight::row_get<flight::RowKey<"rotation">>(node)->z = flight::row_get<flight::RowKey<"orientationZ">>(body));
-  (flight::row_get<flight::RowKey<"rotation">>(node)->w = flight::row_get<flight::RowKey<"orientationW">>(body));
-  flight::node::invalidate_node_local_transform(node);
+inline void sync_physics3_dbody_to_node3_d(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody3D>>>> body, flight::Ref<flight::types::Node3D> node) {
+  (node->position->x = flight::row_get<flight::RowKey<"x">>(body));
+  (node->position->y = flight::row_get<flight::RowKey<"y">>(body));
+  (node->position->z = flight::row_get<flight::RowKey<"z">>(body));
+  (node->rotation->x = flight::row_get<flight::RowKey<"orientationX">>(body));
+  (node->rotation->y = flight::row_get<flight::RowKey<"orientationY">>(body));
+  (node->rotation->z = flight::row_get<flight::RowKey<"orientationZ">>(body));
+  (node->rotation->w = flight::row_get<flight::RowKey<"orientationW">>(body));
+  flight::node::invalidate_node_local_transform(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Node3D>>>>(node)));
 }
 
 } // namespace flight::physics3d

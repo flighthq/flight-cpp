@@ -7,9 +7,14 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AmbientLight; }
 namespace flight::types { struct AnimationTrack; }
+namespace flight::types { struct AreaLight; }
+namespace flight::types { struct DirectionalLight; }
 namespace flight::types { struct EmbeddedImageResourceReference; }
+namespace flight::types { struct Environment; }
 namespace flight::types { struct ExternalImageResourceReference; }
+namespace flight::types { struct HemisphereLight; }
 namespace flight::types { struct Light; }
 namespace flight::types { struct Material; }
 namespace flight::types { struct Matrix4; }
@@ -17,8 +22,10 @@ namespace flight::types { struct MeshGeometry; }
 namespace flight::types { struct MeshMorph; }
 namespace flight::types { struct OrthographicProjection; }
 namespace flight::types { struct PerspectiveProjection; }
+namespace flight::types { struct PointLight; }
 namespace flight::types { struct RawProjection; }
 namespace flight::types { struct Scene3DMetadata; }
+namespace flight::types { struct SpotLight; }
 namespace flight::types { struct Transform3D; }
 
 namespace flight::types {
@@ -37,7 +44,7 @@ struct Scene3DDocumentSkin;
 #include <flight/types/camera3_d.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/image_resource_reference.hpp>
-#include <flight/types/light.hpp>
+#include <flight/types/light_value.hpp>
 #include <flight/types/material.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/mesh_geometry.hpp>
@@ -70,7 +77,7 @@ struct Scene3DDocumentCamera : public flight::ReferenceEnabled {
 };
 
 struct Scene3DDocumentLight : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::Light> descriptor;
+  flight::types::LightValue descriptor;
   std::optional<flight::String> name;
   std::optional<double> node;
   flight::Ref<flight::types::Transform3D> transform;

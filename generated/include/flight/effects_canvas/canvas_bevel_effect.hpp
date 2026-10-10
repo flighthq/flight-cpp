@@ -17,8 +17,6 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { struct BevelEffect; struct CanvasRenderTargetPool; struct CanvasTextureRenderTarget; } namespace flight::effects_canvas { inline void apply_bevel_effect_to_canvas_with_pool(flight::Ref<flight::types::CanvasTextureRenderTarget> source, flight::Ref<flight::types::CanvasTextureRenderTarget> dest, flight::Ref<flight::types::CanvasRenderTargetPool> pool, flight::Ref<flight::types::BevelEffect> effect); }
-
 #include <flight/types/canvas_render_target.hpp>
 
 #include <flight/types/canvas_render_state.hpp>
@@ -32,6 +30,8 @@ namespace flight::types { struct BevelEffect; struct CanvasRenderTargetPool; str
 #include <flight/effects_canvas/canvas_render_effect_registry.hpp>
 #include <flight/effects_canvas/canvas_source_mode_compositing.hpp>
 
+
+namespace flight::types { struct BevelEffect; struct CanvasRenderTargetPool; struct CanvasTextureRenderTarget; } namespace flight::effects_canvas { inline void apply_bevel_effect_to_canvas_with_pool(flight::Ref<flight::types::CanvasTextureRenderTarget> source, flight::Ref<flight::types::CanvasTextureRenderTarget> dest, flight::Ref<flight::types::CanvasRenderTargetPool> pool, flight::Ref<flight::types::BevelEffect> effect); }
 namespace flight::effects_canvas {
 
 extern const flight::types::CanvasRenderEffectRunner default_canvas_bevel_effect_runner;

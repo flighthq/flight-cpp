@@ -16,12 +16,31 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/spritesheet_frame_data.hpp>
+
+#include <flight/types/spritesheet_data.hpp>
+
+#include <flight/types/import_diagnostic.hpp>
+
+namespace flight::types { struct CocosPlistDocument; }
+namespace flight::types { struct CocosPlistFrame; }
+namespace flight::types { struct CocosPlistMetadata; }
+namespace flight::types { struct CocosPlistParsed; }
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct SpritesheetData; }
+namespace flight::types { struct SpritesheetFrameData; }
+namespace flight::types { struct XmlElement; }
+
 #include <flight/importdiagnostics/import_diagnostic_collector.hpp>
 #include <flight/spritesheet/spritesheet_data.hpp>
 #include <flight/types/contract.hpp>
 #include <flight/xml/xml_parse.hpp>
 
 namespace flight::spritesheet_formats {
+
+using flight::types::ImportDiagnostic;
+using flight::types::SpritesheetData;
+using flight::types::SpritesheetFrameData;
 
 inline flight::Array<double> parse_plist_pair(flight::String s) {
   std::optional<flight::RegExpExecArray> m = s.match(flight::RegExp(flight::String("{?\\s*([-\\d.]+)\\s*,\\s*([-\\d.]+)\\s*}?"), flight::String("")));

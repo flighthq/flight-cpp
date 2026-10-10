@@ -8,12 +8,29 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct BlinnPhongMaterial; }
 namespace flight::types { struct Camera3D; }
+namespace flight::types { struct CustomShaderMaterial; }
+namespace flight::types { struct DepthMaterial; }
+namespace flight::types { struct EmissiveMaterial; }
+namespace flight::types { struct ExtendedPbrMaterial; }
 namespace flight::types { struct GlRenderState; }
+namespace flight::types { struct LambertMaterial; }
+namespace flight::types { struct MatcapMaterial; }
 namespace flight::types { struct Material; }
 namespace flight::types { struct MeshGeometry; }
+namespace flight::types { struct NormalMaterial; }
+namespace flight::types { struct PhongMaterial; }
 namespace flight::types { struct Scene3DLightBlock; }
 namespace flight::types { struct Scene3DRenderProxy; }
+namespace flight::types { struct ShadedMaterial; }
+namespace flight::types { struct SpecularGlossinessPbrMaterial; }
+namespace flight::types { struct StandardMaterial; }
+namespace flight::types { struct StandardPbrMaterial; }
+namespace flight::types { struct ToonMaterial; }
+namespace flight::types { struct UnlitMaterial; }
+namespace flight::types { struct VertexColorMaterial; }
+namespace flight::types { struct WireframeMaterial; }
 
 namespace flight::types {
 struct GlMeshMaterialRenderer;
@@ -21,7 +38,7 @@ struct GlMeshMaterialRenderer;
 
 #include <flight/types/camera3_d.hpp>
 #include <flight/types/gl_render_state.hpp>
-#include <flight/types/material.hpp>
+#include <flight/types/material_value.hpp>
 #include <flight/types/mesh_geometry.hpp>
 #include <flight/types/scene3_dlight_block.hpp>
 #include <flight/types/scene3_drender_proxy.hpp>
@@ -29,7 +46,7 @@ struct GlMeshMaterialRenderer;
 namespace flight::types {
 
 struct GlMeshMaterialRenderer : public flight::ReferenceEnabled {
-  std::function<void(flight::Ref<flight::types::GlRenderState>, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DLightBlock>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>)> bind;
+  std::function<void(flight::Ref<flight::types::GlRenderState>, std::optional<flight::types::MaterialValue>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DLightBlock>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>)> bind;
   std::function<void(flight::Ref<flight::types::GlRenderState>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DRenderProxy>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>)> draw;
 };
 

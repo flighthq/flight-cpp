@@ -50,9 +50,9 @@ struct DisplayObjectRuntime;
 
 namespace flight::types {
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_15CAF671682691D5
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_15CAF671682691D5
-struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_15caf671682691d5 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_3CBEF7C4F6984FA8
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_3CBEF7C4F6984FA8
+struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_3cbef7c4f6984fa8 : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::Node2DData>> data;
   bool enabled;
   flight::String kind;
@@ -74,7 +74,7 @@ struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_m
   double x;
   double y;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_15CAF671682691D5
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_3CBEF7C4F6984FA8
 
 struct DisplayObjectRuntime : public flight::ReferenceEnabled {
   std::optional<flight::ErasedRef> binding;
@@ -86,7 +86,7 @@ struct DisplayObjectRuntime : public flight::ReferenceEnabled {
   double appearance_id;
   double bounds_using_local_bounds_id;
   double bounds_using_local_transform_id;
-  std::function<bool(std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>, std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>)> can_add_child;
+  std::function<bool(flight::types::NodeOf<flight::Ref<flight::types::Node2DTraits>>, flight::types::NodeOf<flight::Ref<flight::types::Node2DTraits>>)> can_add_child;
   std::optional<flight::Array<flight::types::NodeOf<flight::Ref<flight::types::Node2DTraits>>>> children;
   double children_id;
   std::optional<flight::Ref<flight::types::NodeTraitsKey<flight::Ref<flight::types::Node2DTraits>>>> traits;

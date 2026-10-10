@@ -22,25 +22,13 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { struct RenderProxy; struct RenderState; } namespace flight::render { inline void update_render_proxy_renderer(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy> node); }
-
-namespace flight::types { struct RenderState; } namespace flight::render { inline void walk_render_subtree(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> root, std::function<void(flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::Renderable>)> visit); }
-
-namespace flight::types { struct RenderState; } namespace flight::render { inline void dispose_render_proxy(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source); }
-
-namespace flight::types { struct RenderState; } namespace flight::render { inline bool walk_node(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> root, flight::types::RenderProxyVisitor visit); }
-
-namespace flight::types { struct RenderProxy2D; struct RenderState; } namespace flight::render { inline void update_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source, flight::Ref<flight::types::RenderProxy2D> data, std::optional<flight::Ref<flight::types::RenderProxy2D>> parent_data = std::nullopt); }
-
-#include <flight/types/render_proxy_visitor.hpp>
-
-namespace flight::types { struct RenderProxy; struct RenderState; } namespace flight::render { inline void initialize_render_proxy(flight::Ref<flight::types::EntityConstruction<flight::Ref<flight::types::RenderProxy>>> out, flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source); }
-
 #include <flight/entity/entity.hpp>
 
 #include <flight/types/renderable.hpp>
 
 #include <flight/types/render_state.hpp>
+
+#include <flight/types/render_proxy_visitor.hpp>
 
 #include <flight/types/render_proxy2_d.hpp>
 
@@ -57,6 +45,18 @@ namespace flight::types { struct RenderProxy; struct RenderState; } namespace fl
 #include <flight/render/render_state.hpp>
 #include <flight/render/render_transform2d.hpp>
 
+
+namespace flight::types { struct RenderProxy; struct RenderState; } namespace flight::render { inline void initialize_render_proxy(flight::Ref<flight::types::EntityConstruction<flight::Ref<flight::types::RenderProxy>>> out, flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source); }
+
+namespace flight::types { struct RenderProxy2D; struct RenderState; } namespace flight::render { inline void update_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source, flight::Ref<flight::types::RenderProxy2D> data, std::optional<flight::Ref<flight::types::RenderProxy2D>> parent_data = std::nullopt); }
+
+namespace flight::types { struct RenderState; } namespace flight::render { inline bool walk_node(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> root, flight::types::RenderProxyVisitor visit); }
+
+namespace flight::types { struct RenderState; } namespace flight::render { inline void dispose_render_proxy(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source); }
+
+namespace flight::types { struct RenderState; } namespace flight::render { inline void walk_render_subtree(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> root, std::function<void(flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::Renderable>)> visit); }
+
+namespace flight::types { struct RenderProxy; struct RenderState; } namespace flight::render { inline void update_render_proxy_renderer(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy> node); }
 namespace flight::render {
 
 inline bool prepare_scene2_drender(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Node2D> source);
@@ -64,8 +64,6 @@ inline bool prepare_scene2_drender(flight::Ref<flight::types::RenderState> state
 inline flight::Ref<flight::types::RenderProxy2D> get_or_create_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Node2D> source);
 
 inline flight::Ref<flight::types::RenderProxy2D> get_or_create_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source);
-
-using flight::types::RenderProxyVisitor;
 
 using flight::entity::allocate_entity;
 using flight::entity::finish_entity;
@@ -75,6 +73,7 @@ using flight::types::Node;
 using flight::types::Node2D;
 using flight::types::RenderProxy;
 using flight::types::RenderProxy2D;
+using flight::types::RenderProxyVisitor;
 using flight::types::RenderState;
 using flight::types::Renderable;
 
@@ -239,8 +238,8 @@ inline bool is_render_proxy_visible(flight::Ref<RenderProxy2D> data) {
 //   // update* steps. Sprites and display objects share this single traversal and a single render-node
 //   // type — what differs is the traits they carry, not the path. Clip is not handled here: it is a
 //   // trait update step in the visitor (updateNodeClip), realized at draw time by the backend clip hooks.
-// cpp emission failed for @flighthq/render/packages/render/src/renderProxy.ts: typeOf types require C++ type
-// computation lowering
+// cpp emission failed for @flighthq/render/packages/render/src/renderProxy.ts: union member test must identify
+// exactly one C++ optional value alternative
 
 
 // NOT GENERATED: function initializeRenderProxy -- source line 98

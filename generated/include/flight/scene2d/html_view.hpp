@@ -10,7 +10,6 @@
 //   missing: variable (binding) -- source line 57
 //   missing: function createHtmlViewRuntime -- source line 33
 //   missing: function createHtmlView -- source line 23
-#include <functional>
 #include <optional>
 #include <flight/runtime.hpp>
 
@@ -25,8 +24,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/html_view.hpp>
 
-#include <flight/types/has_bounds_rectangle.hpp>
-
 #include <flight/types/entity.hpp>
 
 #include <flight/node/revision.hpp>
@@ -35,7 +32,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::scene2d {
 
-using flight::types::BoundsNodeAny;
 using flight::types::EntityConstruction;
 using flight::types::HtmlView;
 using flight::types::Node;
@@ -119,28 +115,17 @@ inline void set_html_view_size(flight::Ref<HtmlView> source, double width, doubl
   invalidate_node_local_bounds(source);
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_8053A6684FB87204
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_8053A6684FB87204
-struct can_add_child_compute_local_bounds_rectangle_8053a6684fb87204 : public flight::ReferenceEnabled {
-  std::optional<std::function<bool(std::shared_ptr<Node<flight::Ref<Node2DTraits>>>, std::shared_ptr<Node<flight::Ref<Node2DTraits>>>)>> can_add_child;
-  std::optional<std::function<void(flight::Ref<Rectangle>, flight::Ref<BoundsNodeAny>)>> compute_local_bounds_rectangle;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_8053A6684FB87204
-
 
 // NOT GENERATED: variable (binding) -- source line 57
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   const defaultMethods: Partial<MethodsOf<HtmlViewRuntime>> = {
 //     computeLocalBoundsRectangle: computeHtmlViewLocalBoundsRectangle,
 //   };
 //   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: contextual union callable value
-// type std::function<void(flight::Ref<Rectangle>, flight::Ref<Node>)> agrees with no alternative's signature:
-// the destination holds [std::function<void(flight::Ref<Rectangle>, flight::Ref<BoundsNodeAny>)>]. A callable is
-// a represented domain, so the obstacle is that the destination's signature cannot call this one. Declare the
-// value's parameters so the destination's signature supplies them, and its result as one the destination holds
+// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: Partial<T> requires a statically
+// resolvable C++ object shape; T is named
 
 
 // NOT GENERATED: function createHtmlViewRuntime -- source line 33

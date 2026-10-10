@@ -43,13 +43,12 @@ inline flight::Ref<flight::types::Mesh> create_mesh(
     std::optional<flight::Ref<enabled_name_f1abece853ac935c>> options =
         std::nullopt) {
   auto runtime = create_mesh_runtime();
-  auto base_runtime = std::reinterpret_pointer_cast<Node3DBaseRuntime>(runtime);
-  return flight::make_ref<flight::types::Mesh>(flight::types::Mesh{
+  auto mesh = flight::make_ref<flight::types::Mesh>(flight::types::Mesh{
       .data = std::nullopt,
       .enabled = detail::option_enabled(options).value_or(true),
       .kind = kind.value_or(flight::types::mesh_kind),
       .name = detail::option_name(options),
-      .entity_runtime_key = std::move(base_runtime),
+      .entity_runtime_key = runtime,
       .alpha = 1.0,
       .visible = true,
       .position = flight::geometry::create_vector3(
@@ -66,6 +65,8 @@ inline flight::Ref<flight::types::Mesh> create_mesh(
                            flight::Undefined>{
           std::in_place_type<flight::Undefined>, flight::undefined},
   });
+  detail::bind_base_runtime_alias(mesh, runtime);
+  return mesh;
 }
 
 inline flight::Ref<flight::types::MeshRuntime> get_mesh_runtime(
@@ -74,8 +75,7 @@ inline flight::Ref<flight::types::MeshRuntime> get_mesh_runtime(
       !source->entity_runtime_key.value()) {
     throw std::logic_error("Mesh has no runtime owner");
   }
-  return std::reinterpret_pointer_cast<flight::types::MeshRuntime>(
-      source->entity_runtime_key.value());
+  return source->entity_runtime_key.value();
 }
 
 template <typename Schema>

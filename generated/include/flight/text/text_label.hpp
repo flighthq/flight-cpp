@@ -10,7 +10,6 @@
 //   missing: variable (binding) -- source line 183
 //   missing: function createTextLabelRuntime -- source line 87
 //   missing: function createTextLabel -- source line 77
-#include <functional>
 #include <optional>
 #include <flight/runtime.hpp>
 
@@ -37,8 +36,6 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/node.hpp>
 
-#include <flight/types/has_bounds_rectangle.hpp>
-
 #include <flight/types/entity.hpp>
 
 #include <flight/text/text_label_layout.hpp>
@@ -50,7 +47,6 @@ using flight::textlayout::create_text_format_range;
 using flight::node::invalidate_node_local_bounds;
 using flight::node::invalidate_node_local_content;
 
-using flight::types::BoundsNodeAny;
 using flight::types::EntityConstruction;
 using flight::types::Node;
 using flight::types::Node2DTraits;
@@ -236,29 +232,17 @@ inline void set_text_label_string(flight::Ref<TextLabel> source, flight::String 
   invalidate_text_label_content(source);
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_BUILD_TEXT_LAYOUT_PARAMS_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_13ED388D9625AAD1
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_BUILD_TEXT_LAYOUT_PARAMS_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_13ED388D9625AAD1
-struct build_text_layout_params_can_add_child_compute_local_bounds_rectangle_13ed388d9625aad1 : public flight::ReferenceEnabled {
-  std::optional<std::function<flight::Ref<TextLayoutParams>(flight::Ref<TextLabel>, flight::Ref<TextMeasureFunction>)>> build_text_layout_params;
-  std::optional<std::function<bool(std::shared_ptr<Node<flight::Ref<Node2DTraits>>>, std::shared_ptr<Node<flight::Ref<Node2DTraits>>>)>> can_add_child;
-  std::optional<std::function<void(flight::Ref<Rectangle>, flight::Ref<BoundsNodeAny>)>> compute_local_bounds_rectangle;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXT_BUILD_TEXT_LAYOUT_PARAMS_CAN_ADD_CHILD_COMPUTE_LOCAL_BOUNDS_RECTANGLE_13ED388D9625AAD1
-
 
 // NOT GENERATED: variable (binding) -- source line 183
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   const defaultMethods: Partial<MethodsOf<TextLabelRuntime>> = {
 //     computeLocalBoundsRectangle: computeTextLabelLocalBoundsRectangle,
 //   };
 //   
-// cpp emission failed for @flighthq/text/packages/text/src/textLabel.ts: contextual union callable value type
-// std::function<void(flight::Ref<Rectangle>, flight::Ref<Node>)> agrees with no alternative's signature: the
-// destination holds [std::function<void(flight::Ref<Rectangle>, flight::Ref<BoundsNodeAny>)>]. A callable is a
-// represented domain, so the obstacle is that the destination's signature cannot call this one. Declare the
-// value's parameters so the destination's signature supplies them, and its result as one the destination holds
+// cpp emission failed for @flighthq/text/packages/text/src/textLabel.ts: Partial<T> requires a statically
+// resolvable C++ object shape; T is named
 
 
 // NOT GENERATED: function createTextLabelRuntime -- source line 87

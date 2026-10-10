@@ -21,24 +21,19 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/wgpu_render_target.hpp>
 
-#include <flight/types/render_target.hpp>
-
-#include <flight/types/texture.hpp>
-
 #include <flight/types/wgpu_render_state.hpp>
+
+#include <flight/types/render_target.hpp>
 
 #include <flight/render_wgpu/wgpu_texture_render_target.hpp>
 
 namespace flight::render_wgpu {
 
+using flight::types::RenderTargetColorSpace;
+using flight::types::WgpuTextureBindings;
+using flight::types::WgpuRenderState;
 using flight::types::WgpuRenderTargetPool;
 using flight::types::WgpuTextureRenderTarget;
-
-using flight::types::WgpuTextureBindings;
-
-using flight::types::RenderTargetColorSpace;
-
-using flight::types::WgpuRenderState;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_WIDTH_HEIGHT_FORMAT_COLOR_SPACE_SAMPLE_COUNT_D7147B6683BA8EDA
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_WIDTH_HEIGHT_FORMAT_COLOR_SPACE_SAMPLE_COUNT_D7147B6683BA8EDA
@@ -53,7 +48,10 @@ struct width_height_format_color_space_sample_count_d7147b6683ba8eda : public fl
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_BINDING_UID_06E64A362B012722
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_BINDING_UID_06E64A362B012722
-using binding_uid_06e64a362b012722 = flight::types::binding_uid_06e64a362b012722;
+struct binding_uid_06e64a362b012722 : public flight::ReferenceEnabled {
+  std::optional<flight::ErasedRef> binding;
+  std::optional<flight::String> uid;
+};
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_BINDING_UID_06E64A362B012722
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_WGPU_HEIGHT_WIDTH_ENTITY_RUNTIME_KEY_COLOR_ATTACHMENTS_COLOR_SPACE_CONTEXT_DEPTH_STENCIL_TEXTURE_DEPTH_STENCIL_VIEW_FORMAT_SAMPLE_COUNT_BINDINGS_MIP_LEVEL_COUNT_TEXTURE_VIEW_2DA0D4718AA8491D
