@@ -1,0 +1,120 @@
+diff --git a/packages/scene2d-canvas/src/canvasAtlasRegion.ts b/packages/scene2d-canvas/src/canvasAtlasRegion.ts
+--- a/packages/scene2d-canvas/src/canvasAtlasRegion.ts
++++ b/packages/scene2d-canvas/src/canvasAtlasRegion.ts
+@@ -1,5 +1,5 @@
+ import { TextureAtlasRotation } from '@flighthq/types/contract';
+-import type { TextureAtlasRegion } from '@flighthq/types/contract';
++import type { HostImageSource, TextureAtlasRegion } from '@flighthq/types/contract';
+ 
+ // Draws one packed atlas rectangle upright in the current local coordinate system. TexturePacker and
+ // Starling store a rotated frame clockwise, while libGDX stores it counterclockwise. The matching
+@@ -7,7 +7,7 @@ import type { TextureAtlasRegion } from '@flighthq/types/contract';
+ // materializing an unrotated canvas.
+ export function drawCanvasAtlasRegion(
+   context: CanvasRenderingContext2D,
+-  source: CanvasImageSource,
++  source: HostImageSource,
+   region: Readonly<TextureAtlasRegion>,
+   x: number,
+   y: number,
+diff --git a/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts b/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts
+--- a/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts
++++ b/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts
+@@ -1,6 +1,12 @@
+ import { createImageResourceFromBitmap } from '@flighthq/image/contract';
+ import { getTextureSource } from '@flighthq/texture/contract';
+-import type { Bitmap, CanvasTextureResolvers, HostImageCapability, Texture } from '@flighthq/types/contract';
++import type {
++  Bitmap,
++  CanvasTextureResolvers,
++  HostImageCapability,
++  HostImageSource,
++  Texture,
++} from '@flighthq/types/contract';
+ import { BitmapTextureSourceKind } from '@flighthq/types/contract';
+ 
+ import { registerCanvasTextureResolver } from './canvasTextureResolver';
+@@ -18,7 +24,7 @@ function resolveCanvasBitmapTexture(
+   hostImage: Readonly<HostImageCapability>,
+   resolvers: CanvasTextureResolvers,
+   texture: Readonly<Texture>,
+-): CanvasImageSource | null {
++): HostImageSource | null {
+   const bitmap = getTextureSource(texture) as Readonly<Bitmap> | null;
+   if (bitmap === null) return null;
+ 
+diff --git a/packages/scene2d-canvas/src/canvasImageTextureResolver.ts b/packages/scene2d-canvas/src/canvasImageTextureResolver.ts
+--- a/packages/scene2d-canvas/src/canvasImageTextureResolver.ts
++++ b/packages/scene2d-canvas/src/canvasImageTextureResolver.ts
+@@ -1,5 +1,5 @@
+ import { getTextureSource } from '@flighthq/texture/contract';
+-import type { CanvasTextureResolvers, ImageResource, Texture } from '@flighthq/types/contract';
++import type { CanvasTextureResolvers, HostImageSource, ImageResource, Texture } from '@flighthq/types/contract';
+ import { ImageTextureSourceKind } from '@flighthq/types/contract';
+ 
+ import { registerCanvasTextureResolver } from './canvasTextureResolver';
+@@ -11,6 +11,6 @@ export function registerCanvasImageTextureResolver(resolvers: CanvasTextureResol
+ function resolveCanvasImageTexture(
+   _resolvers: CanvasTextureResolvers,
+   texture: Readonly<Texture>,
+-): CanvasImageSource | null {
++): HostImageSource | null {
+   return (getTextureSource(texture) as Readonly<ImageResource> | null)?.source ?? null;
+ }
+diff --git a/packages/scene2d-canvas/src/canvasTextureView.ts b/packages/scene2d-canvas/src/canvasTextureView.ts
+--- a/packages/scene2d-canvas/src/canvasTextureView.ts
++++ b/packages/scene2d-canvas/src/canvasTextureView.ts
+@@ -1,6 +1,6 @@
+ import { createMatrix3 } from '@flighthq/geometry/contract';
+ import { getTextureHeight, getTextureUvMatrix, getTextureWidth } from '@flighthq/texture/contract';
+-import type { Texture2D } from '@flighthq/types/contract';
++import type { HostImageSource, Texture2D } from '@flighthq/types/contract';
+ 
+ // Draws a Texture view into the current local coordinate system. The caller owns the local-to-target
+ // transform and smoothing state. Ordinary positive, unrotated windows retain the single drawImage
+@@ -9,7 +9,7 @@ import type { Texture2D } from '@flighthq/types/contract';
+ // needs a clip around a whole-source affine draw.
+ export function drawCanvasTextureView(
+   context: CanvasRenderingContext2D,
+-  source: CanvasImageSource,
++  source: HostImageSource,
+   texture: Readonly<Texture2D>,
+   viewWidth: number,
+   viewHeight: number,
+diff --git a/packages/scene2d-canvas/src/canvasTextureWindowSource.ts b/packages/scene2d-canvas/src/canvasTextureWindowSource.ts
+--- a/packages/scene2d-canvas/src/canvasTextureWindowSource.ts
++++ b/packages/scene2d-canvas/src/canvasTextureWindowSource.ts
+@@ -1,5 +1,5 @@
+ import { getTextureHeight, getTextureViewSize, getTextureWidth } from '@flighthq/texture/contract';
+-import type { CanvasTextureResolvers, Texture } from '@flighthq/types/contract';
++import type { CanvasTextureResolvers, HostImageSource, Texture } from '@flighthq/types/contract';
+ 
+ import { acquireCanvasTextureResolverSurface, resolveCanvasTexture } from './canvasTextureResolver';
+ import { drawCanvasTextureView } from './canvasTextureView';
+@@ -11,7 +11,7 @@ import { drawCanvasTextureView } from './canvasTextureView';
+ export function resolveCanvasTextureWindowSource(
+   resolvers: CanvasTextureResolvers,
+   texture: Readonly<Texture>,
+-): CanvasImageSource | null {
++): HostImageSource | null {
+   if (texture.dimension !== '2d') return null;
+   const image = texture.source;
+   const source = resolveCanvasTexture(resolvers, texture);
+diff --git a/packages/types/src/CanvasShapeDrawState.ts b/packages/types/src/CanvasShapeDrawState.ts
+--- a/packages/types/src/CanvasShapeDrawState.ts
++++ b/packages/types/src/CanvasShapeDrawState.ts
+@@ -1,4 +1,5 @@
+ import type { CanvasTextureResolvers } from './CanvasTextureResolver';
++import type { HostImageSource } from './HostImageSource';
+ import type { Matrix } from './Matrix';
+ import type { LineScaleMode } from './ShapeCommand';
+ 
+@@ -22,7 +23,7 @@ export interface CanvasShapeDrawState {
+   subpathStartX: number;
+   subpathStartY: number;
+   windingRule: CanvasFillRule;
+-  bitmapSrc: CanvasImageSource | null;
++  bitmapSrc: HostImageSource | null;
+   bitmapW: number;
+   bitmapH: number;
+   flush: () => void;

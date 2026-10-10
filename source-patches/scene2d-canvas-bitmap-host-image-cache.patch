@@ -1,0 +1,71 @@
+diff --git a/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts b/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts
+--- a/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts
++++ b/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts
+@@ -4,6 +4,7 @@ import type {
+   Bitmap,
++  CanvasTextureResolver,
+   CanvasTextureResolvers,
+   HostImageCapability,
+   HostImageSource,
+   Texture,
+ } from '@flighthq/types/contract';
+@@ -18,23 +18,27 @@ export function registerCanvasBitmapTextureResolver(
+-  registerCanvasTextureResolver(resolvers, BitmapTextureSourceKind, (r, texture) =>
+-    resolveCanvasBitmapTexture(hostImage, r, texture),
+-  );
++  const resolver: CanvasTextureResolver = (r, texture): HostImageSource | null =>
++    resolveCanvasBitmapTexture(hostImage, r, texture);
++  registerCanvasTextureResolver(resolvers, BitmapTextureSourceKind, resolver);
+ }
+ 
+ function resolveCanvasBitmapTexture(
+   hostImage: Readonly<HostImageCapability>,
+   resolvers: CanvasTextureResolvers,
+   texture: Readonly<Texture>,
+ ): HostImageSource | null {
+   const bitmap = getTextureSource(texture) as Readonly<Bitmap> | null;
+   if (bitmap === null) return null;
+ 
+-  const cache = (resolvers.bitmapElementCache ??= new WeakMap());
+-  let entry = cache.get(bitmap);
+-  if (entry === undefined || entry.version !== bitmap.version) {
+-    const image = createImageResourceFromBitmap(hostImage, bitmap);
+-    if (image === null) return null;
+-    entry = { element: image.source as HTMLCanvasElement, version: bitmap.version };
+-    cache.set(bitmap, entry);
+-  }
+-  return entry.element;
++  let cache = resolvers.bitmapElementCache;
++  if (cache === undefined) {
++    cache = new WeakMap();
++    resolvers.bitmapElementCache = cache;
++  }
++  const entry = cache.get(bitmap);
++  if (entry !== undefined && entry.version === bitmap.version) return entry.element;
++
++  const image = createImageResourceFromBitmap(hostImage, bitmap);
++  if (image === null) return null;
++  const element = image.source;
++  cache.set(bitmap, { element, version: bitmap.version });
++  return element;
+ }
+diff --git a/packages/types/src/CanvasTextureResolver.ts b/packages/types/src/CanvasTextureResolver.ts
+--- a/packages/types/src/CanvasTextureResolver.ts
++++ b/packages/types/src/CanvasTextureResolver.ts
+@@ -21,10 +21,15 @@ export type CanvasTextureResolver = (
+ // A resolver that genuinely needs a render state — a render-target texture belongs to the state that
+ // owns the target — captures that state when it is registered.
++export interface CanvasBitmapElementCacheEntry {
++  element: HostImageSource;
++  version: number;
++}
++
+ export interface CanvasTextureResolvers extends Entity {
+   readonly surfaceCreator: Readonly<CanvasRenderSurfaceCreator>;
+   // Undefined until the first explicit registration, so a bundle only retains the backing realizations
+   // it installs.
+   registry?: Map<TextureSourceKind, CanvasTextureResolver> | null;
+   // The drawable HTMLCanvasElement materialized from a Bitmap. Absent until a Bitmap is resolved.
+-  bitmapElementCache?: WeakMap<Bitmap, { element: HTMLCanvasElement; version: number }>;
++  bitmapElementCache?: WeakMap<Bitmap, CanvasBitmapElementCacheEntry>;
+   // A Texture uv window materialized as a standalone canvas for pattern fills. Identity windows return

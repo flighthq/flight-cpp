@@ -478,6 +478,19 @@ int main() {
   check(widened.shared_object() == nullptr,
         "a widened base row does not claim to hold a base object, because there is none");
 
+  const auto recovered_derived =
+      flight::structural_ref_cast<flight::Ref<TestDerivedTarget>>(widened);
+  check(recovered_derived == derived_target,
+        "a widened row can recover its exact retained native owner without a cast or copy");
+  bool rejected_wrong_owner = false;
+  try {
+    static_cast<void>(flight::structural_ref_cast<flight::Ref<TestBaseTarget>>(widened));
+  } catch (const std::bad_cast&) {
+    rejected_wrong_owner = true;
+  }
+  check(rejected_wrong_owner,
+        "exact owner recovery rejects a structurally compatible but different native owner");
+
   // Optional wrapping: absence stays absence, and a present row still widens.
   const std::optional<DerivedTargetRow> absent_target;
   const std::optional<BaseTargetRow> widened_absent =

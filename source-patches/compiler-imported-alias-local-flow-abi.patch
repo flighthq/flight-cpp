@@ -1,0 +1,102 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+index ec81a8f..3155679 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -13391,2 +13391,12 @@ export interface CanvasTextureResolvers extends Entity {
+              context.drawImage(image, 0, 0);
++           }
++           export function resolveAndDrawCanvasImage(
++             context: CanvasRenderingContext2D,
++             resolver: CanvasTextureResolver,
++             resolvers: CanvasTextureResolvers,
++             texture: Readonly<Texture>,
++           ): void {
++             const image = resolver(resolvers, texture);
++             if (image === null) return;
++             context.drawImage(image, 0, 0);
+            }`,
+@@ -13447,2 +13457,4 @@ export interface CanvasTextureResolvers extends Entity {
+     expect(contents).toContain('draw_image(image, 0.0, 0.0)');
++    expect(contents).toContain('auto image = resolver(resolvers,');
++    expect(contents).toContain('draw_image(image.value(), 0.0, 0.0)');
+     expect(contents).not.toContain('flight::Ref<flighthq_types::HostImageSource>');
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 2aef0e0..f5e9b9c 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -2739,2 +2739,6 @@ function emitVariable(variable: Readonly<IrVariable>, context: EmitContext): str
+       : undefined;
++  const importedAliasCarrierInitializerType =
++    !arrayElement && !variable.mutable && variable.initializer?.kind === 'call'
++      ? getCppImportedAliasCarrierCallResultTypeCpp(variable.initializer, context)
++      : undefined;
+   const preservedInitializerType = arrayElement
+@@ -2742,2 +2746,3 @@ function emitVariable(variable: Readonly<IrVariable>, context: EmitContext): str
+     : (context.preservedInitializerTypes.get(variable.binding.id) ??
++      importedAliasCarrierInitializerType ??
+       invariantCollectionInitializerType ??
+@@ -12984,2 +12989,6 @@ function emitCppPresentBindingStorageValueCpp(
+   const bindingType = getCppBindingTypeCpp(bindingId, context);
++  if (bindingType && getCppOptionalImportedAliasCarrierUnionCpp(bindingType, context)) {
++    context.includes.add('optional');
++    return `${binding}.value()`;
++  }
+   const union = bindingType ? getIrUnionTypeCpp(bindingType, context, new Set()) : undefined;
+@@ -16810,3 +16819,12 @@ function isCppImportedUnionAliasAbiCarrierCpp(
+ ): boolean {
+-  if (type.reference.kind !== 'binding' || type.reference.binding.kind !== 'import') return false;
++  if (type.reference.kind !== 'binding') return false;
++  const directOwner = getCppDirectBindingOwner(type, context);
++  if (
++    type.reference.binding.kind !== 'import' &&
++    (!directOwner ||
++      (directOwner.module.packageName === context.module.packageName &&
++        directOwner.module.source === context.module.source))
++  ) {
++    return false;
++  }
+   const isolatedContext = { ...context, anonymousStructs: new Map(), includes: new Set<string>() };
+@@ -25173,2 +25191,8 @@ function getIrIdentifierTypeEvidenceCpp(
+   const narrowedType = context.narrowedBindingTypes.get(bindingId) ?? expression.narrowedType;
++  const importedAliasCarrierUnion = declaredType
++    ? getCppOptionalImportedAliasCarrierUnionCpp(declaredType, context)
++    : undefined;
++  if (narrowedType && expression.presence === 'narrowedPresent' && importedAliasCarrierUnion) {
++    return getCppOptionalImportedUnionValueAliasCpp(importedAliasCarrierUnion, context);
++  }
+   if (narrowedType) return narrowedType;
+@@ -29253,3 +29277,3 @@ function getCppOptionalImportedUnionValueAliasCpp(
+     value.reference.kind !== 'binding' ||
+-    value.reference.binding.kind !== 'import' ||
++    value.reference.binding.kind === 'typeParameter' ||
+     !alias ||
+@@ -29278,2 +29302,29 @@ function getCppOptionalImportedAliasCarrierUnionCpp(
+ 
++function getCppImportedAliasCarrierCallResultTypeCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'call' }>>,
++  context: EmitContext,
++): Readonly<IrType> | undefined {
++  const calleeType = getIrExpressionTypeEvidenceCpp(expression.callee, context);
++  const returns = calleeType ? getCppCallableReturnType(calleeType, context, new Set()) : undefined;
++  if (!returns) return undefined;
++  const optionalCarrier = getCppOptionalImportedAliasCarrierUnionCpp(returns, context);
++  if (optionalCarrier) return optionalCarrier;
++  if (returns.kind === 'named') {
++    const target = resolveCppTypeAliasTarget(returns, context);
++    return target && isCppImportedUnionAliasAbiCarrierCpp(returns, target, context) ? returns : undefined;
++  }
++  if (returns.kind !== 'union') return undefined;
++  const sentinels = returns.types.filter(
++    (member): member is Extract<IrType, { kind: 'null' | 'undefined' }> =>
++      member.kind === 'null' || member.kind === 'undefined',
++  );
++  const values = returns.types.filter((member) => member.kind !== 'null' && member.kind !== 'undefined');
++  const value = values[0];
++  if (sentinels.length !== 1 || values.length !== 1 || value?.kind !== 'named') return undefined;
++  const target = resolveCppTypeAliasTarget(value, context);
++  return target && isCppImportedUnionAliasAbiCarrierCpp(value, target, context)
++    ? { kind: 'union', types: [value, sentinels[0]!] }
++    : undefined;
++}
++
+ function isCppExactImportedCarrierCallResultCpp(

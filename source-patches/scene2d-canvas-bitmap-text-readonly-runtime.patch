@@ -1,0 +1,44 @@
+diff --git a/packages/scene2d-canvas/package.json b/packages/scene2d-canvas/package.json
+--- a/packages/scene2d-canvas/package.json
++++ b/packages/scene2d-canvas/package.json
+@@ -39,5 +39,6 @@
+   },
+   "dependencies": {
++    "@flighthq/bitmaptext": "*",
+     "@flighthq/color": "*",
+     "@flighthq/entity": "*",
+     "@flighthq/scene2d": "*",
+@@ -58,7 +59,6 @@
+   },
+   "devDependencies": {
+     "@flighthq/bitmap": "*",
+-    "@flighthq/bitmaptext": "*",
+     "@flighthq/path": "*",
+     "@flighthq/quadbatch": "*",
+     "@flighthq/tilemap": "*",
+diff --git a/packages/scene2d-canvas/src/canvasBitmapText.ts b/packages/scene2d-canvas/src/canvasBitmapText.ts
+--- a/packages/scene2d-canvas/src/canvasBitmapText.ts
++++ b/packages/scene2d-canvas/src/canvasBitmapText.ts
+@@ -1,3 +1,3 @@
++import { getBitmapTextPages } from '@flighthq/bitmaptext/contract';
+ import { noopRendererData } from '@flighthq/render/contract';
+-import { getNode2DRuntime } from '@flighthq/scene2d/contract';
+ import { TextureAtlasRotation } from '@flighthq/types/contract';
+@@ -5,3 +5,2 @@ import type {
+   BitmapText,
+-  BitmapTextRuntime,
+   CanvasRenderState,
+@@ -9,2 +8,3 @@ import type {
+   SpriteRenderer,
++  Texture2D,
+ } from '@flighthq/types/contract';
+@@ -26,3 +26,3 @@ export function drawCanvasSpriteText(state: CanvasRenderState, node: RenderProxy2D): void {
+   const source = node.source as BitmapText;
+-  const pages = (getNode2DRuntime(source) as BitmapTextRuntime).pages;
++  const pages = getBitmapTextPages(source);
+ 
+@@ -40,3 +40,3 @@ export function drawCanvasSpriteText(state: CanvasRenderState, node: RenderProxy2D): void {
+     const atlas = page.atlas;
+-    const texture = atlas.texture;
++    const texture: Texture2D | null = atlas.texture;
+     if (texture === null || page.instanceCount === 0) continue;

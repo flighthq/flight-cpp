@@ -1,0 +1,21 @@
+diff --git a/packages/scene2d-canvas/src/canvasTextLabel.ts b/packages/scene2d-canvas/src/canvasTextLabel.ts
+--- a/packages/scene2d-canvas/src/canvasTextLabel.ts
++++ b/packages/scene2d-canvas/src/canvasTextLabel.ts
+@@ -24,2 +24,4 @@ interface CanvasTextLabelData extends RendererData {
+ 
++const canvasTextLabelContentIds = new WeakMap<RendererData, number>();
++
+ function createCanvasTextLabelData(_state: CanvasRenderState, _source: Renderable): RendererData {
+@@ -43,4 +45,5 @@ export function drawCanvasTextLabel(state: CanvasRenderState, renderProxy: RenderProxy2D): void {
+   const version = getNodeLocalContentRevision(source);
+-  const textData = renderProxy.rendererData as CanvasTextLabelData | null;
+-  const needsLayout = textData === null || version !== textData.lastContentId;
++  const textData = renderProxy.rendererData;
++  const lastContentId = textData === null ? undefined : canvasTextLabelContentIds.get(textData);
++  const needsLayout = lastContentId === undefined || version !== lastContentId;
+ 
+@@ -62,3 +65,3 @@ export function drawCanvasTextLabel(state: CanvasRenderState, renderProxy: RenderProxy2D): void {
+ 
+-    if (textData !== null) textData.lastContentId = version;
++    if (textData !== null) canvasTextLabelContentIds.set(textData, version);
+   }

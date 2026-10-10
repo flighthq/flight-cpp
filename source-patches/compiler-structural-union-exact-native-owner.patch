@@ -1,0 +1,94 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -52680,4 +52680,33 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
+       expect(syntax.ok).toBe(true);
+     }
+   });
++
++  it('recovers the exact native owner retained behind a widened structural union slot', () => {
++    const result = lower(
++      'structural-union-exact-native-owner.ts',
++      `interface NodeData { revision: number }
++       interface TextData extends NodeData { text: string }
++       interface Node { data: NodeData; kind: string }
++       interface Transform2D { x: number; y: number }
++       type Node2D = Node & Transform2D;
++       interface TextLabel extends Node, Transform2D { data: TextData }
++       interface RenderCache { kind: string; cached: boolean }
++       type Renderable = Readonly<Node2D> | RenderCache;
++       interface RenderProxy2D { source: Renderable }
++       export function draw(proxy: RenderProxy2D): string {
++         const source = proxy.source as TextLabel;
++         return source.data.text;
++       }`,
++    );
++    const emitted = emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++
++    expect(result.diagnostics).toEqual([]);
++    expect(emitted).toContain('flight::structural_ref_cast<flight::Ref<TextLabel>>');
++    expect(emitted).toContain('std::get<flight::StructuralRef<');
++    if (cppSyntaxGate.available) {
++      const syntax = cppSyntaxGate.checkCppSourceSyntax(emitted, 'structural-union-exact-native-owner');
++      expect(syntax.diagnostic).toBe('');
++      expect(syntax.ok).toBe(true);
++    }
++  });
+ });
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -14540,6 +14540,34 @@ function emitUnionMemberAssertionCpp(
+     : [];
+   const exactStructuralOwnerSlot =
+     exactStructuralOwnerSlots.length === 1 ? exactStructuralOwnerSlots[0] : undefined;
++  // A widened structural row retains its concrete native owner in RowOwner even though its static
++  // schema names only the base view. Registered renderers rely on that fact: Renderable stores a
++  // Node2D row, while the renderer selected by the node's kind asserts the original BitmapText,
++  // Sprite, TextLabel, and so on. The runtime performs an exact typeid check before returning the
++  // retained shared object, so this selects only the one structural slot the asserted declaration
++  // can enter; no pointer cast, replacement object, or sibling owner is accepted.
++  const dynamicStructuralOwnerSlots =
++    !assertedStructuralRow && getCppReferenceElementTypeNameCpp(assertedTarget) !== undefined
++      ? plan.valueSlots.filter(
++          (slot) =>
++            slot.targetType.startsWith('flight::StructuralRef<') &&
++            slot.sourceAlternatives.some(
++              (member) =>
++                context.referenceRepresentationPlanner.isStructurallyAssignable(
++                  assertedType,
++                  member,
++                  context.module,
++                ) ||
++                context.referenceRepresentationPlanner.isStructurallyAssignable(
++                  member,
++                  assertedType,
++                  context.module,
++                ),
++            ),
++        )
++      : [];
++  const dynamicStructuralOwnerSlot =
++    dynamicStructuralOwnerSlots.length === 1 ? dynamicStructuralOwnerSlots[0] : undefined;
+   const structuralAlternative = getCppStructuralUnionAssertionAlternativeCpp(plan, assertedPlan, assertedType, context);
+   if (structuralAlternative) {
+     emissionError(
+@@ -14585,6 +14613,7 @@ function emitUnionMemberAssertionCpp(
+       structuralNarrowing ||
+       partialStructuralNarrowing !== undefined ||
+       slot === exactStructuralOwnerSlot ||
++      slot === dynamicStructuralOwnerSlot ||
+       qualifyCppDeclaringModuleTypeCpp(slot.targetType, unionContext) ===
+         qualifyCppDeclaringModuleTypeCpp(assertedTarget, unionContext) ||
+       slot.sourceAlternatives.some((member) => isDeepStrictEqual(member, assertedType)) ||
+@@ -14753,6 +14782,10 @@ function emitUnionMemberAssertionCpp(
+     narrowing?.cast ??
+     (alternatives[0]!.targetType === assertedTarget ? undefined : getCppReferenceElementTypeNameCpp(assertedTarget));
+   const narrowed = (inner: string): string => {
++    if (alternatives[0] === dynamicStructuralOwnerSlot) {
++      context.includes.add('flight/structural_ref.hpp');
++      return `flight::structural_ref_cast<${assertedTarget}>(${inner})`;
++    }
+     if (partialStructuralNarrowing) {
+       context.includes.add('flight/structural_ref.hpp');
+       const source = partialStructuralNarrowing.sourceProjection

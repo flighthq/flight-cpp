@@ -1,0 +1,110 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+index 9a5b3b6..ec81a8f 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -13385,2 +13385,8 @@ export interface CanvasTextureResolvers extends Entity {
+              return resolver(resolvers, texture);
++           }
++           export function drawCanvasImage(
++             context: CanvasRenderingContext2D,
++             image: HostImageSource,
++           ): void {
++             context.drawImage(image, 0, 0);
+            }`,
+@@ -13409,2 +13415,10 @@ export interface CanvasTextureResolvers extends Entity {
+         })),
++        {
++          headers: ['host/canvas.hpp'],
++          nullability: 'non-null' as const,
++          ownership: 'shared' as const,
++          sourceName: 'CanvasRenderingContext2D',
++          space: 'type' as const,
++          targetName: 'host::CanvasContext',
++        },
+         {
+@@ -13430,3 +13444,6 @@ export interface CanvasTextureResolvers extends Entity {
+     expect(contents).toContain('return resolver(resolvers,');
+-    expect(contents).toContain('std::optional<flight::Ref<flighthq_types::HostImageSource>>');
++    expect(contents).toContain('std::optional<flighthq_types::HostImageSource>');
++    expect(contents).toContain('flighthq_types::HostImageSource image');
++    expect(contents).toContain('draw_image(image, 0.0, 0.0)');
++    expect(contents).not.toContain('flight::Ref<flighthq_types::HostImageSource>');
+     expect(contents).not.toContain('std::variant');
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 64cfb75..2aef0e0 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -4094,3 +4094,10 @@ function emitExpression(
+             assertCppPresentOptionalCollectionArgumentCpp(expression, argument, index, argumentExpectedType, context);
+-            return emitExpression(argument, context, argumentExpectedType);
++            return emitExpression(
++              argument,
++              context,
++              argumentExpectedType &&
++                isCppExactImportedAliasCarrierArgumentCpp(argument, argumentExpectedType, context)
++                ? undefined
++                : argumentExpectedType,
++            );
+           });
+@@ -4218,3 +4225,10 @@ function emitExpression(
+             }
+-            return emitExpression(argument, context, argumentExpectedType);
++            return emitExpression(
++              argument,
++              context,
++              argumentExpectedType &&
++                isCppExactImportedAliasCarrierArgumentCpp(argument, argumentExpectedType, context)
++                ? undefined
++                : argumentExpectedType,
++            );
+           }),
+@@ -9773,3 +9787,4 @@ function emitType(type: Readonly<IrType>, context: EmitContext, representation:
+     hasFlightReferenceRepresentationCpp(type, context) &&
+-    !isCppReferenceValueAliasCpp(type, context)
++    !isCppReferenceValueAliasCpp(type, context) &&
++    !isCppImportedUnionAliasAbiCarrierTypeCpp(type, context)
+   ) {
+@@ -16841,2 +16856,43 @@ function isCppImportedUnionAliasAbiCarrierCpp(
+ 
++function isCppImportedUnionAliasAbiCarrierTypeCpp(type: Readonly<IrType>, context: EmitContext): boolean {
++  if (type.kind !== 'named' || type.reference.kind !== 'binding' || type.reference.binding.kind !== 'import') {
++    return false;
++  }
++  const alias = resolveCppTypeAliasTarget(type, context);
++  return alias !== undefined && isCppImportedUnionAliasAbiCarrierCpp(type, alias, context);
++}
++
++// An imported alias can deliberately preserve one host ABI carrier for a source union whose web
++// alternatives collapse at the native boundary.  When that exact alias is passed back to the same
++// source union (Canvas drawImage/createPattern are the motivating APIs), contextual union construction
++// must not reopen the alias and try to reconstruct alternatives the host carrier cannot distinguish.
++// Both sides are required to expand to the identical source union, so this is an alias erasure rather
++// than a widening or an unchecked selection.
++function isCppExactImportedAliasCarrierArgumentCpp(
++  expression: Readonly<IrExpression>,
++  expectedType: Readonly<IrType>,
++  context: EmitContext,
++): boolean {
++  const sourceType = getIrExpressionTypeEvidenceCpp(expression, context);
++  const source = sourceType ? (getCppIdentityPreservingUtilityArgument(sourceType) ?? sourceType) : undefined;
++  if (
++    !source ||
++    source.kind !== 'named' ||
++    source.reference.kind !== 'binding' ||
++    source.reference.binding.kind !== 'import'
++  ) {
++    return false;
++  }
++  const alias = resolveCppTypeAliasTarget(source, context);
++  if (!alias || !isCppImportedUnionAliasAbiCarrierCpp(source, alias, context)) return false;
++  const aliasUnion = getIrUnionTypeCpp(alias, context, new Set());
++  const expectedUnion = getIrUnionTypeCpp(expectedType, context, new Set());
++  return Boolean(
++    aliasUnion &&
++      expectedUnion &&
++      normalizeCompilerStructuralValueCanonical(aliasUnion) ===
++        normalizeCompilerStructuralValueCanonical(expectedUnion),
++  );
++}
++
+ function getCppUnionRuntimeIdentityKeyCpp(type: Readonly<IrType>, context: EmitContext): string {

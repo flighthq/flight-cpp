@@ -1149,6 +1149,19 @@ class StructuralRef {
     return std::static_pointer_cast<object_type>(owner_->native_object());
   }
 
+  // Recovers the exact native owner retained behind this row, even after the row has been widened
+  // to another structural schema. This is deliberately an exact dynamic-owner check rather than a
+  // C++ pointer cast: flattened TypeScript interfaces are sibling native structs, so inheritance
+  // cannot prove the relationship, while the RowOwner still records the concrete object that first
+  // entered structural storage. A mismatch returns empty and lets the assertion boundary fail
+  // observably instead of manufacturing a new object or reinterpreting the retained one.
+  template <typename Object>
+  [[nodiscard]] std::shared_ptr<Object> shared_exact_object() const noexcept {
+    if (!owner_ || owner_->native_type() != typeid(Object)) return {};
+    const auto native = object_ ? object_ : owner_->native_object();
+    return std::static_pointer_cast<Object>(native);
+  }
+
   [[nodiscard]] const std::shared_ptr<RowOwner>& shared_owner() const noexcept { return owner_; }
 
   // The retained object, erased. A row that owns one keeps it alive; a proxy or a schema-only row
@@ -1427,7 +1440,9 @@ template <typename Target, typename Schema>
     if constexpr (detail::row_materializes_from<To, Object>) {
       return detail::wrap_ref<Target>(detail::materialize_row<To>(source).shared_object());
     } else {
-      return detail::wrap_ref<Target>(source.shared_object());
+      auto recovered = source.template shared_exact_object<To>();
+      if (!recovered) throw std::bad_cast();
+      return detail::wrap_ref<Target>(std::move(recovered));
     }
   }
 }
