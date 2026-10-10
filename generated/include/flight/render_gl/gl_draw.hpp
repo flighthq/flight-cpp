@@ -28,6 +28,17 @@
 #include <tuple>
 #include <variant>
 #include <flight/runtime.hpp>
+#include <flight/types/bitmap.hpp>
+#include <flight/types/blend_mode.hpp>
+#include <flight/types/compressed_image_resource.hpp>
+#include <flight/types/gl_context.hpp>
+#include <flight/types/gl_render_state.hpp>
+#include <flight/types/gl_texture_resolver.hpp>
+#include <flight/types/image_resource.hpp>
+#include <flight/types/registry_table.hpp>
+#include <flight/types/sampler.hpp>
+#include <flight/types/texture.hpp>
+#include <flight/types/texture_source.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
@@ -38,24 +49,94 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/render_gl/gl_shader.hpp>
 #include <flight/render_gl/gl_texture_upload.hpp>
 #include <flight/render_gl/gl_texture_video_upload.hpp>
+#include <flight/texture/texture.hpp>
 
 namespace flight::render_gl {
 
+using flight::types::Bitmap;
+using flight::types::BlendMode;
+using flight::types::CompressedImageResource;
+using flight::types::GlBlendRealization;
+using flight::types::GlBlendSignature;
+using flight::types::GlContext;
+using flight::types::GlRenderState;
+using flight::types::GlRenderStateRuntime;
+using flight::types::GlTextureRealization;
+using flight::types::ImageResource;
+using flight::types::RegistryEntryState;
+using flight::types::SamplerLike;
+using flight::types::TextureColorSpace;
+using flight::types::TextureFilter;
+using flight::types::TextureLike;
+using flight::types::TextureSource;
+using flight::types::TextureWrap;
+using flight::registry::create_keyed_table;
+using flight::registry::get_registry_table_entry;
+using flight::registry::with_registry_table_entry;
+
+inline void apply_gl_blend_mode(
+    flight::Ref<GlRenderState> state,
+    std::optional<BlendMode> blend_mode_2);
+
+inline void draw_gl_quad(
+    flight::Ref<GlRenderState> state,
+    double x0,
+    double y0,
+    double x1,
+    double y1,
+    double u0,
+    double v0,
+    double u1,
+    double v1) {
+  const auto runtime = get_gl_render_state_runtime(state);
+  auto& vertices = runtime->quad_vertex_data;
+  const double values[] = {x0, y0, u0, v0, x1, y0, u1, v0,
+                           x1, y1, u1, v1, x0, y1, u0, v1};
+  for (std::size_t index = 0; index < 16; ++index) {
+    vertices.set_index(index, values[index]);
+  }
+  const auto& context = runtime->context;
+  state->gl.bind_buffer(state->gl.array_buffer, context->quad_vertex_buffer);
+  state->gl.buffer_sub_data(state->gl.array_buffer, 0.0, vertices);
+  state->gl.bind_buffer(state->gl.element_array_buffer, context->quad_index_buffer);
+  set_gl_attributes(state->gl, context->current_shader.value()->locations.value());
+  state->gl.draw_elements(state->gl.triangles, 6.0, state->gl.unsigned_short, 0.0);
+}
+
+inline void use_gl_program(
+    flight::Ref<GlRenderState> state,
+    std::optional<flight::Ref<flight::types::GlBitmapShader>> shader = std::nullopt) {
+  const auto runtime = get_gl_render_state_runtime(state);
+  const auto resolved = shader.has_value() ? shader.value()
+                                           : ensure_default_gl_bitmap_shader(state);
+  const auto program = resolved->program;
+  const bool changed = !runtime->context->current_shader.has_value() ||
+                       runtime->context->current_shader.value()->program != program;
+  if (changed) state->gl.use_program(program);
+  runtime->context->current_shader = flight::make_ref<flight::types::GlBoundShader>(
+      flight::types::GlBoundShader{
+          .locations = resolved->locations,
+          .program = program});
+  if (!changed && runtime->binding_cache_guard.has_value()) {
+    runtime->binding_cache_guard.value()(state, program);
+  }
+}
+
 inline std::optional<flight::host_sdl::WebGlTexture> bind_gl_texture_realization(flight::Ref<GlRenderState> state, std::optional<flight::Ref<GlTextureRealization>> realization) {
-  state->gl.bind_texture(state->gl.texture_2_d, ([&]() -> flight::host_sdl::WebGlTexture { auto nullish_coalesce_left = ([&]() -> std::optional<flight::host_sdl::WebGlTexture> { auto optional_chain_receiver = realization; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->texture; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return nullptr; }()));
-  (get_gl_render_state_runtime(state)->context.current_texture_realization = realization);
+  state->gl.bind_texture(state->gl.texture_2_d, ([&]() -> std::optional<flight::host_sdl::WebGlTexture> { auto optional_chain_receiver = realization; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->texture; }()));
+  (get_gl_render_state_runtime(state)->context->current_texture_realization = realization);
   return ([&]() -> std::optional<flight::host_sdl::WebGlTexture> { auto optional_chain_receiver = realization; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->texture; }());
 }
 
 inline flight::host_sdl::WebGlTexture create_gl_texture(flight::Ref<GlRenderState> state) {
-  flight::Ref<GlContext> gl = state->gl;
-  const double filter = (flight::to_boolean(state->allow_smoothing) ? gl->linear : gl->nearest);
-  flight::host_sdl::WebGlTexture texture = gl->create_texture();
+  GlContext gl = state->gl;
+  const double filter = (flight::to_boolean(state->allow_smoothing) ? gl.linear : gl.nearest);
+  flight::host_sdl::WebGlTexture texture = gl.create_texture();
   bind_gl_texture_realization(state, flight::make_ref<GlTextureRealization>(GlTextureRealization{.straight_alpha = false, .texture = texture}));
-  gl->tex_parameteri(gl->texture_2_d, gl->texture_min_filter, filter);
-  gl->tex_parameteri(gl->texture_2_d, gl->texture_mag_filter, filter);
-  gl->tex_parameteri(gl->texture_2_d, gl->texture_wrap_s, gl->clamp_to_edge);
-  gl->tex_parameteri(gl->texture_2_d, gl->texture_wrap_t, gl->clamp_to_edge);
+  gl.tex_parameteri(gl.texture_2_d, gl.texture_min_filter, filter);
+  gl.tex_parameteri(gl.texture_2_d, gl.texture_mag_filter, filter);
+  gl.tex_parameteri(gl.texture_2_d, gl.texture_wrap_s, gl.clamp_to_edge);
+  gl.tex_parameteri(gl.texture_2_d, gl.texture_wrap_t, gl.clamp_to_edge);
   return texture;
 }
 
@@ -123,25 +204,31 @@ inline flight::host_sdl::WebGlTexture create_gl_texture(flight::Ref<GlRenderStat
 // cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glDraw.ts: typeOf types require C++ type
 // computation lowering
 
-inline void register_gl_blend_mode(flight::Ref<GlRenderState> state, flight::Ref<BlendMode> blend_mode_2, flight::Ref<GlBlendRealization> realization) {
+inline bool is_blend_mode_supported(
+    flight::Ref<GlRenderState> state,
+    BlendMode blend_mode_2) {
+  return get_registry_table_entry<flight::Ref<GlBlendRealization>>(
+             get_gl_render_state_runtime(state)->registries->blend_realizations,
+             blend_mode_2)
+      .has_value();
+}
+
+inline void register_gl_blend_mode(flight::Ref<GlRenderState> state, BlendMode blend_mode_2, flight::Ref<GlBlendRealization> realization) {
   flight::Ref<GlRenderStateRuntime> runtime = get_gl_render_state_runtime(state);
-  (runtime->registries.blend_realizations = with_registry_table_entry(runtime->registries.blend_realizations, blend_mode_2, realization));
+  (runtime->registries->blend_realizations = with_registry_table_entry(runtime->registries->blend_realizations, blend_mode_2, realization));
 }
 
 inline void set_gl_quad_matrix_from_offset(flight::Ref<GlRenderState> state, double a, double b, double c, double d, double tx, double ty, double dx, double dy) {
   flight::Ref<GlRenderStateRuntime> runtime = get_gl_render_state_runtime(state);
-  set_gl_matrix_from_values(state->gl, runtime->context.current_shader->locations, runtime->matrix_array, a, b, c, d, ((tx + (a * dx)) + (c * dy)), ((ty + (b * dx)) + (d * dy)), ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = runtime->render_target_viewport; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->width; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return state->gl.drawing_buffer_width; }()), ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = runtime->render_target_viewport; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->height; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return state->gl.drawing_buffer_height; }()));
+  set_gl_matrix_from_values(state->gl, runtime->context->current_shader.value()->locations.value(), runtime->matrix_array, a, b, c, d, ((tx + (a * dx)) + (c * dy)), ((ty + (b * dx)) + (d * dy)), ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = runtime->render_target_viewport; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->width; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return state->gl.drawing_buffer_width(); }()), ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = runtime->render_target_viewport; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->height; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return state->gl.drawing_buffer_height(); }()));
 }
 
 inline void update_gl_texture(flight::Ref<GlRenderState> state, flight::host_sdl::WebGlTexture texture, flight::host_sdl::GlCanvas canvas) {
-  flight::Ref<GlRenderStateRuntime> runtime = get_gl_render_state_runtime(state);
-  flight::Ref<GlContext> gl = state->gl;
-  bind_gl_texture_realization(state, flight::make_ref<GlTextureRealization>(GlTextureRealization{.straight_alpha = false, .texture = texture}));
-  gl->pixel_storei(gl->unpack_premultiply_alpha_webgl, true);
-  gl->tex_image2_d(gl->texture_2_d, 0.0, gl->rgba, gl->rgba, gl->unsigned_byte, canvas);
-  if (flight::to_boolean(([&]() -> std::optional<bool> { auto optional_chain_receiver = runtime->context.mipmapped_textures; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().has(texture); }()))) {
-    gl->generate_mipmap(gl->texture_2_d);
-  }
+  (void)state;
+  (void)texture;
+  (void)canvas;
+  throw flight::Error(flight::String(
+      "updateGlTexture(canvas) requires a native Canvas2D raster backend"));
 }
 
 
@@ -222,6 +309,78 @@ inline flight::Uint8ClampedArray convert_rgba8_alpha_encoding(flight::Uint8Clamp
   return out;
 }
 
+inline void upload_gl_bitmap(
+    flight::Ref<GlRenderState> state,
+    flight::Ref<Bitmap> bitmap,
+    bool premultiply,
+    TextureColorSpace color_space) {
+  const bool source_is_premultiplied =
+      bitmap->alpha_type == flight::String("premultiplied");
+  const auto data = premultiply != source_is_premultiplied
+                        ? convert_rgba8_alpha_encoding(bitmap->data, premultiply)
+                        : bitmap->data;
+  upload_gl_texture_data(
+      state->gl,
+      state->gl.texture_2_d,
+      bitmap->width,
+      bitmap->height,
+      data,
+      color_space == flight::String("srgb") ? state->gl.srgb8_alpha8
+                                             : state->gl.rgba);
+}
+
+inline void upload_gl_compressed_image(
+    flight::Ref<GlRenderState> state,
+    flight::Ref<CompressedImageResource> image,
+    bool,
+    TextureColorSpace color_space) {
+  const auto runtime = get_gl_render_state_runtime(state);
+  const auto upload_table = runtime->registries->compressed_texture_upload;
+  if (!upload_table.has_value()) return;
+  const auto uploader = flight::registry::get_registry_table_entry<
+      flight::types::GlCompressedTextureUploader>(
+      flight::types::RegistryTable<flight::types::GlCompressedTextureUploader>{
+          std::in_place_type<std::shared_ptr<flight::types::SlotTable<
+              flight::types::GlCompressedTextureUploader>>>,
+          upload_table.value()},
+      upload_table.value()->registry);
+  if (!uploader.has_value()) return;
+
+  std::optional<flight::types::GlCompressedTextureDecoder> decoder;
+  const auto decoder_table = runtime->registries->compressed_texture_decoder;
+  if (decoder_table.has_value()) {
+    decoder = flight::registry::get_registry_table_entry<
+        flight::types::GlCompressedTextureDecoder>(
+        flight::types::RegistryTable<flight::types::GlCompressedTextureDecoder>{
+            std::in_place_type<std::shared_ptr<flight::types::SlotTable<
+                flight::types::GlCompressedTextureDecoder>>>,
+            decoder_table.value()},
+        decoder_table.value()->registry);
+  }
+  uploader.value()(
+      state->gl,
+      flight::StructuralRef<flight::RowReadonly<flight::RowOf<
+          flight::Ref<CompressedImageResource>>>>(image),
+      decoder,
+      color_space);
+}
+
+inline void upload_gl_image_resource(
+    flight::Ref<GlRenderState> state,
+    flight::Ref<ImageResource> image,
+    bool premultiply,
+    TextureColorSpace color_space) {
+  state->gl.pixel_storei(
+      state->gl.unpack_premultiply_alpha_webgl,
+      premultiply && image->alpha_type != flight::String("premultiplied"));
+  upload_gl_texture_element(
+      state->gl,
+      state->gl.texture_2_d,
+      image->source,
+      color_space == flight::String("srgb") ? state->gl.srgb8_alpha8
+                                             : state->gl.rgba);
+}
+
 
 // NOT GENERATED: function uploadGlBitmap -- source line 434
 // refusal: cpp-reference-assertion-without-heritage [target-runtime]
@@ -262,7 +421,7 @@ inline flight::Uint8ClampedArray convert_rgba8_alpha_encoding(flight::Uint8Clamp
 // exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target
 // owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
 
-using GlTextureSourceUpload = std::function<void(flight::Ref<GlRenderState>, flight::Ref<TextureSource>, bool, flight::Ref<TextureColorSpace>)>;
+using GlTextureSourceUpload = std::function<void(flight::Ref<GlRenderState>, flight::Ref<TextureSource>, bool, TextureColorSpace)>;
 
 
 // NOT GENERATED: function useGlProgram -- source line 528
@@ -317,93 +476,117 @@ using GlTextureSourceUpload = std::function<void(flight::Ref<GlRenderState>, fli
 // cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glDraw.ts: contextual dualSentinelVariant
 // construction requires expression type evidence
 
-inline double gl_mag_filter_value(flight::Ref<GlContext> gl, flight::Ref<TextureFilter> filter) {
-  return (filter->starts_with(flight::String("nearest")) ? gl->nearest : gl->linear);
+inline std::optional<flight::host_sdl::GlExtension> ensure_gl_anisotropy_ext(
+    flight::Ref<GlRenderState> state,
+    flight::Ref<GlRenderStateRuntime> runtime) {
+  auto& cached = runtime->context->anisotropy_ext;
+  if (std::holds_alternative<flight::Undefined>(cached)) {
+    const auto extension = state->gl.get_extension(
+        flight::String("EXT_texture_filter_anisotropic"));
+    if (extension.has_value()) {
+      cached = extension.value();
+      const auto maximum = extension->get_number(
+          flight::String("MAX_TEXTURE_MAX_ANISOTROPY_EXT"));
+      runtime->context->max_anisotropy = static_cast<double>(
+          state->gl.get_parameter(static_cast<std::uint32_t>(maximum)));
+    } else {
+      cached = flight::null;
+      runtime->context->max_anisotropy = 1.0;
+    }
+  }
+  if (const auto* extension =
+          std::get_if<flight::host_sdl::GlExtension>(&cached)) {
+    return *extension;
+  }
+  return std::nullopt;
 }
 
-inline double gl_min_filter_value(flight::Ref<GlContext> gl, flight::Ref<TextureFilter> filter, bool use_mips) {
+inline double gl_mag_filter_value(GlContext gl, TextureFilter filter) {
+  return (filter.starts_with(flight::String("nearest")) ? gl.nearest : gl.linear);
+}
+
+inline double gl_min_filter_value(GlContext gl, TextureFilter filter, bool use_mips) {
   if (!use_mips) {
-    return (filter->starts_with(flight::String("nearest")) ? gl->nearest : gl->linear);
+    return (filter.starts_with(flight::String("nearest")) ? gl.nearest : gl.linear);
   }
   {
     auto switch_value = filter;
     if (switch_value == flight::String("linear-mipmap-linear")) {
-      return gl->linear_mipmap_linear;
+      return gl.linear_mipmap_linear;
     }
     else if (switch_value == flight::String("linear-mipmap-nearest")) {
-      return gl->linear_mipmap_nearest;
+      return gl.linear_mipmap_nearest;
     }
     else if (switch_value == flight::String("nearest-mipmap-linear")) {
-      return gl->nearest_mipmap_linear;
+      return gl.nearest_mipmap_linear;
     }
     else if (switch_value == flight::String("nearest-mipmap-nearest")) {
-      return gl->nearest_mipmap_nearest;
+      return gl.nearest_mipmap_nearest;
     }
     else if (switch_value == flight::String("nearest")) {
-      return gl->nearest;
+      return gl.nearest;
     }
     else {
-      return gl->linear;
+      return gl.linear;
     }
   }
   throw std::logic_error("Flight function completed without a value");
 }
 
-inline bool is_gl_mipmap_filter(flight::Ref<TextureFilter> filter) {
+inline bool is_gl_mipmap_filter(TextureFilter filter) {
   return ((filter != flight::String("linear")) && (filter != flight::String("nearest")));
 }
 
-inline double gl_texture_wrap_value(flight::Ref<GlContext> gl, flight::Ref<TextureWrap> wrap) {
+inline double gl_texture_wrap_value(GlContext gl, TextureWrap wrap) {
   if ((wrap == flight::String("repeat"))) {
-    return gl->repeat;
+    return gl.repeat;
   }
   if ((wrap == flight::String("mirror-repeat"))) {
-    return gl->mirrored_repeat;
+    return gl.mirrored_repeat;
   }
-  return gl->clamp_to_edge;
+  return gl.clamp_to_edge;
 }
 
-inline void apply_gl_sampler_state(flight::Ref<GlRenderState> state, flight::Ref<GlRenderStateRuntime> runtime, flight::host_sdl::WebGlTexture texture, std::optional<flight::Ref<SamplerLike>> sampler, std::optional<std::optional<bool>> smoothing_override = std::nullopt) {
-  smoothing_override = smoothing_override.value_or(std::nullopt);
-  flight::Ref<GlContext> gl = state->gl;
+inline void apply_gl_sampler_state(flight::Ref<GlRenderState> state, flight::Ref<GlRenderStateRuntime> runtime, flight::host_sdl::WebGlTexture texture, std::optional<SamplerLike> sampler, std::optional<bool> smoothing_override = std::nullopt) {
+  GlContext gl = state->gl;
   if (!sampler.has_value()) {
-    const bool smooth = ([&]() -> bool { auto nullish_coalesce_left = smoothing_override.value(); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return state->allow_smoothing; }());
-    const double filter = (smooth ? gl->linear : gl->nearest);
-    gl->tex_parameteri(gl->texture_2_d, gl->texture_min_filter, filter);
-    gl->tex_parameteri(gl->texture_2_d, gl->texture_mag_filter, filter);
-    gl->tex_parameteri(gl->texture_2_d, gl->texture_wrap_s, gl->clamp_to_edge);
-    gl->tex_parameteri(gl->texture_2_d, gl->texture_wrap_t, gl->clamp_to_edge);
+    const bool smooth = smoothing_override.value_or(state->allow_smoothing);
+    const double filter = (smooth ? gl.linear : gl.nearest);
+    gl.tex_parameteri(gl.texture_2_d, gl.texture_min_filter, filter);
+    gl.tex_parameteri(gl.texture_2_d, gl.texture_mag_filter, filter);
+    gl.tex_parameteri(gl.texture_2_d, gl.texture_wrap_s, gl.clamp_to_edge);
+    gl.tex_parameteri(gl.texture_2_d, gl.texture_wrap_t, gl.clamp_to_edge);
     return;
   }
   const bool use_mips = (sampler.value()->mipmaps && is_gl_mipmap_filter(sampler.value()->min_filter));
-  gl->tex_parameteri(gl->texture_2_d, gl->texture_min_filter, gl_min_filter_value(gl, sampler.value()->min_filter, use_mips));
-  gl->tex_parameteri(gl->texture_2_d, gl->texture_mag_filter, gl_mag_filter_value(gl, sampler.value()->mag_filter));
-  gl->tex_parameteri(gl->texture_2_d, gl->texture_wrap_s, gl_texture_wrap_value(gl, sampler.value()->wrap_u));
-  gl->tex_parameteri(gl->texture_2_d, gl->texture_wrap_t, gl_texture_wrap_value(gl, sampler.value()->wrap_v));
+  gl.tex_parameteri(gl.texture_2_d, gl.texture_min_filter, gl_min_filter_value(gl, sampler.value()->min_filter, use_mips));
+  gl.tex_parameteri(gl.texture_2_d, gl.texture_mag_filter, gl_mag_filter_value(gl, sampler.value()->mag_filter));
+  gl.tex_parameteri(gl.texture_2_d, gl.texture_wrap_s, gl_texture_wrap_value(gl, sampler.value()->wrap_u));
+  gl.tex_parameteri(gl.texture_2_d, gl.texture_wrap_t, gl_texture_wrap_value(gl, sampler.value()->wrap_v));
   std::optional<flight::host_sdl::GlExtension> ext = ensure_gl_anisotropy_ext(state, runtime);
   if (flight::to_boolean(ext)) {
-    const double level = flight::maximum(1.0, flight::minimum(sampler.value()->anisotropy, runtime->context.max_anisotropy.value_or(1.0)));
-    gl->tex_parameterf(gl->texture_2_d, ext.value().get_number(flight::String("TEXTURE_MAX_ANISOTROPY_EXT")), level);
+    const double level = flight::maximum(1.0, flight::minimum(sampler.value()->anisotropy, runtime->context->max_anisotropy.value_or(1.0)));
+    gl.tex_parameterf(gl.texture_2_d, ext.value().get_number(flight::String("TEXTURE_MAX_ANISOTROPY_EXT")), level);
   }
   if (use_mips) {
-    flight::WeakSet<flight::host_sdl::WebGlTexture> mipped = ([&]() { auto&& assignment_target = runtime->context.mipmapped_textures; if (!assignment_target.has_value()) assignment_target = flight::WeakSet<flight::host_sdl::WebGlTexture>(); return assignment_target.value(); }());
+    auto& mipped = ([&]() -> flight::WeakSet<flight::host_sdl::WebGlTexture>& { auto&& assignment_target = runtime->context->mipmapped_textures; if (!assignment_target.has_value()) assignment_target = flight::WeakSet<flight::host_sdl::WebGlTexture>(); return assignment_target.value(); }());
     if (!mipped.has(texture)) {
-      gl->generate_mipmap(gl->texture_2_d);
+      gl.generate_mipmap(gl.texture_2_d);
       mipped.add(texture);
     }
   }
 }
 
-inline flight::host_sdl::WebGlTexture bind_gl_texture(flight::Ref<GlRenderState> state, flight::host_sdl::ImageSource image_source, std::optional<std::optional<flight::Ref<SamplerLike>>> sampler = std::nullopt) {
+inline flight::host_sdl::WebGlTexture bind_gl_texture(flight::Ref<GlRenderState> state, flight::host_sdl::ImageSource image_source, std::optional<SamplerLike> sampler = std::nullopt) {
   flight::Ref<GlRenderStateRuntime> runtime = get_gl_render_state_runtime(state);
-  flight::Ref<GlContext> gl = state->gl;
-  flight::WeakMap<flight::host_sdl::ImageSource, flight::host_sdl::WebGlTexture, flight::host_sdl::ImageSourceWeakPolicy> texture_cache = runtime->context.texture_cache;
+  GlContext gl = state->gl;
+  auto& texture_cache = runtime->context->texture_cache;
   std::optional<flight::host_sdl::WebGlTexture> texture = texture_cache.get(image_source);
   if (!texture.has_value()) {
-    (texture = std::optional<flight::host_sdl::WebGlTexture>{gl->create_texture()});
+    (texture = std::optional<flight::host_sdl::WebGlTexture>{gl.create_texture()});
     bind_gl_texture_realization(state, flight::make_ref<GlTextureRealization>(GlTextureRealization{.straight_alpha = false, .texture = texture.value()}));
-    gl->pixel_storei(gl->unpack_premultiply_alpha_webgl, true);
-    gl->tex_image2_d(gl->texture_2_d, 0.0, gl->rgba, gl->rgba, gl->unsigned_byte, image_source);
+    gl.pixel_storei(gl.unpack_premultiply_alpha_webgl, true);
+    gl.tex_image2_d(gl.texture_2_d, 0.0, gl.rgba, gl.rgba, gl.unsigned_byte, image_source);
     texture_cache.set(image_source, texture.value());
   }
   else {
@@ -418,39 +601,42 @@ inline flight::host_sdl::WebGlTexture bind_gl_texture(flight::Ref<GlRenderState>
 using texture_version_2f2f82ef5fff624b = flight::types::texture_version_2f2f82ef5fff624b;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_GL_TEXTURE_VERSION_2F2F82EF5FFF624B
 
-inline flight::host_sdl::WebGlTexture bind_gl_texture_source_texture(flight::Ref<GlRenderState> state, flight::Ref<TextureSource> image, std::variant<flight::Ref<SamplerLike>, flight::Null, flight::Undefined> sampler, std::variant<bool, flight::Null, flight::Undefined> smoothing_override, bool premultiply, bool straight_alpha, flight::Ref<TextureColorSpace> color_space, GlTextureSourceUpload upload) {
+template <typename SourceOwner, typename Upload>
+inline flight::host_sdl::WebGlTexture bind_gl_texture_source_texture(flight::Ref<GlRenderState> state, SourceOwner image, std::optional<SamplerLike> sampler, std::optional<bool> smoothing_override, bool premultiply, bool straight_alpha, TextureColorSpace color_space, Upload upload) {
   flight::Ref<GlRenderStateRuntime> runtime = get_gl_render_state_runtime(state);
-  flight::Ref<GlContext> gl = state->gl;
-  flight::WeakMap<flight::Ref<TextureSource>, flight::Ref<texture_version_2f2f82ef5fff624b>> cache = (premultiply ? ((color_space == flight::String("srgb")) ? runtime->context.texture_source_premultiplied_srgb_texture_cache : runtime->context.texture_source_premultiplied_texture_cache) : ((color_space == flight::String("srgb")) ? runtime->context.texture_source_straight_srgb_texture_cache : runtime->context.texture_source_straight_texture_cache));
-  std::optional<flight::Ref<texture_version_2f2f82ef5fff624b>> entry = cache.get(image);
+  GlContext gl = state->gl;
+  auto& cache = (premultiply ? ((color_space == flight::String("srgb")) ? runtime->context->texture_source_premultiplied_srgb_texture_cache : runtime->context->texture_source_premultiplied_texture_cache) : ((color_space == flight::String("srgb")) ? runtime->context->texture_source_straight_srgb_texture_cache : runtime->context->texture_source_straight_texture_cache));
+  flight::types::TextureSourceValue source_key{
+      std::in_place_type<SourceOwner>, image};
+  std::optional<flight::Ref<texture_version_2f2f82ef5fff624b>> entry = cache.get(source_key);
   if (!entry.has_value()) {
-    (entry = std::optional<flight::Ref<texture_version_2f2f82ef5fff624b>>{flight::make_ref<texture_version_2f2f82ef5fff624b>(texture_version_2f2f82ef5fff624b{.texture = gl->create_texture(), .version = -1.0})});
-    cache.set(image, entry.value());
+    (entry = std::optional<flight::Ref<texture_version_2f2f82ef5fff624b>>{flight::make_ref<texture_version_2f2f82ef5fff624b>(texture_version_2f2f82ef5fff624b{.texture = gl.create_texture(), .version = -1.0})});
+    cache.set(source_key, entry.value());
   }
   bind_gl_texture_realization(state, flight::make_ref<GlTextureRealization>(GlTextureRealization{.straight_alpha = straight_alpha, .texture = entry.value()->texture}));
   if ((entry.value()->version != image->version)) {
     upload(state, image, premultiply, color_space);
     (entry.value()->version = image->version);
   }
-  apply_gl_sampler_state(state, runtime, entry.value()->texture, ([&]() -> std::optional<flight::Ref<SamplerLike>> { auto nullish_coalesce_left = sampler; if (const auto* alternative = std::get_if<flight::Ref<SamplerLike>>(&nullish_coalesce_left)) return std::optional<flight::Ref<SamplerLike>>{*alternative}; return std::nullopt; }()), ([&]() -> std::optional<bool> { auto nullish_coalesce_left_2 = smoothing_override; if (const auto* alternative = std::get_if<bool>(&nullish_coalesce_left_2)) return std::optional<bool>{*alternative}; return std::nullopt; }()));
+  apply_gl_sampler_state(state, runtime, entry.value()->texture, sampler, smoothing_override);
   return entry.value()->texture;
 }
 
-inline flight::host_sdl::WebGlTexture bind_gl_bitmap_texture(flight::Ref<GlRenderState> state, flight::Ref<Bitmap> bitmap, std::optional<std::optional<flight::Ref<SamplerLike>>> sampler = std::nullopt, std::optional<std::optional<bool>> smoothing_override = std::nullopt, std::optional<bool> premultiply = std::nullopt, std::optional<flight::Ref<TextureColorSpace>> color_space = std::nullopt) {
+inline flight::host_sdl::WebGlTexture bind_gl_bitmap_texture(flight::Ref<GlRenderState> state, flight::Ref<Bitmap> bitmap, std::optional<SamplerLike> sampler = std::nullopt, std::optional<bool> smoothing_override = std::nullopt, std::optional<bool> premultiply = std::nullopt, std::optional<TextureColorSpace> color_space = std::nullopt) {
   premultiply = premultiply.value_or(false);
   color_space = color_space.value_or(flight::String("linear"));
-  return bind_gl_texture_source_texture(state, bitmap, ([&]() -> std::variant<flight::Ref<SamplerLike>, flight::Null, flight::Undefined> { auto contextual_union_source = sampler; if (!contextual_union_source.has_value()) return std::variant<flight::Ref<SamplerLike>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<SamplerLike>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<SamplerLike>>, contextual_union_source.value()}; }()), ([&]() -> std::variant<bool, flight::Null, flight::Undefined> { auto contextual_union_source_2 = smoothing_override; if (!contextual_union_source_2.has_value()) return std::variant<bool, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<bool, flight::Null, flight::Undefined>{std::in_place_type<bool>, contextual_union_source_2.value()}; }()), premultiply.value(), false, color_space.value(), upload_gl_bitmap);
+  return bind_gl_texture_source_texture(state, bitmap, sampler, smoothing_override, premultiply.value(), false, color_space.value(), upload_gl_bitmap);
 }
 
-inline flight::host_sdl::WebGlTexture bind_gl_compressed_image_texture(flight::Ref<GlRenderState> state, flight::Ref<CompressedImageResource> image, std::optional<std::optional<flight::Ref<SamplerLike>>> sampler = std::nullopt, std::optional<std::optional<bool>> smoothing_override = std::nullopt, std::optional<flight::Ref<TextureColorSpace>> color_space = std::nullopt) {
+inline flight::host_sdl::WebGlTexture bind_gl_compressed_image_texture(flight::Ref<GlRenderState> state, flight::Ref<CompressedImageResource> image, std::optional<SamplerLike> sampler = std::nullopt, std::optional<bool> smoothing_override = std::nullopt, std::optional<TextureColorSpace> color_space = std::nullopt) {
   color_space = color_space.value_or(flight::String("linear"));
-  return bind_gl_texture_source_texture(state, image, ([&]() -> std::variant<flight::Ref<SamplerLike>, flight::Null, flight::Undefined> { auto contextual_union_source_3 = sampler; if (!contextual_union_source_3.has_value()) return std::variant<flight::Ref<SamplerLike>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<SamplerLike>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<SamplerLike>>, contextual_union_source_3.value()}; }()), ([&]() -> std::variant<bool, flight::Null, flight::Undefined> { auto contextual_union_source_4 = smoothing_override; if (!contextual_union_source_4.has_value()) return std::variant<bool, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<bool, flight::Null, flight::Undefined>{std::in_place_type<bool>, contextual_union_source_4.value()}; }()), false, true, color_space.value(), upload_gl_compressed_image);
+  return bind_gl_texture_source_texture(state, image, sampler, smoothing_override, false, true, color_space.value(), upload_gl_compressed_image);
 }
 
-inline flight::host_sdl::WebGlTexture bind_gl_image_resource_texture(flight::Ref<GlRenderState> state, flight::Ref<ImageResource> image, std::optional<std::optional<flight::Ref<SamplerLike>>> sampler = std::nullopt, std::optional<std::optional<bool>> smoothing_override = std::nullopt, std::optional<bool> premultiply = std::nullopt, std::optional<flight::Ref<TextureColorSpace>> color_space = std::nullopt) {
+inline flight::host_sdl::WebGlTexture bind_gl_image_resource_texture(flight::Ref<GlRenderState> state, flight::Ref<ImageResource> image, std::optional<SamplerLike> sampler = std::nullopt, std::optional<bool> smoothing_override = std::nullopt, std::optional<bool> premultiply = std::nullopt, std::optional<TextureColorSpace> color_space = std::nullopt) {
   premultiply = premultiply.value_or(false);
   color_space = color_space.value_or(flight::String("linear"));
-  return bind_gl_texture_source_texture(state, image, ([&]() -> std::variant<flight::Ref<SamplerLike>, flight::Null, flight::Undefined> { auto contextual_union_source_5 = sampler; if (!contextual_union_source_5.has_value()) return std::variant<flight::Ref<SamplerLike>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<SamplerLike>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<SamplerLike>>, contextual_union_source_5.value()}; }()), ([&]() -> std::variant<bool, flight::Null, flight::Undefined> { auto contextual_union_source_6 = smoothing_override; if (!contextual_union_source_6.has_value()) return std::variant<bool, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<bool, flight::Null, flight::Undefined>{std::in_place_type<bool>, contextual_union_source_6.value()}; }()), premultiply.value(), false, color_space.value(), upload_gl_image_resource);
+  return bind_gl_texture_source_texture(state, image, sampler, smoothing_override, premultiply.value(), false, color_space.value(), upload_gl_image_resource);
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_GL_TEXTURE_UPLOADED_VERSION_FA13FB47A7A23F0B
@@ -494,6 +680,60 @@ using texture_uploaded_version_fa13fb47a7a23f0b = flight::types::texture_uploade
 //   
 // cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glDraw.ts: flight-cpp WeakMap construction
 // requires explicit or contextual type arguments
+
+inline flight::host_sdl::WebGlTexture bind_gl_video_texture(
+    flight::Ref<GlRenderState> state,
+    TextureLike texture,
+    std::optional<SamplerLike> sampler = std::nullopt) {
+  const auto source = flight::texture::get_texture_source(texture);
+  if (!source.has_value()) {
+    throw flight::Error(flight::String("bindGlVideoTexture requires a texture source"));
+  }
+  const auto* image_owner = std::get_if<flight::Ref<ImageResource>>(&source.value());
+  if (!image_owner) {
+    throw flight::Error(flight::String("bindGlVideoTexture requires an ImageResource"));
+  }
+  const auto image = *image_owner;
+  const auto runtime = get_gl_render_state_runtime(state);
+  const auto color_space = std::visit(
+      [](const auto& selected) { return selected->color_space; }, texture);
+  const auto texture_sampler = std::visit(
+      [](const auto& selected) -> SamplerLike { return selected->sampler; }, texture);
+  auto& cache_slot = color_space == flight::String("srgb")
+                         ? runtime->context->video_srgb_texture_cache
+                         : runtime->context->video_texture_cache;
+  if (!cache_slot.has_value()) {
+    cache_slot.emplace();
+  }
+  auto& cache = cache_slot.value();
+  auto entry = cache.get(image);
+  if (!entry.has_value()) {
+    entry = flight::make_ref<texture_uploaded_version_fa13fb47a7a23f0b>(
+        texture_uploaded_version_fa13fb47a7a23f0b{
+            .texture = state->gl.create_texture(),
+            .uploaded_version = -1.0});
+    cache.set(image, entry.value());
+  }
+  bind_gl_texture_realization(
+      state,
+      flight::make_ref<GlTextureRealization>(GlTextureRealization{
+          .straight_alpha = false,
+          .texture = entry.value()->texture}));
+  state->gl.pixel_storei(state->gl.unpack_premultiply_alpha_webgl, true);
+  entry.value()->uploaded_version = upload_gl_texture_video_frame(
+      state->gl,
+      flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<ImageResource>>>>(
+          image),
+      entry.value()->uploaded_version,
+      color_space == flight::String("srgb") ? state->gl.srgb8_alpha8
+                                             : state->gl.rgba);
+  apply_gl_sampler_state(
+      state,
+      runtime,
+      entry.value()->texture,
+      sampler.has_value() ? sampler : std::optional<SamplerLike>{texture_sampler});
+  return entry.value()->texture;
+}
 
 inline flight::Ref<GlBlendRealization> normal_blend = flight::make_ref<GlBlendRealization>(GlBlendRealization{.src = flight::String("ONE"), .dst = flight::String("ONE_MINUS_SRC_ALPHA")});
 
@@ -543,11 +783,39 @@ inline flight::Ref<GlBlendRealization> normal_blend = flight::make_ref<GlBlendRe
 // expansion. For a Map or WeakMap lookup followed by a rebind, ensure every rebound member already has the
 // declared value owner member's carrier -- a Readonly structural view does not become a mutable nominal Ref.
 
-inline flight::Array<std::tuple<flight::Ref<BlendMode>, flight::Ref<GlBlendRealization>>> default_gl_blend_modes = flight::Array<std::tuple<flight::Ref<BlendMode>, flight::Ref<GlBlendRealization>>>{std::make_tuple(blend_mode.add, flight::make_ref<GlBlendRealization>(GlBlendRealization{.src = flight::String("ONE"), .dst = flight::String("ONE")})), std::make_tuple(blend_mode.darken, flight::make_ref<GlBlendRealization>(GlBlendRealization{.src = flight::String("ONE"), .dst = flight::String("ONE"), .equation = flight::String("MIN")})), std::make_tuple(blend_mode.lighten, flight::make_ref<GlBlendRealization>(GlBlendRealization{.src = flight::String("ONE"), .dst = flight::String("ONE"), .equation = flight::String("MAX")})), std::make_tuple(blend_mode.multiply, flight::make_ref<GlBlendRealization>(GlBlendRealization{.src = flight::String("DST_COLOR"), .dst = flight::String("ONE_MINUS_SRC_ALPHA")})), std::make_tuple(blend_mode.normal, normal_blend), std::make_tuple(blend_mode.screen, flight::make_ref<GlBlendRealization>(GlBlendRealization{.src = flight::String("ONE"), .dst = flight::String("ONE_MINUS_SRC_COLOR")}))};
+inline void apply_gl_blend_mode(
+    flight::Ref<GlRenderState> state,
+    std::optional<BlendMode> blend_mode_2) {
+  const auto runtime = get_gl_render_state_runtime(state);
+  auto realization = normal_blend;
+  if (blend_mode_2.has_value()) {
+    const auto registered = get_registry_table_entry<flight::Ref<GlBlendRealization>>(
+        runtime->registries->blend_realizations, blend_mode_2.value());
+    if (registered.has_value()) realization = registered.value();
+  }
+  const auto signature = flight::make_ref<GlBlendSignature>(GlBlendSignature{
+      .dst = static_cast<double>(state->gl.named_constant(realization->dst)),
+      .equation = static_cast<double>(state->gl.named_constant(
+          realization->equation.value_or(flight::String("FUNC_ADD")))),
+      .src = static_cast<double>(state->gl.named_constant(realization->src))});
+  const auto& current = runtime->context->current_blend_signature;
+  if (current.has_value() && current.value()->dst == signature->dst &&
+      current.value()->equation == signature->equation &&
+      current.value()->src == signature->src) {
+    return;
+  }
+  state->gl.blend_equation(static_cast<std::uint32_t>(signature->equation));
+  state->gl.blend_func(
+      static_cast<std::uint32_t>(signature->src),
+      static_cast<std::uint32_t>(signature->dst));
+  runtime->context->current_blend_signature = signature;
+}
+
+inline flight::Array<std::tuple<BlendMode, flight::Ref<GlBlendRealization>>> default_gl_blend_modes = flight::Array<std::tuple<BlendMode, flight::Ref<GlBlendRealization>>>{std::make_tuple(flight::types::blend_mode->add, flight::make_ref<GlBlendRealization>(GlBlendRealization{.src = flight::String("ONE"), .dst = flight::String("ONE")})), std::make_tuple(flight::types::blend_mode->darken, flight::make_ref<GlBlendRealization>(GlBlendRealization{.src = flight::String("ONE"), .dst = flight::String("ONE"), .equation = flight::String("MIN")})), std::make_tuple(flight::types::blend_mode->lighten, flight::make_ref<GlBlendRealization>(GlBlendRealization{.src = flight::String("ONE"), .dst = flight::String("ONE"), .equation = flight::String("MAX")})), std::make_tuple(flight::types::blend_mode->multiply, flight::make_ref<GlBlendRealization>(GlBlendRealization{.src = flight::String("DST_COLOR"), .dst = flight::String("ONE_MINUS_SRC_ALPHA")})), std::make_tuple(flight::types::blend_mode->normal, normal_blend), std::make_tuple(flight::types::blend_mode->screen, flight::make_ref<GlBlendRealization>(GlBlendRealization{.src = flight::String("ONE"), .dst = flight::String("ONE_MINUS_SRC_COLOR")}))};
 
 inline void register_default_gl_blend_modes(flight::Ref<GlRenderState> state) {
   for (auto array_pattern_value : default_gl_blend_modes) {
-    flight::Ref<BlendMode> mode = std::get<0>(array_pattern_value);
+    BlendMode mode = std::get<0>(array_pattern_value);
     flight::Ref<GlBlendRealization> realization = std::get<1>(array_pattern_value);
     register_gl_blend_mode(state, mode, realization);
   }
@@ -558,11 +826,11 @@ inline void enable_gl_blend_mode_support(flight::Ref<GlRenderState> state) {
   (state->apply_blend_mode = apply_gl_blend_mode);
 }
 
-inline flight::Any standard_gl_blend_realizations = create_keyed_table<flight::Ref<GlBlendRealization>>(flight::String("GlBlendRealization"), flight::String("Normal"));
+inline std::shared_ptr<flight::types::KeyedTable<flight::Ref<GlBlendRealization>>> standard_gl_blend_realizations = create_keyed_table<flight::Ref<GlBlendRealization>>(flight::String("GlBlendRealization"), flight::String("Normal"));
 
 inline const bool module_side_effect = ([]() {
   for (auto array_pattern_value : default_gl_blend_modes) {
-    flight::Ref<BlendMode> mode = std::get<0>(array_pattern_value);
+    BlendMode mode = std::get<0>(array_pattern_value);
     flight::Ref<GlBlendRealization> realization = std::get<1>(array_pattern_value);
     (standard_gl_blend_realizations = with_registry_table_entry(standard_gl_blend_realizations, mode, realization));
   }

@@ -68,6 +68,26 @@ class ImageSource final {
   }
   [[nodiscard]] std::size_t width() const noexcept { return state_ ? state_->width : 0; }
   [[nodiscard]] std::size_t height() const noexcept { return state_ ? state_->height : 0; }
+  // ImageResource uses the browser video-element vocabulary. A native video producer publishes
+  // decoded frames through the same immutable RGBA carrier and advances ImageResource::version;
+  // expose the corresponding readiness and intrinsic-size observations without pretending that
+  // ImageSource owns playback or frame acquisition.
+  [[nodiscard]] double ready_state() const noexcept {
+    return state_ && state_->kind == ImageSourceKind::video_element &&
+                   state_->width != 0 && state_->height != 0
+               ? 2.0
+               : 0.0;
+  }
+  [[nodiscard]] double video_width() const noexcept {
+    return state_ && state_->kind == ImageSourceKind::video_element
+               ? static_cast<double>(state_->width)
+               : 0.0;
+  }
+  [[nodiscard]] double video_height() const noexcept {
+    return state_ && state_->kind == ImageSourceKind::video_element
+               ? static_cast<double>(state_->height)
+               : 0.0;
+  }
   [[nodiscard]] std::span<const Uint8Clamped> rgba8_pixels() const noexcept {
     return state_ ? state_->pixels.span() : std::span<const Uint8Clamped>{};
   }

@@ -292,11 +292,7 @@ struct callable_clear_signals_7ea687c6e4da0faa : public flight::ReferenceEnabled
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_PROGRAM_BIND_LOCATIONS_88CB6A4173D252CD
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_PROGRAM_BIND_LOCATIONS_88CB6A4173D252CD
-struct entity_runtime_key_program_bind_locations_88cb6a4173d252cd : public flight::types::Entity {
-  flight::host_sdl::WebGlProgram program;
-  std::function<void(flight::host_sdl::WebGl2Context, flight::Ref<flight::types::GlRenderState>, flight::Ref<flight::types::RenderProxy2D>)> bind;
-  flight::Ref<flight::types::GlShaderLocations> locations;
-};
+using entity_runtime_key_program_bind_locations_88cb6a4173d252cd = flight::types::GlBitmapShader;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_PROGRAM_BIND_LOCATIONS_88CB6A4173D252CD
 
 struct GlRenderStateRuntime : public flight::ReferenceEnabled {

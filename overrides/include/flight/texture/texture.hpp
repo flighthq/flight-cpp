@@ -54,11 +54,15 @@ using flight::types::Matrix3Like;
 using flight::types::Sampler;
 using flight::types::Texture;
 using flight::types::Texture2D;
+using flight::types::Texture2DArray;
+using flight::types::Texture3D;
+using flight::types::TextureCube;
 using flight::types::TextureColorSpace;
 using flight::types::TextureLike;
 using flight::types::TextureSource;
 using flight::types::TextureSourceCubeFaces;
 using flight::types::TextureSourceKind;
+using flight::types::TextureSourceValue;
 using flight::types::TextureUvTransform;
 using flight::types::Vector2;
 using flight::types::Vector2Like;
@@ -81,26 +85,29 @@ inline const double half_pi = (flight::pi / 2.0);
 
 
 // Visits the TextureLike union to implement the source discriminant switch.
-inline std::optional<flight::Ref<TextureSource>> get_first_texture_source(flight::Ref<TextureLike> texture) {
-  return std::visit([](const auto& alt) -> std::optional<flight::Ref<TextureSource>> {
+inline std::optional<TextureSourceValue> get_first_texture_source(TextureLike texture) {
+  return std::visit([](const auto& alt) -> std::optional<TextureSourceValue> {
     using AltType = std::decay_t<decltype(*alt)>;
-    if constexpr (requires(const AltType& a) { a.sources; }) {
+    if constexpr (std::same_as<AltType, Texture2DArray> ||
+                  std::same_as<AltType, TextureCube>) {
       // 2d-array or cube: find first non-null source
       for (const auto& s : alt->sources) {
         if (s.has_value()) return s;
       }
       return std::nullopt;
-    } else if constexpr (requires { { alt->source } -> std::convertible_to<std::optional<flight::Ref<TextureSource>>&>; }) {
-      // 2d: TextureSource
+    } else if constexpr (std::same_as<AltType, Texture2D>) {
       return alt->source;
     } else {
-      // 3d: VoxelGrid source, not a TextureSource
+      if (alt->source.has_value()) {
+        return TextureSourceValue{
+            std::in_place_type<flight::Ref<VoxelGrid>>, alt->source.value()};
+      }
       return std::nullopt;
     }
   }, texture);
 }
 
-inline void copy_texture(flight::Ref<TextureLike> out, flight::Ref<TextureLike> source) {
+inline void copy_texture(TextureLike out, TextureLike source) {
   // Use std::visit for all member accesses on the TextureLike variant
   auto get_dim = [](const auto& var) -> flight::String {
     return std::visit([](const auto& a) -> flight::String { return a->dimension; }, var);
@@ -166,7 +173,7 @@ inline void copy_texture(flight::Ref<TextureLike> out, flight::Ref<TextureLike> 
       std::visit([&](auto& o) {
         std::visit([&](const auto& s) {
           if constexpr (requires { o->sources; s->sources; }) {
-            o->sources = static_cast<flight::Ref<TextureSourceCubeFaces>>(s->sources.slice());
+            o->sources = s->sources.slice();
           }
         }, source);
       }, out);
@@ -177,7 +184,7 @@ inline void copy_texture(flight::Ref<TextureLike> out, flight::Ref<TextureLike> 
 }
 
 struct CreateTexture2DArrayOptions : public flight::ReferenceEnabled {
-  std::optional<flight::Array<std::optional<flight::Ref<TextureSource>>>> sources;
+  std::optional<flight::Array<std::optional<TextureSourceValue>>> sources;
   std::optional<double> version;
   std::optional<flight::String> color_space;
   std::optional<flight::Ref<Sampler>> sampler;
@@ -205,7 +212,7 @@ struct CreateTexture3DOptions : public flight::ReferenceEnabled {
 };
 
 struct CreateTextureCubeOptions : public flight::ReferenceEnabled {
-  std::optional<flight::Array<std::optional<flight::Ref<TextureSource>>>> sources;
+  std::optional<flight::Array<std::optional<TextureSourceValue>>> sources;
   std::optional<double> version;
   std::optional<flight::String> color_space;
   std::optional<flight::Ref<Sampler>> sampler;
@@ -218,19 +225,34 @@ struct CreateTextureCubeOptions : public flight::ReferenceEnabled {
   std::variant<flight::Ref<EmbeddedImageResourceReference>, flight::Ref<ExternalImageResourceReference>, flight::Null, flight::Undefined> resource = std::variant<flight::Ref<EmbeddedImageResourceReference>, flight::Ref<ExternalImageResourceReference>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
 
-inline double get_texture_height(flight::Ref<TextureLike> texture) {
-  return ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = get_first_texture_source(texture); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->height; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return -1.0; }());
+inline double texture_source_height(const TextureSourceValue& source) {
+  return std::visit([](const auto& selected) { return selected->height; }, source);
 }
 
-inline std::optional<flight::Ref<TextureSource>> get_texture_source(flight::Ref<TextureLike> texture) {
+inline double texture_source_width(const TextureSourceValue& source) {
+  return std::visit([](const auto& selected) { return selected->width; }, source);
+}
+
+inline flight::String texture_source_kind(const TextureSourceValue& source) {
+  return std::visit([](const auto& selected) { return selected->kind; }, source);
+}
+
+inline double get_texture_height(TextureLike texture) {
+  const auto source = get_first_texture_source(texture);
+  return source.has_value() ? texture_source_height(source.value()) : -1.0;
+}
+
+inline std::optional<TextureSourceValue> get_texture_source(TextureLike texture) {
   return get_first_texture_source(texture);
 }
 
-inline std::optional<flight::Ref<TextureSourceKind>> get_texture_source_kind(flight::Ref<TextureLike> texture) {
-  return ([&]() -> std::optional<flight::Ref<TextureSourceKind>> { auto optional_chain_receiver = get_first_texture_source(texture); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->kind; }());
+inline std::optional<flight::String> get_texture_source_kind(TextureLike texture) {
+  const auto source = get_first_texture_source(texture);
+  if (!source.has_value()) return std::nullopt;
+  return texture_source_kind(source.value());
 }
 
-inline void get_texture_uv_matrix(flight::Ref<Matrix3Like> out, flight::Ref<TextureUvTransform> texture) {
+inline void get_texture_uv_matrix(Matrix3Like out, flight::Ref<TextureUvTransform> texture) {
   const double r = texture->uv_rotation;
   const double flip_scale_x = (flight::to_boolean(texture->flip_x) ? -1.0 : 1.0);
   const double flip_scale_y = (flight::to_boolean(texture->flip_y) ? -1.0 : 1.0);
@@ -280,7 +302,7 @@ inline void get_texture_uv_matrix(flight::Ref<Matrix3Like> out, flight::Ref<Text
   ([&]() { auto&& typed_array_9 = m; const auto typed_index_9 = 8.0; const auto typed_value_9 = 1.0; return typed_array_9.set_index(typed_index_9, typed_value_9); }());
 }
 
-inline void get_texture_inverse_uv_matrix(flight::Ref<Matrix3Like> out, flight::Ref<TextureLike> texture) {
+inline void get_texture_inverse_uv_matrix(Matrix3Like out, TextureLike texture) {
   // TextureLike is a variant, not TextureUvTransform; extract the UV fields into a temporary.
   auto uv_transform = flight::make_ref<TextureUvTransform>(TextureUvTransform{
     .flip_x = std::visit([](const auto& a) { return a->flip_x; }, texture),
@@ -293,37 +315,40 @@ inline void get_texture_inverse_uv_matrix(flight::Ref<Matrix3Like> out, flight::
   inverse_matrix3(out, out);
 }
 
-inline void get_texture_view_size(flight::Ref<Vector2Like> out, flight::Ref<TextureLike> texture) {
-  std::optional<flight::Ref<TextureSource>> source = get_first_texture_source(texture);
-  if (((!source.has_value() || (source.value()->width <= 0.0)) || (source.value()->height <= 0.0))) {
+inline void get_texture_view_size(Vector2Like out, TextureLike texture) {
+  const auto source = get_first_texture_source(texture);
+  const double source_width = source.has_value() ? texture_source_width(source.value()) : -1.0;
+  const double source_height = source.has_value() ? texture_source_height(source.value()) : -1.0;
+  if (((!source.has_value() || (source_width <= 0.0)) || (source_height <= 0.0))) {
     (out->x = 0.0);
     (out->y = 0.0);
     return;
   }
   const double rotation = std::visit([](const auto& a) { return a->uv_rotation; }, texture);
   if ((((rotation == 0.0) || (rotation == flight::pi)) || (rotation == -flight::pi))) {
-    (out->x = std::abs((source.value()->width * std::visit([](const auto& a) { return a->uv_scale->x; }, texture))));
-    (out->y = std::abs((source.value()->height * std::visit([](const auto& a) { return a->uv_scale->y; }, texture))));
+    (out->x = std::abs((source_width * std::visit([](const auto& a) { return a->uv_scale->x; }, texture))));
+    (out->y = std::abs((source_height * std::visit([](const auto& a) { return a->uv_scale->y; }, texture))));
     return;
   }
   if (((rotation == half_pi) || (rotation == -half_pi))) {
-    (out->x = std::abs((source.value()->height * std::visit([](const auto& a) { return a->uv_scale->x; }, texture))));
-    (out->y = std::abs((source.value()->width * std::visit([](const auto& a) { return a->uv_scale->y; }, texture))));
+    (out->x = std::abs((source_height * std::visit([](const auto& a) { return a->uv_scale->x; }, texture))));
+    (out->y = std::abs((source_width * std::visit([](const auto& a) { return a->uv_scale->y; }, texture))));
     return;
   }
   const double cos_r = std::cos(rotation);
   const double sin_r = std::sin(rotation);
   const double uv_scale_x = std::visit([](const auto& a) { return a->uv_scale->x; }, texture);
   const double uv_scale_y = std::visit([](const auto& a) { return a->uv_scale->y; }, texture);
-  (out->x = std::hypot(((source.value()->width * uv_scale_x) * cos_r), ((source.value()->height * uv_scale_x) * sin_r)));
-  (out->y = std::hypot(((source.value()->width * uv_scale_y) * sin_r), ((source.value()->height * uv_scale_y) * cos_r)));
+  (out->x = std::hypot(((source_width * uv_scale_x) * cos_r), ((source_height * uv_scale_x) * sin_r)));
+  (out->y = std::hypot(((source_width * uv_scale_y) * sin_r), ((source_height * uv_scale_y) * cos_r)));
 }
 
-inline double get_texture_width(flight::Ref<TextureLike> texture) {
-  return ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = get_first_texture_source(texture); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->width; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return -1.0; }());
+inline double get_texture_width(TextureLike texture) {
+  const auto source = get_first_texture_source(texture);
+  return source.has_value() ? texture_source_width(source.value()) : -1.0;
 }
 
-inline bool has_texture_source(flight::Ref<TextureLike> texture) {
+inline bool has_texture_source(TextureLike texture) {
   return get_texture_source_kind(texture).has_value();
 }
 
@@ -331,11 +356,11 @@ inline bool has_texture_uv_transform(flight::Ref<TextureUvTransform> texture) {
   return ((((((texture->flip_x || texture->flip_y) || (texture->uv_scale->x != 1.0)) || (texture->uv_scale->y != 1.0)) || (texture->uv_offset->x != 0.0)) || (texture->uv_offset->y != 0.0)) || (texture->uv_rotation != 0.0));
 }
 
-inline bool is_texture_ready(flight::Ref<TextureLike> texture) {
+inline bool is_texture_ready(TextureLike texture) {
   return has_texture_source(texture);
 }
 
-inline void reset_texture_uv_transform(flight::Ref<TextureLike> texture) {
+inline void reset_texture_uv_transform(TextureLike texture) {
   std::visit([](auto& a) { a->flip_x = false; }, texture);
   std::visit([](auto& a) { a->flip_y = false; }, texture);
   std::visit([](auto& a) { a->uv_offset->x = 0.0; }, texture);
@@ -345,19 +370,20 @@ inline void reset_texture_uv_transform(flight::Ref<TextureLike> texture) {
   std::visit([](auto& a) { a->uv_scale->y = 1.0; }, texture);
 }
 
-inline void set_texture_flip(flight::Ref<TextureLike> texture, bool flip_x, bool flip_y) {
+inline void set_texture_flip(TextureLike texture, bool flip_x, bool flip_y) {
   std::visit([&](auto& a) { a->flip_x = flip_x; }, texture);
   std::visit([&](auto& a) { a->flip_y = flip_y; }, texture);
 }
 
-inline void set_texture_source(flight::Ref<TextureLike> texture, std::optional<flight::Ref<TextureSource>> source) {
+inline void set_texture_source(TextureLike texture, std::optional<TextureSourceValue> source) {
   if ((std::visit([](const auto& a) -> flight::String { return a->dimension; }, texture) != flight::String("2d"))) {
     throw flight::Error(flight::String("setTextureSource requires a Texture2D"));
   }
   // Visit to compare and assign the source on the 2d alternative.
-  // Use requires to guard member access: only the 2d alternative has .source of type optional<Ref<TextureSource>>.
+  // Only the 2D alternative has a TextureSourceValue source.
   std::visit([&](auto& a) {
-    if constexpr (requires { { a->source } -> std::convertible_to<std::optional<flight::Ref<TextureSource>>&>; }) {
+    using AltType = std::decay_t<decltype(*a)>;
+    if constexpr (std::same_as<AltType, Texture2D>) {
       if ((a->source == source)) {
         return;
       }
@@ -386,7 +412,7 @@ struct source_version_dimension_color_space_sampler_flip_x_flip_y_uv_offset_uv_r
 
 // Source function refused as cpp-union-member-access-unguarded; the visit preserves its switch.
 // Compares dimension-specific source identity by visiting both operands.
-inline bool equals_texture_content(flight::Ref<TextureLike> a, flight::Ref<TextureLike> b) {
+inline bool equals_texture_content(TextureLike a, TextureLike b) {
   auto get_dim = [](const auto& var) -> flight::String {
     return std::visit([](const auto& alt) -> flight::String { return alt->dimension; }, var);
   };
@@ -418,13 +444,37 @@ inline bool equals_texture_content(flight::Ref<TextureLike> a, flight::Ref<Textu
   }, a);
 }
 
-inline bool equals_texture(std::variant<flight::Ref<TextureLike>, flight::Null, flight::Undefined> a, std::variant<flight::Ref<TextureLike>, flight::Null, flight::Undefined> b) {
+using OptionalTexture = std::variant<flight::Ref<Texture2DArray>, flight::Ref<TextureCube>,
+                                     flight::Ref<Texture2D>, flight::Ref<Texture3D>,
+                                     flight::Null, flight::Undefined>;
+
+inline bool equals_texture(OptionalTexture a, OptionalTexture b) {
   if (((std::holds_alternative<flight::Null>(a) || std::holds_alternative<flight::Undefined>(a)) || (std::holds_alternative<flight::Null>(b) || std::holds_alternative<flight::Undefined>(b)))) {
     return false;
   }
-  auto& ref_a = std::get<0>(a);
-  auto& ref_b = std::get<0>(b);
-  if ((ref_a == ref_b)) {
+  const auto ref_a = std::visit([](const auto& value) -> TextureLike {
+    using Value = std::decay_t<decltype(value)>;
+    if constexpr (std::same_as<Value, flight::Ref<Texture2DArray>> ||
+                  std::same_as<Value, flight::Ref<TextureCube>> ||
+                  std::same_as<Value, flight::Ref<Texture2D>> ||
+                  std::same_as<Value, flight::Ref<Texture3D>>) {
+      return TextureLike{std::in_place_type<Value>, value};
+    } else {
+      throw flight::Error(flight::String("absent texture"));
+    }
+  }, a);
+  const auto ref_b = std::visit([](const auto& value) -> TextureLike {
+    using Value = std::decay_t<decltype(value)>;
+    if constexpr (std::same_as<Value, flight::Ref<Texture2DArray>> ||
+                  std::same_as<Value, flight::Ref<TextureCube>> ||
+                  std::same_as<Value, flight::Ref<Texture2D>> ||
+                  std::same_as<Value, flight::Ref<Texture3D>>) {
+      return TextureLike{std::in_place_type<Value>, value};
+    } else {
+      throw flight::Error(flight::String("absent texture"));
+    }
+  }, b);
+  if (ref_a == ref_b) {
     return true;
   }
   auto get_cs = [](const auto& var) { return std::visit([](const auto& alt) { return alt->color_space; }, var); };
@@ -440,7 +490,7 @@ inline bool equals_texture(std::variant<flight::Ref<TextureLike>, flight::Null, 
   return (((((((((((get_cs(ref_a) == get_cs(ref_b)) && (get_fx(ref_a) == get_fx(ref_b))) && (get_fy(ref_a) == get_fy(ref_b))) && equals_texture_content(ref_a, ref_b)) && (get_ur(ref_a) == get_ur(ref_b))) && (get_uox(ref_a) == get_uox(ref_b))) && (get_uoy(ref_a) == get_uoy(ref_b))) && (get_usx(ref_a) == get_usx(ref_b))) && (get_usy(ref_a) == get_usy(ref_b))) && (get_ver(ref_a) == get_ver(ref_b))) && equals_sampler(get_sam(ref_a), get_sam(ref_b)));
 }
 
-inline void set_texture_uv_from_pixel_rect(flight::Ref<TextureLike> texture, double x, double y, double width, double height) {
+inline void set_texture_uv_from_pixel_rect(TextureLike texture, double x, double y, double width, double height) {
   const double texture_width = get_texture_width(texture);
   const double texture_height = get_texture_height(texture);
   if (((texture_width <= 0.0) || (texture_height <= 0.0))) {
@@ -456,21 +506,21 @@ inline void set_texture_uv_from_pixel_rect(flight::Ref<TextureLike> texture, dou
   std::visit([&](auto& a) { a->uv_scale->y = (height / texture_height); }, texture);
 }
 
-inline void set_texture_uv_offset(flight::Ref<TextureLike> texture, double x, double y) {
+inline void set_texture_uv_offset(TextureLike texture, double x, double y) {
   std::visit([&](auto& a) { a->uv_offset->x = x; }, texture);
   std::visit([&](auto& a) { a->uv_offset->y = y; }, texture);
 }
 
-inline void set_texture_uv_rotation(flight::Ref<TextureLike> texture, double radians) {
+inline void set_texture_uv_rotation(TextureLike texture, double radians) {
   std::visit([&](auto& a) { a->uv_rotation = radians; }, texture);
 }
 
-inline void set_texture_uv_scale(flight::Ref<TextureLike> texture, double x, double y) {
+inline void set_texture_uv_scale(TextureLike texture, double x, double y) {
   std::visit([&](auto& a) { a->uv_scale->x = x; }, texture);
   std::visit([&](auto& a) { a->uv_scale->y = y; }, texture);
 }
 
-inline void transform_texture_uv(flight::Ref<Vector2Like> out, flight::Ref<TextureLike> texture, double u, double v) {
+inline void transform_texture_uv(Vector2Like out, TextureLike texture, double u, double v) {
   const double fu = (flight::to_boolean(std::visit([](const auto& a) { return a->flip_x; }, texture)) ? (1.0 - u) : u);
   const double fv = (flight::to_boolean(std::visit([](const auto& a) { return a->flip_y; }, texture)) ? (1.0 - v) : v);
   const double r = std::visit([](const auto& a) { return a->uv_rotation; }, texture);
@@ -498,7 +548,7 @@ struct color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTURE_COLOR_SPACE_FLIP_X_FLIP_Y_SAMPLER_UV_OFFSET_UV_ROTATION_UV_SCALE_VERSION_2AF05F464E1F33EA
 
-inline void apply_common_texture_fields(flight::Ref<TextureLike> out, flight::Ref<color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_2af05f464e1f33ea> fields) {
+inline void apply_common_texture_fields(TextureLike out, flight::Ref<color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_2af05f464e1f33ea> fields) {
   std::visit([&](auto& a) { a->color_space = fields->color_space; }, out);
   std::visit([&](auto& a) { a->flip_x = fields->flip_x; }, out);
   std::visit([&](auto& a) { a->flip_y = fields->flip_y; }, out);
@@ -598,30 +648,29 @@ inline flight::Ref<color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_sc
 // initializeTexture2D and both constructors were refused at dual-sentinel and Extract boundaries;
 // their concrete-owner lowerings follow this retained resource attachment helper.
 
-inline void attach_texture_to_resource(flight::Ref<Texture> texture, std::variant<flight::Ref<ImageResourceReference>, flight::Null, flight::Undefined> resource) {
-  if (!((std::holds_alternative<flight::Null>(resource) || std::holds_alternative<flight::Undefined>(resource)))) {
-    // ImageResourceReference is itself a variant; visit it to access .textures
-    std::visit([&](auto& alt) {
-      if constexpr (requires { alt->textures; }) {
-        if (!alt->textures.has_value()) alt->textures = flight::Array<flight::Ref<Texture>>{};
-        alt->textures.value().push(texture);
-      }
-    }, std::get<0>(resource));
-  }
+using TextureResource = std::variant<flight::Ref<EmbeddedImageResourceReference>,
+                                     flight::Ref<ExternalImageResourceReference>,
+                                     flight::Null, flight::Undefined>;
+
+inline void attach_texture_to_resource(Texture texture, TextureResource resource) {
+  std::visit([&](auto& selected) {
+    using Selected = std::decay_t<decltype(selected)>;
+    if constexpr (std::same_as<Selected, flight::Ref<EmbeddedImageResourceReference>> ||
+                  std::same_as<Selected, flight::Ref<ExternalImageResourceReference>>) {
+      if (!selected->textures.has_value()) selected->textures = flight::Array<Texture>{};
+      selected->textures.value().push(texture);
+    }
+  }, resource);
 }
 
-using Texture2DArray = typename std::variant_alternative_t<0, Texture>::element_type;
-using Texture3D = typename std::variant_alternative_t<1, Texture>::element_type;
-using TextureCube = typename std::variant_alternative_t<2, Texture>::element_type;
-
 using CreateTexture2DVariantOptions =
-    flight::types::flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_source_dimension_resource_56b24da6433b9dfa;
+    flight::types::source_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_944b02899c0c1ddd;
 using CreateTexture3DVariantOptions =
-    flight::types::source_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_bb75d9be0fe634b2;
+    flight::types::source_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_5834e12080da0d2c;
 using CreateTexture2DArrayVariantOptions =
-    flight::types::sources_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_92a3fc8b0ad18cdf;
+    flight::types::sources_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_255ec905d3c71aa1;
 using CreateTextureCubeVariantOptions =
-    flight::types::sources_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_b243142728373263;
+    flight::types::sources_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_3ee2dba981682dfd;
 
 template <typename Options>
 inline flight::Ref<color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_2af05f464e1f33ea>
@@ -662,10 +711,17 @@ inline void apply_common_texture_fields_to_owner(
 }
 
 template <typename Options>
-inline std::optional<flight::Ref<TextureSource>> texture_source_option(
+inline std::optional<TextureSourceValue> texture_source_option(
     const std::shared_ptr<Options>& opts) {
-  if (const auto* source = std::get_if<flight::Ref<TextureSource>>(&opts->source)) return *source;
-  return std::nullopt;
+  return std::visit([](const auto& source) -> std::optional<TextureSourceValue> {
+    using Source = std::decay_t<decltype(source)>;
+    if constexpr (std::same_as<Source, flight::Null> ||
+                  std::same_as<Source, flight::Undefined>) {
+      return std::nullopt;
+    } else {
+      return TextureSourceValue{std::in_place_type<Source>, source};
+    }
+  }, opts->source);
 }
 
 template <typename Options>
@@ -677,20 +733,7 @@ inline std::optional<flight::Ref<VoxelGrid>> voxel_source_option(
 
 template <typename Resource>
 inline void attach_texture_to_flat_resource(const Texture& texture, const Resource& resource) {
-  if (const auto* embedded = std::get_if<flight::Ref<EmbeddedImageResourceReference>>(&resource)) {
-    std::variant<flight::Ref<ImageResourceReference>, flight::Null, flight::Undefined> normalized{
-        std::in_place_type<flight::Ref<ImageResourceReference>>,
-        ImageResourceReference{std::in_place_type<flight::Ref<EmbeddedImageResourceReference>>,
-                               *embedded}};
-    attach_texture_to_resource(texture, std::move(normalized));
-  } else if (const auto* external =
-                 std::get_if<flight::Ref<ExternalImageResourceReference>>(&resource)) {
-    std::variant<flight::Ref<ImageResourceReference>, flight::Null, flight::Undefined> normalized{
-        std::in_place_type<flight::Ref<ImageResourceReference>>,
-        ImageResourceReference{std::in_place_type<flight::Ref<ExternalImageResourceReference>>,
-                               *external}};
-    attach_texture_to_resource(texture, std::move(normalized));
-  }
+  attach_texture_to_resource(texture, TextureResource{resource});
 }
 
 template <typename Options>
@@ -722,7 +765,7 @@ inline void initialize_texture2_d(
   owner->set_named_value("version", common->version);
   owner->set_named_value("dimension", flight::String("2d"));
   owner->set_named_value(
-      "source", opts ? texture_source_option(*opts) : std::optional<flight::Ref<TextureSource>>{});
+      "source", opts ? texture_source_option(*opts) : std::optional<TextureSourceValue>{});
 }
 
 inline flight::Ref<Texture2D> create_texture2_d(
@@ -756,7 +799,7 @@ inline flight::Ref<Texture2DArray> create_texture(
   apply_common_texture_fields_to_owner(out, common);
   out->dimension = flight::String("2d-array");
   out->sources = opts->sources ? opts->sources->slice()
-                              : flight::Array<std::optional<flight::Ref<TextureSource>>>{};
+                              : flight::Array<std::optional<TextureSourceValue>>{};
   Texture texture{std::in_place_type<flight::Ref<Texture2DArray>>, out};
   attach_texture_to_flat_resource(texture, opts->resource);
   return out;
@@ -785,7 +828,7 @@ inline flight::Ref<TextureCube> create_texture(flight::Ref<CreateTextureCubeVari
   if (opts->sources) {
     out->sources = opts->sources->slice();
   } else {
-    out->sources = flight::Array<std::optional<flight::Ref<TextureSource>>>{
+    out->sources = flight::Array<std::optional<TextureSourceValue>>{
         std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt};
   }
   Texture texture{std::in_place_type<flight::Ref<TextureCube>>, out};
@@ -804,7 +847,7 @@ inline flight::Ref<Texture2D> create_texture(CreateTextureOptions opts) {
       flight::String("createTexture overload result was erased; pass the exact non-2D options owner"));
 }
 
-inline Texture clone_texture(flight::Ref<TextureLike> source) {
+inline Texture clone_texture(TextureLike source) {
   return std::visit(
       [](const auto& input) -> Texture {
         const auto sampler = clone_sampler(input->sampler);
@@ -833,9 +876,7 @@ inline Texture clone_texture(flight::Ref<TextureLike> source) {
           copy_common(out);
           out->sources = input->sources.slice();
           return Texture{std::in_place_type<flight::Ref<Texture2DArray>>, out};
-        } else if constexpr (std::same_as<
-                                 std::remove_cvref_t<decltype(input->source)>,
-                                 std::optional<flight::Ref<TextureSource>>>) {
+        } else if constexpr (std::same_as<std::remove_cvref_t<decltype(*input)>, Texture2D>) {
           auto out = flight::make_ref<Texture2D>();
           copy_common(out);
           out->source = input->source;

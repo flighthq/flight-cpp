@@ -79,7 +79,32 @@ inline void initialize_gl_context_state(flight::types::EntityConstruction<flight
   flight::host_sdl::WebGlBuffer quad_vertex_buffer = gl.create_buffer();
   gl.bind_buffer(gl.array_buffer, quad_vertex_buffer);
   gl.buffer_data(gl.array_buffer, 64.0, gl.dynamic_draw);
-  auto context_runtime = ([&]() { auto object_member_binding = std::nullopt; auto object_member_color_adjustment_resources = std::nullopt; auto object_member_current_blend_signature = std::nullopt; auto object_member_current_shader = std::nullopt; auto object_member_current_texture_realization = std::nullopt; auto object_member_gl = gl; auto object_member_particle_resources = std::nullopt; auto object_member_quad_batch_resources = std::nullopt; auto object_member_quad_index_buffer = quad_index_buffer; auto object_member_quad_vertex_buffer = quad_vertex_buffer; auto object_member_references = 0.0; auto object_member_shape_mesh_resources = std::nullopt; auto object_member_teardowns = flight::Array<std::function<void(flight::host_sdl::WebGl2Context)>>{}; auto object_member_texture_cache = flight::WeakMap<flight::host_sdl::ImageSource, flight::host_sdl::WebGlTexture, flight::host_sdl::ImageSourceWeakPolicy>(); auto object_member_texture_source_premultiplied_srgb_texture_cache = flight::WeakMap<flight::Ref<flight::types::TextureSource>, flight::Ref<texture_version_2f2f82ef5fff624b>>(); auto object_member_texture_source_premultiplied_texture_cache = flight::WeakMap<flight::Ref<flight::types::TextureSource>, flight::Ref<texture_version_2f2f82ef5fff624b>>(); auto object_member_texture_source_straight_srgb_texture_cache = flight::WeakMap<flight::Ref<flight::types::TextureSource>, flight::Ref<texture_version_2f2f82ef5fff624b>>(); auto object_member_texture_source_straight_texture_cache = flight::WeakMap<flight::Ref<flight::types::TextureSource>, flight::Ref<texture_version_2f2f82ef5fff624b>>(); return flight::make_ref<flight::types::GlContextRuntime>(flight::types::GlContextRuntime{.binding = object_member_binding, .gl = object_member_gl, .references = object_member_references, .teardowns = object_member_teardowns, .current_blend_signature = object_member_current_blend_signature, .current_shader = object_member_current_shader, .current_texture_realization = object_member_current_texture_realization, .quad_index_buffer = object_member_quad_index_buffer, .quad_vertex_buffer = object_member_quad_vertex_buffer, .texture_cache = object_member_texture_cache, .texture_source_premultiplied_texture_cache = object_member_texture_source_premultiplied_texture_cache, .texture_source_premultiplied_srgb_texture_cache = object_member_texture_source_premultiplied_srgb_texture_cache, .texture_source_straight_texture_cache = object_member_texture_source_straight_texture_cache, .texture_source_straight_srgb_texture_cache = object_member_texture_source_straight_srgb_texture_cache, .color_adjustment_resources = object_member_color_adjustment_resources, .particle_resources = object_member_particle_resources, .quad_batch_resources = object_member_quad_batch_resources, .shape_mesh_resources = object_member_shape_mesh_resources}); }());
+  using SourceCache = flight::WeakMap<
+      flight::types::TextureSourceValue,
+      flight::Ref<texture_version_2f2f82ef5fff624b>>;
+  auto context_runtime = flight::make_ref<flight::types::GlContextRuntime>(
+      flight::types::GlContextRuntime{
+          .binding = std::nullopt,
+          .gl = gl,
+          .references = 0.0,
+          .teardowns = flight::Array<std::function<void(flight::host_sdl::WebGl2Context)>>{},
+          .current_blend_signature = std::nullopt,
+          .current_shader = std::nullopt,
+          .current_texture_realization = std::nullopt,
+          .quad_index_buffer = quad_index_buffer,
+          .quad_vertex_buffer = quad_vertex_buffer,
+          .texture_cache = flight::WeakMap<
+              flight::host_sdl::ImageSource,
+              flight::host_sdl::WebGlTexture,
+              flight::host_sdl::ImageSourceWeakPolicy>{},
+          .texture_source_premultiplied_texture_cache = SourceCache{},
+          .texture_source_premultiplied_srgb_texture_cache = SourceCache{},
+          .texture_source_straight_texture_cache = SourceCache{},
+          .texture_source_straight_srgb_texture_cache = SourceCache{},
+          .color_adjustment_resources = std::nullopt,
+          .particle_resources = std::nullopt,
+          .quad_batch_resources = std::nullopt,
+          .shape_mesh_resources = std::nullopt});
   flight::row_set<flight::RowKey<"gl">>(state, gl);
   flight::types::write_gl_context_runtime_owner(state, context_runtime);
 }
@@ -105,11 +130,8 @@ inline void register_gl_render_state_teardown(flight::Ref<flight::types::GlRende
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_GL_ENTITY_RUNTIME_KEY_PROGRAM_BIND_LOCATIONS_88CB6A4173D252CD
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_GL_ENTITY_RUNTIME_KEY_PROGRAM_BIND_LOCATIONS_88CB6A4173D252CD
-struct entity_runtime_key_program_bind_locations_88cb6a4173d252cd : public flight::types::Entity {
-  flight::host_sdl::WebGlProgram program;
-  std::function<void(flight::host_sdl::WebGl2Context, flight::Ref<flight::types::GlRenderState>, flight::Ref<flight::types::RenderProxy2D>)> bind;
-  flight::Ref<flight::types::GlShaderLocations> locations;
-};
+using entity_runtime_key_program_bind_locations_88cb6a4173d252cd =
+    flight::types::GlBitmapShader;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_GL_ENTITY_RUNTIME_KEY_PROGRAM_BIND_LOCATIONS_88CB6A4173D252CD
 
 inline flight::Ref<flight::types::GlRenderState> create_gl_render_state_from_context(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlContextState>>>> context_state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlRenderRegistries>>>> registries, flight::Ref<flight::types::GlRenderOptions> options) {

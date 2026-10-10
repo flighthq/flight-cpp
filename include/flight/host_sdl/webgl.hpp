@@ -287,6 +287,8 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
   static constexpr std::uint32_t color_buffer_bit = 16384;
   static constexpr std::uint32_t color_clear_value = 3106;
   static constexpr std::uint32_t color_writemask = 3107;
+  static constexpr std::uint32_t constant_alpha = 32771;
+  static constexpr std::uint32_t constant_color = 32769;
   static constexpr std::uint32_t compile_status = 0x8B81;
   static constexpr std::uint32_t cull_face_constant = 2884;
   static constexpr std::uint32_t cull_face_mode = 2885;
@@ -299,6 +301,7 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
   static constexpr std::uint32_t depth_stencil = 34041;
   static constexpr std::uint32_t depth_stencil_attachment = 33306;
   static constexpr std::uint32_t depth_test = 2929;
+  static constexpr std::uint32_t dst_alpha = 772;
   static constexpr std::uint32_t depth_writemask = 2930;
   static constexpr std::uint32_t draw_framebuffer = 36009;
   static constexpr std::uint32_t dst_color = 774;
@@ -319,6 +322,7 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
   static constexpr std::uint32_t front = 1028;
   static constexpr std::uint32_t front_face_constant = 2886;
   static constexpr std::uint32_t func_add = 32774;
+  static constexpr std::uint32_t func_subtract = 32778;
   static constexpr std::uint32_t func_reverse_subtract = 32779;
   static constexpr std::uint32_t half_float = 5131;
   static constexpr std::uint32_t incr_wrap = 34055;
@@ -343,6 +347,10 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
   static constexpr std::uint32_t none = 0;
   static constexpr std::uint32_t notequal = 517;
   static constexpr std::uint32_t one = 1;
+  static constexpr std::uint32_t one_minus_constant_alpha = 32772;
+  static constexpr std::uint32_t one_minus_constant_color = 32770;
+  static constexpr std::uint32_t one_minus_dst_alpha = 773;
+  static constexpr std::uint32_t one_minus_dst_color = 775;
   static constexpr std::uint32_t one_minus_src_alpha = 771;
   static constexpr std::uint32_t one_minus_src_color = 769;
   static constexpr std::uint32_t points = 0;
@@ -356,6 +364,9 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
   static constexpr std::uint32_t scissor_box = 3088;
   static constexpr std::uint32_t scissor_test = 0x0C11;
   static constexpr std::uint32_t srgb8_alpha8 = 35907;
+  static constexpr std::uint32_t src_alpha = 770;
+  static constexpr std::uint32_t src_alpha_saturate = 776;
+  static constexpr std::uint32_t src_color = 768;
   static constexpr std::uint32_t static_draw = 0x88E4;
   static constexpr std::uint32_t stencil_back_fail = 34817;
   static constexpr std::uint32_t stencil_back_func = 34816;
@@ -414,6 +425,7 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
   [[nodiscard]] int drawing_buffer_height() const;
   [[nodiscard]] SDL_FunctionPointer function_address(std::string_view name) const;
   [[nodiscard]] bool supports_extension(std::string_view name) const;
+  [[nodiscard]] std::uint32_t named_constant(const String& name) const;
   [[nodiscard]] std::optional<GlAnisotropyExtension> anisotropy_extension() const;
 
   [[nodiscard]] WebGlBuffer create_buffer() const;
@@ -706,6 +718,12 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       const std::optional<WebGlUniformLocation>& location,
       bool transpose,
       const Float32Array& values) const;
+  void uniform_matrix3fv(
+      const std::optional<WebGlUniformLocation>& location,
+      bool transpose,
+      const Float32Array& values,
+      std::optional<double> source_offset,
+      std::optional<double> source_length) const;
   void uniform_matrix3fv(
       const std::optional<WebGlUniformLocation>& location,
       bool transpose,

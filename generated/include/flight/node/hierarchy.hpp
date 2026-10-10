@@ -35,6 +35,10 @@ namespace flight::types { template <typename Traits> struct NodeRuntime; }
 #include <flight/node/node_transform2d.hpp>
 #include <flight/node/revision.hpp>
 
+namespace flight::node { template <typename Traits> inline void ensure_node_world_matrix(flight::types::Transform2DNode<Traits> target); }
+
+namespace flight::node { template <typename Traits> inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>> get_node_world_matrix(flight::types::Transform2DNode<Traits> target); }
+
 namespace flight::node { template <typename Traits> inline std::shared_ptr<flight::types::NodeRuntime<Traits>> get_mutable_node_runtime(std::shared_ptr<flight::types::Node<Traits>> source); }
 namespace flight::node { template <typename Traits> inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>> get_node_runtime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<Traits>>>>> source); }
 

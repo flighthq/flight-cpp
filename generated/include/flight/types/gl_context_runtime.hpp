@@ -44,6 +44,7 @@ struct GlContextRuntime;
 #include <flight/types/image_resource.hpp>
 #include <flight/types/render_texture.hpp>
 #include <flight/types/texture_source.hpp>
+#include <flight/types/texture_source_value.hpp>
 
 namespace flight::types {
 
@@ -75,10 +76,10 @@ struct GlContextRuntime : public flight::ReferenceEnabled {
   flight::host_sdl::WebGlBuffer quad_index_buffer;
   flight::host_sdl::WebGlBuffer quad_vertex_buffer;
   flight::WeakMap<flight::host_sdl::ImageSource, flight::host_sdl::WebGlTexture, flight::host_sdl::ImageSourceWeakPolicy> texture_cache;
-  flight::WeakMap<flight::Ref<flight::types::TextureSource>, flight::Ref<texture_version_2f2f82ef5fff624b>> texture_source_premultiplied_texture_cache;
-  flight::WeakMap<flight::Ref<flight::types::TextureSource>, flight::Ref<texture_version_2f2f82ef5fff624b>> texture_source_premultiplied_srgb_texture_cache;
-  flight::WeakMap<flight::Ref<flight::types::TextureSource>, flight::Ref<texture_version_2f2f82ef5fff624b>> texture_source_straight_texture_cache;
-  flight::WeakMap<flight::Ref<flight::types::TextureSource>, flight::Ref<texture_version_2f2f82ef5fff624b>> texture_source_straight_srgb_texture_cache;
+  flight::WeakMap<flight::types::TextureSourceValue, flight::Ref<texture_version_2f2f82ef5fff624b>> texture_source_premultiplied_texture_cache;
+  flight::WeakMap<flight::types::TextureSourceValue, flight::Ref<texture_version_2f2f82ef5fff624b>> texture_source_premultiplied_srgb_texture_cache;
+  flight::WeakMap<flight::types::TextureSourceValue, flight::Ref<texture_version_2f2f82ef5fff624b>> texture_source_straight_texture_cache;
+  flight::WeakMap<flight::types::TextureSourceValue, flight::Ref<texture_version_2f2f82ef5fff624b>> texture_source_straight_srgb_texture_cache;
   std::optional<flight::WeakMap<flight::Ref<flight::types::ExternalTexture>, flight::host_sdl::WebGlTexture>> gl_external_texture_cache;
   std::optional<flight::WeakMap<flight::Ref<flight::types::RenderTexture>, flight::Ref<flight::types::GlRenderTextureEntry>>> gl_render_texture_cache;
   std::optional<flight::WeakMap<flight::Ref<flight::types::ImageResource>, flight::Ref<texture_uploaded_version_fa13fb47a7a23f0b>>> video_texture_cache;

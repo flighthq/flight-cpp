@@ -441,6 +441,33 @@ bool WebGl2Context::supports_extension(std::string_view name) const {
   return SDL_GL_ExtensionSupported(terminated.c_str());
 }
 
+std::uint32_t WebGl2Context::named_constant(const String& name) const {
+  // This is the native equivalent of WebGL's gl[name] lookup used by Flight's blend registry.
+  // Keep the accepted names to the WebGL blend-factor/equation domain rather than silently
+  // returning zero for a miss (ZERO itself is a valid factor).
+  if (name == String("ZERO")) return zero;
+  if (name == String("ONE")) return one;
+  if (name == String("SRC_COLOR")) return src_color;
+  if (name == String("ONE_MINUS_SRC_COLOR")) return one_minus_src_color;
+  if (name == String("DST_COLOR")) return dst_color;
+  if (name == String("ONE_MINUS_DST_COLOR")) return one_minus_dst_color;
+  if (name == String("SRC_ALPHA")) return src_alpha;
+  if (name == String("ONE_MINUS_SRC_ALPHA")) return one_minus_src_alpha;
+  if (name == String("DST_ALPHA")) return dst_alpha;
+  if (name == String("ONE_MINUS_DST_ALPHA")) return one_minus_dst_alpha;
+  if (name == String("CONSTANT_COLOR")) return constant_color;
+  if (name == String("ONE_MINUS_CONSTANT_COLOR")) return one_minus_constant_color;
+  if (name == String("CONSTANT_ALPHA")) return constant_alpha;
+  if (name == String("ONE_MINUS_CONSTANT_ALPHA")) return one_minus_constant_alpha;
+  if (name == String("SRC_ALPHA_SATURATE")) return src_alpha_saturate;
+  if (name == String("FUNC_ADD")) return func_add;
+  if (name == String("FUNC_SUBTRACT")) return func_subtract;
+  if (name == String("FUNC_REVERSE_SUBTRACT")) return func_reverse_subtract;
+  if (name == String("MIN")) return min;
+  if (name == String("MAX")) return max;
+  throw Error(String("Unknown WebGL blend constant: ") + name);
+}
+
 std::optional<GlAnisotropyExtension> WebGl2Context::anisotropy_extension() const {
   if (!supports_extension("GL_EXT_texture_filter_anisotropic") &&
       !supports_extension("GL_ARB_texture_filter_anisotropic")) {
@@ -1521,6 +1548,37 @@ void WebGl2Context::uniform_matrix3fv(
       gl_value_count(data.size(), 9, "uniformMatrix3fv"),
       transpose,
       data.data());
+}
+
+void WebGl2Context::uniform_matrix3fv(
+    const std::optional<WebGlUniformLocation>& location,
+    bool transpose,
+    const Float32Array& values,
+    std::optional<double> source_offset,
+    std::optional<double> source_length) const {
+  if (!source_offset.has_value() && !source_length.has_value()) {
+    uniform_matrix3fv(location, transpose, values);
+    return;
+  }
+
+  const auto checked_index = [](double value, const char* label) -> std::ptrdiff_t {
+    if (!std::isfinite(value) || value < 0.0 || value != std::trunc(value) ||
+        value > static_cast<double>(std::numeric_limits<std::ptrdiff_t>::max())) {
+      throw std::range_error(std::string("uniformMatrix3fv ") + label + " is invalid");
+    }
+    return static_cast<std::ptrdiff_t>(value);
+  };
+  const auto offset = checked_index(source_offset.value_or(0.0), "source offset");
+  const auto available = static_cast<std::ptrdiff_t>(values.size());
+  if (offset > available) {
+    throw std::range_error("uniformMatrix3fv source offset exceeds the array length");
+  }
+  const auto requested = checked_index(source_length.value_or(0.0), "source length");
+  const auto length = requested == 0 ? available - offset : requested;
+  if (length > available - offset) {
+    throw std::range_error("uniformMatrix3fv source range exceeds the array length");
+  }
+  uniform_matrix3fv(location, transpose, values.subarray(offset, offset + length));
 }
 
 void WebGl2Context::uniform_matrix3fv(

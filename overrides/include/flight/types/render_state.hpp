@@ -10,6 +10,7 @@
 #include <optional>
 #include <variant>
 #include <flight/runtime.hpp>
+#include <flight/types/renderable.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
@@ -46,8 +47,8 @@ struct RenderRegistries;
 struct RenderStateRuntime;
 using Scene3DGraphSyncPolicy = flight::String;
 using StrokeTessellator = std::function<std::optional<flight::Ref<flight::types::PathMesh>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::StrokeStyle>>>>, std::optional<double>)>;
-using ColorAdjustmentUnsupportedGuard = std::function<void(flight::Ref<RenderState>, std::variant<flight::Ref<flight::types::RenderCache>, std::shared_ptr<Node<flight::Any>>>)>;
-using RenderRootGuard = std::function<void(flight::Ref<RenderState>, std::variant<flight::Ref<flight::types::RenderCache>, std::shared_ptr<Node<flight::Any>>>)>;
+using ColorAdjustmentUnsupportedGuard = std::function<void(flight::Ref<RenderState>, flight::types::Renderable)>;
+using RenderRootGuard = std::function<void(flight::Ref<RenderState>, flight::types::Renderable)>;
 } // namespace flight::types
 
 #include <flight/types/blend_mode.hpp>

@@ -14,7 +14,7 @@ namespace flight::render_gl {
 
 inline flight::host_sdl::WebGlShader compile_gl_shader(flight::host_sdl::WebGl2Context gl, double type, flight::String source, std::optional<flight::String> label = std::nullopt) {
   label = label.value_or(flight::String("GL"));
-  std::optional<flight::host_sdl::WebGlShader> shader = gl.create_shader(type).value();
+  flight::host_sdl::WebGlShader shader = gl.create_shader(type).value();
   gl.shader_source(shader, source);
   gl.compile_shader(shader);
   if (!flight::to_boolean(gl.get_shader_parameter(shader, gl.compile_status))) {

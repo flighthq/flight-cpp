@@ -67,6 +67,25 @@ inline flight::Ref<KeyedTable<T>> create_keyed_table(
   return flight::entity::finish_entity(out);
 }
 
+// TypeScript infers T from the contextual return type for createKeyedTable().
+// C++ cannot deduce a function-template argument from its return type, so keep
+// that source-level API available through a contextually convertible factory.
+struct KeyedTableFactory {
+  RegistryId registry;
+  RegistryMissPolicy on_miss;
+
+  template <typename T>
+  operator std::shared_ptr<KeyedTable<T>>() && {
+    return create_keyed_table<T>(registry, on_miss);
+  }
+};
+
+inline KeyedTableFactory create_keyed_table(
+    const RegistryId& registry,
+    const RegistryMissPolicy& on_miss) {
+  return KeyedTableFactory{registry, on_miss};
+}
+
 template <typename T>
 inline void initialize_ordinal_table(
     flight::types::EntityConstruction<flight::Ref<OrdinalTable<T>>> out,
@@ -495,7 +514,7 @@ inline flight::Ref<KeyedTable<T>> with_registry_table_entry(
     const Kind& key,
     T value) {
   auto entries = table->entries.clone();
-  using BoundEntry = flight::types::state_value_49c40b4f01b4314b<T>;
+  using BoundEntry = flight::types::BoundRegistryTableEntry<T>;
   entries.set(
       key,
       RegistryTableEntry<T>{
@@ -525,7 +544,7 @@ inline flight::Ref<KeyedTable<T>> with_registry_table_tombstone(
     std::shared_ptr<KeyedTable<T>> table,
     const Kind& key) {
   auto entries = table->entries.clone();
-  using TombstoneEntry = flight::types::state_fb2721e0bb344354<T>;
+  using TombstoneEntry = flight::types::TombstonedRegistryTableEntry;
   entries.set(
       key,
       RegistryTableEntry<T>{

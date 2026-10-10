@@ -5,6 +5,8 @@
 #include <functional>
 #include <optional>
 #include <flight/runtime.hpp>
+#include <flight/types/gl_shader_locations.hpp>
+#include <flight/types/matrix.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
@@ -54,14 +56,7 @@ inline void set_gl_base_uniforms(flight::host_sdl::WebGl2Context gl, flight::Ref
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_GL_A_B_C_D_TX_TY_D975CBA1D9C9E6B5
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_GL_A_B_C_D_TX_TY_D975CBA1D9C9E6B5
-struct a_b_c_d_tx_ty_d975cba1d9c9e6b5 : public flight::ReferenceEnabled {
-  double a;
-  double b;
-  double c;
-  double d;
-  double tx;
-  double ty;
-};
+using a_b_c_d_tx_ty_d975cba1d9c9e6b5 = flight::types::Matrix;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_GL_A_B_C_D_TX_TY_D975CBA1D9C9E6B5
 
 inline void set_gl_matrix_from_transform(flight::host_sdl::WebGl2Context gl, flight::Ref<flight::types::GlShaderLocations> loc, flight::Float32Array m, flight::Ref<a_b_c_d_tx_ty_d975cba1d9c9e6b5> t, double viewport_width, double viewport_height) {
@@ -85,18 +80,14 @@ inline void initialize_default_gl_bitmap_shader(flight::types::EntityConstructio
   flight::row_set<flight::RowKey<"bind">>(out, [=](flight::host_sdl::WebGl2Context gl, flight::Ref<flight::types::GlRenderState> state, flight::Ref<flight::types::RenderProxy2D> render_proxy) {
   auto runtime = flight::render_gl::get_gl_render_state_runtime(state);
   set_gl_attributes(gl, shader_loc);
-  set_gl_matrix_from_transform(gl, shader_loc, matrix_array, render_proxy->transform2_d, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = runtime->render_target_viewport; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->width; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return gl.drawing_buffer_width; }()), ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = runtime->render_target_viewport; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->height; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return gl.drawing_buffer_height; }()));
+  set_gl_matrix_from_transform(gl, shader_loc, matrix_array, render_proxy->transform2_d, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = runtime->render_target_viewport; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->width; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return gl.drawing_buffer_width(); }()), ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = runtime->render_target_viewport; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->height; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return gl.drawing_buffer_height(); }()));
   set_gl_base_uniforms(gl, shader_loc, render_proxy);
 });
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_GL_ENTITY_RUNTIME_KEY_PROGRAM_BIND_LOCATIONS_67C0705549273359
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_GL_ENTITY_RUNTIME_KEY_PROGRAM_BIND_LOCATIONS_67C0705549273359
-struct entity_runtime_key_program_bind_locations_67c0705549273359 : public flight::types::Entity {
-  flight::host_sdl::WebGlProgram program;
-  std::function<void(flight::host_sdl::WebGl2Context, flight::Ref<flight::types::GlRenderState>, flight::Ref<flight::types::RenderProxy2D>)> bind;
-  flight::Ref<flight::types::GlShaderLocations> locations;
-};
+using entity_runtime_key_program_bind_locations_67c0705549273359 = flight::types::GlBitmapShader;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_GL_ENTITY_RUNTIME_KEY_PROGRAM_BIND_LOCATIONS_67C0705549273359
 
 inline flight::Ref<flight::types::GlBitmapShader> create_default_gl_bitmap_shader(flight::Ref<flight::types::GlShaderLocations> shader_loc, flight::Float32Array matrix_array) {
@@ -107,11 +98,7 @@ inline flight::Ref<flight::types::GlBitmapShader> create_default_gl_bitmap_shade
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_GL_ENTITY_RUNTIME_KEY_PROGRAM_BIND_LOCATIONS_88CB6A4173D252CD
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_GL_ENTITY_RUNTIME_KEY_PROGRAM_BIND_LOCATIONS_88CB6A4173D252CD
-struct entity_runtime_key_program_bind_locations_88cb6a4173d252cd : public flight::types::Entity {
-  flight::host_sdl::WebGlProgram program;
-  std::function<void(flight::host_sdl::WebGl2Context, flight::Ref<flight::types::GlRenderState>, flight::Ref<flight::types::RenderProxy2D>)> bind;
-  flight::Ref<flight::types::GlShaderLocations> locations;
-};
+using entity_runtime_key_program_bind_locations_88cb6a4173d252cd = flight::types::GlBitmapShader;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_GL_ENTITY_RUNTIME_KEY_PROGRAM_BIND_LOCATIONS_88CB6A4173D252CD
 
 inline flight::Ref<flight::types::GlBitmapShader> ensure_default_gl_bitmap_shader(flight::Ref<flight::types::GlRenderState> state) {
@@ -132,7 +119,7 @@ inline void initialize_gl_bitmap_shader_flight_value_function_initialize_u000047
   flight::row_set<flight::RowKey<"bind">>(out, [=](flight::host_sdl::WebGl2Context gl, flight::Ref<flight::types::GlRenderState> state, flight::Ref<flight::types::RenderProxy2D> render_proxy) {
   auto runtime = flight::render_gl::get_gl_render_state_runtime(state);
   set_gl_attributes(gl, locations);
-  set_gl_matrix_from_transform(gl, locations, runtime->matrix_array, render_proxy->transform2_d, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = runtime->render_target_viewport; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->width; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return gl.drawing_buffer_width; }()), ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = runtime->render_target_viewport; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->height; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return gl.drawing_buffer_height; }()));
+  set_gl_matrix_from_transform(gl, locations, runtime->matrix_array, render_proxy->transform2_d, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = runtime->render_target_viewport; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->width; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return gl.drawing_buffer_width(); }()), ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = runtime->render_target_viewport; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->height; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return gl.drawing_buffer_height(); }()));
   set_gl_base_uniforms(gl, locations, render_proxy);
   ([&]() { auto optional_chain_receiver = on_bind; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(gl, locations, render_proxy); }());
 });

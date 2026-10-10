@@ -27,7 +27,7 @@ inline double upload_gl_texture_video_frame(flight::host_sdl::WebGl2Context gl, 
     return uploaded_version;
   }
   std::optional<flight::host_sdl::ImageSource> element = static_cast<std::optional<flight::host_sdl::ImageSource>>(flight::row_get<flight::RowKey<"source">>(image));
-  if ((((!element.has_value() || (element.value().ready_state < 2.0)) || (element.value().video_width <= 0.0)) || (element.value().video_height <= 0.0))) {
+  if ((((!element.has_value() || (element.value().ready_state() < 2.0)) || (element.value().video_width() <= 0.0)) || (element.value().video_height() <= 0.0))) {
     return uploaded_version;
   }
   flight::render_gl::upload_gl_texture_element(gl, gl.texture_2_d, element.value(), internal_format.value());
