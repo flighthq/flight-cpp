@@ -1,0 +1,111 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -52507,10 +52507,81 @@
+     if (cppSyntaxGate.available) {
+       const syntax = cppSyntaxGate.checkCppSourceSyntax(
+         emitted.replace('#include <flight/types/contract.hpp>', typesHeader),
+         'imported-readonly-view-owner-recovery',
+       );
+       expect(syntax.diagnostic).toBe('');
+       expect(syntax.ok).toBe(true);
+     }
+   });
++
++  it('qualifies imported owners for variant narrowing and concrete value construction', () => {
++    const moduleResolution: CompilerModuleResolutionPlan = {
++      edges: [
++        {
++          specifier: '@flighthq/types/contract',
++          target: { packageName: '@flighthq/types', source: 'packages/types/src/contract.ts' },
++        },
++      ],
++      schema: 'flight-compiler-module-resolution/1',
++    };
++    const results = lowerTypeScriptSources(
++      [
++        {
++          packageName: '@flighthq/types',
++          sourceFile: ts.createSourceFile(
++            '/flight/packages/types/src/contract.ts',
++            `export interface Texture2D { readonly dimension: '2d'; version: number }
++             export interface TextureCube { readonly dimension: 'cube'; version: number; sources: readonly number[] }
++             export type Texture = Texture2D | TextureCube;
++             export type TextureConsumer = (value: Texture) => void;`,
++            ts.ScriptTarget.Latest,
++            true,
++          ),
++          upstreamDirectory: '/flight',
++        },
++        {
++          packageName: '@flighthq/scene3d-gl',
++          sourceFile: ts.createSourceFile(
++            '/flight/packages/scene3d-gl/src/importedTexture.ts',
++            `import type { Texture, Texture2D, TextureConsumer } from '@flighthq/types/contract';
++             export function consumeOne(consume: TextureConsumer, value: Texture2D): void { consume(value); }
++             export function cubeSize(value: Texture | null): number {
++               if (value === null || value.dimension !== 'cube') return 0;
++               return value.sources.length;
++             }`,
++            ts.ScriptTarget.Latest,
++            true,
++          ),
++          upstreamDirectory: '/flight',
++        },
++      ],
++      moduleResolution,
++    );
++    const [types, consumer] = results;
++    const session = createCppCompilerBackend().createEmissionSession!({
++      moduleResolution,
++      modules: results.map((result) => result.module),
++      options: {
++        packageTargets: {
++          '@flighthq/scene3d-gl': { includePrefix: 'flight/scene3d_gl', namespace: 'flight::scene3d_gl' },
++          '@flighthq/types': { includePrefix: 'flight/types', namespace: 'flight::types' },
++        },
++        runtimeProfile: 'flight-cpp',
++      },
++    });
++    const typesHeader = session.emitModule(types!.module)[0]!.contents;
++    const emitted = session.emitModule(consumer!.module)[0]!.contents;
++
++    expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
++    expect(emitted).toContain('std::in_place_type<flight::Ref<flight::types::Texture2D>>');
++    expect(emitted).toContain('->sources.size()');
++    if (cppSyntaxGate.available) {
++      const syntax = cppSyntaxGate.checkCppSourceSyntax(
++        emitted.replace('#include <flight/types/contract.hpp>', typesHeader),
++        'imported-variant-owner-qualification',
++      );
++      expect(syntax.diagnostic).toBe('');
++      expect(syntax.ok).toBe(true);
++    }
++  });
+ });
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -14585,8 +14585,9 @@
+       narrowing !== undefined ||
+       structuralNarrowing ||
+       partialStructuralNarrowing !== undefined ||
+       slot === exactStructuralOwnerSlot ||
+-      slot.targetType === assertedTarget ||
++      qualifyCppDeclaringModuleTypeCpp(slot.targetType, unionContext) ===
++        qualifyCppDeclaringModuleTypeCpp(assertedTarget, unionContext) ||
+       slot.sourceAlternatives.some((member) => isDeepStrictEqual(member, assertedType)) ||
+       isCppNominalHeritageUnionSlotCpp(slot, assertedType, context),
+   );
+@@ -17618,6 +17619,10 @@
+   }
+   const targetType = emitType(runtimeType, context);
+-  const valueSlot = plan.valueSlots.findIndex((slot) => slot.targetType === targetType);
++  const valueSlot = plan.valueSlots.findIndex(
++    (slot) =>
++      qualifyCppDeclaringModuleTypeCpp(slot.targetType, context) ===
++      qualifyCppDeclaringModuleTypeCpp(targetType, context),
++  );
+   // The exact spelling is the first question and the answer for most values. An alternative that reaches
+   // the value's type through a declared alias spells it differently while denoting the same C++ type, so
+   // the aliases are opened as the second question -- the same alternative, one name further away.

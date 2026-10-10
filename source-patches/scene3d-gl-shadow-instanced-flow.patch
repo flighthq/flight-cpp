@@ -1,0 +1,33 @@
+diff --git a/packages/scene3d-gl/src/glShadowMap.ts b/packages/scene3d-gl/src/glShadowMap.ts
+--- a/packages/scene3d-gl/src/glShadowMap.ts
++++ b/packages/scene3d-gl/src/glShadowMap.ts
+@@ -110,12 +110,12 @@
+     // records ONE copy at the node origin — and because the per-instance matrix routinely carries the
+     // model's authoring scale, that copy can be orders of magnitude the wrong size and flood the map,
+     // shadowing the whole scene. A batch with no live instances casts nothing.
+-    const instancedMesh = isShadowInstancedMesh(mesh) ? mesh : null;
+-    if (instancedMesh !== null && instancedMesh.instanceCount === 0) return;
++    const instanced = isShadowInstancedMesh(mesh);
++    if (instanced && mesh.instanceCount === 0) return;
+
+-    const skinned = instancedMesh === null && mesh.skin != null && hasMeshGeometrySkin(mesh.geometry);
++    const skinned = !instanced && mesh.skin != null && hasMeshGeometrySkin(mesh.geometry);
+     let program: GlMeshProgram;
+-    if (instancedMesh !== null) {
++    if (instanced) {
+       if (instancedProgram === null) {
+         instancedProgram = ensureGlScene3DProgram(
+           state,
+@@ -153,9 +153,9 @@
+     // palette) and wires the joints0/weights0 attributes; a rigid draw uploads geometry.vertices as-is.
+     const upload = ensureGlMeshUpload(state, mesh.geometry, skinned);
+     gl.bindVertexArray(upload.vao);
+-    if (instancedMesh !== null) {
+-      const count = instancedMesh.instanceCount;
+-      bindGlInstancePalette(state, program, flattenShadowInstanceMatrices(instancedMesh), count);
++    if (instanced) {
++      const count = mesh.instanceCount;
++      bindGlInstancePalette(state, program, flattenShadowInstanceMatrices(mesh), count);
+       if (upload.indexBuffer !== null) {
+         gl.drawElementsInstanced(upload.primitiveMode, upload.indexCount, upload.indexType, 0, count);
+       } else {

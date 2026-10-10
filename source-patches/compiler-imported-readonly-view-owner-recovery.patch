@@ -1,0 +1,107 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -52425,7 +52425,85 @@
+     if (cppSyntaxGate.available) {
+       const syntax = cppSyntaxGate.checkCppSourceSyntax(emitted, 'readonly-subtype-union-views');
+       expect(syntax.diagnostic).toBe('');
+       expect(syntax.ok).toBe(true);
+     }
+   });
++
++  it('recovers imported nominal union owners from nullable readonly views', () => {
++    const moduleResolution: CompilerModuleResolutionPlan = {
++      edges: [
++        {
++          specifier: '@flighthq/types/contract',
++          target: { packageName: '@flighthq/types', source: 'packages/types/src/contract.ts' },
++        },
++      ],
++      schema: 'flight-compiler-module-resolution/1',
++    };
++    const results = lowerTypeScriptSources(
++      [
++        {
++          packageName: '@flighthq/types',
++          sourceFile: ts.createSourceFile(
++            '/flight/packages/types/src/contract.ts',
++            `export interface Texture2D { readonly dimension: '2d'; version: number; runtime: number }
++             export interface TextureCube { readonly dimension: 'cube'; version: number; runtime: number }
++             export interface Texture3D { readonly dimension: '3d'; version: number; runtime: number }
++             export interface Texture2DLike { readonly dimension: '2d'; version: number }
++             export interface TextureCubeLike { readonly dimension: 'cube'; version: number }
++             export type Texture = Texture2D | TextureCube;
++             export type TextureView = Readonly<Texture2D> | Readonly<TextureCube>;
++             export type UvView = Readonly<Texture2DLike> | Readonly<TextureCubeLike> | Readonly<Texture3D>;
++             export interface BindContext { bind(value: TextureView | null): void }`,
++            ts.ScriptTarget.Latest,
++            true,
++          ),
++          upstreamDirectory: '/flight',
++        },
++        {
++          packageName: '@flighthq/scene3d-gl',
++          sourceFile: ts.createSourceFile(
++            '/flight/packages/scene3d-gl/src/recover.ts',
++            `import type { BindContext, Texture, TextureView, UvView } from '@flighthq/types/contract';
++             function uv(_value: UvView): void {}
++             export function make(): BindContext {
++               return { bind(value): void { if (value === null) return; uv(value); } };
++             }
++             export function recover(value: TextureView | null): Texture | null { return value; }`,
++            ts.ScriptTarget.Latest,
++            true,
++          ),
++          upstreamDirectory: '/flight',
++        },
++      ],
++      moduleResolution,
++    );
++    const [types, consumer] = results;
++    const session = createCppCompilerBackend().createEmissionSession!({
++      moduleResolution,
++      modules: results.map((result) => result.module),
++      options: {
++        packageTargets: {
++          '@flighthq/scene3d-gl': { includePrefix: 'flight/scene3d_gl', namespace: 'flight::scene3d_gl' },
++          '@flighthq/types': { includePrefix: 'flight/types', namespace: 'flight::types' },
++        },
++        runtimeProfile: 'flight-cpp',
++      },
++    });
++    const typesHeader = session.emitModule(types!.module)[0]!.contents;
++    const emitted = session.emitModule(consumer!.module)[0]!.contents;
++
++    expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
++    expect(emitted).toContain('std::visit');
++    expect(emitted).toContain('std::get_if<flight::StructuralRef<');
++    expect(emitted).toContain('flight::structural_ref_cast<flight::Ref<flight::types::Texture2D>>');
++    expect(emitted).toContain('flight::structural_ref_cast<flight::Ref<flight::types::TextureCube>>');
++    if (cppSyntaxGate.available) {
++      const syntax = cppSyntaxGate.checkCppSourceSyntax(
++        emitted.replace('#include <flight/types/contract.hpp>', typesHeader),
++        'imported-readonly-view-owner-recovery',
++      );
++      expect(syntax.diagnostic).toBe('');
++      expect(syntax.ok).toBe(true);
++    }
++  });
+ });
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -18042,9 +18042,9 @@
+     // shape where one slot would otherwise pair on a carrier the cast cannot accept.
+     const sourceSpelling = emitType(sourceSlot.runtimeType, isolatedContext);
+     if (!sourceSpelling.startsWith('flight::StructuralRef<')) return undefined;
+-    const ownerSpelling = emitType(rowObject, isolatedContext);
+-    const matches = targetPlan.valueSlots.flatMap((slot, target) =>
+-      slot.targetType === ownerSpelling ? [target] : [],
+-    );
++    const ownerSpelling = qualifyCppDeclaringModuleTypeCpp(emitType(rowObject, isolatedContext), context);
++    const matches = targetPlan.valueSlots.flatMap((slot, target) =>
++      qualifyCppDeclaringModuleTypeCpp(slot.targetType, context) === ownerSpelling ? [target] : [],
++    );
+     if (matches.length !== 1) return undefined;
+     const target = matches[0]!;
+     if (taken.has(target)) return undefined;

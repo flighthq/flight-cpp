@@ -44,7 +44,27 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
      // `std::optional` erases which single sentinel caused absence, while the source plan retains it.
      // When widening into a dual-sentinel variant, branch before extracting the value and reconstruct
      // that exact sentinel. An explicit assertion may change the present structural view, but its
-@@ -18112,6 +18121,67 @@ function emitCppOptionalStructuralReferenceWideningCpp(
+@@ -17534,13 +17543,17 @@ function getCppContextualUnionSourceTypeEvidenceCpp(
+   context: EmitContext,
+ ): Readonly<IrType> {
+   if (
+     expression.kind === 'identifier' &&
+-    expression.presence === 'narrowedPresent' &&
++    hasCppPresentBindingStorageProofCpp(expression, context) &&
+     ((targetPlan.kind === 'singleValue' && targetPlan.valueSlots[0]?.runtimeType.kind === 'primitive') ||
+       targetPlan.kind === 'multiVariant')
+   ) {
+     const presentType = getCppNonNullableType(inferredType, context, new Set());
+-    if (presentType && hasEquivalentCppContextualUnionValueSlotsCpp(presentType, targetPlan, context)) {
++    if (
++      presentType &&
++      (targetPlan.kind === 'multiVariant' ||
++        hasEquivalentCppContextualUnionValueSlotsCpp(presentType, targetPlan, context))
++    ) {
+       return presentType;
+     }
+   }
+@@ -18112,6 +18125,81 @@ function emitCppOptionalStructuralReferenceWideningCpp(
    return `${target}(${emitExpression(expression, context, expressionType, false)})`;
  }
  
@@ -71,17 +91,31 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/
 +      const targetObject = targetRow ? getCppStructuralRowObjectTypeCpp(targetRow) : undefined;
 +      if (!targetObject) return [];
 +      const isolatedContext = { ...context, anonymousStructs: new Map(), includes: new Set<string>() };
-+      if (sourceSlot.targetType !== emitType(targetObject, isolatedContext)) return [];
-+      return emitCppStructuralReferenceValueConversionCpp(
++      const exactOwner = sourceSlot.targetType === emitType(targetObject, isolatedContext);
++      const sourceRow = context.referenceRepresentationPlanner.resolveStructuralRow(
++        sourceSlot.runtimeType,
++        context.module,
++      );
++      const converted = emitCppStructuralReferenceValueConversionCpp(
 +        'source',
 +        sourceSlot.runtimeType,
 +        targetSlot.runtimeType,
 +        isolatedContext,
-+      )
-+        ? [{ source: sourceSlot, target: targetSlot }]
++      );
++      if (
++        !exactOwner &&
++        !sourceRow &&
++        getCppStructuralRowObjectWideningProofCpp(sourceSlot.runtimeType, targetObject, isolatedContext) !== 'proven'
++      ) {
++        return [];
++      }
++      return converted
++        ? [{ exactOwner, source: sourceSlot, target: targetSlot }]
 +        : [];
 +    });
-+    return targets.length === 1 ? targets[0] : undefined;
++    const exactTargets = targets.filter((target) => target.exactOwner);
++    if (exactTargets.length === 1) return exactTargets[0];
++    return exactTargets.length === 0 && targets.length === 1 ? targets[0] : undefined;
 +  });
 +  if (mappings.some((mapping) => mapping === undefined)) return undefined;
 +  const resolved = mappings.filter((mapping) => mapping !== undefined);

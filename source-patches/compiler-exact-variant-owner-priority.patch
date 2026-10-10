@@ -2,7 +2,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/pack
 index 23b1c2e..8e21b76 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
-@@ -52101,4 +52101,70 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
+@@ -52101,4 +52101,101 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
      expect(emitted).toContain('std::is_same_v<contextual_union_value_type, flight::Ref<First>>');
      expect(emitted).toContain('flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Second>>>>');
    });
@@ -68,6 +68,37 @@ index 23b1c2e..8e21b76 100644
 +
 +    if (cppSyntaxGate.available) {
 +      const syntax = cppSyntaxGate.checkCppSourceSyntax(emitted, 'nullable-readonly-union-views');
++      expect(syntax.diagnostic).toBe('');
++      expect(syntax.ok).toBe(true);
++    }
++  });
++
++  it('widens a present nullable union subset to unique readonly structural views', () => {
++    const result = lower(
++      'readonly-subtype-union-views.ts',
++      `interface Texture2D { readonly dimension: '2d'; version: number; source: number; runtime: number }
++       interface TextureCube { readonly dimension: 'cube'; version: number; sources: readonly number[]; runtime: number }
++       interface Texture3D { readonly dimension: '3d'; version: number; depth: number; runtime: number }
++       type Texture2DLike = Omit<Texture2D, 'runtime'>;
++       type TextureCubeLike = Omit<TextureCube, 'runtime'>;
++       type Texture = Texture2D | TextureCube;
++       type TextureView = Readonly<Texture2DLike> | Readonly<TextureCubeLike> | Readonly<Texture3D>;
++       function read(value: TextureView): number { return value.version; }
++       export function readMutable(value: Readonly<Texture> | null): number {
++         if (value === null) return 0;
++         return read(value);
++       }`,
++    );
++    const emitted = emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++
++    expect(result.diagnostics).toEqual([]);
++    expect(emitted).toContain('std::is_same_v<contextual_union_value_type, flight::Ref<Texture2D>>');
++    expect(emitted).toContain('flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Texture2DLike>>>>');
++    expect(emitted).toContain('flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TextureCubeLike>>>>');
++    expect(emitted).toContain('value.value()');
++
++    if (cppSyntaxGate.available) {
++      const syntax = cppSyntaxGate.checkCppSourceSyntax(emitted, 'readonly-subtype-union-views');
 +      expect(syntax.diagnostic).toBe('');
 +      expect(syntax.ok).toBe(true);
 +    }
