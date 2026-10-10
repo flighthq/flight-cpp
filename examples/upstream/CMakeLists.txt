@@ -11,6 +11,10 @@ set(UPSTREAM_EXAMPLES
   spatial
 )
 
+set(UPSTREAM_GL_EXAMPLES
+  scene3d
+)
+
 # These packages do not yet have faithful SDL ports. Most core APIs are present,
 # but a port must keep the upstream Flight subsystem as the source of truth and
 # use SDL only for host input and presentation. Keep them out of
@@ -42,22 +46,20 @@ set(UPSTREAM_EXAMPLES_AWAITING_FAITHFUL_SDL_PORT
   video
 )
 
-# These TypeScript examples select the WebGL renderer. Generation now reaches
-# both @flighthq/render-gl and @flighthq/scene3d-gl, but critical render-state,
-# material, shader, and scene-renderer modules are still refused or fail the
-# native compile gate. Their real materials, lighting, and picking cannot be
-# represented by a custom SDL painter.
+# These TypeScript examples select renderer features that do not yet have a
+# complete native GL path. Their real materials, lighting, and picking cannot
+# be represented by a custom SDL painter.
 set(UPSTREAM_EXAMPLES_BLOCKED_SCENE3D_GL
   awd2loading
   instanced_mesh
   materialshowcase
   scene_fire
   scene_picking
-  scene3d
 )
 
 set(_flight_cpp_upstream_inventory
   ${UPSTREAM_EXAMPLES}
+  ${UPSTREAM_GL_EXAMPLES}
   ${UPSTREAM_EXAMPLES_AWAITING_FAITHFUL_SDL_PORT}
   ${UPSTREAM_EXAMPLES_BLOCKED_SCENE3D_GL}
 )
@@ -117,5 +119,43 @@ if(TARGET Flight::HostSdl)
       )
     endif()
   endforeach()
+
+  if(TARGET Flight::HostSdlGl)
+    foreach(example IN LISTS UPSTREAM_GL_EXAMPLES)
+      if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${example}.cpp")
+        message(FATAL_ERROR "Audited upstream GL example ${example} has no source file")
+      endif()
+      add_executable(flight_cpp_upstream_${example} ${example}.cpp)
+      list(APPEND flight_cpp_upstream_targets flight_cpp_upstream_${example})
+      target_link_libraries(flight_cpp_upstream_${example} PRIVATE
+        Flight::HostSdlGl
+        Flight::SdkPreview
+      )
+      flight_cpp_set_project_warnings(flight_cpp_upstream_${example})
+      if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        # The Scene3D include closure instantiates the full generated GL runtime. Suppress the
+        # generator's known JavaScript-number and aggregate warnings instead of printing tens of
+        # thousands of diagnostics for every example rebuild; warnings from the port remain fatal.
+        target_compile_options(flight_cpp_upstream_${example} PRIVATE
+          -Wno-conversion
+          -Wno-missing-field-initializers
+          -Wno-unused-parameter
+          -Wno-unused-result
+        )
+      endif()
+      if(BUILD_TESTING)
+        add_test(
+          NAME flight_cpp_upstream_${example}_smoke
+          COMMAND flight_cpp_upstream_${example} --smoke
+        )
+        if(UNIX AND NOT APPLE)
+          set_tests_properties(
+            flight_cpp_upstream_${example}_smoke
+            PROPERTIES ENVIRONMENT "SDL_VIDEODRIVER=offscreen;LIBGL_ALWAYS_SOFTWARE=1"
+          )
+        endif()
+      endif()
+    endforeach()
+  endif()
   add_custom_target(flight_cpp_upstream_examples DEPENDS ${flight_cpp_upstream_targets})
 endif()

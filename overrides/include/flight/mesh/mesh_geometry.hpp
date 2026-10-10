@@ -428,6 +428,13 @@ inline flight::Ref<MeshGeometry> create_mesh_geometry(flight::Ref<MeshGeometryOp
       options->vertices);
 }
 
+inline flight::Ref<MeshGeometry> create_mesh_geometry(
+    flight::StructuralRef<flight::RowReadonly<
+        flight::RowOf<flight::Ref<MeshGeometryOptions>>>> options) {
+  return create_mesh_geometry(
+      flight::structural_ref_cast<flight::Ref<MeshGeometryOptions>>(options));
+}
+
 template <typename Schema>
 inline flight::Ref<MeshGeometry> create_mesh_geometry(
     flight::StructuralRef<Schema> options) {

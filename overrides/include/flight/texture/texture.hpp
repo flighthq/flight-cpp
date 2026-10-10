@@ -302,6 +302,17 @@ inline void get_texture_uv_matrix(Matrix3Like out, flight::Ref<TextureUvTransfor
   ([&]() { auto&& typed_array_9 = m; const auto typed_index_9 = 8.0; const auto typed_value_9 = 1.0; return typed_array_9.set_index(typed_index_9, typed_value_9); }());
 }
 
+inline void get_texture_like_uv_matrix(Matrix3Like out, TextureLike texture) {
+  auto uv_transform = flight::make_ref<TextureUvTransform>(TextureUvTransform{
+    .flip_x = std::visit([](const auto& a) { return a->flip_x; }, texture),
+    .flip_y = std::visit([](const auto& a) { return a->flip_y; }, texture),
+    .uv_offset = std::visit([](const auto& a) -> flight::Ref<Vector2> { return a->uv_offset; }, texture),
+    .uv_rotation = std::visit([](const auto& a) { return a->uv_rotation; }, texture),
+    .uv_scale = std::visit([](const auto& a) -> flight::Ref<Vector2> { return a->uv_scale; }, texture),
+  });
+  get_texture_uv_matrix(out, uv_transform);
+}
+
 inline void get_texture_inverse_uv_matrix(Matrix3Like out, TextureLike texture) {
   // TextureLike is a variant, not TextureUvTransform; extract the UV fields into a temporary.
   auto uv_transform = flight::make_ref<TextureUvTransform>(TextureUvTransform{
@@ -354,6 +365,16 @@ inline bool has_texture_source(TextureLike texture) {
 
 inline bool has_texture_uv_transform(flight::Ref<TextureUvTransform> texture) {
   return ((((((texture->flip_x || texture->flip_y) || (texture->uv_scale->x != 1.0)) || (texture->uv_scale->y != 1.0)) || (texture->uv_offset->x != 0.0)) || (texture->uv_offset->y != 0.0)) || (texture->uv_rotation != 0.0));
+}
+
+inline bool has_texture_like_uv_transform(TextureLike texture) {
+  return std::visit(
+      [](const auto& value) {
+        return value->flip_x || value->flip_y || value->uv_scale->x != 1.0 ||
+               value->uv_scale->y != 1.0 || value->uv_offset->x != 0.0 ||
+               value->uv_offset->y != 0.0 || value->uv_rotation != 0.0;
+      },
+      texture);
 }
 
 inline bool is_texture_ready(TextureLike texture) {

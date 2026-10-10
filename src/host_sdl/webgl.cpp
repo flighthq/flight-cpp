@@ -100,6 +100,7 @@ using BlitFramebufferFunction = void(GL_APIENTRYP)(
     GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLbitfield, GLenum);
 using ClearBufferfiFunction = void(GL_APIENTRYP)(GLenum, GLint, GLfloat, GLint);
 using ClearBufferfvFunction = void(GL_APIENTRYP)(GLenum, GLint, const GLfloat*);
+using ClearBufferivFunction = void(GL_APIENTRYP)(GLenum, GLint, const GLint*);
 using CompressedTexSubImage3DFunction = void(GL_APIENTRYP)(
     GLenum, GLint, GLint, GLint, GLint, GLsizei, GLsizei, GLsizei, GLenum, GLsizei, const void*);
 using DeleteVertexArraysFunction = void(GL_APIENTRYP)(GLsizei, const GLuint*);
@@ -748,7 +749,7 @@ void WebGl2Context::clear_bufferiv(
   if (source_offset >= data.size()) {
     throw std::range_error("clearBufferiv source does not contain a value");
   }
-  gl_function<PFNGLCLEARBUFFERIVPROC>(*this, "glClearBufferiv")(
+  gl_function<ClearBufferivFunction>(*this, "glClearBufferiv")(
       buffer, draw_buffer, data.data() + source_offset);
 }
 
@@ -1495,6 +1496,43 @@ void WebGl2Context::uniform1fv(
       require_uniform_location(location), gl_value_count(data.size(), 1, "uniform1fv"), data.data());
 }
 
+namespace {
+
+Float32Array uniform_source_slice(
+    const Float32Array& values,
+    std::optional<double> source_offset,
+    std::optional<double> source_length,
+    const char* operation) {
+  const auto checked_index = [operation](double value, const char* label) -> std::ptrdiff_t {
+    if (!std::isfinite(value) || value < 0.0 || value != std::trunc(value) ||
+        value > static_cast<double>(std::numeric_limits<std::ptrdiff_t>::max())) {
+      throw std::range_error(std::string(operation) + " " + label + " is invalid");
+    }
+    return static_cast<std::ptrdiff_t>(value);
+  };
+  const auto offset = checked_index(source_offset.value_or(0.0), "source offset");
+  const auto available = static_cast<std::ptrdiff_t>(values.size());
+  if (offset > available) {
+    throw std::range_error(std::string(operation) + " source offset exceeds the array length");
+  }
+  const auto requested = checked_index(source_length.value_or(0.0), "source length");
+  const auto length = requested == 0 ? available - offset : requested;
+  if (length > available - offset) {
+    throw std::range_error(std::string(operation) + " source range exceeds the array length");
+  }
+  return values.subarray(offset, offset + length);
+}
+
+} // namespace
+
+void WebGl2Context::uniform1fv(
+    const std::optional<WebGlUniformLocation>& location,
+    const Float32Array& values,
+    std::optional<double> source_offset,
+    std::optional<double> source_length) const {
+  uniform1fv(location, uniform_source_slice(values, source_offset, source_length, "uniform1fv"));
+}
+
 void WebGl2Context::uniform1fv(
     const std::optional<WebGlUniformLocation>& location,
     const Array<double>& values) const {
@@ -1513,6 +1551,14 @@ void WebGl2Context::uniform2fv(
 
 void WebGl2Context::uniform2fv(
     const std::optional<WebGlUniformLocation>& location,
+    const Float32Array& values,
+    std::optional<double> source_offset,
+    std::optional<double> source_length) const {
+  uniform2fv(location, uniform_source_slice(values, source_offset, source_length, "uniform2fv"));
+}
+
+void WebGl2Context::uniform2fv(
+    const std::optional<WebGlUniformLocation>& location,
     const Array<double>& values) const {
   const auto data = gl_float_values(values);
   gl_function<PFNGLUNIFORM2FVPROC>(*this, "glUniform2fv")(
@@ -1529,6 +1575,14 @@ void WebGl2Context::uniform3fv(
 
 void WebGl2Context::uniform3fv(
     const std::optional<WebGlUniformLocation>& location,
+    const Float32Array& values,
+    std::optional<double> source_offset,
+    std::optional<double> source_length) const {
+  uniform3fv(location, uniform_source_slice(values, source_offset, source_length, "uniform3fv"));
+}
+
+void WebGl2Context::uniform3fv(
+    const std::optional<WebGlUniformLocation>& location,
     const Array<double>& values) const {
   const auto data = gl_float_values(values);
   gl_function<PFNGLUNIFORM3FVPROC>(*this, "glUniform3fv")(
@@ -1541,6 +1595,14 @@ void WebGl2Context::uniform4fv(
   const auto data = values.span();
   gl_function<PFNGLUNIFORM4FVPROC>(*this, "glUniform4fv")(
       require_uniform_location(location), gl_value_count(data.size(), 4, "uniform4fv"), data.data());
+}
+
+void WebGl2Context::uniform4fv(
+    const std::optional<WebGlUniformLocation>& location,
+    const Float32Array& values,
+    std::optional<double> source_offset,
+    std::optional<double> source_length) const {
+  uniform4fv(location, uniform_source_slice(values, source_offset, source_length, "uniform4fv"));
 }
 
 void WebGl2Context::uniform4fv(
@@ -1616,6 +1678,17 @@ void WebGl2Context::uniform_matrix4fv(
       gl_value_count(data.size(), 16, "uniformMatrix4fv"),
       transpose,
       data.data());
+}
+
+void WebGl2Context::uniform_matrix4fv(
+    const std::optional<WebGlUniformLocation>& location,
+    bool transpose,
+    const Float32Array& values,
+    std::optional<double> source_offset,
+    std::optional<double> source_length) const {
+  uniform_matrix4fv(
+      location, transpose,
+      uniform_source_slice(values, source_offset, source_length, "uniformMatrix4fv"));
 }
 
 void WebGl2Context::uniform_matrix4fv(

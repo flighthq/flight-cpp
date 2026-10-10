@@ -118,7 +118,7 @@ native lane that injects GL or WebGPU handles without duplicating upstream rende
 The [flight-compiler adoption status](docs/flight-compiler-adoption.md) tracks each downstream runtime, host, and
 release obligation without treating a present header as a completed semantic contract.
 
-All 33 upstream example packages have a pinned SDL/GL compilation inventory under
+All 34 upstream example packages have a pinned SDL/GL compilation inventory under
 [`examples/upstream/generated/`](examples/upstream/generated/README.md). It keeps example headers and refusal
 ledgers separate while resolving SDK dependencies against the one shared top-level generated tree.
 

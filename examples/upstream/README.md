@@ -8,8 +8,8 @@ generated Flight APIs used by the TypeScript source. The source comment at the t
 the TypeScript file used as its authority.
 
 These targets require both `FLIGHT_CPP_BUILD_EXAMPLES=ON` and
-`FLIGHT_CPP_BUILD_HOST_SDL=ON`. A build without the optional SDL host does not advertise headless
-substitutes as examples.
+`FLIGHT_CPP_BUILD_HOST_SDL=ON`; `scene3d` also requires the `Flight::HostSdlGl` target. A build
+without the optional SDL host does not advertise headless substitutes as examples.
 
 ## Runnable ports
 
@@ -19,10 +19,12 @@ substitutes as examples.
 | `clock` | `flight::clock` | Parent/child clock hierarchy, effective pause and scale controls, animated shapes and diagnostics |
 | `collision` | `flight::collision` | Draggable circle/AABB/polygon colliders, pair testing, overlap color, and MTV arrows |
 | `motionpath` | `flight::path`, `flight::motionpath` | Two-segment cubic path, moving oriented arrow, speed and clamp/loop/ping-pong controls |
+| `scene3d` | `flight::scene3d_gl`, StandardPbr, effects GL | Procedural meshes, PBR materials, orbit camera, ambient/directional/point lights, shadow map, and HDR multisample presentation |
 | `spatial` | `flight::spatial` | Moving indexed boxes, visible grid cells, pair/point/ray/region queries, and hit counts |
 
 Every executable accepts `--smoke`. Smoke mode creates a hidden SDL window, renders three fixed-step
-frames, and exits; CTest runs this path with SDL's dummy video driver.
+frames, and exits. CTest uses SDL's dummy video driver for painter examples and its offscreen GL
+driver with software rendering for `scene3d` on Linux.
 
 ```sh
 cmake -S . -B build \
@@ -53,17 +55,18 @@ smoke test is not enough if the example bypasses the Flight API it is meant to e
 port belongs in `UPSTREAM_EXAMPLES` only when its state and algorithms come from the same generated
 Flight APIs as the pinned TypeScript source.
 
-The six packages in `UPSTREAM_EXAMPLES_BLOCKED_SCENE3D_GL` are a separate renderer blocker. Their
-TypeScript sources select `@flighthq/render-gl` and `@flighthq/scene3d-gl`. The old generation
-nontermination diagnosis has been removed: the pinned compiler now completes the 1,273-module
-`render-gl` closure, and a traced `scene3d-gl` run completes lowering all 1,597 modules and advances
-through emission. Critical render-state, material, shader, and scene-renderer modules are still
-refused or fail the native compile gate, so the GL scene renderer is not usable yet. This is not a
-DOM dependency. These examples must use that renderer once those modules compile; a custom 2D
-projection or hand-painted material is not an acceptable substitute.
+The five packages in `UPSTREAM_EXAMPLES_BLOCKED_SCENE3D_GL` require additional material, asset,
+particle, instancing, or picking paths. The base Scene3D render chain is now runnable: the `scene3d`
+port uses the generated mesh builders, StandardPbr shader/material renderer, light packing, shadow
+map, render pass, and effects pipeline through the SDL GLES host. Its native default registry
+contains the verified StandardPbr implementation; missing material kinds stay observable registry
+misses rather than being mapped to a look-alike renderer. The remaining examples move to the
+runnable list only as their actual upstream paths compile and run.
 
 The upstream 2D examples normally select `scene2d-canvas`. Many headers for that package exist, but
-critical render-state and shape/text renderer modules are recorded as refused in
-`generated/refusals.json`. The audited ports therefore use a small SDL presentation adapter while
-retaining the upstream Flight subsystem calls. That adapter is not permission to replace a Flight
-algorithm with a lookalike implementation.
+there is no native Canvas2D contract or Cairo/Skia/Pango implementation in this repository. The SDL
+presentation adapter rasterizes its own primitives with `SDL_Renderer` and uploads Flight's glyph
+outlines as SDL textures; it is not a Canvas substitute. Canvas-dependent examples therefore stay
+capability-gated unless a real `scene2d-canvas-cairo` or `scene2d-canvas-skia` backend implements the
+upstream contract. The adapter is only used where the original example's Flight subsystem—not
+Canvas—is the behavior under test.

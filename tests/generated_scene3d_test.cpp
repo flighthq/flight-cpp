@@ -173,9 +173,12 @@ int main() {
         "Node3D hierarchy retains concrete Mesh children and parent identity");
   const auto local_matrix = flight::node::get_node_local_matrix4(mesh);
   const auto world_matrix = flight::node::get_node_world_matrix4(mesh);
+  const auto world_matrix_through_node_view =
+      flight::node::get_node_world_matrix4(scene3d::node3_dview(mesh));
   check(std::abs(local_matrix->m.get_index(12.0) - 4.0) < 1e-6 &&
-            std::abs(world_matrix->m.get_index(12.0) - 6.0) < 1e-6,
-        "3D transform caches compose a concrete child with its Node3D parent");
+            std::abs(world_matrix->m.get_index(12.0) - 6.0) < 1e-6 &&
+            world_matrix_through_node_view == world_matrix,
+        "3D transform caches compose concrete and flattened-view children with their Node3D parent");
 
   auto detached = flight::geometry::create_matrix4(
       std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt,

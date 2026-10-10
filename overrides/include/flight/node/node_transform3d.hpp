@@ -24,30 +24,36 @@ using BaseRuntime =
     flight::types::NodeRuntime<flight::Ref<flight::types::Node3DTraits>>;
 
 template <typename Value>
-[[nodiscard]] decltype(auto) position(const Value& value) {
-  if constexpr (requires { value->position; }) {
-    return (value->position);
-  } else {
-    return flight::row_get<flight::RowKey<"position">>(value);
-  }
+[[nodiscard]] decltype(auto) position(const std::shared_ptr<Value>& value) {
+  return (value->position);
+}
+
+template <typename Schema>
+[[nodiscard]] decltype(auto) position(
+    const flight::StructuralRef<Schema>& value) {
+  return flight::row_get<flight::RowKey<"position">>(value);
 }
 
 template <typename Value>
-[[nodiscard]] decltype(auto) rotation(const Value& value) {
-  if constexpr (requires { value->rotation; }) {
-    return (value->rotation);
-  } else {
-    return flight::row_get<flight::RowKey<"rotation">>(value);
-  }
+[[nodiscard]] decltype(auto) rotation(const std::shared_ptr<Value>& value) {
+  return (value->rotation);
+}
+
+template <typename Schema>
+[[nodiscard]] decltype(auto) rotation(
+    const flight::StructuralRef<Schema>& value) {
+  return flight::row_get<flight::RowKey<"rotation">>(value);
 }
 
 template <typename Value>
-[[nodiscard]] decltype(auto) scale(const Value& value) {
-  if constexpr (requires { value->scale; }) {
-    return (value->scale);
-  } else {
-    return flight::row_get<flight::RowKey<"scale">>(value);
-  }
+[[nodiscard]] decltype(auto) scale(const std::shared_ptr<Value>& value) {
+  return (value->scale);
+}
+
+template <typename Schema>
+[[nodiscard]] decltype(auto) scale(
+    const flight::StructuralRef<Schema>& value) {
+  return flight::row_get<flight::RowKey<"scale">>(value);
 }
 
 template <typename Value>
@@ -161,6 +167,17 @@ inline void recompute_world(
 }
 
 }  // namespace transform3d_detail
+
+// Flattened Node3D owners (Mesh, InstancedMesh, and Node3D) retain their concrete native object
+// rather than a nominal Node<Node3DTraits> base. Preserve the public revision API for those owners
+// without attempting to recover a base object that never existed.
+template <typename Target>
+inline void invalidate_node_local_transform(
+    const std::shared_ptr<Target>& target) {
+  auto runtime = transform3d_detail::runtime(target);
+  runtime->local_transform_id = flight::unsigned_right_shift(
+      runtime->local_transform_id + 1.0, 0.0);
+}
 
 template <typename Out, typename Source>
 inline void get_node_transform3_d(const Out& out, const Source& source) {

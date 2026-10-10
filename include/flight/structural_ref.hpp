@@ -1357,7 +1357,12 @@ void initialize_row_field(const StructuralRef<Schema>& target, Field&& field) {
 template <typename Schema, typename... Fields>
 [[nodiscard]] StructuralRef<Schema> make_structural_ref(Fields&&... fields) {
   using Object = typename StructuralRef<Schema>::object_type;
-  if constexpr (std::is_void_v<Object>) {
+  // An object literal typed as Partial<T> is an option bag, not a newly allocated T. Giving the
+  // row a native T owner eagerly binds all of T's fields (making omitted properties look present)
+  // and binds required native fields with their bare storage type. Initializing the partial cell
+  // with optional<T> then collides with that bare cell and throws std::bad_cast. Keep partial
+  // literals schema-only; projections of an existing T still retain and read that native owner.
+  if constexpr (std::is_void_v<Object> || detail::schema_partial<Schema>) {
     auto result = StructuralRef<Schema>::from_owner(std::make_shared<RowOwner>());
     (detail::initialize_row_field<Schema>(result, std::forward<Fields>(fields)), ...);
     return result;

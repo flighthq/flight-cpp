@@ -314,6 +314,25 @@ static_assert(!flight::detail::schema_required<SubjectRow>);
 } // namespace
 
 int main() {
+  // A Partial<T> object literal is an option bag: its supplied field is present, its omitted field
+  // is absent, and constructing it must not collide optional row storage with T's bare native
+  // members. This is the exact shape used by generated material factory options.
+  {
+    const auto options = flight::make_structural_ref<
+        flight::RowReadonly<flight::RowPartial<
+            flight::RowOf<flight::Ref<TestBaseTarget>>>>>(
+        flight::row_field<flight::RowKey<"width">>(
+            std::optional<double>{3.0}));
+    check(!options.shared_exact_object<TestBaseTarget>(),
+          "a partial object literal stays an option bag rather than allocating its subject");
+    check(flight::row_has<flight::RowKey<"width">>(options) &&
+              !flight::row_has<flight::RowKey<"height">>(options),
+          "a partial object literal distinguishes supplied and omitted properties");
+    check(flight::row_get<flight::RowKey<"width">>(options) ==
+              std::optional<double>{3.0},
+          "a supplied partial field keeps its optional storage shape");
+  }
+
   auto provider = flight::make_ref<TestClipboardChangeProvider>();
   const RequiredView required(provider);
   const PartialView partial(provider);
