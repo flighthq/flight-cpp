@@ -1,0 +1,73 @@
+{
+  "schema": "flight-upstream-test-parity-prototype/1",
+  "source": {
+    "package": "@flighthq/flight",
+    "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad"
+  },
+  "scope": {
+    "packages": [
+      "math",
+      "geometry"
+    ],
+    "pattern": "packages/{math,geometry}/src/*.test.ts"
+  },
+  "eligibility": {
+    "definition": "An it callback contains only const declarations and non-negated expect calls, uses a native-harness matcher, and uses the conservative expression subset accepted by the prototype.",
+    "eligibleFraction": "410/1539 (26.6%)",
+    "eligibleExpectations": 546,
+    "eligibleTests": 410,
+    "expectations": 3215,
+    "files": 43,
+    "packages": {
+      "math": {
+        "eligibleFraction": "218/325 (67.1%)",
+        "eligibleExpectations": 276,
+        "eligibleTests": 218,
+        "expectations": 428,
+        "files": 15,
+        "tests": 325
+      },
+      "geometry": {
+        "eligibleFraction": "192/1214 (15.8%)",
+        "eligibleExpectations": 270,
+        "eligibleTests": 192,
+        "expectations": 2787,
+        "files": 28,
+        "tests": 1214
+      }
+    },
+    "rejectionReasons": {
+      "imperative-or-setup-body": 823,
+      "negated-expectation": 40,
+      "parameterized-it-each": 16,
+      "unsupported-expression": 217,
+      "unsupported-matcher:toBeInstanceOf": 1,
+      "unsupported-matcher:toBeUndefined": 1,
+      "unsupported-matcher:toHaveLength": 1,
+      "unsupported-matcher:toMatchObject": 3,
+      "unsupported-matcher:toStrictEqual": 6,
+      "unsupported-matcher:toThrow": 21
+    },
+    "tests": 1539
+  },
+  "pilot": {
+    "compiledTestCount": 18,
+    "generatedFile": "tests/generated/upstream_math_geometry_parity.cpp",
+    "selections": [
+      {
+        "describe": "*",
+        "sha256": "4a87a63540c53862fec68b439bdbf467e0b561a52fc40a2fb9e59ae484250ad4",
+        "source": "packages/math/src/clamp.test.ts",
+        "tests": 17,
+        "title": "*"
+      },
+      {
+        "describe": "reserveFloat32Array",
+        "sha256": "45a961557ec8b6aaa8dbb8e274ebf2456aa264ae182a0377cd22e63c3f841edf",
+        "source": "packages/geometry/src/typedarray.test.ts",
+        "tests": 1,
+        "title": "leaves extended capacity zero-filled"
+      }
+    ]
+  }
+}

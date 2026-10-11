@@ -11,6 +11,19 @@ cc_test(
 )
 
 cc_test(
+    name = "upstream_math_geometry_parity_test",
+    srcs = [
+        "generated/upstream_math_geometry_parity.cpp",
+        "upstream_test_harness.hpp",
+    ],
+    size = "small",
+    deps = [
+        "//:cpp",
+        "//:sdk_preview",
+    ],
+)
+
+cc_test(
     name = "intl_type_test",
     srcs = ["intl_type_test.cpp"],
     size = "small",

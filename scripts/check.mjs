@@ -45,6 +45,7 @@ const gates = [
   { arguments: [], name: 'uriOracle' },
   { arguments: [], name: 'webTypesOracle' },
   { arguments: ['--check'], name: 'sdkGeneration' },
+  { arguments: ['--check'], name: 'upstreamTestParityPrototype' },
   { arguments: ['--check'], name: 'upstreamExampleGeneration' },
   { arguments: [], name: 'emittedSourceCompile' },
 ];

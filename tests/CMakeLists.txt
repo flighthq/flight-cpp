@@ -4,6 +4,22 @@ flight_cpp_set_project_warnings(flight_cpp_runtime_tests)
 
 add_test(NAME flight_cpp.runtime COMMAND flight_cpp_runtime_tests)
 
+add_executable(
+  flight_cpp_upstream_math_geometry_parity_tests
+  generated/upstream_math_geometry_parity.cpp
+)
+target_include_directories(
+  flight_cpp_upstream_math_geometry_parity_tests
+  PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+)
+target_link_libraries(flight_cpp_upstream_math_geometry_parity_tests PRIVATE Flight::SdkPreview)
+flight_cpp_set_project_warnings(flight_cpp_upstream_math_geometry_parity_tests)
+add_test(
+  NAME flight_cpp.upstream_math_geometry_parity
+  COMMAND flight_cpp_upstream_math_geometry_parity_tests
+)
+
 add_executable(flight_cpp_intl_type_tests intl_type_test.cpp)
 target_link_libraries(flight_cpp_intl_type_tests PRIVATE Flight::Cpp)
 flight_cpp_set_project_warnings(flight_cpp_intl_type_tests)
