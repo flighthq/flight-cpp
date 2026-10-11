@@ -1,16 +1,10 @@
 diff --git a/packages/render-gl/src/glTextureResolver.ts b/packages/render-gl/src/glTextureResolver.ts
-index 9704dfd..03e3e14 100644
+index 1a0268d..b6d43fc 100644
 --- a/packages/render-gl/src/glTextureResolver.ts
 +++ b/packages/render-gl/src/glTextureResolver.ts
-@@ -1,24 +1,32 @@
--import { createKeyedTable, withoutRegistryTableEntry, withRegistryTableEntry } from '@flighthq/registry/contract';
+@@ -1,17 +1,21 @@
+ import { withoutKindMapEntry, withKindMapEntry } from '@flighthq/registry/contract';
 -import { getTextureSampleColorSpace, getTextureSource, getTextureSourceKind } from '@flighthq/texture/contract';
-+import {
-+  createKeyedTable,
-+  getRegistryTableEntry,
-+  withoutRegistryTableEntry,
-+  withRegistryTableEntry,
-+} from '@flighthq/registry/contract';
 +import { getTextureSampleColorSpace } from '@flighthq/texture/contract';
  import type {
    RenderTargetColorSpace,
@@ -32,15 +26,8 @@ index 9704dfd..03e3e14 100644
  } from '@flighthq/types/contract';
  import {
    BitmapTextureSourceKind,
-   CompressedImageTextureSourceKind,
-   ImageTextureSourceKind,
-   RenderRegistryTable,
--  RegistryEntryState,
-   RenderTargetTextureSourceKind,
- } from '@flighthq/types/contract';
- 
-@@ -32,20 +40,20 @@ import { getGlRenderStateRuntime } from './glRenderState';
- import { bindGlRenderTexture } from './glRenderTexture';
+@@ -31,20 +35,20 @@ import { getGlRenderStateRuntime } from './glRenderState.ts';
+ import { bindGlRenderTexture } from './glRenderTexture.ts';
  
  export function registerGlBitmapTextureResolver(state: GlRenderState): void {
 -  registerGlTextureResolver(state, BitmapTextureSourceKind, resolveGlBitmapTexture);
@@ -64,19 +51,17 @@ index 9704dfd..03e3e14 100644
  }
  
  // Registers or replaces one declared source-kind resolver on this render state. The persistent table
-@@ -58,10 +66,58 @@ export function registerGlTextureResolver(
+@@ -57,8 +61,58 @@ export function registerGlTextureResolver(
  ): void {
    const runtime = getGlRenderStateRuntime(state);
    const table = runtime.registries.textureResolvers;
 -  runtime.registries.textureResolvers =
--    resolver === null
--      ? withoutRegistryTableEntry(table, sourceKind)
--      : withRegistryTableEntry(table, sourceKind, resolver);
+-    resolver === null ? withoutKindMapEntry(table, sourceKind) : withKindMapEntry(table, sourceKind, resolver);
 +  if (resolver === null) {
-+    runtime.registries.textureResolvers = withoutRegistryTableEntry<GlTextureResolver>(table, sourceKind);
++    runtime.registries.textureResolvers = withoutKindMapEntry<GlTextureResolver>(table, sourceKind);
 +    return;
 +  }
-+  runtime.registries.textureResolvers = withRegistryTableEntry(table, sourceKind, resolver);
++  runtime.registries.textureResolvers = withKindMapEntry<GlTextureResolver>(table, sourceKind, resolver);
 +}
 +
 +function registerBoundGlTextureResolver(
@@ -85,7 +70,7 @@ index 9704dfd..03e3e14 100644
 +  resolver: GlTextureResolver,
 +): void {
 +  const runtime = getGlRenderStateRuntime(state);
-+  runtime.registries.textureResolvers = withRegistryTableEntry(
++  runtime.registries.textureResolvers = withKindMapEntry<GlTextureResolver>(
 +    runtime.registries.textureResolvers,
 +    sourceKind,
 +    resolver,
@@ -127,7 +112,7 @@ index 9704dfd..03e3e14 100644
  }
  
  export function registerStandardGlTextureResolvers(state: GlRenderState): void {
-@@ -81,19 +137,20 @@ export function registerStandardGlTextureResolvers(state: GlRenderState): void {
+@@ -78,19 +132,20 @@ export function registerStandardGlTextureResolvers(state: GlRenderState): void {
  // every texture it draws. 3D composites linear; 2D composites in the encoded domain and passes 'srgb'.
  export function resolveGlTexture(
    state: GlRenderState,
@@ -142,19 +127,19 @@ index 9704dfd..03e3e14 100644
 +  if (source === null) return null;
 +  const sourceKind = source.kind;
    const runtime = getGlRenderStateRuntime(state);
--  const entry = runtime.registries.textureResolvers.entries.get(sourceKind);
--  if (entry?.state !== RegistryEntryState.Bound) {
-+  const resolver = getRegistryTableEntry(runtime.registries.textureResolvers, sourceKind);
-+  if (resolver === null) {
+-  const entry = runtime.registries.textureResolvers.get(sourceKind);
+-  if (entry == null) {
++  const resolver: GlTextureResolver | undefined = runtime.registries.textureResolvers.get(sourceKind);
++  if (resolver === undefined) {
      runtime.registryMiss?.(RenderRegistryTable.TextureResolver, sourceKind);
      return null;
    }
--  const realization = entry.value(
+-  const realization = entry(
 +  const realization = resolver(
      state,
      texture,
      premultiply,
-@@ -104,54 +161,59 @@ export function resolveGlTexture(
+@@ -101,54 +156,59 @@ export function resolveGlTexture(
  
  function resolveGlBitmapTexture(
    state: GlRenderState,
@@ -232,17 +217,17 @@ index 9704dfd..03e3e14 100644
 +  return createGlTextureRealization(handle, false);
  }
  
--const _standardGlTextureResolvers = withRegistryTableEntry(
--  withRegistryTableEntry(
--    withRegistryTableEntry(
-+const _standardGlTextureResolvers = withRegistryTableEntry<GlTextureResolver>(
-+  withRegistryTableEntry<GlTextureResolver>(
-+    withRegistryTableEntry<GlTextureResolver>(
-       createKeyedTable<GlTextureResolver>('GlTextureResolver', 'Unregistered'),
-       BitmapTextureSourceKind,
-       resolveGlBitmapTexture,
+-const _standardGlTextureResolvers = withKindMapEntry(
+-  withKindMapEntry(
+-    withKindMapEntry(new Map(), BitmapTextureSourceKind, resolveGlBitmapTexture),
++const _standardGlTextureResolvers = withKindMapEntry<GlTextureResolver>(
++  withKindMapEntry<GlTextureResolver>(
++    withKindMapEntry<GlTextureResolver>(new Map(), BitmapTextureSourceKind, resolveGlBitmapTexture),
+     ImageTextureSourceKind,
+     resolveGlImageTexture,
+   ),
 diff --git a/packages/texture/src/texture.ts b/packages/texture/src/texture.ts
-index bfc1934..2c379b7 100644
+index 3b08fc1..fb10a24 100644
 --- a/packages/texture/src/texture.ts
 +++ b/packages/texture/src/texture.ts
 @@ -21,7 +21,6 @@ import type {
@@ -326,14 +311,14 @@ index bfc1934..2c379b7 100644
    if (texture.source === source) return;
    texture.source = source;
 diff --git a/packages/types/src/GlTextureResolver.ts b/packages/types/src/GlTextureResolver.ts
-index 4ba9328..8a0373f 100644
+index 678e00c..1906c8c 100644
 --- a/packages/types/src/GlTextureResolver.ts
 +++ b/packages/types/src/GlTextureResolver.ts
 @@ -1,5 +1,6 @@
- import type { GlRenderState } from './GlRenderState';
--import type { TextureColorSpace, TextureLike } from './Texture';
-+import type { GlTextureValue } from './GlTextureValue';
-+import type { TextureColorSpace } from './Texture';
+ import type { GlRenderState } from './GlRenderState.ts';
+-import type { TextureColorSpace, TextureLike } from './Texture.ts';
++import type { GlTextureValue } from './GlTextureValue.ts';
++import type { TextureColorSpace } from './Texture.ts';
  
  // The backend handle and the sample interpretation that must travel with it. Keeping both facts in
  // one value prevents a newly bound handle from inheriting the previous texture's alpha treatment.
@@ -348,12 +333,12 @@ index 4ba9328..8a0373f 100644
  ) => GlTextureRealization | null;
 diff --git a/packages/types/src/GlTextureValue.ts b/packages/types/src/GlTextureValue.ts
 new file mode 100644
-index 0000000..41c56b1
+index 0000000..a54d51f
 --- /dev/null
 +++ b/packages/types/src/GlTextureValue.ts
 @@ -0,0 +1,11 @@
-+import type { RenderTexture } from './RenderTexture';
-+import type { Texture2DArrayLike, Texture2DLike, Texture3DLike, TextureCubeLike } from './Texture';
++import type { RenderTexture } from './RenderTexture.ts';
++import type { Texture2DArrayLike, Texture2DLike, Texture3DLike, TextureCubeLike } from './Texture.ts';
 +
 +// TextureLike remains the open sampling-view contract. The redundant render-texture arm retains
 +// the exact render-target owner through native resolver dispatch while accepting the same values.
@@ -364,16 +349,16 @@ index 0000000..41c56b1
 +  | Readonly<TextureCubeLike>
 +  | Readonly<RenderTexture>;
 diff --git a/packages/types/src/Texture.ts b/packages/types/src/Texture.ts
-index c67bceb..b638cb2 100644
+index 3a624ca..fe432b2 100644
 --- a/packages/types/src/Texture.ts
 +++ b/packages/types/src/Texture.ts
 @@ -1,6 +1,5 @@
- import type { Entity, EntityWithoutRuntime } from './Entity';
- import type { Sampler } from './Sampler';
--import type { TextureSource } from './TextureSource';
- import type { TextureSourceValue } from './TextureSourceValue';
- import type { TextureUvTransform } from './TextureUvTransform';
- import type { VoxelGrid } from './VoxelGrid';
+ import type { Entity, EntityWithoutRuntime } from './Entity.ts';
+ import type { Sampler } from './Sampler.ts';
+-import type { TextureSource } from './TextureSource.ts';
+ import type { TextureSourceValue } from './TextureSourceValue.ts';
+ import type { TextureUvTransform } from './TextureUvTransform.ts';
+ import type { VoxelGrid } from './VoxelGrid.ts';
 @@ -34,12 +33,12 @@ interface TextureCommon extends Entity, TextureUvTransform {
  
  export interface Texture2D extends TextureCommon {
@@ -390,26 +375,26 @@ index c67bceb..b638cb2 100644
  
  export interface Texture3D extends TextureCommon {
 diff --git a/packages/types/src/contract.ts b/packages/types/src/contract.ts
-index b7d9726..4e73741 100644
+index a8db13a..cc3f1be 100644
 --- a/packages/types/src/contract.ts
 +++ b/packages/types/src/contract.ts
-@@ -318,6 +318,7 @@ export * from './GlSkinPaletteTexture';
- export * from './GlTextureDescriptor';
- export * from './GlTextureFilterKind';
- export * from './GlTextureResolver';
-+export * from './GlTextureValue';
- export * from './GlTextureWrapKind';
- export * from './GlToonProgram';
- export * from './GlUnlitProgram';
+@@ -325,6 +325,7 @@ export * from './GlSkinPaletteTexture.ts';
+ export * from './GlTextureDescriptor.ts';
+ export * from './GlTextureFilterKind.ts';
+ export * from './GlTextureResolver.ts';
++export * from './GlTextureValue.ts';
+ export * from './GlTextureWrapKind.ts';
+ export * from './GlToonProgram.ts';
+ export * from './GlUnlitProgram.ts';
 diff --git a/packages/types/src/index.ts b/packages/types/src/index.ts
-index a8726a2..f927d15 100644
+index 8887e74..ad22c07 100644
 --- a/packages/types/src/index.ts
 +++ b/packages/types/src/index.ts
-@@ -308,6 +308,7 @@ export * from './GlSkinPaletteTexture';
- export * from './GlTextureDescriptor';
- export * from './GlTextureFilterKind';
- export * from './GlTextureResolver';
-+export * from './GlTextureValue';
- export * from './GlTextureWrapKind';
- export * from './GlToonProgram';
- export * from './GlUnlitProgram';
+@@ -314,6 +314,7 @@ export * from './GlSkinPaletteTexture.ts';
+ export * from './GlTextureDescriptor.ts';
+ export * from './GlTextureFilterKind.ts';
+ export * from './GlTextureResolver.ts';
++export * from './GlTextureValue.ts';
+ export * from './GlTextureWrapKind.ts';
+ export * from './GlToonProgram.ts';
+ export * from './GlUnlitProgram.ts';
