@@ -499,28 +499,6 @@
       "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "types-node-forward-declaration",
-      "kind": "insert-forward-declaration",
-      "appliesTo": "flight/types/",
-      "symbol": "Node",
-      "declaration": "namespace flight::types { template <typename Traits> struct Node; }",
-      "diagnostic": "'Node' is not a member of 'flight::types'",
-      "defect": "The emitter's forward-declaration collector walks the names a module references directly, but misses names it reaches only by expanding another package's type alias. flight::types::Node2D expands to flight::StructuralRef<flight::RowMerge<flight::RowOf<flight::Ref<flight::types::Node<flight::Ref<Node2DTraits>>>>, ...>>, so a header using the Node2D alias names Node without ever declaring it.",
-      "expires": "when the forward-declaration collector follows alias expansion; sdk:check fails if this repair matches no file.",
-      "expectedWhen": "always"
-    },
-    {
-      "id": "types-render-cache-forward-declaration",
-      "kind": "insert-forward-declaration",
-      "appliesTo": "flight/types/",
-      "symbol": "RenderCache",
-      "declaration": "namespace flight::types { struct RenderCache; }",
-      "diagnostic": "'RenderCache' is not a member of 'flight::types'",
-      "defect": "Same collector defect as types-node-forward-declaration, reached through the render-options aliases.",
-      "expires": "when the forward-declaration collector follows alias expansion; sdk:check fails if this repair matches no header in a profiled run. RenderCache is only reachable once external bindings let @flighthq/render emit, so the unbound inventory is not evidence that this repair is unneeded.",
-      "expectedWhen": "withBindings"
-    },
-    {
       "id": "log-logentry-using-declaration",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/log/",
@@ -723,32 +701,6 @@
       "expectedWhen": "always"
     },
     {
-      "id": "respell-reference-alias-transform3dnode",
-      "kind": "respell-reference-alias",
-      "appliesTo": "flight/",
-      "symbol": "Transform3DNode",
-      "expansion": "value",
-      "witness": "flight::types::Transform3DNode<flight::Any>",
-      "witnessInclude": "flight/types/has_transform3_d.hpp",
-      "diagnostic": "couldn't deduce template parameter 'T'",
-      "defect": "flight::Ref<Value> resolves through detail::reference_shape<Value, complete_probe<Value>>, a computation, so a template parameter appearing only inside it is in a NON-DEDUCED CONTEXT. Every generated signal and node helper is declared that way -- template <typename T> void emit_signal(flight::Ref<flight::types::Signal<T>>, ArgsPack&&...) -- so the declaration is well-formed and the file compiles alone, while every CALL fails to deduce T. That is why packages which are 100% emitted still have failing headers: @flighthq/camera is 21/21 emitted and three of its headers fail only here, through flight/log/log.hpp's two emit_signal calls.",
-      "expires": "when the emitter writes a deducible spelling for a reference parameter inside a function template -- std::shared_ptr<X> for a ReferenceEnabled X, or X itself otherwise -- instead of the flight::Ref alias; sdk:check fails if this repair matches no file.",
-      "expectedWhen": "always"
-    },
-    {
-      "id": "respell-reference-alias-registrytable",
-      "kind": "respell-reference-alias",
-      "appliesTo": "flight/",
-      "symbol": "RegistryTable",
-      "expansion": "value",
-      "witness": "flight::types::RegistryTable<flight::Any>",
-      "witnessInclude": "flight/types/registry_table.hpp",
-      "diagnostic": "couldn't deduce template parameter 'T'",
-      "defect": "flight::Ref<Value> resolves through detail::reference_shape<Value, complete_probe<Value>>, a computation, so a template parameter appearing only inside it is in a NON-DEDUCED CONTEXT. Every generated signal and node helper is declared that way -- template <typename T> void emit_signal(flight::Ref<flight::types::Signal<T>>, ArgsPack&&...) -- so the declaration is well-formed and the file compiles alone, while every CALL fails to deduce T. That is why packages which are 100% emitted still have failing headers: @flighthq/camera is 21/21 emitted and three of its headers fail only here, through flight/log/log.hpp's two emit_signal calls.",
-      "expires": "when the emitter writes a deducible spelling for a reference parameter inside a function template -- std::shared_ptr<X> for a ReferenceEnabled X, or X itself otherwise -- instead of the flight::Ref alias; sdk:check fails if this repair matches no file.",
-      "expectedWhen": "always"
-    },
-    {
       "id": "node-node-using-declaration",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/node/",
@@ -757,30 +709,6 @@
       "include": "flight/types/node.hpp",
       "diagnostic": "'Node' was not declared in this scope; did you mean 'flight::types::Node'?",
       "defect": "The emitter writes Node unqualified inside namespace flight::node, where the type is flight::types::Node. The same defect as the four in flight/log/ and the two in flight/signals/: a types-owned name used from another package's namespace without qualification, and without the header that defines it.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "node-nodeof-using-declaration",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/node/",
-      "symbol": "NodeOf",
-      "declaration": "using flight::types::NodeOf;",
-      "include": "flight/types/node.hpp",
-      "diagnostic": "'NodeOf' was not declared in this scope; did you mean 'flight::types::NodeOf'?",
-      "defect": "The emitter writes NodeOf unqualified inside namespace flight::node, where the type is flight::types::NodeOf. The same defect as the four in flight/log/ and the two in flight/signals/: a types-owned name used from another package's namespace without qualification, and without the header that defines it.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "node-transform2dlike-using-declaration",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/node/",
-      "symbol": "Transform2DLike",
-      "declaration": "using flight::types::Transform2DLike;",
-      "include": "flight/types/transform2_d.hpp",
-      "diagnostic": "'Transform2DLike' was not declared in this scope; did you mean 'flight::types::Transform2DLike'?",
-      "defect": "The emitter writes Transform2DLike unqualified inside namespace flight::node, where the type is flight::types::Transform2DLike. The same defect as the four in flight/log/ and the two in flight/signals/: a types-owned name used from another package's namespace without qualification, and without the header that defines it.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
     },
@@ -809,18 +737,6 @@
       "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "node-transform2dnode-using-declaration",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/node/",
-      "symbol": "Transform2DNode",
-      "declaration": "using flight::types::Transform2DNode;",
-      "include": "flight/types/has_transform2_d.hpp",
-      "diagnostic": "'Transform2DNode' was not declared in this scope; did you mean 'flight::types::Transform2DNode'?",
-      "defect": "The emitter writes Transform2DNode unqualified inside namespace flight::node, where the type is flight::types::Transform2DNode. A types-owned name used from another package's namespace without qualification, and without the header that defines it.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "node-noderuntime-using-declaration",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/node/",
@@ -841,54 +757,6 @@
       "include": "flight/types/registry_table.hpp",
       "diagnostic": "'RegistryTable' was not declared in this scope; did you mean 'flight::types::RegistryTable'?",
       "defect": "The emitter writes RegistryTable unqualified inside namespace flight::registry, where the type is flight::types::RegistryTable. A types-owned name used from another package's namespace without qualification, and without the header that defines it.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "node-entityconstruction-using-declaration",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/node/",
-      "symbol": "EntityConstruction",
-      "declaration": "using flight::types::EntityConstruction;",
-      "include": "flight/types/entity.hpp",
-      "diagnostic": "'EntityConstruction' was not declared in this scope; did you mean 'flight::types::EntityConstruction'?",
-      "defect": "The emitter writes EntityConstruction unqualified inside namespace flight::node, where the type is flight::types::EntityConstruction. A types-owned name used from another package's namespace without qualification, and without the header that defines it.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "node-matrixlike-using-declaration",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/node/",
-      "symbol": "MatrixLike",
-      "declaration": "using flight::types::MatrixLike;",
-      "include": "flight/types/matrix.hpp",
-      "diagnostic": "'MatrixLike' was not declared in this scope; did you mean 'flight::types::MatrixLike'?",
-      "defect": "The emitter writes MatrixLike unqualified inside namespace flight::node, where the type is flight::types::MatrixLike. A types-owned name used from another package's namespace without qualification, and without the header that defines it.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "registry-kind-using-declaration",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/registry/",
-      "symbol": "Kind",
-      "declaration": "using flight::types::Kind;",
-      "include": "flight/types/entity.hpp",
-      "diagnostic": "'Kind' was not declared in this scope; did you mean 'flight::types::Kind'?",
-      "defect": "The emitter writes Kind unqualified inside namespace flight::registry, where the type is flight::types::Kind. A types-owned name used from another package's namespace without qualification, and without the header that defines it.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "node-vector2like-using-declaration",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/node/",
-      "symbol": "Vector2Like",
-      "declaration": "using flight::types::Vector2Like;",
-      "include": "flight/types/vector2.hpp",
-      "diagnostic": "'Vector2Like' was not declared in this scope; did you mean 'flight::types::Vector2Like'?",
-      "defect": "The emitter writes Vector2Like unqualified inside namespace flight::node, where the type is flight::types::Vector2Like. A types-owned name used from another package's namespace without qualification, and without the header that defines it.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
     },
@@ -915,30 +783,6 @@
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "node-nodeany-using-declaration",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/node/",
-      "symbol": "NodeAny",
-      "declaration": "using flight::types::NodeAny;",
-      "include": "flight/types/node.hpp",
-      "diagnostic": "'NodeAny' was not declared in this scope; did you mean 'flight::types::NodeAny'?",
-      "defect": "The emitter writes NodeAny unqualified inside namespace flight::node, where the type is flight::types::NodeAny. A types-owned name used from another package's namespace without qualification, and without the header that defines it.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "node-nodeorderlistentryvisitor-using-declaration",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/node/",
-      "symbol": "NodeOrderListEntryVisitor",
-      "declaration": "using flight::types::NodeOrderListEntryVisitor;",
-      "include": "flight/types/node_order_list.hpp",
-      "diagnostic": "'NodeOrderListEntryVisitor' was not declared in this scope; did you mean 'flight::types::NodeOrderListEntryVisitor'?",
-      "defect": "The emitter writes NodeOrderListEntryVisitor unqualified inside namespace flight::node, where the type is flight::types::NodeOrderListEntryVisitor. A types-owned name used from another package's namespace without qualification, and without the header that defines it.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "node-nodetraits-using-declaration",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/node/",
@@ -959,54 +803,6 @@
       "include": "flight/types/rectangle.hpp",
       "diagnostic": "'Rectangle' was not declared in this scope; did you mean 'flight::types::Rectangle'?",
       "defect": "The emitter writes Rectangle unqualified inside namespace flight::node, where the type is flight::types::Rectangle. A types-owned name used from another package's namespace without qualification, and without the header that defines it.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "node-transform3dlike-using-declaration",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/node/",
-      "symbol": "Transform3DLike",
-      "declaration": "using flight::types::Transform3DLike;",
-      "include": "flight/types/transform3_d.hpp",
-      "diagnostic": "'Transform3DLike' was not declared in this scope; did you mean 'flight::types::Transform3DLike'?",
-      "defect": "The emitter writes Transform3DLike unqualified inside namespace flight::node, where the type is flight::types::Transform3DLike. A types-owned name used from another package's namespace without qualification, and without the header that defines it.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "node-transform3dnode-using-declaration",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/node/",
-      "symbol": "Transform3DNode",
-      "declaration": "using flight::types::Transform3DNode;",
-      "include": "flight/types/has_transform3_d.hpp",
-      "diagnostic": "'Transform3DNode' was not declared in this scope; did you mean 'flight::types::Transform3DNode'?",
-      "defect": "The emitter writes Transform3DNode unqualified inside namespace flight::node, where the type is flight::types::Transform3DNode. A types-owned name used from another package's namespace without qualification, and without the header that defines it.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "node-vector3like-using-declaration",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/node/",
-      "symbol": "Vector3Like",
-      "declaration": "using flight::types::Vector3Like;",
-      "include": "flight/types/vector3.hpp",
-      "diagnostic": "'Vector3Like' was not declared in this scope; did you mean 'flight::types::Vector3Like'?",
-      "defect": "The emitter writes Vector3Like unqualified inside namespace flight::node, where the type is flight::types::Vector3Like. A types-owned name used from another package's namespace without qualification, and without the header that defines it.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "node-viewportalign-using-declaration",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/node/",
-      "symbol": "ViewportAlign",
-      "declaration": "using flight::types::ViewportAlign;",
-      "include": "flight/types/viewport_align.hpp",
-      "diagnostic": "'ViewportAlign' was not declared in this scope; did you mean 'flight::types::ViewportAlign'?",
-      "defect": "The emitter writes ViewportAlign unqualified inside namespace flight::node, where the type is flight::types::ViewportAlign. A types-owned name used from another package's namespace without qualification, and without the header that defines it.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
@@ -1069,18 +865,6 @@
       "defect": "The emitter writes the FUNCTION create_rectangle unqualified inside namespace flight::node, where it lives in flight::geometry. Same defect as the unqualified type names, on a function rather than a type: a using-declaration introduces the name and nothing else, so it stays inside the rule that a repair adds no behavior.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "node-bare-node-template-argument",
-      "kind": "name-defaulted-template-argument",
-      "appliesTo": "flight/node/",
-      "symbol": "Node",
-      "defaultArgument": "flight::Ref<flight::types::NodeTraits>",
-      "sourceDeclaration": "packages/types/src/Node.ts:19 -- export interface Node<Traits extends object = NodeTraits> extends NodeTraits, Entity",
-      "diagnostic": "type/value mismatch at argument 1 in template parameter list for 'flight::Ref'; note: expected a type, got 'Node'",
-      "defect": "TypeScript's Node declares a DEFAULT type parameter (Traits extends object = NodeTraits), so a bare `Node` in the source means Node<NodeTraits>. The emitter drops the default from the generated template and then writes the bare name in template-argument position, which is not a type in C++. Five occurrences in flight/node/hierarchy.hpp, all inside flight::Ref<...>.\n\nThe argument is spelled flight::Ref<flight::types::NodeTraits> because that is how the emitter itself spells this instantiation everywhere it does supply the argument -- eight occurrences of Node<flight::Ref<flight::types::NodeTraits>> in the tree, and none of a bare Node<NodeTraits>. That is the authority for the spelling, not a guess: an earlier version of this repair wrote the unqualified flight::types::NodeTraits and the resulting Node<NodeTraits> did not convert to the emitter's Node<Ref<NodeTraits>> at the call to set_reparent_node_guard. It is also the semantically right answer -- NodeTraits derives from flight::ReferenceEnabled, and TypeScript object types lower through Ref.\n\nNote that flight::types::NodeAny is NOT the right substitution either: it is Node<any>, a different instantiation from the declared default, and the tree uses it 29 times for genuinely untyped nodes.",
-      "expectedWhen": "always",
-      "expires": "when the emitter carries a declared default type parameter through to the use sites; sdk:check fails if this repair matches no header."
     },
     {
       "id": "create-signal-argument-from-assignment",
@@ -3901,26 +3685,6 @@
       "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "materials-unqualified-entity-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/materials/",
-      "namespace": "flight::entity",
-      "symbols": [
-        {
-          "include": "flight/entity/entity.hpp",
-          "name": "allocate_entity"
-        },
-        {
-          "include": "flight/entity/entity.hpp",
-          "name": "finish_entity"
-        }
-      ],
-      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
-      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::materials. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "media-unqualified-entity-names",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/media/",
@@ -4277,26 +4041,6 @@
       ],
       "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
       "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::scene2d_formats. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "scene3d-unqualified-entity-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/scene3d/",
-      "namespace": "flight::entity",
-      "symbols": [
-        {
-          "include": "flight/entity/entity.hpp",
-          "name": "allocate_entity"
-        },
-        {
-          "include": "flight/entity/entity.hpp",
-          "name": "finish_entity"
-        }
-      ],
-      "diagnostic": "'allocate_entity' was not declared in this scope -- flight::entity::allocate_entity",
-      "defect": "The emitter writes flight::entity's two-phase construction helpers unqualified inside namespace flight::scene3d. They are declared in flight/entity/entity.hpp as template functions, which is why a declaration index matching only struct/class/using misses them, and gcc does not always offer a `did you mean` for them.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies flight::entity's helpers used from another package's namespace; sdk:check fails if this repair matches no header."
     },
@@ -5161,18 +4905,6 @@
       "expires": "when the emitter lowers a symbol-keyed read the way it already lowers the write; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "mesh-entity-runtime-key-member",
-      "kind": "project-symbol-keyed-member",
-      "appliesTo": "flight/mesh/",
-      "symbol": "entity_runtime_key",
-      "member": "entity_runtime_key",
-      "sourceDeclaration": "flight/types/entity.hpp emits BOTH `std::optional<flight::Ref<EntityRuntime>> entity_runtime_key;` as a member of Entity and `inline const flight::Symbol entity_runtime_key = flight::Symbol::for_key(flight::String(\"EntityRuntime\"));` beside it.",
-      "diagnostic": "no match for 'operator[]' (operand types are 'flight::Ref<...>' and 'const flight::Symbol')",
-      "defect": "The emitter lowers TypeScript's symbol-keyed [EntityRuntimeKey] to a plain member named entity_runtime_key, and uses that member correctly in flight/entity/binding.hpp. At 4 site(s) in this package (mesh/mesh_geometry.hpp) it subscripts the receiver with the same-named Symbol constant instead, which nothing can answer: a Symbol is a runtime value so a subscript cannot select a member, and several receivers are flight::Ref, i.e. std::shared_ptr, which cannot be given an operator[]. The rewrite uses the emitter's own spelling and preserves absence, since the member is declared std::optional. GAIN NOT YET MEASURED: the read sites cast to std::optional<flight::Ref<SomeRuntime>> while the member is std::optional<flight::Ref<EntityRuntime>>, and a static_cast between two std::optionals of different shared_ptrs needs std::static_pointer_cast, so those sites likely expose a second diagnostic rather than closing.",
-      "expectedWhen": "always",
-      "expires": "when the emitter lowers a symbol-keyed read the way it already lowers the write; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "render-wgpu-entity-runtime-key-member",
       "kind": "project-symbol-keyed-member",
       "appliesTo": "flight/render_wgpu/",
@@ -5193,18 +4925,6 @@
       "sourceDeclaration": "flight/types/entity.hpp emits BOTH `std::optional<flight::Ref<EntityRuntime>> entity_runtime_key;` as a member of Entity and `inline const flight::Symbol entity_runtime_key = flight::Symbol::for_key(flight::String(\"EntityRuntime\"));` beside it.",
       "diagnostic": "no match for 'operator[]' (operand types are 'flight::Ref<...>' and 'const flight::Symbol')",
       "defect": "The emitter lowers TypeScript's symbol-keyed [EntityRuntimeKey] to a plain member named entity_runtime_key, and uses that member correctly in flight/entity/binding.hpp. At 2 site(s) in this package (scene2d/scene2d.hpp) it subscripts the receiver with the same-named Symbol constant instead, which nothing can answer: a Symbol is a runtime value so a subscript cannot select a member, and several receivers are flight::Ref, i.e. std::shared_ptr, which cannot be given an operator[]. The rewrite uses the emitter's own spelling and preserves absence, since the member is declared std::optional. GAIN NOT YET MEASURED: the read sites cast to std::optional<flight::Ref<SomeRuntime>> while the member is std::optional<flight::Ref<EntityRuntime>>, and a static_cast between two std::optionals of different shared_ptrs needs std::static_pointer_cast, so those sites likely expose a second diagnostic rather than closing.",
-      "expectedWhen": "always",
-      "expires": "when the emitter lowers a symbol-keyed read the way it already lowers the write; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "scene2d-canvas-entity-runtime-key-member",
-      "kind": "project-symbol-keyed-member",
-      "appliesTo": "flight/scene2d_canvas/",
-      "symbol": "entity_runtime_key",
-      "member": "entity_runtime_key",
-      "sourceDeclaration": "flight/types/entity.hpp emits BOTH `std::optional<flight::Ref<EntityRuntime>> entity_runtime_key;` as a member of Entity and `inline const flight::Symbol entity_runtime_key = flight::Symbol::for_key(flight::String(\"EntityRuntime\"));` beside it.",
-      "diagnostic": "no match for 'operator[]' (operand types are 'flight::Ref<...>' and 'const flight::Symbol')",
-      "defect": "The emitter lowers TypeScript's symbol-keyed [EntityRuntimeKey] to a plain member named entity_runtime_key, and uses that member correctly in flight/entity/binding.hpp. At 2 site(s) in this package (scene2d_canvas/canvas_render_state.hpp, scene2d_canvas/canvas_texture_resolver.hpp) it subscripts the receiver with the same-named Symbol constant instead, which nothing can answer: a Symbol is a runtime value so a subscript cannot select a member, and several receivers are flight::Ref, i.e. std::shared_ptr, which cannot be given an operator[]. The rewrite uses the emitter's own spelling and preserves absence, since the member is declared std::optional. GAIN NOT YET MEASURED: the read sites cast to std::optional<flight::Ref<SomeRuntime>> while the member is std::optional<flight::Ref<EntityRuntime>>, and a static_cast between two std::optionals of different shared_ptrs needs std::static_pointer_cast, so those sites likely expose a second diagnostic rather than closing.",
       "expectedWhen": "always",
       "expires": "when the emitter lowers a symbol-keyed read the way it already lowers the write; sdk:check fails if this repair matches no header."
     },
@@ -9321,22 +9041,6 @@
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "spritesheet-unqualified-signals-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/spritesheet/",
-      "namespace": "flight::signals",
-      "symbols": [
-        {
-          "include": "flight/signals/slot.hpp",
-          "name": "clear_signal"
-        }
-      ],
-      "diagnostic": "'clear_signal' was not declared in this scope",
-      "defect": "The emitter writes 1 name(s) owned by flight::signals unqualified inside namespace flight::spritesheet, without the headers that declare them. Collected by scanning for each flight::signals function used without a qualifier, with C++ builtin types filtered out -- an earlier pass reported 'void' in 101 packages because std::function<void( matches a bare-name pattern.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "statusbar-unqualified-signals-names",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/statusbar/",
@@ -9521,22 +9225,6 @@
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "mesh-unqualified-geometry-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/mesh/",
-      "namespace": "flight::geometry",
-      "symbols": [
-        {
-          "include": "flight/geometry/aabb.hpp",
-          "name": "create_aabb"
-        }
-      ],
-      "diagnostic": "'create_aabb' was not declared in this scope",
-      "defect": "The emitter writes 1 function name(s) owned by flight::geometry unqualified inside namespace flight::mesh. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "scene3d-unqualified-geometry-names",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/scene3d/",
@@ -9689,50 +9377,6 @@
       ],
       "diagnostic": "'create_uniform_grid_spatial_backend2_d' was not declared in this scope",
       "defect": "The emitter writes 1 function name(s) owned by flight::spatial unqualified inside namespace flight::physics2d. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "physics3d-unqualified-collision-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/physics3d/",
-      "namespace": "flight::collision",
-      "symbols": [
-        {
-          "include": "flight/collision/raycast_collision_shape3_d.hpp",
-          "name": "create_collision_raycast_hit3_d"
-        },
-        {
-          "include": "flight/collision/sweep_collision_shape3_d.hpp",
-          "name": "create_collision_time_of_impact3_d"
-        },
-        {
-          "include": "flight/collision/triangle_mesh3_d.hpp",
-          "name": "write_collision_heightfield_bounds3_d"
-        },
-        {
-          "include": "flight/collision/triangle_mesh3_d.hpp",
-          "name": "write_collision_triangle_mesh_bounds3_d"
-        }
-      ],
-      "diagnostic": "'create_collision_raycast_hit3_d' was not declared in this scope",
-      "defect": "The emitter writes 4 function name(s) owned by flight::collision unqualified inside namespace flight::physics3d. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "physics3d-unqualified-log-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/physics3d/",
-      "namespace": "flight::log",
-      "symbols": [
-        {
-          "include": "flight/log/log.hpp",
-          "name": "log_once"
-        }
-      ],
-      "diagnostic": "'log_once' was not declared in this scope",
-      "defect": "The emitter writes 1 function name(s) owned by flight::log unqualified inside namespace flight::physics3d. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
@@ -11662,22 +11306,6 @@
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "scene2d-canvas-unqualified-scene2d-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/scene2d_canvas/",
-      "namespace": "flight::scene2d",
-      "symbols": [
-        {
-          "include": "flight/scene2d/sprite.hpp",
-          "name": "create_sprite_renderer_data"
-        }
-      ],
-      "diagnostic": "'create_sprite_renderer_data' was not declared in this scope",
-      "defect": "The emitter writes 1 function name(s) owned by flight::scene2d unqualified inside namespace flight::scene2d_canvas. Collected by compiling the package with -fmax-errors=0 and resolving each name to the single package namespace that defines it; a name defined in more than one namespace is reported, never guessed. Same-package hits are excluded because those are cascade artifacts -- a definition whose parameter type failed to parse leaves its own name undeclared at every call site.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "scene-document-refusal-reason-import-alias",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/scene_document/",
@@ -11688,30 +11316,6 @@
       "defect": "The emitter retains the source import alias FlightDocumentRefusalReasonType at use sites but emits only the underlying flight::types::FlightDocumentRefusalReason alias. Repeating that exact type alias restores the source binding without creating a new type.",
       "expectedWhen": "always",
       "expires": "when the emitter preserves imported type aliases or spells their underlying type; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "node-unqualified-geometry-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/node/",
-      "namespace": "flight::geometry",
-      "symbols": [
-        {
-          "include": "flight/geometry/matrix4_pool.hpp",
-          "name": "acquire_matrix4"
-        },
-        {
-          "include": "flight/geometry/matrix4.hpp",
-          "name": "matrix4_transform_point"
-        },
-        {
-          "include": "flight/geometry/matrix4_pool.hpp",
-          "name": "release_matrix4"
-        }
-      ],
-      "diagnostic": "there are no arguments to 'acquire_matrix4' that depend on a template parameter, so a declaration of 'acquire_matrix4' must be available",
-      "defect": "The emitter retains the imported acquireMatrix4 call unqualified inside flight::node and does not bring the defining matrix-pool header into the template definition context. The using declaration restores the exact imported binding.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies imported geometry functions and orders their includes before template definitions; sdk:check fails if this repair matches no header."
     },
     {
       "id": "particleemitter-unqualified-geometry-names",
@@ -11866,26 +11470,6 @@
       "expires": "when the emitter qualifies the imported texture-atlas grid factory or emits its using declaration; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "spritesheet-unqualified-entity-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/spritesheet/",
-      "namespace": "flight::entity",
-      "symbols": [
-        {
-          "include": "flight/entity/entity.hpp",
-          "name": "allocate_entity"
-        },
-        {
-          "include": "flight/entity/entity.hpp",
-          "name": "finish_entity"
-        }
-      ],
-      "diagnostic": "'allocate_entity' was not declared in this scope",
-      "defect": "The emitter retains the two imported entity construction functions unqualified in spritesheet_player.hpp and omits their defining bindings.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies imported entity functions in spritesheet; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "skeleton3d-node-transform-access",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/skeleton3d/",
@@ -11896,18 +11480,6 @@
       "defect": "The skeleton emitter retains calls to the refused node world-transform boundary without including the runtime extension that states the unavailable checked owner.",
       "expectedWhen": "always",
       "expires": "when getNodeWorldMatrix4 emits with its checked runtime owner or skeleton consumers include that boundary; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "skeleton3d-node-hierarchy-access",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/skeleton3d/",
-      "symbol": "get_node_parent",
-      "declaration": "using flight::node::get_node_parent;",
-      "include": "flight/node/hierarchy_access.hpp",
-      "diagnostic": "'get_node_parent' is not a member of 'flight::node'",
-      "defect": "The skeleton emitter retains qualified calls to the refused node-parent boundary without including a portable declaration of its checked runtime-owner requirement.",
-      "expectedWhen": "always",
-      "expires": "when getNodeParent emits with its NodeRuntime owner or skeleton consumers include that boundary; sdk:check fails if this repair matches no header."
     },
     {
       "id": "layout-bare-layout-node-template-argument",
@@ -11944,18 +11516,6 @@
       "defect": "The scene-resource emitter retains qualified calls to the refused node-child mutation boundary without including the portable checked-owner refusal.",
       "expectedWhen": "always",
       "expires": "when removeNodeChild emits with its NodeRuntime owner or scene-resource consumers include that boundary; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "gizmo-nodeof-type-name",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/gizmo/",
-      "symbol": "NodeOf",
-      "declaration": "using flight::types::NodeOf;",
-      "include": "flight/types/node.hpp",
-      "diagnostic": "'NodeOf' was not declared in this scope",
-      "defect": "The emitter retains the imported NodeOf alias unqualified inside gizmo_state.hpp and omits its defining header and using declaration.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies the imported NodeOf alias; sdk:check fails if this repair matches no header."
     },
     {
       "id": "gizmo-node-transform-access",
@@ -12759,18 +12319,6 @@
       "expires": "when readonly object views used as identity-map keys retain their shared owner for lookup as they already do for erase; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "scene2d-canvas-material-registry-nullish-table",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/scene2d_canvas/canvas_material_registry.hpp",
-      "from": "std::variant<flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_663c6e0d48719ee1>, std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::CanvasMaterialRenderer>>>> table = ([&]() -> std::variant<flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_663c6e0d48719ee1>, std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::CanvasMaterialRenderer>>>> { auto contextual_union_source = runtime->registries->material_renderers; if (contextual_union_source.has_value()) return std::variant<flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_663c6e0d48719ee1>, std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::CanvasMaterialRenderer>>>>{std::in_place_type<std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::CanvasMaterialRenderer>>>>, contextual_union_source.value()}; return std::variant<flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_663c6e0d48719ee1>, std::shared_ptr<flight::types::KeyedTable<flight::Ref<flight::types::CanvasMaterialRenderer>>>>{std::in_place_type<flight::Ref<on_miss_registry_entries_shape_entity_runtime_key_663c6e0d48719ee1>>, flight::registry::create_keyed_table<flight::Ref<flight::types::CanvasMaterialRenderer>>(flight::String(\"CanvasMaterialRenderer\"), flight::String(\"StandardMaterial\"))}; }());",
-      "to": "flight::Ref<flight::types::KeyedTable<flight::Ref<flight::types::CanvasMaterialRenderer>>> table = runtime->registries->material_renderers.value_or(flight::registry::create_keyed_table<flight::Ref<flight::types::CanvasMaterialRenderer>>(flight::String(\"CanvasMaterialRenderer\"), flight::String(\"StandardMaterial\")));",
-      "sourceDeclaration": "packages/scene2d-canvas/src/canvasMaterialRegistry.ts -- materialRenderers and createKeyedTable both have KeyedTable<CanvasMaterialRenderer> identity and are combined only by nullish coalescing",
-      "diagnostic": "cannot construct the anonymous derived KeyedTable variant arm from create_keyed_table's canonical KeyedTable owner",
-      "defect": "The contextual-union emitter flattens the absent branch into an anonymous structural subtype even though both sides of the nullish expression are the same named KeyedTable owner. Keeping the canonical owner preserves the source's one table identity and matches with_registry_table_entry's parameter.",
-      "expectedWhen": "always",
-      "expires": "when nullish coalescing normalizes two spellings of the same named reference owner before constructing a contextual union; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "structural-record-entity-runtime-key-member-spelling",
       "kind": "respell-reference-member-access",
       "appliesTo": "flight/",
@@ -12819,18 +12367,6 @@
       "expires": "when refused declarations referenced by retained exported bindings receive declarations automatically; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "scene2d-canvas-bitmap-text-noop-renderer-adapter",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/scene2d_canvas/canvas_bitmap_text.hpp",
-      "from": ".create_data = noop_renderer_data",
-      "to": ".create_data = [](flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::Sprite>) -> std::optional<flight::Ref<flight::types::RendererData>> { return std::nullopt; }",
-      "sourceDeclaration": "packages/scene2d-canvas/src/canvasBitmapText.ts -- defaultCanvasBitmapTextRenderer.createData is noopRendererData, whose implementation always returns null and ignores both parameters",
-      "diagnostic": "noop_renderer_data's Renderable parameter cannot convert to SpriteRenderer.create_data's Sprite parameter",
-      "defect": "The emitter retains the wider generic helper signature instead of contextualizing the function reference to SpriteRenderer.createData. A typed lambda preserves the helper's exact no-op result while matching the declared callback boundary.",
-      "expectedWhen": "always",
-      "expires": "when function references are contextually adapted to the destination callback parameter types; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "scene2d-canvas-bitmap-text-submit-render-state-adapter",
       "kind": "respell-reference-member-access",
       "appliesTo": "flight/scene2d_canvas/canvas_bitmap_text.hpp",
@@ -12853,18 +12389,6 @@
       "defect": "The emitter refuses the particle draw implementation at a contextual optional construction but retains the exported default renderer value that stores the exact callback boundary.",
       "expectedWhen": "always",
       "expires": "when refused declarations referenced by retained exported bindings receive declarations automatically; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "scene2d-canvas-particle-emitter-noop-renderer-adapter",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/scene2d_canvas/canvas_particle_emitter2_d.hpp",
-      "from": ".create_data = noop_renderer_data",
-      "to": ".create_data = [](flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::Sprite>) -> std::optional<flight::Ref<flight::types::RendererData>> { return std::nullopt; }",
-      "sourceDeclaration": "packages/scene2d-canvas/src/canvasParticleEmitter2D.ts -- defaultCanvasParticleEmitter2DRenderer.createData is noopRendererData, whose implementation always returns null and ignores both parameters",
-      "diagnostic": "noop_renderer_data's Renderable parameter cannot convert to SpriteRenderer.create_data's Sprite parameter",
-      "defect": "The emitter retains the wider generic helper signature instead of contextualizing the function reference to SpriteRenderer.createData.",
-      "expectedWhen": "always",
-      "expires": "when function references are contextually adapted to the destination callback parameter types; sdk:check fails if this repair matches no header."
     },
     {
       "id": "scene2d-canvas-particle-emitter-submit-render-state-adapter",
@@ -12891,18 +12415,6 @@
       "expires": "when refused declarations referenced by retained exported bindings receive declarations automatically; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "scene2d-canvas-quad-batch-noop-renderer-adapter",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/scene2d_canvas/canvas_quad_batch.hpp",
-      "from": ".create_data = noop_renderer_data",
-      "to": ".create_data = [](flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::Sprite>) -> std::optional<flight::Ref<flight::types::RendererData>> { return std::nullopt; }",
-      "sourceDeclaration": "packages/scene2d-canvas/src/canvasQuadBatch.ts -- defaultCanvasQuadBatchRenderer.createData is noopRendererData, whose implementation always returns null and ignores both parameters",
-      "diagnostic": "noop_renderer_data's Renderable parameter cannot convert to SpriteRenderer.create_data's Sprite parameter",
-      "defect": "The emitter retains the wider generic helper signature instead of contextualizing the function reference to SpriteRenderer.createData.",
-      "expectedWhen": "always",
-      "expires": "when function references are contextually adapted to the destination callback parameter types; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "scene2d-canvas-quad-batch-submit-render-state-adapter",
       "kind": "respell-reference-member-access",
       "appliesTo": "flight/scene2d_canvas/canvas_quad_batch.hpp",
@@ -12925,18 +12437,6 @@
       "defect": "The emitter refuses the rich-text draw implementation at a nullable runtime slot test but retains the exported default renderer value that stores the exact callback boundary.",
       "expectedWhen": "always",
       "expires": "when refused declarations referenced by retained exported bindings receive declarations automatically; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "scene2d-canvas-rich-text-renderer-callback-adapters",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/scene2d_canvas/canvas_rich_text.hpp",
-      "from": "Scene2DRenderer{.create_data = noop_renderer_data, .submit = draw_canvas_rich_text}",
-      "to": "Scene2DRenderer{.create_data = [](flight::Ref<flight::types::RenderState>, flight::types::Node2D) -> std::optional<flight::Ref<flight::types::RendererData>> { return std::nullopt; }, .submit = [](flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy2D> node) { draw_canvas_rich_text(std::reinterpret_pointer_cast<flight::types::CanvasRenderState>(state), node); }}",
-      "sourceDeclaration": "packages/scene2d-canvas/src/canvasRichText.ts -- defaultCanvasRichTextRenderer assigns noopRendererData and drawCanvasRichText to Scene2DRenderer callbacks; the former always returns null and the latter runs only for CanvasRenderState",
-      "diagnostic": "generic noop and CanvasRenderState draw callbacks cannot convert to the invariant Scene2DRenderer std::function fields",
-      "defect": "The emitter loses TypeScript's callback parameter adaptation when lowering structurally narrowed renderer methods to invariant std::function signatures. Canvas installs the callback only on an object allocated as CanvasRenderState, so the flattened RenderState parameter is a view of that same allocation; reinterpret_pointer_cast preserves the shared control block and restores the erased backend narrowing without creating state.",
-      "expectedWhen": "always",
-      "expires": "when callback assignment adapts contravariant parameters and backend state narrowing explicitly; sdk:check fails if this repair matches no header."
     },
     {
       "id": "effects-canvas-source-target-readonly-binding-cell",
@@ -13370,18 +12870,6 @@
       "expires": "when refused generic declarations referenced by retained closed-specialization callers receive declarations automatically; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "scene2d-canvas-get-shape-command-declaration",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/scene2d_canvas/canvas_shape_registry.hpp",
-      "symbol": "get_canvas_shape_command",
-      "declaration": "inline std::optional<flight::Ref<flight::types::CanvasShapeCommand<flight::String>>> get_canvas_shape_command(flight::Ref<flight::types::RenderState> state, flight::String key);",
-      "sourceDeclaration": "packages/scene2d-canvas/src/canvasShapeRegistry.ts -- getCanvasShapeCommand(state: RenderState, key: string): CanvasShapeCommand | null; ShapeCommandKey is the string alias used by the default CanvasShapeCommand specialization",
-      "diagnostic": "get_canvas_shape_command was not declared in this scope",
-      "defect": "The emitter refuses the registry lookup at its typeOf boundary but retains canvas command rendering that calls the exact closed string-key specialization.",
-      "expectedWhen": "always",
-      "expires": "when refused registry lookup declarations referenced by retained callers receive declarations automatically; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "scene2d-canvas-flush-shape-path-declaration",
       "kind": "insert-forward-declaration",
       "appliesTo": "flight/scene2d_canvas/canvas_shape.hpp",
@@ -13392,30 +12880,6 @@
       "defect": "The emitter refuses the private path flush implementation at nullable Canvas shape matrix storage but retains both the draw-state callback and command loop that call its exact source signature.",
       "expectedWhen": "always",
       "expires": "when refused private declarations referenced by retained functions receive declarations automatically; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "scene2d-canvas-shape-draw-state-designator-order",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/scene2d_canvas/canvas_shape.hpp",
-      "from": "CanvasShapeDrawState{.allow_smoothing = allow_smoothing, .bitmap_h = 0.0, .bitmap_src = nullptr, .bitmap_w = 0.0, .canvas_texture_resolvers = resolvers, .current_x = 0.0, .current_y = 0.0, .fill_matrix = nullptr, .fill_matrix_inverse = nullptr, .fill_style = flight::String(\"\"), .has_fill = false, .has_pending_path = false, .has_current_point = false, .has_stroke = false, .line_scale_mode = flight::String(\"normal\"), .stroke_style = flight::String(\"\"), .stroke_width = 1.0, .subpath_start_x = 0.0, .subpath_start_y = 0.0, .winding_rule = flight::String(\"evenodd\"), .flush = [=]() { return flush_canvas_shape_path(context, state); }}",
-      "to": "CanvasShapeDrawState{.canvas_texture_resolvers = resolvers, .allow_smoothing = allow_smoothing, .has_fill = false, .fill_style = flight::String(\"\"), .fill_matrix = nullptr, .fill_matrix_inverse = nullptr, .has_stroke = false, .line_scale_mode = flight::String(\"normal\"), .stroke_style = flight::String(\"\"), .stroke_width = 1.0, .current_x = 0.0, .current_y = 0.0, .has_pending_path = false, .has_current_point = false, .subpath_start_x = 0.0, .subpath_start_y = 0.0, .winding_rule = flight::String(\"evenodd\"), .bitmap_src = std::nullopt, .bitmap_w = 0.0, .bitmap_h = 0.0, .flush = [=]() { return flush_canvas_shape_path(context, state); }}",
-      "sourceDeclaration": "packages/scene2d-canvas/src/canvasShape.ts -- createCanvasShapeDrawState initializes every CanvasShapeDrawState field; packages/types/src/CanvasShapeDrawState.ts fixes the emitted aggregate member order",
-      "diagnostic": "designator order for CanvasShapeDrawState::bitmap_src does not match declaration order",
-      "defect": "The emitter preserves source object-literal property order in a C++20 designated initializer even when the target interface declaration has a different member order, and lowers the nullable non-reference bitmap source as nullptr instead of the optional carrier's empty value.",
-      "expectedWhen": "always",
-      "expires": "when aggregate initialization follows the emitted target member order and nullable value members use their optional empty value; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "scene2d-canvas-render-registry-enum-access",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/scene2d_canvas/canvas_shape.hpp",
-      "from": "render_registry_table.shape_command_handler",
-      "to": "flight::types::RenderRegistryTable::ShapeCommandHandler",
-      "sourceDeclaration": "packages/types/src/RenderRegistrySignals.ts -- RenderRegistryTable is a numeric enum with member ShapeCommandHandler; packages/scene2d-canvas/src/canvasShape.ts passes that member to registryMiss",
-      "diagnostic": "render_registry_table was not declared in this scope",
-      "defect": "The emitter lowers a TypeScript enum member as snake-cased object property access instead of the emitted scoped C++ enum type and member.",
-      "expectedWhen": "always",
-      "expires": "when enum member expressions lower to scoped C++ enum access; sdk:check fails if this repair matches no header."
     },
     {
       "id": "render-wgpu-render-texture-guard-nullable-assignment",

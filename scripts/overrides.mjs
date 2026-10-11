@@ -76,10 +76,10 @@ export function loadOverrides(root) {
             'An override that does not compile cannot be supplying anything.',
         );
       }
-      if (entry.remaining !== undefined && !/^None\b/iu.test(entry.remaining.trim())) {
+      if (entry.remaining === undefined || !/^None\b/iu.test(entry.remaining.trim())) {
         throw new Error(
-          `Override ${entry.id} claims to faithfully supply ${entry.supplies} but also records ` +
-            `remaining behavior: ${entry.remaining}`,
+          `Override ${entry.id} claims to faithfully supply ${entry.supplies} but does not explicitly ` +
+            `record that no behavior remains (remaining: ${entry.remaining ?? '<absent>'})`,
         );
       }
     }
@@ -89,6 +89,17 @@ export function loadOverrides(root) {
     const file_ = path.join(overridesIncludeDirectory(root), entry.path);
     if (!existsSync(file_)) {
       throw new Error(`Override ${entry.id} declares ${entry.path}, which is absent from overrides/include`);
+    }
+    // A fail-loud host boundary is preferable to fabricating a successful native result, but it is
+    // still missing runtime behavior. Keep that distinction machine-readable: otherwise a compiling
+    // override whose body says the operation is unavailable can silently promote its package to the
+    // shippable tier.
+    const contents = readFileSync(file_, 'utf8');
+    if (/unavailable in this profile/iu.test(contents) &&
+        (entry.remaining === undefined || /^None\b/iu.test(entry.remaining.trim()))) {
+      throw new Error(
+        `Override ${entry.id} contains an unavailable native profile boundary and must say what remains`,
+      );
     }
   }
   return parsed.overrides;
