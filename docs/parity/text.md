@@ -410,4 +410,3 @@ whichever lane owns it.
 `textureatlas`, `textureatlas-formats` (atlas resource plumbing, GL+2D), `layout` (UI layout,
 core), `image` / `image-codec` (core), `render`, `scene2d*`, `gui`. `font` and `font-formats` are
 members here even though the GL/2D examples consume them through the SDL host.
-
