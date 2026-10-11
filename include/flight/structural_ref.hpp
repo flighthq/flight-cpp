@@ -123,10 +123,18 @@ class TypedRowCell : public RowCell {
   // only place that knowledge exists once the value has been erased -- so the check belongs here
   // rather than at the call site guessing.
   bool assign_any(const Any& value) final {
-    auto typed = detail::any_to<Value>(value);
-    if (!typed) return false;
-    set(std::move(*typed));
-    return true;
+    // `row_set(out, key, std::nullopt)` names TypedRowCell<std::nullopt_t> while looking for a cell,
+    // and clang instantiates this inline virtual with the class. `any_to<std::nullopt_t>` would
+    // return `std::optional<std::nullopt_t>`, which <optional> forbids, and no erased value is ever
+    // a `nullopt_t` or `in_place_t` cell value, so the write is refused before that is spelled.
+    if constexpr (std::same_as<Value, std::nullopt_t> || std::same_as<Value, std::in_place_t>) {
+      return false;
+    } else {
+      auto typed = detail::any_to<Value>(value);
+      if (!typed) return false;
+      set(std::move(*typed));
+      return true;
+    }
   }
 
   bool assign_from(RowCell& other) final {

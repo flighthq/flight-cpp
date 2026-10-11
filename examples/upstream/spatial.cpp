@@ -14,9 +14,11 @@
 #include <exception>
 #include <iostream>
 #include <random>
+#include <set>
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 namespace {
@@ -207,6 +209,25 @@ class SpatialExample final {
            a.min_y < b.max_y && a.max_y > b.min_y;
   }
 
+  [[nodiscard]] static bool shares_grid_cell(
+      const flight::types::SpatialAabb2D& a,
+      const flight::types::SpatialAabb2D& b) {
+    constexpr double cell_size = 100.0;
+    const double shared_min_x = std::max(
+        std::floor(a.min_x / cell_size),
+        std::floor(b.min_x / cell_size));
+    const double shared_max_x = std::min(
+        std::floor(a.max_x / cell_size),
+        std::floor(b.max_x / cell_size));
+    const double shared_min_y = std::max(
+        std::floor(a.min_y / cell_size),
+        std::floor(b.min_y / cell_size));
+    const double shared_max_y = std::min(
+        std::floor(a.max_y / cell_size),
+        std::floor(b.max_y / cell_size));
+    return shared_min_x <= shared_max_x && shared_min_y <= shared_max_y;
+  }
+
   void verify_smoke(std::size_t updated_count) const {
     if (inserted_count_ != objects_.size() || updated_count != 5 ||
         active_mode_ != Mode::region || mouse_x_ != width * 0.5 ||
@@ -248,18 +269,34 @@ class SpatialExample final {
 
     flight::Array<flight::Ref<flight::types::SpatialPair>> probe_pairs;
     flight::spatial::query_spatial_pairs2_d(index_, probe_pairs);
-    std::size_t expected_pair_count{};
+    std::set<std::pair<std::size_t, std::size_t>> candidate_pairs;
+    for (const auto& pair : probe_pairs) {
+      const auto first_index = static_cast<std::size_t>(pair->a);
+      const auto second_index = static_cast<std::size_t>(pair->b);
+      if (pair->a != static_cast<double>(first_index) ||
+          pair->b != static_cast<double>(second_index) ||
+          first_index >= objects_.size() || second_index >= objects_.size() ||
+          first_index >= second_index ||
+          !shares_grid_cell(*objects_[first_index].bounds, *objects_[second_index].bounds)) {
+        throw std::runtime_error("spatial pair query returned an invalid broadphase candidate");
+      }
+      candidate_pairs.emplace(first_index, second_index);
+    }
+    if (candidate_pairs.size() != probe_pairs.size()) {
+      throw std::runtime_error("spatial pair query returned a duplicate broadphase candidate");
+    }
     for (std::size_t first_index = 0; first_index < objects_.size(); ++first_index) {
       for (std::size_t second_index = first_index + 1;
            second_index < objects_.size();
            ++second_index) {
-        if (overlaps(*objects_[first_index].bounds, *objects_[second_index].bounds)) {
-          ++expected_pair_count;
+        const bool expected = shares_grid_cell(
+            *objects_[first_index].bounds,
+            *objects_[second_index].bounds);
+        const bool present = candidate_pairs.contains({first_index, second_index});
+        if (expected != present) {
+          throw std::runtime_error("spatial pair query did not match the indexed grid cells");
         }
       }
-    }
-    if (probe_pairs.size() != expected_pair_count) {
-      throw std::runtime_error("spatial pair query did not match the indexed bounds");
     }
   }
 
