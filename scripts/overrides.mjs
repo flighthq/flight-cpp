@@ -76,6 +76,12 @@ export function loadOverrides(root) {
             'An override that does not compile cannot be supplying anything.',
         );
       }
+      if (entry.remaining !== undefined && !/^None\b/iu.test(entry.remaining.trim())) {
+        throw new Error(
+          `Override ${entry.id} claims to faithfully supply ${entry.supplies} but also records ` +
+            `remaining behavior: ${entry.remaining}`,
+        );
+      }
     }
     if (entry.status === 'incomplete' && (typeof entry.remaining !== 'string' || entry.remaining.length === 0)) {
       throw new Error(`Override ${entry.id} is incomplete and must say what remains`);

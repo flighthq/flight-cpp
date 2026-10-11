@@ -2641,6 +2641,13 @@ void test_new_runtime_services() {
   const auto first_function = flight::Function<void()>([] {});
   const auto second_function = flight::Function<void()>([] {});
   check(first_function != second_function, "distinct Function constructions retain distinct identities");
+  const std::function<void()> erased_first = first_function;
+  const std::function<void()> erased_first_copy = erased_first;
+  const std::function<void()> erased_second = second_function;
+  check(flight::callable_identity_equal(erased_first, erased_first_copy),
+        "std::function preserves an explicitly retained Flight Function identity");
+  check(!flight::callable_identity_equal(erased_first, erased_second),
+        "distinct Flight Function identities survive std::function erasure");
 
   int identified_ignored_calls = 0;
   const auto identified_ignored_arguments =

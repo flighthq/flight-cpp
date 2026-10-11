@@ -193,6 +193,13 @@ for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
   process.on(signal, () => {
     revertSourcePatches(sourcePatches, flight);
     revertSourcePatches(sourcePatches, compiler);
+    // The patched compiler build is an output outside Git, so reverting sources alone leaves later
+    // oracles loading code that no longer corresponds to the clean checkout. Force the next consumer
+    // to rebuild from the restored source when a signal prevents normal cleanup.
+    rmSync(path.join(compiler.directory, 'packages', 'tool-compiler', 'dist'), {
+      force: true,
+      recursive: true,
+    });
     process.exit(signal === 'SIGINT' ? 130 : 143);
   });
 }
@@ -227,7 +234,13 @@ try {
 } finally {
   revertSourcePatches(sourcePatches, flight);
   revertSourcePatches(sourcePatches, compiler);
-  rmSync(temporaryRoot, { force: true, recursive: true });
+  // Source patches are generation-local. Restore the compiler build as well as its source so later
+  // profile/oracle runs cannot inherit a patched dist tree from whichever generation ran last.
+  try {
+    runCompilerBuild(compiler.directory);
+  } finally {
+    rmSync(temporaryRoot, { force: true, recursive: true });
+  }
 }
 
 async function generateSdk(outputRoot, flightDependency, compilerDependency, compilerModule, profiles, appliedPatches) {

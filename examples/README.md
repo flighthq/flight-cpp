@@ -47,16 +47,13 @@ cmake --build --preset development
 Close the window or press Escape to exit. The executable also accepts `--smoke`, which creates a hidden GL window,
 renders three frames, and exits; this is useful with an offscreen SDL video driver in automated environments.
 
-To regenerate `tween/generated/tween.hpp` with the compiler revision pinned by this repository:
+To regenerate the portable example headers with the compiler revision and declared C++ emission
+repairs pinned by this repository:
 
 ```sh
 npm run rehydrate
 npm ci --prefix .dependencies/flight-compiler
-npm --prefix .dependencies/flight-compiler run compile -- \
-  "$PWD/examples/tween/source" \
-  --target cpp \
-  --out "$PWD/examples/tween/generated" \
-  --package @flighthq/examples-tween
+npm run examples:portable:generate
 ```
 
 The upstream browser entry point itself cannot currently be transpiled. It contains executable module-level statements

@@ -57,7 +57,8 @@ int main() {
   options->resource = decltype(types::CreateTexture2DOptions::resource){
       std::in_place_type<flight::Ref<types::ExternalImageResourceReference>>, resource};
   const auto two_d = texture::create_texture2_d(options);
-  check(two_d->source == std::optional<flight::Ref<types::TextureSource>>{source},
+  check(two_d->source.has_value() &&
+            std::get<flight::Ref<types::TextureSource>>(two_d->source.value()) == source,
         "2D construction retains the source owner");
   check(two_d->sampler != sampler && two_d->sampler->anisotropy == 4.0,
         "2D construction deep-clones the sampler");
@@ -72,10 +73,16 @@ int main() {
 
   const auto array_options = flight::make_ref<texture::CreateTexture2DArrayVariantOptions>();
   array_options->dimension = flight::String("2d-array");
-  array_options->sources = flight::Array<std::optional<flight::Ref<types::TextureSource>>>{source};
+  array_options->sources = flight::Array<std::optional<types::TextureSourceValue>>{
+      types::TextureSourceValue{
+          std::in_place_type<flight::Ref<types::TextureSource>>, source}};
   const auto array_texture = texture::create_texture(array_options);
+  const auto array_source = array_texture->sources.get(0.0);
   check(array_texture->dimension == flight::String("2d-array") &&
-            array_texture->sources.size() == 1 && array_texture->sources.get(0.0) == source,
+            array_texture->sources.size() == 1 && array_source.has_value() &&
+            array_source.value().has_value() &&
+            std::get<flight::Ref<types::TextureSource>>(
+                array_source.value().value()) == source,
         "2D-array construction preserves its source list");
 
   const auto voxel = flight::make_ref<types::VoxelGrid>();
@@ -93,9 +100,7 @@ int main() {
   check(cube->dimension == flight::String("cube") && cube->sources.size() == 6,
         "cube construction supplies six absent faces by default");
 
-  using TextureLike2D =
-      typename std::variant_alternative_t<3, types::TextureLike>::element_type;
-  const auto source_view = flight::make_ref<TextureLike2D>();
+  const auto source_view = flight::make_ref<types::Texture2D>();
   source_view->color_space = flight::String("linear");
   source_view->flip_x = true;
   source_view->flip_y = false;
@@ -107,7 +112,7 @@ int main() {
   source_view->dimension = flight::String("2d");
   source_view->source = source;
   types::TextureLike source_union{
-      std::in_place_type<flight::Ref<TextureLike2D>>, source_view};
+      std::in_place_type<flight::Ref<types::Texture2D>>, source_view};
   const auto clone_union = texture::clone_texture(source_union);
   const auto clone = std::get<flight::Ref<types::Texture2D>>(clone_union);
   check(clone->source == source_view->source, "clone retains the source owner");

@@ -1,0 +1,59 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "sdl_host",
+    srcs = ["sdl_host.cpp"],
+    hdrs = ["sdl_host.hpp"],
+    tags = ["manual"],
+    deps = [
+        "//:host_sdl",
+        "//:sdk_preview",
+    ],
+)
+
+cc_binary(
+    name = "camera2d",
+    srcs = ["camera2d.cpp"],
+    tags = ["manual"],
+    deps = [":sdl_host", "//:sdk_preview"],
+)
+
+cc_binary(
+    name = "clock",
+    srcs = ["clock.cpp"],
+    tags = ["manual"],
+    deps = [":sdl_host", "//:sdk_preview"],
+)
+
+cc_binary(
+    name = "collision",
+    srcs = ["collision.cpp"],
+    tags = ["manual"],
+    deps = [":sdl_host", "//:sdk_preview"],
+)
+
+cc_binary(
+    name = "motionpath",
+    srcs = ["motionpath.cpp"],
+    tags = ["manual"],
+    deps = [":sdl_host", "//:sdk_preview"],
+)
+
+cc_binary(
+    name = "spatial",
+    srcs = ["spatial.cpp"],
+    tags = ["manual"],
+    deps = [":sdl_host", "//:sdk_preview"],
+)
+
+cc_binary(
+    name = "scene3d",
+    srcs = ["scene3d.cpp"],
+    tags = ["manual"],
+    deps = [
+        "//:host_sdl_gl",
+        "//:sdk_preview",
+    ],
+)

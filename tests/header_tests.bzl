@@ -81,4 +81,5 @@ _PUBLIC_HEADERS = [
     ("attachment", 55),
     ("audio_context", 56),
     ("template_argument", 57),
+    ("optional_variant", 58),
 ]

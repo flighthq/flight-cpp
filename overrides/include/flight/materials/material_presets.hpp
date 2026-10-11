@@ -105,13 +105,11 @@ create_glass_extended_pbr_material(
       material->double_sided = *(*opts)->double_sided;
   }
 
-  // The generated C++ owner types flatten the source interface heritage. This alias retains the
-  // concrete extension allocation and control block while exposing its source PbrExtension prefix
-  // (entity runtime and kind) through the array's declared base view.
-  auto extension =
-      std::reinterpret_pointer_cast<flight::types::PbrExtension>(transmission);
-  material->extensions =
-      flight::Array<flight::Ref<flight::types::PbrExtension>>{extension};
+  material->extensions = flight::Array<flight::types::PbrExtensionValue>{
+      flight::types::PbrExtensionValue{
+          std::in_place_type<flight::Ref<
+              flight::types::TransmissionVolumePbrExtension>>,
+          transmission}};
   material->standard = standard;
   return material;
 }

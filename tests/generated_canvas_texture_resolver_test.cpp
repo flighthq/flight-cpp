@@ -35,7 +35,8 @@ int main() {
   source->kind = flight::String("image");
   auto texture_2d = flight::make_ref<types::Texture2D>();
   texture_2d->dimension = flight::String("2d");
-  texture_2d->source = source;
+  texture_2d->source = types::TextureSourceValue{
+      std::in_place_type<flight::Ref<types::TextureSource>>, source};
   types::Texture texture{std::in_place_type<flight::Ref<types::Texture2D>>, texture_2d};
 
   bool resolved = false;
@@ -58,7 +59,8 @@ int main() {
   const auto image_resource = flight::make_ref<types::ImageResource>();
   image_resource->kind = types::image_texture_source_kind;
   image_resource->source = flight::make_ref<types::HostImageSource>(image_source);
-  texture_2d->source = std::reinterpret_pointer_cast<types::TextureSource>(image_resource);
+  texture_2d->source = types::TextureSourceValue{
+      std::in_place_type<flight::Ref<types::ImageResource>>, image_resource};
   canvas::register_canvas_image_texture_resolver(resolvers);
   const auto resolved_image = canvas::resolve_canvas_texture(resolvers, texture);
   check(resolved_image.has_value() && resolved_image->identity() == image_source.identity(),

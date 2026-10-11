@@ -77,6 +77,171 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_animation_test",
+    srcs = ["generated_animation_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_collision_test",
+    srcs = ["generated_collision_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_connectivity_test",
+    srcs = ["generated_connectivity_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_dialog_test",
+    srcs = ["generated_dialog_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_image_test_helper_test",
+    srcs = ["generated_image_test_helper_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_interaction_test",
+    srcs = ["generated_interaction_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_intl_cache_test",
+    srcs = ["generated_intl_cache_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_lifecycle_test",
+    srcs = ["generated_lifecycle_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_log_test",
+    srcs = ["generated_log_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_registry_test",
+    srcs = ["generated_registry_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_render_state_test",
+    srcs = [
+        "generated_render_state_renderer_include_test.cpp",
+        "generated_render_state_test.cpp",
+    ],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_scene3d_test",
+    srcs = ["generated_scene3d_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_share_test",
+    srcs = ["generated_share_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_socket_statechart_test",
+    srcs = ["generated_socket_statechart_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_statusbar_test",
+    srcs = ["generated_statusbar_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_surface_test",
+    srcs = ["generated_surface_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_textshaper_cache_test",
+    srcs = ["generated_textshaper_cache_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_updater_test",
+    srcs = ["generated_updater_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_useragent_test",
+    srcs = ["generated_useragent_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+test_suite(
+    name = "generated_tests",
+    tests = [
+        ":generated_animation_test",
+        ":generated_canvas_texture_resolver_test",
+        ":generated_collision_test",
+        ":generated_connectivity_test",
+        ":generated_dialog_test",
+        ":generated_image_test_helper_test",
+        ":generated_interaction_test",
+        ":generated_intl_cache_test",
+        ":generated_lifecycle_test",
+        ":generated_log_test",
+        ":generated_materials_test",
+        ":generated_registry_test",
+        ":generated_render_state_test",
+        ":generated_runtime_test",
+        ":generated_scene3d_test",
+        ":generated_share_test",
+        ":generated_socket_statechart_test",
+        ":generated_statusbar_test",
+        ":generated_surface_test",
+        ":generated_textshaper_cache_test",
+        ":generated_texture_test",
+        ":generated_updater_test",
+        ":generated_useragent_test",
+    ],
+)
+
+cc_test(
     name = "c_api_test",
     srcs = ["c_api_test.c"],
     size = "small",

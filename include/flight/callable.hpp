@@ -123,6 +123,17 @@ template <typename Result, typename... Parameters>
   if (left_pointer != nullptr && right_pointer != nullptr) {
     return *left_pointer == *right_pointer;
   }
+  // An identity-bearing Flight Function can deliberately cross an ABI surface that still spells
+  // its callback as std::function. std::function preserves that target object on copy, so recover
+  // the retained Function and compare its shared state just as the non-erased overload does. This
+  // is the one stateful target whose JavaScript function identity remains represented after the
+  // outer erasure; arbitrary lambdas still fail loudly below.
+  using Identified = Function<Result(Parameters...)>;
+  const auto* left_identified = left.template target<Identified>();
+  const auto* right_identified = right.template target<Identified>();
+  if (left_identified != nullptr && right_identified != nullptr) {
+    return *left_identified == *right_identified;
+  }
   throw std::logic_error(
       "callable identity is unavailable after std::function erasure");
 }

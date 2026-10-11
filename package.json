@@ -24,6 +24,7 @@
     "conformance:check": "node ./scripts/conformanceGeneration.mjs --check",
     "conformance:generate": "node ./scripts/conformanceGeneration.mjs",
     "examples:check": "node ./scripts/exampleHealth.mjs",
+    "examples:portable:generate": "node ./scripts/exampleHealth.mjs --update",
     "examples:generate": "node ./scripts/upstreamExampleGeneration.mjs",
     "examples:generate:check": "node ./scripts/upstreamExampleGeneration.mjs --check",
     "examples:run": "node ./scripts/exampleRun.mjs",

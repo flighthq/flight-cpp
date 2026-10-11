@@ -3,17 +3,27 @@
 # and controls. The SDL host is optional, so these examples are simply omitted
 # from configurations that do not enable FLIGHT_CPP_BUILD_HOST_SDL.
 
-set(UPSTREAM_EXAMPLES
-  camera2d
-  clock
-  collision
-  motionpath
-  spatial
+set(UPSTREAM_EXAMPLE_SOURCES
+  camera2d.cpp
+  clock.cpp
+  collision.cpp
+  motionpath.cpp
+  spatial.cpp
 )
+set(UPSTREAM_EXAMPLES)
+foreach(source IN LISTS UPSTREAM_EXAMPLE_SOURCES)
+  get_filename_component(example "${source}" NAME_WE)
+  list(APPEND UPSTREAM_EXAMPLES "${example}")
+endforeach()
 
-set(UPSTREAM_GL_EXAMPLES
-  scene3d
+set(UPSTREAM_GL_EXAMPLE_SOURCES
+  scene3d.cpp
 )
+set(UPSTREAM_GL_EXAMPLES)
+foreach(source IN LISTS UPSTREAM_GL_EXAMPLE_SOURCES)
+  get_filename_component(example "${source}" NAME_WE)
+  list(APPEND UPSTREAM_GL_EXAMPLES "${example}")
+endforeach()
 
 # These packages do not yet have faithful SDL ports. Most core APIs are present,
 # but a port must keep the upstream Flight subsystem as the source of truth and
@@ -98,11 +108,12 @@ if(TARGET Flight::HostSdl)
   endif()
 
   set(flight_cpp_upstream_targets)
-  foreach(example IN LISTS UPSTREAM_EXAMPLES)
-    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${example}.cpp")
+  foreach(source IN LISTS UPSTREAM_EXAMPLE_SOURCES)
+    get_filename_component(example "${source}" NAME_WE)
+    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${source}")
       message(FATAL_ERROR "Audited upstream example ${example} has no source file")
     endif()
-    add_executable(flight_cpp_upstream_${example} ${example}.cpp)
+    add_executable(flight_cpp_upstream_${example} "${source}")
     list(APPEND flight_cpp_upstream_targets flight_cpp_upstream_${example})
     target_link_libraries(flight_cpp_upstream_${example} PRIVATE
       flight_cpp_upstream_sdl_host
@@ -133,11 +144,12 @@ if(TARGET Flight::HostSdl)
   endforeach()
 
   if(TARGET Flight::HostSdlGl)
-    foreach(example IN LISTS UPSTREAM_GL_EXAMPLES)
-      if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${example}.cpp")
+    foreach(source IN LISTS UPSTREAM_GL_EXAMPLE_SOURCES)
+      get_filename_component(example "${source}" NAME_WE)
+      if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${source}")
         message(FATAL_ERROR "Audited upstream GL example ${example} has no source file")
       endif()
-      add_executable(flight_cpp_upstream_${example} ${example}.cpp)
+      add_executable(flight_cpp_upstream_${example} "${source}")
       list(APPEND flight_cpp_upstream_targets flight_cpp_upstream_${example})
       target_link_libraries(flight_cpp_upstream_${example} PRIVATE
         Flight::HostSdlGl

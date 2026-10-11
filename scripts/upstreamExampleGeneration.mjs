@@ -101,6 +101,11 @@ for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
   process.on(signal, () => {
     revertSourcePatches(sourcePatches, flight);
     revertSourcePatches(sourcePatches, compiler);
+    // The compiled output is not reverted by Git; make a later consumer rebuild from clean source.
+    rmSync(path.join(compiler.directory, 'packages', 'tool-compiler', 'dist'), {
+      force: true,
+      recursive: true,
+    });
     process.exit(signal === 'SIGINT' ? 130 : 143);
   });
 }
@@ -131,7 +136,11 @@ try {
 } finally {
   revertSourcePatches(sourcePatches, flight);
   revertSourcePatches(sourcePatches, compiler);
-  rmSync(temporaryRoot, { force: true, recursive: true });
+  try {
+    runCompilerBuild(compiler.directory);
+  } finally {
+    rmSync(temporaryRoot, { force: true, recursive: true });
+  }
 }
 
 async function generateExamples(outputRoot, flightDependency, compilerDependency, compilerModule, profiles) {

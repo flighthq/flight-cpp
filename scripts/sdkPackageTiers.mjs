@@ -33,7 +33,8 @@ import { loadOverrides } from './overrides.mjs';
 // load-bearing by construction (remove it and the module has no body), and that case is reported as such.
 // For a repair, the report says it was involved and does not claim the package depends on it.
 //   uncompiled  every module emitted, but no header of it was actually compiled
-//   partial     some modules emitted, some refused, or a header fails to compile
+//   partial     some modules emitted, some headers were not attempted or fail to compile, or a
+//               declared override is explicitly still partway
 //   blocked     nothing emitted
 //   deferred    declared a DEFECT in deferred-packages.json; reported, never fails the build, and still
 //               counted in the denominator because it is work this profile owes
@@ -47,15 +48,16 @@ import { loadOverrides } from './overrides.mjs';
 // The denominator matters. Counting a Canvas 2D renderer as outstanding work on a host with no canvas
 // makes the shippable fraction permanently unreachable and tells the reader nothing.
 //
-// `uncompiled` exists because "we did not check" is not "it works", and an interrupted or partial
-// header sweep would otherwise promote a package that has never been compiled at all. It is also not
-// "it is broken", which is why it does not collapse into `partial`.
+// `uncompiled` exists because "we did not check" is not "it works". A package with only some of its
+// headers attempted is `partial`, never ready: an interrupted sweep must not promote it merely because
+// one cheap header happened to compile. A package with none attempted is also not "it is broken",
+// which is why that distinct state does not collapse into `partial`.
 //
 // `ready` plus `assisted` is the shippable surface, and it is meant to be watched as it climbs.
 //
 //   --generated=DIR   the generated tree to read (default: generated)
 //   --report=FILE     where the tier report is written
-//   --compilation=FILE  the header compile report (default: alongside the generated tree)
+//   --compilation=FILE  the header compile report (default: sdkHeaderCompile.mjs's matching output)
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const options = process.argv.slice(2);
@@ -84,9 +86,14 @@ if (!existsSync(manifestFile)) {
   process.exit(0);
 }
 const manifest = JSON.parse(readFileSync(manifestFile, 'utf8'));
+const generatedName = path.basename(generatedRoot);
+const defaultCompilation = path.join(
+  'out',
+  generatedName === 'generated' ? 'sdk-header-compilation.json' : `${generatedName}-header-compilation.json`,
+);
 const compilationFile = path.resolve(
   root,
-  valueOf('--compilation=') ?? `${portable(path.relative(root, generatedRoot))}-header-compilation.json`,
+  valueOf('--compilation=') ?? defaultCompilation,
 );
 const compilation = existsSync(compilationFile) ? JSON.parse(readFileSync(compilationFile, 'utf8')) : undefined;
 // A refused module can be answered by a hand-written override, and before this the gate could not see
@@ -97,16 +104,35 @@ const compilation = existsSync(compilationFile) ? JSON.parse(readFileSync(compil
 // claim than `status: complete`.
 const bestEffortFile = path.join(generatedRoot, 'best-effort.json');
 const bestEffort = existsSync(bestEffortFile) ? JSON.parse(readFileSync(bestEffortFile, 'utf8')) : undefined;
+const generatedHeaders = (bestEffort?.modules ?? []).map((record) => record.path);
+const overrideInventory = loadOverrides(root);
 const suppliedModules = new Set(
-  loadOverrides(root)
+  overrideInventory
     .filter((override) => override.supplies !== undefined)
     .map((override) => override.supplies),
 );
 const suppliedBy = new Map(
-  loadOverrides(root)
+  overrideInventory
     .filter((override) => override.supplies !== undefined)
     .map((override) => [override.supplies, override.id]),
 );
+const incompleteOverridesByPackage = new Map();
+for (const override of overrideInventory.filter((entry) => entry.status === 'incomplete')) {
+  const list = incompleteOverridesByPackage.get(override.package) ?? [];
+  list.push(override.id);
+  incompleteOverridesByPackage.set(override.package, list);
+}
+// `status` records whether an override compiles, not whether all upstream behavior is present. The
+// latter is stated by `remaining`: a compiling profile-boundary throw or conservative no-hit stub is
+// still a package-level functional gap and must not be promoted to shippable.
+const behavioralCaveatsByPackage = new Map();
+for (const override of overrideInventory.filter(
+  (entry) => entry.remaining !== undefined && !/^None\b/iu.test(entry.remaining.trim()),
+)) {
+  const list = behavioralCaveatsByPackage.get(override.package) ?? [];
+  list.push(override.id);
+  behavioralCaveatsByPackage.set(override.package, list);
+}
 // Refused modules per package, from the compiler's own per-module verdict.
 const refusedByPackage = new Map();
 for (const record of bestEffort?.modules ?? []) {
@@ -142,8 +168,8 @@ if (existsSync(reportFile)) {
 const deferred = loadDeferredPackages(root);
 const applicableEnvironments = loadApplicableEnvironments(root);
 
-// A package is only `ready` if its headers were actually tried. An unattempted header is not a pass,
-// so a package nobody compiled is `assisted` at best and is reported as uncompiled either way.
+// A package is only `ready` if every generated header was actually tried. An unattempted header is
+// not a pass; a partial sweep cannot promote a package based on whichever header happened to run.
 const failedPrefixes = new Set((compilation?.failures ?? []).map((failure) => failure.header));
 const attempted = new Set([...(compilation?.passed ?? []), ...failedPrefixes]);
 const repairedByPrefix = new Map();
@@ -158,8 +184,12 @@ for (const patch of manifest.sourcePatches ?? []) {
 
 const tiers = manifest.packages.map((package_) => {
   const prefix = `${package_.cppIncludePrefix}/`;
+  const packageHeaders = generatedHeaders.filter((header) => header.startsWith(prefix));
   const headers = [...attempted].filter((header) => header.startsWith(prefix));
+  const unattemptedHeaders = packageHeaders.filter((header) => !attempted.has(header));
   const failures = headers.filter((header) => failedPrefixes.has(header));
+  const incompleteOverrides = incompleteOverridesByPackage.get(package_.package) ?? [];
+  const behavioralCaveats = behavioralCaveatsByPackage.get(package_.package) ?? [];
   const repairs = [...new Set([...repairedByPrefix].filter(([file]) => file.startsWith(prefix)).map(([, id]) => id))];
   const patches = patchedPackages.get(package_.package) ?? [];
   const deferral = deferred.find((entry) => entry.package === package_.package);
@@ -170,6 +200,7 @@ const tiers = manifest.packages.map((package_) => {
       : undefined;
   // Either nothing was refused, or every refused module is supplied by an override that says so.
   const refusedHere = refusedByPackage.get(package_.package) ?? [];
+  const unsuppliedModules = refusedHere.filter((source) => !suppliedModules.has(source));
   const allRefusalsSupplied =
     package_.refusedModules > 0 &&
     refusedHere.length === package_.refusedModules &&
@@ -186,24 +217,32 @@ const tiers = manifest.packages.map((package_) => {
         : 'deferred'
     : package_.emittedModules === 0
       ? 'blocked'
-      : !complete || failures.length > 0
+      : !complete || failures.length > 0 || incompleteOverrides.length > 0 || behavioralCaveats.length > 0
         ? 'partial'
         : headers.length === 0
           ? 'uncompiled'
-          : repairs.length > 0 || patches.length > 0 || overrides.length > 0
-            ? 'assisted'
-            : 'ready';
+          : unattemptedHeaders.length > 0
+            ? 'partial'
+            : repairs.length > 0 || patches.length > 0 || overrides.length > 0
+              ? 'assisted'
+              : 'ready';
   return {
     emittedModules: package_.emittedModules,
     ...(package_.environment === undefined ? {} : { environment: package_.environment }),
+    behavioralCaveats,
     failingHeaders: failures,
+    generatedHeaders: packageHeaders.length,
     headers: headers.length,
+    incompleteOverrides,
     package: package_.package,
     repairs,
+    refusedModules: package_.refusedModules,
     overrides,
     patches,
     sourceModules: package_.sourceModules,
     tier,
+    unattemptedHeaders,
+    unsuppliedModules,
   };
 });
 
@@ -211,6 +250,12 @@ const order = ['ready', 'assisted', 'uncompiled', 'partial', 'blocked', 'deferre
 const counts = Object.fromEntries(order.map((tier) => [tier, tiers.filter((row) => row.tier === tier).length]));
 const shippable = counts.ready + counts.assisted;
 const applicable = tiers.length - counts['n/a'];
+const nativeUnsuppliedModules = tiers
+  .filter((row) => row.tier !== 'n/a')
+  .reduce((count, row) => count + row.unsuppliedModules.length, 0);
+const nativePackagesWithUnsuppliedModules = tiers.filter(
+  (row) => row.tier !== 'n/a' && row.unsuppliedModules.length > 0,
+).length;
 
 mkdirSync(path.dirname(reportFile), { recursive: true });
 writeFileSync(
@@ -222,6 +267,8 @@ writeFileSync(
       applicable,
       counts,
       generated: path.relative(root, generatedRoot),
+      nativePackagesWithUnsuppliedModules,
+      nativeUnsuppliedModules,
       packages: tiers.sort((left, right) => order.indexOf(left.tier) - order.indexOf(right.tier) || left.package.localeCompare(right.package)),
       shippable,
       source: manifest.source,
@@ -239,6 +286,12 @@ process.stdout.write(
     `${String(counts['n/a'])} of ${String(tiers.length)} package(s) are not applicable to this profile and ` +
     'are excluded from that count.\n',
 );
+if (nativeUnsuppliedModules > 0) {
+  process.stdout.write(
+    `${String(nativeUnsuppliedModules)} refused native module(s) remain without a faithful supplying override ` +
+      `across ${String(nativePackagesWithUnsuppliedModules)} package(s).\n`,
+  );
+}
 if (compilation === undefined) {
   process.stdout.write(
     'No header compile report was found, so no package can be called ready. ' +
@@ -250,6 +303,24 @@ if (counts.uncompiled > 0) {
     `\n${String(counts.uncompiled)} package(s) emitted completely but no header of theirs was compiled, ` +
       'so they are not counted as shippable. Run `npm run sdk:compile:sdl` over the whole tree.\n',
   );
+}
+const incompleteOverrideRows = tiers.filter(
+  (row) => row.tier !== 'n/a' && row.incompleteOverrides.length > 0,
+);
+if (incompleteOverrideRows.length > 0) {
+  process.stdout.write('\nnative packages with explicitly incomplete overrides:\n');
+  for (const row of incompleteOverrideRows) {
+    process.stdout.write(`- ${row.package}: ${row.incompleteOverrides.join(', ')}\n`);
+  }
+}
+const behavioralCaveatRows = tiers.filter(
+  (row) => row.tier !== 'n/a' && row.behavioralCaveats.length > 0,
+);
+if (behavioralCaveatRows.length > 0) {
+  process.stdout.write('\nnative packages with declared behavioral gaps:\n');
+  for (const row of behavioralCaveatRows) {
+    process.stdout.write(`- ${row.package}: ${row.behavioralCaveats.join(', ')}\n`);
+  }
 }
 for (const tier of ['ready', 'assisted']) {
   const named = tiers.filter((row) => row.tier === tier);

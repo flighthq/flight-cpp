@@ -129,13 +129,18 @@ int main() {
   check(glass->standard->base_color == 4294967295.0 &&
             glass->standard->metallic == 0.0 && glass->standard->roughness == 0.2,
         "glass merges its standard defaults with nested caller options");
-  check(glass->extensions.size() == 1 &&
-            glass->extensions.get(0.0).value()->kind ==
-                types::transmission_volume_pbr_extension_kind,
+  const auto extension = glass->extensions.get(0.0);
+  check(extension.has_value() &&
+            std::holds_alternative<
+                flight::Ref<types::TransmissionVolumePbrExtension>>(
+                extension.value()) &&
+            std::get<flight::Ref<types::TransmissionVolumePbrExtension>>(
+                extension.value())
+                    ->kind == types::transmission_volume_pbr_extension_kind,
         "glass retains one ordered transmission extension through its base view");
   const auto transmission =
-      std::reinterpret_pointer_cast<types::TransmissionVolumePbrExtension>(
-          glass->extensions.get(0.0).value());
+      std::get<flight::Ref<types::TransmissionVolumePbrExtension>>(
+          extension.value());
   check(transmission->transmission == 0.4 && transmission->ior == 1.5,
         "glass retains the same concrete extension owner and nested overrides");
 

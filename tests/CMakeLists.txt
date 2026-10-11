@@ -283,6 +283,7 @@ set(
   math
   number
   object
+  optional_variant
   presence
   reference
   regexp

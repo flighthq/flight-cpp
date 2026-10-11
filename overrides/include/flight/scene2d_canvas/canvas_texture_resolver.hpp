@@ -63,7 +63,9 @@ inline std::optional<flight::host_sdl::ImageSource> resolve_canvas_texture(
   const auto* texture_2d = std::get_if<flight::Ref<Texture2D>>(&texture);
   if (!texture_2d || !*texture_2d || !(*texture_2d)->source.has_value()) return std::nullopt;
 
-  const flight::String source_kind = (*texture_2d)->source.value()->kind;
+  const flight::String source_kind = std::visit(
+      [](const auto& source) { return source->kind; },
+      (*texture_2d)->source.value());
   const auto* registry = std::get_if<ResolverRegistry>(&resolvers->registry);
   const auto resolver = registry ? registry->get(source_kind) : std::nullopt;
   if (!resolver.has_value()) {

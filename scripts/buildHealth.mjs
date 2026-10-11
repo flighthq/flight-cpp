@@ -12,6 +12,8 @@ const bazelIgnore = readCpp('.bazelignore');
 const bazelModule = readCpp('MODULE.bazel');
 const bazelConfiguration = readCpp('.bazelrc');
 const bazelDocumentation = readCpp('docs/bazel.md');
+const bazelHeaderTests = readCpp('tests/header_tests.bzl');
+const bazelHeaderSelfContainment = readCpp('tests/header_self_containment_test.cpp');
 const bazelGraph = filesUnder(cppRoot, (name) => name === 'BUILD.bazel' || name.endsWith('.bzl'))
   .map((filename) => readFileSync(filename, 'utf8'))
   .join('\n');
@@ -21,6 +23,7 @@ const cmakeGraph = filesUnder(cppRoot, (name) => name === 'CMakeLists.txt')
 const ci = readFileSync(path.join(root, '.github', 'workflows', 'ci.yml'), 'utf8');
 const presets = JSON.parse(readCpp('CMakePresets.json'));
 const sdkManifest = JSON.parse(readCpp('generated/manifest.json'));
+const sdkBestEffort = JSON.parse(readCpp('generated/best-effort.json'));
 
 if (bazelVersion !== '9.2.0') failures.push(`.bazelversion selects ${bazelVersion || '<empty>'}, expected 9.2.0`);
 requireText(bazelModule, 'name = "flight_cpp"', 'Bazel module identity');
@@ -71,11 +74,28 @@ for (const target of ['cpp', 'c', 'flight_cpp', 'flight_cpp_c', 'tests']) {
 }
 requireText(cmakeGraph, 'Flight::SdkPreview', 'CMake generated SDK preview target');
 requireText(bazelGraph, 'name = "sdk_preview"', 'Bazel generated SDK preview target');
-const generatedSdkHeaders = filesUnder(path.join(cppRoot, 'generated', 'include'), (name) => name.endsWith('.hpp'))
-  .filter((filename) => !filename.includes(`${path.sep}sdk${path.sep}`));
-if (generatedSdkHeaders.length !== sdkManifest.summary.emittedModules) {
+const generatedIncludeRoot = path.join(cppRoot, 'generated', 'include');
+const generatedSdkHeaders = filesUnder(generatedIncludeRoot, (name) => name.endsWith('.hpp'))
+  .map((filename) => path.relative(generatedIncludeRoot, filename).split(path.sep).join('/'))
+  .filter((filename) => filename !== 'flight/sdk/structural_members.hpp');
+// Best-effort generation deliberately writes a diagnostic header for refused modules, so the
+// filesystem must match every source module, not only manifest.summary.emittedModules. The repair
+// header is generator-owned but has no TypeScript source module of its own.
+const expectedGeneratedSdkHeaders = new Set([
+  ...sdkBestEffort.modules.map((module) => module.path),
+  'flight/repairs/reference_alias_identity.hpp',
+]);
+for (const header of generatedSdkHeaders) {
+  if (!expectedGeneratedSdkHeaders.delete(header)) {
+    failures.push(`generated SDK contains unexpected module header ${header}`);
+  }
+}
+for (const header of expectedGeneratedSdkHeaders) {
+  failures.push(`generated SDK is missing module header ${header}`);
+}
+if (sdkBestEffort.modules.length !== sdkManifest.summary.sourceModules) {
   failures.push(
-    `generated SDK contains ${String(generatedSdkHeaders.length)} module headers, expected ${String(sdkManifest.summary.emittedModules)}`,
+    `best-effort inventory contains ${String(sdkBestEffort.modules.length)} source modules, expected ${String(sdkManifest.summary.sourceModules)}`,
   );
 }
 
@@ -87,6 +107,26 @@ for (const header of publicHeaders) {
   requireText(cmakeGraph, `  ${header}\n`, `CMake public header ${header}.hpp`);
   requireText(bazelGraph, `include/flight/${header}.hpp`, `Bazel public header ${header}.hpp`);
   requireText(bazelGraph, `("${header}",`, `Bazel self-containment test for ${header}.hpp`);
+}
+const headerSelectors = new Map(
+  [...bazelHeaderTests.matchAll(/\("(?<header>[^"]+)", (?<selector>\d+)\)/gu)].map((match_) => [
+    match_.groups.header,
+    Number.parseInt(match_.groups.selector, 10),
+  ]),
+);
+const selectedHeaders = new Map(
+  [...bazelHeaderSelfContainment.matchAll(
+    /FLIGHT_CPP_HEADER_SELECTOR == (?<selector>\d+)\n#include <flight\/(?<header>[^>]+)\.hpp>/gu,
+  )].map((match_) => [Number.parseInt(match_.groups.selector, 10), match_.groups.header]),
+);
+for (const header of publicHeaders) {
+  const selector = headerSelectors.get(header);
+  if (selector === undefined || selectedHeaders.get(selector) !== header) {
+    failures.push(`Bazel self-containment selector for ${header}.hpp resolves to the wrong header`);
+  }
+}
+if (headerSelectors.size !== publicHeaders.length || selectedHeaders.size !== publicHeaders.length) {
+  failures.push('Bazel self-containment selector inventory differs from the public header inventory');
 }
 
 const hostSdlSourceRoot = path.join(cppRoot, 'src', 'host_sdl');

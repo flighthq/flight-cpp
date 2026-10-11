@@ -9,6 +9,27 @@ bool check(bool condition, const char* message) {
   return condition;
 }
 
+template <typename T>
+flight::types::RegistryTableEntry<T> bound_entry(T value) {
+  using Entry = flight::types::BoundRegistryTableEntry<T>;
+  auto entry = flight::make_ref<Entry>(Entry{
+      .state = flight::types::registry_entry_state->bound,
+      .value = std::move(value),
+  });
+  return flight::types::RegistryTableEntry<T>{
+      std::in_place_type<flight::Ref<Entry>>, std::move(entry)};
+}
+
+template <typename T>
+flight::types::RegistryTableEntry<T> tombstone_entry() {
+  using Entry = flight::types::TombstonedRegistryTableEntry;
+  auto entry = flight::make_ref<Entry>(Entry{
+      .state = flight::types::registry_entry_state->tombstoned,
+  });
+  return flight::types::RegistryTableEntry<T>{
+      std::in_place_type<flight::Ref<Entry>>, std::move(entry)};
+}
+
 } // namespace
 
 int main() {
@@ -113,21 +134,12 @@ int main() {
       String("slot"), String("none"));
   const auto base_slot = flight::registry::create_slot_table<String>(
       String("slot"), String("none"));
-  base_slot->entry =
-      flight::make_ref<flight::types::state_value_835a3ead37753719<String>>(
-          flight::types::state_value_835a3ead37753719<String>{
-              .state = flight::types::registry_entry_state->bound,
-              .value = String("base"),
-          });
+  base_slot->entry = bound_entry(String("base"));
   const auto inherited_slot =
       flight::registry::concat_registry_table<String>(base_slot, created_slot);
   const auto omitted_slot_overlay = flight::registry::create_slot_table<String>(
       String("slot"), String("none"));
-  omitted_slot_overlay->entry =
-      flight::make_ref<flight::types::state_3c8aa9fbfec5b0c7<String>>(
-          flight::types::state_3c8aa9fbfec5b0c7<String>{
-              .state = flight::types::registry_entry_state->tombstoned,
-          });
+  omitted_slot_overlay->entry = tombstone_entry<String>();
   const auto omitted_slot =
       flight::registry::concat_registry_table<String>(base_slot, omitted_slot_overlay);
   if (!check(flight::registry::get_registry_table_entry(inherited_slot, String("slot")) ==
@@ -172,15 +184,8 @@ int main() {
     return 1;
   }
 
-  const auto keyed_bound = flight::make_ref<flight::types::state_value_49c40b4f01b4314b<double>>(
-      flight::types::state_value_49c40b4f01b4314b<double>{
-          .state = flight::types::registry_entry_state->bound,
-          .value = 7.0,
-      });
-  const auto keyed_tombstone = flight::make_ref<flight::types::state_fb2721e0bb344354<double>>(
-      flight::types::state_fb2721e0bb344354<double>{
-          .state = flight::types::registry_entry_state->tombstoned,
-      });
+  const auto keyed_bound = bound_entry(7.0);
+  const auto keyed_tombstone = tombstone_entry<double>();
   const auto keyed = flight::make_ref<KeyedTable<double>>(KeyedTable<double>{
       .registry = String("numbers"),
       .entries = {{alpha, keyed_bound}, {String("removed"), keyed_tombstone}},
@@ -196,11 +201,7 @@ int main() {
     return 1;
   }
 
-  const auto slot_bound = flight::make_ref<flight::types::state_value_835a3ead37753719<double>>(
-      flight::types::state_value_835a3ead37753719<double>{
-          .state = flight::types::registry_entry_state->bound,
-          .value = 11.0,
-      });
+  const auto slot_bound = bound_entry(11.0);
   const auto slot = flight::make_ref<SlotTable<double>>(SlotTable<double>{
       .registry = String("singleton"),
       .entry = slot_bound,
@@ -213,10 +214,7 @@ int main() {
              "slot resolved for a different registry key")) {
     return 1;
   }
-  slot->entry = flight::make_ref<flight::types::state_3c8aa9fbfec5b0c7<double>>(
-      flight::types::state_3c8aa9fbfec5b0c7<double>{
-          .state = flight::types::registry_entry_state->tombstoned,
-      });
+  slot->entry = tombstone_entry<double>();
   if (!check(!flight::registry::get_registry_table_entry(slot_table, String("singleton")).has_value(),
              "slot tombstone escaped as a binding")) {
     return 1;
@@ -238,15 +236,8 @@ int main() {
     return 1;
   }
 
-  const auto any_bound = flight::make_ref<flight::types::state_value_49c40b4f01b4314b<flight::Any>>(
-      flight::types::state_value_49c40b4f01b4314b<flight::Any>{
-          .state = flight::types::registry_entry_state->bound,
-          .value = flight::Any(17.0),
-      });
-  const auto any_tombstone = flight::make_ref<flight::types::state_fb2721e0bb344354<flight::Any>>(
-      flight::types::state_fb2721e0bb344354<flight::Any>{
-          .state = flight::types::registry_entry_state->tombstoned,
-      });
+  const auto any_bound = bound_entry(flight::Any(17.0));
+  const auto any_tombstone = tombstone_entry<flight::Any>();
   const RegistryTable<flight::Any> any_table = flight::make_ref<KeyedTable<flight::Any>>(
       KeyedTable<flight::Any>{
           .registry = String("anything"),

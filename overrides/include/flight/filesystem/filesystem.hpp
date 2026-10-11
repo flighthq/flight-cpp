@@ -16,6 +16,7 @@
 #include <variant>
 
 #include <flight/abort.hpp>
+#include <flight/dialog/file_dialog.hpp>
 #include <flight/regexp.hpp>
 #include <flight/runtime.hpp>
 #include <flight/stream.hpp>
@@ -29,12 +30,9 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::filesystem {
 
-// OVERRIDE: this file faithfully supplies the forty declarations whose source can be represented
-// by the current runtime. The four pathless dialog-handle operations remain deliberately absent:
-// their TypeScript calls getFileDialogHandleOperations(handle), but that function was itself
-// refused in flight/dialog/file_dialog.hpp and FileDialogHandle's generated EntityRuntime carrier
-// does not expose FileDialogHandleRuntime::operations. Returning null/false for a PRESENT operation
-// would turn a runtime-representation gap into different public behavior, so this override does not.
+// OVERRIDE: this file faithfully supplies the complete refused module. File-dialog handles recover
+// their provider-neutral operations through dialog's checked identity-keyed authority table; native
+// path handles continue to delegate to HostFileSystemCapability.
 
 namespace detail {
 
@@ -438,6 +436,70 @@ inline flight::Task<bool> write_text_file(
   if (!write.has_value()) return flight::Task<bool>::resolve(false);
   return signal.has_value() ? write.value()(path, data, signal)
                             : write.value()(path, data, std::nullopt);
+}
+
+inline flight::Task<std::optional<flight::Uint8Array>> read_dialog_handle_binary_file(
+    detail::HostFileSystem host_file_system,
+    flight::Ref<flight::types::FileDialogHandle> handle,
+    std::optional<flight::AbortSignal> signal = std::nullopt) {
+  if (signal.has_value()) signal->throw_if_aborted();
+  if (handle->path.has_value()) {
+    co_return co_await read_binary_file(host_file_system, handle->path.value(), signal);
+  }
+  const auto operations = flight::dialog::get_file_dialog_handle_operations(handle);
+  if (!operations.has_value() || !operations.value()->read_binary.has_value()) {
+    co_return std::nullopt;
+  }
+  co_return co_await operations.value()->read_binary.value()(signal);
+}
+
+inline flight::Task<std::optional<flight::String>> read_dialog_handle_text_file(
+    detail::HostFileSystem host_file_system,
+    flight::Ref<flight::types::FileDialogHandle> handle,
+    std::optional<flight::AbortSignal> signal = std::nullopt) {
+  if (signal.has_value()) signal->throw_if_aborted();
+  if (handle->path.has_value()) {
+    co_return co_await read_text_file(host_file_system, handle->path.value(), signal);
+  }
+  const auto operations = flight::dialog::get_file_dialog_handle_operations(handle);
+  if (!operations.has_value() || !operations.value()->read_text.has_value()) {
+    co_return std::nullopt;
+  }
+  co_return co_await operations.value()->read_text.value()(signal);
+}
+
+inline flight::Task<bool> write_dialog_handle_binary_file(
+    detail::HostFileSystem host_file_system,
+    flight::Ref<flight::types::FileDialogHandle> handle,
+    flight::Uint8Array data,
+    std::optional<flight::AbortSignal> signal = std::nullopt) {
+  if (signal.has_value()) signal->throw_if_aborted();
+  if (handle->path.has_value()) {
+    co_return co_await write_binary_file(
+        host_file_system, handle->path.value(), std::move(data), signal);
+  }
+  const auto operations = flight::dialog::get_file_dialog_handle_operations(handle);
+  if (!operations.has_value() || !operations.value()->write_binary.has_value()) {
+    co_return false;
+  }
+  co_return co_await operations.value()->write_binary.value()(std::move(data), signal);
+}
+
+inline flight::Task<bool> write_dialog_handle_text_file(
+    detail::HostFileSystem host_file_system,
+    flight::Ref<flight::types::FileDialogHandle> handle,
+    flight::String data,
+    std::optional<flight::AbortSignal> signal = std::nullopt) {
+  if (signal.has_value()) signal->throw_if_aborted();
+  if (handle->path.has_value()) {
+    co_return co_await write_text_file(
+        host_file_system, handle->path.value(), std::move(data), signal);
+  }
+  const auto operations = flight::dialog::get_file_dialog_handle_operations(handle);
+  if (!operations.has_value() || !operations.value()->write_text.has_value()) {
+    co_return false;
+  }
+  co_return co_await operations.value()->write_text.value()(std::move(data), signal);
 }
 
 namespace detail {
