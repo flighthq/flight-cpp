@@ -10,42 +10,42 @@
       "code": "dependency-refused",
       "module": "packages/animation/src/animationBlendTree.ts",
       "package": "@flighthq/animation",
-      "reason": "dependency ./animationTrack was refused for @flighthq/animation/packages/animation/src/animationTrack.ts",
+      "reason": "dependency ./animationTrack.ts was refused for @flighthq/animation/packages/animation/src/animationTrack.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/animation/src/animationClip.ts",
       "package": "@flighthq/animation",
-      "reason": "dependency ./animationTrack was refused for @flighthq/animation/packages/animation/src/animationTrack.ts",
+      "reason": "dependency ./animationTrack.ts was refused for @flighthq/animation/packages/animation/src/animationTrack.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/animation/src/animationCrossfade.ts",
       "package": "@flighthq/animation",
-      "reason": "dependency ./animationTrack was refused for @flighthq/animation/packages/animation/src/animationTrack.ts",
+      "reason": "dependency ./animationTrack.ts was refused for @flighthq/animation/packages/animation/src/animationTrack.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/animation/src/animationLayerStack.ts",
       "package": "@flighthq/animation",
-      "reason": "dependency ./animationBlendTree was refused for @flighthq/animation/packages/animation/src/animationBlendTree.ts",
+      "reason": "dependency ./animationBlendTree.ts was refused for @flighthq/animation/packages/animation/src/animationBlendTree.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/animation/src/animationRootMotion.ts",
       "package": "@flighthq/animation",
-      "reason": "dependency ./animationTrack was refused for @flighthq/animation/packages/animation/src/animationTrack.ts",
+      "reason": "dependency ./animationTrack.ts was refused for @flighthq/animation/packages/animation/src/animationTrack.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/animation/src/animationStateMachine.ts",
       "package": "@flighthq/animation",
-      "reason": "dependency ./animationBlendTree was refused for @flighthq/animation/packages/animation/src/animationBlendTree.ts",
+      "reason": "dependency ./animationBlendTree.ts was refused for @flighthq/animation/packages/animation/src/animationBlendTree.ts",
       "stage": "dependency"
     },
     {
@@ -61,14 +61,14 @@
       "code": "dependency-refused",
       "module": "packages/animation/src/contract.ts",
       "package": "@flighthq/animation",
-      "reason": "dependency ./animationBlendTree was refused for @flighthq/animation/packages/animation/src/animationBlendTree.ts",
+      "reason": "dependency ./animationBlendTree.ts was refused for @flighthq/animation/packages/animation/src/animationBlendTree.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/animation/src/index.ts",
       "package": "@flighthq/animation",
-      "reason": "dependency ./contract was refused for @flighthq/animation/packages/animation/src/contract.ts",
+      "reason": "dependency ./animationBlendTree.ts was refused for @flighthq/animation/packages/animation/src/animationBlendTree.ts",
       "stage": "dependency"
     },
     {

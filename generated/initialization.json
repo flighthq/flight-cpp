@@ -30460,7 +30460,7 @@
             "line": 7,
             "packageName": "@flighthq/animation",
             "source": "packages/animation/src/animationAdvance.ts",
-            "id": "binding:[\"@flighthq/animation\",\"packages/animation/src/animationAdvance.ts\",348]",
+            "id": "binding:[\"@flighthq/animation\",\"packages/animation/src/animationAdvance.ts\",351]",
             "kind": "function",
             "name": "advanceAnimationPlayers",
             "scope": "module",
@@ -30482,7 +30482,7 @@
             "packageName": "@flighthq/animation",
             "source": "packages/animation/src/animationAdvance.ts"
           },
-          "specifier": "./animationPlayer",
+          "specifier": "./animationPlayer.ts",
           "target": {
             "name": "AnimationPlayer",
             "packageName": "@flighthq/animation",
@@ -32407,7 +32407,7 @@
             "line": 6,
             "packageName": "@flighthq/animation",
             "source": "packages/animation/src/animationStateMachineAdvance.ts",
-            "id": "binding:[\"@flighthq/animation\",\"packages/animation/src/animationStateMachineAdvance.ts\",251]",
+            "id": "binding:[\"@flighthq/animation\",\"packages/animation/src/animationStateMachineAdvance.ts\",254]",
             "kind": "function",
             "name": "advanceAnimationStateMachineWithScratch",
             "scope": "module",
@@ -32428,7 +32428,7 @@
             "line": 26,
             "packageName": "@flighthq/animation",
             "source": "packages/animation/src/animationStateMachineAdvance.ts",
-            "id": "binding:[\"@flighthq/animation\",\"packages/animation/src/animationStateMachineAdvance.ts\",1095]",
+            "id": "binding:[\"@flighthq/animation\",\"packages/animation/src/animationStateMachineAdvance.ts\",1098]",
             "kind": "function",
             "name": "getLinearAnimationStateMachineTransitionWeight",
             "scope": "module",
@@ -32450,7 +32450,7 @@
             "packageName": "@flighthq/animation",
             "source": "packages/animation/src/animationStateMachineAdvance.ts"
           },
-          "specifier": "./animationAdvance",
+          "specifier": "./animationAdvance.ts",
           "target": {
             "name": "AnimationAdvance",
             "packageName": "@flighthq/animation",
@@ -100021,7 +100021,7 @@
             "packageName": "@flighthq/motionpath",
             "source": "packages/motionpath/src/contract.ts"
           },
-          "specifier": "./motionPath",
+          "specifier": "./motionPath.ts",
           "target": {
             "name": "MotionPath",
             "packageName": "@flighthq/motionpath",
@@ -169410,7 +169410,7 @@
             "packageName": "@flighthq/motionpath",
             "source": "packages/motionpath/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/motionpath",

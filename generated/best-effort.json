@@ -388,7 +388,8 @@
     {
       "consumers": [
         "@flighthq/animation/packages/animation/src/animationLayerStack.ts",
-        "@flighthq/animation/packages/animation/src/animationStateMachineAdvance.ts"
+        "@flighthq/animation/packages/animation/src/animationStateMachineAdvance.ts",
+        "@flighthq/animation/packages/animation/src/contract.ts"
       ],
       "module": {
         "name": "AnimationAdvance",
@@ -404,7 +405,8 @@
         "@flighthq/animation/packages/animation/src/animationCrossfade.ts",
         "@flighthq/animation/packages/animation/src/animationLayerStack.ts",
         "@flighthq/animation/packages/animation/src/animationStateMachine.ts",
-        "@flighthq/animation/packages/animation/src/contract.ts"
+        "@flighthq/animation/packages/animation/src/contract.ts",
+        "@flighthq/animation/packages/animation/src/index.ts"
       ],
       "module": {
         "name": "AnimationBlend",
@@ -418,7 +420,8 @@
       "consumers": [
         "@flighthq/animation/packages/animation/src/animationLayerStack.ts",
         "@flighthq/animation/packages/animation/src/animationStateMachine.ts",
-        "@flighthq/animation/packages/animation/src/contract.ts"
+        "@flighthq/animation/packages/animation/src/contract.ts",
+        "@flighthq/animation/packages/animation/src/index.ts"
       ],
       "module": {
         "name": "AnimationBlendTree",
@@ -434,6 +437,7 @@
     {
       "consumers": [
         "@flighthq/animation/packages/animation/src/contract.ts",
+        "@flighthq/animation/packages/animation/src/index.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAnimation.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
@@ -458,7 +462,8 @@
     },
     {
       "consumers": [
-        "@flighthq/animation/packages/animation/src/contract.ts"
+        "@flighthq/animation/packages/animation/src/contract.ts",
+        "@flighthq/animation/packages/animation/src/index.ts"
       ],
       "module": {
         "name": "AnimationCrossfade",
@@ -473,7 +478,8 @@
     },
     {
       "consumers": [
-        "@flighthq/animation/packages/animation/src/contract.ts"
+        "@flighthq/animation/packages/animation/src/contract.ts",
+        "@flighthq/animation/packages/animation/src/index.ts"
       ],
       "module": {
         "name": "AnimationLayerStack",
@@ -492,7 +498,8 @@
         "@flighthq/animation/packages/animation/src/animationAdvance.ts",
         "@flighthq/animation/packages/animation/src/animationBlendTree.ts",
         "@flighthq/animation/packages/animation/src/animationCrossfade.ts",
-        "@flighthq/animation/packages/animation/src/contract.ts"
+        "@flighthq/animation/packages/animation/src/contract.ts",
+        "@flighthq/animation/packages/animation/src/index.ts"
       ],
       "module": {
         "name": "AnimationPlayer",
@@ -504,7 +511,8 @@
     },
     {
       "consumers": [
-        "@flighthq/animation/packages/animation/src/contract.ts"
+        "@flighthq/animation/packages/animation/src/contract.ts",
+        "@flighthq/animation/packages/animation/src/index.ts"
       ],
       "module": {
         "name": "AnimationRootMotion",
@@ -520,7 +528,8 @@
     {
       "consumers": [
         "@flighthq/animation/packages/animation/src/animationLayerStack.ts",
-        "@flighthq/animation/packages/animation/src/contract.ts"
+        "@flighthq/animation/packages/animation/src/contract.ts",
+        "@flighthq/animation/packages/animation/src/index.ts"
       ],
       "module": {
         "name": "AnimationStateMachine",
@@ -536,7 +545,8 @@
     {
       "consumers": [
         "@flighthq/animation/packages/animation/src/animationLayerStack.ts",
-        "@flighthq/animation/packages/animation/src/animationStateMachine.ts"
+        "@flighthq/animation/packages/animation/src/animationStateMachine.ts",
+        "@flighthq/animation/packages/animation/src/contract.ts"
       ],
       "module": {
         "name": "AnimationStateMachineAdvance",
@@ -554,6 +564,7 @@
         "@flighthq/animation/packages/animation/src/animationCrossfade.ts",
         "@flighthq/animation/packages/animation/src/animationRootMotion.ts",
         "@flighthq/animation/packages/animation/src/contract.ts",
+        "@flighthq/animation/packages/animation/src/index.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAnimation.ts",
         "@flighthq/scene2d/packages/scene2d/src/displayObjectAnimation.ts",
@@ -595,9 +606,7 @@
       "status": "refused-placeholder"
     },
     {
-      "consumers": [
-        "@flighthq/animation/packages/animation/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/animation",
@@ -624,7 +633,13 @@
       },
       "path": "flight/animation/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/animation/packages/animation/src/contract.ts"
+        "@flighthq/animation/packages/animation/src/animationBlendTree.ts",
+        "@flighthq/animation/packages/animation/src/animationClip.ts",
+        "@flighthq/animation/packages/animation/src/animationCrossfade.ts",
+        "@flighthq/animation/packages/animation/src/animationLayerStack.ts",
+        "@flighthq/animation/packages/animation/src/animationRootMotion.ts",
+        "@flighthq/animation/packages/animation/src/animationStateMachine.ts",
+        "@flighthq/animation/packages/animation/src/animationTrack.ts"
       ],
       "status": "dependency-incomplete"
     },

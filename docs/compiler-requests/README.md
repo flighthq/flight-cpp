@@ -54,3 +54,6 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   fails closed for widening, but symbol reads still need an upstream contract.
 - [Guarded external optionals must unwrap before member lowering](guarded-external-optional-member-view.md) —
   the SDL/GL oracle intentionally carries the failing probe.
+- [Animation track: number-carrier discrimination and optional-easing
+  lowering](animation-track-number-carrier-and-optional-easing.md) — `animationTrack.ts` emits a
+  PARTIAL header missing five declarations, and its eight dependents are refused with it.
