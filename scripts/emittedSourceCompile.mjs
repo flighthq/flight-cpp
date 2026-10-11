@@ -1,9 +1,10 @@
 import { execFileSync, spawnSync } from 'node:child_process';
-import { existsSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { resolveDependency } from './dependencyLock.mjs';
+import { applyEmissionRepairs, loadEmissionRepairs } from './emissionRepairs.mjs';
 
 // Does the pinned compiler's C++ still compile against this runtime?
 //
@@ -23,6 +24,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const compiler = resolveDependency(root, 'flight-compiler');
 const goldenDirectory = path.join(compiler.directory, 'golden');
 const includeDirectory = path.join(root, 'include');
+const emissionRepairs = loadEmissionRepairs(root);
 const failures = [];
 let checked = 0;
 
@@ -46,6 +48,16 @@ for (const fixture of fixtures) {
   const emitted = path.join(goldenDirectory, fixture, 'cpp');
   for (const header of collectSourceFiles(emitted, '.hpp')) {
     checked += 1;
+    // SDK and example generation compile the repaired emitter output, not the raw text. In
+    // particular, exponentiation cannot keep the compiler's `flight::power` helper spelling because
+    // @flighthq/power owns that C++ namespace. Exercise the same declared, expiring repair seam here
+    // so this gate measures the code users receive while still leaving compiler-only failures visible.
+    const source = path.join(emitted, header);
+    const candidate = {
+      contents: readFileSync(source, 'utf8'),
+      path: `flight/compiler-golden/${fixture}/${header}`,
+    };
+    applyEmissionRepairs(emissionRepairs, [candidate]);
     // Emission is one module at a time by design, so a fixture's siblings come from the pinned
     // checkout's own support tree. Those stubs stand in for downstream implementations; the runtime
     // contract itself is this repository's `include/`, which is the whole point of the gate.
@@ -60,10 +72,10 @@ for (const fixture of fixtures) {
         '-I',
         path.join(goldenDirectory, 'support', 'cpp'),
         '-x',
-        'c++-header',
-        path.join(emitted, header),
+        'c++',
+        '-',
       ],
-      { cwd: emitted, encoding: 'utf8' },
+      { cwd: path.dirname(source), encoding: 'utf8', input: candidate.contents },
     );
     if (result.status !== 0) {
       failures.push({ fixture: `${fixture}/${header}`, output: `${result.stdout ?? ''}${result.stderr ?? ''}`.trim() });
