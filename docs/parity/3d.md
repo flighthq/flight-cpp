@@ -17,9 +17,10 @@ rediscovered package by package.
   `.dependencies/flight/packages/<package>/src/*.test.ts`; the *Asserted behavior groups* column is
   the set of `describe(...)` titles in each file, which name the behaviors that file asserts.
 - The **inventory columns** (source / emitted / refused modules) are read from the committed
-  `generated/manifest.json` and `generated/refusals.json`. That tree was generated at the *previous*
-  pin (`7e2fc7df`); the Q0 re-pin moved the lock but did not regenerate the tree, and regenerating it
-  is out of scope for this document. Treat those three columns as the current committed inventory,
+  `generated/manifest.json` and `generated/refusals.json`. The tree is being migrated to the Q0 pin
+  package by package, so it is *mixed-revision*: each package's own pinned revision is recorded in
+  that package's `source.revision` row of `generated/manifest.json`, and a row here reflects whatever
+  that row says. Treat the three columns as the committed inventory at those per-package revisions,
   not as a reading of the new pin.
 
 The local-coverage column comes from the repository's own CTest registrations. Where a test carries a
