@@ -29,6 +29,7 @@ import { driftedOverrides, loadOverrides, overridesIncludeDirectory } from './ov
 //   --report=FILE              where the report is written
 //   --headers=a.hpp,b.hpp      compile only these, or --headers=@FILE to read them one per line
 //   --resume                   skip what the existing report already attempted
+//   --retry-killed             with --resume, retry compiler processes killed by the OS
 //   --deadline-seconds=N       stop starting new work after N seconds and report the remainder
 //   --checkpoint-seconds=N     how often the report is flushed while running (default 10)
 //
@@ -37,7 +38,7 @@ import { driftedOverrides, loadOverrides, overridesIncludeDirectory } from './ov
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const options = process.argv.slice(2);
 const valued = ['--generated=', '--report=', '--headers=', '--deadline-seconds=', '--checkpoint-seconds='];
-const flags = ['--resume'];
+const flags = ['--resume', '--retry-killed'];
 const unknown = options.filter(
   (option) => !valued.some((name) => option.startsWith(name)) && !flags.includes(option),
 );
@@ -75,6 +76,11 @@ const overrides = loadOverrides(root);
 const overrideInclude = overridesIncludeDirectory(root);
 const reportFile = path.resolve(root, valueOf('--report=') ?? path.join('out', 'sdk-header-compilation.json'));
 const resume = options.includes('--resume');
+const retryKilled = options.includes('--retry-killed');
+if (retryKilled && !resume) {
+  process.stderr.write('--retry-killed requires --resume.\n');
+  process.exit(1);
+}
 const deadlineSeconds = numberOf('--deadline-seconds=', undefined);
 const checkpointSeconds = numberOf('--checkpoint-seconds=', 10);
 const manifest = JSON.parse(readFileSync(path.join(generatedRoot, 'manifest.json'), 'utf8'));
@@ -89,7 +95,12 @@ const previous = resume ? readPreviousReport() : new Map();
 const done = new Map();
 for (const header of selected) {
   const earlier = previous.get(header);
-  if (earlier) done.set(header, earlier);
+  if (
+    earlier &&
+    !(retryKilled && !earlier.passed && /^(?:g\+\+: fatal error: )?Killed signal\b/u.test(earlier.diagnostic))
+  ) {
+    done.set(header, earlier);
+  }
 }
 const pending = selected.filter((header) => !done.has(header));
 

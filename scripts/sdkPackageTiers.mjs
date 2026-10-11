@@ -185,9 +185,11 @@ for (const patch of manifest.sourcePatches ?? []) {
 const tiers = manifest.packages.map((package_) => {
   const prefix = `${package_.cppIncludePrefix}/`;
   const packageHeaders = generatedHeaders.filter((header) => header.startsWith(prefix));
-  const headers = [...attempted].filter((header) => header.startsWith(prefix));
+  // Count only headers in THIS inventory. A report from an older tree may name a removed header
+  // under the same package prefix; that stale path is evidence for neither success nor failure now.
+  const headers = packageHeaders.filter((header) => attempted.has(header));
   const unattemptedHeaders = packageHeaders.filter((header) => !attempted.has(header));
-  const failures = headers.filter((header) => failedPrefixes.has(header));
+  const failures = packageHeaders.filter((header) => failedPrefixes.has(header));
   const incompleteOverrides = incompleteOverridesByPackage.get(package_.package) ?? [];
   const behavioralCaveats = behavioralCaveatsByPackage.get(package_.package) ?? [];
   const repairs = [...new Set([...repairedByPrefix].filter(([file]) => file.startsWith(prefix)).map(([, id]) => id))];
