@@ -44,6 +44,9 @@ int main() {
           flight::StructuralRef<SurfaceOptions>(surface_options)});
   check(surface->kind == flight::String("TestSurface"),
         "surface construction preserves the requested kind");
+  check(std::holds_alternative<flight::Null>(surface->name) &&
+            !std::holds_alternative<flight::Undefined>(surface->name),
+        "material construction initializes name to null rather than undefined");
   check(surface->alpha_cutoff == 0.25 && surface->alpha_mode == flight::String("mask"),
         "surface construction forwards alpha options");
   check(surface->blend_mode == types::blend_mode->add && surface->double_sided,

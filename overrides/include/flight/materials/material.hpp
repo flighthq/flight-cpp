@@ -72,7 +72,7 @@ inline bool equals_material(flight::Ref<Material> a, flight::Ref<Material> b) {
 template <typename T>
 inline void initialize_material(EntityConstruction<T> material, Kind kind) {
   (material->kind = kind);
-  (material->name = nullptr);
+  (material->name = flight::null);
 }
 
 template <typename T = flight::Ref<Material>>
