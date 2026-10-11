@@ -273,6 +273,12 @@ const nativeUnsuppliedModules = tiers
 const nativePackagesWithUnsuppliedModules = tiers.filter(
   (row) => row.tier !== 'n/a' && row.unsuppliedModules.length > 0,
 ).length;
+const nativeDriftedOverrides = tiers
+  .filter((row) => row.tier !== 'n/a')
+  .reduce((count, row) => count + row.driftedOverrides.length, 0);
+const nativePackagesWithDriftedOverrides = tiers.filter(
+  (row) => row.tier !== 'n/a' && row.driftedOverrides.length > 0,
+).length;
 
 mkdirSync(path.dirname(reportFile), { recursive: true });
 writeFileSync(
@@ -284,6 +290,8 @@ writeFileSync(
       applicable,
       counts,
       generated: path.relative(root, generatedRoot),
+      nativeDriftedOverrides,
+      nativePackagesWithDriftedOverrides,
       nativePackagesWithUnsuppliedModules,
       nativeUnsuppliedModules,
       packages: tiers.sort((left, right) => order.indexOf(left.tier) - order.indexOf(right.tier) || left.package.localeCompare(right.package)),
@@ -307,6 +315,12 @@ if (nativeUnsuppliedModules > 0) {
   process.stdout.write(
     `${String(nativeUnsuppliedModules)} refused native module(s) remain without a faithful supplying override ` +
       `across ${String(nativePackagesWithUnsuppliedModules)} package(s).\n`,
+  );
+}
+if (nativeDriftedOverrides > 0) {
+  process.stdout.write(
+    `${String(nativeDriftedOverrides)} drifted override(s) shadow native packages across ` +
+      `${String(nativePackagesWithDriftedOverrides)} package(s); those packages remain partial.\n`,
   );
 }
 if (compilation === undefined) {
