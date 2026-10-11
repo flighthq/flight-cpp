@@ -108,4 +108,3 @@ function run(command, args) {
   }
   return result.status === 0;
 }
-
