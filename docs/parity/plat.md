@@ -1,0 +1,1334 @@
+# PLAT lane — upstream parity inventory
+
+The PLAT lane is host platform integration — device and OS identity, input, audio and media, windows and menus, and the per-capability facades. This document is an inventory, not a scorecard: it
+records, package by package, what the pinned upstream source asserts in its own tests and what
+of that this repository covers today. It carries no judgement about which gaps matter.
+
+## Pin and provenance
+
+| | |
+| --- | --- |
+| `flight` | `a62784923f3be814463286c9fb28edfe6ab15789` |
+| `flight-compiler` | `2b687eaf6b631e0fa4d7d6e18dad93b845f99633` |
+
+Every upstream test file, case count, `describe` name, and example status below was read from
+the `flight` checkout under the gitignored `.dependencies/` at the commit named above, and from
+nowhere else. The *generated* figures are a different measurement: they come from the committed
+`generated/manifest.json` and `generated/refusals.json`, whose tree was produced at flight
+`7e2fc7d` and which a pin move does not regenerate by itself. A package whose upstream directory was
+renamed at the newer pin is listed under the name the approved plan uses and read under the
+name the pin ships, which at this pin is the same name.
+
+## How the lane is defined
+
+The lane is the approved fleet plan's package set, given verbatim. It is not a reading of the
+upstream package map, which groups packages differently and would put, for instance,
+`collision` and `spatial` outside an animation lane.
+
+- `@flighthq/app`
+- `@flighthq/host`
+- `@flighthq/platform`
+- `@flighthq/lifecycle`
+- `@flighthq/input`
+- `@flighthq/keyboard`
+- `@flighthq/interaction`
+- `@flighthq/gui`
+- `@flighthq/layout`
+- `@flighthq/accessibility`
+- `@flighthq/audio`
+- `@flighthq/media`
+- `@flighthq/mediasession`
+- `@flighthq/video`
+- `@flighthq/webcam`
+- `@flighthq/midi`
+- `@flighthq/sensors`
+- `@flighthq/geolocation`
+- `@flighthq/haptics`
+- `@flighthq/device`
+- `@flighthq/screen`
+- `@flighthq/power`
+- `@flighthq/clipboard`
+- `@flighthq/dialog`
+- `@flighthq/menu`
+- `@flighthq/tray`
+- `@flighthq/statusbar`
+- `@flighthq/notification`
+- `@flighthq/share`
+- `@flighthq/shortcut`
+- `@flighthq/shell`
+- `@flighthq/ipc`
+- `@flighthq/protocol`
+- `@flighthq/permissions`
+- `@flighthq/filesystem`
+- `@flighthq/preferences`
+- `@flighthq/updater`
+- `@flighthq/useragent`
+- `@flighthq/connectivity`
+
+## Method
+
+- **Upstream tests** are the colocated `packages/<name>/src/**/*.test.ts` vitest files at the
+  pin. The case count per file is the number of `it(`/`test(` blocks in it; the behaviors listed
+  are that file's `describe` blocks, which upstream names after the exported function or object
+  under test. A file with more than 12 blocks lists that many and names the
+  remainder as a count; the file itself is one open away.
+- **Existing CTest coverage** is read from `tests/CMakeLists.txt`, `examples/CMakeLists.txt`, and
+  `examples/upstream/CMakeLists.txt`, and attributed by which of the package's *generated* (or
+  hand-written override) headers a registered test source includes directly. A runtime header
+  that merely shares a package's directory name — `flight/host/console.hpp` against
+  `@flighthq/host` — is not SDK package coverage and is not counted. A test whose registered
+  name also matches the package is marked *dedicated*; anything else reaches the package through
+  the closure it links, and is *incidental*.
+- **Web-only exclusions** are read from `flight.environment` in each package's own
+  `package.json`, which is how this repository derives applicability (`deferred-packages.json`
+  lists `applicableEnvironments: []`, so any declaration excludes the package). They are never
+  inferred from a package name, and a web symbol in a refusal is evidence to read, not a
+  classification — `@flighthq/webcam` was nearly parked for its name and is shippable, and
+  `@flighthq/render-wgpu`'s `HTMLImageElement[value]` refusals are SDL image sources.
+
+## Lane roll-up
+
+| package | upstream modules | test files | cases | local CTest | web-only declared | generated emitted / refused |
+| --- | ---: | ---: | ---: | --- | --- | --- |
+| `@flighthq/app` | 6 | 5 | 201 | incidental | none | 4 / 2 |
+| `@flighthq/host` | 6 | 4 | 141 | none | none | 6 / 0 |
+| `@flighthq/platform` | 3 | 1 | 37 | none | none | 3 / 0 |
+| `@flighthq/lifecycle` | 3 | 2 | 44 | dedicated | none | 2 / 1 |
+| `@flighthq/input` | 3 | 2 | 66 | none | none | 2 / 1 |
+| `@flighthq/keyboard` | 3 | 1 | 23 | none | none | 3 / 0 |
+| `@flighthq/interaction` | 19 | 17 | 212 | dedicated | none | 8 / 11 |
+| `@flighthq/gui` | 20 | 18 | 115 | none | none | 16 / 4 |
+| `@flighthq/layout` | 8 | 7 | 73 | none | none | 5 / 3 |
+| `@flighthq/accessibility` | 3 | 1 | 6 | none | none | 3 / 0 |
+| `@flighthq/audio` | 8 | 6 | 109 | none | none | 5 / 3 |
+| `@flighthq/media` | 7 | 5 | 127 | none | none | 5 / 2 |
+| `@flighthq/mediasession` | 3 | 1 | 19 | none | none | 3 / 0 |
+| `@flighthq/video` | 5 | 3 | 79 | none | none | 4 / 1 |
+| `@flighthq/webcam` | 2 | 1 | 1 | none | none | 2 / 0 |
+| `@flighthq/midi` | 7 | 5 | 40 | none | none | 5 / 2 |
+| `@flighthq/sensors` | 3 | 2 | 67 | none | none | 3 / 0 |
+| `@flighthq/geolocation` | 4 | 2 | 13 | none | none | 4 / 0 |
+| `@flighthq/haptics` | 3 | 1 | 19 | none | none | 3 / 0 |
+| `@flighthq/device` | 3 | 1 | 12 | none | none | 3 / 0 |
+| `@flighthq/screen` | 3 | 1 | 46 | none | none | 3 / 0 |
+| `@flighthq/power` | 3 | 1 | 31 | none | none | 2 / 1 |
+| `@flighthq/clipboard` | 3 | 1 | 31 | none | none | 3 / 0 |
+| `@flighthq/dialog` | 5 | 3 | 23 | dedicated | none | 4 / 1 |
+| `@flighthq/menu` | 4 | 2 | 58 | none | none | 3 / 1 |
+| `@flighthq/tray` | 4 | 2 | 31 | none | none | 3 / 1 |
+| `@flighthq/statusbar` | 3 | 1 | 18 | dedicated | none | 2 / 1 |
+| `@flighthq/notification` | 3 | 1 | 38 | none | none | 2 / 1 |
+| `@flighthq/share` | 3 | 2 | 14 | dedicated | none | 2 / 1 |
+| `@flighthq/shortcut` | 4 | 2 | 27 | none | none | 3 / 1 |
+| `@flighthq/shell` | 3 | 1 | 14 | none | none | 3 / 0 |
+| `@flighthq/ipc` | 3 | 1 | 12 | none | none | 3 / 0 |
+| `@flighthq/protocol` | 3 | 2 | 23 | none | none | 3 / 0 |
+| `@flighthq/permissions` | 3 | 5 | 31 | none | none | 3 / 0 |
+| `@flighthq/filesystem` | 3 | 1 | 48 | incidental | none | 2 / 1 |
+| `@flighthq/preferences` | 4 | 2 | 45 | none | none | 3 / 1 |
+| `@flighthq/updater` | 3 | 1 | 6 | dedicated | none | 2 / 1 |
+| `@flighthq/useragent` | 4 | 2 | 104 | dedicated | none | 3 / 1 |
+| `@flighthq/connectivity` | 3 | 1 | 17 | dedicated | none | 2 / 1 |
+
+`upstream modules` counts the `.ts` files under `packages/<name>/src`; the generated manifest
+counts its own `sourceModules`, and the two differ where declaration files or generated outputs
+are involved.
+
+**39** packages, **117** upstream test files, **2021** cases.
+10 of 39 packages are reached by at least one local CTest executable.
+8 by a test dedicated to the package: `lifecycle`, `interaction`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`.
+
+## `@flighthq/app`
+
+Application identity, lifecycle control, the frame loop, windows, and render views over a swappable web/native backend
+
+6 upstream modules under `packages/app/src`.
+ Depends on `@flighthq/entity`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/app.test.ts` | 42 | … `addAppRecentDocument`, `attachAppActivate`, `attachAppAllWindowsClosed`, `attachAppEvents`, `attachAppOpenFile`, `attachAppQuitRequest`, `attachAppReady`, `attachAppSecondInstance`, `bounceAppDock`, `cancelAppAttention`, `cancelAppDockBounce`, `clearAppRecentDocuments` (+30 more describe blocks in the file) |
+| `src/appHost.test.ts` | 3 | `app explicit Host ownership` |
+| `src/appLoop.test.ts` | 60 | … `attachAppLoopExit`, `attachAppLoopLifecycle`, `createAppLoop`, `detachAppLoopExit`, `disposeAppLoop`, `enableAppLoopLifecycleSignals`, `forEachAppLoopWindow`, `getAppLoopFrameRate`, `getAppLoopMainWindow`, `getAppLoopWindows`, `initializeAppLoop`, `isAppLoopRunning` (+10 more describe blocks in the file) |
+| `src/appRenderView.test.ts` | 6 | `attachAppRenderView`, `createAppRenderView`, `detachAppRenderView`, `initializeAppRenderView`, `synchronizeAppRenderView` |
+| `src/appWindow.test.ts` | 90 | … `attachWindow`, `attachWindowClose`, `attachWindowDropFile`, `attachWindowFocus`, `attachWindowFullscreen`, `attachWindowMove`, `attachWindowOrientation`, `attachWindowRenderContext`, `attachWindowRenderState`, `attachWindowResize`, `attachWindowVisibility`, `centerWindow` (+48 more describe blocks in the file) |
+
+Upstream carries per-package records at `flight/agents/packages/app/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+- `flight_cpp.generated_dialog` — `tests/generated_dialog_test.cpp` (incidental: includes the package as part of a larger closure)
+
+### Local generation status
+
+4 of 6 modules emitted, 2 refused; 4 refusing modules (2 of them refusal roots). Read from the committed generated tree, not from the pin above.
+ Hand-written overrides shadow generated headers here: `app-using-declaration-order-and-any-iteration`, `app-loop-unqualified-types-and-missing-declarations`, `app-render-view-unqualified-types-and-member-access`, `app-window-ref-member-access-and-optional-calls`.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/host`
+
+Portable host interface: host construction, capability queries, and host diagnostics
+
+6 upstream modules under `packages/host/src`.
+ Depends on `@flighthq/entity`, `@flighthq/log`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/enableHostGuards.test.ts` | 5 | `enableHostGuards` |
+| `src/host.test.ts` | 6 | `createHost`, `initializeHost` |
+| `src/hostExplain.test.ts` | 18 | `explainHost`, `explainHostAudioDevice`, `explainHostAudioMixer`, `explainHostImage`, `explainHostInputIngress`, `explainHostTextSegmenter`, `explainHostTextShaper`, `explainHostVideo` |
+| `src/hostQuery.test.ts` | 112 | … `getHostAudioDevice`, `getHostAudioMixer`, `getHostBitmapEncode`, `getHostBitmapReadback`, `getHostClipboardFormats`, `getHostDevice`, `getHostFileSystem`, `getHostFontLoading`, `getHostGeolocation`, `getHostGlyphRasterizer`, `getHostHaptics`, `getHostImage` (+44 more describe blocks in the file) |
+
+Upstream carries per-package records at `flight/agents/packages/host/`: `status.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+6 of 6 modules emitted, 0 refused; 3 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/platform`
+
+Platform identification seam for the desktop/mobile integration suite: OS/kind/arch detection with a swappable host backend
+
+3 upstream modules under `packages/platform/src`.
+ Depends on `@flighthq/entity`, `@flighthq/types`, `@flighthq/useragent`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/platform.test.ts` | 37 | … `comparePlatformVersions`, `createPlatformInfo`, `getPlatformEngine`, `getPlatformInfo`, `getPlatformKind`, `getPlatformName`, `getPlatformRuntime`, `initializePlatformInfo`, `isPlatformDesktop`, `isPlatformMobile`, `isPlatformNative`, `isPlatformTouch` (+3 more describe blocks in the file) |
+
+Upstream carries per-package records at `flight/agents/packages/platform/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+3 of 3 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/lifecycle`
+
+Application foreground/background lifecycle state and resume/pause/back signals over a swappable web/native backend
+
+3 upstream modules under `packages/lifecycle/src`.
+ Depends on `@flighthq/entity`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/lifecycle.test.ts` | 37 | … `attachAppLifecycle`, `createAppLifecycle`, `detachAppLifecycle`, `disposeAppLifecycle`, `explainLifecycleOperation`, `getAppLaunchKind`, `getAppLifecycleState`, `hasLifecycleOperation`, `initializeAppLifecycle`, `isAppActive`, `isAppBackground`, `isAppInactive` (+1 more describe blocks in the file) |
+| `src/lifecycleHost.test.ts` | 7 | `getAppLaunchKind`, `getAppLifecycleState`, `isAppActive`, `isAppBackground`, `isAppInactive` |
+
+Upstream carries per-package records at `flight/agents/packages/lifecycle/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+- `flight_cpp.generated_lifecycle` — `tests/generated_lifecycle_test.cpp` (dedicated)
+
+### Local generation status
+
+2 of 3 modules emitted, 1 refused; 3 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
+ Hand-written overrides shadow generated headers here: `lifecycle-complete-module`.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/input`
+
+Portable input normalization for keyboard, pointer, wheel, gamepad, and text events, with a held-state snapshot and per-frame edge queries
+
+3 upstream modules under `packages/input/src`.
+ Depends on `@flighthq/entity`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/index.test.ts` | 3 | `input exports` |
+| `src/inputManager.test.ts` | 63 | … `applyGamepadAxisDeadZone`, `applyGamepadStickDeadZone`, `attachGamepadInput`, `attachKeyboardInput`, `attachPointerInput`, `attachRelativePointerInput`, `attachTextInput`, `attachWheelInput`, `connectInputStateToInputManager`, `createInputKeyRepeatTimer`, `createInputManager`, `createInputSignals` (+23 more describe blocks in the file) |
+
+Upstream carries per-package records at `flight/agents/packages/input/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+2 of 3 modules emitted, 1 refused; 3 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
+ Hand-written overrides shadow generated headers here: `input-manager-refused-state-and-timer-boundaries`.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/keyboard`
+
+On-screen (soft) keyboard visibility, height, and show/hide/resize signals over a swappable web/native backend
+
+3 upstream modules under `packages/keyboard/src`.
+ Depends on `@flighthq/entity`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/keyboard.test.ts` | 23 | … `attachSoftKeyboard`, `createSoftKeyboard`, `detachSoftKeyboard`, `disposeSoftKeyboard`, `getSoftKeyboardHeight`, `getSoftKeyboardInfo`, `hideSoftKeyboard`, `initializeSoftKeyboard`, `isSoftKeyboardVisible`, `setSoftKeyboardAccessoryBarVisible`, `setSoftKeyboardResizeMode`, `setSoftKeyboardScrollAssistEnabled` (+2 more describe blocks in the file) |
+
+Upstream carries per-package records at `flight/agents/packages/keyboard/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+3 of 3 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/interaction`
+
+Interaction: pointer event dispatch, hit testing, focus, and cursor management
+
+19 upstream modules under `packages/interaction/src`.
+ Depends on `@flighthq/bitmap`, `@flighthq/clip`, `@flighthq/entity`, `@flighthq/geometry`, `@flighthq/log`, `@flighthq/node`, `@flighthq/path`, `@flighthq/registry`, `@flighthq/shape`, `@flighthq/signals`, `@flighthq/spatial`, `@flighthq/text`, `@flighthq/textlayout`, `@flighthq/tilemap`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/displayHitTests.test.ts` | 9 | `defaultHtmlViewHitTestHandler`, `defaultMovieClipHitTestHandler`, `defaultNode2DHitTestHandler`, `defaultRichTextHitTestHandler`, `defaultShapeHitTestHandler`, `defaultTextHitTestHandler` |
+| `src/displayObjectOverlap.test.ts` | 8 | `containsNode2D`, `getNode2DOverlapRectangle`, `hitTestNode2DsShape` |
+| `src/enableInteractionGuards.test.ts` | 5 | `disableInteractionGuards`, `enableInteractionGuards`, `explainInteractionHitEligibility` |
+| `src/focusManager.test.ts` | 20 | `clearFocus`, `connectFocusNavigation`, `createFocusManager`, `focusNextNode`, `focusNodeInDirection`, `focusPreviousNode`, `getFocusedNode`, `getFocusOrder`, `initializeFocusManager`, `isNodeFocused`, `setFocusedNode` |
+| `src/hitTests.test.ts` | 35 | `describeGraphHit`, `findGraphHitTarget`, `findGraphHitTargetPrecise`, `findGraphHitTargets`, `findGraphHitTargetsPrecise`, `hitTestGraphLocalBounds`, `hitTestGraphPoint`, `hitTestGraphPointPrecise`, `hitTestNode2Ds`, `hitTestNodeRegion`, `registerHitTest`, `registerHitTestPrecise` |
+| `src/interactionManager.test.ts` | 76 | … `captureInteractionPointer`, `connectInputToInteraction`, `connectInteractionDispatchLayer`, `connectInteractionSignal`, `createInteractionManager`, `createInteractionSignals`, `disconnectInteractionSignal`, `dispatchInteractionContextMenu`, `dispatchInteractionKeyDown`, `dispatchInteractionKeyUp`, `dispatchInteractionPointerCancel`, `dispatchInteractionPointerDown` (+10 more describe blocks in the file) |
+| `src/interactionSpatialIndex.test.ts` | 6 | `findSpatialInteractionTarget`, `refreshInteractionSpatialIndex` |
+| `src/nodeInteractionState.test.ts` | 18 | … `areNodeChildrenHitTestEnabled`, `createNodeInteractionState`, `enableNodeInteractionState`, `getNodeCursor`, `getNodeHitArea`, `getNodeInteractionState`, `getNodeTabIndex`, `initializeNodeInteractionState`, `isNodeFocusable`, `isNodeHitTestEnabled`, `isNodePointerDoubleClickEnabled`, `setNodeChildrenHitTestEnabled` (+6 more describe blocks in the file) |
+| `src/nodeInteractiveStateBinding.test.ts` | 9 | `applyNodeInteractiveStates`, `createNodeInteractiveStateBinding`, `disposeNodeInteractiveStateBinding`, `explainNodeInteractiveStateBinding` |
+| `src/registerDefaultHitTests.test.ts` | 2 | `registerDefaultHitTests` |
+| `src/registerQuadBatchHitTest.test.ts` | 5 | `registerQuadBatchHitTest` |
+| `src/registerShapeHitTest.test.ts` | 2 | `registerShapeHitTest` |
+| `src/registerSpriteHitTest.test.ts` | 1 | `registerSpriteHitTest` |
+| `src/registerTextHitTest.test.ts` | 2 | `registerTextHitTest` |
+| `src/registerTilemapHitTest.test.ts` | 3 | `registerTilemapHitTest` |
+| `src/spatialQuery.test.ts` | 3 | `hitTestAreaQuery`, `hitTestAreaQueryCircle` |
+| `src/spriteHitTests.test.ts` | 8 | `defaultQuadBatchHitTestHandler`, `defaultSpriteHitTestHandler`, `defaultTilemapHitTestHandler` |
+
+Upstream carries per-package records at `flight/agents/packages/interaction/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+- `flight_cpp.generated_interaction` — `tests/generated_interaction_test.cpp` (dedicated)
+
+### Local generation status
+
+8 of 19 modules emitted, 11 refused; 17 refusing modules (11 of them refusal roots). Read from the committed generated tree, not from the pin above.
+ Hand-written overrides shadow generated headers here: `interaction-node-interaction-state`, `interaction-state-binding-runtime-boundary`, `interaction-display-overlap-bounds-boundary`, `interaction-spatial-query-bounds-boundary`.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/gui`
+
+Controller-only behavior for caller-authored 2D interface visuals
+
+20 upstream modules under `packages/gui/src`.
+ Depends on `@flighthq/interaction`, `@flighthq/node`, `@flighthq/signals`, `@flighthq/text`, `@flighthq/textinput`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/buttonController.test.ts` | 7 | `createButtonController`, `disposeButtonController`, `getButtonControllerSignals`, `isButtonControllerDisabled`, `setButtonControllerDisabled` |
+| `src/comboBoxController.test.ts` | 5 | `createComboBoxController`, `disposeComboBoxController`, `getComboBoxControllerSignals`, `isComboBoxControllerOpen`, `setComboBoxControllerOpen` |
+| `src/guiController.test.ts` | 15 | … `clampGuiValue`, `configureGuiHitArea`, `connectGuiInteraction`, `connectGuiSignal`, `createGuiController`, `createGuiControllerRuntime`, `disposeGuiController`, `getGuiControllerRuntime`, `getGuiLength`, `getGuiPosition`, `setGuiPosition`, `setGuiScale` (+3 more describe blocks in the file) |
+| `src/guiDialog.test.ts` | 11 | `closeGuiDialog`, `createGuiDialog`, `disposeGuiDialog`, `enqueueGuiDialog`, `getActiveGuiDialogEntry`, `getGuiDialogEntries`, `getGuiDialogSignals`, `removeGuiDialogEntry` |
+| `src/guiTreeShaking.test.ts` | 2 | `GUI controller tree shaking` |
+| `src/listController.test.ts` | 7 | `createListController`, `disposeListController`, `getListControllerSelectedIndex`, `getListControllerSignals`, `setListControllerSelectedIndex`, `setListControllerVisible` |
+| `src/progressBarController.test.ts` | 4 | `createProgressBarController`, `disposeProgressBarController`, `getProgressBarControllerValue`, `setProgressBarControllerValue` |
+| `src/radioGroupController.test.ts` | 5 | `createRadioGroupController`, `disposeRadioGroupController`, `getRadioGroupControllerSelectedIndex`, `getRadioGroupControllerSignals`, `setRadioGroupControllerSelectedIndex` |
+| `src/scrollBarController.test.ts` | 6 | `createScrollBarController`, `disposeScrollBarController`, `getScrollBarControllerSignals`, `getScrollBarControllerValue`, `setScrollBarControllerValue` |
+| `src/scrollViewController.test.ts` | 6 | `createScrollViewController`, `disposeScrollViewController`, `getScrollViewControllerSignals`, `getScrollViewControllerX`, `getScrollViewControllerY`, `setScrollViewControllerPosition` |
+| `src/sliderController.test.ts` | 6 | `createSliderController`, `disposeSliderController`, `getSliderControllerSignals`, `getSliderControllerValue`, `setSliderControllerValue` |
+| `src/splitPaneController.test.ts` | 5 | `createSplitPaneController`, `disposeSplitPaneController`, `getSplitPaneControllerPosition`, `getSplitPaneControllerSignals`, `setSplitPaneControllerPosition` |
+| `src/tabBarController.test.ts` | 5 | `createTabBarController`, `disposeTabBarController`, `getTabBarControllerSelectedIndex`, `getTabBarControllerSignals`, `setTabBarControllerSelectedIndex` |
+| `src/textInputController.test.ts` | 7 | `blurTextInputController`, `createTextInputController`, `dispatchTextInputControllerKeyDown`, `dispatchTextInputControllerText`, `disposeTextInputController`, `focusTextInputController`, `getTextInputControllerSignals` |
+| `src/toggleController.test.ts` | 5 | `createToggleController`, `disposeToggleController`, `getToggleControllerSignals`, `isToggleControllerChecked`, `setToggleControllerChecked` |
+| `src/tooltipController.test.ts` | 4 | `createTooltipController`, `disposeTooltipController`, `hideTooltipController`, `showTooltipController` |
+| `src/treeViewController.test.ts` | 9 | `createTreeViewController`, `disposeTreeViewController`, `getTreeViewControllerSelectedItem`, `getTreeViewControllerSignals`, `isTreeViewControllerItemExpanded`, `setTreeViewControllerItemExpanded`, `setTreeViewControllerSelectedItem`, `toggleTreeViewControllerItem` |
+| `src/windowController.test.ts` | 6 | `createWindowController`, `disposeWindowController`, `getWindowControllerSignals`, `setWindowControllerPosition`, `setWindowControllerSize` |
+
+Upstream carries per-package records at `flight/agents/packages/gui/`: `status.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+16 of 20 modules emitted, 4 refused; 20 refusing modules (4 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/layout`
+
+Renderer-neutral anchor, flex, and grid rectangle layout over flat trees
+
+8 upstream modules under `packages/layout/src`.
+ Depends on `@flighthq/entity`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/anchorLayout.test.ts` | 7 | `registerAnchorLayoutResolver` |
+| `src/enableLayoutGuards.test.ts` | 1 | `enableLayoutGuards` |
+| `src/flexLayout.test.ts` | 30 | `registerFlexLayoutResolver` |
+| `src/gridLayout.test.ts` | 15 | `registerGridLayoutResolver` |
+| `src/layoutState.test.ts` | 3 | `createLayoutState`, `initializeLayoutState`, `registerLayoutResolver` |
+| `src/layoutTreeShaking.test.ts` | 2 | `layout resolver tree shaking` |
+| `src/resolveLayoutTree.test.ts` | 15 | `explainLayoutResolution`, `resolveLayoutTree` |
+
+Upstream carries per-package records at `flight/agents/packages/layout/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+5 of 8 modules emitted, 3 refused; 5 refusing modules (3 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/accessibility`
+
+Host-explicit assistive-technology bridge for mirrored semantic nodes, focus, and announcements
+
+3 upstream modules under `packages/accessibility/src`.
+ Depends on `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/accessibility.test.ts` | 6 | `announceAccessibility`, `clearAccessibilityTree`, `destroyAccessibility`, `removeAccessibilityNode`, `setAccessibilityFocus`, `setAccessibilityNode` |
+
+Upstream carries per-package records at `flight/agents/packages/accessibility/`: `status.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+3 of 3 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/audio`
+
+AudioResource lifecycle — create/clone/dispose, sample-tier and decoded-bytes constructors, URL/Blob/Base64 loaders, codec negotiation, and container MIME detection
+
+8 upstream modules under `packages/audio/src`.
+ Depends on `@flighthq/entity`, `@flighthq/net`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/audioDecodeSlot.test.ts` | 6 | `getAudioDecodeSlot`, `hasAudioDecodeSlot` |
+| `src/audioFormat.test.ts` | 29 | `canPlayAudioType`, `detectAudioMimeType`, `getAudioMimeTypeEssence`, `getAudioMimeTypeParameter`, `inferAudioMimeType` |
+| `src/audioResource.test.ts` | 16 | `cloneAudioResource`, `createAudioResource`, `disposeAudioResource`, `getAudioResourceByteSize`, `getAudioResourceChannelCount`, `getAudioResourceChannelData`, `getAudioResourceDuration`, `getAudioResourceSampleRate`, `hasAudioResourceBuffer`, `initializeAudioResource`, `isAudioResourceEmpty` |
+| `src/audioResourceFrom.test.ts` | 26 | `createAudioResourceFromSamples`, `loadAudioResourceFromBase64`, `loadAudioResourceFromBlob`, `loadAudioResourceFromBytes`, `loadAudioResourceFromUrl`, `loadAudioResourceFromUrls`, `selectAudioResourceUrl` |
+| `src/audioResourceReference.test.ts` | 22 | `createAudioResourceFailure`, `createEmbeddedAudioResourceReference`, `createExternalAudioResourceReference`, `explainAudioResourceReferenceResolution`, `findAudioResourceReferenceByName`, `initializeEmbeddedAudioResourceReference`, `initializeExternalAudioResourceReference`, `resetFailedAudioResourceReference`, `resolveAudioResourceReference` |
+| `src/decodeAudioResourceBytes.test.ts` | 10 | `decodeAudioResourceBytes` |
+
+Upstream carries per-package records at `flight/agents/packages/audio/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+5 of 8 modules emitted, 3 refused; 7 refusing modules (3 of them refusal roots). Read from the committed generated tree, not from the pin above.
+ Hand-written overrides shadow generated headers here: `audio-variant-member-access-and-enum-qualification`, `audio-from-nullopt-return-type-and-missing-infer`.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/media`
+
+Audio and video playback channels
+
+7 upstream modules under `packages/media/src`.
+ Depends on `@flighthq/audio`, `@flighthq/entity`, `@flighthq/log`, `@flighthq/math`, `@flighthq/signals`, `@flighthq/types`, `@flighthq/video`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/audioChannel.test.ts` | 55 | … `clearAudioChannelLoopRegion`, `destroyAudioChannel`, `fadeAudioChannelGain`, `getAudioChannelCurrentTime`, `getAudioChannelDuration`, `getAudioChannelSourceHandle`, `hasAudioChannelFade`, `isAudioChannelMuted`, `isAudioChannelPlaying`, `pauseAudioChannel`, `playAudioResource`, `resumeAudioChannel` (+8 more describe blocks in the file) |
+| `src/audioMixer.test.ts` | 32 | … `addAudioBusToMixer`, `createAudioBus`, `createAudioMixer`, `destroyAudioMixer`, `explicit provider-first mixer operations`, `fadeAudioBusGain`, `getAudioMixerActiveChannels`, `initializeAudioBus`, `pauseAllAudioMixerChannels`, `resumeAllAudioMixerChannels`, `resumeAllAudioMixerChannels scope`, `routeAudioChannelToMixerBus` (+8 more describe blocks in the file) |
+| `src/enableAudioMixerGuards.test.ts` | 3 | `disableAudioMixerGuards`, `enableAudioMixerGuards` |
+| `src/mediaChannelSignals.test.ts` | 8 | `enableAudioChannelSignals`, `enableVideoChannelSignals`, `getAudioChannelSignals`, `getVideoChannelSignals` |
+| `src/videoChannel.test.ts` | 29 | … `destroyVideoChannel`, `getVideoChannelCurrentTime`, `getVideoChannelDuration`, `getVideoChannelHeight`, `getVideoChannelWidth`, `isVideoChannelMuted`, `isVideoChannelPlaying`, `pauseVideoChannel`, `playVideoResource`, `resumeVideoChannel`, `setVideoChannelCurrentTime`, `setVideoChannelGain` (+3 more describe blocks in the file) |
+
+Upstream carries per-package records at `flight/agents/packages/media/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+5 of 7 modules emitted, 2 refused; 5 refusing modules (2 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/mediasession`
+
+Explicit-Host OS media-session commands and per-action transport event entities
+
+3 upstream modules under `packages/mediasession/src`.
+ Depends on `@flighthq/entity`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/mediasession.test.ts` | 19 | `attachMediaSessionAction`, `clearMediaSessionMetadata`, `clearMediaSessionPositionState`, `createMediaSessionActionSignal`, `destroyMediaSession`, `detachMediaSessionAction`, `disposeMediaSessionActionSignal`, `initializeMediaSessionActionSignal`, `setMediaSessionMetadata`, `setMediaSessionPlaybackState`, `setMediaSessionPositionState` |
+
+Upstream carries per-package records at `flight/agents/packages/mediasession/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+3 of 3 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/video`
+
+Video resources and URL constructors
+
+5 upstream modules under `packages/video/src`.
+ Depends on `@flighthq/entity`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/videoFormat.test.ts` | 32 | `canPlayVideoType`, `detectVideoMimeType`, `inferVideoMimeType`, `selectVideoResourceUrl` |
+| `src/videoResource.test.ts` | 35 | `createVideoResource`, `destroyVideoResource`, `disposeVideoResource`, `getVideoResourceDuration`, `getVideoResourceHeight`, `getVideoResourceWidth`, `hasVideoResourceElement`, `initializeVideoResource`, `isVideoResourceEmpty`, `isVideoResourceReady` |
+| `src/videoResourceFrom.test.ts` | 12 | `loadVideoResourceFromBlob`, `loadVideoResourceFromUrl`, `loadVideoResourceFromUrls` |
+
+Upstream carries per-package records at `flight/agents/packages/video/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+4 of 5 modules emitted, 1 refused; 3 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+Refusal text naming a browser surface (1 module) — listed to be read, not to classify:
+- `packages/video/src/videoResourceFrom.ts` — cpp emission failed for @flighthq/video/packages/video/src/videoResourceFrom.ts: C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame -> flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each reaches a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the emitter does -- or provide that runtime contract
+
+## `@flighthq/webcam`
+
+Future explicit-host live webcam streaming, device enumeration, and stream lifecycle
+
+2 upstream modules under `packages/webcam/src`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/missing.test.ts` | 1 | — (no `describe`; the cases assert the module surface directly) |
+
+Upstream carries per-package records at `flight/agents/packages/webcam/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+2 of 2 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/midi`
+
+Explicit MIDI access, port resources, and lifecycle subscriptions
+
+7 upstream modules under `packages/midi/src`.
+ Depends on `@flighthq/entity`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/midiAccess.test.ts` | 7 | `createMidiAccessResource`, `disposeMidiAccess`, `getMidiAccessInputPorts`, `getMidiAccessOutputPorts`, `initializeMidiAccessResource`, `requestMidiAccess` |
+| `src/midiPermission.test.ts` | 1 | `getMidiPermission` |
+| `src/midiPort.test.ts` | 11 | `closeMidiPort`, `createMidiInputPortResource`, `createMidiOutputPortResource`, `disposeMidiPort`, `getMidiPortConnection`, `getMidiPortState`, `initializeMidiInputPortResource`, `initializeMidiOutputPortResource`, `openMidiPort`, `sendMidiMessage` |
+| `src/midiResource.test.ts` | 5 | `getMidiAccessResourceState`, `getMidiPortResourceState`, `retainMidiAccessResourceState`, `retainMidiInputPortResourceState`, `retainMidiOutputPortResourceState` |
+| `src/midiSubscription.test.ts` | 16 | … `attachMidiAccessStateSubscription`, `attachMidiInputMessageSubscription`, `attachMidiPortStateSubscription`, `createMidiAccessStateSubscription`, `createMidiInputMessageSubscription`, `createMidiPortStateSubscription`, `detachMidiAccessStateSubscription`, `detachMidiInputMessageSubscription`, `detachMidiPortStateSubscription`, `disposeMidiAccessStateSubscription`, `disposeMidiInputMessageSubscription`, `disposeMidiPortStateSubscription` (+3 more describe blocks in the file) |
+
+Upstream carries per-package records at `flight/agents/packages/midi/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+5 of 7 modules emitted, 2 refused; 5 refusing modules (2 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/sensors`
+
+Device motion and orientation sensor readings and signals over a swappable web/native backend
+
+3 upstream modules under `packages/sensors/src`.
+ Depends on `@flighthq/entity`, `@flighthq/math`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/sensors.test.ts` | 62 | … `attachSensors`, `computeEulerFromQuaternion`, `computeGravityFromOrientation`, `computeQuaternionFromOrientationReading`, `computeRotationMatrixFromQuaternion`, `computeScreenRelativeOrientation`, `computeWorldAccelerationFromDeviceAcceleration`, `createAmbientLightReading`, `createMotionReading`, `createOrientationReading`, `createPressureReading`, `createProximityReading` (+25 more describe blocks in the file) |
+| `src/sensorsHost.test.ts` | 5 | `getSensorsPermissionState`, `hasAccelerometer`, `hasBarometer`, `isSensorsSupported` |
+
+Upstream carries per-package records at `flight/agents/packages/sensors/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+3 of 3 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/geolocation`
+
+Device geolocation (current position, watch, permission) over a swappable web/native backend
+
+4 upstream modules under `packages/geolocation/src`.
+ Depends on `@flighthq/entity`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/geolocation.test.ts` | 8 | `clearGeolocationWatch`, `createGeolocationPosition`, `getCurrentGeolocationPosition`, `getCurrentGeolocationPositionResult`, `initializeGeolocationPosition`, `isGeolocationAvailable`, `watchGeolocationPosition` |
+| `src/geolocationAccess.test.ts` | 5 | `promptForGeolocationAccess` |
+
+Upstream carries per-package records at `flight/agents/packages/geolocation/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+4 of 4 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/haptics`
+
+Haptic feedback (vibrate, impact, notification, selection) over a swappable web/native backend
+
+3 upstream modules under `packages/haptics/src`.
+ Depends on `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/haptics.test.ts` | 19 | `cancelDeviceVibration`, `getHapticsCapabilities`, `isHapticsSupported`, `prepareHaptics`, `triggerHapticImpact`, `triggerHapticNotification`, `triggerHapticSelection`, `vibrateDevice`, `vibrateDevicePattern`, `vibrateDeviceWaveform` |
+
+Upstream carries per-package records at `flight/agents/packages/haptics/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+3 of 3 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/device`
+
+Device identity, hardware, and safe-area insets over a swappable web/native backend
+
+3 upstream modules under `packages/device/src`.
+ Depends on `@flighthq/entity`, `@flighthq/types`, `@flighthq/useragent`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/device.test.ts` | 12 | `createDeviceCapabilities`, `createDeviceDisplayMetrics`, `createDeviceInfo`, `createSafeAreaInsets`, `getDeviceCapabilities`, `getDeviceDisplayMetrics`, `getDeviceId`, `getDeviceInfo`, `getSafeAreaInsets`, `R3 boundary`, `refreshDeviceInfo` |
+
+Upstream carries per-package records at `flight/agents/packages/device/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+3 of 3 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/screen`
+
+Host-explicit display enumeration, geometry, work area, scale factor, and display events
+
+3 upstream modules under `packages/screen/src`.
+ Depends on `@flighthq/entity`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/screen.test.ts` | 46 | … `attachScreenPermissionChange`, `attachScreenSignals`, `createScreenInfo`, `createScreenMode`, `createScreenPermissionChange`, `createScreenSignals`, `detachScreenPermissionChange`, `detachScreenSignals`, `dipToScreenPoint`, `dipToScreenRect`, `disposeScreenPermissionChange`, `disposeScreenSignals` (+19 more describe blocks in the file) |
+
+Upstream carries per-package records at `flight/agents/packages/screen/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+3 of 3 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/power`
+
+Battery level, charging state, low-power signals and screen keep-awake over a swappable web/native backend
+
+3 upstream modules under `packages/power/src`.
+ Depends on `@flighthq/entity`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/power.test.ts` | 31 | … `acquirePowerKeepAwake`, `attachPower`, `createPower`, `destroyPowerKeepAwake`, `detachPower`, `disposePower`, `enablePowerSignals`, `getPowerBatteryHealth`, `getPowerIdlePollingIntervalMs`, `getPowerStatus`, `getPowerSystemIdleState`, `getPowerSystemIdleTime` (+7 more describe blocks in the file) |
+
+Upstream carries per-package records at `flight/agents/packages/power/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+2 of 3 modules emitted, 1 refused; 3 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/clipboard`
+
+System clipboard operations over explicit Host capability vectors for text, images, formats, bookmarks, and change subscriptions
+
+3 upstream modules under `packages/clipboard/src`.
+ Depends on `@flighthq/entity`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/clipboard.test.ts` | 31 | … `attachClipboardWatch`, `clearClipboard`, `clipboard`, `ClipboardWatch`, `createClipboardWatch`, `detachClipboardWatch`, `disposeClipboardWatch`, `getClipboardFormats`, `hasClipboardBookmark`, `hasClipboardFormat`, `hasClipboardHtml`, `hasClipboardImage` (+17 more describe blocks in the file) |
+
+Upstream carries per-package records at `flight/agents/packages/clipboard/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+3 of 3 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/dialog`
+
+Host-explicit open/save file, message, confirm, and prompt dialog operations
+
+5 upstream modules under `packages/dialog/src`.
+ Depends on `@flighthq/entity`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/dialog.test.ts` | 8 | `showConfirmDialog`, `showErrorBox`, `showErrorDialog`, `showInfoDialog`, `showMessageDialog`, `showPromptDialog`, `showWarningDialog` |
+| `src/fileDialog.test.ts` | 10 | `createFileDialogHandle`, `getFileDialogHandleOperations`, `initializeFileDialogHandle`, `showOpenDirectoryDialog`, `showOpenFileDialog`, `showSaveFileDialog` |
+| `src/mediaDialog.test.ts` | 5 | `showCapturePhotoDialog`, `showCaptureVideoDialog`, `showOpenImageDialog` |
+
+Upstream carries per-package records at `flight/agents/packages/dialog/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+- `flight_cpp.generated_dialog` — `tests/generated_dialog_test.cpp` (dedicated)
+
+### Local generation status
+
+4 of 5 modules emitted, 1 refused; 3 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
+ Hand-written overrides shadow generated headers here: `dialog-file-handle-runtime-authority`.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/menu`
+
+Native application and context menus over a swappable web/native backend
+
+4 upstream modules under `packages/menu/src`.
+ Depends on `@flighthq/entity`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/menu-templates.test.ts` | 18 | `createDefaultAppMenuTemplate`, `createDefaultEditMenuTemplate`, `createDefaultFileMenuTemplate`, `createDefaultHelpMenuTemplate`, `createDefaultViewMenuTemplate`, `createDefaultWindowMenuTemplate` |
+| `src/menu.test.ts` | 40 | … `attachMenuHighlight`, `attachMenuSelect`, `cloneMenuTemplate`, `createMenuHighlight`, `createMenuItemTemplate`, `createMenuSelect`, `destroyAppMenu`, `detachMenuHighlight`, `detachMenuSelect`, `disposeMenuHighlight`, `disposeMenuSelect`, `enableMenuSignals` (+6 more describe blocks in the file) |
+
+Upstream carries per-package records at `flight/agents/packages/menu/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+3 of 4 modules emitted, 1 refused; 3 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
+ Hand-written overrides shadow generated headers here: `menu-recursive-template-validation`.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/tray`
+
+Tray icon Entities over explicitly injected operation providers
+
+4 upstream modules under `packages/tray/src`.
+ Depends on `@flighthq/entity`, `@flighthq/log`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/enableTrayGuards.test.ts` | 2 | `disableTrayGuards`, `enableTrayGuards` |
+| `src/tray.test.ts` | 29 | … `createTrayIcon`, `destroyTrayIcon`, `displayTrayBalloon`, `getTrayIconBounds`, `getTrayIcons`, `getTrayIconTitle`, `getTrayIconTooltip`, `initializeTrayCreateFailedResult`, `initializeTrayCreateProviderFailureResult`, `initializeTrayCreateSuccessResult`, `isTrayDestroyed`, `isTrayIconAnimating` (+16 more describe blocks in the file) |
+
+Upstream carries per-package records at `flight/agents/packages/tray/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+3 of 4 modules emitted, 1 refused; 4 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/statusbar`
+
+Mobile status bar style, visibility, and color over a swappable web/native backend
+
+3 upstream modules under `packages/statusbar/src`.
+ Depends on `@flighthq/entity`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/statusbar.test.ts` | 18 | … `attachStatusBar`, `clearStatusBarStyleStack`, `createStatusBar`, `createStatusBarInfo`, `detachStatusBar`, `disposeStatusBar`, `getStatusBarHeight`, `getStatusBarInfo`, `hasStatusBarStyleEntry`, `initializeStatusBar`, `initializeStatusBarInfo`, `packedRgbaToHexColor` (+6 more describe blocks in the file) |
+
+Upstream carries per-package records at `flight/agents/packages/statusbar/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+- `flight_cpp.generated_statusbar` — `tests/generated_statusbar_test.cpp` (dedicated)
+
+### Local generation status
+
+2 of 3 modules emitted, 1 refused; 3 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
+ Hand-written overrides shadow generated headers here: `statusbar-complete-module`.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/notification`
+
+System notifications over a swappable web (Notification API) / native backend
+
+3 upstream modules under `packages/notification/src`.
+ Depends on `@flighthq/entity`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/notification.test.ts` | 38 | … `attachNotificationActionSubscription`, `attachNotificationClickSubscription`, `attachNotificationDismissSubscription`, `attachNotificationReceivedSubscription`, `attachNotificationReplySubscription`, `bindNotificationClose`, `bindScheduledNotificationCancel`, `cancelScheduledNotification`, `closeAllNotifications`, `closeNotification`, `createNotificationActionSubscription`, `createNotificationClickSubscription` (+24 more describe blocks in the file) |
+
+Upstream carries per-package records at `flight/agents/packages/notification/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+2 of 3 modules emitted, 1 refused; 3 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
+ Hand-written overrides shadow generated headers here: `notification-subscription-lifecycle`.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/share`
+
+Explicit host share-sheet commands for content and portable files
+
+3 upstream modules under `packages/share/src`.
+ Depends on `@flighthq/entity`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/share.test.ts` | 13 | … `attachShareSignals`, `canShareContent`, `canShareFiles`, `detachShareSignals`, `disposeShareSignals`, `enableShareSignals`, `hasShareContentFields`, `initializeShareSignals`, `isShareFileValid`, `Share contract surface`, `shareContent`, `shareContentWithResult` (+3 more describe blocks in the file) |
+| `src/shareExplicit.test.ts` | 1 | `explicit Share host isolation` |
+
+Upstream carries per-package records at `flight/agents/packages/share/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+- `flight_cpp.generated_share` — `tests/generated_share_test.cpp` (dedicated)
+
+### Local generation status
+
+2 of 3 modules emitted, 1 refused; 3 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
+ Hand-written overrides shadow generated headers here: `share-complete-module`.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/shortcut`
+
+Global OS hotkey registration over a swappable web/native backend
+
+4 upstream modules under `packages/shortcut/src`.
+ Depends on `@flighthq/entity`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/shortcut.test.ts` | 13 | … `equalsAccelerator`, `findAcceleratorConflict`, `formatAcceleratorForDisplay`, `getAcceleratorKey`, `getAcceleratorKeyLabel`, `getAcceleratorModifierLabel`, `getAcceleratorModifiers`, `isAcceleratorValid`, `makeParsedAccelerator`, `normalizeAccelerator`, `parseAccelerator`, `parseAcceleratorDetailed` (+1 more describe blocks in the file) |
+| `src/shortcutExplicitDependency.test.ts` | 14 | `attachGlobalShortcut`, `createGlobalShortcut`, `destroyShortcutTrigger`, `detachGlobalShortcut`, `disposeGlobalShortcut`, `initializeGlobalShortcut`, `queryGlobalShortcutConflict`, `queryGlobalShortcutRegistration` |
+
+Upstream carries per-package records at `flight/agents/packages/shortcut/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+3 of 4 modules emitted, 1 refused; 3 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
+ Hand-written overrides shadow generated headers here: `shortcut-explicit-dependency-structural-assertions`.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/shell`
+
+OS shell commands over seven explicit Host capability slots with required external URL policy
+
+3 upstream modules under `packages/shell/src`.
+ Depends on `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/shell.test.ts` | 14 | `isShellUrlAllowed`, `moveShellItemsToTrash`, `moveShellItemToTrash`, `openShellExternalUrl`, `openShellPath`, `readShellShortcutLink`, `revealShellPath`, `shellBeep`, `spawnShellProcess`, `writeShellShortcutLink` |
+
+Upstream carries per-package records at `flight/agents/packages/shell/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+3 of 3 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/ipc`
+
+Inter-process messaging over explicit operation-tight host capabilities
+
+3 upstream modules under `packages/ipc/src`.
+ Depends on `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/ipc.test.ts` | 12 | `invokeIpc`, `onceIpcMessage`, `onIpcInvoke`, `onIpcMessage`, `sendIpcMessage`, `sendIpcMessageTo` |
+
+Upstream carries per-package records at `flight/agents/packages/ipc/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+3 of 3 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/protocol`
+
+Custom URI scheme registration and deep-link open-URL signals over a swappable web/native backend
+
+3 upstream modules under `packages/protocol/src`.
+ Depends on `@flighthq/entity`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/protocol.test.ts` | 20 | … `attachProtocolHandler`, `createProtocolHandler`, `createProtocolUrl`, `detachProtocolHandler`, `disposeProtocolHandler`, `getProtocolLaunchUrl`, `getRegisteredProtocolSchemes`, `initializeProtocolHandler`, `isProtocolSchemeDefault`, `isProtocolSchemeRegistered`, `isValidProtocolScheme`, `parseProtocolUrl` (+6 more describe blocks in the file) |
+| `src/protocolHost.test.ts` | 3 | `protocol explicit Host ownership` |
+
+Upstream carries per-package records at `flight/agents/packages/protocol/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+3 of 3 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/permissions`
+
+Explicit-Host permission query/request facade over capability-owned permission seams
+
+3 upstream modules under `packages/permissions/src`.
+ Depends on `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/geolocationDelegation.test.ts` | 9 | `requestPermission` |
+| `src/getPermissionState.test.ts` | 5 | `getPermissionState` |
+| `src/getPermissionStates.test.ts` | 6 | `getPermissionStates` |
+| `src/permission.test.ts` | 3 | `getPermissionState`, `getPermissionStates`, `requestPermission` |
+| `src/requestPermission.test.ts` | 8 | `requestPermission` |
+
+Upstream carries per-package records at `flight/agents/packages/permissions/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+3 of 3 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/filesystem`
+
+Read/write files and directories over a swappable web (OPFS) / native backend
+
+3 upstream modules under `packages/filesystem/src`.
+ Depends on `@flighthq/dialog`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/filesystem.test.ts` | 48 | … `appendTextFile`, `canAccessFile`, `copyFile`, `createFileSymlink`, `directoryExists`, `fileExists`, `findFiles`, `getFileBaseName`, `getFileDirectoryName`, `getFileExtensionName`, `getFilePermissions`, `getFileRealPath` (+28 more describe blocks in the file) |
+
+Upstream carries per-package records at `flight/agents/packages/filesystem/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+- `flight_cpp.generated_dialog` — `tests/generated_dialog_test.cpp` (incidental: includes the package as part of a larger closure)
+
+### Local generation status
+
+2 of 3 modules emitted, 1 refused; 3 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
+ Hand-written overrides shadow generated headers here: `filesystem-module-indexed-abort-event-map`.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/preferences`
+
+Synchronous key/value persistence over explicit Host capabilities
+
+4 upstream modules under `packages/preferences/src`.
+ Depends on `@flighthq/entity`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/storage.test.ts` | 43 | … `attachStorage`, `clearStorage`, `clearStorageNamespace`, `createStorageSignals`, `destroyStorage`, `detachStorage`, `disposeStorage`, `getNamespacedStorageByteSize`, `getNamespacedStorageEntries`, `getNamespacedStorageItem`, `getNamespacedStorageItemPresence`, `getNamespacedStorageKeys` (+25 more describe blocks in the file) |
+| `src/storagePersistence.test.ts` | 2 | `getStoragePersistence`, `requestStoragePersistence` |
+
+Upstream carries per-package records at `flight/agents/packages/preferences/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+None. No local test, example, or benchmark includes a header of this package.
+
+### Local generation status
+
+3 of 4 modules emitted, 1 refused; 3 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
+ Hand-written overrides shadow generated headers here: `preferences-storage-outcome-dispatch`.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/updater`
+
+Awaited application update checks and provider-pinned downloaded-update installation transactions
+
+3 upstream modules under `packages/updater/src`.
+ Depends on `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/updater.test.ts` | 6 | `checkForAppUpdate`, `destroyUpdater`, `installDownloadedUpdate` |
+
+Upstream carries per-package records at `flight/agents/packages/updater/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+- `flight_cpp.generated_updater` — `tests/generated_updater_test.cpp` (dedicated)
+
+### Local generation status
+
+2 of 3 modules emitted, 1 refused; 3 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
+ Hand-written overrides shadow generated headers here: `updater-complete-module`.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/useragent`
+
+Pure user-agent string parsing to device and platform identity tokens.
+
+4 upstream modules under `packages/useragent/src`.
+ Depends on `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/userAgent.test.ts` | 72 | … `detectEndianness`, `legacy EdgeHTML`, `parseUserAgentArch`, `parseUserAgentEngine`, `parseUserAgentEngine for Opera on iOS`, `parseUserAgentEngine on iOS`, `parseUserAgentEngineVersion`, `parseUserAgentKind`, `parseUserAgentName`, `parseUserAgentPointerWidth`, `parseUserAgentRuntime`, `parseUserAgentVersion` (+1 more describe blocks in the file) |
+| `src/userAgentParse.test.ts` | 32 | `parseUserAgentFormFactor`, `parseUserAgentFormFactor desktop-mode iPad`, `parseUserAgentOsName`, `parseUserAgentOsVersion` |
+
+Upstream carries per-package records at `flight/agents/packages/useragent/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+- `flight_cpp.generated_useragent` — `tests/generated_useragent_test.cpp` (dedicated)
+
+### Local generation status
+
+3 of 4 modules emitted, 1 refused; 4 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
+ Hand-written overrides shadow generated headers here: `useragent-platform-parsers`, `useragent-os-and-form-factor-parsers`.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## `@flighthq/connectivity`
+
+Explicit connectivity status, change signals, and reachability operations
+
+3 upstream modules under `packages/connectivity/src`.
+ Depends on `@flighthq/entity`, `@flighthq/signals`, `@flighthq/types`.
+
+### Upstream tests
+
+| test file | cases | behaviors asserted (upstream `describe` blocks) |
+| --- | ---: | --- |
+| `src/connectivity.test.ts` | 17 | `attachConnectivity`, `createConnectivity`, `destroyConnectivity`, `detachConnectivity`, `detectConnectivityReachability`, `disposeConnectivity`, `getConnectivityOnline`, `getConnectivityStatus`, `hasConnectivityStatusChanged`, `initializeConnectivity`, `isConnectivityMetered`, `isConnectivitySaveDataEnabled` |
+
+Upstream carries per-package records at `flight/agents/packages/connectivity/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
+
+### Existing CTest coverage
+
+- `flight_cpp.generated_connectivity` — `tests/generated_connectivity_test.cpp` (dedicated)
+
+### Local generation status
+
+2 of 3 modules emitted, 1 refused; 3 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
+ Hand-written overrides shadow generated headers here: `connectivity-complete-module`.
+
+### Web-only exclusions
+
+None declared. The package ships no `flight.environment` declaration, so it is environment-agnostic and applicable to the native SDL host; nothing in it is excluded for being web-shaped.
+
+## Lane notes
+
+### Upstream examples
+
+6 of the 34 upstream examples are ported and smoke-tested.
+ None of the ported ones belongs to this lane.
+
+A further 3 examples are in that inventory whose subject is a package in this lane, and are listed as awaiting a faithful SDL port: `interaction`, `sound`, `video`. The mapping is by example name, or by an import of the package where the name differs (`flowstates` imports `@flighthq/flow`); the 30 other examples whose imports go through the `@flighthq/sdk` barrel are not attributed to any lane here.
+
+This lane's largest upstream suites are `interaction` (212 cases), `app` (201 cases), `host` (141 cases).
+None of them has an example port behind it; whatever local coverage the lane has is per package, and is listed below.
+
+### Upstream functional scenes
+
+Upstream also asserts behaviour visually, as image-diff cells under `flight/functional/scenes/`
+(383 scene files at the pin). No scene takes a package in this lane as its subject, so
+there is no upstream image-diff evidence about one.
+
+Some scene files do import a lane package directly, always incidentally — for a type or a
+helper the renderer scene needs, never as its subject:
+
+- `@flighthq/app` — 5 files (`application-render-view.webgl.ts`, `render-pass-shared-context.webgl.ts`, `render-pass-viewport.webgl.ts`)
+
+### Local substrate shared by every lane
+
+These CTest executables are the repository's own parity surface. They cover the language
+runtime and the emitted-SDK contracts rather than any one lane package, and they are listed
+here so that a missing lane CTest is not read as an absence of local evidence about the runtime
+the lane's emitted code calls.
+
+| CTest | source | what it covers |
+| --- | --- | --- |
+| `flight_cpp.runtime` | `tests/runtime_test.cpp` | `Array`, `Map`, `Set`, `String`, `Number`, `Date`, `RegExp`, `Task`, `Blob`, typed arrays, `Any`, structural rows, Intl carriers |
+| `flight_cpp.runtime_conformance` | `tests/runtime_conformance_test.cpp` + `conformance/portable-typescript-v1.json` | the committed profile semantics |
+| `flight_cpp.generated_runtime` | `tests/generated_runtime_test.cpp` + `tests/generated/semantic_runtime.ts` | semantics of compiled-from-TypeScript containers, closures, and iteration |
+| `flight_cpp.structural_row` | `tests/structural_row_test.cpp` | structural rows and the named-property view |
+| `flight_cpp.c_api`, `flight_cpp.c_api_threads` | `tests/c_api_test.c`, `tests/c_api_thread_test.cpp` | the `Flight::C` foreign ABI |
+| header self-containment | `tests/CMakeLists.txt` `flight_cpp_public_headers` | each installed `flight/*.hpp` compiles alone |
+| `flight_cpp.host_sdl` | `tests/host_sdl_test.cpp` | the SDL host seam |
+| `flight_cpp.upstream_math_geometry_parity` | `tests/generated/upstream_math_geometry_parity.cpp`, `tests/upstream_test_harness.hpp` | a pilot that lowers `@flighthq/math` and `@flighthq/geometry` upstream tests to native C++ (18 tests); it is the first local CTest sourced from the upstream suites this document inventories |
+
+Outside CTest, `scripts/*Oracle.mjs` (`npm run <surface>:oracle`) compares individual runtime
+surfaces against Node directly. Those are gates about the language runtime, not tests of a lane
+package.
+
