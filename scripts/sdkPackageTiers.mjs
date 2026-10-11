@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 import { loadApplicableEnvironments, loadDeferredPackages } from './deferredPackages.mjs';
 import { driftedOverrides, loadOverrides } from './overrides.mjs';
+import { normalizePackageName } from './packageScope.mjs';
 
 // What of the SDK is actually usable, counted per package.
 //
@@ -58,10 +59,11 @@ import { driftedOverrides, loadOverrides } from './overrides.mjs';
 //   --generated=DIR   the generated tree to read (default: generated)
 //   --report=FILE     where the tier report is written
 //   --compilation=FILE  the header compile report (default: sdkHeaderCompile.mjs's matching output)
+//   --package=@flighthq/x  tier only that package (what `npm run pkg:tier` passes)
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const options = process.argv.slice(2);
-const valued = ['--generated=', '--report=', '--compilation='];
+const valued = ['--generated=', '--report=', '--compilation=', '--package='];
 const unknown = options.filter((option) => !valued.some((prefix) => option.startsWith(prefix)));
 if (unknown.length > 0) {
   process.stderr.write(`Unknown SDK package tier option(s): ${unknown.join(', ')}\n`);
@@ -86,6 +88,16 @@ if (!existsSync(manifestFile)) {
   process.exit(0);
 }
 const manifest = JSON.parse(readFileSync(manifestFile, 'utf8'));
+// A scoped run tiers one package. Every rule below is per package already, so narrowing the row set is
+// the whole change; the counts then describe that package and nothing else.
+const scopedPackage = valueOf('--package=') === undefined ? undefined : normalizePackageName(valueOf('--package='));
+if (scopedPackage !== undefined) {
+  manifest.packages = manifest.packages.filter((package_) => package_.package === scopedPackage);
+  if (manifest.packages.length === 0) {
+    process.stderr.write(`${scopedPackage} is not in ${portable(path.relative(root, manifestFile))}.\n`);
+    process.exit(1);
+  }
+}
 const generatedName = path.basename(generatedRoot);
 const defaultCompilation = path.join(
   'out',
@@ -303,6 +315,14 @@ writeFileSync(
   )}\n`,
 );
 
+if (scopedPackage !== undefined) {
+  const [row] = tiers;
+  process.stdout.write(
+    `${row.package}: ${row.tier} -- ${String(row.emittedModules)}/${String(row.sourceModules)} modules emitted, ` +
+      `${String(row.headers)}/${String(row.generatedHeaders)} headers compiled, ${String(row.failingHeaders.length)} failing, ` +
+      `${String(row.unattemptedHeaders.length)} unattempted.\n`,
+  );
+}
 process.stdout.write(
   `${String(shippable)} of ${String(applicable)} applicable SDK packages are shippable ` +
     `(${String(counts.ready)} ready, ${String(counts.assisted)} assisted); ` +

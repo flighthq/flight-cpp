@@ -176,6 +176,41 @@ The native build is the runtime's own gate and is run directly with CMake or Baz
 
 `compile:check` reports and skips when the checkout is absent or no C++ compiler is installed, so a fresh clone stays runnable. The compiler repository asks the same question from its side against the runtime revision it pins; both are wanted, because each side owns the pin it can move and a failure names which one changed.
 
+## Working on one package
+
+The `sdk:*` scripts act on the whole inventory. A lane that owns one package works through the `pkg:*` scripts
+instead, which never touch another package's output:
+
+```sh
+npm run pkg:generate -- <package>            # regenerate one package into generated/
+npm run pkg:generate -- <package> --check    # fail if that package's slice of generated/ is stale
+npm run pkg:compile -- <package> [-j N]      # compile its headers independently (default -j2)
+npm run pkg:compile -- <package> --ctest     # ...and build and run its CTest tests (`ctest -L '^pkg:<package>$'`)
+npm run pkg:tier -- <package>                # tier it from that compile report
+npm run pkg:test                             # the scripts' own tests
+```
+
+`<package>` is `math` or `@flighthq/math`. Generation compiles the package's dependency closure, so the package
+is measured against its real dependencies, but splices back only `include/flight/<package>/` and that
+package's rows in `manifest.json`, `refusals.json`, `best-effort.json` and `initialization.json`; the header
+lists and README summary are re-derived from the merged tree. Reports land in `out/pkg/<package>/`.
+
+Three things are shared by every package and are deliberately not rewritten by a scoped run. Each is reported
+as a failure rather than left silently stale, and each needs `npm run sdk:generate`:
+
+- a row key the package uses that `flight/sdk/structural_members.hpp` does not yet list;
+- a change in the package's set of evaluation groups, whose place in the whole-SDK topological order in
+  `initialization.json` cannot be decided from one package (the closure orders the same groups differently,
+  so an unchanged set keeps its committed placement);
+- a different compiler or Flight pin, or a different binding-profile set, which moves every package at once.
+
+A module's best-effort `consumers` include its reverse dependents, which lie outside the closure; a scoped run
+keeps those from the committed record and states only the consumers it can see.
+
+`canonicalPackageLocalIncludes.includes` is a whole-tree count of rewritten includes, and a rewritten include
+is indistinguishable from an emitted one once written. A scoped run adjusts it by the change in same-package
+angle includes in the files it rewrote, which is exact unless the emitter itself changed how it spells those.
+
 ## License
 
 MIT. See [LICENSE.md](LICENSE.md).

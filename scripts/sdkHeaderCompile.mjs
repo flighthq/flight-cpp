@@ -11,6 +11,7 @@ import {
   refusedDeferrals,
 } from './deferredPackages.mjs';
 import { driftedOverrides, loadOverrides, overridesIncludeDirectory } from './overrides.mjs';
+import { includePrefixOf, normalizePackageName } from './packageScope.mjs';
 
 // Compiles each generated SDK header on its own and records what happened.
 //
@@ -28,6 +29,7 @@ import { driftedOverrides, loadOverrides, overridesIncludeDirectory } from './ov
 //   --generated=DIR            the generated tree to compile (default: generated/)
 //   --report=FILE              where the report is written
 //   --headers=a.hpp,b.hpp      compile only these, or --headers=@FILE to read them one per line
+//   --package=@flighthq/x      compile only that package's headers, and judge only its overrides
 //   --resume                   skip what the existing report already attempted
 //   --retry-killed             with --resume, retry compiler processes killed by the OS or run signal
 //   --deadline-seconds=N       stop starting new work after N seconds and report the remainder
@@ -37,7 +39,7 @@ import { driftedOverrides, loadOverrides, overridesIncludeDirectory } from './ov
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const options = process.argv.slice(2);
-const valued = ['--generated=', '--report=', '--headers=', '--deadline-seconds=', '--checkpoint-seconds='];
+const valued = ['--generated=', '--report=', '--headers=', '--package=', '--deadline-seconds=', '--checkpoint-seconds='];
 const flags = ['--resume', '--retry-killed'];
 const unknown = options.filter(
   (option) => !valued.some((name) => option.startsWith(name)) && !flags.includes(option),
@@ -72,7 +74,17 @@ const generatedInclude = path.join(generatedRoot, 'include');
 const runtimeInclude = path.join(root, 'include');
 // Hand-written overrides shadow the generated tree, so they go FIRST. The generated file is left
 // exactly as emitted and the override wins by include order alone; see scripts/overrides.mjs.
-const overrides = loadOverrides(root);
+// A package-scoped run answers for that package alone: another package's drifted override is real, but
+// it is that package's finding, and failing this run on it would make a scoped check unusable.
+const scopedPackage = valueOf('--package=') === undefined ? undefined : normalizePackageName(valueOf('--package='));
+if (scopedPackage !== undefined && valueOf('--headers=') !== undefined) {
+  process.stderr.write('--package and --headers both select headers; pass one.\n');
+  process.exit(1);
+}
+const allOverrides = loadOverrides(root);
+const overrides = allOverrides.filter(
+  (override) => scopedPackage === undefined || override.package === scopedPackage,
+);
 const overrideInclude = overridesIncludeDirectory(root);
 const reportFile = path.resolve(root, valueOf('--report=') ?? path.join('out', 'sdk-header-compilation.json'));
 const resume = options.includes('--resume');
@@ -217,6 +229,15 @@ function reportDeferred() {
 }
 
 function selectHeaders() {
+  if (scopedPackage !== undefined) {
+    const prefix = includePrefixOf(scopedPackage);
+    const headers = everyHeader.filter((header) => header.startsWith(prefix));
+    if (headers.length === 0) {
+      process.stderr.write(`${scopedPackage} has no headers in ${portable(path.relative(root, generatedRoot))}.\n`);
+      process.exit(1);
+    }
+    return headers;
+  }
   const raw = valueOf('--headers=');
   if (raw === undefined) return everyHeader;
   const names = (raw.startsWith('@') ? readFileSync(path.resolve(root, raw.slice(1)), 'utf8').split(/\r?\n/u) : raw.split(','))
@@ -276,7 +297,8 @@ function writeReport() {
     run: {
       complete: isComplete,
       elapsedSeconds: Math.round((Date.now() - startedAt) / 100) / 10,
-      headerSelection: valueOf('--headers=') === undefined ? 'all' : 'explicit',
+      headerSelection:
+        scopedPackage !== undefined ? `package:${scopedPackage}` : valueOf('--headers=') === undefined ? 'all' : 'explicit',
       jobs: concurrency,
     },
     summary: {
@@ -361,7 +383,8 @@ function compileHeader(header) {
         ...extraFlags,
         '-std=c++20',
         diagnosticLimit,
-        ...(overrides.length > 0 ? [`-I${overrideInclude}`] : []),
+        // Every override shadows, whatever the scope: a package's headers include its dependencies'.
+        ...(allOverrides.length > 0 ? [`-I${overrideInclude}`] : []),
         `-I${generatedInclude}`,
         `-I${runtimeInclude}`,
         '-x',

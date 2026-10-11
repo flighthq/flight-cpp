@@ -247,6 +247,41 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_surface_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_surface COMMAND flight_cpp_generated_surface_tests)
 
+# Per-package labels: `ctest -L '^pkg:<package>$'` runs exactly the semantic tests that include that
+# SDK package's generated headers, and `npm run pkg:compile -- <package> --ctest` builds and runs them.
+# A label is the unscoped npm name (`pkg:scene2d-canvas`, not the C++ directory), and every package a
+# test includes directly is listed; scripts/packageScope.test.mjs checks this table against the
+# includes so a new test or include cannot go unlabeled.
+function(flight_cpp_package_test_labels test)
+  list(TRANSFORM ARGN PREPEND "pkg:" OUTPUT_VARIABLE labels)
+  set_tests_properties("${test}" PROPERTIES LABELS "${labels}")
+endfunction()
+
+flight_cpp_package_test_labels(flight_cpp.structural_row types)
+flight_cpp_package_test_labels(flight_cpp.generated_collision collision)
+flight_cpp_package_test_labels(flight_cpp.generated_registry registry)
+flight_cpp_package_test_labels(flight_cpp.generated_animation animation)
+flight_cpp_package_test_labels(flight_cpp.generated_log log)
+flight_cpp_package_test_labels(flight_cpp.generated_render_state types)
+flight_cpp_package_test_labels(flight_cpp.generated_canvas_texture_resolver scene2d-canvas)
+flight_cpp_package_test_labels(flight_cpp.generated_texture texture)
+flight_cpp_package_test_labels(flight_cpp.generated_materials materials)
+flight_cpp_package_test_labels(flight_cpp.generated_scene3d materials mesh node scene3d)
+flight_cpp_package_test_labels(flight_cpp.generated_interaction interaction)
+flight_cpp_package_test_labels(flight_cpp.generated_intl_cache intl)
+flight_cpp_package_test_labels(flight_cpp.generated_image_test_helper image)
+flight_cpp_package_test_labels(flight_cpp.generated_statusbar statusbar)
+flight_cpp_package_test_labels(flight_cpp.generated_connectivity connectivity)
+flight_cpp_package_test_labels(flight_cpp.generated_share share)
+flight_cpp_package_test_labels(flight_cpp.generated_updater updater)
+flight_cpp_package_test_labels(flight_cpp.generated_lifecycle lifecycle signals)
+flight_cpp_package_test_labels(flight_cpp.generated_useragent useragent)
+flight_cpp_package_test_labels(flight_cpp.generated_dialog app dialog filesystem geometry node render signals)
+flight_cpp_package_test_labels(flight_cpp.generated_textshaper_cache textshaper)
+flight_cpp_package_test_labels(flight_cpp.generated_socket_statechart socket statechart)
+flight_cpp_package_test_labels(flight_cpp.generated_surface surface)
+flight_cpp_package_test_labels(flight_cpp.upstream_math_geometry_parity geometry math)
+
 add_executable(flight_cpp_c_api_tests c_api_test.c)
 target_link_libraries(flight_cpp_c_api_tests PRIVATE Flight::C)
 flight_cpp_set_project_warnings(flight_cpp_c_api_tests)
@@ -349,6 +384,7 @@ if(TARGET Flight::HostSdlWgpu)
     flight_cpp.host_sdl
     PROPERTIES ENVIRONMENT "SDL_VIDEODRIVER=dummy;SDL_AUDIODRIVER=dummy"
   )
+  flight_cpp_package_test_labels(flight_cpp.host_sdl types)
 endif()
 
 if(TARGET Flight::HostSdlGl)
