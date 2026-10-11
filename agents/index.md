@@ -1,6 +1,6 @@
 # flight-cpp fleet plan
 
-Status: **DRAFT — awaiting user approval.** Nothing in `queue.md` is authorized until this line reads APPROVED.
+Status: **APPROVED** by the user, 2026-10-11. `queue.md` is authorized work.
 
 This directory is the contract for the execution fleet. `index.md` holds the goal, decisions and
 standing rules; `queue.md` holds the work items. Repository rules in `AGENTS.md` still apply and win

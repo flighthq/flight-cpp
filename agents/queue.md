@@ -1,6 +1,6 @@
 # Work queue
 
-Status: **DRAFT — awaiting user approval** (see `index.md`).
+Status: **APPROVED** by the user, 2026-10-11 (see `index.md`).
 
 Foreman divides and dispatches; builders own implementation. Rules, CPU budget and the package
 definition of done are in `index.md`. Items are ordered by priority within each phase. `Needs:`
