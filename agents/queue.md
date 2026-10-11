@@ -20,6 +20,11 @@ names items that must land first.
 | **CORE** — data & IO | math, geometry, types, signals, command, encoding, compression, xml, abc, net, socket, loader, assets, registry, registry-catalog, registry-codegen, log, debug, requirements, importdiagnostics |
 | **WGPU** (phase 4) | render-wgpu, scene2d-wgpu, scene3d-wgpu, effects-wgpu |
 
+The table is exhaustive. A package's lane is the row it is listed in, whatever its name suggests:
+renderers belong to their dimension (scene2d-gl → 2D, scene3d-gl → 3D), while GL owns the shared
+render core. Mixed packages are placed as listed: camera, camera-controls, path → 2D; collision,
+spatial, motionpath, clock → ANIM; geometry, math → CORE.
+
 Any package Q0 finds at the new pin that is missing from this table goes to the lane closest in kind;
 Q0 reports the assignment.
 
@@ -129,6 +134,22 @@ tilemap draws through `flight::tilemap`, movieclip plays through `flight::moviec
 render Scene3D. Each port lands in `UPSTREAM_EXAMPLES` with a `--smoke` CTest whose assertion checks the
 subject package was actually driven (e.g. frames advanced, tiles drawn, nodes rendered), not just that
 the process exited 0. A port that can't use its subject yet stays out, with the blocker recorded.
+
+**E0 · existing ports · rework after the audit of 2026-10-11.** None of the six is synthetic, but:
+- **E0a · 2D · Needs P-2D1.** camera2d, clock, collision, motionpath and spatial draw through an
+  immediate-mode painter in `examples/upstream/sdl_host.cpp` instead of the upstream
+  Node2D/Shape/TextLabel scene and its render pass. Move them onto scene2d + scene2d-gl, then retire
+  the painter's shape and text code. Use the upstream surface size (800×500 for clock, motionpath and spatial).
+- **E0b · ANIM ·** collision: keep collider state in the generated CollisionCircle2D/Aabb2D/Polygon2D
+  records, not a local struct; use upstream's convex hit test. spatial: `Math.random` for interactive
+  runs and the seeded generator only in capture; dt clamp 0.05; latched input mode; capture mouse at
+  (400,250). camera2d: drive the smoke capture through `zoom_camera2_dat_screen_point`, not a direct
+  field write; draw the returned visible-bounds rectangle.
+- **E0c · 3D ·** scene3d: call `enable_flight_diagnostics`; render once after the dt=1 controller
+  update, before the first timed update, as upstream does.
+- **E0d · all ·** Smoke tests assert the subject was driven, e.g. clock elapsed and pause state,
+  motion-path progress and position, collision hit count and manifold, spatial query hits, camera
+  bounds. A test that only exits 0 doesn't count. E0b–E0d don't wait for P-2D1.
 
 | Item | Example | Lane | Needs |
 | --- | --- | --- | --- |

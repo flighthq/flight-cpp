@@ -100,6 +100,10 @@ example, because it reports working code that does not exist.
 A port is faithful when its state and algorithms come from the generated Flight APIs the TypeScript
 source uses. SDL may replace only the browser host: window, input events, presentation, and the
 Canvas→GL renderer selection (D2). It may not recreate a subsystem locally or substitute a look-alike.
+Renderer selection means choosing scene2d-gl where upstream chose scene2d-canvas. It does **not**
+permit replacing the upstream scene graph (Node2D, Shape, TextLabel, prepare/render calls) with an
+immediate-mode painter: an example renders through the same scene and render pipeline as its source.
+Application state uses the generated Flight types the source uses, not local mirrors of them.
 Each port names its TypeScript authority at the top and lists any feature it cannot yet show and why.
 
 ### Compiler requests
