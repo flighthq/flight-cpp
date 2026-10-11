@@ -1,7 +1,10 @@
 {
-  "schema": "flight-generated-sdk-refusals/2",
+  "schema": "flight-generated-sdk-refusals/3",
   "compilerRevision": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
-  "sourceRevision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+  "sourceRevisions": [
+    "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+    "a62784923f3be814463286c9fb28edfe6ab15789"
+  ],
   "refusals": [
     {
       "code": "dependency-refused",

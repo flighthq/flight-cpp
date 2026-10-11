@@ -2489,18 +2489,13 @@
       "package": "@flighthq/node",
       "answers": "refusal",
       "refusal": "transform and bounds paths erase exact runtime slots through getEntityRuntime and then assert readonly EntityRuntime back to writable capability runtimes; remaining node collections and callbacks similarly erase NodeOf<Traits> before mutation",
-      "rewrite": "Declares exact transform and bounds runtime slots on their structural node capability types, carries NodeOf<Traits> through node callbacks, revisions, ordering, fit contexts, and read APIs, gives base initialization a concrete data-bearing options shape, avoids readonly/mutable carrier rebinds in ancestry walks, and sorts order-list entry indices instead of erasing heterogeneous nodes into shared scratch.",
-      "equivalence": "All annotations erase in JavaScript. The same runtime objects, matrices, rectangles, child arrays, revisions, adjustments, callbacks, signals, node identities, and data factories are used. Order-list sorting uses the same last-entry identity map, keys, tie break, child slots, and writes; it retains integer entry indices instead of the equivalent node references. Direct symbol reads return the identical runtime object previously returned by getEntityRuntime, without granting write authority through a readonly accessor.",
-      "verification": "The patch applies after the complete Flight source stack. Focused strict TypeScript programs for @flighthq/node and Scene3D report zero relevant errors, with only unavailable ambient WebGPU declarations outside scope. Native @flighthq/node regeneration emits 1101/1147 dependency-closure modules and 18/21 Node modules, up from 1097/1147 and 14/21; the remaining three direct Node refusals are isolated computed-symbol accesses in bounds and transform caches.",
+      "rewrite": "Declares exact transform and bounds runtime slots on their structural node capability types, carries NodeOf<Traits> through node callbacks, revisions, ordering, fit contexts, and read APIs, gives base initialization a concrete data-bearing options shape, avoids readonly/mutable carrier rebinds in ancestry walks, and sorts order-list entry indices instead of erasing heterogeneous nodes into shared scratch. At a627849 the bounds runtime slots name a new non-generic BoundsRectangleRuntimeView (the same five members, with callbacks over Readonly<BoundsNodeAny>), not HasBoundsRectangleRuntime: upstream 859024f1f made HasBoundsRectangleRuntime generic with callbacks over BoundsNode<Traits>, so a slot naming it closes BoundsNode<Traits> -> runtime -> callback -> BoundsNode<Traits>, on which the pinned compiler does not terminate (Maximum call stack size exceeded across types). Naming HasBoundsRectangleRuntime<any> instead terminates, but its callbacks take the BoundsNode<Any> alias, which the emitter then uses before the alias template is declared. BoundsNodeAny is a struct, so the view forms the same closed, non-generic fixed point as the old-pin BoundsNodeAny slot and forward-declares cleanly.",
+      "equivalence": "All annotations erase in JavaScript. The same runtime objects, matrices, rectangles, child arrays, revisions, adjustments, callbacks, signals, node identities, and data factories are used. Order-list sorting uses the same last-entry identity map, keys, tie break, child slots, and writes; it retains integer entry indices instead of the equivalent node references. Direct symbol reads return the identical runtime object previously returned by getEntityRuntime, without granting write authority through a readonly accessor. BoundsRectangleRuntimeView is a type-only declaration: the slot holds the same runtime object, and every bounds callback stored in it is the one the kind installed.",
+      "verification": "Package-scoped foundation generation at a627849 emits node 21/21 and types 1028/1028 (types-only runs with the generic slot overflow the compiler stack); flight/types/has_bounds_rectangle.hpp compiles.",
       "whyNotUpstreamFirst": "These capability types already promise that transform and bounds nodes own the corresponding runtime caches, and NodeRuntime children plus NodeOrderList entries already contain trait-bearing nodes. Naming those actual slots and values is a target-neutral contract correction, not a target-specific representation escape.",
       "unblocks": "Removes the node data-owner, hierarchy, traversal, revision, color-adjustment, scene-fit, and child-order refusals beneath both Canvas Scene2D and WebGL Scene3D, leaving only the three explicit transform/bounds cache-access modules to solve.",
       "expires": "when Flight exposes exact runtime slots on its structural node capabilities and retains NodeOf/Data owners across these APIs upstream, or the native compiler preserves the same checked owners through the weaker base interfaces automatically.",
-      "appliedOn": "2026-10-08",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "GEN",
-        "reason": "re-derived text applies at the new pin, but its BoundsNode/Spatial2DNode/Transform2DNode runtime slots close a type cycle with upstream generic HasBoundsRectangleRuntime<Traits> (runtime -> bounds callback -> BoundsNode<Traits> -> slot -> runtime). The pinned compiler then fails 17 types modules with Maximum call stack size exceeded, and a raised-stack run did not terminate in 10 minutes. Re-derive without the slots (or break the cycle) before activating."
-      }
+      "appliedOn": "2026-10-08"
     },
     {
       "id": "node-exact-runtime-helper-boundaries",
@@ -2517,12 +2512,24 @@
       "whyNotUpstreamFirst": "The helper interfaces restate runtime slots already guaranteed by the public transform and bounds capability types. They make the existing owner proof lexical without changing runtime representation or adding a native-only path.",
       "unblocks": "Removes the last three direct Node package refusals, clearing all 21 Node modules beneath hierarchy, traversal, bounds, scene preparation, Canvas Scene2D, and WebGL Scene3D consumers.",
       "expires": "when flight-compiler can project computed members from a structural row through its concrete nominal conjunct automatically, or Flight adopts explicit exact-runtime accessors upstream.",
-      "appliedOn": "2026-10-08",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "GEN",
-        "reason": "applies on top of node-exact-capability-runtimes and type-checks only against its BoundsNode runtime slots, so it is pending until that patch is activated."
-      }
+      "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "node-bounds-validity-explicit-carrier",
+      "dependency": "flight",
+      "patch": "node-bounds-validity-explicit-carrier.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/node/src/hasBoundsRectangle.ts",
+      "package": "@flighthq/node",
+      "answers": "refusal",
+      "refusal": "contextual C++ union conversion requires equivalent source union evidence: target optionalSingle carriers [std::function<bool(... BoundsNode<Traits> row ...)>] from binary source optionalSingle carriers [std::function<bool(flight::types::BoundsNode<flight::Any>)>]",
+      "rewrite": "Spells initBoundsRectangleRuntimeTrait's methods parameter as an explicit readonly shape of its two optional members, each typed by indexed access on HasBoundsRectangleRuntime<Traits>, instead of Readonly<Partial<MethodsOf<HasBoundsRectangleRuntime<Traits>> & Pick<HasBoundsRectangleRuntime<Traits>, 'isLocalBoundsRectangleValid'>>>, through which the emitter loses Traits.",
+      "equivalence": "MethodsOf keeps only the function-typed members of HasBoundsRectangleRuntime<Traits>, which is computeLocalBoundsRectangle alone (isLocalBoundsRectangleValid is function-or-null), and the Pick adds isLocalBoundsRectangleValid; Partial makes both optional. The explicit shape is exactly that type. Annotations erase in JavaScript, so the function body, its reads, its defaults and the stored references are unchanged.",
+      "verification": "Node-scoped generation at a627849 (emission limited to hasBoundsRectangle.ts and boundsRectangle.ts) emits both with zero refusals; an explicitly typed local for the nullish result alone was tried first and is still refused.",
+      "whyNotUpstreamFirst": "The emitter resolves members read through MethodsOf/Pick views of a generic runtime as BoundsNode<Any> rather than BoundsNode<Traits>; respelling the parameter is the smallest source change that supplies the evidence, and node blocks every lane.",
+      "unblocks": "@flighthq/node hasBoundsRectangle.ts and its dependents (initBoundsRectangleRuntimeTrait).",
+      "expires": "when the emitter carries Traits through MethodsOf/Pick member views into a nullish-coalescing result.",
+      "appliedOn": "2026-10-11"
     },
     {
       "id": "materials-exact-construction-owner",

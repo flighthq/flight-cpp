@@ -1,0 +1,29 @@
+diff --git a/packages/node/src/hasBoundsRectangle.ts b/packages/node/src/hasBoundsRectangle.ts
+index 57d663a..fec9e88 100644
+--- a/packages/node/src/hasBoundsRectangle.ts
++++ b/packages/node/src/hasBoundsRectangle.ts
+@@ -2,7 +2,6 @@ import type {
+   BoundsNode,
+   HasBoundsRectangle,
+   HasBoundsRectangleRuntime,
+-  MethodsOf,
+   NodeTraits,
+   Rectangle,
+ } from '@flighthq/types/contract';
+@@ -14,12 +13,10 @@ export function defaultComputeLocalBoundsRectangle<Traits extends object = NodeT
+ 
+ export function initBoundsRectangleRuntimeTrait<Traits extends object = NodeTraits>(
+   target: HasBoundsRectangleRuntime<Traits>,
+-  methods?: Readonly<
+-    Partial<
+-      MethodsOf<HasBoundsRectangleRuntime<Traits>> &
+-        Pick<HasBoundsRectangleRuntime<Traits>, 'isLocalBoundsRectangleValid'>
+-    >
+-  >,
++  methods?: Readonly<{
++    computeLocalBoundsRectangle?: HasBoundsRectangleRuntime<Traits>['computeLocalBoundsRectangle'];
++    isLocalBoundsRectangleValid?: HasBoundsRectangleRuntime<Traits>['isLocalBoundsRectangleValid'];
++  }>,
+ ): void {
+   target.boundsRectangle = null;
+   target.localBoundsRectangle = null;

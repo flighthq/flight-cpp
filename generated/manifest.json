@@ -1,5 +1,5 @@
 {
-  "schema": "flight-generated-sdk/1",
+  "schema": "flight-generated-sdk/2",
   "compiler": {
     "repository": "https://github.com/flighthq/flight-compiler",
     "revision": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
@@ -330,6 +330,7 @@
         "flight/selection/pointer_selection_policy.hpp",
         "flight/skeleton2d/skeleton2d_draw_order_target.hpp",
         "flight/timeline/timeline.hpp",
+        "flight/types/bitmap_text.hpp",
         "flight/types/display_object.hpp",
         "flight/types/flight_document_interactive_state.hpp",
         "flight/types/flight_document_layout.hpp",
@@ -337,6 +338,8 @@
         "flight/types/focus_event_data.hpp",
         "flight/types/focus_manager.hpp",
         "flight/types/frame_script.hpp",
+        "flight/types/gl_scene3_druntime.hpp",
+        "flight/types/group.hpp",
         "flight/types/gui_controller.hpp",
         "flight/types/has_appearance.hpp",
         "flight/types/has_blend_mode.hpp",
@@ -348,22 +351,40 @@
         "flight/types/has_transform3_d.hpp",
         "flight/types/hierarchy_node.hpp",
         "flight/types/hit_test_function.hpp",
+        "flight/types/html_view.hpp",
         "flight/types/interaction_connect_guard.hpp",
         "flight/types/interaction_manager.hpp",
+        "flight/types/morph_shape.hpp",
+        "flight/types/movie_clip.hpp",
+        "flight/types/native_text.hpp",
         "flight/types/node.hpp",
         "flight/types/node2_d.hpp",
+        "flight/types/node3_d.hpp",
+        "flight/types/node3_dvisitor.hpp",
         "flight/types/node_descendant_visitor.hpp",
         "flight/types/node_interaction.hpp",
         "flight/types/node_interactive_state_binding.hpp",
         "flight/types/node_order_list.hpp",
+        "flight/types/particle_emitter2_d.hpp",
         "flight/types/pointer_event_data.hpp",
+        "flight/types/quad_batch.hpp",
+        "flight/types/render_proxy.hpp",
+        "flight/types/render_proxy2_d.hpp",
         "flight/types/render_proxy_visitor.hpp",
         "flight/types/render_state.hpp",
-        "flight/types/renderable.hpp",
+        "flight/types/rich_text.hpp",
+        "flight/types/scale9_shape.hpp",
+        "flight/types/scale9_sprite.hpp",
         "flight/types/scene2_dresources.hpp",
         "flight/types/selection_state.hpp",
         "flight/types/selection_state_runtime.hpp",
-        "flight/types/skeleton2_ddraw_order_animation_target.hpp"
+        "flight/types/shape.hpp",
+        "flight/types/skeleton2_ddraw_order_animation_target.hpp",
+        "flight/types/sprite.hpp",
+        "flight/types/svg_registry.hpp",
+        "flight/types/text_label.hpp",
+        "flight/types/tilemap.hpp",
+        "flight/types/wgpu_scene3_druntime.hpp"
       ],
       "id": "respell-reference-alias-node"
     },
@@ -382,10 +403,12 @@
         "flight/scene2d_formats/rive_asset_binding.hpp",
         "flight/scene3d/billboard.hpp",
         "flight/scene3d/scene_material.hpp",
+        "flight/types/billboard.hpp",
         "flight/types/bitmap_text.hpp",
         "flight/types/display_object.hpp",
         "flight/types/html_view.hpp",
         "flight/types/instanced_mesh.hpp",
+        "flight/types/lod_mesh.hpp",
         "flight/types/mesh.hpp",
         "flight/types/morph_shape.hpp",
         "flight/types/movie_clip.hpp",
@@ -394,6 +417,7 @@
         "flight/types/node2_d.hpp",
         "flight/types/node3_d.hpp",
         "flight/types/particle_emitter2_d.hpp",
+        "flight/types/particle_emitter3_d.hpp",
         "flight/types/quad_batch.hpp",
         "flight/types/rich_text.hpp",
         "flight/types/scale9_shape.hpp",
@@ -420,8 +444,7 @@
         "flight/render/render_state.hpp",
         "flight/render/renderer.hpp",
         "flight/render_gl/gl_render_state.hpp",
-        "flight/render_gl/gl_texture_resolver.hpp",
-        "flight/types/registry_table.hpp"
+        "flight/render_gl/gl_texture_resolver.hpp"
       ],
       "id": "respell-reference-alias-ordinaltable"
     },
@@ -459,16 +482,7 @@
         "flight/skeleton2d/skeleton2d_animation_target.hpp",
         "flight/skeleton2d_formats/skeleton_detect.hpp",
         "flight/spritesheet_formats/spritesheet_detect.hpp",
-        "flight/textureatlas_formats/texture_atlas_detect.hpp",
-        "flight/types/canvas_render_state.hpp",
-        "flight/types/dom_render_state.hpp",
-        "flight/types/flight_document_resource.hpp",
-        "flight/types/flight_document_schema_registry.hpp",
-        "flight/types/flight_document_token.hpp",
-        "flight/types/gl_render_state.hpp",
-        "flight/types/registry_table.hpp",
-        "flight/types/render_state.hpp",
-        "flight/types/wgpu_render_state.hpp"
+        "flight/textureatlas_formats/texture_atlas_detect.hpp"
       ],
       "id": "respell-reference-alias-keyedtable"
     },
@@ -478,13 +492,7 @@
         "flight/render/render_state.hpp",
         "flight/render/renderer.hpp",
         "flight/render_gl/gl_render_state.hpp",
-        "flight/render_gl/gl_texture_resolver.hpp",
-        "flight/types/canvas_render_state.hpp",
-        "flight/types/dom_render_state.hpp",
-        "flight/types/gl_render_state.hpp",
-        "flight/types/registry_table.hpp",
-        "flight/types/render_state.hpp",
-        "flight/types/wgpu_render_state.hpp"
+        "flight/render_gl/gl_texture_resolver.hpp"
       ],
       "id": "respell-reference-alias-slottable"
     },
@@ -931,19 +939,22 @@
     },
     {
       "files": [
+        "flight/types/dom_render_options.hpp",
         "flight/types/dom_render_state.hpp"
       ],
       "id": "types-dom-texture-resolver-repeat-alias"
     },
     {
       "files": [
-        "flight/types/gl_render_state.hpp"
+        "flight/types/gl_render_state.hpp",
+        "flight/types/gl_render_state_options.hpp"
       ],
       "id": "types-gl-texture-resolver-repeat-alias"
     },
     {
       "files": [
-        "flight/types/wgpu_render_state.hpp"
+        "flight/types/wgpu_render_state.hpp",
+        "flight/types/wgpu_render_state_options.hpp"
       ],
       "id": "types-wgpu-texture-resolver-repeat-alias"
     },
@@ -4122,9 +4133,7 @@
       "id": "render-cache-signal-construction-context"
     },
     {
-      "files": [
-        "flight/types/render_cache_adapter.hpp"
-      ],
+      "files": [],
       "id": "types-render-cache-adapter-interface-heritage"
     },
     {
@@ -4158,9 +4167,7 @@
       "id": "render-cache-adapter-type-guard-narrowing"
     },
     {
-      "files": [
-        "flight/types/render_proxy2_d.hpp"
-      ],
+      "files": [],
       "id": "types-render-proxy2d-interface-heritage"
     },
     {
@@ -5196,9 +5203,9 @@
     },
     {
       "dependency": "flight",
-      "digest": "055b73b2fd0d21f68584c65700cefdc097fbb3addc991214edbd7879adc84bfb",
-      "id": "renderable-concrete-node-arms",
-      "module": "packages/types/src/Renderable.ts",
+      "digest": "52c4a9162d6d319c8ab0670f804d31d616e4e2d11e67c74fd06747c4f2a7c8b9",
+      "id": "texture-like-concrete-value-arms",
+      "module": "packages/types/src/Texture.ts",
       "package": "@flighthq/types"
     },
     {
@@ -5207,13 +5214,6 @@
       "id": "material-concrete-value-path",
       "module": "packages/types/src/MaterialValue.ts, Mesh.ts, InstancedMesh.ts, Billboard.ts, GlMeshMaterialRenderer.ts, Scene3DRenderProxy.ts, and GlScene3DRuntime.ts; packages/scene3d constructors; packages/scene3d-gl material dispatch and built-in renderers",
       "package": "@flighthq/scene3d-gl"
-    },
-    {
-      "dependency": "flight",
-      "digest": "52c4a9162d6d319c8ab0670f804d31d616e4e2d11e67c74fd06747c4f2a7c8b9",
-      "id": "texture-like-concrete-value-arms",
-      "module": "packages/types/src/Texture.ts",
-      "package": "@flighthq/types"
     },
     {
       "dependency": "flight",
@@ -5466,13 +5466,6 @@
       "id": "scene3d-readonly-transform-query-boundaries",
       "module": "packages/node/src/nodeTransform3d.ts and packages/scene3d-gl/src/glParticleEmitter3D.ts",
       "package": "@flighthq/node and @flighthq/scene3d-gl"
-    },
-    {
-      "dependency": "flight",
-      "digest": "24323d32bdb09a289add8adec7d62e77adf762f9fbbf10d2aa17ec479ad2493b",
-      "id": "node3d-named-runtime-carriers",
-      "module": "Node3D, Mesh, and InstancedMesh runtime carriers",
-      "package": "@flighthq/types"
     },
     {
       "dependency": "flight",
@@ -6282,6 +6275,10 @@
       "emittedModules": 4,
       "package": "@flighthq/abc",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -6290,6 +6287,10 @@
       "emittedModules": 3,
       "package": "@flighthq/accessibility",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6298,6 +6299,10 @@
       "emittedModules": 22,
       "package": "@flighthq/adjustments",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 22
     },
     {
@@ -6306,6 +6311,10 @@
       "emittedModules": 12,
       "package": "@flighthq/animation",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 13
     },
     {
@@ -6314,6 +6323,10 @@
       "emittedModules": 4,
       "package": "@flighthq/app",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 6
     },
     {
@@ -6322,6 +6335,10 @@
       "emittedModules": 4,
       "package": "@flighthq/assets",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
@@ -6330,6 +6347,10 @@
       "emittedModules": 5,
       "package": "@flighthq/audio",
       "refusedModules": 3,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
@@ -6338,6 +6359,10 @@
       "emittedModules": 4,
       "package": "@flighthq/binpack",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -6346,6 +6371,10 @@
       "emittedModules": 44,
       "package": "@flighthq/bitmap",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 44
     },
     {
@@ -6354,6 +6383,10 @@
       "emittedModules": 7,
       "package": "@flighthq/bitmapfont",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
@@ -6362,6 +6395,10 @@
       "emittedModules": 6,
       "package": "@flighthq/bitmapfont-formats",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
@@ -6370,6 +6407,10 @@
       "emittedModules": 3,
       "package": "@flighthq/bitmaptext",
       "refusedModules": 3,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 6
     },
     {
@@ -6378,6 +6419,10 @@
       "emittedModules": 21,
       "package": "@flighthq/camera",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 21
     },
     {
@@ -6386,6 +6431,10 @@
       "emittedModules": 7,
       "package": "@flighthq/camera-controls",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 7
     },
     {
@@ -6394,6 +6443,10 @@
       "emittedModules": 3,
       "package": "@flighthq/capture",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -6402,6 +6455,10 @@
       "emittedModules": 4,
       "package": "@flighthq/clip",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -6410,6 +6467,10 @@
       "emittedModules": 3,
       "package": "@flighthq/clipboard",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6418,6 +6479,10 @@
       "emittedModules": 4,
       "package": "@flighthq/clock",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -6426,6 +6491,10 @@
       "emittedModules": 32,
       "package": "@flighthq/collision",
       "refusedModules": 6,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 38
     },
     {
@@ -6434,6 +6503,10 @@
       "emittedModules": 11,
       "package": "@flighthq/color",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 11
     },
     {
@@ -6442,6 +6515,10 @@
       "emittedModules": 6,
       "package": "@flighthq/command",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
@@ -6450,6 +6527,10 @@
       "emittedModules": 6,
       "package": "@flighthq/compression",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 6
     },
     {
@@ -6458,6 +6539,10 @@
       "emittedModules": 2,
       "package": "@flighthq/connectivity",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6466,6 +6551,10 @@
       "emittedModules": 3,
       "package": "@flighthq/debug",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -6474,6 +6563,10 @@
       "emittedModules": 3,
       "package": "@flighthq/device",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6482,6 +6575,10 @@
       "emittedModules": 4,
       "package": "@flighthq/dialog",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
@@ -6490,6 +6587,10 @@
       "emittedModules": 22,
       "package": "@flighthq/easing",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 23
     },
     {
@@ -6498,6 +6599,10 @@
       "emittedModules": 55,
       "package": "@flighthq/effects",
       "refusedModules": 22,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 77
     },
     {
@@ -6507,6 +6612,10 @@
       "environment": "web",
       "package": "@flighthq/effects-canvas",
       "refusedModules": 18,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 30
     },
     {
@@ -6515,6 +6624,10 @@
       "emittedModules": 7,
       "package": "@flighthq/effects-gl",
       "refusedModules": 54,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 61
     },
     {
@@ -6523,6 +6636,10 @@
       "emittedModules": 12,
       "package": "@flighthq/effects-wgpu",
       "refusedModules": 48,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 60
     },
     {
@@ -6531,6 +6648,10 @@
       "emittedModules": 3,
       "package": "@flighthq/encoding",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6539,6 +6660,10 @@
       "emittedModules": 10,
       "package": "@flighthq/entity",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 10
     },
     {
@@ -6547,6 +6672,10 @@
       "emittedModules": 2,
       "package": "@flighthq/filesystem",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6555,6 +6684,10 @@
       "emittedModules": 4,
       "package": "@flighthq/flow",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -6563,6 +6696,10 @@
       "emittedModules": 8,
       "package": "@flighthq/font",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 9
     },
     {
@@ -6571,6 +6708,10 @@
       "emittedModules": 15,
       "package": "@flighthq/font-formats",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 17
     },
     {
@@ -6579,6 +6720,10 @@
       "emittedModules": 4,
       "package": "@flighthq/geolocation",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -6587,6 +6732,10 @@
       "emittedModules": 30,
       "package": "@flighthq/geometry",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 30
     },
     {
@@ -6595,6 +6744,10 @@
       "emittedModules": 4,
       "package": "@flighthq/gizmo",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
@@ -6603,6 +6756,10 @@
       "emittedModules": 7,
       "package": "@flighthq/glyphatlas",
       "refusedModules": 3,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 10
     },
     {
@@ -6611,6 +6768,10 @@
       "emittedModules": 16,
       "package": "@flighthq/gui",
       "refusedModules": 4,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 20
     },
     {
@@ -6619,6 +6780,10 @@
       "emittedModules": 3,
       "package": "@flighthq/haptics",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6627,6 +6792,10 @@
       "emittedModules": 6,
       "package": "@flighthq/host",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 6
     },
     {
@@ -6635,6 +6804,10 @@
       "emittedModules": 4,
       "package": "@flighthq/image",
       "refusedModules": 3,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 7
     },
     {
@@ -6643,6 +6816,10 @@
       "emittedModules": 9,
       "package": "@flighthq/image-codec",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 9
     },
     {
@@ -6651,6 +6828,10 @@
       "emittedModules": 4,
       "package": "@flighthq/importdiagnostics",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -6659,6 +6840,10 @@
       "emittedModules": 2,
       "package": "@flighthq/input",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6667,6 +6852,10 @@
       "emittedModules": 8,
       "package": "@flighthq/interaction",
       "refusedModules": 11,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 19
     },
     {
@@ -6675,6 +6864,10 @@
       "emittedModules": 2,
       "package": "@flighthq/intl",
       "refusedModules": 7,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 9
     },
     {
@@ -6683,6 +6876,10 @@
       "emittedModules": 3,
       "package": "@flighthq/ipc",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6691,6 +6888,10 @@
       "emittedModules": 3,
       "package": "@flighthq/keyboard",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6699,6 +6900,10 @@
       "emittedModules": 5,
       "package": "@flighthq/layout",
       "refusedModules": 3,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
@@ -6707,6 +6912,10 @@
       "emittedModules": 2,
       "package": "@flighthq/lifecycle",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6715,6 +6924,10 @@
       "emittedModules": 13,
       "package": "@flighthq/lighting",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 14
     },
     {
@@ -6723,6 +6936,10 @@
       "emittedModules": 3,
       "package": "@flighthq/loader",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -6731,6 +6948,10 @@
       "emittedModules": 2,
       "package": "@flighthq/log",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6739,6 +6960,10 @@
       "emittedModules": 24,
       "package": "@flighthq/materials",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 24
     },
     {
@@ -6747,6 +6972,10 @@
       "emittedModules": 17,
       "package": "@flighthq/math",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 17
     },
     {
@@ -6755,6 +6984,10 @@
       "emittedModules": 5,
       "package": "@flighthq/media",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 7
     },
     {
@@ -6763,6 +6996,10 @@
       "emittedModules": 3,
       "package": "@flighthq/mediasession",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6771,6 +7008,10 @@
       "emittedModules": 3,
       "package": "@flighthq/menu",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -6779,6 +7020,10 @@
       "emittedModules": 16,
       "package": "@flighthq/mesh",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 16
     },
     {
@@ -6787,6 +7032,10 @@
       "emittedModules": 5,
       "package": "@flighthq/midi",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 7
     },
     {
@@ -6795,6 +7044,10 @@
       "emittedModules": 3,
       "package": "@flighthq/motionpath",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6803,6 +7056,10 @@
       "emittedModules": 3,
       "package": "@flighthq/movieclip",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
@@ -6811,6 +7068,10 @@
       "emittedModules": 5,
       "package": "@flighthq/net",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
@@ -6819,6 +7080,10 @@
       "emittedModules": 21,
       "package": "@flighthq/node",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 21
     },
     {
@@ -6827,6 +7092,10 @@
       "emittedModules": 2,
       "package": "@flighthq/notification",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6835,6 +7104,10 @@
       "emittedModules": 7,
       "package": "@flighthq/particleemitter",
       "refusedModules": 5,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 12
     },
     {
@@ -6843,6 +7116,10 @@
       "emittedModules": 12,
       "package": "@flighthq/particles",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 13
     },
     {
@@ -6851,6 +7128,10 @@
       "emittedModules": 11,
       "package": "@flighthq/particles-formats",
       "refusedModules": 6,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 17
     },
     {
@@ -6859,6 +7140,10 @@
       "emittedModules": 31,
       "package": "@flighthq/path",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 31
     },
     {
@@ -6867,6 +7152,10 @@
       "emittedModules": 9,
       "package": "@flighthq/path-boolean",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 10
     },
     {
@@ -6875,6 +7164,10 @@
       "emittedModules": 3,
       "package": "@flighthq/path-formats",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6883,6 +7176,10 @@
       "emittedModules": 3,
       "package": "@flighthq/permissions",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6891,6 +7188,10 @@
       "emittedModules": 21,
       "package": "@flighthq/physics2d",
       "refusedModules": 5,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 26
     },
     {
@@ -6899,6 +7200,10 @@
       "emittedModules": 6,
       "package": "@flighthq/physics2d-abi",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
@@ -6907,6 +7212,10 @@
       "emittedModules": 32,
       "package": "@flighthq/physics3d",
       "refusedModules": 4,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 36
     },
     {
@@ -6915,6 +7224,10 @@
       "emittedModules": 6,
       "package": "@flighthq/physics3d-abi",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
@@ -6923,6 +7236,10 @@
       "emittedModules": 2,
       "package": "@flighthq/picking",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -6931,6 +7248,10 @@
       "emittedModules": 3,
       "package": "@flighthq/platform",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6939,6 +7260,10 @@
       "emittedModules": 2,
       "package": "@flighthq/power",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6947,6 +7272,10 @@
       "emittedModules": 3,
       "package": "@flighthq/preferences",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -6955,6 +7284,10 @@
       "emittedModules": 3,
       "package": "@flighthq/protocol",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6963,6 +7296,10 @@
       "emittedModules": 2,
       "package": "@flighthq/quadbatch",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6971,6 +7308,10 @@
       "emittedModules": 3,
       "package": "@flighthq/registry",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6979,6 +7320,10 @@
       "emittedModules": 4,
       "package": "@flighthq/registry-catalog",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -6987,6 +7332,10 @@
       "emittedModules": 3,
       "package": "@flighthq/registry-codegen",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -6995,6 +7344,10 @@
       "emittedModules": 11,
       "package": "@flighthq/render",
       "refusedModules": 14,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 25
     },
     {
@@ -7003,6 +7356,10 @@
       "emittedModules": 19,
       "package": "@flighthq/render-gl",
       "refusedModules": 14,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 33
     },
     {
@@ -7011,6 +7368,10 @@
       "emittedModules": 14,
       "package": "@flighthq/render-wgpu",
       "refusedModules": 19,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 33
     },
     {
@@ -7019,6 +7380,10 @@
       "emittedModules": 4,
       "package": "@flighthq/requirements",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -7027,6 +7392,10 @@
       "emittedModules": 3,
       "package": "@flighthq/scene-document",
       "refusedModules": 8,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 11
     },
     {
@@ -7035,6 +7404,10 @@
       "emittedModules": 4,
       "package": "@flighthq/scene2d",
       "refusedModules": 6,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 10
     },
     {
@@ -7044,6 +7417,10 @@
       "environment": "web",
       "package": "@flighthq/scene2d-canvas",
       "refusedModules": 11,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 51
     },
     {
@@ -7053,6 +7430,10 @@
       "environment": "web",
       "package": "@flighthq/scene2d-dom",
       "refusedModules": 19,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 33
     },
     {
@@ -7061,6 +7442,10 @@
       "emittedModules": 17,
       "package": "@flighthq/scene2d-formats",
       "refusedModules": 10,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 27
     },
     {
@@ -7069,6 +7454,10 @@
       "emittedModules": 9,
       "package": "@flighthq/scene2d-gl",
       "refusedModules": 24,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 33
     },
     {
@@ -7077,6 +7466,10 @@
       "emittedModules": 10,
       "package": "@flighthq/scene2d-resources",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 12
     },
     {
@@ -7085,6 +7478,10 @@
       "emittedModules": 8,
       "package": "@flighthq/scene2d-wgpu",
       "refusedModules": 25,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 33
     },
     {
@@ -7093,6 +7490,10 @@
       "emittedModules": 20,
       "package": "@flighthq/scene3d",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 21
     },
     {
@@ -7101,6 +7502,10 @@
       "emittedModules": 20,
       "package": "@flighthq/scene3d-formats",
       "refusedModules": 20,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 40
     },
     {
@@ -7109,6 +7514,10 @@
       "emittedModules": 67,
       "package": "@flighthq/scene3d-gl",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 68
     },
     {
@@ -7117,6 +7526,10 @@
       "emittedModules": 11,
       "package": "@flighthq/scene3d-resources",
       "refusedModules": 17,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 28
     },
     {
@@ -7125,6 +7538,10 @@
       "emittedModules": 16,
       "package": "@flighthq/scene3d-wgpu",
       "refusedModules": 34,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 50
     },
     {
@@ -7133,6 +7550,10 @@
       "emittedModules": 3,
       "package": "@flighthq/screen",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -7141,6 +7562,10 @@
       "emittedModules": 3,
       "package": "@flighthq/selection",
       "refusedModules": 3,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 6
     },
     {
@@ -7149,6 +7574,10 @@
       "emittedModules": 3,
       "package": "@flighthq/sensors",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -7157,6 +7586,10 @@
       "emittedModules": 17,
       "package": "@flighthq/shading",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 19
     },
     {
@@ -7165,6 +7598,10 @@
       "emittedModules": 16,
       "package": "@flighthq/shape",
       "refusedModules": 4,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 20
     },
     {
@@ -7173,6 +7610,10 @@
       "emittedModules": 3,
       "package": "@flighthq/shape-formats",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -7181,6 +7622,10 @@
       "emittedModules": 2,
       "package": "@flighthq/share",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -7189,6 +7634,10 @@
       "emittedModules": 3,
       "package": "@flighthq/shell",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -7197,6 +7646,10 @@
       "emittedModules": 3,
       "package": "@flighthq/shortcut",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -7205,6 +7658,10 @@
       "emittedModules": 8,
       "package": "@flighthq/signals",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 10
     },
     {
@@ -7213,6 +7670,10 @@
       "emittedModules": 17,
       "package": "@flighthq/skeleton2d",
       "refusedModules": 8,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 25
     },
     {
@@ -7221,6 +7682,10 @@
       "emittedModules": 10,
       "package": "@flighthq/skeleton2d-formats",
       "refusedModules": 5,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 15
     },
     {
@@ -7229,6 +7694,10 @@
       "emittedModules": 8,
       "package": "@flighthq/skeleton3d",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 10
     },
     {
@@ -7237,6 +7706,10 @@
       "emittedModules": 2,
       "package": "@flighthq/snapshot",
       "refusedModules": 5,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 7
     },
     {
@@ -7245,6 +7718,10 @@
       "emittedModules": 5,
       "package": "@flighthq/socket",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
@@ -7253,6 +7730,10 @@
       "emittedModules": 10,
       "package": "@flighthq/spatial",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 11
     },
     {
@@ -7261,6 +7742,10 @@
       "emittedModules": 6,
       "package": "@flighthq/spring",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 6
     },
     {
@@ -7269,6 +7754,10 @@
       "emittedModules": 7,
       "package": "@flighthq/spritesheet",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 9
     },
     {
@@ -7277,6 +7766,10 @@
       "emittedModules": 8,
       "package": "@flighthq/spritesheet-formats",
       "refusedModules": 5,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 13
     },
     {
@@ -7285,6 +7778,10 @@
       "emittedModules": 5,
       "package": "@flighthq/statechart",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
@@ -7293,6 +7790,10 @@
       "emittedModules": 2,
       "package": "@flighthq/statusbar",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -7301,6 +7802,10 @@
       "emittedModules": 6,
       "package": "@flighthq/surface",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 7
     },
     {
@@ -7309,6 +7814,10 @@
       "emittedModules": 16,
       "package": "@flighthq/swf",
       "refusedModules": 3,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 19
     },
     {
@@ -7317,6 +7826,10 @@
       "emittedModules": 4,
       "package": "@flighthq/text",
       "refusedModules": 5,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 9
     },
     {
@@ -7325,6 +7838,10 @@
       "emittedModules": 6,
       "package": "@flighthq/text-markup",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
@@ -7333,6 +7850,10 @@
       "emittedModules": 7,
       "package": "@flighthq/textbidi",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
@@ -7341,6 +7862,10 @@
       "emittedModules": 5,
       "package": "@flighthq/textinput",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 6
     },
     {
@@ -7349,6 +7874,10 @@
       "emittedModules": 12,
       "package": "@flighthq/textlayout",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 14
     },
     {
@@ -7357,6 +7886,10 @@
       "emittedModules": 5,
       "package": "@flighthq/textsegment",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 7
     },
     {
@@ -7365,6 +7898,10 @@
       "emittedModules": 9,
       "package": "@flighthq/textshaper",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 10
     },
     {
@@ -7374,6 +7911,10 @@
       "environment": "web",
       "package": "@flighthq/textshaper-canvas",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -7382,6 +7923,10 @@
       "emittedModules": 6,
       "package": "@flighthq/texture",
       "refusedModules": 3,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 9
     },
     {
@@ -7390,6 +7935,10 @@
       "emittedModules": 10,
       "package": "@flighthq/texture-formats",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 11
     },
     {
@@ -7398,6 +7947,10 @@
       "emittedModules": 5,
       "package": "@flighthq/textureatlas",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 7
     },
     {
@@ -7406,6 +7959,10 @@
       "emittedModules": 6,
       "package": "@flighthq/textureatlas-formats",
       "refusedModules": 2,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 8
     },
     {
@@ -7414,6 +7971,10 @@
       "emittedModules": 2,
       "package": "@flighthq/tilemap",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -7422,6 +7983,10 @@
       "emittedModules": 5,
       "package": "@flighthq/tilemap-formats",
       "refusedModules": 6,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 11
     },
     {
@@ -7430,6 +7995,10 @@
       "emittedModules": 3,
       "package": "@flighthq/timeline",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -7438,6 +8007,10 @@
       "emittedModules": 2,
       "package": "@flighthq/tokens",
       "refusedModules": 3,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
@@ -7446,6 +8019,10 @@
       "emittedModules": 3,
       "package": "@flighthq/tray",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -7454,15 +8031,23 @@
       "emittedModules": 7,
       "package": "@flighthq/tween",
       "refusedModules": 3,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 10
     },
     {
       "cppIncludePrefix": "flight/types",
       "cppNamespace": "flight::types",
-      "emittedModules": 1001,
+      "emittedModules": 1028,
       "package": "@flighthq/types",
       "refusedModules": 0,
-      "sourceModules": 1001
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
+      "sourceModules": 1028
     },
     {
       "cppIncludePrefix": "flight/updater",
@@ -7470,6 +8055,10 @@
       "emittedModules": 2,
       "package": "@flighthq/updater",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 3
     },
     {
@@ -7478,6 +8067,10 @@
       "emittedModules": 3,
       "package": "@flighthq/useragent",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     },
     {
@@ -7486,6 +8079,10 @@
       "emittedModules": 4,
       "package": "@flighthq/velocity",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
@@ -7494,6 +8091,10 @@
       "emittedModules": 4,
       "package": "@flighthq/video",
       "refusedModules": 1,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 5
     },
     {
@@ -7502,6 +8103,10 @@
       "emittedModules": 2,
       "package": "@flighthq/webcam",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 2
     },
     {
@@ -7510,19 +8115,25 @@
       "emittedModules": 4,
       "package": "@flighthq/xml",
       "refusedModules": 0,
+      "source": {
+        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "version": "0.5.0"
+      },
       "sourceModules": 4
     }
   ],
   "source": {
     "package": "@flighthq/sdk",
     "repository": "https://github.com/flighthq/flight",
-    "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-    "version": "0.5.0"
+    "revisions": [
+      "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "a62784923f3be814463286c9fb28edfe6ab15789"
+    ]
   },
   "summary": {
     "packages": 154,
-    "emittedModules": 2349,
+    "emittedModules": 2376,
     "refusedModules": 561,
-    "sourceModules": 2910
+    "sourceModules": 2937
   }
 }

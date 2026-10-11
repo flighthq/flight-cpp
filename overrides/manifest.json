@@ -390,35 +390,6 @@
       "authoredOn": "2026-10-05"
     },
     {
-      "id": "types-log-sink-reference-parameter",
-      "path": "flight/types/log.hpp",
-      "package": "@flighthq/types",
-      "derivedFrom": "53d0632a259cf1125aaafaf89707ab52cb3afa40014aac0fd1df1196567e895a",
-      "reason": "The generated LogSink alias takes a readonly ROW while all ten LogSink lambdas in flight/log/log.hpp take a REFERENCE, so @flighthq/log cannot satisfy its own type. It also lowers the JavaScript function object to std::function, which is invocable but has no reference identity; copied sinks therefore cannot support source-level idempotent registration or removal. Roughly 200 compile diagnostics came from the parameter mismatch, while the identity loss caused two behavioral divergences after compilation was restored.",
-      "change": "The alias is `flight::Function<void(flight::Ref<LogEntry>)>` in place of std::function over StructuralRef<RowReadonly<RowOf<Ref<LogEntry>>>>. The parameter now agrees with emitted producers and consumers, and Function carries a shared callable state whose identity survives copies.",
-      "equivalence": "Invocation accepts the same LogEntry reference used by every sink lambda. Function preserves JavaScript function-object semantics beyond invocation: copies retain one identity, while separately constructed wrappers around even the same implementation remain distinct. The row spelling appears zero times in flight/log/log.hpp, and flight/types/log_signals.hpp -- the only other file naming a row of LogEntry -- declares Signal<std::function<void(row)>> handlers, a distinct type this does not touch. No declaration is added or removed.",
-      "whyNotAPatchOrRepair": "A source patch cannot reach either defect: the TypeScript already says `(entry: Readonly<LogEntry>) => void` consistently in the alias and lambdas, and already relies on ordinary JavaScript function identity. Dropping the annotation was measured to leave the lowering unchanged. A repair cannot change a type representation or supply identity semantics; both are behavioral emitter/runtime decisions rather than text-only insertions.",
-      "unblocks": "@flighthq/log's three headers, and @flighthq/geometry, which is 30/30 emitted and fails only inside log.hpp. log is the second-largest cascade root in the SDK at nineteen packages. The identity-bearing carrier also closes log's two remaining semantic divergences: duplicate registration and removal through a copied callback.",
-      "expires": "when the emitter lowers Readonly<LogEntry> consistently in aliases and lambda parameters and represents JavaScript function values with an identity-bearing callable such as flight::Function.",
-      "authoredOn": "2026-10-03",
-      "status": "complete"
-    },
-    {
-      "id": "types-render-state-deferred-cycle-body",
-      "path": "flight/types/render_state.hpp",
-      "package": "@flighthq/types",
-      "status": "complete",
-      "derivedFrom": "cb257e238f61bafc1f60b8b0bd0359d588eb69ddc6230159ef6e620e778da145",
-      "reason": "The generated Renderer, RenderProxy, and RenderState headers form a mutual include cycle. RenderState defines invoke_render_proxy_destroy_data inline and immediately dereferences RenderProxy and its Renderer before whichever type began the cycle is complete. It also includes RenderProxy2D directly and transitively through RenderProxyAdapter and Scene2DRenderer even though this header uses all three only behind Ref or function carriers; entering through render_proxy.hpp therefore tries to define the derived RenderProxy2D while its RenderProxy base is still incomplete. Separately, the synthesized runtime-owner writer fixes its construction carrier to RenderState, rejecting exact flattened state owners such as GlRenderState.",
-      "change": "invoke_render_proxy_destroy_data becomes a constrained function template. Its two emitted public parameters remain exact. A defaulted DeferredProxy parameter is constrained to RenderProxy, and the body copies the input into optional<Ref<DeferredProxy>> so both proxy and renderer member accesses are dependent and are checked when the existing call site instantiates the function after the cycle has completed. The unnecessary RenderProxy2D, RenderProxyAdapter, and Scene2DRenderer includes are replaced by the existing forward declarations plus an exact RenderProxyAdapter declaration. The runtime-owner writer deduces its construction carrier and runtime argument while preserving the same checked row_set and exact RenderStateRuntime field value.",
-      "equivalence": "The destroy template constraint admits exactly RenderProxy, callers supply no template argument, and the copied optional retains the same shared owner and null state. The optional-chain body and destroy callback invocation are otherwise byte-for-byte emitted code. The owner writer still stores exactly Ref<RenderStateRuntime> under entity_runtime_key; deduction changes only which exact-owner construction view may carry that field. Focused runtime coverage proves forwarding and no-op behavior, and Renderer-first plus RenderProxy-first include orders compile.",
-      "whyNotAPatchOrRepair": "The TypeScript file declares interfaces and contains neither synthesized helper, so no target-neutral source rewrite can move or template them. Its source imports are already type-only declarations, so rewriting them cannot stop the emitter from promoting Ref/function-pointee dependencies to full includes. An insertion repair cannot remove those includes, make existing expressions dependent, relocate a definition, or change a synthesized parameter type.",
-      "unblocks": "Across the 101-header reverse-include closure in types, effects_canvas, scene2d_canvas, and render, the focused gate moves from 17/101 to 68/101: +51 newly clean headers and zero regressions. Two further headers advance from render_state.hpp:133 to an independent canvas_render_surface.hpp failure. Thus all 53 headers whose first diagnostic was one of the two incomplete dereferences are cleared at this site.",
-      "remaining": "Thirty-three of the focused 101 headers retain independent failures: fifteen applicable failures in render and eighteen environment-deferred canvas failures. The two advanced canvas headers now stop at an unrelated missing CanvasRenderState qualification. WGPU effect headers likewise advance past this site but retain host/profile declaration gaps.",
-      "expires": "when the emitter places the synthesized destroy-data helper after complete RenderProxy and Renderer definitions, factors the cyclic declarations from the inline implementation, or emits a standards-conforming dependent body itself.",
-      "authoredOn": "2026-10-05"
-    },
-    {
       "id": "render-gl-state-deferred-heritage-teardown",
       "path": "flight/render_gl/gl_render_state.hpp",
       "package": "@flighthq/render-gl",
@@ -845,22 +816,6 @@
       "unblocks": "The source patch first moves @flighthq/statechart from 1/5 to 2/5. This angle-included guard then clears itself and both aggregators, producing the measured final gain to 5/5 with a three-header blast radius.",
       "remaining": "None in @flighthq/statechart when regenerated with statechart-single-transition-binding.",
       "expires": "when erased object WeakMap keys retain structural owner identity, function equality lowers for represented callbacks, and contextual LogData records construct their declared union.",
-      "authoredOn": "2026-10-04"
-    },
-    {
-      "id": "types-surface-runtime-heritage",
-      "path": "flight/types/surface.hpp",
-      "package": "@flighthq/types",
-      "status": "complete",
-      "supplies": "packages/types/src/Surface.ts",
-      "derivedFrom": "8abcc8c955f71203e0240cd057b785cf37bf0f09c0a1831a76f8efcc5f22c437",
-      "reason": "The emitter flattens SurfaceRuntime extends EntityRuntime into an unrelated aggregate. That makes one source owner impossible to store through the generic EntityRuntime slot and later recover as SurfaceRuntime without an identity-changing copy or an invalid pointer cast.",
-      "change": "Retains the generated Surface shape and NativeSurfaceHandle carrier, but declares SurfaceRuntime as the source-specified public C++ subclass of EntityRuntime with its one additional handle member.",
-      "equivalence": "The base binding and uid cells plus the handle live on one shared owner. Upcasting into the generic entity slot and static recovery through the source-guaranteed surface invariant share one control block and one object; no side table, copy, reinterpretation, or extra public field is introduced.",
-      "whyNotAPatchOrRepair": "The TypeScript already declares the exact heritage. A source rewrite cannot add more evidence, while an insertion repair cannot replace the generated unrelated base class. A side-table-only surface override was rejected because the source explicitly requires the runtime to remain the entity runtime and observable identity would diverge.",
-      "unblocks": "This type header has thirteen direct angle-include consumers, so that is its direct blast radius. Composed with the four surface module overrides, the measured @flighthq/surface gain is six headers, from 1/7 to 7/7.",
-      "remaining": "None in @flighthq/surface with the companion module overrides.",
-      "expires": "when interface extension retains represented C++ heritage for SurfaceRuntime extends EntityRuntime.",
       "authoredOn": "2026-10-04"
     },
     {
