@@ -4,7 +4,7 @@ diff --git a/packages/texture/src/cubeTexture.ts b/packages/texture/src/cubeText
 @@ -8,10 +8,6 @@ import type {
  import { cloneSampler } from './sampler.ts';
  import { cloneTexture, copyTexture, createTexture, equalsTexture } from './texture.ts';
- 
+
 -function getCubeSources(texture: Readonly<CubeTexture>): TextureSourceCubeFaces {
 -  return texture.sources;
 -}
@@ -14,7 +14,7 @@ diff --git a/packages/texture/src/cubeTexture.ts b/packages/texture/src/cubeText
  }
 @@ -38,7 +34,7 @@ export function equalsCubeTexture(
  }
- 
+
  export function getCubeTextureFaceSize(cube: Readonly<CubeTexture>): number {
 -  const sources = getCubeSources(cube);
 +  const sources = cube.sources;
@@ -23,7 +23,7 @@ diff --git a/packages/texture/src/cubeTexture.ts b/packages/texture/src/cubeText
      if (face !== null) return face.width;
 @@ -47,11 +43,19 @@ export function getCubeTextureFaceSize(cube: Readonly<CubeTexture>): number {
  }
- 
+
  export function isCubeTextureComplete(cube: Readonly<CubeTexture>): boolean {
 -  return getCubeSources(cube).every((face) => face !== null);
 +  const sources = cube.sources;
@@ -36,7 +36,7 @@ diff --git a/packages/texture/src/cubeTexture.ts b/packages/texture/src/cubeText
 +    sources[5] !== null
 +  );
  }
- 
+
  export function setCubeTextureFace(cube: CubeTexture, faceIndex: number, source: TextureSource | null): void {
 -  const sources = getCubeSources(cube);
 +  const sources = cube.sources;

@@ -39,7 +39,7 @@ using flight::types::TextureSource;
 //   export function cloneCubeTexture(source: Readonly<CubeTexture>): CubeTexture {
 //     return cloneTexture(source) as CubeTexture;
 //   }
-//   
+//
 // cpp emission failed for @flighthq/texture/packages/texture/src/cubeTexture.ts: a reference assertion from
 // flight::Ref<Texture> to flight::Ref<CubeTexture> has no heritage to cast along: the declarations share no
 // emitted C++ class-heritage path (source interface and intersection relationships flatten into independent
@@ -64,7 +64,7 @@ inline void copy_cube_texture(flight::Ref<CubeTexture> out, flight::Ref<CubeText
 //       sources: opts?.sources ?? [null, null, null, null, null, null],
 //     }) as CubeTexture;
 //   }
-//   
+//
 // cpp emission failed for @flighthq/texture/packages/texture/src/cubeTexture.ts: a reference assertion from
 // flight::Ref<TextureCube> to flight::Ref<CubeTexture> has no heritage to cast along: the declarations share no
 // emitted C++ class-heritage path (source interface and intersection relationships flatten into independent
@@ -92,7 +92,7 @@ inline bool equals_cube_texture(std::variant<flight::Ref<CubeTexture>, flight::N
 //     }
 //     return -1;
 //   }
-//   
+//
 // cpp emission failed for @flighthq/texture/packages/texture/src/cubeTexture.ts: contextual optionalVariant
 // construction requires expression type evidence
 
@@ -112,7 +112,7 @@ inline bool equals_cube_texture(std::variant<flight::Ref<CubeTexture>, flight::N
 //       sources[5] !== null
 //     );
 //   }
-//   
+//
 // cpp emission failed for @flighthq/texture/packages/texture/src/cubeTexture.ts: a presence test against null
 // has no absence channel in the emitted C++ storage for element
 
@@ -126,7 +126,7 @@ inline bool equals_cube_texture(std::variant<flight::Ref<CubeTexture>, flight::N
 //     (sources as unknown as (TextureSource | null)[])[faceIndex] = source;
 //     cube.version = (cube.version + 1) >>> 0;
 //   }
-//   
+//
 // cpp emission failed for @flighthq/texture/packages/texture/src/cubeTexture.ts: tuple projection requires one
 // statically known nonnegative integer index
 
