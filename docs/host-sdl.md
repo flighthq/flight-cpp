@@ -310,7 +310,8 @@ The native mechanics are now present. Wiring them to generated Flight contracts 
    application module. The repository now selects and compiles all upstream WebGL example sources through a recorded
    source remap and the SDL application-shell profile.
 
-The corresponding compiler work is recorded in [the upstream request](upstream-flight-compiler-request.md). The
+The corresponding compiler work is recorded in the
+[compiler-request catalog](compiler-requests/README.md). The
 installed host package does not wait for those compiler changes; the preview adapter is isolated so compiler-driven
 type changes do not alter SDL ownership or the native playback implementation.
 

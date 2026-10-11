@@ -313,7 +313,7 @@ try {
           'numericPropertyView. Both halves are needed: unwrap the narrowed local, then lower ' +
           '`anisotropy.MAX_TEXTURE_MAX_ANISOTROPY_EXT` onto GlExtension::get_number(String) the ' +
           'way `anisotropyEnums` above it already does on a non-optional parameter. Owned ' +
-          'upstream; see docs/upstream-flight-compiler-request.md.\n',
+          'upstream; see docs/compiler-requests/guarded-external-optional-member-view.md.\n',
       );
     }
     process.exit(1);

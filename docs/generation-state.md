@@ -2,8 +2,8 @@
 
 What the pinned compiler can and cannot turn into a usable SDK, measured rather than estimated. This
 replaces the practice of writing findings up as letters to flight-compiler: findings are recorded here
-and we keep patching. `docs/upstream-flight-compiler-request.md` is the historical correspondence and is
-no longer the place new work goes.
+and we keep patching. Concise upstream reproductions and their carrying workarounds live in the
+[compiler-request catalog](compiler-requests/README.md).
 
 Measured at flight `7e2fc7d` / flight-compiler `2b687ea`. Sections are appended as findings land, so a
 later section supersedes an earlier one where they disagree; corrections are recorded rather than edited away.

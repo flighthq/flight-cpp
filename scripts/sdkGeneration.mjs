@@ -674,7 +674,7 @@ function reportComputedCells(names) {
     process.stdout.write(
       `Computed cells the runtime's Symbol overloads cannot read: ${unreachable.join(', ')}\n` +
         '  Widening across a disagreement about these is refused, but a symbol read of one returns\n' +
-        "  the attachment's answer rather than the member. See docs/upstream-flight-compiler-request.md.\n",
+        "  the attachment's answer rather than the member. See docs/compiler-requests/computed-symbol-cell-bindings.md.\n",
     );
   }
 }
