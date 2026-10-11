@@ -25,18 +25,21 @@ Q0 reports the assignment.
 
 ---
 
-## Phase 0 — Re-pin (serialized; blocks generated-tree work)
+## Phase 0 — Re-pin
 
 **Q0 · GEN · Move the flight pin to upstream main.** Lock flight at a62784923f3be814463286c9fb28edfe6ab15789
-(or main at the time, recorded). Rehydrate, regenerate the SDK, and fix regressions so that headers,
-tiers and tests are **no worse** than baseline at 846fa56 (2,173 headers; 61 shippable; CTest 39/39)
-— or every regression is explained and listed. Re-validate every source patch against the new base
-(drop obsolete, re-derive broken); refresh the override drift list; re-inventory upstream examples
-(the count may have changed from 34). Pin move + regenerated output in their own commit(s), per `AGENTS.md`.
-Publish the new baseline numbers, per-package tier table and override drift list as
-`docs/baseline-<pin>.md` for every lane to start from.
-This is the one builder task exempt from the whole-SDK restriction; still `-j4` max.
-Accept: lock moved; `sdk:check`, `overrides:check` report reviewed; baseline doc committed.
+(or main at the time, recorded) and rehydrate. Do **not** regenerate the whole SDK. Instead:
+- Produce `docs/repin-<short-sha>.md`: the upstream packages and examples changed between the old and
+  new pin (from `git diff --stat` of the two commits, no builds), new or removed packages and examples,
+  and which lane each belongs to. Lanes start from this.
+- Regenerate, package-scoped, only the foundation packages most others depend on (e.g. types, math,
+  geometry, signals; whatever `--package=` closure order shows is shared) and fix what breaks, so lanes
+  regenerate on a sound base.
+- Check every source patch for whether it still applies at the new pin (an apply check, not a build).
+  Drop the obsolete ones, mark the broken ones for their owning lane, and list both in the repin doc.
+Pin move in its own commit, per `AGENTS.md`. After Q0, each lane regenerates its own packages as part
+of Phase 1.
+Accept: lock moved; repin doc committed; foundation packages regenerated and compiling.
 
 ### Runs in parallel with Q0 (does not depend on regenerated output)
 
@@ -46,7 +49,7 @@ the minimal TS repro, expected C++, and the patches/overrides/repairs carrying i
 maps every `source-patches/compiler-*.patch` to its request. This index is what the user sends upstream.
 
 **Q2 · each lane · Parity-test inventory.** For each lane, read the upstream package tests at the
-new pin (read-only, from `.dependencies` once Q0 rehydrates, or a separate read-only checkout) and
+new pin (read-only, from `.dependencies` once Q0 rehydrates) and
 write `docs/parity/<lane>.md`: per package, the upstream test files, the behaviors they assert, which
 are already covered by our CTest, and which are web-only and not applicable. No builds.
 This is the work list for Phase 2.
@@ -57,9 +60,12 @@ a small native harness for the test framework's `describe/it/expect` surface. Re
 fraction on two pilot packages (suggest math, geometry). If it works, it replaces most of the
 hand-porting in Phase 2. Prototype only; no whole-SDK runs.
 
-**Q4 · CPU hygiene tooling.** Add scoped helpers so staying in lane is the easy path: e.g.
-`npm run pkg:compile -- <package>` (headers of one package), `npm run pkg:tier -- <package>`, and
-a scoped CMake/CTest target per package's tests. Default to `-j2`.
+**Q4 · GEN · Package-scoped tooling.** Make staying in lane the easy path:
+`npm run pkg:generate -- <package>` regenerates one package and replaces **only that package's
+subtree and manifest rows** in `generated/`. Its dependency closure is used for resolution but not
+written over other lanes' output. Add `npm run pkg:compile -- <package>`, `npm run pkg:tier -- <package>`,
+and a per-package CTest label. Default to `-j2`. Highest priority of the parallel items, because every
+lane uses it.
 
 ---
 
@@ -67,7 +73,8 @@ a scoped CMake/CTest target per package's tests. Default to `-j2`.
 
 For each lane: drive every package to **done** (definition in `index.md`, points 1–3), largest
 refusal count first. Foreman may split a lane into one item per package or package group. Each item
-updates the baseline doc's row for its package on completion (via its commit; integration republishes the totals).
+starts by regenerating its packages at the new pin with `pkg:generate`. Completion is shown by
+package-scoped evidence in the commit message (headers compiled, tier, tests), not global totals.
 
 - **P-GL1 · GL ·** render, render-gl, texture, shading, materials, lighting (unblocks 2D and 3D).
 - **P-GL2 · GL ·** effects, effects-gl (54/61 refused at old pin; needed by D2 and Scene3D presentation).
@@ -76,7 +83,7 @@ updates the baseline doc's row for its package on completion (via its commit; in
 - **P-2D2 · 2D ·** node, shape, path, path-boolean, bitmap, clip, camera, camera-controls, entity.
 - **P-2D3 · 2D ·** scene2d-formats, scene2d-resources, scene-document, shape-formats, path-formats.
 - **P-2D4 · 2D ·** tilemap, textureatlas, spritesheet (+ formats), binpack, gizmo, selection.
-- **P-3D1 · 3D ·** scene3d, scene3d-gl: materials beyond StandardPbr, instancing, particles path, picking. Needs P-GL1.
+- **P-3D1 · 3D ·** scene3d, scene3d-gl: materials beyond StandardPbr, instancing, particles path. Needs P-GL1.
 - **P-3D2 · 3D ·** scene3d-formats, scene3d-resources (glTF, OBJ, AWD2…), mesh, skeleton3d.
 - **P-3D3 · 3D ·** physics3d, physics3d-abi, picking.
 - **P-TX1 · TEXT ·** font, font-formats, glyphatlas, textshaper, textbidi, textsegment, intl.
@@ -87,7 +94,10 @@ updates the baseline doc's row for its package on completion (via its commit; in
 - **P-AN4 · ANIM ·** physics2d(+abi), collision, spatial.
 - **P-PL1 · PLAT ·** app, host, platform, lifecycle, input, keyboard, interaction, gui, layout, accessibility.
 - **P-PL2 · PLAT ·** audio, media, mediasession, video, webcam, midi (SDL-backed where a host is needed).
-- **P-PL3 · PLAT ·** the desktop/service packages (dialog … connectivity in the lane table): native implementation, or an honest fail-loud capability where SDL has none, recorded in `docs/`.
+- **P-PL3 · PLAT ·** the desktop/service packages (dialog … connectivity in the lane table): port them
+  faithfully; the SDL host implements only the seams SDL supports, and the rest are declared and left
+  unsupplied (`index.md`, "Host seams, not stubs"). Record in `docs/host-sdl.md` which seams SDL
+  supplies and which await another host.
 - **P-CO1 · CORE ·** math, geometry, types, signals, command, encoding, compression (carry upstream's LZMA fix), xml, abc.
 - **P-CO2 · CORE ·** net, socket, loader, assets, registry, registry-catalog, registry-codegen, log, debug, requirements, importdiagnostics.
 
@@ -111,11 +121,14 @@ mark any frame whose correctness was not checked by eye.
 
 ---
 
-## Phase 3 — Faithful example ports (e2e acceptance)
+## Phase 3 — Example ports (secondary to Phase 1–2)
 
-Each item: a faithful SDL port per `index.md`, added to `UPSTREAM_EXAMPLES`, with a `--smoke` CTest.
-Owned by the lane of the example's subject; starts when that lane's packages for it are done.
-Q0's re-inventory adds any new upstream example here.
+Examples serve the SDK (`index.md`). An example item starts only when its lane has no package work
+outstanding that would be more valuable. Each port must visibly **exercise its subject package**: the
+tilemap draws through `flight::tilemap`, movieclip plays through `flight::movieclip`, the 3D examples
+render Scene3D. Each port lands in `UPSTREAM_EXAMPLES` with a `--smoke` CTest whose assertion checks the
+subject package was actually driven (e.g. frames advanced, tiles drawn, nodes rendered), not just that
+the process exited 0. A port that can't use its subject yet stays out, with the blocker recorded.
 
 | Item | Example | Lane | Needs |
 | --- | --- | --- | --- |
@@ -153,20 +166,27 @@ The existing tree's `examples/sound` and `examples/tween` are not upstream ports
 
 ---
 
-## Phase 4 — WGPU and hardening (after Phases 1–3 are substantially green)
+## Phase 4 — WGPU (after the GL stack is green)
 
 - **W1 · WGPU ·** Choose and integrate a device provider (wgpu-native or Dawn) behind the optional SDL host. The runtime stays dependency-free.
 - **W2 · WGPU ·** render-wgpu, effects-wgpu, scene2d-wgpu, scene3d-wgpu to done; examples run on both backends.
-- **H1 · integration ·** Debug, Release, ASan+UBSan CTest runs, staggered to stay within the CPU budget.
-- **H2 · integration ·** Clang and GCC consumer builds; Bazel inventory parity with CMake.
-- **H3 · GEN ·** Pin-move drill: document and script a repeatable re-pin, so the next upstream move is routine.
+
+---
+
+## Phase 5 — Finalization (far out; not before Phases 1–3 are substantially done)
+
+- **F1 ·** Full-tree reproduction: whole `sdk:generate` / `sdk:check`, full header sweep, tiers, full
+  CMake build and CTest. Reconcile any cross-lane inconsistency that package-scoped work missed.
+- **F2 ·** Debug, Release, ASan+UBSan CTest; Clang and GCC consumer builds; Bazel inventory parity with CMake.
+- **F3 ·** Pin-move drill: script a repeatable re-pin so the next upstream move is routine.
+- **F4 ·** Full independent audit (auditor): tiers, override honesty, example faithfulness.
 
 ---
 
 ## Standing duties (not queued items)
 
-- **Integration** owns all whole-SDK runs. After each merge batch: scoped checks for what changed;
-  periodically, the full header sweep + tiers + CTest, published to `docs/baseline-<pin>.md` (totals
-  only) so lanes read results instead of recomputing them.
-- **Auditor** (on principal's request): faithfulness audits of example ports, override honesty,
-  and whether parity tests actually assert upstream behavior.
+- **Integration** merges continuously and runs only scoped checks for what each merge touches. It does
+  not run whole-SDK operations and never holds merges behind a long run.
+- **Auditor**, at principal's request or occasionally foreman's: faithfulness audits of example ports,
+  override honesty, whether parity tests assert real upstream behavior, and, rarely, a whole-tree audit
+  when a specific question needs one.

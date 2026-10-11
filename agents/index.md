@@ -9,10 +9,10 @@ on anything technical.
 ## Goal
 
 Every environment-agnostic upstream Flight package exists in C++ and **behaves as the original**.
-"Behaves" means proven by tests, not by compiling. Upstream examples run natively as faithful,
-end-to-end ports that use the same Flight APIs as the TypeScript source.
+"Behaves" means proven by tests, not by compiling. The SDK is the target. Upstream example ports
+are secondary evidence, and they count only when they genuinely run on the SDK packages they demonstrate.
 
-Baseline (builder audit, base 846fa56, flight pin 7e2fc7d):
+Last full baseline (builder audit, base 846fa56, old flight pin 7e2fc7d). Not to be recomputed until Phase 5:
 
 - 154 packages; 150 applicable; 4 web-only (effects-canvas, scene2d-canvas, scene2d-dom, textshaper-canvas).
 - 61/150 shippable (25 ready, 36 assisted), 89 partial.
@@ -23,7 +23,8 @@ Baseline (builder audit, base 846fa56, flight pin 7e2fc7d):
 ## Decisions (user, 2026-10-11)
 
 - **D1 — Pin.** The flight pin is 445 commits behind upstream main (7e2fc7d → a627849). Move it
-  first, in one serialized item (Q0). flight-compiler is current (2b687ea) and stays pinned.
+  first (Q0), then each lane regenerates its own packages at the new pin. flight-compiler is current
+  (2b687ea) and stays pinned.
 - **D2 — 2D rendering.** Native 2D renders through **scene2d-gl** (+ effects-gl). A 2D example port
   may change its renderer selection from Canvas to GL. That is the only permitted deviation from the
   upstream source. No native Canvas2D backend is planned.
@@ -34,13 +35,18 @@ Baseline (builder audit, base 846fa56, flight pin 7e2fc7d):
 - **D4 — WGPU.** GL first. WGPU packages (render-wgpu, scene2d-wgpu, scene3d-wgpu, effects-wgpu)
   are queued after the GL stack is green, as an optional host library. Until then they stay partial
   with honest fail-loud boundaries.
-
+- **D5 — Platform packages.** Ported like any other; the SDL host supplies only the seams SDL
+  supports. See "Host seams, not stubs".
+- **D6 — Global audits.** No whole-SDK runs during ordinary work, by anyone. Rare auditor runs at
+  foreman's request; the full audit is finalization work (Phase 5).
 ## Definition of done for a package
 
 A package is **done** when all hold, verified by its lane:
 
-1. Every public header compiles independently (`sdk:compile --headers=` scoped to the package).
-2. Tier is `ready`, or `assisted` with zero drifted overrides and no `incomplete` override.
+1. The package is regenerated at the current pin (`--package=`) and every public header compiles
+   independently (`sdk:compile --headers=` scoped to the package).
+2. Its tier, computed for that package alone, is `ready`, or `assisted` with zero drifted overrides
+   and no `incomplete` override.
 3. No refused module lacks a faithful supply; remaining refusals are recorded in `docs/` with a
    compiler request.
 4. Behavioral parity tests exist (CTest) covering the package's upstream test intent: absence,
@@ -54,17 +60,18 @@ A package is **done** when all hold, verified by its lane:
 
 The machine is shared by ~13 agents (16 cores, 23 GB). Builds of the whole SDK take hours under contention.
 
-- **Stay in your package.** Compile only the headers, tests and targets of the package(s) you are
-  working on: `npm run sdk:compile -- --headers=@list`, `sdkGeneration.mjs --package=…`,
-  `cmake --build build --target <target>`.
-- **Max `-j2`** for any build or test command a builder runs.
-- **No whole-SDK operations by builders.** Full `sdk:generate`, an unscoped `sdk:compile`, full
-  `sdk:tiers` regeneration, full CMake build and full CTest belong to **integration** only (and
-  to Q0's owner during the pin move). Integration runs them at most once per merge batch, `-j4` max,
-  never two at once.
+- **Everything is package-scoped.** Generate with `sdkGeneration.mjs --package=<pkg>` (it brings
+  the package's dependency closure; add `--emit-path-prefix=` to narrow the expensive C++ emission),
+  compile with `sdk:compile --headers=…`, build and test with named CMake targets and `ctest -R`.
+- **Max `-j2`** for any build or test command.
+- **Nobody runs whole-SDK operations during ordinary work** — no full `sdk:generate`/`sdk:check`,
+  unscoped `sdk:compile`, full `sdk:tiers`, full CMake build or full CTest. Not builders, not
+  integration. Integration runs scoped checks for what it merges and keeps merging; it must never
+  become a queue behind a long run.
+- **Full audits are rare and late.** Foreman may occasionally ask the auditor for one when a real
+  question needs a whole-tree answer. Otherwise the full sweep belongs to finalization (Phase 5).
+  Lanes make progress from package-scoped evidence; they do not wait for, or ask for, global numbers.
 - Use a per-agent build directory and keep it, so builds stay incremental. Do not wipe it to "be sure".
-- A builder that needs a whole-tree answer (e.g. reverse-include closure) asks integration for the
-  latest report instead of producing one.
 
 ### Lanes
 
@@ -73,20 +80,33 @@ overrides, patches and tests. Touching another lane's package is allowed when un
 change minimal and say so in the commit message. Foreman assigns builders to lanes. One builder per
 lane at a time is the default, so two builders don't fight over the same files.
 
-### Faithful examples
+### Host seams, not stubs
+
+Port every applicable package, including platform ones (dialog, tray, notification, menu, …). A
+package's host-facing capability reaches the platform only through a host seam. The SDL host
+implements the seams SDL actually supports, and nothing else. An unsupported capability is signalled
+by the **missing seam**, not by a stub, fake or per-OS implementation. Those packages are complete
+when their generated code is correct and their seams are declared; they wait for a future C++ host
+that supplies the seam. Never fake a seam to make a package look working.
+
+### Examples serve the SDK
+
+The SDK is the target; examples are evidence that it works. Rank example work below package work.
+What matters is that an example **actually exercises the packages it is named for**: a tilemap
+example draws through `flight::tilemap`, a movieclip example plays through `flight::movieclip`, a 3D
+example renders a Scene3D scene. An example that runs but bypasses its subject is worse than no
+example, because it reports working code that does not exist.
 
 A port is faithful when its state and algorithms come from the generated Flight APIs the TypeScript
 source uses. SDL may replace only the browser host: window, input events, presentation, and the
-Canvas→GL renderer selection (D2). Recreating a subsystem locally, skipping features the original
-shows, or substituting a look-alike is not a port. Each port names its TypeScript authority at the
-top and lists in its header comment any feature it cannot yet show and why. A port with such
-gaps stays out of `UPSTREAM_EXAMPLES` until the gaps are closed.
+Canvas→GL renderer selection (D2). It may not recreate a subsystem locally or substitute a look-alike.
+Each port names its TypeScript authority at the top and lists any feature it cannot yet show and why.
 
 ### Compiler requests
 
 Record each flight-compiler defect as one file `docs/compiler-requests/<short-slug>.md`: minimal
 TypeScript reproduction, observed vs expected C++, affected modules, and the workaround that carries
-it here (patch/override/repair name). One file per defect avoids collisions between lanes. Q14
+it here (patch/override/repair name). One file per defect avoids collisions between lanes. Q1
 consolidates the existing `docs/upstream-flight-compiler-request.md` into that form.
 
 ### Honesty
