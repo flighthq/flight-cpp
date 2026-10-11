@@ -20,8 +20,12 @@
 #include <exception>
 #include <iomanip>
 #include <iostream>
+#include <memory>
+#include <optional>
 #include <sstream>
+#include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace {
@@ -77,7 +81,7 @@ class Random final {
   const auto channel = [match](double value) {
     return static_cast<std::uint32_t>(std::lround((value + match) * 255.0));
   };
-  return (channel(red) << 24U) | (channel(green) << 16U) | (channel(blue) << 8U) | 0xffU;
+  return (channel(red) << 16U) | (channel(green) << 8U) | channel(blue);
 }
 
 [[nodiscard]] std::string fixed(double value, int precision) {
@@ -112,10 +116,28 @@ struct Mountain final {
   double width{};
 };
 
+template <typename Value>
+[[nodiscard]] auto readonly_row(const std::shared_ptr<Value>& value) {
+  return flight::structural_ref_cast<
+      flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Value>>>>>(
+      flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<Value>>>>(value));
+}
+
+[[nodiscard]] flight::Ref<flight::types::Camera2D> create_example_camera() {
+  auto options = flight::make_ref<flight::types::Camera2DOptions>(
+      flight::types::Camera2DOptions{
+          .rotation = std::nullopt,
+          .x = world_width * 0.5,
+          .y = world_height * 0.5,
+          .zoom = 1.0,
+      });
+  return flight::camera::create_camera2_d(800.0, 600.0, readonly_row(options));
+}
+
 class CameraExample final {
  public:
   CameraExample()
-      : camera_(flight::camera::create_camera2_d(800.0, 600.0)),
+      : camera_(create_example_camera()),
         world_bounds_(flight::geometry::create_rectangle(0.0, 0.0, world_width, world_height)),
         follow_options_(flight::make_ref<flight::types::Camera2DFollowOptions>(
             flight::types::Camera2DFollowOptions{
@@ -129,9 +151,6 @@ class CameraExample final {
         stars_offset_(flight::geometry::create_vector2()),
         mountains_offset_(flight::geometry::create_vector2()),
         clouds_offset_(flight::geometry::create_vector2()) {
-    camera_->x = world_width * 0.5;
-    camera_->y = world_height * 0.5;
-    camera_->zoom = 1.0;
     Random random;
     for (int index = 0; index < 60; ++index) {
       const bool circle = random.next() <= 0.5;
@@ -170,8 +189,8 @@ class CameraExample final {
   void frame(const Frame& frame) {
     update_player(frame);
     update_zoom(frame);
-    if (frame.smoke && frame.index == 0) camera_->zoom = 0.25;
     update_camera(frame.delta_time);
+    if (frame.smoke) verify_smoke(frame.index);
     draw_parallax(frame.canvas);
     draw_world(frame.canvas);
     draw_hud(frame.canvas);
@@ -215,11 +234,50 @@ class CameraExample final {
   void update_camera(double delta_time) {
     flight::camera_controls::update_camera2_dfollow(
         camera_, player_.x, player_.y, delta_time, follow_options_);
+    ++follow_updates_;
     flight::camera::get_camera2_dview_matrix(camera_, view_matrix_);
     flight::camera::get_camera2_dvisible_bounds(camera_, visible_bounds_);
     flight::camera::get_camera2_dparallax_point(camera_, 0.1, stars_offset_);
     flight::camera::get_camera2_dparallax_point(camera_, 0.4, mountains_offset_);
     flight::camera::get_camera2_dparallax_point(camera_, 0.6, clouds_offset_);
+  }
+
+  [[nodiscard]] static bool near(double actual, double expected) {
+    return std::abs(actual - expected) <= 1e-9;
+  }
+
+  void verify_smoke(std::size_t frame_index) {
+    if (!near(camera_->x, world_width * 0.5) ||
+        !near(camera_->y, world_height * 0.5) || !near(camera_->zoom, 1.0) ||
+        follow_updates_ != frame_index + 1 ||
+        !near(view_matrix_->a, 1.0) || !near(view_matrix_->b, 0.0) ||
+        !near(view_matrix_->c, 0.0) || !near(view_matrix_->d, 1.0) ||
+        !near(view_matrix_->tx, -800.0) || !near(view_matrix_->ty, -600.0) ||
+        !near(visible_bounds_->x, 800.0) || !near(visible_bounds_->y, 600.0) ||
+        !near(visible_bounds_->width, 800.0) || !near(visible_bounds_->height, 600.0) ||
+        !near(stars_offset_->x, -120.0) || !near(stars_offset_->y, -90.0) ||
+        !near(mountains_offset_->x, -480.0) || !near(mountains_offset_->y, -360.0) ||
+        !near(clouds_offset_->x, -720.0) || !near(clouds_offset_->y, -540.0)) {
+      throw std::runtime_error(
+          "camera2d smoke did not observe generated follow, view, bounds, and parallax output");
+    }
+    if (smoke_probe_complete_) return;
+
+    auto zoom_probe = create_example_camera();
+    flight::camera::zoom_camera2_dat_screen_point(zoom_probe, 200.0, 150.0, 2.0);
+    if (!near(zoom_probe->x, 1100.0) || !near(zoom_probe->y, 825.0) ||
+        !near(zoom_probe->zoom, 2.0)) {
+      throw std::runtime_error("camera2d smoke did not observe generated anchored zoom output");
+    }
+
+    auto follow_probe = create_example_camera();
+    flight::camera_controls::update_camera2_dfollow(
+        follow_probe, 1500.0, 1100.0, 1.0 / 60.0, follow_options_);
+    if (!(follow_probe->x > world_width * 0.5 && follow_probe->x < 1500.0 &&
+          follow_probe->y > world_height * 0.5 && follow_probe->y < 1100.0)) {
+      throw std::runtime_error("camera2d smoke did not observe generated follow output");
+    }
+    smoke_probe_complete_ = true;
   }
 
   void draw_parallax(Canvas& canvas) const {
@@ -253,18 +311,14 @@ class CameraExample final {
 
   void draw_world(Canvas& canvas) const {
     constexpr double grid = 100.0;
-    const double left = visible_bounds_->x;
-    const double right = visible_bounds_->x + visible_bounds_->width;
-    const double top = visible_bounds_->y;
-    const double bottom = visible_bounds_->y + visible_bounds_->height;
-    for (double x = std::floor(left / grid) * grid; x <= right; x += grid) {
-      const Point from = screen({x, std::max(0.0, top)});
-      const Point to = screen({x, std::min(world_height, bottom)});
+    for (double x = 0.0; x <= world_width; x += grid) {
+      const Point from = screen({x, 0.0});
+      const Point to = screen({x, world_height});
       canvas.line(from.x, from.y, to.x, to.y, 0x64788cffU, 1.0, 0.15);
     }
-    for (double y = std::floor(top / grid) * grid; y <= bottom; y += grid) {
-      const Point from = screen({std::max(0.0, left), y});
-      const Point to = screen({std::min(world_width, right), y});
+    for (double y = 0.0; y <= world_height; y += grid) {
+      const Point from = screen({0.0, y});
+      const Point to = screen({world_width, y});
       canvas.line(from.x, from.y, to.x, to.y, 0x64788cffU, 1.0, 0.15);
     }
     const Point origin = screen({0.0, 0.0});
@@ -308,10 +362,10 @@ class CameraExample final {
         16.0,
         16.0,
         0xffffffffU,
-        10.0);
-    canvas.text("Player: (" + fixed(player_.x, 0) + ", " + fixed(player_.y, 0) + ")", 16.0, 34.0, 0xffffffffU, 10.0);
-    canvas.text("WASD/Arrows: move  Scroll: zoom", 16.0, 52.0, 0xffffffffU, 9.0);
-    canvas.text("Green = visible bounds  Red = world border", 16.0, 70.0, 0xffffffffU, 8.0);
+        13.0);
+    canvas.text("Player: (" + fixed(player_.x, 0) + ", " + fixed(player_.y, 0) + ")", 16.0, 34.0, 0xffffffffU, 13.0);
+    canvas.text("WASD/Arrows: move  Scroll: zoom", 16.0, 52.0, 0xffffffffU, 13.0);
+    canvas.text("Green = visible bounds  Red = world border", 16.0, 70.0, 0xffffffffU, 13.0);
   }
 
   std::vector<Landmark> landmarks_;
@@ -327,6 +381,8 @@ class CameraExample final {
   flight::Ref<flight::types::Vector2> stars_offset_;
   flight::Ref<flight::types::Vector2> mountains_offset_;
   flight::Ref<flight::types::Vector2> clouds_offset_;
+  std::size_t follow_updates_{};
+  bool smoke_probe_complete_{};
 };
 
 } // namespace

@@ -307,11 +307,11 @@ bool Input::key_pressed(SDL_Keycode key) const {
   return std::ranges::find(keys_pressed, key) != keys_pressed.end();
 }
 
-Canvas::Canvas(std::string_view title, bool hidden)
+Canvas::Canvas(std::string_view title, bool hidden, int width, int height)
     : window_(flight::host_sdl::WindowOptions{
           .title = std::string(title),
-          .width = canvas_width,
-          .height = canvas_height,
+          .width = width,
+          .height = height,
           .graphics_api = flight::host_sdl::GraphicsApi::none,
           .open_gl = {},
           .extra_flags = 0,
@@ -323,8 +323,8 @@ Canvas::Canvas(std::string_view title, bool hidden)
   if (renderer_ == nullptr) throw sdl_error("SDL could not create the example renderer");
   if (!SDL_SetRenderLogicalPresentation(
           renderer_,
-          canvas_width,
-          canvas_height,
+          width,
+          height,
           SDL_LOGICAL_PRESENTATION_LETTERBOX)) {
     throw sdl_error("SDL could not set the example logical presentation");
   }
@@ -679,6 +679,8 @@ int SdlExample::run(
     char** argv,
     std::string_view title,
     FrameCallback callback,
+    int width,
+    int height,
     std::uint32_t background,
     ExitCallback on_exit) {
   if (argc > 2 || (argc == 2 && std::string_view(argv[1]) != "--smoke")) {
@@ -686,7 +688,7 @@ int SdlExample::run(
   }
   const bool smoke = argc == 2;
   flight::host_sdl::Host host;
-  Canvas canvas(title, smoke);
+  Canvas canvas(title, smoke, width, height);
   Input input;
   const auto started = std::chrono::steady_clock::now();
   auto previous = started;

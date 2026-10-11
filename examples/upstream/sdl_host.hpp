@@ -53,7 +53,11 @@ struct Input final {
 
 class Canvas final {
  public:
-  explicit Canvas(std::string_view title, bool hidden);
+  explicit Canvas(
+      std::string_view title,
+      bool hidden,
+      int width = canvas_width,
+      int height = canvas_height);
   ~Canvas() noexcept;
 
   Canvas(const Canvas&) = delete;
@@ -188,6 +192,8 @@ class SdlExample final {
       char** argv,
       std::string_view title,
       FrameCallback callback,
+      int width = canvas_width,
+      int height = canvas_height,
       std::uint32_t background = 0x1a1a2eff,
       ExitCallback on_exit = {});
 };

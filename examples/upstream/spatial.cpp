@@ -7,12 +7,16 @@
 #include <flight/spatial/uniform_grid.hpp>
 #include <flight/types/spatial.hpp>
 
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
 #include <exception>
 #include <iostream>
+#include <random>
+#include <stdexcept>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace {
@@ -37,14 +41,25 @@ struct Object final {
 
 class Random final {
  public:
+  explicit Random(bool deterministic) : deterministic_(deterministic) {
+    if (!deterministic_) engine_.seed(std::random_device{}());
+  }
+
   [[nodiscard]] double range(double minimum, double maximum) {
-    state_ = state_ * 1664525U + 1013904223U;
-    const double amount = static_cast<double>(state_) / 4294967296.0;
+    double amount{};
+    if (deterministic_) {
+      state_ = state_ * 1664525U + 1013904223U;
+      amount = static_cast<double>(state_) / 4294967296.0;
+    } else {
+      amount = std::generate_canonical<double, 53>(engine_);
+    }
     return minimum + amount * (maximum - minimum);
   }
 
  private:
+  bool deterministic_{};
   std::uint32_t state_{0x05a171a1U};
+  std::mt19937_64 engine_{};
 };
 
 enum class Mode { pairs, point, ray, region };
@@ -61,10 +76,12 @@ enum class Mode { pairs, point, ray, region };
 
 class SpatialExample final {
  public:
-  SpatialExample()
-      : index_(flight::spatial::create_spatial_index2_d(
+  explicit SpatialExample(bool capture_mode)
+      : capture_mode_(capture_mode),
+        active_mode_(capture_mode ? Mode::region : Mode::pairs),
+        index_(flight::spatial::create_spatial_index2_d(
             flight::spatial::create_uniform_grid_spatial_backend2_d(100.0))) {
-    Random random;
+    Random random(capture_mode);
     for (int index = 0; index < 20; ++index) {
       const double object_width = random.range(30.0, 80.0);
       const double object_height = random.range(20.0, 60.0);
@@ -84,22 +101,18 @@ class SpatialExample final {
           .velocity_x = moving ? random.range(-30.0, 30.0) : 0.0,
           .velocity_y = moving ? random.range(-30.0, 30.0) : 0.0,
       });
-      flight::spatial::insert_spatial_object2_d(index_, static_cast<double>(index), bounds);
+      if (flight::spatial::insert_spatial_object2_d(index_, static_cast<double>(index), bounds)) {
+        ++inserted_count_;
+      }
     }
   }
 
   void frame(const Frame& frame) {
-    update(frame.delta_time);
-    const double mouse_x = frame.input.pointer_x;
-    const double mouse_y = frame.input.pointer_y;
-    const Mode mode = frame.smoke ? Mode::region
-                      : frame.input.pointer_down ? Mode::point
-                      : frame.input.key_down(SDLK_R) ? Mode::ray
-                      : frame.input.key_down(SDLK_Q) ? Mode::region
-                                                    : Mode::pairs;
+    handle_input(frame);
+    const std::size_t updated_count = update(std::min(frame.delta_time, 0.05));
     std::vector<bool> highlighted(objects_.size());
     int results{};
-    if (mode == Mode::pairs) {
+    if (active_mode_ == Mode::pairs) {
       flight::spatial::query_spatial_pairs2_d(index_, pairs_out_);
       results = static_cast<int>(pairs_out_.size());
       for (const auto& pair : pairs_out_) {
@@ -107,18 +120,18 @@ class SpatialExample final {
         highlight(pair->b, highlighted);
       }
     } else {
-      if (mode == Mode::point) {
-        flight::spatial::query_spatial_point2_d(index_, mouse_x, mouse_y, ids_out_);
-      } else if (mode == Mode::ray) {
+      if (active_mode_ == Mode::point) {
+        flight::spatial::query_spatial_point2_d(index_, mouse_x_, mouse_y_, ids_out_);
+      } else if (active_mode_ == Mode::ray) {
         flight::spatial::query_spatial_ray2_d(
-            index_, 0.0, height / 2.0, mouse_x, mouse_y - height / 2.0, ids_out_);
+            index_, 0.0, height / 2.0, mouse_x_, mouse_y_ - height / 2.0, ids_out_);
       } else {
         const auto region = flight::make_ref<flight::types::SpatialAabb2D>(
             flight::types::SpatialAabb2D{
-                .min_x = mouse_x - 50.0,
-                .min_y = mouse_y - 50.0,
-                .max_x = mouse_x + 50.0,
-                .max_y = mouse_y + 50.0,
+                .min_x = mouse_x_ - 50.0,
+                .min_y = mouse_y_ - 50.0,
+                .max_x = mouse_x_ + 50.0,
+                .max_y = mouse_y_ + 50.0,
             });
         flight::spatial::query_spatial_region2_d(index_, region, ids_out_);
       }
@@ -127,11 +140,30 @@ class SpatialExample final {
         highlight(id, highlighted);
       }
     }
-    draw(frame.canvas, mode, highlighted, results, mouse_x, mouse_y);
+    if (frame.smoke) verify_smoke(updated_count);
+    draw(frame.canvas, active_mode_, highlighted, results, mouse_x_, mouse_y_);
   }
 
  private:
-  void update(double delta_time) {
+  void handle_input(const Frame& frame) {
+    if (capture_mode_) return;
+    if (frame.input.pointer_inside) {
+      mouse_x_ = frame.input.pointer_x;
+      mouse_y_ = frame.input.pointer_y;
+    }
+    if (frame.input.pointer_pressed) active_mode_ = Mode::point;
+    for (const SDL_Keycode key : frame.input.keys_pressed) {
+      if (key == SDLK_R) active_mode_ = Mode::ray;
+      if (key == SDLK_Q) active_mode_ = Mode::region;
+    }
+    for (const SDL_Keycode key : frame.input.keys_released) {
+      if (key == SDLK_R || key == SDLK_Q) active_mode_ = Mode::pairs;
+    }
+    if (frame.input.pointer_released) active_mode_ = Mode::pairs;
+  }
+
+  [[nodiscard]] std::size_t update(double delta_time) {
+    std::size_t updated_count{};
     for (std::size_t index = 0; index < 5; ++index) {
       auto& object = objects_[index];
       auto& bounds = *object.bounds;
@@ -161,7 +193,73 @@ class SpatialExample final {
         bounds.min_y = height - object_height;
         object.velocity_y = -std::abs(object.velocity_y);
       }
-      flight::spatial::update_spatial_object2_d(index_, object.id, object.bounds);
+      if (flight::spatial::update_spatial_object2_d(index_, object.id, object.bounds)) {
+        ++updated_count;
+      }
+    }
+    return updated_count;
+  }
+
+  [[nodiscard]] static bool overlaps(
+      const flight::types::SpatialAabb2D& a,
+      const flight::types::SpatialAabb2D& b) {
+    return a.min_x < b.max_x && a.max_x > b.min_x &&
+           a.min_y < b.max_y && a.max_y > b.min_y;
+  }
+
+  void verify_smoke(std::size_t updated_count) const {
+    if (inserted_count_ != objects_.size() || updated_count != 5 ||
+        active_mode_ != Mode::region || mouse_x_ != width * 0.5 ||
+        mouse_y_ != height * 0.5) {
+      throw std::runtime_error("spatial smoke did not preserve capture state or index updates");
+    }
+
+    const flight::types::SpatialAabb2D region{
+        .min_x = mouse_x_ - 50.0,
+        .min_y = mouse_y_ - 50.0,
+        .max_x = mouse_x_ + 50.0,
+        .max_y = mouse_y_ + 50.0,
+    };
+    std::size_t expected_region_count{};
+    for (const auto& object : objects_) {
+      if (overlaps(*object.bounds, region)) {
+        ++expected_region_count;
+        if (!ids_out_.includes(object.id)) {
+          throw std::runtime_error("spatial region query omitted an overlapping indexed object");
+        }
+      }
+    }
+    if (ids_out_.size() != expected_region_count) {
+      throw std::runtime_error("spatial region query returned non-overlapping indexed objects");
+    }
+
+    flight::Array<double> probe_ids;
+    const auto& first = *objects_.front().bounds;
+    const double first_x = (first.min_x + first.max_x) * 0.5;
+    const double first_y = (first.min_y + first.max_y) * 0.5;
+    flight::spatial::query_spatial_point2_d(index_, first_x, first_y, probe_ids);
+    if (!probe_ids.includes(objects_.front().id)) {
+      throw std::runtime_error("spatial point query did not observe the generated index");
+    }
+    flight::spatial::query_spatial_ray2_d(index_, 0.0, 0.0, first_x, first_y, probe_ids);
+    if (!probe_ids.includes(objects_.front().id)) {
+      throw std::runtime_error("spatial ray query did not observe the generated index");
+    }
+
+    flight::Array<flight::Ref<flight::types::SpatialPair>> probe_pairs;
+    flight::spatial::query_spatial_pairs2_d(index_, probe_pairs);
+    std::size_t expected_pair_count{};
+    for (std::size_t first_index = 0; first_index < objects_.size(); ++first_index) {
+      for (std::size_t second_index = first_index + 1;
+           second_index < objects_.size();
+           ++second_index) {
+        if (overlaps(*objects_[first_index].bounds, *objects_[second_index].bounds)) {
+          ++expected_pair_count;
+        }
+      }
+    }
+    if (probe_pairs.size() != expected_pair_count) {
+      throw std::runtime_error("spatial pair query did not match the indexed bounds");
     }
   }
 
@@ -218,7 +316,7 @@ class SpatialExample final {
       canvas.fill_rectangle(mouse_x - 50.0, mouse_y - 50.0, 100.0, 100.0, color_region, 0.15);
       canvas.stroke_rectangle(mouse_x - 50.0, mouse_y - 50.0, 100.0, 100.0, color_region);
     }
-    canvas.text("Click: point query | R: ray query | Q: region query", 10.0, 6.0, 0x888888ffU, 11.0);
+    canvas.text("Click: point query | R: ray query | Q: region query", 10.0, 6.0, 0x888888ffU, 13.0);
     canvas.text(
         "Mode: " + std::string(mode_name(mode)) + "  Hits: " + std::to_string(results),
         10.0,
@@ -228,6 +326,11 @@ class SpatialExample final {
   }
 
   std::vector<Object> objects_;
+  bool capture_mode_{};
+  Mode active_mode_{Mode::pairs};
+  double mouse_x_{width * 0.5};
+  double mouse_y_{height * 0.5};
+  std::size_t inserted_count_{};
   flight::Ref<flight::types::SpatialIndex2D> index_;
   flight::Array<flight::Ref<flight::types::SpatialPair>> pairs_out_;
   flight::Array<double> ids_out_;
@@ -237,12 +340,15 @@ class SpatialExample final {
 
 int main(int argc, char** argv) {
   try {
-    SpatialExample example;
+    const bool capture_mode = argc == 2 && std::string_view(argv[1]) == "--smoke";
+    SpatialExample example(capture_mode);
     return flight::examples::SdlExample::run(
         argc,
         argv,
         "Flight spatial index - SDL",
-        [&](const Frame& frame) { example.frame(frame); });
+        [&](const Frame& frame) { example.frame(frame); },
+        static_cast<int>(width),
+        static_cast<int>(height));
   } catch (const std::exception& error) {
     std::cerr << "spatial example failed: " << error.what() << '\n';
     return EXIT_FAILURE;

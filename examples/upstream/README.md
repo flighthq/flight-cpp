@@ -1,8 +1,9 @@
 # Upstream Flight example ports
 
 The targets in this directory are audited native SDL ports of the pinned Flight TypeScript examples
-under `.dependencies/flight/examples/packages`. They open an 800 by 600 resizable window and render
-continuously. SDL replaces the browser host and presentation surface; the example's camera,
+under `.dependencies/flight/examples/packages`. They open a resizable window at the authority's
+canvas size (800 by 600 except for spatial's 800 by 500) and render continuously. SDL replaces the
+browser host and presentation surface; the example's camera,
 collision, clock, motion-path, or spatial behavior still comes from the same
 generated Flight APIs used by the TypeScript source. The source comment at the top of each port names
 the TypeScript file used as its authority.
@@ -23,8 +24,9 @@ without the optional SDL host does not advertise headless substitutes as example
 | `spatial` | `flight::spatial` | Moving indexed boxes, visible grid cells, pair/point/ray/region queries, and hit counts |
 
 Every executable accepts `--smoke`. Smoke mode creates a hidden SDL window, renders three fixed-step
-frames, and exits. CTest uses SDL's dummy video driver for painter examples and its offscreen GL
-driver with software rendering for `scene3d` on Linux.
+frames, and exits. The camera2d, collision, and spatial ports also assert generated package output,
+so a locally simulated frame cannot satisfy their smoke checks. CTest uses SDL's dummy video driver
+for painter examples and its offscreen GL driver with software rendering for `scene3d` on Linux.
 
 ```sh
 cmake -S . -B build \
