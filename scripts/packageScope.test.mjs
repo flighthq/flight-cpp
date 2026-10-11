@@ -10,6 +10,7 @@ import {
   compareInitializationModules,
   compareText,
   ctestLabelOf,
+  evaluationGroups,
   finalizeProvenance,
   mergeSortedRows,
   normalizePackageName,
@@ -140,6 +141,11 @@ describe('ordered ledgers reinsert where a full run puts them', () => {
     });
   }
 
+  test('evaluation groups are exactly what the compiler Tarjan walk computes from the records', () => {
+    const initialization = json('initialization.json');
+    assert.deepEqual(evaluationGroups(initialization), initialization.groups);
+  });
+
   test('initialization modules, which interleave packages', () => {
     const rows = json('initialization.json').modules;
     for (const package_ of packages) {
@@ -249,16 +255,35 @@ describe('scoped merge', () => {
     assert.ok(json('best-effort.json').modules.some((row) => row.module.packageName === target && row.consumers.some(outsideConsumer)));
   });
 
-  test('a changed evaluation group set is reported for a full run and left as committed', () => {
+  test('evaluation groups are recomputed, so a package that gains a module keeps every module in one group', () => {
+    const target = '@flighthq/math';
     const committed = copyTree('groups-committed');
     const candidate = copyTree('groups-candidate');
+    // The candidate grows math by one module that imports angle at runtime, as a new upstream file would.
     editJson(candidate, 'initialization.json', (value) => {
-      value.groups.find((group) => group.modules[0].packageName === '@flighthq/math').cyclic = true;
+      const angle = value.modules.find((row) => row.module.packageName === target && row.module.source.endsWith('/angle.ts'));
+      const added = { name: 'Added', packageName: target, source: 'packages/math/src/added.ts' };
+      value.entries.push(added);
+      value.modules.push({
+        bindings: [],
+        dependencies: [{ evaluation: 'runtime', importer: added, specifier: './angle', target: angle.module }],
+        module: added,
+        steps: [],
+      });
     });
-    const plan = planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName: '@flighthq/math' });
-    assert.equal(plan.problems.length, 1);
-    assert.match(plan.problems[0], /evaluation groups changed/u);
-    assert.ok(!plan.writes.has('initialization.json'));
+    const plan = planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName: target });
+    assert.deepEqual(plan.problems, []);
+    const merged = JSON.parse(plan.writes.get('initialization.json'));
+    const counts = new Map();
+    for (const group of merged.groups) {
+      for (const module of group.modules) counts.set(`${module.packageName}|${module.source}`, (counts.get(`${module.packageName}|${module.source}`) ?? 0) + 1);
+    }
+    assert.equal(counts.size, merged.modules.length);
+    assert.ok([...counts.values()].every((count) => count === 1));
+    assert.equal(counts.get(`${target}|packages/math/src/added.ts`), 1);
+    // A dependency's group precedes its importer's.
+    const position = (source) => merged.groups.findIndex((group) => group.modules.some((module) => module.source === source));
+    assert.ok(position('packages/math/src/angle.ts') < position('packages/math/src/added.ts'));
   });
 
   test('a row key absent from the shared table is reported, not silently written', () => {

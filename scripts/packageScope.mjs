@@ -402,28 +402,13 @@ export function planPackageMerge({ candidateRoot, committedRoot, packageName }) 
     candidateInitialization.modules.filter((row) => owns(row.module)),
     compareInitializationModules,
   );
-  // Evaluation groups are a topological order over the WHOLE graph, and the closure orders the same groups
-  // differently, so where a group sits cannot be decided from the package alone. Each group is
-  // single-package (checked). While the package's groups are the same set, their committed placement
-  // stands; a changed set is reported for a full run and the committed groups are left alone.
-  const groupOwner = (group) => {
-    const owners = new Set(group.modules.map((module) => module.packageName));
-    if (owners.size !== 1) throw new Error('An initialization group spans packages; scoped merge cannot place it.');
-    return [...owners][0];
-  };
-  const committedGroups = initialization.groups.filter((group) => groupOwner(group) === packageName);
-  const candidateGroups = candidateInitialization.groups.filter((group) => groupOwner(group) === packageName);
-  const groupKey = (group) => stableJson(group);
-  const committedGroupKeys = new Set(committedGroups.map(groupKey));
-  const groupsChanged =
-    committedGroups.length !== candidateGroups.length ||
-    candidateGroups.some((group) => !committedGroupKeys.has(groupKey(group)));
-  if (groupsChanged) {
-    problems.push(
-      `${packageName}'s evaluation groups changed; their place in the whole-SDK topological order of ` +
-        'initialization.json needs `npm run sdk:generate`. Those groups were left as committed.',
-    );
-  }
+  // Evaluation groups are the strongly connected components of the WHOLE runtime import graph, in the
+  // order the compiler's Tarjan walk emits them. They are derived, not owned by any package: the records
+  // they are computed from are `entries` and each module's `dependencies`, both merged above. So they are
+  // recomputed from the merged ledger exactly as the compiler computes them -- which keeps every module
+  // in exactly one group however the package's module set changed. scripts/packageScope.test.mjs checks
+  // that this reproduces the compiler's own groups.
+  initialization.groups = evaluationGroups(initialization);
   writes.set('initialization.json', `${JSON.stringify(initialization, undefined, 2)}\n`);
 
   // Build metadata and README are pure functions of the merged tree and manifest.
@@ -463,6 +448,76 @@ export function planPackageMerge({ candidateRoot, committedRoot, packageName }) 
     warnings,
     writes,
   };
+}
+
+// Mirrors flight-compiler's createCompilerModuleEvaluationGroups (packages/compiler-module/src/
+// compilerModuleEvaluation.ts): Tarjan's algorithm over `entries` in order, following each module's RUNTIME
+// dependencies in their recorded order; a group is cyclic when it has several modules or one that imports
+// itself. Type-only imports link without evaluation and are not edges.
+export function evaluationGroups(initialization) {
+  const key = (module) => `${module.packageName}\0${module.source}`;
+  const records = new Map(initialization.modules.map((record) => [key(record.module), record]));
+  const runtimeDependencies = (record) =>
+    record.dependencies
+      .filter((dependency) => dependency.evaluation === 'runtime')
+      .map((dependency) => {
+        const target = records.get(key(dependency.target));
+        if (target === undefined) {
+          throw new Error(`initialization.json: ${key(record.module)} imports ${key(dependency.target)}, which has no module record.`);
+        }
+        return target;
+      });
+  const groups = [];
+  const indices = new Map();
+  const lowLinks = new Map();
+  const onStack = new Set();
+  const stack = [];
+  let next = 0;
+  // Iterative, because the SDK graph is deep enough that recursion depth is a real risk on small stacks.
+  const visit = (root) => {
+    const frames = [{ dependencies: runtimeDependencies(root), position: 0, record: root }];
+    const enter = (record) => {
+      const id = key(record.module);
+      indices.set(id, next);
+      lowLinks.set(id, next);
+      next += 1;
+      stack.push(record);
+      onStack.add(id);
+    };
+    enter(root);
+    while (frames.length > 0) {
+      const frame = frames[frames.length - 1];
+      const id = key(frame.record.module);
+      if (frame.position < frame.dependencies.length) {
+        const dependency = frame.dependencies[frame.position++];
+        const dependencyId = key(dependency.module);
+        if (!indices.has(dependencyId)) {
+          enter(dependency);
+          frames.push({ dependencies: runtimeDependencies(dependency), position: 0, record: dependency, parent: id });
+        } else if (onStack.has(dependencyId)) {
+          lowLinks.set(id, Math.min(lowLinks.get(id), indices.get(dependencyId)));
+        }
+        continue;
+      }
+      frames.pop();
+      if (frame.parent !== undefined) lowLinks.set(frame.parent, Math.min(lowLinks.get(frame.parent), lowLinks.get(id)));
+      if (lowLinks.get(id) !== indices.get(id)) continue;
+      const modules = [];
+      let member;
+      do {
+        member = stack.pop();
+        onStack.delete(key(member.module));
+        modules.push(member.module);
+      } while (member !== frame.record);
+      groups.push({ cyclic: modules.length > 1 || frame.dependencies.includes(frame.record), modules });
+    }
+  };
+  for (const entry of initialization.entries) {
+    const record = records.get(key(entry));
+    if (record === undefined) throw new Error(`initialization.json: entry ${key(entry)} has no module record.`);
+    if (!indices.has(key(record.module))) visit(record);
+  }
+  return groups;
 }
 
 // Writes a plan into the inventory: contents for a path, null to delete it (pruning emptied directories).

@@ -195,15 +195,16 @@ is measured against its real dependencies, but splices back only `include/flight
 package's rows in `manifest.json`, `refusals.json`, `best-effort.json` and `initialization.json`; the header
 lists and README summary are re-derived from the merged tree. Reports land in `out/pkg/<package>/`.
 
-Three things are shared by every package and are deliberately not rewritten by a scoped run. Each is reported
+Two things are shared by every package and are deliberately not rewritten by a scoped run. Each is reported
 as a failure rather than left silently stale, and each needs `npm run sdk:generate`:
 
 - a row key the package uses that `flight/sdk/structural_members.hpp` does not yet list;
-- a change in the package's set of evaluation groups, whose place in the whole-SDK topological order in
-  `initialization.json` cannot be decided from one package (the closure orders the same groups differently,
-  so an unchanged set keeps its committed placement);
 - a different compiler, binding-profile set or namespace mapping, which moves every package at once (a different
   Flight revision is allowed: see the pin transition below).
+
+The evaluation groups in `initialization.json` are not owned by any package: they are the compiler's Tarjan walk
+over the merged `entries` and runtime `dependencies`, and a scoped run recomputes them exactly that way, so a
+package that gains or loses modules still leaves every module in exactly one group.
 
 A module's best-effort `consumers` include its reverse dependents, which lie outside the closure; a scoped run
 keeps those from the committed record and states only the consumers it can see.

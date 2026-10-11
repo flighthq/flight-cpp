@@ -9175,9 +9175,7 @@
       "status": "refused-placeholder"
     },
     {
-      "consumers": [
-        "@flighthq/encoding/packages/encoding/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/encoding",
@@ -9198,7 +9196,8 @@
     },
     {
       "consumers": [
-        "@flighthq/encoding/packages/encoding/src/contract.ts"
+        "@flighthq/encoding/packages/encoding/src/contract.ts",
+        "@flighthq/encoding/packages/encoding/src/index.ts"
       ],
       "module": {
         "name": "Utf8",

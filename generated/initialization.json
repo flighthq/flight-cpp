@@ -9661,6 +9661,36 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "Awd2Block",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/Awd2Block.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Awd2Header",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/Awd2Header.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Awd2ParseOptions",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/Awd2ParseOptions.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "BackendExplanation",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/BackendExplanation.ts"
@@ -9891,9 +9921,29 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "BitmapFontFormatKind",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/BitmapFontFormatKind.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "BitmapFontGlyphExplanation",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/BitmapFontGlyphExplanation.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "BitmapFontImportOptions",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/BitmapFontImportOptions.ts"
         }
       ]
     },
@@ -10291,9 +10341,9 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "CanvasImageSourceKind",
+          "name": "CanvasEffectSupport",
           "packageName": "@flighthq/types",
-          "source": "packages/types/src/CanvasImageSourceKind.ts"
+          "source": "packages/types/src/CanvasEffectSupport.ts"
         }
       ]
     },
@@ -10301,9 +10351,9 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "CanvasMaterialRenderer",
+          "name": "CanvasImageSourceKind",
           "packageName": "@flighthq/types",
-          "source": "packages/types/src/CanvasMaterialRenderer.ts"
+          "source": "packages/types/src/CanvasImageSourceKind.ts"
         }
       ]
     },
@@ -10321,9 +10371,9 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "CanvasRenderEffectSupport",
+          "name": "CanvasQuadMaterialRenderer",
           "packageName": "@flighthq/types",
-          "source": "packages/types/src/CanvasRenderEffectSupport.ts"
+          "source": "packages/types/src/CanvasQuadMaterialRenderer.ts"
         }
       ]
     },
@@ -10351,16 +10401,6 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "Entity",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/Entity.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
           "name": "CanvasRenderState",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/CanvasRenderState.ts"
@@ -10371,9 +10411,9 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "CanvasRenderSurface",
+          "name": "CanvasRenderStateOptions",
           "packageName": "@flighthq/types",
-          "source": "packages/types/src/CanvasRenderSurface.ts"
+          "source": "packages/types/src/CanvasRenderStateOptions.ts"
         }
       ]
     },
@@ -10714,6 +10754,16 @@
           "name": "CocosPlistSchema",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/CocosPlistSchema.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "ColladaDecoding",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/ColladaDecoding.ts"
         }
       ]
     },
@@ -11291,6 +11341,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "DragonBonesRegistry",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/DragonBonesRegistry.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "DropShadowEffect",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/DropShadowEffect.ts"
@@ -11314,6 +11374,56 @@
           "name": "EasingSegment",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/EasingSegment.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Effect",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/Effect.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "EffectCaptureGeometry",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/EffectCaptureGeometry.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "EffectFieldRole",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/EffectFieldRole.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "EffectInput",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/EffectInput.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "EffectPadding",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/EffectPadding.ts"
         }
       ]
     },
@@ -11414,6 +11524,16 @@
           "name": "EmissiveModifierOptions",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/EmissiveModifierOptions.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Entity",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/Entity.ts"
         }
       ]
     },
@@ -12101,16 +12221,6 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "GlMaterialRenderer",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/GlMaterialRenderer.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
           "name": "GlMeshMaterialRenderer",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/GlMeshMaterialRenderer.ts"
@@ -12231,6 +12341,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "GlQuadMaterialRenderer",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/GlQuadMaterialRenderer.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "GlRenderOptions",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/GlRenderOptions.ts"
@@ -12254,6 +12374,16 @@
           "name": "GlRenderState",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/GlRenderState.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "GlRenderStateOptions",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/GlRenderStateOptions.ts"
         }
       ]
     },
@@ -12871,6 +13001,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "HostAudioDecode",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/HostAudioDecode.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "HostAudioDevice",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/HostAudioDevice.ts"
@@ -12971,9 +13111,29 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "HostImageDecode",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/HostImageDecode.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "HostImageDimensions",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/HostImageDimensions.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "HostImageEncode",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/HostImageEncode.ts"
         }
       ]
     },
@@ -13151,16 +13311,6 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "ImageDecodeFailureExplanation",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/ImageDecodeFailureExplanation.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
           "name": "ImageDecodeOptions",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/ImageDecodeOptions.ts"
@@ -13174,16 +13324,6 @@
           "name": "ImageDecoder",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/ImageDecoder.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "ImageEncodeFailureExplanation",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/ImageEncodeFailureExplanation.ts"
         }
       ]
     },
@@ -13234,16 +13374,6 @@
           "name": "ImageResourceReference",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/ImageResourceReference.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "ImageSurface",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/ImageSurface.ts"
         }
       ]
     },
@@ -13771,6 +13901,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "LottieRegistry",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/LottieRegistry.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "MarkupClassResolver",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/MarkupClassResolver.ts"
@@ -13851,9 +13991,9 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "MaterialConversionExplanation",
+          "name": "Material2D",
           "packageName": "@flighthq/types",
-          "source": "packages/types/src/MaterialConversionExplanation.ts"
+          "source": "packages/types/src/Material2D.ts"
         }
       ]
     },
@@ -13861,9 +14001,29 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "MaterialValue",
+          "name": "Material3D",
           "packageName": "@flighthq/types",
-          "source": "packages/types/src/MaterialValue.ts"
+          "source": "packages/types/src/Material3D.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Material3DOptions",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/Material3DOptions.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "MaterialConversionExplanation",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/MaterialConversionExplanation.ts"
         }
       ]
     },
@@ -13901,9 +14061,29 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "Md2SectionHandler",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/Md2SectionHandler.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "Md5Schema",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/Md5Schema.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Md5SectionHandler",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/Md5SectionHandler.ts"
         }
       ]
     },
@@ -14131,16 +14311,6 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "ModifierDefinitionValue",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/ModifierDefinitionValue.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
           "name": "ModifierKind",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/ModifierKind.ts"
@@ -14164,16 +14334,6 @@
           "name": "ModifierSlot",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/ModifierSlot.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "ModifierValue",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/ModifierValue.ts"
         }
       ]
     },
@@ -14421,6 +14581,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "NodeRenderer",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/NodeRenderer.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "NodeSignals",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/NodeSignals.ts"
@@ -14464,6 +14634,16 @@
           "name": "Obb",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/Obb.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "ObjMaterialHandler",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/ObjMaterialHandler.ts"
         }
       ]
     },
@@ -14694,6 +14874,16 @@
           "name": "ParticleFormatCodec",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/ParticleFormatCodec.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "ParticleFormatDescriptor",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/ParticleFormatDescriptor.ts"
         }
       ]
     },
@@ -15331,26 +15521,6 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "RegistryCatalog",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/RegistryCatalog.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "RegistryCodegen",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/RegistryCodegen.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
           "name": "RegistryTable",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/RegistryTable.ts"
@@ -15414,56 +15584,6 @@
           "name": "RenderDrawContext",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/RenderDrawContext.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "RenderEffect",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/RenderEffect.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "RenderEffectCaptureGeometry",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/RenderEffectCaptureGeometry.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "RenderEffectFieldRole",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/RenderEffectFieldRole.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "RenderEffectInput",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/RenderEffectInput.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "RenderEffectPadding",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/RenderEffectPadding.ts"
         }
       ]
     },
@@ -15551,6 +15671,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "RenderStateOptions",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/RenderStateOptions.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "RenderStateStats",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/RenderStateStats.ts"
@@ -15591,26 +15721,6 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "Renderable",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/Renderable.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "Renderer",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/Renderer.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
           "name": "RendererData",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/RendererData.ts"
@@ -15624,6 +15734,26 @@
           "name": "Requirement",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/Requirement.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "RequirementCatalog",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/RequirementCatalog.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "RequirementCodegen",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/RequirementCodegen.ts"
         }
       ]
     },
@@ -15794,6 +15924,16 @@
           "name": "RiveDocument",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/RiveDocument.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "RiveImportOptions",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/RiveImportOptions.ts"
         }
       ]
     },
@@ -16741,6 +16881,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "Skeleton2DJsonAnalysis",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/Skeleton2DJsonAnalysis.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "Skeleton2DPathConstraint",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/Skeleton2DPathConstraint.ts"
@@ -16961,6 +17111,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "SpineJsonRegistry",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/SpineJsonRegistry.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "SpineParticleSchema",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/SpineParticleSchema.ts"
@@ -17104,6 +17264,16 @@
           "name": "SpritesheetFormat",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/SpritesheetFormat.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SpritesheetFormatDescriptor",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/SpritesheetFormatDescriptor.ts"
         }
       ]
     },
@@ -17281,6 +17451,26 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "StlFeatures",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/StlFeatures.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "StlImportOptions",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/StlImportOptions.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "StopTweenOptions",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/StopTweenOptions.ts"
@@ -17341,26 +17531,6 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "SurfaceMaterial",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/SurfaceMaterial.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "SurfaceMaterialOptions",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/SurfaceMaterialOptions.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
           "name": "SvgDocumentImport",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/SvgDocumentImport.ts"
@@ -17374,6 +17544,26 @@
           "name": "SvgPathDataFormatOptions",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/SvgPathDataFormatOptions.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SvgRegistry",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/SvgRegistry.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SwfContentCapabilities",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/SwfContentCapabilities.ts"
         }
       ]
     },
@@ -17401,6 +17591,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "SwfHeader",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/SwfHeader.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "SwfMorphShapePaths",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/SwfMorphShapePaths.ts"
@@ -17411,9 +17611,29 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "SwfParseOptions",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/SwfParseOptions.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "SwfTagHandler",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/SwfTagHandler.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SwfTagParseState",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/SwfTagParseState.ts"
         }
       ]
     },
@@ -17801,6 +18021,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "TextureAtlasFormatDescriptor",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/TextureAtlasFormatDescriptor.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "TextureAtlasFormatKind",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/TextureAtlasFormatKind.ts"
@@ -18021,6 +18251,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "ThreeDsChunkHandler",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/ThreeDsChunkHandler.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "ThreeDsSchema",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/ThreeDsSchema.ts"
@@ -18124,6 +18364,26 @@
           "name": "Tilemap",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/Tilemap.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "TilemapFormatKind",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/TilemapFormatKind.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "TilemapImportOptions",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/TilemapImportOptions.ts"
         }
       ]
     },
@@ -18831,16 +19091,6 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "WgpuMaterialRenderer",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/WgpuMaterialRenderer.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
           "name": "WgpuMeshMaterialRenderer",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/WgpuMeshMaterialRenderer.ts"
@@ -18901,6 +19151,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "WgpuQuadMaterialRenderer",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/WgpuQuadMaterialRenderer.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "WgpuRenderOptions",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/WgpuRenderOptions.ts"
@@ -18924,6 +19184,16 @@
           "name": "WgpuRenderState",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/WgpuRenderState.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "WgpuRenderStateOptions",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/WgpuRenderStateOptions.ts"
         }
       ]
     },
@@ -19044,6 +19314,16 @@
           "name": "WgpuToonPipeline",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/WgpuToonPipeline.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "WgpuUniformEndianness",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/WgpuUniformEndianness.ts"
         }
       ]
     },
@@ -99172,7 +99452,7 @@
             "packageName": "@flighthq/encoding",
             "source": "packages/encoding/src/contract.ts"
           },
-          "specifier": "./utf8",
+          "specifier": "./utf8.ts",
           "target": {
             "name": "Utf8",
             "packageName": "@flighthq/encoding",
@@ -169135,11 +169415,11 @@
             "packageName": "@flighthq/encoding",
             "source": "packages/encoding/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./utf8.ts",
           "target": {
-            "name": "Contract",
+            "name": "Utf8",
             "packageName": "@flighthq/encoding",
-            "source": "packages/encoding/src/contract.ts"
+            "source": "packages/encoding/src/utf8.ts"
           }
         }
       ],
