@@ -28,7 +28,7 @@ struct CreateTextureCubeOptions;
 struct CreateTexture2DOptions : public flight::ReferenceEnabled {
   std::optional<flight::String> color_space;
   std::optional<double> version;
-  std::variant<flight::Ref<flight::types::TextureSource>, flight::Null, flight::Undefined> source = std::variant<flight::Ref<flight::types::TextureSource>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::VoxelGrid>, flight::Ref<flight::types::TextureSource>, flight::Ref<flight::types::ExternalTexture>, flight::Ref<flight::types::Bitmap>, flight::Ref<flight::types::CompressedImageResource>, flight::Ref<flight::types::RenderTarget>, flight::Ref<flight::types::ImageResource>, flight::Null, flight::Undefined> source = std::variant<flight::Ref<flight::types::VoxelGrid>, flight::Ref<flight::types::TextureSource>, flight::Ref<flight::types::ExternalTexture>, flight::Ref<flight::types::Bitmap>, flight::Ref<flight::types::CompressedImageResource>, flight::Ref<flight::types::RenderTarget>, flight::Ref<flight::types::ImageResource>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::optional<flight::Ref<flight::types::Sampler>> sampler;
   std::optional<bool> flip_x;
   std::optional<bool> flip_y;
@@ -36,19 +36,6 @@ struct CreateTexture2DOptions : public flight::ReferenceEnabled {
   std::optional<double> uv_rotation;
   std::optional<flight::Ref<flight::types::Vector2>> uv_scale;
   std::optional<flight::String> dimension;
-  std::variant<flight::Ref<EmbeddedImageResourceReference>, flight::Ref<ExternalImageResourceReference>, flight::Null, flight::Undefined> resource = std::variant<flight::Ref<EmbeddedImageResourceReference>, flight::Ref<ExternalImageResourceReference>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-};
-struct CreateTexture2DArrayOptions : public flight::ReferenceEnabled {
-  std::optional<flight::String> color_space;
-  std::optional<double> version;
-  std::optional<flight::Ref<flight::types::Sampler>> sampler;
-  std::optional<bool> flip_x;
-  std::optional<bool> flip_y;
-  std::optional<flight::Ref<flight::types::Vector2>> uv_offset;
-  std::optional<double> uv_rotation;
-  std::optional<flight::Ref<flight::types::Vector2>> uv_scale;
-  std::optional<flight::Array<std::optional<flight::Ref<flight::types::TextureSource>>>> sources;
-  flight::String dimension;
   std::variant<flight::Ref<EmbeddedImageResourceReference>, flight::Ref<ExternalImageResourceReference>, flight::Null, flight::Undefined> resource = std::variant<flight::Ref<EmbeddedImageResourceReference>, flight::Ref<ExternalImageResourceReference>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
 struct CreateTexture3DOptions : public flight::ReferenceEnabled {
@@ -68,15 +55,28 @@ struct CreateTexture3DOptions : public flight::ReferenceEnabled {
 
 #include <flight/types/image_resource_reference.hpp>
 #include <flight/types/texture.hpp>
-#include <flight/types/texture_source.hpp>
+#include <flight/types/texture_source_value.hpp>
 #include <flight/types/sampler.hpp>
 #include <flight/types/vector2.hpp>
 #include <flight/types/voxel_grid.hpp>
-#include <flight/types/texture_source_value.hpp>
 
 namespace flight::types {
 
 struct TextureResourceOptions : public flight::ReferenceEnabled {
+  std::variant<flight::Ref<EmbeddedImageResourceReference>, flight::Ref<ExternalImageResourceReference>, flight::Null, flight::Undefined> resource = std::variant<flight::Ref<EmbeddedImageResourceReference>, flight::Ref<ExternalImageResourceReference>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+};
+
+struct CreateTexture2DArrayOptions : public flight::ReferenceEnabled {
+  std::optional<flight::String> color_space;
+  std::optional<double> version;
+  std::optional<flight::Ref<flight::types::Sampler>> sampler;
+  std::optional<bool> flip_x;
+  std::optional<bool> flip_y;
+  std::optional<flight::Ref<flight::types::Vector2>> uv_offset;
+  std::optional<double> uv_rotation;
+  std::optional<flight::Ref<flight::types::Vector2>> uv_scale;
+  std::optional<flight::Array<std::optional<flight::types::TextureSourceValue>>> sources;
+  flight::String dimension;
   std::variant<flight::Ref<EmbeddedImageResourceReference>, flight::Ref<ExternalImageResourceReference>, flight::Null, flight::Undefined> resource = std::variant<flight::Ref<EmbeddedImageResourceReference>, flight::Ref<ExternalImageResourceReference>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
 
@@ -94,12 +94,12 @@ struct CreateTextureCubeOptions : public flight::ReferenceEnabled {
   std::variant<flight::Ref<EmbeddedImageResourceReference>, flight::Ref<ExternalImageResourceReference>, flight::Null, flight::Undefined> resource = std::variant<flight::Ref<EmbeddedImageResourceReference>, flight::Ref<ExternalImageResourceReference>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COLOR_SPACE_VERSION_SOURCE_SAMPLER_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_DIMENSION_RESOURCE_728363D651CB14D2
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COLOR_SPACE_VERSION_SOURCE_SAMPLER_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_DIMENSION_RESOURCE_728363D651CB14D2
-struct color_space_version_source_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_728363d651cb14d2 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COLOR_SPACE_VERSION_SOURCE_SAMPLER_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_DIMENSION_RESOURCE_5A93A3871F953593
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COLOR_SPACE_VERSION_SOURCE_SAMPLER_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_DIMENSION_RESOURCE_5A93A3871F953593
+struct color_space_version_source_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_5a93a3871f953593 : public flight::ReferenceEnabled {
   std::optional<flight::String> color_space;
   std::optional<double> version;
-  std::variant<flight::Ref<flight::types::TextureSource>, flight::Null, flight::Undefined> source = std::variant<flight::Ref<flight::types::TextureSource>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::VoxelGrid>, flight::Ref<flight::types::TextureSource>, flight::Ref<flight::types::ExternalTexture>, flight::Ref<flight::types::Bitmap>, flight::Ref<flight::types::CompressedImageResource>, flight::Ref<flight::types::RenderTarget>, flight::Ref<flight::types::ImageResource>, flight::Null, flight::Undefined> source = std::variant<flight::Ref<flight::types::VoxelGrid>, flight::Ref<flight::types::TextureSource>, flight::Ref<flight::types::ExternalTexture>, flight::Ref<flight::types::Bitmap>, flight::Ref<flight::types::CompressedImageResource>, flight::Ref<flight::types::RenderTarget>, flight::Ref<flight::types::ImageResource>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::optional<flight::Ref<flight::types::Sampler>> sampler;
   std::optional<bool> flip_x;
   std::optional<bool> flip_y;
@@ -109,11 +109,11 @@ struct color_space_version_source_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv
   std::optional<flight::String> dimension;
   std::variant<flight::Ref<EmbeddedImageResourceReference>, flight::Ref<ExternalImageResourceReference>, flight::Null, flight::Undefined> resource = std::variant<flight::Ref<EmbeddedImageResourceReference>, flight::Ref<ExternalImageResourceReference>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COLOR_SPACE_VERSION_SOURCE_SAMPLER_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_DIMENSION_RESOURCE_728363D651CB14D2
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COLOR_SPACE_VERSION_SOURCE_SAMPLER_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_DIMENSION_RESOURCE_5A93A3871F953593
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COLOR_SPACE_VERSION_SAMPLER_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_SOURCES_DIMENSION_RESOURCE_23E1CD9812634614
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COLOR_SPACE_VERSION_SAMPLER_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_SOURCES_DIMENSION_RESOURCE_23E1CD9812634614
-struct color_space_version_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_sources_dimension_resource_23e1cd9812634614 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COLOR_SPACE_VERSION_SAMPLER_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_SOURCES_DIMENSION_RESOURCE_B96956D30CC649C7
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COLOR_SPACE_VERSION_SAMPLER_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_SOURCES_DIMENSION_RESOURCE_B96956D30CC649C7
+struct color_space_version_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_sources_dimension_resource_b96956d30cc649c7 : public flight::ReferenceEnabled {
   std::optional<flight::String> color_space;
   std::optional<double> version;
   std::optional<flight::Ref<flight::types::Sampler>> sampler;
@@ -122,11 +122,11 @@ struct color_space_version_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_
   std::optional<flight::Ref<flight::types::Vector2>> uv_offset;
   std::optional<double> uv_rotation;
   std::optional<flight::Ref<flight::types::Vector2>> uv_scale;
-  std::optional<flight::Array<std::optional<flight::Ref<flight::types::TextureSource>>>> sources;
+  std::optional<flight::Array<std::optional<flight::types::TextureSourceValue>>> sources;
   flight::String dimension;
   std::variant<flight::Ref<EmbeddedImageResourceReference>, flight::Ref<ExternalImageResourceReference>, flight::Null, flight::Undefined> resource = std::variant<flight::Ref<EmbeddedImageResourceReference>, flight::Ref<ExternalImageResourceReference>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COLOR_SPACE_VERSION_SAMPLER_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_SOURCES_DIMENSION_RESOURCE_23E1CD9812634614
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COLOR_SPACE_VERSION_SAMPLER_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_SOURCES_DIMENSION_RESOURCE_B96956D30CC649C7
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COLOR_SPACE_VERSION_SOURCE_SAMPLER_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_DIMENSION_RESOURCE_EAE08BAEFDAEADA2
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COLOR_SPACE_VERSION_SOURCE_SAMPLER_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_DIMENSION_RESOURCE_EAE08BAEFDAEADA2
@@ -162,6 +162,6 @@ struct color_space_version_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_COLOR_SPACE_VERSION_SAMPLER_FLIP_X_FLIP_Y_UV_OFFSET_UV_ROTATION_UV_SCALE_SOURCES_DIMENSION_RESOURCE_8F80A98CD173B278
 
-using CreateTextureOptions = std::variant<flight::Ref<color_space_version_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_sources_dimension_resource_23e1cd9812634614>, flight::Ref<color_space_version_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_sources_dimension_resource_8f80a98cd173b278>, flight::Ref<color_space_version_source_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_728363d651cb14d2>, flight::Ref<color_space_version_source_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_eae08baefdaeada2>>;
+using CreateTextureOptions = std::variant<flight::Ref<color_space_version_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_sources_dimension_resource_b96956d30cc649c7>, flight::Ref<color_space_version_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_sources_dimension_resource_8f80a98cd173b278>, flight::Ref<color_space_version_source_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_5a93a3871f953593>, flight::Ref<color_space_version_source_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_eae08baefdaeada2>>;
 
 } // namespace flight::types

@@ -38,7 +38,6 @@ using TextureLike = std::variant<flight::Ref<Texture2DArray>, flight::Ref<Textur
 
 #include <flight/types/entity.hpp>
 #include <flight/types/sampler.hpp>
-#include <flight/types/texture_source.hpp>
 #include <flight/types/texture_source_value.hpp>
 #include <flight/types/texture_uv_transform.hpp>
 #include <flight/types/voxel_grid.hpp>
@@ -70,7 +69,7 @@ struct Texture2D : public flight::ReferenceEnabled {
   flight::Ref<flight::types::Sampler> sampler;
   double version;
   flight::String dimension;
-  std::optional<flight::Ref<flight::types::TextureSource>> source;
+  std::optional<flight::types::TextureSourceValue> source;
 };
 
 struct Texture2DArray : public flight::ReferenceEnabled {
@@ -84,7 +83,7 @@ struct Texture2DArray : public flight::ReferenceEnabled {
   flight::Ref<flight::types::Sampler> sampler;
   double version;
   flight::String dimension;
-  flight::Array<std::optional<flight::Ref<flight::types::TextureSource>>> sources;
+  flight::Array<std::optional<flight::types::TextureSourceValue>> sources;
 };
 
 struct Texture3D : public flight::ReferenceEnabled {

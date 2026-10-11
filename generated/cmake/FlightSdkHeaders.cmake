@@ -2228,6 +2228,7 @@ set(FLIGHT_SDK_GENERATED_HEADERS
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/types/gl_texture_descriptor.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/types/gl_texture_filter_kind.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/types/gl_texture_resolver.hpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../include/flight/types/gl_texture_value.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/types/gl_texture_wrap_kind.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/types/gl_toon_program.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/types/gl_unlit_program.hpp"

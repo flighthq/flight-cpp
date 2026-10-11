@@ -41,6 +41,7 @@ namespace flight::types { struct PathMesh; }
 namespace flight::types { struct RenderProxy; }
 namespace flight::types { struct RenderState; }
 namespace flight::types { struct RenderStateOptions; }
+namespace flight::types { struct RenderTexture; }
 namespace flight::types { struct Scene3DLights; }
 namespace flight::types { struct StrokeStyle; }
 namespace flight::types { struct Texture2D; }

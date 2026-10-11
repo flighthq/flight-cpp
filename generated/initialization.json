@@ -5676,6 +5676,11 @@
       "source": "packages/types/src/GlTextureResolver.ts"
     },
     {
+      "name": "GlTextureValue",
+      "packageName": "@flighthq/types",
+      "source": "packages/types/src/GlTextureValue.ts"
+    },
+    {
       "name": "GlTextureWrapKind",
       "packageName": "@flighthq/types",
       "source": "packages/types/src/GlTextureWrapKind.ts"
@@ -105571,6 +105576,20 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/contract.ts"
           },
+          "specifier": "./GlTextureValue.ts",
+          "target": {
+            "name": "GlTextureValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlTextureValue.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          },
           "specifier": "./GlTextureWrapKind.ts",
           "target": {
             "name": "GlTextureWrapKind",
@@ -117566,20 +117585,6 @@
             "name": "Texture",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/Texture.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "CreateTextureOptions",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/CreateTextureOptions.ts"
-          },
-          "specifier": "./TextureSource.js",
-          "target": {
-            "name": "TextureSource",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/TextureSource.ts"
           }
         },
         {
@@ -147285,10 +147290,79 @@
       "steps": []
     },
     {
-      "bindings": [],
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8dbd9a7a5a2bbacbe8a8f1b2c515bdfce0b4062e3b92fcac4e71e01f6dd140a3",
+            "line": 2,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlContextState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/GlContextState.ts\",72]",
+            "kind": "import",
+            "name": "EntityRuntimeKey",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "EntityRuntimeKey",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/Entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:875b08904bdf851f61f51c7ffb84b78d4292d91239468db6a24a656d7d50ca3f",
+            "line": 11,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlContextState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/GlContextState.ts\",370]",
+            "kind": "function",
+            "name": "readGlContextRuntimeOwner",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:10d7222924bf652930226272c00602b49b208b66e020094313a9b2e7e0253232",
+            "line": 15,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlContextState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/GlContextState.ts\",503]",
+            "kind": "function",
+            "name": "writeGlContextRuntimeOwner",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
       "dependencies": [
         {
-          "evaluation": "type-only",
+          "evaluation": "runtime",
           "importer": {
             "name": "GlContextState",
             "packageName": "@flighthq/types",
@@ -147313,6 +147387,20 @@
             "name": "GlContext",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/GlContext.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "GlContextState",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlContextState.ts"
+          },
+          "specifier": "./GlContextRuntime.ts",
+          "target": {
+            "name": "GlContextRuntime",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlContextRuntime.ts"
           }
         }
       ],
@@ -150098,7 +150186,76 @@
       ]
     },
     {
-      "bindings": [],
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8dbd9a7a5a2bbacbe8a8f1b2c515bdfce0b4062e3b92fcac4e71e01f6dd140a3",
+            "line": 4,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlRenderState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/GlRenderState.ts\",178]",
+            "kind": "import",
+            "name": "EntityRuntimeKey",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "EntityRuntimeKey",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/Entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:bc0778f36aad0b5f53517cecff179f4d5aad892c96080d8fcf5c6a4b6a634eea",
+            "line": 40,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlRenderState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/GlRenderState.ts\",2279]",
+            "kind": "function",
+            "name": "readGlRenderStateRuntimeOwner",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:ea7a8719cb868c4a5c2d871a96454b8e267af88d74ef2951e954186f379cc3b1",
+            "line": 44,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlRenderState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/GlRenderState.ts\",2419]",
+            "kind": "function",
+            "name": "writeGlRenderStateRuntimeOwner",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
       "dependencies": [
         {
           "evaluation": "type-only",
@@ -150157,7 +150314,7 @@
           }
         },
         {
-          "evaluation": "type-only",
+          "evaluation": "runtime",
           "importer": {
             "name": "GlRenderState",
             "packageName": "@flighthq/types",
@@ -152954,6 +153111,20 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/GlTextureResolver.ts"
           },
+          "specifier": "./GlTextureValue.ts",
+          "target": {
+            "name": "GlTextureValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlTextureValue.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "GlTextureResolver",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlTextureResolver.ts"
+          },
           "specifier": "./Texture.ts",
           "target": {
             "name": "Texture",
@@ -153126,6 +153297,45 @@
         "name": "GlTextureUpload",
         "packageName": "@flighthq/render-gl",
         "source": "packages/render-gl/src/glTextureUpload.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "GlTextureValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlTextureValue.ts"
+          },
+          "specifier": "./RenderTexture.ts",
+          "target": {
+            "name": "RenderTexture",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RenderTexture.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "GlTextureValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlTextureValue.ts"
+          },
+          "specifier": "./Texture.ts",
+          "target": {
+            "name": "Texture",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Texture.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "GlTextureValue",
+        "packageName": "@flighthq/types",
+        "source": "packages/types/src/GlTextureValue.ts"
       },
       "steps": []
     },
@@ -174224,6 +174434,20 @@
             "name": "GlTextureResolver",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/GlTextureResolver.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/index.ts"
+          },
+          "specifier": "./GlTextureValue.ts",
+          "target": {
+            "name": "GlTextureValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlTextureValue.ts"
           }
         },
         {
@@ -260874,7 +261098,139 @@
       "steps": []
     },
     {
-      "bindings": [],
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8dbd9a7a5a2bbacbe8a8f1b2c515bdfce0b4062e3b92fcac4e71e01f6dd140a3",
+            "line": 5,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RenderState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/RenderState.ts\",275]",
+            "kind": "import",
+            "name": "EntityRuntimeKey",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "EntityRuntimeKey",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/Entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:2219e6ffc56b4121d68e9ea250a0f150dda541d4434022227fbd442635f6b27c",
+            "line": 122,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RenderState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/RenderState.ts\",6985]",
+            "kind": "function",
+            "name": "createRenderProxyAdapterWeakMap",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:6635e32c005ab79e1e0ee836a8696bc7e210921f8a5f33de9cac53d9f57a8467",
+            "line": 126,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RenderState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/RenderState.ts\",7102]",
+            "kind": "function",
+            "name": "createRenderProxyWeakMap",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:84407ec1ffe91193eed17814a63e586789693d97721c37f35382558a3897b2c6",
+            "line": 130,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RenderState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/RenderState.ts\",7205]",
+            "kind": "function",
+            "name": "invokeRenderProxyDestroyData",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:a7cdf3f05938bc068d4d8c5035e67a662535a1422a0326f970ffa3ba64281f0a",
+            "line": 136,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RenderState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/RenderState.ts\",7454]",
+            "kind": "function",
+            "name": "readRenderStateRuntimeOwner",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:450986d9bf089e2440ab0889372f5719d6e1c538f567fc942547508e4f138d79",
+            "line": 140,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RenderState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/RenderState.ts\",7588]",
+            "kind": "function",
+            "name": "writeRenderStateRuntimeOwner",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
       "dependencies": [
         {
           "evaluation": "type-only",
@@ -260911,6 +261267,20 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/RenderState.ts"
           },
+          "specifier": "./ColorScaleBias.js",
+          "target": {
+            "name": "ColorScaleBias",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ColorScaleBias.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "RenderState",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RenderState.ts"
+          },
           "specifier": "./EffectPadding.ts",
           "target": {
             "name": "EffectPadding",
@@ -260919,7 +261289,7 @@
           }
         },
         {
-          "evaluation": "type-only",
+          "evaluation": "runtime",
           "importer": {
             "name": "RenderState",
             "packageName": "@flighthq/types",
@@ -260958,6 +261328,20 @@
             "name": "ImageResource",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/ImageResource.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "RenderState",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RenderState.ts"
+          },
+          "specifier": "./Material.js",
+          "target": {
+            "name": "Material",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material.ts"
           }
         },
         {
@@ -261070,6 +261454,20 @@
             "name": "RenderRegistrySignals",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/RenderRegistrySignals.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "RenderState",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RenderState.ts"
+          },
+          "specifier": "./RendererData.js",
+          "target": {
+            "name": "RendererData",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RendererData.ts"
           }
         },
         {
@@ -261328,11 +261726,11 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/RenderTexture.ts"
           },
-          "specifier": "./TextureSource.js",
+          "specifier": "./TextureSourceValue.js",
           "target": {
-            "name": "TextureSource",
+            "name": "TextureSourceValue",
             "packageName": "@flighthq/types",
-            "source": "packages/types/src/TextureSource.ts"
+            "source": "packages/types/src/TextureSourceValue.ts"
           }
         }
       ],
@@ -321006,20 +321404,6 @@
             "name": "Sampler",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/Sampler.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "Texture",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Texture.ts"
-          },
-          "specifier": "./TextureSource.ts",
-          "target": {
-            "name": "TextureSource",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/TextureSource.ts"
           }
         },
         {

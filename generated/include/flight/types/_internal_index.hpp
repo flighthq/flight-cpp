@@ -321,6 +321,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/gl_texture_descriptor.hpp>
 #include <flight/types/gl_texture_filter_kind.hpp>
 #include <flight/types/gl_texture_resolver.hpp>
+#include <flight/types/gl_texture_value.hpp>
 #include <flight/types/gl_texture_wrap_kind.hpp>
 #include <flight/types/gl_toon_program.hpp>
 #include <flight/types/gl_unlit_program.hpp>

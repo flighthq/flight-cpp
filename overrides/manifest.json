@@ -4,6 +4,21 @@
   "note": "Hand-written headers that SHADOW the generated tree. An override is placed earlier on the include path than the generated include directory, so the generated file stays untouched and the override is the whole of the modification: the set of files under overrides/include is the diff, and no computation is needed to find it. Reserved for what the declared mechanisms cannot reach -- source-patches/ rewrites the pinned TypeScript, repairs/ adds text with no behavior to emitted output, and either is preferable because neither carries a copy. An override does carry a copy, so each entry records `derivedFrom`, the sha256 of the generated file it was produced from. When a pin move changes that file the digest stops matching and `npm run overrides:check` says so, which is the signal to re-derive the override or drop it. Each entry also carries a `status`: `complete` means the override compiles, `incomplete` means it is partway and says what remains, so nobody mistakes a half-finished override for a finished one.",
   "overrides": [
     {
+      "id": "types-render-state-deferred-cycle-body",
+      "path": "flight/types/render_state.hpp",
+      "package": "@flighthq/types",
+      "status": "complete",
+      "derivedFrom": "1ba0e7cbaf574d139b1e76e885137e06de1d49791453466833ecc828cefbd174",
+      "reason": "The generated Renderer, RenderProxy, and RenderState headers still form a mutual include cycle in reverse include order. RenderState defines invoke_render_proxy_destroy_data inline and dereferences RenderProxy and its Renderer while that owner is only forward-declared when the cycle is entered through GL render-state dependencies.",
+      "change": "invoke_render_proxy_destroy_data becomes a constrained function template. Its two emitted public parameters remain exact. A defaulted DeferredProxy parameter is constrained to RenderProxy, and the body copies the input into optional<Ref<DeferredProxy>> so the proxy and renderer member accesses are dependent and checked only when an existing call site instantiates the function after the cycle has completed.",
+      "equivalence": "The constraint admits exactly RenderProxy, callers supply no template argument, and the copied optional retains the same shared owner and absence state. The optional-chain body and destroy callback invocation are otherwise byte-for-byte emitted code.",
+      "whyNotAPatchOrRepair": "The TypeScript file declares interfaces and contains neither the synthesized helper nor the emitted include order. A source rewrite cannot template the generated helper, while an insertion repair cannot make its existing member expressions dependent.",
+      "unblocks": "With the a627849 GL source patches active, direct Clang 22 checks of gl_texture_resolver.hpp, gl_render_state.hpp, and the aggregate types/_internal_index.hpp all compile through the reverse include path; without this override they stop at render_state.hpp on incomplete RenderProxy member access.",
+      "remaining": "The independent package header gate still measures unrelated generated-header defects separately.",
+      "expires": "when the emitter places the synthesized destroy-data helper after complete RenderProxy and Renderer definitions, factors the cyclic declarations from the inline implementation, or emits a standards-conforming dependent body itself.",
+      "authoredOn": "2026-10-11"
+    },
+    {
       "id": "textshaper-cache-identity-and-keying",
       "path": "flight/textshaper/text_shaper_cache.hpp",
       "package": "@flighthq/textshaper",

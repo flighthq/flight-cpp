@@ -23,7 +23,6 @@ namespace flight::types { struct Bitmap; }
 namespace flight::types { struct DomScene2DRectangle; }
 namespace flight::types { struct Effect; }
 namespace flight::types { struct EffectPadding; }
-namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct HostCanvasCapability; }
 namespace flight::types { struct HostImageCapability; }
 namespace flight::types { struct Matrix; }
@@ -77,15 +76,15 @@ using DomClipEntry = std::variant<flight::Ref<flight::types::DomScene2DRectangle
 #include <flight/types/path_mesh.hpp>
 #include <flight/types/render_proxy_adapter.hpp>
 #include <flight/types/render_registry_signals.hpp>
-#include <flight/types/entity.hpp>
-#include <flight/types/blend_mode.hpp>
 #include <flight/types/render_state.hpp>
+#include <flight/types/blend_mode.hpp>
+#include <flight/types/entity.hpp>
 #include <flight/types/render_proxy2_d.hpp>
 
 namespace flight::types {
 
 struct DomRenderState : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  std::optional<flight::Ref<flight::types::RenderStateRuntime>> entity_runtime_key;
   bool allow_smoothing;
   double current_clip_depth;
   std::optional<flight::Ref<flight::types::Scene2DClipHooks>> display_object_clip_hooks;
@@ -123,9 +122,9 @@ struct DomClipHooks : public flight::ReferenceEnabled {
   std::function<void(flight::Ref<DomRenderState>, flight::Ref<flight::types::RenderProxy2D>)> apply;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_B91DC2687D8B3F5C
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_B91DC2687D8B3F5C
-struct callable_clear_signals_b91dc2687d8b3f5c : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_CDA1FB4E0303DB9A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_CDA1FB4E0303DB9A
+struct callable_clear_signals_cda1fb4e0303db9a : public flight::ReferenceEnabled {
   std::function<void(flight::Ref<flight::types::RenderRegistryTable>, flight::String)> callable;
   std::function<void()> clear;
   flight::Ref<flight::types::RenderRegistrySignals> signals;
@@ -133,7 +132,7 @@ struct callable_clear_signals_b91dc2687d8b3f5c : public flight::ReferenceEnabled
     return callable(argument_0, argument_1);
   }
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_B91DC2687D8B3F5C
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_CDA1FB4E0303DB9A
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ELEMENT_VERSION_02719FB3B3A4E4E7
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ELEMENT_VERSION_02719FB3B3A4E4E7
@@ -151,7 +150,7 @@ struct DomRenderStateRuntime : public flight::ReferenceEnabled {
   flight::WeakMap<flight::types::NodeAny, flight::Ref<flight::types::RenderProxyAdapter>> render_proxy_adapter_map;
   flight::WeakMap<flight::types::NodeAny, flight::Ref<flight::types::RenderProxy>> render_proxy_map;
   flight::Set<flight::types::NodeAny> render_proxy_sources;
-  flight::Ref<std::optional<flight::Ref<callable_clear_signals_b91dc2687d8b3f5c>>> registry_miss;
+  flight::Ref<std::optional<flight::Ref<callable_clear_signals_cda1fb4e0303db9a>>> registry_miss;
   flight::Ref<DomRenderRegistries> registries;
   double renderer_map_id;
   flight::Array<flight::types::NodeAny> temp_stack;

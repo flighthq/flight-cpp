@@ -41859,6 +41859,7 @@
         "@flighthq/types/packages/types/src/Node.ts",
         "@flighthq/types/packages/types/src/RenderProxy.ts",
         "@flighthq/types/packages/types/src/RenderProxy2D.ts",
+        "@flighthq/types/packages/types/src/RenderState.ts",
         "@flighthq/types/packages/types/src/Scene3DRenderProxy.ts",
         "@flighthq/types/packages/types/src/WgpuRenderState.ts",
         "@flighthq/types/packages/types/src/contract.ts",
@@ -44818,6 +44819,7 @@
     },
     {
       "consumers": [
+        "@flighthq/types/packages/types/src/GlContextState.ts",
         "@flighthq/types/packages/types/src/GlRenderState.ts",
         "@flighthq/types/packages/types/src/contract.ts"
       ],
@@ -45773,6 +45775,20 @@
         "source": "packages/types/src/GlTextureResolver.ts"
       },
       "path": "flight/types/gl_texture_resolver.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/types/packages/types/src/GlTextureResolver.ts",
+        "@flighthq/types/packages/types/src/contract.ts",
+        "@flighthq/types/packages/types/src/index.ts"
+      ],
+      "module": {
+        "name": "GlTextureValue",
+        "packageName": "@flighthq/types",
+        "source": "packages/types/src/GlTextureValue.ts"
+      },
+      "path": "flight/types/gl_texture_value.hpp",
       "status": "emitted"
     },
     {
@@ -48408,6 +48424,7 @@
         "@flighthq/types/packages/types/src/RenderDrawContext.ts",
         "@flighthq/types/packages/types/src/RenderProxy.ts",
         "@flighthq/types/packages/types/src/RenderProxy2D.ts",
+        "@flighthq/types/packages/types/src/RenderState.ts",
         "@flighthq/types/packages/types/src/Scene3DDocument.ts",
         "@flighthq/types/packages/types/src/Scene3DResources.ts",
         "@flighthq/types/packages/types/src/TiledParseOptions.ts",
@@ -52060,6 +52077,7 @@
         "@flighthq/types/packages/types/src/CanvasRenderTexture.ts",
         "@flighthq/types/packages/types/src/GlContextRuntime.ts",
         "@flighthq/types/packages/types/src/GlRenderTexture.ts",
+        "@flighthq/types/packages/types/src/GlTextureValue.ts",
         "@flighthq/types/packages/types/src/WgpuDeviceRuntime.ts",
         "@flighthq/types/packages/types/src/WgpuRenderState.ts",
         "@flighthq/types/packages/types/src/WgpuRenderTexture.ts",
@@ -52083,6 +52101,7 @@
         "@flighthq/types/packages/types/src/NodeRenderer.ts",
         "@flighthq/types/packages/types/src/RenderProxy.ts",
         "@flighthq/types/packages/types/src/RenderProxy2D.ts",
+        "@flighthq/types/packages/types/src/RenderState.ts",
         "@flighthq/types/packages/types/src/Scene2DRenderer.ts",
         "@flighthq/types/packages/types/src/SpriteIdentityRendererData.ts",
         "@flighthq/types/packages/types/src/SpriteRenderer.ts",
@@ -56164,6 +56183,7 @@
         "@flighthq/types/packages/types/src/GlPbrExtensionShaderContext.ts",
         "@flighthq/types/packages/types/src/GlScene3DRuntime.ts",
         "@flighthq/types/packages/types/src/GlTextureResolver.ts",
+        "@flighthq/types/packages/types/src/GlTextureValue.ts",
         "@flighthq/types/packages/types/src/GltfExtension.ts",
         "@flighthq/types/packages/types/src/ImageResourceReference.ts",
         "@flighthq/types/packages/types/src/IridescencePbrExtension.ts",
@@ -56604,15 +56624,12 @@
         "@flighthq/textureatlas/packages/textureatlas/src/textureAtlas.ts",
         "@flighthq/types/packages/types/src/Bitmap.ts",
         "@flighthq/types/packages/types/src/CompressedImageResource.ts",
-        "@flighthq/types/packages/types/src/CreateTextureOptions.ts",
         "@flighthq/types/packages/types/src/ExternalTexture.ts",
         "@flighthq/types/packages/types/src/GlContextRuntime.ts",
         "@flighthq/types/packages/types/src/GlyphSource.ts",
         "@flighthq/types/packages/types/src/ImageResource.ts",
         "@flighthq/types/packages/types/src/RenderTarget.ts",
-        "@flighthq/types/packages/types/src/RenderTexture.ts",
         "@flighthq/types/packages/types/src/Scene3DResources.ts",
-        "@flighthq/types/packages/types/src/Texture.ts",
         "@flighthq/types/packages/types/src/TextureSourceValue.ts",
         "@flighthq/types/packages/types/src/VoxelGrid.ts",
         "@flighthq/types/packages/types/src/WgpuDeviceRuntime.ts",
@@ -56733,6 +56750,7 @@
         "@flighthq/textureatlas/packages/textureatlas/src/textureAtlasFrom.ts",
         "@flighthq/textureatlas/packages/textureatlas/src/textureAtlasRegion.ts",
         "@flighthq/types/packages/types/src/CreateTextureOptions.ts",
+        "@flighthq/types/packages/types/src/RenderTexture.ts",
         "@flighthq/types/packages/types/src/Texture.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"

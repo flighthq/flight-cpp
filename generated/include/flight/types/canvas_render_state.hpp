@@ -24,7 +24,6 @@ namespace flight::types { struct CanvasTextureRenderTarget; }
 namespace flight::types { struct CanvasTextureResolvers; }
 namespace flight::types { struct Effect; }
 namespace flight::types { struct EffectPadding; }
-namespace flight::types { struct EntityRuntime; }
 namespace flight::types { struct HostCanvasCapability; }
 namespace flight::types { struct HostImageCapability; }
 namespace flight::types { struct NodeRenderer; }
@@ -69,16 +68,16 @@ struct CanvasRenderStateRuntime;
 #include <flight/types/path_mesh.hpp>
 #include <flight/types/render_proxy_adapter.hpp>
 #include <flight/types/render_registry_signals.hpp>
-#include <flight/types/entity.hpp>
+#include <flight/types/render_state.hpp>
 #include <flight/types/host_canvas.hpp>
 #include <flight/types/blend_mode.hpp>
-#include <flight/types/render_state.hpp>
+#include <flight/types/entity.hpp>
 #include <flight/types/render_proxy2_d.hpp>
 
 namespace flight::types {
 
 struct CanvasRenderState : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  std::optional<flight::Ref<flight::types::RenderStateRuntime>> entity_runtime_key;
   bool allow_smoothing;
   double current_clip_depth;
   std::optional<flight::Ref<flight::types::Scene2DClipHooks>> display_object_clip_hooks;
@@ -109,9 +108,9 @@ struct CanvasRenderRegistries : public flight::ReferenceEnabled {
   flight::Map<flight::String, flight::types::CanvasEffectRunner> effects;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_19AB45A5975CF4C1
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_19AB45A5975CF4C1
-struct callable_clear_signals_19ab45a5975cf4c1 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_363BDD338F206297
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_363BDD338F206297
+struct callable_clear_signals_363bdd338f206297 : public flight::ReferenceEnabled {
   std::function<void(flight::Ref<flight::types::RenderRegistryTable>, flight::String)> callable;
   std::function<void()> clear;
   flight::Ref<flight::types::RenderRegistrySignals> signals;
@@ -119,7 +118,7 @@ struct callable_clear_signals_19ab45a5975cf4c1 : public flight::ReferenceEnabled
     return callable(argument_0, argument_1);
   }
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_19AB45A5975CF4C1
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_CALLABLE_CLEAR_SIGNALS_363BDD338F206297
 
 struct CanvasRenderStateRuntime : public flight::ReferenceEnabled {
   std::optional<flight::ErasedRef> binding;
@@ -129,7 +128,7 @@ struct CanvasRenderStateRuntime : public flight::ReferenceEnabled {
   flight::WeakMap<flight::types::NodeAny, flight::Ref<flight::types::RenderProxyAdapter>> render_proxy_adapter_map;
   flight::WeakMap<flight::types::NodeAny, flight::Ref<flight::types::RenderProxy>> render_proxy_map;
   flight::Set<flight::types::NodeAny> render_proxy_sources;
-  flight::Ref<std::optional<flight::Ref<callable_clear_signals_19ab45a5975cf4c1>>> registry_miss;
+  flight::Ref<std::optional<flight::Ref<callable_clear_signals_363bdd338f206297>>> registry_miss;
   flight::Ref<CanvasRenderRegistries> registries;
   double renderer_map_id;
   flight::Array<flight::types::NodeAny> temp_stack;
