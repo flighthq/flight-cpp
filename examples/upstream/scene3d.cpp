@@ -324,6 +324,7 @@ class Scene3DExample final {
 
     flight::camera_controls::update_orbit_camera_controller(
         scene_.controller, scene_.camera, 1.0);
+    ++controller_updates_;
   }
 
   int run(bool smoke, const std::optional<std::string>& capture_path) {
@@ -332,29 +333,9 @@ class Scene3DExample final {
     std::size_t verified_frames = 0;
     std::size_t maximum_coverage = 0;
     bool running = true;
-    std::uint64_t previous = flight::host_sdl::Host::ticks_nanoseconds();
-    while (running) {
-      SDL_Event event{};
-      while (host_.poll_event(event)) {
-        if (event.type == SDL_EVENT_QUIT ||
-            event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED ||
-            (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_ESCAPE)) {
-          running = false;
-        }
-        static_cast<void>(platform_input_.dispatch(event));
-      }
-
-      const std::uint64_t now = flight::host_sdl::Host::ticks_nanoseconds();
-      const double delta_time = smoke
-                                    ? 1.0 / 60.0
-                                    : std::min(
-                                          static_cast<double>(now - previous) /
-                                              1'000'000'000.0,
-                                          0.05);
-      previous = now;
-      flight::camera_controls::update_orbit_camera_controller(
-          scene_.controller, scene_.camera, delta_time);
-      auto capture = render(smoke || (capture_path.has_value() && !captured_));
+    const auto draw_frame = [&]() {
+      auto capture = render(
+          smoke || (capture_path.has_value() && !captured_), smoke);
       if (capture.has_value()) {
         const auto& frame = capture.value();
         std::cout << "scene3d framebuffer: " << frame.width << 'x' << frame.height
@@ -384,15 +365,51 @@ class Scene3DExample final {
         }
       }
       gl_.present();
-
       ++frames;
       if (smoke && frames >= 3) running = false;
+    };
+
+    // The TypeScript authority renders once immediately after its initial controller update, then
+    // schedules the time-stepped animation callback. Preserve that first-frame ordering here.
+    draw_frame();
+    std::uint64_t previous = flight::host_sdl::Host::ticks_nanoseconds();
+    while (running) {
+      SDL_Event event{};
+      while (host_.poll_event(event)) {
+        if (event.type == SDL_EVENT_QUIT ||
+            event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED ||
+            (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_ESCAPE)) {
+          running = false;
+        }
+        static_cast<void>(platform_input_.dispatch(event));
+      }
+
+      const std::uint64_t now = flight::host_sdl::Host::ticks_nanoseconds();
+      const double delta_time = smoke
+                                    ? 1.0 / 60.0
+                                    : std::min(
+                                          static_cast<double>(now - previous) /
+                                              1'000'000'000.0,
+                                          0.05);
+      previous = now;
+      flight::camera_controls::update_orbit_camera_controller(
+          scene_.controller, scene_.camera, delta_time);
+      ++controller_updates_;
+      draw_frame();
       std::this_thread::sleep_for(8ms);
     }
     if (smoke) {
       if (verified_frames != frames) {
         throw std::runtime_error(
             "Scene3D smoke did not verify every rendered frame");
+      }
+      if (subject_verified_frames_ != frames) {
+        throw std::runtime_error(
+            "Scene3D smoke did not drive the subject render path every frame");
+      }
+      if (first_render_controller_updates_ != 1 || controller_updates_ != frames) {
+        throw std::runtime_error(
+            "Scene3D first-frame controller ordering diverged from the authority");
       }
       std::cout << "scene3d-gl package smoke: rendered " << verified_frames
                 << " verified frames, maximum non-background coverage "
@@ -411,10 +428,32 @@ class Scene3DExample final {
     }
   }
 
-  [[nodiscard]] std::optional<FrameCapture> render(bool capture_frame) {
+  [[nodiscard]] std::optional<FrameCapture> render(
+      bool capture_frame, bool verify_subject) {
+    if (rendered_frames_ == 0) {
+      first_render_controller_updates_ = controller_updates_;
+    }
     require_no_gl_error("initialization or previous frame");
-    flight::render::prepare_scene3_drender(
+    auto render_list = flight::render::prepare_scene3_drender(
         state_, scene_.root, scene_.camera, scene_.lights);
+    if (verify_subject) {
+      const auto light_block = render_list->lights
+                                   .template shared_exact_object<
+                                       flight::types::Scene3DLightBlock>();
+      if (render_list->mesh_count != 4.0 ||
+          render_list->visible_meshes.size() != 4 ||
+          render_list->instanced_mesh_count != 0.0 ||
+          !render_list->visible_instanced_meshes.empty() || !light_block ||
+          light_block->ambient_count != 1.0 ||
+          light_block->directional_count != 1.0 ||
+          light_block->point_count != 1.0 ||
+          light_block->hemisphere_count != 0.0 ||
+          light_block->spot_count != 0.0) {
+        throw std::runtime_error(
+            "Scene3D subject preparation did not expose the authored meshes and lights");
+      }
+      ++subject_verified_frames_;
+    }
     flight::scene3d_gl::draw_gl_scene3_dshadow_map(
         state_, readonly(scene_.root), readonly(scene_.shadow_camera),
         std::optional<Readonly<flight::types::DirectionalLight>>{
@@ -443,6 +482,7 @@ class Scene3DExample final {
             flight::Ref<flight::types::Adjustment>,
             flight::Ref<flight::types::RenderEffect>>>{});
     require_no_gl_error("effects presentation");
+    ++rendered_frames_;
 
     if (!capture_frame) return std::nullopt;
 
@@ -506,6 +546,10 @@ class Scene3DExample final {
   flight::Ref<flight::types::GlEffectState> pipeline_;
   bool dragging_{false};
   bool captured_{false};
+  std::size_t controller_updates_{0};
+  std::size_t first_render_controller_updates_{0};
+  std::size_t rendered_frames_{0};
+  std::size_t subject_verified_frames_{0};
   double previous_x_{0.0};
   double previous_y_{0.0};
 };
