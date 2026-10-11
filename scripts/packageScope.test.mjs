@@ -28,12 +28,14 @@ import {
 // Run with `npm run pkg:test`. Needs nothing but the committed generated/ tree.
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const generated = path.join(root, 'generated');
+const scratch = mkdtempSync(path.join(tmpdir(), 'flight-cpp-package-scope-'));
+after(() => rmSync(scratch, { force: true, recursive: true }));
+// The fixtures are a single-revision inventory, the form a full run writes. The committed tree may be
+// mid-transition, so it is collapsed onto the revision most of its rows hold; only provenance changes.
+const generated = uniformInventory(path.join(root, 'generated'), path.join(scratch, 'uniform'));
 const json = (file) => JSON.parse(readFileSync(path.join(generated, file), 'utf8'));
 const manifest = json('manifest.json');
 const packages = manifest.packages.map((row) => row.package);
-const scratch = mkdtempSync(path.join(tmpdir(), 'flight-cpp-package-scope-'));
-after(() => rmSync(scratch, { force: true, recursive: true }));
 
 describe('arguments', () => {
   test('exactly one package is required, in any accepted spelling', () => {
@@ -405,4 +407,25 @@ function editJson(treeRoot, file, edit) {
   const value = JSON.parse(readFileSync(filename, 'utf8'));
   edit(value);
   writeFileSync(filename, `${JSON.stringify(value, undefined, 2)}\n`);
+}
+
+function uniformInventory(committed, target) {
+  mkdirSync(target, { recursive: true });
+  cpSync(committed, target, { recursive: true });
+  const manifestFile = path.join(target, 'manifest.json');
+  const refusalsFile = path.join(target, 'refusals.json');
+  const value = JSON.parse(readFileSync(manifestFile, 'utf8'));
+  if (value.schema !== 'flight-generated-sdk/2') return target;
+  const counts = new Map();
+  for (const row of value.packages) counts.set(row.source.revision, (counts.get(row.source.revision) ?? 0) + 1);
+  const [revision] = [...counts].sort(([l, left], [r, right]) => right - left || compareText(l, r))[0];
+  const { version } = value.packages.find((row) => row.source.revision === revision).source;
+  value.packages = value.packages.map((row) => ({ ...row, source: { revision, version } }));
+  const refusals = JSON.parse(readFileSync(refusalsFile, 'utf8'));
+  finalizeProvenance(value, refusals);
+  writeFileSync(manifestFile, `${JSON.stringify(value, undefined, 2)}\n`);
+  writeFileSync(refusalsFile, `${JSON.stringify(refusals, undefined, 2)}\n`);
+  const readme = path.join(target, 'README.md');
+  writeFileSync(readme, readmeWithProvenance(readFileSync(readme, 'utf8'), value));
+  return target;
 }
