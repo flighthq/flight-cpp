@@ -25,6 +25,7 @@ import {
   referenceAliasIdentityProof,
 } from './emissionRepairs.mjs';
 import { canonicalizeGeneratedIncludes } from './generatedIncludes.mjs';
+import { isMixedManifest, verifyMixedInventory } from './packageScope.mjs';
 import {
   applySourcePatches,
   ineffectivePatches,
@@ -213,7 +214,31 @@ try {
   }
   const appliedPatches = [...compilerPatches, ...applySourcePatches(sourcePatches, flight)];
   const result = await generateSdk(candidateRoot, flight, compiler, compilerEntry, bindingProfiles, appliedPatches);
-  if (check) {
+  if (check && isMixedInventory(generatedRoot)) {
+    // A mixed inventory is mid pin transition: see scripts/packageScope.mjs. Rows at this pin must
+    // reproduce package by package; rows at another revision are the transition's pending work.
+    const verdict = verifyMixedInventory({ candidateRoot, committedRoot: generatedRoot });
+    const pendingRevisions = [...new Set(verdict.pending.map((entry) => entry.revision.slice(0, 7)))].join(', ');
+    if (verdict.failed.length > 0) {
+      process.stderr.write(
+        `${String(verdict.failed.length)} package(s) recorded at ${verdict.revision.slice(0, 7)} do not reproduce:\n`,
+      );
+      for (const entry of verdict.failed.slice(0, 20)) {
+        process.stderr.write(`- ${entry.package}: ${entry.reason ?? entry.files.slice(0, 4).join(', ')}\n`);
+      }
+      process.stderr.write('Run `npm run pkg:generate -- <package>` for each and commit the result.\n');
+      process.exitCode = 1;
+    }
+    for (const problem of verdict.problems) process.stderr.write(`- ${problem}\n`);
+    if (verdict.problems.length > 0) process.exitCode = 1;
+    process.stdout.write(
+      `Mixed SDK inventory: ${String(verdict.reproduced.length)} package(s) at ${verdict.revision.slice(0, 7)} reproduce; ` +
+        `${String(verdict.pending.length)} pending at ${pendingRevisions || 'no other revision'}` +
+        `${verdict.missing.length > 0 ? `; ${String(verdict.missing.length)} new at this pin and not yet generated: ${verdict.missing.join(', ')}` : ''}.\n`,
+    );
+    if (reportObsoleteRepairs(result)) process.exitCode = 1;
+    if (reportIneffectivePatches(result)) process.exitCode = 1;
+  } else if (check) {
     const drift = compareTrees(candidateRoot, generatedRoot);
     if (drift.length > 0) {
       process.stderr.write(`Generated SDK inventory differs in ${String(drift.length)} path(s):\n`);
@@ -867,6 +892,11 @@ function declaredEnvironment(packageRoot) {
 
 function cppPackageName(packageName) {
   return packageName.slice('@flighthq/'.length).replaceAll('-', '_');
+}
+
+function isMixedInventory(directory) {
+  const file = path.join(directory, 'manifest.json');
+  return existsSync(file) && isMixedManifest(JSON.parse(readFileSync(file, 'utf8')));
 }
 
 function compareTrees(expectedRoot, actualRoot) {

@@ -1,10 +1,16 @@
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, rmdirSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { parsePackageArguments, planPackageMerge, portable } from './packageScope.mjs';
+import {
+  applyPackageMerge,
+  parsePackageArguments,
+  planPackageMerge,
+  portable,
+  rowProvenance,
+} from './packageScope.mjs';
 
 // `npm run pkg:generate -- <package>` regenerates ONE package into the committed inventory.
 //
@@ -69,29 +75,30 @@ try {
       process.stdout.write(`${packageName} is current in ${relative}.\n`);
     } else {
       process.stderr.write(`${packageName} differs from ${relative} in ${String(plan.writes.size)} path(s):\n`);
+      const committed = JSON.parse(readFileSync(path.join(generatedRoot, 'manifest.json'), 'utf8'));
+      const committedRow = committed.packages.find((row) => row.package === packageName);
+      const recorded = committedRow === undefined ? undefined : rowProvenance(committed, committedRow).revision;
+      if (recorded !== undefined && recorded !== plan.provenance.revision) {
+        process.stderr.write(
+          `  (it is recorded at ${recorded.slice(0, 7)}; the pin is ${plan.provenance.revision.slice(0, 7)}, so it has not moved yet)\n`,
+        );
+      }
       for (const file of [...plan.writes.keys()].slice(0, 20)) process.stderr.write(`- ${file}\n`);
       if (plan.writes.size > 20) process.stderr.write(`- … and ${String(plan.writes.size - 20)} more\n`);
       process.stderr.write(`Run \`npm run pkg:generate -- ${packageName}\` and commit the result.\n`);
       process.exitCode = 1;
     }
   } else {
-    for (const [file, contents] of plan.writes) {
-      const target = path.join(generatedRoot, file);
-      if (contents === null) {
-        rmSync(target, { force: true });
-        pruneEmptyDirectories(path.dirname(target), path.join(generatedRoot, 'include'));
-      } else {
-        mkdirSync(path.dirname(target), { recursive: true });
-        writeFileSync(target, contents);
-      }
-    }
+    applyPackageMerge(plan, generatedRoot);
     const row = plan.row;
     process.stdout.write(
       `${packageName}: ${String(row.emittedModules)}/${String(row.sourceModules)} modules emitted, ` +
-        `${String(row.refusedModules)} refused; ${String(plan.changedHeaders.length)} header(s) changed, ` +
-        `${String(plan.writes.size)} path(s) written in ${relative}.\n`,
+        `${String(row.refusedModules)} refused at ${plan.provenance.revision.slice(0, 7)}; ` +
+        `${String(plan.changedHeaders.length)} header(s) changed, ${String(plan.writes.size)} path(s) written in ${relative}.\n`,
     );
   }
+  reportTransition(JSON.parse(readFileSync(path.join(generatedRoot, 'manifest.json'), 'utf8')), plan, check);
+  for (const warning of plan.warnings) process.stdout.write(`warning: ${warning}\n`);
   if (plan.problems.length > 0) {
     process.stderr.write(`${String(plan.problems.length)} shared artifact(s) this package cannot update on its own:\n`);
     for (const problem of plan.problems) process.stderr.write(`- ${problem}\n`);
@@ -101,10 +108,21 @@ try {
   rmSync(temporary, { force: true, recursive: true });
 }
 
-function pruneEmptyDirectories(directory, stopAt) {
-  let current = directory;
-  while (current.startsWith(stopAt) && current !== stopAt && existsSync(current) && readdirSync(current).length === 0) {
-    rmdirSync(current);
-    current = path.dirname(current);
+// Says where the inventory stands in a pin transition: which revision this package is at, and how many
+// rows still sit at another one. In --check mode the inventory was not written, so it reports what is.
+function reportTransition(manifest, plan, checking) {
+  const byRevision = new Map();
+  for (const row of manifest.packages) {
+    const { revision } = rowProvenance(manifest, row);
+    byRevision.set(revision, (byRevision.get(revision) ?? 0) + 1);
   }
+  if (byRevision.size === 1) {
+    if (!checking) process.stdout.write(`Inventory is uniform at ${[...byRevision.keys()][0].slice(0, 7)}.\n`);
+    return;
+  }
+  const behind = manifest.packages.length - (byRevision.get(plan.provenance.revision) ?? 0);
+  process.stdout.write(
+    `Inventory is mixed during a pin transition: ${[...byRevision].map(([revision, count]) => `${String(count)} at ${revision.slice(0, 7)}`).join(', ')}; ` +
+      `${String(behind)} package(s) are not at ${plan.provenance.revision.slice(0, 7)}. It returns to a single revision when every row matches.\n`,
+  );
 }

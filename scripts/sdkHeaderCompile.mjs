@@ -11,7 +11,7 @@ import {
   refusedDeferrals,
 } from './deferredPackages.mjs';
 import { driftedOverrides, loadOverrides, overridesIncludeDirectory } from './overrides.mjs';
-import { includePrefixOf, normalizePackageName } from './packageScope.mjs';
+import { includePrefixOf, isMixedManifest, normalizePackageName, rowProvenance } from './packageScope.mjs';
 
 // Compiles each generated SDK header on its own and records what happened.
 //
@@ -292,7 +292,12 @@ function writeReport() {
     compiler: { command: compiler, version: compilerVersion.split(/\r?\n/u)[0] },
     generated: {
       compilerRevision: manifest.compiler.revision,
-      sourceRevision: manifest.source.revision,
+      // A mixed inventory has no single revision; a scoped run names its package's, a full one lists all.
+      ...(scopedPackage !== undefined
+        ? { sourceRevision: rowProvenance(manifest, manifest.packages.find((row) => row.package === scopedPackage) ?? {}).revision }
+        : isMixedManifest(manifest)
+          ? { sourceRevisions: manifest.source.revisions }
+          : { sourceRevision: manifest.source.revision }),
     },
     run: {
       complete: isComplete,

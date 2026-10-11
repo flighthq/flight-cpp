@@ -6,18 +6,23 @@ import { after, describe, test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 import {
+  applyPackageMerge,
   compareInitializationModules,
   compareText,
   ctestLabelOf,
+  finalizeProvenance,
   mergeSortedRows,
   normalizePackageName,
   packageHeaders,
   parseJobs,
   parsePackageArguments,
   planPackageMerge,
+  readmeWithProvenance,
   replaceRowsInPlace,
   replaceSortedRows,
   testTargetOf,
+  validateProvenance,
+  verifyMixedInventory,
 } from './packageScope.mjs';
 
 // Run with `npm run pkg:test`. Needs nothing but the committed generated/ tree.
@@ -264,16 +269,122 @@ describe('scoped merge', () => {
     assert.match(plan.problems[0], /definitelyNotAKeyAnywhere/u);
   });
 
-  test('a candidate at another pin is refused outright', () => {
-    const committed = copyTree('pin-committed');
-    const candidate = copyTree('pin-candidate');
-    editJson(candidate, 'manifest.json', (value) => {
-      value.source.revision = '0'.repeat(40);
+  test('a different compiler, binding profile set or namespace mapping is still refused', () => {
+    const committed = copyTree('shared-committed');
+    for (const [field, edit] of [
+      ['compiler', (value) => (value.compiler.revision = '1'.repeat(40))],
+      ['bindingProfiles', (value) => (value.bindingProfiles[0].digest = 'sha256:0')],
+      ['namespaceMapping', (value) => (value.namespaceMapping.desiredRoot = 'other')],
+    ]) {
+      const candidate = copyTree(`shared-${field}`);
+      editJson(candidate, 'manifest.json', edit);
+      assert.throws(
+        () => planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName: '@flighthq/math' }),
+        new RegExp(`${field} differs`, 'u'),
+      );
+    }
+  });
+});
+
+describe('mixed-pin transition', () => {
+  const OLD = manifest.source.revision;
+  const NEW = 'a'.repeat(40);
+  const target = '@flighthq/math';
+
+  // A single-revision inventory at NEW, as a closure or full run at the next pin would write it.
+  function candidateAt(name, revision) {
+    const tree = copyTree(name);
+    editJson(tree, 'manifest.json', (value) => {
+      value.source.revision = revision;
+    });
+    editJson(tree, 'refusals.json', (value) => {
+      value.sourceRevision = revision;
+    });
+    const readme = path.join(tree, 'README.md');
+    writeFileSync(readme, readmeWithProvenance(readFileSync(readme, 'utf8'), JSON.parse(readFileSync(path.join(tree, 'manifest.json'), 'utf8'))));
+    return tree;
+  }
+
+  test('the first scoped run at a new pin migrates a uniform inventory to per-row provenance', () => {
+    const committed = copyTree('migrate-committed');
+    const plan = planPackageMerge({ candidateRoot: candidateAt('migrate-candidate', NEW), committedRoot: committed, packageName: target });
+    const merged = JSON.parse(plan.writes.get('manifest.json'));
+    assert.equal(merged.schema, 'flight-generated-sdk/2');
+    assert.deepEqual(merged.source, { package: manifest.source.package, repository: manifest.source.repository, revisions: [OLD, NEW].sort(compareText) });
+    for (const row of merged.packages) {
+      assert.deepEqual(row.source, { revision: row.package === target ? NEW : OLD, version: manifest.source.version }, row.package);
+    }
+    assert.doesNotThrow(() => validateProvenance(merged));
+    // Rows keep code-unit key order, `source` before `sourceModules`.
+    assert.deepEqual(Object.keys(merged.packages[0]), [...Object.keys(merged.packages[0])].sort(compareText));
+    const refusals = JSON.parse(plan.writes.get('refusals.json'));
+    assert.equal(refusals.schema, 'flight-generated-sdk-refusals/3');
+    assert.deepEqual(refusals.sourceRevisions, [OLD, NEW].sort(compareText));
+    assert.equal(refusals.sourceRevision, undefined);
+    assert.match(plan.writes.get('README.md'), /during a pin transition/u);
+    assert.match(plan.writes.get('README.md'), new RegExp(`\`${NEW}\` \\(1 package\\)`, 'u'));
+    // math was generated against types, which stays at OLD in the inventory.
+    assert.equal(plan.warnings.length, 1);
+    assert.match(plan.warnings[0], /@flighthq\/types/u);
+  });
+
+  test('the last row to move collapses the inventory back to one revision, byte for byte', () => {
+    const committed = copyTree('collapse-committed');
+    // Every row at NEW except math, which is still at OLD.
+    editJson(committed, 'manifest.json', (value) => {
+      value.packages = value.packages.map((row) => ({
+        ...row,
+        source: { revision: row.package === target ? OLD : NEW, version: value.source.version },
+      }));
+    });
+    const manifestFile = path.join(committed, 'manifest.json');
+    const refusalsFile = path.join(committed, 'refusals.json');
+    const mixed = JSON.parse(readFileSync(manifestFile, 'utf8'));
+    const mixedRefusals = JSON.parse(readFileSync(refusalsFile, 'utf8'));
+    finalizeProvenance(mixed, mixedRefusals);
+    assert.equal(mixed.schema, 'flight-generated-sdk/2');
+    writeFileSync(manifestFile, `${JSON.stringify(mixed, undefined, 2)}\n`);
+    writeFileSync(refusalsFile, `${JSON.stringify(mixedRefusals, undefined, 2)}\n`);
+    const readme = path.join(committed, 'README.md');
+    writeFileSync(readme, readmeWithProvenance(readFileSync(readme, 'utf8'), mixed));
+
+    const candidate = candidateAt('collapse-candidate', NEW);
+    const plan = planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName: target });
+    for (const file of ['manifest.json', 'refusals.json', 'README.md']) {
+      assert.equal(plan.writes.get(file), readFileSync(path.join(candidate, file), 'utf8'), file);
+    }
+    assert.deepEqual(plan.warnings, []);
+  });
+
+  test('a mixed row without complete provenance is refused', () => {
+    const committed = copyTree('incomplete-committed');
+    applyPackageMerge(
+      planPackageMerge({ candidateRoot: candidateAt('incomplete-candidate', NEW), committedRoot: committed, packageName: target }),
+      committed,
+    );
+    editJson(committed, 'manifest.json', (value) => {
+      delete value.packages.find((row) => row.package === '@flighthq/xml').source.version;
     });
     assert.throws(
-      () => planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName: '@flighthq/math' }),
-      /source differs/u,
+      () => planPackageMerge({ candidateRoot: candidateAt('incomplete-again', NEW), committedRoot: committed, packageName: target }),
+      /without complete provenance.*@flighthq\/xml/u,
     );
+  });
+
+  test('sdk:check on a mixed inventory reproduces rows at the pin and lists the rest as pending', () => {
+    const committed = copyTree('verify-committed');
+    const candidate = candidateAt('verify-candidate', NEW);
+    applyPackageMerge(planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName: target }), committed);
+    const verdict = verifyMixedInventory({ candidateRoot: candidate, committedRoot: committed });
+    assert.deepEqual(verdict.reproduced, [target]);
+    assert.deepEqual(verdict.failed, []);
+    assert.equal(verdict.pending.length, packages.length - 1);
+    assert.ok(verdict.pending.every((entry) => entry.revision === OLD));
+
+    const [header] = packageHeaders(committed, target);
+    appendTo(committed, `include/${header}`, '\n// hand edit\n');
+    const tampered = verifyMixedInventory({ candidateRoot: candidate, committedRoot: committed });
+    assert.deepEqual(tampered.failed.map((entry) => entry.package), [target]);
   });
 });
 

@@ -202,10 +202,33 @@ as a failure rather than left silently stale, and each needs `npm run sdk:genera
 - a change in the package's set of evaluation groups, whose place in the whole-SDK topological order in
   `initialization.json` cannot be decided from one package (the closure orders the same groups differently,
   so an unchanged set keeps its committed placement);
-- a different compiler or Flight pin, or a different binding-profile set, which moves every package at once.
+- a different compiler, binding-profile set or namespace mapping, which moves every package at once (a different
+  Flight revision is allowed: see the pin transition below).
 
 A module's best-effort `consumers` include its reverse dependents, which lie outside the closure; a scoped run
 keeps those from the committed record and states only the consumers it can see.
+
+### Moving the pin one package at a time
+
+A pin move changes every package, but lanes move their own packages one at a time, so the inventory may be
+*mixed* during a transition. The first `pkg:generate` at a new Flight revision turns `manifest.json` into
+schema `flight-generated-sdk/2`: every package row then carries `source: { revision, version }`,
+`source.revisions` lists the distinct revisions, and `refusals.json` (schema
+`flight-generated-sdk-refusals/3`) lists `sourceRevisions`. Rows nobody has regenerated stay attributed to
+the revision they were really generated from. `pkg:generate` prints where the transition stands and warns
+when a package now sits beside dependencies still at the older revision.
+
+Only the Flight revision may vary per package. A different compiler, binding-profile set or namespace mapping
+cannot be represented per package, because rows produced that way would not link together, so it is still
+refused and needs `npm run sdk:generate`.
+
+`sdk:check` on a mixed inventory regenerates at the current pin and requires every row recorded at that
+revision to reproduce exactly as `pkg:generate --check` would. Rows at another revision cannot be reproduced at
+this pin; they are listed as pending rather than failed or silently passed. `pkg:compile` and `pkg:tier`
+record the row's own revision in their reports.
+
+The transition ends on its own: when the last row reaches the new revision, the merge writes the uniform
+`flight-generated-sdk/1` form again, byte-identical to a full `sdk:generate` at that pin.
 
 `canonicalPackageLocalIncludes.includes` is a whole-tree count of rewritten includes, and a rewritten include
 is indistinguishable from an emitted one once written. A scoped run adjusts it by the change in same-package

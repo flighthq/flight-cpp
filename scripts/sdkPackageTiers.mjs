@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 import { loadApplicableEnvironments, loadDeferredPackages } from './deferredPackages.mjs';
 import { driftedOverrides, loadOverrides } from './overrides.mjs';
-import { normalizePackageName } from './packageScope.mjs';
+import { normalizePackageName, rowProvenance } from './packageScope.mjs';
 
 // What of the SDK is actually usable, counted per package.
 //
@@ -269,6 +269,9 @@ const tiers = manifest.packages.map((package_) => {
     overrides,
     patches,
     sourceModules: package_.sourceModules,
+    // Where the row's output came from. During a pin transition rows differ, and a tier is evidence about
+    // that revision only.
+    sourceRevision: rowProvenance(manifest, package_).revision,
     tier,
     unattemptedHeaders,
     unsuppliedModules,
@@ -318,7 +321,8 @@ writeFileSync(
 if (scopedPackage !== undefined) {
   const [row] = tiers;
   process.stdout.write(
-    `${row.package}: ${row.tier} -- ${String(row.emittedModules)}/${String(row.sourceModules)} modules emitted, ` +
+    `${row.package}: ${row.tier} at ${row.sourceRevision.slice(0, 7)} -- ` +
+      `${String(row.emittedModules)}/${String(row.sourceModules)} modules emitted, ` +
       `${String(row.headers)}/${String(row.generatedHeaders)} headers compiled, ${String(row.failingHeaders.length)} failing, ` +
       `${String(row.unattemptedHeaders.length)} unattempted.\n`,
   );
