@@ -1,7 +1,8 @@
 diff --git a/packages/node/src/boundsRectangle.ts b/packages/node/src/boundsRectangle.ts
+index 4c6369a..4241bf3 100644
 --- a/packages/node/src/boundsRectangle.ts
 +++ b/packages/node/src/boundsRectangle.ts
-@@ -78,14 +78,14 @@
+@@ -78,14 +78,14 @@ export function computeNodeRootLocalBoundsRectangle<Traits extends object>(
  }
  
  export function ensureNodeLocalBoundsRectangle<Traits extends object>(target: BoundsNode<Traits>): void {
@@ -18,7 +19,7 @@ diff --git a/packages/node/src/boundsRectangle.ts b/packages/node/src/boundsRect
    if (
      !isNodeLocalBoundsRectangleValid(target, runtime) ||
      runtime.boundsUsingLocalBoundsId !== runtime.localBoundsId ||
-@@ -96,7 +96,7 @@
+@@ -96,7 +96,7 @@ export function ensureNodeParentBoundsRectangle<Traits extends object>(target: S
  }
  
  export function ensureNodeWorldBoundsRectangle<Traits extends object>(target: Spatial2DNode<Traits>): void {
@@ -27,7 +28,7 @@ diff --git a/packages/node/src/boundsRectangle.ts b/packages/node/src/boundsRect
    const localBoundsInvalid =
      !isNodeLocalBoundsRectangleValid(target, runtime) ||
      runtime.worldBoundsUsingLocalBoundsId !== runtime.localBoundsId;
-@@ -132,7 +132,7 @@
+@@ -132,7 +132,7 @@ export function getNodeHeight<Traits extends object>(source: Spatial2DNode<Trait
   */
  export function getNodeLocalBoundsRectangle<Traits extends object>(target: BoundsNode<Traits>): Readonly<Rectangle> {
    ensureNodeLocalBoundsRectangle(target);
@@ -36,7 +37,7 @@ diff --git a/packages/node/src/boundsRectangle.ts b/packages/node/src/boundsRect
  }
  
  /**
-@@ -142,7 +142,7 @@
+@@ -142,7 +142,7 @@ export function getNodeParentBoundsRectangle<Traits extends object>(
    target: Spatial2DNode<Traits>,
  ): Readonly<Rectangle> {
    ensureNodeParentBoundsRectangle(target);
@@ -45,7 +46,7 @@ diff --git a/packages/node/src/boundsRectangle.ts b/packages/node/src/boundsRect
  }
  
  export function getNodeWidth<Traits extends object>(source: Spatial2DNode<Traits>): number {
-@@ -159,7 +159,7 @@
+@@ -159,7 +159,7 @@ export function getNodeWidth<Traits extends object>(source: Spatial2DNode<Traits
   */
  export function getNodeWorldBoundsRectangle<Traits extends object>(target: Spatial2DNode<Traits>): Readonly<Rectangle> {
    ensureNodeWorldBoundsRectangle(target);
@@ -54,7 +55,7 @@ diff --git a/packages/node/src/boundsRectangle.ts b/packages/node/src/boundsRect
  }
  
  export function setNodeHeight<Traits extends object>(target: Spatial2DNode<Traits>, value: number): void {
-@@ -221,7 +221,7 @@
+@@ -221,7 +221,7 @@ function ensureNodeChildWorldBoundsRectangles<Traits extends object>(target: Spa
    for (const child of children) {
      if (!child.enabled) continue;
      const childNode = child as Spatial2DNode<Traits>;
@@ -63,7 +64,7 @@ diff --git a/packages/node/src/boundsRectangle.ts b/packages/node/src/boundsRect
      const previous = runtime.worldBoundsRectangle;
      const previousX = previous?.x;
      const previousY = previous?.y;
-@@ -322,6 +322,26 @@
+@@ -322,6 +322,26 @@ function tryFastRecomputeWorldBoundsRectangle<Traits extends object>(
    return false;
  }
  
@@ -91,12 +92,10 @@ diff --git a/packages/node/src/boundsRectangle.ts b/packages/node/src/boundsRect
  const _rootLocalNodeBounds = createRectangle();
  const SINGULAR_AXIS_EPSILON = 1e-12;
 diff --git a/packages/node/src/nodeTransform2d.ts b/packages/node/src/nodeTransform2d.ts
+index e5ce7a2..e6ea3af 100644
 --- a/packages/node/src/nodeTransform2d.ts
 +++ b/packages/node/src/nodeTransform2d.ts
-@@ -8,9 +8,10 @@
- } from '@flighthq/geometry/contract';
- import { DEG_TO_RAD } from '@flighthq/math/contract';
- import type {
+@@ -11,6 +11,7 @@ import type {
    HasTransform2DRuntime,
    Matrix,
    MatrixLike,
@@ -104,7 +103,7 @@ diff --git a/packages/node/src/nodeTransform2d.ts b/packages/node/src/nodeTransf
    NodeRuntime,
    Transform2DLike,
    Transform2DNode,
-@@ -46,22 +47,24 @@
+@@ -46,23 +47,25 @@ export function convertNodeVector2LocalToGlobal<Traits extends object>(
  }
  
  export function ensureNodeLocalMatrix<Traits extends object>(target: Transform2DNode<Traits>): void {
@@ -124,11 +123,10 @@ diff --git a/packages/node/src/nodeTransform2d.ts b/packages/node/src/nodeTransf
    let parentRuntime: (NodeRuntime<Traits> & HasTransform2DRuntime) | undefined;
    let parentWorldTransformId = 0;
  
--  if (parent !== null) {
+   if (parent !== null) {
 -    ensureNodeWorldMatrix(parent);
 -    parentRuntime = parent[EntityRuntimeKey]!;
 -    parentWorldTransformId = parentRuntime.worldTransformId;
-+  if (parent !== null) {
 +    if (isTransform2DNode(parent)) {
 +      ensureNodeWorldMatrix(parent);
 +      parentRuntime = getTransform2DRuntime(parent);
@@ -136,7 +134,8 @@ diff --git a/packages/node/src/nodeTransform2d.ts b/packages/node/src/nodeTransf
 +    }
    }
  
-@@ -75,7 +78,7 @@
+   if (
+@@ -75,7 +78,7 @@ export function ensureNodeWorldMatrix<Traits extends object>(target: Transform2D
  
  export function getNodeLocalMatrix<Traits extends object>(target: Transform2DNode<Traits>): Readonly<Matrix> {
    ensureNodeLocalMatrix(target);
@@ -145,7 +144,7 @@ diff --git a/packages/node/src/nodeTransform2d.ts b/packages/node/src/nodeTransf
  }
  
  // Reads the node's decomposed local transform fields into `out`.
-@@ -93,7 +96,7 @@
+@@ -93,7 +96,7 @@ export function getNodeTransform2D<Traits extends object>(out: Transform2DLike,
  
  export function getNodeWorldMatrix<Traits extends object>(target: Transform2DNode<Traits>): Readonly<Matrix> {
    ensureNodeWorldMatrix(target);
@@ -154,7 +153,7 @@ diff --git a/packages/node/src/nodeTransform2d.ts b/packages/node/src/nodeTransf
  }
  
  // Sets the node's local transform directly from a matrix, decomposing it into the transform fields.
-@@ -178,3 +181,23 @@
+@@ -178,3 +181,23 @@ function recomputeWorldTransform2D<Traits extends object>(
    }
    computeNodeWorldTransformRevision(runtime, parentRuntime);
  }
@@ -179,12 +178,10 @@ diff --git a/packages/node/src/nodeTransform2d.ts b/packages/node/src/nodeTransf
 +  return candidate.x !== undefined;
 +}
 diff --git a/packages/node/src/nodeTransform3d.ts b/packages/node/src/nodeTransform3d.ts
+index 09da473..a7f6559 100644
 --- a/packages/node/src/nodeTransform3d.ts
 +++ b/packages/node/src/nodeTransform3d.ts
-@@ -12,9 +12,10 @@
-   releaseMatrix4,
- } from '@flighthq/geometry/contract';
- import type {
+@@ -15,6 +15,7 @@ import type {
    HasTransform3DRuntime,
    Matrix4,
    Matrix4Like,
@@ -192,7 +189,7 @@ diff --git a/packages/node/src/nodeTransform3d.ts b/packages/node/src/nodeTransf
    NodeRuntime,
    Transform3DLike,
    Transform3DNode,
-@@ -48,22 +49,24 @@
+@@ -48,23 +49,25 @@ export function convertNodeVector3LocalToGlobal<Traits extends object>(
  // local transform is dirty — unless it was set directly (setNodeLocalMatrix4 pre-satisfies the dirty
  // check so the detached matrix survives).
  export function ensureNodeLocalMatrix4<Traits extends object>(target: Transform3DNode<Traits>): void {
@@ -212,11 +209,10 @@ diff --git a/packages/node/src/nodeTransform3d.ts b/packages/node/src/nodeTransf
    let parentRuntime: (NodeRuntime<Traits> & HasTransform3DRuntime) | undefined;
    let parentWorldTransformId = 0;
  
--  if (parent !== null) {
+   if (parent !== null) {
 -    ensureNodeWorldMatrix4(parent);
 -    parentRuntime = parent[EntityRuntimeKey]!;
 -    parentWorldTransformId = parentRuntime.worldTransformId;
-+  if (parent !== null) {
 +    if (isTransform3DNode(parent)) {
 +      ensureNodeWorldMatrix4(parent);
 +      parentRuntime = getTransform3DRuntime(parent);
@@ -224,7 +220,8 @@ diff --git a/packages/node/src/nodeTransform3d.ts b/packages/node/src/nodeTransf
 +    }
    }
  
-@@ -77,7 +80,7 @@
+   if (
+@@ -77,7 +80,7 @@ export function ensureNodeWorldMatrix4<Traits extends object>(target: Transform3
  
  export function getNodeLocalMatrix4<Traits extends object>(target: Transform3DNode<Traits>): Readonly<Matrix4> {
    ensureNodeLocalMatrix4(target);
@@ -233,7 +230,7 @@ diff --git a/packages/node/src/nodeTransform3d.ts b/packages/node/src/nodeTransf
  }
  
  // Reads the node's decomposed local transform (translation/rotation/scale) into `out`. When the local
-@@ -91,7 +94,7 @@
+@@ -91,7 +94,7 @@ export function getNodeTransform3D<Traits extends object>(out: Transform3DLike,
  
  export function getNodeWorldMatrix4<Traits extends object>(target: Transform3DNode<Traits>): Readonly<Matrix4> {
    ensureNodeWorldMatrix4(target);
@@ -242,7 +239,7 @@ diff --git a/packages/node/src/nodeTransform3d.ts b/packages/node/src/nodeTransf
  }
  
  // True when the local matrix was set directly (setNodeLocalMatrix4) and the translation/rotation/scale
-@@ -99,7 +102,7 @@
+@@ -99,7 +102,7 @@ export function getNodeWorldMatrix4<Traits extends object>(target: Transform3DNo
  // Resolves the local matrix first so a pending TRS write reports as reattached rather than stale.
  export function isNodeLocalMatrix4Detached<Traits extends object>(target: Transform3DNode<Traits>): boolean {
    ensureNodeLocalMatrix4(target);
@@ -251,7 +248,7 @@ diff --git a/packages/node/src/nodeTransform3d.ts b/packages/node/src/nodeTransf
  }
  
  // Sets the node's local matrix directly, bypassing translation/rotation/scale. The matrix is copied
-@@ -110,7 +113,7 @@
+@@ -110,7 +113,7 @@ export function setNodeLocalMatrix4<Traits extends object>(
    target: Transform3DNode<Traits>,
    source: Readonly<Matrix4Like>,
  ): void {
@@ -260,7 +257,7 @@ diff --git a/packages/node/src/nodeTransform3d.ts b/packages/node/src/nodeTransf
    if (runtime.localMatrix4 === null) runtime.localMatrix4 = createMatrix4();
    copyMatrix4(runtime.localMatrix4, source);
    invalidateNodeLocalTransform(target);
-@@ -134,7 +137,7 @@
+@@ -134,7 +137,7 @@ export function setNodeTransform3D<Traits extends object>(
  // (best-effort: lossy on shear). Non-destructive — the matrix cache is unchanged and stays authoritative
  // until a subsequent TRS write. Clears the detached state.
  export function syncNodeTransform3DFromMatrix4<Traits extends object>(target: Transform3DNode<Traits>): void {
@@ -269,7 +266,7 @@ diff --git a/packages/node/src/nodeTransform3d.ts b/packages/node/src/nodeTransf
    ensureNodeLocalMatrix4(target);
    decomposeMatrix4(target.position, target.rotation, target.scale, runtime.localMatrix4!);
    runtime.localMatrix4Detached = false;
-@@ -168,3 +171,23 @@
+@@ -168,3 +171,23 @@ function recomputeWorldTransform3D<Traits extends object>(
  
    computeNodeWorldTransformRevision(runtime, parentRuntime);
  }
@@ -293,4 +290,3 @@ diff --git a/packages/node/src/nodeTransform3d.ts b/packages/node/src/nodeTransf
 +  const candidate: Transform3DProbe = node;
 +  return candidate.position != null;
 +}
-

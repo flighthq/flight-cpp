@@ -47,7 +47,21 @@ const REQUIRED = [
   'appliedOn',
 ];
 
+// A patch the pin has outgrown is declared, not skipped. When a pin move breaks a patch, the patch keeps
+// its manifest entry and its original `baseCommit`, and gains `pendingRebase: { since, lane, reason }`:
+// the pin it is pending at, the lane that owns it, and why it cannot be applied there -- usually a rewrite
+// the pin broke, sometimes a rewrite that applies but must not be activated yet. A pending
+// patch is never applied, and every generation names the pending set, so the debt stays visible while
+// the rest of the pin generates. This is what lets one broken patch stop blocking every package.
 export function loadSourcePatches(root) {
+  return readSourcePatches(root).filter((patch) => patch.pendingRebase === undefined);
+}
+
+export function loadPendingSourcePatches(root) {
+  return readSourcePatches(root).filter((patch) => patch.pendingRebase !== undefined);
+}
+
+function readSourcePatches(root) {
   const directory = path.join(root, 'source-patches');
   const file = path.join(directory, 'manifest.json');
   let parsed;
@@ -70,6 +84,20 @@ export function loadSourcePatches(root) {
     patch.answers ??= 'refusal';
     if (!ANSWERS.has(patch.answers)) {
       throw new Error(`Source patch ${patch.id} has unknown answers ${patch.answers}`);
+    }
+    if (patch.pendingRebase !== undefined) {
+      const pending = patch.pendingRebase;
+      if (
+        typeof pending !== 'object' ||
+        pending === null ||
+        !/^[0-9a-f]{40}$/u.test(pending.since ?? '') ||
+        typeof pending.lane !== 'string' ||
+        pending.lane.length === 0 ||
+        typeof pending.reason !== 'string' ||
+        pending.reason.length === 0
+      ) {
+        throw new Error(`Source patch ${patch.id} has a pendingRebase without since, lane and reason`);
+      }
     }
     const patchFile = path.join(directory, patch.patch);
     let contents;

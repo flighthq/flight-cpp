@@ -1,0 +1,14 @@
+diff --git a/packages/compiler-inventory/src/flightWorkspaceInventory.ts b/packages/compiler-inventory/src/flightWorkspaceInventory.ts
+index e64d8fa..d84742f 100644
+--- a/packages/compiler-inventory/src/flightWorkspaceInventory.ts
++++ b/packages/compiler-inventory/src/flightWorkspaceInventory.ts
+@@ -432,6 +432,9 @@ function readSdkExposures(
+     for (const declaration of parsed.exportDeclarations) {
+       if (!declaration.moduleSpecifier || !ts.isStringLiteral(declaration.moduleSpecifier)) continue;
+       const target = declaration.moduleSpecifier.text;
++      // A relative re-export names one of the SDK package's own modules, not another package, so it
++      // contributes no package exposure. Its declarations are still parsed with the SDK's own sources.
++      if (target.startsWith('./') || target.startsWith('../')) continue;
+       if (!target.startsWith(`${packageScope}/`)) {
+         throw createCompilerInventoryFailure(
+           'unsupported-package-specifier',

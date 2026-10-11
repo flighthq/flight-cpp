@@ -10,7 +10,7 @@ diff --git a/packages/scene3d-gl/src/enableGlScene3DDeformGuards.ts b/packages/s
 +import type { GlRenderState, Mesh } from '@flighthq/types/contract';
  import { LogLevel } from '@flighthq/types/contract';
  
- import { getGlScene3DRuntime } from './glScene3DRuntime';
+ import { getGlScene3DRuntime } from './glScene3DRuntime.ts';
 @@ -43,7 +43,7 @@ function warnGlScene3DMeshDrawnUndeformed(mesh: Mesh): void {
    }
  

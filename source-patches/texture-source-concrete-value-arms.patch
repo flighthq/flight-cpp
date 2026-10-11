@@ -3,13 +3,13 @@ new file mode 100644
 --- /dev/null
 +++ b/packages/types/src/TextureSourceValue.ts
 @@ -0,0 +1,18 @@
-+import type { Bitmap } from './Bitmap';
-+import type { CompressedImageResource } from './CompressedImageResource';
-+import type { ExternalTexture } from './ExternalTexture';
-+import type { ImageResource } from './ImageResource';
-+import type { RenderTarget } from './RenderTarget';
-+import type { TextureSource } from './TextureSource';
-+import type { VoxelGrid } from './VoxelGrid';
++import type { Bitmap } from './Bitmap.ts';
++import type { CompressedImageResource } from './CompressedImageResource.ts';
++import type { ExternalTexture } from './ExternalTexture.ts';
++import type { ImageResource } from './ImageResource.ts';
++import type { RenderTarget } from './RenderTarget.ts';
++import type { TextureSource } from './TextureSource.ts';
++import type { VoxelGrid } from './VoxelGrid.ts';
 +
 +// TextureSource remains the open substrate contract. The redundant built-in arms retain each exact
 +// source owner when heterogeneous Texture storage crosses an invariant native target.
@@ -25,12 +25,12 @@ diff --git a/packages/types/src/Texture.ts b/packages/types/src/Texture.ts
 --- a/packages/types/src/Texture.ts
 +++ b/packages/types/src/Texture.ts
 @@ -1,5 +1,6 @@
- import type { Entity, EntityWithoutRuntime } from './Entity';
- import type { Sampler } from './Sampler';
- import type { TextureSource } from './TextureSource';
-+import type { TextureSourceValue } from './TextureSourceValue';
- import type { TextureUvTransform } from './TextureUvTransform';
- import type { VoxelGrid } from './VoxelGrid';
+ import type { Entity, EntityWithoutRuntime } from './Entity.ts';
+ import type { Sampler } from './Sampler.ts';
+ import type { TextureSource } from './TextureSource.ts';
++import type { TextureSourceValue } from './TextureSourceValue.ts';
+ import type { TextureUvTransform } from './TextureUvTransform.ts';
+ import type { VoxelGrid } from './VoxelGrid.ts';
 @@ -13,10 +14,10 @@ export type TextureColorSpace = 'linear' | 'srgb';
  // Six source slots in canonical GPU cube-face order (+X, -X, +Y, -Y, +Z, -Z). Null remains a
  // transitional incomplete-face sentinel until the named non-null loader stage.
@@ -52,19 +52,19 @@ diff --git a/packages/types/src/contract.ts b/packages/types/src/contract.ts
 --- a/packages/types/src/contract.ts
 +++ b/packages/types/src/contract.ts
 @@ -367,5 +367,6 @@ export * from './HostMessageDialog';
- export * from './HostPromptDialog';
- export * from './TextureSource';
-+export * from './TextureSourceValue';
- export * from './ImageChannel';
- export * from './HostBitmapEncode';
- export * from './BitmapEncodeFailureExplanation';
+ export * from './HostPromptDialog.ts';
+ export * from './TextureSource.ts';
++export * from './TextureSourceValue.ts';
+ export * from './ImageChannel.ts';
+ export * from './HostBitmapEncode.ts';
+ export * from './BitmapEncodeFailureExplanation.ts';
 diff --git a/packages/types/src/index.ts b/packages/types/src/index.ts
 --- a/packages/types/src/index.ts
 +++ b/packages/types/src/index.ts
 @@ -357,5 +357,6 @@ export * from './HostMessageDialog';
- export * from './HostPromptDialog';
- export * from './TextureSource';
-+export * from './TextureSourceValue';
- export * from './ImageChannel';
- export * from './HostBitmapEncode';
- export * from './BitmapEncodeFailureExplanation';
+ export * from './HostPromptDialog.ts';
+ export * from './TextureSource.ts';
++export * from './TextureSourceValue.ts';
+ export * from './ImageChannel.ts';
+ export * from './HostBitmapEncode.ts';
+ export * from './BitmapEncodeFailureExplanation.ts';

@@ -20,7 +20,7 @@ index 2c6efeb..3c68a50 100644
 -import { ParticleEmitter3DKind } from '@flighthq/types/contract';
 +import { EntityRuntimeKey, ParticleEmitter3DKind } from '@flighthq/types/contract';
  
- import { createParticleEmitterData } from './particleEmitter';
+ import { createParticleEmitterData } from './particleEmitter.ts';
  
 @@ -153,10 +153,11 @@ export function computeParticleEmitter3DLocalBoundsAabb(out: AabbLike, source: R
  }

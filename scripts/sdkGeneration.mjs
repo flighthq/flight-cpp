@@ -28,6 +28,7 @@ import { canonicalizeGeneratedIncludes } from './generatedIncludes.mjs';
 import {
   applySourcePatches,
   ineffectivePatches,
+  loadPendingSourcePatches,
   loadSourcePatches,
   recoverStalePatches,
   revertSourcePatches,
@@ -141,6 +142,7 @@ const bindingProfiles = loadBindingProfiles(
 const declaredRepairs = loadEmissionRepairs(root);
 const deferredPackages = loadDeferredPackages(root);
 const sourcePatches = loadSourcePatches(root);
+reportPendingSourcePatches(loadPendingSourcePatches(root));
 for (const dependency of [compiler, flight]) {
   const recovery = recoverStalePatches(sourcePatches, dependency);
   if (recovery.recovered.length > 0) {
@@ -953,4 +955,16 @@ function reportObsoleteRepairs(result) {
   for (const id of result.obsoleteRepairs) process.stderr.write(`- ${id}\n`);
   process.stderr.write('Delete them from repairs/emission-repairs.json; the defect they stood in for is gone.\n');
   return true;
+}
+
+// A pending patch is declared debt, not a silent skip: every run names how many are outstanding and which
+// lane owns each group, so a generation never reads as though the whole patch set was applied.
+function reportPendingSourcePatches(pending) {
+  if (pending.length === 0) return;
+  const byLane = new Map();
+  for (const patch of pending) byLane.set(patch.pendingRebase.lane, [...(byLane.get(patch.pendingRebase.lane) ?? []), patch.id]);
+  process.stderr.write(`${String(pending.length)} source patch(es) pending rebase and NOT applied:\n`);
+  for (const [lane, ids] of [...byLane].sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0))) {
+    process.stderr.write(`- ${lane}: ${ids.join(', ')}\n`);
+  }
 }

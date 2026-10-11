@@ -14,8 +14,8 @@ diff --git a/packages/collision/src/raycastCollisionShape3D.ts b/packages/collis
 +  EntityConstruction,
 +} from '@flighthq/types/contract';
  
- import { writeCollisionConvexHullFaces3D } from './convexHull3D';
- import { getCollisionShapeContainsPoint3D } from './pointContainment3D';
+ import { writeCollisionConvexHullFaces3D } from './convexHull3D.ts';
+ import { getCollisionShapeContainsPoint3D } from './pointContainment3D.ts';
 @@ -228,7 +236,7 @@ function raycastConvexHull3D(
  // world's. One conjugate rotation of two vectors replaces rotating eight corners, and the slab test then
  // runs on an axis-aligned problem; only the resulting normal rotates back.

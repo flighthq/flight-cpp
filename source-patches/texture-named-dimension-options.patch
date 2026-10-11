@@ -2,14 +2,14 @@ diff --git a/packages/types/src/CreateTextureOptions.ts b/packages/types/src/Cre
 --- a/packages/types/src/CreateTextureOptions.ts
 +++ b/packages/types/src/CreateTextureOptions.ts
 @@ -1,17 +1,32 @@
- import type { ImageResourceReference } from './ImageResourceReference';
--import type { TextureLike } from './Texture';
+ import type { ImageResourceReference } from './ImageResourceReference.ts';
+-import type { TextureLike } from './Texture.ts';
 +import type {
 +  Texture2DArrayLike,
 +  Texture2DLike,
 +  Texture3DLike,
 +  TextureCubeLike,
-+} from './Texture';
++} from './Texture.ts';
  
 -type CreateTextureVariantOptions<Type extends TextureLike> = Type extends TextureLike
 -  ? Omit<Partial<Type>, 'dimension'> &

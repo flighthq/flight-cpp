@@ -8,7 +8,7 @@ index 2cb7c7b..c36d486 100644
 -import { DEG_TO_RAD } from '@flighthq/math/contract';
  import type { AttachmentSkin2D, Bone2D, EntityConstruction, MatrixLike, Skeleton2D } from '@flighthq/types/contract';
  
--import { SKELETON_2D_MATRIX_STRIDE as MATRIX_STRIDE } from './skeleton2dConstants';
+-import { SKELETON_2D_MATRIX_STRIDE as MATRIX_STRIDE } from './skeleton2dConstants.ts';
 +const DEG_TO_RAD = Math.PI / 180;
 +const MATRIX_STRIDE = 6;
  

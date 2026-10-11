@@ -662,32 +662,6 @@
       "expectedWhen": "always"
     },
     {
-      "id": "respell-reference-alias-keyedtable",
-      "kind": "respell-reference-alias",
-      "appliesTo": "flight/",
-      "symbol": "KeyedTable",
-      "expansion": "shared-pointer",
-      "witness": "flight::types::KeyedTable<flight::Any>",
-      "witnessInclude": "flight/types/registry_table.hpp",
-      "diagnostic": "couldn't deduce template parameter 'T'",
-      "defect": "flight::Ref<Value> resolves through detail::reference_shape<Value, complete_probe<Value>>, a computation, so a template parameter appearing only inside it is in a NON-DEDUCED CONTEXT. Every generated signal and node helper is declared that way -- template <typename T> void emit_signal(flight::Ref<flight::types::Signal<T>>, ArgsPack&&...) -- so the declaration is well-formed and the file compiles alone, while every CALL fails to deduce T. That is why packages which are 100% emitted still have failing headers: @flighthq/camera is 21/21 emitted and three of its headers fail only here, through flight/log/log.hpp's two emit_signal calls.",
-      "expires": "when the emitter writes a deducible spelling for a reference parameter inside a function template -- std::shared_ptr<X> for a ReferenceEnabled X, or X itself otherwise -- instead of the flight::Ref alias; sdk:check fails if this repair matches no file.",
-      "expectedWhen": "always"
-    },
-    {
-      "id": "respell-reference-alias-slottable",
-      "kind": "respell-reference-alias",
-      "appliesTo": "flight/",
-      "symbol": "SlotTable",
-      "expansion": "shared-pointer",
-      "witness": "flight::types::SlotTable<flight::Any>",
-      "witnessInclude": "flight/types/registry_table.hpp",
-      "diagnostic": "couldn't deduce template parameter 'T'",
-      "defect": "flight::Ref<Value> resolves through detail::reference_shape<Value, complete_probe<Value>>, a computation, so a template parameter appearing only inside it is in a NON-DEDUCED CONTEXT. Every generated signal and node helper is declared that way -- template <typename T> void emit_signal(flight::Ref<flight::types::Signal<T>>, ArgsPack&&...) -- so the declaration is well-formed and the file compiles alone, while every CALL fails to deduce T. That is why packages which are 100% emitted still have failing headers: @flighthq/camera is 21/21 emitted and three of its headers fail only here, through flight/log/log.hpp's two emit_signal calls.",
-      "expires": "when the emitter writes a deducible spelling for a reference parameter inside a function template -- std::shared_ptr<X> for a ReferenceEnabled X, or X itself otherwise -- instead of the flight::Ref alias; sdk:check fails if this repair matches no file.",
-      "expectedWhen": "always"
-    },
-    {
       "id": "respell-reference-alias-transform2dnode",
       "kind": "respell-reference-alias",
       "appliesTo": "flight/",

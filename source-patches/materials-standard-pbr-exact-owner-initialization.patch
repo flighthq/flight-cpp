@@ -1,10 +1,11 @@
 diff --git a/packages/materials/src/pbrMaterials.ts b/packages/materials/src/pbrMaterials.ts
+index 25af727..b86c95d 100644
 --- a/packages/materials/src/pbrMaterials.ts
 +++ b/packages/materials/src/pbrMaterials.ts
-@@ -115,7 +115,19 @@ export function createSpecularGlossinessPbrMaterial(
+@@ -116,7 +116,19 @@ export function createSpecularGlossinessPbrMaterial(
  // unit `normalScale`/`occlusionStrength`, all maps null.
  export function createStandardPbrMaterial(opts?: Readonly<Partial<StandardPbrMaterial>>): StandardPbrMaterial {
-   const material = createSurfaceMaterial<StandardPbrMaterial>(StandardPbrMaterialKind, opts);
+   const material = createMaterial3D<StandardPbrMaterial>(StandardPbrMaterialKind, opts);
 -  assignStandardPbrMaterialProperties(material, opts);
 +  material.alphaMap = opts?.alphaMap ?? null;
 +  material.baseColor = opts?.baseColor ?? 0xffffffff;

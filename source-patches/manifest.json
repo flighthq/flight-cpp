@@ -7,7 +7,7 @@
       "id": "animation-layer-stack-channel-projection",
       "dependency": "flight",
       "patch": "animation-layer-stack-channel-projection.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/animation/src/animationLayerStack.ts",
       "package": "@flighthq/animation",
       "answers": "diagnostic",
@@ -33,13 +33,18 @@
       "whyNotUpstreamFirst": "These target-neutral spellings document the map, result, and callback contracts directly and retain type evidence the emitter loses through assignment context, named Partial, and shorter-function assignability.",
       "unblocks": "Prevents Map deduction and C++ callable-arity failures and lets the standard formatting handlers emit rather than leaving unresolved calls in markup_tag_registry.hpp.",
       "expires": "when assignment context supplies generic constructor arguments, named all-optional interfaces and structural callback results retain their represented types, and contextual function assignment adapts ignored parameters during lowering, or Flight adopts the explicit forms.",
-      "appliedOn": "2026-10-07"
+      "appliedOn": "2026-10-07",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "TEXT",
+        "reason": "context drift: the patched code still exists (17/18 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "glyphatlas-iterator-result-binding",
       "dependency": "flight",
       "patch": "glyphatlas-iterator-result-binding.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/glyphatlas/src/glyphAtlasEntry.ts",
       "package": "@flighthq/glyphatlas",
       "answers": "diagnostic",
@@ -55,7 +60,7 @@
       "id": "midi-explicit-port-state-arms",
       "dependency": "flight",
       "patch": "midi-explicit-port-state-arms.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/midi/src/midiResource.ts",
       "package": "@flighthq/midi",
       "answers": "refusal",
@@ -71,7 +76,7 @@
       "id": "loader-request-options-return-type",
       "dependency": "flight",
       "patch": "loader-request-options-return-type.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/loader/src/load.ts",
       "package": "@flighthq/loader",
       "answers": "diagnostic",
@@ -97,7 +102,12 @@
       "whyNotUpstreamFirst": "Matching a callback's declared arity is ordinary target-neutral source and avoids teaching the runtime an unsafe general conversion between incompatible C++ callable signatures.",
       "unblocks": "Makes the default audio and image resource fetch functions initialize their declared std::function carriers.",
       "expires": "when contextual function assignment adapts ignored parameters and preserves the declared Promise result carrier during lowering, or Flight adopts the explicit forms.",
-      "appliedOn": "2026-10-07"
+      "appliedOn": "2026-10-07",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "2D",
+        "reason": "context drift: the patched code still exists (2/2 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "shape-formats-keyed-table-owner",
@@ -113,13 +123,18 @@
       "whyNotUpstreamFirst": "These target-neutral local contracts document the values already proved by the factory and guard while retaining evidence the emitter otherwise loses.",
       "unblocks": "Keeps the schema registry on one KeyedTable carrier and gives is_finite_number_array an iterable dense-array carrier.",
       "expires": "when generic factory results retain their explicit type arguments through reassignment and Array.isArray narrowing preserves an iterable array carrier, or Flight adopts the annotations.",
-      "appliedOn": "2026-10-07"
+      "appliedOn": "2026-10-07",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "2D",
+        "reason": "context drift: the patched code still exists (1/2 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "tokens-string-narrowing-binding",
       "dependency": "flight",
       "patch": "tokens-string-narrowing-binding.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/tokens/src/flightDocumentTokenReference.ts",
       "package": "@flighthq/tokens",
       "answers": "diagnostic",
@@ -135,7 +150,7 @@
       "id": "video-extension-array-binding",
       "dependency": "flight",
       "patch": "video-extension-array-binding.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/video/src/videoFormat.ts",
       "package": "@flighthq/video",
       "answers": "refusal",
@@ -151,7 +166,7 @@
       "id": "spritesheet-formats-line-normalization",
       "dependency": "flight",
       "patch": "spritesheet-formats-line-normalization.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/spritesheet-formats/src/libgdxAtlasParse.ts",
       "package": "@flighthq/spritesheet-formats",
       "answers": "diagnostic",
@@ -167,7 +182,7 @@
       "id": "tilemap-formats-record-materialization",
       "dependency": "flight",
       "patch": "tilemap-formats-record-materialization.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/tilemap-formats/src/tiledJsonParse.ts, packages/tilemap-formats/src/tiledTmjFormat.ts, and packages/tilemap-formats/src/tiledXmlParse.ts",
       "package": "@flighthq/tilemap-formats",
       "answers": "diagnostic",
@@ -183,7 +198,7 @@
       "id": "spritesheet-player-options-shape",
       "dependency": "flight",
       "patch": "spritesheet-player-options-shape.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/spritesheet/src/spritesheetPlayer.ts",
       "package": "@flighthq/spritesheet",
       "answers": "refusal",
@@ -199,7 +214,7 @@
       "id": "layout-node-reference-bindings",
       "dependency": "flight",
       "patch": "layout-node-reference-bindings.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/layout/src/flexLayout.ts and packages/layout/src/gridLayout.ts",
       "package": "@flighthq/layout",
       "answers": "diagnostic",
@@ -215,7 +230,7 @@
       "id": "skeleton3d-explicit-storage",
       "dependency": "flight",
       "patch": "skeleton3d-explicit-storage.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/skeleton3d/src/skeleton3d.ts",
       "package": "@flighthq/skeleton3d",
       "answers": "refusal",
@@ -231,7 +246,7 @@
       "id": "shading-explicit-reference-storage",
       "dependency": "flight",
       "patch": "shading-explicit-reference-storage.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/shading/src/createShadedMaterial.ts and packages/shading/src/getModifierDefineKey.ts",
       "package": "@flighthq/shading",
       "answers": "diagnostic",
@@ -257,13 +272,18 @@
       "whyNotUpstreamFirst": "This follows the repository's existing RenderState runtime-owner pattern and gives the emitter exact owner-side reference evidence that a cross-package symbol read and assertion lose.",
       "unblocks": "Removes the shared symbol-subscript and optional-base cast root from dom_render_state.hpp and its DOM render consumers.",
       "expires": "when symbol-keyed reads and runtime assertions retain the derived runtime owner, or Flight adopts this owner-side declaration and accessor.",
-      "appliedOn": "2026-10-06"
+      "appliedOn": "2026-10-06",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "2D",
+        "reason": "context drift: the patched code still exists (2/2 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "optional-null-storage-evidence",
       "dependency": "flight",
       "patch": "optional-null-storage-evidence.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene-document/src/sceneDocumentRefusal.ts",
       "package": "@flighthq/scene-document",
       "answers": "diagnostic",
@@ -279,7 +299,7 @@
       "id": "scene3d-formats-optional-null-storage",
       "dependency": "flight",
       "patch": "scene3d-formats-optional-null-storage.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene3d-formats/src/mtlParse.ts",
       "package": "@flighthq/scene3d-formats",
       "answers": "diagnostic",
@@ -305,13 +325,18 @@
       "whyNotUpstreamFirst": "This is ordinary target-neutral TypeScript and is the smallest source spelling that preserves the value binding while the emitter loses imported value aliases.",
       "unblocks": "Defines all animation-target kind member accesses in skeleton2d_animation_target.hpp and its skeleton2d-formats consumers.",
       "expires": "when imported value aliases are rebound in generated modules, or Flight adopts the unaliased import.",
-      "appliedOn": "2026-10-06"
+      "appliedOn": "2026-10-06",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "2D",
+        "reason": "context drift: the patched code still exists (4/6 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "particles-formats-string-operations",
       "dependency": "flight",
       "patch": "particles-formats-string-operations.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/particles-formats/src/libgdxParse.ts and packages/particles-formats/src/particleDesignerParse.ts",
       "package": "@flighthq/particles-formats",
       "answers": "diagnostic",
@@ -327,7 +352,7 @@
       "id": "particles-formats-diagnostic-details",
       "dependency": "flight",
       "patch": "particles-formats-diagnostic-details.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/particles-formats/src/formatRegistry.ts",
       "package": "@flighthq/particles-formats",
       "answers": "diagnostic",
@@ -343,7 +368,7 @@
       "id": "gui-hit-area-type-evidence",
       "dependency": "flight",
       "patch": "gui-hit-area-type-evidence.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/gui/src/guiController.ts",
       "package": "@flighthq/gui",
       "answers": "diagnostic",
@@ -359,7 +384,7 @@
       "id": "skeleton2d-local-numeric-constants",
       "dependency": "flight",
       "patch": "skeleton2d-local-numeric-constants.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/skeleton2d/src/skeleton2d.ts",
       "package": "@flighthq/skeleton2d",
       "answers": "diagnostic",
@@ -375,7 +400,7 @@
       "id": "selection-runtime-type-evidence",
       "dependency": "flight",
       "patch": "selection-runtime-type-evidence.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/selection/src/lassoSelection.ts, packages/selection/src/marqueeSelection.ts, and packages/selection/src/selectionState.ts",
       "package": "@flighthq/selection",
       "answers": "diagnostic",
@@ -391,7 +416,7 @@
       "id": "movieclip-guard-log-data",
       "dependency": "flight",
       "patch": "movieclip-guard-log-data.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/movieclip/src/enableMovieClipGuards.ts",
       "package": "@flighthq/movieclip",
       "answers": "diagnostic",
@@ -407,7 +432,7 @@
       "id": "movieclip-data-binding",
       "dependency": "flight",
       "patch": "movieclip-data-binding.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/movieclip/src/movieClip.ts",
       "package": "@flighthq/movieclip",
       "answers": "diagnostic",
@@ -433,13 +458,18 @@
       "whyNotUpstreamFirst": "String literals are the native spelling of these discriminated unions and avoid a backend member-access defect without adding a target-specific construct.",
       "unblocks": "Removes the shared discriminant carrier diagnostic from image_resource_reference.hpp and its downstream format consumers.",
       "expires": "when member access on reference-backed exported const objects emits pointer access, or Flight adopts the literal discriminants.",
-      "appliedOn": "2026-10-06"
+      "appliedOn": "2026-10-06",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "2D",
+        "reason": "context drift: the patched code still exists (23/24 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "text-data-binding",
       "dependency": "flight",
       "patch": "text-data-binding.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/text/src/textLabel.ts and packages/text/src/nativeText.ts",
       "package": "@flighthq/text",
       "answers": "diagnostic",
@@ -455,7 +485,7 @@
       "id": "node-traversal-typed-empty-children",
       "dependency": "flight",
       "patch": "node-traversal-typed-empty-children.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/node/src/traversal.ts",
       "package": "@flighthq/node",
       "answers": "diagnostic",
@@ -471,7 +501,7 @@
       "id": "particleemitter-data-binding",
       "dependency": "flight",
       "patch": "particleemitter-data-binding.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/particleemitter/src/particleEmitter.ts",
       "package": "@flighthq/particleemitter",
       "answers": "diagnostic",
@@ -487,7 +517,7 @@
       "id": "node-stage-fit-string-value",
       "dependency": "flight",
       "patch": "node-stage-fit-string-value.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/node/src/stageFit.ts",
       "package": "@flighthq/node",
       "answers": "diagnostic",
@@ -503,7 +533,7 @@
       "id": "tween-record-membership",
       "dependency": "flight",
       "patch": "tween-record-membership.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/tween/src/internal.ts",
       "package": "@flighthq/tween",
       "answers": "diagnostic",
@@ -519,7 +549,7 @@
       "id": "gui-controller-explicit-type-evidence",
       "dependency": "flight",
       "patch": "gui-controller-explicit-type-evidence.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/gui/src/guiController.ts",
       "package": "@flighthq/gui",
       "answers": "refusal",
@@ -535,7 +565,7 @@
       "id": "scene3d-formats-resource-ref-owner-lookup",
       "dependency": "flight",
       "patch": "scene3d-formats-resource-ref-owner-lookup.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene3d-formats/src/shared.ts plus ImageResourceReference owner lookups",
       "package": "@flighthq/scene3d-formats",
       "answers": "refusal",
@@ -551,7 +581,7 @@
       "id": "scene3d-formats-gltf-camera-diagnostic-details",
       "dependency": "flight",
       "patch": "scene3d-formats-gltf-camera-diagnostic-details.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene3d-formats/src/gltfCameras.ts",
       "package": "@flighthq/scene3d-formats",
       "answers": "diagnostic",
@@ -567,7 +597,7 @@
       "id": "animation-track-explicit-initialization-defaults",
       "dependency": "flight",
       "patch": "animation-track-explicit-initialization-defaults.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/animation/src/animationTrack.ts",
       "package": "@flighthq/animation",
       "answers": "refusal",
@@ -593,7 +623,12 @@
       "whyNotUpstreamFirst": "These are ordinary target-neutral TypeScript declarations and factoring, with no C++ types or target branches. The public state factories keep their signatures. The owner accessors live beside the fields they represent because the emitter cannot retain that exact symbol and heritage evidence across package boundaries; they can disappear when it can.",
       "unblocks": "Full @flighthq/render-gl closure generation improves from 1203/1273 modules with 70 refusals to 1210/1273 with 63. GlContextState emits, glRenderState's own runtime-owner, registry-owner, cache, and initialization refusals clear, and the generated gl_render_state.hpp passes a C++20 syntax check when composed with the two separately declared include-cycle overrides and nullable-structural runtime support. The inventory still records glRenderState as dependency-refused because registryTable remains overridden rather than emitted.",
       "expires": "when the emitter preserves exact computed-symbol owners, derived registry/runtime heritage, external weak-key policies, Partial member projections, and cross-package registry-reader evidence without source factoring, or Flight adopts these equivalent forms.",
-      "appliedOn": "2026-10-08"
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GL",
+        "reason": "context drift: the patched code still exists (47/64 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "canvas-render-state-runtime-owner-and-initialization",
@@ -609,29 +644,18 @@
       "whyNotUpstreamFirst": "The rewrite is target-neutral TypeScript and makes the already-intended derived owners explicit. It depends on the temporary generic render initializer only because the emitter flattens interface heritage; no public factory signature changes.",
       "unblocks": "In the 27-package @flighthq/scene2d-canvas closure, the final callback refinement moves the inventory from 1309/1404 modules with 95 refusals to 1310/1404 with 94. The exact runtime accessors, runtime factory, and complete createCanvasRenderState body emit. The module now remains dependency-refused only because canvasTextureResolver is independently refused, which is addressed separately.",
       "expires": "when the emitter preserves CanvasRenderState and CanvasRenderStateRuntime heritage and computed-symbol ownership across their RenderState bases, or Flight adopts these exact-owner helpers.",
-      "appliedOn": "2026-10-08"
-    },
-    {
-      "id": "registry-bound-discriminant-literal",
-      "dependency": "flight",
-      "patch": "registry-bound-discriminant-literal.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/registry/src/registryTable.ts",
-      "package": "@flighthq/registry",
-      "answers": "diagnostic",
-      "refusal": "RegistryEntryState.Bound emits a reference-backed registry_entry_state with value-style member access",
-      "rewrite": "Compares the two public resolution results with the literal discriminant `bound` instead of selecting the identically typed Bound field from RegistryEntryState.",
-      "equivalence": "RegistryTableEntry declares its bound arm with the literal type `typeof RegistryEntryState.Bound`, and RegistryEntryState declares that readonly const field as exactly `bound`. Comparing entry.state with the literal therefore performs the same strict string comparison and preserves the same union narrowing, return value, and tombstone handling. The exported RegistryEntryState object and every public signature remain unchanged.",
-      "whyNotUpstreamFirst": "The emitter correctly represents the exported const object by reference but lowers its member selection with `.`. The literal spelling is idiomatic for a string-discriminated union and avoids that backend defect without introducing a target-specific construct.",
-      "unblocks": "Removes the registry_entry_state.bound diagnostic from getRegistryTableEntry and hasRegistryTableEntry; the separately refused table-union dispatcher still needs an implementation before either reader is usable.",
-      "expires": "when member access on a reference-backed exported const object emits `->`, or Flight adopts the literal discriminant comparisons.",
-      "appliedOn": "2026-10-04"
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "2D",
+        "reason": "context drift: the patched code still exists (10/14 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "node-initialize-node-non-optional-source",
       "dependency": "flight",
       "patch": "node-initialize-node-non-optional-source.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/node/src/node.ts",
       "package": "@flighthq/node",
       "refusal": "dual-sentinel optional property result requires one represented member value domain",
@@ -647,7 +671,7 @@
       "id": "timeline-noop-construct-frame-arity",
       "dependency": "flight",
       "patch": "timeline-noop-construct-frame-arity.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/timeline/src/timeline.ts",
       "package": "@flighthq/timeline",
       "answers": "diagnostic",
@@ -663,7 +687,7 @@
       "id": "screen-copy-screen-info-explicit-fields",
       "dependency": "flight",
       "patch": "screen-copy-screen-info-explicit-fields.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/screen/src/screen.ts",
       "package": "@flighthq/screen",
       "answers": "refusal",
@@ -679,7 +703,7 @@
       "id": "collision-shape-contact-explicit-branches",
       "dependency": "flight",
       "patch": "collision-shape-contact-explicit-branches.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/collision/src/shapeContact2D.ts",
       "package": "@flighthq/collision",
       "answers": "diagnostic",
@@ -696,7 +720,7 @@
       "id": "collision-raycast-named-shape-parameters",
       "dependency": "flight",
       "patch": "collision-raycast-named-shape-parameters.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/collision/src/raycastCollisionShape3D.ts",
       "package": "@flighthq/collision",
       "answers": "diagnostic",
@@ -713,7 +737,7 @@
       "id": "path-retain-stroke-geometry-return-type",
       "dependency": "flight",
       "patch": "path-retain-stroke-geometry-return-type.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/path/src/strokePathGeometry.ts plus its three consumers",
       "package": "@flighthq/path",
       "answers": "diagnostic",
@@ -741,13 +765,18 @@
       "verification": "Targeted regeneration made woff_font.hpp compile independently and a C++ probe preserved the missing-decompressor null result plus diagnostic kind, origin, and table detail. Combining that candidate with the committed full structural-member table made all 17 package headers compile; the first named-Record trial exposed and the final typed-local spelling removed the optional-chain Any widening.",
       "unblocks": "Makes woff_font.hpp compile, clearing open_type_glyph_outline_source.hpp and both package aggregators and moving @flighthq/font-formats from 13/17 to 17/17 when regenerated with the full SDK structural schema.",
       "expires": "when the emitter materializes a contextual Record object literal before constructing an optional<Record> function argument, or Flight adopts the named bindings.",
-      "appliedOn": "2026-10-04"
+      "appliedOn": "2026-10-04",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "TEXT",
+        "reason": "context drift: the patched code still exists (4/5 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "statechart-single-transition-binding",
       "dependency": "flight",
       "patch": "statechart-single-transition-binding.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/statechart/src/statechart.ts",
       "package": "@flighthq/statechart",
       "answers": "diagnostic",
@@ -764,7 +793,7 @@
       "id": "clip-explicit-contours-storage",
       "dependency": "flight",
       "patch": "clip-explicit-contours-storage.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/types/src/ClipRegion.ts plus packages/clip/src/clipRegion.ts",
       "package": "@flighthq/clip",
       "answers": "refusal",
@@ -777,26 +806,10 @@
       "appliedOn": "2026-10-05"
     },
     {
-      "id": "materials-exact-construction-owner",
-      "dependency": "flight",
-      "patch": "materials-exact-construction-owner.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/materials/src/material.ts, surfaceMaterial.ts, and the six concrete constructor modules",
-      "package": "@flighthq/materials",
-      "answers": "refusal",
-      "refusal": "createMaterial and createSurfaceMaterial allocate the base Material owners and each concrete constructor then asserts that reference to an unrelated flattened C++ interface owner, so Blinn-Phong, Phong, Lambert, PBR, unlit, and the other real material constructors are refused",
-      "rewrite": "Makes the two allocation helpers generic in the exact Material and SurfaceMaterial owner with their old return types as defaults, and supplies each concrete constructor's already-declared result type as the generic argument instead of asserting the base factory result afterward.",
-      "equivalence": "TypeScript erases generic arguments. Every call still invokes allocateEntity once, initializes kind, name, and the same shared surface fields in the same order, mutates the same newly allocated plain object with the same concrete defaults, and returns that object with identical identity. The default type parameters preserve callers that intentionally request the base Material or SurfaceMaterial contract.",
-      "whyNotUpstreamFirst": "The compiler diagnostic explicitly requests exact generic allocation because flattened C++ interface owners have no inheritance cast. This is ordinary target-neutral TypeScript that states the concrete owner each public constructor already promises without a copied C++ material implementation.",
-      "unblocks": "Allows the concrete material constructor modules to retain BlinnPhongMaterial, LambertMaterial, PhongMaterial, StandardPbrMaterial, SpecularGlossinessPbrMaterial, ExtendedPbrMaterial, CustomShaderMaterial, and all built-in unlit/debug material owners through initialization.",
-      "expires": "when interface-heritage references retain an owner-preserving C++ carrier across base factory results, or Flight adopts exact generic allocation.",
-      "appliedOn": "2026-10-08"
-    },
-    {
       "id": "geometry-matrix-independent-storage",
       "dependency": "flight",
       "patch": "geometry-matrix-independent-storage.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/geometry/src/matrix3.ts and packages/geometry/src/matrix4.ts",
       "package": "@flighthq/geometry",
       "answers": "diagnostic",
@@ -812,7 +825,7 @@
       "id": "mesh-icosphere-explicit-base-vertices",
       "dependency": "flight",
       "patch": "mesh-icosphere-explicit-base-vertices.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/mesh/src/meshGeometryBuilders.ts",
       "package": "@flighthq/mesh",
       "answers": "diagnostic",
@@ -961,22 +974,6 @@
       "appliedOn": "2026-10-08"
     },
     {
-      "id": "renderable-concrete-node-arms",
-      "dependency": "flight",
-      "patch": "renderable-concrete-node-arms.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/types/src/Renderable.ts",
-      "package": "@flighthq/types",
-      "answers": "diagnostic",
-      "refusal": "Node<any> lowers to the single invariant C++ specialization Node<flight::Any>, so the existing Node2D and Node3D subtypes cannot enter Renderable, serve as its WeakMap keys, or reach the shared render traversal APIs with their real owners",
-      "rewrite": "Names Node2D and Node3D as explicit Renderable union arms beside the existing open NodeAny arm and RenderCache arm.",
-      "equivalence": "Node2D and Node3D are already structurally assignable to NodeAny, so adding them to a union does not add a value, remove a value, change narrowing, or alter runtime JavaScript. The union remains open to every custom Node<any>; the redundant named arms only retain the two existing SDK node carriers for targets whose generic specializations are invariant.",
-      "whyNotUpstreamFirst": "This is an erased, target-neutral type expansion of two already-included subtypes. It preserves the open NodeAny contract while exposing concrete carrier evidence the current emitter loses when it lowers TypeScript any as one C++ template argument.",
-      "unblocks": "Allows exact Node2D and Node3D owners to flow through Renderable, its WeakMap and Set storage, and shared render-proxy APIs without casts, materialization, or side storage.",
-      "expires": "when emitted generic specializations preserve TypeScript assignability into Node<any>, or Flight keeps the redundant concrete arms upstream.",
-      "appliedOn": "2026-10-08"
-    },
-    {
       "id": "material-concrete-value-path",
       "dependency": "flight",
       "patch": "material-concrete-value-path.patch",
@@ -990,13 +987,18 @@
       "whyNotUpstreamFirst": "The public material family deliberately stays open, while flattened native interface owners cannot recover a built-in material after it first enters the base Material carrier. Redundant exact arms plus optional open-material capabilities are target-neutral descriptions of the existing value domain and duck-typed reads, avoiding an unchecked native cast or replacement material.",
       "unblocks": "Carries real CustomShader, Depth, ExtendedPbr, Matcap, Normal, SpecularGlossinessPbr, StandardPbr, VertexColor, Wireframe, and texture-bearing material owners from createMesh through the GL registry to their upstream binder implementations, while removing object erasure in the pooled draw path.",
       "expires": "when heterogeneous structural storage preserves checked concrete owner identity through open base-interface arms and readonly partial capability views across those arms emit directly, or Flight adopts the explicit value union.",
-      "appliedOn": "2026-10-08"
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GL",
+        "reason": "target file(s) renamed or removed upstream (packages/scene3d-gl/src/blinnPhongGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/customShaderGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/depthGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/emissiveGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/lambertGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/matcapGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/normalGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/phongGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/shadedGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/specularGlossinessPbrGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/standardPbrGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/toonGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/unlitGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/vertexColorGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/wireframeGlMeshMaterialRenderer.ts; a4f7bffd6 refactor(renderers): rename renderer consts for consistent naming); rewrite against the new layout or drop if the refusal is gone"
+      }
     },
     {
       "id": "texture-like-concrete-value-arms",
       "dependency": "flight",
       "patch": "texture-like-concrete-value-arms.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/types/src/Texture.ts",
       "package": "@flighthq/types",
       "answers": "refusal",
@@ -1023,7 +1025,12 @@
       "whyNotUpstreamFirst": "The direct object-literal form is valid portable TypeScript, but the pinned emitter does not yet retain an external call's optional host-handle domain while contextually constructing a record field. Immutable locals expose the existing represented carrier without changing the public API or runtime behavior.",
       "unblocks": "Emits the classic, debug, matcap, PBR, shadow, toon, unlit, and wireframe program builders that real upstream Scene3D material renderers require.",
       "expires": "when flight-compiler contextually stores represented optional external call results directly in object fields, or Flight adopts the equivalent immutable-local form upstream.",
-      "appliedOn": "2026-10-08"
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GL",
+        "reason": "context drift: the patched code still exists (88/88 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "pbr-extension-concrete-value-arms",
@@ -1039,7 +1046,12 @@
       "whyNotUpstreamFirst": "The source API deliberately remains vendor-extensible, while the pinned C++ emitter flattens an object first retained through the open base arm and cannot recover its built-in fields later. Redundant exact arms are a target-neutral statement of owners already in the value domain and preserve the open public contract.",
       "unblocks": "Retains Anisotropy, Clearcoat, Iridescence, Sheen, Specular, TransmissionVolume, and WrappedDiffuse extension owners through real ExtendedPbrMaterial arrays and the GL registry callbacks so their existing upstream shader and texture-binding implementations can emit.",
       "expires": "when heterogeneous structural storage preserves checked concrete owner identity through open base-interface arms, or Flight adopts the explicit value union upstream.",
-      "appliedOn": "2026-10-08"
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GL",
+        "reason": "context drift: the patched code still exists (11/14 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "scene3d-gl-erased-upload-cache",
@@ -1056,7 +1068,12 @@
       "whyNotUpstreamFirst": "The context tier intentionally exposes one renderer-neutral object cache, while the pinned native target needs its type erasure stated at that storage boundary and its exact view stated at the consumer. The rewrite is target-neutral and changes only static annotations.",
       "unblocks": "Clears glScene3DRuntime's root refusal and the dependency chain needed by material registration, lit programs, PBR extensions, scene time, and the final Scene3D draw traversal.",
       "expires": "when WeakMap generic assignability preserves checked typed views across object-erased fields automatically, or Flight adopts the same boundary and local-view annotations upstream.",
-      "appliedOn": "2026-10-08"
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GL",
+        "reason": "context drift: the patched code still exists (8/9 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "scene3d-gl-erased-program-cache",
@@ -1073,13 +1090,18 @@
       "whyNotUpstreamFirst": "The shared cache intentionally stores several extended program record shapes under family-namespaced keys. The target-neutral object boundary accurately states that heterogeneity while the checked consumer assertions preserve each exact owner for native emission.",
       "unblocks": "Clears glMeshProgram's generic cache refusal so unlit, shaded, classic, toon, PBR, custom-shader, shadow, matcap, debug, and wireframe programs can share the real upstream state cache.",
       "expires": "when heterogeneous Map storage preserves constrained generic owners automatically, or Flight adopts this explicit erased cache boundary upstream.",
-      "appliedOn": "2026-10-08"
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GL",
+        "reason": "context drift: the patched code still exists (7/7 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "scene3d-gl-present-index-storage",
       "dependency": "flight",
       "patch": "scene3d-gl-present-index-storage.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene3d-gl/src/glMeshUpload.ts and glWireframeUpload.ts",
       "package": "@flighthq/scene3d-gl",
       "answers": "refusal",
@@ -1107,13 +1129,18 @@
       "whyNotUpstreamFirst": "The two constants were implementation placeholders rather than distinct semantic materials. A single immutable placeholder is target-neutral and states their existing equivalence without teaching the emitter to pretend two same-carrier union domains are distinguishable.",
       "unblocks": "Allows renderGlScene3D's real opaque, blended, instanced, and fallback traversal to share one exact default material owner in generated C++.",
       "expires": "when flight-compiler can prove same-carrier singleton domains identical, or Flight adopts the shared placeholder upstream.",
-      "appliedOn": "2026-10-08"
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GL",
+        "reason": "context drift: the patched code still exists (4/7 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "scene3d-gl-viewport-number-domain",
       "dependency": "flight",
       "patch": "scene3d-gl-viewport-number-domain.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene3d-gl/src/glViewportAspect.ts",
       "package": "@flighthq/scene3d-gl",
       "answers": "refusal",
@@ -1130,7 +1157,7 @@
       "id": "texture-source-concrete-value-arms",
       "dependency": "flight",
       "patch": "texture-source-concrete-value-arms.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/types/src/TextureSourceValue.ts and cube Texture source storage",
       "package": "@flighthq/types and @flighthq/scene3d-gl",
       "answers": "refusal",
@@ -1158,13 +1185,18 @@
       "whyNotUpstreamFirst": "These refusals are caused by the pinned emitter losing contextual carrier evidence across concise optional and rebound-cache constructs. The expanded forms are target-neutral statements of types, branches, and object identities the TypeScript source already guarantees.",
       "unblocks": "Allows source environment cubemaps and the irradiance, prefilter, and BRDF IBL bake programs used by real PBR materials to reach generated C++.",
       "expires": "when flight-compiler preserves optional expression evidence in array callbacks and current-face checks plus declared WeakMap/Map value owners through rebound locals, or Flight adopts the explicit forms upstream.",
-      "appliedOn": "2026-10-09"
+      "appliedOn": "2026-10-09",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GL",
+        "reason": "context drift: the patched code still exists (30/30 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "scene3d-gl-mesh-runtime-accessor",
       "dependency": "flight",
       "patch": "scene3d-gl-mesh-runtime-accessor.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene3d-gl/src/enableGlScene3DDeformGuards.ts",
       "package": "@flighthq/scene3d-gl",
       "answers": "refusal",
@@ -1192,7 +1224,12 @@
       "whyNotUpstreamFirst": "The public modifier and definition families intentionally remain open, while flattened native interface owners cannot recover a built-in descriptor or backend snippet after it first enters the base carrier. Redundant exact arms are a target-neutral description of values already accepted by those APIs.",
       "unblocks": "Carries AnimatedNormal, Dissolve, Emissive, EnvReflect, Fog, Rim, Toon, and VertexDisplace owners into their real upstream GL binders, and retains GlModifierSnippet owners through the shared registry for shaded program assembly.",
       "expires": "when heterogeneous structural storage preserves checked concrete modifier and backend-definition owners through open base-interface arms, or Flight adopts the explicit value unions upstream.",
-      "appliedOn": "2026-10-09"
+      "appliedOn": "2026-10-09",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GL",
+        "reason": "target file(s) renamed or removed upstream (packages/scene3d-gl/src/shadedGlMeshMaterialRenderer.ts; a4f7bffd6 refactor(renderers): rename renderer consts for consistent naming); rewrite against the new layout or drop if the refusal is gone"
+      }
     },
     {
       "id": "scene3d-gl-stable-modifier-property-reads",
@@ -1209,13 +1246,18 @@
       "whyNotUpstreamFirst": "The pinned lowering records the narrowed type on the outer member use but does not mark its nested optional property carrier present. These target-neutral locals are the diagnostic's prescribed stable-read form and preserve the upstream modifier objects and callbacks.",
       "unblocks": "Allows real built-in shaded GL modifiers to consume guarded optional textures, axes, and facing modes after their concrete readonly owners are recovered from ModifierValue.",
       "expires": "when flight-compiler propagates present-storage evidence to repeated nested property receivers after a checker-proven guard, or Flight adopts stable local reads at these sites.",
-      "appliedOn": "2026-10-09"
+      "appliedOn": "2026-10-09",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GL",
+        "reason": "applies only with reduced context (git apply -C1) at the new pin; regenerate the patch text against it and confirm the hunk still lands on the intended expression"
+      }
     },
     {
       "id": "scene3d-gl-stable-fog-mode-reads",
       "dependency": "flight",
       "patch": "scene3d-gl-stable-fog-mode-reads.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene3d-gl/src/glShadedBuiltInModifiers.ts",
       "package": "@flighthq/scene3d-gl",
       "answers": "refusal",
@@ -1229,27 +1271,10 @@
       "appliedOn": "2026-10-09"
     },
     {
-      "id": "scene3d-gl-modifier-snippet-table-owner",
-      "dependency": "flight",
-      "patch": "scene3d-gl-modifier-snippet-table-owner.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/scene3d-gl/src/glShadedPrelude.ts",
-      "package": "@flighthq/scene3d-gl",
-      "answers": "refusal",
-      "refusal": "contextual union value type flight::Ref<flight::types::KeyedTable<flight::Ref<flight::types::GlModifierSnippet>>> is not a represented runtime domain",
-      "rewrite": "Retains the exact KeyedTable<GlModifierSnippet> owner in place of its top-level Readonly mapped view while preserving the legacy readonly ModifierRegistry alternative accepted by the shaded compiler helpers.",
-      "equivalence": "KeyedTable and Readonly<KeyedTable> are mutually assignable here because Readonly changes only the write authority of the table's top-level properties, not their types or the runtime value domain. The private alias still accepts the same registry objects and erases from JavaScript; the same entries Map, revision, snippets, cache key, shader source, lookup order, and callbacks are used without a cast, copy, row materialization, or side storage.",
-      "verification": "Scoped Scene3D-GL generation emits glShadedPrelude with the real render-state registry and modifier stack; generated-header compilation validates the retained table owner at all shaded compiler helpers.",
-      "whyNotUpstreamFirst": "The render-state contract already stores the concrete KeyedTable owner, while the helper's top-level readonly mapped view makes the pinned native emitter discard that owner before a later union boundary. Retaining the exact owner states the same TypeScript value domain without changing the runtime path.",
-      "unblocks": "Allows the real ShadedMaterial program cache, modifier define-key computation, fragment and vertex snippet assembly, and uniform binding path to consume the render state's registered GL modifier snippets.",
-      "expires": "when contextual unions preserve an exact owner through a top-level readonly mapped view, or Flight retains the exact table owner in this helper upstream.",
-      "appliedOn": "2026-10-08"
-    },
-    {
       "id": "render-scene3d-projection-api",
       "dependency": "flight",
       "patch": "render-scene3d-projection-api.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/render/src/sceneRender.ts",
       "package": "@flighthq/render",
       "answers": "refusal",
@@ -1266,7 +1291,7 @@
       "id": "scene3d-material-value-enumeration",
       "dependency": "flight",
       "patch": "scene3d-material-value-enumeration.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene3d/src/sceneMaterial.ts",
       "package": "@flighthq/scene3d",
       "answers": "refusal",
@@ -1283,7 +1308,7 @@
       "id": "scene3d-document-light-values",
       "dependency": "flight",
       "patch": "scene3d-document-light-values.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/types/src/LightValue.ts and Scene3DDocument.ts",
       "package": "@flighthq/scene3d",
       "answers": "refusal",
@@ -1300,7 +1325,7 @@
       "id": "node-matrix-owner-accessors",
       "dependency": "flight",
       "patch": "node-matrix-owner-accessors.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/node/src/nodeTransform3d.ts and packages/scene3d/src/billboardCamera.ts",
       "package": "@flighthq/scene3d",
       "answers": "refusal",
@@ -1317,7 +1342,7 @@
       "id": "scene3d-readonly-billboard-probe",
       "dependency": "flight",
       "patch": "scene3d-readonly-billboard-probe.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene3d/src/billboard.ts",
       "package": "@flighthq/scene3d",
       "answers": "refusal",
@@ -1345,13 +1370,18 @@
       "whyNotUpstreamFirst": "The public Node3D contract already promises Node3DRuntime through getNode3DRuntime, but its inherited entity slot was declared only as the base NodeRuntime. Naming the actual slot and constructing its complete owner is a target-neutral correction of that contract.",
       "unblocks": "Allows createNode3D, every mesh constructor, and all real Scene3D transform and appearance consumers to share the same exact runtime owner without casting between unrelated flattened C++ records.",
       "expires": "when Flight declares the exact Node3D runtime slot and constructs that owner upstream, or native interface intersections preserve their runtime owner identity through the base Node slot automatically.",
-      "appliedOn": "2026-10-08"
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "3D",
+        "reason": "context drift: the patched code still exists (6/6 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "scene3d-morph-capability-guard",
       "dependency": "flight",
       "patch": "scene3d-morph-capability-guard.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene3d/src/prepareScene3DMorph.ts",
       "package": "@flighthq/scene3d",
       "answers": "refusal",
@@ -1379,7 +1409,12 @@
       "whyNotUpstreamFirst": "The draw path only reads emitter state, yet the old assertion recovered a writable owner from a readonly heterogeneous node. A checked readonly capability guard is a target-neutral correction and also validates custom input more accurately than kind alone.",
       "unblocks": "Allows the real SDL WebGL particle traversal and instanced quad draw path to retain readonly emitter ownership without a native cast.",
       "expires": "when Flight adopts the capability predicate upstream, or the native compiler retains checked concrete node owners through heterogeneous traversal automatically.",
-      "appliedOn": "2026-10-08"
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GL",
+        "reason": "applies only with reduced context (git apply -C1) at the new pin; regenerate the patch text against it and confirm the hunk still lands on the intended expression"
+      }
     },
     {
       "id": "scene3d-concrete-node-construction",
@@ -1396,13 +1431,18 @@
       "whyNotUpstreamFirst": "Flight's concrete constructors allocated Node3D and asserted it to wider drawable records, while their runtime accessors later asserted the inherited base slot back to concrete runtimes. Allocating and initializing the types the functions promise is a target-neutral correction of those construction contracts.",
       "unblocks": "Gives real Mesh, Billboard, and InstancedMesh objects and their runtime caches exact native owners, including the instanced signal and culling slots used by Scene3D preparation and GL instanced drawing.",
       "expires": "when Flight allocates concrete Scene3D node and runtime owners upstream, or the native compiler preserves derived structural owner identity through Node3D construction and runtime storage automatically.",
-      "appliedOn": "2026-10-08"
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "3D",
+        "reason": "context drift: the patched code still exists (14/18 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "particleemitter3d-concrete-node-construction",
       "dependency": "flight",
       "patch": "particleemitter3d-concrete-node-construction.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/particleemitter/src/particleEmitter3D.ts",
       "package": "@flighthq/particleemitter",
       "answers": "refusal",
@@ -1430,7 +1470,12 @@
       "whyNotUpstreamFirst": "Flight's backend-neutral Scene3D render walk already uses checked structural mesh predicates, while the shadow twin still asserted concrete node owners. Applying the same checked pattern before any unknown erasure is a target-neutral consistency and const-correctness fix.",
       "unblocks": "Allows the upstream scene3d example's real directional shadow pass to traverse rigid, skinned, and instanced casters without invented native casts.",
       "expires": "when Flight adopts checked mesh and instanced-mesh shadow predicates upstream, or native heterogeneous node traversal retains concrete owners automatically.",
-      "appliedOn": "2026-10-08"
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GL",
+        "reason": "context drift: the patched code still exists (12/14 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "scene-nodeof-traversal-capabilities",
@@ -1447,13 +1492,18 @@
       "whyNotUpstreamFirst": "The generic traversal contract was weaker than its own NodeRuntime.children storage and return APIs. Preserving its declared trait intersection is a target-neutral type correction, while typed readonly capability checks accurately express the structural Scene3D operations without native assertions.",
       "unblocks": "Keeps 2D/3D scene traits intact through the real graph walk and removes structural-row erasure from Scene3D subtree cloning, material/kind discovery, world bounds, and frustum culling used by the upstream renderer.",
       "expires": "when Flight preserves NodeOf<Traits> through traversal callbacks upstream and uses typed readonly capability guards at these Scene3D consumers, or the native compiler can recover the same checked owners from the weaker callback types.",
-      "appliedOn": "2026-10-08"
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "3D",
+        "reason": "context drift: the patched code still exists (31/42 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "node-exact-runtime-and-owner-paths",
       "dependency": "flight",
       "patch": "node-exact-runtime-and-owner-paths.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/node/src/node.ts, hierarchy.ts, and traversal.ts",
       "package": "@flighthq/node",
       "answers": "refusal",
@@ -1467,44 +1517,10 @@
       "appliedOn": "2026-10-08"
     },
     {
-      "id": "node-exact-capability-runtimes",
-      "dependency": "flight",
-      "patch": "node-exact-capability-runtimes.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "node transform, bounds, color-adjustment, revision, ordering, fit, hierarchy, traversal, and their capability type contracts",
-      "package": "@flighthq/node",
-      "answers": "refusal",
-      "refusal": "transform and bounds paths erase exact runtime slots through getEntityRuntime and then assert readonly EntityRuntime back to writable capability runtimes; remaining node collections and callbacks similarly erase NodeOf<Traits> before mutation",
-      "rewrite": "Declares exact transform and bounds runtime slots on their structural node capability types, carries NodeOf<Traits> through node callbacks, revisions, ordering, fit contexts, and read APIs, gives base initialization a concrete data-bearing options shape, avoids readonly/mutable carrier rebinds in ancestry walks, and sorts order-list entry indices instead of erasing heterogeneous nodes into shared scratch.",
-      "equivalence": "All annotations erase in JavaScript. The same runtime objects, matrices, rectangles, child arrays, revisions, adjustments, callbacks, signals, node identities, and data factories are used. Order-list sorting uses the same last-entry identity map, keys, tie break, child slots, and writes; it retains integer entry indices instead of the equivalent node references. Direct symbol reads return the identical runtime object previously returned by getEntityRuntime, without granting write authority through a readonly accessor.",
-      "verification": "The patch applies after the complete Flight source stack. Focused strict TypeScript programs for @flighthq/node and Scene3D report zero relevant errors, with only unavailable ambient WebGPU declarations outside scope. Native @flighthq/node regeneration emits 1101/1147 dependency-closure modules and 18/21 Node modules, up from 1097/1147 and 14/21; the remaining three direct Node refusals are isolated computed-symbol accesses in bounds and transform caches.",
-      "whyNotUpstreamFirst": "These capability types already promise that transform and bounds nodes own the corresponding runtime caches, and NodeRuntime children plus NodeOrderList entries already contain trait-bearing nodes. Naming those actual slots and values is a target-neutral contract correction, not a target-specific representation escape.",
-      "unblocks": "Removes the node data-owner, hierarchy, traversal, revision, color-adjustment, scene-fit, and child-order refusals beneath both Canvas Scene2D and WebGL Scene3D, leaving only the three explicit transform/bounds cache-access modules to solve.",
-      "expires": "when Flight exposes exact runtime slots on its structural node capabilities and retains NodeOf/Data owners across these APIs upstream, or the native compiler preserves the same checked owners through the weaker base interfaces automatically.",
-      "appliedOn": "2026-10-08"
-    },
-    {
-      "id": "node-exact-runtime-helper-boundaries",
-      "dependency": "flight",
-      "patch": "node-exact-runtime-helper-boundaries.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/node/src/boundsRectangle.ts, nodeTransform2d.ts, and nodeTransform3d.ts",
-      "package": "@flighthq/node",
-      "answers": "refusal",
-      "refusal": "computed EntityRuntimeKey access on a trait-bearing structural node row lacks one concrete object-reference target even though its capability type declares the exact bounds or transform runtime",
-      "rewrite": "Crosses a local named exact-runtime-owner interface before each symbol access, separately names bounds, spatial-2D, transform-2D, and transform-3D runtime owners, widens the trait-bearing parent to its declared base Node shape at the property-read boundary, and narrows that parent through a concrete readonly transform probe before recursively consuming the exact runtime.",
-      "equivalence": "Each helper returns the exact EntityRuntimeKey member from the same node. Valid homogeneous 2D and 3D scene graphs take the same parent branch and use the same cache object, matrices, rectangles, revisions, and node identities. A malformed mixed graph whose parent lacks the child's transform capability is now treated as a transform root instead of reading nonexistent transform fields through an unchecked assertion.",
-      "verification": "Focused strict Node and Scene3D TypeScript programs report zero relevant errors apart from unavailable ambient WebGPU declarations. A focused compiler regression probe emits a trait-bearing structural capability passed through a named exact-owner helper. Native @flighthq/node regeneration emits 1104/1147 dependency-closure modules and all 21/21 Node modules with zero direct Node refusals, up from 1101/1147 and 18/21 before this patch.",
-      "whyNotUpstreamFirst": "The helper interfaces restate runtime slots already guaranteed by the public transform and bounds capability types. They make the existing owner proof lexical without changing runtime representation or adding a native-only path.",
-      "unblocks": "Removes the last three direct Node package refusals, clearing all 21 Node modules beneath hierarchy, traversal, bounds, scene preparation, Canvas Scene2D, and WebGL Scene3D consumers.",
-      "expires": "when flight-compiler can project computed members from a structural row through its concrete nominal conjunct automatically, or Flight adopts explicit exact-runtime accessors upstream.",
-      "appliedOn": "2026-10-08"
-    },
-    {
       "id": "meshgeometry-exact-runtime-owner",
       "dependency": "flight",
       "patch": "meshgeometry-exact-runtime-owner.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/types/src/MeshGeometry.ts and mesh runtime consumers in @flighthq/mesh",
       "package": "@flighthq/mesh",
       "answers": "refusal",
@@ -1521,7 +1537,7 @@
       "id": "meshgeometry-present-index-storage",
       "dependency": "flight",
       "patch": "meshgeometry-present-index-storage.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "mesh geometry options/creation, primitive building, tangent generation, index conversion, layout conversion, merge/validation, and mirrored transforms",
       "package": "@flighthq/mesh",
       "answers": "refusal",
@@ -1549,7 +1565,12 @@
       "whyNotUpstreamFirst": "Mesh is already a structural capability in these generic traversal consumers. Naming the readonly partial capability directly is a target-neutral expression of the property test they already perform.",
       "unblocks": "Removes the repeated geometry-presence refusal from real mesh cloning, material/kind discovery, world bounds, frustum culling, and morph preparation paths.",
       "expires": "when flight-compiler recognizes an in-operator plus nullable member test as the same readonly partial-capability proof, or Flight adopts this direct capability guard upstream.",
-      "appliedOn": "2026-10-08"
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "3D",
+        "reason": "context drift: the patched code still exists (0/5 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "scene3d-exact-owner-boundaries",
@@ -1566,7 +1587,12 @@
       "whyNotUpstreamFirst": "These declarations and local guards describe owners the constructors and arrays already hold; they remove unchecked recovery without introducing a native-only representation. The one diagnostic-field omission is isolated to opt-in failure reporting and does not affect scene behavior or rendering.",
       "unblocks": "Targets the nine direct Scene3D package refusals remaining after Node and Mesh reach complete native closure, including the real mesh/material, billboard, animation, skin, morph, and instance paths needed by the upstream examples.",
       "expires": "when Flight preserves Node3D and Mesh owners through these construction/storage boundaries and uses representable structured diagnostic values upstream, or flight-compiler can retain the same checked owners and erased array value automatically.",
-      "appliedOn": "2026-10-08"
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "3D",
+        "reason": "context drift: the patched code still exists (27/35 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "scene3d-gl-pbr-alpha-mode-boundary",
@@ -1583,7 +1609,12 @@
       "whyNotUpstreamFirst": "The helper only needs the closed MaterialAlphaMode scalar, while accepting the whole open SurfaceMaterial hierarchy forces native flattened owners through a fictitious base-row conversion. A scalar overload is a target-neutral internal API boundary and avoids casts or copied materials.",
       "unblocks": "Removes the repeated PBR-to-SurfaceMaterial owner widening from the real metallic-roughness, specular-glossiness, and extension-composed material bind paths.",
       "expires": "when Flight's native structural interface heritage preserves checked derived-to-base owner conversion, or Flight adopts the scalar alpha-mode helper upstream.",
-      "appliedOn": "2026-10-08"
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GL",
+        "reason": "target file(s) renamed or removed upstream (packages/scene3d-gl/src/extendedPbrGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/specularGlossinessPbrGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/standardPbrGlMeshMaterialRenderer.ts; a4f7bffd6 refactor(renderers): rename renderer consts for consistent naming); rewrite against the new layout or drop if the refusal is gone"
+      }
     },
     {
       "id": "scene3d-gl-lazy-uniform-location-boundaries",
@@ -1600,7 +1631,12 @@
       "whyNotUpstreamFirst": "The undefined-versus-null lazy cache is a deliberate WebGL contract. Explicit resolver boundaries are target-neutral and preserve it without replacing the cache representation, repeating lookups, or teaching the emitter to conflate the states.",
       "unblocks": "Restores the shared mesh bind/draw implementation beneath classic, debug, shaded, toon, unlit, wireframe, and PBR material families, including instancing, GPU skinning, UV transforms, color adjustments, and object opacity.",
       "expires": "when flight-compiler retains exact dual-sentinel property state through inferred locals and presence branches automatically, or Flight adopts explicit lazy-location resolvers upstream.",
-      "appliedOn": "2026-10-08"
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GL",
+        "reason": "context drift: the patched code still exists (46/52 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "scene3d-readonly-transform-query-boundaries",
@@ -1617,7 +1653,12 @@
       "whyNotUpstreamFirst": "World-matrix ensure/get operations are logical queries whose only writes are internal derived-state caches. Expressing their input as readonly is a target-neutral const-correctness repair, and naming the hit and miss values independently preserves the cache's already-declared owner without a target-specific conversion.",
       "unblocks": "Allows the real Scene3D GL particle traversal and instanced billboard draw to retain its shader owner and resolve current hierarchical transforms without a readonly-to-writable structural assertion.",
       "expires": "when Flight declares its transform cache queries readonly and retains declared cache owners upstream, or flight-compiler can distinguish hidden cache mutation from public node write authority and preserve the WeakMap value owner through a rebound local automatically.",
-      "appliedOn": "2026-10-09"
+      "appliedOn": "2026-10-09",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GL",
+        "reason": "context drift: the patched code still exists (10/13 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "node3d-named-runtime-carriers",
@@ -1634,7 +1675,12 @@
       "whyNotUpstreamFirst": "The rewrite is target-neutral naming of existing structural intersections, but it is pinned here because the native compiler currently needs terminating interface declarations to prove these compatible hidden-runtime refinements before Flight has adopted the named form upstream.",
       "unblocks": "Removes the shared inherited-runtime-property refusal from Billboard, Group, InstancedMesh, LodMesh, Mesh, and ParticleEmitter3D so real Scene3D nodes and materials can remain in the generated closure.",
       "expires": "when Flight names these runtime intersections upstream, or flight-compiler can prove the same compatible runtime refinements through intersection aliases.",
-      "appliedOn": "2026-10-09"
+      "appliedOn": "2026-10-09",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "3D",
+        "reason": "context drift: the patched code still exists (4/6 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "compiler-readonly-union-view-conversion",
@@ -1657,7 +1703,7 @@
       "id": "lighting-dense-forward-selection-scratch",
       "dependency": "flight",
       "patch": "lighting-dense-forward-selection-scratch.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/lighting/src/sceneForwardLights.ts",
       "package": "@flighthq/lighting",
       "answers": "refusal",
@@ -1671,163 +1717,10 @@
       "appliedOn": "2026-10-09"
     },
     {
-      "id": "registry-named-entity-carriers",
-      "dependency": "flight",
-      "patch": "registry-named-entity-carriers.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/registry/src/registryTable.ts",
-      "package": "@flighthq/registry",
-      "answers": "refusal",
-      "refusal": "generic KeyedTable, OrdinalTable, and SlotTable intersections with Entity have no single C++ object shape at construction and result boundaries",
-      "rewrite": "Names private KeyedTableEntity, OrdinalTableEntity, and SlotTableEntity interfaces extending the same generic table and Entity contracts, then uses those exact carriers for allocation, initialization, replacement, composition, and return values.",
-      "equivalence": "Each interface denotes the same structural intersection previously written inline. Table fields, Entity runtime slot, map and array identities, persistent replacement behavior, registry and miss-policy checks, tombstone semantics, entry ordering, generic value types, and public assignability to the original table interfaces are unchanged. Plain structural table inputs remain accepted; only entity-backed products receive stable internal names.",
-      "verification": "The complete Flight patch stack must apply and reverse cleanly, and focused native regeneration must remove the repeated intersection-member-shapeless omissions from registryTable before any remaining independent union-dispatch refusal is addressed.",
-      "whyNotUpstreamFirst": "Naming an existing intersection is target-neutral and mirrors the established CommandBindingTable pattern, but it is pinned here because the native compiler currently needs a terminating declared owner for generic entity construction.",
-      "unblocks": "Gives the real persistent registry constructors and replacement operations stable entity owners used by GL material, texture, blend, modifier, and PBR-extension registries.",
-      "expires": "when Flight names its entity-backed registry table products upstream, or flight-compiler can lower these generic object intersections without a named carrier.",
-      "appliedOn": "2026-10-09"
-    },
-    {
-      "id": "registry-copy-composed-entry-values",
-      "dependency": "flight",
-      "patch": "registry-copy-composed-entry-values.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/registry/src/registryTable.ts",
-      "package": "@flighthq/registry",
-      "answers": "refusal",
-      "refusal": "readonly overlay entry arms acquire sibling anonymous owners when assigned into the replacement table's declared RegistryTableEntry union",
-      "rewrite": "Copies each selected slot or keyed entry into the corresponding declared bound or tombstoned value shape after discriminant narrowing, preserving the bound payload and tombstone state explicitly.",
-      "equivalence": "Registry entries are immutable value wrappers in the documented persistent-table contract. Composition already creates a replacement table and map; this rewrite preserves the exact key order, last-overlay-wins behavior, inherited-null behavior, bound payload value or reference identity, tombstone meaning, registry id, miss policy, and table identity rules. Only the unpromised identity of the readonly one- or two-field entry wrapper is refreshed while copying it into the replacement.",
-      "verification": "The complete Flight patch stack must apply and reverse cleanly; focused native registryTable regeneration must emit the module without the contextual-union owner refusal, and the upstream registry behavior test should pass when its pinned vitest dependency is available.",
-      "whyNotUpstreamFirst": "Explicit discriminated-union value copying is target-neutral and matches the table's persistent value semantics, but it is pinned here while the native compiler cannot retain anonymous generic arm ownership through readonly map iteration.",
-      "unblocks": "Allows slot and keyed registry composition to preserve real renderer, resolver, modifier, blend, and PBR-extension payloads and tombstones in the generated native registry implementation.",
-      "expires": "when Flight copies composed entries explicitly upstream, or flight-compiler retains the declared RegistryTableEntry arm owner through readonly iteration and assignment.",
-      "appliedOn": "2026-10-09"
-    },
-    {
-      "id": "registry-export-named-entry-arms",
-      "dependency": "flight",
-      "patch": "registry-export-named-entry-arms.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/types/src/RegistryTable.ts",
-      "package": "@flighthq/types and @flighthq/registry",
-      "answers": "refusal",
-      "refusal": "fresh RegistryTableEntry object literals in the registry package cannot name the imported generic union's anonymous C++ arm owners",
-      "rewrite": "Names and exports the existing bound and tombstoned RegistryTableEntry interfaces, then defines the same exported union from those exact arms so constructors can request their declared owners.",
-      "equivalence": "RegistryTableEntry retains the same two closed object shapes, readonly properties, bound payload, tombstone absence, literal discriminants, generic parameter behavior, JavaScript representation, and union assignability. The two exported interface names are additive type-only API and introduce no runtime value or behavior.",
-      "verification": "The complete Flight patch stack must apply and reverse cleanly, and the registry package must use the named arms at every entry construction boundary before focused native regeneration.",
-      "whyNotUpstreamFirst": "Naming existing union arms is target-neutral and useful to downstream typed constructors, but it is pinned here because the native backend currently cannot recover an imported anonymous generic arm owner from a contextual object literal.",
-      "unblocks": "Provides stable entry-arm owners for persistent registry constructors, composition, tombstones, and ordinal lookup results.",
-      "expires": "when Flight exports equivalent named entry arms upstream, or flight-compiler constructs imported anonymous generic-union arms with their declaration-owned carriers.",
-      "appliedOn": "2026-10-09"
-    },
-    {
-      "id": "registry-exact-entry-factories",
-      "dependency": "flight",
-      "patch": "registry-exact-entry-factories.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/registry/src/registryTable.ts",
-      "package": "@flighthq/registry",
-      "answers": "refusal",
-      "refusal": "contextual RegistryTableEntry object literals are minted as local sibling owners instead of the imported union's declared bound and tombstoned carriers",
-      "rewrite": "Adds private bound and tombstoned entry factories returning the exact exported arm interfaces and routes every entry construction in composition, replacement, tombstoning, and ordinal lookup through them.",
-      "equivalence": "Each factory returns the identical plain object literal previously created at its call site, with the same state string and same payload value or reference. Calls add no branching or state; key order, persistent table identity, wrapper allocation count, entry wrapper identity rules, tombstone semantics, and all public function results remain unchanged.",
-      "verification": "The complete Flight patch stack must apply and reverse cleanly, and focused native registryTable regeneration must emit the module with zero omissions or refusals.",
-      "whyNotUpstreamFirst": "Exact typed factories are target-neutral and centralize an existing repeated construction, but they are pinned here because the native compiler needs their declared return owner to construct an imported generic union arm.",
-      "unblocks": "Completes the real registry implementation used to assemble GL material renderers, texture resolvers, modifier snippets, blend realizations, and PBR extensions.",
-      "expires": "when Flight adopts exact entry factories upstream, or flight-compiler contextualizes these object literals directly into the imported union arm owners.",
-      "appliedOn": "2026-10-09"
-    },
-    {
-      "id": "registry-invalid-entry-state-throw",
-      "dependency": "flight",
-      "patch": "registry-invalid-entry-state-throw.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/registry/src/registryTable.ts",
-      "package": "@flighthq/registry",
-      "answers": "refusal",
-      "refusal": "the exhaustiveness-only never binding lowers as void and is returned from a function whose result is a keyed-or-slot table union",
-      "rewrite": "Replaces the impossible default branch's never return with an explicit invalid-entry-state programmer-error throw.",
-      "equivalence": "For every value allowed by RegistryTableEntry, the bound and tombstoned cases still execute identically and the default remains unreachable. An untyped or corrupted third state now fails explicitly instead of returning an object outside the declared table result, consistent with concatRegistryTable's existing shape, registry, and miss-policy programmer-error checks.",
-      "verification": "The complete Flight patch stack must apply and reverse cleanly, and focused native registryTable regeneration must emit the module with zero omissions or refusals.",
-      "whyNotUpstreamFirst": "An explicit impossible-state throw is target-neutral and strengthens runtime diagnostics, but it is pinned here because the native backend cannot use a never-valued return solely as a TypeScript exhaustiveness witness.",
-      "unblocks": "Removes the final void-to-table-union result from registry composition after all real entry arms have been handled.",
-      "expires": "when Flight adopts the explicit throw upstream, or flight-compiler treats a never return as unreachable control flow without emitting a value conversion.",
-      "appliedOn": "2026-10-09"
-    },
-    {
-      "id": "registry-exact-table-dispatch",
-      "dependency": "flight",
-      "patch": "registry-exact-table-dispatch.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/registry/src/registryTable.ts",
-      "package": "@flighthq/registry",
-      "answers": "refusal",
-      "refusal": "shape-narrowed RegistryTable branches retain a combined entries/member view, leaving keyed entry state on optional multi-domain storage",
-      "rewrite": "Moves each arm-specific read into a small helper whose parameter is the exact readonly KeyedTable, SlotTable, or OrdinalTable alternative, then calls it from the existing shape-discriminated branch.",
-      "equivalence": "Each helper call is dominated by the same closed shape check TypeScript already uses to narrow its argument. The same map iteration, slot key comparison, ordinal scan, output order, sort, lookup result, payload identity, and null behavior remain; no runtime test, allocation, assertion, or mutation is added.",
-      "verification": "The complete Flight patch stack must apply and reverse cleanly, and focused native registryTable regeneration must emit both dispatch functions without optional multi-domain member access.",
-      "whyNotUpstreamFirst": "Exact read-only dispatch helpers are target-neutral, but they are pinned here because the native backend currently loses the source checker’s arm evidence when multiple union arms expose an entries member of different container kinds.",
-      "unblocks": "Restores exact keyed, slot, and ordinal registry enumeration and lookup used by native render pipeline assembly and diagnostics.",
-      "expires": "when Flight adopts explicit dispatch locals upstream, or flight-compiler retains exact discriminant evidence across these generic imported table arms.",
-      "appliedOn": "2026-10-09"
-    },
-    {
-      "id": "registry-explicit-ordinal-storage",
-      "dependency": "flight",
-      "patch": "registry-explicit-ordinal-storage.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/registry/src/registryTable.ts",
-      "package": "@flighthq/registry",
-      "answers": "refusal",
-      "refusal": "the null-only result inferred for vocabulary.map cannot be passed as the persistent ordinal table's generic T-or-null entry array without changing container identity",
-      "rewrite": "Constructs the same fresh ordinal entry array through an explicitly typed T-or-null local and pushes one null for every vocabulary element before assigning it to the table.",
-      "equivalence": "Both forms allocate one new array with vocabulary.length entries, every entry null and in the same order, then assign that array once. No vocabulary element is read by the original callback or the loop; table fields, allocation count, array identity, and all observable table behavior remain unchanged.",
-      "verification": "The complete Flight patch stack must apply and reverse cleanly, and focused native registryTable regeneration must emit initializeOrdinalTable without a contextual array element-union refusal.",
-      "whyNotUpstreamFirst": "An explicitly typed construction loop is target-neutral, but it is pinned here because the native backend cannot rebind a null-inferred array container to the generic T-or-null element union while preserving its identity.",
-      "unblocks": "Restores ordinal registry table construction required by generated render registries and scene document decoding.",
-      "expires": "when Flight adopts an explicitly union-typed ordinal array construction upstream, or flight-compiler contextually instantiates map results with the destination element union.",
-      "appliedOn": "2026-10-09"
-    },
-    {
-      "id": "registry-ordinal-entry-bounds",
-      "dependency": "flight",
-      "patch": "registry-ordinal-entry-bounds.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/registry/src/registryTable.ts",
-      "package": "@flighthq/registry",
-      "answers": "refusal",
-      "refusal": "an ordinal selected through vocabulary can index beyond the separately stored entries array, so the native runtime correctly retains an undefined domain that cannot inhabit a bound RegistryTableEntry value",
-      "rewrite": "Checks the indexed entry for undefined and throws a programmer error before the existing null-or-bound result handling.",
-      "equivalence": "For every valid OrdinalTable, whose vocabulary maps one-to-one onto its entries, undefined is unreachable and lookup is unchanged. A malformed table with a shorter entries array previously returned a bound wrapper carrying undefined despite the declared RegistryTableEntry<T> contract; it now fails explicitly instead of exporting an invalid value. Array reads, valid payload identity, null behavior, and allocation count remain unchanged.",
-      "verification": "The complete Flight patch stack must apply and reverse cleanly, and focused native registryTable regeneration must emit ordinal lookup without an optional payload domain.",
-      "whyNotUpstreamFirst": "The invariant check is target-neutral and makes a latent malformed-table failure explicit, but it is pinned here because the native runtime models JavaScript's possible out-of-range array result even where TypeScript omits undefined from indexed access.",
-      "unblocks": "Provides an exact T payload to ordinal registry bound-entry construction without erasing the native runtime's array bounds semantics.",
-      "expires": "when Flight validates equal ordinal vocabulary and entry lengths upstream, or flight-compiler can prove this table invariant across construction and lookup.",
-      "appliedOn": "2026-10-09"
-    },
-    {
-      "id": "registry-bound-entry-union-result",
-      "dependency": "flight",
-      "patch": "registry-bound-entry-union-result.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/registry/src/registryTable.ts",
-      "package": "@flighthq/registry",
-      "answers": "refusal",
-      "refusal": "the exact bound-entry factory result reaches an outer nullable RegistryTableEntry return before it has been stored in the declared bound-or-tombstoned union carrier",
-      "rewrite": "Adds a private factory that promotes the exact bound arm into RegistryTableEntry<T> while its value parameter is still exactly T, then returns that declared union carrier from ordinal lookup.",
-      "equivalence": "The new factory calls the existing exact-arm factory once and returns its result without reading, copying, or rebuilding it. The same bound wrapper is allocated once with the same payload identity and state, and the ordinal lookup's null, error, and success paths are unchanged.",
-      "verification": "The complete Flight patch stack must apply and reverse cleanly, and focused native registryTable regeneration must emit ordinal lookup with the declared entry union carrier.",
-      "whyNotUpstreamFirst": "The explicit union-result factory is target-neutral, but it is pinned here because the native backend requires the declared inner union owner to be selected before widening that result with null.",
-      "unblocks": "Preserves the exact RegistryTableEntry carrier through generic ordinal lookup without casting or materializing a replacement owner.",
-      "expires": "when Flight adopts a declared union-result factory upstream, or flight-compiler can widen an exact generic arm call result directly into the nullable imported union.",
-      "appliedOn": "2026-10-09"
-    },
-    {
       "id": "texture-preserve-source-value-owners",
       "dependency": "flight",
       "patch": "texture-preserve-source-value-owners.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/texture/src/texture.ts",
       "package": "@flighthq/texture",
       "answers": "refusal",
@@ -1861,7 +1754,7 @@
       "id": "texture-exact-dimension-content-dispatch",
       "dependency": "flight",
       "patch": "texture-exact-dimension-content-dispatch.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/texture/src/texture.ts",
       "package": "@flighthq/texture",
       "answers": "refusal",
@@ -1878,7 +1771,7 @@
       "id": "texture-explicit-source-presence-queries",
       "dependency": "flight",
       "patch": "texture-explicit-source-presence-queries.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/texture/src/texture.ts",
       "package": "@flighthq/texture",
       "answers": "refusal",
@@ -1895,7 +1788,7 @@
       "id": "texture-explicit-nullish-equality-operands",
       "dependency": "flight",
       "patch": "texture-explicit-nullish-equality-operands.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/texture/src/texture.ts",
       "package": "@flighthq/texture",
       "answers": "refusal",
@@ -1929,7 +1822,7 @@
       "id": "texture-clone-exact-dimension-helpers",
       "dependency": "flight",
       "patch": "texture-clone-exact-dimension-helpers.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/texture/src/texture.ts",
       "package": "@flighthq/texture",
       "answers": "refusal",
@@ -1946,7 +1839,7 @@
       "id": "texture-common-fields-live-carrier",
       "dependency": "flight",
       "patch": "texture-common-fields-live-carrier.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/texture/src/texture.ts",
       "package": "@flighthq/texture",
       "answers": "refusal",
@@ -1963,7 +1856,7 @@
       "id": "texture-common-options-view",
       "dependency": "flight",
       "patch": "texture-common-options-view.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/texture/src/texture.ts",
       "package": "@flighthq/texture",
       "answers": "refusal",
@@ -1980,7 +1873,7 @@
       "id": "texture-exact-cube-face-clone",
       "dependency": "flight",
       "patch": "texture-exact-cube-face-clone.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/texture/src/texture.ts",
       "package": "@flighthq/texture",
       "answers": "refusal",
@@ -1997,7 +1890,7 @@
       "id": "texture-default-2d-narrowing",
       "dependency": "flight",
       "patch": "texture-default-2d-narrowing.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/texture/src/texture.ts",
       "package": "@flighthq/texture",
       "answers": "refusal",
@@ -2014,7 +1907,7 @@
       "id": "texture-named-dimension-options",
       "dependency": "flight",
       "patch": "texture-named-dimension-options.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/types/src/CreateTextureOptions.ts",
       "package": "@flighthq/texture",
       "answers": "refusal",
@@ -2031,7 +1924,7 @@
       "id": "texture-initialize2d-source-presence",
       "dependency": "flight",
       "patch": "texture-initialize2d-source-presence.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/texture/src/texture.ts",
       "package": "@flighthq/texture",
       "answers": "refusal",
@@ -2048,7 +1941,7 @@
       "id": "texture-create-options-views",
       "dependency": "flight",
       "patch": "texture-create-options-views.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/texture/src/texture.ts",
       "package": "@flighthq/texture",
       "answers": "refusal",
@@ -2076,7 +1969,12 @@
       "whyNotUpstreamFirst": "The redundant type arms and explicit branches are target-neutral, but they are pinned here because the native backend needs exact owners retained through invariant storage and resolver variants and needs absence separated from owner selection.",
       "unblocks": "Enables the complete standard GL texture resolver path, including real bitmap/image uploads and identity-preserving render-target sampling used by GL materials.",
       "expires": "when Flight adopts the exact GL texture value domain and explicit resolver boundaries upstream, or flight-compiler automatically retains redundant concrete owners through these nullable resolver paths.",
-      "appliedOn": "2026-10-09"
+      "appliedOn": "2026-10-09",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GL",
+        "reason": "context drift: the patched code still exists (33/52 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "canvas-texture-resolver-void-miss-callback",
@@ -2093,13 +1991,18 @@
       "whyNotUpstreamFirst": "The block-bodied callback is target-neutral, but it is pinned here because the native backend currently preserves the optional-call expression's undefined alternative instead of contextualizing the callback to its declared void result.",
       "unblocks": "Emits the shared Canvas texture resolver used by render state, bitmap and image sources, render textures, fill patterns, Canvas materials, and the Scene2D Canvas pipeline.",
       "expires": "when Flight adopts the explicit void wrapper upstream, or flight-compiler contextualizes expression-bodied callbacks assigned to void-returning nullable callable fields.",
-      "appliedOn": "2026-10-09"
+      "appliedOn": "2026-10-09",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "2D",
+        "reason": "applies only with reduced context (git apply -C1) at the new pin; regenerate the patch text against it and confirm the hunk still lands on the intended expression"
+      }
     },
     {
       "id": "canvas-texture-resolver-present-registry",
       "dependency": "flight",
       "patch": "canvas-texture-resolver-present-registry.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene2d-canvas/src/canvasTextureResolver.ts",
       "package": "@flighthq/scene2d-canvas",
       "answers": "refusal",
@@ -2127,7 +2030,12 @@
       "whyNotUpstreamFirst": "The explicit 2D read is target-neutral and matches this backend-specific resolver's established dimension guard, but it is pinned here because the native backend cannot yet project a live exact texture owner into the corresponding runtime-free structural union arm.",
       "unblocks": "Keeps Canvas texture resolution on the exact 2D owner used by bitmap, image, render-target, and pattern drawing paths.",
       "expires": "when Flight adopts the exact 2D source read upstream, or flight-compiler supports identity-preserving projection from a live Texture2D owner into the matching readonly TextureLike arm.",
-      "appliedOn": "2026-10-09"
+      "appliedOn": "2026-10-09",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "2D",
+        "reason": "applies only with reduced context (git apply -C1) at the new pin; regenerate the patch text against it and confirm the hunk still lands on the intended expression"
+      }
     },
     {
       "id": "canvas-texture-resolver-explicit-optional-receivers",
@@ -2144,7 +2052,12 @@
       "whyNotUpstreamFirst": "The explicit receiver guards are target-neutral, but they are pinned here because the native backend requires a single proven-present receiver domain where TypeScript optional chaining admits callable intersections and optional nullable structural fields.",
       "unblocks": "Completes the shared Canvas texture resolver control flow without unchecked optional payload extraction.",
       "expires": "when Flight adopts explicit receiver guards upstream, or flight-compiler preserves exact present-domain evidence through these optional-chain receiver forms.",
-      "appliedOn": "2026-10-09"
+      "appliedOn": "2026-10-09",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "2D",
+        "reason": "context drift: the patched code still exists (5/5 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "canvas-texture-resolver-host-image-result",
@@ -2161,7 +2074,12 @@
       "whyNotUpstreamFirst": "HostImageSource is already Flight's target-neutral alias for the same web drawing-source union. It is pinned here because the native backend expands the direct ambient alias inside imported callable and cache types before applying the exact external binding.",
       "unblocks": "Gives Canvas bitmap, image, render-target, window, and pattern resolvers one faithful SDL drawable handle result without fake DOM alternatives.",
       "expires": "when Flight uses HostImageSource at these host seams upstream, or flight-compiler retains the exact CanvasImageSource external binding through imported callable and cache declarations.",
-      "appliedOn": "2026-10-09"
+      "appliedOn": "2026-10-09",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "2D",
+        "reason": "context drift: the patched code still exists (3/3 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "compiler-exact-variant-owner-priority",
@@ -2235,7 +2153,7 @@
       "id": "materials-named-standard-block-clone",
       "dependency": "flight",
       "patch": "materials-named-standard-block-clone.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/materials/src/material.ts",
       "package": "@flighthq/materials",
       "answers": "refusal",
@@ -2252,7 +2170,7 @@
       "id": "materials-glass-preset-option-boundary",
       "dependency": "flight",
       "patch": "materials-glass-preset-option-boundary.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/materials/src/materialPresets.ts",
       "package": "@flighthq/materials",
       "answers": "refusal",
@@ -2297,7 +2215,12 @@
       "whyNotUpstreamFirst": "This target-neutral ownership placement is needed now because the pinned C++ emitter emits type-module function bodies inline and cannot defer one until a cyclic nominal definition becomes complete.",
       "unblocks": "Allows the common render-state header used by every real Scene3D GL pipeline to compile through proxy teardown without inventing an alternate renderer or proxy representation.",
       "expires": "when Flight keeps the teardown body in its render implementation owner upstream or flight-compiler can schedule inline type-module bodies after cyclic nominal definitions become complete.",
-      "appliedOn": "2026-10-09"
+      "appliedOn": "2026-10-09",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GL",
+        "reason": "context drift: the patched code still exists (0/5 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "compiler-flattened-optional-chain-union-storage",
@@ -2314,23 +2237,6 @@
       "whyNotUpstreamFirst": "This is a target backend carrier-planning defect needed by the pinned compiler before Flight's real PBR constructors can compile natively.",
       "unblocks": "Allows real classic, specular-glossiness, standard, and extended PBR constructors to initialize Texture union maps through their upstream Partial option paths without replacing materials or textures with invented host types.",
       "expires": "when flight-compiler derives contextual nullish conversion plans from the optional-chain emitter's concrete carrier upstream.",
-      "appliedOn": "2026-10-09"
-    },
-    {
-      "id": "materials-standard-pbr-exact-owner-initialization",
-      "dependency": "flight",
-      "patch": "materials-standard-pbr-exact-owner-initialization.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/materials/src/pbrMaterials.ts",
-      "package": "@flighthq/materials",
-      "answers": "diagnostic",
-      "refusal": "assignStandardPbrMaterialProperties accepts the flattened StandardPbrMaterialProperties owner, but createStandardPbrMaterial passes the distinct StandardPbrMaterial owner that TypeScript accepts through interface extension and C++ shared_ptr cannot convert",
-      "rewrite": "Inlines the private helper's unchanged thirteen assignments at the StandardPbrMaterial call site, while retaining the helper for the standalone StandardPbrMaterialProperties constructor whose owner already matches it.",
-      "equivalence": "The helper is private and the replaced call is synchronous. Its exact thirteen statements are inserted at the call site in the same order, reading the same opts reference and writing the same newly allocated material object with the same nullish defaults. No object, field, value, or reference is copied, materialized, or replaced, and the public constructor signatures are unchanged.",
-      "verification": "Focused pbrMaterials.ts generation must emit without refusals, and cohesive pbr_materials.hpp plus material_presets.hpp must compile past the StandardPbrMaterial-to-StandardPbrMaterialProperties shared_ptr conversion without changing their public signatures.",
-      "whyNotUpstreamFirst": "This ordinary target-neutral inlining states each existing write against the concrete owner already promised by the public constructor and is needed by the pinned compiler for native material construction.",
-      "unblocks": "Allows the real StandardPbrMaterial constructor and every preset layered on it to initialize the shared metallic-roughness block on the material's own owner.",
-      "expires": "when Flight initializes the concrete owner directly upstream or flight-compiler represents interface heritage with an identity-preserving compatible owner carrier.",
       "appliedOn": "2026-10-09"
     },
     {
@@ -2399,7 +2305,12 @@
       "whyNotUpstreamFirst": "This target-neutral control-flow spelling preserves the checked source predicate and avoids asking the native backend to construct a redundant nullable union between flattened interface owners.",
       "unblocks": "Restores the real directional shadow pass for rigid, skinned, and instanced meshes without an invented native mesh carrier.",
       "expires": "when Flight keeps the checked instance predicate as branch flow upstream or flight-compiler preserves the predicate-refined owner through nullable conditional construction.",
-      "appliedOn": "2026-10-09"
+      "appliedOn": "2026-10-09",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GL",
+        "reason": "most of the patched lines were rewritten upstream (2/7 removed lines still present); re-derive from the current source or drop if the refusal is gone"
+      }
     },
     {
       "id": "compiler-structural-union-exact-native-owner",
@@ -2470,6 +2381,23 @@
       "appliedOn": "2026-10-09"
     },
     {
+      "id": "compiler-sdk-lane-local-reexports",
+      "dependency": "flight-compiler",
+      "patch": "compiler-sdk-lane-local-reexports.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-inventory/src/flightWorkspaceInventory.ts",
+      "package": "@flighthq/compiler-inventory",
+      "answers": "refusal",
+      "refusal": "workspace inventory throws unsupported-package-specifier for `export * from './sdkHost.ts'` in @flighthq/sdk (added upstream by the Host.compress/LZMA commits at a62784923f), so analyzeFlightWorkspace aborts before any package -- even a closure that never reaches @flighthq/sdk -- is lowered",
+      "rewrite": "readSdkExposures skips SDK-lane re-exports whose specifier is relative (./ or ../) instead of throwing; package-scoped targets are handled exactly as before.",
+      "equivalence": "SDK exposures map an SDK lane to the @flighthq/* package it re-exports. A relative re-export names one of the SDK package's own modules, which is not another package, so it contributes no exposure under either reading. Every package exposure the inventory records is identical with and without the patch; no source, declaration, or emitted value changes.",
+      "verification": "Package-scoped foundation generation (entity, node, math, geometry closure) at flight a62784923f completes inventory analysis with the patch and aborts at readSdkExposures without it.",
+      "whyNotUpstreamFirst": "Upstream flight-compiler main is still 2b687ea, the pinned revision, so there is no newer compiler to move to; inventory analysis must succeed before any package at the new Flight pin can be generated at all.",
+      "unblocks": "Every generation at the a62784923f Flight pin (sdk:generate, examples:generate, any --package run).",
+      "expires": "when flight-compiler's SDK exposure reader accepts SDK-local relative re-exports upstream.",
+      "appliedOn": "2026-10-11"
+    },
+    {
       "id": "scene2d-canvas-host-image-draw-flow",
       "dependency": "flight",
       "patch": "scene2d-canvas-host-image-draw-flow.patch",
@@ -2484,7 +2412,12 @@
       "whyNotUpstreamFirst": "Flight already declares HostImageSource specifically for this native seam and the resolver result already uses it. This target-neutral annotation completes that existing abstraction through downstream helpers while remaining the identical CanvasImageSource alias on web.",
       "unblocks": "Keeps the verified real Canvas texture draws for ParticleEmitter2D, QuadBatch, Scale9Sprite, Sprite, and Tilemap on the SDL host image carrier and advances the remaining consumers to their next independently tracked boundary.",
       "expires": "when Flight carries HostImageSource through these Canvas draw boundaries upstream or flight-compiler preserves the imported alias carrier without re-expanding it.",
-      "appliedOn": "2026-10-09"
+      "appliedOn": "2026-10-09",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "2D",
+        "reason": "context drift: the patched code still exists (11/11 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "scene2d-canvas-bitmap-host-image-cache",
@@ -2501,7 +2434,12 @@
       "whyNotUpstreamFirst": "This target-neutral cache contract follows the resolver's already-declared HostImageSource result instead of assuming every bitmap realization is specifically an HTML canvas.",
       "unblocks": "Restores native bitmap texture resolution and caching without optional payload guessing or a browser canvas cast.",
       "expires": "when Flight adopts HostImageSource for the bitmap cache and an explicit present cache-hit path upstream.",
-      "appliedOn": "2026-10-09"
+      "appliedOn": "2026-10-09",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "2D",
+        "reason": "context drift: the patched code still exists (11/11 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "scene2d-canvas-exact-texture-view-dimensions",
@@ -2518,13 +2456,18 @@
       "whyNotUpstreamFirst": "The function already has the exact readonly Texture2D owner and only needs its 2D source dimensions. This target-neutral spelling avoids an unnecessary all-dimension union boundary while the native compiler cannot select the matching imported structural view.",
       "unblocks": "Restores the real upstream Canvas texture-view crop and UV transform helper used by sprite, scale-9, texture-window, and atlas paths.",
       "expires": "when Flight adopts the exact Texture2D source read upstream or flight-compiler can select the matching imported readonly TextureLike view without replacing the owner.",
-      "appliedOn": "2026-10-09"
+      "appliedOn": "2026-10-09",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "2D",
+        "reason": "context drift: the patched code still exists (3/3 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     },
     {
       "id": "scene2d-canvas-bitmap-text-readonly-runtime",
       "dependency": "flight",
       "patch": "scene2d-canvas-bitmap-text-readonly-runtime.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene2d-canvas/src/canvasBitmapText.ts and packages/scene2d-canvas/package.json",
       "package": "@flighthq/scene2d-canvas",
       "answers": "refusal",
@@ -2535,6 +2478,83 @@
       "whyNotUpstreamFirst": "Flight already exposes the exact target-neutral accessor for this read. Reusing it keeps runtime ownership in the bitmaptext package and removes the redundant cross-package concrete-runtime assertion.",
       "unblocks": "Restores the real upstream Canvas bitmap-font renderer without replacing glyph atlas pages or drawing text through a console-font fallback.",
       "expires": "when Flight uses getBitmapTextPages in this renderer upstream, declares its production bitmaptext dependency, or flight-compiler can prove a concrete derived runtime behind the generic readonly Node2D runtime accessor.",
+      "appliedOn": "2026-10-09"
+    },
+    {
+      "id": "node-exact-capability-runtimes",
+      "dependency": "flight",
+      "patch": "node-exact-capability-runtimes.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "node transform, bounds, color-adjustment, revision, ordering, fit, hierarchy, traversal, and their capability type contracts",
+      "package": "@flighthq/node",
+      "answers": "refusal",
+      "refusal": "transform and bounds paths erase exact runtime slots through getEntityRuntime and then assert readonly EntityRuntime back to writable capability runtimes; remaining node collections and callbacks similarly erase NodeOf<Traits> before mutation",
+      "rewrite": "Declares exact transform and bounds runtime slots on their structural node capability types, carries NodeOf<Traits> through node callbacks, revisions, ordering, fit contexts, and read APIs, gives base initialization a concrete data-bearing options shape, avoids readonly/mutable carrier rebinds in ancestry walks, and sorts order-list entry indices instead of erasing heterogeneous nodes into shared scratch.",
+      "equivalence": "All annotations erase in JavaScript. The same runtime objects, matrices, rectangles, child arrays, revisions, adjustments, callbacks, signals, node identities, and data factories are used. Order-list sorting uses the same last-entry identity map, keys, tie break, child slots, and writes; it retains integer entry indices instead of the equivalent node references. Direct symbol reads return the identical runtime object previously returned by getEntityRuntime, without granting write authority through a readonly accessor.",
+      "verification": "The patch applies after the complete Flight source stack. Focused strict TypeScript programs for @flighthq/node and Scene3D report zero relevant errors, with only unavailable ambient WebGPU declarations outside scope. Native @flighthq/node regeneration emits 1101/1147 dependency-closure modules and 18/21 Node modules, up from 1097/1147 and 14/21; the remaining three direct Node refusals are isolated computed-symbol accesses in bounds and transform caches.",
+      "whyNotUpstreamFirst": "These capability types already promise that transform and bounds nodes own the corresponding runtime caches, and NodeRuntime children plus NodeOrderList entries already contain trait-bearing nodes. Naming those actual slots and values is a target-neutral contract correction, not a target-specific representation escape.",
+      "unblocks": "Removes the node data-owner, hierarchy, traversal, revision, color-adjustment, scene-fit, and child-order refusals beneath both Canvas Scene2D and WebGL Scene3D, leaving only the three explicit transform/bounds cache-access modules to solve.",
+      "expires": "when Flight exposes exact runtime slots on its structural node capabilities and retains NodeOf/Data owners across these APIs upstream, or the native compiler preserves the same checked owners through the weaker base interfaces automatically.",
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GEN",
+        "reason": "re-derived text applies at the new pin, but its BoundsNode/Spatial2DNode/Transform2DNode runtime slots close a type cycle with upstream generic HasBoundsRectangleRuntime<Traits> (runtime -> bounds callback -> BoundsNode<Traits> -> slot -> runtime). The pinned compiler then fails 17 types modules with Maximum call stack size exceeded, and a raised-stack run did not terminate in 10 minutes. Re-derive without the slots (or break the cycle) before activating."
+      }
+    },
+    {
+      "id": "node-exact-runtime-helper-boundaries",
+      "dependency": "flight",
+      "patch": "node-exact-runtime-helper-boundaries.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/node/src/boundsRectangle.ts, nodeTransform2d.ts, and nodeTransform3d.ts",
+      "package": "@flighthq/node",
+      "answers": "refusal",
+      "refusal": "computed EntityRuntimeKey access on a trait-bearing structural node row lacks one concrete object-reference target even though its capability type declares the exact bounds or transform runtime",
+      "rewrite": "Crosses a local named exact-runtime-owner interface before each symbol access, separately names bounds, spatial-2D, transform-2D, and transform-3D runtime owners, widens the trait-bearing parent to its declared base Node shape at the property-read boundary, and narrows that parent through a concrete readonly transform probe before recursively consuming the exact runtime.",
+      "equivalence": "Each helper returns the exact EntityRuntimeKey member from the same node. Valid homogeneous 2D and 3D scene graphs take the same parent branch and use the same cache object, matrices, rectangles, revisions, and node identities. A malformed mixed graph whose parent lacks the child's transform capability is now treated as a transform root instead of reading nonexistent transform fields through an unchecked assertion.",
+      "verification": "Focused strict Node and Scene3D TypeScript programs report zero relevant errors apart from unavailable ambient WebGPU declarations. A focused compiler regression probe emits a trait-bearing structural capability passed through a named exact-owner helper. Native @flighthq/node regeneration emits 1104/1147 dependency-closure modules and all 21/21 Node modules with zero direct Node refusals, up from 1101/1147 and 18/21 before this patch.",
+      "whyNotUpstreamFirst": "The helper interfaces restate runtime slots already guaranteed by the public transform and bounds capability types. They make the existing owner proof lexical without changing runtime representation or adding a native-only path.",
+      "unblocks": "Removes the last three direct Node package refusals, clearing all 21 Node modules beneath hierarchy, traversal, bounds, scene preparation, Canvas Scene2D, and WebGL Scene3D consumers.",
+      "expires": "when flight-compiler can project computed members from a structural row through its concrete nominal conjunct automatically, or Flight adopts explicit exact-runtime accessors upstream.",
+      "appliedOn": "2026-10-08",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "GEN",
+        "reason": "applies on top of node-exact-capability-runtimes and type-checks only against its BoundsNode runtime slots, so it is pending until that patch is activated."
+      }
+    },
+    {
+      "id": "materials-exact-construction-owner",
+      "dependency": "flight",
+      "patch": "materials-exact-construction-owner.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/materials/src/material3d.ts",
+      "package": "@flighthq/materials",
+      "answers": "refusal",
+      "refusal": "createMaterial and createMaterial3D allocate the base Material owners and each concrete constructor then asserts that reference to an unrelated flattened C++ interface owner, so Blinn-Phong, Phong, Lambert, PBR, unlit, and the other real material constructors are refused",
+      "rewrite": "Makes the two allocation helpers (createMaterial and createMaterial3D, which absorbed createSurfaceMaterial upstream in 8bcf2e087) generic in the exact Material and Material3D owner with their old return types as defaults, and supplies each concrete constructor's already-declared result type as the generic argument instead of asserting the base factory result afterward.",
+      "equivalence": "TypeScript erases generic arguments. Every call still invokes allocateEntity once, initializes kind, name, and the same shared surface fields in the same order, mutates the same newly allocated plain object with the same concrete defaults, and returns that object with identical identity. The default type parameters preserve callers that intentionally request the base Material or SurfaceMaterial contract.",
+      "whyNotUpstreamFirst": "The compiler diagnostic explicitly requests exact generic allocation because flattened C++ interface owners have no inheritance cast. This is ordinary target-neutral TypeScript that states the concrete owner each public constructor already promises without a copied C++ material implementation.",
+      "unblocks": "Allows the concrete material constructor modules to retain BlinnPhongMaterial, LambertMaterial, PhongMaterial, StandardPbrMaterial, SpecularGlossinessPbrMaterial, ExtendedPbrMaterial, CustomShaderMaterial, and all built-in unlit/debug material owners through initialization.",
+      "expires": "when interface-heritage references retain an owner-preserving C++ carrier across base factory results, or Flight adopts exact generic allocation.",
+      "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "materials-standard-pbr-exact-owner-initialization",
+      "dependency": "flight",
+      "patch": "materials-standard-pbr-exact-owner-initialization.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/materials/src/pbrMaterials.ts",
+      "package": "@flighthq/materials",
+      "answers": "diagnostic",
+      "refusal": "assignStandardPbrMaterialProperties accepts the flattened StandardPbrMaterialProperties owner, but createStandardPbrMaterial passes the distinct StandardPbrMaterial owner that TypeScript accepts through interface extension and C++ shared_ptr cannot convert",
+      "rewrite": "Inlines the private helper's unchanged thirteen assignments at the StandardPbrMaterial call site, while retaining the helper for the standalone StandardPbrMaterialProperties constructor whose owner already matches it.",
+      "equivalence": "The helper is private and the replaced call is synchronous. Its exact thirteen statements are inserted at the call site in the same order, reading the same opts reference and writing the same newly allocated material object with the same nullish defaults. No object, field, value, or reference is copied, materialized, or replaced, and the public constructor signatures are unchanged.",
+      "verification": "Focused pbrMaterials.ts generation must emit without refusals, and cohesive pbr_materials.hpp plus material_presets.hpp must compile past the StandardPbrMaterial-to-StandardPbrMaterialProperties shared_ptr conversion without changing their public signatures.",
+      "whyNotUpstreamFirst": "This ordinary target-neutral inlining states each existing write against the concrete owner already promised by the public constructor and is needed by the pinned compiler for native material construction.",
+      "unblocks": "Allows the real StandardPbrMaterial constructor and every preset layered on it to initialize the shared metallic-roughness block on the material's own owner.",
+      "expires": "when Flight initializes the concrete owner directly upstream or flight-compiler represents interface heritage with an identity-preserving compatible owner carrier.",
       "appliedOn": "2026-10-09"
     },
     {
@@ -2552,7 +2572,12 @@
       "whyNotUpstreamFirst": "Renderer.createData intentionally publishes only RendererData, so asserting a private derived owner after that storage boundary is not portable. A base-owner-keyed WeakMap retains the cache behavior without claiming cells the public slot erased.",
       "unblocks": "Restores the real Canvas text-label measurement and draw path without replacing it with console text or inventing a native label implementation.",
       "expires": "when RendererData storage retains an exact checked derived-owner recovery contract upstream or Flight adopts the base-owner-keyed revision cache.",
-      "appliedOn": "2026-10-09"
+      "appliedOn": "2026-10-09",
+      "pendingRebase": {
+        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "lane": "2D",
+        "reason": "context drift: the patched code still exists (3/3 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
+      }
     }
   ]
 }

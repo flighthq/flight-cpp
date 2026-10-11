@@ -43,9 +43,9 @@ diff --git a/packages/path/src/strokePath.ts b/packages/path/src/strokePath.ts
 @@ -1,5 +1,5 @@
  import type { Path, StrokeStyle } from '@flighthq/types/contract';
  
- import { appendPathClose, appendPathLineTo, appendPathMoveTo, createPath } from './path';
--import { buildStrokePathGeometry } from './strokePathGeometry';
-+import { buildStrokePathGeometry, type StrokePathGeometry } from './strokePathGeometry';
+ import { appendPathClose, appendPathLineTo, appendPathMoveTo, createPath } from './path.ts';
+-import { buildStrokePathGeometry } from './strokePathGeometry.ts';
++import { buildStrokePathGeometry, type StrokePathGeometry } from './strokePathGeometry.ts';
  
 @@ -11,7 +11,7 @@ export type { StrokeStyle } from '@flighthq/types/contract';
  // must honor non-zero winding for that case rather than independently filling both contours.
@@ -62,12 +62,12 @@ diff --git a/packages/path/src/tessellateStrokePath.ts b/packages/path/src/tesse
 @@ -1,4 +1,8 @@
  import type { Path, PathMesh, StrokeStyle } from '@flighthq/types/contract';
  
--import { buildStrokePathGeometry, StrokePathTessellationIssueNone } from './strokePathGeometry';
+-import { buildStrokePathGeometry, StrokePathTessellationIssueNone } from './strokePathGeometry.ts';
 +import {
 +  buildStrokePathGeometry,
 +  type StrokePathGeometry,
 +  StrokePathTessellationIssueNone,
-+} from './strokePathGeometry';
++} from './strokePathGeometry.ts';
  
 @@ -11,7 +15,7 @@ export function tessellateStrokePath(
    style: Readonly<StrokeStyle>,

@@ -18,6 +18,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { resolveDependency } from './dependencyLock.mjs';
 import {
   applySourcePatches,
+  loadPendingSourcePatches,
   loadSourcePatches,
   recoverStalePatches,
   revertSourcePatches,
@@ -54,6 +55,7 @@ const bindingProfileFiles = [
 ];
 const bindingProfiles = loadBindingProfiles(bindingProfileFiles);
 const sourcePatches = loadSourcePatches(root);
+reportPendingSourcePatches(loadPendingSourcePatches(root));
 for (const dependency of [compiler, flight]) {
   const recovery = recoverStalePatches(sourcePatches, dependency);
   if (recovery.recovered.length > 0) {
@@ -624,4 +626,16 @@ function compareText(left, right) {
 
 function summary(prefix, result) {
   return `${prefix}: ${String(result.emittedModules)}/${String(result.sourceModules)} modules emitted across ${String(result.packages)} examples; ${String(result.refusedModules)} refusals recorded.\n`;
+}
+
+// A pending patch is declared debt, not a silent skip: every run names how many are outstanding and which
+// lane owns each group, so a generation never reads as though the whole patch set was applied.
+function reportPendingSourcePatches(pending) {
+  if (pending.length === 0) return;
+  const byLane = new Map();
+  for (const patch of pending) byLane.set(patch.pendingRebase.lane, [...(byLane.get(patch.pendingRebase.lane) ?? []), patch.id]);
+  process.stderr.write(`${String(pending.length)} source patch(es) pending rebase and NOT applied:\n`);
+  for (const [lane, ids] of [...byLane].sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0))) {
+    process.stderr.write(`- ${lane}: ${ids.join(', ')}\n`);
+  }
 }
