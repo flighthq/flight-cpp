@@ -26,7 +26,7 @@ index 83a715e..8ada709 100644
 +  writeGlRenderStateRuntimeOwner,
  } from '@flighthq/types/contract';
 -import { EntityRuntimeKey } from '@flighthq/types/contract';
- 
+
  export function buildGlRenderRegistries(options: Readonly<GlRenderStateOptions>): GlRenderRegistries {
    const registries = {} as GlRenderRegistries;
 @@ -52,15 +58,15 @@ export function createGlContextState(gl: GlContext): GlContextState {
@@ -37,7 +37,7 @@ index 83a715e..8ada709 100644
 +  _contextStateByGl.set(gl as WebGL2RenderingContext, result);
    return result;
  }
- 
+
  export function createGlRenderState(gl: GlContext, options: Readonly<GlRenderStateOptions> = {}): GlRenderState {
 -  let contextState = _contextStateByGl.get(gl);
 +  let contextState = _contextStateByGl.get(gl as WebGL2RenderingContext);
@@ -69,19 +69,19 @@ index 83a715e..8ada709 100644
    runtime.bindingCacheGuard = null;
 @@ -156,13 +165,13 @@ export function getGlColorAdjustmentMaterialFeatureGuard(
  }
- 
+
  export function getGlContextRuntime(contextState: Readonly<GlContextState>): GlContextRuntime {
 -  return contextState[EntityRuntimeKey] as GlContextRuntime;
 +  return readGlContextRuntimeOwner(contextState);
  }
- 
+
  // Resolves the package-private GPU runtime attached to a GlRenderState. Mutable by design: the
  // render path writes its fields every frame.
  export function getGlRenderStateRuntime(state: GlRenderState): GlRenderStateRuntime {
 -  return state[EntityRuntimeKey] as GlRenderStateRuntime;
 +  return readGlRenderStateRuntimeOwner(state);
  }
- 
+
  export function initializeGlContextState(state: EntityConstruction<GlContextState>, gl: GlContext): void {
 @@ -186,14 +195,26 @@ export function initializeGlContextState(state: EntityConstruction<GlContextStat
      references: 0,
@@ -114,12 +114,12 @@ index 83a715e..8ada709 100644
 -  state[EntityRuntimeKey] = contextRuntime;
 +  writeGlContextRuntimeOwner(state, contextRuntime);
  }
- 
+
  // Discards render-gl's cached GL binding state (bound program, texture, framebuffer, blend mode,
 @@ -232,19 +253,21 @@ function _createGlRenderStateFromContext(
  ): GlRenderState {
    const gl = contextState.gl;
- 
+
 -  const state = _createRenderState({
 +  const runtime = createGlRenderStateRuntime(contextState, options);
 +  const state = createDerivedRenderStateConstruction<GlRenderState>({
@@ -132,7 +132,7 @@ index 83a715e..8ada709 100644
 -  }) as GlRenderState;
 +  });
 +  writeGlRenderStateRuntimeOwner(state, runtime);
- 
+
 -  const runtime = createGlRenderStateRuntime(contextState, options);
    state.applyBlendMode = null;
 -  Object.assign(state, { contextState, gl, registries: runtime.registries });
@@ -146,7 +146,7 @@ index 83a715e..8ada709 100644
 @@ -278,5 +301,5 @@ export function registerGlRenderStateTeardown(state: GlRenderState, teardown: (s
    getGlRenderStateRuntime(state).teardowns.push(teardown);
  }
- 
+
 -const _contextStateByGl = new WeakMap<GlContext, GlContextState>();
 +const _contextStateByGl = new WeakMap<WebGL2RenderingContext, GlContextState>();
  const _destroyedStates = new WeakSet<GlRenderState>();
@@ -190,7 +190,7 @@ index fdaa422..279d3cb 100644
 +  sceneGraphSyncPolicy?: 'refreshDerivedState' | 'requiresInvalidation';
 +  roundPixels?: boolean;
 +}
- 
+
 -export function createRenderState(obj?: Partial<RenderState>): RenderState {
 +export function createRenderState(obj?: Partial<RenderState>): RenderState;
 +export function createRenderState(obj?: RenderStateInitialization): RenderState {
@@ -198,7 +198,7 @@ index fdaa422..279d3cb 100644
    initializeRenderState(state, obj);
    return finishEntity(state);
  }
- 
+
 +export function createDerivedRenderStateConstruction<State extends RenderState>(
 +  obj: RenderStateInitialization | undefined,
 +): EntityConstruction<State> {
@@ -264,7 +264,7 @@ index fdaa422..279d3cb 100644
 -  return state[EntityRuntimeKey] as RenderStateRuntime;
 +  return readRenderStateRuntimeOwner(state);
  }
- 
+
 -export function initializeRenderState(state: EntityConstruction<RenderState>, obj?: Partial<RenderState>): void {
 -  state.allowSmoothing = obj?.allowSmoothing ?? true;
 -  state.currentClipDepth = obj?.currentClipDepth ?? 0;
@@ -324,7 +324,7 @@ index fdaa422..279d3cb 100644
 +  const sceneGraphSyncPolicy = obj.sceneGraphSyncPolicy;
 +  state.sceneGraphSyncPolicy = sceneGraphSyncPolicy == null ? 'refreshDerivedState' : sceneGraphSyncPolicy;
  }
- 
+
  function disposeRenderProxyForShutdown(state: RenderState, source: NodeAny): void {
    const runtime = getRenderStateRuntime(state);
    const proxy = runtime.renderProxyMap.get(source);
@@ -345,7 +345,7 @@ index c960059..6d1d2cb 100644
 +import { EntityRuntimeKey } from './Entity.ts';
  import type { GlContext } from './GlContext.ts';
 +import type { GlContextRuntime } from './GlContextRuntime.ts';
- 
+
  export interface GlContextState extends Entity {
 +  [EntityRuntimeKey]: GlContextRuntime | undefined;
    readonly gl: GlContext;
@@ -376,7 +376,7 @@ index 9b30410..14a3537 100644
  import type { GlContext } from './GlContext.ts';
 @@ -29,12 +30,24 @@ import type { ShapeRasterizer } from './ShapeRasterizer.ts';
  import type { TintMaterialData } from './TintMaterialData.ts';
- 
+
  export interface GlRenderState extends RenderState {
 +  [EntityRuntimeKey]: GlRenderStateRuntime | undefined;
    applyBlendMode: ((state: GlRenderState, blendMode: BlendMode | null) => void) | null;
@@ -384,7 +384,7 @@ index 9b30410..14a3537 100644
    readonly gl: GlContext;
    readonly registries: Readonly<GlRenderRegistries>;
  }
- 
+
 +export function readGlRenderStateRuntimeOwner(owner: Readonly<GlRenderState>): GlRenderStateRuntime {
 +  return owner[EntityRuntimeKey]!;
 +}
@@ -415,7 +415,7 @@ index bfa6e87..9644e94 100644
  import type { NodeAny } from './Node.ts';
 @@ -25,6 +26,7 @@ import type { StrokeStyle } from './StrokeStyle.ts';
  export type Scene3DGraphSyncPolicy = 'refreshDerivedState' | 'requiresInvalidation';
- 
+
  export interface RenderState extends Entity {
 +  [EntityRuntimeKey]: RenderStateRuntime | undefined;
    allowSmoothing: boolean;
