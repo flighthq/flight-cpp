@@ -451,6 +451,13 @@ int main() {
          "GL anisotropy maximum query changed");
   static_assert(flight::host_sdl::WebGl2Context::max_texture_size == 3379);
 
+  const flight::host_sdl::GlCanvas no_gl_canvas;
+  auto same_no_gl_canvas = no_gl_canvas;
+  same_no_gl_canvas.style.color = flight::String("red");
+  same_no_gl_canvas.width = 640.0;
+  expect(no_gl_canvas == same_no_gl_canvas,
+         "mutable DOM canvas fields changed reference identity");
+
   const flight::host_sdl::WebGl2Context no_gl_context;
 
   // THE WEAK-KEY CONTRACT for `new WeakMap<GlContext, ...>`, which is the most common weak map in

@@ -419,9 +419,6 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
   WebGl2Context() noexcept = default;
 
   [[nodiscard]] explicit operator bool() const noexcept { return state_ != nullptr; }
-  [[nodiscard]] friend bool operator==(
-      const WebGl2Context&,
-      const WebGl2Context&) noexcept = default;
   [[nodiscard]] const void* identity() const noexcept { return state_.get(); }
   [[nodiscard]] int drawing_buffer_width() const;
   [[nodiscard]] int drawing_buffer_height() const;
@@ -883,7 +880,11 @@ class FLIGHT_HOST_SDL_GL_API GlCanvas final {
       bool hidden = false);
 
   [[nodiscard]] explicit operator bool() const noexcept { return state_ != nullptr; }
-  [[nodiscard]] friend bool operator==(const GlCanvas&, const GlCanvas&) noexcept = default;
+  // DOM objects compare by reference identity. Mutable style and logical-size fields describe the
+  // same canvas object and must not change whether two handles compare equal.
+  [[nodiscard]] friend bool operator==(const GlCanvas& left, const GlCanvas& right) noexcept {
+    return left.state_ == right.state_;
+  }
   [[nodiscard]] const void* identity() const noexcept { return state_.get(); }
   [[nodiscard]] WindowSize logical_size() const;
   [[nodiscard]] WindowSize pixel_size() const;
