@@ -65,7 +65,7 @@ void fill_circle(
   }
 }
 
-void draw_frame(
+[[nodiscard]] flight::Array<double> draw_frame(
     const flight::host_sdl::WebGl2Context& gl,
     flight::host_sdl::WindowSize size,
     double progress) {
@@ -120,6 +120,7 @@ void draw_frame(
   if (gl.get_error() != flight::host_sdl::WebGl2Context::no_error) {
     throw std::runtime_error("OpenGL rejected the tween frame");
   }
+  return values;
 }
 
 void validate_gl_resource_path(const flight::host_sdl::WebGl2Context& gl) {
@@ -352,8 +353,23 @@ int run(bool smoke) {
     const std::uint64_t elapsed = flight::host_sdl::Host::ticks_nanoseconds() - started;
     const double seconds = static_cast<double>(elapsed) / 1'000'000'000.0;
     const double cycle = std::fmod(seconds / 2.0, 2.0);
-    const double progress = cycle <= 1.0 ? cycle : 2.0 - cycle;
-    draw_frame(context, canvas.pixel_size(), progress);
+    const double progress = smoke
+                                ? static_cast<double>(frames) / 2.0
+                                : (cycle <= 1.0 ? cycle : 2.0 - cycle);
+    const auto values = draw_frame(context, canvas.pixel_size(), progress);
+    if (smoke) {
+      constexpr std::array<std::array<double, 2>, 3> expected_quadratic{{
+          {0.0, 0.0},
+          {0.25, 0.75},
+          {1.0, 1.0},
+      }};
+      const auto expected = expected_quadratic[frames];
+      if (std::abs(values[0] - expected[0]) > 1e-12 ||
+          std::abs(values[1] - expected[1]) > 1e-12) {
+        throw std::runtime_error(
+            "compiler-generated tween curves did not produce the expected samples");
+      }
+    }
     context.present();
     static_cast<void>(flight::host_sdl::pump_animation_frame(
         static_cast<double>(flight::host_sdl::Host::ticks_nanoseconds()) / 1'000'000.0));
@@ -361,6 +377,10 @@ int run(bool smoke) {
     ++frames;
     if (smoke && frames >= 3) running = false;
     std::this_thread::sleep_for(8ms);
+  }
+  if (smoke) {
+    std::cout << "tween package smoke: sampled 15 generated curves at 3 "
+                 "deterministic positions\n";
   }
   return 0;
 }

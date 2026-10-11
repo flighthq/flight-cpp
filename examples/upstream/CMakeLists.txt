@@ -172,6 +172,11 @@ if(TARGET Flight::HostSdl)
           NAME flight_cpp_upstream_${example}_smoke
           COMMAND flight_cpp_upstream_${example} --smoke
         )
+        set_tests_properties(
+          flight_cpp_upstream_${example}_smoke
+          PROPERTIES PASS_REGULAR_EXPRESSION
+            "scene3d-gl package smoke: rendered 3 verified frames, maximum non-background coverage [1-9][0-9]*"
+        )
         if(UNIX AND NOT APPLE)
           set_tests_properties(
             flight_cpp_upstream_${example}_smoke

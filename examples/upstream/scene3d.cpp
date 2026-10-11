@@ -329,6 +329,8 @@ class Scene3DExample final {
   int run(bool smoke, const std::optional<std::string>& capture_path) {
     using namespace std::chrono_literals;
     std::size_t frames = 0;
+    std::size_t verified_frames = 0;
+    std::size_t maximum_coverage = 0;
     bool running = true;
     std::uint64_t previous = flight::host_sdl::Host::ticks_nanoseconds();
     while (running) {
@@ -375,12 +377,26 @@ class Scene3DExample final {
           throw std::runtime_error(
               "Scene3D produced an effectively uniform framebuffer");
         }
+        if (smoke) {
+          ++verified_frames;
+          maximum_coverage =
+              std::max(maximum_coverage, frame.pixels_different_from_corner);
+        }
       }
       gl_.present();
 
       ++frames;
       if (smoke && frames >= 3) running = false;
       std::this_thread::sleep_for(8ms);
+    }
+    if (smoke) {
+      if (verified_frames != frames) {
+        throw std::runtime_error(
+            "Scene3D smoke did not verify every rendered frame");
+      }
+      std::cout << "scene3d-gl package smoke: rendered " << verified_frames
+                << " verified frames, maximum non-background coverage "
+                << maximum_coverage << '\n';
     }
     return 0;
   }

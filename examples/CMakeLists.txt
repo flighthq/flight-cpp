@@ -23,6 +23,23 @@ add_subdirectory(upstream)
 if(BUILD_TESTING)
   add_test(NAME flight_cpp.example.tween COMMAND flight_cpp_tween_example)
   add_test(NAME flight_cpp.example.sdk_math COMMAND flight_cpp_sdk_math_example)
+  if(TARGET flight_cpp_tween_sdl_gl_example)
+    add_test(
+      NAME flight_cpp.example.tween_sdl_gl
+      COMMAND flight_cpp_tween_sdl_gl_example --smoke
+    )
+    set_tests_properties(
+      flight_cpp.example.tween_sdl_gl
+      PROPERTIES PASS_REGULAR_EXPRESSION
+        "tween package smoke: sampled 15 generated curves at 3 deterministic positions"
+    )
+    if(UNIX AND NOT APPLE)
+      set_tests_properties(
+        flight_cpp.example.tween_sdl_gl
+        PROPERTIES ENVIRONMENT "SDL_VIDEODRIVER=offscreen;LIBGL_ALWAYS_SOFTWARE=1"
+      )
+    endif()
+  endif()
   if(TARGET flight_cpp_sound_sdl_example)
     add_test(NAME flight_cpp.example.sound_sdl COMMAND flight_cpp_sound_sdl_example --smoke)
     set_tests_properties(
