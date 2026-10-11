@@ -29,7 +29,7 @@ import { driftedOverrides, loadOverrides, overridesIncludeDirectory } from './ov
 //   --report=FILE              where the report is written
 //   --headers=a.hpp,b.hpp      compile only these, or --headers=@FILE to read them one per line
 //   --resume                   skip what the existing report already attempted
-//   --retry-killed             with --resume, retry compiler processes killed by the OS
+//   --retry-killed             with --resume, retry compiler processes killed by the OS or run signal
 //   --deadline-seconds=N       stop starting new work after N seconds and report the remainder
 //   --checkpoint-seconds=N     how often the report is flushed while running (default 10)
 //
@@ -97,12 +97,17 @@ for (const header of selected) {
   const earlier = previous.get(header);
   if (
     earlier &&
-    !(retryKilled && !earlier.passed && /^(?:g\+\+: fatal error: )?Killed signal\b/u.test(earlier.diagnostic))
+    !(retryKilled && !earlier.passed && isInterruptedCompilerFailure(earlier.diagnostic))
   ) {
     done.set(header, earlier);
   }
 }
 const pending = selected.filter((header) => !done.has(header));
+
+function isInterruptedCompilerFailure(diagnostic) {
+  return /^(?:(?:g\+\+|c\+\+|clang\+\+): fatal error: )?Killed signal\b/u.test(diagnostic) ||
+    diagnostic === 'compiler exited with status null';
+}
 
 const version = spawnSync(compiler, ['--version'], { encoding: 'utf8' });
 if (version.status !== 0) {

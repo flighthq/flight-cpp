@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { loadApplicableEnvironments, loadDeferredPackages } from './deferredPackages.mjs';
-import { loadOverrides } from './overrides.mjs';
+import { driftedOverrides, loadOverrides } from './overrides.mjs';
 
 // What of the SDK is actually usable, counted per package.
 //
@@ -34,7 +34,7 @@ import { loadOverrides } from './overrides.mjs';
 // For a repair, the report says it was involved and does not claim the package depends on it.
 //   uncompiled  every module emitted, but no header of it was actually compiled
 //   partial     some modules emitted, some headers were not attempted or fail to compile, or a
-//               declared override is explicitly still partway
+//               declared override is explicitly still partway, behaviorally incomplete, or drifted
 //   blocked     nothing emitted
 //   deferred    declared a DEFECT in deferred-packages.json; reported, never fails the build, and still
 //               counted in the denominator because it is work this profile owes
@@ -106,6 +106,18 @@ const bestEffortFile = path.join(generatedRoot, 'best-effort.json');
 const bestEffort = existsSync(bestEffortFile) ? JSON.parse(readFileSync(bestEffortFile, 'utf8')) : undefined;
 const generatedHeaders = (bestEffort?.modules ?? []).map((record) => record.path);
 const overrideInventory = loadOverrides(root);
+// An override is a copy of generated output with hand-written corrections. Once its source hash
+// moves, successful compilation is no longer evidence that the copy still represents upstream.
+// Keep every package touched by such a copy out of the shippable tiers until it is re-derived.
+const overrideById = new Map(overrideInventory.map((override) => [override.id, override]));
+const driftedOverridesByPackage = new Map();
+for (const drift of driftedOverrides(overrideInventory, generatedRoot)) {
+  const override = overrideById.get(drift.id);
+  if (override === undefined) continue;
+  const list = driftedOverridesByPackage.get(override.package) ?? [];
+  list.push(drift.id);
+  driftedOverridesByPackage.set(override.package, list);
+}
 const suppliedModules = new Set(
   overrideInventory
     .filter((override) => override.supplies !== undefined)
@@ -192,6 +204,7 @@ const tiers = manifest.packages.map((package_) => {
   const failures = packageHeaders.filter((header) => failedPrefixes.has(header));
   const incompleteOverrides = incompleteOverridesByPackage.get(package_.package) ?? [];
   const behavioralCaveats = behavioralCaveatsByPackage.get(package_.package) ?? [];
+  const driftedOverrides = driftedOverridesByPackage.get(package_.package) ?? [];
   const repairs = [...new Set([...repairedByPrefix].filter(([file]) => file.startsWith(prefix)).map(([, id]) => id))];
   const patches = patchedPackages.get(package_.package) ?? [];
   const deferral = deferred.find((entry) => entry.package === package_.package);
@@ -219,7 +232,8 @@ const tiers = manifest.packages.map((package_) => {
         : 'deferred'
     : package_.emittedModules === 0
       ? 'blocked'
-      : !complete || failures.length > 0 || incompleteOverrides.length > 0 || behavioralCaveats.length > 0
+      : !complete || failures.length > 0 || incompleteOverrides.length > 0 ||
+          behavioralCaveats.length > 0 || driftedOverrides.length > 0
         ? 'partial'
         : headers.length === 0
           ? 'uncompiled'
@@ -232,6 +246,7 @@ const tiers = manifest.packages.map((package_) => {
     emittedModules: package_.emittedModules,
     ...(package_.environment === undefined ? {} : { environment: package_.environment }),
     behavioralCaveats,
+    driftedOverrides,
     failingHeaders: failures,
     generatedHeaders: packageHeaders.length,
     headers: headers.length,
@@ -313,6 +328,15 @@ if (incompleteOverrideRows.length > 0) {
   process.stdout.write('\nnative packages with explicitly incomplete overrides:\n');
   for (const row of incompleteOverrideRows) {
     process.stdout.write(`- ${row.package}: ${row.incompleteOverrides.join(', ')}\n`);
+  }
+}
+const driftedOverrideRows = tiers.filter(
+  (row) => row.tier !== 'n/a' && row.driftedOverrides.length > 0,
+);
+if (driftedOverrideRows.length > 0) {
+  process.stdout.write('\nnative packages shadowed by drifted overrides:\n');
+  for (const row of driftedOverrideRows) {
+    process.stdout.write(`- ${row.package}: ${row.driftedOverrides.join(', ')}\n`);
   }
 }
 const behavioralCaveatRows = tiers.filter(
