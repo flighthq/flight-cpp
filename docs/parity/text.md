@@ -22,44 +22,58 @@ rediscovered package by package.
   is out of scope for this document. Treat those three columns as the current committed inventory,
   not as a reading of the new pin.
 
-The local-coverage columns come from the repository's own sources: which headers each `tests/*.cpp`
-and `examples/**/*.cpp` includes, and which of those are registered as CTest cases in
-`tests/CMakeLists.txt`, `tests/upstream_test_harness.hpp` and `examples/upstream/CMakeLists.txt`.
+The local-coverage column comes from the repository's own CTest registrations. Where a test carries a
+`flight_cpp_package_test_labels` label set, that label is the authority for which package the test
+covers; example coverage is taken from the header each `examples/upstream/*.cpp` port includes.
 
 **No build was run and no whole-SDK operation was performed to produce this document** — it is read
 from the pinned sources and the committed generated tree only.
 
-## Lane definition
+## Reconciliation note
 
-This lane covers these 13 packages:
+Lane membership here was corrected against the approved contract table after an earlier draft
+over-included and under-included packages. The earlier draft treated packages the 3D lane merely
+*consumes* — `materials`, `geometry`, `collision`, `spatial`, `camera`, `camera-controls`,
+`lighting`, `shading`, `scene3d-wgpu`, `gizmo` — as members; they are not, and they are now listed
+only as consumed dependencies (see *Packages this lane consumes but does not own*). The Q0 part 1
+re-pin to `a627849` added no package to either lane: the thirteen packages newly present upstream at
+that revision (`host-capacitor`, `host-electron`, `host-tauri`, `host-web`, `requirement`,
+`requirement-catalog`, `requirement-codegen`, `sdk`, `tool-capture`, `tool-manifest`,
+`tool-pipeline`, `tool-registry`, `vite-plugin-manifest`) are outside both lanes. `textshaper-canvas`
+was removed upstream and is not a member.
 
-`@flighthq/text`, `@flighthq/text-markup`, `@flighthq/textbidi`, `@flighthq/textinput`, `@flighthq/textlayout`, `@flighthq/textsegment`, `@flighthq/textshaper`, `@flighthq/font`, `@flighthq/font-formats`, `@flighthq/glyphatlas`, `@flighthq/bitmapfont`, `@flighthq/bitmapfont-formats`, `@flighthq/bitmaptext`.
+## Lane membership
 
-The TEXT lane is disjoint from the GL+2D lane at this granularity, and every package in it declares
-no `flight.environment`, so all of it is environment-agnostic. `@flighthq/textshaper-canvas` — the
-web Canvas text-shaper backend, the one web-only package this lane used to contain — **no longer
-exists upstream** at the Q0 pin (the package was removed); the committed generated tree still
-carries its headers because it predates the re-pin, so it will disappear when the tree is
-regenerated.
+The lane is **exactly** these 15 packages, per the approved contract table:
+
+`@flighthq/text`, `@flighthq/text-markup`, `@flighthq/textlayout`, `@flighthq/textshaper`, `@flighthq/textbidi`, `@flighthq/textsegment`, `@flighthq/textinput`, `@flighthq/font`, `@flighthq/font-formats`, `@flighthq/glyphatlas`, `@flighthq/bitmapfont`, `@flighthq/bitmapfont-formats`, `@flighthq/bitmaptext`, `@flighthq/intl`, `@flighthq/tokens`.
+
+Fifteen packages: the text pipeline (`text`, `text-markup`, `textlayout`, `textshaper`,
+`textbidi`, `textsegment`, `textinput`), font data and rasterization (`font`, `font-formats`,
+`glyphatlas`, `bitmapfont`, `bitmapfont-formats`, `bitmaptext`), and the two shared-surface packages
+`intl` and `tokens`. `textshaper-canvas` is *not* a member: it was removed upstream at the Q0 pin,
+and it was web-only and never in the applicable list.
 
 ## Summary
 
-| Package | src | emitted | refused | upstream files | upstream `it` | local CTest | web-only |
-| --- | ---: | ---: | ---: | ---: | ---: | :-- | :-- |
-| `text` | 9 | 4 | 5 | 7 | 213 | none |  |
-| `text-markup` | 8 | 6 | 2 | 6 | 68 | none |  |
-| `textbidi` | 8 | 7 | 1 | 7 | 57 | none |  |
-| `textinput` | 6 | 5 | 1 | 4 | 150 | none |  |
-| `textlayout` | 14 | 12 | 2 | 12 | 156 | none |  |
-| `textsegment` | 7 | 5 | 2 | 6 | 40 | none |  |
-| `textshaper` | 10 | 9 | 1 | 8 | 98 | yes |  |
-| `font` | 9 | 8 | 1 | 7 | 63 | yes |  |
-| `font-formats` | 17 | 15 | 2 | 15 | 219 | yes |  |
-| `glyphatlas` | 10 | 7 | 3 | 8 | 63 | none |  |
-| `bitmapfont` | 8 | 7 | 1 | 6 | 50 | none |  |
-| `bitmapfont-formats` | 8 | 6 | 2 | 8 | 90 | none |  |
-| `bitmaptext` | 6 | 3 | 3 | 4 | 81 | none |  |
-| **total** | | | | **98** | **1348** | | |
+| Package | src | emitted | refused | upstream files | upstream `it` | local CTest |
+| --- | ---: | ---: | ---: | ---: | ---: | :-- |
+| `text` | 9 | 4 | 5 | 7 | 213 | none |
+| `text-markup` | 8 | 6 | 2 | 6 | 68 | none |
+| `textlayout` | 14 | 12 | 2 | 12 | 156 | none |
+| `textshaper` | 10 | 9 | 1 | 8 | 98 | yes |
+| `textbidi` | 8 | 7 | 1 | 7 | 57 | none |
+| `textsegment` | 7 | 5 | 2 | 6 | 40 | none |
+| `textinput` | 6 | 5 | 1 | 4 | 150 | none |
+| `font` | 9 | 8 | 1 | 7 | 63 | yes |
+| `font-formats` | 17 | 15 | 2 | 15 | 219 | yes |
+| `glyphatlas` | 10 | 7 | 3 | 8 | 63 | none |
+| `bitmapfont` | 8 | 7 | 1 | 6 | 50 | none |
+| `bitmapfont-formats` | 8 | 6 | 2 | 8 | 90 | none |
+| `bitmaptext` | 6 | 3 | 3 | 4 | 81 | none |
+| `intl` | 9 | 2 | 7 | 7 | 26 | yes |
+| `tokens` | 5 | 2 | 3 | 4 | 46 | none |
+| **total** | | | | **109** | **1420** | |
 
 ## Per-package inventory
 
@@ -104,45 +118,6 @@ Local CTest coverage: **none** — no local test or example includes this packag
 Web-only exclusions:
   - None identified for this package.
 
-### @flighthq/textbidi
-
-Inventory: 8 source modules — 7 emitted, 1 refused.
-
-Upstream tests: 7 files, 57 `it` cases, 79 `expect` assertions.
-
-| Upstream test file | it | Asserted behavior groups | Web-only |
-| --- | ---: | --- | :--: |
-| `src/bidiClassKernel.test.ts` | 6 | compactBidiClassKernel · createCompactBidiClassKernel · explainBidiClassKernel · initializeCompactBidiClassKernel |  |
-| `src/bidiConformance.test.ts` | 3 | bidi conformance fixtures |  |
-| `src/enableTextBidiGuards.test.ts` | 4 | disableTextBidiGuards · enableTextBidiGuards |  |
-| `src/getBidiRuns.test.ts` | 9 | getBidiRuns |  |
-| `src/reorderBidiLine.test.ts` | 6 | reorderBidiLine |  |
-| `src/resolveBidiLevels.test.ts` | 27 | resolveBidiLevels |  |
-| `src/textBidiGuards.test.ts` | 2 | reportTextBidiCompactTableMiss · setTextBidiGuard |  |
-
-Local CTest coverage: **none** — no local test or example includes this package’s headers.
-
-Web-only exclusions:
-  - None identified for this package.
-
-### @flighthq/textinput
-
-Inventory: 6 source modules — 5 emitted, 1 refused.
-
-Upstream tests: 4 files, 150 `it` cases, 230 `expect` assertions.
-
-| Upstream test file | it | Asserted behavior groups | Web-only |
-| --- | ---: | --- | :--: |
-| `src/selectableRichTextManager.test.ts` | 18 | blurSelectableRichText · createSelectableRichTextManager · dispatchSelectableRichTextKeyDown · dispatchSelectableRichTextPointerDown · dispatchSelectableRichTextPointerMove · dispatchSelectableRichTextWheel · focusSelectableRichText · getSelectableRichTextSelectionText · initializeSelectableRichTextManager |  |
-| `src/textInput.test.ts` | 7 | disableTextInput · enableTextInput · getTextInputState · hasTextInput |  |
-| `src/textInputEditing.test.ts` | 105 | appendTextInput · applyTextInputRestriction · canRedoTextInput · canUndoTextInput · clearTextInputHistory · deleteTextInputBackward · deleteTextInputForward · deleteTextInputWordBackward · deleteTextInputWordForward · getTextInputCaretIndex · getTextInputCaretRectangle · getTextInputCharacterIndexAtPoint · getTextInputDisplayText · getTextInputSelectionBeginIndex · getTextInputSelectionEndIndex · getTextInputSelectionRectangles · getTextInputSelectionText · handleTextInputKeyboard · insertTextInput · moveTextInputCaret · moveTextInputCaretByWord · moveTextInputCaretDown · moveTextInputCaretToLineEnd · moveTextInputCaretToLineStart · moveTextInputCaretUp · redoTextInput · replaceSelectedTextInput · replaceTextInput · scrollTextInputCaretIntoView · selectAllTextInput · selectLineAtTextInputIndex · selectWordAtTextInputIndex · setTextInputSelection · undoTextInput |  |
-| `src/textInputManager.test.ts` | 20 | blurTextInput · connectInputToTextInput · createTextInputManager · dispatchTextInput · dispatchTextInputKeyDown · dispatchTextInputPointerDown · dispatchTextInputPointerMove · dispatchTextInputWheel · focusTextInput · initializeTextInputManager |  |
-
-Local CTest coverage: **none** — no local test or example includes this package’s headers.
-
-Web-only exclusions:
-  - None identified for this package.
-
 ### @flighthq/textlayout
 
 Inventory: 14 source modules — 12 emitted, 2 refused.
@@ -169,6 +144,49 @@ Local CTest coverage: **none** — no local test or example includes this packag
 Web-only exclusions:
   - None identified for this package.
 
+### @flighthq/textshaper
+
+Inventory: 10 source modules — 9 emitted, 1 refused.
+
+Upstream tests: 8 files, 98 `it` cases, 173 `expect` assertions.
+
+| Upstream test file | it | Asserted behavior groups | Web-only |
+| --- | ---: | --- | :--: |
+| `src/enableTextShaperGuards.test.ts` | 3 | disableTextShaperGuards · enableTextShaperGuards |  |
+| `src/textShaper.test.ts` | 5 | explainTextShaperOperation · hasTextShaperOperation · measureText |  |
+| `src/textShaperCache.test.ts` | 15 | clearTextShaperCache · createTextShaperCache · disposeTextShaperCache · initializeTextShaperCache · shapeTextRunCached |  |
+| `src/textShaperCluster.test.ts` | 12 | getCaretPositionsForRun · getClusterForIndex · getIndexRangeForCluster |  |
+| `src/textShaperItemize.test.ts` | 11 | itemizeText · shapeTextRuns |  |
+| `src/textShaperPool.test.ts` | 9 | acquireShapedRun · releaseShapedRun · setShapedRunReleaseGuard |  |
+| `src/textShaperRun.test.ts` | 36 | clearShapedRun · createShapedRun · getCodePointForGlyph · getFontMetrics · getFontMetricsInto · getFontUnitScale · getGlyphExtents · getGlyphExtentsBatch · getGlyphExtentsInto · getGlyphIndexForCodePoint · getGlyphName · initializeShapedRun · shapeTextRun · shapeTextRunInto |  |
+| `src/textShaperSignals.test.ts` | 7 | disposeTextShaperSignals · enableTextShaperSignals · getTextShaperSignals · initializeTextShaperSignals |  |
+
+Local CTest coverage: `flight_cpp.generated_textshaper_cache` (`tests/generated_textshaper_cache_test.cpp`; labelled `textshaper`)
+
+Web-only exclusions:
+  - None identified for this package.
+
+### @flighthq/textbidi
+
+Inventory: 8 source modules — 7 emitted, 1 refused.
+
+Upstream tests: 7 files, 57 `it` cases, 79 `expect` assertions.
+
+| Upstream test file | it | Asserted behavior groups | Web-only |
+| --- | ---: | --- | :--: |
+| `src/bidiClassKernel.test.ts` | 6 | compactBidiClassKernel · createCompactBidiClassKernel · explainBidiClassKernel · initializeCompactBidiClassKernel |  |
+| `src/bidiConformance.test.ts` | 3 | bidi conformance fixtures |  |
+| `src/enableTextBidiGuards.test.ts` | 4 | disableTextBidiGuards · enableTextBidiGuards |  |
+| `src/getBidiRuns.test.ts` | 9 | getBidiRuns |  |
+| `src/reorderBidiLine.test.ts` | 6 | reorderBidiLine |  |
+| `src/resolveBidiLevels.test.ts` | 27 | resolveBidiLevels |  |
+| `src/textBidiGuards.test.ts` | 2 | reportTextBidiCompactTableMiss · setTextBidiGuard |  |
+
+Local CTest coverage: **none** — no local test or example includes this package’s headers.
+
+Web-only exclusions:
+  - None identified for this package.
+
 ### @flighthq/textsegment
 
 Inventory: 7 source modules — 5 emitted, 2 refused.
@@ -189,24 +207,20 @@ Local CTest coverage: **none** — no local test or example includes this packag
 Web-only exclusions:
   - None identified for this package.
 
-### @flighthq/textshaper
+### @flighthq/textinput
 
-Inventory: 10 source modules — 9 emitted, 1 refused.
+Inventory: 6 source modules — 5 emitted, 1 refused.
 
-Upstream tests: 8 files, 98 `it` cases, 173 `expect` assertions.
+Upstream tests: 4 files, 150 `it` cases, 230 `expect` assertions.
 
 | Upstream test file | it | Asserted behavior groups | Web-only |
 | --- | ---: | --- | :--: |
-| `src/enableTextShaperGuards.test.ts` | 3 | disableTextShaperGuards · enableTextShaperGuards |  |
-| `src/textShaper.test.ts` | 5 | explainTextShaperOperation · hasTextShaperOperation · measureText |  |
-| `src/textShaperCache.test.ts` | 15 | clearTextShaperCache · createTextShaperCache · disposeTextShaperCache · initializeTextShaperCache · shapeTextRunCached |  |
-| `src/textShaperCluster.test.ts` | 12 | getCaretPositionsForRun · getClusterForIndex · getIndexRangeForCluster |  |
-| `src/textShaperItemize.test.ts` | 11 | itemizeText · shapeTextRuns |  |
-| `src/textShaperPool.test.ts` | 9 | acquireShapedRun · releaseShapedRun · setShapedRunReleaseGuard |  |
-| `src/textShaperRun.test.ts` | 36 | clearShapedRun · createShapedRun · getCodePointForGlyph · getFontMetrics · getFontMetricsInto · getFontUnitScale · getGlyphExtents · getGlyphExtentsBatch · getGlyphExtentsInto · getGlyphIndexForCodePoint · getGlyphName · initializeShapedRun · shapeTextRun · shapeTextRunInto |  |
-| `src/textShaperSignals.test.ts` | 7 | disposeTextShaperSignals · enableTextShaperSignals · getTextShaperSignals · initializeTextShaperSignals |  |
+| `src/selectableRichTextManager.test.ts` | 18 | blurSelectableRichText · createSelectableRichTextManager · dispatchSelectableRichTextKeyDown · dispatchSelectableRichTextPointerDown · dispatchSelectableRichTextPointerMove · dispatchSelectableRichTextWheel · focusSelectableRichText · getSelectableRichTextSelectionText · initializeSelectableRichTextManager |  |
+| `src/textInput.test.ts` | 7 | disableTextInput · enableTextInput · getTextInputState · hasTextInput |  |
+| `src/textInputEditing.test.ts` | 105 | appendTextInput · applyTextInputRestriction · canRedoTextInput · canUndoTextInput · clearTextInputHistory · deleteTextInputBackward · deleteTextInputForward · deleteTextInputWordBackward · deleteTextInputWordForward · getTextInputCaretIndex · getTextInputCaretRectangle · getTextInputCharacterIndexAtPoint · getTextInputDisplayText · getTextInputSelectionBeginIndex · getTextInputSelectionEndIndex · getTextInputSelectionRectangles · getTextInputSelectionText · handleTextInputKeyboard · insertTextInput · moveTextInputCaret · moveTextInputCaretByWord · moveTextInputCaretDown · moveTextInputCaretToLineEnd · moveTextInputCaretToLineStart · moveTextInputCaretUp · redoTextInput · replaceSelectedTextInput · replaceTextInput · scrollTextInputCaretIntoView · selectAllTextInput · selectLineAtTextInputIndex · selectWordAtTextInputIndex · setTextInputSelection · undoTextInput |  |
+| `src/textInputManager.test.ts` | 20 | blurTextInput · connectInputToTextInput · createTextInputManager · dispatchTextInput · dispatchTextInputKeyDown · dispatchTextInputPointerDown · dispatchTextInputPointerMove · dispatchTextInputWheel · focusTextInput · initializeTextInputManager |  |
 
-Local CTest coverage: `tests/generated_textshaper_cache_test.cpp` (flight_cpp.generated_textshaper_cache)
+Local CTest coverage: **none** — no local test or example includes this package’s headers.
 
 Web-only exclusions:
   - None identified for this package.
@@ -227,7 +241,7 @@ Upstream tests: 7 files, 63 `it` cases, 102 `expect` assertions.
 | `src/fontStatus.test.ts` | 5 | isFontLoaded · whenFontsReady |  |
 | `src/glyphOutlineSource.test.ts` | 5 | allocateGlyphRasterizerBackendFromGlyphOutlineSource · initializeGlyphRasterizerBackendFromGlyphOutlineSource |  |
 
-Local CTest coverage: `examples/upstream/sdl_host.cpp` — linked into every `flight_cpp_upstream_*` example; glyph outlines rasterized at runtime (exercised, not asserted)
+Local CTest coverage: `examples/upstream/sdl_host.cpp` — linked into every `flight_cpp_upstream_*` example, which load a system TrueType font and rasterize its glyph outlines at runtime (exercised, not asserted)
 
 Web-only exclusions:
   - None identified for this package.
@@ -256,7 +270,7 @@ Upstream tests: 15 files, 219 `it` cases, 391 `expect` assertions.
 | `src/woff2GlyfTransform.test.ts` | 35 | createWoff2TransformReverser · decodeWoff2Triplet · getWoff2BboxBitmapByteLength · hasWoff2GlyphBbox · isWoff2PointOnCurve · measureWoff2CompositeGlyph · readWoff2GlyfStreams · readWoff2Short · reverseWoff2GlyfTransform |  |
 | `src/woffFont.test.ts` | 15 | readWoffChecksumMismatches · readWoffFont |  |
 
-Local CTest coverage: `examples/upstream/sdl_host.cpp` — reads sfnt directory, loca, metrics, advances, cmap and glyf outlines for the example font (exercised, not asserted)
+Local CTest coverage: `examples/upstream/sdl_host.cpp` — reads the sfnt table directory, loca, metrics, advances, cmap and glyf outlines of that font (exercised, not asserted)
 
 Web-only exclusions:
   - None identified for this package.
@@ -343,9 +357,57 @@ Local CTest coverage: **none** — no local test or example includes this packag
 Web-only exclusions:
   - None identified for this package.
 
+### @flighthq/intl
+
+Inventory: 9 source modules — 2 emitted, 7 refused.
+
+Upstream tests: 7 files, 26 `it` cases, 39 `expect` assertions.
+
+| Upstream test file | it | Asserted behavior groups | Web-only |
+| --- | ---: | --- | :--: |
+| `src/cache.test.ts` | 5 | getCached · getCacheKey |  |
+| `src/collator.test.ts` | 3 | compareStrings · sortStrings |  |
+| `src/datetime.test.ts` | 5 | formatDate · formatDateTime · formatTime |  |
+| `src/list.test.ts` | 2 | formatList |  |
+| `src/number.test.ts` | 7 | formatCompactNumber · formatCurrency · formatNumber · formatPercent · formatUnit |  |
+| `src/plural.test.ts` | 2 | selectOrdinalCategory · selectPluralCategory |  |
+| `src/relativeTime.test.ts` | 2 | formatRelativeTime |  |
+
+Local CTest coverage: `flight_cpp.generated_intl_cache` (`tests/generated_intl_cache_test.cpp`; labelled `intl`); `flight_cpp.intl_types` (`tests/intl_type_test.cpp`) covers the runtime `flight::intl` surface (`flight/intl.hpp`), not this package’s generated headers
+
+Note: 7 of `intl`'s 9 source modules are refused at the committed tree, so the package is far from complete regardless of test coverage.
+
+Web-only exclusions:
+  - None identified for this package.
+
+### @flighthq/tokens
+
+Inventory: 5 source modules — 2 emitted, 3 refused.
+
+Upstream tests: 4 files, 46 `it` cases, 83 `expect` assertions.
+
+| Upstream test file | it | Asserted behavior groups | Web-only |
+| --- | ---: | --- | :--: |
+| `src/flightDocumentSceneTokenPipeline.test.ts` | 3 | flightDocumentSceneTokenPipeline |  |
+| `src/flightDocumentSceneTokens.test.ts` | 20 | createFlightDocumentTokenResolverRegistry · explainFlightDocumentSceneTokenResolution · initializeFlightDocumentTokenResolverRegistry · resolveFlightDocumentSceneTokens |  |
+| `src/flightDocumentTokenReference.test.ts` | 10 | INVALID_FLIGHT_DOCUMENT_TOKEN_VALUE · isFlightDocumentTokenReference · readFlightDocumentTokenReferenceKey · substituteFlightDocumentTokenValue |  |
+| `src/substituteFlightDocumentSceneTokens.test.ts` | 13 | explainFlightDocumentSceneTokenSubstitution · substituteFlightDocumentSceneTokens |  |
+
+Local CTest coverage: **none** — no local test or example includes this package’s headers.
+
+Web-only exclusions:
+  - None identified for this package.
+
+## Packages this lane consumes but does not own
+
+Derived from the emitted headers of the fifteen lane packages: `bitmap`, `color`, `compression`,
+`entity`, `geometry`, `importdiagnostics`, `log`, `node`, `path`, `signals`, `texture`,
+`textureatlas`, `types`, `xml`. These are `#include` dependencies, not members: each belongs to
+whichever lane owns it.
+
 ## Packages adjacent to this lane but out of scope
 
-Owned by other lanes and deliberately not inventoried here: `textureatlas`, `textureatlas-formats`
-(atlas resource plumbing, GL+2D), `layout` (UI layout, core), `image` / `image-codec` (core),
-`render`, `scene2d*`, `gui`. `font-formats` and `font` are inventoried here even though the GL/2D
-examples consume them through the SDL host.
+`textureatlas`, `textureatlas-formats` (atlas resource plumbing, GL+2D), `layout` (UI layout,
+core), `image` / `image-codec` (core), `render`, `scene2d*`, `gui`. `font` and `font-formats` are
+members here even though the GL/2D examples consume them through the SDL host.
+
