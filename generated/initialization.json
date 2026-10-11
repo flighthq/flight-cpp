@@ -98913,7 +98913,7 @@
             "packageName": "@flighthq/clock",
             "source": "packages/clock/src/contract.ts"
           },
-          "specifier": "./clock",
+          "specifier": "./clock.ts",
           "target": {
             "name": "Clock",
             "packageName": "@flighthq/clock",
@@ -98927,7 +98927,7 @@
             "packageName": "@flighthq/clock",
             "source": "packages/clock/src/contract.ts"
           },
-          "specifier": "./clockSignals",
+          "specifier": "./clockSignals.ts",
           "target": {
             "name": "ClockSignals",
             "packageName": "@flighthq/clock",
@@ -100733,7 +100733,7 @@
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/contract.ts"
           },
-          "specifier": "./spring",
+          "specifier": "./spring.ts",
           "target": {
             "name": "Spring",
             "packageName": "@flighthq/spring",
@@ -100747,7 +100747,7 @@
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/contract.ts"
           },
-          "specifier": "./spring2D",
+          "specifier": "./spring2D.ts",
           "target": {
             "name": "Spring2D",
             "packageName": "@flighthq/spring",
@@ -100761,7 +100761,7 @@
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/contract.ts"
           },
-          "specifier": "./spring3D",
+          "specifier": "./spring3D.ts",
           "target": {
             "name": "Spring3D",
             "packageName": "@flighthq/spring",
@@ -100775,7 +100775,7 @@
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/contract.ts"
           },
-          "specifier": "./springConfig",
+          "specifier": "./springConfig.ts",
           "target": {
             "name": "SpringConfig",
             "packageName": "@flighthq/spring",
@@ -100800,7 +100800,7 @@
             "packageName": "@flighthq/timeline",
             "source": "packages/timeline/src/contract.ts"
           },
-          "specifier": "./timeline",
+          "specifier": "./timeline.ts",
           "target": {
             "name": "Timeline",
             "packageName": "@flighthq/timeline",
@@ -168797,7 +168797,7 @@
             "packageName": "@flighthq/clock",
             "source": "packages/clock/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/clock",
@@ -169553,7 +169553,7 @@
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/spring",
@@ -169588,7 +169588,7 @@
             "packageName": "@flighthq/timeline",
             "source": "packages/timeline/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/timeline",
@@ -300840,7 +300840,7 @@
             "line": 7,
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/spring2D.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring2D.ts\",382]",
+            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring2D.ts\",385]",
             "kind": "function",
             "name": "addSpringImpulse2D",
             "scope": "module",
@@ -300861,7 +300861,7 @@
             "line": 12,
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/spring2D.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring2D.ts\",572]",
+            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring2D.ts\",575]",
             "kind": "function",
             "name": "createSpring2D",
             "scope": "module",
@@ -300882,7 +300882,7 @@
             "line": 25,
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/spring2D.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring2D.ts\",968]",
+            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring2D.ts\",971]",
             "kind": "function",
             "name": "initializeSpring2D",
             "scope": "module",
@@ -300903,7 +300903,7 @@
             "line": 38,
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/spring2D.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring2D.ts\",1432]",
+            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring2D.ts\",1435]",
             "kind": "function",
             "name": "isSpring2DSettled",
             "scope": "module",
@@ -300924,7 +300924,7 @@
             "line": 53,
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/spring2D.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring2D.ts\",1964]",
+            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring2D.ts\",1967]",
             "kind": "function",
             "name": "resetSpring2D",
             "scope": "module",
@@ -300945,7 +300945,7 @@
             "line": 67,
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/spring2D.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring2D.ts\",2455]",
+            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring2D.ts\",2458]",
             "kind": "function",
             "name": "updateSpring2D",
             "scope": "module",
@@ -300967,7 +300967,7 @@
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/spring2D.ts"
           },
-          "specifier": "./spring",
+          "specifier": "./spring.ts",
           "target": {
             "name": "Spring",
             "packageName": "@flighthq/spring",
@@ -301225,7 +301225,7 @@
             "line": 7,
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/spring3D.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring3D.ts\",387]",
+            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring3D.ts\",390]",
             "kind": "function",
             "name": "addSpringImpulse3D",
             "scope": "module",
@@ -301246,7 +301246,7 @@
             "line": 13,
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/spring3D.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring3D.ts\",639]",
+            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring3D.ts\",642]",
             "kind": "function",
             "name": "createSpring3D",
             "scope": "module",
@@ -301267,7 +301267,7 @@
             "line": 28,
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/spring3D.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring3D.ts\",1097]",
+            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring3D.ts\",1100]",
             "kind": "function",
             "name": "initializeSpring3D",
             "scope": "module",
@@ -301288,7 +301288,7 @@
             "line": 44,
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/spring3D.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring3D.ts\",1624]",
+            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring3D.ts\",1627]",
             "kind": "function",
             "name": "isSpring3DSettled",
             "scope": "module",
@@ -301309,7 +301309,7 @@
             "line": 61,
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/spring3D.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring3D.ts\",2258]",
+            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring3D.ts\",2261]",
             "kind": "function",
             "name": "resetSpring3D",
             "scope": "module",
@@ -301330,7 +301330,7 @@
             "line": 77,
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/spring3D.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring3D.ts\",2771]",
+            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/spring3D.ts\",2774]",
             "kind": "function",
             "name": "updateSpring3D",
             "scope": "module",
@@ -301352,7 +301352,7 @@
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/spring3D.ts"
           },
-          "specifier": "./spring",
+          "specifier": "./spring.ts",
           "target": {
             "name": "Spring",
             "packageName": "@flighthq/spring",
@@ -301424,63 +301424,11 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
+            "fingerprint": "sha256:fcd875d8feb1f6816391d74a447396c4b6442967ed287a8a08c4e580a96ea5a0",
             "line": 1,
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/springConfig.ts",
             "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",9]",
-            "kind": "import",
-            "name": "allocateEntity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "allocateEntity",
-            "kind": "dependency",
-            "module": {
-              "name": "Entity",
-              "packageName": "@flighthq/entity",
-              "source": "packages/entity/src/entity.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 26,
-            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
-            "line": 1,
-            "packageName": "@flighthq/spring",
-            "source": "packages/spring/src/springConfig.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",25]",
-            "kind": "import",
-            "name": "finishEntity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "finishEntity",
-            "kind": "dependency",
-            "module": {
-              "name": "Entity",
-              "packageName": "@flighthq/entity",
-              "source": "packages/entity/src/entity.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:fcd875d8feb1f6816391d74a447396c4b6442967ed287a8a08c4e580a96ea5a0",
-            "line": 2,
-            "packageName": "@flighthq/spring",
-            "source": "packages/spring/src/springConfig.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",83]",
             "kind": "import",
             "name": "TAU",
             "scope": "module",
@@ -301503,10 +301451,10 @@
           "binding": {
             "column": 14,
             "fingerprint": "sha256:5883453476452432782c31ba83459e26c47c77af8cb4f760e09d790e743d19fe",
-            "line": 7,
+            "line": 6,
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/springConfig.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",391]",
+            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",320]",
             "kind": "variable",
             "name": "SpringPresetBouncy",
             "scope": "module",
@@ -301524,10 +301472,10 @@
           "binding": {
             "column": 14,
             "fingerprint": "sha256:bc305f66972dc3f5cb7b1b116c96d44e0d730c88cfeb1e0cce9a6b86b76c11e0",
-            "line": 17,
+            "line": 9,
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/springConfig.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",705]",
+            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",520]",
             "kind": "variable",
             "name": "SpringPresetGentle",
             "scope": "module",
@@ -301545,10 +301493,10 @@
           "binding": {
             "column": 14,
             "fingerprint": "sha256:3aaf1e9197cfe1430e8cf3c17c90da85fe8cb037e5f9a129e7a2738cb1e66ba1",
-            "line": 27,
+            "line": 12,
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/springConfig.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",1008]",
+            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",709]",
             "kind": "variable",
             "name": "SpringPresetStiff",
             "scope": "module",
@@ -301566,10 +301514,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:2f7556f0d5177b29566391e040ada0b424250be3bf90cc01cd48331b8e99e567",
-            "line": 36,
+            "line": 17,
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/springConfig.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",1233]",
+            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",1108]",
             "kind": "function",
             "name": "createSpringConfig",
             "scope": "module",
@@ -301587,54 +301535,12 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:b7e4fac5b67a0e2b3ea98af712031e7dd0d268b6cac9d23884a519e9b656f814",
-            "line": 42,
+            "line": 28,
             "packageName": "@flighthq/spring",
             "source": "packages/spring/src/springConfig.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",1458]",
+            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",1624]",
             "kind": "function",
             "name": "createSpringConfigFromPhysical",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:4bec31fea74e0570f4f74856c0c31881b4269ddb5b68951fd2e2a592423f7997",
-            "line": 51,
-            "packageName": "@flighthq/spring",
-            "source": "packages/spring/src/springConfig.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",2007]",
-            "kind": "function",
-            "name": "initializeSpringConfig",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:8a63dffaa6fba77e12a776740dad81e33c5012f7433dcf0ceeeace79564aeb4c",
-            "line": 64,
-            "packageName": "@flighthq/spring",
-            "source": "packages/spring/src/springConfig.ts",
-            "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",2554]",
-            "kind": "function",
-            "name": "initializeSpringConfigFromPhysical",
             "scope": "module",
             "space": "value"
           },
@@ -301647,20 +301553,6 @@
         }
       ],
       "dependencies": [
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "SpringConfig",
-            "packageName": "@flighthq/spring",
-            "source": "packages/spring/src/springConfig.ts"
-          },
-          "specifier": "@flighthq/entity/contract",
-          "target": {
-            "name": "Entity",
-            "packageName": "@flighthq/entity",
-            "source": "packages/entity/src/entity.ts"
-          }
-        },
         {
           "evaluation": "runtime",
           "importer": {
@@ -301683,14 +301575,13 @@
             "source": "packages/spring/src/springConfig.ts"
           },
           "importedNames": [
-            "Entity",
-            "EntityConstruction"
+            "NonEntityCreateResult"
           ],
           "specifier": "@flighthq/types/contract",
           "target": {
-            "name": "Entity",
+            "name": "NonEntityCreateResult",
             "packageName": "@flighthq/types",
-            "source": "packages/types/src/Entity.ts"
+            "source": "packages/types/src/NonEntityCreateResult.ts"
           }
         },
         {
@@ -301723,10 +301614,10 @@
             {
               "column": 14,
               "fingerprint": "sha256:5883453476452432782c31ba83459e26c47c77af8cb4f760e09d790e743d19fe",
-              "line": 7,
+              "line": 6,
               "packageName": "@flighthq/spring",
               "source": "packages/spring/src/springConfig.ts",
-              "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",391]",
+              "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",320]",
               "kind": "variable",
               "name": "SpringPresetBouncy",
               "scope": "module",
@@ -301746,10 +301637,10 @@
             {
               "column": 14,
               "fingerprint": "sha256:bc305f66972dc3f5cb7b1b116c96d44e0d730c88cfeb1e0cce9a6b86b76c11e0",
-              "line": 17,
+              "line": 9,
               "packageName": "@flighthq/spring",
               "source": "packages/spring/src/springConfig.ts",
-              "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",705]",
+              "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",520]",
               "kind": "variable",
               "name": "SpringPresetGentle",
               "scope": "module",
@@ -301769,10 +301660,10 @@
             {
               "column": 14,
               "fingerprint": "sha256:3aaf1e9197cfe1430e8cf3c17c90da85fe8cb037e5f9a129e7a2738cb1e66ba1",
-              "line": 27,
+              "line": 12,
               "packageName": "@flighthq/spring",
               "source": "packages/spring/src/springConfig.ts",
-              "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",1008]",
+              "id": "binding:[\"@flighthq/spring\",\"packages/spring/src/springConfig.ts\",709]",
               "kind": "variable",
               "name": "SpringPresetStiff",
               "scope": "module",
