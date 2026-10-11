@@ -313,6 +313,10 @@ inline void get_texture_like_uv_matrix(Matrix3Like out, TextureLike texture) {
   get_texture_uv_matrix(out, uv_transform);
 }
 
+inline void get_texture_uv_matrix(Matrix3Like out, TextureLike texture) {
+  get_texture_like_uv_matrix(out, std::move(texture));
+}
+
 inline void get_texture_inverse_uv_matrix(Matrix3Like out, TextureLike texture) {
   // TextureLike is a variant, not TextureUvTransform; extract the UV fields into a temporary.
   auto uv_transform = flight::make_ref<TextureUvTransform>(TextureUvTransform{
@@ -685,13 +689,13 @@ inline void attach_texture_to_resource(Texture texture, TextureResource resource
 }
 
 using CreateTexture2DVariantOptions =
-    flight::types::source_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_944b02899c0c1ddd;
+    flight::types::color_space_version_source_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_5a93a3871f953593;
 using CreateTexture3DVariantOptions =
-    flight::types::source_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_5834e12080da0d2c;
+    flight::types::color_space_version_source_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_eae08baefdaeada2;
 using CreateTexture2DArrayVariantOptions =
-    flight::types::sources_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_255ec905d3c71aa1;
+    flight::types::color_space_version_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_sources_dimension_resource_b96956d30cc649c7;
 using CreateTextureCubeVariantOptions =
-    flight::types::sources_version_color_space_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_3ee2dba981682dfd;
+    flight::types::color_space_version_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_sources_dimension_resource_8f80a98cd173b278;
 
 template <typename Options>
 inline flight::Ref<color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_2af05f464e1f33ea>

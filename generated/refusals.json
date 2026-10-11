@@ -8324,13 +8324,13 @@
       "code": "dependency-refused",
       "module": "packages/texture/src/contract.ts",
       "package": "@flighthq/texture",
-      "reason": "dependency ./cubeTexture was refused for @flighthq/texture/packages/texture/src/cubeTexture.ts",
+      "reason": "dependency ./cubeTexture.ts was refused for @flighthq/texture/packages/texture/src/cubeTexture.ts",
       "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 15,
+      "line": 11,
       "module": "packages/texture/src/cubeTexture.ts",
       "package": "@flighthq/texture",
       "reason": "cpp emission failed for @flighthq/types/packages/types/src/Texture.ts: contextual union value type flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::CubeTexture>>> is not a represented runtime domain: the value's type resembles an alternative but is not the declaration it names. Pass the declared type, or declare the destination union over the type the value has",
@@ -8340,7 +8340,7 @@
       "code": "dependency-refused",
       "module": "packages/texture/src/index.ts",
       "package": "@flighthq/texture",
-      "reason": "dependency ./contract was refused for @flighthq/texture/packages/texture/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/texture/packages/texture/src/contract.ts",
       "stage": "dependency"
     },
     {

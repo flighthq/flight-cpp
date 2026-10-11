@@ -1,4 +1,4 @@
-#include <flight/texture/texture.hpp>
+#include <flight/texture/video_texture.hpp>
 
 #include <iostream>
 #include <variant>
@@ -99,7 +99,6 @@ int main() {
   const auto cube = texture::create_texture(cube_options);
   check(cube->dimension == flight::String("cube") && cube->sources.size() == 6,
         "cube construction supplies six absent faces by default");
-
   const auto source_view = flight::make_ref<types::Texture2D>();
   source_view->color_space = flight::String("linear");
   source_view->flip_x = true;
@@ -122,6 +121,43 @@ int main() {
         "clone deep-copies both UV vectors");
   check(clone->color_space == flight::String("linear") && clone->version == 9.0,
         "clone preserves common scalar state");
+
+  const auto host_video = flight::make_ref<types::HostVideoCapability>();
+  host_video->get_width = [](types::HostImageSource source) { return source.video_width(); };
+  host_video->get_height = [](types::HostImageSource source) { return source.video_height(); };
+  host_video->is_ready = [](types::HostImageSource source) { return source.ready_state() >= 2.0; };
+  const auto video_source = flight::make_ref<types::VideoResource>();
+  video_source->element = flight::host_sdl::ImageSource::rgba8(
+      2,
+      1,
+      flight::Uint8ClampedArray{255, 0, 0, 255, 0, 255, 0, 255},
+      flight::host_sdl::ImageSourceKind::video_element);
+  const auto video_options = flight::make_ref<types::CreateTexture2DOptions>();
+  video_options->flip_x = true;
+  video_options->uv_rotation = 0.5;
+  const auto video = texture::create_video_texture(host_video, video_source, video_options);
+  types::TextureLike video_union{
+      std::in_place_type<flight::Ref<types::Texture2D>>, video};
+  const auto video_image = texture::get_video_image(video_union);
+  check(video->flip_x && video->uv_rotation == 0.5,
+        "video construction retains supplied 2D sampling options");
+  check(video_image.has_value() && (*video_image)->source == video_source->element.value(),
+        "video construction retains the borrowed host source identity");
+  check(texture::get_video_texture_width(host_video, video_union) == 2.0 &&
+            texture::get_video_texture_height(host_video, video_union) == 1.0,
+        "video dimensions come from the host capability");
+  check(texture::is_video_texture_frame_ready(host_video, video_union),
+        "a decoded non-empty host frame is ready");
+  check(texture::advance_video_texture(host_video, video_union) == 0.0 &&
+            video->version == 0.0 && (*video_image)->version == 0.0,
+        "the first video advance wraps the all-ones revision to zero");
+  texture::reset_video_texture_frame(video_union);
+  check(video->version == texture::initial_video_version &&
+            (*video_image)->version == texture::initial_video_version,
+        "video reset restores both shared revisions");
+  texture::destroy_video_texture(video);
+  check(!video->source.has_value() && video->version == texture::initial_video_version,
+        "video destruction detaches only the borrowed image source");
 
   if (failures == 0) std::cout << "texture construction and cloning match Flight\n";
   return failures == 0 ? 0 : 1;

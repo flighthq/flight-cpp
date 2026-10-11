@@ -1882,6 +1882,23 @@
       "appliedOn": "2026-10-09"
     },
     {
+      "id": "texture-direct-cube-face-storage",
+      "dependency": "flight",
+      "patch": "texture-direct-cube-face-storage.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/texture/src/cubeTexture.ts",
+      "package": "@flighthq/texture",
+      "answers": "diagnostic",
+      "refusal": "a private helper returns the TextureSourceCubeFaces value alias through Readonly<CubeTexture>, so the emitter spells its return as flight::Ref<Array<...>> even though Ref preserves this value carrier; after direct access, Array.every synthesizes the same TextureSourceValue alternatives in a different std::variant order than the tuple element carrier",
+      "rewrite": "Removes the private identity helper, reads the same declared sources field directly from the already-exact CubeTexture owner, and spells the six-face completeness check as fixed tuple-index tests.",
+      "equivalence": "The removed helper returned texture.sources without branching, copying, mutation, or any other effect. Each caller evaluates the identical cube.sources field once and retains the exact same tuple reference. TextureSourceCubeFaces always has six entries, so the fixed conjunction visits indices zero through five and stops at the first null exactly as Array.every did. Identity checks, face mutation, and version updates are unchanged.",
+      "verification": "The complete Flight source-patch stack must apply and reverse cleanly, focused texture generation must omit getCubeSources, and the package-scoped nine-header native syntax gate must compile with at most two jobs.",
+      "whyNotUpstreamFirst": "Direct field access and fixed tuple checks are target-neutral and make the value ownership explicit, but they are pinned here while the native backend incorrectly adds reference syntax around a non-reference Array alias and independently reorders the same union at the callback boundary.",
+      "unblocks": "Makes cube_texture.hpp and both texture barrels compile without retaining an invalid value-array reference helper or an incompatible callback carrier; isCubeTextureComplete remains an explicit nullable-presence refusal rather than a wrong-but-emitted function.",
+      "expires": "when Flight removes the identity helper and uses fixed tuple checks upstream, or flight-compiler preserves value carriers through named Array aliases and canonicalizes union alternative order across callback synthesis.",
+      "appliedOn": "2026-10-11"
+    },
+    {
       "id": "texture-default-2d-narrowing",
       "dependency": "flight",
       "patch": "texture-default-2d-narrowing.patch",

@@ -44,6 +44,8 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 
 ## Active requests without a compiler patch
 
+- [Union carriers need canonical alternative order](canonical-union-carrier-order.md) — identical
+  named unions currently become incompatible `std::variant` types at array callback boundaries.
 - [Nullable and optional storage needs two absence channels](nullable-optional-presence.md) — one
   `std::optional` cannot distinguish source `null` from absent `undefined`.
 - [Move-only structural assertions should not require derived cells](move-only-structural-assertions.md) —
@@ -57,3 +59,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [Animation track: number-carrier discrimination and optional-easing
   lowering](animation-track-number-carrier-and-optional-easing.md) — `animationTrack.ts` emits a
   PARTIAL header missing five declarations, and its eight dependents are refused with it.
+- [Readonly structural owners must enter their exact nominal union arm](readonly-structural-owner-to-nominal-union.md) —
+  a retained concrete owner is not recovered when its readonly row enters `TextureLike`.
+- [Flattened interface refinements need an identity-preserving carrier](flattened-interface-refinement-identity.md) —
+  independent emitted structs cannot represent a `Texture2D` → `RenderTexture` refinement.
+- [Named union shapes must survive `Partial<T>`](named-union-partial-shape.md) — the emitter
+  refuses a mapped partial even though every concrete union arm has a closed object shape.

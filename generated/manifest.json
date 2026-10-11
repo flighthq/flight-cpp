@@ -5595,6 +5595,13 @@
     },
     {
       "dependency": "flight",
+      "digest": "8a6603ea5873e2ceaf7a0d3230146eef84f71ad209b24f997fe569e4f5b2184c",
+      "id": "texture-direct-cube-face-storage",
+      "module": "packages/texture/src/cubeTexture.ts",
+      "package": "@flighthq/texture"
+    },
+    {
+      "dependency": "flight",
       "digest": "756acaec3bd9c4cd5d54e4b70923c2b6052bb4d6a15cbbb555b3e68feb4cbf1f",
       "id": "texture-default-2d-narrowing",
       "module": "packages/texture/src/texture.ts",
@@ -5602,7 +5609,7 @@
     },
     {
       "dependency": "flight",
-      "digest": "54e73b1f963b7f7ec690dc1710084deb44545d16122c41165244d5ef84b24497",
+      "digest": "6ec331ada72e0dee4e595962272fe84a78335d557c57d9ad44acc7d0fd024d3e",
       "id": "texture-named-dimension-options",
       "module": "packages/types/src/CreateTextureOptions.ts",
       "package": "@flighthq/texture"
@@ -7924,7 +7931,7 @@
       "package": "@flighthq/texture",
       "refusedModules": 3,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 9

@@ -1094,6 +1094,14 @@
       "namespace": "flight::types",
       "symbols": [
         {
+          "include": "flight/types/bitmap.hpp",
+          "name": "Bitmap"
+        },
+        {
+          "include": "flight/types/compressed_image_resource.hpp",
+          "name": "CompressedImageResource"
+        },
+        {
           "include": "flight/types/create_render_texture_options.hpp",
           "name": "CreateRenderTextureOptions"
         },
@@ -1112,6 +1120,10 @@
         {
           "include": "flight/types/entity.hpp",
           "name": "EntityConstruction"
+        },
+        {
+          "include": "flight/types/external_texture.hpp",
+          "name": "ExternalTexture"
         },
         {
           "include": "flight/types/image_resource_reference.hpp",
@@ -1207,7 +1219,7 @@
         }
       ],
       "diagnostic": "'CreateRenderTextureOptions' was not declared in this scope; did you mean 'flight::types::CreateRenderTextureOptions'?",
-      "defect": "The emitter writes 26 name(s) owned by flight::types unqualified inside namespace flight::texture, and without the headers that define them. Declared as one entry rather than one per name because this is a single emitter defect that produces names by the dozen per package; each name is still enumerated, carries its own defining header, and is introduced only into the files that use it unqualified.\\n\\nMEASURED GAIN TODAY: ZERO headers. Applied to a scratch tree and iterated to convergence, flight::texture and its two sibling packages stayed at 8 of 32 headers compiling. The chain terminates on twelve names with no declaration anywhere in the tree -- functions the compiler refused to generate -- so these packages need hand-written overrides as well. It is declared anyway because the names are necessary though not sufficient, because a using-declaration has no wrong-but-compiling outcome, and because otherwise whoever writes those overrides rediscovers all 56 names first. See docs/generation-state.md.",
+      "defect": "The emitter writes 29 name(s) owned by flight::types unqualified inside namespace flight::texture, and without the headers that define them. Declared as one entry rather than one per name because this is a single emitter defect that produces names by the dozen per package; each name is still enumerated, carries its own defining header, and is introduced only into the files that use it unqualified.\\n\\nMEASURED GAIN TODAY: the three concrete TextureSourceValue arms added at a627849 close cube_texture.hpp and its two barrel headers after direct tuple access exposes the callback signature. The remaining names are necessary even where refused behavioral declarations still require overrides. See docs/generation-state.md.",
       "expectedWhen": "always",
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
