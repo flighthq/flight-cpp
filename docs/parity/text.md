@@ -349,4 +349,3 @@ Owned by other lanes and deliberately not inventoried here: `textureatlas`, `tex
 (atlas resource plumbing, GL+2D), `layout` (UI layout, core), `image` / `image-codec` (core),
 `render`, `scene2d*`, `gui`. `font-formats` and `font` are inventoried here even though the GL/2D
 examples consume them through the SDL host.
-
