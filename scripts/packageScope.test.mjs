@@ -179,7 +179,15 @@ describe('scoped merge', () => {
     const committed = copyTree('committed');
     const candidate = copyTree('candidate');
     const target = '@flighthq/math';
-    const [kept, dropped] = packageHeaders(candidate, target);
+    // The dropped header must be one no other package includes, or the move is (rightly) refused.
+    const includedElsewhere = (header) =>
+      packageHeaders(candidate, '@flighthq/types')
+        .concat(...packages.filter((name) => name !== target).map((name) => packageHeaders(candidate, name)))
+        .some((other) => readFileSync(path.join(candidate, 'include', other), 'utf8').includes(`<${header}>`));
+    const headers = packageHeaders(candidate, target);
+    const dropped = headers.find((header) => !header.endsWith('_internal_index.hpp') && !includedElsewhere(header));
+    const kept = headers.find((header) => header !== dropped);
+    assert.ok(dropped !== undefined, 'math has a header no other package includes');
     // A candidate that changes one header, drops another, adds a third and refuses one more module --
     // and ALSO differs in a package outside the request, which must be ignored.
     appendTo(candidate, `include/${kept}`, '\n// candidate change\n');
@@ -284,6 +292,22 @@ describe('scoped merge', () => {
     // A dependency's group precedes its importer's.
     const position = (source) => merged.groups.findIndex((group) => group.modules.some((module) => module.source === source));
     assert.ok(position('packages/math/src/angle.ts') < position('packages/math/src/added.ts'));
+  });
+
+  test('a package that drops a module another package still uses cannot move alone', () => {
+    const committed = copyTree('orphan-committed');
+    const candidate = copyTree('orphan-candidate');
+    const target = '@flighthq/math';
+    // camera-controls imports math's angle module; a candidate without it would strand that import.
+    editJson(candidate, 'initialization.json', (value) => {
+      value.entries = value.entries.filter((entry) => !(entry.packageName === target && entry.source.endsWith('/angle.ts')));
+      value.modules = value.modules.filter((row) => !(row.module.packageName === target && row.module.source.endsWith('/angle.ts')));
+    });
+    rmSync(path.join(candidate, 'include', 'flight', 'math', 'angle.hpp'));
+    assert.throws(
+      () => planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName: target }),
+      /cannot move alone.*@flighthq\/camera-controls/su,
+    );
   });
 
   test('a row key absent from the shared table is reported, not silently written', () => {

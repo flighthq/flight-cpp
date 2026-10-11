@@ -68,7 +68,13 @@ try {
     process.exit(generation.status ?? 1);
   }
 
-  const plan = planPackageMerge({ candidateRoot, committedRoot: generatedRoot, packageName });
+  let plan;
+  try {
+    plan = planPackageMerge({ candidateRoot, committedRoot: generatedRoot, packageName });
+  } catch (error) {
+    process.stderr.write(`pkg:generate: ${error.message}\n${portable(path.relative(root, generatedRoot))} is untouched.\n`);
+    process.exit(1);
+  }
   const relative = portable(path.relative(root, generatedRoot));
   if (check) {
     if (plan.writes.size === 0) {

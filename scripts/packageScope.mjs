@@ -252,6 +252,9 @@ export function planPackageMerge({ candidateRoot, committedRoot, packageName }) 
   const candidateProvenance = rowProvenance(candidateManifest, {});
   const candidateRow = candidateManifest.packages.find((row) => row.package === packageName);
   if (candidateRow === undefined) throw new Error(`The candidate inventory has no row for ${packageName}.`);
+  // A package that drops a module or header another package still uses cannot move alone: the dependent
+  // row stays at its own revision, and would be left importing something that no longer exists.
+  assertNoOrphanedDependents({ candidateRoot, committedRoot, packageName });
   // Closure members this run regenerated but does NOT write keep their committed revision. When that
   // differs, the package was generated against dependencies newer than the ones it will sit beside.
   const warnings = [];
@@ -448,6 +451,57 @@ export function planPackageMerge({ candidateRoot, committedRoot, packageName }) 
     warnings,
     writes,
   };
+}
+
+function assertNoOrphanedDependents({ candidateRoot, committedRoot, packageName }) {
+  const read = (root, file) => JSON.parse(readFileSync(path.join(root, file), 'utf8'));
+  const key = (module) => `${module.packageName}\0${module.source}`;
+  const owned = (root) =>
+    new Set(
+      read(root, 'initialization.json')
+        .modules.filter((record) => record.module.packageName === packageName)
+        .map((record) => key(record.module)),
+    );
+  // Only what THIS move removes. A reference that already dangles in the committed tree is earlier damage;
+  // refusing on it would block every later move of the package without being about this one.
+  const candidateModules = owned(candidateRoot);
+  const committedModules = owned(committedRoot);
+  const removed = (target) => committedModules.has(key(target)) && !candidateModules.has(key(target));
+  const orphans = new Map();
+  const note = (dependent, missing) => {
+    const list = orphans.get(dependent) ?? new Set();
+    list.add(missing);
+    orphans.set(dependent, list);
+  };
+  for (const record of read(committedRoot, 'initialization.json').modules) {
+    if (record.module.packageName === packageName) continue;
+    for (const dependency of record.dependencies) {
+      if (dependency.target.packageName === packageName && removed(dependency.target)) {
+        note(record.module.packageName, dependency.target.source);
+      }
+    }
+  }
+  const prefix = includePrefixOf(packageName);
+  const candidateHeaders = new Set(includeFilesUnder(candidateRoot, prefix));
+  const removedHeaders = new Set(includeFilesUnder(committedRoot, prefix).filter((header) => !candidateHeaders.has(header)));
+  if (removedHeaders.size > 0) {
+    for (const header of includeFilesUnder(committedRoot, '')) {
+      if (header.startsWith(prefix)) continue;
+      const text = readFileSync(path.join(committedRoot, 'include', header), 'utf8');
+      for (const [, included] of text.matchAll(/^#include [<"]([^>"]+)[>"]/gmu)) {
+        if (removedHeaders.has(included)) note(`@flighthq/${header.split('/')[1].replaceAll('_', '-')}`, included);
+      }
+    }
+  }
+  if (orphans.size === 0) return;
+  const detail = [...orphans]
+    .sort(([left], [right]) => compareText(left, right))
+    .map(([dependent, missing]) => `${dependent} (uses ${[...missing].sort(compareText).join(', ')})`);
+  throw new Error(
+    `${packageName} cannot move alone: at the candidate revision it no longer has modules or headers that other packages ` +
+      `still use at their recorded revision: ${detail.join('; ')}. Move them together, in the same change, or leave ` +
+      `${packageName} where it is.`,
+  );
 }
 
 // Mirrors flight-compiler's createCompilerModuleEvaluationGroups (packages/compiler-module/src/
