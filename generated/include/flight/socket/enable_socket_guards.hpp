@@ -25,11 +25,7 @@ namespace flight::socket {
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SOCKET_OPERATION_REASON_SOCKET_7B279469BA8AEDD5
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SOCKET_OPERATION_REASON_SOCKET_7B279469BA8AEDD5
-struct operation_reason_socket_7b279469ba8aedd5 : public flight::ReferenceEnabled {
-  flight::String operation;
-  flight::String reason;
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Socket>>>> socket;
-};
+using operation_reason_socket_7b279469ba8aedd5 = flight::types::operation_reason_socket_7b279469ba8aedd5;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SOCKET_OPERATION_REASON_SOCKET_7B279469BA8AEDD5
 
 inline void warn_on_socket_misuse(flight::types::SocketGuardNotice notice) {

@@ -140,6 +140,26 @@ void test_attach_detach() {
     fake->open();
     check(opens == 0, "detachSocket stops backend events from reaching the signals");
   }
+  {
+    // Not an upstream case: upstream's detach test drives only the open event. socket.ts states the contract
+    // for every handler ("Every handler is a no-op once the runtime stops delivering", a627849 line 143), so
+    // message, close and error are asserted the same way, and a detached close leaves the state untouched.
+    auto fake = fake_backend();
+    auto socket = create(fake, "ws://x");
+    auto signals = socket_ns::enable_socket_signals(socket);
+    int events = 0;
+    flight::signals::connect_signal(signals->on_socket_message, std::function<void(socket_ns::ReadonlySocketMessage)>(
+                                                                    [&](socket_ns::ReadonlySocketMessage) { ++events; }));
+    flight::signals::connect_signal(signals->on_socket_close, std::function<void(socket_ns::ReadonlySocketCloseInfo)>(
+                                                                  [&](socket_ns::ReadonlySocketCloseInfo) { ++events; }));
+    flight::signals::connect_signal(signals->on_socket_error, counter(events));
+    socket_ns::detach_socket(socket);
+    fake->message(socket_ns::ReadonlySocketMessage(message(String("hi"), false)));
+    fake->close(socket_ns::ReadonlySocketCloseInfo(close_info(1000.0, "", true)));
+    fake->error();
+    check(events == 0 && socket_ns::get_socket_ready_state(socket) == String("connecting"),
+          "detachSocket stops message, close and error events too, and a detached close changes no state");
+  }
 }
 
 void test_close() {

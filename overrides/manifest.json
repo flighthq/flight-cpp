@@ -792,7 +792,7 @@
       "package": "@flighthq/socket",
       "status": "complete",
       "supplies": "packages/socket/src/enableSocketGuards.ts",
-      "derivedFrom": "36025b44f3df5eac683592880c0067ee6daab65b04dc3d3408c3d9f298d3aebe",
+      "derivedFrom": "fc21e594af98a5a390e37245b9dbde08173e255d19eb46c1d7f9e703c5f2e53f",
       "reason": "The retained module accesses a reference-backed notice with value syntax, constructs LogData as an anonymous designated aggregate instead of the generated Record union, and installs the callback through the invalid guard storage emitted by socket.hpp.",
       "change": "Supplies complete opt-in guard enablement and warning reporting with the exact generated notice, LogData, level, channel, and socket URL carriers.",
       "equivalence": "Enable and disable preserve the module-level boolean and replace or clear the one core hook in source order. Warning keys, messages, structured data fields, channel, socket URL, and log-once suppression are unchanged.",
