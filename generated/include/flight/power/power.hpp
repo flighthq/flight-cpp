@@ -8,7 +8,6 @@
 #include <flight/weak_set.hpp>
 #include <functional>
 #include <optional>
-#include <stdexcept>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -155,7 +154,7 @@ inline void detach_power(flight::Ref<flight::types::Power> power) {
     try {
       teardown();
     }
-    catch (const std::exception& error) {
+    catch (...) {
       ([&]() { if (!failure) failure = std::current_exception(); return failure; }());
     }
   }
@@ -288,7 +287,7 @@ inline void destroy_power_keep_awake(flight::Array<flight::StructuralRef<flight:
         assert_sync_void<flight::Undefined>((provider_2->destroy.value()(), flight::undefined));
       }
     }
-    catch (const std::exception& error) {
+    catch (...) {
       ([&]() { if (!failure) failure = std::current_exception(); return failure; }());
       continue;
     }

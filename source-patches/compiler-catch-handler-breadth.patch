@@ -1,0 +1,180 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -9171,12 +9171,60 @@
+   }
+ }
+ 
++// A handler whose binding is only ever the right side of a record into an exception slot does not need
++// the caught value bound by name: the record lane writes `std::current_exception()` and never mentions
++// the binding. Such a handler can catch everything, which is what makes the attempt-all pattern faithful
++// for a throw that is not a class -- `throw 42` reaches the handler, the slot reifies it, and
++// `std::rethrow_exception` hands the caller the same `int`, where the narrow handler let it escape and
++// skipped the siblings. A handler that READS the value -- a member, an argument, a direct rethrow --
++// keeps the narrow binding, because C++ cannot name a non-class caught value at all; that is the
++// boundary this lowering stops at, and the value's escape is then the source's own behavior lost, not a
++// value boxed into something it never was.
++function isCppReifyOnlyCatchBindingCpp(
++  binding: Readonly<IrBindingIdentity>,
++  body: Readonly<IrStatement>,
++  context: EmitContext,
++): boolean {
++  let references = 0;
++  let records = 0;
++  analyzeIrStatementSubtreeTraversal(body, {
++    expression(expression) {
++      if (
++        expression.kind === 'identifier' &&
++        expression.reference.kind === 'binding' &&
++        expression.reference.binding.id === binding.id
++      ) {
++        references += 1;
++      }
++      if (
++        expression.kind === 'assignment' &&
++        (expression.operator === '=' || expression.operator === '??=') &&
++        expression.left.kind === 'identifier' &&
++        expression.left.reference.kind === 'binding' &&
++        context.exceptionPointerBindingIds.has(expression.left.reference.binding.id) &&
++        expression.right.kind === 'identifier' &&
++        expression.right.reference.kind === 'binding' &&
++        expression.right.reference.binding.id === binding.id
++      ) {
++        records += 1;
++      }
++    },
++  });
++  return references === records;
++}
++
+ function emitCatchClauseCpp(
+   catchClause: NonNullable<Extract<IrStatement, { kind: 'try' }>['catchClause']>,
+   context: EmitContext,
+ ): string[] {
+-  if (catchClause.binding) context.includes.add('stdexcept');
+-  const catchVar = catchClause.binding ? `const std::exception& ${safeCppName(catchClause.binding.name)}` : '...';
++  const reifyOnly = catchClause.binding
++    ? isCppReifyOnlyCatchBindingCpp(catchClause.binding, catchClause.body, context)
++    : false;
++  if (catchClause.binding && !reifyOnly) context.includes.add('stdexcept');
++  const catchVar =
++    catchClause.binding && !reifyOnly
++      ? `const std::exception& ${safeCppName(catchClause.binding.name)}`
++      : '...';
+   return [`catch (${catchVar}) {`, ...indentSourceLines(emitStatementBody(catchClause.body, context)), '}'];
+ }
+ 
+diff --git a/packages/compiler-backend-cpp/src/cppCatchHandlerBreadth.test.ts b/packages/compiler-backend-cpp/src/cppCatchHandlerBreadth.test.ts
+new file mode 100644
+index 0000000..81d431b
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppCatchHandlerBreadth.test.ts
+@@ -0,0 +1,108 @@
++import { describe, expect, it } from 'vitest';
++import ts from 'typescript';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++
++import { createCppCompilerBackend } from './cppCompilerBackend.js';
++
++// Which thrown values reach a continuing catch handler.
++//
++// A `catch (error)` whose body only REIFIES the value -- every use of the binding is the right side of a
++// record into a slot carried as `std::exception_ptr`, which the record lane lowers to
++// `std::current_exception()` -- is emitted as `catch (...)` here. That is what makes the attempt-all
++// teardown faithful for a throw that is not a class: `throw 42` reaches the handler, the slot reifies it,
++// and `std::rethrow_exception` hands the caller the same int. A handler that READS the value keeps the
++// narrow `catch (const std::exception&)`, because C++ cannot name a non-class caught value at all; the
++// non-class throw then escapes there, which is the boundary this lowering stops at.
++function emit(source: string): string {
++  const lowering = lowerTypeScriptSource(
++    ts.createSourceFile('/flight/packages/power/src/probe.ts', source, ts.ScriptTarget.Latest, true),
++    { packageName: '@flighthq/power', upstreamDirectory: '/flight' },
++  );
++  const module = lowering.module;
++  const session = createCppCompilerBackend().createEmissionSession!({
++    modules: [module],
++    options: {
++      packageTargets: { '@flighthq/power': { includePrefix: 'flight/power', namespace: 'flight::power' } },
++      runtimeProfile: 'flight-cpp',
++    },
++  });
++  return session.emitModule(module)[0]!.contents;
++}
++
++const ATTEMPT_ALL = `
++export function teardown(values: readonly number[]): void {
++  let failure: unknown = null;
++  for (const value of values) {
++    try {
++      if (value > 1) throw new Error('too big');
++    } catch (error) {
++      failure ??= error;
++      continue;
++    }
++  }
++  if (failure !== null) throw failure;
++}
++`;
++
++describe('a catch handler whose binding is only reified', () => {
++  it('catches every thrown value, so an attempt-all loop is not skipped by a non-class throw', () => {
++    const contents = emit(ATTEMPT_ALL);
++    expect(contents).toContain('catch (...) {');
++    expect(contents).not.toContain('const std::exception& error');
++    // ...and the reify is still the exception pointer, so the value rethrown is the value caught.
++    expect(contents).toContain('failure = std::current_exception()');
++    expect(contents).toContain('std::rethrow_exception(failure)');
++  });
++
++  it('keeps the narrow handler when the caught value is read', () => {
++    // The boundary: a handler that reads the binding cannot be widened, because C++ has no way to name a
++    // non-class caught value. Staying narrow here is deliberate rather than an oversight.
++    const contents = emit(`
++export function rethrow(values: readonly number[]): void {
++  for (const value of values) {
++    try {
++      if (value > 1) throw new Error('too big');
++    } catch (error) {
++      throw error;
++    }
++  }
++}
++`);
++    expect(contents).toContain('catch (const std::exception& error) {');
++    expect(contents).not.toContain('catch (...) {');
++  });
++
++  it('keeps the narrow handler when the caught value is recorded somewhere else', () => {
++    // A record into a slot that is NOT the exception carrier is a read of the value, not a reify.
++    const contents = emit(`
++export function note(values: readonly number[]): void {
++  let observed: unknown = null;
++  for (const value of values) {
++    try {
++      if (value > 1) throw new Error('too big');
++    } catch (error) {
++      observed = error;
++    }
++  }
++}
++`);
++    expect(contents).toContain('catch (const std::exception& error) {');
++  });
++
++  it('leaves a handler with no binding as it was', () => {
++    const contents = emit(`
++export function ignore(values: readonly number[]): void {
++  for (const value of values) {
++    try {
++      if (value > 1) throw new Error('too big');
++    } catch {
++      continue;
++    }
++  }
++}
++`);
++    expect(contents).toContain('catch (...) {');
++    expect(contents).not.toContain('const std::exception&');
++  });
++});

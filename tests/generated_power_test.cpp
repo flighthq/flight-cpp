@@ -8,20 +8,18 @@
 //
 // THE RECORD-AND-RETHROW PATH IS CARRIED, AND IS ASSERTED
 //
-// Two things were broken in this module's failure paths and only one is fixed at this pin:
+// Both failure paths of this module are carried, by three patches that land together:
 //
-//   * the record and the rethrow, carried by
-//     source-patches/compiler-nullish-assignment-statement-in-catch.patch and
-//     source-patches/compiler-catch-recorded-slot-carrier.patch. The slot is an `std::exception_ptr`,
-//     the first caught error is recorded once, and the rethrow hands the caller the ORIGINAL exception.
-//     This file asserts that, including a direct first-failure-retention case with two failing
-//     providers: asserting only the attempt-all halves was how the previous version recorded the defect
-//     without certifying it.
-//   * CATCH BREADTH, which is NOT fixed. `catch (error)` is lowered to
-//     `catch (const std::exception&)`, so a thrown value that is not a class escapes a handler whose
-//     body continues -- with a provider whose destroy throws `42`, the sibling provider is never
-//     attempted. Filed as docs/compiler-requests/catch-handler-breadth-attempt-all.md, and this file
-//     therefore throws only class values and asserts nothing about a non-class one.
+//   * the record and the rethrow -- compiler-nullish-assignment-statement-in-catch.patch and
+//     compiler-catch-recorded-slot-carrier.patch. The slot is an `std::exception_ptr`, the first caught
+//     error is recorded once, and the rethrow hands the caller the ORIGINAL exception.
+//   * CATCH BREADTH, for this module's handlers -- compiler-catch-handler-breadth.patch. Both handlers
+//     only REIFY the caught value (every use of the binding is the record into the exception slot), so
+//     they are emitted as `catch (...)`: a value that is not a class reaches them, is reified by
+//     `std::current_exception()`, and `std::rethrow_exception` hands the caller the same value. The
+//     boundary that remains is a handler which READS the caught value -- C++ cannot name a non-class
+//     caught value at all -- and no handler in this module does that, so this file asserts the whole
+//     path, including a provider that throws a plain `int`.
 //
 // Three of my own expectations were wrong first and are fixed here rather than worked around: a
 // change-provider fake that counted releases without removing the released listener (so a correct
@@ -29,9 +27,9 @@
 // itself, and an absolute release count where the block had already detached once. The first two are
 // now behaviourally faithful fakes and the third is a delta; each block says so where it matters.
 //
-// Both live in destroyPowerKeepAwake and detachPower. Their attempt-all halves are asserted too -- a
+// Both live in destroyPowerKeepAwake and detachPower, and their attempt-all halves are asserted too -- a
 // throwing provider's sibling is still attempted, a failed obligation is retried on the next call, and a
-// succeeded one is not destroyed twice -- so what is left unasserted here is exactly the catch breadth.
+// succeeded one is not destroyed twice. Nothing about either function is left unasserted here.
 #include <flight/power/power.hpp>
 
 #include <iostream>
@@ -493,6 +491,53 @@ int main() {
     }
     check(retained == String("the first failure"),
           "with two failing providers the FIRST error is the one rethrown");
+
+    // A throw that is NOT a class. C++ has a value channel for it, and the handler catches everything
+    // because its binding is only reified, so the sibling is attempted and the caller catches the same
+    // `int` the provider threw. Before the catch-handler-breadth patch the value escaped the handler,
+    // the sibling was skipped, and this call returned without throwing at all.
+    const auto throws_number = std::make_shared<KeepAwake>();
+    const auto sibling = std::make_shared<KeepAwake>();
+    const auto number_provider = keep_awake(throws_number, []() { throw 42; });
+    const auto sibling_provider = keep_awake(sibling, [sibling]() { ++sibling->destroys; });
+    flight::Array<View<HostPowerKeepAwakeCapability>> primitive_mixed =
+        flight::Array<View<HostPowerKeepAwakeCapability>>{};
+    primitive_mixed.push(View<HostPowerKeepAwakeCapability>(number_provider));
+    primitive_mixed.push(View<HostPowerKeepAwakeCapability>(sibling_provider));
+    bool caught_number = false;
+    int number_value = 0;
+    try {
+      power::destroy_power_keep_awake(primitive_mixed);
+    } catch (int value) {
+      caught_number = true;
+      number_value = value;
+    } catch (...) {
+    }
+    check(caught_number && number_value == 42,
+          "a provider that throws a value which is not a class is caught, reified and rethrown as it was");
+    check(sibling->destroys == 1, "and its sibling is still attempted");
+
+    // Retention is type-agnostic: the first failure is kept whether it is a class or not. Here the FIRST
+    // throw is the int and the second is an exception, and the caller must see the int.
+    const auto first_number = std::make_shared<KeepAwake>();
+    const auto second_class = std::make_shared<KeepAwake>();
+    const auto first_number_provider = keep_awake(first_number, []() { throw 7; });
+    const auto second_class_provider = keep_awake(second_class, []() { throw flight::Error(String("later")); });
+    flight::Array<View<HostPowerKeepAwakeCapability>> mixed_kinds =
+        flight::Array<View<HostPowerKeepAwakeCapability>>{};
+    mixed_kinds.push(View<HostPowerKeepAwakeCapability>(first_number_provider));
+    mixed_kinds.push(View<HostPowerKeepAwakeCapability>(second_class_provider));
+    bool kept_first_kind = false;
+    int kept_number = 0;
+    try {
+      power::destroy_power_keep_awake(mixed_kinds);
+    } catch (int value) {
+      kept_first_kind = true;
+      kept_number = value;
+    } catch (...) {
+    }
+    check(kept_first_kind && kept_number == 7,
+          "the retained failure is the FIRST one whatever kind it is, not the class that followed it");
   }
 
   // detachPower: the attempt-all half of teardown, and the endpoints its failures must not lose. The

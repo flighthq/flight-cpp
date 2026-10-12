@@ -2531,6 +2531,23 @@
       "whyNotUpstreamFirst": "The election is a closed-shape rule in the pinned backend with its own stated intent in a comment -- it protects ordinary unknown storage from the exception carrier -- and these three conditions are that intent spelled more precisely, not a new contract: the carrier, the record and the rethrow it needs all already exist. A narrow versioned patch with focused controls is the smallest change that lets the source's own attempt-all shape lower, and the controls are what keep the rule from widening."
     },
     {
+      "id": "compiler-catch-handler-breadth",
+      "dependency": "flight-compiler",
+      "patch": "compiler-catch-handler-breadth.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "a `catch (error)` whose body only reifies the caught value -- the attempt-all teardown that records the first failure and rethrows it after the siblings -- is emitted as `catch (const std::exception& error)`. A thrown value that is not a class therefore never reaches the handler: it escapes, the loop is skipped, and the remaining obligations are stranded. C++ has a value channel for this (`throw 42`), and `std::current_exception()` reifies any thrown value, so the narrow binding is not a representation limit -- it is a binding the body does not need.",
+      "rewrite": "In the catch-clause emission, a handler whose binding is referenced ONLY as the right side of a record into a slot carried as `std::exception_ptr` -- the record the exception-carrier patch lowers to `std::current_exception()`, which never mentions the binding -- is emitted as `catch (...)`. A handler that reads the value (a member, an argument, a direct rethrow) keeps `catch (const std::exception& name)`, because C++ cannot name a non-class caught value at all; that is the boundary this lowering stops at, and staying narrow there is deliberate. A handler with no binding is unchanged (`catch (...)` already).",
+      "equivalence": "The value rethrown is the value caught, for every thrown type: `std::rethrow_exception` rethrows the same object a class throw produced -- a caller catching `flight::Error` sees exactly what it saw before -- and rethrows the same `int` a primitive throw produced, which the narrow handler could not deliver at all. The record is still `std::current_exception()` and the rethrow is still `std::rethrow_exception`, so first-failure retention is unchanged, and the attempt-all loop now runs its siblings for a non-class throw instead of being skipped by it. Nothing is boxed into a carrier it was not: the widening is exactly 'catch everything, keep the exception pointer', and where that is not faithful the handler is left narrow.",
+      "verification": "New `cppCatchHandlerBreadth.test.ts`, 4 pass: the reify-only attempt-all handler is `catch (...)` with the exception-pointer record and rethrow; a handler that rethrows the binding directly and one that records it into a NON-exception slot both keep the narrow `catch (const std::exception& error)`; and a binding-less handler is unchanged. Neutralising the condition fails the first case and leaves the three boundary controls passing. Applied with the other compiler patches in manifest order, all 41 apply and the three backend test files pass 13/13; the behavioural proof for a primitive throw is in `@flighthq/power`'s native test.",
+      "unblocks": "`@flighthq/power`'s attempt-all teardown is faithful for every thrown value it can be given: with a provider whose destroy throws a number, the sibling is still attempted and the caller catches that same number, where the narrow handler skipped the sibling and the value escaped.",
+      "expires": "when the emitter can name a non-class caught value where the source reads it, at which point the narrow form is never needed.",
+      "appliedOn": "2026-10-12",
+      "whyNotUpstreamFirst": "The narrow form is a binding choice in the catch-clause emission, not a missing contract: the value channel (`catch (...)`, `std::current_exception()`, `std::rethrow_exception`) is already used elsewhere in the same file and already lowered for the binding-less handler. The patch narrows exactly which handlers may keep the binding, and its controls pin the boundary."
+    },
+    {
       "id": "scene2d-canvas-host-image-draw-flow",
       "dependency": "flight",
       "patch": "scene2d-canvas-host-image-draw-flow.patch",

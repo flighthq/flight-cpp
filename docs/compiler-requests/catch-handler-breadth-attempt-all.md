@@ -84,3 +84,26 @@ is about the shape of a caught error once it is a value; here the value never ar
 None. No override is carried for `@flighthq/mediasession` or `@flighthq/power`; the sibling-attempt path is
 correct for every `std::exception`, which is what the runtime's own error types are, and the gap is the
 non-class throw a C++ host can still make.
+
+## Carried by a compiler patch, for the handlers this asks about
+
+[`compiler-catch-handler-breadth.patch`](../../source-patches/compiler-catch-handler-breadth.patch) widens
+exactly the handlers this request names. A handler whose binding is used **only** as the right side of a
+record into a slot carried as `std::exception_ptr` -- which the record lane lowers to
+`std::current_exception()` and which never mentions the binding -- needs no name for the caught value, so it
+is emitted as `catch (...)`. `throw 42` then reaches the handler, the slot reifies it, and
+`std::rethrow_exception` hands the caller the same `int`: measured in `@flighthq/power`, the sibling provider
+is attempted and the caller catches that `int`, and with an `int` throw followed by an exception throw the
+retained failure is the `int`.
+
+The boundary is narrower than "fixed", and it is deliberate. A handler that **reads** the caught value -- a
+member, an argument, a direct rethrow -- keeps `catch (const std::exception& name)`, because C++ has no way
+to name a non-class caught value at all. The backend test pins both sides of that line: the reify-only
+handler widens, a handler that rethrows its binding or records it into a non-exception slot does not, and
+neutralising the condition fails the widened case while the boundary controls keep passing. Widening those
+would not be a representation limit but a lie about the value, which is why this stops here rather than
+boxing it into something it never was.
+
+`@flighthq/mediasession`'s `destroyMediaSession` has the same reify-only shape (`firstError = error` into an
+`std::exception_ptr` slot), so it should pick the fix up when its slice is next regenerated; that package was
+not touched by this unit, which stayed package-scoped to `@flighthq/power`.
