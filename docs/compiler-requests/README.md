@@ -253,3 +253,5 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   identity](class-instance-as-implemented-interface.md) — swf hands its `SwfReader` to every tag handler.
 - [A partially refused module's retained declarations must keep their names in
   scope](partial-module-placeholder-qualification.md) — the swf video handler placeholder.
+- [Calls to overloaded functions lower through the selected overload](source-overload-call-through-selected-signature.md) —
+  tween's timer and swf's texture construction.

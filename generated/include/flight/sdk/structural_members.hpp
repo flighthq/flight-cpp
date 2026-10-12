@@ -454,6 +454,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("durationGuard") && requires { object.duration_guard; }) return (object.duration_guard);
   else if constexpr (Key::name.view() == std::string_view("durationMs") && requires { object.duration_ms; }) return (object.duration_ms);
   else if constexpr (Key::name.view() == std::string_view("e") && requires { object.e; }) return (object.e);
+  else if constexpr (Key::name.view() == std::string_view("each") && requires { object.each; }) return (object.each);
   else if constexpr (Key::name.view() == std::string_view("ease") && requires { object.ease; }) return (object.ease);
   else if constexpr (Key::name.view() == std::string_view("edge") && requires { object.edge; }) return (object.edge);
   else if constexpr (Key::name.view() == std::string_view("edgeColor") && requires { object.edge_color; }) return (object.edge_color);
@@ -1779,6 +1780,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("sr") && requires { object.sr; }) return (object.sr);
   else if constexpr (Key::name.view() == std::string_view("st") && requires { object.st; }) return (object.st);
   else if constexpr (Key::name.view() == std::string_view("stack") && requires { object.stack; }) return (object.stack);
+  else if constexpr (Key::name.view() == std::string_view("staggerEase") && requires { object.stagger_ease; }) return (object.stagger_ease);
   else if constexpr (Key::name.view() == std::string_view("standard") && requires { object.standard; }) return (object.standard);
   else if constexpr (Key::name.view() == std::string_view("start") && requires { object.start; }) return (object.start);
   else if constexpr (Key::name.view() == std::string_view("startCap") && requires { object.start_cap; }) return (object.start_cap);
@@ -2525,6 +2527,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("durationGuard") && requires(Object& object) { object.duration_guard; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().duration_guard)>>{};
   else if constexpr (Key::name.view() == std::string_view("durationMs") && requires(Object& object) { object.duration_ms; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().duration_ms)>>{};
   else if constexpr (Key::name.view() == std::string_view("e") && requires(Object& object) { object.e; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().e)>>{};
+  else if constexpr (Key::name.view() == std::string_view("each") && requires(Object& object) { object.each; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().each)>>{};
   else if constexpr (Key::name.view() == std::string_view("ease") && requires(Object& object) { object.ease; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ease)>>{};
   else if constexpr (Key::name.view() == std::string_view("edge") && requires(Object& object) { object.edge; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().edge)>>{};
   else if constexpr (Key::name.view() == std::string_view("edgeColor") && requires(Object& object) { object.edge_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().edge_color)>>{};
@@ -3850,6 +3853,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("sr") && requires(Object& object) { object.sr; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sr)>>{};
   else if constexpr (Key::name.view() == std::string_view("st") && requires(Object& object) { object.st; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().st)>>{};
   else if constexpr (Key::name.view() == std::string_view("stack") && requires(Object& object) { object.stack; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().stack)>>{};
+  else if constexpr (Key::name.view() == std::string_view("staggerEase") && requires(Object& object) { object.stagger_ease; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().stagger_ease)>>{};
   else if constexpr (Key::name.view() == std::string_view("standard") && requires(Object& object) { object.standard; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().standard)>>{};
   else if constexpr (Key::name.view() == std::string_view("start") && requires(Object& object) { object.start; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start)>>{};
   else if constexpr (Key::name.view() == std::string_view("startCap") && requires(Object& object) { object.start_cap; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().start_cap)>>{};
@@ -4599,6 +4603,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->duration_guard; }) owner.bind_named("durationGuard", [object]() -> decltype(auto) { return (object->duration_guard); });
   if constexpr (requires { object->duration_ms; }) owner.bind_named("durationMs", [object]() -> decltype(auto) { return (object->duration_ms); });
   if constexpr (requires { object->e; }) owner.bind_named("e", [object]() -> decltype(auto) { return (object->e); });
+  if constexpr (requires { object->each; }) owner.bind_named("each", [object]() -> decltype(auto) { return (object->each); });
   if constexpr (requires { object->ease; }) owner.bind_named("ease", [object]() -> decltype(auto) { return (object->ease); });
   if constexpr (requires { object->edge; }) owner.bind_named("edge", [object]() -> decltype(auto) { return (object->edge); });
   if constexpr (requires { object->edge_color; }) owner.bind_named("edgeColor", [object]() -> decltype(auto) { return (object->edge_color); });
@@ -5924,6 +5929,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->sr; }) owner.bind_named("sr", [object]() -> decltype(auto) { return (object->sr); });
   if constexpr (requires { object->st; }) owner.bind_named("st", [object]() -> decltype(auto) { return (object->st); });
   if constexpr (requires { object->stack; }) owner.bind_named("stack", [object]() -> decltype(auto) { return (object->stack); });
+  if constexpr (requires { object->stagger_ease; }) owner.bind_named("staggerEase", [object]() -> decltype(auto) { return (object->stagger_ease); });
   if constexpr (requires { object->standard; }) owner.bind_named("standard", [object]() -> decltype(auto) { return (object->standard); });
   if constexpr (requires { object->start; }) owner.bind_named("start", [object]() -> decltype(auto) { return (object->start); });
   if constexpr (requires { object->start_cap; }) owner.bind_named("startCap", [object]() -> decltype(auto) { return (object->start_cap); });
@@ -6706,6 +6712,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(duration_guard)
   FLIGHT_SDK_ROW_WIDENS(duration_ms)
   FLIGHT_SDK_ROW_WIDENS(e)
+  FLIGHT_SDK_ROW_WIDENS(each)
   FLIGHT_SDK_ROW_WIDENS(ease)
   FLIGHT_SDK_ROW_WIDENS(edge)
   FLIGHT_SDK_ROW_WIDENS(edge_color)
@@ -8031,6 +8038,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(sr)
   FLIGHT_SDK_ROW_WIDENS(st)
   FLIGHT_SDK_ROW_WIDENS(stack)
+  FLIGHT_SDK_ROW_WIDENS(stagger_ease)
   FLIGHT_SDK_ROW_WIDENS(standard)
   FLIGHT_SDK_ROW_WIDENS(start)
   FLIGHT_SDK_ROW_WIDENS(start_cap)

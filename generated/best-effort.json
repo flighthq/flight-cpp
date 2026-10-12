@@ -40352,7 +40352,8 @@
     {
       "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/tween/packages/tween/src/contract.ts"
+        "@flighthq/tween/packages/tween/src/contract.ts",
+        "@flighthq/tween/packages/tween/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:a22779b80a5e8661d64264ac99d0ff307a0afb5ecfa42b446bfb0a22a89bdf53",
@@ -40367,9 +40368,7 @@
       "status": "refused-placeholder"
     },
     {
-      "consumers": [
-        "@flighthq/tween/packages/tween/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/tween",
@@ -40392,13 +40391,16 @@
       },
       "path": "flight/tween/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/tween/packages/tween/src/contract.ts"
+        "@flighthq/tween/packages/tween/src/colorTween.ts",
+        "@flighthq/tween/packages/tween/src/timer.ts",
+        "@flighthq/tween/packages/tween/src/tweenStagger.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "consumers": [
         "@flighthq/tween/packages/tween/src/colorTween.ts",
+        "@flighthq/tween/packages/tween/src/contract.ts",
         "@flighthq/tween/packages/tween/src/tween.ts",
         "@flighthq/tween/packages/tween/src/tweenProgress.ts",
         "@flighthq/tween/packages/tween/src/updateTweens.ts"
@@ -40414,7 +40416,8 @@
     {
       "classification": "source-portability",
       "consumers": [
-        "@flighthq/tween/packages/tween/src/contract.ts"
+        "@flighthq/tween/packages/tween/src/contract.ts",
+        "@flighthq/tween/packages/tween/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:98670cbd43acdb9b37e8e7b845c1caa1a9112c065debd99989f2f28e6062b358"
@@ -40432,6 +40435,7 @@
       "consumers": [
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/revealScene3DResourcesOnResolve.ts",
         "@flighthq/tween/packages/tween/src/contract.ts",
+        "@flighthq/tween/packages/tween/src/index.ts",
         "@flighthq/tween/packages/tween/src/timer.ts",
         "@flighthq/tween/packages/tween/src/tweenStagger.ts"
       ],
@@ -40446,6 +40450,7 @@
     {
       "consumers": [
         "@flighthq/tween/packages/tween/src/contract.ts",
+        "@flighthq/tween/packages/tween/src/index.ts",
         "@flighthq/tween/packages/tween/src/tween.ts"
       ],
       "module": {
@@ -40458,7 +40463,8 @@
     },
     {
       "consumers": [
-        "@flighthq/tween/packages/tween/src/contract.ts"
+        "@flighthq/tween/packages/tween/src/contract.ts",
+        "@flighthq/tween/packages/tween/src/index.ts"
       ],
       "module": {
         "name": "TweenProgress",
@@ -40471,7 +40477,8 @@
     {
       "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/tween/packages/tween/src/contract.ts"
+        "@flighthq/tween/packages/tween/src/contract.ts",
+        "@flighthq/tween/packages/tween/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:44de43deeb503655aaa35c52a8ca3d623a9fdccf219bec4a800517fbd746abb3",
@@ -40487,7 +40494,8 @@
     },
     {
       "consumers": [
-        "@flighthq/tween/packages/tween/src/contract.ts"
+        "@flighthq/tween/packages/tween/src/contract.ts",
+        "@flighthq/tween/packages/tween/src/index.ts"
       ],
       "module": {
         "name": "UpdateTweens",

@@ -55,6 +55,10 @@ runtime capability to design deliberately), not an expression to rewrite.
 `index.ts` and `midiAccess.ts`. No other package is known to hit it today; the shape is ordinary
 "mutate captured state in a completion callback", so others plausibly will.
 
+Also refused at a627849: `createColorTween` in `@flighthq/tween` (`colorTween.ts`). Its update closure
+writes `target[property]` on the caller's `Record<string, number>`; without a shared reference
+representation the write would land on a copy. No workaround is carried.
+
 ## Carrying workaround
 
 None. `@flighthq/midi` is `partial` with this and two other defects named against it; no patch or

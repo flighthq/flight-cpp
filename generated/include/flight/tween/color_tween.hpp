@@ -16,7 +16,7 @@
 // Imported by this module, which the replacement likely needs:
 //   { connectSignal } from '@flighthq/signals/contract'
 //   type { Tween, TweenManager, TweenOptions } from '@flighthq/types/contract'
-//   { addTweenToManager, makeTween } from './internal'
+//   { addTweenToManager, makeTween } from './internal.ts'
 //   type { NumericProps } from '@flighthq/types/contract'
 //   type { EasingFunction } from '@flighthq/types/contract'
 //   type { Signal } from '@flighthq/types/contract'

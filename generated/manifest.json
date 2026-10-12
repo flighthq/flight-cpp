@@ -5215,7 +5215,7 @@
     },
     {
       "dependency": "flight",
-      "digest": "c9330c83a870baae9d1e060884fbd22d535e95ed04d225c7cbb84d6939aeb30a",
+      "digest": "c427061b825face862b7251c23d198eae0b75756626b71bfdd30d6ef93c8ae87",
       "id": "tween-record-membership",
       "module": "packages/tween/src/internal.ts",
       "package": "@flighthq/tween"
@@ -6535,12 +6535,10 @@
       "flight/tilemap_formats/tiled_tmx_format.hpp",
       "flight/tilemap_formats/tiled_xml_parse.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp",
-      "flight/tween/timer.hpp",
-      "flight/tween/tween_stagger.hpp",
       "flight/velocity/transform_velocity.hpp",
       "flight/video/video_resource_from.hpp"
     ],
-    "includes": 971
+    "includes": 969
   },
   "packages": [
     {
@@ -8472,14 +8470,14 @@
       "sourceModules": 4
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/tween",
       "cppNamespace": "flight::tween",
       "emittedModules": 7,
       "package": "@flighthq/tween",
       "refusedModules": 3,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 10

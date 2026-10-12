@@ -9088,14 +9088,14 @@
       "code": "dependency-refused",
       "module": "packages/tween/src/contract.ts",
       "package": "@flighthq/tween",
-      "reason": "dependency ./colorTween was refused for @flighthq/tween/packages/tween/src/colorTween.ts",
+      "reason": "dependency ./colorTween.ts was refused for @flighthq/tween/packages/tween/src/colorTween.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/tween/src/index.ts",
       "package": "@flighthq/tween",
-      "reason": "dependency ./contract was refused for @flighthq/tween/packages/tween/src/contract.ts",
+      "reason": "dependency ./colorTween.ts was refused for @flighthq/tween/packages/tween/src/colorTween.ts",
       "stage": "dependency"
     },
     {

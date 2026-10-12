@@ -88,6 +88,11 @@ declare the member, instead of requiring exactly one.
 `@flighthq/tray` — `createTrayIcon` and the whole module behind it. 3 of 4 modules are emitted and no
 header compiles; `contract.ts`, `enableTrayGuards.ts` and `index.ts` are dependency-refused.
 
+Also refused at a627849: `computeStaggerDelay` in `@flighthq/tween` (`tweenStagger.ts`), which narrows
+`from: 'center' | 'end' | 'start' | number` through `===` comparisons. Measured: testing
+`typeof from === 'number'` first (equivalent over the declared domain) is still refused at the same site,
+so no patch is carried.
+
 ## Carrying workaround
 
 None, deliberately. The landed patch `tray-create-result-and-runtime-owner` removes the sibling-owner
