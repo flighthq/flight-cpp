@@ -12,9 +12,13 @@ error happens to stop it compiling.
 
 ## Minimal TypeScript
 
+The reduction below is the shape of the real code, with the declaration copied from
+`packages/types/src/FlightDocumentFieldSchema.ts`:
+
 ```ts
-export type FlightDocumentValue =
-  | string | number | boolean | null | FlightDocumentValue[] | { [key: string]: FlightDocumentValue };
+export type FlightDocumentScalar = boolean | number | string | null;
+export type FlightDocumentValue = FlightDocumentScalar | FlightDocumentValue[] | FlightDocumentFields;
+export interface FlightDocumentFields { [name: string]: FlightDocumentValue; }
 
 export function isReference(value: FlightDocumentValue): value is string {
   if (typeof value !== 'string') return false;
@@ -23,10 +27,47 @@ export function isReference(value: FlightDocumentValue): value is string {
 }
 ```
 
-## Observed C++
+## REDUCTION DOES NOT REPRODUCE THE FOLD — measured, 2026-10-12
+
+This is the most important thing in this file. Written as a backend unit test against
+`lowerTypeScriptSources` + `createCppCompilerBackend`, the guard above lowers **correctly**:
 
 ```cpp
-inline bool is_reference(flight::Ref<FlightDocumentValue> value) {
+inline bool is_reference(flight::types::FlightDocumentValue value) {
+  if (!(([&]() { const auto& typeof_value = value;
+                  return typeof_value.has_value() && typeof_value.value().index() == 4; }()))) {
+    return false;
+  }
+  const flight::String text = std::get<4>(value.value());
+  return (text.starts_with(flight::String("$")) && !text.starts_with(flight::String("$$")));
+}
+```
+
+Variants that were tried and all lowered correctly:
+
+| reduction | result |
+| --- | --- |
+| single module, union declared inline | correct variant-index test |
+| cross-module import of the union | correct |
+| the exact recursive declaration above (index-signature interface) | correct |
+| positive guard `=== 'string'` and negative guard `!== 'string'` | both correct |
+| as a type predicate (`value is string`) | correct |
+| a guard that excludes only ONE member (`!== 'number'`) | correct, and safely: it emits a re-check over the remaining alternatives with a `throw std::logic_error("narrowed union holds an excluded alternative")` fallback rather than a cast |
+
+So the fold is not caused by the guard's shape, by the import boundary, or by the declaration shape. The
+one visible difference between the reduced case and the real one is the parameter carrier: the real
+header takes `flight::Ref<FlightDocumentValue>` while every reduction emits the union **by value**, and
+in the reductions the index-signature member is `flight::Record<flight::String, FlightDocumentValue>`
+whereas an earlier reduced form produced an anonymous `flight::Ref<anonymous_...>` for it instead.
+
+A fix cannot honestly be written against a defect that does not reproduce. What is needed next is the
+piece of the real graph that makes the carrier a `Ref` — most likely the binding/structural-member
+inputs the repository passes and a unit fixture does not. Until that is reduced, this stays a request.
+
+## Observed C++ in the real package
+
+```cpp
+inline bool is_flight_document_token_reference(flight::Ref<FlightDocumentValue> value) {
   if ((flight::String("object") != flight::String("string"))) {   // constant, and false
     return false;
   }
@@ -35,22 +76,17 @@ inline bool is_reference(flight::Ref<FlightDocumentValue> value) {
 }
 ```
 
-`"object"` is the declared type's name, not the value's runtime type. For a union there is no single
-name to fold, and the safe answer is a real test, not a constant.
-
-Two consequences:
-- the guard collapses (here to `false`, so the function would always return `false` rather than
-  dereferencing the value — the opposite of the source's intent);
-- the narrowed binding keeps the union carrier, so the string method call cannot be emitted at all.
+`"object"` is the declared type's name, not the value's runtime type. For a union there is no single name
+to fold, and the safe answer is a real test, as the reductions already produce.
 
 ## Expected C++
 
 ```cpp
-if (!value.is_string()) return false;          // or std::holds_alternative on the carrier
-const flight::String text = value.as_string();
+if (!value.has_value() || value.value().index() != 4) return false;
+const flight::String text = std::get<4>(value.value());
 ```
 
-The runtime already carries the discriminator for the union; the guard should consult it.
+The runtime already carries the discriminator; the guard should consult it.
 
 ## Affected modules
 
