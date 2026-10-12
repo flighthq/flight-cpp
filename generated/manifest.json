@@ -391,6 +391,7 @@
         "flight/scene3d_gl/render_gl_scene3_d.hpp",
         "flight/selection/pointer_selection_policy.hpp",
         "flight/skeleton2d/skeleton2d_draw_order_target.hpp",
+        "flight/skeleton3d/prepare_scene3_dskinning.hpp",
         "flight/timeline/timeline.hpp",
         "flight/types/bitmap_text.hpp",
         "flight/types/display_object.hpp",
@@ -2377,6 +2378,7 @@
       "files": [
         "flight/skeleton3d/enable_skeleton3_dguards.hpp",
         "flight/skeleton3d/get_mesh_skin_bounds.hpp",
+        "flight/skeleton3d/prepare_scene3_dskinning.hpp",
         "flight/skeleton3d/skeleton3d.hpp",
         "flight/skeleton3d/skin_mesh_geometry.hpp",
         "flight/skeleton3d/update_mesh_skin.hpp"
@@ -4813,6 +4815,24 @@
         "flight/requirement/requirement_set.hpp"
       ],
       "id": "requirement-row-write-array-projection"
+    },
+    {
+      "files": [
+        "flight/skeleton3d/skin_mesh_geometry.hpp"
+      ],
+      "id": "skeleton3d-mesh-attribute-four-component-owner"
+    },
+    {
+      "files": [
+        "flight/skeleton3d/skin_mesh_geometry.hpp"
+      ],
+      "id": "skeleton3d-mesh-joints-exact-geometry-owner"
+    },
+    {
+      "files": [
+        "flight/skeleton3d/skin_mesh_geometry.hpp"
+      ],
+      "id": "skeleton3d-mesh-weights-exact-geometry-owner"
     }
   ],
   "sourcePatches": [
@@ -5091,9 +5111,9 @@
     },
     {
       "dependency": "flight",
-      "digest": "c04826f86c5bb3658a48971cfff3d29ab9f3ee14af37de9a349e8905f7fcda20",
+      "digest": "8769c7399239a8e9c5de29e271934beb4325067ded66c7c2f55eb8318eb6fcc7",
       "id": "skeleton3d-explicit-storage",
-      "module": "packages/skeleton3d/src/skeleton3d.ts",
+      "module": "packages/skeleton3d/src/skeleton3d.ts and packages/skeleton3d/src/prepareScene3DSkinning.ts",
       "package": "@flighthq/skeleton3d"
     },
     {
@@ -6453,7 +6473,6 @@
       "flight/skeleton2d_formats/spine_binary_parse.hpp",
       "flight/skeleton2d_formats/spine_binary_versioned.hpp",
       "flight/skeleton2d_formats/spine_parse.hpp",
-      "flight/skeleton3d/prepare_scene3_dskinning.hpp",
       "flight/snapshot/enable_snapshot_guards.hpp",
       "flight/spatial/format_spatial_indexing_notice.hpp",
       "flight/spritesheet/spritesheet_from.hpp",
@@ -8040,14 +8059,14 @@
       "sourceModules": 15
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/skeleton3d",
       "cppNamespace": "flight::skeleton3d",
-      "emittedModules": 8,
+      "emittedModules": 9,
       "package": "@flighthq/skeleton3d",
-      "refusedModules": 2,
+      "refusedModules": 1,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 10
