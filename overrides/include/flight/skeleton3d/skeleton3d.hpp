@@ -35,6 +35,8 @@ using Skeleton3DNames =
                  flight::Undefined>;
 using ReadonlyNode3D = flight::StructuralRef<
     flight::RowReadonly<flight::RowOf<flight::Ref<Node3D>>>>;
+using ReadonlySkeleton3D = flight::StructuralRef<
+    flight::RowReadonly<flight::RowOf<flight::Ref<Skeleton3D>>>>;
 using CloneSkeleton3DJoint =
     std::function<flight::Ref<Node3D>(ReadonlyNode3D, double)>;
 
@@ -70,8 +72,8 @@ inline void dispose_skeleton3_d(flight::Ref<Skeleton3D> skeleton) {
       Skeleton3DNames{std::in_place_type<flight::Null>, flight::null};
 }
 
-inline bool equals_skeleton3_d(flight::Ref<Skeleton3D> a,
-                               flight::Ref<Skeleton3D> b) {
+inline bool equals_skeleton3_d(ReadonlySkeleton3D a,
+                               ReadonlySkeleton3D b) {
   if (a == b) return true;
   if (a->joints.size() != b->joints.size()) return false;
   if (a->inverse_bind_matrices.size() != b->inverse_bind_matrices.size()) {
@@ -96,6 +98,14 @@ inline bool equals_skeleton3_d(flight::Ref<Skeleton3D> a,
     if ((*a_names)[i] != (*b_names)[i]) return false;
   }
   return true;
+}
+
+inline double get_skeleton3_djoint_index_by_name(
+    ReadonlySkeleton3D skeleton, flight::String name) {
+  const auto* names =
+      std::get_if<flight::Array<flight::String>>(&skeleton->names);
+  return names == nullptr ? -1.0
+                          : static_cast<double>(names->index_of(name));
 }
 
 // The generated Node3D interface is a flattened owner rather than Node<Traits>.
@@ -169,7 +179,7 @@ inline flight::Ref<Matrix4> get_skeleton3_dnode_world_matrix(
 }
 
 inline bool get_skeleton3_djoint_world_matrix(
-    flight::Ref<Matrix4Like> out, flight::Ref<Skeleton3D> skeleton,
+    flight::Ref<Matrix4Like> out, ReadonlySkeleton3D skeleton,
     double joint_index) {
   if (joint_index < 0.0 ||
       joint_index >= static_cast<double>(skeleton->joints.size())) {
@@ -182,7 +192,7 @@ inline bool get_skeleton3_djoint_world_matrix(
 }
 
 inline bool get_skeleton3_djoint_world_matrix_by_name(
-    flight::Ref<Matrix4Like> out, flight::Ref<Skeleton3D> skeleton,
+    flight::Ref<Matrix4Like> out, ReadonlySkeleton3D skeleton,
     flight::String name) {
   return get_skeleton3_djoint_world_matrix(
       out, skeleton,
@@ -190,7 +200,7 @@ inline bool get_skeleton3_djoint_world_matrix_by_name(
 }
 
 inline flight::Ref<Skeleton3D> clone_skeleton3_d(
-    flight::Ref<Skeleton3D> skeleton) {
+    ReadonlySkeleton3D skeleton) {
   auto out = flight::entity::allocate_entity<flight::Ref<Skeleton3D>>();
   initialize_skeleton3_d(
       out, flight::Float32Array::from(skeleton->inverse_bind_matrices),
@@ -201,7 +211,7 @@ inline flight::Ref<Skeleton3D> clone_skeleton3_d(
 }
 
 inline flight::Ref<Skeleton3D> clone_skeleton3_djoint_hierarchy(
-    flight::Ref<Skeleton3D> skeleton, CloneSkeleton3DJoint clone_joint) {
+    ReadonlySkeleton3D skeleton, CloneSkeleton3DJoint clone_joint) {
   const auto& source_joints = skeleton->joints;
   flight::Array<flight::Ref<Node3D>> joints(source_joints.size());
   std::unordered_map<const flight::RowOwner*, flight::Ref<Node3D>>
@@ -239,7 +249,7 @@ inline flight::Ref<Skeleton3D> clone_skeleton3_djoint_hierarchy(
 }
 
 inline std::optional<flight::Ref<Skeleton3DValidationDiagnostic>>
-validate_skeleton3_d(flight::Ref<Skeleton3D> skeleton) {
+validate_skeleton3_d(ReadonlySkeleton3D skeleton) {
   const double joint_count = static_cast<double>(skeleton->joints.size());
   const double inverse_bind_matrices_length =
       static_cast<double>(skeleton->inverse_bind_matrices.size());
@@ -268,7 +278,7 @@ inline flight::Ref<Matrix4> result = flight::geometry::create_matrix4();
 inline flight::Ref<Matrix3> normal = flight::geometry::create_matrix3();
 
 inline void compute_skeleton3_djoint_matrices(
-    flight::Ref<Skeleton3D> skeleton) {
+    ReadonlySkeleton3D skeleton) {
   for (std::size_t joint = 0; joint < skeleton->joints.size(); ++joint) {
     const double base = static_cast<double>(joint * 16);
     for (std::size_t component = 0; component < 16; ++component) {
@@ -294,10 +304,10 @@ inline void compute_skeleton3_djoint_matrices(
 }
 
 inline std::optional<
-    std::function<void(flight::Ref<Skeleton3D>, double)>>
+    std::function<void(ReadonlySkeleton3D, double)>>
     skeleton3_dbind_pose_guard = std::nullopt;
 
-inline void set_skeleton3_dbind_pose(flight::Ref<Skeleton3D> skeleton) {
+inline void set_skeleton3_dbind_pose(ReadonlySkeleton3D skeleton) {
   for (std::size_t joint = 0; joint < skeleton->joints.size(); ++joint) {
     if (flight::geometry::inverse_matrix4(
             result,
@@ -345,7 +355,7 @@ inline flight::Ref<Skeleton3D> create_skeleton3_d(
 }
 
 inline void set_skeleton3_dbind_pose_guard(
-    std::optional<std::function<void(flight::Ref<Skeleton3D>, double)>>
+    std::optional<std::function<void(ReadonlySkeleton3D, double)>>
         guard) {
   skeleton3_dbind_pose_guard = std::move(guard);
 }
