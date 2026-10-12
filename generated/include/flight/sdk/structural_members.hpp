@@ -268,6 +268,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("clipMode") && requires { object.clip_mode; }) return (object.clip_mode);
   else if constexpr (Key::name.view() == std::string_view("clipboard") && requires { object.clipboard; }) return (object.clipboard);
   else if constexpr (Key::name.view() == std::string_view("clipboardText") && requires { object.clipboard_text; }) return (object.clipboard_text);
+  else if constexpr (Key::name.view() == std::string_view("closeAllNotifications") && requires { object.close_all_notifications; }) return (object.close_all_notifications);
   else if constexpr (Key::name.view() == std::string_view("closeButton") && requires { object.close_button; }) return (object.close_button);
   else if constexpr (Key::name.view() == std::string_view("closed") && requires { object.closed; }) return (object.closed);
   else if constexpr (Key::name.view() == std::string_view("code") && requires { object.code; }) return (object.code);
@@ -618,6 +619,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("gateWeave") && requires { object.gate_weave; }) return (object.gate_weave);
   else if constexpr (Key::name.view() == std::string_view("geolocation") && requires { object.geolocation; }) return (object.geolocation);
   else if constexpr (Key::name.view() == std::string_view("geometry") && requires { object.geometry; }) return (object.geometry);
+  else if constexpr (Key::name.view() == std::string_view("getActiveNotifications") && requires { object.get_active_notifications; }) return (object.get_active_notifications);
   else if constexpr (Key::name.view() == std::string_view("getAppDirectoryPath") && requires { object.get_app_directory_path; }) return (object.get_app_directory_path);
   else if constexpr (Key::name.view() == std::string_view("getAppPath") && requires { object.get_app_path; }) return (object.get_app_path);
   else if constexpr (Key::name.view() == std::string_view("getBatteryHealth") && requires { object.get_battery_health; }) return (object.get_battery_health);
@@ -650,6 +652,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("getLocale") && requires { object.get_locale; }) return (object.get_locale);
   else if constexpr (Key::name.view() == std::string_view("getLoginItem") && requires { object.get_login_item; }) return (object.get_login_item);
   else if constexpr (Key::name.view() == std::string_view("getName") && requires { object.get_name; }) return (object.get_name);
+  else if constexpr (Key::name.view() == std::string_view("getPendingNotifications") && requires { object.get_pending_notifications; }) return (object.get_pending_notifications);
   else if constexpr (Key::name.view() == std::string_view("getPermission") && requires { object.get_permission; }) return (object.get_permission);
   else if constexpr (Key::name.view() == std::string_view("getPermissionState") && requires { object.get_permission_state; }) return (object.get_permission_state);
   else if constexpr (Key::name.view() == std::string_view("getPersistence") && requires { object.get_persistence; }) return (object.get_persistence);
@@ -1200,6 +1203,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("normalZ") && requires { object.normal_z; }) return (object.normal_z);
   else if constexpr (Key::name.view() == std::string_view("normals") && requires { object.normals; }) return (object.normals);
   else if constexpr (Key::name.view() == std::string_view("notification") && requires { object.notification; }) return (object.notification);
+  else if constexpr (Key::name.view() == std::string_view("notify") && requires { object.notify; }) return (object.notify);
   else if constexpr (Key::name.view() == std::string_view("numLines") && requires { object.num_lines; }) return (object.num_lines);
   else if constexpr (Key::name.view() == std::string_view("object") && requires { object.object; }) return (object.object);
   else if constexpr (Key::name.view() == std::string_view("objectId") && requires { object.object_id; }) return (object.object_id);
@@ -1632,6 +1636,8 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("sceneGraphSyncPolicy") && requires { object.scene_graph_sync_policy; }) return (object.scene_graph_sync_policy);
   else if constexpr (Key::name.view() == std::string_view("sceneTarget") && requires { object.scene_target; }) return (object.scene_target);
   else if constexpr (Key::name.view() == std::string_view("sceneVelocityTexture") && requires { object.scene_velocity_texture; }) return (object.scene_velocity_texture);
+  else if constexpr (Key::name.view() == std::string_view("schedule") && requires { object.schedule; }) return (object.schedule);
+  else if constexpr (Key::name.view() == std::string_view("scheduleNotification") && requires { object.schedule_notification; }) return (object.schedule_notification);
   else if constexpr (Key::name.view() == std::string_view("scheme") && requires { object.scheme; }) return (object.scheme);
   else if constexpr (Key::name.view() == std::string_view("scissorRect") && requires { object.scissor_rect; }) return (object.scissor_rect);
   else if constexpr (Key::name.view() == std::string_view("scissorStack") && requires { object.scissor_stack; }) return (object.scissor_stack);
@@ -2377,6 +2383,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("clipMode") && requires(Object& object) { object.clip_mode; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clip_mode)>>{};
   else if constexpr (Key::name.view() == std::string_view("clipboard") && requires(Object& object) { object.clipboard; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clipboard)>>{};
   else if constexpr (Key::name.view() == std::string_view("clipboardText") && requires(Object& object) { object.clipboard_text; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clipboard_text)>>{};
+  else if constexpr (Key::name.view() == std::string_view("closeAllNotifications") && requires(Object& object) { object.close_all_notifications; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().close_all_notifications)>>{};
   else if constexpr (Key::name.view() == std::string_view("closeButton") && requires(Object& object) { object.close_button; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().close_button)>>{};
   else if constexpr (Key::name.view() == std::string_view("closed") && requires(Object& object) { object.closed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().closed)>>{};
   else if constexpr (Key::name.view() == std::string_view("code") && requires(Object& object) { object.code; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().code)>>{};
@@ -2727,6 +2734,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("gateWeave") && requires(Object& object) { object.gate_weave; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gate_weave)>>{};
   else if constexpr (Key::name.view() == std::string_view("geolocation") && requires(Object& object) { object.geolocation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().geolocation)>>{};
   else if constexpr (Key::name.view() == std::string_view("geometry") && requires(Object& object) { object.geometry; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().geometry)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getActiveNotifications") && requires(Object& object) { object.get_active_notifications; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_active_notifications)>>{};
   else if constexpr (Key::name.view() == std::string_view("getAppDirectoryPath") && requires(Object& object) { object.get_app_directory_path; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_app_directory_path)>>{};
   else if constexpr (Key::name.view() == std::string_view("getAppPath") && requires(Object& object) { object.get_app_path; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_app_path)>>{};
   else if constexpr (Key::name.view() == std::string_view("getBatteryHealth") && requires(Object& object) { object.get_battery_health; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_battery_health)>>{};
@@ -2759,6 +2767,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("getLocale") && requires(Object& object) { object.get_locale; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_locale)>>{};
   else if constexpr (Key::name.view() == std::string_view("getLoginItem") && requires(Object& object) { object.get_login_item; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_login_item)>>{};
   else if constexpr (Key::name.view() == std::string_view("getName") && requires(Object& object) { object.get_name; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_name)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getPendingNotifications") && requires(Object& object) { object.get_pending_notifications; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_pending_notifications)>>{};
   else if constexpr (Key::name.view() == std::string_view("getPermission") && requires(Object& object) { object.get_permission; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_permission)>>{};
   else if constexpr (Key::name.view() == std::string_view("getPermissionState") && requires(Object& object) { object.get_permission_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_permission_state)>>{};
   else if constexpr (Key::name.view() == std::string_view("getPersistence") && requires(Object& object) { object.get_persistence; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_persistence)>>{};
@@ -3309,6 +3318,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("normalZ") && requires(Object& object) { object.normal_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().normal_z)>>{};
   else if constexpr (Key::name.view() == std::string_view("normals") && requires(Object& object) { object.normals; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().normals)>>{};
   else if constexpr (Key::name.view() == std::string_view("notification") && requires(Object& object) { object.notification; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().notification)>>{};
+  else if constexpr (Key::name.view() == std::string_view("notify") && requires(Object& object) { object.notify; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().notify)>>{};
   else if constexpr (Key::name.view() == std::string_view("numLines") && requires(Object& object) { object.num_lines; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().num_lines)>>{};
   else if constexpr (Key::name.view() == std::string_view("object") && requires(Object& object) { object.object; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().object)>>{};
   else if constexpr (Key::name.view() == std::string_view("objectId") && requires(Object& object) { object.object_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().object_id)>>{};
@@ -3741,6 +3751,8 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("sceneGraphSyncPolicy") && requires(Object& object) { object.scene_graph_sync_policy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scene_graph_sync_policy)>>{};
   else if constexpr (Key::name.view() == std::string_view("sceneTarget") && requires(Object& object) { object.scene_target; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scene_target)>>{};
   else if constexpr (Key::name.view() == std::string_view("sceneVelocityTexture") && requires(Object& object) { object.scene_velocity_texture; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scene_velocity_texture)>>{};
+  else if constexpr (Key::name.view() == std::string_view("schedule") && requires(Object& object) { object.schedule; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().schedule)>>{};
+  else if constexpr (Key::name.view() == std::string_view("scheduleNotification") && requires(Object& object) { object.schedule_notification; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().schedule_notification)>>{};
   else if constexpr (Key::name.view() == std::string_view("scheme") && requires(Object& object) { object.scheme; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scheme)>>{};
   else if constexpr (Key::name.view() == std::string_view("scissorRect") && requires(Object& object) { object.scissor_rect; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scissor_rect)>>{};
   else if constexpr (Key::name.view() == std::string_view("scissorStack") && requires(Object& object) { object.scissor_stack; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scissor_stack)>>{};
@@ -4489,6 +4501,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->clip_mode; }) owner.bind_named("clipMode", [object]() -> decltype(auto) { return (object->clip_mode); });
   if constexpr (requires { object->clipboard; }) owner.bind_named("clipboard", [object]() -> decltype(auto) { return (object->clipboard); });
   if constexpr (requires { object->clipboard_text; }) owner.bind_named("clipboardText", [object]() -> decltype(auto) { return (object->clipboard_text); });
+  if constexpr (requires { object->close_all_notifications; }) owner.bind_named("closeAllNotifications", [object]() -> decltype(auto) { return (object->close_all_notifications); });
   if constexpr (requires { object->close_button; }) owner.bind_named("closeButton", [object]() -> decltype(auto) { return (object->close_button); });
   if constexpr (requires { object->closed; }) owner.bind_named("closed", [object]() -> decltype(auto) { return (object->closed); });
   if constexpr (requires { object->code; }) owner.bind_named("code", [object]() -> decltype(auto) { return (object->code); });
@@ -4839,6 +4852,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->gate_weave; }) owner.bind_named("gateWeave", [object]() -> decltype(auto) { return (object->gate_weave); });
   if constexpr (requires { object->geolocation; }) owner.bind_named("geolocation", [object]() -> decltype(auto) { return (object->geolocation); });
   if constexpr (requires { object->geometry; }) owner.bind_named("geometry", [object]() -> decltype(auto) { return (object->geometry); });
+  if constexpr (requires { object->get_active_notifications; }) owner.bind_named("getActiveNotifications", [object]() -> decltype(auto) { return (object->get_active_notifications); });
   if constexpr (requires { object->get_app_directory_path; }) owner.bind_named("getAppDirectoryPath", [object]() -> decltype(auto) { return (object->get_app_directory_path); });
   if constexpr (requires { object->get_app_path; }) owner.bind_named("getAppPath", [object]() -> decltype(auto) { return (object->get_app_path); });
   if constexpr (requires { object->get_battery_health; }) owner.bind_named("getBatteryHealth", [object]() -> decltype(auto) { return (object->get_battery_health); });
@@ -4871,6 +4885,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->get_locale; }) owner.bind_named("getLocale", [object]() -> decltype(auto) { return (object->get_locale); });
   if constexpr (requires { object->get_login_item; }) owner.bind_named("getLoginItem", [object]() -> decltype(auto) { return (object->get_login_item); });
   if constexpr (requires { object->get_name; }) owner.bind_named("getName", [object]() -> decltype(auto) { return (object->get_name); });
+  if constexpr (requires { object->get_pending_notifications; }) owner.bind_named("getPendingNotifications", [object]() -> decltype(auto) { return (object->get_pending_notifications); });
   if constexpr (requires { object->get_permission; }) owner.bind_named("getPermission", [object]() -> decltype(auto) { return (object->get_permission); });
   if constexpr (requires { object->get_permission_state; }) owner.bind_named("getPermissionState", [object]() -> decltype(auto) { return (object->get_permission_state); });
   if constexpr (requires { object->get_persistence; }) owner.bind_named("getPersistence", [object]() -> decltype(auto) { return (object->get_persistence); });
@@ -5421,6 +5436,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->normal_z; }) owner.bind_named("normalZ", [object]() -> decltype(auto) { return (object->normal_z); });
   if constexpr (requires { object->normals; }) owner.bind_named("normals", [object]() -> decltype(auto) { return (object->normals); });
   if constexpr (requires { object->notification; }) owner.bind_named("notification", [object]() -> decltype(auto) { return (object->notification); });
+  if constexpr (requires { object->notify; }) owner.bind_named("notify", [object]() -> decltype(auto) { return (object->notify); });
   if constexpr (requires { object->num_lines; }) owner.bind_named("numLines", [object]() -> decltype(auto) { return (object->num_lines); });
   if constexpr (requires { object->object; }) owner.bind_named("object", [object]() -> decltype(auto) { return (object->object); });
   if constexpr (requires { object->object_id; }) owner.bind_named("objectId", [object]() -> decltype(auto) { return (object->object_id); });
@@ -5853,6 +5869,8 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->scene_graph_sync_policy; }) owner.bind_named("sceneGraphSyncPolicy", [object]() -> decltype(auto) { return (object->scene_graph_sync_policy); });
   if constexpr (requires { object->scene_target; }) owner.bind_named("sceneTarget", [object]() -> decltype(auto) { return (object->scene_target); });
   if constexpr (requires { object->scene_velocity_texture; }) owner.bind_named("sceneVelocityTexture", [object]() -> decltype(auto) { return (object->scene_velocity_texture); });
+  if constexpr (requires { object->schedule; }) owner.bind_named("schedule", [object]() -> decltype(auto) { return (object->schedule); });
+  if constexpr (requires { object->schedule_notification; }) owner.bind_named("scheduleNotification", [object]() -> decltype(auto) { return (object->schedule_notification); });
   if constexpr (requires { object->scheme; }) owner.bind_named("scheme", [object]() -> decltype(auto) { return (object->scheme); });
   if constexpr (requires { object->scissor_rect; }) owner.bind_named("scissorRect", [object]() -> decltype(auto) { return (object->scissor_rect); });
   if constexpr (requires { object->scissor_stack; }) owner.bind_named("scissorStack", [object]() -> decltype(auto) { return (object->scissor_stack); });
@@ -6634,6 +6652,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(clip_mode)
   FLIGHT_SDK_ROW_WIDENS(clipboard)
   FLIGHT_SDK_ROW_WIDENS(clipboard_text)
+  FLIGHT_SDK_ROW_WIDENS(close_all_notifications)
   FLIGHT_SDK_ROW_WIDENS(close_button)
   FLIGHT_SDK_ROW_WIDENS(closed)
   FLIGHT_SDK_ROW_WIDENS(code)
@@ -6984,6 +7003,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(gate_weave)
   FLIGHT_SDK_ROW_WIDENS(geolocation)
   FLIGHT_SDK_ROW_WIDENS(geometry)
+  FLIGHT_SDK_ROW_WIDENS(get_active_notifications)
   FLIGHT_SDK_ROW_WIDENS(get_app_directory_path)
   FLIGHT_SDK_ROW_WIDENS(get_app_path)
   FLIGHT_SDK_ROW_WIDENS(get_battery_health)
@@ -7016,6 +7036,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(get_locale)
   FLIGHT_SDK_ROW_WIDENS(get_login_item)
   FLIGHT_SDK_ROW_WIDENS(get_name)
+  FLIGHT_SDK_ROW_WIDENS(get_pending_notifications)
   FLIGHT_SDK_ROW_WIDENS(get_permission)
   FLIGHT_SDK_ROW_WIDENS(get_permission_state)
   FLIGHT_SDK_ROW_WIDENS(get_persistence)
@@ -7566,6 +7587,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(normal_z)
   FLIGHT_SDK_ROW_WIDENS(normals)
   FLIGHT_SDK_ROW_WIDENS(notification)
+  FLIGHT_SDK_ROW_WIDENS(notify)
   FLIGHT_SDK_ROW_WIDENS(num_lines)
   FLIGHT_SDK_ROW_WIDENS(object)
   FLIGHT_SDK_ROW_WIDENS(object_id)
@@ -7998,6 +8020,8 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(scene_graph_sync_policy)
   FLIGHT_SDK_ROW_WIDENS(scene_target)
   FLIGHT_SDK_ROW_WIDENS(scene_velocity_texture)
+  FLIGHT_SDK_ROW_WIDENS(schedule)
+  FLIGHT_SDK_ROW_WIDENS(schedule_notification)
   FLIGHT_SDK_ROW_WIDENS(scheme)
   FLIGHT_SDK_ROW_WIDENS(scissor_rect)
   FLIGHT_SDK_ROW_WIDENS(scissor_stack)

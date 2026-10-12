@@ -1572,14 +1572,14 @@
       "package": "@flighthq/notification",
       "status": "partial",
       "supplies": "packages/notification/src/notification.ts",
-      "derivedFrom": "fb529e84a6ebe16060543cff3fac500a3ed02737da0bb249d469bdf3cecc875b",
-      "reason": "Imported outcome names need repair and the emitter refuses subscription creation, attach and dispose because generic signal construction and runtime owner state are not represented.",
-      "change": "Supplies typed signals, identity-keyed unsubscribe ownership, attach replacement, event forwarding, and disposal for the generated subscription entity.",
+      "derivedFrom": "5f2379fc7c7a50ac6eade052a1987d8a1fbd77caaaacffa3a9c99508f24efc69",
+      "reason": "Re-read against this module's a627849 emission, which is unusable as a base: the emitter still refuses createNotificationSubscription (Object.assign onto an entity, filed as object-assign-onto-structural-record) and it emits three further forms that cannot compile -- attachNotificationSubscription's declaration is truncated mid-parameter, its anonymous outcome carriers are referenced through flight::types:: although they are defined in flight::notification, and the ten per-type attach/detach wrappers pass a Ref<Notification*Subscription> where the shared function takes Ref<Entity>, which the subscription structs do not derive from. Each is filed under docs/compiler-requests/.",
+      "change": "Re-read against this emission rather than re-derived from it: the emission cannot be adopted while its three malformed forms and its refusal stand, so this copy is retained unchanged and only its recorded state is brought up to date. The copy predates the emission's refusals and implements typed signals, identity-keyed unsubscribe ownership, attach replacement, event forwarding and disposal itself.",
       "equivalence": "Each live subscription owns at most one backend callback; replacement and disposal invoke the exact prior unsubscribe once, events reach their matching signals, and unavailable refused host operations return their declared failure outcomes.",
       "whyNotAPatchOrRepair": "Using declarations solve only the missing names. A source patch cannot express the target runtime owner table without changing the public entity shape, while a declaration repair cannot supply lifecycle behavior.",
       "unblocks": "notification.hpp compiles independently and supplies the notification package aggregators.",
       "remaining": "The subscription lifecycle is not implemented. attachNotification*Subscription (five exports) ignore the host capability and always return {attachFailed: true, reason: operation-failed}; detachNotification*Subscription (five) always report not-attached; disposeNotification*Subscription (five) always report already-disposed; and createNotification*Subscription do not register the per-subscription runtime row those paths would read. The source keys one WeakMap by Entity, and the emitted subscription types share no C++ base, so the table has to be keyed per subscription type; the source also stores the pending attach promise and awaits it twice (guarded by promise identity), which the emitted Task carrier does not express directly.",
-      "expires": "when generic signals, subscription runtime ownership, and notification operation unions emit directly.",
+      "expires": "when the module emits whole: the Object.assign refusal, the truncated attach declaration, the anonymous carriers' owner namespace, and an entity base the subscription types actually derive from.",
       "authoredOn": "2026-10-07"
     },
     {

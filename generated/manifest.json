@@ -220,6 +220,7 @@
         "flight/media/audio_channel.hpp",
         "flight/midi/midi_subscription.hpp",
         "flight/net/net.hpp",
+        "flight/notification/notification.hpp",
         "flight/power/power.hpp",
         "flight/scene2d_resources/scene2_ddocument_source.hpp",
         "flight/signals/emitter.hpp",
@@ -1494,9 +1495,7 @@
       "id": "midi-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/notification/notification.hpp"
-      ],
+      "files": [],
       "id": "notification-unqualified-entity-names"
     },
     {
@@ -2838,9 +2837,7 @@
       "id": "midi-unqualified-signals-names"
     },
     {
-      "files": [
-        "flight/notification/notification.hpp"
-      ],
+      "files": [],
       "id": "notification-unqualified-signals-names"
     },
     {
@@ -5978,6 +5975,7 @@
       "flight/mesh/mesh_geometry.hpp",
       "flight/mesh/mesh_geometry_attributes.hpp",
       "flight/midi/midi_access.hpp",
+      "flight/notification/notification.hpp",
       "flight/particleemitter/particle_emitter3_d.hpp",
       "flight/particles_formats/libgdx_parse.hpp",
       "flight/particles_formats/libgdx_serialize.hpp",
