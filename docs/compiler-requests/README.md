@@ -75,6 +75,8 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   refuses `@flighthq/debug` `debug.ts` (`enableDebug`); no workaround.
 - [Nullable storage of an imported alias is spelled by its expansion](nullable-alias-storage-spelled-by-expansion.md) —
   `@flighthq/debug` `install_debug_sink` under the LogSink override; no workaround yet.
+- [Constructor parameter properties are declared but never assigned](constructor-parameter-properties-dropped.md) —
+  SILENT miscompilation: `@flighthq/compression` InflateState (decompressDeflate returns null for every input), `@flighthq/swf` SwfReader, `@flighthq/abc` AbcReader; no workaround.
 - [`@flighthq/log` native-compile defect inventory](log-native-compile-defects.md) — fifteen emitter
   defects make log.hpp fail clang once the console refusal is set aside; the log override stubs twelve
   functions with throws, so log parity is not honest.
