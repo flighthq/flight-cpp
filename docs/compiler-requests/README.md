@@ -92,6 +92,15 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `invokeUpdate<Provider, Result extends { readonly outcome: string }>` builds an arm and asserts it to
   `Result`; distinguished from the three declared-heritage requests, because here the destination is a
   parameter and no identity is at stake.
+- [An object literal returning into an outcome union is emitted as a record initializer](object-literal-into-outcome-variant.md) —
+  the mirror of the reference-backed read-side request; four of `@flighthq/midi`'s seven headers fail on
+  one line, and `@flighthq/log` records the same construct already.
+- [A captured referent mutated after suspension needs a shared reference representation](captured-referent-mutation.md) —
+  `@flighthq/midi`'s `midiPort.ts` mutates a captured state record from a settlement callback; copying
+  the record would compile and be wrong.
+- [An optional property call needs its callable's result evidence](optional-property-call-result-evidence.md) —
+  `runtime.ownerSubscriptions?.delete(subscription)`; the chain already carries the presence proof the
+  refusal asks for.
 - [Union carriers need canonical alternative order](canonical-union-carrier-order.md) — identical
   named unions currently become incompatible `std::variant` types at array callback boundaries.
 - [Nullable and optional storage needs two absence channels](nullable-optional-presence.md) — one

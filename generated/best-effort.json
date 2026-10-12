@@ -14788,9 +14788,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/midi/packages/midi/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/midi",
@@ -14813,13 +14811,16 @@
       },
       "path": "flight/midi/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/midi/packages/midi/src/contract.ts"
+        "@flighthq/midi/packages/midi/src/midiAccess.ts",
+        "@flighthq/midi/packages/midi/src/midiPort.ts",
+        "@flighthq/midi/packages/midi/src/midiSubscription.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "consumers": [
-        "@flighthq/midi/packages/midi/src/contract.ts"
+        "@flighthq/midi/packages/midi/src/contract.ts",
+        "@flighthq/midi/packages/midi/src/index.ts"
       ],
       "module": {
         "name": "MidiAccess",
@@ -14835,7 +14836,8 @@
     },
     {
       "consumers": [
-        "@flighthq/midi/packages/midi/src/contract.ts"
+        "@flighthq/midi/packages/midi/src/contract.ts",
+        "@flighthq/midi/packages/midi/src/index.ts"
       ],
       "module": {
         "name": "MidiPermission",
@@ -14849,6 +14851,7 @@
       "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/midi/packages/midi/src/contract.ts",
+        "@flighthq/midi/packages/midi/src/index.ts",
         "@flighthq/midi/packages/midi/src/midiAccess.ts"
       ],
       "declarationFingerprints": [
@@ -14878,6 +14881,7 @@
     },
     {
       "consumers": [
+        "@flighthq/midi/packages/midi/src/contract.ts",
         "@flighthq/midi/packages/midi/src/midiAccess.ts",
         "@flighthq/midi/packages/midi/src/midiPort.ts",
         "@flighthq/midi/packages/midi/src/midiSubscription.ts"
@@ -14894,6 +14898,7 @@
       "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/midi/packages/midi/src/contract.ts",
+        "@flighthq/midi/packages/midi/src/index.ts",
         "@flighthq/midi/packages/midi/src/midiAccess.ts",
         "@flighthq/midi/packages/midi/src/midiPort.ts"
       ],

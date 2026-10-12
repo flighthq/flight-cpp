@@ -29,8 +29,8 @@
 // Imported by this module, which the replacement likely needs:
 //   { allocateEntity, finishEntity } from '@flighthq/entity/contract'
 //   type { EntityConstruction, MidiInputPort, MidiInputPortResourceOperations, MidiMessageSendOutcome, MidiOutputPort, MidiOutputPortResourceOperations, MidiPort, MidiPortCloseOutcome, MidiPortConnectionOutcome, MidiPortDisposeOutcome, MidiPortOpenOutcome, MidiPortStateOutcome } from '@flighthq/types/contract'
-//   { getMidiPortResourceState, retainMidiInputPortResourceState, retainMidiOutputPortResourceState } from './midiResource'
-//   { disposeMidiInputMessageSubscription, disposeMidiPortStateSubscription } from './midiSubscription'
+//   { getMidiPortResourceState, retainMidiInputPortResourceState, retainMidiOutputPortResourceState } from './midiResource.ts'
+//   { disposeMidiInputMessageSubscription, disposeMidiPortStateSubscription } from './midiSubscription.ts'
 //   type { MidiInputMessageSubscription } from '@flighthq/types/contract'
 //   type { MidiPortStateSubscription } from '@flighthq/types/contract'
 //   type { MidiPortConnection } from '@flighthq/types/contract'

@@ -2995,21 +2995,21 @@
       "code": "dependency-refused",
       "module": "packages/midi/src/contract.ts",
       "package": "@flighthq/midi",
-      "reason": "dependency ./midiPort was refused for @flighthq/midi/packages/midi/src/midiPort.ts",
+      "reason": "dependency ./midiPort.ts was refused for @flighthq/midi/packages/midi/src/midiPort.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/midi/src/index.ts",
       "package": "@flighthq/midi",
-      "reason": "dependency ./contract was refused for @flighthq/midi/packages/midi/src/contract.ts",
+      "reason": "dependency ./midiPort.ts was refused for @flighthq/midi/packages/midi/src/midiPort.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/midi/src/midiAccess.ts",
       "package": "@flighthq/midi",
-      "reason": "dependency ./midiPort was refused for @flighthq/midi/packages/midi/src/midiPort.ts",
+      "reason": "dependency ./midiPort.ts was refused for @flighthq/midi/packages/midi/src/midiPort.ts",
       "stage": "dependency"
     },
     {
