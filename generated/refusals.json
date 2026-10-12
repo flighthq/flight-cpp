@@ -7828,36 +7828,34 @@
       "code": "dependency-refused",
       "module": "packages/skeleton3d/src/contract.ts",
       "package": "@flighthq/skeleton3d",
-      "reason": "dependency ./prepareScene3DSkinning was refused for @flighthq/skeleton3d/packages/skeleton3d/src/prepareScene3DSkinning.ts",
+      "reason": "dependency ./skeleton3d.ts was refused for @flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/skeleton3d/src/enableSkeleton3DGuards.ts",
       "package": "@flighthq/skeleton3d",
-      "reason": "dependency ./skeleton3d was refused for @flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts",
+      "reason": "dependency ./skeleton3d.ts was refused for @flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/skeleton3d/src/index.ts",
       "package": "@flighthq/skeleton3d",
-      "reason": "dependency ./contract was refused for @flighthq/skeleton3d/packages/skeleton3d/src/contract.ts",
+      "reason": "dependency ./enableSkeleton3DGuards.ts was refused for @flighthq/skeleton3d/packages/skeleton3d/src/enableSkeleton3DGuards.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/skeleton3d/src/prepareScene3DSkinning.ts",
+      "package": "@flighthq/skeleton3d",
+      "reason": "dependency ./skeleton3d.ts was refused for @flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts",
       "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 28,
-      "module": "packages/skeleton3d/src/prepareScene3DSkinning.ts",
-      "package": "@flighthq/skeleton3d",
-      "reason": "cpp emission failed for @flighthq/skeleton3d/packages/skeleton3d/src/prepareScene3DSkinning.ts: a structural assertion from the readonly row Readonly<Mesh> to the writable row NodeAny claims mutation the source refused: a readonly row never becomes writable, because the boundary the value came through said its subject must not be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the readonly row where the value is only read, or declare the source -- its parameter, slot, or accessor result -- as the writable type where that object may really be mutated. Choosing between those two repairs is the question this assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME OWNER that the mutating paths must write needs a mutable-source accessor returning the full writable owner from the typed runtime slot, with the readonly accessor kept for reads, because the capability has to exist on the storage and accessor that establish those cells; a NODE that the read paths only traverse and never mutate needs the two authorities separated instead, with a readonly view on every read path and a separate mutable entry point for the paths that really mutate, because laundering a writable node out of a readonly boundary grants mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained row carries; neither adds cells to a row that does not declare them. Making only that boundary writable is insufficient here: the source owner does not declare EntityRuntimeKey, so it has no cells for the asserted row to mutate. Declare both the storage slot and the accessor result as the full writable NodeAny row where initialization establishes those cells, rather than widening Readonly<Mesh> at the use site.",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 41,
+      "line": 40,
       "module": "packages/skeleton3d/src/skeleton3d.ts",
       "package": "@flighthq/skeleton3d",
       "reason": "cpp emission failed for @flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
@@ -7867,14 +7865,14 @@
       "code": "dependency-refused",
       "module": "packages/skeleton3d/src/updateMeshDeformation.ts",
       "package": "@flighthq/skeleton3d",
-      "reason": "dependency ./updateMeshSkin was refused for @flighthq/skeleton3d/packages/skeleton3d/src/updateMeshSkin.ts",
+      "reason": "dependency ./updateMeshSkin.ts was refused for @flighthq/skeleton3d/packages/skeleton3d/src/updateMeshSkin.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/skeleton3d/src/updateMeshSkin.ts",
       "package": "@flighthq/skeleton3d",
-      "reason": "dependency ./skeleton3d was refused for @flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts",
+      "reason": "dependency ./skeleton3d.ts was refused for @flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts",
       "stage": "dependency"
     },
     {

@@ -13439,6 +13439,44 @@
       "expires": "when cyclic imported functions are declared before package bodies; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "skeleton3d-mesh-attribute-four-component-owner",
+      "kind": "alias-anonymous-struct-to-named",
+      "appliesTo": "flight/skeleton3d/skin_mesh_geometry.hpp",
+      "symbol": "w_x_y_z_5137f2b28145ccce",
+      "replacement": "w_x_y_z_5137f2b28145ccce",
+      "replacementNamespace": "flight::mesh",
+      "canonicalInclude": "flight/mesh/mesh_geometry_attributes.hpp",
+      "sourceDeclaration": "packages/skeleton3d/src/skinMeshGeometry.ts passes its { w, x, y, z } joint and weight scratch objects directly to packages/mesh/src/meshGeometryAttributes.ts getMeshGeometryVertexJoints0 and getMeshGeometryVertexWeights0, whose out parameters declare the identical four required numeric fields",
+      "diagnostic": "no viable conversion from Ref<flight::skeleton3d::w_x_y_z_5137f2b28145ccce> to Ref<flight::mesh::w_x_y_z_5137f2b28145ccce>",
+      "defect": "The emitter creates one package-local nominal C++ owner for each occurrence of the same anonymous TypeScript object shape, so the exact object passed across the imported call boundary no longer has the callee's parameter type. The two emitted definitions are byte-identical and represent the same source object contract; aliasing the caller spelling to the callee owner changes no storage, field value, call, identity, or control flow.",
+      "expectedWhen": "always",
+      "expires": "when anonymous structural object values passed across package boundaries retain one owner or lower through an identity-preserving structural view; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "skeleton3d-mesh-joints-exact-geometry-owner",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/skeleton3d/skin_mesh_geometry.hpp",
+      "from": "flight::mesh::get_mesh_geometry_vertex_joints0(joint, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(geometry), v)",
+      "to": "flight::mesh::get_mesh_geometry_vertex_joints0(joint, flight::structural_ref_cast<flight::Ref<flight::types::MeshGeometry>>(geometry), v)",
+      "sourceDeclaration": "packages/skeleton3d/src/skinMeshGeometry.ts -- captureMeshSkinBindPose receives the exact retained MeshGeometry object and passes that same object to getMeshGeometryVertexJoints0",
+      "diagnostic": "readonly MeshGeometry structural view cannot bind to the exact Ref<MeshGeometry> accepted by the canonical meshGeometryAttributes completion",
+      "defect": "The emitter widens the exact MeshGeometry owner to a readonly row at the imported call even though the call is implemented by the canonical exact-owner mesh module. Recovering the exact object from that row retains the identical shared owner and changes no read, write, call, or failure path.",
+      "expectedWhen": "always",
+      "expires": "when imported calls preserve the exact MeshGeometry owner required by their canonical implementation; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "skeleton3d-mesh-weights-exact-geometry-owner",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/skeleton3d/skin_mesh_geometry.hpp",
+      "from": "flight::mesh::get_mesh_geometry_vertex_weights0(weight, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(geometry), v)",
+      "to": "flight::mesh::get_mesh_geometry_vertex_weights0(weight, flight::structural_ref_cast<flight::Ref<flight::types::MeshGeometry>>(geometry), v)",
+      "sourceDeclaration": "packages/skeleton3d/src/skinMeshGeometry.ts -- captureMeshSkinBindPose receives the exact retained MeshGeometry object and passes that same object to getMeshGeometryVertexWeights0",
+      "diagnostic": "readonly MeshGeometry structural view cannot bind to the exact Ref<MeshGeometry> accepted by the canonical meshGeometryAttributes completion",
+      "defect": "The emitter widens the exact MeshGeometry owner to a readonly row at the imported call even though the call is implemented by the canonical exact-owner mesh module. Recovering the exact object from that row retains the identical shared owner and changes no read, write, call, or failure path.",
+      "expectedWhen": "always",
+      "expires": "when imported calls preserve the exact MeshGeometry owner required by their canonical implementation; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "adjustments-color-matrix-interface-heritage",
       "kind": "respell-reference-member-access",
       "appliesTo": "flight/types/color_matrix_adjustment.hpp",

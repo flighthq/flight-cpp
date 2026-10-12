@@ -35203,9 +35203,7 @@
       "status": "refused-placeholder"
     },
     {
-      "consumers": [
-        "@flighthq/skeleton3d/packages/skeleton3d/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/skeleton3d",
@@ -35223,7 +35221,8 @@
     },
     {
       "consumers": [
-        "@flighthq/skeleton3d/packages/skeleton3d/src/contract.ts"
+        "@flighthq/skeleton3d/packages/skeleton3d/src/contract.ts",
+        "@flighthq/skeleton3d/packages/skeleton3d/src/index.ts"
       ],
       "module": {
         "name": "EnableSkeleton3DGuards",
@@ -35240,6 +35239,7 @@
     {
       "consumers": [
         "@flighthq/skeleton3d/packages/skeleton3d/src/contract.ts",
+        "@flighthq/skeleton3d/packages/skeleton3d/src/index.ts",
         "@flighthq/skeleton3d/packages/skeleton3d/src/prepareScene3DSkinning.ts"
       ],
       "module": {
@@ -35259,18 +35259,18 @@
       },
       "path": "flight/skeleton3d/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/skeleton3d/packages/skeleton3d/src/contract.ts"
+        "@flighthq/skeleton3d/packages/skeleton3d/src/enableSkeleton3DGuards.ts",
+        "@flighthq/skeleton3d/packages/skeleton3d/src/prepareScene3DSkinning.ts",
+        "@flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts",
+        "@flighthq/skeleton3d/packages/skeleton3d/src/updateMeshDeformation.ts",
+        "@flighthq/skeleton3d/packages/skeleton3d/src/updateMeshSkin.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
-      "classification": "source-portability",
       "consumers": [
-        "@flighthq/skeleton3d/packages/skeleton3d/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:8250a6670884cf9ecb14be8dcc79c67c39b84dd9d7efd7da29cddaf5151901b4",
-        "sha256:eba5bf19f73facff1d3978f81eb6ba24b36eba8c2c9691f5f6356bad12e3124f"
+        "@flighthq/skeleton3d/packages/skeleton3d/src/contract.ts",
+        "@flighthq/skeleton3d/packages/skeleton3d/src/index.ts"
       ],
       "module": {
         "name": "PrepareScene3DSkinning",
@@ -35278,35 +35278,39 @@
         "source": "packages/skeleton3d/src/prepareScene3DSkinning.ts"
       },
       "path": "flight/skeleton3d/prepare_scene3_dskinning.hpp",
-      "rule": "cpp-structural-assertion-writable-capability-unproven",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/skeleton3d/packages/skeleton3d/src/contract.ts",
         "@flighthq/skeleton3d/packages/skeleton3d/src/enableSkeleton3DGuards.ts",
+        "@flighthq/skeleton3d/packages/skeleton3d/src/index.ts",
         "@flighthq/skeleton3d/packages/skeleton3d/src/prepareScene3DSkinning.ts",
         "@flighthq/skeleton3d/packages/skeleton3d/src/updateMeshSkin.ts"
       ],
       "declarationFingerprints": [
-        "sha256:02d08e8d124bbc2e43d0163d7cfa6fb525e174c653ddafe815d47e511975149b",
+        "sha256:008753e8198204e41ccaf4ae8203fee8b93d92c37c22782ae98ff4ba17ddc2df",
         "sha256:09754634722bc97ca284fd6f2765d6b129b9d14546921a40ef2fa2f14ee5f3a0",
-        "sha256:0d0585ee1e8517a5f8fd0fa703ce3cad40b6596de285e3bdf2e4e5dd66189e59",
         "sha256:1058429325724392a4b765f6b25989f5990486d49d84f867a3f797289e6959a2",
         "sha256:14c4d409fc0c72696598dbfc3b8b631fc6399f0bdff06702914c71da87c084c1",
+        "sha256:27d771339f9e889021cd4796826fc069f6076d35f5fdbaa04e3da80fde3f6369",
         "sha256:29f4f509574d0d3f4dbdc68621579ccd42918d78be7fe9ca5dbb9153d444f6ee",
-        "sha256:3a0123c9ca5c18b13b95de4ab592ffc324499d534708ad2d99d6262f1926c189",
         "sha256:450a21a282fbf1e53650800f2efb269283cf85859e5e05e3e1e3f3290402bd33",
         "sha256:59fe7ed664d557db10e7ffd68dbd96cef80fb2f64b12277ebe90df7a60112723",
-        "sha256:5eb55f6973463ef6e3abe2cadd63cae40b393dd7dee9f13d7c80ec30d89cdb00",
         "sha256:645dad3eb585b160c0e00d0afbcefff7959a7c09a27d0dd99062b6a100600b35",
         "sha256:72265becd8f6524fcaf016e42eecd5dd60d177aaee16509c4af12eba2acf8ab9",
         "sha256:7fc875212b9924f9b723942f786e2e54eba44581b2875471ecb809a7481b352f",
         "sha256:89824bb75f260184f40fb2f87180cef662c85b7b4c2add9ad4d2eb1d3d5aba0e",
         "sha256:980259b2f4e0ae8edb9094a86d499b1b59e41d1640a97d4d40d072295a08ef1e",
+        "sha256:be48942d670996b8bf98d435cd636ce8eb1ae4b5e29a9502b548ca276372d6ba",
         "sha256:c3cd6dd275098f95c5310292c6c7970bff51125d481fc25b61ca97219ad92dbc",
-        "sha256:ddd8a163e4f897b3e6c2c5888fa67c06163ffa98b84add198d5876d438f6f23f"
+        "sha256:caaf6068ede4bef13860f6378d7464315ac3d6feca1a1547f3f94c5763f7709c",
+        "sha256:ddd8a163e4f897b3e6c2c5888fa67c06163ffa98b84add198d5876d438f6f23f",
+        "sha256:e169763da57524593d75ca07f33277608c5008e514071f98b16f6f7c68227b83"
       ],
       "module": {
         "name": "Skeleton3d",
@@ -35320,6 +35324,7 @@
     {
       "consumers": [
         "@flighthq/skeleton3d/packages/skeleton3d/src/contract.ts",
+        "@flighthq/skeleton3d/packages/skeleton3d/src/index.ts",
         "@flighthq/skeleton3d/packages/skeleton3d/src/prepareScene3DSkinning.ts",
         "@flighthq/skeleton3d/packages/skeleton3d/src/updateMeshSkin.ts"
       ],
@@ -35335,6 +35340,7 @@
       "consumers": [
         "@flighthq/skeleton3d/packages/skeleton3d/src/contract.ts",
         "@flighthq/skeleton3d/packages/skeleton3d/src/getMeshSkinBounds.ts",
+        "@flighthq/skeleton3d/packages/skeleton3d/src/index.ts",
         "@flighthq/skeleton3d/packages/skeleton3d/src/skinMeshGeometry.ts"
       ],
       "module": {
@@ -35347,7 +35353,8 @@
     },
     {
       "consumers": [
-        "@flighthq/skeleton3d/packages/skeleton3d/src/contract.ts"
+        "@flighthq/skeleton3d/packages/skeleton3d/src/contract.ts",
+        "@flighthq/skeleton3d/packages/skeleton3d/src/index.ts"
       ],
       "module": {
         "name": "UpdateMeshDeformation",
@@ -35363,6 +35370,7 @@
     {
       "consumers": [
         "@flighthq/skeleton3d/packages/skeleton3d/src/contract.ts",
+        "@flighthq/skeleton3d/packages/skeleton3d/src/index.ts",
         "@flighthq/skeleton3d/packages/skeleton3d/src/updateMeshDeformation.ts"
       ],
       "module": {
