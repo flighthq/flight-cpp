@@ -8899,13 +8899,13 @@
       "code": "dependency-refused",
       "module": "packages/tokens/src/contract.ts",
       "package": "@flighthq/tokens",
-      "reason": "dependency ./flightDocumentSceneTokens was refused for @flighthq/tokens/packages/tokens/src/flightDocumentSceneTokens.ts",
+      "reason": "dependency ./flightDocumentSceneTokens.ts was refused for @flighthq/tokens/packages/tokens/src/flightDocumentSceneTokens.ts",
       "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 82,
+      "line": 83,
       "module": "packages/tokens/src/flightDocumentSceneTokens.ts",
       "package": "@flighthq/tokens",
       "reason": "cpp emission failed for @flighthq/tokens/packages/tokens/src/flightDocumentSceneTokens.ts: dual-sentinel presence narrowing requires one remaining C++ value domain: the storage carries both null and undefined beside SEVERAL value alternatives, so a presence test leaves more than one possible value and the emitter has no single read to emit for it. Declare the member with one concrete representation -- `readonly number[]` rather than `readonly number[] | Uint16Array | Uint32Array` -- and read it through a coalesce whose result is declared; that shape lowers, which the control beside this rule shows",
@@ -8924,13 +8924,13 @@
       "code": "dependency-refused",
       "module": "packages/tokens/src/index.ts",
       "package": "@flighthq/tokens",
-      "reason": "dependency ./flightDocumentSceneTokens was refused for @flighthq/tokens/packages/tokens/src/flightDocumentSceneTokens.ts",
+      "reason": "dependency ./flightDocumentSceneTokens.ts was refused for @flighthq/tokens/packages/tokens/src/flightDocumentSceneTokens.ts",
       "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 51,
+      "line": 30,
       "module": "packages/tokens/src/substituteFlightDocumentSceneTokens.ts",
       "package": "@flighthq/tokens",
       "reason": "cpp emission failed for @flighthq/types/packages/types/src/FlightDocument.ts: contextual nullable construction resolves the value's type evidence to a complete closed union carrier, but that carrier is not the destination variant and the expression does not select one declared alternative. This commonly occurs when a constrained generic value or whole-union assertion preserves a structural subtype or orders alternatives differently from the closed C++ variant. Keep the value in the exact declared union carrier, construct one declared arm before the generic boundary, or add a checked dependent owner carrier to the runtime contract; the compiler will not choose an arm with an unchecked cast, copy or materialize a replacement object, or add side storage.",

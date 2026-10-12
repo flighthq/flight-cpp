@@ -6,55 +6,114 @@
     "runtimeProfile": "flight-cpp",
     "target": "cpp"
   },
-  "bindingProfiles": [
+  "bindingProfileSets": [
     {
-      "digest": "sha256:23d8b54c0e33ad10d6cfb7004620f66ff4d0f68062dcc132fcca8fb7d4eabbf8",
-      "identity": "flighthq/flight-cpp/runtime-carriers/1",
-      "path": "bindings/runtime.json",
-      "profile": "runtime-carriers",
-      "schema": "flight-cpp-external-bindings/1"
+      "id": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
+      "profiles": [
+        {
+          "digest": "sha256:23d8b54c0e33ad10d6cfb7004620f66ff4d0f68062dcc132fcca8fb7d4eabbf8",
+          "identity": "flighthq/flight-cpp/runtime-carriers/1",
+          "path": "bindings/runtime.json",
+          "profile": "runtime-carriers",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:96db37ebc3c2412cbc64451ea6344e463539b1dea548a30e1c06ce315836fb24",
+          "identity": "flighthq/flight-cpp/headless/1",
+          "path": "bindings/headless.json",
+          "profile": "headless",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:5bbaaf9c6dcacda0d2c9fe89eb9453af9726d417c15193e2e5016cce9930db71",
+          "identity": "flighthq/flight-cpp/web-types/1",
+          "path": "bindings/web-types.json",
+          "profile": "web-types",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:b0b4e3ac41bba815dd5e27b8e677d4edc505bf56ca0ab519914f8525751773ed",
+          "identity": "flighthq/flight-cpp/sdl-image/1",
+          "path": "bindings/sdl-image.json",
+          "profile": "sdl-image",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:4daf23f904f3868115322ed091fea1c4b6e287e3ce06732789e5c6eb543d53dd",
+          "identity": "flighthq/flight-cpp/sdl-gl/1",
+          "path": "bindings/sdl-gl.json",
+          "profile": "sdl-gl",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:651d841d6f5a5c0feb80be12d79e45cb1fba6fd973176f96e580efb98aec3f59",
+          "identity": "flighthq/flight-cpp/sdl-wgpu/1",
+          "path": "bindings/sdl-wgpu.json",
+          "profile": "sdl-wgpu",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:3f73f00279d486c9dd4b7c6158d95bce4afa0b3e0704c87462829d73d8049f86",
+          "identity": "flighthq/flight-cpp/sdl-app/1",
+          "path": "bindings/sdl-app.json",
+          "profile": "sdl-app",
+          "schema": "flight-cpp-external-bindings/1"
+        }
+      ]
     },
     {
-      "digest": "sha256:0dcdadfb1a56a90afff9a5073fc80c4f897077c94d2c2ace07e0a54393e7f48c",
-      "identity": "flighthq/flight-cpp/headless/1",
-      "path": "bindings/headless.json",
-      "profile": "headless",
-      "schema": "flight-cpp-external-bindings/1"
-    },
-    {
-      "digest": "sha256:5bbaaf9c6dcacda0d2c9fe89eb9453af9726d417c15193e2e5016cce9930db71",
-      "identity": "flighthq/flight-cpp/web-types/1",
-      "path": "bindings/web-types.json",
-      "profile": "web-types",
-      "schema": "flight-cpp-external-bindings/1"
-    },
-    {
-      "digest": "sha256:b0b4e3ac41bba815dd5e27b8e677d4edc505bf56ca0ab519914f8525751773ed",
-      "identity": "flighthq/flight-cpp/sdl-image/1",
-      "path": "bindings/sdl-image.json",
-      "profile": "sdl-image",
-      "schema": "flight-cpp-external-bindings/1"
-    },
-    {
-      "digest": "sha256:4daf23f904f3868115322ed091fea1c4b6e287e3ce06732789e5c6eb543d53dd",
-      "identity": "flighthq/flight-cpp/sdl-gl/1",
-      "path": "bindings/sdl-gl.json",
-      "profile": "sdl-gl",
-      "schema": "flight-cpp-external-bindings/1"
-    },
-    {
-      "digest": "sha256:651d841d6f5a5c0feb80be12d79e45cb1fba6fd973176f96e580efb98aec3f59",
-      "identity": "flighthq/flight-cpp/sdl-wgpu/1",
-      "path": "bindings/sdl-wgpu.json",
-      "profile": "sdl-wgpu",
-      "schema": "flight-cpp-external-bindings/1"
-    },
-    {
-      "digest": "sha256:3f73f00279d486c9dd4b7c6158d95bce4afa0b3e0704c87462829d73d8049f86",
-      "identity": "flighthq/flight-cpp/sdl-app/1",
-      "path": "bindings/sdl-app.json",
-      "profile": "sdl-app",
-      "schema": "flight-cpp-external-bindings/1"
+      "id": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "profiles": [
+        {
+          "digest": "sha256:23d8b54c0e33ad10d6cfb7004620f66ff4d0f68062dcc132fcca8fb7d4eabbf8",
+          "identity": "flighthq/flight-cpp/runtime-carriers/1",
+          "path": "bindings/runtime.json",
+          "profile": "runtime-carriers",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:0dcdadfb1a56a90afff9a5073fc80c4f897077c94d2c2ace07e0a54393e7f48c",
+          "identity": "flighthq/flight-cpp/headless/1",
+          "path": "bindings/headless.json",
+          "profile": "headless",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:5bbaaf9c6dcacda0d2c9fe89eb9453af9726d417c15193e2e5016cce9930db71",
+          "identity": "flighthq/flight-cpp/web-types/1",
+          "path": "bindings/web-types.json",
+          "profile": "web-types",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:b0b4e3ac41bba815dd5e27b8e677d4edc505bf56ca0ab519914f8525751773ed",
+          "identity": "flighthq/flight-cpp/sdl-image/1",
+          "path": "bindings/sdl-image.json",
+          "profile": "sdl-image",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:4daf23f904f3868115322ed091fea1c4b6e287e3ce06732789e5c6eb543d53dd",
+          "identity": "flighthq/flight-cpp/sdl-gl/1",
+          "path": "bindings/sdl-gl.json",
+          "profile": "sdl-gl",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:651d841d6f5a5c0feb80be12d79e45cb1fba6fd973176f96e580efb98aec3f59",
+          "identity": "flighthq/flight-cpp/sdl-wgpu/1",
+          "path": "bindings/sdl-wgpu.json",
+          "profile": "sdl-wgpu",
+          "schema": "flight-cpp-external-bindings/1"
+        },
+        {
+          "digest": "sha256:3f73f00279d486c9dd4b7c6158d95bce4afa0b3e0704c87462829d73d8049f86",
+          "identity": "flighthq/flight-cpp/sdl-app/1",
+          "path": "bindings/sdl-app.json",
+          "profile": "sdl-app",
+          "schema": "flight-cpp-external-bindings/1"
+        }
+      ]
     }
   ],
   "namespaceMapping": {
@@ -6420,6 +6479,7 @@
   },
   "packages": [
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/abc",
       "cppNamespace": "flight::abc",
       "emittedModules": 4,
@@ -6432,6 +6492,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/accessibility",
       "cppNamespace": "flight::accessibility",
       "emittedModules": 3,
@@ -6444,6 +6505,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/adjustments",
       "cppNamespace": "flight::adjustments",
       "emittedModules": 22,
@@ -6456,6 +6518,7 @@
       "sourceModules": 22
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/animation",
       "cppNamespace": "flight::animation",
       "emittedModules": 12,
@@ -6468,6 +6531,7 @@
       "sourceModules": 13
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/app",
       "cppNamespace": "flight::app",
       "emittedModules": 4,
@@ -6480,6 +6544,7 @@
       "sourceModules": 6
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/assets",
       "cppNamespace": "flight::assets",
       "emittedModules": 4,
@@ -6492,6 +6557,7 @@
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/audio",
       "cppNamespace": "flight::audio",
       "emittedModules": 5,
@@ -6504,6 +6570,7 @@
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/binpack",
       "cppNamespace": "flight::binpack",
       "emittedModules": 4,
@@ -6516,6 +6583,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/bitmap",
       "cppNamespace": "flight::bitmap",
       "emittedModules": 44,
@@ -6528,6 +6596,7 @@
       "sourceModules": 44
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/bitmapfont",
       "cppNamespace": "flight::bitmapfont",
       "emittedModules": 7,
@@ -6540,6 +6609,7 @@
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/bitmapfont_formats",
       "cppNamespace": "flight::bitmapfont_formats",
       "emittedModules": 6,
@@ -6552,6 +6622,7 @@
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/bitmaptext",
       "cppNamespace": "flight::bitmaptext",
       "emittedModules": 3,
@@ -6564,6 +6635,7 @@
       "sourceModules": 6
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/camera",
       "cppNamespace": "flight::camera",
       "emittedModules": 21,
@@ -6576,6 +6648,7 @@
       "sourceModules": 21
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/camera_controls",
       "cppNamespace": "flight::camera_controls",
       "emittedModules": 7,
@@ -6588,6 +6661,7 @@
       "sourceModules": 7
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/capture",
       "cppNamespace": "flight::capture",
       "emittedModules": 3,
@@ -6600,6 +6674,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/clip",
       "cppNamespace": "flight::clip",
       "emittedModules": 4,
@@ -6612,6 +6687,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/clipboard",
       "cppNamespace": "flight::clipboard",
       "emittedModules": 3,
@@ -6624,6 +6700,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/clock",
       "cppNamespace": "flight::clock",
       "emittedModules": 4,
@@ -6636,6 +6713,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/collision",
       "cppNamespace": "flight::collision",
       "emittedModules": 32,
@@ -6648,6 +6726,7 @@
       "sourceModules": 38
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/color",
       "cppNamespace": "flight::color",
       "emittedModules": 11,
@@ -6660,6 +6739,7 @@
       "sourceModules": 11
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/command",
       "cppNamespace": "flight::command",
       "emittedModules": 6,
@@ -6672,6 +6752,7 @@
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/compression",
       "cppNamespace": "flight::compression",
       "emittedModules": 6,
@@ -6684,6 +6765,7 @@
       "sourceModules": 6
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/connectivity",
       "cppNamespace": "flight::connectivity",
       "emittedModules": 2,
@@ -6696,6 +6778,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/debug",
       "cppNamespace": "flight::debug",
       "emittedModules": 3,
@@ -6708,6 +6791,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/device",
       "cppNamespace": "flight::device",
       "emittedModules": 3,
@@ -6720,6 +6804,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/dialog",
       "cppNamespace": "flight::dialog",
       "emittedModules": 4,
@@ -6732,6 +6817,7 @@
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/easing",
       "cppNamespace": "flight::easing",
       "emittedModules": 22,
@@ -6744,6 +6830,7 @@
       "sourceModules": 23
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/effects",
       "cppNamespace": "flight::effects",
       "emittedModules": 55,
@@ -6756,6 +6843,7 @@
       "sourceModules": 77
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/effects_canvas",
       "cppNamespace": "flight::effects_canvas",
       "emittedModules": 12,
@@ -6769,6 +6857,7 @@
       "sourceModules": 30
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/effects_gl",
       "cppNamespace": "flight::effects_gl",
       "emittedModules": 7,
@@ -6781,6 +6870,7 @@
       "sourceModules": 61
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/effects_wgpu",
       "cppNamespace": "flight::effects_wgpu",
       "emittedModules": 12,
@@ -6793,6 +6883,7 @@
       "sourceModules": 60
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/encoding",
       "cppNamespace": "flight::encoding",
       "emittedModules": 3,
@@ -6805,6 +6896,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/entity",
       "cppNamespace": "flight::entity",
       "emittedModules": 10,
@@ -6817,6 +6909,7 @@
       "sourceModules": 10
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/filesystem",
       "cppNamespace": "flight::filesystem",
       "emittedModules": 2,
@@ -6829,6 +6922,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/flow",
       "cppNamespace": "flight::flow",
       "emittedModules": 4,
@@ -6841,6 +6935,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/font",
       "cppNamespace": "flight::font",
       "emittedModules": 8,
@@ -6853,6 +6948,7 @@
       "sourceModules": 9
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/font_formats",
       "cppNamespace": "flight::font_formats",
       "emittedModules": 15,
@@ -6865,6 +6961,7 @@
       "sourceModules": 17
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/geolocation",
       "cppNamespace": "flight::geolocation",
       "emittedModules": 4,
@@ -6877,6 +6974,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/geometry",
       "cppNamespace": "flight::geometry",
       "emittedModules": 30,
@@ -6889,6 +6987,7 @@
       "sourceModules": 30
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/gizmo",
       "cppNamespace": "flight::gizmo",
       "emittedModules": 4,
@@ -6901,6 +7000,7 @@
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/glyphatlas",
       "cppNamespace": "flight::glyphatlas",
       "emittedModules": 8,
@@ -6913,6 +7013,7 @@
       "sourceModules": 10
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/gui",
       "cppNamespace": "flight::gui",
       "emittedModules": 16,
@@ -6925,6 +7026,7 @@
       "sourceModules": 20
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/haptics",
       "cppNamespace": "flight::haptics",
       "emittedModules": 3,
@@ -6937,6 +7039,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/host",
       "cppNamespace": "flight::host",
       "emittedModules": 6,
@@ -6949,6 +7052,7 @@
       "sourceModules": 6
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/image",
       "cppNamespace": "flight::image",
       "emittedModules": 4,
@@ -6961,6 +7065,7 @@
       "sourceModules": 7
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/image_codec",
       "cppNamespace": "flight::image_codec",
       "emittedModules": 9,
@@ -6973,6 +7078,7 @@
       "sourceModules": 9
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/importdiagnostics",
       "cppNamespace": "flight::importdiagnostics",
       "emittedModules": 4,
@@ -6985,6 +7091,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/input",
       "cppNamespace": "flight::input",
       "emittedModules": 2,
@@ -6997,6 +7104,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/interaction",
       "cppNamespace": "flight::interaction",
       "emittedModules": 8,
@@ -7009,6 +7117,7 @@
       "sourceModules": 19
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/intl",
       "cppNamespace": "flight::intl",
       "emittedModules": 2,
@@ -7021,6 +7130,7 @@
       "sourceModules": 9
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/ipc",
       "cppNamespace": "flight::ipc",
       "emittedModules": 3,
@@ -7033,6 +7143,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/keyboard",
       "cppNamespace": "flight::keyboard",
       "emittedModules": 3,
@@ -7045,6 +7156,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/layout",
       "cppNamespace": "flight::layout",
       "emittedModules": 5,
@@ -7057,6 +7169,7 @@
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/lifecycle",
       "cppNamespace": "flight::lifecycle",
       "emittedModules": 2,
@@ -7069,6 +7182,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/lighting",
       "cppNamespace": "flight::lighting",
       "emittedModules": 13,
@@ -7081,6 +7195,7 @@
       "sourceModules": 14
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/loader",
       "cppNamespace": "flight::loader",
       "emittedModules": 3,
@@ -7093,6 +7208,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/log",
       "cppNamespace": "flight::log",
       "emittedModules": 2,
@@ -7105,6 +7221,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/materials",
       "cppNamespace": "flight::materials",
       "emittedModules": 23,
@@ -7117,6 +7234,7 @@
       "sourceModules": 24
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/math",
       "cppNamespace": "flight::math",
       "emittedModules": 17,
@@ -7129,6 +7247,7 @@
       "sourceModules": 17
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/media",
       "cppNamespace": "flight::media",
       "emittedModules": 5,
@@ -7141,6 +7260,7 @@
       "sourceModules": 7
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/mediasession",
       "cppNamespace": "flight::mediasession",
       "emittedModules": 3,
@@ -7153,6 +7273,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/menu",
       "cppNamespace": "flight::menu",
       "emittedModules": 3,
@@ -7165,6 +7286,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/mesh",
       "cppNamespace": "flight::mesh",
       "emittedModules": 16,
@@ -7177,6 +7299,7 @@
       "sourceModules": 16
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/midi",
       "cppNamespace": "flight::midi",
       "emittedModules": 5,
@@ -7189,6 +7312,7 @@
       "sourceModules": 7
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/motionpath",
       "cppNamespace": "flight::motionpath",
       "emittedModules": 3,
@@ -7201,6 +7325,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/movieclip",
       "cppNamespace": "flight::movieclip",
       "emittedModules": 3,
@@ -7213,6 +7338,7 @@
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/net",
       "cppNamespace": "flight::net",
       "emittedModules": 5,
@@ -7225,6 +7351,7 @@
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/node",
       "cppNamespace": "flight::node",
       "emittedModules": 21,
@@ -7237,6 +7364,7 @@
       "sourceModules": 21
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/notification",
       "cppNamespace": "flight::notification",
       "emittedModules": 2,
@@ -7249,6 +7377,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/particleemitter",
       "cppNamespace": "flight::particleemitter",
       "emittedModules": 7,
@@ -7261,6 +7390,7 @@
       "sourceModules": 12
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/particles",
       "cppNamespace": "flight::particles",
       "emittedModules": 12,
@@ -7273,6 +7403,7 @@
       "sourceModules": 13
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/particles_formats",
       "cppNamespace": "flight::particles_formats",
       "emittedModules": 11,
@@ -7285,6 +7416,7 @@
       "sourceModules": 17
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/path",
       "cppNamespace": "flight::path",
       "emittedModules": 31,
@@ -7297,6 +7429,7 @@
       "sourceModules": 31
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/path_boolean",
       "cppNamespace": "flight::path_boolean",
       "emittedModules": 9,
@@ -7309,6 +7442,7 @@
       "sourceModules": 10
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/path_formats",
       "cppNamespace": "flight::path_formats",
       "emittedModules": 3,
@@ -7321,6 +7455,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/permissions",
       "cppNamespace": "flight::permissions",
       "emittedModules": 3,
@@ -7333,6 +7468,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/physics2d",
       "cppNamespace": "flight::physics2d",
       "emittedModules": 21,
@@ -7345,6 +7481,7 @@
       "sourceModules": 26
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/physics2d_abi",
       "cppNamespace": "flight::physics2d_abi",
       "emittedModules": 6,
@@ -7357,6 +7494,7 @@
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/physics3d",
       "cppNamespace": "flight::physics3d",
       "emittedModules": 32,
@@ -7369,6 +7507,7 @@
       "sourceModules": 36
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/physics3d_abi",
       "cppNamespace": "flight::physics3d_abi",
       "emittedModules": 6,
@@ -7381,6 +7520,7 @@
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/picking",
       "cppNamespace": "flight::picking",
       "emittedModules": 2,
@@ -7393,6 +7533,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/platform",
       "cppNamespace": "flight::platform",
       "emittedModules": 3,
@@ -7405,6 +7546,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/power",
       "cppNamespace": "flight::power",
       "emittedModules": 2,
@@ -7417,6 +7559,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/preferences",
       "cppNamespace": "flight::preferences",
       "emittedModules": 3,
@@ -7429,6 +7572,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/protocol",
       "cppNamespace": "flight::protocol",
       "emittedModules": 3,
@@ -7441,6 +7585,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/quadbatch",
       "cppNamespace": "flight::quadbatch",
       "emittedModules": 2,
@@ -7453,6 +7598,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/registry",
       "cppNamespace": "flight::registry",
       "emittedModules": 3,
@@ -7465,6 +7611,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/registry_catalog",
       "cppNamespace": "flight::registry_catalog",
       "emittedModules": 4,
@@ -7477,6 +7624,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/registry_codegen",
       "cppNamespace": "flight::registry_codegen",
       "emittedModules": 3,
@@ -7489,6 +7637,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/render",
       "cppNamespace": "flight::render",
       "emittedModules": 11,
@@ -7501,6 +7650,7 @@
       "sourceModules": 25
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/render_gl",
       "cppNamespace": "flight::render_gl",
       "emittedModules": 19,
@@ -7513,6 +7663,7 @@
       "sourceModules": 33
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/render_wgpu",
       "cppNamespace": "flight::render_wgpu",
       "emittedModules": 14,
@@ -7525,6 +7676,7 @@
       "sourceModules": 33
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/requirement",
       "cppNamespace": "flight::requirement",
       "emittedModules": 4,
@@ -7537,6 +7689,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/requirements",
       "cppNamespace": "flight::requirements",
       "emittedModules": 4,
@@ -7549,6 +7702,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/scene_document",
       "cppNamespace": "flight::scene_document",
       "emittedModules": 3,
@@ -7561,6 +7715,7 @@
       "sourceModules": 11
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/scene2d",
       "cppNamespace": "flight::scene2d",
       "emittedModules": 4,
@@ -7573,6 +7728,7 @@
       "sourceModules": 9
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/scene2d_canvas",
       "cppNamespace": "flight::scene2d_canvas",
       "emittedModules": 40,
@@ -7586,6 +7742,7 @@
       "sourceModules": 51
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/scene2d_dom",
       "cppNamespace": "flight::scene2d_dom",
       "emittedModules": 14,
@@ -7599,6 +7756,7 @@
       "sourceModules": 33
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/scene2d_formats",
       "cppNamespace": "flight::scene2d_formats",
       "emittedModules": 52,
@@ -7611,6 +7769,7 @@
       "sourceModules": 80
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/scene2d_gl",
       "cppNamespace": "flight::scene2d_gl",
       "emittedModules": 9,
@@ -7623,6 +7782,7 @@
       "sourceModules": 33
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/scene2d_resources",
       "cppNamespace": "flight::scene2d_resources",
       "emittedModules": 10,
@@ -7635,6 +7795,7 @@
       "sourceModules": 12
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/scene2d_wgpu",
       "cppNamespace": "flight::scene2d_wgpu",
       "emittedModules": 8,
@@ -7647,6 +7808,7 @@
       "sourceModules": 33
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/scene3d",
       "cppNamespace": "flight::scene3d",
       "emittedModules": 20,
@@ -7659,6 +7821,7 @@
       "sourceModules": 21
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/scene3d_formats",
       "cppNamespace": "flight::scene3d_formats",
       "emittedModules": 20,
@@ -7671,6 +7834,7 @@
       "sourceModules": 40
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/scene3d_gl",
       "cppNamespace": "flight::scene3d_gl",
       "emittedModules": 67,
@@ -7683,6 +7847,7 @@
       "sourceModules": 68
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/scene3d_resources",
       "cppNamespace": "flight::scene3d_resources",
       "emittedModules": 11,
@@ -7695,6 +7860,7 @@
       "sourceModules": 28
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/scene3d_wgpu",
       "cppNamespace": "flight::scene3d_wgpu",
       "emittedModules": 16,
@@ -7707,6 +7873,7 @@
       "sourceModules": 50
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/screen",
       "cppNamespace": "flight::screen",
       "emittedModules": 3,
@@ -7719,6 +7886,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/selection",
       "cppNamespace": "flight::selection",
       "emittedModules": 3,
@@ -7731,6 +7899,7 @@
       "sourceModules": 6
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/sensors",
       "cppNamespace": "flight::sensors",
       "emittedModules": 3,
@@ -7743,6 +7912,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/shading",
       "cppNamespace": "flight::shading",
       "emittedModules": 18,
@@ -7755,6 +7925,7 @@
       "sourceModules": 19
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/shape",
       "cppNamespace": "flight::shape",
       "emittedModules": 16,
@@ -7767,6 +7938,7 @@
       "sourceModules": 20
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/shape_formats",
       "cppNamespace": "flight::shape_formats",
       "emittedModules": 3,
@@ -7779,6 +7951,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/share",
       "cppNamespace": "flight::share",
       "emittedModules": 2,
@@ -7791,6 +7964,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/shell",
       "cppNamespace": "flight::shell",
       "emittedModules": 3,
@@ -7803,6 +7977,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/shortcut",
       "cppNamespace": "flight::shortcut",
       "emittedModules": 3,
@@ -7815,6 +7990,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/signals",
       "cppNamespace": "flight::signals",
       "emittedModules": 8,
@@ -7827,6 +8003,7 @@
       "sourceModules": 10
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/skeleton2d",
       "cppNamespace": "flight::skeleton2d",
       "emittedModules": 17,
@@ -7839,6 +8016,7 @@
       "sourceModules": 25
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/skeleton2d_formats",
       "cppNamespace": "flight::skeleton2d_formats",
       "emittedModules": 10,
@@ -7851,6 +8029,7 @@
       "sourceModules": 15
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/skeleton3d",
       "cppNamespace": "flight::skeleton3d",
       "emittedModules": 8,
@@ -7863,6 +8042,7 @@
       "sourceModules": 10
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/snapshot",
       "cppNamespace": "flight::snapshot",
       "emittedModules": 2,
@@ -7875,6 +8055,7 @@
       "sourceModules": 7
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/socket",
       "cppNamespace": "flight::socket",
       "emittedModules": 5,
@@ -7887,6 +8068,7 @@
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/spatial",
       "cppNamespace": "flight::spatial",
       "emittedModules": 10,
@@ -7899,6 +8081,7 @@
       "sourceModules": 11
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/spring",
       "cppNamespace": "flight::spring",
       "emittedModules": 6,
@@ -7911,6 +8094,7 @@
       "sourceModules": 6
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/spritesheet",
       "cppNamespace": "flight::spritesheet",
       "emittedModules": 7,
@@ -7923,6 +8107,7 @@
       "sourceModules": 9
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/spritesheet_formats",
       "cppNamespace": "flight::spritesheet_formats",
       "emittedModules": 8,
@@ -7935,6 +8120,7 @@
       "sourceModules": 13
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/statechart",
       "cppNamespace": "flight::statechart",
       "emittedModules": 5,
@@ -7947,6 +8133,7 @@
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/statusbar",
       "cppNamespace": "flight::statusbar",
       "emittedModules": 2,
@@ -7959,6 +8146,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/surface",
       "cppNamespace": "flight::surface",
       "emittedModules": 6,
@@ -7971,6 +8159,7 @@
       "sourceModules": 7
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/swf",
       "cppNamespace": "flight::swf",
       "emittedModules": 16,
@@ -7983,6 +8172,7 @@
       "sourceModules": 19
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/text",
       "cppNamespace": "flight::text",
       "emittedModules": 4,
@@ -7995,6 +8185,7 @@
       "sourceModules": 9
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/text_markup",
       "cppNamespace": "flight::text_markup",
       "emittedModules": 6,
@@ -8007,6 +8198,7 @@
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/textbidi",
       "cppNamespace": "flight::textbidi",
       "emittedModules": 7,
@@ -8019,6 +8211,7 @@
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/textinput",
       "cppNamespace": "flight::textinput",
       "emittedModules": 5,
@@ -8031,6 +8224,7 @@
       "sourceModules": 6
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/textlayout",
       "cppNamespace": "flight::textlayout",
       "emittedModules": 12,
@@ -8043,6 +8237,7 @@
       "sourceModules": 14
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/textsegment",
       "cppNamespace": "flight::textsegment",
       "emittedModules": 5,
@@ -8055,6 +8250,7 @@
       "sourceModules": 7
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/textshaper",
       "cppNamespace": "flight::textshaper",
       "emittedModules": 9,
@@ -8067,6 +8263,7 @@
       "sourceModules": 10
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/textshaper_canvas",
       "cppNamespace": "flight::textshaper_canvas",
       "emittedModules": 2,
@@ -8080,6 +8277,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/texture",
       "cppNamespace": "flight::texture",
       "emittedModules": 6,
@@ -8092,6 +8290,7 @@
       "sourceModules": 9
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/texture_formats",
       "cppNamespace": "flight::texture_formats",
       "emittedModules": 10,
@@ -8104,6 +8303,7 @@
       "sourceModules": 11
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/textureatlas",
       "cppNamespace": "flight::textureatlas",
       "emittedModules": 5,
@@ -8116,6 +8316,7 @@
       "sourceModules": 7
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/textureatlas_formats",
       "cppNamespace": "flight::textureatlas_formats",
       "emittedModules": 6,
@@ -8128,6 +8329,7 @@
       "sourceModules": 8
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/tilemap",
       "cppNamespace": "flight::tilemap",
       "emittedModules": 2,
@@ -8140,6 +8342,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/tilemap_formats",
       "cppNamespace": "flight::tilemap_formats",
       "emittedModules": 5,
@@ -8152,6 +8355,7 @@
       "sourceModules": 11
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/timeline",
       "cppNamespace": "flight::timeline",
       "emittedModules": 3,
@@ -8164,18 +8368,20 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/tokens",
       "cppNamespace": "flight::tokens",
       "emittedModules": 2,
       "package": "@flighthq/tokens",
       "refusedModules": 3,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/tray",
       "cppNamespace": "flight::tray",
       "emittedModules": 3,
@@ -8188,6 +8394,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/tween",
       "cppNamespace": "flight::tween",
       "emittedModules": 7,
@@ -8200,6 +8407,7 @@
       "sourceModules": 10
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/types",
       "cppNamespace": "flight::types",
       "emittedModules": 1029,
@@ -8212,6 +8420,7 @@
       "sourceModules": 1029
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/updater",
       "cppNamespace": "flight::updater",
       "emittedModules": 2,
@@ -8224,6 +8433,7 @@
       "sourceModules": 3
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/useragent",
       "cppNamespace": "flight::useragent",
       "emittedModules": 3,
@@ -8236,6 +8446,7 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/velocity",
       "cppNamespace": "flight::velocity",
       "emittedModules": 4,
@@ -8248,6 +8459,7 @@
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/video",
       "cppNamespace": "flight::video",
       "emittedModules": 4,
@@ -8260,6 +8472,7 @@
       "sourceModules": 5
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/webcam",
       "cppNamespace": "flight::webcam",
       "emittedModules": 2,
@@ -8272,6 +8485,7 @@
       "sourceModules": 2
     },
     {
+      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/xml",
       "cppNamespace": "flight::xml",
       "emittedModules": 4,

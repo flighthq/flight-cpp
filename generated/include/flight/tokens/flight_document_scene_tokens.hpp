@@ -11,15 +11,15 @@
 // single read to emit for it. Declare the member with one concrete representation -- `readonly number[]` rather
 // than `readonly number[] | Uint16Array | Uint32Array` -- and read it through a coalesce whose result is
 // declared; that shape lowers, which the control beside this rule shows
-// stopped at: packages/tokens/src/flightDocumentSceneTokens.ts:82:1
+// stopped at: packages/tokens/src/flightDocumentSceneTokens.ts:83:1
 
 // Declared here, for the replacement to supply:
-//   function createFlightDocumentTokenResolverRegistry(): FlightDocumentTokenResolverRegistry -- :22
-//   function explainFlightDocumentSceneTokenResolution(scene: Readonly<FlightDocumentScene>, mode: string, resolvers?: Readonly<FlightDocumentTokenResolverRegistry>): FlightDocumentRefusalExplanation | null -- :28
-//   function initializeFlightDocumentTokenResolverRegistry(out: EntityConstruction<FlightDocumentTokenResolverRegistry>): void -- :39
-//   function resolveFlightDocumentSceneTokens(scene: Readonly<FlightDocumentScene>, mode: string, resolvers?: Readonly<FlightDocumentTokenResolverRegistry>): FlightDocumentTokenResolution | null -- :50
-//   function readSceneTokens(scene: Readonly<FlightDocumentScene>, mode: string, resolvers?: Readonly<FlightDocumentTokenResolverRegistry>): SceneTokenReadResult -- :59
-//   function resolveTokenKey(key: string, state: SceneTokenResolutionState, referencedFrom?: string): FlightDocumentValue | ... -- :82
+//   function createFlightDocumentTokenResolverRegistry(): FlightDocumentTokenResolverRegistry -- :23
+//   function explainFlightDocumentSceneTokenResolution(scene: Readonly<FlightDocumentScene>, mode: string, resolvers?: Readonly<FlightDocumentTokenResolverRegistry>): FlightDocumentRefusalExplanation | null -- :29
+//   function initializeFlightDocumentTokenResolverRegistry(out: EntityConstruction<FlightDocumentTokenResolverRegistry>): void -- :40
+//   function resolveFlightDocumentSceneTokens(scene: Readonly<FlightDocumentScene>, mode: string, resolvers?: Readonly<FlightDocumentTokenResolverRegistry>): FlightDocumentTokenResolution | null -- :51
+//   function readSceneTokens(scene: Readonly<FlightDocumentScene>, mode: string, resolvers?: Readonly<FlightDocumentTokenResolverRegistry>): SceneTokenReadResult -- :60
+//   function resolveTokenKey(key: string, state: SceneTokenResolutionState, referencedFrom?: string): FlightDocumentValue | ... -- :83
 //   function resolveAlias(authored: string, token: Readonly<FlightDocumentToken>, path: string, state: SceneTokenResolutionState): FlightDocumentValue | ... -- :131
 //   function refuse(state: SceneTokenResolutionState, reason: FlightDocumentRefusalReason, path: string, tokenKey: string | null, mode: string | null, kind: string | null): ... -- :149
 //   function resolveBooleanTokenValue(value: FlightDocumentValue): FlightDocumentValue | null -- :176
@@ -30,30 +30,20 @@
 //   interface SceneTokenResolutionState { mode: string; refusal?: FlightDocumentRefusalExplanation; resolved: Map<string, FlightDocumentValue>; resolvers?: Readonly<FlightDocumentTokenResolverRegistry>; rows: Map<string, TokenRow>; visiting: Set<string> } -- :200
 //   interface TokenRow { index: number; token: Readonly<FlightDocumentToken> } -- :209
 //   const DEFAULT_MODE: string -- :214
-//   const TOKEN_RESOLVER_MISS_POLICY: string -- :216
-//   const TOKEN_RESOLVER_REGISTRY_ID: string -- :217
 
 // Imported by this module, which the replacement likely needs:
 //   { allocateEntity, finishEntity } from '@flighthq/entity/contract'
-//   { createKeyedTable, getRegistryTableEntry, withRegistryTableEntry } from '@flighthq/registry/contract'
-//   type { EntityConstruction, FlightDocumentRefusalExplanation, FlightDocumentScene, FlightDocumentToken, FlightDocumentTokenResolution, FlightDocumentTokenResolver, FlightDocumentTokenResolverRegistry, FlightDocumentValue } from '@flighthq/types/contract'
+//   { withKindMapEntry } from '@flighthq/registry/contract'
+//   type { EntityConstruction, FlightDocumentRefusalExplanation, FlightDocumentScene, FlightDocumentToken, FlightDocumentTokenResolution, FlightDocumentTokenResolver, FlightDocumentTokenResolverRegistry, FlightDocumentValue, Kind } from '@flighthq/types/contract'
 //   { FlightDocumentRefusalReason } from '@flighthq/types/contract'
-//   { INVALID_FLIGHT_DOCUMENT_TOKEN_VALUE, isFlightDocumentTokenReference, readFlightDocumentTokenReferenceKey, substituteFlightDocumentTokenValue } from './flightDocumentTokenReference'
-//   type { KeyedTable } from '@flighthq/types/contract'
+//   { INVALID_FLIGHT_DOCUMENT_TOKEN_VALUE, isFlightDocumentTokenReference, readFlightDocumentTokenReferenceKey, substituteFlightDocumentTokenValue } from './flightDocumentTokenReference.ts'
 //   type { Entity } from '@flighthq/types/contract'
 //   type { FlightDocumentScene2D } from '@flighthq/types/contract'
 //   type { FlightDocumentScene3D } from '@flighthq/types/contract'
-//   type { RegistryTableEntry } from '@flighthq/types/contract'
-//   type { RegistryId } from '@flighthq/types/contract'
-//   type { RegistryMissPolicy } from '@flighthq/types/contract'
-//   type { Kind } from '@flighthq/types/contract'
+//   type { FlightDocumentTokenValues } from '@flighthq/types/contract'
 //   type { FlightDocumentScalar } from '@flighthq/types/contract'
 //   type { FlightDocumentFields } from '@flighthq/types/contract'
-//   type { FlightDocumentTokenValues } from '@flighthq/types/contract'
 //   type { FlightDocumentRefusalReason } from '@flighthq/types/contract'
-//   type { RegistryTable } from '@flighthq/types/contract'
-//   type { OrdinalTable } from '@flighthq/types/contract'
-//   type { SlotTable } from '@flighthq/types/contract'
 
 namespace flight::tokens {
 

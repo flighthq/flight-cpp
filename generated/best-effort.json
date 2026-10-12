@@ -39547,6 +39547,7 @@
       "path": "flight/tokens/contract.hpp",
       "refusedDependencies": [
         "@flighthq/tokens/packages/tokens/src/flightDocumentSceneTokens.ts",
+        "@flighthq/tokens/packages/tokens/src/flightDocumentTokenReference.ts",
         "@flighthq/tokens/packages/tokens/src/substituteFlightDocumentSceneTokens.ts"
       ],
       "status": "dependency-incomplete"
@@ -39558,20 +39559,18 @@
         "@flighthq/tokens/packages/tokens/src/index.ts"
       ],
       "declarationFingerprints": [
-        "sha256:30bcfba19d2ed6355343c614e96d2d21d65855249a1702bd2180d92446de57d2",
+        "sha256:40412a05b79ad17f97620ba1090ea8726be9c40b4e1565f904073b8f38982d93",
         "sha256:525c751af61cc9c39a54e6d31f2e4b6749d425c5ff66c9642888415492b530e4",
         "sha256:5bcc9680d6a274e6b516d093e98bf9956191ad0ff1d78b42019f2cb053ac5058",
         "sha256:5ca865637efbdedd6e27ec556c1f50cd8ed1d20da4b193543e9e1790d1413423",
         "sha256:5d8277ff37a16afd424b1f505697a105cd52d38307d79635ea5b3fb00972acf4",
         "sha256:738c8fa83eca7b3c932311bcfd9a6680c1ef8536da63e6698a4b66d0ad77ede1",
         "sha256:7741bba542561ea7a03467fe8eba10e95c3e0245694c9fe99a15be737555e12e",
-        "sha256:8a19f18713c8a1ebd5d318dc3508a8a27bd52bde58ae3776ae6e5d3dc0ed2552",
+        "sha256:8d799563736dd7a83c444af2e5f99a926f71dd2d1786c661733f152a902fa864",
         "sha256:90b1784c6885c80b5a16ad187ae6612fce41406f6dafcb23b8215b22745f323c",
         "sha256:9a951b99e8d2af4f14fd7c076cfc5b70cd638cc17a87d088a9023362a2be2832",
         "sha256:a2d48ccc310dd46d1fdef04cc85c7a722b25a9d2bd6114fa93df7791ee10dde0",
         "sha256:ae49bc3256b627b765ec3624d1ea8ccf7973ef2aebb7e62fdf1dcbdcde596505",
-        "sha256:bbaea44511706bf3d17ff63cbbaf17a780b7a5743f73656755e49c667dfda731",
-        "sha256:d88d10247adbe01b53decf89d3a384c248bd0cbb34fcbdac08f783efd154eaac",
         "sha256:d88dff022ce6d6b0e26a20576666b37efce0b6456ddfd4cb1988a6f91b54e5ac",
         "sha256:eb284ca9d146f53facfa996a880719e76473eea1abfa85a6771df177ad1293ad",
         "sha256:efddc84b94863ba98e8921b54426b10bd35baddd16146983d8020f121360cc10",
@@ -39589,6 +39588,7 @@
     {
       "classification": "compiler-restriction",
       "consumers": [
+        "@flighthq/tokens/packages/tokens/src/contract.ts",
         "@flighthq/tokens/packages/tokens/src/flightDocumentSceneTokens.ts",
         "@flighthq/tokens/packages/tokens/src/substituteFlightDocumentSceneTokens.ts"
       ],
@@ -39631,13 +39631,12 @@
         "@flighthq/tokens/packages/tokens/src/index.ts"
       ],
       "declarationFingerprints": [
-        "sha256:0fd46811682a81c08892c59d5cb8260272310b5afaa174040f49294e0615e64c",
         "sha256:511c66284a99aca7d7ecb162e7134851944c179182339382bcc60dcfb7800a2c",
         "sha256:704ad25f2cdc70d46dcb94e3253513fd4819869ccd733e87e4a0eb882ac764ff",
         "sha256:7e79f4ec43ce9d5e546996a0b5be7b6239ab5767fbc3786dc3ec78e1e54bb22f",
-        "sha256:9375414dcdbf4acfaa250fda4bfaa4f742350556d906f4f096012385595a9afc",
         "sha256:97717d1ff0e5cdca6f5fe15973c7bec8310f12b6845725f3b02524dd1e663e9e",
         "sha256:aab7186aadf867324cf2db71ec785f1e5157c24b9abf5a8f1328fb02cfd58209",
+        "sha256:bbe5e7f8cc198b86640cc9fcbb7e0eab3c31ccbabf4a88cc1856ea234b59bad7",
         "sha256:c44665ac0164e7327278a896a49fa5e4e6d23e33bea086e4dea718e9cc610f87",
         "sha256:deff1fcaf0887497e8952d79efea6b2adc47ae1fe2e4a5c49d0d8857a1b6bb27"
       ],
