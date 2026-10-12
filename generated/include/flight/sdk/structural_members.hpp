@@ -1861,6 +1861,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("touchSupport") && requires { object.touch_support; }) return (object.touch_support);
   else if constexpr (Key::name.view() == std::string_view("touching") && requires { object.touching; }) return (object.touching);
   else if constexpr (Key::name.view() == std::string_view("track") && requires { object.track; }) return (object.track);
+  else if constexpr (Key::name.view() == std::string_view("trailing") && requires { object.trailing; }) return (object.trailing);
   else if constexpr (Key::name.view() == std::string_view("traits") && requires { object.traits; }) return (object.traits);
   else if constexpr (Key::name.view() == std::string_view("transactionDepth") && requires { object.transaction_depth; }) return (object.transaction_depth);
   else if constexpr (Key::name.view() == std::string_view("transactionIndex") && requires { object.transaction_index; }) return (object.transaction_index);
@@ -3867,6 +3868,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("touchSupport") && requires(Object& object) { object.touch_support; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().touch_support)>>{};
   else if constexpr (Key::name.view() == std::string_view("touching") && requires(Object& object) { object.touching; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().touching)>>{};
   else if constexpr (Key::name.view() == std::string_view("track") && requires(Object& object) { object.track; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().track)>>{};
+  else if constexpr (Key::name.view() == std::string_view("trailing") && requires(Object& object) { object.trailing; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().trailing)>>{};
   else if constexpr (Key::name.view() == std::string_view("traits") && requires(Object& object) { object.traits; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().traits)>>{};
   else if constexpr (Key::name.view() == std::string_view("transactionDepth") && requires(Object& object) { object.transaction_depth; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transaction_depth)>>{};
   else if constexpr (Key::name.view() == std::string_view("transactionIndex") && requires(Object& object) { object.transaction_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transaction_index)>>{};
@@ -5876,6 +5878,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->touch_support; }) owner.bind_named("touchSupport", [object]() -> decltype(auto) { return (object->touch_support); });
   if constexpr (requires { object->touching; }) owner.bind_named("touching", [object]() -> decltype(auto) { return (object->touching); });
   if constexpr (requires { object->track; }) owner.bind_named("track", [object]() -> decltype(auto) { return (object->track); });
+  if constexpr (requires { object->trailing; }) owner.bind_named("trailing", [object]() -> decltype(auto) { return (object->trailing); });
   if constexpr (requires { object->traits; }) owner.bind_named("traits", [object]() -> decltype(auto) { return (object->traits); });
   if constexpr (requires { object->transaction_depth; }) owner.bind_named("transactionDepth", [object]() -> decltype(auto) { return (object->transaction_depth); });
   if constexpr (requires { object->transaction_index; }) owner.bind_named("transactionIndex", [object]() -> decltype(auto) { return (object->transaction_index); });
@@ -7918,6 +7921,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(touch_support)
   FLIGHT_SDK_ROW_WIDENS(touching)
   FLIGHT_SDK_ROW_WIDENS(track)
+  FLIGHT_SDK_ROW_WIDENS(trailing)
   FLIGHT_SDK_ROW_WIDENS(traits)
   FLIGHT_SDK_ROW_WIDENS(transaction_depth)
   FLIGHT_SDK_ROW_WIDENS(transaction_index)

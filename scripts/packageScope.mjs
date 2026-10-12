@@ -437,13 +437,19 @@ export function planPackageMerge({ candidateRoot, committedRoot, movingTogether 
 
   // The structural member table is shared vocabulary: every row key and computed cell any emitted header
   // or override uses. It is a pure function of that file set (scripts/structuralMembers.mjs), so it is
-  // re-rendered from the merged tree exactly as a full run renders it -- but only when this package's
-  // headers changed, because otherwise its inputs did not.
-  if (changedHeaders.length > 0) {
+  // re-rendered from the merged tree exactly as a full run renders it -- when this package's headers
+  // changed, or when an override now uses a row key the committed table lacks (an override is part of the
+  // table's input, and one written after the last render would otherwise never reach it).
+  const overrides = overrideHeaderFiles(REPOSITORY_ROOT);
+  const committedTableKeys = existsSync(path.join(committedRoot, 'include', STRUCTURAL_MEMBERS))
+    ? structuralTableKeys(read(committedRoot, `include/${STRUCTURAL_MEMBERS}`))
+    : new Set();
+  const overrideKeyMissing = overrides.some((file) => [...rowKeysIn(file.contents)].some((key) => !committedTableKeys.has(key)));
+  if (changedHeaders.length > 0 || overrideKeyMissing) {
     const files = mergedIncludeFiles
       .filter((file) => file !== STRUCTURAL_MEMBERS)
       .map((file) => ({ contents: mergedHeaderText(file), path: file }));
-    const table = structuralMemberTable(files, overrideHeaderFiles(REPOSITORY_ROOT));
+    const table = structuralMemberTable(files, overrides);
     if (table.contents === undefined) {
       problems.push(`No emitted header uses a structural row key; ${STRUCTURAL_MEMBERS} was left as committed.`);
     } else {

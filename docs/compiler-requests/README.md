@@ -73,3 +73,12 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   independent emitted structs cannot represent a `Texture2D` → `RenderTexture` refinement.
 - [Named union shapes must survive `Partial<T>`](named-union-partial-shape.md) — the emitter
   refuses a mapped partial even though every concrete union arm has a closed object shape.
+- [A callable's parameter pack needs a typed buffer](callable-pack-argument-buffer.md) — debounce and
+  throttle connectors cannot buffer a slot's arguments; carried by the signals throttle override.
+- [Compound `%=` on a number must lower to `fmod`](compound-remainder-on-numbers.md) — the compound
+  form is emitted as a C++ `double` remainder; carried by the same override.
+- [A locally declared handler needs callable identity](local-handler-callable-identity.md) — an erased
+  local lambda cannot be disconnected; carried by the same override.
+- [A generic owner entering a widest-signature container must keep its
+  identity](generic-owner-into-widest-container.md) — `connectSignalTracked` stays refused; a copy in
+  `SignalScope.connections` would split identity and state, so no workaround is carried.

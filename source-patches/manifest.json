@@ -741,23 +741,18 @@
       "id": "font-formats-name-woff-diagnostic-details",
       "dependency": "flight",
       "patch": "font-formats-name-woff-diagnostic-details.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/font-formats/src/woffFont.ts",
       "package": "@flighthq/font-formats",
       "answers": "diagnostic",
       "refusal": "object-literal diagnostic details are emitted as a brace initializer that cannot cross both Record and optional<Record> construction boundaries",
-      "rewrite": "Binds each diagnostic detail object to its already-declared Record<string, boolean | number | string> parameter type before passing it, and binds the nullable output length to an explicitly numeric local.",
-      "equivalence": "The binding evaluates the same property expressions once in the same order and passes the same object contents. inflated?.byteLength ?? -1 and inflated === null ? -1 : inflated.byteLength agree because inflated has exactly Uint8Array | null and byteLength is always numeric. Nothing escapes, mutates, or changes parameter omission.",
+      "rewrite": "Binds the decompression-failure diagnostic detail object to its already-declared Record<string, boolean | number | string> parameter type before passing it, and binds the nullable output length to an explicitly numeric local.",
+      "equivalence": "The binding evaluates the same property expressions once in the same order and passes the same object contents. inflated?.byteLength ?? -1 and inflated === null ? -1 : inflated.byteLength agree because inflated has exactly Uint8Array | null (the Decompressor return type) and byteLength is always numeric. Nothing escapes, mutates, or changes parameter omission.",
       "whyNotUpstreamFirst": "The object literals already receive the exact parameter context and the optional chain already has a numeric result in TypeScript. These ordinary target-neutral spellings avoid maintaining a copied WOFF reader while the emitter cannot compose Record and optional construction or retain the optional-chain value domain.",
-      "verification": "Targeted regeneration made woff_font.hpp compile independently and a C++ probe preserved the missing-decompressor null result plus diagnostic kind, origin, and table detail. Combining that candidate with the committed full structural-member table made all 17 package headers compile; the first named-Record trial exposed and the final typed-local spelling removed the optional-chain Any widening.",
+      "verification": "Rebased onto a627849, where upstream removed the no-decompressor branch (decompress is now a non-null Decompressor parameter), so only the decompression-failure site remains. Applies cleanly at a627849; the effect on woff_font.hpp must be re-verified by the coordinated font/font-formats/compression/swf generation.",
       "unblocks": "Makes woff_font.hpp compile, clearing open_type_glyph_outline_source.hpp and both package aggregators and moving @flighthq/font-formats from 13/17 to 17/17 when regenerated with the full SDK structural schema.",
       "expires": "when the emitter materializes a contextual Record object literal before constructing an optional<Record> function argument, or Flight adopts the named bindings.",
-      "appliedOn": "2026-10-04",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "TEXT",
-        "reason": "context drift: the patched code still exists (4/5 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "appliedOn": "2026-10-12"
     },
     {
       "id": "statechart-single-transition-binding",

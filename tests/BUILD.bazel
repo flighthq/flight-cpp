@@ -156,6 +156,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_signals_throttle_test",
+    srcs = ["generated_signals_throttle_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_log_test",
     srcs = ["generated_log_test.cpp"],
     size = "small",
@@ -248,6 +255,7 @@ test_suite(
         ":generated_intl_cache_test",
         ":generated_lifecycle_test",
         ":generated_log_test",
+        ":generated_signals_throttle_test",
         ":generated_materials_test",
         ":generated_registry_test",
         ":generated_render_state_test",
