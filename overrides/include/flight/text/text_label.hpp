@@ -1,3 +1,16 @@
+// Derived from @flighthq/text/packages/text/src/textLabel.ts
+// at generated digest fabb6ee4f78b7aa32e8ea6d199386c829b5d09986ac73996fafb6280a1452c42.
+//
+// OVERRIDE: the emitted text_label.hpp is a PARTIAL -- the emitter refused createTextLabel,
+// createTextLabelData, createTextLabelRuntime, getTextLabelRuntime, initializeTextLabelData and
+// computeTextLabelLocalBoundsRectangle. This completes the module with the node construction and the
+// data/format/string accessors that the Scene2D text examples need.
+//
+// KNOWN GAP, measured 2026-10-12 and NOT closed by re-deriving: four of those six declarations are
+// still absent from the compiled surface -- computeTextLabelLocalBoundsRectangle, createTextLabelRuntime,
+// getTextLabelRuntime, initializeTextLabelData. The package compiles because nothing in its compiled
+// closure calls them, which is why this is easy to mistake for a complete supply. Treat the module's
+// surface as incomplete until they exist.
 // Runtime completion of the generated partial textLabel module.
 #pragma once
 

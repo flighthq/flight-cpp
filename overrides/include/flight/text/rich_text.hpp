@@ -1,3 +1,15 @@
+// Derived from @flighthq/text/packages/text/src/richText.ts
+// at generated digest 0222a241dd7d49f029cd7a0555d1197ab4582c4874abb13679595cf9571157d5.
+//
+// OVERRIDE: the emitted rich_text.hpp is a PARTIAL (14 declarations omitted). This completes the
+// construction, content and runtime-access core the examples use.
+//
+// KNOWN GAP, measured 2026-10-12 and NOT closed by re-deriving: eleven omitted declarations are absent
+// from the compiled surface -- buildRichTextLayoutParams, computeRichTextLocalBoundsRectangle,
+// createRichTextRuntime, dispatchRichTextLinkAtPoint, emitTextFieldChange, emitTextFieldScroll,
+// enableTextFieldSignals, equalsRichTextFormat, getRichTextFormatRangeAt, getRichTextPasswordCharacter,
+// getTextFieldSignals. The package compiles because nothing in its compiled closure calls them. Treat
+// the module's surface as incomplete until they exist.
 // Runtime completion of the generated partial richText module.
 #pragma once
 
