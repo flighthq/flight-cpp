@@ -7906,7 +7906,7 @@
       "code": "dependency-refused",
       "module": "packages/socket/src/contract.ts",
       "package": "@flighthq/socket",
-      "reason": "dependency ./enableSocketGuards was refused for @flighthq/socket/packages/socket/src/enableSocketGuards.ts",
+      "reason": "dependency ./enableSocketGuards.ts was refused for @flighthq/socket/packages/socket/src/enableSocketGuards.ts",
       "stage": "dependency"
     },
     {
@@ -7920,7 +7920,7 @@
       "code": "dependency-refused",
       "module": "packages/socket/src/index.ts",
       "package": "@flighthq/socket",
-      "reason": "dependency ./contract was refused for @flighthq/socket/packages/socket/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/socket/packages/socket/src/contract.ts",
       "stage": "dependency"
     },
     {

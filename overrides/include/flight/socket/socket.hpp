@@ -56,9 +56,11 @@ inline void emit_socket_guard(
     flight::String reason,
     ReadonlySocket socket) {
   if (!socket_guard.has_value()) return;
-  const auto notice = flight::make_ref<
-      flight::types::operation_reason_socket_33737934b106de78>(
-      flight::types::operation_reason_socket_33737934b106de78{
+  // The notice record is named through the public SocketGuardNotice alias, not by the structural hash the
+  // emitter gives the anonymous object type, so a pin move that re-hashes it cannot strand this copy.
+  using Notice = flight::types::SocketGuardNotice::element_type;
+  const auto notice = flight::make_ref<Notice>(
+      Notice{
           .operation = std::move(operation),
           .reason = std::move(reason),
           .socket = std::move(socket),
