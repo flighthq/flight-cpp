@@ -2,6 +2,7 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/array.hpp>
 #include <flight/boolean.hpp>
 #include <functional>
 #include <optional>
@@ -117,6 +118,9 @@ struct InflateState : public flight::ReferenceEnabled {
   double position;
   double output_limit;
   InflateState(flight::Uint8Array input, double position, double output_limit) {
+    this->input = input;
+    this->position = position;
+    this->output_limit = output_limit;
     (this->output = flight::Uint8Array(flight::minimum(initial_inflate_bytes, output_limit)));
   }
   double read_bit() {
