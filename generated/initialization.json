@@ -100103,7 +100103,7 @@
             "packageName": "@flighthq/importdiagnostics",
             "source": "packages/importdiagnostics/src/contract.ts"
           },
-          "specifier": "./importDiagnosticCollector",
+          "specifier": "./importDiagnosticCollector.ts",
           "target": {
             "name": "ImportDiagnosticCollector",
             "packageName": "@flighthq/importdiagnostics",
@@ -100117,7 +100117,7 @@
             "packageName": "@flighthq/importdiagnostics",
             "source": "packages/importdiagnostics/src/contract.ts"
           },
-          "specifier": "./importDiagnosticText",
+          "specifier": "./importDiagnosticText.ts",
           "target": {
             "name": "ImportDiagnosticText",
             "packageName": "@flighthq/importdiagnostics",
@@ -170492,7 +170492,7 @@
             "packageName": "@flighthq/importdiagnostics",
             "source": "packages/importdiagnostics/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/importdiagnostics",
