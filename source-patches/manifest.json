@@ -2871,6 +2871,22 @@
       "unblocks": "swf_image_texture.hpp and the swf headers that include it (bitmap tag family, all tag handlers, the tag-stream test helper).",
       "expires": "when the emitter lowers an overloaded call through the overload TypeScript selected.",
       "appliedOn": "2026-10-12"
+    },
+    {
+      "id": "compiler-placeholder-graph-qualification",
+      "dependency": "flight-compiler",
+      "patch": "compiler-placeholder-graph-qualification.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts, packages/compiler-types/src/compilerBackendContract.ts, packages/compiler-orchestration/src/compilerPackageCompilation.ts",
+      "package": "@flighthq/swf",
+      "answers": "diagnostic",
+      "refusal": "a best-effort placeholder salvaged its retained declarations without graph context: emitCppRefusalPlaceholder emitted the module with only itself as source and no module resolution, so imported names were left unqualified (flight::Ref<SwfTagReader>) and their headers were not included",
+      "rewrite": "Adds an optional session-scoped emitRefusalPlaceholder to CompilerBackendEmissionSession; the C++ session salvages with the same graph-wide context (modules, module resolution, representation planner, interface inheritance, binding owners, naming) as every other module; orchestration prefers the session form. Inside salvage, a refused declaration's partially recorded includes and anonymous structs are rolled back, and a module import is included only when a retained declaration references one of its bindings (bare side-effect imports kept).",
+      "equivalence": "Normal (non-salvage) emission is unchanged: the new parameters are only used on the salvage path, and the backend-level emitRefusalPlaceholder remains as the fallback. A retained declaration is now emitted exactly as it is in a fully emitted module (pinned by a control test). The rollback removes only state recorded by code that is not emitted.",
+      "whyNotUpstreamFirst": "Carried as a compiler patch so best-effort placeholders in this repository compile for the reason they were refused rather than for missing qualification; the request documents the upstream fix.",
+      "unblocks": "Qualification and includes of retained declarations in every PARTIAL placeholder (measured on @flighthq/swf swfVideoHandler).",
+      "expires": "when flight-compiler salvages refusal placeholders inside the emission session.",
+      "appliedOn": "2026-10-12"
     }
   ]
 }

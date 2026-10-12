@@ -18,3 +18,13 @@ emitted module. The refusal then costs only the refused declarations.
 added by hand (measured), the header still fails, at the `create_texture` call. That is a texture-lane
 override signature mismatch, so a declaration-only repair would not make this header compile, and none is
 carried.
+
+## Carrying workaround
+
+[`compiler-placeholder-graph-qualification.patch`](../../source-patches/compiler-placeholder-graph-qualification.patch)
+salvages the placeholder inside the emission session, with the same graph-wide context as every other module.
+Retained declarations then resolve imports and include their headers. A refused declaration's partially
+recorded includes and anonymous structs are rolled back with it. An import is included only when a retained
+declaration references it, so nothing the refused code alone used leaks in. Fixture tests pin qualification,
+both negative cases, and parity with a fully emitted module. The request closes when flight-compiler salvages
+placeholders inside the emission session.

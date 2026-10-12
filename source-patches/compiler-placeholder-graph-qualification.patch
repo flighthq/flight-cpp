@@ -1,0 +1,348 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index fae6209..ff7ed31 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -435,6 +435,17 @@ export function createCppCompilerBackend(): CompilerBackend<CppCompilerBackendOp
+       const targetNameMaps = createCppTargetNameMaps(modules);
+       const anonymousStructNaming = createCppAnonymousStructNaming(targetNameMaps);
+       const unionArmIdentities = new Map<string, CppUnionArmIdentity[]>();
++      const graph: CppRefusalPlaceholderGraph = {
++        anonymousStructNaming,
++        directBindingOwners,
++        importBindingOwners,
++        interfaceInheritancePass,
++        moduleResolution,
++        modules,
++        referenceRepresentationPlanner,
++        targetNameMaps,
++        unionArmIdentities,
++      };
+       return Object.freeze({
+         emitModule(module: Readonly<IrModule>) {
+           return [
+@@ -453,6 +464,9 @@ export function createCppCompilerBackend(): CompilerBackend<CppCompilerBackendOp
+             ),
+           ];
+         },
++        emitRefusalPlaceholder(module: Readonly<IrModule>, refusal: Readonly<CompilerRefusalPlaceholderRequest>) {
++          return emitCppRefusalPlaceholder(module, refusal, options, graph);
++        },
+       });
+     },
+     emitModule(module, { moduleResolution, modules, options }) {
+@@ -755,6 +769,9 @@ function emitIrModuleCppWithContext(
+     .map((declaration) => {
+       const existingAnonymousStructs = new Set(context.anonymousStructs.keys());
+       const earlyPublicationMaterializedOwners = new Set<string>();
++      // A salvaged declaration that fails part-way may already have recorded includes and anonymous structs.
++      // They belong to code that is not emitted, so they are rolled back with it.
++      const includesBefore = salvage === undefined ? undefined : new Set(context.includes);
+       const lines = (() => {
+         try {
+           return emitDeclaration(declaration, {
+@@ -779,6 +796,13 @@ function emitIrModuleCppWithContext(
+               : { sourceLines: sliceCppSalvagedDeclarationSourceCpp(module, declaration, salvage.sourceText) }),
+           };
+           salvage.failures.push(failure);
++          if (includesBefore !== undefined) {
++            context.includes.clear();
++            for (const include of includesBefore) context.includes.add(include);
++          }
++          for (const key of [...context.anonymousStructs.keys()]) {
++            if (!existingAnonymousStructs.has(key)) context.anonymousStructs.delete(key);
++          }
+           return renderCppSalvagedDeclarationCpp(failure);
+         }
+       })();
+@@ -800,7 +824,13 @@ function emitIrModuleCppWithContext(
+   // out, and that names a type whose module has to be included. Collected any later and the include
+   // is dropped on the floor while the declaration that needed it is still emitted.
+   const forwardDeclarations = emitCppForwardDeclarations(module, context);
+-  const imports = emitImports(module, context);
++  const imports = emitImports(
++    module,
++    context,
++    salvage !== undefined && salvage.failures.length > 0
++      ? collectCppRetainedBindingReferencesCpp(module, new Set(salvage.failures.map((failure) => failure.declaration)))
++      : undefined,
++  );
+   const importedFunctionForwardDeclarations = emitCppImportedFunctionForwardDeclarations(context);
+   const reexports = emitReexportsCpp(module, context);
+   const namespaceName = getCppCompilerPackageNamespace(module.packageName, options.packageTargets);
+@@ -24948,6 +24978,29 @@ function collectIrModuleDeclarationDependenciesCpp(
+   return dependencies;
+ }
+ 
++// Every binding id the given module's declarations refer to, other than those of the excluded (refused)
++// declarations. Exports and re-exports are not declarations and are not consulted.
++function collectCppRetainedBindingReferencesCpp(
++  module: Readonly<IrModule>,
++  excluded: ReadonlySet<Readonly<IrDeclaration>>,
++): ReadonlySet<string> {
++  const referenced = new Set<string>();
++  analyzeIrModuleTraversal(
++    { ...module, declarations: module.declarations.filter((declaration) => !excluded.has(declaration)), exports: [] },
++    {
++      expression(expression) {
++        if (expression.kind === 'identifier' && expression.reference.kind === 'binding') {
++          referenced.add(expression.reference.binding.id);
++        }
++      },
++      type(type) {
++        if (type.kind === 'named' && type.reference.kind === 'binding') referenced.add(type.reference.binding.id);
++      },
++    },
++  );
++  return referenced;
++}
++
+ function collectCppMutuallyRecursiveFunctionGroups(
+   module: Readonly<IrModule>,
+   dependencies: ReadonlyMap<Readonly<IrDeclaration>, ReadonlySet<Readonly<IrDeclaration>>>,
+@@ -29044,9 +29097,23 @@ function isCppGenericStructuralSequenceParameterCpp(parameter: Readonly<IrParame
+   return Boolean(array?.readonly && array.element.kind === 'object');
+ }
+ 
+-function emitImports(module: Readonly<IrModule>, context: EmitContext): string[] {
++// `retainedReferences`, when given, are the binding ids the declarations a salvaged module actually emitted
++// refer to. An import none of them uses -- one that only a refused declaration needed -- is not included, so
++// the placeholder pulls in exactly what its retained surface needs. A bare side-effect import is kept.
++function emitImports(
++  module: Readonly<IrModule>,
++  context: EmitContext,
++  retainedReferences?: ReadonlySet<string>,
++): string[] {
+   const specifiers = [
+-    ...module.imports.map((item) => item.specifier),
++    ...module.imports
++      .filter(
++        (item) =>
++          retainedReferences === undefined ||
++          item.bindings.length === 0 ||
++          item.bindings.some((binding) => retainedReferences.has(binding.binding.id)),
++      )
++      .map((item) => item.specifier),
+     ...module.exports.flatMap((item) =>
+       item.kind === 'all' || item.kind === 'namespace' || item.kind === 'reexport' ? [item.specifier] : [],
+     ),
+@@ -29175,10 +29242,25 @@ interface CppSalvageRequest {
+ // It carries no `#error` and declares nothing it cannot justify -- no member, no base, no body -- so a build
+ // failure downstream of this file is a failure about what is genuinely missing rather than about an artifact the
+ // compiler deliberately poisoned. Everything in it is meant to be deleted by the hand edit that replaces it.
++// The graph-wide context an emission session holds. A placeholder salvaged inside a session receives it, so
++// its retained declarations resolve imports exactly as every other module's declarations do.
++interface CppRefusalPlaceholderGraph {
++  readonly anonymousStructNaming: ReturnType<typeof createCppAnonymousStructNaming>;
++  readonly directBindingOwners: ReturnType<typeof createCppDirectBindingOwners>;
++  readonly importBindingOwners: ReturnType<typeof createCppImportBindingOwners>;
++  readonly interfaceInheritancePass: Readonly<CompilerLoweringPass>;
++  readonly moduleResolution: Readonly<CompilerModuleResolutionPlan> | undefined;
++  readonly modules: readonly Readonly<IrModule>[];
++  readonly referenceRepresentationPlanner: CompilerCppReferenceRepresentationPlanner;
++  readonly targetNameMaps: ReturnType<typeof createCppTargetNameMaps>;
++  readonly unionArmIdentities: Map<string, CppUnionArmIdentity[]>;
++}
++
+ function emitCppRefusalPlaceholder(
+   module: Readonly<IrModule>,
+   refusal: Readonly<CompilerRefusalPlaceholderRequest>,
+   options: Readonly<CppCompilerBackendOptions>,
++  graph?: Readonly<CppRefusalPlaceholderGraph>,
+ ): EmittedFile {
+   // SALVAGE FIRST. The module usually lowered fine and failed on one declaration, so the useful answer is the
+   // module with that declaration marked missing rather than a file that carries only a description of it. A
+@@ -29192,15 +29274,15 @@ function emitCppRefusalPlaceholder(
+     return emitIrModuleCppWithContext(
+       module,
+       options,
+-      [module],
+-      undefined,
+-      undefined,
+-      undefined,
+-      undefined,
+-      undefined,
+-      undefined,
+-      undefined,
+-      undefined,
++      graph?.modules ?? [module],
++      graph?.moduleResolution,
++      graph?.referenceRepresentationPlanner,
++      graph?.interfaceInheritancePass,
++      graph?.directBindingOwners,
++      graph?.importBindingOwners,
++      graph?.targetNameMaps,
++      graph?.anonymousStructNaming,
++      graph?.unionArmIdentities,
+       salvage,
+     );
+   } catch {
+diff --git a/packages/compiler-backend-cpp/src/cppRefusalPlaceholderQualification.test.ts b/packages/compiler-backend-cpp/src/cppRefusalPlaceholderQualification.test.ts
+new file mode 100644
+index 0000000..196df92
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppRefusalPlaceholderQualification.test.ts
+@@ -0,0 +1,123 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import type { CompilerModuleResolutionPlan, IrModule } from '../../compiler-types/src/index.js';
++import { createCppCompilerBackend } from './cppCompilerBackend.js';
++
++// A partially refused module keeps the declarations it could lower. Those retained declarations must be
++// emitted exactly as they would be in a fully emitted module: imported names qualified, and the headers they
++// need included. Only what the RETAINED surface uses may be pulled in -- an import that only the refused
++// declaration used must not leak an include into the placeholder.
++describe('C++ refusal placeholder qualification', () => {
++  const typesPackage = '@flighthq/types';
++  const consumerPackage = '@flighthq/swf';
++  const options = {
++    packageTargets: {
++      [consumerPackage]: { includePrefix: 'flight/swf', namespace: 'flight::swf' },
++      [typesPackage]: { includePrefix: 'flight/types', namespace: 'flight::types' },
++    },
++    runtimeProfile: 'flight-cpp' as const,
++  };
++  // The refused declaration: an erased record assertion, which the C++ backend refuses on its own.
++  const refusedBody = '(target as unknown as Record<PropertyKey, unknown>)[prop] = value;';
++
++  function lowerGraph(consumerSource: string): { consumer: IrModule; moduleResolution: CompilerModuleResolutionPlan; modules: IrModule[] } {
++    const file = (path: string, text: string) => ts.createSourceFile(path, text, ts.ScriptTarget.Latest, true);
++    const sources = [
++      {
++        packageName: typesPackage,
++        sourceFile: file('/flight/packages/types/src/reader.ts', 'export interface Reader { pos: number }'),
++        upstreamDirectory: '/flight',
++      },
++      {
++        packageName: typesPackage,
++        sourceFile: file('/flight/packages/types/src/unrelated.ts', 'export interface Unrelated { extent: number }'),
++        upstreamDirectory: '/flight',
++      },
++      {
++        packageName: consumerPackage,
++        sourceFile: file('/flight/packages/swf/src/handler.ts', consumerSource),
++        upstreamDirectory: '/flight',
++      },
++    ];
++    const moduleResolution: CompilerModuleResolutionPlan = {
++      edges: [
++        { specifier: '@flighthq/types/reader', target: { packageName: typesPackage, source: 'packages/types/src/reader.ts' } },
++        {
++          specifier: '@flighthq/types/unrelated',
++          target: { packageName: typesPackage, source: 'packages/types/src/unrelated.ts' },
++        },
++      ],
++      schema: 'flight-compiler-module-resolution/1',
++    };
++    const results = lowerTypeScriptSources(sources, moduleResolution);
++    expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
++    const modules = results.map((result) => result.module);
++    return { consumer: modules[2]!, moduleResolution, modules };
++  }
++
++  function placeholder(consumerSource: string): string {
++    const { consumer, moduleResolution, modules } = lowerGraph(consumerSource);
++    const session = createCppCompilerBackend().createEmissionSession!({ moduleResolution, modules, options });
++    expect(session.emitRefusalPlaceholder).toBeDefined();
++    return session.emitRefusalPlaceholder!(consumer, {
++      message: 'an erased assertion hides the represented source carrier',
++      rule: 'cpp-erased-record-assertion-unrepresented',
++    })!.contents;
++  }
++
++  it('qualifies and includes what a retained declaration imports', () => {
++    const contents = placeholder(
++      `import type { Reader } from '@flighthq/types/reader';
++       export function readPos(reader: Reader): number { return reader.pos; }
++       export function bad(target: object, prop: string, value: unknown): void { ${refusedBody} }`,
++    );
++    expect(contents).toContain('PARTIAL:');
++    expect(contents).toContain('NOT GENERATED: function bad');
++    // The retained function names the imported type the way a fully emitted module does.
++    expect(contents).toMatch(/double read_pos\(flight::Ref<flight::types::Reader> reader\)/u);
++    expect(contents).not.toMatch(/flight::Ref<Reader>/u);
++    expect(contents).toContain('#include <flight/types/reader.hpp>');
++  });
++
++  it('does not include an import that only the refused declaration used', () => {
++    const contents = placeholder(
++      `import type { Reader } from '@flighthq/types/reader';
++       import type { Unrelated } from '@flighthq/types/unrelated';
++       export function readPos(reader: Reader): number { return reader.pos; }
++       export function bad(target: object, prop: string, value: unknown, extent: Unrelated): void { ${refusedBody} }`,
++    );
++    expect(contents).toContain('#include <flight/types/reader.hpp>');
++    expect(contents).not.toContain('flight/types/unrelated.hpp');
++    expect(contents).not.toContain('Unrelated>');
++  });
++
++  it('includes no imported header when no retained declaration uses an import', () => {
++    const contents = placeholder(
++      `import type { Reader } from '@flighthq/types/reader';
++       export function twice(value: number): number { return value * 2; }
++       export function bad(target: object, prop: string, value: unknown, reader: Reader): void { ${refusedBody} }`,
++    );
++    expect(contents).toContain('double twice(double value)');
++    expect(contents).not.toContain('flight/types/reader.hpp');
++    expect(contents).not.toContain('flight/types/unrelated.hpp');
++  });
++
++  it('emits the same retained declaration as a fully emitted module does', () => {
++    // The control: the retained function, emitted on its own in a module with no refusal, is spelled exactly
++    // as the placeholder spells it.
++    const retained = 'export function readPos(reader: Reader): number { return reader.pos; }';
++    const { consumer, moduleResolution, modules } = lowerGraph(
++      `import type { Reader } from '@flighthq/types/reader';\n${retained}`,
++    );
++    const full = createCppCompilerBackend()
++      .createEmissionSession!({ moduleResolution, modules, options })
++      .emitModule(consumer)[0]!.contents;
++    const signature = /inline double read_pos\([^)]*\)/u;
++    const salvaged = placeholder(
++      `import type { Reader } from '@flighthq/types/reader';\n${retained}\nexport function bad(target: object, prop: string, value: unknown): void { ${refusedBody} }`,
++    );
++    expect(salvaged.match(signature)?.[0]).toBe(full.match(signature)?.[0]);
++  });
++});
+diff --git a/packages/compiler-orchestration/src/compilerPackageCompilation.ts b/packages/compiler-orchestration/src/compilerPackageCompilation.ts
+index a2e9a61..dd553d3 100644
+--- a/packages/compiler-orchestration/src/compilerPackageCompilation.ts
++++ b/packages/compiler-orchestration/src/compilerPackageCompilation.ts
+@@ -238,7 +238,15 @@ export function compileTypeScriptPackageGraph<BackendOptions>(
+   const placeholderFiles: EmittedFile[] = [];
+   const placeholderPaths = new Map<string, string>();
+   if (bestEffort && options.backend.emitRefusalPlaceholder) {
+-    const emitPlaceholder = options.backend.emitRefusalPlaceholder;
++    // The session form salvages with the graph-wide context every other module was emitted with; the
++    // backend-level form is the compatibility fallback for a backend without one.
++    const sessionPlaceholder = emissionSession?.emitRefusalPlaceholder;
++    const backendPlaceholder = options.backend.emitRefusalPlaceholder;
++    const emitPlaceholder = (
++      module: Parameters<typeof backendPlaceholder>[0],
++      failure: Parameters<typeof backendPlaceholder>[1],
++      backendOptions: Parameters<typeof backendPlaceholder>[2],
++    ) => (sessionPlaceholder ? sessionPlaceholder(module, failure) : backendPlaceholder(module, failure, backendOptions));
+     for (const key of [...records.keys()].sort(compareTextCodeUnits)) {
+       const record = records.get(key)!;
+       if (!isCompilerPackageGraphModuleSelectedByEmitPaths(record.module, emitPathPrefixes)) continue;
+diff --git a/packages/compiler-types/src/compilerBackendContract.ts b/packages/compiler-types/src/compilerBackendContract.ts
+index 14f92ba..e88615b 100644
+--- a/packages/compiler-types/src/compilerBackendContract.ts
++++ b/packages/compiler-types/src/compilerBackendContract.ts
+@@ -70,6 +70,15 @@ export interface CompilerBackend<Options = Record<string, never>> {
+ 
+ export interface CompilerBackendEmissionSession {
+   readonly emitModule: (module: Readonly<IrModule>) => readonly EmittedFile[];
++  /**
++   * The session-scoped form of `CompilerBackend.emitRefusalPlaceholder`. A placeholder salvages the
++   * declarations its module could lower, and those must be emitted with the same graph-wide context as
++   * every other module -- imported names resolved and qualified, their headers included. When present,
++   * orchestration uses this instead of the backend-level entry point.
++   */
++  readonly emitRefusalPlaceholder?:
++    | ((module: Readonly<IrModule>, failure: Readonly<CompilerRefusalPlaceholderRequest>) => EmittedFile | undefined)
++    | undefined;
+ }
+ 
+ export interface BackendCompilation {
