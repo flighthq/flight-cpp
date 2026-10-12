@@ -58,7 +58,7 @@ struct AppRenderViewRuntime : public flight::ReferenceEnabled {
 //   function getAppRenderViewRuntime(view: AppRenderView): AppRenderViewRuntime<RenderState, RenderTargetDimensions> {
 //     return view[EntityRuntimeKey] as AppRenderViewRuntime<RenderState, RenderTargetDimensions>;
 //   }
-//   
+//
 // cpp emission failed for @flighthq/app/packages/app/src/appRenderView.ts: the asserted row from
 // flight::Ref<flight::types::EntityRuntime> to
 // flight::Ref<AppRenderViewRuntime<flight::Ref<flight::types::RenderState>,
