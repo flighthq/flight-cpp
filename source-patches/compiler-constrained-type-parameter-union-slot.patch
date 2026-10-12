@@ -1,0 +1,149 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 69afd6e..d48c5b1 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -17119,6 +17119,22 @@ function getCppVariantRepresentationForInspection(
+   });
+ }
+ 
++// A type parameter whose constraint is one runtime domain (a callable, an object, a primitive) is one value
++// alternative of a union that names it, and that alternative is stored as the parameter, not as its
++// constraint. Opening it to the constraint would declare `(T | null)[]` as an array of the constraint's
++// carrier, which the instantiated `T` the values actually have does not convert to. A constraint that is
++// itself a union of several domains still opens, because those domains are the alternatives the union
++// stores. An unconstrained parameter already stays itself.
++function isCppSingleDomainTypeParameterCpp(type: Readonly<IrType>, context: EmitContext): boolean {
++  if (type.kind !== 'named' || type.reference.kind !== 'binding' || type.reference.binding.kind !== 'typeParameter') {
++    return false;
++  }
++  const constraint = getCppDependentTypeParameterConstraintCpp(type.reference.binding.id, context);
++  if (!constraint) return false;
++  const domain = getIrTypeRuntimeDomainCpp(constraint, context, new Set([type.reference.binding.id]));
++  return domain !== undefined && getIrUnionTypeCpp(domain, context, new Set()) === undefined;
++}
++
+ function getCppUnionRepresentationPlan(
+   type: Readonly<Extract<IrType, { kind: 'union' }>>,
+   context: EmitContext,
+@@ -17142,7 +17158,9 @@ function getCppUnionRepresentationPlan(
+       return getCppUnionRuntimeIdentityKeyCpp(runtimeType, context);
+     },
+     resolveRuntimeDomain(runtimeType) {
+-      return getIrTypeRuntimeDomainCpp(runtimeType, context, new Set());
++      return isCppSingleDomainTypeParameterCpp(runtimeType, context)
++        ? runtimeType
++        : getIrTypeRuntimeDomainCpp(runtimeType, context, new Set());
+     },
+     resolveTargetType(runtimeType) {
+       return emitType(runtimeType, context);
+@@ -18047,6 +18065,23 @@ function emitContextualUnionExpressionInContextCpp(
+     const unionType = emitUnionTypeCpp(union, context);
+     return `([&]() -> ${unionType} { (void)${emitted}; return ${absence}; }())`;
+   }
++  // A single-domain type parameter is its own alternative in a union that names it (see
++  // isCppSingleDomainTypeParameterCpp), so a value of that parameter enters that alternative unchanged.
++  // Without that alternative -- a destination spelled with the constraint itself -- the domain lanes below
++  // decide, as they always have.
++  if (isCppSingleDomainTypeParameterCpp(expressionType, context)) {
++    const parameterTarget = emitType(expressionType, context);
++    const parameterSlot = plan.valueSlots.find((slot) => slot.targetType === parameterTarget);
++    if (parameterSlot) {
++      return emitCppUnionValueConstruction(
++        emitExpression(expression, context, expressionType, false),
++        parameterSlot.targetType,
++        union,
++        plan.kind,
++        context,
++      );
++    }
++  }
+   const runtimeType = getIrTypeRuntimeDomainCpp(expressionType, context, new Set());
+   if (!runtimeType) {
+     emissionError(
+diff --git a/packages/compiler-backend-cpp/src/cppConstrainedTypeParameterStorage.test.ts b/packages/compiler-backend-cpp/src/cppConstrainedTypeParameterStorage.test.ts
+new file mode 100644
+index 0000000..ae9e684
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppConstrainedTypeParameterStorage.test.ts
+@@ -0,0 +1,81 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/x/src/x.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/x', upstreamDirectory: '/flight' });
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++// The declaration line of local `name` in `contents`, trimmed.
++function declaration(contents: string, name: string): string {
++  const line = contents.split('\n').find((candidate) => new RegExp(`\\b${name} = `, 'u').test(candidate));
++  expect(line).toBeDefined();
++  return line!.trim();
++}
++
++const box = 'export interface Box<T> { items: (T | null)[]; one: T }\n';
++const callable = 'T extends (...args: any[]) => void';
++
++// A local whose type names a type parameter inside a union must store the parameter the values have, not
++// the carrier of its constraint, or the first copy from parameter-typed storage does not convert.
++describe('locals typed by a constrained type parameter', () => {
++  it.each([
++    ['inferred from a copy', 'const items = box.items.slice();', 'flight::Array<std::optional<T>> items = box->items.slice();'],
++    ['explicitly annotated', 'const items: (T | null)[] = box.items.slice();', 'flight::Array<std::optional<T>> items = box->items.slice();'],
++    ['read directly', 'const items = box.items;', 'flight::Array<std::optional<T>> items = box->items;'],
++  ])('keeps a callable-constrained parameter in an array local %s', (_, statement, expected) => {
++    const contents = emit(`${box}export function f<${callable}>(box: Box<T>): number { ${statement} return items.length; }`);
++    expect(declaration(contents, 'items')).toBe(expected);
++  });
++
++  it('keeps a callable-constrained parameter in an element local', () => {
++    const contents = emit(
++      `${box}export function f<${callable}>(box: Box<T>): number { const item = box.items[0]; return item === null ? 0 : 1; }`,
++    );
++    expect(declaration(contents, 'item')).toBe('std::optional<std::optional<T>> item = box->items.get(0.0);');
++  });
++
++  it('keeps an object-constrained parameter rather than erasing it', () => {
++    const contents = emit(
++      `${box}export function f<T extends object>(box: Box<T>): number { const items = box.items.slice(); return items.length; }`,
++    );
++    expect(declaration(contents, 'items')).toBe('flight::Array<std::optional<T>> items = box->items.slice();');
++  });
++
++  it('matches the unconstrained parameter, which already kept itself', () => {
++    const contents = emit(
++      `${box}export function f<T>(box: Box<T>): number { const items = box.items.slice(); return items.length; }`,
++    );
++    expect(declaration(contents, 'items')).toBe('flight::Array<std::optional<T>> items = box->items.slice();');
++  });
++
++  it('leaves a scalar constrained local as it was', () => {
++    const contents = emit(`${box}export function f<${callable}>(box: Box<T>): T { const one = box.one; return one; }`);
++    expect(declaration(contents, 'one')).toBe('T one = box->one;');
++  });
++
++  it('stores a parameter value into the parameter alternative it now has', () => {
++    const contents = emit(`${box}export function f<${callable}>(box: Box<T>, slot: T): void { box.items.push(slot); }`);
++    expect(contents).toContain('box->items.push(std::optional<T>{slot});');
++  });
++
++  it('still converts a parameter value into a union spelled with the constraint itself', () => {
++    const contents = emit(
++      `export interface Holder { items: (((...args: any[]) => void) | null)[] }\nexport function f<${callable}>(h: Holder, slot: T): void { h.items.push(slot); }`,
++    );
++    expect(contents).toContain('h->items.push(std::optional<std::function<void(flight::Array<flight::Any>)>>{slot});');
++  });
++
++  it('still opens a constraint that is itself a union of several domains', () => {
++    const contents = emit(
++      `${box}export function f<T extends string | number>(box: Box<T>): number { const items = box.items.slice(); return items.length; }`,
++    );
++    expect(declaration(contents, 'items')).toBe(
++      'flight::Array<std::optional<std::variant<double, flight::String>>> items = box->items.slice();',
++    );
++  });
++});

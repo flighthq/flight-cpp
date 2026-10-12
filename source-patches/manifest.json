@@ -3118,6 +3118,23 @@
       "unblocks": "skeleton2d.hpp (the core module header) and ik_constraint2_d.hpp compile.",
       "expires": "when the emitter lowers strict equality on a nullish carrier against a present value, or the runtime defines that comparison.",
       "appliedOn": "2026-10-12"
+    },
+    {
+      "id": "compiler-constrained-type-parameter-union-slot",
+      "dependency": "flight-compiler",
+      "patch": "compiler-constrained-type-parameter-union-slot.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "not a refusal: a type parameter with a single-domain constraint, named inside a union (`(T | null)[]`, `T | null`), was planned as its constraint, so a local of that type was declared with the constraint's carrier (std::function<void(Array<Any>)> for a callable constraint, ErasedRef for `object`). The first copy from parameter-typed storage then does not convert, so every instantiation fails; @flighthq/signals emitSignalSafe could not be instantiated for any signal. The header passes the gate only because the gate never instantiates templates.",
+      "rewrite": "getCppUnionRepresentationPlan's runtime-domain capability keeps a type parameter whose constraint resolves to one non-union runtime domain as its own value slot, spelled as the parameter, instead of opening it to the constraint. A constraint that is itself a union of several domains still opens, and getIrTypeRuntimeDomainCpp is unchanged for every other caller. Contextual union construction gives a value of such a parameter that same alternative directly (the push of a slot into (T | null)[]); a destination union spelled with the constraint itself still converts through the existing domain lanes.",
+      "equivalence": "The values such a union holds are instances of the instantiated parameter, never of a different constraint carrier, so storing the parameter is the source's own type. A union of the parameter and a sentinel keeps the same plan kind and sentinels (optionalSingle with null as optional absence); only the payload spelling changes from the constraint's carrier to T. Unconstrained parameters and scalar T locals already emitted T and are unchanged.",
+      "verification": "New cppConstrainedTypeParameterStorage.test.ts, 10 pass. The 6 behaviour cases fail without the rewrite: a callable-constrained array local inferred, annotated and read directly; a callable-constrained element local; an object-constrained array local; and a parameter value pushed into (T | null)[]. The 4 controls pass both ways: unconstrained T, a scalar constrained local, a push into a union spelled with the constraint, and a union constraint that still opens to its variant. compiler-backend-cpp suite: the same 46 pre-existing failures by name with and without the patch, 1739 passing with it. Natively: @flighthq/signals regenerated package-scoped; emitSignalSafe instantiates for void(), void(double) and void(String); six of its seven upstream cases pass in tests/generated_signals_test.cpp, and the seventh is a known defect of the separate forwarded-parameter-pack-reused request (an rvalue argument moved into the first slot). Reaching the instantiation also required two sibling emission repairs in safe.hpp for shapes slot.hpp already repairs, and removed the now-expired signals-generic-slot-operations repair.",
+      "whyNotUpstreamFirst": "It is a backend representation defect that makes every instantiation of the affected generic functions ill-formed; upstream receives the request with the repro, and the patch keeps native signals usable meanwhile.",
+      "unblocks": "@flighthq/signals emitSignalSafe (safe.ts). Other packages with constrained type parameters inside unions are fixed when next regenerated; this change does not move them.",
+      "expires": "when upstream spells a single-domain constrained type parameter as itself inside a union (docs/compiler-requests/constrained-type-parameter-local-storage.md).",
+      "appliedOn": "2026-10-12"
     }
   ]
 }

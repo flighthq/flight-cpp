@@ -53,4 +53,30 @@ the refused `connectSignalTracked`).
 
 ## Workaround carried
 
-None.
+[`compiler-constrained-type-parameter-union-slot.patch`](../../source-patches/compiler-constrained-type-parameter-union-slot.patch).
+
+The defect is in union planning, not local declaration. A local of type `T` already keeps `T`, but a union
+naming a constrained `T` opened `T` to its constraint's runtime domain, and that domain then also chose the
+alternative's C++ spelling. The patch changes two things:
+- **Planning:** a type parameter whose constraint is one non-union runtime domain stays its own
+  alternative, spelled `T`. A constraint that is itself a union of several domains still opens.
+- **Construction:** a value of such a parameter enters that alternative directly. A destination union
+  spelled with the constraint itself still converts through the existing lanes.
+
+Verified two ways:
+- by `cppConstrainedTypeParameterStorage.test.ts`: 10 cases, 6 of which fail without the patch, and 4
+  controls (unconstrained `T`, a scalar constrained local, a push into a constraint-spelled union, and a
+  union constraint);
+- by the unchanged set of pre-existing backend failures.
+
+`@flighthq/signals` is regenerated with the patch, and `emitSignalSafe` instantiates for `void()`,
+`void(double)` and `void(String)`. Signals' `signals-generic-slot-operations` emission repair, which
+respelled exactly these slot operations to `T`, matched nothing after the patch and was removed.
+
+Reaching the instantiation exposed two masked defects in `safe.hpp`, both the same shapes `slot.hpp`
+already repairs. They are carried as sibling repairs:
+- the nested length-bounded slot read (`signals-safe-flatten-generic-slot-read`);
+- the nullable slot identity comparison (`signals-safe-tombstone-identity-comparison`).
+
+It also exposed a third, which is not repaired: the dispatch loops forward the argument pack on every slot
+call. See [forwarded-parameter-pack-reused](forwarded-parameter-pack-reused.md).
