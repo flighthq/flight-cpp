@@ -19,6 +19,16 @@
 // Not ported: 'sdkHostDecompressDeflate is a ready-made deflate slot' and its LZMA twin, which assert
 // `slot.decompress` is the SAME function object as decompressDeflate. std::function has no identity to
 // compare; the behavioural twin ('... exactly as the bare function does') is ported for both.
+//
+// MUTATION SENSITIVITY, measured 2026-10-12: these fixtures do not merely pass, they catch the regression
+// they were written for. Two mutations were applied to a SHADOW COPY of the generated
+// flight/compression/lzma.hpp (the generated tree was never touched, and the baseline passes):
+//   * the short-rep path taking rep3 instead of rep2 -- three checks fail, including both fixtures the
+//     upstream LZMA fix added to lzma.test.ts at the pinned commit;
+//   * rep3 clobbered on the rep1 path, which is the pre-fix shape those fixtures guard -- the fixture
+//     'a rep1 match must not clobber rep2' fails, and it is the only one.
+// Package-scoped regeneration at a627849 reports 7/7 modules emitted, 0 refused and 0 of 7 headers
+// changed, so the committed slice is current and already carries the fix.
 
 namespace {
 
