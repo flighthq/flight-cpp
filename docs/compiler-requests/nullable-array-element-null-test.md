@@ -77,5 +77,24 @@ the same way. They were not enumerated here.
 
 ## Workaround carried
 
-None. This needs an emitter change; an override of `slot.hpp` would copy the whole module to fix two
-comparisons.
+[`compiler-indexed-element-presence-test.patch`](../../source-patches/compiler-indexed-element-presence-test.patch)
+adds the two-layer lane to `emitCppPresenceTestCpp`. It covers an element read through a runtime array,
+written directly or retained by an immutable array-element binding. The outer layer is tested as the index
+miss (`undefined`) and, when the element type stores a sentinel as optional absence, the inner layer as that
+sentinel. An element type with no absence of its own has only the outer layer, so strict `null` is
+type-decided. RegExpExecArray captures and typed arrays keep their own lanes.
+
+A binding's declaration owns its storage, and two emission repairs flatten a declared single-absence binding
+to one layer after emission (`signals-flatten-generic-slot-read`,
+`animation-state-machine-flatten-channel-index-read`). So a binding's test dispatches at compile time on the
+carrier it actually has, inside a generic lambda so that the branch not taken is never instantiated.
+
+Verified three ways:
+- against node on 90 cells: every operator above, crossed with direct reads, bound locals and null,
+  undefined, callable and plain element arrays, crossed with in-range null, in-range present and
+  out-of-range indices;
+- by `cppIndexedElementPresence.test.ts` (11 cases, all failing without the patch);
+- by the unchanged set of pre-existing backend failures.
+
+`@flighthq/signals` is regenerated with the patch, and its three tombstone cases are asserted in
+`tests/generated_signals_test.cpp`. Reverting either regenerated comparison fails them.

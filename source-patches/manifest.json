@@ -3016,6 +3016,23 @@
       "unblocks": "Emits parseTextureAtlasLibgdxAtlas without relying on RegExp split, an unproved optional string projection, or reconstruction of the enum owner from an inferred number.",
       "expires": "when indexed member calls retain their dominating bounds evidence, mutable enum locals retain their declared owner at contextual union boundaries, and String.split(RegExp) has a complete native lowering, or Flight adopts these equivalent forms.",
       "appliedOn": "2026-10-12"
+    },
+    {
+      "id": "compiler-indexed-element-presence-test",
+      "dependency": "flight-compiler",
+      "patch": "compiler-indexed-element-presence-test.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "silent miscompilation, not a refusal: a null or undefined comparison of a runtime array element (`slots[i] !== null`) is emitted as `slots.get(i).has_value()`. Array::get answers std::optional around the element's own storage, so that tests the index-miss layer only: a null element of a (T | null)[] reads as present, and a miss reads as null. @flighthq/signals therefore counts tombstoned slots as live and never compacts them.",
+      "rewrite": "emitCppPresenceTestCpp gains a lane for an element read through a runtime array, written directly or retained by an immutable array-element binding (which keeps the same `get` carrier). It inspects the carrier in the order the comparison asks: the outer layer is the index miss JavaScript reads as undefined; when the element type stores null (or undefined) as optional absence, the inner layer is that sentinel. An element type with no absence of its own has only the outer layer, so a strict null test is type-decided. The operand is evaluated once in every form. RegExpExecArray captures and typed arrays keep their own lanes. A binding's declaration owns its storage and an emission repair may flatten a declared single-absence binding to one layer (signals-flatten-generic-slot-read, animation-state-machine-flatten-channel-index-read), so a binding's test dispatches at compile time on the carrier it actually has, inside a generic lambda so the branch not taken is never instantiated.",
+      "equivalence": "For s: (T | null)[], JavaScript's s[i] is undefined on a miss, null on a null element, and the value otherwise. The emitted tests are exactly: !== null is miss or present; === null is in range and null; != null is in range and present; == null is miss or null; !== undefined is in range; === undefined is a miss. For (T | undefined)[] both layers mean undefined and strict null is false. For an element with no absence, strict null is constant and the rest test the miss. Checked against node on 90 cells (6 operators x direct read, bound local, null-element, undefined-element, callable-element and plain arrays x in-range null, in-range present, out of range): all match.",
+      "verification": "New cppIndexedElementPresence.test.ts, 11 pass: the six operators on a nullable element, the bound local, a callable element, strict null and undefined on an undefined element, and strict and loose null on a plain number[]. Without the rewrite all 11 fail. The repair-flattened binding form compiles for a concrete payload in non-template code and for a generic std::function payload, and answers correctly. compiler-backend-cpp suite: the same 46 pre-existing failures by name with and without the patch, 1724 passing with it. Natively: @flighthq/signals regenerated package-scoped; the three tombstone cases in tests/generated_signals_test.cpp are asserted and pass.",
+      "whyNotUpstreamFirst": "It is a backend lowering defect that silently changes runtime results; upstream receives the request with the repro and truth table, and the patch keeps native signals correct meanwhile.",
+      "unblocks": "@flighthq/signals tombstone compaction and hasSignalSlots after an in-dispatch disconnect. Every other package that null-tests runtime array elements is fixed when next regenerated; this change does not move them.",
+      "expires": "when upstream tests both layers of an indexed element carrier (docs/compiler-requests/nullable-array-element-null-test.md).",
+      "appliedOn": "2026-10-12"
     }
   ]
 }

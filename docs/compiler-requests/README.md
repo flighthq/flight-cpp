@@ -22,6 +22,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-concrete-owner-union-row-assertions.patch`](../../source-patches/compiler-concrete-owner-union-row-assertions.patch) | [Concrete owner assertion from an open union](compiler-concrete-owner-union-row-assertions.md) |
 | [`compiler-concrete-structural-union-view-selection.patch`](../../source-patches/compiler-concrete-structural-union-view-selection.patch) | [Concrete owner entering a structural-view union](compiler-concrete-structural-union-view-selection.md) |
 | [`compiler-constructor-parameter-property-assignment.patch`](../../source-patches/compiler-constructor-parameter-property-assignment.patch) | [Constructor parameter properties are declared but never assigned](constructor-parameter-properties-dropped.md) |
+| [`compiler-indexed-element-presence-test.patch`](../../source-patches/compiler-indexed-element-presence-test.patch) | [A null test on an element of a nullable-element array tests the wrong optional layer](nullable-array-element-null-test.md) |
 | [`compiler-contextual-imported-union-owner.patch`](../../source-patches/compiler-contextual-imported-union-owner.patch) | [Contextual construction of an imported union](compiler-contextual-imported-union-owner.md) |
 | [`compiler-erased-ref-weak-map-view.patch`](../../source-patches/compiler-erased-ref-weak-map-view.patch) | [Checked typed view of an erased WeakMap](compiler-erased-ref-weak-map-view.md) |
 | [`compiler-error-stack-cause-presence.patch`](../../source-patches/compiler-error-stack-cause-presence.patch) | [Runtime-declared Error members and their presence tests](compiler-error-stack-cause-presence.md) |
@@ -289,6 +290,6 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [Type-argument deduction must follow interface heritage](heritage-argument-generic-deduction.md) —
   `@flighthq/movieclip`'s spritesheet source adds and invalidates a `Sprite` under a `Node2D`; the third leaked-`Traits` cause, cross-linked with the `any` and readonly-view requests. No workaround is carried.
 - [A null test on an element of a nullable-element array tests the wrong optional layer](nullable-array-element-null-test.md) —
-  silent miscompilation: `slots[i] !== null` emits `get(i).has_value()`, so signals' tombstoned slots count as live and are never compacted. No workaround is carried.
+  silent miscompilation: `slots[i] !== null` emitted `get(i).has_value()`, so signals' tombstoned slots counted as live and were never compacted. Carried by the `compiler-indexed-element-presence-test` patch.
 - [A local typed by a constrained type parameter is stored as the constraint](constrained-type-parameter-local-storage.md) —
   `@flighthq/signals`' `emitSignalSafe` cannot be instantiated for any signal; the header passes the gate only because the template is never instantiated there. No workaround is carried.

@@ -1,0 +1,207 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 35f3396..6e02681 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -13244,6 +13244,70 @@ function hasCppNestedNullableOptionalPropertyStorageCpp(
+   );
+ }
+ 
++interface CppIndexedNullableElementPresencePlan {
++  // The sentinel the element type stores as optional absence, i.e. what the inner layer means.
++  // `none` when the element type stores no absence: then only the outer layer exists.
++  readonly elementSentinel: 'null' | 'undefined' | 'none';
++  // The two-layer carrier: the `Array::get` read itself, or the binding that retained it.
++  readonly value: string;
++  // Whether `value` names a binding, whose declared storage may have been flattened to one layer.
++  readonly binding: boolean;
++}
++
++// Whether a presence test's operand is a runtime array element whose carrier has two absence layers:
++// `Array<std::optional<T>>::get` answers `std::optional<std::optional<T>>`. The read is either written
++// directly or retained by an immutable binding the array-element lane gave the same carrier. An element
++// type with no optional absence has one layer, and a RegExpExecArray capture has its own accessor, so
++// neither is claimed here.
++function getCppIndexedNullableElementPresencePlanCpp(
++  operand: Readonly<IrExpression>,
++  context: EmitContext,
++): CppIndexedNullableElementPresencePlan | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
++  let element: Readonly<Extract<IrExpression, { kind: 'element' }>> | undefined;
++  let value: (() => string) | undefined;
++  if (operand.kind === 'element') {
++    element = operand;
++    value = () => emitOptionalExpressionCpp(operand, context, undefined);
++  } else if (
++    operand.kind === 'identifier' &&
++    operand.reference.kind === 'binding' &&
++    context.arrayElementBindingIds.has(operand.reference.binding.id)
++  ) {
++    const initializer = context.bindingInitializers.get(operand.reference.binding.id);
++    if (initializer?.kind === 'element') element = initializer;
++    const reference = operand.reference;
++    value = () => emitIdentifierReference(reference, context);
++  }
++  if (
++    !element ||
++    !value ||
++    element.optional ||
++    hasCppRegExpExecArrayIndexedReceiverCpp(element, context) ||
++    !hasIndexedRuntimeReceiverCpp(element, context) ||
++    hasOnlyCppTypedArrayIndexedReceiversCpp(element, context)
++  ) {
++    return undefined;
++  }
++  const array = getIrArrayTypeCpp(getIrExpressionTypeEvidenceCpp(element.object, context), context, new Set());
++  const union = array ? getIrUnionTypeCpp(array.element, context, new Set()) : undefined;
++  if (!array) return undefined;
++  const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
++  // An element type that is not a union, or a union with neither sentinel, stores no absence of its own.
++  // Any other carrier for a sentinel (a tagged variant, a null-tagged owner) keeps its own lanes.
++  const elementSentinel = !plan
++    ? 'none'
++    : plan.sentinels.null === 'absent' && plan.sentinels.undefined === 'absent'
++      ? 'none'
++      : (plan.kind === 'optionalSingle' || plan.kind === 'optionalVariant') && plan.sentinels.null === 'optionalAbsence'
++        ? 'null'
++        : (plan.kind === 'optionalSingle' || plan.kind === 'optionalVariant') &&
++            plan.sentinels.undefined === 'optionalAbsence'
++          ? 'undefined'
++          : undefined;
++  return elementSentinel ? { binding: operand.kind === 'identifier', elementSentinel, value: value() } : undefined;
++}
++
+ interface CppGenericCarrierPropertyPresencePlan {
+   readonly kind: 'alwaysPresent' | 'optionalUndefined';
+   readonly valueType: Readonly<IrType>;
+@@ -13471,6 +13535,54 @@ function emitCppPresenceTestCpp(
+     }
+     return `([&]() { const auto& presence_operand = ${value}; return ${test}; }())`;
+   }
++  // An element read through a runtime array answers `Array::get`, an optional around the element's own
++  // storage: the outer layer is the index miss JavaScript reads as `undefined`, and when the element type
++  // stores a sentinel as optional absence, the inner layer is that sentinel. A binding initialized by such
++  // a read keeps the same carrier. Testing only the outer layer would report a null element as present and
++  // a miss as null, so both layers are inspected here, in the order the source comparison asks.
++  const indexedElement = getCppIndexedNullableElementPresencePlanCpp(operand, context);
++  if (indexedElement) {
++    context.includes.add('optional');
++    let test: string;
++    if (indexedElement.elementSentinel === 'none') {
++      // Only the index miss can be absent, and JavaScript reads a miss as `undefined`, never `null`.
++      test =
++        strict && sentinel === 'null'
++          ? `static_cast<void>(presence_operand), ${present ? 'true' : 'false'}`
++          : `${present ? '' : '!'}presence_operand.has_value()`;
++    } else if (indexedElement.elementSentinel === 'undefined') {
++      // Both layers are `undefined`, so strict null has a type-decided answer; the operand still runs once.
++      test =
++        strict && sentinel === 'null'
++          ? `static_cast<void>(presence_operand), ${present ? 'true' : 'false'}`
++          : present
++            ? 'presence_operand.has_value() && presence_operand.value().has_value()'
++            : '!presence_operand.has_value() || !presence_operand.value().has_value()';
++    } else if (!strict) {
++      test = present
++        ? 'presence_operand.has_value() && presence_operand.value().has_value()'
++        : '!presence_operand.has_value() || !presence_operand.value().has_value()';
++    } else if (sentinel === 'undefined') {
++      test = `${present ? '' : '!'}presence_operand.has_value()`;
++    } else {
++      test = present
++        ? '!presence_operand.has_value() || presence_operand.value().has_value()'
++        : 'presence_operand.has_value() && !presence_operand.value().has_value()';
++    }
++    if (!indexedElement.binding || indexedElement.elementSentinel === 'none') {
++      return `([&]() { const auto& presence_operand = ${indexedElement.value}; return ${test}; }())`;
++    }
++    // A binding's declaration decides its storage, and a declared single-absence binding may be stored
++    // flattened (`get(i).value_or(std::nullopt)`) by an emission repair after this test is written. Ask the
++    // carrier it actually has: two layers take the test above, one layer keeps the single-layer test that
++    // flattened declaration was written for.
++    context.includes.add('flight/structural_ref.hpp');
++    context.includes.add('type_traits');
++    const flattened = `${present ? '' : '!'}presence_operand.has_value()`;
++    // The generic lambda keeps the branch not taken uninstantiated, which a plain lambda in non-template
++    // code would not: there the two-layer test would still be checked against a one-layer payload.
++    return `([&](const auto& presence_operand) { if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(presence_operand.value())>>::optional) { return ${test}; } else { return ${flattened}; } }(${indexedElement.value}))`;
++  }
+   const externalCallResult = getCppExternalCallResultPresencePlanCpp(operand, context);
+   if (externalCallResult) {
+     if (!externalCallResult.immutable) refuseCppPresenceTestCpp(operand, sentinel, context);
+diff --git a/packages/compiler-backend-cpp/src/cppIndexedElementPresence.test.ts b/packages/compiler-backend-cpp/src/cppIndexedElementPresence.test.ts
+new file mode 100644
+index 0000000..b9e110d
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppIndexedElementPresence.test.ts
+@@ -0,0 +1,71 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/x/src/x.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/x', upstreamDirectory: '/flight' });
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++// The single `return` line of the one function in `contents`.
++function returned(contents: string): string {
++  const line = contents.split('\n').find((candidate) => candidate.trim().startsWith('return '));
++  expect(line).toBeDefined();
++  return line!.trim();
++}
++
++const both = (test: string): string =>
++  `return ([&]() { const auto& presence_operand = s.get(i); return ${test}; }());`;
++
++// `Array<std::optional<T>>::get` answers `std::optional<std::optional<T>>`: the outer layer is the index
++// miss JavaScript reads as `undefined`, the inner layer the element's own null.
++describe('presence tests on a runtime array element', () => {
++  it.each([
++    ['!== null', '!presence_operand.has_value() || presence_operand.value().has_value()'],
++    ['=== null', 'presence_operand.has_value() && !presence_operand.value().has_value()'],
++    ['!= null', 'presence_operand.has_value() && presence_operand.value().has_value()'],
++    ['== null', '!presence_operand.has_value() || !presence_operand.value().has_value()'],
++    ['!== undefined', 'presence_operand.has_value()'],
++    ['=== undefined', '!presence_operand.has_value()'],
++  ])('tests both layers of a nullable element for %s', (operator, test) => {
++    const contents = emit(`export function t(s: (number | null)[], i: number): boolean { return s[i] ${operator}; }`);
++    expect(returned(contents)).toBe(both(test));
++  });
++
++  // A binding's declaration owns its storage, and a single-absence declaration may be flattened to one
++  // layer after emission, so the test dispatches on the carrier the binding actually has.
++  it('tests the same two layers through a binding that retained the element carrier', () => {
++    const contents = emit(
++      'export function t(s: (number | null)[], i: number): boolean { const v = s[i]; return v !== null; }',
++    );
++    expect(contents).toContain('const std::optional<std::optional<double>> v = s.get(i);');
++    expect(returned(contents)).toBe(
++      'return ([&](const auto& presence_operand) { if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(presence_operand.value())>>::optional) { return !presence_operand.has_value() || presence_operand.value().has_value(); } else { return presence_operand.has_value(); } }(v));',
++    );
++  });
++
++  it('reads a callable element the same way', () => {
++    const contents = emit(`export function t(s: ((() => void) | null)[], i: number): boolean { return s[i] !== null; }`);
++    expect(returned(contents)).toBe(both('!presence_operand.has_value() || presence_operand.value().has_value()'));
++  });
++
++  it('answers strict null from the type when both layers mean undefined, still evaluating the read', () => {
++    const contents = emit(`export function t(s: (number | undefined)[], i: number): boolean { return s[i] === null; }`);
++    expect(returned(contents)).toBe(both('static_cast<void>(presence_operand), false'));
++  });
++
++  it('tests either layer for undefined on an undefined element', () => {
++    const contents = emit(`export function t(s: (number | undefined)[], i: number): boolean { return s[i] !== undefined; }`);
++    expect(returned(contents)).toBe(both('presence_operand.has_value() && presence_operand.value().has_value()'));
++  });
++
++  it('never reads an index miss as null on an element with no absence of its own', () => {
++    const strict = emit(`export function t(s: number[], i: number): boolean { return s[i] !== null; }`);
++    expect(returned(strict)).toBe(both('static_cast<void>(presence_operand), true'));
++    const loose = emit(`export function t(s: number[], i: number): boolean { return s[i] != null; }`);
++    expect(returned(loose)).toBe(both('presence_operand.has_value()'));
++  });
++});
