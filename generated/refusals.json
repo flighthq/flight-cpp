@@ -3071,7 +3071,7 @@
       "code": "dependency-refused",
       "module": "packages/net/src/contract.ts",
       "package": "@flighthq/net",
-      "reason": "dependency ./enableNetGuards was refused for @flighthq/net/packages/net/src/enableNetGuards.ts",
+      "reason": "dependency ./enableNetGuards.ts was refused for @flighthq/net/packages/net/src/enableNetGuards.ts",
       "stage": "dependency"
     },
     {
@@ -3085,7 +3085,7 @@
       "code": "dependency-refused",
       "module": "packages/net/src/index.ts",
       "package": "@flighthq/net",
-      "reason": "dependency ./contract was refused for @flighthq/net/packages/net/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/net/packages/net/src/contract.ts",
       "stage": "dependency"
     },
     {
