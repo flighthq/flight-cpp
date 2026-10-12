@@ -68,7 +68,7 @@ using flight::types::AssetLoaderAdapter;
 //       runtime.acquireGuard?.(library, { id, refCount: 0, status: 'missing-loader', type: descriptor.type });
 //       return Promise.reject(new Error(`assets: no loader for type "${descriptor.type}"`));
 //     }
-//   
+//
 //     const existing = runtime.entries.get(id);
 //     if (existing !== undefined) {
 //       existing.refcount++;
@@ -76,7 +76,7 @@ using flight::types::AssetLoaderAdapter;
 //       // A load is in flight — share it so only one adapter.load runs per id.
 //       return existing.loadPromise as Promise<T>;
 //     }
-//   
+//
 //     const entry: AssetEntry = { value: undefined, refcount: 1, loadPromise: null, resident: false };
 //     runtime.freedIds.delete(id);
 //     runtime.entries.set(id, entry);
@@ -103,7 +103,7 @@ using flight::types::AssetLoaderAdapter;
 //     entry.loadPromise = loadPromise;
 //     return loadPromise as Promise<T>;
 //   }
-//   
+//
 // cpp emission failed for @flighthq/assets/packages/assets/src/assetLibrary.ts: type assertion target must
 // identify exactly one C++ variant alternative: target flight::Task<T> against [flight::Task<flight::Any>]
 
@@ -171,7 +171,7 @@ inline flight::Ref<flight::types::AssetLibrary> create_asset_library() {
 //     const runtime = library.runtime;
 //     const ids = runtime.groups.get(name);
 //     if (ids === undefined || ids.length === 0) return;
-//   
+//
 //     const loader = createResourceLoader();
 //     const progress = options?.progress;
 //     if (progress !== undefined) {
@@ -184,7 +184,7 @@ inline flight::Ref<flight::types::AssetLibrary> create_asset_library() {
 //         emitSignal(progress, { loaded: counts.settledItems, total: counts.totalItems });
 //       });
 //     }
-//   
+//
 //     const itemPromises: Promise<unknown>[] = [];
 //     for (const id of ids) {
 //       const entry = runtime.entries.get(id);
@@ -197,7 +197,7 @@ inline flight::Ref<flight::types::AssetLibrary> create_asset_library() {
 //       // the group's reference.
 //       itemPromises.push(queueResourceLoad(loader, () => acquireAsset(library, id)).promise);
 //     }
-//   
+//
 //     // Attach rejection handlers before starting the loader so a fast adapter failure can never surface
 //     // as an unhandled rejection while the aggregate completion signal is still pending.
 //     const settlements = Promise.allSettled(itemPromises);
@@ -210,7 +210,7 @@ inline flight::Ref<flight::types::AssetLibrary> create_asset_library() {
 //     const failed = results.find((result) => result.status === 'rejected');
 //     if (failed?.status === 'rejected') throw failed.reason;
 //   }
-//   
+//
 //   // Registers or replaces one catalog descriptor without loading it. Replacement fully reconciles group
 //   // tags. Replacing an id while it is acquired/in-flight is programmer misuse: the resident value's
 //   // loader/disposer contract belongs to the descriptor that created it, so changing that contract under
@@ -230,7 +230,7 @@ inline flight::Ref<flight::types::AssetLibrary> create_asset_library() {
 //   ): void {
 //     library.runtime.adapters.set(type, adapter as AssetLoaderAdapter);
 //   }
-//   
+//
 //   // Registers an in-hand plain-data manifest as a batch of descriptor registrations. This is synchronous
 //   // catalog mutation, not I/O: loadAssetGroup/acquireAsset perform asynchronous work later. Duplicate ids
 //   // within one manifest use their final descriptor. The batch preflights acquired replacements before
