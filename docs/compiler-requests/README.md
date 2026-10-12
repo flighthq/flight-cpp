@@ -101,6 +101,10 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [An optional property call needs its callable's result evidence](optional-property-call-result-evidence.md) —
   `runtime.ownerSubscriptions?.delete(subscription)`; the chain already carries the presence proof the
   refusal asks for.
+- [Distinct source domains mapped to one carrier need their discriminator declared](image-source-union-domain-discriminator.md) —
+  `@flighthq/video` refuses because six element domains map to `flight::host_sdl::ImageSource`, whose
+  runtime carrier **already carries `ImageSourceKind`** for exactly this; the binding schema simply has
+  no field to declare it. Same profile family as `render-wgpu`'s image-source refusals.
 - [Union carriers need canonical alternative order](canonical-union-carrier-order.md) — identical
   named unions currently become incompatible `std::variant` types at array callback boundaries.
 - [Nullable and optional storage needs two absence channels](nullable-optional-presence.md) — one

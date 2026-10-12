@@ -1,0 +1,92 @@
+# Distinct source domains mapped to one carrier need their discriminator declared
+
+Six element domains reach the same SDL carrier through the external binding profile, and the emitter
+refuses the union because it sees one carrier with no discriminator. **The carrier has one** — the
+binding simply cannot declare it, and that is the actionable half of this request.
+
+Measured at `2b687ea`, flight `a627849`.
+
+## Minimal TypeScript
+
+`@flighthq/video`, `packages/video/src/videoResourceFrom.ts:32`:
+
+```ts
+export function loadVideoResourceFromUrl(
+  hostVideo: Readonly<HostVideoCapability>,
+  url: string,
+  options?: Readonly<VideoResourceLoadOptions>,
+  signal?: AbortSignal,
+): Promise<VideoResource> {
+  if (hostVideo.loadUrl === undefined) return Promise.reject(new Error('No video element backend available'));
+  return hostVideo.loadUrl(url, options, signal).then((element) => createVideoResource(element, undefined, true));
+}
+```
+
+`HostVideoCapability.loadUrl` resolves to `CanvasImageSource`, which is the union of
+`HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame`.
+
+## Observed
+
+```
+cpp emission failed for @flighthq/video/packages/video/src/videoResourceFrom.ts: C++ runtime contract
+maps distinct union domains to one carrier without a discriminator or checked projection
+(HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame ->
+flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each
+reaches a carrier of its own -- a union of two declarations that differ only in name is one carrier
+whatever the emitter does -- or provide that runtime contract
+```
+
+The module refuses, omitting `loadVideoResourceFromUrl` (line 32) and `loadVideoResourceFromBlob` (line
+11), and three of the package's five headers fail behind it.
+
+## What makes this actionable: the discriminator already exists
+
+`include/flight/host_sdl/image.hpp:19` — the runtime's own carrier, with its own note on why:
+
+```cpp
+// Native image sources share one decoded RGBA representation across GL and WebGPU. The kind retains
+// the provider's source domain for future compiler-lowered external type tests without making either
+// graphics API own image decoding or video-frame acquisition.
+enum class ImageSourceKind {
+  decoded_rgba,
+  image_element,
+  video_element,
+  image_bitmap,
+  offscreen_canvas,
+  svg_image_element,
+  video_frame,
+};
+```
+
+`ImageSource` carries that kind. So the refusal's premise — "without a discriminator or checked
+projection" — is not true of this carrier: it is exactly the projection the message asks for, and the
+runtime comment says it was put there for this.
+
+## Where the gap actually is
+
+`bindings/sdl-image.json` maps nine source names (`CanvasImageSource`, `HTMLImageElement`,
+`HTMLVideoElement`, `ImageBitmap`, `OffscreenCanvas`, `SVGImageElement`, `TexImageSource`,
+`VideoFrame`, `GPUCopyExternalImageSource`) to `flight::host_sdl::ImageSource`. The **binding schema
+has no field to say which kind each name maps onto**: the entries carry `headers`, `nullability`,
+`ownership`, `sourceName`, `space`, `targetName` and `weakKeyPolicyTargetName`, and searching the
+compiler's contracts finds no discriminator, type-test or kind field. So a target that *has* a
+discriminator cannot tell the emitter about it, and the emitter's only honest answer is to refuse a
+union it cannot project.
+
+Two shapes would close it, and either is upstream's call: a per-binding discriminator the emitter emits
+an external type test against, or the emitter accepting the union where the named runtime carrier
+declares a kind covering every source domain.
+
+## Affected modules
+
+`@flighthq/video` — `videoResourceFrom.ts` (51 lines, three exported functions) and three headers
+behind it. The same profile family is what `render-wgpu`'s `HTMLImageElement[value]` refusals come
+from (AGENTS.md names them as `copyExternalImageToTexture` sources), so the reach is wider than video.
+
+## Carrying workaround
+
+None, and the reason is not size — the refused module is 51 lines and a hand supply is available. It is
+that the defect is in the *profile mapping*: a hand-written module would reproduce the mapping the
+profile should express, which is the "fork nobody chose" the repository's own rules are written to
+prevent. If the mapping is wanted in the profile, this belongs upstream; if a supply is wanted
+regardless, that decision should be explicit.

@@ -9274,14 +9274,14 @@
       "code": "dependency-refused",
       "module": "packages/video/src/contract.ts",
       "package": "@flighthq/video",
-      "reason": "dependency ./videoResourceFrom was refused for @flighthq/video/packages/video/src/videoResourceFrom.ts",
+      "reason": "dependency ./videoResourceFrom.ts was refused for @flighthq/video/packages/video/src/videoResourceFrom.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/video/src/index.ts",
       "package": "@flighthq/video",
-      "reason": "dependency ./contract was refused for @flighthq/video/packages/video/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/video/packages/video/src/contract.ts",
       "stage": "dependency"
     },
     {
