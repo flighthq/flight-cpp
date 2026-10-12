@@ -1,5 +1,5 @@
 // Derived from @flighthq/lighting/packages/lighting/src/lightAnalysis.ts
-// at generated digest c7ef2696ab08ebb336a885dec08e30e13c1a5374039477c623468a05831ba12f.
+// at generated digest d213c6793a59f26bf6a33ea38321533d00daf43a4a2404d55192a526d4fd3620.
 #pragma once
 
 #include <cmath>
@@ -31,6 +31,9 @@ using AnalysisPointLightView = flight::StructuralRef<flight::RowReadonly<
 using AnalysisSpotLightView = flight::StructuralRef<flight::RowReadonly<
     flight::RowOf<flight::Ref<flight::types::SpotLight>>>>;
 using PointOrSpotLightView = std::variant<AnalysisPointLightView, AnalysisSpotLightView>;
+using PointOrSpotLightRef = std::variant<
+    flight::Ref<flight::types::SpotLight>,
+    flight::Ref<flight::types::PointLight>>;
 
 template <typename Type>
 inline std::shared_ptr<Type> light_analysis_native_ref(const std::shared_ptr<Type>& value) {
@@ -237,6 +240,17 @@ inline double get_light_contribution_at_bounding_sphere(
 template <typename BoundsCarrier>
 inline double get_light_contribution_at_bounding_sphere(
     const PointOrSpotLightView& light,
+    const BoundsCarrier& bounds) {
+  return std::visit(
+      [&](const auto& value) {
+        return get_light_contribution_at_bounding_sphere(value, bounds);
+      },
+      light);
+}
+
+template <typename BoundsCarrier>
+inline double get_light_contribution_at_bounding_sphere(
+    const PointOrSpotLightRef& light,
     const BoundsCarrier& bounds) {
   return std::visit(
       [&](const auto& value) {
