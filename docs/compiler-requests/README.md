@@ -18,6 +18,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | --- | --- |
 | [`compiler-canvas-context-overload-result.patch`](../../source-patches/compiler-canvas-context-overload-result.patch) | [Literal-selected Canvas context result](compiler-canvas-context-overload-result.md) |
 | [`compiler-closed-key-external-member-call.patch`](../../source-patches/compiler-closed-key-external-member-call.patch) | [Finite-key calls on a bound host object](closed-key-bound-member-call.md) |
+| [`compiler-catch-recorded-slot-carrier.patch`](../../source-patches/compiler-catch-recorded-slot-carrier.patch) | [A slot a catch records into needs the exception carrier, whatever its initializer](catch-recorded-slot-carrier.md) |
 | [`compiler-concrete-owner-union-row-assertions.patch`](../../source-patches/compiler-concrete-owner-union-row-assertions.patch) | [Concrete owner assertion from an open union](compiler-concrete-owner-union-row-assertions.md) |
 | [`compiler-concrete-structural-union-view-selection.patch`](../../source-patches/compiler-concrete-structural-union-view-selection.patch) | [Concrete owner entering a structural-view union](compiler-concrete-structural-union-view-selection.md) |
 | [`compiler-constructor-parameter-property-assignment.patch`](../../source-patches/compiler-constructor-parameter-property-assignment.patch) | [Constructor parameter properties are declared but never assigned](constructor-parameter-properties-dropped.md) |
@@ -66,11 +67,6 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   carried for socket by the override `socket-complete-lifecycle`.
 - [Member reads on a collapsed union record must use one access form](collapsed-union-record-member-access.md) —
   carried for socket by the override `socket-guard-reporting`.
-- [A slot a catch records into needs the exception carrier, whatever its initializer](catch-recorded-slot-carrier.md) —
-  `@flighthq/power`'s `let failure: unknown = null` takes the erased `flight::Any`, which cannot hold the
-  caught value, while the same slot without an initializer takes `std::exception_ptr` and lowers
-  correctly; the record's lowering patch and this carrier have to land together or the module goes
-  from silently dropping the write to not compiling.
 - [A catch body that awaits and reads its binding needs an owned caught value](catch-binding-across-await.md) —
   refuses `@flighthq/loader` `resourceLoader.ts`; no workaround.
 - [Asserting a `Promise<unknown>` to `Promise<T>` needs a typed task view](generic-promise-assertion-to-type-parameter.md) —

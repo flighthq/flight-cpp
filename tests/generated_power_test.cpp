@@ -6,18 +6,22 @@
 // file and its upstream suite (packages/power/src/power.test.ts) rather than from the emission -- the
 // bars are the source's, the values are read out of the compiled module.
 //
-// WHAT THIS FILE DELIBERATELY DOES NOT CERTIFY
+// THE RECORD-AND-RETHROW PATH IS CARRIED, AND IS ASSERTED
 //
-// Two failure paths in this module are known-broken and are excluded rather than asserted, because a
-// green test would otherwise claim they work:
+// Two things were broken in this module's failure paths and only one is fixed at this pin:
 //
-//   * CATCH BREADTH. `catch (error)` is lowered to `catch (const std::exception&)`, so a thrown value
-//     that is not a class escapes a handler whose body continues. Measured in this module: with a
-//     provider whose destroy throws `42`, the sibling provider is never attempted. Filed as
-//     docs/compiler-requests/catch-handler-breadth-attempt-all.md.
-//   * NULLISH ASSIGNMENT IN A CATCH BODY. `failure ??= error;` is emitted as a bare `failure;`, so the
-//     first failure is never recorded and never rethrown. Filed as
-//     docs/compiler-requests/nullish-assignment-dropped-in-catch.md.
+//   * the record and the rethrow, carried by
+//     source-patches/compiler-nullish-assignment-statement-in-catch.patch and
+//     source-patches/compiler-catch-recorded-slot-carrier.patch. The slot is an `std::exception_ptr`,
+//     the first caught error is recorded once, and the rethrow hands the caller the ORIGINAL exception.
+//     This file asserts that, including a direct first-failure-retention case with two failing
+//     providers: asserting only the attempt-all halves was how the previous version recorded the defect
+//     without certifying it.
+//   * CATCH BREADTH, which is NOT fixed. `catch (error)` is lowered to
+//     `catch (const std::exception&)`, so a thrown value that is not a class escapes a handler whose
+//     body continues -- with a provider whose destroy throws `42`, the sibling provider is never
+//     attempted. Filed as docs/compiler-requests/catch-handler-breadth-attempt-all.md, and this file
+//     therefore throws only class values and asserts nothing about a non-class one.
 //
 // Three of my own expectations were wrong first and are fixed here rather than worked around: a
 // change-provider fake that counted releases without removing the released listener (so a correct
@@ -25,11 +29,9 @@
 // itself, and an absolute release count where the block had already detached once. The first two are
 // now behaviourally faithful fakes and the third is a delta; each block says so where it matters.
 //
-// Both live in destroyPowerKeepAwake and detachPower. This file asserts only their CORRECT halves --
-// that a throwing provider's sibling is still attempted, that a failed obligation is retried on the
-// next call, and that a succeeded one is not destroyed twice -- and asserts nothing about the rethrow,
-// in either direction: not that it happens (it does not) and not that it does not (that would be
-// certifying the defect). The two functions' success paths are asserted in full.
+// Both live in destroyPowerKeepAwake and detachPower. Their attempt-all halves are asserted too -- a
+// throwing provider's sibling is still attempted, a failed obligation is retried on the next call, and a
+// succeeded one is not destroyed twice -- so what is left unasserted here is exactly the catch breadth.
 #include <flight/power/power.hpp>
 
 #include <iostream>
@@ -437,8 +439,9 @@ int main() {
     // sibling, and it is RETAINED so the next call retries only the failures.
     const auto flaky = std::make_shared<KeepAwake>();
     int attempts = 0;
-    // Throws a class on its first attempt only, so the retry is observable and the handler's narrowed
-    // form still catches it (the excluded defect is the NON-class throw, which this file does not use).
+    // Throws a class on its first attempt only, so the retry is observable, the recorded error is
+    // rethrown to the caller, and the handler's narrowed form still catches it (the defect this file
+    // excludes is the NON-class throw, which it does not use).
     const auto flaky_provider = keep_awake(flaky, [&attempts]() {
       ++attempts;
       if (attempts == 1) throw flight::Error(String("transient"));
@@ -449,12 +452,47 @@ int main() {
         flight::Array<View<HostPowerKeepAwakeCapability>>{};
     mixed.push(View<HostPowerKeepAwakeCapability>(flaky_provider));
     mixed.push(View<HostPowerKeepAwakeCapability>(healthy_provider));
-    power::destroy_power_keep_awake(mixed);
+
+    String rethrown;
+    try {
+      power::destroy_power_keep_awake(mixed);
+    } catch (const std::exception& error) {
+      rethrown = String(error.what());
+    }
+    check(rethrown == String("transient"),
+          "the failure the loop recorded is rethrown to the caller, as the original exception");
     check(attempts == 1 && healthy->destroys == 1,
-          "one provider's failure does not strand its sibling, which is destroyed once");
-    power::destroy_power_keep_awake(mixed);
+          "and it does not strand its sibling, which is destroyed once");
+
+    bool retried_without_failing = true;
+    try {
+      power::destroy_power_keep_awake(mixed);
+    } catch (const std::exception&) {
+      retried_without_failing = false;
+    }
+    check(retried_without_failing, "the retry that succeeds rethrows nothing");
     check(attempts == 2 && healthy->destroys == 1,
-          "and the failed obligation is retried while the succeeded one is never released twice");
+          "the failed obligation is retried while the succeeded one is never released twice");
+
+    // FIRST-FAILURE RETENTION, directly: two providers fail, and the error the caller sees is the first
+    // one caught, not the last. That is `??=`'s rule -- assign only while nothing is recorded.
+    const auto first = std::make_shared<KeepAwake>();
+    const auto second_failing = std::make_shared<KeepAwake>();
+    const auto first_provider = keep_awake(first, []() { throw flight::Error(String("the first failure")); });
+    const auto second_provider =
+        keep_awake(second_failing, []() { throw flight::Error(String("the second failure")); });
+    flight::Array<View<HostPowerKeepAwakeCapability>> both_failing =
+        flight::Array<View<HostPowerKeepAwakeCapability>>{};
+    both_failing.push(View<HostPowerKeepAwakeCapability>(first_provider));
+    both_failing.push(View<HostPowerKeepAwakeCapability>(second_provider));
+    String retained;
+    try {
+      power::destroy_power_keep_awake(both_failing);
+    } catch (const std::exception& error) {
+      retained = String(error.what());
+    }
+    check(retained == String("the first failure"),
+          "with two failing providers the FIRST error is the one rethrown");
   }
 
   // detachPower: the attempt-all half of teardown, and the endpoints its failures must not lose. The
@@ -473,9 +511,16 @@ int main() {
     const auto power_entity = power::create_power();
     power::attach_power(std::nullopt, std::nullopt, view(session_lock), std::nullopt, std::nullopt,
                         std::nullopt, power_entity);
-    power::detach_power(power_entity);
+    String teardown_failure;
+    try {
+      power::detach_power(power_entity);
+    } catch (const std::exception& error) {
+      teardown_failure = String(error.what());
+    }
+    check(teardown_failure == String("the lock teardown failed"),
+          "detach rethrows the first teardown failure to its caller");
     check(unlock_torn_down,
-          "a throwing teardown does not strand the teardowns after it in the same entity");
+          "and it does not strand the teardowns after it in the same entity");
   }
 
   if (failures == 0) std::cout << "generated power: all checks passed\n";

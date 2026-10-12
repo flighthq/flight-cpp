@@ -148,10 +148,10 @@ sites above carrying the write.
 `std::exception` -- while a non-class throw still escapes the loop. The two requests touch the same
 handler and should be resolved together if the fix is shared.
 
-**Measured outcome of the patch, and the blocker beside it.** With the patch applied, regenerating
-`@flighthq/power` package-scoped does emit the guarded assignment at both call sites -- and the module does
-not compile, because the slot the write lands in is the wrong carrier for a caught value:
-`flight/power/power.hpp:159` and `:292` fail with `no viable overloaded '='`. That is the defect filed as
-[`catch-recorded-slot-carrier.md`](catch-recorded-slot-carrier.md), and the package's slice was left
-unregenerated rather than committed in a state where a shippable module stops compiling. The two have to
-land together: this patch is the write, that request is the slot.
+**Measured outcome of the pair.** With this patch alone, regenerating `@flighthq/power` emits the guarded
+write at both call sites and the module does not compile: the slot the write lands in is the wrong
+carrier for a caught value. That blocker is filed as
+[`catch-recorded-slot-carrier.md`](catch-recorded-slot-carrier.md) and is now carried by its own patch, so
+with the two applied together the package regenerates to an `std::exception_ptr` slot, a record that keeps
+the first failure, and `std::rethrow_exception`, compiles 3/3, and `tests/generated_power_test.cpp` asserts
+that the caller gets the original exception -- including the first of two failures rather than the last.

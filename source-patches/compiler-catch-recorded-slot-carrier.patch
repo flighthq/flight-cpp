@@ -1,0 +1,238 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCatchRecordedSlotCarrier.test.ts b/packages/compiler-backend-cpp/src/cppCatchRecordedSlotCarrier.test.ts
+new file mode 100644
+index 0000000..8772e59
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppCatchRecordedSlotCarrier.test.ts
+@@ -0,0 +1,119 @@
++import { describe, expect, it } from 'vitest';
++import ts from 'typescript';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++
++import { createCppCompilerBackend } from './cppCompilerBackend.js';
++
++// The carrier a catch/attempt-all pattern records into.
++//
++// `let failure: unknown = null` is the "no failure yet" state of an attempt-all teardown, and an empty
++// `std::exception_ptr` already means exactly that. The rule that elects `std::exception_ptr` used to
++// require a slot with NO initializer, an `=` record, and no read other than the record and the rethrow,
++// so this shape -- initialized, recorded with `??=`, and tested with `!== null` -- stayed on the erased
++// `flight::Any` path, which cannot hold a caught exception at all.
++function emit(source: string): string {
++  const lowering = lowerTypeScriptSource(
++    ts.createSourceFile('/flight/packages/power/src/probe.ts', source, ts.ScriptTarget.Latest, true),
++    { packageName: '@flighthq/power', upstreamDirectory: '/flight' },
++  );
++  const module = lowering.module;
++  const session = createCppCompilerBackend().createEmissionSession!({
++    modules: [module],
++    options: {
++      packageTargets: { '@flighthq/power': { includePrefix: 'flight/power', namespace: 'flight::power' } },
++      runtimeProfile: 'flight-cpp',
++    },
++  });
++  return session.emitModule(module)[0]!.contents;
++}
++
++const ATTEMPT_ALL = `
++export function teardown(values: readonly number[]): void {
++  let failure: unknown = null;
++  for (const value of values) {
++    try {
++      if (value > 1) throw new Error('too big');
++    } catch (error) {
++      failure ??= error;
++      continue;
++    }
++  }
++  if (failure !== null) throw failure;
++}
++`;
++
++describe('the slot an attempt-all teardown records into', () => {
++  it('is the exception carrier, recorded once and rethrown', () => {
++    const contents = emit(ATTEMPT_ALL);
++    // The declaration keeps the source's `null` as an empty pointer, which is the same "no failure
++    // recorded yet" state.
++    expect(contents).toContain('std::exception_ptr failure = nullptr;');
++    expect(contents).not.toContain('flight::Any failure = nullptr;');
++    // The record keeps the FIRST failure: an empty pointer is the slot's nullish state, so a later
++    // caught error cannot overwrite the one already recorded.
++    expect(contents).toContain('if (!failure) failure = std::current_exception();');
++    expect(contents).toContain('std::rethrow_exception(failure)');
++  });
++
++  it('answers its nullish test with the pointer, not the erased carrier', () => {
++    const contents = emit(ATTEMPT_ALL);
++    // `failure !== null` asks whether a failure was recorded, so the pointer's own truth is the answer
++    // (and the reverse spelling emits its negation).
++    expect(contents).toContain('return presence_operand;');
++    expect(contents).not.toContain('is_null()');
++  });
++
++  it('leaves an ordinary unknown slot on the dynamic-value carrier', () => {
++    // The same declaration, initialized to null, but holding a plain value and never thrown: nothing
++    // about it is a caught-exception slot, so the erased carrier is right and must survive.
++    const contents = emit(`
++export function note(): unknown {
++  let note: unknown = null;
++  note = 'text';
++  return note;
++}
++`);
++    expect(contents).toContain('flight::Any note');
++    expect(contents).not.toContain('exception_ptr');
++  });
++
++  it('leaves a recorded slot that is never rethrown on the dynamic-value carrier', () => {
++    const contents = emit(`
++export function count(values: readonly number[]): unknown {
++  let failure: unknown = null;
++  for (const value of values) {
++    try {
++      if (value > 1) throw new Error('too big');
++    } catch (error) {
++      failure ??= error;
++    }
++  }
++  return failure;
++}
++`);
++    expect(contents).toContain('flight::Any failure');
++    expect(contents).not.toContain('exception_ptr');
++  });
++
++  it('leaves a slot that is read for anything but its presence on the dynamic-value carrier', () => {
++    // The extra read is what distinguishes a slot this rule may carry as an exception pointer from one
++    // whose value other code consumes: an exception pointer cannot supply the original value.
++    const contents = emit(`
++export function observed(values: readonly number[]): unknown {
++  let failure: unknown = null;
++  for (const value of values) {
++    try {
++      if (value > 1) throw new Error('too big');
++    } catch (error) {
++      failure ??= error;
++    }
++  }
++  if (failure !== null) throw failure;
++  return failure;
++}
++`);
++    expect(contents).toContain('flight::Any failure');
++    expect(contents).not.toContain('exception_ptr');
++  });
++});
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 35f3396..48cd0a5 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -3590,7 +3590,7 @@ function emitExpression(
+         );
+       }
+       if (
+-        expression.operator === '=' &&
++        (expression.operator === '=' || expression.operator === '??=') &&
+         expression.left.kind === 'identifier' &&
+         expression.left.reference.kind === 'binding' &&
+         context.exceptionPointerBindingIds.has(expression.left.reference.binding.id) &&
+@@ -3599,7 +3599,12 @@ function emitExpression(
+         expression.right.reference.binding.kind === 'catch'
+       ) {
+         context.includes.add('exception');
+-        return `${emitExpression(expression.left, context)} = std::current_exception()`;
++        const target = emitExpression(expression.left, context);
++        // `??=` keeps the FIRST failure: an empty pointer is this slot's nullish state, so a later
++        // caught error does not overwrite the one already recorded.
++        return expression.operator === '='
++          ? `${target} = std::current_exception()`
++          : `([&]() { if (!${target}) ${target} = std::current_exception(); return ${target}; }())`;
+       }
+       const assignmentType = getIrAssignmentTargetTypeCpp(expression.left, context);
+       const rightType = getIrExpressionTypeEvidenceCpp(expression.right, context);
+@@ -13444,6 +13449,16 @@ function emitCppPresenceTestCpp(
+ ): string {
+   const errorMemberTest = emitCppErrorPresenceMemberTestCpp(operand, sentinel, present, strict, context);
+   if (errorMemberTest) return errorMemberTest;
++  // A slot carried as `std::exception_ptr` answers "was a failure recorded" as pointer emptiness, and
++  // for either sentinel: there, the source's `null` and `undefined` are the same "nothing recorded yet".
++  if (
++    operand.kind === 'identifier' &&
++    operand.reference.kind === 'binding' &&
++    context.exceptionPointerBindingIds.has(operand.reference.binding.id)
++  ) {
++    const value = emitExpression(operand, context);
++    return `([&]() { const auto& presence_operand = ${value}; return ${present ? '' : '!'}presence_operand; }())`;
++  }
+   const operandType = getCppNullishComparisonOperandTypeCpp(operand, context);
+   const union = operandType ? getIrUnionTypeCpp(operandType, context, new Set()) : undefined;
+   const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
+@@ -23082,10 +23097,17 @@ function collectCppExceptionPointerBindingIdsCpp(
+   const candidates = new Set<string>();
+   analyzeIrModuleTraversal(module, {
+     variable(variable) {
++      // A slot initialized to `null`/`undefined` says "no failure recorded yet", which an empty
++      // `std::exception_ptr` already means; a slot initialized to anything else is holding a value and
++      // stays on the dynamic-value path this rule exists to protect.
++      const initializerIsNullish =
++        variable.initializer !== undefined &&
++        ((variable.initializer.kind === 'literal' && variable.initializer.value === null) ||
++          variable.initializer.kind === 'undefinedValue');
+       if (
+         'binding' in variable &&
+         variable.mutable &&
+-        !variable.initializer &&
++        (variable.initializer === undefined || initializerIsNullish) &&
+         bindingTypes.get(variable.binding.id)?.kind === 'unknown'
+       ) {
+         candidates.add(variable.binding.id);
+@@ -23096,12 +23118,26 @@ function collectCppExceptionPointerBindingIdsCpp(
+   const invalidAssignments = new Set<string>();
+   const referenceCounts = new Map<string, number>();
+   const throwCounts = new Map<string, number>();
++  const nullishTestCounts = new Map<string, number>();
+   analyzeIrModuleTraversal(module, {
+     expression(expression) {
+       if (expression.kind === 'identifier' && expression.reference.kind === 'binding') {
+         const bindingId = expression.reference.binding.id;
+         if (candidates.has(bindingId)) referenceCounts.set(bindingId, (referenceCounts.get(bindingId) ?? 0) + 1);
+       }
++      // `failure !== null` is the source asking whether a failure was recorded, and its lowering is the
++      // carrier's own presence test; it is a permitted reference, unlike any other read of the slot.
++      if (expression.kind === 'binary' && expression.semantics.nullishComparison) {
++        const referenced = (candidate: Readonly<IrExpression>): string | undefined =>
++          candidate.kind === 'identifier' && candidate.reference.kind === 'binding'
++            ? candidate.reference.binding.id
++            : undefined;
++        for (const bindingId of [referenced(expression.left), referenced(expression.right)]) {
++          if (bindingId !== undefined && candidates.has(bindingId)) {
++            nullishTestCounts.set(bindingId, (nullishTestCounts.get(bindingId) ?? 0) + 1);
++          }
++        }
++      }
+       if (
+         expression.kind !== 'assignment' ||
+         expression.left.kind !== 'identifier' ||
+@@ -23113,7 +23149,7 @@ function collectCppExceptionPointerBindingIdsCpp(
+       const bindingId = expression.left.reference.binding.id;
+       assignmentCounts.set(bindingId, (assignmentCounts.get(bindingId) ?? 0) + 1);
+       if (
+-        expression.operator !== '=' ||
++        (expression.operator !== '=' && expression.operator !== '??=') ||
+         expression.right.kind !== 'identifier' ||
+         expression.right.reference.kind !== 'binding' ||
+         expression.right.reference.binding.kind !== 'catch'
+@@ -23137,11 +23173,12 @@ function collectCppExceptionPointerBindingIdsCpp(
+     [...candidates].filter((bindingId) => {
+       const assignments = assignmentCounts.get(bindingId) ?? 0;
+       const throws = throwCounts.get(bindingId) ?? 0;
++      const nullishTests = nullishTestCounts.get(bindingId) ?? 0;
+       return (
+         assignments > 0 &&
+         throws > 0 &&
+         !invalidAssignments.has(bindingId) &&
+-        referenceCounts.get(bindingId) === assignments + throws
++        referenceCounts.get(bindingId) === assignments + throws + nullishTests
+       );
+     }),
+   );

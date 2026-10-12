@@ -107,3 +107,33 @@ None carried. The source could drop the `= null` initializer and test the slot a
 instead, which is a source change in a sibling package and a semantics-preserving one at that -- the
 repository's preference is to lower what the source already says, and the lowering it needs is already in
 the emitter for the other spelling.
+
+## Carried by a compiler patch
+
+[`compiler-catch-recorded-slot-carrier.patch`](../../source-patches/compiler-catch-recorded-slot-carrier.patch)
+is the companion of
+[`compiler-nullish-assignment-statement-in-catch.patch`](../../source-patches/compiler-nullish-assignment-statement-in-catch.patch)
+and the two land together. It admits a nullish-literal initializer as the "nothing recorded yet" state,
+counts a `??=` from a catch binding as a recording assignment, and counts the slot's own nullish presence
+test as a permitted reference; the record then lowers to `if (!slot) slot = std::current_exception();` --
+first failure kept -- and the presence test to pointer emptiness, for either sentinel. Its test pins those
+and three controls that must NOT change carrier: an ordinary `unknown` slot holding a plain value, a slot
+recorded but never rethrown, and a slot read for its value as well as its presence.
+
+Measured after both patches: `@flighthq/power` regenerates package-scoped to
+
+```cpp
+  std::exception_ptr failure = nullptr;
+  ...
+    catch (const std::exception& error) {
+      ([&]() { if (!failure) failure = std::current_exception(); return failure; }());
+    }
+  ...
+  if (([&]() { const auto& presence_operand = failure; return presence_operand; }())) {
+    std::rethrow_exception(failure);
+  }
+```
+
+at both call sites, compiles 3/3, and `tests/generated_power_test.cpp` asserts that the caller receives the
+ORIGINAL exception -- including, with two failing providers, the first one and not the last. Catch breadth
+is untouched and still open.

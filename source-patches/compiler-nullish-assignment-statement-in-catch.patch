@@ -25,10 +25,10 @@ index fae6209..6a1bbdb 100644
        return `(${left} ${emitAssignmentOperator(expression.operator)} ${right})`;
 diff --git a/packages/compiler-backend-cpp/src/cppNullishAssignmentStatement.test.ts b/packages/compiler-backend-cpp/src/cppNullishAssignmentStatement.test.ts
 new file mode 100644
-index 0000000..58c492a
+index 0000000..c21981c
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppNullishAssignmentStatement.test.ts
-@@ -0,0 +1,93 @@
+@@ -0,0 +1,87 @@
 +import { describe, expect, it } from 'vitest';
 +import ts from 'typescript';
 +
@@ -63,17 +63,12 @@ index 0000000..58c492a
 +}
 +
 +const FAILURE_SLOT = `
-+export function teardown(values: readonly number[]): void {
-+  let failure: unknown = null;
++export function accumulate(values: readonly number[]): unknown {
++  let current: unknown = null;
 +  for (const value of values) {
-+    try {
-+      if (value > 1) throw new Error('too big');
-+    } catch (error) {
-+      failure ??= error;
-+      continue;
-+    }
++    current ??= value;
 +  }
-+  if (failure !== null) throw failure;
++  return current;
 +}
 +`;
 +
@@ -86,13 +81,12 @@ index 0000000..58c492a
 +`;
 +
 +describe('??= on an erased target', () => {
-+  it('keeps the assignment as a statement inside a catch body', () => {
++  it('keeps the assignment as a statement', () => {
 +    const contents = emit(FAILURE_SLOT);
 +    // The write is present and conditional: it is the guarded form, not the bare target the old
 +    // shortcut emitted, and the guard is the loose nullish test so the FIRST failure is retained.
-+    expect(contents).toContain('if (assignment_target.is_nullish()) assignment_target = error;');
-+    expect(contents).not.toMatch(/catch \(const std::exception& error\) \{\s*failure;/);
-+  });
++    expect(contents).toContain('if (assignment_target.is_nullish()) assignment_target = value;');
++      });
 +
 +  it('keeps the assignment in an expression position too', () => {
 +    const contents = emit(EXPRESSION_POSITION);
