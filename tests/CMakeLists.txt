@@ -331,6 +331,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_assets_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_assets COMMAND flight_cpp_generated_assets_tests)
 
+add_executable(flight_cpp_generated_importdiagnostics_tests generated_importdiagnostics_test.cpp)
+target_include_directories(
+  flight_cpp_generated_importdiagnostics_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_importdiagnostics_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_importdiagnostics COMMAND flight_cpp_generated_importdiagnostics_tests)
+
 add_executable(flight_cpp_generated_socket_statechart_tests generated_socket_statechart_test.cpp)
 target_include_directories(
   flight_cpp_generated_socket_statechart_tests
@@ -390,6 +398,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_dialog app dialog filesystem
 flight_cpp_package_test_labels(flight_cpp.generated_textshaper_cache textshaper)
 flight_cpp_package_test_labels(flight_cpp.generated_socket_statechart socket statechart)
 flight_cpp_package_test_labels(flight_cpp.generated_assets assets)
+flight_cpp_package_test_labels(flight_cpp.generated_importdiagnostics importdiagnostics)
 flight_cpp_package_test_labels(flight_cpp.generated_surface surface)
 flight_cpp_package_test_labels(flight_cpp.upstream_math_geometry_parity geometry math)
 
