@@ -101987,7 +101987,7 @@
             "packageName": "@flighthq/keyboard",
             "source": "packages/keyboard/src/contract.ts"
           },
-          "specifier": "./keyboard",
+          "specifier": "./keyboard.ts",
           "target": {
             "name": "Keyboard",
             "packageName": "@flighthq/keyboard",
@@ -171941,7 +171941,7 @@
             "packageName": "@flighthq/keyboard",
             "source": "packages/keyboard/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/keyboard",
