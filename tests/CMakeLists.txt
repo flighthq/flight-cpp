@@ -259,6 +259,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_spring_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_spring COMMAND flight_cpp_generated_spring_tests)
 
+add_executable(flight_cpp_generated_timeline_tests generated_timeline_test.cpp)
+target_include_directories(
+  flight_cpp_generated_timeline_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_timeline_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_timeline COMMAND flight_cpp_generated_timeline_tests)
+
 add_executable(flight_cpp_generated_lifecycle_tests generated_lifecycle_test.cpp)
 target_include_directories(
   flight_cpp_generated_lifecycle_tests
@@ -348,6 +356,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_share share)
 flight_cpp_package_test_labels(flight_cpp.generated_updater updater)
 flight_cpp_package_test_labels(flight_cpp.generated_lifecycle lifecycle signals)
 flight_cpp_package_test_labels(flight_cpp.generated_spring spring)
+flight_cpp_package_test_labels(flight_cpp.generated_timeline signals timeline)
 flight_cpp_package_test_labels(flight_cpp.generated_signals_throttle signals)
 flight_cpp_package_test_labels(flight_cpp.generated_useragent useragent)
 flight_cpp_package_test_labels(flight_cpp.generated_dialog app dialog filesystem geometry node render signals)
