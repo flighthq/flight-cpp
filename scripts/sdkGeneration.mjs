@@ -102,6 +102,21 @@ const compiler = resolveDependency(root, 'flight-compiler');
 const generatedRoot = outputOption
   ? path.resolve(root, outputOption.slice('--output='.length))
   : path.join(root, 'generated');
+// Checked first and independently of generation: it needs no pinned checkout, so it holds on a fresh clone
+// where the rest of the check is skipped, and it names the stale sentence instead of a whole-tree diff.
+// A failure EXITS here, before patch recovery, checkout validation or generation: there is no reason to
+// spend a whole-SDK run confirming a tree whose own README already contradicts it.
+if (check) {
+  const readmeProblems = generatedReadmeProblems(generatedRoot);
+  if (readmeProblems.length > 0) {
+    const shown = path.relative(root, generatedRoot);
+    const where = shown.startsWith('..') || path.isAbsolute(shown) ? portable(generatedRoot) : portable(shown) || '.';
+    process.stderr.write(`${where}/README.md is not derived from its manifest.json:\n`);
+    for (const problem of readmeProblems) process.stderr.write(`- ${problem}\n`);
+    process.stderr.write('Re-derive it with readmeWithSummary and readmeWithProvenance from scripts/packageScope.mjs; a scoped merge does this itself.\n');
+    process.exit(1);
+  }
+}
 // The profile set the committed inventory is generated with, and the reason it is a DEFAULT rather than
 // something the npm scripts pass.
 //
@@ -142,19 +157,6 @@ const bindingProfiles = loadBindingProfiles(
 // threw on a declaration the already-loaded module did not recognise. Validating up front turns that
 // into an immediate error instead of a wasted half hour.
 const declaredRepairs = loadEmissionRepairs(root);
-// Checked first and independently of generation: it needs no pinned checkout, so it holds on a fresh clone
-// where the rest of the check is skipped, and it names the stale sentence instead of a whole-tree diff.
-if (check) {
-  const readmeProblems = generatedReadmeProblems(generatedRoot);
-  if (readmeProblems.length > 0) {
-    const shown = path.relative(root, generatedRoot);
-    const where = shown.startsWith('..') || path.isAbsolute(shown) ? portable(generatedRoot) : portable(shown) || '.';
-    process.stderr.write(`${where}/README.md is not derived from its manifest.json:\n`);
-    for (const problem of readmeProblems) process.stderr.write(`- ${problem}\n`);
-    process.stderr.write('Re-derive it with readmeWithSummary and readmeWithProvenance from scripts/packageScope.mjs; a scoped merge does this itself.\n');
-    process.exitCode = 1;
-  }
-}
 const deferredPackages = loadDeferredPackages(root);
 const sourcePatches = loadSourcePatches(root);
 reportPendingSourcePatches(loadPendingSourcePatches(root));
@@ -178,7 +180,7 @@ if (inputFailure !== undefined) {
   const message = `${inputFailure} Run \`npm run rehydrate\` and \`npm ci --prefix .dependencies/flight-compiler\`.\n`;
   if (check) {
     process.stdout.write(`SDK generation check skipped: ${message}`);
-    process.exit(process.exitCode ?? 0);
+    process.exit(0);
   }
   process.stderr.write(message);
   process.exit(1);

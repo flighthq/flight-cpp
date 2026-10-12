@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, readdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -968,6 +969,50 @@ describe('generated README invariant', () => {
     const empty = path.join(scratch, 'readme-empty');
     mkdirSync(empty, { recursive: true });
     assert.equal(generatedReadmeProblems(empty).length, 1);
+  });
+});
+
+describe('sdk:check README gate', () => {
+  // The real sdk:check entry point, run from a copy of the repository WITHOUT .dependencies/, so it can never
+  // reach a pinned checkout, patch one or start a whole-SDK generation, whatever the script does. With a
+  // correct README the same sandbox reaches checkout validation and reports "skipped"; that control is what
+  // shows a stale README stops the run earlier, at the gate, rather than somewhere downstream.
+  const sandbox = path.join(scratch, 'sdk-check-sandbox');
+  for (const entry of ['scripts', 'bindings', 'repairs', 'source-patches', 'overrides', 'dependencies.lock.json', 'deferred-packages.json']) {
+    cpSync(path.join(root, entry), path.join(sandbox, entry), { recursive: true });
+  }
+  const run = (tree) =>
+    spawnSync(process.execPath, [path.join(sandbox, 'scripts', 'sdkGeneration.mjs'), '--check', `--output=${tree}`], {
+      encoding: 'utf8',
+      timeout: 120_000,
+    });
+
+  test('the sandbox has no pinned checkout to touch', () => {
+    assert.ok(!existsSync(path.join(sandbox, '.dependencies')));
+  });
+
+  test('a consistent README lets the check continue past the gate', () => {
+    const result = run(copyTree('sdk-check-consistent'));
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /SDK generation check skipped/u);
+    assert.doesNotMatch(result.stderr, /is not derived from its manifest\.json/u);
+  });
+
+  test('a stale README fails with the diagnostic and stops before checkout validation or generation', () => {
+    const tree = copyTree('sdk-check-stale');
+    const readme = readFileSync(path.join(tree, 'README.md'), 'utf8');
+    const stale = readme.replace(/\n(\d+) SDK packages and refused/u, (_, count) => `\n${String(Number(count) - 1)} SDK packages and refused`);
+    assert.notEqual(stale, readme);
+    writeFileSync(path.join(tree, 'README.md'), stale);
+    const result = run(tree);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /README\.md is not derived from its manifest\.json/u);
+    assert.match(result.stderr, /the module summary sentence disagrees with manifest\.json/u);
+    // Nothing downstream of the gate ran: no checkout validation, no patch recovery, no generation.
+    const output = `${result.stdout}\n${result.stderr}`;
+    for (const downstream of [/check skipped/u, /Recovered \d+ source patch/u, /pending rebase/u, /Generat/u]) {
+      assert.doesNotMatch(output, downstream);
+    }
   });
 });
 
