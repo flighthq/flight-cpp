@@ -8718,21 +8718,21 @@
       "code": "dependency-refused",
       "module": "packages/useragent/src/contract.ts",
       "package": "@flighthq/useragent",
-      "reason": "dependency ./userAgentParse was refused for @flighthq/useragent/packages/useragent/src/userAgentParse.ts",
+      "reason": "dependency ./userAgentParse.ts was refused for @flighthq/useragent/packages/useragent/src/userAgentParse.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/useragent/src/index.ts",
       "package": "@flighthq/useragent",
-      "reason": "dependency ./contract was refused for @flighthq/useragent/packages/useragent/src/contract.ts",
+      "reason": "dependency ./userAgentParse.ts was refused for @flighthq/useragent/packages/useragent/src/userAgentParse.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/useragent/src/userAgent.ts",
       "package": "@flighthq/useragent",
-      "reason": "dependency ./userAgentParse was refused for @flighthq/useragent/packages/useragent/src/userAgentParse.ts",
+      "reason": "dependency ./userAgentParse.ts was refused for @flighthq/useragent/packages/useragent/src/userAgentParse.ts",
       "stage": "dependency"
     },
     {

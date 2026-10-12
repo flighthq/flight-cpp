@@ -59771,9 +59771,7 @@
       "status": "refused-placeholder"
     },
     {
-      "consumers": [
-        "@flighthq/useragent/packages/useragent/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/useragent",
@@ -59795,13 +59793,15 @@
       },
       "path": "flight/useragent/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/useragent/packages/useragent/src/contract.ts"
+        "@flighthq/useragent/packages/useragent/src/userAgent.ts",
+        "@flighthq/useragent/packages/useragent/src/userAgentParse.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "consumers": [
-        "@flighthq/useragent/packages/useragent/src/contract.ts"
+        "@flighthq/useragent/packages/useragent/src/contract.ts",
+        "@flighthq/useragent/packages/useragent/src/index.ts"
       ],
       "module": {
         "name": "UserAgent",
@@ -59818,6 +59818,7 @@
       "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/useragent/packages/useragent/src/contract.ts",
+        "@flighthq/useragent/packages/useragent/src/index.ts",
         "@flighthq/useragent/packages/useragent/src/userAgent.ts"
       ],
       "declarationFingerprints": [
