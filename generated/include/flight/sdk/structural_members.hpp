@@ -824,6 +824,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("isHdr") && requires { object.is_hdr; }) return (object.is_hdr);
   else if constexpr (Key::name.view() == std::string_view("isJailbroken") && requires { object.is_jailbroken; }) return (object.is_jailbroken);
   else if constexpr (Key::name.view() == std::string_view("isLinearAccelerationSupported") && requires { object.is_linear_acceleration_supported; }) return (object.is_linear_acceleration_supported);
+  else if constexpr (Key::name.view() == std::string_view("isLocalBoundsRectangleValid") && requires { object.is_local_bounds_rectangle_valid; }) return (object.is_local_bounds_rectangle_valid);
   else if constexpr (Key::name.view() == std::string_view("isLowEndDevice") && requires { object.is_low_end_device; }) return (object.is_low_end_device);
   else if constexpr (Key::name.view() == std::string_view("isMagnetometerSupported") && requires { object.is_magnetometer_supported; }) return (object.is_magnetometer_supported);
   else if constexpr (Key::name.view() == std::string_view("isMotionSupported") && requires { object.is_motion_supported; }) return (object.is_motion_supported);
@@ -1880,7 +1881,6 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("transmissionEnabled") && requires { object.transmission_enabled; }) return (object.transmission_enabled);
   else if constexpr (Key::name.view() == std::string_view("transmissionMap") && requires { object.transmission_map; }) return (object.transmission_map);
   else if constexpr (Key::name.view() == std::string_view("transmissionMapUvSet") && requires { object.transmission_map_uv_set; }) return (object.transmission_map_uv_set);
-  else if constexpr (Key::name.view() == std::string_view("transmissionVolume") && requires { object.transmission_volume; }) return (object.transmission_volume);
   else if constexpr (Key::name.view() == std::string_view("transparency") && requires { object.transparency; }) return (object.transparency);
   else if constexpr (Key::name.view() == std::string_view("trauma") && requires { object.trauma; }) return (object.trauma);
   else if constexpr (Key::name.view() == std::string_view("tray") && requires { object.tray; }) return (object.tray);
@@ -2830,6 +2830,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("isHdr") && requires(Object& object) { object.is_hdr; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_hdr)>>{};
   else if constexpr (Key::name.view() == std::string_view("isJailbroken") && requires(Object& object) { object.is_jailbroken; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_jailbroken)>>{};
   else if constexpr (Key::name.view() == std::string_view("isLinearAccelerationSupported") && requires(Object& object) { object.is_linear_acceleration_supported; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_linear_acceleration_supported)>>{};
+  else if constexpr (Key::name.view() == std::string_view("isLocalBoundsRectangleValid") && requires(Object& object) { object.is_local_bounds_rectangle_valid; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_local_bounds_rectangle_valid)>>{};
   else if constexpr (Key::name.view() == std::string_view("isLowEndDevice") && requires(Object& object) { object.is_low_end_device; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_low_end_device)>>{};
   else if constexpr (Key::name.view() == std::string_view("isMagnetometerSupported") && requires(Object& object) { object.is_magnetometer_supported; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_magnetometer_supported)>>{};
   else if constexpr (Key::name.view() == std::string_view("isMotionSupported") && requires(Object& object) { object.is_motion_supported; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().is_motion_supported)>>{};
@@ -3886,7 +3887,6 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("transmissionEnabled") && requires(Object& object) { object.transmission_enabled; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transmission_enabled)>>{};
   else if constexpr (Key::name.view() == std::string_view("transmissionMap") && requires(Object& object) { object.transmission_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transmission_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("transmissionMapUvSet") && requires(Object& object) { object.transmission_map_uv_set; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transmission_map_uv_set)>>{};
-  else if constexpr (Key::name.view() == std::string_view("transmissionVolume") && requires(Object& object) { object.transmission_volume; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transmission_volume)>>{};
   else if constexpr (Key::name.view() == std::string_view("transparency") && requires(Object& object) { object.transparency; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transparency)>>{};
   else if constexpr (Key::name.view() == std::string_view("trauma") && requires(Object& object) { object.trauma; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().trauma)>>{};
   else if constexpr (Key::name.view() == std::string_view("tray") && requires(Object& object) { object.tray; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tray)>>{};
@@ -4839,6 +4839,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->is_hdr; }) owner.bind_named("isHdr", [object]() -> decltype(auto) { return (object->is_hdr); });
   if constexpr (requires { object->is_jailbroken; }) owner.bind_named("isJailbroken", [object]() -> decltype(auto) { return (object->is_jailbroken); });
   if constexpr (requires { object->is_linear_acceleration_supported; }) owner.bind_named("isLinearAccelerationSupported", [object]() -> decltype(auto) { return (object->is_linear_acceleration_supported); });
+  if constexpr (requires { object->is_local_bounds_rectangle_valid; }) owner.bind_named("isLocalBoundsRectangleValid", [object]() -> decltype(auto) { return (object->is_local_bounds_rectangle_valid); });
   if constexpr (requires { object->is_low_end_device; }) owner.bind_named("isLowEndDevice", [object]() -> decltype(auto) { return (object->is_low_end_device); });
   if constexpr (requires { object->is_magnetometer_supported; }) owner.bind_named("isMagnetometerSupported", [object]() -> decltype(auto) { return (object->is_magnetometer_supported); });
   if constexpr (requires { object->is_motion_supported; }) owner.bind_named("isMotionSupported", [object]() -> decltype(auto) { return (object->is_motion_supported); });
@@ -5895,7 +5896,6 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->transmission_enabled; }) owner.bind_named("transmissionEnabled", [object]() -> decltype(auto) { return (object->transmission_enabled); });
   if constexpr (requires { object->transmission_map; }) owner.bind_named("transmissionMap", [object]() -> decltype(auto) { return (object->transmission_map); });
   if constexpr (requires { object->transmission_map_uv_set; }) owner.bind_named("transmissionMapUvSet", [object]() -> decltype(auto) { return (object->transmission_map_uv_set); });
-  if constexpr (requires { object->transmission_volume; }) owner.bind_named("transmissionVolume", [object]() -> decltype(auto) { return (object->transmission_volume); });
   if constexpr (requires { object->transparency; }) owner.bind_named("transparency", [object]() -> decltype(auto) { return (object->transparency); });
   if constexpr (requires { object->trauma; }) owner.bind_named("trauma", [object]() -> decltype(auto) { return (object->trauma); });
   if constexpr (requires { object->tray; }) owner.bind_named("tray", [object]() -> decltype(auto) { return (object->tray); });
@@ -6881,6 +6881,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(is_hdr)
   FLIGHT_SDK_ROW_WIDENS(is_jailbroken)
   FLIGHT_SDK_ROW_WIDENS(is_linear_acceleration_supported)
+  FLIGHT_SDK_ROW_WIDENS(is_local_bounds_rectangle_valid)
   FLIGHT_SDK_ROW_WIDENS(is_low_end_device)
   FLIGHT_SDK_ROW_WIDENS(is_magnetometer_supported)
   FLIGHT_SDK_ROW_WIDENS(is_motion_supported)
@@ -7937,7 +7938,6 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(transmission_enabled)
   FLIGHT_SDK_ROW_WIDENS(transmission_map)
   FLIGHT_SDK_ROW_WIDENS(transmission_map_uv_set)
-  FLIGHT_SDK_ROW_WIDENS(transmission_volume)
   FLIGHT_SDK_ROW_WIDENS(transparency)
   FLIGHT_SDK_ROW_WIDENS(trauma)
   FLIGHT_SDK_ROW_WIDENS(tray)
