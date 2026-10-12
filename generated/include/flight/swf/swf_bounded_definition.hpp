@@ -7,6 +7,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/swf_tag_parse_state.hpp>
+
 namespace flight::types { struct SwfTagParseState; }
 namespace flight::types { struct SwfTagReader; }
 namespace flight::types { struct SwfTagRectangle; }
@@ -18,10 +20,7 @@ namespace flight::swf {
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_END_START_B3D703E568B779F1
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_END_START_B3D703E568B779F1
-struct end_start_b3d703e568b779f1 : public flight::ReferenceEnabled {
-  flight::Ref<flight::types::SwfTagRectangle> end;
-  flight::Ref<flight::types::SwfTagRectangle> start;
-};
+using end_start_b3d703e568b779f1 = flight::types::end_start_b3d703e568b779f1;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_END_START_B3D703E568B779F1
 
 inline double read_swf_bounded_definition_header(flight::Ref<flight::types::SwfTagReader> body, flight::Ref<flight::types::SwfTagParseState> state, bool has_end_bounds) {

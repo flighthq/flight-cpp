@@ -87,8 +87,10 @@ one package produces does not convert where another consumes it.
 
 The repair keeps the `flight::types` definition and turns every other copy into a type alias to it,
 hoisting the canonical header's include to file scope. Two constraints make it safe, and both are
-checked rather than assumed: the bodies must be **byte-identical**, not merely hash-alike, and
-`flight::types` is the only canonical home, because every package already depends on it. An alias
+checked rather than assumed: the bodies must be **byte-identical**, not merely hash-alike -- apart from
+qualification, because the canonical copy writes its siblings unqualified inside `namespace flight::types`,
+so a copy emitted elsewhere that names them as `flight::types::X` and names nothing unqualified is the same
+declaration -- and `flight::types` is the only canonical home, because every package already depends on it. An alias
 introduces no operation and no storage, so it stays within the rule that a repair may only add text
 with no behavior of its own.
 

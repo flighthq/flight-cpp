@@ -1,0 +1,95 @@
+diff --git a/packages/swf/src/swfFrameAction.ts b/packages/swf/src/swfFrameAction.ts
+index 4cccbaa8..d9f0fc6d 100644
+--- a/packages/swf/src/swfFrameAction.ts
++++ b/packages/swf/src/swfFrameAction.ts
+@@ -177,12 +177,16 @@ function readSwfAbcFrameScriptCalls(
+           // One report for both causes, because the caller loses the same thing either way: a frame the
+           // file bound a script to has none. `reason` separates a method body that did not parse from a
+           // body that parsed into work this importer declines to obey.
++          const detail: Record<string, boolean | number | string> = {
++            frame: frame.value + 1,
++            reason: body === undefined ? 'method-body-unreadable' : 'commands-declined',
++          };
+           reportImportDiagnostic(
+             diagnostics,
+             ImportDiagnosticSeverity.Drop,
+             'swf.abc-frame-script-declined',
+             'readSwfAbcFrameScriptCalls',
+-            { frame: frame.value + 1, reason: body === undefined ? 'method-body-unreadable' : 'commands-declined' },
++            detail,
+           );
+           continue;
+         }
+diff --git a/packages/swf/src/swfSoundHandler.ts b/packages/swf/src/swfSoundHandler.ts
+index 0f2fb734..694d9051 100644
+--- a/packages/swf/src/swfSoundHandler.ts
++++ b/packages/swf/src/swfSoundHandler.ts
+@@ -388,11 +388,6 @@ function appendSwfStreamSoundChunk(body: SwfTagReader, state: SwfTagParseState,
+     return;
+   }
+   if (timeline.streamFormat < 0) return;
+-  reportImportDiagnostic(
+-    state.diagnostics,
+-    ImportDiagnosticSeverity.Skip,
+-    'swf.stream-sound-format',
+-    'readSwfTimeline',
+-    { capability: 'swf.axis.sound-format-non-mp3', format: timeline.streamFormat },
+-  );
++  const detail: Record<string, boolean | number | string> = { capability: 'swf.axis.sound-format-non-mp3', format: timeline.streamFormat };
++  reportImportDiagnostic(state.diagnostics, ImportDiagnosticSeverity.Skip, 'swf.stream-sound-format', 'readSwfTimeline', detail);
+ }
+diff --git a/packages/swf/src/swfTimelineParse.ts b/packages/swf/src/swfTimelineParse.ts
+index 1e64f446..cbacf60d 100644
+--- a/packages/swf/src/swfTimelineParse.ts
++++ b/packages/swf/src/swfTimelineParse.ts
+@@ -48,7 +48,8 @@ function reportSwfUnhandledTag(diagnostics: ImportDiagnostic[] | undefined, code
+   if (SWF_NON_CONTENT_TAGS.has(code)) return;
+ 
+   const kind = isKnownSwfTag(code) ? 'swf.tag-handler-unregistered' : 'swf.tag-unknown';
+-  reportImportDiagnostic(diagnostics, ImportDiagnosticSeverity.Skip, kind, 'readSwfTimeline', { tag: code });
++  const detail: Record<string, boolean | number | string> = { tag: code };
++  reportImportDiagnostic(diagnostics, ImportDiagnosticSeverity.Skip, kind, 'readSwfTimeline', detail);
+ }
+ 
+ // Reads one tag stream — the root's or a sprite's — into frames and labels, dispatching each tag to the
+@@ -108,29 +109,19 @@ export function readSwfTimeline(reader: SwfReader, state: SwfTagParseState): Swf
+   const reachableCues = timeline.cues.filter((cue) => cue.frame <= timeline.frames.length);
+   const reachableLabels = timeline.labels.filter((label) => label.frame <= timeline.frames.length);
+   if (reachableLabels.length !== timeline.labels.length) {
+-    reportImportDiagnostic(
+-      state.diagnostics,
+-      ImportDiagnosticSeverity.Drop,
+-      'swf.label-past-last-frame',
+-      'readSwfTimeline',
+-      {
+-        capability: 'swf.timeline.frame-label',
+-        dropped: timeline.labels.length - reachableLabels.length,
+-        frames: timeline.frames.length,
+-      },
+-    );
++    const detail: Record<string, boolean | number | string> = {
++      capability: 'swf.timeline.frame-label',
++      dropped: timeline.labels.length - reachableLabels.length,
++      frames: timeline.frames.length,
++    };
++    reportImportDiagnostic(state.diagnostics, ImportDiagnosticSeverity.Drop, 'swf.label-past-last-frame', 'readSwfTimeline', detail);
+   }
+   if (reachableCues.length !== timeline.cues.length) {
+-    reportImportDiagnostic(
+-      state.diagnostics,
+-      ImportDiagnosticSeverity.Drop,
+-      'swf.cue-past-last-frame',
+-      'readSwfTimeline',
+-      {
+-        dropped: timeline.cues.length - reachableCues.length,
+-        frames: timeline.frames.length,
+-      },
+-    );
++    const detail: Record<string, boolean | number | string> = {
++      dropped: timeline.cues.length - reachableCues.length,
++      frames: timeline.frames.length,
++    };
++    reportImportDiagnostic(state.diagnostics, ImportDiagnosticSeverity.Drop, 'swf.cue-past-last-frame', 'readSwfTimeline', detail);
+   }
+   return {
+     actions: timeline.actions,

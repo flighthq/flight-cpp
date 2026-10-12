@@ -71,7 +71,8 @@ inline void report_swf_unhandled_tag(std::optional<flight::Array<flight::Ref<fli
     return;
   }
   const flight::String kind = (flight::swf::is_known_swf_tag(code) ? flight::String("swf.tag-handler-unregistered") : flight::String("swf.tag-unknown"));
-  flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics.value()}, flight::types::import_diagnostic_severity->skip, kind, flight::String("readSwfTimeline"), {{flight::String("tag"), std::variant<bool, double, flight::String>{std::in_place_type<double>, code}}});
+  flight::Record<flight::String, std::variant<bool, double, flight::String>> detail = {{flight::String("tag"), std::variant<bool, double, flight::String>{std::in_place_type<double>, code}}};
+  flight::importdiagnostics::report_import_diagnostic(std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>{diagnostics.value()}, flight::types::import_diagnostic_severity->skip, kind, flight::String("readSwfTimeline"), detail);
 }
 
 inline const double tag_end = 0.0;
@@ -142,10 +143,12 @@ inline std::optional<flight::Ref<flight::types::SwfTimeline>> read_swf_timeline(
   flight::Array<flight::Ref<flight::types::TimelineCue>> reachable_cues = timeline->cues.filter([=](flight::Ref<flight::types::TimelineCue> cue) { return (cue->frame <= static_cast<double>(timeline->frames.size())); });
   flight::Array<flight::Ref<flight::types::TimelineLabel>> reachable_labels = timeline->labels.filter([=](flight::Ref<flight::types::TimelineLabel> label) { return (label->frame <= static_cast<double>(timeline->frames.size())); });
   if ((static_cast<double>(reachable_labels.size()) != static_cast<double>(timeline->labels.size()))) {
-    flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("swf.label-past-last-frame"), flight::String("readSwfTimeline"), {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.timeline.frame-label")}}, {flight::String("dropped"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (static_cast<double>(timeline->labels.size()) - static_cast<double>(reachable_labels.size()))}}, {flight::String("frames"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(timeline->frames.size())}}});
+    flight::Record<flight::String, std::variant<bool, double, flight::String>> detail = {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.timeline.frame-label")}}, {flight::String("dropped"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (static_cast<double>(timeline->labels.size()) - static_cast<double>(reachable_labels.size()))}}, {flight::String("frames"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(timeline->frames.size())}}};
+    flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("swf.label-past-last-frame"), flight::String("readSwfTimeline"), detail);
   }
   if ((static_cast<double>(reachable_cues.size()) != static_cast<double>(timeline->cues.size()))) {
-    flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("swf.cue-past-last-frame"), flight::String("readSwfTimeline"), {{flight::String("dropped"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (static_cast<double>(timeline->cues.size()) - static_cast<double>(reachable_cues.size()))}}, {flight::String("frames"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(timeline->frames.size())}}});
+    flight::Record<flight::String, std::variant<bool, double, flight::String>> detail_2 = {{flight::String("dropped"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (static_cast<double>(timeline->cues.size()) - static_cast<double>(reachable_cues.size()))}}, {flight::String("frames"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(timeline->frames.size())}}};
+    flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("swf.cue-past-last-frame"), flight::String("readSwfTimeline"), detail_2);
   }
   return std::optional<flight::Ref<flight::types::SwfTimeline>>{flight::make_ref<flight::types::SwfTimeline>(flight::types::SwfTimeline{.actions = timeline->actions, .cues = reachable_cues, .frames = timeline->frames, .labels = reachable_labels.sort(compare_swf_timeline_label_frame)})};
 }

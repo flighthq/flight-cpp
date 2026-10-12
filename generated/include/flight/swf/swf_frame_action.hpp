@@ -5,6 +5,7 @@
 #include <exception>
 #include <flight/boolean.hpp>
 #include <flight/map.hpp>
+#include <flight/record.hpp>
 #include <flight/sequence_view.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -309,7 +310,8 @@ inline flight::Map<double, flight::types::FrameScript> read_swf_abc_frame_script
             std::optional<flight::Array<flight::Ref<flight::types::AbcInstruction>>> body = bodies.get(handler->value);
             std::optional<flight::Array<flight::Ref<SwfFrameCommand>>> commands = (!body.has_value() ? std::nullopt : read_swf_abc_commands(file, body.value()));
             if (!commands.has_value()) {
-              flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("swf.abc-frame-script-declined"), flight::String("readSwfAbcFrameScriptCalls"), {{flight::String("frame"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (frame->value + 1.0)}}, {flight::String("reason"), (!body.has_value() ? std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("method-body-unreadable")} : std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("commands-declined")})}});
+              flight::Record<flight::String, std::variant<bool, double, flight::String>> detail = {{flight::String("frame"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (frame->value + 1.0)}}, {flight::String("reason"), (!body.has_value() ? std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("method-body-unreadable")} : std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("commands-declined")})}};
+              flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("swf.abc-frame-script-declined"), flight::String("readSwfAbcFrameScriptCalls"), detail);
               {
                 (i += 2.0);
                 continue;

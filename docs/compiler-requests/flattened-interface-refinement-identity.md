@@ -43,3 +43,9 @@ The same representation boundary also omits the `Texture` → `CubeTexture` and 
 There is no downstream workaround: materializing the refined struct would replace the source object and
 break reference equality. The generated placeholders deliberately retain the refusal until the compiler
 and runtime agree on an owner-preserving interface-refinement carrier.
+
+Also blocks `@flighthq/swf` at a627849: `swf_appearance.hpp` builds `colorAdjustments: Adjustment[]` from
+`createColorScaleBiasAdjustment(...)`. `ColorScaleBiasAdjustment` extends `ColorMatrixAdjustment` extends
+`Adjustment` in TypeScript, but the emitted structs are independent, so a `Ref<ColorScaleBiasAdjustment>`
+cannot enter `flight::Array<flight::Ref<flight::types::Adjustment>>` without a copy that would split identity.
+No workaround is carried.

@@ -352,7 +352,8 @@ inline void append_swf_stream_sound_chunk(flight::Ref<flight::types::SwfTagReade
   if ((timeline->stream_format < 0.0)) {
     return;
   }
-  flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.stream-sound-format"), flight::String("readSwfTimeline"), {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.axis.sound-format-non-mp3")}}, {flight::String("format"), std::variant<bool, double, flight::String>{std::in_place_type<double>, timeline->stream_format}}});
+  flight::Record<flight::String, std::variant<bool, double, flight::String>> detail = {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.axis.sound-format-non-mp3")}}, {flight::String("format"), std::variant<bool, double, flight::String>{std::in_place_type<double>, timeline->stream_format}}};
+  flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.stream-sound-format"), flight::String("readSwfTimeline"), detail);
 }
 
 inline flight::Ref<flight::types::SwfTagHandler> swf_sound_handler = flight::make_ref<flight::types::SwfTagHandler>(flight::types::SwfTagHandler{.instantiate = std::optional<flight::Ref<flight::types::SwfTagHandlerInstantiation>>{flight::make_ref<flight::types::SwfTagHandlerInstantiation>(flight::types::SwfTagHandlerInstantiation{.create_resources = std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>, flight::Ref<flight::types::SwfTagHandlerResources>)>>{[](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>> parsed, flight::Ref<flight::types::SwfTagHandlerResources> out) {

@@ -69,7 +69,7 @@
       "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
       "rebasedOn": "2026-10-12"
     },
-{
+    {
       "id": "text-markup-spread-class-merge",
       "dependency": "flight",
       "patch": "text-markup-spread-class-merge.patch",
@@ -84,7 +84,7 @@
       "unblocks": "Lets packages/text-markup/src/markupTagRegistry.ts emit, which is what defines create_markup_font_tag_handler and the other standard tag handlers that markup_tag_registry.hpp already calls.",
       "expires": "when Object.assign with an exact compatible object-literal source lowers directly.",
       "appliedOn": "2026-10-12"
-},
+    },
     {
       "id": "glyphatlas-iterator-result-binding",
       "dependency": "flight",
@@ -2838,6 +2838,38 @@
       "whyNotUpstreamFirst": "The profile table is this repository's runtime contract, and the runtime function it names already exists at the pin; upstream has no newer commit than the pin.",
       "unblocks": "@flighthq/media: `audioMixer.ts`'s `Array.from(runtime.activeChannels)`, and any other module whose only refusal is an `Array.from`.",
       "expires": "when the profile binds `Array.from` upstream, or the emitter lowers `Array.from` without a declared member.",
+      "appliedOn": "2026-10-12"
+    },
+    {
+      "id": "swf-diagnostic-detail-records",
+      "dependency": "flight",
+      "patch": "swf-diagnostic-detail-records.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/swf/src/swfTimelineParse.ts, swfFrameAction.ts, swfSoundHandler.ts",
+      "package": "@flighthq/swf",
+      "answers": "diagnostic",
+      "refusal": "object-literal diagnostic details are emitted as a brace initializer that cannot cross both Record and optional<Record> construction boundaries (no matching constructor for std::optional<flight::Record<flight::String, std::variant<bool, double, flight::String>>>)",
+      "rewrite": "Binds each failing diagnostic detail object literal to a local declared with reportImportDiagnostic's own detail type, Record<string, boolean | number | string>, immediately before the call, and passes the local.",
+      "equivalence": "The object literal is evaluated once, with the same property expressions in the same order, and the same fresh object reaches the sink. Every argument evaluated before it in the original call is a constant or a side-effect-free read, so evaluating the detail first is unobservable. reportImportDiagnostic receives the identical value and arguments.",
+      "whyNotUpstreamFirst": "The literals already receive the exact parameter context. This is the same emitter defect the font-formats woff patch answers; a target-neutral named binding avoids maintaining copied tag handlers while the emitter cannot compose Record and optional construction.",
+      "unblocks": "swf_timeline_parse.hpp and every swf header that includes it (header, document, content capabilities, requirements, sprite handler and family, tag census), plus swf_frame_action.hpp and swf_sound_handler.hpp at their diagnostic sites.",
+      "expires": "when the emitter materializes a contextual Record object literal before constructing an optional<Record> function argument (the woff patch expires on the same fix).",
+      "appliedOn": "2026-10-12"
+    },
+    {
+      "id": "swf-image-texture-2d-constructor",
+      "dependency": "flight",
+      "patch": "swf-image-texture-2d-constructor.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/swf/src/swfImageTexture.ts",
+      "package": "@flighthq/swf",
+      "answers": "diagnostic",
+      "refusal": "createTexture is overloaded; TypeScript resolves a dimension-less call to the overload returning Texture2D, but the emitter calls the implementation signature returning the flat Texture union and passes a designated brace initializer to its optional view parameter, so no create_texture overload matches and the Texture result cannot be stored as Texture2D",
+      "rewrite": "Calls createTexture2D, the 2D leaf constructor, with the same options object.",
+      "equivalence": "For options without a dimension, createTexture's default branch is exactly `return createTexture2D(opts)`. The only other work on that path is createCommonTextureFields(opts), whose result the branch discards; it only reads opts and allocates fresh Sampler and Vector2 objects through allocateEntity, which records no identity, counter or uid. So the returned texture, its fields, its resource attachment, and every observable allocation are identical.",
+      "whyNotUpstreamFirst": "Naming the 2D constructor is ordinary target-neutral TypeScript that states the intended dimension, which createTexture's own comment recommends.",
+      "unblocks": "swf_image_texture.hpp and the swf headers that include it (bitmap tag family, all tag handlers, the tag-stream test helper).",
+      "expires": "when the emitter lowers an overloaded call through the overload TypeScript selected.",
       "appliedOn": "2026-10-12"
     }
   ]

@@ -1430,6 +1430,18 @@ function indexStructuralDefinitions(files) {
   return index;
 }
 
+// Whether a non-canonical copy declares exactly what the flight::types copy declares. Byte identity is the
+// common case. The one textual difference that is not a difference is qualification: the canonical copy
+// sits inside `namespace flight::types` and writes its siblings as `SwfTagRectangle`, while a copy emitted
+// in another package must write `flight::types::SwfTagRectangle`. Removing that qualifier from the copy
+// must then reproduce the canonical text exactly -- and the copy may name no type unqualified at all,
+// because a bare name there resolves in the copy's own namespace and the strip would equate it wrongly.
+export function equivalentStructuralBody(copy, canonical) {
+  if (copy === canonical) return true;
+  if (/(?<![\w:])[A-Z][A-Za-z0-9_]*/u.test(copy)) return false;
+  return copy.replaceAll('flight::types::', '') === canonical;
+}
+
 // Rewrites each non-canonical copy of a duplicated struct into an alias to the flight::types one.
 // Returns the files touched, for the manifest and for the expiry report.
 export function aliasDuplicateStructuralStructs(files) {
@@ -1439,9 +1451,9 @@ export function aliasDuplicateStructuralStructs(files) {
     if (byPackage.size < 2) continue;
     const types = byPackage.get('types');
     if (types === undefined) continue;
-    // Every other copy must be byte-identical to the canonical one, or this struct is left alone
-    // entirely -- a partial alias would be worse than none.
-    if (![...byPackage].every(([, copy]) => copy.body === types.body)) continue;
+    // Every other copy must be the same declaration as the canonical one, or this struct is left alone
+    // entirely -- a partial alias would be worse than none. See equivalentStructuralBody.
+    if (![...byPackage].every(([, copy]) => equivalentStructuralBody(copy.body, types.body))) continue;
     canonical.set(name, types);
   }
   if (canonical.size === 0) return { files: [], structs: [] };
@@ -1455,7 +1467,7 @@ export function aliasDuplicateStructuralStructs(files) {
     const needed = new Set();
     const repaired = contents.replaceAll(STRUCT_DEFINITION, (whole, open, _guard, body, name, close) => {
       const target = canonical.get(name);
-      if (target === undefined || target.body !== body) return whole;
+      if (target === undefined || !equivalentStructuralBody(body, target.body)) return whole;
       changed = true;
       aliased.add(name);
       // The include CANNOT go here. These guard blocks sit inside the package's `namespace flight::x`,

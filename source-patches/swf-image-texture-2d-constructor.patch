@@ -1,0 +1,19 @@
+diff --git a/packages/swf/src/swfImageTexture.ts b/packages/swf/src/swfImageTexture.ts
+index d476cc3e..768137b6 100644
+--- a/packages/swf/src/swfImageTexture.ts
++++ b/packages/swf/src/swfImageTexture.ts
+@@ -1,4 +1,4 @@
+-import { createSampler, createTexture } from '@flighthq/texture/contract';
++import { createSampler, createTexture2D } from '@flighthq/texture/contract';
+ import type { Texture2D } from '@flighthq/types/contract';
+ 
+ // The Texture identity a bitmap character's samplings share. A shape's bitmap fill and a placement of the
+@@ -27,7 +27,7 @@ export function acquireSwfImageTexture(
+   const key = `${repeat ? 'r' : 'c'}${smoothed ? 's' : 'n'}`;
+   let texture = variants.get(key);
+   if (texture === undefined) {
+-    texture = createTexture({
++    texture = createTexture2D({
+       sampler: createSampler({
+         magFilter: smoothed ? 'linear' : 'nearest',
+         minFilter: smoothed ? 'linear-mipmap-linear' : 'nearest',

@@ -5973,6 +5973,20 @@
       "id": "compiler-array-from-runtime-member",
       "module": "packages/compiler-backend-cpp/src/cppRuntimeExternalSymbolBinding.ts",
       "package": "@flighthq/media"
+    },
+    {
+      "dependency": "flight",
+      "digest": "46451ef2c8e13e3a3dc700ebeb63b2a2c08b0298519585d9588c4e54d03414d4",
+      "id": "swf-diagnostic-detail-records",
+      "module": "packages/swf/src/swfTimelineParse.ts, swfFrameAction.ts, swfSoundHandler.ts",
+      "package": "@flighthq/swf"
+    },
+    {
+      "dependency": "flight",
+      "digest": "00953bb916eb2b5aeaee901351d94fbd20543dd52984b04cb1ea98dabc9bf676",
+      "id": "swf-image-texture-2d-constructor",
+      "module": "packages/swf/src/swfImageTexture.ts",
+      "package": "@flighthq/swf"
     }
   ],
   "duplicateStructuralStructAliases": {
@@ -6064,6 +6078,7 @@
       "flight/skeleton2d/transform_constraint2_d.hpp",
       "flight/skeleton2d_formats/spine_binary_parse.hpp",
       "flight/swf/_internal_swf_tag_stream_test_helper.hpp",
+      "flight/swf/swf_bounded_definition.hpp",
       "flight/swf/swf_document.hpp",
       "flight/swf/swf_jpeg_bitmap_handler.hpp",
       "flight/swf/swf_lossless_bitmap_handler.hpp",
@@ -6093,6 +6108,7 @@
       "colors_timeline_79cefceb3eed9427",
       "element_version_02719fb3b3a4e4e7",
       "end_start_97b3a2515eda198d",
+      "end_start_b3d703e568b779f1",
       "height_width_86f909d1d50ed705",
       "khr_lights_punctual_57088e9c45e874e0",
       "khr_texture_basisu_e59745e8c15a4024",
