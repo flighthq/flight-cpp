@@ -11,3 +11,12 @@ diff --git a/packages/tween/src/internal.ts b/packages/tween/src/internal.ts
  }
  
  export function initializeTween<T extends object>(tween: Tween<T>): void {
+@@ -80,7 +80,7 @@
+   options: Readonly<TweenOptions> | undefined,
+   defaultEase: EasingFunction,
+ ): Tween<T> {
+-  const keys = Object.keys(propertyMap);
++  const keys = Object.keys(propertyMap as Record<string, number>);
+   const properties: TweenPropertyDetail[] = keys.map((key) => ({ change: 0, key, start: 0 }));
+   const out = allocateEntity<Tween<T>>();
+   out.complete = false;

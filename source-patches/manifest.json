@@ -530,12 +530,12 @@
       "package": "@flighthq/tween",
       "answers": "diagnostic",
       "refusal": "the JavaScript in operator is retained verbatim in generated C++ for Tween.propertyMap membership",
-      "rewrite": "Preserves the mapped numeric properties through an explicit Record<string, number> view, then uses Object.hasOwn to ask the same own-property membership question.",
-      "equivalence": "The view changes no object or value: NumericProps contains only optional numeric properties and the same module already uses this exact Record<string, number> view for reads. Object.hasOwn and the original in expression agree for this ordinary own-property record, without reading its values or changing registration-key precedence.",
+      "rewrite": "Views the mapped numeric properties through an explicit Record<string, number> at both uses of the erased carrier: Object.hasOwn on that view asks the same own-property membership question the in operator asked, and Object.keys on the same view asks for the same key list the erased carrier can no longer enumerate.",
+      "equivalence": "The view changes no object or value: NumericProps contains only optional numeric properties and the same module already uses this exact Record<string, number> view for reads, so both rewritten sites read the same keys off the same object. Object.keys over the view returns the mapped keys the source would enumerate. Object.hasOwn and the original in expression agree for this ordinary own-property record, without reading its values or changing registration-key precedence.",
       "whyNotUpstreamFirst": "The explicit record view and Object.hasOwn are ordinary target-neutral TypeScript, preserve the intended key/value carrier for the backend, and avoid an in operator the emitter retains verbatim.",
       "unblocks": "Restores internal.ts, tween.ts, tweenProgress.ts, and updateTweens.ts to emitted modules and replaces the retained C++ in expression with Record::has; their headers now advance to the separate structural-row carrier defect.",
       "expires": "when the emitter lowers the JavaScript in operator over generated Record storage, or Flight adopts Object.hasOwn here.",
-      "appliedOn": "2026-10-06"
+      "appliedOn": "2026-10-11"
     },
     {
       "id": "gui-controller-explicit-type-evidence",

@@ -61,6 +61,12 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [Animation track: number-carrier discrimination and optional-easing
   lowering](animation-track-number-carrier-and-optional-easing.md) — `animationTrack.ts` emits a
   PARTIAL header missing five declarations, and its eight dependents are refused with it.
+- [A generic key-remapping mapped type must not erase to an opaque
+  value](generic-mapped-type-erased-to-any.md) — `NumericProps<T>` becomes `flight::Any`, so every use
+  of its key set compiles against a carrier with no keys.
+- [A type assertion must not lower to an unchecked
+  `static_cast`](assertion-lowered-to-unchecked-static-cast.md) — `x as T` becomes
+  `static_cast<T>(x)`, which an erased carrier cannot serve and which the runtime refuses to coerce.
 - [Readonly structural owners must enter their exact nominal union arm](readonly-structural-owner-to-nominal-union.md) —
   a retained concrete owner is not recovered when its readonly row enters `TextureLike`.
 - [Flattened interface refinements need an identity-preserving carrier](flattened-interface-refinement-identity.md) —

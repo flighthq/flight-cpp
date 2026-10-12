@@ -275,6 +275,51 @@ one. Focus/file-drop subscriptions and active fullscreen/pointer-lock IDs are or
 state. The WebGL weak-object table likewise canonicalizes provider-owned native GL handles and does not store a host
 capability.
 
+### Which PLAT packages this host serves
+
+Nine of the `@flighthq/*` platform packages have an SDL seam here. The table is read from the capability files
+above and the types they declare, not from package names — a name is not evidence of coverage, and the reverse
+holds too: `bindings/sdl-app.json` is an application-shell binding profile whose bindings live in
+`web_platform_types.hpp`, not an `@flighthq/app` seam.
+
+| PLAT package | seam | capability types |
+| --- | --- | --- |
+| `platform` | `sdk_platform.hpp`, `src/host_sdl/sdk_platform.cpp` | `HostPlatformCapability` |
+| `keyboard` | `sdk_keyboard.hpp`, `src/host_sdl/sdk_keyboard.cpp` | `HostSoftKeyboardInfoCapability`, `HostSoftKeyboardVisibilityCapability`, `HostSoftKeyboardChangeCapability` |
+| `input` | `input.hpp`, `src/host_sdl/input.cpp`, with `window.hpp` and `sdk_window.hpp` | `InputDispatcher`, `InputSink`, `GamepadNavigator`, and the normalized `InputKeyboardData`, `InputPointerData`, `InputTextData` and `InputGamepad*Data` records |
+| `host` | the capability set itself — `sdk_audio`, `sdk_clipboard`, `sdk_cursor`, `sdk_device`, `sdk_haptics`, `sdk_keyboard`, `sdk_platform`, `sdk_screen`, `sdk_window` | the `Host*Capability` records those headers declare |
+| `audio` | `audio.hpp`, `sdk_audio.hpp`, `src/host_sdl/audio.cpp`, `src/host_sdl/sdk_audio.cpp` | `SdlAudioDeviceBackend`, `HostAudioDeviceCapability` |
+| `clipboard` | `sdk_clipboard.hpp`, `src/host_sdl/sdk_clipboard.cpp` | `HostClipboardTextCapability` |
+| `device` | `sdk_device.hpp`, `src/host_sdl/sdk_device.cpp` | `HostDeviceCapability` |
+| `haptics` | `sdk_haptics.hpp`, `src/host_sdl/sdk_haptics.cpp` | `HostHapticsCapability` |
+| `screen` | `sdk_screen.hpp`, `src/host_sdl/sdk_screen.cpp` | `HostScreenQueryCapability`, `HostScreenDetailsCapability`, `HostScreenChangeCapability`, reported through `ScreenInfo` |
+
+`sdk_cursor.hpp` supplies the generated `CursorBackend` the interaction and sound examples consume; it carries no
+PLAT package facade. `sdk_window.hpp` additionally declares `HostInputFocusCapability`, `HostInputDropFileCapability`,
+`HostInputPointerLockCapability` and `HostElementFullscreenCapability`, which together with `InputDispatcher`'s
+normalized records are what the wiring lane below still has to adopt.
+
+**The other thirty PLAT packages are declared capability facades with no SDL seam**: `app`, `lifecycle`,
+`accessibility`, `interaction`, `gui`, `layout`, `media`, `mediasession`, `video`, `webcam`, `midi`, `sensors`,
+`geolocation`, `power`, `dialog`, `menu`, `tray`, `statusbar`, `notification`, `share`, `shortcut`, `shell`, `ipc`,
+`protocol`, `permissions`, `filesystem`, `preferences`, `updater`, `useragent` and `connectivity`. Nothing under
+`include/flight/host_sdl/` or `src/host_sdl/` names any of their types. Two adjacent capabilities exist and neither
+serves them today: `image.hpp`'s `ImageSource` is the image-source handle a video or webcam implementation could
+carry frames through, and `web_platform.hpp` carries the application-shell harness the `sdl-app` profile binds.
+
+**A missing seam is not a stub.** What is absent is an implementation, and nothing is installed in its place: no
+fake backend, no inert placeholder, no capability that answers `false` where SDL is simply not doing the work. The
+generated facade is the caller-facing contract, and a host that wants the capability supplies its own — which is
+what `SdkWindowBackend`, `SdkAudioDeviceBackend` and `SdkCursorBackend` do for the seams that exist.
+
+**A clean generated package can therefore be complete without an SDL implementation.** At flight `a627849`, with
+the committed generated tree at `7e2fc7d`, ten PLAT packages carry no refusal and no override: `permissions`,
+`shell`, `ipc`, `protocol`, `sensors`, `geolocation`, and the seamed `clipboard`, `device`, `haptics` and `screen`.
+Only one of the ten carries a patch at all, and it answers a diagnostic rather than a refusal —
+`screen-copy-screen-info-explicit-fields`. Their emitted declarations compile, and their behaviour is whatever
+capability the host installs. Completeness for them is a statement about emission and compilation, never a claim
+that SDL implements them.
+
 ## Generated SDK wiring lane
 
 The native mechanics are now present. Wiring them to generated Flight contracts remains a narrow integration task:
