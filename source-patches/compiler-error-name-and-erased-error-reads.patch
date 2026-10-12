@@ -5,7 +5,7 @@ index d30c0ce..bf9b771 100644
 @@ -33136,52 +33136,43 @@ Resolver make_resolver(TextureRef texture) {
      expect(failure.message).toContain('narrow or assert an erased operand');
    });
- 
+
 -  it('attributes Error properties with missing runtime views to the runtime contract', () => {
 -    const name = captureBackendEmissionFailure(() =>
 -      emitIrModuleCpp(
@@ -52,7 +52,7 @@ index d30c0ce..bf9b771 100644
 +    // The guard itself is the checked test, and no `instanceof` reaches the emitted C++.
 +    expect(erasedName).toContain('.error_if() != nullptr');
 +    expect(erasedName).not.toContain('instanceof');
- 
+
 -    expect(name.rule).toBe('cpp-error-name-runtime-required');
 -    expect(name.classification).toBe('target-runtime');
 -    expect(name.message).toContain('instance flight::Error::name() const accessor');
@@ -72,7 +72,7 @@ index d30c0ce..bf9b771 100644
 +    ).contents;
 +    expect(typedName).toContain('.name()');
 +    expect(typedName).not.toContain('.error_if()');
- 
+
 +    const erasedMessage = emitIrModuleCpp(
 +      lower(
 +        'erased-error-message.ts',
@@ -117,7 +117,7 @@ index fae6209..36039a7 100644
 @@ -24666,12 +24670,72 @@ function emitCppNarrowedErasedPrimitiveIdentifierCpp(
    return `${emitIdentifierReference(expression.reference, context)}.${accessor}()`;
  }
- 
+
 -// `Error.name` is a dynamic source property, while Flight currently exposes one static name() per
 -// class; calling it through an Error-typed value would answer "Error" after a RangeError was sliced.
 -// An `instanceof Error` view over flight::Any has a second missing seam: no checked Error projection
@@ -214,7 +214,7 @@ index fae6209..36039a7 100644
      'cpp-erased-error-view-runtime-required',
    );
  }
- 
+
 +
  function getIrPropertyExpressionTypeEvidenceCpp(
    expression: Readonly<Extract<IrExpression, { kind: 'property' }>>,
