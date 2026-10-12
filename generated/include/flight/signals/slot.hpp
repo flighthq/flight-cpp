@@ -6,6 +6,7 @@
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
+#include <type_traits>
 #include <utility>
 #include <flight/runtime.hpp>
 
@@ -68,7 +69,7 @@ inline void compact_signal_data_flight_value_function_compact_u000053_ignal_u000
     double read = 0.0;
     while ((read < static_cast<double>(data->slots.size()))) {
       {
-        if (!data->slots.get(read).has_value()) {
+        if (([&]() { const auto& presence_operand = data->slots.get(read); return presence_operand.has_value() && !presence_operand.value().has_value(); }())) {
           (read += 1.0);
           continue;
         }
@@ -102,7 +103,7 @@ inline T make_dispatch(std::shared_ptr<flight::types::Signal<T>> signal, std::sh
   double i = 0.0;
   while ((i < static_cast<double>(data->slots.size()))) {
     std::optional<T> slot = data->slots.get(i).value_or(std::nullopt);
-    if (!slot.has_value()) {
+    if (([&](const auto& presence_operand) { if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(presence_operand.value())>>::optional) { return presence_operand.has_value() && !presence_operand.value().has_value(); } else { return !presence_operand.has_value(); } }(slot))) {
       i++;
       continue;
     }
@@ -164,7 +165,7 @@ inline double count_live_slots(flight::StructuralRef<flight::RowReadonly<flight:
     double i = 0.0;
     while ((i < static_cast<double>(flight::row_get<flight::RowKey<"slots">>(data).size()))) {
       {
-        if (flight::row_get<flight::RowKey<"slots">>(data).get(i).has_value()) {
+        if (([&]() { const auto& presence_operand = flight::row_get<flight::RowKey<"slots">>(data).get(i); return !presence_operand.has_value() || presence_operand.value().has_value(); }())) {
           live++;
         }
       }
@@ -183,7 +184,7 @@ inline bool has_signal_slots(flight::StructuralRef<flight::RowReadonly<flight::R
   if ((data.value()->depth == 0.0)) {
     return (static_cast<double>(data.value()->slots.size()) > 0.0);
   }
-  return (count_live_slots(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::SignalData<T>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::SignalData<T>>>>>(data.value()))) > 0.0);
+  return (count_live_slots<T>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::SignalData<T>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<std::shared_ptr<flight::types::SignalData<T>>>>>(data.value()))) > 0.0);
 }
 
 } // namespace flight::signals

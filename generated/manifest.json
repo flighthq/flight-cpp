@@ -6467,8 +6467,6 @@
       "flight/shape/shape.hpp",
       "flight/shape/shape_bounds.hpp",
       "flight/shape_formats/shape_json.hpp",
-      "flight/signals/connection.hpp",
-      "flight/signals/throttle.hpp",
       "flight/skeleton2d/deform_animation_target2_d.hpp",
       "flight/skeleton2d/ik_constraint2_d.hpp",
       "flight/skeleton2d/path_constraint2_d.hpp",
@@ -6503,7 +6501,7 @@
       "flight/tilemap_formats/tiled_xml_parse.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 922
+    "includes": 920
   },
   "packages": [
     {
@@ -8031,7 +8029,7 @@
       "sourceModules": 4
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/signals",
       "cppNamespace": "flight::signals",
       "emittedModules": 8,

@@ -4,20 +4,23 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function connectSignalTracked -- source line 10
-#include <flight/any.hpp>
-#include <flight/boolean.hpp>
-#include <functional>
-#include <optional>
-#include <utility>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/signal_connection.hpp>
+namespace flight::types { struct SignalConnectOptions; }
+namespace flight::types { struct SignalScope; }
+namespace flight::types { struct SignalTrackedConnectOptions; }
+namespace flight::types { template <typename T> struct Signal; }
+namespace flight::types { template <typename T> struct SignalConnection; }
+namespace flight::types { template <typename T> struct SignalData; }
 
 #include <flight/types/signal.hpp>
-
+#include <flight/types/signal_connect_options.hpp>
+#include <flight/types/signal_connection.hpp>
+#include <flight/types/signal_scope.hpp>
+#include <flight/types/signal_tracked_connect_options.hpp>
 #include <flight/signals/slot.hpp>
 
 namespace flight::signals {
@@ -27,12 +30,12 @@ using flight::types::SignalConnection;
 using flight::types::Signal;
 
 template <typename T>
-inline void disconnect_signal_connection(std::shared_ptr<SignalConnection<T>> connection) {
-  if (!flight::to_boolean(connection->connected)) {
+inline void disconnect_signal_connection(std::shared_ptr<flight::types::SignalConnection<T>> connection) {
+  if (!connection->connected) {
     return;
   }
   (connection->connected = false);
-  disconnect_signal(connection->signal, connection->slot);
+  flight::signals::disconnect_signal<T>(connection->signal, connection->slot);
 }
 
 
@@ -63,25 +66,25 @@ inline void disconnect_signal_connection(std::shared_ptr<SignalConnection<T>> co
 //   }
 //   
 // cpp emission failed for @flighthq/signals/packages/signals/src/connection.ts: the erased assertion cannot
-// re-instantiate the represented generic owner std::shared_ptr<SignalConnection<T>> as
-// std::shared_ptr<SignalConnection<std::function<void(flight::Array<flight::Any>)>>>: sharing one generic
-// declaration does not make different type arguments representation-equivalent, because those arguments bind the
-// member and callable cells of each concrete owner. Preserve the exact source instantiation through its
+// re-instantiate the represented generic owner std::shared_ptr<flight::types::SignalConnection<T>> as
+// std::shared_ptr<flight::types::SignalConnection<std::function<void(flight::Array<flight::Any>)>>>: sharing one
+// generic declaration does not make different type arguments representation-equivalent, because those arguments
+// bind the member and callable cells of each concrete owner. Preserve the exact source instantiation through its
 // retaining slot. If heterogeneous storage needs one closed operation, store an operation closure that captures
 // the exact owner; otherwise declare an explicit type-erased handle and target-runtime contract. The compiler
 // will not treat type-parameter variance as representation equivalence, reinterpret or cast the owner, copy or
 // materialize a replacement, or add side storage.
 
 template <typename T>
-inline void pause_signal_connection(std::shared_ptr<SignalConnection<T>> connection) {
-  if (flight::to_boolean(connection->connected)) {
+inline void pause_signal_connection(std::shared_ptr<flight::types::SignalConnection<T>> connection) {
+  if (connection->connected) {
     (connection->paused = true);
   }
 }
 
 template <typename T>
-inline void resume_signal_connection(std::shared_ptr<SignalConnection<T>> connection) {
-  if (flight::to_boolean(connection->connected)) {
+inline void resume_signal_connection(std::shared_ptr<flight::types::SignalConnection<T>> connection) {
+  if (connection->connected) {
     (connection->paused = false);
   }
 }

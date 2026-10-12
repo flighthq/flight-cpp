@@ -5,25 +5,26 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function connectSignalDebounced -- source line 50
 //   missing: function connectSignalThrottled -- source line 102
-#include <flight/any.hpp>
-#include <flight/host/timers.hpp>
 #include <functional>
-#include <limits>
 #include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/signal.hpp>
+namespace flight::types { struct SignalThrottleOptions; }
+namespace flight::types { template <typename T> struct Signal; }
+namespace flight::types { template <typename T> struct SignalData; }
 
+#include <flight/types/signal.hpp>
+#include <flight/types/signal_throttle_options.hpp>
 #include <flight/signals/slot.hpp>
 
 namespace flight::signals {
 
 using flight::types::Signal;
 
-inline std::function<void()> connect_signal_at_frame_rate(std::shared_ptr<Signal<std::function<void(double)>>> source, double fps, std::function<void(double)> slot) {
+inline std::function<void()> connect_signal_at_frame_rate(std::shared_ptr<flight::types::Signal<std::function<void(double)>>> source, double fps, std::function<void(double)> slot) {
   const double period = (1000.0 / fps);
   const auto elapsed_capture = flight::make_binding_cell(double{0.0});
   std::function<void(double)> handler = [=](double delta) {
@@ -33,8 +34,8 @@ inline std::function<void()> connect_signal_at_frame_rate(std::shared_ptr<Signal
     elapsed_capture.update_binding([&](auto& binding_value) { binding_value %= period; return binding_value; });
   }
 };
-  connect_signal(source, handler, std::nullopt);
-  return [=]() { return disconnect_signal(source, handler); };
+  flight::signals::connect_signal<std::function<void(double)>>(source, handler, std::nullopt);
+  return [=]() { return flight::signals::disconnect_signal<std::function<void(double)>>(source, handler); };
 }
 
 
@@ -104,6 +105,7 @@ inline std::function<void()> connect_signal_at_frame_rate(std::shared_ptr<Signal
 
 
 // NOT GENERATED: function connectSignalThrottled -- source line 102
+// refusal: cpp-dependent-parameter-pack-nonterminal-use [source-portability]
 //
 // The source it stood for:
 //   export function connectSignalThrottled<T extends (...args: any[]) => void>(
@@ -156,7 +158,12 @@ inline std::function<void()> connect_signal_at_frame_rate(std::shared_ptr<Signal
 //     };
 //   }
 //   
-// cpp emission failed for @flighthq/signals/packages/signals/src/throttle.ts: external call result type
-// flight::host::TimerHandle is not one represented contextual runtime domain
+// cpp emission failed for @flighthq/signals/packages/signals/src/throttle.ts: dependent callable parameter pack
+// args may only be used as a terminal call spread: the pack's element types are the callable's own dependent
+// parameters, so they can be forwarded into the call that owns them (which is what the emitted variadic pack
+// does) but cannot be named as storage -- and the source declares the buffer as an array of `any`, which the
+// target refuses to erase into flight::Any and could otherwise only hold by copying every argument. Hold one
+// typed payload instead of the argument list (parameterize the connector over the payload type), or take the
+// shape that forwards a computed value rather than the source arguments
 
 } // namespace flight::signals

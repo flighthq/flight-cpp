@@ -4,8 +4,10 @@
 #include <exception>
 #include <flight/any.hpp>
 #include <flight/boolean.hpp>
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
+#include <type_traits>
 #include <utility>
 #include <flight/runtime.hpp>
 
@@ -47,7 +49,7 @@ inline void compact_signal_data_flight_value_function_compact_u000053_ignal_u000
     double read = 0.0;
     while ((read < static_cast<double>(data->slots.size()))) {
       {
-        if (!data->slots.get(read).has_value()) {
+        if (([&]() { const auto& presence_operand = data->slots.get(read); return presence_operand.has_value() && !presence_operand.value().has_value(); }())) {
           (read += 1.0);
           continue;
         }
@@ -92,7 +94,7 @@ inline void emit_signal_safe(std::shared_ptr<flight::types::Signal<T>> signal, A
       while ((i < static_cast<double>(slots.size()))) {
         {
           std::optional<std::optional<std::function<void(flight::Array<flight::Any>)>>> slot = slots.get(i);
-          if (!slot.has_value()) {
+          if (([&](const auto& presence_operand) { if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(presence_operand.value())>>::optional) { return presence_operand.has_value() && !presence_operand.value().has_value(); } else { return !presence_operand.has_value(); } }(slot))) {
             (i += 1.0);
             continue;
           }
