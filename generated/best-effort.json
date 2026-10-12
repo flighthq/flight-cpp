@@ -19223,9 +19223,7 @@
       "status": "refused-placeholder"
     },
     {
-      "consumers": [
-        "@flighthq/platform/packages/platform/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/platform",
@@ -19246,7 +19244,8 @@
     },
     {
       "consumers": [
-        "@flighthq/platform/packages/platform/src/contract.ts"
+        "@flighthq/platform/packages/platform/src/contract.ts",
+        "@flighthq/platform/packages/platform/src/index.ts"
       ],
       "module": {
         "name": "Platform",

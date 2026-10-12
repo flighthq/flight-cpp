@@ -102957,7 +102957,7 @@
             "packageName": "@flighthq/platform",
             "source": "packages/platform/src/contract.ts"
           },
-          "specifier": "./platform",
+          "specifier": "./platform.ts",
           "target": {
             "name": "Platform",
             "packageName": "@flighthq/platform",
@@ -172701,11 +172701,11 @@
             "packageName": "@flighthq/platform",
             "source": "packages/platform/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./platform.ts",
           "target": {
-            "name": "Contract",
+            "name": "Platform",
             "packageName": "@flighthq/platform",
-            "source": "packages/platform/src/contract.ts"
+            "source": "packages/platform/src/platform.ts"
           }
         }
       ],
