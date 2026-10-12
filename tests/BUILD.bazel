@@ -205,6 +205,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_net_test",
+    srcs = ["generated_net_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_signals_throttle_test",
     srcs = ["generated_signals_throttle_test.cpp"],
     size = "small",
@@ -363,6 +370,7 @@ test_suite(
         ":generated_mediasession_test",
         ":generated_menu_test",
         ":generated_midi_test",
+        ":generated_net_test",
         ":generated_spring_test",
         ":generated_timeline_test",
         ":generated_velocity_test",

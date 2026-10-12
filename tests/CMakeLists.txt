@@ -371,6 +371,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_importdiagnostics_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_importdiagnostics COMMAND flight_cpp_generated_importdiagnostics_tests)
 
+add_executable(flight_cpp_generated_net_tests generated_net_test.cpp)
+target_include_directories(
+  flight_cpp_generated_net_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_net_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_net COMMAND flight_cpp_generated_net_tests)
+
 add_executable(flight_cpp_generated_socket_statechart_tests generated_socket_statechart_test.cpp)
 target_include_directories(
   flight_cpp_generated_socket_statechart_tests
@@ -432,6 +440,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_signals_throttle signals)
 flight_cpp_package_test_labels(flight_cpp.generated_useragent useragent)
 flight_cpp_package_test_labels(flight_cpp.generated_dialog app dialog filesystem geometry node render signals)
 flight_cpp_package_test_labels(flight_cpp.generated_textshaper_cache textshaper)
+flight_cpp_package_test_labels(flight_cpp.generated_net net)
 flight_cpp_package_test_labels(flight_cpp.generated_socket_statechart socket statechart)
 flight_cpp_package_test_labels(flight_cpp.generated_assets assets)
 flight_cpp_package_test_labels(flight_cpp.generated_importdiagnostics importdiagnostics)
