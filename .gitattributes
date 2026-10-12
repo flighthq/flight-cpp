@@ -1,1 +1,3 @@
 generated/** linguist-generated=true
+# A unified diff marks a blank context line with a single space; whitespace cleanup corrupts it.
+source-patches/*.patch -whitespace
