@@ -64,8 +64,9 @@ export function loadOverrides(root) {
     // `supplies` names the refused module this override provides a FAITHFUL implementation of, by its
     // source path in the pinned checkout. It is a stronger claim than `status`, and separate from it on
     // purpose: `status: complete` only means the override compiles, which a file full of functions that
-    // throw also does. flight/log/log.hpp is exactly that -- it compiles, and nine of its functions
-    // throw -- so it must never carry `supplies`, or the tier gate would call @flighthq/log shippable.
+    // throw also does. flight/log/log.hpp is exactly that -- it compiles, and twelve of its functions
+    // throw -- so it may carry `supplies` only as `partial`, whose required `remaining` holds
+    // @flighthq/log below shippable; as `complete` the tier gate would call it shippable.
     //
     // Only an override that actually implements the module gets it, and only then does the tier gate
     // count the package's refusal as answered.
