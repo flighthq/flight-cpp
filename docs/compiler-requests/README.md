@@ -142,6 +142,12 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [A lambda whose fallback is absence is declared to return the present type](logical-or-lambda-return-type.md) —
   `blob.type || undefined` becomes a `String`-returning lambda with `return std::nullopt`; the audio
   override has hand-fixed this shape since the pin before last.
+- [A call result and its destination must be the same anonymous shape, not two with equal members](media-audio-mixer-runtime-set-union-conversion.md) —
+  `@flighthq/media`'s `audioMixer.ts` refuses on two `flight::Set<…>` carriers that differ only in the
+  emitter's name for one anonymous shape.
+- [A WeakMap value needs a representable C++ type, and naming the literal is not enough](media-weakmap-value-representation.md) —
+  `@flighthq/media`'s `videoChannel.ts`; records the measured negative result that naming the literal with
+  its declared interface does not clear the refusal.
 - [Union carriers need canonical alternative order](canonical-union-carrier-order.md) — identical
   named unions currently become incompatible `std::variant` types at array callback boundaries.
 - [Nullable and optional storage needs two absence channels](nullable-optional-presence.md) — one

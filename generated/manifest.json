@@ -2704,8 +2704,7 @@
     {
       "files": [
         "flight/media/audio_channel.hpp",
-        "flight/media/media_channel_signals.hpp",
-        "flight/media/video_channel.hpp"
+        "flight/media/media_channel_signals.hpp"
       ],
       "id": "media-create-signal-using-declaration"
     },
@@ -5966,6 +5965,20 @@
       "id": "audio-indexed-member-presence-proof",
       "module": "packages/audio/src/audioFormat.ts plus packages/audio/src/audioResourceFrom.ts",
       "package": "@flighthq/audio"
+    },
+    {
+      "dependency": "flight-compiler",
+      "digest": "cb33a85485e57bd6f2379dc4e5c68e0faafa897b30f3b1a1cc487c4b4daa5246",
+      "id": "compiler-array-from-runtime-member",
+      "module": "packages/compiler-backend-cpp/src/cppRuntimeExternalSymbolBinding.ts",
+      "package": "@flighthq/media"
+    },
+    {
+      "dependency": "flight",
+      "digest": "1c0c7689fb00c82d9a9e5898ffec182775d944d4dbb489f66631d094e1011352",
+      "id": "media-video-channel-runtime-owner",
+      "module": "packages/media/src/videoChannel.ts",
+      "package": "@flighthq/media"
     }
   ],
   "duplicateStructuralStructAliases": {
@@ -7311,14 +7324,14 @@
       "sourceModules": 17
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/media",
       "cppNamespace": "flight::media",
       "emittedModules": 5,
       "package": "@flighthq/media",
       "refusedModules": 2,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 7

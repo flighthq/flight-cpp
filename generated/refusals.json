@@ -2877,37 +2877,37 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 107,
+      "line": 278,
       "module": "packages/media/src/audioMixer.ts",
       "package": "@flighthq/media",
-      "reason": "cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: ambient value Array member from has no C++ binding",
+      "reason": "cpp emission failed for @flighthq/media/packages/media/src/audioMixer.ts: contextual C++ union conversion requires equivalent source union evidence: target optionalSingle carriers [flight::Set<flight::Ref<active_channels_channels_paused_by_mixer_buses_bus_nodes_channel_to_bus_graph_6738b3976aa8c03b>>] from call source optionalSingle carriers [flight::Set<flight::Ref<AudioMixerRuntime>>]. Narrow or convert the source expression so each of its alternatives names exactly one destination union alternative. The carrier lists show which alternatives lack an exact carrier; preserve the declared collection or member union alias before flow expansion. For a Map or WeakMap lookup followed by a rebind, ensure every rebound member already has the declared value owner member's carrier -- a Readonly structural view does not become a mutable nominal Ref.",
       "stage": "emission"
     },
     {
       "code": "dependency-refused",
       "module": "packages/media/src/contract.ts",
       "package": "@flighthq/media",
-      "reason": "dependency ./audioMixer was refused for @flighthq/media/packages/media/src/audioMixer.ts",
+      "reason": "dependency ./audioMixer.ts was refused for @flighthq/media/packages/media/src/audioMixer.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/media/src/enableAudioMixerGuards.ts",
       "package": "@flighthq/media",
-      "reason": "dependency ./audioMixer was refused for @flighthq/media/packages/media/src/audioMixer.ts",
+      "reason": "dependency ./audioMixer.ts was refused for @flighthq/media/packages/media/src/audioMixer.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/media/src/index.ts",
       "package": "@flighthq/media",
-      "reason": "dependency ./contract was refused for @flighthq/media/packages/media/src/contract.ts",
+      "reason": "dependency ./audioMixer.ts was refused for @flighthq/media/packages/media/src/audioMixer.ts",
       "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "column": 7,
-      "line": 167,
+      "line": 170,
       "module": "packages/media/src/videoChannel.ts",
       "package": "@flighthq/media",
       "reason": "cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: flight-cpp WeakMap value requires a proven C++ representation",

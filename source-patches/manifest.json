@@ -2823,6 +2823,22 @@
       "unblocks": "@flighthq/audio: `audioFormat.ts` and `audioResourceFrom.ts` no longer refuse, which also clears the five dependency refusals cascading from them (audioDecodeSlot, audioResourceReference, contract, decodeAudioResourceBytes, index).",
       "expires": "when the emitter proves presence for an indexed read it can see cannot be absent, or Flight names the elements upstream.",
       "appliedOn": "2026-10-12"
+    },
+    {
+      "id": "compiler-array-from-runtime-member",
+      "dependency": "flight-compiler",
+      "patch": "compiler-array-from-runtime-member.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppRuntimeExternalSymbolBinding.ts",
+      "package": "@flighthq/media",
+      "answers": "refusal",
+      "refusal": "ambient value Array member from has no C++ binding",
+      "rewrite": "Declares `from` on the profile's `Array` value binding, mapped to `flight::array_from`, and adds the `flight/array.hpp` header the member needs. `isArray` keeps its existing target.",
+      "equivalence": "The member is declared where the binding already lives rather than shadowed by a second entry (a second entry is refused as a duplicate), and it names the runtime function with the same semantics: `flight::array_from` iterates the source range and returns a new `Array` of its elements, which is what `Array.from` is. No existing lowering changes -- `isArray` and every other member keep their targets -- and nothing is added to the runtime.",
+      "whyNotUpstreamFirst": "The profile table is this repository's runtime contract, and the runtime function it names already exists at the pin; upstream has no newer commit than the pin.",
+      "unblocks": "@flighthq/media: `audioMixer.ts`'s `Array.from(runtime.activeChannels)`, and any other module whose only refusal is an `Array.from`.",
+      "expires": "when the profile binds `Array.from` upstream, or the emitter lowers `Array.from` without a declared member.",
+      "appliedOn": "2026-10-12"
     }
   ]
 }
