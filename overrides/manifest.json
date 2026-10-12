@@ -1640,7 +1640,7 @@
       "package": "@flighthq/shortcut",
       "status": "complete",
       "supplies": "packages/shortcut/src/shortcutExplicitDependency.ts",
-      "derivedFrom": "e016e54993a615f6ea15e0e51f7b50363105d7c5a4b26840a1bbc5f259fa0651",
+      "derivedFrom": "7f51efa8c2d8a6fdee8baf8fe657ed98cf4918b8f27359c7b5d58fc9bd9d3ffa",
       "reason": "The module needs a nominal-reference structural assertion, contextual construction of attach outcome variants, exact unsubscribe storage and a refused accelerator formatter.",
       "change": "Uses the runtime's owner-preserving assertion path, constructs the generated outcome arms explicitly, retains exact subscription ownership, and supplies source-equivalent formatting.",
       "equivalence": "Shortcut parsing and formatting preserve modifier order and key spelling; attach returns the exact success or failure arm, retains one unsubscribe per registration, and releases it exactly once without cloning the asserted dependency owner.",

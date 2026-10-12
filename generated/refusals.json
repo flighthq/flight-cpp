@@ -2108,7 +2108,7 @@
       "code": "dependency-refused",
       "module": "packages/filesystem/src/contract.ts",
       "package": "@flighthq/filesystem",
-      "reason": "dependency ./filesystem was refused for @flighthq/filesystem/packages/filesystem/src/filesystem.ts",
+      "reason": "dependency ./filesystem.ts was refused for @flighthq/filesystem/packages/filesystem/src/filesystem.ts",
       "stage": "dependency"
     },
     {
@@ -2122,7 +2122,7 @@
       "code": "dependency-refused",
       "module": "packages/filesystem/src/index.ts",
       "package": "@flighthq/filesystem",
-      "reason": "dependency ./contract was refused for @flighthq/filesystem/packages/filesystem/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/filesystem/packages/filesystem/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -7288,14 +7288,14 @@
       "code": "dependency-refused",
       "module": "packages/shortcut/src/contract.ts",
       "package": "@flighthq/shortcut",
-      "reason": "dependency ./shortcutExplicitDependency was refused for @flighthq/shortcut/packages/shortcut/src/shortcutExplicitDependency.ts",
+      "reason": "dependency ./shortcutExplicitDependency.ts was refused for @flighthq/shortcut/packages/shortcut/src/shortcutExplicitDependency.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/shortcut/src/index.ts",
       "package": "@flighthq/shortcut",
-      "reason": "dependency ./contract was refused for @flighthq/shortcut/packages/shortcut/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/shortcut/packages/shortcut/src/contract.ts",
       "stage": "dependency"
     },
     {

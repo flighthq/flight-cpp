@@ -59,6 +59,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   carried by the emission repairs `adjustments-color-matrix-interface-heritage` and `adjustments-tint-interface-heritage`.
 - [Narrow an optional local in the else-branch of a negated truthiness test](negated-truthiness-else-narrowing.md) —
   carried by the source patch `node-bounds-rectangle-explicit-narrowing`.
+- [A callee's type parameter must not survive into an emitted structural row](compiler-generic-signal-row-projection.md) —
+  `hasSignalSlots<T>(signal: Signal<T>)` leaves the helper's `T` in the emitted row, so `@flighthq/power`
+  emits cleanly and compiles not at all.
 - [Union carriers need canonical alternative order](canonical-union-carrier-order.md) — identical
   named unions currently become incompatible `std::variant` types at array callback boundaries.
 - [Nullable and optional storage needs two absence channels](nullable-optional-presence.md) — one
