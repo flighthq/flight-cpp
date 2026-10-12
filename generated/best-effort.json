@@ -36732,9 +36732,7 @@
       "status": "dependency-incomplete"
     },
     {
-      "consumers": [
-        "@flighthq/textlayout/packages/textlayout/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/textlayout",
@@ -36761,7 +36759,13 @@
       },
       "path": "flight/textlayout/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/textlayout/packages/textlayout/src/contract.ts"
+        "@flighthq/textlayout/packages/textlayout/src/richTextContent.ts",
+        "@flighthq/textlayout/packages/textlayout/src/richTextMetrics.ts",
+        "@flighthq/textlayout/packages/textlayout/src/richTextQuery.ts",
+        "@flighthq/textlayout/packages/textlayout/src/textBounds.ts",
+        "@flighthq/textlayout/packages/textlayout/src/textFormat.ts",
+        "@flighthq/textlayout/packages/textlayout/src/textLayout.ts",
+        "@flighthq/textlayout/packages/textlayout/src/textLayoutRuntime.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -36774,7 +36778,8 @@
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuRichText.ts",
         "@flighthq/text-markup/packages/text-markup/src/textMarkup.ts",
         "@flighthq/text/packages/text/src/richText.ts",
-        "@flighthq/textlayout/packages/textlayout/src/contract.ts"
+        "@flighthq/textlayout/packages/textlayout/src/contract.ts",
+        "@flighthq/textlayout/packages/textlayout/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:04b09025608438a7c2c5239c59bb3e4fb3f2c1e59ca2802bbabd752a011b52a1",
@@ -36812,7 +36817,8 @@
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuRichText.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuTextInput.ts",
         "@flighthq/text/packages/text/src/richText.ts",
-        "@flighthq/textlayout/packages/textlayout/src/contract.ts"
+        "@flighthq/textlayout/packages/textlayout/src/contract.ts",
+        "@flighthq/textlayout/packages/textlayout/src/index.ts"
       ],
       "module": {
         "name": "RichTextMetrics",
@@ -36833,7 +36839,8 @@
         "@flighthq/text/packages/text/src/richText.ts",
         "@flighthq/textinput/packages/textinput/src/selectableRichTextManager.ts",
         "@flighthq/textinput/packages/textinput/src/textInputEditing.ts",
-        "@flighthq/textlayout/packages/textlayout/src/contract.ts"
+        "@flighthq/textlayout/packages/textlayout/src/contract.ts",
+        "@flighthq/textlayout/packages/textlayout/src/index.ts"
       ],
       "module": {
         "name": "RichTextQuery",
@@ -36857,6 +36864,7 @@
         "@flighthq/text/packages/text/src/textLabel.ts",
         "@flighthq/textinput/packages/textinput/src/textInputEditing.ts",
         "@flighthq/textlayout/packages/textlayout/src/contract.ts",
+        "@flighthq/textlayout/packages/textlayout/src/index.ts",
         "@flighthq/textlayout/packages/textlayout/src/richTextMetrics.ts"
       ],
       "module": {
@@ -36875,6 +36883,7 @@
       "consumers": [
         "@flighthq/text/packages/text/src/richText.ts",
         "@flighthq/textlayout/packages/textlayout/src/contract.ts",
+        "@flighthq/textlayout/packages/textlayout/src/index.ts",
         "@flighthq/textlayout/packages/textlayout/src/richTextContent.ts",
         "@flighthq/textlayout/packages/textlayout/src/textLayout.ts"
       ],
@@ -36908,6 +36917,7 @@
         "@flighthq/text/packages/text/src/textLabel.ts",
         "@flighthq/textinput/packages/textinput/src/textInputEditing.ts",
         "@flighthq/textlayout/packages/textlayout/src/contract.ts",
+        "@flighthq/textlayout/packages/textlayout/src/index.ts",
         "@flighthq/textlayout/packages/textlayout/src/richTextContent.ts"
       ],
       "module": {
@@ -36930,6 +36940,7 @@
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuTextLabel.ts",
         "@flighthq/text/packages/text/src/textLabelLayout.ts",
         "@flighthq/textlayout/packages/textlayout/src/contract.ts",
+        "@flighthq/textlayout/packages/textlayout/src/index.ts",
         "@flighthq/textlayout/packages/textlayout/src/richTextQuery.ts",
         "@flighthq/textlayout/packages/textlayout/src/textBounds.ts",
         "@flighthq/textlayout/packages/textlayout/src/textLayoutRuntime.ts"
@@ -36948,6 +36959,7 @@
     {
       "consumers": [
         "@flighthq/textlayout/packages/textlayout/src/contract.ts",
+        "@flighthq/textlayout/packages/textlayout/src/index.ts",
         "@flighthq/textlayout/packages/textlayout/src/textLayout.ts"
       ],
       "module": {
@@ -36961,7 +36973,8 @@
     {
       "consumers": [
         "@flighthq/text/packages/text/src/textLabelLayout.ts",
-        "@flighthq/textlayout/packages/textlayout/src/contract.ts"
+        "@flighthq/textlayout/packages/textlayout/src/contract.ts",
+        "@flighthq/textlayout/packages/textlayout/src/index.ts"
       ],
       "module": {
         "name": "TextLayoutMeasure",
@@ -36982,7 +36995,8 @@
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuRichText.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuTextLabel.ts",
         "@flighthq/text/packages/text/src/textLabelLayout.ts",
-        "@flighthq/textlayout/packages/textlayout/src/contract.ts"
+        "@flighthq/textlayout/packages/textlayout/src/contract.ts",
+        "@flighthq/textlayout/packages/textlayout/src/index.ts"
       ],
       "module": {
         "name": "TextLayoutRuntime",
@@ -36998,6 +37012,7 @@
     {
       "consumers": [
         "@flighthq/textlayout/packages/textlayout/src/contract.ts",
+        "@flighthq/textlayout/packages/textlayout/src/index.ts",
         "@flighthq/textlayout/packages/textlayout/src/textLayout.ts"
       ],
       "module": {
@@ -37011,7 +37026,8 @@
     {
       "consumers": [
         "@flighthq/text/packages/text/src/textLabelLayout.ts",
-        "@flighthq/textlayout/packages/textlayout/src/contract.ts"
+        "@flighthq/textlayout/packages/textlayout/src/contract.ts",
+        "@flighthq/textlayout/packages/textlayout/src/index.ts"
       ],
       "module": {
         "name": "TextMetrics",

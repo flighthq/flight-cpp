@@ -1,5 +1,12 @@
 // Derived from @flighthq/textlayout/packages/textlayout/src/textFormat.ts
-// at generated digest a4b244868d3cb480efa0a8d909ed298cae2435465f257589ba826f926d22a215.
+// at generated digest 738ca43812bb9a079f7f85bf43e32f50f96fb5c29e264af5c16c15ef70a1f1fb.
+//
+// OVERRIDE: the emitter refuses textFormat.ts because Object.keys + keyof cannot be lowered, so the
+// emitted header is a PARTIAL. This supplies all five functions.
+//
+// Re-derived 2026-10-12 by checking it still matches the current source: ascent = size ?? 12,
+// descent = ascent * 0.185, leading = leading ?? 0, height = ascent + descent + leading, and
+// merge copies the base then assigns each present override field -- all unchanged.
 #pragma once
 
 #include <flight/runtime.hpp>

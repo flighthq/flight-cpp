@@ -8167,14 +8167,14 @@
       "code": "dependency-refused",
       "module": "packages/textlayout/src/contract.ts",
       "package": "@flighthq/textlayout",
-      "reason": "dependency ./richTextContent was refused for @flighthq/textlayout/packages/textlayout/src/richTextContent.ts",
+      "reason": "dependency ./richTextContent.ts was refused for @flighthq/textlayout/packages/textlayout/src/richTextContent.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/textlayout/src/index.ts",
       "package": "@flighthq/textlayout",
-      "reason": "dependency ./contract was refused for @flighthq/textlayout/packages/textlayout/src/contract.ts",
+      "reason": "dependency ./richTextContent.ts was refused for @flighthq/textlayout/packages/textlayout/src/richTextContent.ts",
       "stage": "dependency"
     },
     {
@@ -8190,21 +8190,21 @@
       "code": "dependency-refused",
       "module": "packages/textlayout/src/richTextMetrics.ts",
       "package": "@flighthq/textlayout",
-      "reason": "dependency ./textBounds was refused for @flighthq/textlayout/packages/textlayout/src/textBounds.ts",
+      "reason": "dependency ./textBounds.ts was refused for @flighthq/textlayout/packages/textlayout/src/textBounds.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/textlayout/src/richTextQuery.ts",
       "package": "@flighthq/textlayout",
-      "reason": "dependency ./textLayout was refused for @flighthq/textlayout/packages/textlayout/src/textLayout.ts",
+      "reason": "dependency ./textLayout.ts was refused for @flighthq/textlayout/packages/textlayout/src/textLayout.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/textlayout/src/textBounds.ts",
       "package": "@flighthq/textlayout",
-      "reason": "dependency ./textLayout was refused for @flighthq/textlayout/packages/textlayout/src/textLayout.ts",
+      "reason": "dependency ./textLayout.ts was refused for @flighthq/textlayout/packages/textlayout/src/textLayout.ts",
       "stage": "dependency"
     },
     {
@@ -8220,14 +8220,14 @@
       "code": "dependency-refused",
       "module": "packages/textlayout/src/textLayout.ts",
       "package": "@flighthq/textlayout",
-      "reason": "dependency ./textFormat was refused for @flighthq/textlayout/packages/textlayout/src/textFormat.ts",
+      "reason": "dependency ./textFormat.ts was refused for @flighthq/textlayout/packages/textlayout/src/textFormat.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/textlayout/src/textLayoutRuntime.ts",
       "package": "@flighthq/textlayout",
-      "reason": "dependency ./textLayout was refused for @flighthq/textlayout/packages/textlayout/src/textLayout.ts",
+      "reason": "dependency ./textLayout.ts was refused for @flighthq/textlayout/packages/textlayout/src/textLayout.ts",
       "stage": "dependency"
     },
     {

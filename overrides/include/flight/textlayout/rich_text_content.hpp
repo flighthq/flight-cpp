@@ -1,5 +1,16 @@
 // Derived from @flighthq/textlayout/packages/textlayout/src/richTextContent.ts
-// at generated digest 074b52dc486f75c7b5471fed3253315120f7e659727fc91e7bbdb881722c709f.
+// at generated digest cbd319e9fba1e7cbe2ebfc4ccfe6f16fdbf2a6a5366e8ef9742c5e3586397193.
+//
+// OVERRIDE: the emitter refuses richTextContent.ts (property length on absence-carrying storage),
+// so the emitted header is a PARTIAL. This supplies the module: the five exported functions
+// (clear/compute/create/get/initialize RichTextContent) and the helpers they share.
+//
+// Re-derived 2026-10-12 by checking it still matches the current source: all five exports are present
+// with the same helper structure.
+//
+// NOTE: the digest this header previously recorded (074b52dc...) did not match the manifest's
+// derivedFrom for the same entry; the manifest is authoritative for drift checking, and both now
+// name the same generated file.
 #pragma once
 
 #include <flight/entity/entity.hpp>
