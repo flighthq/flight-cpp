@@ -37093,9 +37093,7 @@
       "status": "refused-placeholder"
     },
     {
-      "consumers": [
-        "@flighthq/textshaper/packages/textshaper/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/textshaper",
@@ -37110,7 +37108,8 @@
     },
     {
       "consumers": [
-        "@flighthq/textshaper/packages/textshaper/src/contract.ts"
+        "@flighthq/textshaper/packages/textshaper/src/contract.ts",
+        "@flighthq/textshaper/packages/textshaper/src/index.ts"
       ],
       "module": {
         "name": "EnableTextShaperGuards",
@@ -37132,14 +37131,16 @@
       },
       "path": "flight/textshaper/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/textshaper/packages/textshaper/src/contract.ts"
+        "@flighthq/textshaper/packages/textshaper/src/enableTextShaperGuards.ts",
+        "@flighthq/textshaper/packages/textshaper/src/textShaperCache.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "consumers": [
         "@flighthq/textlayout/packages/textlayout/src/textLayoutMeasure.ts",
-        "@flighthq/textshaper/packages/textshaper/src/contract.ts"
+        "@flighthq/textshaper/packages/textshaper/src/contract.ts",
+        "@flighthq/textshaper/packages/textshaper/src/index.ts"
       ],
       "module": {
         "name": "TextShaper",
@@ -37152,7 +37153,8 @@
     {
       "classification": "target-runtime",
       "consumers": [
-        "@flighthq/textshaper/packages/textshaper/src/contract.ts"
+        "@flighthq/textshaper/packages/textshaper/src/contract.ts",
+        "@flighthq/textshaper/packages/textshaper/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:0ec8c5babe7578ba78d0fdcd1cbf8e43a8051613e776156c948b18d9064d1401",
@@ -37178,7 +37180,8 @@
     },
     {
       "consumers": [
-        "@flighthq/textshaper/packages/textshaper/src/contract.ts"
+        "@flighthq/textshaper/packages/textshaper/src/contract.ts",
+        "@flighthq/textshaper/packages/textshaper/src/index.ts"
       ],
       "module": {
         "name": "TextShaperCluster",
@@ -37190,7 +37193,8 @@
     },
     {
       "consumers": [
-        "@flighthq/textshaper/packages/textshaper/src/contract.ts"
+        "@flighthq/textshaper/packages/textshaper/src/contract.ts",
+        "@flighthq/textshaper/packages/textshaper/src/index.ts"
       ],
       "module": {
         "name": "TextShaperItemize",
@@ -37203,7 +37207,8 @@
     {
       "consumers": [
         "@flighthq/textshaper/packages/textshaper/src/contract.ts",
-        "@flighthq/textshaper/packages/textshaper/src/enableTextShaperGuards.ts"
+        "@flighthq/textshaper/packages/textshaper/src/enableTextShaperGuards.ts",
+        "@flighthq/textshaper/packages/textshaper/src/index.ts"
       ],
       "module": {
         "name": "TextShaperPool",
@@ -37216,6 +37221,7 @@
     {
       "consumers": [
         "@flighthq/textshaper/packages/textshaper/src/contract.ts",
+        "@flighthq/textshaper/packages/textshaper/src/index.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperCache.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperItemize.ts",
         "@flighthq/textshaper/packages/textshaper/src/textShaperPool.ts"
@@ -37230,7 +37236,8 @@
     },
     {
       "consumers": [
-        "@flighthq/textshaper/packages/textshaper/src/contract.ts"
+        "@flighthq/textshaper/packages/textshaper/src/contract.ts",
+        "@flighthq/textshaper/packages/textshaper/src/index.ts"
       ],
       "module": {
         "name": "TextShaperSignals",

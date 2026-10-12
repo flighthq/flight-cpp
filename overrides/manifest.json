@@ -24,7 +24,7 @@
       "package": "@flighthq/textshaper",
       "status": "complete",
       "supplies": "packages/textshaper/src/textShaperCache.ts",
-      "derivedFrom": "f41570c98804dc723422b021a0b5824305db8411f91a09e573f864214c921975",
+      "derivedFrom": "41e775d902dae8e79d83cb2c6343f598533551203155ca557d386fdedb42b4ef",
       "reason": "The emitter leaves entity, provider, format, option, and cache types unqualified; emits EntityRuntimeKey symbol access as operator[] on nominal references; constructs a heterogeneous JavaScript join as an impossible deduced Array; and produces variant<String, String> for the TextDirection alias.",
       "change": "Supplies the complete cache module with weak cache-runtime ownership, weak provider identity IDs, explicit JavaScript-equivalent key concatenation, and nominal-to-readonly-row projections for the retained shaping function.",
       "equivalence": "Every cache has distinct identity and an entity marker. Clear evicts without disposing, dispose is idempotent and disables later shaping, null results are not cached, successful results retain object identity, provider identities never collide, and keys include text plus every source format and option field with the same separators and defaults.",

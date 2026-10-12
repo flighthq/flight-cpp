@@ -8273,7 +8273,7 @@
       "code": "dependency-refused",
       "module": "packages/textshaper/src/contract.ts",
       "package": "@flighthq/textshaper",
-      "reason": "dependency ./textShaperCache was refused for @flighthq/textshaper/packages/textshaper/src/textShaperCache.ts",
+      "reason": "dependency ./textShaperCache.ts was refused for @flighthq/textshaper/packages/textshaper/src/textShaperCache.ts",
       "stage": "dependency"
     },
     {
@@ -8287,7 +8287,7 @@
       "code": "dependency-refused",
       "module": "packages/textshaper/src/index.ts",
       "package": "@flighthq/textshaper",
-      "reason": "dependency ./contract was refused for @flighthq/textshaper/packages/textshaper/src/contract.ts",
+      "reason": "dependency ./enableTextShaperGuards.ts was refused for @flighthq/textshaper/packages/textshaper/src/enableTextShaperGuards.ts",
       "stage": "dependency"
     },
     {

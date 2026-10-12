@@ -1,4 +1,12 @@
-// Derived from @flighthq/textshaper/packages/textshaper/src/textShaperCache.ts.
+// Derived from @flighthq/textshaper/packages/textshaper/src/textShaperCache.ts
+// at generated digest 41e775d902dae8e79d83cb2c6343f598533551203155ca557d386fdedb42b4ef.
+//
+// The emitted header for this module is a refused best-effort: it assigns a TextShaperCacheRuntime
+// to the EntityRuntime-typed runtime key (no C++ conversion follows the TypeScript heritage) and it
+// names EntityConstruction without declaring it, so it does not compile on its own. This override
+// supplies the whole module: it keeps the cache runtime in a side WeakMap keyed by the cache and
+// stores a plain EntityRuntime under the key, so getTextShaperCacheRuntime and dispose read the map
+// and nothing has to convert owners. Every other function keeps the source's exact behaviour.
 #pragma once
 
 #include <optional>
