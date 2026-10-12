@@ -1390,23 +1390,18 @@
       "id": "scene3d-exact-runtime-owner",
       "dependency": "flight",
       "patch": "scene3d-exact-runtime-owner.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/types/src/Node3D.ts and packages/scene3d/src/sceneNode.ts",
       "package": "@flighthq/scene3d",
       "answers": "refusal",
-      "refusal": "a reference assertion from NodeRuntime<Node3DTraits> to the intersection Node3DRuntime has no emitted C++ heritage path",
+      "refusal": "at a627849, createNode3DRuntime and getNode3DRuntime still assert the base NodeRuntime<Node3DTraits> owner to the wider Node3DRuntime intersection, for which the generated C++ has no heritage path",
       "rewrite": "Declares the Node3D entity runtime slot as its exact Node3DRuntime owner, constructs that owner as one fresh typed object from the base runtime fields plus the 3D appearance and transform fields, and reads the exact slot directly.",
-      "equivalence": "The spread copies a newly allocated, unobserved base runtime into the one object returned to the node; every base field retains the same value and reference, and the existing trait initializers write the same 3D defaults before return. Node3D already guarantees this runtime shape, so narrowing its symbol slot and reading it directly changes no JavaScript property, identity visible to callers, initialization order after publication, or mutation path.",
-      "verification": "The patch composes after the complete Flight source-patch stack. Full Scene3D regeneration verifies both runtime construction and access emit without a flattened-owner assertion, followed by generated-header compilation.",
+      "equivalence": "The spread copies a newly allocated, unobserved base runtime into the one object returned to the node; every base field retains the same value and reference, and the existing trait initializers write the same 3D defaults before return. Node3D already guarantees this runtime shape, so narrowing its symbol slot and reading it directly changes no JavaScript property, identity visible to callers, initialization order after publication, or mutation path. The a627849 isNode3D predicate keeps its existing base-runtime lookup until the later exact-owner patch rebinds that same check to the exact slot.",
+      "verification": "The re-derived patch applies cumulatively at its manifest position on a627849, followed by the active morph guard and the re-derived concrete-construction patch; the complete current-pin Flight stack is apply/reverse checked after all six 3D patches are activated. No Scene3D row generation is used for this rebase check.",
       "whyNotUpstreamFirst": "The public Node3D contract already promises Node3DRuntime through getNode3DRuntime, but its inherited entity slot was declared only as the base NodeRuntime. Naming the actual slot and constructing its complete owner is a target-neutral correction of that contract.",
       "unblocks": "Allows createNode3D, every mesh constructor, and all real Scene3D transform and appearance consumers to share the same exact runtime owner without casting between unrelated flattened C++ records.",
       "expires": "when Flight declares the exact Node3D runtime slot and constructs that owner upstream, or native interface intersections preserve their runtime owner identity through the base Node slot automatically.",
-      "appliedOn": "2026-10-08",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "3D",
-        "reason": "context drift: the patched code still exists (6/6 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "appliedOn": "2026-10-12"
     },
     {
       "id": "scene3d-morph-capability-guard",
@@ -1451,23 +1446,18 @@
       "id": "scene3d-concrete-node-construction",
       "dependency": "flight",
       "patch": "scene3d-concrete-node-construction.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/types Mesh and InstancedMesh runtime slots; packages/scene3d node, mesh, instanced-mesh, and billboard construction",
       "package": "@flighthq/scene3d",
       "answers": "refusal",
-      "refusal": "a structural assertion from the readonly row Readonly<NodeRuntime<Node3DTraits>> to the writable row InstancedMeshRuntime claims mutation the source refused",
+      "refusal": "at a627849, Mesh, Billboard, and InstancedMesh are still created as Node3D and asserted to their concrete owners, while InstancedMesh runtime reads assert the inherited base runtime to a writable InstancedMeshRuntime",
       "rewrite": "Adds one exact-runtime initializeNode3D construction seam, allocates each concrete drawable as its declared entity owner, constructs MeshRuntime and InstancedMeshRuntime owners from the fresh Node3D runtime, declares their exact symbol slots, and reads those slots without base-runtime assertions.",
-      "equivalence": "initializeNode3D performs the same runtime-factory call and writes the same data, enabled, kind, name, appearance, and transform defaults as initializeNode plus the existing trait initializers. Mesh, Billboard, and InstancedMesh are allocated once and published only after their same fields are assigned; their runtime objects preserve the same base field values and referenced objects. Optional concrete runtime cells remain absent in JavaScript until used, exactly as before. No public node, geometry, material, matrix, signal, or runtime identity escapes before finishEntity.",
-      "verification": "The complete patch stack composes cleanly and a focused strict TypeScript program reports no errors in the changed type or Scene3D modules; unavailable ambient WebGPU declarations are the only package-wide typecheck blocker. Regeneration validates the exact native owners and generated-header compilation validates their use sites.",
+      "equivalence": "initializeNode3D performs the same runtime-factory call and writes the same data, enabled, kind, name, appearance, and transform defaults as initializeNode plus the existing trait initializers. Mesh, Billboard, and InstancedMesh are allocated once and published only after their same fields are assigned; their runtime objects preserve the same base field values and referenced objects. The a627849 Material3D arrays are passed through unchanged. Optional concrete runtime cells remain absent in JavaScript until used, exactly as before. No public node, geometry, material, matrix, signal, or runtime identity escapes before finishEntity.",
+      "verification": "The re-derived patch applies cumulatively after scene3d-exact-runtime-owner and the active morph guard at a627849. The complete current-pin Flight stack is apply/reverse checked after all six 3D patches are activated; no Scene3D row generation is used for this rebase check.",
       "whyNotUpstreamFirst": "Flight's concrete constructors allocated Node3D and asserted it to wider drawable records, while their runtime accessors later asserted the inherited base slot back to concrete runtimes. Allocating and initializing the types the functions promise is a target-neutral correction of those construction contracts.",
       "unblocks": "Gives real Mesh, Billboard, and InstancedMesh objects and their runtime caches exact native owners, including the instanced signal and culling slots used by Scene3D preparation and GL instanced drawing.",
       "expires": "when Flight allocates concrete Scene3D node and runtime owners upstream, or the native compiler preserves derived structural owner identity through Node3D construction and runtime storage automatically.",
-      "appliedOn": "2026-10-08",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "3D",
-        "reason": "context drift: the patched code still exists (14/18 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "appliedOn": "2026-10-12"
     },
     {
       "id": "particleemitter3d-concrete-node-construction",
@@ -1512,23 +1502,18 @@
       "id": "scene-nodeof-traversal-capabilities",
       "dependency": "flight",
       "patch": "scene-nodeof-traversal-capabilities.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/node traversal and visitor contracts; Scene2D kind usage; Scene3D cloning, kind/material enumeration, bounds, and culling",
       "package": "@flighthq/node, @flighthq/scene2d, @flighthq/scene3d",
       "answers": "refusal",
-      "refusal": "descendant traversal erases NodeOf<Traits> children to Node<Traits>, forcing downstream Scene3D readers to assert the 3D trait row back or pass structural rows through unknown predicates",
-      "rewrite": "Carries the existing NodeOf<Traits> child owner through find and descendant visitor callbacks, then uses typed readonly geometry and modifier capability guards in Scene3D consumers and removes the now-unnecessary Scene2D and Scene3D traversal assertions.",
-      "equivalence": "NodeRuntime.children already stores NodeOf<Traits> values, so the callback annotations describe the exact objects already delivered. All traversal order, early-return behavior, identities, callbacks, material overrides, modifier discovery, transforms, bounds, frustum tests, and output arrays remain unchanged. The local guards test the same geometry and modifier properties the old unknown predicates and partial assertions read, without copying or recovering mutable owners.",
-      "verification": "The patch composes after the complete Flight source stack. Focused strict TypeScript programs for Scene3D and for node plus Scene2D report no relevant errors; only the checkout's unavailable ambient WebGPU declarations remain. Regeneration validates the exact native callback and capability carriers before generated-header compilation.",
+      "refusal": "at a627849, Scene2D and Scene3D consumers still assert descendant values back to their trait rows or pass them through unknown structural predicates, and NodeDescendantVisitor still erases NodeOf<Traits>, even though the active node exact-capability patch preserves NodeOf<Traits> across the traversal implementation",
+      "rewrite": "Leaves the traversal implementation change to node-exact-capability-runtimes, names NodeOf<Traits> in the descendant visitor alias, uses typed readonly geometry and modifier capability guards in Scene3D consumers, and removes the now-unnecessary Scene2D and Scene3D traversal assertions.",
+      "equivalence": "NodeRuntime.children already stores NodeOf<Traits> values, and the active node exact-capability patch passes those same objects through every traversal callback. This patch changes only the companion visitor declaration and consumers: traversal order, early-return behavior, identities, callbacks, Material3D overrides, modifier discovery, transforms, bounds, frustum tests, and output arrays remain unchanged. The local guards test the same geometry and modifier properties the old unknown predicates and partial assertions read, without copying or recovering mutable owners.",
+      "verification": "The re-derived patch applies cumulatively at a627849 without duplicating the traversal hunks now owned by node-exact-capability-runtimes. Its Scene2D, Scene3D, and visitor hunks compose with that later active patch in the complete current-pin Flight apply/reverse check. No Scene3D row generation is used for this rebase check.",
       "whyNotUpstreamFirst": "The generic traversal contract was weaker than its own NodeRuntime.children storage and return APIs. Preserving its declared trait intersection is a target-neutral type correction, while typed readonly capability checks accurately express the structural Scene3D operations without native assertions.",
       "unblocks": "Keeps 2D/3D scene traits intact through the real graph walk and removes structural-row erasure from Scene3D subtree cloning, material/kind discovery, world bounds, and frustum culling used by the upstream renderer.",
       "expires": "when Flight preserves NodeOf<Traits> through traversal callbacks upstream and uses typed readonly capability guards at these Scene3D consumers, or the native compiler can recover the same checked owners from the weaker callback types.",
-      "appliedOn": "2026-10-08",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "3D",
-        "reason": "context drift: the patched code still exists (31/42 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "appliedOn": "2026-10-12"
     },
     {
       "id": "node-exact-runtime-and-owner-paths",
@@ -1585,45 +1570,35 @@
       "id": "scene3d-mesh-capability-presence",
       "dependency": "flight",
       "patch": "scene3d-mesh-capability-presence.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "Scene3D subtree cloning, morph preparation, kind discovery, and bounds/culling guards",
       "package": "@flighthq/scene3d",
       "answers": "refusal",
-      "refusal": "a structural 'geometry' presence test followed by comparison with null has no absence channel after NodeOf<Node3DTraits> traversal preserves the node row",
+      "refusal": "after the re-derived traversal-capability patch materializes its five Scene3D mesh guards at a627849, each structural 'geometry' in node test followed by a null comparison still loses the absence channel on the preserved NodeOf<Node3DTraits> row",
       "rewrite": "Views each traversed node through a readonly Partial<Mesh> capability and tests that capability's nullable geometry member directly.",
-      "equivalence": "Each guard reads the same geometry property once and returns true for exactly the same non-null and non-undefined values. It preserves readonly authority and changes no node identity, traversal, clone, material, morph, bounds, or culling behavior.",
-      "verification": "The focused strict Scene3D TypeScript program reports zero relevant errors apart from unavailable ambient WebGPU declarations. Native Scene3D regeneration verifies the capability guard at each renderer-facing consumer.",
+      "equivalence": "Each of the five guards reads the same geometry property once and returns true for exactly the same non-null and non-undefined values. The readonly Partial<Mesh> local names the capability already tested, preserves readonly authority, and changes no node identity, traversal, clone, material, morph, bounds, or culling behavior.",
+      "verification": "All five original hunks apply unchanged after the re-derived traversal-capability patch at a627849; the earlier 0/5 scan was taken before that predecessor materialized the guards. The complete current-pin Flight stack is apply/reverse checked with both patches active. No Scene3D row generation is used for this rebase check.",
       "whyNotUpstreamFirst": "Mesh is already a structural capability in these generic traversal consumers. Naming the readonly partial capability directly is a target-neutral expression of the property test they already perform.",
       "unblocks": "Removes the repeated geometry-presence refusal from real mesh cloning, material/kind discovery, world bounds, frustum culling, and morph preparation paths.",
       "expires": "when flight-compiler recognizes an in-operator plus nullable member test as the same readonly partial-capability proof, or Flight adopts this direct capability guard upstream.",
-      "appliedOn": "2026-10-08",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "3D",
-        "reason": "context drift: the patched code still exists (0/5 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "appliedOn": "2026-10-12"
     },
     {
       "id": "scene3d-exact-owner-boundaries",
       "dependency": "flight",
       "patch": "scene3d-exact-owner-boundaries.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "Scene3D node traits/construction, billboards, meshes, animation, document assembly, appearance, instance colors, and opt-in diagnostics",
       "package": "@flighthq/scene3d and @flighthq/types",
       "answers": "refusal",
-      "refusal": "the full Scene3D closure leaves nine direct package refusals: Node3D runtime parent/child storage erases the exact Node3D owner, billboard and mesh initialization options reach a wider optional owner, graph consumers assert erased nodes back to Node3D or Mesh, instance-color initialization rereads optional storage before assignment, document node arrays erase Mesh owners, and diagnostic data erases a numeric array into Record<string, unknown>",
-      "rewrite": "Keeps Node3D's exact runtime slot on its concrete type alias and uses the runtime trait symbol to recover Node3D only after checking base Node parent/child storage, retains Node3D/Mesh document alternatives until a readonly geometry guard selects Mesh, replaces node and mesh recovery assertions with runtime-checked owners or readonly capability guards, names the newly allocated instance-color payload before storing it, gives billboard and mesh constructors the same Node3D initialization option shape they forward, declares optional initialization results before assignment, and keeps the degenerate-camera warning message while omitting its unrepresentable auxiliary matrix-array field.",
-      "equivalence": "Scene graph objects, runtimes, transforms, colors, geometry, materials, skins, morph weights, animations, names, kinds, parent/child identities, and constructor defaults are unchanged for valid Scene3D graphs. Base Node parent/child values whose runtime trait is not Node3D now take the existing root fallback or are skipped instead of being asserted into invalid Scene3D nodes. Billboard and mesh construction additionally accept the Node3D alpha/visible fields already handled by their shared initializer. The guard warning keeps the same key, level, message, once-only behavior, and trigger; only the extra structured view array is omitted because LogData's erased Record cell cannot carry its native array representation.",
-      "verification": "The patch applies after all 87 preceding Flight source patches, and the focused strict Scene3D TypeScript check reports no errors in the changed modules apart from unavailable ambient WebGPU declarations elsewhere in the imported Types closure. Native @flighthq/scene3d regeneration emits 20/21 Scene3D modules, up from 12/21, while retaining 21/21 Node and 16/16 Mesh; the sole remaining direct Scene3D refusal is the pre-existing open Object.assign material copy in sceneDocument.ts.",
+      "refusal": "at a627849, Scene3D parent/child storage and document node arrays still erase exact Node3D or Mesh owners; billboard and mesh options narrow the Node3D initialization fields they forward; instance-color initialization rereads optional storage; animation and appearance consumers recover structural owners by assertion; and opt-in guard data erases a numeric array into Record<string, unknown>",
+      "rewrite": "Keeps Node3D's exact runtime slot on its concrete type alias, rewrites the existing a627849 isNode3D predicate to check that slot directly, and uses the runtime trait symbol to recover Node3D only after checking base Node parent/child storage. It retains Node3D/Mesh document alternatives until a readonly geometry guard selects Mesh, replaces node and mesh recovery assertions with runtime-checked owners or readonly capability guards, names the newly allocated instance-color payload before storing it, gives billboard and mesh constructors the same Node3D initialization option shape they forward, declares optional initialization results before assignment, and keeps the degenerate-camera warning message while omitting its unrepresentable auxiliary matrix-array field.",
+      "equivalence": "Scene graph objects, runtimes, transforms, colors, geometry, Material3D values, skins, morph weights, animations, names, kinds, parent/child identities, and constructor defaults are unchanged for valid Scene3D graphs. The revised isNode3D reads the same runtime symbol and compares the same traits symbol as the a627849 helper; an absent runtime now returns false instead of being dereferenced. Base Node parent/child values whose runtime trait is not Node3D take the existing root fallback or are skipped instead of being asserted into invalid Scene3D nodes. Billboard and mesh construction additionally accept the Node3D alpha/visible fields already handled by their shared initializer. The guard warning keeps the same key, level, message, once-only behavior, and trigger; only the extra structured view array is omitted because LogData's erased Record cell cannot carry its native array representation.",
+      "verification": "All eleven target files apply cumulatively after the re-derived runtime, construction, traversal, and mesh-presence patches at a627849. The following named-runtime patch and the later active node exact-capability patch compose in the complete current-pin Flight apply/reverse check. No Scene3D row generation is used for this rebase check.",
       "whyNotUpstreamFirst": "These declarations and local guards describe owners the constructors and arrays already hold; they remove unchecked recovery without introducing a native-only representation. The one diagnostic-field omission is isolated to opt-in failure reporting and does not affect scene behavior or rendering.",
       "unblocks": "Targets the nine direct Scene3D package refusals remaining after Node and Mesh reach complete native closure, including the real mesh/material, billboard, animation, skin, morph, and instance paths needed by the upstream examples.",
       "expires": "when Flight preserves Node3D and Mesh owners through these construction/storage boundaries and uses representable structured diagnostic values upstream, or flight-compiler can retain the same checked owners and erased array value automatically.",
-      "appliedOn": "2026-10-08",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "3D",
-        "reason": "context drift: the patched code still exists (27/35 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "appliedOn": "2026-10-12"
     },
     {
       "id": "scene3d-gl-pbr-alpha-mode-boundary",
@@ -1695,23 +1670,18 @@
       "id": "node3d-named-runtime-carriers",
       "dependency": "flight",
       "patch": "node3d-named-runtime-carriers.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "Node3D, Mesh, and InstancedMesh runtime carriers",
       "package": "@flighthq/types",
       "answers": "refusal",
-      "refusal": "inherits incompatible property EntityRuntimeKey",
+      "refusal": "at a627849, the exact Node3D, Mesh, and InstancedMesh runtime refinements still reach the native compiler as intersection aliases and trigger the inherited-property refusal: inherits incompatible property EntityRuntimeKey",
       "rewrite": "Names Node3DRuntime, MeshRuntime, and InstancedMeshRuntime as interfaces extending the same component runtime interfaces, and names Node3D as an interface with its existing exact hidden runtime property instead of an intersection alias.",
-      "equivalence": "The public node object, unique-symbol runtime slot, runtime allocation, object identity, trait fields, initialization order, structural members, and all stored values are unchanged. Each named interface denotes the same structural intersection as its former type alias. Node3D keeps the same Node and Node3DTraits bases and the same exact Node3DRuntime slot; the representation only gives the compiler one terminating declaration path for each compatible runtime refinement.",
-      "verification": "The complete 91-patch Flight stack applies and reverses cleanly. Focused native Scene3D-GL closure regeneration lowers all 1,602 modules, emits Node3D plus Billboard, Group, InstancedMesh, LodMesh, Mesh, and ParticleEmitter3D (7/7), and records zero refusals; the source-patch effectiveness check also accepts the rewrite.",
+      "equivalence": "The public node object, unique-symbol runtime slot, runtime allocation, object identity, trait fields, initialization order, structural members, and all stored values are unchanged at a627849. Each named interface denotes the same structural intersection as its former type alias. Node3D keeps the same Node and Node3DTraits bases and the same exact Node3DRuntime slot; the representation only gives the compiler one terminating declaration path for each compatible runtime refinement.",
+      "verification": "The three type-declaration hunks apply after scene3d-exact-owner-boundaries at a627849 and compose with every later active Flight patch in the complete current-pin apply/reverse check. No Scene3D or Scene3D-GL row generation is used for this rebase check.",
       "whyNotUpstreamFirst": "The rewrite is target-neutral naming of existing structural intersections, but it is pinned here because the native compiler currently needs terminating interface declarations to prove these compatible hidden-runtime refinements before Flight has adopted the named form upstream.",
       "unblocks": "Removes the shared inherited-runtime-property refusal from Billboard, Group, InstancedMesh, LodMesh, Mesh, and ParticleEmitter3D so real Scene3D nodes and materials can remain in the generated closure.",
       "expires": "when Flight names these runtime intersections upstream, or flight-compiler can prove the same compatible runtime refinements through intersection aliases.",
-      "appliedOn": "2026-10-09",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "3D",
-        "reason": "context drift: the patched code still exists (4/6 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "appliedOn": "2026-10-12"
     },
     {
       "id": "compiler-readonly-union-view-conversion",

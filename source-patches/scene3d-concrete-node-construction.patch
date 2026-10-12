@@ -11,8 +11,8 @@ index 41692a7..8056f4b 100644
  } from '@flighthq/types/contract';
  import { BillboardKind } from '@flighthq/types/contract';
  
--import { createNode3D, getNode3DRuntime } from './sceneNode';
-+import { createNode3DRuntime, getNode3DRuntime, initializeNode3D } from './sceneNode';
+-import { createNode3D, getNode3DRuntime } from './sceneNode.ts';
++import { createNode3DRuntime, getNode3DRuntime, initializeNode3D } from './sceneNode.ts';
  
  export { BillboardKind } from '@flighthq/types/contract';
  
@@ -52,8 +52,8 @@ index d7ee457..bc564bc 100644
  
  export { InstancedMeshKind };
  
--import { createNode3D } from './sceneNode';
-+import { createNode3DRuntime, initializeNode3D } from './sceneNode';
+-import { createNode3D } from './sceneNode.ts';
++import { createNode3DRuntime, initializeNode3D } from './sceneNode.ts';
  
  /**
   * Appends one instance at the end of `target`, growing `instanceCount` (and capacity, via
@@ -120,8 +120,8 @@ index 08058d1..0afe552 100644
 +  MeshKind,
 +} from '@flighthq/types/contract';
  
--import { createNode3D, getNode3DRuntime } from './sceneNode';
-+import { createNode3DRuntime, initializeNode3D } from './sceneNode';
+-import { createNode3D, getNode3DRuntime } from './sceneNode.ts';
++import { createNode3DRuntime, initializeNode3D } from './sceneNode.ts';
  
  export { MeshKind } from '@flighthq/types/contract';
  
@@ -157,7 +157,7 @@ diff --git a/packages/scene3d/src/sceneNode.ts b/packages/scene3d/src/sceneNode.
 index 8e7c883..eb99a8e 100644
 --- a/packages/scene3d/src/sceneNode.ts
 +++ b/packages/scene3d/src/sceneNode.ts
-@@ -5,11 +5,18 @@ import {
+@@ -5,11 +5,19 @@ import {
    getNodeSignals,
    initAppearanceRuntimeTrait,
    initAppearanceTrait,
@@ -165,10 +165,11 @@ index 8e7c883..eb99a8e 100644
    initTransform3DRuntimeTrait,
    initTransform3DTrait,
  } from '@flighthq/node/contract';
--import type { Kind, NodeSignals, Node3D, Node3DRuntime, Node3DTraits } from '@flighthq/types/contract';
+-import type { Kind, NodeAny, NodeSignals, Node3D, Node3DRuntime, Node3DTraits } from '@flighthq/types/contract';
 +import type {
 +  EntityConstruction,
 +  Kind,
++  NodeAny,
 +  NodeRuntimeFactory,
 +  NodeSignals,
 +  Node3D,
@@ -213,13 +214,13 @@ index afd4a8c..56c6e25 100644
 --- a/packages/types/src/InstancedMesh.ts
 +++ b/packages/types/src/InstancedMesh.ts
 @@ -1,10 +1,12 @@
- import type { Aabb } from './Aabb';
-+import type { EntityRuntimeKey } from './Entity';
- import type { InstancedMeshSignals } from './InstancedMeshSignals';
- import type { MaterialValue } from './MaterialValue';
- import type { Matrix4 } from './Matrix4';
- import type { MeshGeometry } from './MeshGeometry';
- import type { Node3D, Node3DRuntime } from './Node3D';
+ import type { Aabb } from './Aabb.ts';
++import type { EntityRuntimeKey } from './Entity.ts';
+ import type { InstancedMeshSignals } from './InstancedMeshSignals.ts';
+ import type { Material3D } from './Material3D.ts';
+ import type { Matrix4 } from './Matrix4.ts';
+ import type { MeshGeometry } from './MeshGeometry.ts';
+ import type { Node3D, Node3DRuntime } from './Node3D.ts';
  export interface InstancedMesh extends Node3D {
 +  [EntityRuntimeKey]: InstancedMeshRuntime | undefined;
    geometry: MeshGeometry;
@@ -230,17 +231,16 @@ index e2c8979..6f6d9e2 100644
 --- a/packages/types/src/Mesh.ts
 +++ b/packages/types/src/Mesh.ts
 @@ -1,4 +1,5 @@
- import type { Aabb } from './Aabb';
-+import type { EntityRuntimeKey } from './Entity';
- import type { MaterialValue } from './MaterialValue';
- import type { MeshGeometry } from './MeshGeometry';
- import type { MeshMorph } from './MorphTarget';
+ import type { Aabb } from './Aabb.ts';
++import type { EntityRuntimeKey } from './Entity.ts';
+ import type { Material3D } from './Material3D.ts';
+ import type { MeshGeometry } from './MeshGeometry.ts';
+ import type { MeshMorph } from './MorphTarget.ts';
 @@ -24,6 +25,7 @@ import type { Skin } from './Skin';
  // each frame; a `Weights` animation channel drives the weights. Like skin it is a field, not a node
  // kind, and the two compose (corrective morph over skinning) — see MeshDeformer.
  export interface Mesh extends Node3D {
 +  [EntityRuntimeKey]: MeshRuntime | undefined;
    geometry: MeshGeometry;
-   materials: (MaterialValue | null)[];
+   materials: (Material3D | null)[];
    morph?: MeshMorph | null;
-

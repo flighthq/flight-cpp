@@ -2,7 +2,7 @@ diff --git a/packages/types/src/Node3D.ts b/packages/types/src/Node3D.ts
 --- a/packages/types/src/Node3D.ts
 +++ b/packages/types/src/Node3D.ts
 @@ -4,8 +4,9 @@
- import type { Node, NodeRuntime } from './Node';
+ import type { Node, NodeRuntime } from './Node.ts';
  export const Node3DKind = 'Node3D';
  export interface Node3DTraits extends HasAppearance, HasTransform3D {}
 -export type Node3DRuntime = NodeRuntime<Node3DTraits> & HasAppearanceRuntime & HasTransform3DRuntime;
@@ -19,7 +19,7 @@ diff --git a/packages/scene3d/src/billboard.ts b/packages/scene3d/src/billboard.
 --- a/packages/scene3d/src/billboard.ts
 +++ b/packages/scene3d/src/billboard.ts
 @@ -8,5 +8,7 @@
-   MaterialValue,
+   Material3D,
    MeshGeometry,
    NodeSignals,
    Node3D,
@@ -27,7 +27,7 @@ diff --git a/packages/scene3d/src/billboard.ts b/packages/scene3d/src/billboard.
 +  NodeOf,
  } from '@flighthq/types/contract';
 @@ -34,7 +34,7 @@
-   materials: (MaterialValue | null)[],
+   materials: (Material3D | null)[],
    mode: BillboardMode = 'full',
    kind: Kind = BillboardKind,
 -  obj?: Readonly<Partial<Pick<Billboard, 'enabled' | 'name'>>>,
@@ -56,9 +56,9 @@ diff --git a/packages/scene3d/src/billboardCamera.ts b/packages/scene3d/src/bill
 -import type { Billboard, BillboardMode, Camera3D, Matrix4, Node3D } from '@flighthq/types/contract';
 +import type { Billboard, BillboardMode, Camera3D, Matrix4, Node, Node3D, Node3DTraits, NodeOf } from '@flighthq/types/contract';
  
- import { isBillboard } from './billboard';
--import { getNode3DRuntime } from './sceneNode';
-+import { getNode3DRuntime, isNode3D } from './sceneNode';
+ import { isBillboard } from './billboard.ts';
+-import { getNode3DRuntime } from './sceneNode.ts';
++import { getNode3DRuntime, isNode3D } from './sceneNode.ts';
  
 @@ -56,7 +56,7 @@
    decomposeMatrix4(_position, _rotationScratch, _scale, world);
@@ -129,7 +129,7 @@ diff --git a/packages/scene3d/src/mesh.ts b/packages/scene3d/src/mesh.ts
  import {
 @@ -66,7 +67,7 @@
    geometry: MeshGeometry,
-   materials: (MaterialValue | null)[],
+   materials: (Material3D | null)[],
    kind: Kind = MeshKind,
 -  obj?: Readonly<Partial<Pick<Mesh, 'enabled' | 'name'>>>,
 +  obj?: Readonly<Partial<Pick<Node3D, 'alpha' | 'enabled' | 'name' | 'visible'>>>,
@@ -164,8 +164,8 @@ diff --git a/packages/scene3d/src/sceneDocument.ts b/packages/scene3d/src/sceneD
 --- a/packages/scene3d/src/sceneDocument.ts
 +++ b/packages/scene3d/src/sceneDocument.ts
 @@ -23,6 +23,8 @@
- import { createScene3D } from './scene';
- import { createNode3D } from './sceneNode';
+ import { createScene3D } from './scene.ts';
+ import { createNode3D } from './sceneNode.ts';
  
 +type Scene3DDocumentNodeValue = Node3D | Mesh;
 +
@@ -207,12 +207,12 @@ diff --git a/packages/scene3d/src/sceneDocument.ts b/packages/scene3d/src/sceneD
 @@ -205,11 +208,21 @@
    node: Readonly<Scene3DDocumentNode>,
    meshes: Readonly<Scene3DDocument['meshes']>,
-   materials: readonly Material[],
+   materials: readonly Material3D[],
 -): Node3D {
 +): Scene3DDocumentNodeValue {
    if (node.mesh === undefined) return createNode3D(node.kind, { name: node.name });
    const documentMesh = meshes[node.mesh];
-   const meshMaterials: (Material | null)[] = documentMesh.materials.map((index) => materials[index] ?? null);
+   const meshMaterials: (Material3D | null)[] = documentMesh.materials.map((index) => materials[index] ?? null);
    const mesh = createMesh(documentMesh.geometry, meshMaterials, node.kind, { name: node.name });
    if (documentMesh.morph != null) mesh.morph = documentMesh.morph;
 -  return mesh as unknown as Node3D;
@@ -231,10 +231,19 @@ diff --git a/packages/scene3d/src/sceneDocument.ts b/packages/scene3d/src/sceneD
 diff --git a/packages/scene3d/src/sceneNode.ts b/packages/scene3d/src/sceneNode.ts
 --- a/packages/scene3d/src/sceneNode.ts
 +++ b/packages/scene3d/src/sceneNode.ts
-@@ -11,6 +11,7 @@
+@@ -2,7 +2,6 @@
+ import {
+   createNodeRuntime,
+   enableNodeSignals,
+-  getNodeRuntime,
+   getNodeSignals,
+   initAppearanceRuntimeTrait,
+   initAppearanceTrait,
+@@ -11,7 +10,7 @@
  import type {
    EntityConstruction,
    Kind,
+-  NodeAny,
 +  Node,
    NodeRuntimeFactory,
    NodeSignals,
@@ -258,15 +267,13 @@ diff --git a/packages/scene3d/src/sceneNode.ts b/packages/scene3d/src/sceneNode.
    initTransform3DTrait(out);
  }
  
-@@ -75,3 +77,8 @@
- export function getNode3DSignals(source: Node3D): NodeSignals | null {
-   return getNodeSignals(source);
- }
-+
+@@ -82,3 +82,4 @@
+-export function isNode3D(node: NodeAny): node is Node3D {
+-  return getNodeRuntime(node).traits === Node3DTraitsKey;
 +export function isNode3D(source: Node<Node3DTraits>): source is Node3D {
 +  const runtime = source[EntityRuntimeKey];
 +  return runtime !== undefined && runtime.traits === Node3DTraitsKey;
-+}
+ }
 diff --git a/packages/scene3d/src/sceneNodeAppearance.ts b/packages/scene3d/src/sceneNodeAppearance.ts
 --- a/packages/scene3d/src/sceneNodeAppearance.ts
 +++ b/packages/scene3d/src/sceneNodeAppearance.ts
@@ -275,8 +282,8 @@ diff --git a/packages/scene3d/src/sceneNodeAppearance.ts b/packages/scene3d/src/
 -import type { Node3D } from '@flighthq/types/contract';
 +import type { Node, Node3D, Node3DTraits } from '@flighthq/types/contract';
  
--import { getNode3DRuntime } from './sceneNode';
-+import { getNode3DRuntime, isNode3D } from './sceneNode';
+-import { getNode3DRuntime } from './sceneNode.ts';
++import { getNode3DRuntime, isNode3D } from './sceneNode.ts';
  
  // Ensures the node's resolved parent×self opacity (`worldAlpha`) is current, recomputing only when the
  // node's own appearance revision or an ancestor's resolved appearance changed. Mirrors

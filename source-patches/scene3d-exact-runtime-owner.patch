@@ -2,18 +2,10 @@ diff --git a/packages/scene3d/src/sceneNode.ts b/packages/scene3d/src/sceneNode.
 index 5d44262..8e7c883 100644
 --- a/packages/scene3d/src/sceneNode.ts
 +++ b/packages/scene3d/src/sceneNode.ts
-@@ -2,7 +2,6 @@ import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
- import {
-   createNodeRuntime,
-   enableNodeSignals,
--  getNodeRuntime,
-   getNodeSignals,
-   initAppearanceRuntimeTrait,
-   initAppearanceTrait,
-@@ -11,7 +10,7 @@ import {
+@@ -11,7 +11,7 @@ import {
    initTransform3DTrait,
  } from '@flighthq/node/contract';
- import type { Kind, NodeSignals, Node3D, Node3DRuntime, Node3DTraits } from '@flighthq/types/contract';
+ import type { Kind, NodeAny, NodeSignals, Node3D, Node3DRuntime, Node3DTraits } from '@flighthq/types/contract';
 -import { Node3DKind, Node3DTraitsKey } from '@flighthq/types/contract';
 +import { EntityRuntimeKey, Node3DKind, Node3DTraitsKey } from '@flighthq/types/contract';
  
@@ -53,10 +45,10 @@ index 1be0e65..03e9520 100644
 --- a/packages/types/src/Node3D.ts
 +++ b/packages/types/src/Node3D.ts
 @@ -1,8 +1,11 @@
- import type { HasAppearance, HasAppearanceRuntime } from './HasAppearance';
- import type { HasTransform3D, HasTransform3DRuntime } from './HasTransform3D';
-+import type { EntityRuntimeKey } from './Entity';
- import type { Node, NodeRuntime } from './Node';
+ import type { HasAppearance, HasAppearanceRuntime } from './HasAppearance.ts';
+ import type { HasTransform3D, HasTransform3DRuntime } from './HasTransform3D.ts';
++import type { EntityRuntimeKey } from './Entity.ts';
+ import type { Node, NodeRuntime } from './Node.ts';
  export const Node3DKind = 'Node3D';
  export interface Node3DTraits extends HasAppearance, HasTransform3D {}
 -export type Node3D = Node<Node3DTraits> & Node3DTraits;
@@ -65,4 +57,3 @@ index 1be0e65..03e9520 100644
 +  [EntityRuntimeKey]: Node3DRuntime | undefined;
 +}
  export const Node3DTraitsKey = Symbol('Node3DTraits');
-
