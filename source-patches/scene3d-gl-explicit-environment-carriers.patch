@@ -151,7 +151,7 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentCube.ts b/packages/scene3d-gl/
 diff --git a/packages/scene3d-gl/src/glEnvironmentIblBake.ts b/packages/scene3d-gl/src/glEnvironmentIblBake.ts
 --- a/packages/scene3d-gl/src/glEnvironmentIblBake.ts
 +++ b/packages/scene3d-gl/src/glEnvironmentIblBake.ts
-@@ -235,13 +235,9 @@ interface GlBakeProgram {
+@@ -235,16 +235,9 @@ interface GlBakeProgram {
 -
 +
  function ensureGlBakeProgram(state: GlRenderState, key: string, fragment: string): GlBakeProgram {
@@ -160,6 +160,9 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentIblBake.ts b/packages/scene3d-
 -  if (byState === undefined) {
 -    byState = new Map();
 -    _bakePrograms.set(state, byState);
+-    // First bake program for this state: hand teardown to the scene runtime, which has no import of
+-    // this module.
+-    addGlScene3DResourceCleanup(state, destroyGlEnvironmentIblBakePrograms);
 -  }
 -  let baked = byState.get(key);
 -  if (baked !== undefined) return baked;
@@ -170,7 +173,7 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentIblBake.ts b/packages/scene3d-
 +
    const program = linkGlBakeProgram(gl, fragment);
    const vao = gl.createVertexArray()!;
-@@ -253,7 +249,7 @@ function ensureGlBakeProgram(state: GlRenderState, key: string, fragment: string
+@@ -256,7 +249,7 @@ function ensureGlBakeProgram(state: GlRenderState, key: string, fragment: string
    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
    gl.bindVertexArray(null);
 -
@@ -180,7 +183,7 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentIblBake.ts b/packages/scene3d-
      buffer,
      locEnvCube: gl.getUniformLocation(program, 'u_envCube'),
      locFaceForward: gl.getUniformLocation(program, 'u_faceForward'),
-@@ -267,6 +263,14 @@ function ensureGlBakeProgram(state: GlRenderState, key: string, fragment: string
+@@ -270,6 +263,17 @@ function ensureGlBakeProgram(state: GlRenderState, key: string, fragment: string
    byState.set(key, baked);
    return baked;
  }
@@ -191,6 +194,9 @@ diff --git a/packages/scene3d-gl/src/glEnvironmentIblBake.ts b/packages/scene3d-
 +  if (cached !== undefined) return cached;
 +  const created: Map<string, GlBakeProgram> = new Map<string, GlBakeProgram>();
 +  _bakePrograms.set(state, created);
++  // First bake program for this state: hand teardown to the scene runtime, which has no import of
++  // this module.
++  addGlScene3DResourceCleanup(state, destroyGlEnvironmentIblBakePrograms);
 +  return created;
 +}
 +

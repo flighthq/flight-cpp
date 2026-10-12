@@ -1221,23 +1221,18 @@
       "id": "scene3d-gl-explicit-environment-carriers",
       "dependency": "flight",
       "patch": "scene3d-gl-explicit-environment-carriers.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene3d-gl/src/glEnvironmentCube.ts and glEnvironmentIblBake.ts",
       "package": "@flighthq/scene3d-gl",
       "answers": "refusal",
       "refusal": "contextual optionalSingle and optionalVariant construction lacks expression evidence for cube-face versions and repeated cache-validity fields, mapped Readonly<CubeTexture> and Readonly<GlScene3DRuntime> helper views duplicate or attempt to materialize the exact native carriers, and rebound inferred WeakMap, Map, and program locals expand GlBakeProgram into incompatible anonymous structural owners",
       "rewrite": "Builds the six face-version numbers and each current-face comparison with explicit null branches, types internal read-only helpers directly with the same CubeTexture and GlScene3DRuntime owners, splits compound validation before projecting both source and tracked Texture values to their exact cube arms, selects the dynamically named tracked face through the fixed tuple's six static indices, and iterates revision values through a typed loop binding while retaining the same numeric index. It also separates IBL program-map and program cache hits from freshly allocated values with their exact declared Map<string, GlBakeProgram> and GlBakeProgram owners.",
       "equivalence": "The source validation preserves the original short-circuit order: null and non-cube candidates clear the same stale texture and return before face validation, while cube candidates run the same face test; both guarded CubeTexture assertions erase in JavaScript. The version loop visits the same source array in order and appends exactly source.version for a present face or -1 for null, matching the previous map and optional-chain expression. Face validation performs the same null and kind tests; null and non-cube tracked textures cannot equal the requested cube, so their explicit false branches match the original identity comparison. The six switch cases read exactly sources[face] for the valid integer indices and leave the match false for every index whose original read produced undefined. The current-face loop visits the same six tuple values in order, compares each against the same numeric revision slot, advances the index only after the same successful comparison, and returns the same false result for null that comparison with undefined produced. Dropping mapped Readonly wrappers from private helper parameters erases in JavaScript and those helpers still perform no writes. Each cache hit returns the same map or program immediately; each miss allocates exactly one empty map or program record, stores that identical object under the same state or string key, and returns it. All uploads, bake shaders, GL resources, uniforms, draws, teardown, and ordering are unchanged.",
-      "verification": "With the complete 98-patch stack, focused glEnvironmentCube and glEnvironmentIblBake generation each emits its real upstream module 1/1 with zero refusals. Top-level Scene3D GL regeneration and generated-header compilation remain the integration gates.",
+      "verification": "The rebased patch applies cleanly to a627849 and reverse-applies back to its pristine tree. With the complete 98-patch stack, focused glEnvironmentCube and glEnvironmentIblBake generation each emits its real upstream module 1/1 with zero refusals. Top-level Scene3D GL regeneration and generated-header compilation remain the integration gates.",
       "whyNotUpstreamFirst": "These refusals are caused by the pinned emitter losing contextual carrier evidence across concise optional and rebound-cache constructs. The expanded forms are target-neutral statements of types, branches, and object identities the TypeScript source already guarantees.",
       "unblocks": "Allows source environment cubemaps and the irradiance, prefilter, and BRDF IBL bake programs used by real PBR materials to reach generated C++.",
       "expires": "when flight-compiler preserves optional expression evidence in array callbacks and current-face checks plus declared WeakMap/Map value owners through rebound locals, or Flight adopts the explicit forms upstream.",
-      "appliedOn": "2026-10-09",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "GL",
-        "reason": "context drift: the patched code still exists (30/30 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "appliedOn": "2026-10-12"
     },
     {
       "id": "scene3d-gl-mesh-runtime-accessor",
