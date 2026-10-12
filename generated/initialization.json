@@ -2706,6 +2706,21 @@
       "source": "packages/platform/src/platform.ts"
     },
     {
+      "name": "Contract",
+      "packageName": "@flighthq/power",
+      "source": "packages/power/src/contract.ts"
+    },
+    {
+      "name": "Index",
+      "packageName": "@flighthq/power",
+      "source": "packages/power/src/index.ts"
+    },
+    {
+      "name": "Power",
+      "packageName": "@flighthq/power",
+      "source": "packages/power/src/power.ts"
+    },
+    {
       "name": "StoragePersistence",
       "packageName": "@flighthq/preferences",
       "source": "packages/preferences/src/storagePersistence.ts"
@@ -25089,6 +25104,36 @@
           "name": "Index",
           "packageName": "@flighthq/platform",
           "source": "packages/platform/src/index.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Power",
+          "packageName": "@flighthq/power",
+          "source": "packages/power/src/power.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Contract",
+          "packageName": "@flighthq/power",
+          "source": "packages/power/src/contract.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Index",
+          "packageName": "@flighthq/power",
+          "source": "packages/power/src/index.ts"
         }
       ]
     },
@@ -101056,6 +101101,31 @@
           "evaluation": "runtime",
           "importer": {
             "name": "Contract",
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/contract.ts"
+          },
+          "specifier": "./power.ts",
+          "target": {
+            "name": "Power",
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Contract",
+        "packageName": "@flighthq/power",
+        "source": "packages/power/src/contract.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
             "packageName": "@flighthq/protocol",
             "source": "packages/protocol/src/contract.ts"
           },
@@ -170822,6 +170892,31 @@
         "name": "Index",
         "packageName": "@flighthq/platform",
         "source": "packages/platform/src/index.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/index.ts"
+          },
+          "specifier": "./contract.ts",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Index",
+        "packageName": "@flighthq/power",
+        "source": "packages/power/src/index.ts"
       },
       "steps": []
     },
@@ -252158,6 +252253,898 @@
         "source": "packages/types/src/PosterizeEffect.ts"
       },
       "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
+            "line": 1,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",9]",
+            "kind": "import",
+            "name": "allocateEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "allocateEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 26,
+            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
+            "line": 1,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",25]",
+            "kind": "import",
+            "name": "finishEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "finishEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:0241fa56e43b8f3a3f1b0b5d5bbb498eaa70882b9c68fe294ac18e6db1d726ed",
+            "line": 2,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",83]",
+            "kind": "import",
+            "name": "clearSignal",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "clearSignal",
+            "kind": "dependency",
+            "module": {
+              "name": "Slot",
+              "packageName": "@flighthq/signals",
+              "source": "packages/signals/src/slot.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 23,
+            "fingerprint": "sha256:f695125ef15fca88aad4ca9f4017858873dc8acecca23873c3db6d3f8d8ac3da",
+            "line": 2,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",96]",
+            "kind": "import",
+            "name": "createSignal",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createSignal",
+            "kind": "dependency",
+            "module": {
+              "name": "Signal",
+              "packageName": "@flighthq/signals",
+              "source": "packages/signals/src/signal.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 37,
+            "fingerprint": "sha256:fa9bc748aa318de911894b591045e72bbc661d8809c2bf90f79bb60e7707dce8",
+            "line": 2,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",110]",
+            "kind": "import",
+            "name": "emitSignal",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "emitSignal",
+            "kind": "dependency",
+            "module": {
+              "name": "Emitter",
+              "packageName": "@flighthq/signals",
+              "source": "packages/signals/src/emitter.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 49,
+            "fingerprint": "sha256:7e812033f5bc64a839fa99a543303b4c60c35c705107b541594d6cfc7260f08b",
+            "line": 2,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",122]",
+            "kind": "import",
+            "name": "hasSignalSlots",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "hasSignalSlots",
+            "kind": "dependency",
+            "module": {
+              "name": "Slot",
+              "packageName": "@flighthq/signals",
+              "source": "packages/signals/src/slot.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:10ab76c1823dce3325e8ebe6b261b3b2cf20aa96c77db549414eab08cba3e04d",
+            "line": 30,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",1244]",
+            "kind": "function",
+            "name": "acquirePowerKeepAwake",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:3608cd55fc1e02c8831f416f87d7e4c5678808278b571590480cdd999489086a",
+            "line": 43,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",1921]",
+            "kind": "function",
+            "name": "attachPower",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:a89494cfeb630031774289513b8ae9dc4243423eba8d57fd369200cc2d6a618f",
+            "line": 117,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",5079]",
+            "kind": "function",
+            "name": "createPower",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:895db681930c45e37333b4dabea190d54df336721bab19ff84f348272ba9ceec",
+            "line": 133,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",6017]",
+            "kind": "function",
+            "name": "destroyPowerKeepAwake",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:95a735b096492da0ca3220c7b9c41c6f9028810bfe67712e75783322a47ac546",
+            "line": 151,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",6623]",
+            "kind": "function",
+            "name": "detachPower",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:e129e72670cb08966abdd297eb9ffefabc23518da6f4092b9d473da9986de037",
+            "line": 167,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",7083]",
+            "kind": "function",
+            "name": "disposePower",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:641ec0d0787ca21b4ef31508c2222af6f11103bb76aa8c1bcdc01cbc592915e1",
+            "line": 181,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",7870]",
+            "kind": "function",
+            "name": "enablePowerSignals",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:7629823c84b45e86ebdc3a8578a1a02af86035c3398bf4ffd611385805c953c1",
+            "line": 193,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",8302]",
+            "kind": "function",
+            "name": "getPowerBatteryHealth",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:d8e5bf560774b79f32bbd9bd1e2a468a94083c493dbe1375fe683b9f2893916e",
+            "line": 200,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",8520]",
+            "kind": "function",
+            "name": "getPowerIdlePollingIntervalMs",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:77e87fb42a0aa05e395a3780448e7400b1814de5efa4dce4590e9821aafbde73",
+            "line": 204,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",8614]",
+            "kind": "function",
+            "name": "getPowerStatus",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:53beba541c1381dcfc3aeec2587db5eef17bfa0772cc15383168dafa3783bd23",
+            "line": 208,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",8776]",
+            "kind": "function",
+            "name": "getPowerSystemIdleState",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:9670e0914a752db5aed8ce0ff3deeb9f2491e59c84db250b234718f24635c65f",
+            "line": 215,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",8975]",
+            "kind": "function",
+            "name": "getPowerSystemIdleTime",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:0ae6496f6ec77d56a43b5848a999ee43d4ef4a990a512a3846350d85b488d75f",
+            "line": 219,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",9122]",
+            "kind": "function",
+            "name": "getPowerThermalState",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:89ef174b13466d4581df9d48d1bcea446bab263a5cfb64e96869863e87dfe0ff",
+            "line": 225,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",9471]",
+            "kind": "function",
+            "name": "initializePower",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:874fac882306b1dec07ccacbf1967e8e03ecaa776d46d559b5dcefbc9e071c9a",
+            "line": 237,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",9792]",
+            "kind": "function",
+            "name": "isPowerKeepAwakeActive",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:9107a6def2902f9f5fe4cb9fdb2dd821aa3b25c5d2f795565e5e3319610339aa",
+            "line": 244,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",10257]",
+            "kind": "function",
+            "name": "makePowerBatteryHealth",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:b81aae9501837324c3c8a945d4a3673b6902d4d280fe755cdd82560963a040c9",
+            "line": 256,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",10641]",
+            "kind": "function",
+            "name": "makePowerStatus",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:9ce2e8ed29e7cddc8996fe95bbdb753962daa78672027491dbcaa4926d8175ff",
+            "line": 271,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",11053]",
+            "kind": "function",
+            "name": "releasePowerKeepAwake",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:05cc0594f058f7c9f89a96bc34863687bbeab6a468355df6266bbcd75f6fbbe5",
+            "line": 277,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",11238]",
+            "kind": "function",
+            "name": "setPowerIdlePollingIntervalMs",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:c849d79715f9d28f8b480333339484dea6e43869c91c4bf44a9201899a445fe1",
+            "line": 281,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",11368]",
+            "kind": "function",
+            "name": "emitSignalWhenPresent",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 5,
+            "fingerprint": "sha256:982e9c07c9874cb8d0cc8c9b589b6b35ef6021c49ebd2b8be574013d82726249",
+            "line": 285,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",11476]",
+            "kind": "variable",
+            "name": "_idlePollingIntervalMs",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:044ff97e745a51dbe926abba22b87fce16a2aafdb9a843b0a38a9bd29a9a9c9e",
+            "line": 289,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",11694]",
+            "kind": "variable",
+            "name": "_subscriptions",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:c3560e62de250b23ccc4b9c8fce322deeb34e1e52c950af5bdaccca8574e77c9",
+            "line": 293,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",11939]",
+            "kind": "variable",
+            "name": "_destroyedKeepAwake",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 2
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:664480a14cc1266d1b400a0308e5521e3bd0d336dc38e9c9901d250ccd86d02c",
+            "line": 296,
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts",
+            "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",12064]",
+            "kind": "function",
+            "name": "assertSyncVoid",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Power",
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts"
+          },
+          "specifier": "@flighthq/entity/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/entity",
+            "source": "packages/entity/src/entity.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Power",
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts"
+          },
+          "importedNames": [
+            "emitSignal"
+          ],
+          "specifier": "@flighthq/signals/contract",
+          "target": {
+            "name": "Emitter",
+            "packageName": "@flighthq/signals",
+            "source": "packages/signals/src/emitter.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Power",
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts"
+          },
+          "importedNames": [
+            "createSignal"
+          ],
+          "specifier": "@flighthq/signals/contract",
+          "target": {
+            "name": "Signal",
+            "packageName": "@flighthq/signals",
+            "source": "packages/signals/src/signal.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Power",
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts"
+          },
+          "importedNames": [
+            "clearSignal",
+            "hasSignalSlots"
+          ],
+          "specifier": "@flighthq/signals/contract",
+          "target": {
+            "name": "Slot",
+            "packageName": "@flighthq/signals",
+            "source": "packages/signals/src/slot.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Power",
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts"
+          },
+          "importedNames": [
+            "Entity",
+            "EntityConstruction"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Power",
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts"
+          },
+          "importedNames": [
+            "HostPowerBatteryHealthCapability",
+            "HostPowerChangeCapability",
+            "HostPowerIdleCapability",
+            "HostPowerKeepAwakeCapability",
+            "HostPowerSessionLockCapability",
+            "HostPowerStatusCapability",
+            "HostPowerSuspensionCapability",
+            "HostPowerThermalCapability",
+            "Power",
+            "PowerIdleState",
+            "PowerKeepAwakeAcquireResult",
+            "PowerKeepAwakeMode",
+            "PowerKeepAwakeReleaseResult",
+            "PowerStatus",
+            "PowerThermalState"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Power",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Power.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Power",
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts"
+          },
+          "importedNames": [
+            "PowerBatteryHealth",
+            "PowerBatteryHealthState"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "PowerBatteryHealth",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/PowerBatteryHealth.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Power",
+            "packageName": "@flighthq/power",
+            "source": "packages/power/src/power.ts"
+          },
+          "importedNames": [
+            "Signal"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Signal",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Signal.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Power",
+        "packageName": "@flighthq/power",
+        "source": "packages/power/src/power.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 5,
+              "fingerprint": "sha256:982e9c07c9874cb8d0cc8c9b589b6b35ef6021c49ebd2b8be574013d82726249",
+              "line": 285,
+              "packageName": "@flighthq/power",
+              "source": "packages/power/src/power.ts",
+              "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",11476]",
+              "kind": "variable",
+              "name": "_idlePollingIntervalMs",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            20
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:044ff97e745a51dbe926abba22b87fce16a2aafdb9a843b0a38a9bd29a9a9c9e",
+              "line": 289,
+              "packageName": "@flighthq/power",
+              "source": "packages/power/src/power.ts",
+              "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",11694]",
+              "kind": "variable",
+              "name": "_subscriptions",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            21
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:c3560e62de250b23ccc4b9c8fce322deeb34e1e52c950af5bdaccca8574e77c9",
+              "line": 293,
+              "packageName": "@flighthq/power",
+              "source": "packages/power/src/power.ts",
+              "id": "binding:[\"@flighthq/power\",\"packages/power/src/power.ts\",11939]",
+              "kind": "variable",
+              "name": "_destroyedKeepAwake",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            22
+          ]
+        }
+      ]
     },
     {
       "bindings": [],

@@ -1,0 +1,141 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index fae6209..98c333d 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -22182,7 +22182,13 @@ function collectCppExternalBindingStorageTargetTypesCpp(
+   const recordCandidate = (bindingId: string, expression: Readonly<IrExpression>): void => {
+     const declaredType = context.bindingTypes.get(bindingId);
+     const declaredCallResultAbsence = getCppExternalCallResultAbsenceCpp(expression, context);
+-    if (!declaredType || (!declaredCallResultAbsence && !isCppUnresolvedExternalStorageTypeCpp(declaredType))) return;
++    const declaredNumericToken = isCppLibraryResultTokenStorageTypeCpp(declaredType);
++    if (
++      !declaredType ||
++      (!declaredCallResultAbsence && !declaredNumericToken && !isCppUnresolvedExternalStorageTypeCpp(declaredType))
++    ) {
++      return;
++    }
+     const targetType =
+       getCppExternalCallResultTargetCpp(expression, context) ??
+       getCppExternalInstanceMemberStorageTypeCpp(expression, context);
+@@ -22804,6 +22810,18 @@ function getCppRuntimeMemberStorageTypeCpp(
+     : undefined;
+ }
+
++// A host function bound with a `callResultType` is called at its target, whose result carrier is the
++// one the binding names -- and a library's own declaration is not that carrier. The DOM's `setInterval`
++// returns `number`, the runtime's `set_interval` returns a TimerHandle, and a local initialized
++// straight from the bound call (`const id = setInterval(tick, ms)`) has that numeric token as its only
++// declared type. Emitting it would place the handle in a `double`. The library token is recognizable
++// where the source is: a bare primitive the checker took from the call's own signature, on a binding
++// the emitter has already resolved to a bound external call. A declared union keeps its own path, and
++// any other declared type is still a genuine disagreement that refuses.
++function isCppLibraryResultTokenStorageTypeCpp(type: Readonly<IrType> | undefined): boolean {
++  return type?.kind === 'primitive' && (type.name === 'number' || type.name === 'string' || type.name === 'boolean');
++}
++
+ function isCppUnresolvedExternalStorageTypeCpp(type: Readonly<IrType>): boolean {
+   if (type.kind === 'unknown') return true;
+   if (type.kind !== 'union') return false;
+@@ -22816,7 +22834,7 @@ function emitCppExternalBindingStorageTypeCpp(
+   targetType: string,
+   context: EmitContext,
+ ): string {
+-  if (!type || type.kind === 'unknown') return targetType;
++  if (!type || type.kind === 'unknown' || isCppLibraryResultTokenStorageTypeCpp(type)) return targetType;
+   if (type.kind !== 'union') {
+     emissionError(
+       context,
+diff --git a/packages/compiler-backend-cpp/src/cppHostTimerLocalStorage.test.ts b/packages/compiler-backend-cpp/src/cppHostTimerLocalStorage.test.ts
+new file mode 100644
+index 0000000..d26cd6b
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppHostTimerLocalStorage.test.ts
+@@ -0,0 +1,88 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++// A host timer stored in a local. The library declaration is the only type evidence a local has when the
++// source writes no annotation, and the DOM's `setInterval` returns `number` -- the numeric token the
++// target's own timer contract forbids. The binding's `callResultType` is what the emitted call actually
++// returns, so it is what the local must be declared as.
++const domTimers = `
++  type ReturnType<T extends (...args: any) => any> = T extends (...args: any) => infer R ? R : any;
++  declare function setInterval(handler: () => void, timeout?: number): number;
++  declare function clearInterval(id: number | undefined): void;
++  declare function now(): number;
++`;
++
++const timerBindings = {
++  bindings: [
++    {
++      callResultType: 'host::TimerHandle',
++      headers: ['host/timer.hpp'],
++      nullability: 'non-null' as const,
++      ownership: 'borrowed' as const,
++      sourceName: 'setInterval',
++      space: 'value' as const,
++      targetName: 'host::set_interval',
++    },
++    {
++      headers: ['host/timer.hpp'],
++      nullability: 'non-null' as const,
++      ownership: 'borrowed' as const,
++      sourceName: 'clearInterval',
++      space: 'value' as const,
++      targetName: 'host::clear_interval',
++    },
++    {
++      headers: ['host/clock.hpp'],
++      nullability: 'non-null' as const,
++      ownership: 'borrowed' as const,
++      sourceName: 'now',
++      space: 'value' as const,
++      targetName: 'host::now',
++    },
++  ],
++  schema: 'flight-cpp-external-bindings/1' as const,
++};
++
++function emit(source: string, externalBindings?: typeof timerBindings): string {
++  const sourceFile = ts.createSourceFile(
++    '/flight/packages/log/src/Timers.ts',
++    domTimers + source,
++    ts.ScriptTarget.Latest,
++    true,
++  );
++  const lowered = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/log', upstreamDirectory: '/flight' });
++  return emitIrModuleCpp(lowered.module, { externalBindings, runtimeProfile: 'flight-cpp' }).contents;
++}
++
++describe('a bound host timer stored in a local', () => {
++  it('declares the local as the binding result carrier rather than the library numeric token', () => {
++    const contents = emit(
++      `export function every(tick: () => void, ms: number): void {
++         const id = setInterval(tick, ms);
++         clearInterval(id);
++       }`,
++      timerBindings,
++    );
++    expect(contents).toContain('host::TimerHandle id = host::set_interval(tick, ms)');
++    expect(contents).toContain('host::clear_interval(id)');
++    expect(contents).not.toContain('double id');
++  });
++
++  it('keeps a local the binding does not name on its declared numeric domain', () => {
++    const contents = emit(
++      `export function elapsed(): number {
++         const started = now();
++         return started;
++       }`,
++      timerBindings,
++    );
++    // `now` has no callResultType, so its library result stands: the local stays a double and no host
++    // handle is invented for it.
++    expect(contents).toContain('const double started = host::now()');
++    expect(contents).not.toContain('TimerHandle started');
++  });
++});

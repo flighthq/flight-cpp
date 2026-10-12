@@ -19269,10 +19269,7 @@
         "source": "packages/power/src/contract.ts"
       },
       "path": "flight/power/contract.hpp",
-      "refusedDependencies": [
-        "@flighthq/power/packages/power/src/power.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "consumers": [],
@@ -19282,42 +19279,11 @@
         "source": "packages/power/src/index.ts"
       },
       "path": "flight/power/_internal_index.hpp",
-      "refusedDependencies": [
-        "@flighthq/power/packages/power/src/contract.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/power/packages/power/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:0acd12b98ba64880f0f9bc036bb8cf47bb9159f2ab962314ac46dc90cf180c39",
-        "sha256:111442fa09c554d38a55ee61121c684ef76b0bd3ef613f4b03cb85a34733547c",
-        "sha256:25d426acae32092e0a04241297ee0feab246a4b2cd8189fbab9e6adbbeaa7379",
-        "sha256:3fbf82a91c35f72b19dd1b4d31ca18e8f08d806a94d1e0cbb34da7bbcbc9c0ca",
-        "sha256:4e0ca6a87004f4b7989e2e41f7af526dfd3e398d431d1c2ef3e719bf58a1d76e",
-        "sha256:529c32df96e97cd858aa24094716d5fe27735bedbb75ee65afd53789439154cd",
-        "sha256:53ed0be6f58029780cacf8842333ee8283be8e9a601181ec083389b36290dd20",
-        "sha256:684775ba09f4aad01234194e5aa758d00dea645b1ad470da66aedf7436b3b7af",
-        "sha256:7c415d6c96eee96eef3629136ae68ecf28edb1e960c831dccdbf094233442f49",
-        "sha256:7cd49457474016c33ed600897fcafe184a9950758bc5fe0b37f21772f708219b",
-        "sha256:8d5d4c9ee2e5f2d60835ffe0b4e58cc789c8d73a3a5c563ceabfe17cad489cf8",
-        "sha256:929f112bbd73782d894e555465a7f7d4fe0f7b80ceeed2d9750c0209eb5db054",
-        "sha256:97da4d8b2c1ed8495a1de0f2c9eab82886da1779a45b261ea831cf92975bddc1",
-        "sha256:9b29ec72ae6f984592a8ff9fc1ff7721e1688df71488380db229130fa654fd81",
-        "sha256:9cead0898c17958a21eb6f01caf60c2e5cb01f3a14f30f2202e3588f6e704404",
-        "sha256:a92faec306e33074563d762166f7661fddde4e06ed0b5351a0c6bca8944ada34",
-        "sha256:b2e0df9ef8dfaa1209da9bc77cea21aa8934b92f1797cd06fe422f37e48ad9cc",
-        "sha256:d2320f419181f384a8c543b96209746d76ca88e38eac28aad88b221e1f387e8a",
-        "sha256:dc4f38688f91c927f1de09de83020f3dddcde51e6b1087bc69382a4eb1def189",
-        "sha256:e73fb10d94fd1e8167fccf9d788574aaf7d8eba779dd306f2ab132ebf42629f3",
-        "sha256:f5325201f273da4c83daad5a4636dfe9213f7e89ca29be8d009596b2b71d280a",
-        "sha256:f96942e24b8553a023a7d68ff77d9a73d52a79ccae9d2f9383c81c517bd5c85b",
-        "sha256:fa71706a29c6913a8aa1acffebbfb0bd1b92afb0db4898d26280fc36664537ac",
-        "sha256:fe678c8f491056cf6756c9c372d2f04608502963e88d00212a4fa0c64bc138b6",
-        "sha256:fea7d67893369d0ae30a1c1737677d396858f59763ec718249c971abbaf94317"
       ],
       "module": {
         "name": "Power",
@@ -19325,8 +19291,7 @@
         "source": "packages/power/src/power.ts"
       },
       "path": "flight/power/power.hpp",
-      "rule": "cpp-call-argument-missing",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [

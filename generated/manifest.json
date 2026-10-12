@@ -782,7 +782,6 @@
         "flight/lifecycle/lifecycle.hpp",
         "flight/menu/menu.hpp",
         "flight/midi/midi_subscription.hpp",
-        "flight/power/power.hpp",
         "flight/preferences/storage.hpp",
         "flight/quadbatch/quad_batch.hpp",
         "flight/scene2d/scene2d.hpp",
@@ -1561,9 +1560,7 @@
       "id": "picking-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/power/power.hpp"
-      ],
+      "files": [],
       "id": "power-unqualified-entity-names"
     },
     {
@@ -2888,9 +2885,7 @@
       "id": "notification-unqualified-signals-names"
     },
     {
-      "files": [
-        "flight/power/power.hpp"
-      ],
+      "files": [],
       "id": "power-unqualified-signals-names"
     },
     {
@@ -5924,6 +5919,20 @@
       "id": "scene2d-canvas-text-label-base-cache",
       "module": "packages/scene2d-canvas/src/canvasTextLabel.ts",
       "package": "@flighthq/scene2d-canvas"
+    },
+    {
+      "dependency": "flight-compiler",
+      "digest": "2792c3e9ac27c86e7f8c508794d61b86f6a28e85f68373a2d2877cd50288ed10",
+      "id": "compiler-readonly-view-argument-substitution",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/power"
+    },
+    {
+      "dependency": "flight-compiler",
+      "digest": "312e0146aa1a0a6951b912bb5efcc7160421ef9fdfde4334cc7d097282abe315",
+      "id": "compiler-host-timer-local-storage-carrier",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/power"
     }
   ],
   "duplicateStructuralStructAliases": {
@@ -7546,14 +7555,14 @@
       "sourceModules": 3
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/power",
       "cppNamespace": "flight::power",
-      "emittedModules": 2,
+      "emittedModules": 3,
       "package": "@flighthq/power",
-      "refusedModules": 1,
+      "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 3
@@ -8508,8 +8517,8 @@
   },
   "summary": {
     "packages": 155,
-    "emittedModules": 2417,
-    "refusedModules": 577,
+    "emittedModules": 2418,
+    "refusedModules": 576,
     "sourceModules": 2994
   }
 }

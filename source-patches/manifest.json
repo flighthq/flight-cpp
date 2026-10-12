@@ -2746,6 +2746,23 @@
       "unblocks": "`@flighthq/power` compiles instead of failing all three of its headers on `use of undeclared identifier 'T'`; `@flighthq/preferences` reaches the same helper through `storage.ts`.",
       "expires": "when upstream deduces a generic parameter through a readonly view from argument evidence.",
       "appliedOn": "2026-10-12"
+    },
+    {
+      "id": "compiler-host-timer-local-storage-carrier",
+      "dependency": "flight-compiler",
+      "patch": "compiler-host-timer-local-storage-carrier.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/power",
+      "answers": "diagnostic",
+      "refusal": "a local initialized straight from a bound host call is declared from the library signature's numeric token, so `const id = setInterval(tick, ms)` emits `const double id = host::set_interval(tick, ms)` -- the handle placed in a double",
+      "rewrite": "A local whose only declared type is the library's own primitive result (number/string/boolean) for a call the emitter has already resolved to a bound external call takes that binding's `callResultType` as its storage type, in both the storage-target collector and the storage-type emitter.",
+      "equivalence": "The binding's `callResultType` names the carrier the emitted call actually returns; the library declaration names a token the target never issues (`setInterval` returns the DOM's `number`, `set_interval` returns a TimerHandle). The patch changes which type the local is declared as, not which value it holds: the same call, the same handle, the same identity reaching the matching clearInterval. It applies only to a bare primitive declared type that came from the callee's own library signature, on a call the emitter resolved through the binding table; a declared union keeps its existing path and any other declared type still refuses as `cpp-external-binding-missing-source-type-evidence`, so no disagreement is papered over and no carrier is invented where a binding names none.",
+      "verification": "New fixtures in cppHostTimerLocalStorage.test.ts (2 pass): the local is declared `host::TimerHandle` and reaches `host::clear_interval(id)`; an ambient bound function whose binding names no `callResultType` keeps its declared numeric domain (`const double started = host::now()`). cppCompilerBackend.test.ts: the same 24 pre-existing failures with and without the patch, 1461 passing. Package typecheck and oxfmt clean.",
+      "whyNotUpstreamFirst": "Only a target with a handle binding can know the call's real carrier; the library's `number` is what reaches the compiler because Flight's tsconfig has no Node typings. Upstream has no newer commit than the pin.",
+      "unblocks": "`@flighthq/power`'s `_idlePollingIntervalMs` poll loop, which stores the interval handle in a local; it is the same family as compiler-host-timer-return-type-handle, in the position that patch does not cover.",
+      "expires": "when upstream declares a local initialized from a bound host call as the binding's result carrier.",
+      "appliedOn": "2026-10-12"
     }
   ]
 }

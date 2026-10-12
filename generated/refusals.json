@@ -3736,29 +3736,6 @@
     },
     {
       "code": "dependency-refused",
-      "module": "packages/power/src/contract.ts",
-      "package": "@flighthq/power",
-      "reason": "dependency ./power was refused for @flighthq/power/packages/power/src/power.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/power/src/index.ts",
-      "package": "@flighthq/power",
-      "reason": "dependency ./contract was refused for @flighthq/power/packages/power/src/contract.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 43,
-      "module": "packages/power/src/power.ts",
-      "package": "@flighthq/power",
-      "reason": "cpp emission failed for @flighthq/power/packages/power/src/power.ts: missing required call argument at position 2",
-      "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
       "module": "packages/preferences/src/contract.ts",
       "package": "@flighthq/preferences",
       "reason": "dependency ./storage was refused for @flighthq/preferences/packages/preferences/src/storage.ts",
