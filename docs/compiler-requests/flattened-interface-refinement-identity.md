@@ -49,3 +49,6 @@ Also blocks `@flighthq/swf` at a627849: `swf_appearance.hpp` builds `colorAdjust
 `Adjustment` in TypeScript, but the emitted structs are independent, so a `Ref<ColorScaleBiasAdjustment>`
 cannot enter `flight::Array<flight::Ref<flight::types::Adjustment>>` without a copy that would split identity.
 No workaround is carried.
+
+Also blocks `swf_sound_handler.hpp` at a627849: `cues: TimelineCue[]` receives
+`TimelineStreamAudioCue`, which extends `TimelineCue` in TypeScript but not in the emitted C++ (3 sites).

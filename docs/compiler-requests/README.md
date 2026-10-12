@@ -228,3 +228,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [`for...of` over a string needs a code-point iteration runtime contract](compiler-string-for-of-codepoint-iteration.md)
   — blocks `@flighthq/textinput`'s editing module and two `@flighthq/bitmaptext` modules; no workaround is
   carried, because a hand-rewritten index loop is not equivalent for surrogate pairs.
+- [A class instance passed as the interface it implements must keep its
+  identity](class-instance-as-implemented-interface.md) — swf hands its `SwfReader` to every tag handler.
+- [A partially refused module's retained declarations must keep their names in
+  scope](partial-module-placeholder-qualification.md) — the swf video handler placeholder.

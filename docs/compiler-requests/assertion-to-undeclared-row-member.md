@@ -31,3 +31,9 @@ Related: [assertion lowered to an unchecked static_cast](assertion-lowered-to-un
 ## Affected modules
 
 `computeSwfLocalBoundsRectangle` in `@flighthq/swf` (`swfNode.ts`): refused, not supplied.
+
+Also: a nominal downcast assertion lowered to a structural view. In `@flighthq/swf`
+(`swfFrameAction.ts`), `const clip = target as MovieClip` (a `Node2D` asserted to `MovieClip`) becomes
+`structural_ref_cast<StructuralRef<RowWritable<RowOf<Ref<MovieClip>>>>>(target)`. Every movieclip call
+then needs the nominal `Ref<MovieClip>`: `swf_frame_action.hpp` fails at 6 sites. The same checked owner
+recovery described above is the fix. No workaround is carried.
