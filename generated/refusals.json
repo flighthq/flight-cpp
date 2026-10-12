@@ -632,7 +632,7 @@
       "code": "dependency-refused",
       "module": "packages/dialog/src/contract.ts",
       "package": "@flighthq/dialog",
-      "reason": "dependency ./fileDialog was refused for @flighthq/dialog/packages/dialog/src/fileDialog.ts",
+      "reason": "dependency ./fileDialog.ts was refused for @flighthq/dialog/packages/dialog/src/fileDialog.ts",
       "stage": "dependency"
     },
     {
@@ -648,7 +648,7 @@
       "code": "dependency-refused",
       "module": "packages/dialog/src/index.ts",
       "package": "@flighthq/dialog",
-      "reason": "dependency ./contract was refused for @flighthq/dialog/packages/dialog/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/dialog/packages/dialog/src/contract.ts",
       "stage": "dependency"
     },
     {

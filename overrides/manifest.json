@@ -40,7 +40,7 @@
       "package": "@flighthq/dialog",
       "status": "complete",
       "supplies": "packages/dialog/src/fileDialog.ts",
-      "derivedFrom": "ae7023e9f06ac7e2246c35d1ade9fc5d9bd978cd8b2ce03569459e45a0158d8e",
+      "derivedFrom": "c2c0943c07393ec84fd042d6a1d6f5740f3d9802ae452ed79952bf94e9ba78c6",
       "reason": "The emitter refuses recovery of the optional operations member through EntityRuntimeKey and refuses the asserted FileDialogHandleRuntime owner because the emitted runtime structs have no C++ heritage. Imported entity, dialog, and provider types are also left unqualified.",
       "change": "Supplies the complete module. Handles retain the ordinary EntityRuntime marker while a weak identity-keyed table carries their optional provider-neutral operations; dialog capability calls explicitly project nominal options to the declared readonly structural rows.",
       "equivalence": "Handle kind, name, nullable path, and entity presence are unchanged. Operations remain non-enumerable authority tied to one live handle identity, are absent for path-only handles, and are not recoverable from a copied descriptor. Directory omission versus supplied options and every provider Task and outcome are forwarded unchanged.",
