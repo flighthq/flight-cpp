@@ -83,7 +83,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   made solely for the emitter.
 - [An async closure needs the coroutine lowering a module-level function gets](async-closure-coroutine-lowering.md) —
   an `async release()` inside an object literal and an `async () =>` handed to `then` are both refused;
-  three functions in `@flighthq/tray` and the notification attach/dispose path. No workaround carried.
+  three functions in `@flighthq/tray`. No workaround carried.
 - [A union-member test needs the binding's carrier to still be a variant](union-member-test-without-variant-binding.md) —
   fires on the *shared* helper of two families, so one rule holds ten notification functions and
   `startTrayIconAnimation`; reduction attempts are recorded because four of them reached a neighbouring

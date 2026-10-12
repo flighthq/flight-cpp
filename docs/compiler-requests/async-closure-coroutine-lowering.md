@@ -53,8 +53,9 @@ the body differs.
 | `queueAnimationWrite` (383) | an `async () => { … }` passed to `Promise.prototype.then` |
 | `startTrayIconAnimation` (371–379) | the same release-literal shape, behind that function's first refusal |
 
-`@flighthq/notification` has the same shape in its subscription attach/dispose path (the `NotificationAttach`
-callbacks its shared helpers take), so two packages are behind this one.
+`@flighthq/tray` is the only package where this shape has been measured. `@flighthq/notification`'s
+attach/dispose path was checked for it and does **not** contain an async closure — every `async` there is
+a module-level function, which lowers — so this request has one package behind it, not two.
 
 ## Carrying workaround
 
