@@ -1,3 +1,11 @@
+// Derived from @flighthq/textinput/packages/textinput/src/textInput.ts
+// at generated digest 816ef0938e6e85dda8fe79efaff375ab82528bb2c3da0acfecb7c2449d728880.
+//
+// Re-derived 2026-10-12. text_input.ts now emits in full, so this is not completing a partial: it
+// supplies the state over the exact RichText runtime the text override retains, and every exported
+// textInput function it covers (enable/disable/has/get state, caret and selection accessors, insert and
+// set selection) is present. The companion manager, history, keyboard and clipboard helpers are separate
+// modules and are not this file's surface.
 // Core text-input state over the exact RichText runtime retained by the text override.
 #pragma once
 

@@ -8626,14 +8626,14 @@
       "code": "dependency-refused",
       "module": "packages/textinput/src/contract.ts",
       "package": "@flighthq/textinput",
-      "reason": "dependency ./textInputEditing was refused for @flighthq/textinput/packages/textinput/src/textInputEditing.ts",
+      "reason": "dependency ./textInputEditing.ts was refused for @flighthq/textinput/packages/textinput/src/textInputEditing.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/textinput/src/index.ts",
       "package": "@flighthq/textinput",
-      "reason": "dependency ./contract was refused for @flighthq/textinput/packages/textinput/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/textinput/packages/textinput/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8663,7 +8663,7 @@
       "code": "dependency-refused",
       "module": "packages/textinput/src/textInputManager.ts",
       "package": "@flighthq/textinput",
-      "reason": "dependency ./textInput was refused for @flighthq/textinput/packages/textinput/src/textInput.ts",
+      "reason": "dependency ./textInput.ts was refused for @flighthq/textinput/packages/textinput/src/textInput.ts",
       "stage": "dependency"
     },
     {

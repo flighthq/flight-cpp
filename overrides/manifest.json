@@ -1921,7 +1921,7 @@
       "package": "@flighthq/textinput",
       "status": "complete",
       "supplies": "packages/textinput/src/textInput.ts",
-      "derivedFrom": "3d2afe04175d723e6ea7517a251172bd218cbbf5115f3b2073d7c99a84a4ce22",
+      "derivedFrom": "816ef0938e6e85dda8fe79efaff375ab82528bb2c3da0acfecb7c2449d728880",
       "reason": "The emitter refuses RichText runtime recovery and TextInputState construction, then retains calls to those missing declarations and accesses Ref-owned RichText data as a value.",
       "change": "Uses the exact RichText runtime registry, constructs the generated input-state owner with source defaults, and restores enablement, state, selection, display-text, and insertion operations over the generated Ref carriers.",
       "equivalence": "One input state is retained per enabled RichText identity; disablement clears it. Selection endpoints are ordered and clamped to the current string, insertion replaces the selected range, collapses the caret after inserted text, and invalidates RichText content.",

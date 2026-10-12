@@ -158,3 +158,6 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [Row assertions to undeclared members](assertion-to-undeclared-row-member.md) — swf authored bounds.
 - [Unbounded spread into a rest call](unbounded-spread-into-rest-call.md) — swf tag-stream test helper.
 - [Distinct union domains on one carrier](distinct-union-domains-one-carrier.md) — font-formats test helper.
+- [`for...of` over a string needs a code-point iteration runtime contract](compiler-string-for-of-codepoint-iteration.md)
+  — blocks `@flighthq/textinput`'s editing module and two `@flighthq/bitmaptext` modules; no workaround is
+  carried, because a hand-rewritten index loop is not equivalent for surrogate pairs.
