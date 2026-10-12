@@ -53,6 +53,12 @@ The controls isolate the defect to the conjunction of an inferred `any` argument
 structural conversion. A concrete inferred argument is substituted. An explicit `any` is substituted.
 A call that needs no conversion does not spell the parameter at all.
 
+A concrete inferred argument is not always safe, though: through the intersection alias
+`NodeOf<Traits> = Node<Traits> & Traits`, a checker-inferred concrete `Traits` with a writable parameter
+also leaks. That trigger, with its own measured controls, is recorded in
+[callee-type-parameter-leaked-into-call-site](callee-type-parameter-leaked-into-call-site.md); a fix
+should be checked against both reductions.
+
 ## Affected Flight modules
 
 `@flighthq/command` `command.ts` at flight `a627849`: `initializeRemoveNodeChildCommand` and
