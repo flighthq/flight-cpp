@@ -2,6 +2,8 @@
 #pragma once
 #include <flight/abort.hpp>
 #include <flight/any.hpp>
+#include <flight/erased_ref.hpp>
+#include <flight/host/timers.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -22,9 +24,14 @@ namespace flight::types {
 struct TrayIconOptions;
 struct TrayBalloonOptions;
 struct TrayIcon;
+struct TrayReleaseRuntime;
+struct TrayRuntime;
 struct TrayInteractionEvent;
 struct TrayMenuSelectionEvent;
 struct TrayBalloonEvent;
+template <typename Tray = flight::Ref<TrayIcon>>
+struct TrayCreateSuccessResult;
+struct TrayCreateFailedResult;
 struct TrayDestroyFailure;
 struct TrayEventRelease;
 struct HostTrayLifecycleCapability;
@@ -71,10 +78,6 @@ struct TrayBalloonOptions : public flight::ReferenceEnabled {
   std::optional<bool> respect_quiet_time;
   flight::String text;
   flight::String title;
-};
-
-struct TrayIcon : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
 };
 
 struct TrayInteractionEvent : public flight::ReferenceEnabled {
@@ -130,43 +133,53 @@ struct error_outcome_cfa38b2f61f29ba3 : public flight::ReferenceEnabled {
 
 using TrayCreateCapabilityResult = std::variant<flight::Ref<error_outcome_cfa38b2f61f29ba3>, flight::Ref<outcome_bd967408cf2a4c5c>>;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_OUTCOME_TRAY_A2649A1280D0352E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_OUTCOME_TRAY_A2649A1280D0352E
-template <typename Tray>
-struct entity_runtime_key_outcome_tray_a2649a1280d0352e : public flight::types::Entity {
-  flight::String outcome;
-  Tray tray;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_OUTCOME_TRAY_A2649A1280D0352E
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_OUTCOME_ERROR_789F203C1F963B68
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_OUTCOME_ERROR_789F203C1F963B68
-template <typename Tray>
-struct entity_runtime_key_outcome_error_789f203c1f963b68 : public flight::types::Entity {
-  flight::String outcome;
+struct TrayCreateFailedResult : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
   std::optional<flight::Any> error;
+  flight::String outcome;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_OUTCOME_ERROR_789F203C1F963B68
 
-template <typename Tray = flight::Ref<TrayIcon>>
-using TrayCreateResult = std::variant<entity_runtime_key_outcome_error_789f203c1f963b68<Tray>, flight::Ref<entity_runtime_key_outcome_tray_a2649a1280d0352e<Tray>>>;
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_OUTCOME_1729F20A2D6D85DE
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_OUTCOME_1729F20A2D6D85DE
+struct entity_runtime_key_outcome_1729f20a2d6d85de : public flight::types::Entity {
+  flight::String outcome;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_OUTCOME_1729F20A2D6D85DE
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_ERROR_OUTCOME_B8E6B272F8143A76
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_ERROR_OUTCOME_B8E6B272F8143A76
+struct entity_runtime_key_error_outcome_b8e6b272f8143a76 : public flight::types::Entity {
+  std::optional<flight::Any> error;
+  flight::String outcome;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_ERROR_OUTCOME_B8E6B272F8143A76
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_ERROR_OUTCOME_4CE1A41137441135
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_ERROR_OUTCOME_4CE1A41137441135
+struct entity_runtime_key_error_outcome_4ce1a41137441135 : public flight::types::Entity {
+  std::optional<flight::Any> error;
+  flight::String outcome;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_ERROR_OUTCOME_4CE1A41137441135
+
+using TrayCreateProviderFailureResult = std::variant<flight::Ref<entity_runtime_key_error_outcome_4ce1a41137441135>, flight::Ref<entity_runtime_key_error_outcome_b8e6b272f8143a76>, flight::Ref<entity_runtime_key_outcome_1729f20a2d6d85de>>;
 
 struct TrayDestroyFailure : public flight::ReferenceEnabled {
   std::optional<flight::Any> error;
   flight::String step;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILURES_OUTCOME_41290060B1521B94
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILURES_OUTCOME_41290060B1521B94
-struct failures_outcome_41290060b1521b94 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILURES_OUTCOME_CACC8CA3CBE65537
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILURES_OUTCOME_CACC8CA3CBE65537
+struct failures_outcome_cacc8ca3cbe65537 : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<TrayDestroyFailure>> failures;
   flight::String outcome;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILURES_OUTCOME_41290060B1521B94
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_FAILURES_OUTCOME_CACC8CA3CBE65537
 
-using TrayDestroyCapabilityResult = std::variant<flight::Ref<failures_outcome_41290060b1521b94>, flight::Ref<outcome_bd967408cf2a4c5c>>;
+using TrayDestroyCapabilityResult = std::variant<flight::Ref<failures_outcome_cacc8ca3cbe65537>, flight::Ref<outcome_bd967408cf2a4c5c>>;
 
-using TrayDestroyResult = std::variant<flight::Ref<failures_outcome_41290060b1521b94>, flight::Ref<outcome_bd967408cf2a4c5c>>;
+using TrayDestroyResult = std::variant<flight::Ref<failures_outcome_cacc8ca3cbe65537>, flight::Ref<outcome_bd967408cf2a4c5c>>;
 
 using TrayImageUpdateResult = std::variant<flight::Ref<error_outcome_cfa38b2f61f29ba3>, flight::Ref<outcome_bd967408cf2a4c5c>>;
 
@@ -202,15 +215,15 @@ struct outcome_tooltip_fbaaa0217ca4ec4d : public flight::ReferenceEnabled {
 
 using TrayTooltipReadResult = std::variant<flight::Ref<error_outcome_cfa38b2f61f29ba3>, flight::Ref<outcome_tooltip_fbaaa0217ca4ec4d>, flight::Ref<outcome_bd967408cf2a4c5c>>;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BOUNDS_OUTCOME_6A4A0F03BFD06907
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BOUNDS_OUTCOME_6A4A0F03BFD06907
-struct bounds_outcome_6a4a0f03bfd06907 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BOUNDS_OUTCOME_891C6E923AF333EE
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BOUNDS_OUTCOME_891C6E923AF333EE
+struct bounds_outcome_891c6e923af333ee : public flight::ReferenceEnabled {
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>> bounds;
   flight::String outcome;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BOUNDS_OUTCOME_6A4A0F03BFD06907
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_BOUNDS_OUTCOME_891C6E923AF333EE
 
-using TrayBoundsResult = std::variant<flight::Ref<bounds_outcome_6a4a0f03bfd06907>, flight::Ref<error_outcome_cfa38b2f61f29ba3>, flight::Ref<outcome_bd967408cf2a4c5c>>;
+using TrayBoundsResult = std::variant<flight::Ref<bounds_outcome_891c6e923af333ee>, flight::Ref<error_outcome_cfa38b2f61f29ba3>, flight::Ref<outcome_bd967408cf2a4c5c>>;
 
 using TrayPopupMenuResult = std::variant<flight::Ref<error_outcome_cfa38b2f61f29ba3>, flight::Ref<outcome_bd967408cf2a4c5c>>;
 
@@ -220,29 +233,86 @@ using TrayBalloonRemoveResult = std::variant<flight::Ref<error_outcome_cfa38b2f6
 
 using TrayReleaseResult = std::variant<flight::Ref<error_outcome_cfa38b2f61f29ba3>, flight::Ref<outcome_bd967408cf2a4c5c>>;
 
+struct TrayReleaseRuntime : public flight::ReferenceEnabled {
+  std::function<flight::Task<TrayReleaseResult>()> release;
+  bool released;
+};
+
 struct TrayEventRelease : public flight::ReferenceEnabled {
   std::function<flight::Task<TrayReleaseResult>()> release;
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_OUTCOME_RELEASE_07A13E49D1674BFD
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_OUTCOME_RELEASE_07A13E49D1674BFD
-struct outcome_release_07a13e49d1674bfd : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_OUTCOME_RELEASE_35B93FE95822E195
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_OUTCOME_RELEASE_35B93FE95822E195
+struct outcome_release_35b93fe95822e195 : public flight::ReferenceEnabled {
   flight::String outcome;
   flight::Ref<TrayEventRelease> release;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_OUTCOME_RELEASE_07A13E49D1674BFD
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_OUTCOME_RELEASE_35B93FE95822E195
 
-using TrayEventAttachResult = std::variant<flight::Ref<error_outcome_cfa38b2f61f29ba3>, flight::Ref<outcome_release_07a13e49d1674bfd>, flight::Ref<outcome_bd967408cf2a4c5c>>;
+using TrayEventAttachResult = std::variant<flight::Ref<error_outcome_cfa38b2f61f29ba3>, flight::Ref<outcome_release_35b93fe95822e195>, flight::Ref<outcome_bd967408cf2a4c5c>>;
 
-using TrayAnimationStartResult = std::variant<std::variant<flight::Ref<error_outcome_cfa38b2f61f29ba3>, flight::Ref<outcome_bd967408cf2a4c5c>>, flight::Ref<outcome_release_07a13e49d1674bfd>, flight::Ref<outcome_bd967408cf2a4c5c>>;
+using TrayAnimationStartResult = std::variant<std::variant<flight::Ref<error_outcome_cfa38b2f61f29ba3>, flight::Ref<outcome_bd967408cf2a4c5c>>, flight::Ref<outcome_release_35b93fe95822e195>, flight::Ref<outcome_bd967408cf2a4c5c>>;
 
 using TrayAnimationStopResult = flight::Ref<outcome_bd967408cf2a4c5c>;
+
+struct TrayIcon : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<TrayRuntime>> entity_runtime_key;
+};
+
+template <typename Tray>
+struct TrayCreateSuccessResult : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  flight::String outcome;
+  Tray tray;
+};
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_OUTCOME_8EC916D13E18223D
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_OUTCOME_8EC916D13E18223D
+template <typename Tray>
+struct entity_runtime_key_outcome_8ec916d13e18223d : public flight::types::Entity {
+  flight::String outcome;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_OUTCOME_8EC916D13E18223D
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_ERROR_OUTCOME_63DD3CCB9E77FE7F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_ERROR_OUTCOME_63DD3CCB9E77FE7F
+template <typename Tray>
+struct entity_runtime_key_error_outcome_63dd3ccb9e77fe7f : public flight::types::Entity {
+  std::optional<flight::Any> error;
+  flight::String outcome;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_ERROR_OUTCOME_63DD3CCB9E77FE7F
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_ERROR_OUTCOME_0F472ADE7B1CCB7A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_ERROR_OUTCOME_0F472ADE7B1CCB7A
+template <typename Tray>
+struct entity_runtime_key_error_outcome_0f472ade7b1ccb7a : public flight::types::Entity {
+  std::optional<flight::Any> error;
+  flight::String outcome;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_ENTITY_RUNTIME_KEY_ERROR_OUTCOME_0F472ADE7B1CCB7A
+
+template <typename Tray = flight::Ref<TrayIcon>>
+using TrayCreateResult = std::variant<flight::Ref<entity_runtime_key_error_outcome_0f472ade7b1ccb7a<Tray>>, flight::Ref<entity_runtime_key_error_outcome_63dd3ccb9e77fe7f<Tray>>, flight::Ref<entity_runtime_key_outcome_8ec916d13e18223d<Tray>>, flight::Ref<TrayCreateFailedResult>, flight::Ref<TrayCreateSuccessResult<Tray>>>;
 
 struct HostTrayLifecycleCapability : public flight::ReferenceEnabled {
   std::function<flight::Task<TrayCreateCapabilityResult>(flight::Ref<TrayIcon>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TrayIconOptions>>>>)> create;
   std::function<flight::Task<TrayDestroyCapabilityResult>(flight::Ref<TrayIcon>)> destroy;
   std::function<bool(flight::Ref<TrayIcon>)> is_destroyed;
   std::function<flight::Array<flight::Ref<TrayIcon>>()> list;
+};
+
+struct TrayRuntime : public flight::ReferenceEnabled {
+  std::optional<flight::ErasedRef> binding;
+  std::optional<flight::String> uid;
+  double animation_generation;
+  std::optional<flight::host::TimerHandle> animation_timer;
+  flight::Task<void> animation_write_tail;
+  std::optional<flight::Task<TrayDestroyResult>> destroy_promise;
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<HostTrayLifecycleCapability>>>> lifecycle;
+  flight::Set<flight::Ref<TrayReleaseRuntime>> releases;
+  flight::String state;
 };
 
 struct HostTrayImageCapability : public flight::ReferenceEnabled {
