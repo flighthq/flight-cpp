@@ -2696,7 +2696,7 @@
       "code": "dependency-refused",
       "module": "packages/layout/src/contract.ts",
       "package": "@flighthq/layout",
-      "reason": "dependency ./anchorLayout was refused for @flighthq/layout/packages/layout/src/anchorLayout.ts",
+      "reason": "dependency ./anchorLayout.ts was refused for @flighthq/layout/packages/layout/src/anchorLayout.ts",
       "stage": "dependency"
     },
     {
@@ -2721,7 +2721,7 @@
       "code": "dependency-refused",
       "module": "packages/layout/src/index.ts",
       "package": "@flighthq/layout",
-      "reason": "dependency ./contract was refused for @flighthq/layout/packages/layout/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/layout/packages/layout/src/contract.ts",
       "stage": "dependency"
     },
     {
