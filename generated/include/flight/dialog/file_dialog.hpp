@@ -5,26 +5,38 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function getFileDialogHandleOperations -- source line 32
 //   missing: function initializeFileDialogHandle -- source line 41
+#include <flight/structural_ref.hpp>
 #include <optional>
-#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/dialog.hpp>
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+namespace flight::types { struct FileDialogHandle; }
+namespace flight::types { struct FileDialogHandleOperations; }
+namespace flight::types { struct FileDialogHandleRuntime; }
+namespace flight::types { struct HostDirectoryOpenDialogCapability; }
+namespace flight::types { struct HostFileOpenDialogCapability; }
+namespace flight::types { struct HostFileSaveDialogCapability; }
+namespace flight::types { struct OpenDirectoryDialogOptions; }
+namespace flight::types { struct OpenFileDialogOptions; }
+namespace flight::types { struct SaveFileDialogOptions; }
 
 #include <flight/entity/entity.hpp>
+#include <flight/entity/runtime.hpp>
+#include <flight/types/dialog.hpp>
+#include <flight/types/entity.hpp>
+#include <flight/types/host_file_dialog.hpp>
 
 namespace flight::dialog {
 
 using flight::types::FileDialogHandle;
 
-using flight::entity::allocate_entity;
-using flight::entity::finish_entity;
-
 
 // NOT GENERATED: function getFileDialogHandleOperations -- source line 32
+// refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getFileDialogHandleOperations(
@@ -36,8 +48,23 @@ using flight::entity::finish_entity;
 //   
 //   // Constructs the identity that crosses from a picker provider into filesystem. `operations` is an
 //   // internal runtime extension point, not serialized descriptor data; native path handles use null.
-// cpp emission failed for @flighthq/dialog/packages/dialog/src/fileDialog.ts: dual-sentinel optional property
-// result requires one represented member value domain
+// cpp emission failed for @flighthq/dialog/packages/dialog/src/fileDialog.ts: the asserted row from
+// flight::Ref<flight::types::EntityRuntime> to flight::Ref<flight::types::FileDialogHandleRuntime> reads
+// operations, which the source type does not declare, and a structural owner binds the members and storage
+// representations of the type the object was first reached as, so a member the source's own declaration lacks or
+// carries differently has no compatible cell to answer the read. Reading the value back from retained storage
+// does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove
+// which concrete owner was stored. Preserve the concrete owner in the source type through every storage,
+// callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage
+// that remains typed as FileDialogHandleRuntime, rather than storing an erased reference and asserting it back;
+// an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not
+// prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates
+// and returns the exact owner before dispatch. Declare the source as a type that declares operations --
+// construct FileDialogHandleRuntime explicitly, then type the retaining slot and every accessor result as
+// FileDialogHandleRuntime wherever that concrete owner is known; changing only the accessor result cannot
+// recover a wider owner after a base-typed slot erased it -- rather than asserting past
+// flight::Ref<flight::types::EntityRuntime>. The compiler will not reinterpret the owner, cast it, copy or
+// materialize a replacement, or add side storage.
 
 
 // NOT GENERATED: function initializeFileDialogHandle -- source line 41
@@ -60,34 +87,35 @@ using flight::entity::finish_entity;
 //   }
 //   
 // cpp emission failed for @flighthq/dialog/packages/dialog/src/fileDialog.ts: a reference assertion from the
-// createEntityRuntime factory result flight::Ref<EntityRuntime> to flight::Ref<FileDialogHandleRuntime> has no
-// heritage to cast along: the call already allocated and returned the flight::Ref<EntityRuntime> owner, and
-// neither a target-typed use nor kind, options, or other arguments passed to the factory add the target owner's
-// cells or change that identity. Make createEntityRuntime generic in the exact owner it allocates and returns,
-// or preallocate flight::Ref<FileDialogHandleRuntime> and pass it through named generic shared-layer
-// initializers that fill only their declared cells; then retain flight::Ref<FileDialogHandleRuntime> through
-// target-specific writes and the return boundary. A kind or registry tag is not owner validation. If the runtime
-// intentionally erases concrete owners, add a checked recovery contract instead. The compiler will not use a
-// native pointer cast, reinterpret the factory result, copy or materialize a replacement owner, or invent side
-// storage
+// createEntityRuntime factory result flight::Ref<flight::types::EntityRuntime> to
+// flight::Ref<flight::types::FileDialogHandleRuntime> has no heritage to cast along: the call already allocated
+// and returned the flight::Ref<flight::types::EntityRuntime> owner, and neither a target-typed use nor kind,
+// options, or other arguments passed to the factory add the target owner's cells or change that identity. Make
+// createEntityRuntime generic in the exact owner it allocates and returns, or preallocate
+// flight::Ref<flight::types::FileDialogHandleRuntime> and pass it through named generic shared-layer
+// initializers that fill only their declared cells; then retain
+// flight::Ref<flight::types::FileDialogHandleRuntime> through target-specific writes and the return boundary. A
+// kind or registry tag is not owner validation. If the runtime intentionally erases concrete owners, add a
+// checked recovery contract instead. The compiler will not use a native pointer cast, reinterpret the factory
+// result, copy or materialize a replacement owner, or invent side storage
 
-inline flight::Ref<FileDialogHandle> create_file_dialog_handle(flight::String kind, flight::String name, std::optional<flight::String> path, std::optional<std::optional<flight::Ref<FileDialogHandleOperations>>> operations = std::nullopt) {
+inline flight::Ref<flight::types::FileDialogHandle> create_file_dialog_handle(flight::String kind, flight::String name, std::optional<flight::String> path, std::optional<std::optional<flight::Ref<flight::types::FileDialogHandleOperations>>> operations = std::nullopt) {
   operations = operations.value_or(std::nullopt);
-  flight::Ref<EntityConstruction<flight::Ref<FileDialogHandle>>> handle = allocate_entity<flight::Ref<FileDialogHandle>>();
+  flight::types::EntityConstruction<flight::Ref<flight::types::FileDialogHandle>> handle = flight::entity::allocate_entity<flight::Ref<flight::types::FileDialogHandle>>();
   initialize_file_dialog_handle(handle, kind, name, path, operations.value());
-  return finish_entity(handle);
+  return flight::entity::finish_entity<flight::Ref<flight::types::FileDialogHandle>>(handle);
 }
 
-inline flight::Task<flight::Ref<DirectoryOpenDialogResult>> show_open_directory_dialog(flight::Ref<HostDirectoryOpenDialogCapability> host_directory_open_dialog, std::optional<flight::Ref<OpenDirectoryDialogOptions>> options = std::nullopt) {
-  return (!options.has_value() ? host_directory_open_dialog->open() : host_directory_open_dialog->open(options.value()));
+inline flight::Task<flight::types::DirectoryOpenDialogResult> show_open_directory_dialog(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDirectoryOpenDialogCapability>>>> host_directory_open_dialog, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OpenDirectoryDialogOptions>>>>> options = std::nullopt) {
+  return (!options.has_value() ? flight::row_get<flight::RowKey<"open">>(host_directory_open_dialog)(std::nullopt) : flight::row_get<flight::RowKey<"open">>(host_directory_open_dialog)(options.value()));
 }
 
-inline flight::Task<flight::Ref<FileOpenDialogResult>> show_open_file_dialog(flight::Ref<HostFileOpenDialogCapability> host_file_open_dialog, flight::Ref<OpenFileDialogOptions> options) {
-  return host_file_open_dialog->open(options);
+inline flight::Task<flight::types::FileOpenDialogResult> show_open_file_dialog(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostFileOpenDialogCapability>>>> host_file_open_dialog, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::OpenFileDialogOptions>>>> options) {
+  return flight::row_get<flight::RowKey<"open">>(host_file_open_dialog)(options);
 }
 
-inline flight::Task<flight::Ref<FileSaveDialogResult>> show_save_file_dialog(flight::Ref<HostFileSaveDialogCapability> host_file_save_dialog, flight::Ref<SaveFileDialogOptions> options) {
-  return host_file_save_dialog->save(options);
+inline flight::Task<flight::types::FileSaveDialogResult> show_save_file_dialog(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostFileSaveDialogCapability>>>> host_file_save_dialog, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SaveFileDialogOptions>>>> options) {
+  return flight::row_get<flight::RowKey<"save">>(host_file_save_dialog)(options);
 }
 
 } // namespace flight::dialog

@@ -1634,6 +1634,19 @@ That readiness is therefore purely a statement about emission and compilation; t
 above is the substantive part of `webcam`'s entry, and it stands unchanged. Recorded so a later reader
 does not take `ready` here as evidence that a webcam feature area exists.
 
+### A pin migration can leave a package including a header another package dropped
+
+`generated/include/flight/types/renderer.hpp` does not exist at a627849 — the types migration
+(`787a9d1f`) deleted it, and the types row is 1029/1029 emitted with no refusals — but six generated
+headers still include it: `render/render_state.hpp`, `render/render_cache.hpp`,
+`render/explain_scene2_dcoverage.hpp`, `render/renderer.hpp`, `render/render_registry_signals.hpp` and
+`scene2d_canvas/canvas_texture_resolver.hpp`. Any translation unit that includes one of them stops with
+`fatal error: 'flight/types/renderer.hpp' file not found`. That is why the committed
+`tests/generated_dialog_test.cpp` cannot build in this tree while the `dialog` package it exercises
+compiles 5/5 on its own. Regenerating those dependants against the current types row is what clears it;
+they were last emitted before that row moved. Recorded rather than repaired here because it crosses
+package ownership.
+
 ### The sharpest remaining target: fully emitted and still failing
 
 A package with **no refusals** cannot have a never-generated function behind its diagnostics, so whatever

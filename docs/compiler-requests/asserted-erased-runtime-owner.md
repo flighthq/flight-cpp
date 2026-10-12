@@ -16,6 +16,30 @@ type does not declare, and a structural owner binds the members and storage repr
 object was first reached as …
 ```
 
+## Second measured site: `@flighthq/dialog` `fileDialog.ts`
+
+The same pair of refusals, from the P-PL3 increment, on a module that is supplied by hand today:
+
+```
+cpp emission failed for @flighthq/dialog/packages/dialog/src/fileDialog.ts: the asserted row from
+flight::Ref<flight::types::EntityRuntime> to flight::Ref<flight::types::FileDialogHandleRuntime> reads
+operations, which the source type does not declare …
+cpp emission failed for @flighthq/dialog/packages/dialog/src/fileDialog.ts: a reference assertion from the
+createEntityRuntime factory result flight::Ref<flight::types::EntityRuntime> to
+flight::Ref<FileDialogHandleRuntime> has no heritage to cast along …
+```
+
+`getFileDialogHandleOperations` (`cpp-structural-assertion-owner-unproven`, source line 32) and
+`initializeFileDialogHandle` (`cpp-reference-assertion-without-heritage`, source line 41) — the same two
+declarations the app-render-view module loses, for the same reason, in a module that keeps a *nullable*
+authority rather than a whole runtime. `@flighthq/dialog` is `assisted` because
+`overrides/include/flight/dialog/file_dialog.hpp` supplies both and the package's five headers then
+compile; without that supply it is the same broken module this request describes. At this pin the module's
+*third* refusal (a dual-sentinel optional property result,
+[`compiler-present-dual-sentinel-multivariant.md`](compiler-present-dual-sentinel-multivariant.md)) no
+longer fires, so the emitter now emits `createFileDialogHandle` and the three `show*` functions itself and
+refuses only the two declarations above.
+
 ## Why the module does it
 
 `appRenderView.ts` keeps a per-view runtime — `attached`, `resize`, `synchronize` — beside the view entity,

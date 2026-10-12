@@ -1606,6 +1606,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("sampler") && requires { object.sampler; }) return (object.sampler);
   else if constexpr (Key::name.view() == std::string_view("samples") && requires { object.samples; }) return (object.samples);
   else if constexpr (Key::name.view() == std::string_view("saturation") && requires { object.saturation; }) return (object.saturation);
+  else if constexpr (Key::name.view() == std::string_view("save") && requires { object.save; }) return (object.save);
   else if constexpr (Key::name.view() == std::string_view("saved") && requires { object.saved; }) return (object.saved);
   else if constexpr (Key::name.view() == std::string_view("sc") && requires { object.sc; }) return (object.sc);
   else if constexpr (Key::name.view() == std::string_view("scale") && requires { object.scale; }) return (object.scale);
@@ -3703,6 +3704,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("sampler") && requires(Object& object) { object.sampler; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sampler)>>{};
   else if constexpr (Key::name.view() == std::string_view("samples") && requires(Object& object) { object.samples; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().samples)>>{};
   else if constexpr (Key::name.view() == std::string_view("saturation") && requires(Object& object) { object.saturation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().saturation)>>{};
+  else if constexpr (Key::name.view() == std::string_view("save") && requires(Object& object) { object.save; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().save)>>{};
   else if constexpr (Key::name.view() == std::string_view("saved") && requires(Object& object) { object.saved; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().saved)>>{};
   else if constexpr (Key::name.view() == std::string_view("sc") && requires(Object& object) { object.sc; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sc)>>{};
   else if constexpr (Key::name.view() == std::string_view("scale") && requires(Object& object) { object.scale; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scale)>>{};
@@ -5803,6 +5805,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->sampler; }) owner.bind_named("sampler", [object]() -> decltype(auto) { return (object->sampler); });
   if constexpr (requires { object->samples; }) owner.bind_named("samples", [object]() -> decltype(auto) { return (object->samples); });
   if constexpr (requires { object->saturation; }) owner.bind_named("saturation", [object]() -> decltype(auto) { return (object->saturation); });
+  if constexpr (requires { object->save; }) owner.bind_named("save", [object]() -> decltype(auto) { return (object->save); });
   if constexpr (requires { object->saved; }) owner.bind_named("saved", [object]() -> decltype(auto) { return (object->saved); });
   if constexpr (requires { object->sc; }) owner.bind_named("sc", [object]() -> decltype(auto) { return (object->sc); });
   if constexpr (requires { object->scale; }) owner.bind_named("scale", [object]() -> decltype(auto) { return (object->scale); });
@@ -7936,6 +7939,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(sampler)
   FLIGHT_SDK_ROW_WIDENS(samples)
   FLIGHT_SDK_ROW_WIDENS(saturation)
+  FLIGHT_SDK_ROW_WIDENS(save)
   FLIGHT_SDK_ROW_WIDENS(saved)
   FLIGHT_SDK_ROW_WIDENS(sc)
   FLIGHT_SDK_ROW_WIDENS(scale)
