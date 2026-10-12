@@ -101270,7 +101270,7 @@
             "packageName": "@flighthq/camera-controls",
             "source": "packages/camera-controls/src/contract.ts"
           },
-          "specifier": "./cameraShake",
+          "specifier": "./cameraShake.ts",
           "target": {
             "name": "CameraShake",
             "packageName": "@flighthq/camera-controls",
@@ -101284,7 +101284,7 @@
             "packageName": "@flighthq/camera-controls",
             "source": "packages/camera-controls/src/contract.ts"
           },
-          "specifier": "./flyCameraController",
+          "specifier": "./flyCameraController.ts",
           "target": {
             "name": "FlyCameraController",
             "packageName": "@flighthq/camera-controls",
@@ -101298,7 +101298,7 @@
             "packageName": "@flighthq/camera-controls",
             "source": "packages/camera-controls/src/contract.ts"
           },
-          "specifier": "./follow",
+          "specifier": "./follow.ts",
           "target": {
             "name": "Follow",
             "packageName": "@flighthq/camera-controls",
@@ -101312,7 +101312,7 @@
             "packageName": "@flighthq/camera-controls",
             "source": "packages/camera-controls/src/contract.ts"
           },
-          "specifier": "./framing",
+          "specifier": "./framing.ts",
           "target": {
             "name": "Framing",
             "packageName": "@flighthq/camera-controls",
@@ -101326,7 +101326,7 @@
             "packageName": "@flighthq/camera-controls",
             "source": "packages/camera-controls/src/contract.ts"
           },
-          "specifier": "./orbitCameraController",
+          "specifier": "./orbitCameraController.ts",
           "target": {
             "name": "OrbitCameraController",
             "packageName": "@flighthq/camera-controls",
@@ -143667,10 +143667,10 @@
           "binding": {
             "column": 7,
             "fingerprint": "sha256:32177732e8afc4073128f6ebb48be2178eb56cee45f7b709adcf24ae468cf7e8",
-            "line": 77,
+            "line": 79,
             "packageName": "@flighthq/camera-controls",
             "source": "packages/camera-controls/src/follow.ts",
-            "id": "binding:[\"@flighthq/camera-controls\",\"packages/camera-controls/src/follow.ts\",3193]",
+            "id": "binding:[\"@flighthq/camera-controls\",\"packages/camera-controls/src/follow.ts\",3275]",
             "kind": "variable",
             "name": "scratchBounds",
             "scope": "module",
@@ -143796,10 +143796,10 @@
             {
               "column": 7,
               "fingerprint": "sha256:32177732e8afc4073128f6ebb48be2178eb56cee45f7b709adcf24ae468cf7e8",
-              "line": 77,
+              "line": 79,
               "packageName": "@flighthq/camera-controls",
               "source": "packages/camera-controls/src/follow.ts",
-              "id": "binding:[\"@flighthq/camera-controls\",\"packages/camera-controls/src/follow.ts\",3193]",
+              "id": "binding:[\"@flighthq/camera-controls\",\"packages/camera-controls/src/follow.ts\",3275]",
               "kind": "variable",
               "name": "scratchBounds",
               "scope": "module",
@@ -171476,7 +171476,7 @@
             "packageName": "@flighthq/camera-controls",
             "source": "packages/camera-controls/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/camera-controls",
