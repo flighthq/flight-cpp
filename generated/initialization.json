@@ -312143,7 +312143,7 @@
             "line": 7,
             "packageName": "@flighthq/preferences",
             "source": "packages/preferences/src/storagePersistence.ts",
-            "id": "binding:[\"@flighthq/preferences\",\"packages/preferences/src/storagePersistence.ts\",186]",
+            "id": "binding:[\"@flighthq/preferences\",\"packages/preferences/src/storagePersistence.ts\",187]",
             "kind": "function",
             "name": "getStoragePersistence",
             "scope": "module",
@@ -312164,7 +312164,7 @@
             "line": 14,
             "packageName": "@flighthq/preferences",
             "source": "packages/preferences/src/storagePersistence.ts",
-            "id": "binding:[\"@flighthq/preferences\",\"packages/preferences/src/storagePersistence.ts\",441]",
+            "id": "binding:[\"@flighthq/preferences\",\"packages/preferences/src/storagePersistence.ts\",443]",
             "kind": "function",
             "name": "requestStoragePersistence",
             "scope": "module",
@@ -312206,7 +312206,7 @@
           "importedNames": [
             "HostPreferencesPersistenceQueryCapability",
             "HostPreferencesPersistenceRequestCapability",
-            "StoragePersistenceResult"
+            "StoragePersistenceOutcome"
           ],
           "specifier": "@flighthq/types/contract",
           "target": {

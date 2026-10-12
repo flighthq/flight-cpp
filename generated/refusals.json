@@ -3738,14 +3738,14 @@
       "code": "dependency-refused",
       "module": "packages/preferences/src/contract.ts",
       "package": "@flighthq/preferences",
-      "reason": "dependency ./storage was refused for @flighthq/preferences/packages/preferences/src/storage.ts",
+      "reason": "dependency ./storage.ts was refused for @flighthq/preferences/packages/preferences/src/storage.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/preferences/src/index.ts",
       "package": "@flighthq/preferences",
-      "reason": "dependency ./contract was refused for @flighthq/preferences/packages/preferences/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/preferences/packages/preferences/src/contract.ts",
       "stage": "dependency"
     },
     {

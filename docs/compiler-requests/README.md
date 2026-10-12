@@ -64,6 +64,10 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   carried by the emission repairs `adjustments-color-matrix-interface-heritage` and `adjustments-tint-interface-heritage`.
 - [Narrow an optional local in the else-branch of a negated truthiness test](negated-truthiness-else-narrowing.md) —
   carried by the source patch `node-bounds-rectangle-explicit-narrowing`.
+- [A reference-backed outcome variant is narrowed as if it were a record](reference-backed-outcome-variant-narrowing.md) —
+  a bound capability's `keys()` result is read as `result->reason` on a `std::variant`, so
+  `@flighthq/preferences` refuses at emission and its header compiles nowhere; carried by the
+  hand-written `preferences-storage-outcome-dispatch` override, which declares its own JSON boundary.
 - [Union carriers need canonical alternative order](canonical-union-carrier-order.md) — identical
   named unions currently become incompatible `std::variant` types at array callback boundaries.
 - [Nullable and optional storage needs two absence channels](nullable-optional-presence.md) — one

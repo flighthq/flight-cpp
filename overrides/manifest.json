@@ -1609,7 +1609,7 @@
       "path": "flight/preferences/storage.hpp",
       "package": "@flighthq/preferences",
       "status": "complete",
-      "derivedFrom": "99b3094503d48284816542e281ae3920f88e80f7581e672af5ada586aa4d4ff7",
+      "derivedFrom": "b81919e3547729926e48b9e1a98b564185e1d0eb4a30d12f2d319fd7ffb063ac",
       "reason": "The emitter treats reference-backed outcome variants as records throughout the storage module and loses contextual construction for their success and failure arms.",
       "change": "Provides typed outcome factories and accessors, JSON conversion for represented JSON values, exact optional failed-key states, signal ownership, namespace operations and migrations over the generated carriers.",
       "equivalence": "Every backend reason, value, completed count and failed key follows the source branch, including absent failed keys before enumeration. Namespacing, byte counts, JSON fallbacks, change signals, migration ordering and checkpoint failures preserve the source behavior.",
