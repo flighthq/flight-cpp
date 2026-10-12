@@ -315,7 +315,7 @@
       "id": "skeleton2d-target-kind-binding",
       "dependency": "flight",
       "patch": "skeleton2d-target-kind-binding.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/skeleton2d/src/skeleton2dAnimationTarget.ts",
       "package": "@flighthq/skeleton2d",
       "answers": "diagnostic",
@@ -325,12 +325,7 @@
       "whyNotUpstreamFirst": "This is ordinary target-neutral TypeScript and is the smallest source spelling that preserves the value binding while the emitter loses imported value aliases.",
       "unblocks": "Defines all animation-target kind member accesses in skeleton2d_animation_target.hpp and its skeleton2d-formats consumers.",
       "expires": "when imported value aliases are rebound in generated modules, or Flight adopts the unaliased import.",
-      "appliedOn": "2026-10-06",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "2D",
-        "reason": "context drift: the patched code still exists (4/6 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "appliedOn": "2026-10-11"
     },
     {
       "id": "particles-formats-string-operations",
