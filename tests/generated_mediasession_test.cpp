@@ -14,10 +14,9 @@
 //   * position state is classified locally -- the three invalid cases are answered without invoking the
 //     provider at all -- and playback state misuse is a TypeError before the provider sees it.
 //
-// The one case the C++ lowering gets wrong -- a provider passed through *both* capability slots -- is not
-// asserted here; it is measured and filed as a request. See the note above the destroy group, and note
-// that every call in this file passes two DISTINCT providers precisely so that nothing here certifies the
-// aliased case.
+// The aliased case -- one provider passed through *both* capability slots, which the source documents as
+// destroying once -- is asserted in the destroy group, and every other call in this file passes two
+// DISTINCT providers so that the two are never confused.
 #include <flight/mediasession/mediasession.hpp>
 
 #include <functional>
@@ -45,6 +44,8 @@ using MetadataRow = flight::StructuralRef<
     flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MediaSessionMetadata>>>>;
 using PositionRow = flight::StructuralRef<
     flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MediaSessionPositionState>>>>;
+using CommandsRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Cap>>>>;
+using ActionsRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Act>>>>;
 
 flight::types::MediaSessionClearMetadataOutcome ok_clear_metadata() {
   return flight::make_ref<flight::types::MediaSessionOperationOutcome<flight::String>>(
@@ -211,12 +212,33 @@ int main() {
     check(order == "commands;actions;", "distinct providers are destroyed once each, in insertion order");
   }
 
-  // The upstream suite's aliased case -- one provider passed through *both* capability slots, which the
-  // source documents as destroying once -- is not asserted here: the emitted lowering answers two calls,
-  // because the Set's element is a two-alternative union and C++ compares a variant's index before its
-  // value, while `Set` in the source compares the referenced object. It is measured and filed as
-  // docs/compiler-requests/union-set-identity-across-alternatives.md, and asserting the wrong answer here
-  // would certify it.
+  // destroy: one subject passed through BOTH capability slots is destroyed once, which is what the source
+  // documents. This used to be the one case left unasserted here: the Set's element is a two-alternative
+  // union, C++ compares a variant's index before its value, and the emitted lowering therefore answered
+  // two calls for one subject. The rule that closes it is in the runtime's SameValueZero -- a union of
+  // reference-backed subjects answers identity across its arms -- so the case is covered here rather than
+  // filed, and docs/compiler-requests/union-set-identity-across-alternatives.md records the defect it
+  // closes. The row views below are two schemas over one object, which is how a caller aliases: the
+  // structural cast keeps the live owner.
+  {
+    int alias_destroys = 0;
+    auto subject = flight::make_ref<Cap>();
+    subject->destroy = [&alias_destroys]() { ++alias_destroys; };
+    subject->clear_metadata = []() { return ok_clear_metadata(); };
+    subject->clear_position_state = []() { return ok_clear_metadata(); };
+    subject->set_metadata = [](MetadataRow) { return ok_clear_metadata(); };
+    subject->set_playback_state = [](flight::types::MediaSessionPlaybackState) {
+      return ok_clear_metadata();
+    };
+    subject->set_position_state = [](PositionRow) { return ok_clear_metadata(); };
+
+    const CommandsRow commands_view(subject);
+    const ActionsRow actions_view = flight::structural_ref_cast<ActionsRow>(commands_view);
+    check(commands_view.identity() == actions_view.identity(),
+          "the aliased views are two schemas over one subject");
+    flight::mediasession::destroy_media_session(commands_view, actions_view);
+    check(alias_destroys == 1, "one subject through both slots is destroyed exactly once");
+  }
 
   // destroy: the sibling is still attempted after one throws, and the first error is rethrown
   {

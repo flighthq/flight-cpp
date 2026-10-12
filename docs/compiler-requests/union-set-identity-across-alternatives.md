@@ -103,3 +103,31 @@ about asserting a concrete owner out of a union; this is about two references to
 None, and none is proposed. The affected site is one function's aliased input, and an override would put
 the whole module below shippable for it. `@flighthq/mediasession` is unaffected for distinct providers,
 which is the shape the emitted signature separates statically.
+
+## Closed by a runtime change, and the severity was worse than filed
+
+`flight::SameValueZero` now answers identity **across** the arms of a variant whose active alternatives are
+reference-backed carriers (`include/flight/equality.hpp`). The arms of such a union are views of one
+subject -- the owner a structural row projects is the same owner for every schema the view was spelled with
+-- so the subject is compared rather than the view, which is what the source's `Set` did. Nothing else about
+variant equality moved: a variant whose active alternatives are values keeps index-then-value equality, and
+its alternatives keep their own `SameValueZero` (so a `double` alternative remains NaN-matched). Focused
+tests are in `tests/variant_set_identity_test.cpp`, and the package that motivated the request asserts the
+aliased case directly: `@flighthq/mediasession`'s `destroyMediaSession` now destroys a subject passed
+through both slots **exactly once**.
+
+**The defect was a crash, not only a double release.** Reverting the rule and running that package's test
+faults: the aliased subject stays two members, the second visit reaches the *other* arm, and
+`medialsesession.hpp`'s `std::visit([](const auto& value) { return value->destroy; }, provider)()` dereferences a
+row view whose native family differs from the subject's -- `shared_object()` is null for a different native
+type, by design -- and the process aborts on a null member access. So this file's opening paragraph
+understated it: a caller that aliases one provider through both capability slots did not merely double-release
+it, it crashed.
+
+**What remains, precisely.** The rule compares subjects within one accessor, so two carriers of different
+*kinds* for one subject (a shared reference and a row view) are still two members, and a surviving arm whose
+native family differs from the subject's still dereferences a null view -- that is the same
+`std::visit`-through-the-arm question, and it is a carrier decision rather than an equality one. Emitted
+unions of this shape carry two row views, and both aliasing orders measured against the package (the
+subject's own family view first, and the family view obtained by casting first) destroy once and run; the
+mixed-carrier shape does not arise from the emitter today.

@@ -46,6 +46,11 @@ target_link_libraries(flight_cpp_structural_row_tests PRIVATE Flight::Cpp Flight
 flight_cpp_set_project_warnings(flight_cpp_structural_row_tests)
 add_test(NAME flight_cpp.structural_row COMMAND flight_cpp_structural_row_tests)
 
+add_executable(flight_cpp_variant_set_identity_tests variant_set_identity_test.cpp)
+target_link_libraries(flight_cpp_variant_set_identity_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+flight_cpp_set_project_warnings(flight_cpp_variant_set_identity_tests)
+add_test(NAME flight_cpp.variant_set_identity COMMAND flight_cpp_variant_set_identity_tests)
+
 add_executable(flight_cpp_generated_collision_tests generated_collision_test.cpp)
 target_include_directories(
   flight_cpp_generated_collision_tests
