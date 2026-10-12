@@ -23,22 +23,19 @@
       "id": "text-markup-handler-map-type",
       "dependency": "flight",
       "patch": "text-markup-handler-map-type.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/text-markup/src/markupTagRegistry.ts plus packages/types/src/MarkupTagHandler.ts",
       "package": "@flighthq/text-markup",
       "answers": "diagnostic",
       "refusal": "an untyped empty Map loses its destination arguments, Partial<TextFormat> is refused even though every TextFormat property is optional, and contextual callback arity and structural effect results lower to incompatible C++ function carriers",
-      "rewrite": "Supplies Map<string, MarkupTagHandler> explicitly, spells formatting contributions as TextFormat and structural contributions as MarkupTagEffect including the identical public seams, and names the declared attributes and enclosing-format parameters on every registered handler.",
+      "rewrite": "Supplies Map<string, MarkupTagHandler> explicitly (at this pin that is the `new Map()` inside createMarkupTagRegistry, which replaced initializeMarkupTagRegistry), spells formatting contributions as TextFormat and structural contributions as MarkupTagEffect including the identical public seams, and names the declared attributes and enclosing-format parameters on every registered handler.",
       "equivalence": "Generic arguments, return annotations, and parameter annotations are erased by TypeScript. TextFormat and Partial<TextFormat> accept exactly the same objects because every TextFormat property is optional; MarkupTagEffect names the same structural objects already returned, and the added underscore parameters are unused, so runtime values and effects are unchanged.",
       "whyNotUpstreamFirst": "These target-neutral spellings document the map, result, and callback contracts directly and retain type evidence the emitter loses through assignment context, named Partial, and shorter-function assignability.",
       "unblocks": "Prevents Map deduction and C++ callable-arity failures and lets the standard formatting handlers emit rather than leaving unresolved calls in markup_tag_registry.hpp.",
       "expires": "when assignment context supplies generic constructor arguments, named all-optional interfaces and structural callback results retain their represented types, and contextual function assignment adapts ignored parameters during lowering, or Flight adopts the explicit forms.",
       "appliedOn": "2026-10-07",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "TEXT",
-        "reason": "context drift: the patched code still exists (17/18 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "rebasedOn": "2026-10-12"
     },
     {
       "id": "glyphatlas-iterator-result-binding",
