@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import {
   applyPackageMerge,
   compareInitializationModules,
+  danglingIncludes,
   compareText,
   ctestLabelOf,
   evaluationGroups,
@@ -21,7 +22,9 @@ import {
   readmeWithProvenance,
   replaceRowsInPlace,
   replaceSortedRows,
+  syncTree,
   testTargetOf,
+  treeDifferences,
   validateProvenance,
   verifyMixedInventory,
 } from './packageScope.mjs';
@@ -45,6 +48,11 @@ describe('arguments', () => {
     assert.equal(parsePackageArguments(['--package', 'render-gl']).package, '@flighthq/render-gl');
     assert.throws(() => parsePackageArguments([]), /exactly one package/u);
     assert.throws(() => parsePackageArguments(['math', 'types']), /exactly one package/u);
+    assert.deepEqual(parsePackageArguments(['compression', 'swf', '@flighthq/swf'], { allowGroup: true }).packages, [
+      '@flighthq/compression',
+      '@flighthq/swf',
+    ]);
+    assert.throws(() => parsePackageArguments([], { allowGroup: true }), /one or more packages/u);
     assert.throws(() => parsePackageArguments(['math', '--all']), /Unknown option --all/u);
   });
 
@@ -308,6 +316,55 @@ describe('scoped merge', () => {
       () => planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName: target }),
       /cannot move alone.*@flighthq\/camera-controls/su,
     );
+  });
+
+  test('a coordinated group may drop a module its own members import, and lands as one unit', () => {
+    const committed = copyTree('group-committed');
+    const candidate = copyTree('group-candidate');
+    const target = '@flighthq/math';
+    const partner = '@flighthq/camera-controls';
+    editJson(candidate, 'initialization.json', (value) => {
+      value.entries = value.entries.filter((entry) => !(entry.packageName === target && entry.source.endsWith('/angle.ts')));
+      value.modules = value.modules
+        .filter((row) => !(row.module.packageName === target && row.module.source.endsWith('/angle.ts')))
+        .map((row) =>
+          [target, partner].includes(row.module.packageName)
+            ? { ...row, dependencies: row.dependencies.filter((dependency) => !dependency.target.source.endsWith('math/src/angle.ts')) }
+            : row,
+        );
+    });
+    rmSync(path.join(candidate, 'include', 'flight', 'math', 'angle.hpp'));
+    for (const header of [...packageHeaders(candidate, partner), ...packageHeaders(candidate, target)]) {
+      const filename = path.join(candidate, 'include', header);
+      writeFileSync(filename, readFileSync(filename, 'utf8').replaceAll('#include <flight/math/angle.hpp>\n', ''));
+    }
+    // Alone, math is refused; with camera-controls in the same group it is not, and the merged tree has
+    // nothing left that includes the dropped header.
+    assert.throws(() => planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName: target }), /cannot move alone/u);
+    for (const [name, partners] of [[target, [partner]], [partner, [target]]]) {
+      applyPackageMerge(planPackageMerge({ candidateRoot: candidate, committedRoot: committed, movingTogether: partners, packageName: name }), committed);
+    }
+    assert.ok(!existsSync(path.join(committed, 'include', 'flight', 'math', 'angle.hpp')));
+    assert.deepEqual(danglingIncludes(committed, [target, partner], [path.join(root, 'include'), path.join(root, 'overrides', 'include')]), new Map());
+  });
+
+  test('a moved package that includes a header no root provides is reported', () => {
+    const tree = copyTree('dangling-tree');
+    const [header] = packageHeaders(tree, '@flighthq/xml');
+    appendTo(tree, `include/${header}`, '\n#include <flight/types/does_not_exist.hpp>\n');
+    const found = danglingIncludes(tree, ['@flighthq/xml'], [path.join(root, 'include')]);
+    assert.deepEqual([...found], [['@flighthq/xml', ['flight/types/does_not_exist.hpp']]]);
+  });
+
+  test('tree differences and sync touch only what differs', () => {
+    const left = copyTree('sync-left');
+    const right = copyTree('sync-right');
+    appendTo(left, 'README.md', 'x');
+    rmSync(path.join(right, 'refusals.json'));
+    writeFileSync(path.join(right, 'extra.txt'), 'y');
+    assert.deepEqual(treeDifferences(left, right), ['README.md', 'extra.txt', 'refusals.json']);
+    assert.deepEqual(syncTree(left, right), ['README.md', 'extra.txt', 'refusals.json']);
+    assert.deepEqual(treeDifferences(left, right), []);
   });
 
   test('a row key absent from the shared table is reported, not silently written', () => {

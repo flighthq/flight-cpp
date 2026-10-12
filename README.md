@@ -209,6 +209,21 @@ package that gains or loses modules still leaves every module in exactly one gro
 A module's best-effort `consumers` include its reverse dependents, which lie outside the closure; a scoped run
 keeps those from the committed record and states only the consumers it can see.
 
+### Moving packages that cannot move alone
+
+`pkg:generate` refuses a move that would strand another package: one that drops a module or header another
+package still uses at its recorded revision. When a package splits or renames a module its dependents import,
+name them together:
+
+```sh
+npm run pkg:generate -- compression swf font-formats
+```
+
+A group is generated as one closure and merged into a staging copy of the inventory, where its members may
+drop what only other members use. `generated/` changes only if every member merges, and then all at once.
+Any move, single or grouped, is also refused when a moved package includes a header no include root provides,
+which means a dependency it needs is still at an older revision and has to move first.
+
 ### Moving the pin one package at a time
 
 A pin move changes every package, but lanes move their own packages one at a time, so the inventory may be

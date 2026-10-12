@@ -157,9 +157,11 @@ export function testTargetOf(testName) {
   return `${testName.replace('.', '_')}_tests`;
 }
 
-// `--package=x`, `--package x` and a bare positional are all accepted, once; anything else is refused.
+// `--package=x`, `--package x` and a bare positional are all accepted; anything else is refused. Exactly one
+// package, unless the caller allows a coordinated group (`pkg:generate` does), which is still a named list
+// and never the whole SDK.
 // `-j N`, `-jN`, `--jobs N` and `--jobs=N` all land in values as `--jobs`; parseJobs validates them.
-export function parsePackageArguments(argv, { flags = [], valued = [] } = {}) {
+export function parsePackageArguments(argv, { allowGroup = false, flags = [], valued = [] } = {}) {
   const result = { flags: new Set(), packages: [], values: new Map() };
   for (let index = 0; index < argv.length; index++) {
     const argument = argv[index];
@@ -184,13 +186,14 @@ export function parsePackageArguments(argv, { flags = [], valued = [] } = {}) {
       throw new Error(`Unknown option ${argument}`);
     }
   }
-  if (result.packages.length !== 1 || result.packages[0] === undefined) {
+  if (result.packages.length === 0 || result.packages.includes(undefined) || (!allowGroup && result.packages.length !== 1)) {
     throw new Error(
-      'Name exactly one package. Package-scoped commands never operate on the whole SDK; ' +
-        'use the sdk:* scripts for that.',
+      `Name ${allowGroup ? 'one or more packages' : 'exactly one package'}. Package-scoped commands never operate on ` +
+        'the whole SDK; use the sdk:* scripts for that.',
     );
   }
-  return { ...result, package: normalizePackageName(result.packages[0]) };
+  const packages = [...new Set(result.packages.map(normalizePackageName))];
+  return { ...result, package: packages[0], packages };
 }
 
 export function parseJobs(raw, fallback = DEFAULT_JOBS) {
@@ -220,7 +223,11 @@ export function packageHeaders(generatedRoot, packageName) {
 
 // Computes, without writing anything, every file the scoped merge changes. Returns a Map of
 // generated-root-relative path -> new contents (string) or null (delete), plus what was found.
-export function planPackageMerge({ candidateRoot, committedRoot, packageName }) {
+// `movingTogether` names the other packages of a coordinated group move. They are about to be merged from
+// the same candidate, so an import of theirs into this package is not stranded and their old revision is
+// not a stale dependency.
+export function planPackageMerge({ candidateRoot, committedRoot, movingTogether = [], packageName }) {
+  const group = new Set(movingTogether);
   const prefix = includePrefixOf(packageName);
   const read = (root, file) => readFileSync(path.join(root, file), 'utf8');
   const readJson = (root, file) => JSON.parse(read(root, file));
@@ -254,13 +261,13 @@ export function planPackageMerge({ candidateRoot, committedRoot, packageName }) 
   if (candidateRow === undefined) throw new Error(`The candidate inventory has no row for ${packageName}.`);
   // A package that drops a module or header another package still uses cannot move alone: the dependent
   // row stays at its own revision, and would be left importing something that no longer exists.
-  assertNoOrphanedDependents({ candidateRoot, committedRoot, packageName });
+  assertNoOrphanedDependents({ candidateRoot, committedRoot, exempt: group, packageName });
   // Closure members this run regenerated but does NOT write keep their committed revision. When that
   // differs, the package was generated against dependencies newer than the ones it will sit beside.
   const warnings = [];
   const committedByName = new Map(committedManifest.packages.map((row) => [row.package, row]));
   const staleClosure = candidateManifest.packages
-    .filter((row) => row.package !== packageName && committedByName.has(row.package))
+    .filter((row) => row.package !== packageName && !group.has(row.package) && committedByName.has(row.package))
     .filter((row) => rowProvenance(committedManifest, committedByName.get(row.package)).revision !== candidateProvenance.revision)
     .map((row) => row.package);
   if (staleClosure.length > 0) {
@@ -411,7 +418,7 @@ export function planPackageMerge({ candidateRoot, committedRoot, packageName }) 
   // recomputed from the merged ledger exactly as the compiler computes them -- which keeps every module
   // in exactly one group however the package's module set changed. scripts/packageScope.test.mjs checks
   // that this reproduces the compiler's own groups.
-  initialization.groups = evaluationGroups(initialization);
+  initialization.groups = evaluationGroups(initialization, group);
   writes.set('initialization.json', `${JSON.stringify(initialization, undefined, 2)}\n`);
 
   // Build metadata and README are pure functions of the merged tree and manifest.
@@ -453,7 +460,7 @@ export function planPackageMerge({ candidateRoot, committedRoot, packageName }) 
   };
 }
 
-function assertNoOrphanedDependents({ candidateRoot, committedRoot, packageName }) {
+function assertNoOrphanedDependents({ candidateRoot, committedRoot, exempt, packageName }) {
   const read = (root, file) => JSON.parse(readFileSync(path.join(root, file), 'utf8'));
   const key = (module) => `${module.packageName}\0${module.source}`;
   const owned = (root) =>
@@ -469,6 +476,7 @@ function assertNoOrphanedDependents({ candidateRoot, committedRoot, packageName 
   const removed = (target) => committedModules.has(key(target)) && !candidateModules.has(key(target));
   const orphans = new Map();
   const note = (dependent, missing) => {
+    if (exempt.has(dependent)) return;
     const list = orphans.get(dependent) ?? new Set();
     list.add(missing);
     orphans.set(dependent, list);
@@ -508,7 +516,12 @@ function assertNoOrphanedDependents({ candidateRoot, committedRoot, packageName 
 // compilerModuleEvaluation.ts): Tarjan's algorithm over `entries` in order, following each module's RUNTIME
 // dependencies in their recorded order; a group is cyclic when it has several modules or one that imports
 // itself. Type-only imports link without evaluation and are not edges.
-export function evaluationGroups(initialization) {
+//
+// `pending` names packages whose records are about to be replaced in the same coordinated move. Between
+// two merges of a group, one member's old records may still import a module another member just dropped;
+// those edges are skipped rather than refused, because the group's last merge recomputes over records
+// that agree.
+export function evaluationGroups(initialization, pending = new Set()) {
   const key = (module) => `${module.packageName}\0${module.source}`;
   const records = new Map(initialization.modules.map((record) => [key(record.module), record]));
   const runtimeDependencies = (record) =>
@@ -516,11 +529,13 @@ export function evaluationGroups(initialization) {
       .filter((dependency) => dependency.evaluation === 'runtime')
       .map((dependency) => {
         const target = records.get(key(dependency.target));
+        if (target === undefined && pending.has(record.module.packageName)) return undefined;
         if (target === undefined) {
           throw new Error(`initialization.json: ${key(record.module)} imports ${key(dependency.target)}, which has no module record.`);
         }
         return target;
-      });
+      })
+      .filter((target) => target !== undefined);
   const groups = [];
   const indices = new Map();
   const lowLinks = new Map();
@@ -572,6 +587,56 @@ export function evaluationGroups(initialization) {
     if (!indices.has(key(record.module))) visit(record);
   }
   return groups;
+}
+
+// Includes of `flight/...` headers that no include root resolves: the generated tree, the runtime's own
+// include tree and the override tree, in that set. For a package that just moved, an entry here means a
+// dependency it now needs is still at an older revision that does not have the header.
+export function danglingIncludes(generatedRoot, packageNames, otherIncludeRoots = []) {
+  const roots = [path.join(generatedRoot, 'include'), ...otherIncludeRoots];
+  const exists = (header) => roots.some((root) => existsSync(path.join(root, header)));
+  const result = new Map();
+  for (const packageName of packageNames) {
+    const missing = new Set();
+    for (const header of includeFilesUnder(generatedRoot, includePrefixOf(packageName))) {
+      const text = readFileSync(path.join(generatedRoot, 'include', header), 'utf8');
+      for (const [, included] of text.matchAll(/^#include <(flight\/[^>]+)>/gmu)) if (!exists(included)) missing.add(included);
+    }
+    if (missing.size > 0) result.set(packageName, [...missing].sort(compareText));
+  }
+  return result;
+}
+
+// Paths, relative to the roots, whose contents differ between two trees, including files only one has.
+export function treeDifferences(leftRoot, rightRoot) {
+  const list = (root) =>
+    existsSync(root) ? new Map(filesUnder(root).map((file) => [portable(path.relative(root, file)), file])) : new Map();
+  const left = list(leftRoot);
+  const right = list(rightRoot);
+  const differs = [];
+  for (const file of new Set([...left.keys(), ...right.keys()])) {
+    if (!left.has(file) || !right.has(file) || !readFileSync(left.get(file)).equals(readFileSync(right.get(file)))) {
+      differs.push(file);
+    }
+  }
+  return differs.sort(compareText);
+}
+
+// Makes `targetRoot` match `sourceRoot`, touching only the paths that differ.
+export function syncTree(sourceRoot, targetRoot) {
+  const changed = treeDifferences(sourceRoot, targetRoot);
+  for (const file of changed) {
+    const source = path.join(sourceRoot, file);
+    const target = path.join(targetRoot, file);
+    if (existsSync(source)) {
+      mkdirSync(path.dirname(target), { recursive: true });
+      writeFileSync(target, readFileSync(source));
+    } else {
+      rmSync(target, { force: true });
+      pruneEmptyDirectories(path.dirname(target), targetRoot);
+    }
+  }
+  return changed;
 }
 
 // Writes a plan into the inventory: contents for a path, null to delete it (pruning emptied directories).
