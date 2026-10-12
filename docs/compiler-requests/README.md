@@ -63,6 +63,12 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   carried for socket by the override `socket-guard-reporting`.
 - [A catch body that awaits and reads its binding needs an owned caught value](catch-binding-across-await.md) —
   refuses `@flighthq/loader` `resourceLoader.ts`; no workaround.
+- [Asserting a `Promise<unknown>` to `Promise<T>` needs a typed task view](generic-promise-assertion-to-type-parameter.md) —
+  first refusal in `@flighthq/assets` `assetLibrary.ts`; carried by the override `assets-reject-task-template-parameter`.
+- [`Promise.allSettled` needs a binding and a settled-result lowering](promise-all-settled-binding.md) —
+  `@flighthq/assets` `loadAssetGroup`; no workaround.
+- [`registerAssetLoader` stores a readonly adapter as a writable one (Flight source)](readonly-adapter-stored-as-writable.md) —
+  `@flighthq/assets` `registerAssetLoader`; an upstream source question, no workaround.
 - [`@flighthq/log` native-compile defect inventory](log-native-compile-defects.md) — fifteen emitter
   defects make log.hpp fail clang once the console refusal is set aside; the log override stubs twelve
   functions with throws, so log parity is not honest.
