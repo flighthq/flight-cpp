@@ -2751,14 +2751,14 @@
       "code": "dependency-refused",
       "module": "packages/lifecycle/src/contract.ts",
       "package": "@flighthq/lifecycle",
-      "reason": "dependency ./lifecycle was refused for @flighthq/lifecycle/packages/lifecycle/src/lifecycle.ts",
+      "reason": "dependency ./lifecycle.ts was refused for @flighthq/lifecycle/packages/lifecycle/src/lifecycle.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/lifecycle/src/index.ts",
       "package": "@flighthq/lifecycle",
-      "reason": "dependency ./contract was refused for @flighthq/lifecycle/packages/lifecycle/src/contract.ts",
+      "reason": "dependency ./lifecycle.ts was refused for @flighthq/lifecycle/packages/lifecycle/src/lifecycle.ts",
       "stage": "dependency"
     },
     {

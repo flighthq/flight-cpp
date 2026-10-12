@@ -60,6 +60,25 @@ needs one owner", and a reader cannot act on it without trying both, as this req
 `@flighthq/media` — `videoChannel.ts`, whose only refusal this is. Its sibling `audioMixer.ts` refuses
 separately.
 
+## A second package, and a sharper form of the same refusal
+
+`@flighthq/lifecycle` refuses with the identical message, and its module's override records it as the
+third of five defects there:
+
+```ts
+const _savedState = new WeakMap<AppLifecycle, Record<string, unknown>>();
+```
+
+Unlike media's, this value is a `Record` whose value domain is `unknown`. If the unproven part is the
+*unknown* domain inside the value rather than the record wrapper, that is the same defect seen from the
+other side, and a fix that represents this value would very likely fix media's too. I cannot separate the
+two yet — lifecycle refuses earlier on other defects, so its WeakMap is not reachable for measurement —
+but the pairing is worth knowing before either is worked on alone.
+
+There is also [`nullable-reference-weak-map-value.md`](nullable-reference-weak-map-value.md), which is a
+*different* WeakMap refusal (a nullable value type). Three documents in this family now, and they should
+be read together before any one of them is fixed.
+
 ## Carrying workaround
 
 None, deliberately: the patch above is the only shape a source edit can take, and it is ineffective.

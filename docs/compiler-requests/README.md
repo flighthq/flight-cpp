@@ -160,6 +160,10 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [A WeakMap value needs a representable C++ type, and naming the literal is not enough](media-weakmap-value-representation.md) —
   `@flighthq/media`'s `videoChannel.ts`; records the measured negative result that naming the literal with
   its declared interface does not clear the refusal.
+- [A keyed `typeof` over a closed capability could enumerate its key set](keyed-typeof-capability-presence.md) —
+  `@flighthq/lifecycle`'s `typeof hostLifecycle[operation] === 'function'`, where the key set is declared
+  and enumerable; recorded from the module override's measurement, not re-measured here, and the
+  provenance is stated in the request.
 - [Union carriers need canonical alternative order](canonical-union-carrier-order.md) — identical
   named unions currently become incompatible `std::variant` types at array callback boundaries.
 - [Nullable and optional storage needs two absence channels](nullable-optional-presence.md) — one

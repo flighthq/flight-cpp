@@ -13053,9 +13053,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/lifecycle/packages/lifecycle/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/lifecycle",
@@ -13076,14 +13074,15 @@
       },
       "path": "flight/lifecycle/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/lifecycle/packages/lifecycle/src/contract.ts"
+        "@flighthq/lifecycle/packages/lifecycle/src/lifecycle.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "classification": "source-portability",
       "consumers": [
-        "@flighthq/lifecycle/packages/lifecycle/src/contract.ts"
+        "@flighthq/lifecycle/packages/lifecycle/src/contract.ts",
+        "@flighthq/lifecycle/packages/lifecycle/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:01e1b003a631ebd979f55d1d5e5af0b46852325ccb9f516fb607833d03ba14ca",
