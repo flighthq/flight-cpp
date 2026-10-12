@@ -1726,7 +1726,7 @@
       "status": "complete",
       "supplies": "packages/debug/src/debugTiming.ts",
       "remaining": "None in the supplied module at this pin.",
-      "derivedFrom": "58cae2728fdf366149df6747cc04d58777907f57e4aa73cb1ea2f9859e1a6b9c",
+      "derivedFrom": "41654f22d7c0add14030489d7779eb9232fc9b1155cabe795d529e42c77c056c",
       "reason": "The generated module calls the compiler-refused endLogTimer boundary through a readonly structural view that cannot recover the nominal timer owner, and emits its frame LogData object as designated initialization of a variant.",
       "change": "Retains the nominal LogTimer returned by start_log_timer through begin/end and exception-safe measurement, delegates elapsed logging to the restored log override, and constructs the frame marker as the exact LogData record.",
       "equivalence": "Disabled spans remain allocation-free and return -1, enabled spans close exactly once on success or throw, results and exceptions pass through unchanged, and frame markers preserve the optional label, monotonic counter, channel, and debug gate.",

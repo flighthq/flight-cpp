@@ -433,6 +433,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("directional") && requires { object.directional; }) return (object.directional);
   else if constexpr (Key::name.view() == std::string_view("directionalCount") && requires { object.directional_count; }) return (object.directional_count);
   else if constexpr (Key::name.view() == std::string_view("directory") && requires { object.directory; }) return (object.directory);
+  else if constexpr (Key::name.view() == std::string_view("disableGuards") && requires { object.disable_guards; }) return (object.disable_guards);
   else if constexpr (Key::name.view() == std::string_view("disabled") && requires { object.disabled; }) return (object.disabled);
   else if constexpr (Key::name.view() == std::string_view("dismissOnBackdrop") && requires { object.dismiss_on_backdrop; }) return (object.dismiss_on_backdrop);
   else if constexpr (Key::name.view() == std::string_view("display") && requires { object.display; }) return (object.display);
@@ -2526,6 +2527,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("directional") && requires(Object& object) { object.directional; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().directional)>>{};
   else if constexpr (Key::name.view() == std::string_view("directionalCount") && requires(Object& object) { object.directional_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().directional_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("directory") && requires(Object& object) { object.directory; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().directory)>>{};
+  else if constexpr (Key::name.view() == std::string_view("disableGuards") && requires(Object& object) { object.disable_guards; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().disable_guards)>>{};
   else if constexpr (Key::name.view() == std::string_view("disabled") && requires(Object& object) { object.disabled; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().disabled)>>{};
   else if constexpr (Key::name.view() == std::string_view("dismissOnBackdrop") && requires(Object& object) { object.dismiss_on_backdrop; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().dismiss_on_backdrop)>>{};
   else if constexpr (Key::name.view() == std::string_view("display") && requires(Object& object) { object.display; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().display)>>{};
@@ -4622,6 +4624,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->directional; }) owner.bind_named("directional", [object]() -> decltype(auto) { return (object->directional); });
   if constexpr (requires { object->directional_count; }) owner.bind_named("directionalCount", [object]() -> decltype(auto) { return (object->directional_count); });
   if constexpr (requires { object->directory; }) owner.bind_named("directory", [object]() -> decltype(auto) { return (object->directory); });
+  if constexpr (requires { object->disable_guards; }) owner.bind_named("disableGuards", [object]() -> decltype(auto) { return (object->disable_guards); });
   if constexpr (requires { object->disabled; }) owner.bind_named("disabled", [object]() -> decltype(auto) { return (object->disabled); });
   if constexpr (requires { object->dismiss_on_backdrop; }) owner.bind_named("dismissOnBackdrop", [object]() -> decltype(auto) { return (object->dismiss_on_backdrop); });
   if constexpr (requires { object->display; }) owner.bind_named("display", [object]() -> decltype(auto) { return (object->display); });
@@ -6751,6 +6754,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(directional)
   FLIGHT_SDK_ROW_WIDENS(directional_count)
   FLIGHT_SDK_ROW_WIDENS(directory)
+  FLIGHT_SDK_ROW_WIDENS(disable_guards)
   FLIGHT_SDK_ROW_WIDENS(disabled)
   FLIGHT_SDK_ROW_WIDENS(dismiss_on_backdrop)
   FLIGHT_SDK_ROW_WIDENS(display)

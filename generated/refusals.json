@@ -547,7 +547,7 @@
       "code": "dependency-refused",
       "module": "packages/debug/src/contract.ts",
       "package": "@flighthq/debug",
-      "reason": "dependency ./debug was refused for @flighthq/debug/packages/debug/src/debug.ts",
+      "reason": "dependency ./debug.ts was refused for @flighthq/debug/packages/debug/src/debug.ts",
       "stage": "dependency"
     },
     {
@@ -563,14 +563,14 @@
       "code": "dependency-refused",
       "module": "packages/debug/src/debugTiming.ts",
       "package": "@flighthq/debug",
-      "reason": "dependency ./debug was refused for @flighthq/debug/packages/debug/src/debug.ts",
+      "reason": "dependency ./debug.ts was refused for @flighthq/debug/packages/debug/src/debug.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/debug/src/index.ts",
       "package": "@flighthq/debug",
-      "reason": "dependency ./contract was refused for @flighthq/debug/packages/debug/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/debug/packages/debug/src/contract.ts",
       "stage": "dependency"
     },
     {
