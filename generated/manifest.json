@@ -4721,6 +4721,12 @@
         "flight/materials/custom_shader_material.hpp"
       ],
       "id": "materials-custom-shader-records-partial-row-absence"
+    },
+    {
+      "files": [
+        "flight/requirement/requirement_set.hpp"
+      ],
+      "id": "requirement-row-write-array-projection"
     }
   ],
   "sourcePatches": [
@@ -7459,6 +7465,18 @@
       "sourceModules": 33
     },
     {
+      "cppIncludePrefix": "flight/requirement",
+      "cppNamespace": "flight::requirement",
+      "emittedModules": 4,
+      "package": "@flighthq/requirement",
+      "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
+      "sourceModules": 4
+    },
+    {
       "cppIncludePrefix": "flight/requirements",
       "cppNamespace": "flight::requirements",
       "emittedModules": 4,
@@ -8215,9 +8233,9 @@
     ]
   },
   "summary": {
-    "packages": 154,
-    "emittedModules": 2378,
+    "packages": 155,
+    "emittedModules": 2382,
     "refusedModules": 560,
-    "sourceModules": 2938
+    "sourceModules": 2942
   }
 }

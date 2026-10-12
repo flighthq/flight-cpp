@@ -22141,6 +22141,53 @@
       "consumers": [],
       "module": {
         "name": "Contract",
+        "packageName": "@flighthq/requirement",
+        "source": "packages/requirement/src/contract.ts"
+      },
+      "path": "flight/requirement/contract.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [],
+      "module": {
+        "name": "Index",
+        "packageName": "@flighthq/requirement",
+        "source": "packages/requirement/src/index.ts"
+      },
+      "path": "flight/requirement/_internal_index.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/requirement/packages/requirement/src/contract.ts",
+        "@flighthq/requirement/packages/requirement/src/index.ts"
+      ],
+      "module": {
+        "name": "RequirementCollector",
+        "packageName": "@flighthq/requirement",
+        "source": "packages/requirement/src/requirementCollector.ts"
+      },
+      "path": "flight/requirement/requirement_collector.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/requirement/packages/requirement/src/contract.ts",
+        "@flighthq/requirement/packages/requirement/src/index.ts",
+        "@flighthq/requirement/packages/requirement/src/requirementCollector.ts"
+      ],
+      "module": {
+        "name": "RequirementSet",
+        "packageName": "@flighthq/requirement",
+        "source": "packages/requirement/src/requirementSet.ts"
+      },
+      "path": "flight/requirement/requirement_set.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [],
+      "module": {
+        "name": "Contract",
         "packageName": "@flighthq/requirements",
         "source": "packages/requirements/src/contract.ts"
       },
