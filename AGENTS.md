@@ -108,9 +108,13 @@ an emission repair adds text with no behavior and carries no copy; a deferral re
 question. An override carries a copy, and a copy's hazard is that it keeps compiling after the thing it
 replaced has changed. So each entry records `derivedFrom`, the sha256 of the generated file it was
 produced from, and `npm run overrides:check` reports every override whose source no longer hashes to it —
-the signal to re-derive or drop it. Each entry also carries a `status`: `complete` means it compiles,
-`incomplete` means it is partway and must say what remains, so a half-finished override is never mistaken
-for a finished one.
+the signal to re-derive or drop it. Each entry also carries a `status`, and there are three because the
+middle case is real: `complete` means it compiles and owes nothing; `partial` means it compiles and
+supplies its module but deliberately leaves declared surface or behavior out, so it must say what remains
+and it holds its package below shippable; `incomplete` means it is partway, does not compile, and so
+cannot name `supplies` at all. Without the middle state, a compiling override with a behavior gap has to
+be recorded as finished or as broken, and recording it as finished is how a green header gets mistaken
+for a complete module.
 
 Reach for an override only for what the others cannot express: renaming a type the emitter mis-spelled,
 rewriting an operator it emitted as source text, or supplying a function it refused to generate.

@@ -30,7 +30,10 @@ const REQUIRED = [
   'authoredOn',
   'status',
 ];
-const STATUSES = new Set(['complete', 'incomplete']);
+// `complete` compiles and owes nothing; `partial` compiles and supplies a module but deliberately
+// leaves a declared surface or behavior gap (so `remaining` must say what); `incomplete` means the
+// override is not a usable supply at all and may not name `supplies`.
+const STATUSES = new Set(['complete', 'incomplete', 'partial']);
 
 export function overridesIncludeDirectory(root) {
   return path.join(root, 'overrides', 'include');
@@ -70,18 +73,35 @@ export function loadOverrides(root) {
       if (typeof entry.supplies !== 'string' || entry.supplies.length === 0) {
         throw new Error(`Override ${entry.id} has a non-string supplies path`);
       }
-      if (entry.status !== 'complete') {
+      if (entry.status === 'incomplete') {
         throw new Error(
-          `Override ${entry.id} claims to supply ${entry.supplies} but its status is ${entry.status}. ` +
+          `Override ${entry.id} claims to supply ${entry.supplies} but its status is incomplete. ` +
             'An override that does not compile cannot be supplying anything.',
         );
       }
-      if (entry.remaining === undefined || !/^None\b/iu.test(entry.remaining.trim())) {
+      if (entry.status === 'complete' &&
+          (entry.remaining === undefined || !/^None\b/iu.test(entry.remaining.trim()))) {
         throw new Error(
           `Override ${entry.id} claims to faithfully supply ${entry.supplies} but does not explicitly ` +
             `record that no behavior remains (remaining: ${entry.remaining ?? '<absent>'})`,
         );
       }
+      // A `partial` supply is the middle case the other two cannot express: the override compiles and
+      // implements the module, but declared surface or behavior is deliberately not there yet. It must
+      // SAY what is missing -- an unqualified supply claim is exactly the thing being prevented.
+      if (entry.status === 'partial' &&
+          (entry.remaining === undefined || entry.remaining.trim().length === 0 ||
+           /^None\b/iu.test(entry.remaining.trim()))) {
+        throw new Error(
+          `Override ${entry.id} is partial and must say what surface or behavior remains ` +
+            `(remaining: ${entry.remaining ?? '<absent>'})`,
+        );
+      }
+    }
+    if (entry.status === 'partial' &&
+        (typeof entry.remaining !== 'string' || entry.remaining.trim().length === 0 ||
+         /^None\b/iu.test(entry.remaining.trim()))) {
+      throw new Error(`Override ${entry.id} is partial and must say what surface or behavior remains`);
     }
     if (entry.status === 'incomplete' && (typeof entry.remaining !== 'string' || entry.remaining.length === 0)) {
       throw new Error(`Override ${entry.id} is incomplete and must say what remains`);

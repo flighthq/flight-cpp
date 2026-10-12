@@ -146,6 +146,16 @@ for (const override of overrideInventory.filter((entry) => entry.status === 'inc
   list.push(override.id);
   incompleteOverridesByPackage.set(override.package, list);
 }
+// A `partial` override compiles and supplies its module, but deliberately leaves declared surface or
+// behavior out. It therefore does NOT belong in `incompleteOverridesByPackage` (that would say it is
+// not a supply at all) and must not read as a clean supply either. It is reported on its own line, and
+// the non-None `remaining` it is required to carry is what holds its package at `partial` below.
+const partialOverridesByPackage = new Map();
+for (const override of overrideInventory.filter((entry) => entry.status === 'partial')) {
+  const list = partialOverridesByPackage.get(override.package) ?? [];
+  list.push(override.id);
+  partialOverridesByPackage.set(override.package, list);
+}
 // `status` records whether an override compiles, not whether all upstream behavior is present. The
 // latter is stated by `remaining`: a compiling profile-boundary throw or conservative no-hit stub is
 // still a package-level functional gap and must not be promoted to shippable.
@@ -263,6 +273,7 @@ const tiers = manifest.packages.map((package_) => {
     generatedHeaders: packageHeaders.length,
     headers: headers.length,
     incompleteOverrides,
+    partialOverrides: partialOverridesByPackage.get(package_.package) ?? [],
     package: package_.package,
     repairs,
     refusedModules: package_.refusedModules,
@@ -366,6 +377,15 @@ if (incompleteOverrideRows.length > 0) {
   process.stdout.write('\nnative packages with explicitly incomplete overrides:\n');
   for (const row of incompleteOverrideRows) {
     process.stdout.write(`- ${row.package}: ${row.incompleteOverrides.join(', ')}\n`);
+  }
+}
+const partialOverrideRows = tiers.filter(
+  (row) => row.tier !== 'n/a' && (row.partialOverrides ?? []).length > 0,
+);
+if (partialOverrideRows.length > 0) {
+  process.stdout.write('\nnative packages whose override supplies its module only partially:\n');
+  for (const row of partialOverrideRows) {
+    process.stdout.write(`- ${row.package}: ${row.partialOverrides.join(', ')}\n`);
   }
 }
 const driftedOverrideRows = tiers.filter(

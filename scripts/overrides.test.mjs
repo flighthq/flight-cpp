@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
 
-import { hashSuffixedIdentifiers, unresolvedHashReferences } from './overrides.mjs';
+import { hashSuffixedIdentifiers, loadOverrides, unresolvedHashReferences } from './overrides.mjs';
 
 // The hash-reference check is the one part of override validation that looks at what an override SAYS
 // rather than at which file it came from, so it is the part that can be wrong in both directions: a
@@ -78,4 +78,76 @@ test('hashSuffixedIdentifiers reports each identifier once and ignores everythin
       'struct ordinary_name {};\nconst char* s = "c_0123456789abcdef";\n',
   );
   assert.deepEqual(identifiers.sort(), ['a_0123456789abcdef', 'b_fedcba9876543210', 'c_0123456789abcdef']);
+});
+
+// `status` has three values because two cannot describe a compiling override that deliberately leaves
+// surface out. `complete` owes nothing, `incomplete` does not compile and cannot claim to supply
+// anything, and `partial` compiles and supplies while still owing something. Both directions are
+// fixtures: a partial that is refused would push its author back to claiming `complete`, which is the
+// state that made a green header read as a complete module.
+function statusFixture(entries) {
+  const root = mkdtempSync(path.join(tmpdir(), 'flight-override-status-'));
+  const modulePath = path.join('flight', 'thing', 'thing.hpp');
+  const file = path.join(root, 'overrides', 'include', modulePath);
+  mkdirSync(path.dirname(file), { recursive: true });
+  writeFileSync(file, 'inline int thing() { return 1; }\n');
+  writeFileSync(
+    path.join(root, 'overrides', 'manifest.json'),
+    `${JSON.stringify(
+      {
+        schema: 'flight-cpp-overrides/1',
+        overrides: entries.map((entry) => ({
+          authoredOn: '2026-10-12',
+          change: 'Supplies the refused declaration.',
+          derivedFrom: 'a'.repeat(64),
+          equivalence: 'Same result for the same inputs.',
+          expires: 'when the emitter lowers it.',
+          id: 'fixture',
+          package: '@flighthq/thing',
+          path: modulePath,
+          reason: 'The emitter refused the declaration.',
+          unblocks: 'The other declarations in the module.',
+          whyNotAPatchOrRepair: 'A repair cannot add a body.',
+          ...entry,
+        })),
+      },
+      undefined,
+      2,
+    )}\n`,
+  );
+  return root;
+}
+
+test('a partial override that supplies a module and says what remains is accepted', () => {
+  const root = statusFixture([
+    { status: 'partial', supplies: 'packages/thing/src/thing.ts', remaining: 'Two accessors are absent.' },
+  ]);
+  assert.equal(loadOverrides(root).length, 1);
+  rmSync(root, { recursive: true, force: true });
+});
+
+test('a partial override that claims nothing remains is refused', () => {
+  const root = statusFixture([{ status: 'partial', supplies: 'packages/thing/src/thing.ts', remaining: 'None.' }]);
+  assert.throws(() => loadOverrides(root), /partial and must say what surface or behavior remains/u);
+  rmSync(root, { recursive: true, force: true });
+});
+
+test('a partial override with no remaining field at all is refused', () => {
+  const root = statusFixture([{ status: 'partial' }]);
+  assert.throws(() => loadOverrides(root), /partial and must say what surface or behavior remains/u);
+  rmSync(root, { recursive: true, force: true });
+});
+
+test('an incomplete override still may not claim to supply a module', () => {
+  const root = statusFixture([
+    { status: 'incomplete', supplies: 'packages/thing/src/thing.ts', remaining: 'Half written.' },
+  ]);
+  assert.throws(() => loadOverrides(root), /does not compile cannot be supplying anything/u);
+  rmSync(root, { recursive: true, force: true });
+});
+
+test('a complete override that supplies a module still owes nothing', () => {
+  const root = statusFixture([{ status: 'complete', supplies: 'packages/thing/src/thing.ts', remaining: 'None.' }]);
+  assert.equal(loadOverrides(root).length, 1);
+  rmSync(root, { recursive: true, force: true });
 });
