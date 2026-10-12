@@ -65,10 +65,7 @@ inline flight::Task<flight::types::PermissionQueryOutcome> query_midi_permission
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_PERMISSION_REASON_2A03A8A4FAAB9E18
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_PERMISSION_REASON_2A03A8A4FAAB9E18
-struct permission_reason_2a03a8a4faab9e18 : public flight::ReferenceEnabled {
-  flight::types::NotificationPermission permission;
-  flight::String reason;
-};
+using permission_reason_2a03a8a4faab9e18 = flight::types::permission_reason_2a03a8a4faab9e18;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_PERMISSION_REASON_2A03A8A4FAAB9E18
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_43A745D20647BFB6
@@ -168,25 +165,17 @@ inline flight::Task<flight::types::PermissionQueryOutcome> query_storage_persist
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_86DECB2E3186B77A
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_86DECB2E3186B77A
-struct reason_state_86decb2e3186b77a : public flight::ReferenceEnabled {
-  flight::String reason;
-  flight::types::PermissionState state;
-};
+using reason_state_86decb2e3186b77a = flight::types::reason_state_86decb2e3186b77a;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_86DECB2E3186B77A
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_7172771D69BEE031
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_7172771D69BEE031
-struct reason_state_7172771d69bee031 : public flight::ReferenceEnabled {
-  flight::String reason;
-  std::optional<flight::types::PermissionState> state;
-};
+using reason_state_7172771d69bee031 = flight::types::reason_state_7172771d69bee031;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_STATE_7172771D69BEE031
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_5A15B37101877C7D
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_5A15B37101877C7D
-struct reason_5a15b37101877c7d : public flight::ReferenceEnabled {
-  flight::types::PermissionQueryFailureReason reason;
-};
+using reason_5a15b37101877c7d = flight::types::reason_5a15b37101877c7d;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PERMISSIONS_REASON_5A15B37101877C7D
 
 inline flight::Task<flight::types::PermissionQueryOutcome> query_permission_state(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<PermissionQueryOrigins>>>> origins, flight::String name) {
