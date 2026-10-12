@@ -103,6 +103,17 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [A WeakMap value may be a nullable reference carrier](nullable-reference-weak-map-value.md) —
   P-3D2 resource guards refuse `ImageResourceFailure | null` even though the runtime faithfully stores
   and distinguishes the nested optional carrier.
+- [`Promise.allSettled` needs a static binding and settled-result lowering](promise-all-settled-binding-and-result-lowering.md) —
+  the runtime aggregate and per-arm carriers already exist, but the compiler-owned `Promise` table
+  omits the member; Scene3D's two discard-only calls need the binding, while assets also needs checked
+  `status`/`reason` lowering.
+- [A readonly structural row cannot yet enter `unknown`](structural-row-erasure-to-unknown.md) —
+  P-3D2 calls the `unknown`-accepting `isMesh` predicate with `Readonly<Node3D>`; exact references can
+  enter `Any`, but a row needs an identity- and native-owner-preserving structural alternative.
+- [A readonly `Mesh` cannot assert writable `NodeAny` authority](readonly-mesh-to-writable-node-authority.md) —
+  P-3D2 picking asserts a readonly mesh to a wider writable node only to read runtime state; readonly
+  respelling removes the authority claim but still lacks owner-cell proof, so no permissive cast is a
+  valid compiler fix.
 - [An entity intersection arm and the value that fills it are sibling C++ carriers](entity-intersection-arm-sibling-carriers.md) —
   `@flighthq/tray` refuses at emission and none of its four headers compile; carried by the source patch
   `tray-create-result-and-runtime-owner`, which names the create-result arms once and narrows the
