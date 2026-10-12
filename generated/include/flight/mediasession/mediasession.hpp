@@ -10,7 +10,6 @@
 #include <functional>
 #include <limits>
 #include <optional>
-#include <stdexcept>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -137,7 +136,7 @@ inline void destroy_media_session(flight::StructuralRef<flight::RowReadonly<flig
     try {
       assert_sync_void<flight::Undefined>((std::visit([](const auto& value) { return value->destroy; }, provider)(), flight::undefined));
     }
-    catch (const std::exception& error) {
+    catch (...) {
       if (!has_error) {
         first_error = std::current_exception();
       }

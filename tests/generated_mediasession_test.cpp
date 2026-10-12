@@ -9,12 +9,15 @@
 //     its map entry so a later detach can retry the same origin;
 //   * dispose detaches and then clears the signal even when detaching throws, propagating the original;
 //   * destroy uses a Set, so two distinct providers are destroyed once each in insertion order, the
-//     sibling is attempted after one throws, and the first error is the one rethrown;
+//     sibling is attempted after one throws, and the first error is the one rethrown -- whether that
+//     error is a class or a plain value, and with the retained failure being the first one either way;
 //   * position state is classified locally -- the three invalid cases are answered without invoking the
 //     provider at all -- and playback state misuse is a TypeError before the provider sees it.
 //
 // The one case the C++ lowering gets wrong -- a provider passed through *both* capability slots -- is not
-// asserted here; it is measured and filed as a request. See the note above the destroy group.
+// asserted here; it is measured and filed as a request. See the note above the destroy group, and note
+// that every call in this file passes two DISTINCT providers precisely so that nothing here certifies the
+// aliased case.
 #include <flight/mediasession/mediasession.hpp>
 
 #include <functional>
@@ -243,6 +246,54 @@ int main() {
     }
     check(threw && message == "commands failed", "the first provider's error is the one rethrown");
     check(action_destroys == 1, "the distinct sibling provider is still destroyed");
+  }
+
+  // destroy: a failure that is NOT a class. Both handlers in this function only reify the caught value,
+  // so both are emitted as `catch (...)`: the value reaches the handler, the slot reifies it with
+  // std::current_exception(), and std::rethrow_exception hands the caller the same `int`. Before the
+  // catch-handler-breadth patch the value escaped the handler, the loop was skipped, and the sibling was
+  // never attempted.
+  {
+    int action_destroys = 0;
+    auto commands = flight::make_ref<Cap>();
+    commands->destroy = []() { throw 42; };
+    auto actions = flight::make_ref<Act>();
+    actions->destroy = [&action_destroys]() { ++action_destroys; };
+
+    bool caught_number = false;
+    int number = 0;
+    try {
+      flight::mediasession::destroy_media_session(commands, actions);
+    } catch (int value) {
+      caught_number = true;
+      number = value;
+    } catch (...) {
+    }
+    check(caught_number && number == 42,
+          "a provider whose throw is not a class is rethrown to the caller as the value it was");
+    check(action_destroys == 1, "and the distinct sibling is still attempted");
+  }
+
+  // destroy: retention is type-agnostic. The FIRST failure is kept whatever kind it is -- here a plain
+  // value ahead of an exception -- because the record is `if nothing recorded yet, record`, not
+  // `record the last`.
+  {
+    auto commands = flight::make_ref<Cap>();
+    commands->destroy = []() { throw 7; };
+    auto actions = flight::make_ref<Act>();
+    actions->destroy = []() { throw std::runtime_error("actions failed"); };
+
+    bool kept_number = false;
+    int number = 0;
+    try {
+      flight::mediasession::destroy_media_session(commands, actions);
+    } catch (int value) {
+      kept_number = true;
+      number = value;
+    } catch (...) {
+    }
+    check(kept_number && number == 7,
+          "the first failure is retained across later ones whatever kind it is");
   }
 
   // setPlaybackState: misuse is rejected before the provider observes it
