@@ -36,14 +36,11 @@
 //   because the gate never instantiates the template. Filed as
 //   docs/compiler-requests/constrained-type-parameter-local-storage.md.
 //
-// Known emitted defect, ported faithfully but reported through known_defect() instead of asserted:
-// - "emitSignal purges disconnected entries once the outermost emit exits", "returns the signal to its
-//   empty state when every slot disconnects during dispatch" and "reports no slots from inside the
-//   dispatch that disconnected the last one". The source tests a tombstoned slot with
-//   `data.slots[i] !== null` (count_live_slots) and `data.slots[read] === null` (compaction). Both emit as
-//   `slots.get(i).has_value()`, which tests whether the index is in range, not whether the element is null
-//   (generated/include/flight/signals/slot.hpp:71 and :167). So a tombstone counts as a live slot and is
-//   never compacted. Filed as docs/compiler-requests/nullable-array-element-null-test.md.
+// The three tombstone cases ("emitSignal purges disconnected entries once the outermost emit exits",
+// "returns the signal to its empty state when every slot disconnects during dispatch" and "reports no
+// slots from inside the dispatch that disconnected the last one") depend on `data.slots[i] !== null` and
+// `data.slots[read] === null` testing the element rather than the index. They are asserted since the
+// compiler-indexed-element-presence-test source patch (docs/compiler-requests/nullable-array-element-null-test.md).
 // - "createSignalScope starts empty and collects only the connections that name it": its emptiness half is
 //   ported; the collection half needs connectSignalTracked (above).
 // - initializeSignal / initializeSignalScope / nullSignalEmit `typeof === 'function'` and "returns
@@ -74,15 +71,6 @@ flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::type
   out->once = once;
   out->priority = priority;
   return flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SignalConnectOptions>>>>(out);
-}
-
-// A faithful upstream check that fails because of the known emitted defect listed at the top of this file.
-// It is reported on every run but does not fail the test, and it says so once the defect is fixed.
-void known_defect(bool condition, const std::string& message) {
-  if (condition)
-    std::cerr << "NOTE: known-defect case now passes, promote it to check(): " << message << '\n';
-  else
-    std::cerr << "KNOWN DEFECT (not asserted): " << message << '\n';
 }
 
 template <typename Call>
@@ -326,7 +314,7 @@ void test_dispatch_mutation() {
     const bool states = !sig::is_slot_connected<Void>(signal, b) && sig::has_signal_slots<Void>(signal);
     calls.clear();
     sig::emit_signal(signal);
-    known_defect(states && compacted && calls == Strings{"a"}, "emitSignal purges disconnected entries once the outermost emit exits");
+    check(states && compacted && calls == Strings{"a"}, "emitSignal purges disconnected entries once the outermost emit exits");
   }
   {
     auto signal = sig::create_signal<Void>();
@@ -334,7 +322,7 @@ void test_dispatch_mutation() {
     *a = fn<void()>([&, a_weak = std::weak_ptr<Void>(a)] { sig::disconnect_signal(signal, *a_weak.lock()); });
     sig::connect_signal(signal, *a);
     sig::emit_signal(signal);
-    known_defect(!sig::has_signal_slots<Void>(signal) && !sig::is_slot_connected<Void>(signal, *a) && !signal->data.has_value(),
+    check(!sig::has_signal_slots<Void>(signal) && !sig::is_slot_connected<Void>(signal, *a) && !signal->data.has_value(),
           "emitSignal returns the signal to its empty state when every slot disconnects during dispatch");
   }
   {
@@ -347,7 +335,7 @@ void test_dispatch_mutation() {
     });
     sig::connect_signal(signal, *a);
     sig::emit_signal(signal);
-    known_defect(observed == std::vector<bool>{false}, "emitSignal reports no slots from inside the dispatch that disconnected the last one");
+    check(observed == std::vector<bool>{false}, "emitSignal reports no slots from inside the dispatch that disconnected the last one");
   }
   {
     auto signal = sig::create_signal<Void>();
