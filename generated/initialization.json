@@ -98113,7 +98113,7 @@
             "packageName": "@flighthq/abc",
             "source": "packages/abc/src/contract.ts"
           },
-          "specifier": "./abcFile",
+          "specifier": "./abcFile.ts",
           "target": {
             "name": "AbcFile",
             "packageName": "@flighthq/abc",
@@ -98127,7 +98127,7 @@
             "packageName": "@flighthq/abc",
             "source": "packages/abc/src/contract.ts"
           },
-          "specifier": "./abcInstruction",
+          "specifier": "./abcInstruction.ts",
           "target": {
             "name": "AbcInstruction",
             "packageName": "@flighthq/abc",
@@ -115509,7 +115509,7 @@
             "packageName": "@flighthq/xml",
             "source": "packages/xml/src/contract.ts"
           },
-          "specifier": "./xmlParse",
+          "specifier": "./xmlParse.ts",
           "target": {
             "name": "XmlParse",
             "packageName": "@flighthq/xml",
@@ -115523,7 +115523,7 @@
             "packageName": "@flighthq/xml",
             "source": "packages/xml/src/contract.ts"
           },
-          "specifier": "./xmlQuery",
+          "specifier": "./xmlQuery.ts",
           "target": {
             "name": "XmlQuery",
             "packageName": "@flighthq/xml",
@@ -169098,7 +169098,7 @@
             "packageName": "@flighthq/abc",
             "source": "packages/abc/src/index.ts"
           },
-          "specifier": "./abcFile",
+          "specifier": "./abcFile.ts",
           "target": {
             "name": "AbcFile",
             "packageName": "@flighthq/abc",
@@ -169112,7 +169112,7 @@
             "packageName": "@flighthq/abc",
             "source": "packages/abc/src/index.ts"
           },
-          "specifier": "./abcInstruction",
+          "specifier": "./abcInstruction.ts",
           "target": {
             "name": "AbcInstruction",
             "packageName": "@flighthq/abc",
@@ -184054,7 +184054,7 @@
             "packageName": "@flighthq/xml",
             "source": "packages/xml/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/xml",
