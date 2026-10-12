@@ -88,3 +88,5 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [A generic owner entering a widest-signature container must keep its
   identity](generic-owner-into-widest-container.md) — `connectSignalTracked` stays refused; a copy in
   `SignalScope.connections` would split identity and state, so no workaround is carried.
+- [Partial row reads must materialize three-state returns](partial-row-three-state-return.md) — an
+  `optional<Value>` row read cannot be returned directly as `variant<Value, Null, Undefined>`.

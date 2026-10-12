@@ -1520,6 +1520,20 @@
       "expires": "when the emitter uses its long-form lowering at every partial row_get in a three-state position; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "materials-custom-shader-records-partial-row-absence",
+      "kind": "project-partial-row-absence",
+      "appliesTo": "flight/materials/custom_shader_material.hpp",
+      "keys": [
+        "textures",
+        "uniforms"
+      ],
+      "sourceDeclaration": "packages/materials/src/customShaderMaterial.ts -- textures and uniforms are nullable Record members read with opts?.key ?? null from Readonly<Partial<CustomShaderMaterial>>",
+      "diagnostic": "could not convert a partial-row read of type std::optional<Record<String, Value>> to std::variant<Record<String, Value>, flight::Null, flight::Undefined>",
+      "defect": "The emitter declares the optional-chain lambda as a three-state variant and correctly returns Undefined when the receiver is absent, but its present-receiver branch returns row_get directly. That partial-row read is optional<Record<...>>: absence there denotes the nullable member and must enter the Null arm, while a present record must enter the record arm. The repair writes the emitter's established long form for exactly this header and key.",
+      "expectedWhen": "always",
+      "expires": "when the emitter materializes every partial row_get into its declared three-state return carrier; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "materials-standard-material-three-state-member",
       "kind": "unwrap-partial-row-three-state-member",
       "appliesTo": "flight/materials/standard_material.hpp",

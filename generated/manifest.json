@@ -4713,6 +4713,12 @@
         "flight/types/tint_adjustment.hpp"
       ],
       "id": "adjustments-tint-interface-heritage"
+    },
+    {
+      "files": [
+        "flight/materials/custom_shader_material.hpp"
+      ],
+      "id": "materials-custom-shader-records-partial-row-absence"
     }
   ],
   "sourcePatches": [
