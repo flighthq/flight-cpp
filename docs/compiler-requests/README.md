@@ -53,6 +53,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 
 - [Variadic console calls with non-string arguments](console-variadic-arguments.md) —
   needs a declared console-formatting contract; blocks log.ts `_writeConsoleCaptureEntry`.
+- [`@flighthq/log` native-compile defect inventory](log-native-compile-defects.md) — fifteen emitter
+  defects make log.hpp fail clang once the console refusal is set aside; the log override stubs twelve
+  functions with throws, so log parity is not honest.
 - [A binding initialized from a non-null-asserted collection get is present](non-null-asserted-collection-get-binding.md) —
   carried for log by the source patch `log-buffered-sink-state-explicit-guard`.
 - [Emit declared interface heritage so derived references widen to their base](interface-heritage-widening.md) —
