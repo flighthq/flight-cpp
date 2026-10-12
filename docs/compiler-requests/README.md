@@ -94,6 +94,8 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   independent emitted structs cannot represent a `Texture2D` → `RenderTexture` refinement.
 - [Named union shapes must survive `Partial<T>`](named-union-partial-shape.md) — the emitter
   refuses a mapped partial even though every concrete union arm has a closed object shape.
+- [Named interface shapes must survive `Partial<T>`](named-interface-partial-shape.md) — the emitter
+  refuses a mapped partial even though the named interface has one closed generated object row.
 - [A callable's parameter pack needs a typed buffer](callable-pack-argument-buffer.md) — debounce and
   throttle connectors cannot buffer a slot's arguments; carried by the signals throttle override.
 - [Compound `%=` on a number must lower to `fmod`](compound-remainder-on-numbers.md) — the compound
