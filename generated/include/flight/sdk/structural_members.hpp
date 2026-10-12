@@ -196,6 +196,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("cameras") && requires { object.cameras; }) return (object.cameras);
   else if constexpr (Key::name.view() == std::string_view("canAddChild") && requires { object.can_add_child; }) return (object.can_add_child);
   else if constexpr (Key::name.view() == std::string_view("canPlayType") && requires { object.can_play_type; }) return (object.can_play_type);
+  else if constexpr (Key::name.view() == std::string_view("canShareContent") && requires { object.can_share_content; }) return (object.can_share_content);
   else if constexpr (Key::name.view() == std::string_view("cancel") && requires { object.cancel; }) return (object.cancel);
   else if constexpr (Key::name.view() == std::string_view("cancelAttention") && requires { object.cancel_attention; }) return (object.cancel_attention);
   else if constexpr (Key::name.view() == std::string_view("cancelDockBounce") && requires { object.cancel_dock_bounce; }) return (object.cancel_dock_bounce);
@@ -393,6 +394,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("dash") && requires { object.dash; }) return (object.dash);
   else if constexpr (Key::name.view() == std::string_view("dashOffset") && requires { object.dash_offset; }) return (object.dash_offset);
   else if constexpr (Key::name.view() == std::string_view("data") && requires { object.data; }) return (object.data);
+  else if constexpr (Key::name.view() == std::string_view("dataUrl") && requires { object.data_url; }) return (object.data_url);
   else if constexpr (Key::name.view() == std::string_view("deadzoneHalfHeight") && requires { object.deadzone_half_height; }) return (object.deadzone_half_height);
   else if constexpr (Key::name.view() == std::string_view("deadzoneHalfWidth") && requires { object.deadzone_half_width; }) return (object.deadzone_half_width);
   else if constexpr (Key::name.view() == std::string_view("decay") && requires { object.decay; }) return (object.decay);
@@ -1308,6 +1310,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("onScreenRemoved") && requires { object.on_screen_removed; }) return (object.on_screen_removed);
   else if constexpr (Key::name.view() == std::string_view("onSecondInstance") && requires { object.on_second_instance; }) return (object.on_second_instance);
   else if constexpr (Key::name.view() == std::string_view("onSelect") && requires { object.on_select; }) return (object.on_select);
+  else if constexpr (Key::name.view() == std::string_view("onShareResult") && requires { object.on_share_result; }) return (object.on_share_result);
   else if constexpr (Key::name.view() == std::string_view("onShow") && requires { object.on_show; }) return (object.on_show);
   else if constexpr (Key::name.view() == std::string_view("onSocketClose") && requires { object.on_socket_close; }) return (object.on_socket_close);
   else if constexpr (Key::name.view() == std::string_view("onSocketError") && requires { object.on_socket_error; }) return (object.on_socket_error);
@@ -1730,6 +1733,8 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("shapeRasterizer") && requires { object.shape_rasterizer; }) return (object.shape_rasterizer);
   else if constexpr (Key::name.view() == std::string_view("shapeRun") && requires { object.shape_run; }) return (object.shape_run);
   else if constexpr (Key::name.view() == std::string_view("share") && requires { object.share; }) return (object.share);
+  else if constexpr (Key::name.view() == std::string_view("shareContent") && requires { object.share_content; }) return (object.share_content);
+  else if constexpr (Key::name.view() == std::string_view("shareContentWithResult") && requires { object.share_content_with_result; }) return (object.share_content_with_result);
   else if constexpr (Key::name.view() == std::string_view("sheenColor") && requires { object.sheen_color; }) return (object.sheen_color);
   else if constexpr (Key::name.view() == std::string_view("sheenColorMap") && requires { object.sheen_color_map; }) return (object.sheen_color_map);
   else if constexpr (Key::name.view() == std::string_view("sheenColorMapUvSet") && requires { object.sheen_color_map_uv_set; }) return (object.sheen_color_map_uv_set);
@@ -2311,6 +2316,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("cameras") && requires(Object& object) { object.cameras; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cameras)>>{};
   else if constexpr (Key::name.view() == std::string_view("canAddChild") && requires(Object& object) { object.can_add_child; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().can_add_child)>>{};
   else if constexpr (Key::name.view() == std::string_view("canPlayType") && requires(Object& object) { object.can_play_type; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().can_play_type)>>{};
+  else if constexpr (Key::name.view() == std::string_view("canShareContent") && requires(Object& object) { object.can_share_content; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().can_share_content)>>{};
   else if constexpr (Key::name.view() == std::string_view("cancel") && requires(Object& object) { object.cancel; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cancel)>>{};
   else if constexpr (Key::name.view() == std::string_view("cancelAttention") && requires(Object& object) { object.cancel_attention; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cancel_attention)>>{};
   else if constexpr (Key::name.view() == std::string_view("cancelDockBounce") && requires(Object& object) { object.cancel_dock_bounce; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cancel_dock_bounce)>>{};
@@ -2508,6 +2514,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("dash") && requires(Object& object) { object.dash; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().dash)>>{};
   else if constexpr (Key::name.view() == std::string_view("dashOffset") && requires(Object& object) { object.dash_offset; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().dash_offset)>>{};
   else if constexpr (Key::name.view() == std::string_view("data") && requires(Object& object) { object.data; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().data)>>{};
+  else if constexpr (Key::name.view() == std::string_view("dataUrl") && requires(Object& object) { object.data_url; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().data_url)>>{};
   else if constexpr (Key::name.view() == std::string_view("deadzoneHalfHeight") && requires(Object& object) { object.deadzone_half_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().deadzone_half_height)>>{};
   else if constexpr (Key::name.view() == std::string_view("deadzoneHalfWidth") && requires(Object& object) { object.deadzone_half_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().deadzone_half_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("decay") && requires(Object& object) { object.decay; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().decay)>>{};
@@ -3423,6 +3430,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("onScreenRemoved") && requires(Object& object) { object.on_screen_removed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_screen_removed)>>{};
   else if constexpr (Key::name.view() == std::string_view("onSecondInstance") && requires(Object& object) { object.on_second_instance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_second_instance)>>{};
   else if constexpr (Key::name.view() == std::string_view("onSelect") && requires(Object& object) { object.on_select; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_select)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onShareResult") && requires(Object& object) { object.on_share_result; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_share_result)>>{};
   else if constexpr (Key::name.view() == std::string_view("onShow") && requires(Object& object) { object.on_show; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_show)>>{};
   else if constexpr (Key::name.view() == std::string_view("onSocketClose") && requires(Object& object) { object.on_socket_close; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_socket_close)>>{};
   else if constexpr (Key::name.view() == std::string_view("onSocketError") && requires(Object& object) { object.on_socket_error; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_socket_error)>>{};
@@ -3845,6 +3853,8 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("shapeRasterizer") && requires(Object& object) { object.shape_rasterizer; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().shape_rasterizer)>>{};
   else if constexpr (Key::name.view() == std::string_view("shapeRun") && requires(Object& object) { object.shape_run; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().shape_run)>>{};
   else if constexpr (Key::name.view() == std::string_view("share") && requires(Object& object) { object.share; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().share)>>{};
+  else if constexpr (Key::name.view() == std::string_view("shareContent") && requires(Object& object) { object.share_content; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().share_content)>>{};
+  else if constexpr (Key::name.view() == std::string_view("shareContentWithResult") && requires(Object& object) { object.share_content_with_result; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().share_content_with_result)>>{};
   else if constexpr (Key::name.view() == std::string_view("sheenColor") && requires(Object& object) { object.sheen_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sheen_color)>>{};
   else if constexpr (Key::name.view() == std::string_view("sheenColorMap") && requires(Object& object) { object.sheen_color_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sheen_color_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("sheenColorMapUvSet") && requires(Object& object) { object.sheen_color_map_uv_set; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sheen_color_map_uv_set)>>{};
@@ -4429,6 +4439,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->cameras; }) owner.bind_named("cameras", [object]() -> decltype(auto) { return (object->cameras); });
   if constexpr (requires { object->can_add_child; }) owner.bind_named("canAddChild", [object]() -> decltype(auto) { return (object->can_add_child); });
   if constexpr (requires { object->can_play_type; }) owner.bind_named("canPlayType", [object]() -> decltype(auto) { return (object->can_play_type); });
+  if constexpr (requires { object->can_share_content; }) owner.bind_named("canShareContent", [object]() -> decltype(auto) { return (object->can_share_content); });
   if constexpr (requires { object->cancel; }) owner.bind_named("cancel", [object]() -> decltype(auto) { return (object->cancel); });
   if constexpr (requires { object->cancel_attention; }) owner.bind_named("cancelAttention", [object]() -> decltype(auto) { return (object->cancel_attention); });
   if constexpr (requires { object->cancel_dock_bounce; }) owner.bind_named("cancelDockBounce", [object]() -> decltype(auto) { return (object->cancel_dock_bounce); });
@@ -4626,6 +4637,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->dash; }) owner.bind_named("dash", [object]() -> decltype(auto) { return (object->dash); });
   if constexpr (requires { object->dash_offset; }) owner.bind_named("dashOffset", [object]() -> decltype(auto) { return (object->dash_offset); });
   if constexpr (requires { object->data; }) owner.bind_named("data", [object]() -> decltype(auto) { return (object->data); });
+  if constexpr (requires { object->data_url; }) owner.bind_named("dataUrl", [object]() -> decltype(auto) { return (object->data_url); });
   if constexpr (requires { object->deadzone_half_height; }) owner.bind_named("deadzoneHalfHeight", [object]() -> decltype(auto) { return (object->deadzone_half_height); });
   if constexpr (requires { object->deadzone_half_width; }) owner.bind_named("deadzoneHalfWidth", [object]() -> decltype(auto) { return (object->deadzone_half_width); });
   if constexpr (requires { object->decay; }) owner.bind_named("decay", [object]() -> decltype(auto) { return (object->decay); });
@@ -5541,6 +5553,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->on_screen_removed; }) owner.bind_named("onScreenRemoved", [object]() -> decltype(auto) { return (object->on_screen_removed); });
   if constexpr (requires { object->on_second_instance; }) owner.bind_named("onSecondInstance", [object]() -> decltype(auto) { return (object->on_second_instance); });
   if constexpr (requires { object->on_select; }) owner.bind_named("onSelect", [object]() -> decltype(auto) { return (object->on_select); });
+  if constexpr (requires { object->on_share_result; }) owner.bind_named("onShareResult", [object]() -> decltype(auto) { return (object->on_share_result); });
   if constexpr (requires { object->on_show; }) owner.bind_named("onShow", [object]() -> decltype(auto) { return (object->on_show); });
   if constexpr (requires { object->on_socket_close; }) owner.bind_named("onSocketClose", [object]() -> decltype(auto) { return (object->on_socket_close); });
   if constexpr (requires { object->on_socket_error; }) owner.bind_named("onSocketError", [object]() -> decltype(auto) { return (object->on_socket_error); });
@@ -5963,6 +5976,8 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->shape_rasterizer; }) owner.bind_named("shapeRasterizer", [object]() -> decltype(auto) { return (object->shape_rasterizer); });
   if constexpr (requires { object->shape_run; }) owner.bind_named("shapeRun", [object]() -> decltype(auto) { return (object->shape_run); });
   if constexpr (requires { object->share; }) owner.bind_named("share", [object]() -> decltype(auto) { return (object->share); });
+  if constexpr (requires { object->share_content; }) owner.bind_named("shareContent", [object]() -> decltype(auto) { return (object->share_content); });
+  if constexpr (requires { object->share_content_with_result; }) owner.bind_named("shareContentWithResult", [object]() -> decltype(auto) { return (object->share_content_with_result); });
   if constexpr (requires { object->sheen_color; }) owner.bind_named("sheenColor", [object]() -> decltype(auto) { return (object->sheen_color); });
   if constexpr (requires { object->sheen_color_map; }) owner.bind_named("sheenColorMap", [object]() -> decltype(auto) { return (object->sheen_color_map); });
   if constexpr (requires { object->sheen_color_map_uv_set; }) owner.bind_named("sheenColorMapUvSet", [object]() -> decltype(auto) { return (object->sheen_color_map_uv_set); });
@@ -6580,6 +6595,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(cameras)
   FLIGHT_SDK_ROW_WIDENS(can_add_child)
   FLIGHT_SDK_ROW_WIDENS(can_play_type)
+  FLIGHT_SDK_ROW_WIDENS(can_share_content)
   FLIGHT_SDK_ROW_WIDENS(cancel)
   FLIGHT_SDK_ROW_WIDENS(cancel_attention)
   FLIGHT_SDK_ROW_WIDENS(cancel_dock_bounce)
@@ -6777,6 +6793,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(dash)
   FLIGHT_SDK_ROW_WIDENS(dash_offset)
   FLIGHT_SDK_ROW_WIDENS(data)
+  FLIGHT_SDK_ROW_WIDENS(data_url)
   FLIGHT_SDK_ROW_WIDENS(deadzone_half_height)
   FLIGHT_SDK_ROW_WIDENS(deadzone_half_width)
   FLIGHT_SDK_ROW_WIDENS(decay)
@@ -7692,6 +7709,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(on_screen_removed)
   FLIGHT_SDK_ROW_WIDENS(on_second_instance)
   FLIGHT_SDK_ROW_WIDENS(on_select)
+  FLIGHT_SDK_ROW_WIDENS(on_share_result)
   FLIGHT_SDK_ROW_WIDENS(on_show)
   FLIGHT_SDK_ROW_WIDENS(on_socket_close)
   FLIGHT_SDK_ROW_WIDENS(on_socket_error)
@@ -8114,6 +8132,8 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(shape_rasterizer)
   FLIGHT_SDK_ROW_WIDENS(shape_run)
   FLIGHT_SDK_ROW_WIDENS(share)
+  FLIGHT_SDK_ROW_WIDENS(share_content)
+  FLIGHT_SDK_ROW_WIDENS(share_content_with_result)
   FLIGHT_SDK_ROW_WIDENS(sheen_color)
   FLIGHT_SDK_ROW_WIDENS(sheen_color_map)
   FLIGHT_SDK_ROW_WIDENS(sheen_color_map_uv_set)

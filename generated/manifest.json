@@ -784,7 +784,6 @@
         "flight/preferences/storage.hpp",
         "flight/quadbatch/quad_batch.hpp",
         "flight/scene2d/scene2d.hpp",
-        "flight/share/share.hpp",
         "flight/shortcut/shortcut_explicit_dependency.hpp",
         "flight/text/rich_text.hpp",
         "flight/tilemap/tilemap.hpp"
@@ -1619,9 +1618,7 @@
       "id": "selection-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/share/share.hpp"
-      ],
+      "files": [],
       "id": "share-unqualified-entity-names"
     },
     {
@@ -2858,9 +2855,7 @@
       "id": "scene3d-resources-unqualified-signals-names"
     },
     {
-      "files": [
-        "flight/share/share.hpp"
-      ],
+      "files": [],
       "id": "share-unqualified-signals-names"
     },
     {
@@ -7995,7 +7990,7 @@
       "sourceModules": 4
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/share",
       "cppNamespace": "flight::share",
       "emittedModules": 2,

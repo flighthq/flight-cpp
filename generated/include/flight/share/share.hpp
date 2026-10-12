@@ -5,37 +5,42 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function hasShareContentFields -- source line 51
 #include <coroutine>
+#include <flight/structural_ref.hpp>
+#include <functional>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/signals/slot.hpp>
-
-#include <flight/signals/emitter.hpp>
-
-#include <flight/signals/signal.hpp>
-
-#include <flight/types/share.hpp>
+namespace flight::types { struct Entity; }
+namespace flight::types { struct HostShareContentCapability; }
+namespace flight::types { struct HostShareFilesCapability; }
+namespace flight::types { struct ShareFile; }
+namespace flight::types { struct ShareFilesContent; }
+namespace flight::types { struct ShareResult; }
+namespace flight::types { struct ShareSignals; }
+namespace flight::types { template <typename T> struct Signal; }
 
 #include <flight/entity/entity.hpp>
+#include <flight/signals/emitter.hpp>
+#include <flight/signals/signal.hpp>
+#include <flight/signals/slot.hpp>
+#include <flight/types/entity.hpp>
+#include <flight/types/share.hpp>
+#include <flight/types/share_file.hpp>
+#include <flight/types/share_signals.hpp>
+#include <flight/types/signal.hpp>
 
 namespace flight::share {
-
-using flight::signals::clear_signal;
-using flight::signals::emit_signal;
 
 using flight::signals::create_signal;
 
 using flight::types::HostShareContentCapability;
 
-using flight::entity::allocate_entity;
-using flight::entity::finish_entity;
-
 
 // NOT GENERATED: function hasShareContentFields -- source line 51
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
 //
 // The source it stood for:
 //   export function hasShareContentFields(content: Readonly<ShareContent>): boolean {
@@ -45,93 +50,84 @@ using flight::entity::finish_entity;
 //     return false;
 //   }
 //   
-// cpp emission failed for @flighthq/share/packages/share/src/share.ts: a presence test against undefined has no
-// absence channel in the emitted C++ storage for property
+// cpp emission failed for @flighthq/share/packages/share/src/share.ts: nullable union member access requires
+// presence-aware C++ narrowing
 
-inline bool can_share_content(flight::Ref<HostShareContentCapability> host_share_content, flight::Ref<ShareContent> content) {
-  return (has_share_content_fields(content) && host_share_content->can_share_content(content));
+inline bool can_share_content(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostShareContentCapability>>>> host_share_content, flight::types::ShareContent content) {
+  return (has_share_content_fields(content) && flight::row_get<flight::RowKey<"canShareContent">>(host_share_content)(content));
 }
 
-inline void initialize_share_signals(flight::Ref<EntityConstruction<flight::Ref<ShareSignals>>> out) {
-  (out->on_share_result = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_share_result)>::element_type>>());
+inline void initialize_share_signals(flight::types::EntityConstruction<flight::Ref<flight::types::ShareSignals>> out) {
+  flight::row_set<flight::RowKey<"onShareResult">>(out, flight::signals::create_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShareResult>>>>)>>());
 }
 
-inline flight::Ref<ShareSignals> enable_share_signals() {
-  flight::Ref<EntityConstruction<flight::Ref<ShareSignals>>> out = allocate_entity<flight::Ref<ShareSignals>>();
+inline flight::Ref<flight::types::ShareSignals> enable_share_signals() {
+  flight::types::EntityConstruction<flight::Ref<flight::types::ShareSignals>> out = flight::entity::allocate_entity<flight::Ref<flight::types::ShareSignals>>();
   initialize_share_signals(out);
-  return finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::ShareSignals>>(out);
 }
 
-inline bool is_share_file_valid(flight::Ref<ShareFile> file) {
-  return ((((file->name != flight::String("")) && (file->mime_type != flight::String(""))) && file->data_url.starts_with(flight::String("data:"))) && file->data_url.includes(flight::String(",")));
+inline bool is_share_file_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShareFile>>>> file) {
+  return ((((flight::row_get<flight::RowKey<"name">>(file) != flight::String("")) && (flight::row_get<flight::RowKey<"mimeType">>(file) != flight::String(""))) && flight::row_get<flight::RowKey<"dataUrl">>(file).starts_with(flight::String("data:"))) && flight::row_get<flight::RowKey<"dataUrl">>(file).includes(flight::String(",")));
 }
 
-inline flight::Task<bool> share_content(flight::Ref<HostShareContentCapability> host_share_content, flight::Ref<ShareContent> content) {
+inline flight::Task<bool> share_content(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostShareContentCapability>>>> host_share_content, flight::types::ShareContent content) {
   if (!has_share_content_fields(content)) {
     return flight::resolve_task(false);
   }
-  return host_share_content->share_content(content);
+  return flight::row_get<flight::RowKey<"shareContent">>(host_share_content)(content);
 }
 
-inline flight::Task<bool> share_text(flight::Ref<HostShareContentCapability> host_share_content, flight::String text) {
-  return share_content(host_share_content, flight::make_ref<ShareContent>(ShareContent{.text = text}));
+inline flight::Task<bool> share_text(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostShareContentCapability>>>> host_share_content, flight::String text) {
+  return share_content(host_share_content, std::variant<flight::Ref<flight::types::text_title_url_66ef499c1c8b6060>, flight::Ref<flight::types::text_title_url_0920bc2a3ce65b06>, flight::Ref<flight::types::text_title_url_178ed2aab7bfa756>>{std::in_place_type<flight::Ref<flight::types::text_title_url_66ef499c1c8b6060>>, flight::make_ref<flight::types::text_title_url_66ef499c1c8b6060>(flight::types::text_title_url_66ef499c1c8b6060{.text = text})});
 }
 
-inline flight::Task<bool> share_url(flight::Ref<HostShareContentCapability> host_share_content, flight::String url) {
-  return share_content(host_share_content, flight::make_ref<ShareContent>(ShareContent{.url = url}));
+inline flight::Task<bool> share_url(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostShareContentCapability>>>> host_share_content, flight::String url) {
+  return share_content(host_share_content, std::variant<flight::Ref<flight::types::text_title_url_66ef499c1c8b6060>, flight::Ref<flight::types::text_title_url_0920bc2a3ce65b06>, flight::Ref<flight::types::text_title_url_178ed2aab7bfa756>>{std::in_place_type<flight::Ref<flight::types::text_title_url_178ed2aab7bfa756>>, flight::make_ref<flight::types::text_title_url_178ed2aab7bfa756>(flight::types::text_title_url_178ed2aab7bfa756{.url = url})});
 }
 
-inline flight::Set<flight::Ref<ShareSignals>> attached_signals = flight::Set<flight::Ref<ShareSignals>>();
+inline flight::Set<flight::Ref<flight::types::ShareSignals>> attached_signals = flight::Set<flight::Ref<flight::types::ShareSignals>>();
 
-inline void attach_share_signals(flight::Ref<ShareSignals> signals) {
+inline void attach_share_signals(flight::Ref<flight::types::ShareSignals> signals) {
   attached_signals.add(signals);
 }
 
-inline void detach_share_signals(flight::Ref<ShareSignals> signals) {
+inline void detach_share_signals(flight::Ref<flight::types::ShareSignals> signals) {
   attached_signals.erase(signals);
 }
 
-inline void dispose_share_signals(flight::Ref<ShareSignals> signals) {
+inline void dispose_share_signals(flight::Ref<flight::types::ShareSignals> signals) {
   detach_share_signals(signals);
-  clear_signal(signals->on_share_result);
+  flight::signals::clear_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShareResult>>>>)>>(signals->on_share_result);
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHARE_COMPLETED_ACTIVITY_TYPE_DISMISSED_CE20774170042BFD
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHARE_COMPLETED_ACTIVITY_TYPE_DISMISSED_CE20774170042BFD
-struct completed_activity_type_dismissed_ce20774170042bfd : public flight::ReferenceEnabled {
-  bool completed;
-  std::optional<flight::String> activity_type;
-  bool dismissed;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHARE_COMPLETED_ACTIVITY_TYPE_DISMISSED_CE20774170042BFD
-
-inline flight::Task<flight::Ref<ShareResult>> share_content_with_result(flight::Ref<HostShareContentCapability> host_share_content, flight::Ref<ShareContent> content) {
+inline flight::Task<flight::Ref<flight::types::ShareResult>> share_content_with_result(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostShareContentCapability>>>> host_share_content, flight::types::ShareContent content) {
   if (!has_share_content_fields(content)) {
-    co_return flight::make_ref<ShareResult>(ShareResult{.completed = false, .activity_type = nullptr, .dismissed = false});
+    co_return flight::make_ref<flight::types::ShareResult>(flight::types::ShareResult{.completed = false, .activity_type = std::nullopt, .dismissed = false});
   }
-  flight::Ref<completed_activity_type_dismissed_ce20774170042bfd> result = co_await host_share_content->share_content_with_result(content);
+  auto result = co_await flight::row_get<flight::RowKey<"shareContentWithResult">>(host_share_content)(content);
   for (auto signals : attached_signals) {
-    emit_signal(signals->on_share_result, result);
+    flight::signals::emit_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShareResult>>>>)>>(signals->on_share_result, result);
   }
   co_return result;
 }
 
-inline std::optional<flight::Ref<ShareFilesContent>> files_content(flight::Array<flight::Ref<ShareFile>> files) {
-  std::optional<flight::Ref<ShareFile>> first = files.get(0.0);
-  return ((!first.has_value() || !files.every(is_share_file_valid)) ? std::nullopt : std::optional<flight::Ref<ShareFilesContent>>{flight::make_ref<ShareFilesContent>(ShareFilesContent{.files = ([&]() { flight::Array<flight::Ref<ShareFile>> array_spread_result; array_spread_result.push(first.value()); for (const auto& array_spread_item : files.slice(1.0)) { array_spread_result.push(array_spread_item); } return array_spread_result; }())})});
+inline std::optional<flight::Ref<flight::types::ShareFilesContent>> files_content(flight::Array<flight::Ref<flight::types::ShareFile>> files) {
+  std::optional<flight::Ref<flight::types::ShareFile>> first = files.get(0.0);
+  return ((!first.has_value() || !files.every(is_share_file_valid)) ? std::nullopt : std::optional<flight::Ref<flight::types::ShareFilesContent>>{flight::make_ref<flight::types::ShareFilesContent>(flight::types::ShareFilesContent{.files = ([&]() { flight::Array<flight::Ref<flight::types::ShareFile>> array_spread_result; array_spread_result.push(first.value()); for (const auto& array_spread_item : files.slice(1.0)) { array_spread_result.push(array_spread_item); } return array_spread_result; }())})});
 }
 
-inline bool can_share_files(flight::Ref<HostShareFilesCapability> host_share_files, flight::Array<flight::Ref<ShareFile>> files) {
-  std::optional<flight::Ref<ShareFilesContent>> content = files_content(files);
-  return (content.has_value() && host_share_files->can_share_content(content.value()));
+inline bool can_share_files(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostShareFilesCapability>>>> host_share_files, flight::Array<flight::Ref<flight::types::ShareFile>> files) {
+  auto content = files_content(files);
+  return (content.has_value() && flight::row_get<flight::RowKey<"canShareContent">>(host_share_files)(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShareFilesContent>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ShareFilesContent>>>>(content.value()))));
 }
 
-inline flight::Task<bool> share_files(flight::Ref<HostShareFilesCapability> host_share_files, flight::Array<flight::Ref<ShareFile>> files) {
-  std::optional<flight::Ref<ShareFilesContent>> content = files_content(files);
+inline flight::Task<bool> share_files(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostShareFilesCapability>>>> host_share_files, flight::Array<flight::Ref<flight::types::ShareFile>> files) {
+  auto content = files_content(files);
   if (!content.has_value()) {
     return flight::resolve_task(false);
   }
-  return host_share_files->share_content(content.value());
+  return flight::row_get<flight::RowKey<"shareContent">>(host_share_files)(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ShareFilesContent>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ShareFilesContent>>>>(content.value())));
 }
 
 } // namespace flight::share
