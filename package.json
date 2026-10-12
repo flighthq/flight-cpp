@@ -36,6 +36,7 @@
     "intl:oracle": "node ./scripts/intlSurfaceOracle.mjs",
     "number-to-fixed:oracle": "node ./scripts/numberToFixedOracle.mjs",
     "overrides:check": "node ./scripts/overridesCheck.mjs",
+    "overrides:test": "node --test ./scripts/overrides.test.mjs",
     "parity:check": "node ./scripts/upstreamTestParityPrototype.mjs --check",
     "parity:generate": "node ./scripts/upstreamTestParityPrototype.mjs",
     "pkg:compile": "node ./scripts/pkgCompile.mjs",

@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
 // Hand-written headers that shadow the generated tree.
@@ -128,4 +128,81 @@ export function driftedOverrides(overrides, generatedRoot) {
 
 function portable(filename) {
   return filename.split(path.sep).join('/');
+}
+
+// Emitted text names the anonymous structural shapes it carries by a hash of their members --
+// `binding_uid_06e64a362b012722`, `reason_update_457a6ef5d21e9081`. Those hashes are NOT stable: a pin
+// move mints new ones, and the same shape can be named differently in the package that uses it and in
+// `flight/types`. So an override can name a type that exists nowhere while `driftedOverrides` stays
+// green, because the file it shadows is byte-identical -- which is exactly what happened to
+// @flighthq/updater and @flighthq/shortcut at a627849, where four references had to be re-pointed and
+// the module failed to compile until they were.
+//
+// This check is deliberately one-directional and exact. It reports an identifier that appears NOWHERE
+// in the generated tree, which is a fact about the tree; it says nothing about an identifier that is
+// mentioned but never declared, which the compile gate already decides and which a text scan cannot
+// judge without becoming the kind of check that fails on its own false positives.
+const HASH_SUFFIXED_IDENTIFIER = /\b([a-z_0-9]+_[0-9a-f]{16})\b/gu;
+
+export function hashSuffixedIdentifiers(text) {
+  return [...new Set([...text.matchAll(HASH_SUFFIXED_IDENTIFIER)].map((match) => match[1]))];
+}
+
+// Whether the override DECLARES this identifier itself. Hand-written bodies build their own shapes --
+// `struct entity_runtime_key_..._b54dc1bffa369663 : public flight::ReferenceEnabled { ... }` -- and those
+// are not references to anything the tree owes them, so they must not be reported. A `using X = ...`
+// alias is deliberately NOT a declaration here: it names a type that has to exist somewhere else, which
+// is precisely the stale case (`using binding_uid_... = flight::types::binding_uid_...;`), and an alias
+// whose target is live passes the tree test anyway.
+//
+// This is a text heuristic, and its failure direction is deliberate: a pattern it does not recognize
+// under-reports, which leaves the defect in place, rather than over-reports, which teaches a reader to
+// ignore the gate.
+function declaredInOverride(text, identifier) {
+  const escaped = identifier.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+  const patterns = [
+    `\\b(?:struct|class)\\s+${escaped}\\b`,
+    `\\bauto\\s+${escaped}\\b`,
+    `\\binline\\s+[^;\\n]*\\b${escaped}\\s*[(=]`,
+    // A bare assignment defines a local; `using X = ...` does not, which the lookbehind keeps apart.
+    `(?:^|[^:.>\\w])(?<!using )${escaped}\\s*=`,
+  ];
+  return patterns.some((pattern) => new RegExp(pattern, 'u').test(text));
+}
+
+// Every hash-suffixed identifier an override references that the generated tree does not carry at all and
+// the override does not declare itself, one record per identifier so a reader can act on each without
+// re-reading the file.
+export function unresolvedHashReferences(overrides, includeDirectory, generatedRoot) {
+  const available = generatedIdentifiers(generatedRoot);
+  const unresolved = [];
+  for (const entry of overrides) {
+    const text = readFileSync(path.join(includeDirectory, entry.path), 'utf8');
+    for (const identifier of hashSuffixedIdentifiers(text)) {
+      if (available.has(identifier) || declaredInOverride(text, identifier)) continue;
+      unresolved.push({ id: entry.id, path: entry.path, identifier });
+    }
+  }
+  return unresolved;
+}
+
+// What the generated tree mentions at all, definitions and references alike. Asking for definitions
+// specifically would need C++ parsing to be right, and being wrong here has a cost on the other side:
+// a gate that flags a live reference teaches its reader to ignore it.
+function generatedIdentifiers(generatedRoot) {
+  const identifiers = new Set();
+  const collect = (directory) => {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      const full = path.join(directory, entry.name);
+      if (entry.isDirectory()) {
+        collect(full);
+        continue;
+      }
+      if (!entry.name.endsWith('.hpp')) continue;
+      for (const identifier of hashSuffixedIdentifiers(readFileSync(full, 'utf8'))) identifiers.add(identifier);
+    }
+  };
+  const include = path.join(generatedRoot, 'include');
+  if (existsSync(include)) collect(include);
+  return identifiers;
 }
