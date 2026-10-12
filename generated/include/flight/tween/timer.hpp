@@ -31,7 +31,7 @@ using flight::types::Tween;
 //   ): Tween<object> {
 //     return createTween(manager, {}, duration, {}, options);
 //   }
-//   
+//
 // cpp emission failed for @flighthq/tween/packages/tween/src/timer.ts: contextual union value type
 // flight::Ref<anonymous_3e6b344a3b6bd77e> is not a represented runtime domain: the value leaves a member the
 // destination requires optional or absent, or gives it an incompatible type, so it is not the shape an
