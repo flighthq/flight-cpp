@@ -30,8 +30,11 @@
 //      watch is retained strongly by the module and a dropped watch is never collected. No observable
 //      behaviour in this module differs -- routing is identity-keyed either way -- so nothing here asserts
 //      against it, and it is a lifetime divergence rather than a missing capability: it is filed as
-//      docs/compiler-requests/reference-keyed-weak-map-as-strong-map.md, which records both this site and
-//      the connectivity one that took the weak container for the same source shape.
+//      docs/compiler-requests/reference-keyed-weak-map-as-strong-map.md, which records this site, the
+//      connectivity one that took the weak container for the same source shape, and the eight isolated
+//      fixtures in which the pinned emitter elects the weak container for this very shape -- so the
+//      election is reproducible everywhere except in this module, and the request stays open with that
+//      pair as its reproduction.
 //   2. A provider that rejects is not caught: the module forwards the task, and the "returns false when the
 //      host denies access" in the source is the host's resolved-value contract, not a catch this module
 //      performs. A rejecting capability therefore rejects the caller's task, which is asserted below rather
