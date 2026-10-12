@@ -160,6 +160,23 @@ add_test(
   COMMAND flight_cpp_generated_textureatlas_formats_tests
 )
 
+add_executable(
+  flight_cpp_generated_spritesheet_formats_tests
+  generated_spritesheet_formats_test.cpp
+)
+target_include_directories(
+  flight_cpp_generated_spritesheet_formats_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_spritesheet_formats_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(
+  NAME flight_cpp.generated_spritesheet_formats
+  COMMAND flight_cpp_generated_spritesheet_formats_tests
+)
+
 add_executable(flight_cpp_generated_spritesheet_tests generated_spritesheet_test.cpp)
 target_include_directories(
   flight_cpp_generated_spritesheet_tests
@@ -663,6 +680,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_render_state types)
 flight_cpp_package_test_labels(flight_cpp.generated_canvas_texture_resolver scene2d-canvas)
 flight_cpp_package_test_labels(flight_cpp.generated_texture texture)
 flight_cpp_package_test_labels(flight_cpp.generated_textureatlas_formats textureatlas-formats)
+flight_cpp_package_test_labels(flight_cpp.generated_spritesheet_formats spritesheet-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_spritesheet signals spritesheet)
 flight_cpp_package_test_labels(flight_cpp.generated_materials materials)
 flight_cpp_package_test_labels(flight_cpp.generated_shading shading)

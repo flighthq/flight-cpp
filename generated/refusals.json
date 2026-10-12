@@ -7945,26 +7945,17 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 95,
-      "module": "packages/spritesheet-formats/src/asepriteSerialize.ts",
-      "package": "@flighthq/spritesheet-formats",
-      "reason": "cpp emission failed for @flighthq/spritesheet-formats/packages/spritesheet-formats/src/asepriteSerialize.ts: Partial<T> requires a statically resolvable C++ object shape; T is named",
-      "stage": "emission"
-    },
-    {
       "code": "dependency-refused",
       "module": "packages/spritesheet-formats/src/contract.ts",
       "package": "@flighthq/spritesheet-formats",
-      "reason": "dependency ./asepriteParse was refused for @flighthq/spritesheet-formats/packages/spritesheet-formats/src/asepriteParse.ts",
+      "reason": "dependency ./asepriteParse.ts was refused for @flighthq/spritesheet-formats/packages/spritesheet-formats/src/asepriteParse.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/spritesheet-formats/src/index.ts",
       "package": "@flighthq/spritesheet-formats",
-      "reason": "dependency ./contract was refused for @flighthq/spritesheet-formats/packages/spritesheet-formats/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/spritesheet-formats/packages/spritesheet-formats/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -7975,13 +7966,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 78,
+      "code": "dependency-refused",
       "module": "packages/spritesheet-formats/src/spritesheetDetect.ts",
       "package": "@flighthq/spritesheet-formats",
-      "reason": "cpp emission failed for @flighthq/spritesheet-formats/packages/spritesheet-formats/src/spritesheetDetect.ts: contextual optionalSingle construction requires expression type evidence",
-      "stage": "emission"
+      "reason": "dependency ./asepriteParse.ts was refused for @flighthq/spritesheet-formats/packages/spritesheet-formats/src/asepriteParse.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -7997,15 +7986,6 @@
       "module": "packages/spritesheet-formats/src/texturePackerParse.ts",
       "package": "@flighthq/spritesheet-formats",
       "reason": "cpp emission failed for @flighthq/types/packages/types/src/TexturePackerAtlasSchema.ts: contextual C++ union conversion requires equivalent source union evidence: target multiVariant carriers [flight::Ref<TexturePackerAtlasArrayDocument>, flight::Ref<TexturePackerAtlasHashDocument>] from identifier source multiVariant carriers [flight::Ref<TexturePackerHashDocument>, flight::Ref<TexturePackerArrayDocument>]. Narrow or convert the source expression so each of its alternatives names exactly one destination union alternative. The carrier lists show which alternatives lack an exact carrier; preserve the declared collection or member union alias before flow expansion. For a Map or WeakMap lookup followed by a rebind, ensure every rebound member already has the declared value owner member's carrier -- a Readonly structural view does not become a mutable nominal Ref.",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 83,
-      "module": "packages/spritesheet-formats/src/texturePackerSerialize.ts",
-      "package": "@flighthq/spritesheet-formats",
-      "reason": "cpp emission failed for @flighthq/spritesheet-formats/packages/spritesheet-formats/src/texturePackerSerialize.ts: Partial<T> requires a statically resolvable C++ object shape; T is named",
       "stage": "emission"
     },
     {

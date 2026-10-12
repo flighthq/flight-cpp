@@ -35984,17 +35984,8 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "source-portability",
       "consumers": [
         "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:084cd4c7f5987001a2da08bd0e827b1c70c60686fd3b2cd9fbc00e1a5389d664",
-        "sha256:66d9860571470882304972e89ef218b59b19be9259b06dfc34b6ca04b7cc894b",
-        "sha256:8aa24f38d6af820b96f23ada78492a0c879ef8b5cb0628ab68894ca3dc7cbecc",
-        "sha256:aa9a14e803e2fadfd2882120c75ffd220b4cba286ad2cfd3009c18ccb1ef3a81",
-        "sha256:c106e8f176ea82999d0c5f627b52ebbbea91a38f950f7080282125c8d5979881",
-        "sha256:f844917ae53168ecbd955b8c739db71c45428d564c45ae503cd687c7ab4db06e"
       ],
       "module": {
         "name": "AsepriteSerialize",
@@ -36002,8 +35993,7 @@
         "source": "packages/spritesheet-formats/src/asepriteSerialize.ts"
       },
       "path": "flight/spritesheet_formats/aseprite_serialize.hpp",
-      "rule": "cpp-partial-shape-unresolvable",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -36042,12 +36032,10 @@
       "path": "flight/spritesheet_formats/contract.hpp",
       "refusedDependencies": [
         "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/asepriteParse.ts",
-        "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/asepriteSerialize.ts",
         "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/libgdxAtlasParse.ts",
         "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/spritesheetDetect.ts",
         "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/starlingParse.ts",
-        "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/texturePackerParse.ts",
-        "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/texturePackerSerialize.ts"
+        "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/texturePackerParse.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -36093,29 +36081,8 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:254f5264c6a5afd8dd4eb271ccfb89317a19e8f13518cbdb96ebd277dde8d09c",
-        "sha256:3a2fa8b57ecbac589a9c0dad426d19867105adc750ffcf08249cbf5fe0aa669d",
-        "sha256:4a7ec826f059a2b384a73f4afe238bcd991c024f67b516b5a2d9aaa0031a4987",
-        "sha256:58931268abe5167760f7908ca54411243334ee08f87965e60e77e8fd21c8026c",
-        "sha256:590c5e25449ffd9b40286f880252780d007ab883b9514523dd2f95175307625a",
-        "sha256:6206bc9bc9670bbe0587b6608a7579306a7023b5a9f4ec542243760337837ffd",
-        "sha256:7ec7140866a85fb866afd728197148a22559c7d554a979f557d1e81649707184",
-        "sha256:81238aee00e32aa54c45e6f842b93dbc38e75a644b490b4281c73a6b79ce251c",
-        "sha256:9355e97da75c056560903cf7e0ea5637f03619b7cfb1fbe2173a8fb8480919b1",
-        "sha256:9560a7fa5f5dc16a457b38d142c6c0a7a4494df007c653d4ead528eae9d1c13f",
-        "sha256:9c6b5b923b4fa58875b292f5c3a67b9c20ec6752c086bb10f2723c76ce44210b",
-        "sha256:aad93debb4c3568b21f88d43f6498346d928dda058010e0158f7ea2ca1b64caa",
-        "sha256:c059d2f722f59e1165302d703a593b4a70bbcef1f5b1cea892c65f8477b0febd",
-        "sha256:c55d8fd8ff4932dbb3fb9166896298e4139649c6eff99203851bfa62939a46bb",
-        "sha256:d1749b8b60d02d0e80c2a7afed9b7676978c607626705d553d03d2d6675ea070",
-        "sha256:ded6be07b8a55d58ab315f6a61347e405d1b7738f52562250421254d6006aa8e",
-        "sha256:ecdae2dad8be0c1a45583d1a378ed6512fd5a4886a5be979e51511056a6394c5",
-        "sha256:f666a7b14ed6bfbad51482246ec6d12911d82fb0fd0e1dcdb56cd11a5bca960f"
       ],
       "module": {
         "name": "SpritesheetDetect",
@@ -36123,8 +36090,14 @@
         "source": "packages/spritesheet-formats/src/spritesheetDetect.ts"
       },
       "path": "flight/spritesheet_formats/spritesheet_detect.hpp",
-      "rule": "cpp-contextual-union-missing-expression-type:optionalSingle",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/registry/packages/registry/src/registryTable.ts",
+        "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/asepriteParse.ts",
+        "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/libgdxAtlasParse.ts",
+        "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/starlingParse.ts",
+        "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/texturePackerParse.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
@@ -36179,16 +36152,8 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "source-portability",
       "consumers": [
         "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:08dbe6f535d9da6099d5ad09243264db173081ddab9d024d21b927348cc3e345",
-        "sha256:10f376fd0caf5bf3742ae7b299a09dc9ee465b3bb4fd70d858b79c4153aac277",
-        "sha256:26e74df5e229538a6f40794619a0577330555ac01e6594f0e2cdd6347cd1dfdd",
-        "sha256:433f089b741a3c845bff8f7fc1ded6616a51720c3f9cdcafa112065a4d18cc73",
-        "sha256:ba7ec8cfac3ba8167f30274cf42c58c8af4480b7310321f02ca2636b6c68e693"
       ],
       "module": {
         "name": "TexturePackerSerialize",
@@ -36196,8 +36161,7 @@
         "source": "packages/spritesheet-formats/src/texturePackerSerialize.ts"
       },
       "path": "flight/spritesheet_formats/texture_packer_serialize.hpp",
-      "rule": "cpp-partial-shape-unresolvable",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [],

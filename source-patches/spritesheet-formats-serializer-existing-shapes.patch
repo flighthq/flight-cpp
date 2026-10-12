@@ -1,0 +1,232 @@
+diff --git a/packages/spritesheet-formats/src/asepriteSerialize.ts b/packages/spritesheet-formats/src/asepriteSerialize.ts
+--- a/packages/spritesheet-formats/src/asepriteSerialize.ts
++++ b/packages/spritesheet-formats/src/asepriteSerialize.ts
+@@ -2,14 +2,18 @@
+   AsepriteArrayDocument,
+   AsepriteArrayFrame,
+   AsepriteBaseFrame,
+-  AsepriteDocument,
+   AsepriteHashDocument,
+   AsepriteMeta,
+   AsepriteSerializeOptions,
+   SpritesheetData,
+ } from '@flighthq/types/contract';
+ 
+-function dataToMeta(data: Readonly<SpritesheetData>, existing: Partial<AsepriteMeta>): AsepriteMeta {
++interface AsepriteSerializeExisting {
++  frames?: AsepriteArrayFrame[] | Record<string, AsepriteBaseFrame>;
++  meta?: AsepriteMeta;
++}
++
++function dataToMeta(data: Readonly<SpritesheetData>, existing?: Readonly<AsepriteMeta>): AsepriteMeta {
+   const tags = data.animations.map((anim, i) => {
+     const firstIdx = data.frames.findIndex((f) => f.name === anim.frameNames[0]);
+     const lastIdx = data.frames.findIndex((f) => f.name === anim.frameNames[anim.frameNames.length - 1]);
+@@ -18,20 +22,21 @@
+       from: firstIdx >= 0 ? firstIdx : 0,
+       name: anim.name,
+       to: lastIdx >= 0 ? lastIdx : 0,
+-      ...(existing.frameTags?.[i]?.color !== undefined ? { color: existing.frameTags[i].color } : {}),
++      ...(existing?.frameTags?.[i]?.color !== undefined ? { color: existing.frameTags[i].color } : {}),
+     };
+   });
+ 
+-  return {
+-    app: existing.app ?? 'https://www.aseprite.org/',
+-    format: existing.format ?? 'RGBA8888',
++  const meta: AsepriteMeta = {
++    app: existing?.app ?? 'https://www.aseprite.org/',
++    format: existing?.format ?? 'RGBA8888',
+     frameTags: tags,
+-    image: data.imageFile || existing.image || '',
+-    ...(existing.layers !== undefined ? { layers: existing.layers } : {}),
+-    scale: data.scale !== 1 ? String(data.scale) : (existing.scale ?? '1'),
++    image: data.imageFile || existing?.image || '',
++    ...(existing?.layers !== undefined ? { layers: existing.layers } : {}),
++    scale: data.scale !== 1 ? String(data.scale) : (existing?.scale ?? '1'),
+     size: { h: data.imageHeight, w: data.imageWidth },
+-    version: existing.version ?? '1.3',
++    version: existing?.version ?? '1.3',
+   };
++  return meta;
+ }
+ 
+ function frameToEntry(frame: Readonly<SpritesheetData['frames'][0]>, durationMs: number): AsepriteBaseFrame {
+@@ -72,39 +77,48 @@
+ 
+ function dataToHashDocument(
+   data: Readonly<SpritesheetData>,
+-  existing: Partial<AsepriteHashDocument>,
++  existingMeta?: Readonly<AsepriteMeta>,
+ ): AsepriteHashDocument {
+   const frames: Record<string, AsepriteBaseFrame> = {};
+   for (const frame of data.frames) {
+     frames[frame.name] = frameToEntry(frame, resolveFrameDuration(data, frame.name));
+   }
+-  return { frames, meta: dataToMeta(data, existing.meta ?? {}) };
++  return { frames, meta: dataToMeta(data, existingMeta) };
+ }
+ 
+ function dataToArrayDocument(
+   data: Readonly<SpritesheetData>,
+-  existing: Partial<AsepriteArrayDocument>,
++  existingMeta?: Readonly<AsepriteMeta>,
+ ): AsepriteArrayDocument {
+-  const frames: AsepriteArrayFrame[] = data.frames.map((frame) => ({
+-    filename: frame.name,
+-    ...frameToEntry(frame, resolveFrameDuration(data, frame.name)),
+-  }));
+-  return { frames, meta: dataToMeta(data, existing.meta ?? {}) };
++  const frames: AsepriteArrayFrame[] = data.frames.map((frame) => {
++    const filename = frame.name;
++    const entry = frameToEntry(frame, resolveFrameDuration(data, frame.name));
++    return {
++      filename,
++      duration: entry.duration,
++      frame: entry.frame,
++      rotated: entry.rotated,
++      sourceSize: entry.sourceSize,
++      spriteSourceSize: entry.spriteSourceSize,
++      trimmed: entry.trimmed,
++    };
++  });
++  return { frames, meta: dataToMeta(data, existingMeta) };
+ }
+ 
+ export function serializeAsepriteSpritesheet(
+   data: Readonly<SpritesheetData>,
+-  existing?: Partial<AsepriteDocument>,
++  existing?: AsepriteSerializeExisting,
+   options?: AsepriteSerializeOptions,
+ ): string {
+-  const existingIsArray = existing !== undefined && Array.isArray((existing as AsepriteArrayDocument).frames);
++  const existingIsArray = existing !== undefined && Array.isArray(existing.frames);
+   const variant = options?.variant ?? (existingIsArray ? 'array' : 'hash');
+ 
+   if (variant === 'array') {
+-    const doc = dataToArrayDocument(data, (existing as Partial<AsepriteArrayDocument>) ?? {});
++    const doc = dataToArrayDocument(data, existing?.meta);
+     return JSON.stringify(doc, null, 2);
+   }
+ 
+-  const doc = dataToHashDocument(data, (existing as Partial<AsepriteHashDocument>) ?? {});
++  const doc = dataToHashDocument(data, existing?.meta);
+   return JSON.stringify(doc, null, 2);
+ }
+diff --git a/packages/spritesheet-formats/src/texturePackerSerialize.ts b/packages/spritesheet-formats/src/texturePackerSerialize.ts
+--- a/packages/spritesheet-formats/src/texturePackerSerialize.ts
++++ b/packages/spritesheet-formats/src/texturePackerSerialize.ts
+@@ -2,17 +2,21 @@
+   SpritesheetData,
+   TexturePackerArrayDocument,
+   TexturePackerArrayFrame,
+-  TexturePackerDocument,
+   TexturePackerHashDocument,
+   TexturePackerHashFrame,
+   TexturePackerMeta,
+   TexturePackerSerializeOptions,
+ } from '@flighthq/types/contract';
+ 
+-function dataToMeta(data: Readonly<SpritesheetData>, existing: Partial<TexturePackerMeta>): TexturePackerMeta {
+-  return {
+-    app: existing.app ?? 'https://www.codeandweb.com/texturepacker',
+-    format: existing.format ?? 'RGBA8888',
++interface TexturePackerSerializeExisting {
++  frames?: TexturePackerArrayFrame[] | Record<string, TexturePackerHashFrame>;
++  meta?: TexturePackerMeta;
++}
++
++function dataToMeta(data: Readonly<SpritesheetData>, existing?: Readonly<TexturePackerMeta>): TexturePackerMeta {
++  const meta: TexturePackerMeta = {
++    app: existing?.app ?? 'https://www.codeandweb.com/texturepacker',
++    format: existing?.format ?? 'RGBA8888',
+     frameTags: data.animations.length
+       ? data.animations.map((anim) => {
+           const firstIdx = data.frames.findIndex((f) => f.name === anim.frameNames[0]);
+@@ -25,11 +29,12 @@
+           };
+         })
+       : undefined,
+-    image: data.imageFile || existing.image || '',
+-    scale: data.scale !== 1 ? data.scale : (existing.scale ?? 1),
++    image: data.imageFile || existing?.image || '',
++    scale: data.scale !== 1 ? data.scale : (existing?.scale ?? 1),
+     size: { h: data.imageHeight, w: data.imageWidth },
+-    version: existing.version ?? '1.0',
++    version: existing?.version ?? '1.0',
+   };
++  return meta;
+ }
+ 
+ function frameToEntry(frame: Readonly<SpritesheetData['frames'][0]>): TexturePackerHashFrame {
+@@ -60,39 +65,58 @@
+ 
+ function dataToHashDocument(
+   data: Readonly<SpritesheetData>,
+-  existing: Partial<TexturePackerHashDocument>,
++  existingMeta?: Readonly<TexturePackerMeta>,
+ ): TexturePackerHashDocument {
+   const frames: Record<string, TexturePackerHashFrame> = {};
+   for (const frame of data.frames) {
+     frames[frame.name] = frameToEntry(frame);
+   }
+-  return { frames, meta: dataToMeta(data, existing.meta ?? {}) };
++  return { frames, meta: dataToMeta(data, existingMeta) };
+ }
+ 
+ function dataToArrayDocument(
+   data: Readonly<SpritesheetData>,
+-  existing: Partial<TexturePackerArrayDocument>,
++  existingMeta?: Readonly<TexturePackerMeta>,
+ ): TexturePackerArrayDocument {
+-  const frames: TexturePackerArrayFrame[] = data.frames.map((frame) => ({
+-    filename: frame.name,
+-    ...frameToEntry(frame),
+-  }));
+-  return { frames, meta: dataToMeta(data, existing.meta ?? {}) };
++  const frames: TexturePackerArrayFrame[] = data.frames.map((frame) => {
++    const filename = frame.name;
++    const entry = frameToEntry(frame);
++    if (entry.pivot !== undefined) {
++      return {
++        filename,
++        frame: entry.frame,
++        pivot: entry.pivot,
++        rotated: entry.rotated,
++        sourceSize: entry.sourceSize,
++        spriteSourceSize: entry.spriteSourceSize,
++        trimmed: entry.trimmed,
++      };
++    }
++    return {
++      filename,
++      frame: entry.frame,
++      rotated: entry.rotated,
++      sourceSize: entry.sourceSize,
++      spriteSourceSize: entry.spriteSourceSize,
++      trimmed: entry.trimmed,
++    };
++  });
++  return { frames, meta: dataToMeta(data, existingMeta) };
+ }
+ 
+ export function serializeTexturePackerSpritesheet(
+   data: Readonly<SpritesheetData>,
+-  existing?: Partial<TexturePackerDocument>,
++  existing?: TexturePackerSerializeExisting,
+   options?: TexturePackerSerializeOptions,
+ ): string {
+-  const existingIsArray = existing !== undefined && Array.isArray((existing as TexturePackerArrayDocument).frames);
++  const existingIsArray = existing !== undefined && Array.isArray(existing.frames);
+   const variant = options?.variant ?? (existingIsArray ? 'array' : 'hash');
+ 
+   if (variant === 'array') {
+-    const doc = dataToArrayDocument(data, (existing as Partial<TexturePackerArrayDocument>) ?? {});
++    const doc = dataToArrayDocument(data, existing?.meta);
+     return JSON.stringify(doc, null, 2);
+   }
+ 
+-  const doc = dataToHashDocument(data, (existing as Partial<TexturePackerHashDocument>) ?? {});
++  const doc = dataToHashDocument(data, existing?.meta);
+   return JSON.stringify(doc, null, 2);
+ }

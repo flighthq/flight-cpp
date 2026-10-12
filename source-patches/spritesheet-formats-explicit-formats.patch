@@ -1,0 +1,14 @@
+diff --git a/packages/spritesheet-formats/src/spritesheetDetect.ts b/packages/spritesheet-formats/src/spritesheetDetect.ts
+--- a/packages/spritesheet-formats/src/spritesheetDetect.ts
++++ b/packages/spritesheet-formats/src/spritesheetDetect.ts
+@@ -114,7 +114,9 @@ function getRegistry(): ReadonlyMap<Kind, RegisteredFormatEntry> {
+  * which is detection order.
+  */
+ export function applySpritesheetImportOptions(options: Readonly<SpritesheetImportOptions>): void {
+-  for (const format of options.formats ?? []) bindSpritesheetFormat(format.kind, format.entry);
++  const formats = options.formats;
++  if (formats === undefined) return;
++  for (const format of formats) bindSpritesheetFormat(format.kind, format.entry);
+ }
+ 
+ /** Detect the format kind of a spritesheet text document.

@@ -3841,6 +3841,11 @@
       "source": "packages/spritesheet/src/spritesheetPlayer.ts"
     },
     {
+      "name": "AsepriteSerialize",
+      "packageName": "@flighthq/spritesheet-formats",
+      "source": "packages/spritesheet-formats/src/asepriteSerialize.ts"
+    },
+    {
       "name": "CocosPlistParse",
       "packageName": "@flighthq/spritesheet-formats",
       "source": "packages/spritesheet-formats/src/cocosPlistParse.ts"
@@ -3859,6 +3864,11 @@
       "name": "StarlingSerialize",
       "packageName": "@flighthq/spritesheet-formats",
       "source": "packages/spritesheet-formats/src/starlingSerialize.ts"
+    },
+    {
+      "name": "TexturePackerSerialize",
+      "packageName": "@flighthq/spritesheet-formats",
+      "source": "packages/spritesheet-formats/src/texturePackerSerialize.ts"
     },
     {
       "name": "Statechart",
@@ -27401,6 +27411,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "AsepriteSerialize",
+          "packageName": "@flighthq/spritesheet-formats",
+          "source": "packages/spritesheet-formats/src/asepriteSerialize.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "CocosPlistParse",
           "packageName": "@flighthq/spritesheet-formats",
           "source": "packages/spritesheet-formats/src/cocosPlistParse.ts"
@@ -27434,6 +27454,16 @@
           "name": "StarlingSerialize",
           "packageName": "@flighthq/spritesheet-formats",
           "source": "packages/spritesheet-formats/src/starlingSerialize.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "TexturePackerSerialize",
+          "packageName": "@flighthq/spritesheet-formats",
+          "source": "packages/spritesheet-formats/src/texturePackerSerialize.ts"
         }
       ]
     },
@@ -39293,6 +39323,239 @@
         "name": "AsepriteSchema",
         "packageName": "@flighthq/types",
         "source": "packages/types/src/AsepriteSchema.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:30188f5c991d778f9ab333de230cfe7ca8066ba813ccb2eda37c8434ee36d214",
+            "line": 16,
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/asepriteSerialize.ts",
+            "id": "binding:[\"@flighthq/spritesheet-formats\",\"packages/spritesheet-formats/src/asepriteSerialize.ts\",347]",
+            "kind": "function",
+            "name": "dataToMeta",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:283029d8fa3b85d42d77a5989da888045e8179a381e31a8d19b3a1935f6440c2",
+            "line": 42,
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/asepriteSerialize.ts",
+            "id": "binding:[\"@flighthq/spritesheet-formats\",\"packages/spritesheet-formats/src/asepriteSerialize.ts\",1431]",
+            "kind": "function",
+            "name": "frameToEntry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:7011325f16388453373cd05d9f745357bf0d2d787acd2e4d119408d16163d983",
+            "line": 68,
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/asepriteSerialize.ts",
+            "id": "binding:[\"@flighthq/spritesheet-formats\",\"packages/spritesheet-formats/src/asepriteSerialize.ts\",2132]",
+            "kind": "function",
+            "name": "resolveFrameDuration",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:13e99078f67fdde8cd120e2323de8d79d2d200ef6e3f3f5d2fd4954e86d3a2b9",
+            "line": 78,
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/asepriteSerialize.ts",
+            "id": "binding:[\"@flighthq/spritesheet-formats\",\"packages/spritesheet-formats/src/asepriteSerialize.ts\",2491]",
+            "kind": "function",
+            "name": "dataToHashDocument",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ae4ac25a6c26123d88b0fda7526cb969f8e29751a512f4cb0d4b048d09b5368a",
+            "line": 89,
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/asepriteSerialize.ts",
+            "id": "binding:[\"@flighthq/spritesheet-formats\",\"packages/spritesheet-formats/src/asepriteSerialize.ts\",2867]",
+            "kind": "function",
+            "name": "dataToArrayDocument",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:cd926f92f021b179a724c22408b865311a597c537b160bd3bf15375701399166",
+            "line": 109,
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/asepriteSerialize.ts",
+            "id": "binding:[\"@flighthq/spritesheet-formats\",\"packages/spritesheet-formats/src/asepriteSerialize.ts\",3493]",
+            "kind": "function",
+            "name": "serializeAsepriteSpritesheet",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AsepriteSerialize",
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/asepriteSerialize.ts"
+          },
+          "importedNames": [
+            "AsepriteArrayDocument",
+            "AsepriteArrayFrame",
+            "AsepriteBaseFrame",
+            "AsepriteFrameTag",
+            "AsepriteHashDocument",
+            "AsepriteHashFrame",
+            "AsepriteLayer",
+            "AsepriteMeta",
+            "AsepriteRect",
+            "AsepriteSerializeOptions",
+            "AsepriteSize"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "AsepriteSchema",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/AsepriteSchema.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AsepriteSerialize",
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/asepriteSerialize.ts"
+          },
+          "importedNames": [
+            "SpritesheetAnimationData"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "SpritesheetAnimationData",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/SpritesheetAnimationData.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AsepriteSerialize",
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/asepriteSerialize.ts"
+          },
+          "importedNames": [
+            "SpritesheetAnimationDirection"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "SpritesheetAnimationDirection",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/SpritesheetAnimationDirection.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AsepriteSerialize",
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/asepriteSerialize.ts"
+          },
+          "importedNames": [
+            "SpritesheetData"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "SpritesheetData",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/SpritesheetData.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AsepriteSerialize",
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/asepriteSerialize.ts"
+          },
+          "importedNames": [
+            "SpritesheetFrameData"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "SpritesheetFrameData",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/SpritesheetFrameData.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "AsepriteSerialize",
+        "packageName": "@flighthq/spritesheet-formats",
+        "source": "packages/spritesheet-formats/src/asepriteSerialize.ts"
       },
       "steps": []
     },
@@ -341430,6 +341693,217 @@
         "name": "TexturePackerSchema",
         "packageName": "@flighthq/types",
         "source": "packages/types/src/TexturePackerSchema.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:30188f5c991d778f9ab333de230cfe7ca8066ba813ccb2eda37c8434ee36d214",
+            "line": 16,
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/texturePackerSerialize.ts",
+            "id": "binding:[\"@flighthq/spritesheet-formats\",\"packages/spritesheet-formats/src/texturePackerSerialize.ts\",397]",
+            "kind": "function",
+            "name": "dataToMeta",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:283029d8fa3b85d42d77a5989da888045e8179a381e31a8d19b3a1935f6440c2",
+            "line": 40,
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/texturePackerSerialize.ts",
+            "id": "binding:[\"@flighthq/spritesheet-formats\",\"packages/spritesheet-formats/src/texturePackerSerialize.ts\",1399]",
+            "kind": "function",
+            "name": "frameToEntry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:13e99078f67fdde8cd120e2323de8d79d2d200ef6e3f3f5d2fd4954e86d3a2b9",
+            "line": 66,
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/texturePackerSerialize.ts",
+            "id": "binding:[\"@flighthq/spritesheet-formats\",\"packages/spritesheet-formats/src/texturePackerSerialize.ts\",2171]",
+            "kind": "function",
+            "name": "dataToHashDocument",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ae4ac25a6c26123d88b0fda7526cb969f8e29751a512f4cb0d4b048d09b5368a",
+            "line": 77,
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/texturePackerSerialize.ts",
+            "id": "binding:[\"@flighthq/spritesheet-formats\",\"packages/spritesheet-formats/src/texturePackerSerialize.ts\",2522]",
+            "kind": "function",
+            "name": "dataToArrayDocument",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:e89822703e053f5579d1b804e1b11c42370ba5c977e4225145e8085ca1b7b7d2",
+            "line": 107,
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/texturePackerSerialize.ts",
+            "id": "binding:[\"@flighthq/spritesheet-formats\",\"packages/spritesheet-formats/src/texturePackerSerialize.ts\",3384]",
+            "kind": "function",
+            "name": "serializeTexturePackerSpritesheet",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "TexturePackerSerialize",
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/texturePackerSerialize.ts"
+          },
+          "importedNames": [
+            "SpritesheetAnimationData"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "SpritesheetAnimationData",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/SpritesheetAnimationData.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "TexturePackerSerialize",
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/texturePackerSerialize.ts"
+          },
+          "importedNames": [
+            "SpritesheetAnimationDirection"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "SpritesheetAnimationDirection",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/SpritesheetAnimationDirection.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "TexturePackerSerialize",
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/texturePackerSerialize.ts"
+          },
+          "importedNames": [
+            "SpritesheetData"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "SpritesheetData",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/SpritesheetData.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "TexturePackerSerialize",
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/texturePackerSerialize.ts"
+          },
+          "importedNames": [
+            "SpritesheetFrameData"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "SpritesheetFrameData",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/SpritesheetFrameData.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "TexturePackerSerialize",
+            "packageName": "@flighthq/spritesheet-formats",
+            "source": "packages/spritesheet-formats/src/texturePackerSerialize.ts"
+          },
+          "importedNames": [
+            "TexturePackerArrayDocument",
+            "TexturePackerArrayFrame",
+            "TexturePackerFrameTag",
+            "TexturePackerHashDocument",
+            "TexturePackerHashFrame",
+            "TexturePackerMeta",
+            "TexturePackerPivot",
+            "TexturePackerRect",
+            "TexturePackerSerializeOptions",
+            "TexturePackerSize"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "TexturePackerSchema",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TexturePackerSchema.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "TexturePackerSerialize",
+        "packageName": "@flighthq/spritesheet-formats",
+        "source": "packages/spritesheet-formats/src/texturePackerSerialize.ts"
       },
       "steps": []
     },

@@ -548,8 +548,7 @@
         "flight/scene3d_wgpu/wgpu_shaded_modifier_snippet.hpp",
         "flight/scene3d_wgpu/wgpu_shaded_prelude.hpp",
         "flight/shape_formats/shape_command_schemas.hpp",
-        "flight/skeleton2d_formats/skeleton_detect.hpp",
-        "flight/spritesheet_formats/spritesheet_detect.hpp"
+        "flight/skeleton2d_formats/skeleton_detect.hpp"
       ],
       "id": "respell-reference-alias-keyedtable"
     },
@@ -3297,30 +3296,19 @@
       "id": "textinput-unqualified-types-names"
     },
     {
-      "files": [
-        "flight/spritesheet_formats/aseprite_parse.hpp",
-        "flight/spritesheet_formats/texture_packer_parse.hpp"
-      ],
+      "files": [],
       "id": "spritesheet-formats-unqualified-importdiagnostics-names"
     },
     {
-      "files": [
-        "flight/spritesheet_formats/spritesheet_detect.hpp"
-      ],
+      "files": [],
       "id": "spritesheet-formats-unqualified-registry-names"
     },
     {
-      "files": [
-        "flight/spritesheet_formats/aseprite_parse.hpp",
-        "flight/spritesheet_formats/texture_packer_parse.hpp"
-      ],
+      "files": [],
       "id": "spritesheet-formats-unqualified-spritesheet-names"
     },
     {
-      "files": [
-        "flight/spritesheet_formats/aseprite_parse.hpp",
-        "flight/spritesheet_formats/texture_packer_parse.hpp"
-      ],
+      "files": [],
       "id": "spritesheet-formats-unqualified-textureatlas-formats-names"
     },
     {
@@ -5004,6 +4992,20 @@
     },
     {
       "dependency": "flight",
+      "digest": "b0320738510a4bb33d5f85b631d90c992a9a7f708590b9c894526549ebbddbbb",
+      "id": "spritesheet-formats-explicit-formats",
+      "module": "packages/spritesheet-formats/src/spritesheetDetect.ts",
+      "package": "@flighthq/spritesheet-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "39dbaae03a149bc03d761f5df36ddf81ffb8010ffebc1949d1c046174d90e32c",
+      "id": "spritesheet-formats-serializer-existing-shapes",
+      "module": "packages/spritesheet-formats/src/asepriteSerialize.ts and packages/spritesheet-formats/src/texturePackerSerialize.ts",
+      "package": "@flighthq/spritesheet-formats"
+    },
+    {
+      "dependency": "flight",
       "digest": "f6e3a267c0060d609bf0bf726770be46dc1c57099255ea75656e3e357e97818b",
       "id": "tilemap-formats-record-materialization",
       "module": "packages/tilemap-formats/src/tiledJsonParse.ts, packages/tilemap-formats/src/tiledTmjFormat.ts, and packages/tilemap-formats/src/tiledXmlParse.ts",
@@ -6498,7 +6500,6 @@
       "flight/skeleton2d_formats/spine_parse.hpp",
       "flight/snapshot/enable_snapshot_guards.hpp",
       "flight/spatial/format_spatial_indexing_notice.hpp",
-      "flight/spritesheet_formats/spritesheet_detect.hpp",
       "flight/text/rich_text.hpp",
       "flight/text/text_label.hpp",
       "flight/text_markup/text_markup.hpp",
@@ -6518,7 +6519,7 @@
       "flight/tilemap_formats/tiled_xml_parse.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 899
+    "includes": 894
   },
   "packages": [
     {
@@ -8163,14 +8164,14 @@
       "sourceModules": 9
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/spritesheet_formats",
       "cppNamespace": "flight::spritesheet_formats",
-      "emittedModules": 8,
+      "emittedModules": 11,
       "package": "@flighthq/spritesheet-formats",
-      "refusedModules": 5,
+      "refusedModules": 2,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 13
@@ -8564,8 +8565,8 @@
   },
   "summary": {
     "packages": 156,
-    "emittedModules": 2459,
-    "refusedModules": 574,
+    "emittedModules": 2462,
+    "refusedModules": 571,
     "sourceModules": 3033
   }
 }

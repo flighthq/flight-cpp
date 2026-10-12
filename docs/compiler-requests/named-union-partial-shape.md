@@ -37,9 +37,20 @@ are evaluated.
 `cpp-partial-shape-unresolvable` refusal. The same mechanism also appears in generic configuration paths
 such as particle validation.
 
+At Flight `a627849`, `@flighthq/spritesheet-formats` measures the same refusal on two public serializer
+parameters: `Partial<AsepriteDocument>` and `Partial<TexturePackerDocument>`, where each document alias
+is the union of its array and hash schema arms. The refusal omits both complete serializer declarations.
+
 ## Carrying workaround
 
 There is no general compiler patch in this repository. Some individual modules replace a partial mapped
 type with a hand-written closed options interface when that interface is already their true API, but
 `createVideoTexture` intentionally accepts the public `TextureLike` surface. Its generated module remains
 refused until named mapped unions resolve to their per-arm object shapes.
+
+The two spritesheet serializers carry a narrower source workaround:
+`source-patches/spritesheet-formats-serializer-existing-shapes.patch` spells the already-equivalent
+top-level partial union as one optional row whose `frames` field is the same array-or-record union and
+whose `meta` field keeps the same owner. Internal helpers receive only that shared metadata field, which
+is all they previously read. It changes no runtime value or accepted structural caller and expires when
+the named union form plans those same rows directly.

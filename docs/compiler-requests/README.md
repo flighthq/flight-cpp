@@ -238,6 +238,24 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [An iterated element's property must retain its type at a contextual optional field](iterated-element-property-contextual-optional.md) —
   spritesheet refuses hydration and data validation after typed callback/iterator elements reach C++
   storage erased at optional destination fields; distinct from absence and presence-test defects.
+- [A contextual empty-array fallback must inherit the iterable element type](contextual-empty-array-fallback-element-evidence.md) —
+  spritesheet and texture-atlas format registries lose their typed descriptor arm at `options.formats ?? []`;
+  explicit absence guards preserve the same zero-iteration behavior.
+- [Structurally assignable schema unions need identity-preserving call conversion](parallel-schema-union-structural-conversion.md) —
+  Aseprite and TexturePacker spritesheet documents cannot enter their parallel atlas-schema union arms
+  even though TypeScript accepts each source arm structurally.
+- [A contextual object return must use its declared nominal owner](contextual-object-return-nominal-owner.md) —
+  two spritesheet serializer helpers silently return anonymous metadata owners from functions declared
+  to return `AsepriteMeta` or `TexturePackerMeta`.
+- [An object spread of a call result must copy the returned fields](object-spread-of-call-result-dropped.md) —
+  Aseprite and TexturePacker array serializers silently drop every frame field supplied by a freshly
+  returned nominal entry, leaving only `filename` in the emitted objects.
+- [`JSON.stringify` must enumerate a nominal interface reference](json-stringify-nominal-ref-empty-object.md) —
+  both spritesheet JSON serializers compile without diagnostics but stringify complete nominal documents
+  as `{}` until the same owner is exposed through its readonly structural row.
+- [A recursive value union needs incomplete-type-safe native storage](recursive-value-union-complete-storage.md) —
+  `FlightDocumentValue` instantiates arrays and records of itself by value before its definition is
+  complete, blocking six spritesheet-format parser and aggregate headers.
 - [Flattened interface refinements need an identity-preserving carrier](flattened-interface-refinement-identity.md) —
   independent emitted structs cannot represent a `Texture2D` → `RenderTexture` refinement.
 - [Named union shapes must survive `Partial<T>`](named-union-partial-shape.md) — the emitter
