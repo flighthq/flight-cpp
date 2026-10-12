@@ -6764,22 +6764,6 @@
       "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "useragent-unqualified-types-names",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/useragent/",
-      "namespace": "flight::types",
-      "symbols": [
-        {
-          "include": "flight/types/device_form_factor.hpp",
-          "name": "DeviceFormFactor"
-        }
-      ],
-      "diagnostic": "'DeviceFormFactor' was not declared in this scope",
-      "defect": "The emitter writes 1 name(s) owned by flight::types unqualified inside namespace flight::useragent, without the headers that define them. Each name here was named by an actual compiler diagnostic in a complete run and resolved to a definition in flight/types/, so no name already in scope is redeclared.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "updater-unqualified-types-names",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/updater/",
