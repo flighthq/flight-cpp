@@ -2706,7 +2706,7 @@
       "code": "dependency-refused",
       "module": "packages/intl/src/contract.ts",
       "package": "@flighthq/intl",
-      "reason": "dependency ./collator was refused for @flighthq/intl/packages/intl/src/collator.ts",
+      "reason": "dependency ./cache.ts was refused for @flighthq/intl/packages/intl/src/cache.ts",
       "stage": "dependency"
     },
     {
@@ -2722,7 +2722,7 @@
       "code": "dependency-refused",
       "module": "packages/intl/src/index.ts",
       "package": "@flighthq/intl",
-      "reason": "dependency ./contract was refused for @flighthq/intl/packages/intl/src/contract.ts",
+      "reason": "dependency ./collator.ts was refused for @flighthq/intl/packages/intl/src/collator.ts",
       "stage": "dependency"
     },
     {

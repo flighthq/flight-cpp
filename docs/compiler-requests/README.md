@@ -100,3 +100,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [Interface heritage is not a C++ owner relation](compiler-interface-heritage-owner-widening.md) —
   a sub-interface value cannot widen into a super-interface slot across a nullable union; no faithful
   source spelling exists, so `glyphSource.ts` stays refused.
+- [intl is refused for carried union and absence evidence](compiler-intl-optional-and-union-carrier-evidence.md)
+  — 7 of 9 `@flighthq/intl` modules; one is supplied by the intl-formatter-cache override, the rest
+  are retained refusals.
+- [An argument is passed without constructing its declared parameter type](compiler-union-and-literal-argument-construction.md)
+  — a union argument to an overloaded call, and an object literal into an `std::optional` parameter;
+  recorded so they are not confused with intl's own refusals.

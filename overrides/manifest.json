@@ -1469,7 +1469,7 @@
       "package": "@flighthq/intl",
       "status": "complete",
       "supplies": "packages/intl/src/cache.ts",
-      "derivedFrom": "0f377835cdf8b674379334da96d96e228feedef0a3b4b1197fba776c5d2f6fb5",
+      "derivedFrom": "32cf9e6c3c79810812d702aeb636e3e26698f64c8e2e3a83c90b4b62c59530c3",
       "reason": "The emitter refuses the generic cache builder after losing Map lookup absence and refuses cache-key serialization after losing the LocaleInput union, while every formatter retains calls to both functions.",
       "change": "Supplies a bounded FIFO cache over type-erased immutable formatter values and the source JSON key shape for each represented Intl option record and locale arm.",
       "equivalence": "Keys preserve the source kind, locale ordering, omitted undefined fields, JSON escaping, booleans, and the insertion order used by every represented formatter option object. Cache hits return the stored formatter value, misses invoke the builder once, and inserting at capacity evicts the oldest key exactly as the source Map does.",

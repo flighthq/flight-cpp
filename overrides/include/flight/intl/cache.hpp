@@ -1,4 +1,16 @@
-// Derived from @flighthq/intl/packages/intl/src/cache.ts.
+// Derived from @flighthq/intl/packages/intl/src/cache.ts
+// at generated digest 32cf9e6c3c79810812d702aeb636e3e26698f64c8e2e3a83c90b4b62c59530c3.
+//
+// OVERRIDE: the emitter refuses this module -- a presence test against undefined has no absence
+// channel in the emitted C++ storage for the `unknown` value a Map<string, unknown>.get returns -- so
+// the emitted header is a PARTIAL that omits getCacheKey and getCached. This supplies both, plus the
+// per-option key builders they use.
+//
+// Re-derived 2026-10-12 by checking it still matches the current source rather than rebuilding it from
+// the emitted partial: both exported functions are present, the key is still kind|localeKey|json and
+// the cache is still a bounded FIFO of 256 over type-erased values. A target-neutral rewrite of the
+// eviction (iterate keys() and delete the first) was tried first and did NOT clear the refusal, which
+// is why the override stays.
 #pragma once
 
 #include <functional>

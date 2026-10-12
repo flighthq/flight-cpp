@@ -12692,6 +12692,7 @@
       "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/intl/packages/intl/src/collator.ts",
+        "@flighthq/intl/packages/intl/src/contract.ts",
         "@flighthq/intl/packages/intl/src/datetime.ts",
         "@flighthq/intl/packages/intl/src/list.ts",
         "@flighthq/intl/packages/intl/src/number.ts",
@@ -12716,7 +12717,8 @@
     {
       "classification": "source-portability",
       "consumers": [
-        "@flighthq/intl/packages/intl/src/contract.ts"
+        "@flighthq/intl/packages/intl/src/contract.ts",
+        "@flighthq/intl/packages/intl/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:5333c0b92b78f468e707819f57edd0b4de2c57ad96d122d914c4f84d35dd69d8",
@@ -12733,9 +12735,7 @@
       "status": "refused-placeholder"
     },
     {
-      "consumers": [
-        "@flighthq/intl/packages/intl/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/intl",
@@ -12743,6 +12743,7 @@
       },
       "path": "flight/intl/contract.hpp",
       "refusedDependencies": [
+        "@flighthq/intl/packages/intl/src/cache.ts",
         "@flighthq/intl/packages/intl/src/collator.ts",
         "@flighthq/intl/packages/intl/src/datetime.ts",
         "@flighthq/intl/packages/intl/src/list.ts",
@@ -12755,7 +12756,8 @@
     {
       "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/intl/packages/intl/src/contract.ts"
+        "@flighthq/intl/packages/intl/src/contract.ts",
+        "@flighthq/intl/packages/intl/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:16f465c519c3ef1838d21b5b63d436fc4cca2383d830ace87248268d331718e7",
@@ -12784,14 +12786,20 @@
       },
       "path": "flight/intl/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/intl/packages/intl/src/contract.ts"
+        "@flighthq/intl/packages/intl/src/collator.ts",
+        "@flighthq/intl/packages/intl/src/datetime.ts",
+        "@flighthq/intl/packages/intl/src/list.ts",
+        "@flighthq/intl/packages/intl/src/number.ts",
+        "@flighthq/intl/packages/intl/src/plural.ts",
+        "@flighthq/intl/packages/intl/src/relativeTime.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "classification": "source-portability",
       "consumers": [
-        "@flighthq/intl/packages/intl/src/contract.ts"
+        "@flighthq/intl/packages/intl/src/contract.ts",
+        "@flighthq/intl/packages/intl/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:60b1fe248a3b2ca6f1ce8258afd11a4c5fb279b067a57e3d3aa7784d9c027b94"
@@ -12808,7 +12816,8 @@
     {
       "classification": "source-portability",
       "consumers": [
-        "@flighthq/intl/packages/intl/src/contract.ts"
+        "@flighthq/intl/packages/intl/src/contract.ts",
+        "@flighthq/intl/packages/intl/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:3886882496f9f0849a98dbbe5076a5714d9cc9e7a4021034ce33115f4ac42653",
@@ -12830,7 +12839,8 @@
     {
       "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/intl/packages/intl/src/contract.ts"
+        "@flighthq/intl/packages/intl/src/contract.ts",
+        "@flighthq/intl/packages/intl/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:612d6be7f016bb8ace40e15063518e5851e74ea6aace9f2d48b567c8aac33ed1",
@@ -12849,7 +12859,8 @@
     {
       "classification": "source-portability",
       "consumers": [
-        "@flighthq/intl/packages/intl/src/contract.ts"
+        "@flighthq/intl/packages/intl/src/contract.ts",
+        "@flighthq/intl/packages/intl/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:4f9bc8eafd9b0f62bdcdad3228b71faebc989f50593fd6d1581a03f64b00032f"
