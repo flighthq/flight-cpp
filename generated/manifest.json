@@ -778,7 +778,6 @@
       "files": [
         "flight/app/app_loop.hpp",
         "flight/connectivity/connectivity.hpp",
-        "flight/input/input_manager.hpp",
         "flight/interaction/interaction_manager.hpp",
         "flight/lifecycle/lifecycle.hpp",
         "flight/menu/menu.hpp",
@@ -1470,9 +1469,7 @@
       "id": "image-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/input/input_manager.hpp"
-      ],
+      "files": [],
       "id": "input-unqualified-entity-names"
     },
     {
@@ -2832,9 +2829,7 @@
       "id": "gui-unqualified-signals-names"
     },
     {
-      "files": [
-        "flight/input/input_manager.hpp"
-      ],
+      "files": [],
       "id": "input-unqualified-signals-names"
     },
     {
@@ -3719,39 +3714,27 @@
       "id": "math-power-runtime-call-namespace-collision"
     },
     {
-      "files": [
-        "flight/input/input_manager.hpp"
-      ],
+      "files": [],
       "id": "input-readonly-keyboard-callback-parameter"
     },
     {
-      "files": [
-        "flight/input/input_manager.hpp"
-      ],
+      "files": [],
       "id": "input-readonly-pointer-callback-parameter"
     },
     {
-      "files": [
-        "flight/input/input_manager.hpp"
-      ],
+      "files": [],
       "id": "input-readonly-gamepad-button-callback-parameter"
     },
     {
-      "files": [
-        "flight/input/input_manager.hpp"
-      ],
+      "files": [],
       "id": "input-readonly-gamepad-axis-callback-parameter"
     },
     {
-      "files": [
-        "flight/input/input_manager.hpp"
-      ],
+      "files": [],
       "id": "input-readonly-gamepad-connect-callback-parameter"
     },
     {
-      "files": [
-        "flight/input/input_manager.hpp"
-      ],
+      "files": [],
       "id": "input-readonly-text-callback-parameter"
     },
     {
@@ -7178,14 +7161,14 @@
       "sourceModules": 4
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/input",
       "cppNamespace": "flight::input",
-      "emittedModules": 2,
+      "emittedModules": 3,
       "package": "@flighthq/input",
-      "refusedModules": 1,
+      "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 3
@@ -8608,8 +8591,8 @@
   },
   "summary": {
     "packages": 156,
-    "emittedModules": 2452,
-    "refusedModules": 581,
+    "emittedModules": 2453,
+    "refusedModules": 580,
     "sourceModules": 3033
   }
 }

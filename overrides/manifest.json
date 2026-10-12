@@ -1528,7 +1528,7 @@
       "equivalence": "Input state updates preserve the source key, pointer, gamepad and frame-reset rules. Connecting appends one listener to each existing dispatcher and the returned closure restores those exact dispatchers; repeat timers retain their key and timing state by identity.",
       "whyNotAPatchOrRepair": "Using declarations and readonly-parameter repairs close the emitted naming defects but cannot supply refused behavioral bodies or repair invalid generic signal storage. Rewriting the portable source around the C++ signal representation would leak target details upstream.",
       "unblocks": "input_manager.hpp compiles independently and supplies the module used by the package aggregators.",
-      "remaining": "None in input_manager.ts at this pin; the refused repeat timer is represented by the source-compatible timer state boundary.",
+      "remaining": "The key-repeat timer is NOT implemented. `initialize_input_key_repeat_timer`'s `start` invokes the callback once and returns, and `stop` is inert, so the delay and the repeating interval the source documents -- immediate call on press, again after `options.delay` ms, then every `options.interval` ms until `stop()` -- do not happen. The interface is source-compatible; the behavior is not, and this entry previously said \"None\" here, which understated it. The emitter defect behind it is filed as docs/compiler-requests/timer-handle-in-a-declared-number-slot.md; re-deriving this override must implement the repeat, not re-state the boundary.",
       "expires": "when generic SignalData storage, shared closure state, and input timer initialization emit directly.",
       "authoredOn": "2026-10-07"
     },

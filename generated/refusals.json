@@ -2467,29 +2467,6 @@
     },
     {
       "code": "dependency-refused",
-      "module": "packages/input/src/contract.ts",
-      "package": "@flighthq/input",
-      "reason": "dependency ./inputManager was refused for @flighthq/input/packages/input/src/inputManager.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/input/src/index.ts",
-      "package": "@flighthq/input",
-      "reason": "dependency ./contract was refused for @flighthq/input/packages/input/src/contract.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 352,
-      "module": "packages/input/src/inputManager.ts",
-      "package": "@flighthq/input",
-      "reason": "cpp emission failed for @flighthq/input/packages/input/src/inputManager.ts: missing required call argument at position 2",
-      "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
       "module": "packages/interaction/src/contract.ts",
       "package": "@flighthq/interaction",
       "reason": "dependency ./focusManager was refused for @flighthq/interaction/packages/interaction/src/focusManager.ts",

@@ -12038,19 +12038,14 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/input/packages/input/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/input",
         "source": "packages/input/src/contract.ts"
       },
       "path": "flight/input/contract.hpp",
-      "refusedDependencies": [
-        "@flighthq/input/packages/input/src/inputManager.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "consumers": [],
@@ -12060,66 +12055,12 @@
         "source": "packages/input/src/index.ts"
       },
       "path": "flight/input/_internal_index.hpp",
-      "refusedDependencies": [
-        "@flighthq/input/packages/input/src/contract.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/input/packages/input/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:088a99820b2920b14dabbb8baf24ab15b5e1dcd94744c04633c5ce9a42c66a0f",
-        "sha256:12175d70a9ac6866479a326e5abbe85efa7a0caca6b650b553e115d83e9c4c48",
-        "sha256:12245e2cc9a014d92ef77a14c4252c21bc76d77bcd7ddbedc0db40f737990004",
-        "sha256:12cc0e345a82adb0fe99cc000bbbff55d1639347720d0307c3437fc7fdea7a80",
-        "sha256:17946cfc82a4afbb8bae67fdbed05dfb13768d3368c1a632c9728ab72592a886",
-        "sha256:18cd09b5b3338e290c0d074f271f957f074bfb1bd2d69c0b8715ccf2cc1bfe6f",
-        "sha256:281cf16b56dd78ac20515f21f02c59b2e7bd056238a73dd8bda900175363eb3a",
-        "sha256:318fd043a139d0b0bba005cf88fb0ca628924373e125915418bc2b847ae808c5",
-        "sha256:36a6e44064a351ea9331f29e5f14a32f28878f394b49637b4a44e907f9765b66",
-        "sha256:3d5f99c1545613470500f400524f2d1684fa3035239f77f9c65f6cfb516a1f0c",
-        "sha256:3f63e3e06871e5b0a687b4aff653171f197cae52716b33f0d84d459887a27626",
-        "sha256:457d1e0f94bf83cfe9ebc41389994a68d95744fa9c2110736e8fd98591374a0f",
-        "sha256:45bda1661ba19e4024a5b168af48e7052784ed9ef60b31b3e7c5dbdd67e5129e",
-        "sha256:45ce36177eada86b8c0cd97ce2d7fc1ed8b69f68bd1e0a3d8401ea2d4d1f9715",
-        "sha256:49d351c347d6c1285faaa4cc1bbffeb859b1f55235846a5b6d633a9347cc332a",
-        "sha256:4a50ad47067dca3bdeb0fa4a1f50d76dd898c3b515f28bc3dd378378039a0570",
-        "sha256:4b20ce43e69e0aa6bbbd1a2c2f3bc759d7478b0da326878a077c2380c5d0e620",
-        "sha256:4e41233fb62842b7531809beda0f6fda1bb96be37041399bc5260c4130927db9",
-        "sha256:50173d762742f518876201c2c8f39639e7326f7974603c6ad6886afe2c8f4e97",
-        "sha256:5b43a0652056e1b99ccaa19433ae35fd49cc45a4abcaf70ab573a03d36cf0e08",
-        "sha256:5ba39cbd7b2dd14e912ae7f835b8f1259654e5baf4ecd5a8806e7de9c2aeed6a",
-        "sha256:664b23ac48711ebde52ff23481209670fcce80277564d5003c7d23cbde5015b5",
-        "sha256:6e2e1b4620a0197b0cedf6a2814d96bee1acdb5f9f2fac1826ef3bb12972aad0",
-        "sha256:761a0ae2dc41b7f3f5571313074f9db37fc5b713288581c67d1ed89bff527bd3",
-        "sha256:79082d44a8fdd5ecc37a668f91daf387e5d1dd9468bf157d4b814048bf04a41d",
-        "sha256:793a650ef071415f45499f69a8a05aa8bebec5403b967069feba3dc8187d9e16",
-        "sha256:8475e40ebaefb9406cc0f8be9bac2e3da823ad71c4ec062d86c91ac13e0531bd",
-        "sha256:8a43970c788e498fc1927fbbfae9cd3b569a3d383b05ae20962562b891737352",
-        "sha256:8aeb7149765713d58db9d3652c35c4ab0d1955de4369d50826922f36622a240e",
-        "sha256:8b9c2bc4c09537848aa8cc4c5b0486cda124b7f21fd2b4b6b61f147440879a0c",
-        "sha256:8ce02fe18389c35858b37e515567c180c4b6a56f7a2df4bf10893836aaa1c867",
-        "sha256:8ea8a622a428bebb8384c1aea9dd53d42a7fc862d7fd8371ca28c831d1506507",
-        "sha256:904495fd3e350d02fabf2f07ee82ab1ecbceaec3933bb0d440eb447d2040632d",
-        "sha256:94b3c318f6312e2988875f327a7b83fe0e4c2b9415b23db69982291893d5efa7",
-        "sha256:965f2eeffa56284fc85b084123b416fad44e2dcff50ee5d9e55ee83d0142c752",
-        "sha256:9db5f83251445e67eacc5d6b548dad85e66381aa6a205d85f83386739f03b08b",
-        "sha256:9fa0da9b15b3908bde57eb1c357d45264fbe47e72adb0ac5c76d8e8e737d93ab",
-        "sha256:9faea97712f550589a68d8e015c9a6a993f54a836344c16ddb0c01d833befe9b",
-        "sha256:a071563226e25d89c556299e37c9f25db2389c6e0e733f66981f8f9acafef871",
-        "sha256:ad9af47e326f059042c14e793cb1f0185cd02aa2997edbaf45ac07951b299abe",
-        "sha256:ae10b8da0c09d886cd645f5ea7d232cd53776de57c52839b2506fd195a4c345a",
-        "sha256:b542a13b799ba9f81169d7cdbe950bfe027c46c4a6b89e4a7eaa66b40ccb2bbf",
-        "sha256:b63782c3e8092bb570e2d82ee7abdb91789f646a0812c0295efa9a7cf4b1a44b",
-        "sha256:c738c024ec85835b6fb9f1c83c907b277f7d6761baad2c02fcfa9bf7eb0d45b1",
-        "sha256:d8a342452f25c77cc335798678a2133e00eabad9ccc87922677fcb86bc3f8e74",
-        "sha256:dfcf9f385dcd474a3145ebe27ef6edde554e52b52f4940868a488c6b4b8f3c81",
-        "sha256:e87dde67f7a551654befd39c793d08df8e7ebbd172056419b09f59e996036753",
-        "sha256:ef6bceab1e58d5f840c3be71704169ac0364a812b4661e407247ae8d6d1adb0f",
-        "sha256:fe509dc2677266291bab31322d9de8c3491af91cb05fe0007158315a28e07838"
+        "@flighthq/input/packages/input/src/contract.ts",
+        "@flighthq/input/packages/input/src/index.ts"
       ],
       "module": {
         "name": "InputManager",
@@ -12127,8 +12068,7 @@
         "source": "packages/input/src/inputManager.ts"
       },
       "path": "flight/input/input_manager.hpp",
-      "rule": "cpp-call-argument-missing",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [

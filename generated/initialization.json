@@ -1716,6 +1716,21 @@
       "source": "packages/importdiagnostics/src/index.ts"
     },
     {
+      "name": "Contract",
+      "packageName": "@flighthq/input",
+      "source": "packages/input/src/contract.ts"
+    },
+    {
+      "name": "Index",
+      "packageName": "@flighthq/input",
+      "source": "packages/input/src/index.ts"
+    },
+    {
+      "name": "InputManager",
+      "packageName": "@flighthq/input",
+      "source": "packages/input/src/inputManager.ts"
+    },
+    {
       "name": "DisplayObjectOverlap",
       "packageName": "@flighthq/interaction",
       "source": "packages/interaction/src/displayObjectOverlap.ts"
@@ -23349,6 +23364,36 @@
           "name": "Index",
           "packageName": "@flighthq/importdiagnostics",
           "source": "packages/importdiagnostics/src/index.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "InputManager",
+          "packageName": "@flighthq/input",
+          "source": "packages/input/src/inputManager.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Contract",
+          "packageName": "@flighthq/input",
+          "source": "packages/input/src/contract.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Index",
+          "packageName": "@flighthq/input",
+          "source": "packages/input/src/index.ts"
         }
       ]
     },
@@ -101959,6 +102004,31 @@
           "evaluation": "runtime",
           "importer": {
             "name": "Contract",
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/contract.ts"
+          },
+          "specifier": "./inputManager.ts",
+          "target": {
+            "name": "InputManager",
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Contract",
+        "packageName": "@flighthq/input",
+        "source": "packages/input/src/contract.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
             "packageName": "@flighthq/ipc",
             "source": "packages/ipc/src/contract.ts"
           },
@@ -172061,6 +172131,31 @@
           "evaluation": "runtime",
           "importer": {
             "name": "Index",
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/index.ts"
+          },
+          "specifier": "./inputManager.ts",
+          "target": {
+            "name": "InputManager",
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Index",
+        "packageName": "@flighthq/input",
+        "source": "packages/input/src/index.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
             "packageName": "@flighthq/ipc",
             "source": "packages/ipc/src/index.ts"
           },
@@ -187352,6 +187447,1612 @@
         "source": "packages/types/src/InputKeyboardData.ts"
       },
       "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
+            "line": 1,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",9]",
+            "kind": "import",
+            "name": "allocateEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "allocateEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 26,
+            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
+            "line": 1,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",25]",
+            "kind": "import",
+            "name": "finishEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "finishEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ad71e27ca521c5b7410beb63b3f90a39117676012b7e2cb6f5101841c105c154",
+            "line": 2,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",83]",
+            "kind": "import",
+            "name": "connectSignal",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "connectSignal",
+            "kind": "dependency",
+            "module": {
+              "name": "Slot",
+              "packageName": "@flighthq/signals",
+              "source": "packages/signals/src/slot.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 25,
+            "fingerprint": "sha256:f695125ef15fca88aad4ca9f4017858873dc8acecca23873c3db6d3f8d8ac3da",
+            "line": 2,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",98]",
+            "kind": "import",
+            "name": "createSignal",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createSignal",
+            "kind": "dependency",
+            "module": {
+              "name": "Signal",
+              "packageName": "@flighthq/signals",
+              "source": "packages/signals/src/signal.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 39,
+            "fingerprint": "sha256:fd2c501674edcc24225dee1f0442f8355067ec584395997d5452711ddb95448a",
+            "line": 2,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",112]",
+            "kind": "import",
+            "name": "disconnectSignal",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "disconnectSignal",
+            "kind": "dependency",
+            "module": {
+              "name": "Slot",
+              "packageName": "@flighthq/signals",
+              "source": "packages/signals/src/slot.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 57,
+            "fingerprint": "sha256:fa9bc748aa318de911894b591045e72bbc661d8809c2bf90f79bb60e7707dce8",
+            "line": 2,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",130]",
+            "kind": "import",
+            "name": "emitSignal",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "emitSignal",
+            "kind": "dependency",
+            "module": {
+              "name": "Emitter",
+              "packageName": "@flighthq/signals",
+              "source": "packages/signals/src/emitter.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 22,
+            "fingerprint": "sha256:133377ab4c79d3d42a6279689e9189afd6d7ef29fdbf3745feddd6cc0a84148e",
+            "line": 24,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",647]",
+            "kind": "import",
+            "name": "GamepadAxisKindValues",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "GamepadAxisKind",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 24,
+            "fingerprint": "sha256:150577abecf1bbb470546a9e64385f4686ad22eb9a888f84298badd84bcb601c",
+            "line": 25,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",693]",
+            "kind": "import",
+            "name": "GamepadButtonKindValues",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "GamepadButtonKind",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:1372f20d77a0dfd4b65afd200bf7f6d7cc5e6a2e1c4e217a159a3a76b9e9136c",
+            "line": 31,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",999]",
+            "kind": "variable",
+            "name": "MAX_GAMEPAD_AXES",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:991936fc365ae4cdf4a5e25b34a5e1341e76e02999ae7020a24c0a283fc58e12",
+            "line": 32,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",1028]",
+            "kind": "variable",
+            "name": "MAX_GAMEPAD_BUTTONS",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:f4f8bf9d1187be0959be174b12757d116d37c33fba2ec0dcf97e1c46c66eb456",
+            "line": 40,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",1327]",
+            "kind": "function",
+            "name": "applyGamepadAxisDeadZone",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:8274144e4bcd144fad255721db0b4532b0bce78a0b48d7aa23518100a13bf000",
+            "line": 59,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",2064]",
+            "kind": "function",
+            "name": "applyGamepadStickDeadZone",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:e366f9f866f1241854a6808b1cc8cd2c4d2cd3919174a13d89e4a6cd1fc06a0b",
+            "line": 76,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",2469]",
+            "kind": "function",
+            "name": "attachGamepadInput",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:82cb68101e349d164501a2dcc92b82f6daf75c31352aa09720057b273c6979b2",
+            "line": 86,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",2830]",
+            "kind": "function",
+            "name": "attachKeyboardInput",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:69267174920f01104ad7105ebb7a1cadd6d090a4b5d7c59b8ff74a4439c76fbf",
+            "line": 96,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",3194]",
+            "kind": "function",
+            "name": "attachPointerInput",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:c93c29ad7450d11f12cda9ca157321c4e68bee3fe1a2f985ac04778222fa13ad",
+            "line": 106,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",3555]",
+            "kind": "function",
+            "name": "attachRelativePointerInput",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:2e8f30d1eb316f209f53f83eb01c4bf57e698845010d268bfa851aa8c8740938",
+            "line": 116,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",3940]",
+            "kind": "function",
+            "name": "attachTextInput",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:ea9a1511dbe52601c6d36ba43b2497f53f0364cc2169867c23f6d0593eb8c4e2",
+            "line": 126,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",4292]",
+            "kind": "function",
+            "name": "attachWheelInput",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:45b6c08ead32c04f88535a54ee27f57cd1946d531616c2112aca5a6f2a5a80ea",
+            "line": 143,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",4997]",
+            "kind": "function",
+            "name": "connectInputStateToInputManager",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:269547a7602fa1f5974de13efc93c408f5554b59452762a71f9915bbbb5aa284",
+            "line": 243,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",10065]",
+            "kind": "function",
+            "name": "createInputKeyRepeatTimer",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:555283da226bb5735e5b668a16a831cfbd05e05ce16d45b5b46a3f46f7a6d95b",
+            "line": 249,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",10303]",
+            "kind": "function",
+            "name": "createInputManager",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:ae0973aa4ab43a38f7d5b6c4019739b9833a8df31a10b2384fe235d4759e73e6",
+            "line": 255,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",10464]",
+            "kind": "function",
+            "name": "createInputSignals",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:4402c2381b9aff10edb887a94b2b13537544fac37cde6f34eabb1f719a8ed0ff",
+            "line": 261,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",10625]",
+            "kind": "function",
+            "name": "createInputState",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:582c5bb08568a40af9f0f15ab09b525268435151c426d4ac9fdbd433e137ba63",
+            "line": 267,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",10778]",
+            "kind": "function",
+            "name": "detachGamepadInput",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:5fd6ad6bb054e22dc4ff9bf0c8e9ea4337263f1adc768066a35ee08a2453d04a",
+            "line": 271,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",10928]",
+            "kind": "function",
+            "name": "detachKeyboardInput",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:9f885827d382c3a1aac07bd4f403fac2e3ca9b1d4cc7b019a3d44b3e3d29ab35",
+            "line": 275,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",11080]",
+            "kind": "function",
+            "name": "detachPointerInput",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:0703266e05cad490b526c3777812a37b4b60b24a04493d5b4d0c34916280658b",
+            "line": 279,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",11230]",
+            "kind": "function",
+            "name": "detachRelativePointerInput",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:8ebeb65450a3301df0fbd2e4ebbacb80a273f02b27efb5a6a0c7fe08e2dc5d05",
+            "line": 283,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",11396]",
+            "kind": "function",
+            "name": "detachTextInput",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:cf35bf167c9fa12377f5461158414024eb3d39e625d56a7031041ac5219fefc7",
+            "line": 287,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",11540]",
+            "kind": "function",
+            "name": "detachWheelInput",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:345b3a7ba88979c6e571f89db3cc8f5c308b5837e9b28291a3f1f201eb504ec2",
+            "line": 297,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",11974]",
+            "kind": "function",
+            "name": "endInputStateFrame",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:3c343073c9108fc1dc7ca068a046ed200542aaaa8c422d43cd904aa49b2ff0cc",
+            "line": 309,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",12394]",
+            "kind": "function",
+            "name": "getGamepadAxisName",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:4db0d1eb9f2ac631679e77c5e60350485efe87e06ed6cd30b1e1920aa2dbcdf5",
+            "line": 319,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",12792]",
+            "kind": "function",
+            "name": "getGamepadButtonName",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:2bf9da2743dfeeabc214d3fc67a40be13005b6c4a06ad9194364f3ad8238c6d4",
+            "line": 328,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",13147]",
+            "kind": "function",
+            "name": "getInputGamepadAxis",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:9ac5194afc932eb639353c42741c1315d344b86eb94599bab19217a846446889",
+            "line": 352,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",14052]",
+            "kind": "function",
+            "name": "initializeInputKeyRepeatTimer",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:a039b121d1acfc0a8f39fc975e60ac6917a46afa0e343b79c633b883f2944e07",
+            "line": 376,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",14661]",
+            "kind": "function",
+            "name": "initializeInputManager",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:3c5a2d77a02347cb9323dcf03ed88435195da3645f4233e0fa8788274ad88fe6",
+            "line": 396,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",15507]",
+            "kind": "function",
+            "name": "initializeInputSignals",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:f35d8e10954dac9c4202eaca8280459478e4da79730e34da784c549bb03f08f5",
+            "line": 420,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",16431]",
+            "kind": "function",
+            "name": "initializeInputState",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:0a8c59c79259e0ae97018cf909f921683cef11371edfd8c3e66b1bad1a14ac34",
+            "line": 435,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",16950]",
+            "kind": "function",
+            "name": "isInputGamepadButtonDown",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:6c5aaf27a988234e7caf9ea43eb821d72439111e15653f42706093c75679642a",
+            "line": 442,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",17231]",
+            "kind": "function",
+            "name": "isInputKeyDown",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:afa44a83bc402f15fa19a086ce7099e4dacca91b6ac79180195c2f4f1689cbf0",
+            "line": 450,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",17552]",
+            "kind": "function",
+            "name": "isInputPointerButtonDown",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:8faf34bf2b818b1b9eee02c3c770ca171d7b063cc3106731f9cdab8fba2db5fe",
+            "line": 459,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",17928]",
+            "kind": "function",
+            "name": "wasInputGamepadButtonPressed",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:42f8a45ad35f10a16dca05b23e5fe80b1234c3d1e5b266ea0328abd52b74752f",
+            "line": 468,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",18312]",
+            "kind": "function",
+            "name": "wasInputGamepadButtonReleased",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:4cd040edbc41e78a9095fa09a36bb7c24a73409975dbb7f20a4c83181bd12959",
+            "line": 476,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",18676]",
+            "kind": "function",
+            "name": "wasInputKeyPressed",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:13644ddb13fccb5054d804971ba4bb0a30b6e4baf54a9bc2b5258f5cfc5e9953",
+            "line": 484,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",18972]",
+            "kind": "function",
+            "name": "wasInputKeyReleased",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:e135dc8359df0fdfa59ba0778732b2e4d6cd7ecb8d3b5a949994c170049eb96b",
+            "line": 489,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",19174]",
+            "kind": "variable",
+            "name": "_standardButtonNames",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 2
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:fd1095bbfff2f2f2bd46731e207cc3168b43ec1c796b5c1666a733f2d8bc1ab8",
+            "line": 511,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",20098]",
+            "kind": "variable",
+            "name": "_standardAxisNames",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 3
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:bb15583b75dda9a80ee74af6f8acc1ba85fceeea4146ae9e2ab9308d0eda1058",
+            "line": 518,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",20347]",
+            "kind": "variable",
+            "name": "_inputIngressSinks",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 4
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:bae3aec8ed63b2525c4fc618e62eaa102f10f720ec3c52be6dd7979b69a76962",
+            "line": 520,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",20425]",
+            "kind": "function",
+            "name": "getInputIngressSink",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:ec7bbcf8ffa1a4ff2778cb9c4838215b6e32d86cf2b6727d56a3d4301c04bd2e",
+            "line": 581,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",22652]",
+            "kind": "variable",
+            "name": "kGamepadInput",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 5
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:f2935b91610fcba8c0e478e554ee5eb0b72837b7f24e8e36184c2e55be639fa8",
+            "line": 582,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",22684]",
+            "kind": "variable",
+            "name": "kKeyboardInput",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 6
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:91b9bf2d93b035b34047e706a2675c75166e2bef52fbb4b191feede13cdcae38",
+            "line": 583,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",22717]",
+            "kind": "variable",
+            "name": "kPointerInput",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 7
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:7db12ef4832676e85a8f5fc67a13becdc457a45ff3b0b848f2722c3252647794",
+            "line": 584,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",22749]",
+            "kind": "variable",
+            "name": "kRelativePointerInput",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 8
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:438de4548b14144f10f9c6a6e7d1bc907b1fa5b2946b0e26468da0f8509700d3",
+            "line": 585,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",22789]",
+            "kind": "variable",
+            "name": "kTextInput",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 9
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:b2abbdaf203e2f70de567f81cc9e7c2bee9d9687db1fdb501f8df3d9736feb28",
+            "line": 586,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",22818]",
+            "kind": "variable",
+            "name": "kWheelInput",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 10
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:a44184a8556fec9a7f19a49d60d20ecee1cfc74971d08535935dd17e53bc98a8",
+            "line": 588,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",22849]",
+            "kind": "variable",
+            "name": "_inputBindings",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 11
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:b06f19c502f5635a00e4a97758747a73ea4328d9a716caaeff7554ee2ba11fbe",
+            "line": 590,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",22955]",
+            "kind": "function",
+            "name": "clearInputBinding",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:7329865c7969608dbacecad04f01deef61d647e4d13750f287a0264d8c749c2c",
+            "line": 600,
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts",
+            "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",23309]",
+            "kind": "function",
+            "name": "setInputBinding",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "InputManager",
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts"
+          },
+          "specifier": "@flighthq/entity/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/entity",
+            "source": "packages/entity/src/entity.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "InputManager",
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts"
+          },
+          "importedNames": [
+            "emitSignal"
+          ],
+          "specifier": "@flighthq/signals/contract",
+          "target": {
+            "name": "Emitter",
+            "packageName": "@flighthq/signals",
+            "source": "packages/signals/src/emitter.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "InputManager",
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts"
+          },
+          "importedNames": [
+            "createSignal"
+          ],
+          "specifier": "@flighthq/signals/contract",
+          "target": {
+            "name": "Signal",
+            "packageName": "@flighthq/signals",
+            "source": "packages/signals/src/signal.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "InputManager",
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts"
+          },
+          "importedNames": [
+            "connectSignal",
+            "disconnectSignal"
+          ],
+          "specifier": "@flighthq/signals/contract",
+          "target": {
+            "name": "Slot",
+            "packageName": "@flighthq/signals",
+            "source": "packages/signals/src/slot.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "InputManager",
+            "packageName": "@flighthq/input",
+            "source": "packages/input/src/inputManager.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "InputManager",
+        "packageName": "@flighthq/input",
+        "source": "packages/input/src/inputManager.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:1372f20d77a0dfd4b65afd200bf7f6d7cc5e6a2e1c4e217a159a3a76b9e9136c",
+              "line": 31,
+              "packageName": "@flighthq/input",
+              "source": "packages/input/src/inputManager.ts",
+              "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",999]",
+              "kind": "variable",
+              "name": "MAX_GAMEPAD_AXES",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            0
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:991936fc365ae4cdf4a5e25b34a5e1341e76e02999ae7020a24c0a283fc58e12",
+              "line": 32,
+              "packageName": "@flighthq/input",
+              "source": "packages/input/src/inputManager.ts",
+              "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",1028]",
+              "kind": "variable",
+              "name": "MAX_GAMEPAD_BUTTONS",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            1
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:e135dc8359df0fdfa59ba0778732b2e4d6cd7ecb8d3b5a949994c170049eb96b",
+              "line": 489,
+              "packageName": "@flighthq/input",
+              "source": "packages/input/src/inputManager.ts",
+              "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",19174]",
+              "kind": "variable",
+              "name": "_standardButtonNames",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            36
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:fd1095bbfff2f2f2bd46731e207cc3168b43ec1c796b5c1666a733f2d8bc1ab8",
+              "line": 511,
+              "packageName": "@flighthq/input",
+              "source": "packages/input/src/inputManager.ts",
+              "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",20098]",
+              "kind": "variable",
+              "name": "_standardAxisNames",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            37
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:bb15583b75dda9a80ee74af6f8acc1ba85fceeea4146ae9e2ab9308d0eda1058",
+              "line": 518,
+              "packageName": "@flighthq/input",
+              "source": "packages/input/src/inputManager.ts",
+              "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",20347]",
+              "kind": "variable",
+              "name": "_inputIngressSinks",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            38
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:ec7bbcf8ffa1a4ff2778cb9c4838215b6e32d86cf2b6727d56a3d4301c04bd2e",
+              "line": 581,
+              "packageName": "@flighthq/input",
+              "source": "packages/input/src/inputManager.ts",
+              "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",22652]",
+              "kind": "variable",
+              "name": "kGamepadInput",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            40
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:f2935b91610fcba8c0e478e554ee5eb0b72837b7f24e8e36184c2e55be639fa8",
+              "line": 582,
+              "packageName": "@flighthq/input",
+              "source": "packages/input/src/inputManager.ts",
+              "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",22684]",
+              "kind": "variable",
+              "name": "kKeyboardInput",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            41
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:91b9bf2d93b035b34047e706a2675c75166e2bef52fbb4b191feede13cdcae38",
+              "line": 583,
+              "packageName": "@flighthq/input",
+              "source": "packages/input/src/inputManager.ts",
+              "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",22717]",
+              "kind": "variable",
+              "name": "kPointerInput",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            42
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:7db12ef4832676e85a8f5fc67a13becdc457a45ff3b0b848f2722c3252647794",
+              "line": 584,
+              "packageName": "@flighthq/input",
+              "source": "packages/input/src/inputManager.ts",
+              "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",22749]",
+              "kind": "variable",
+              "name": "kRelativePointerInput",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            43
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:438de4548b14144f10f9c6a6e7d1bc907b1fa5b2946b0e26468da0f8509700d3",
+              "line": 585,
+              "packageName": "@flighthq/input",
+              "source": "packages/input/src/inputManager.ts",
+              "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",22789]",
+              "kind": "variable",
+              "name": "kTextInput",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            44
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:b2abbdaf203e2f70de567f81cc9e7c2bee9d9687db1fdb501f8df3d9736feb28",
+              "line": 586,
+              "packageName": "@flighthq/input",
+              "source": "packages/input/src/inputManager.ts",
+              "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",22818]",
+              "kind": "variable",
+              "name": "kWheelInput",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            45
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:a44184a8556fec9a7f19a49d60d20ecee1cfc74971d08535935dd17e53bc98a8",
+              "line": 588,
+              "packageName": "@flighthq/input",
+              "source": "packages/input/src/inputManager.ts",
+              "id": "binding:[\"@flighthq/input\",\"packages/input/src/inputManager.ts\",22849]",
+              "kind": "variable",
+              "name": "_inputBindings",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            46
+          ]
+        }
+      ]
     },
     {
       "bindings": [],
