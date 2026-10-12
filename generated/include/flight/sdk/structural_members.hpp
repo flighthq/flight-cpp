@@ -598,6 +598,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("forceY") && requires { object.force_y; }) return (object.force_y);
   else if constexpr (Key::name.view() == std::string_view("forceZ") && requires { object.force_z; }) return (object.force_z);
   else if constexpr (Key::name.view() == std::string_view("format") && requires { object.format; }) return (object.format);
+  else if constexpr (Key::name.view() == std::string_view("formats") && requires { object.formats; }) return (object.formats);
   else if constexpr (Key::name.view() == std::string_view("fov") && requires { object.fov; }) return (object.fov);
   else if constexpr (Key::name.view() == std::string_view("fovY") && requires { object.fov_y; }) return (object.fov_y);
   else if constexpr (Key::name.view() == std::string_view("fraction") && requires { object.fraction; }) return (object.fraction);
@@ -2763,6 +2764,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("forceY") && requires(Object& object) { object.force_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().force_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("forceZ") && requires(Object& object) { object.force_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().force_z)>>{};
   else if constexpr (Key::name.view() == std::string_view("format") && requires(Object& object) { object.format; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().format)>>{};
+  else if constexpr (Key::name.view() == std::string_view("formats") && requires(Object& object) { object.formats; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().formats)>>{};
   else if constexpr (Key::name.view() == std::string_view("fov") && requires(Object& object) { object.fov; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fov)>>{};
   else if constexpr (Key::name.view() == std::string_view("fovY") && requires(Object& object) { object.fov_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fov_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("fraction") && requires(Object& object) { object.fraction; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().fraction)>>{};
@@ -4931,6 +4933,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->force_y; }) owner.bind_named("forceY", [object]() -> decltype(auto) { return (object->force_y); });
   if constexpr (requires { object->force_z; }) owner.bind_named("forceZ", [object]() -> decltype(auto) { return (object->force_z); });
   if constexpr (requires { object->format; }) owner.bind_named("format", [object]() -> decltype(auto) { return (object->format); });
+  if constexpr (requires { object->formats; }) owner.bind_named("formats", [object]() -> decltype(auto) { return (object->formats); });
   if constexpr (requires { object->fov; }) owner.bind_named("fov", [object]() -> decltype(auto) { return (object->fov); });
   if constexpr (requires { object->fov_y; }) owner.bind_named("fovY", [object]() -> decltype(auto) { return (object->fov_y); });
   if constexpr (requires { object->fraction; }) owner.bind_named("fraction", [object]() -> decltype(auto) { return (object->fraction); });
@@ -7132,6 +7135,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(force_y)
   FLIGHT_SDK_ROW_WIDENS(force_z)
   FLIGHT_SDK_ROW_WIDENS(format)
+  FLIGHT_SDK_ROW_WIDENS(formats)
   FLIGHT_SDK_ROW_WIDENS(fov)
   FLIGHT_SDK_ROW_WIDENS(fov_y)
   FLIGHT_SDK_ROW_WIDENS(fraction)

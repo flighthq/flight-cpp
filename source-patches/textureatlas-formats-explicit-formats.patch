@@ -1,0 +1,15 @@
+diff --git a/packages/textureatlas-formats/src/textureAtlasDetect.ts b/packages/textureatlas-formats/src/textureAtlasDetect.ts
+--- a/packages/textureatlas-formats/src/textureAtlasDetect.ts
++++ b/packages/textureatlas-formats/src/textureAtlasDetect.ts
+@@ -101,8 +101,10 @@ function readJsonAtlasKind(content: string): TextureAtlasFormatKind | null {
+  * subset never reorders what was already installed. Detection does not depend on that order anyway: the built-in
+  * detectors are mutually exclusive.
+  */
+ export function applyTextureAtlasImportOptions(options: Readonly<TextureAtlasImportOptions>): void {
+-  for (const format of options.formats ?? []) bindTextureAtlasFormat(format.kind, format.entry);
++  const formats = options.formats;
++  if (formats === undefined) return;
++  for (const format of formats) bindTextureAtlasFormat(format.kind, format.entry);
+ }
+ 
+ /** Sniff the text content of a texture-atlas descriptor and return its format kind, or

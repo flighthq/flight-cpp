@@ -39601,9 +39601,7 @@
       "status": "refused-placeholder"
     },
     {
-      "consumers": [
-        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/textureatlas-formats",
@@ -39628,7 +39626,11 @@
       },
       "path": "flight/textureatlas_formats/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/contract.ts"
+        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasAsepriteParse.ts",
+        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasDetect.ts",
+        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasLibgdxParse.ts",
+        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasStarlingParse.ts",
+        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/texturePackerAtlasParse.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -39636,6 +39638,7 @@
       "consumers": [
         "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/asepriteParse.ts",
         "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/contract.ts",
+        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/index.ts",
         "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasDetect.ts"
       ],
       "module": {
@@ -39650,32 +39653,9 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:00ce742ec0888feb8226bf96ceb5beb852dbeb71aee85caa870c492eebdb2ed9",
-        "sha256:04e760944a8bfb0880b42dd721bfae8d417fd8e016ea6ddfd8cce8e0dccfd0db",
-        "sha256:102ca0a466bb16d5f479507de738875ae5d012c53c8a194b0bd193e40e255d1f",
-        "sha256:3ef92500ee0e1d99b876eb992dedfac3dd8275cf96889ef9a4e0fa8ee12a844f",
-        "sha256:4adbdd146232453c62a0f954f25c6af2faecd7d6b2053b8621a64716e622d639",
-        "sha256:59e52ba2f63245880e88a9d64f83ee888a97aa5c4e6c453928e82120178f61e7",
-        "sha256:5d20e69f366755fd5ea02466d4b14b9633dc68846f50de527293af5baea17e1d",
-        "sha256:6733317dd9472f7763a57ee7ad90eafcd21f737f096c969c17e2e2190bd85e96",
-        "sha256:68e5719eca6f0fcfaeb95b2a5d76becf6594df93f12c82e3947290bb3ac24d6d",
-        "sha256:68e79318aeff94b82474d4d2618c70c832e535f89090be37261c1e19abf715f5",
-        "sha256:6a1fd5b905fbbdc7a06299e74f259dad7f6761193a1ed82cce033eab234a5b04",
-        "sha256:7ec7140866a85fb866afd728197148a22559c7d554a979f557d1e81649707184",
-        "sha256:81f2586f20f15f7ab201272d06a4afc40c20491ba2b38d4039271aea12ae4625",
-        "sha256:8c394e09b4040992f6aec9942ac7db16fea1e778e6168c9299a704650dc20fa0",
-        "sha256:93060080a7e451260202b98359353e99c196bb8b52e257058e9eaecade8a4987",
-        "sha256:9672eb33f1928c94d3ecdf27f1b1232f87bacc69c0696a5dfeaf57ae16c42f85",
-        "sha256:b2235c1d67ffe73a014146fdfd60299ef125b4354a749c58680735a2a6a9fe8c",
-        "sha256:c254160f5655e81b40ac1458dc0db83714f2cb70e8306f9b4910f01a43f2e060",
-        "sha256:d1749b8b60d02d0e80c2a7afed9b7676978c607626705d553d03d2d6675ea070",
-        "sha256:ecdae2dad8be0c1a45583d1a378ed6512fd5a4886a5be979e51511056a6394c5",
-        "sha256:fbec78e95d18e5b7fbe685dfe1f19431f925214e4be0a1eb86d2374c5c097ff9"
+        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/contract.ts",
+        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/index.ts"
       ],
       "module": {
         "name": "TextureAtlasDetect",
@@ -39683,18 +39663,21 @@
         "source": "packages/textureatlas-formats/src/textureAtlasDetect.ts"
       },
       "path": "flight/textureatlas_formats/texture_atlas_detect.hpp",
-      "rule": "cpp-contextual-union-missing-expression-type:optionalSingle",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/registry/packages/registry/src/registryTable.ts",
+        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasAsepriteParse.ts",
+        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasLibgdxParse.ts",
+        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasStarlingParse.ts",
+        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/texturePackerAtlasParse.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/libgdxAtlasParse.ts",
         "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/contract.ts",
+        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/index.ts",
         "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasDetect.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:31cb25f470898a2b780921a645e6668e6e3610e3cef803502b69684700d77b7e"
       ],
       "module": {
         "name": "TextureAtlasLibgdxParse",
@@ -39702,11 +39685,15 @@
         "source": "packages/textureatlas-formats/src/textureAtlasLibgdxParse.ts"
       },
       "path": "flight/textureatlas_formats/texture_atlas_libgdx_parse.hpp",
-      "rule": "cpp-member-projection-without-present-storage",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/textureatlas/packages/textureatlas/src/textureAtlasRegion.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
+        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/contract.ts",
+        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/index.ts",
         "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasAsepriteParse.ts",
         "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasLibgdxParse.ts",
         "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasStarlingParse.ts",
@@ -39724,6 +39711,7 @@
       "consumers": [
         "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/starlingParse.ts",
         "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/contract.ts",
+        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/index.ts",
         "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasDetect.ts"
       ],
       "module": {
@@ -39741,6 +39729,7 @@
       "consumers": [
         "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/texturePackerParse.ts",
         "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/contract.ts",
+        "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/index.ts",
         "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasDetect.ts"
       ],
       "module": {

@@ -1,0 +1,101 @@
+diff --git a/packages/textureatlas-formats/src/textureAtlasLibgdxParse.ts b/packages/textureatlas-formats/src/textureAtlasLibgdxParse.ts
+--- a/packages/textureatlas-formats/src/textureAtlasLibgdxParse.ts
++++ b/packages/textureatlas-formats/src/textureAtlasLibgdxParse.ts
+@@ -4,6 +4,12 @@ import type { TextureAtlas } from '@flighthq/types/contract';
+ 
+ import { resetTextureAtlasPageMeta } from './textureAtlasPageMeta.ts';
+ 
++function readAtlasValue(values: readonly string[], index: number, fallback = ''): string {
++  const value = values[index];
++  // Every caller proves the index is in bounds; this branch only makes that evidence explicit.
++  return value === undefined ? fallback : value;
++}
++
+ // Parses a libGDX / Spine text-format atlas string and populates `atlas.regions`.
+ // Handles single and multi-page atlases; regions from all pages are concatenated.
+ // Existing regions in `atlas` are cleared. Returns `atlas` for convenience.
+@@ -11,17 +17,18 @@ export function parseTextureAtlasLibgdxAtlas(text: string, atlas: TextureAtlas):
+   atlas.regions.length = 0;
+   resetTextureAtlasPageMeta(atlas);
+-  const lines = text.split(/\r?\n/);
++  const normalized = text.replace(/\r\n/g, '\n');
++  const lines = normalized.split('\n');
+   let i = 0;
+   let id = 0;
+   // The page a region belongs to. A multi-page atlas concatenates its regions, so each one has to
+   // carry its own page name or the caller cannot tell which image to sample.
+   let pageName: string | null = null;
+   while (i < lines.length) {
+     // Skip blank lines (page separator or leading whitespace)
+-    while (i < lines.length && lines[i].trim() === '') i++;
++    while (i < lines.length && readAtlasValue(lines, i).trim() === '') i++;
+     if (i >= lines.length) break;
+     // Page header: first non-blank line is the image file name (no colon)
+-    const maybeImage = lines[i].trim();
++    const maybeImage = readAtlasValue(lines, i).trim();
+     if (!maybeImage.includes(':')) {
+       pageName = maybeImage;
+       // The first page is the atlas's own image; later pages are recorded per region.
+@@ -28,14 +35,14 @@ export function parseTextureAtlasLibgdxAtlas(text: string, atlas: TextureAtlas):
+       if (atlas.imageName === null) atlas.imageName = maybeImage;
+       i++; // consume image filename
+       // Skip page-level key:value pairs
+-      while (i < lines.length && lines[i].trim() !== '') {
+-        if (lines[i].trim().includes(':')) i++;
++      while (i < lines.length && readAtlasValue(lines, i).trim() !== '') {
++        if (readAtlasValue(lines, i).trim().includes(':')) i++;
+         else break;
+       }
+     }
+     // Read regions until blank line or EOF
+-    while (i < lines.length && lines[i].trim() !== '') {
+-      const line = lines[i].trim();
++    while (i < lines.length && readAtlasValue(lines, i).trim() !== '') {
++      const line = readAtlasValue(lines, i).trim();
+       // If a line has no colon it is a region name
+       if (!line.includes(':')) {
+         const regionName = line;
+@@ -51,8 +58,8 @@ export function parseTextureAtlasLibgdxAtlas(text: string, atlas: TextureAtlas):
+-        let rotation = TextureAtlasRotation.None;
++        let rotation: TextureAtlasRotation = TextureAtlasRotation.None;
+         let index = -1;
+         // Read region key:value pairs
+         while (i < lines.length) {
+-          const kv = lines[i].trim();
++          const kv = readAtlasValue(lines, i).trim();
+           if (kv === '' || !kv.includes(':')) break;
+           const colon = kv.indexOf(':');
+           const key = kv.slice(0, colon).trim();
+@@ -71,24 +78,24 @@ export function parseTextureAtlasLibgdxAtlas(text: string, atlas: TextureAtlas):
+             case 'xy': {
+               const parts = value.split(',');
+-              atlasX = parseFloat(parts[0]?.trim() ?? '0');
+-              atlasY = parseFloat(parts[1]?.trim() ?? '0');
++              atlasX = parseFloat(readAtlasValue(parts, 0, '0').trim());
++              atlasY = parseFloat(readAtlasValue(parts, 1, '0').trim());
+               break;
+             }
+             case 'size': {
+               const parts = value.split(',');
+-              atlasW = parseFloat(parts[0]?.trim() ?? '0');
+-              atlasH = parseFloat(parts[1]?.trim() ?? '0');
++              atlasW = parseFloat(readAtlasValue(parts, 0, '0').trim());
++              atlasH = parseFloat(readAtlasValue(parts, 1, '0').trim());
+               break;
+             }
+             case 'orig': {
+               const parts = value.split(',');
+-              origW = parseFloat(parts[0]?.trim() ?? '0');
+-              origH = parseFloat(parts[1]?.trim() ?? '0');
++              origW = parseFloat(readAtlasValue(parts, 0, '0').trim());
++              origH = parseFloat(readAtlasValue(parts, 1, '0').trim());
+               break;
+             }
+             case 'offset': {
+               const parts = value.split(',');
+-              offsetX = parseFloat(parts[0]?.trim() ?? '0');
+-              offsetY = parseFloat(parts[1]?.trim() ?? '0');
++              offsetX = parseFloat(readAtlasValue(parts, 0, '0').trim());
++              offsetY = parseFloat(readAtlasValue(parts, 1, '0').trim());
+               break;
+             }

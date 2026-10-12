@@ -2967,6 +2967,38 @@
       "unblocks": "Emits spritesheetTimelineSource and, through it, enableMovieClipGuards and the package index.",
       "expires": "when the emitter converts a nullable union arm into its nullable union member directly, or the imported-variant-owner qualification fix lands upstream.",
       "appliedOn": "2026-10-12"
+    },
+    {
+      "id": "textureatlas-formats-explicit-formats",
+      "dependency": "flight",
+      "patch": "textureatlas-formats-explicit-formats.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/textureatlas-formats/src/textureAtlasDetect.ts",
+      "package": "@flighthq/textureatlas-formats",
+      "answers": "refusal",
+      "refusal": "the nullish fallback in `options.formats ?? []` constructs an empty array with no concrete element evidence, so applyTextureAtlasImportOptions is refused as cpp-empty-array-element-type-unproven",
+      "rewrite": "Binds the optional formats array, returns when it is absent, and iterates that same array when present.",
+      "equivalence": "When formats is absent, iterating an empty fallback performs no calls and returning performs no calls. When formats is present, the local aliases the identical readonly array and the loop visits the same descriptors in the same order, passing the same kind and entry references to the same binder.",
+      "whyNotUpstreamFirst": "The explicit guard is target-neutral TypeScript and makes the source's no-formats control flow visible while the emitter cannot infer an element type for the empty fallback literal.",
+      "unblocks": "Emits applyTextureAtlasImportOptions and removes textureAtlasDetect's only direct refusal.",
+      "expires": "when an empty array used only as a nullish iterable fallback inherits the other arm's element type, or Flight adopts the explicit guard.",
+      "appliedOn": "2026-10-12"
+    },
+    {
+      "id": "textureatlas-formats-indexed-lines",
+      "dependency": "flight",
+      "patch": "textureatlas-formats-indexed-lines.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/textureatlas-formats/src/textureAtlasLibgdxParse.ts",
+      "package": "@flighthq/textureatlas-formats",
+      "answers": "refusal",
+      "refusal": "member calls on lines[i] lose the surrounding bounds proof and are refused as cpp-member-projection-without-present-storage; after those reads are explicit, the mutable TextureAtlasRotation local reaches its declared destination as an unrepresented numeric contextual-union value; the RegExp split would also call a runtime overload that accepts only a string separator",
+      "rewrite": "Normalizes CRLF pairs before a string split, reads indexed lines and comma-separated fields through a string-returning helper before trimming them, and annotates the mutable rotation local with its existing enum type.",
+      "equivalence": "Replacing every CRLF pair with LF and splitting on LF produces the same pieces as splitting on /\\r?\\n/, including leading, trailing, and adjacent empty pieces; lone carriage returns remain data. Line reads are dominated by i < lines.length, so they return the identical string and their empty fallback is unreachable. Each field read returns the identical string when present and the same '0' fallback when absent. The rotation annotation erases and names the enum whose members are the local's only assigned values. Loop order, increments, parsed keys, region construction, and returned atlas identity are unchanged.",
+      "whyNotUpstreamFirst": "Both spellings are ordinary target-neutral TypeScript; the line normalization matches the existing spritesheet and particles libGDX recoveries, and the explicit helper carries the bounds evidence described in optional-index-member-present-flow.md.",
+      "unblocks": "Emits parseTextureAtlasLibgdxAtlas without relying on RegExp split, an unproved optional string projection, or reconstruction of the enum owner from an inferred number.",
+      "expires": "when indexed member calls retain their dominating bounds evidence, mutable enum locals retain their declared owner at contextual union boundaries, and String.split(RegExp) has a complete native lowering, or Flight adopts these equivalent forms.",
+      "appliedOn": "2026-10-12"
     }
   ]
 }

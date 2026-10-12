@@ -550,8 +550,7 @@
         "flight/shape_formats/shape_command_schemas.hpp",
         "flight/skeleton2d/skeleton2d_animation_target.hpp",
         "flight/skeleton2d_formats/skeleton_detect.hpp",
-        "flight/spritesheet_formats/spritesheet_detect.hpp",
-        "flight/textureatlas_formats/texture_atlas_detect.hpp"
+        "flight/spritesheet_formats/spritesheet_detect.hpp"
       ],
       "id": "respell-reference-alias-keyedtable"
     },
@@ -5935,6 +5934,20 @@
       "id": "scene2d-sprite-exact-runtime-runner",
       "module": "packages/types/src/Sprite.ts and packages/scene2d/src/sprite.ts",
       "package": "@flighthq/scene2d"
+    },
+    {
+      "dependency": "flight",
+      "digest": "9abf3ab50ce8c657c7d19f45973d9067d4d0170b7f75ca026633f635a2ecb8a2",
+      "id": "textureatlas-formats-explicit-formats",
+      "module": "packages/textureatlas-formats/src/textureAtlasDetect.ts",
+      "package": "@flighthq/textureatlas-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "0fbcbd99ff7bb8629b0a194daa5e95f966031017f1937d4136b860743af53b6e",
+      "id": "textureatlas-formats-indexed-lines",
+      "module": "packages/textureatlas-formats/src/textureAtlasLibgdxParse.ts",
+      "package": "@flighthq/textureatlas-formats"
     }
   ],
   "duplicateStructuralStructAliases": {
@@ -6483,8 +6496,6 @@
       "flight/texture/render_texture.hpp",
       "flight/texture/video_texture.hpp",
       "flight/texture_formats/parse_atf.hpp",
-      "flight/textureatlas_formats/texture_atlas_detect.hpp",
-      "flight/textureatlas_formats/texture_atlas_libgdx_parse.hpp",
       "flight/tilemap_formats/tiled_json_parse.hpp",
       "flight/tilemap_formats/tiled_project.hpp",
       "flight/tilemap_formats/tiled_tmj_format.hpp",
@@ -6492,7 +6503,7 @@
       "flight/tilemap_formats/tiled_xml_parse.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 927
+    "includes": 922
   },
   "packages": [
     {
@@ -8346,14 +8357,14 @@
       "sourceModules": 7
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/textureatlas_formats",
       "cppNamespace": "flight::textureatlas_formats",
-      "emittedModules": 6,
+      "emittedModules": 8,
       "package": "@flighthq/textureatlas-formats",
-      "refusedModules": 2,
+      "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 8
@@ -8538,8 +8549,8 @@
   },
   "summary": {
     "packages": 156,
-    "emittedModules": 2455,
-    "refusedModules": 578,
+    "emittedModules": 2457,
+    "refusedModules": 576,
     "sourceModules": 3033
   }
 }

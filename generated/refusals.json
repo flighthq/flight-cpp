@@ -8843,14 +8843,14 @@
       "code": "dependency-refused",
       "module": "packages/textureatlas-formats/src/contract.ts",
       "package": "@flighthq/textureatlas-formats",
-      "reason": "dependency ./textureAtlasDetect was refused for @flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasDetect.ts",
+      "reason": "dependency ./textureAtlasAsepriteParse.ts was refused for @flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasAsepriteParse.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/textureatlas-formats/src/index.ts",
       "package": "@flighthq/textureatlas-formats",
-      "reason": "dependency ./contract was refused for @flighthq/textureatlas-formats/packages/textureatlas-formats/src/contract.ts",
+      "reason": "dependency ./textureAtlasAsepriteParse.ts was refused for @flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasAsepriteParse.ts",
       "stage": "dependency"
     },
     {
@@ -8861,22 +8861,18 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 51,
+      "code": "dependency-refused",
       "module": "packages/textureatlas-formats/src/textureAtlasDetect.ts",
       "package": "@flighthq/textureatlas-formats",
-      "reason": "cpp emission failed for @flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasDetect.ts: contextual optionalSingle construction requires expression type evidence",
-      "stage": "emission"
+      "reason": "dependency ./textureAtlasAsepriteParse.ts was refused for @flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasAsepriteParse.ts",
+      "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 10,
+      "code": "dependency-refused",
       "module": "packages/textureatlas-formats/src/textureAtlasLibgdxParse.ts",
       "package": "@flighthq/textureatlas-formats",
-      "reason": "cpp emission failed for @flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasLibgdxParse.ts: member trim on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
-      "stage": "emission"
+      "reason": "dependency @flighthq/textureatlas/contract was refused for @flighthq/textureatlas/packages/textureatlas/src/textureAtlasRegion.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
