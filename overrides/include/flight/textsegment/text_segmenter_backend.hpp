@@ -1,3 +1,17 @@
+// Derived from @flighthq/textsegment/packages/textsegment/src/textSegmenterBackend.ts
+// at generated digest 8342a1e42b7d77cdbaa206ccadc494bcc9b9cb29bb6948c466d0668d3c55ef35.
+//
+// OVERRIDE: the emitter refuses this module (typeof requires closed runtime type evidence), so the
+// emitted header is a PARTIAL. This supplies the whole module: the web provider value, the two
+// exported entry points, and the Intl.Segmenter-backed internals.
+//
+// Portable-profile boundary, stated deliberately rather than hidden: has_intl_segmenter() is false
+// here because this profile has no Intl.Segmenter. Real Unicode segmentation is a host capability --
+// an unsupported capability is signalled by the missing seam, not by a stub -- so the web provider
+// reports itself unavailable and segment() returns no segments rather than faking them.
+//
+// Re-derived 2026-10-12 by checking it still matches the current source: webTextSegmenterBackend and
+// explainTextSegmenterBackend are both present, with the same declaration order and status reporting.
 #pragma once
 
 #include <flight/intl.hpp>

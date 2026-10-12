@@ -8234,7 +8234,7 @@
       "code": "dependency-refused",
       "module": "packages/textsegment/src/contract.ts",
       "package": "@flighthq/textsegment",
-      "reason": "dependency ./textSegmentBoundary was refused for @flighthq/textsegment/packages/textsegment/src/textSegmentBoundary.ts",
+      "reason": "dependency ./textSegmentBoundary.ts was refused for @flighthq/textsegment/packages/textsegment/src/textSegmentBoundary.ts",
       "stage": "dependency"
     },
     {
@@ -8248,7 +8248,7 @@
       "code": "dependency-refused",
       "module": "packages/textsegment/src/index.ts",
       "package": "@flighthq/textsegment",
-      "reason": "dependency ./contract was refused for @flighthq/textsegment/packages/textsegment/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/textsegment/packages/textsegment/src/contract.ts",
       "stage": "dependency"
     },
     {

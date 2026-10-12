@@ -1,3 +1,12 @@
+// Derived from @flighthq/textsegment/packages/textsegment/src/textSegmentBoundary.ts
+// at generated digest b9743151d87d41129fb07cb17b7c6d38115de36263d2a4f62c58c69be748cee7.
+//
+// OVERRIDE: the emitter refuses this module (typeof requires closed runtime type evidence), so the
+// emitted header is a PARTIAL. This supplies the whole module: the six exported boundary queries and
+// getWordRangeAt, plus the helpers they share.
+//
+// Re-derived 2026-10-12 by checking it still matches the current source rather than by rebuilding it
+// from the emitted partial: all seven exported functions are present here.
 #pragma once
 
 #include <flight/runtime.hpp>
