@@ -14,7 +14,7 @@ index a67b248..7bcfb97 100644
 @@ -13730,6 +13732,36 @@ function hasCppErasedDynamicStorageCpp(
    return isCppErasedDynamicValueTypeCpp(declaration.type);
  }
- 
+
 +// A presence test on `error.stack` or `error.cause`, whose storage the Error read itself names: `stack`
 +// is `std::optional<String>` and can only be absent, never null; `cause` is the erased value, which keeps
 +// presence in its own kind tag. Each is answered on that storage with the same predicates the
@@ -73,7 +73,7 @@ index a67b248..7bcfb97 100644
 @@ -25328,6 +25370,20 @@ function emitCppErrorPropertyReadCpp(
    return `${emitExpression(expression.object, context)}.error_if()->${expression.name}()`;
  }
- 
+
 +// The two Error members beyond name/message that flight::Error represents, each with the absence the
 +// source can observe. `stack` is `string | undefined` in the source and `std::optional<String>` in the
 +// runtime, which records no call stack, so it is absent on every Error; a presence test on it then takes

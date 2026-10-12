@@ -4,7 +4,7 @@ index 68beec9..f42f0e5 100644
 +++ b/packages/log/src/log.ts
 @@ -106,14 +106,16 @@ export function createBufferedLogSink(
    const intervalMs = options.intervalMs ?? 1000;
- 
+
    const flush = (): void => {
 -    const state = _bufferedSinkStates.get(handle)!;
 +    const state = _bufferedSinkStates.get(handle);
@@ -13,7 +13,7 @@ index 68beec9..f42f0e5 100644
      const batch = state.buf.splice(0);
      for (const entry of batch) target(entry);
    };
- 
+
    const sink: LogSink = (entry: Readonly<LogEntry>) => {
 -    const state = _bufferedSinkStates.get(handle)!;
 +    const state = _bufferedSinkStates.get(handle);
