@@ -8811,7 +8811,7 @@
       "code": "dependency-refused",
       "module": "packages/textureatlas/src/contract.ts",
       "package": "@flighthq/textureatlas",
-      "reason": "dependency ./enableTextureAtlasGuards was refused for @flighthq/textureatlas/packages/textureatlas/src/enableTextureAtlasGuards.ts",
+      "reason": "dependency ./enableTextureAtlasGuards.ts was refused for @flighthq/textureatlas/packages/textureatlas/src/enableTextureAtlasGuards.ts",
       "stage": "dependency"
     },
     {
@@ -8827,7 +8827,7 @@
       "code": "dependency-refused",
       "module": "packages/textureatlas/src/index.ts",
       "package": "@flighthq/textureatlas",
-      "reason": "dependency ./contract was refused for @flighthq/textureatlas/packages/textureatlas/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/textureatlas/packages/textureatlas/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8841,7 +8841,7 @@
       "code": "dependency-refused",
       "module": "packages/textureatlas/src/textureAtlasGrid.ts",
       "package": "@flighthq/textureatlas",
-      "reason": "dependency ./textureAtlasRegion was refused for @flighthq/textureatlas/packages/textureatlas/src/textureAtlasRegion.ts",
+      "reason": "dependency ./textureAtlasRegion.ts was refused for @flighthq/textureatlas/packages/textureatlas/src/textureAtlasRegion.ts",
       "stage": "dependency"
     },
     {

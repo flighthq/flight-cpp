@@ -3389,15 +3389,11 @@
       "id": "particles-formats-unqualified-particles-names"
     },
     {
-      "files": [
-        "flight/textureatlas/enable_texture_atlas_guards.hpp"
-      ],
+      "files": [],
       "id": "textureatlas-unqualified-log-names"
     },
     {
-      "files": [
-        "flight/textureatlas/texture_atlas_region.hpp"
-      ],
+      "files": [],
       "id": "textureatlas-unqualified-texture-names"
     },
     {
@@ -6485,7 +6481,6 @@
       "flight/texture/render_texture.hpp",
       "flight/texture/video_texture.hpp",
       "flight/texture_formats/parse_atf.hpp",
-      "flight/textureatlas/enable_texture_atlas_guards.hpp",
       "flight/textureatlas_formats/texture_atlas_detect.hpp",
       "flight/textureatlas_formats/texture_atlas_libgdx_parse.hpp",
       "flight/tilemap_formats/tiled_json_parse.hpp",
@@ -6495,7 +6490,7 @@
       "flight/tilemap_formats/tiled_xml_parse.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 959
+    "includes": 958
   },
   "packages": [
     {
@@ -8336,14 +8331,14 @@
       "sourceModules": 11
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/textureatlas",
       "cppNamespace": "flight::textureatlas",
       "emittedModules": 5,
       "package": "@flighthq/textureatlas",
       "refusedModules": 2,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 7

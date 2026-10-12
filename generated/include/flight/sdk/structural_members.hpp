@@ -1379,6 +1379,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("ownsElement") && requires { object.owns_element; }) return (object.owns_element);
   else if constexpr (Key::name.view() == std::string_view("padding") && requires { object.padding; }) return (object.padding);
   else if constexpr (Key::name.view() == std::string_view("pageIds") && requires { object.page_ids; }) return (object.page_ids);
+  else if constexpr (Key::name.view() == std::string_view("pageName") && requires { object.page_name; }) return (object.page_name);
   else if constexpr (Key::name.view() == std::string_view("pages") && requires { object.pages; }) return (object.pages);
   else if constexpr (Key::name.view() == std::string_view("parent") && requires { object.parent; }) return (object.parent);
   else if constexpr (Key::name.view() == std::string_view("parentIndices") && requires { object.parent_indices; }) return (object.parent_indices);
@@ -2023,6 +2024,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("transparency") && requires { object.transparency; }) return (object.transparency);
   else if constexpr (Key::name.view() == std::string_view("trauma") && requires { object.trauma; }) return (object.trauma);
   else if constexpr (Key::name.view() == std::string_view("tray") && requires { object.tray; }) return (object.tray);
+  else if constexpr (Key::name.view() == std::string_view("trimmed") && requires { object.trimmed; }) return (object.trimmed);
   else if constexpr (Key::name.view() == std::string_view("tweens") && requires { object.tweens; }) return (object.tweens);
   else if constexpr (Key::name.view() == std::string_view("tx") && requires { object.tx; }) return (object.tx);
   else if constexpr (Key::name.view() == std::string_view("ty") && requires { object.ty; }) return (object.ty);
@@ -3526,6 +3528,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("ownsElement") && requires(Object& object) { object.owns_element; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().owns_element)>>{};
   else if constexpr (Key::name.view() == std::string_view("padding") && requires(Object& object) { object.padding; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().padding)>>{};
   else if constexpr (Key::name.view() == std::string_view("pageIds") && requires(Object& object) { object.page_ids; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().page_ids)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pageName") && requires(Object& object) { object.page_name; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().page_name)>>{};
   else if constexpr (Key::name.view() == std::string_view("pages") && requires(Object& object) { object.pages; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pages)>>{};
   else if constexpr (Key::name.view() == std::string_view("parent") && requires(Object& object) { object.parent; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().parent)>>{};
   else if constexpr (Key::name.view() == std::string_view("parentIndices") && requires(Object& object) { object.parent_indices; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().parent_indices)>>{};
@@ -4170,6 +4173,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("transparency") && requires(Object& object) { object.transparency; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transparency)>>{};
   else if constexpr (Key::name.view() == std::string_view("trauma") && requires(Object& object) { object.trauma; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().trauma)>>{};
   else if constexpr (Key::name.view() == std::string_view("tray") && requires(Object& object) { object.tray; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tray)>>{};
+  else if constexpr (Key::name.view() == std::string_view("trimmed") && requires(Object& object) { object.trimmed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().trimmed)>>{};
   else if constexpr (Key::name.view() == std::string_view("tweens") && requires(Object& object) { object.tweens; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tweens)>>{};
   else if constexpr (Key::name.view() == std::string_view("tx") && requires(Object& object) { object.tx; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tx)>>{};
   else if constexpr (Key::name.view() == std::string_view("ty") && requires(Object& object) { object.ty; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ty)>>{};
@@ -5676,6 +5680,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->owns_element; }) owner.bind_named("ownsElement", [object]() -> decltype(auto) { return (object->owns_element); });
   if constexpr (requires { object->padding; }) owner.bind_named("padding", [object]() -> decltype(auto) { return (object->padding); });
   if constexpr (requires { object->page_ids; }) owner.bind_named("pageIds", [object]() -> decltype(auto) { return (object->page_ids); });
+  if constexpr (requires { object->page_name; }) owner.bind_named("pageName", [object]() -> decltype(auto) { return (object->page_name); });
   if constexpr (requires { object->pages; }) owner.bind_named("pages", [object]() -> decltype(auto) { return (object->pages); });
   if constexpr (requires { object->parent; }) owner.bind_named("parent", [object]() -> decltype(auto) { return (object->parent); });
   if constexpr (requires { object->parent_indices; }) owner.bind_named("parentIndices", [object]() -> decltype(auto) { return (object->parent_indices); });
@@ -6320,6 +6325,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->transparency; }) owner.bind_named("transparency", [object]() -> decltype(auto) { return (object->transparency); });
   if constexpr (requires { object->trauma; }) owner.bind_named("trauma", [object]() -> decltype(auto) { return (object->trauma); });
   if constexpr (requires { object->tray; }) owner.bind_named("tray", [object]() -> decltype(auto) { return (object->tray); });
+  if constexpr (requires { object->trimmed; }) owner.bind_named("trimmed", [object]() -> decltype(auto) { return (object->trimmed); });
   if constexpr (requires { object->tweens; }) owner.bind_named("tweens", [object]() -> decltype(auto) { return (object->tweens); });
   if constexpr (requires { object->tx; }) owner.bind_named("tx", [object]() -> decltype(auto) { return (object->tx); });
   if constexpr (requires { object->ty; }) owner.bind_named("ty", [object]() -> decltype(auto) { return (object->ty); });
@@ -7859,6 +7865,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(owns_element)
   FLIGHT_SDK_ROW_WIDENS(padding)
   FLIGHT_SDK_ROW_WIDENS(page_ids)
+  FLIGHT_SDK_ROW_WIDENS(page_name)
   FLIGHT_SDK_ROW_WIDENS(pages)
   FLIGHT_SDK_ROW_WIDENS(parent)
   FLIGHT_SDK_ROW_WIDENS(parent_indices)
@@ -8503,6 +8510,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(transparency)
   FLIGHT_SDK_ROW_WIDENS(trauma)
   FLIGHT_SDK_ROW_WIDENS(tray)
+  FLIGHT_SDK_ROW_WIDENS(trimmed)
   FLIGHT_SDK_ROW_WIDENS(tweens)
   FLIGHT_SDK_ROW_WIDENS(tx)
   FLIGHT_SDK_ROW_WIDENS(ty)
