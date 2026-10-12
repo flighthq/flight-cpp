@@ -3666,6 +3666,11 @@
       "source": "packages/skeleton2d/src/regionAttachment2D.ts"
     },
     {
+      "name": "Skeleton2d",
+      "packageName": "@flighthq/skeleton2d",
+      "source": "packages/skeleton2d/src/skeleton2d.ts"
+    },
+    {
       "name": "Skeleton2dConstants",
       "packageName": "@flighthq/skeleton2d",
       "source": "packages/skeleton2d/src/skeleton2dConstants.ts"
@@ -3689,6 +3694,11 @@
       "name": "SkinAttachment2DPoints",
       "packageName": "@flighthq/skeleton2d",
       "source": "packages/skeleton2d/src/skinAttachment2DPoints.ts"
+    },
+    {
+      "name": "SlotDeform2D",
+      "packageName": "@flighthq/skeleton2d",
+      "source": "packages/skeleton2d/src/slotDeform2D.ts"
     },
     {
       "name": "SpineBinaryReader",
@@ -27081,9 +27091,29 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "Skeleton2d",
+          "packageName": "@flighthq/skeleton2d",
+          "source": "packages/skeleton2d/src/skeleton2d.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "Skeleton2dConstraint",
           "packageName": "@flighthq/skeleton2d",
           "source": "packages/skeleton2d/src/skeleton2dConstraint.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SlotDeform2D",
+          "packageName": "@flighthq/skeleton2d",
+          "source": "packages/skeleton2d/src/slotDeform2D.ts"
         }
       ]
     },
@@ -65619,7 +65649,7 @@
             "line": 14,
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/boundingBoxAttachment2D.ts",
-            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/boundingBoxAttachment2D.ts\",809]",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/boundingBoxAttachment2D.ts\",812]",
             "kind": "function",
             "name": "computeSkeleton2DBoundingBoxAttachmentVertices",
             "scope": "module",
@@ -65641,7 +65671,7 @@
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/boundingBoxAttachment2D.ts"
           },
-          "specifier": "./skinAttachment2DPoints",
+          "specifier": "./skinAttachment2DPoints.ts",
           "target": {
             "name": "SkinAttachment2DPoints",
             "packageName": "@flighthq/skeleton2d",
@@ -89477,7 +89507,7 @@
             "line": 13,
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/clippingAttachment2D.ts",
-            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/clippingAttachment2D.ts\",793]",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/clippingAttachment2D.ts\",796]",
             "kind": "function",
             "name": "computeSkeleton2DClippingAttachmentVertices",
             "scope": "module",
@@ -89498,7 +89528,7 @@
             "line": 38,
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/clippingAttachment2D.ts",
-            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/clippingAttachment2D.ts\",1777]",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/clippingAttachment2D.ts\",1780]",
             "kind": "function",
             "name": "getSkeleton2DClippingAttachmentSlotRange",
             "scope": "module",
@@ -89520,7 +89550,7 @@
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/clippingAttachment2D.ts"
           },
-          "specifier": "./skinAttachment2DPoints",
+          "specifier": "./skinAttachment2DPoints.ts",
           "target": {
             "name": "SkinAttachment2DPoints",
             "packageName": "@flighthq/skeleton2d",
@@ -125058,7 +125088,7 @@
             "line": 29,
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/deformMeshAttachment2D.ts",
-            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/deformMeshAttachment2D.ts\",2088]",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/deformMeshAttachment2D.ts\",2091]",
             "kind": "function",
             "name": "deformSkeleton2DMeshAttachment",
             "scope": "module",
@@ -125080,7 +125110,7 @@
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/deformMeshAttachment2D.ts"
           },
-          "specifier": "./skinAttachment2DPoints",
+          "specifier": "./skinAttachment2DPoints.ts",
           "target": {
             "name": "SkinAttachment2DPoints",
             "packageName": "@flighthq/skeleton2d",
@@ -125182,7 +125212,7 @@
             "line": 28,
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/deformPathAttachment2D.ts",
-            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/deformPathAttachment2D.ts\",1938]",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/deformPathAttachment2D.ts\",1941]",
             "kind": "function",
             "name": "deformSkeleton2DPathAttachment",
             "scope": "module",
@@ -125204,7 +125234,7 @@
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/deformPathAttachment2D.ts"
           },
-          "specifier": "./skinAttachment2DPoints",
+          "specifier": "./skinAttachment2DPoints.ts",
           "target": {
             "name": "SkinAttachment2DPoints",
             "packageName": "@flighthq/skeleton2d",
@@ -258081,7 +258111,7 @@
             "line": 8,
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/pointAttachment2D.ts",
-            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/pointAttachment2D.ts\",438]",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/pointAttachment2D.ts\",441]",
             "kind": "function",
             "name": "computeSkeleton2DPointAttachmentPosition",
             "scope": "module",
@@ -258102,7 +258132,7 @@
             "line": 28,
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/pointAttachment2D.ts",
-            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/pointAttachment2D.ts\",1441]",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/pointAttachment2D.ts\",1444]",
             "kind": "function",
             "name": "computeSkeleton2DPointAttachmentRotation",
             "scope": "module",
@@ -258124,7 +258154,7 @@
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/pointAttachment2D.ts"
           },
-          "specifier": "./skeleton2dConstants",
+          "specifier": "./skeleton2dConstants.ts",
           "target": {
             "name": "Skeleton2dConstants",
             "packageName": "@flighthq/skeleton2d",
@@ -267384,7 +267414,7 @@
             "line": 12,
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/regionAttachment2D.ts",
-            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/regionAttachment2D.ts\",861]",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/regionAttachment2D.ts\",864]",
             "kind": "function",
             "name": "computeSkeleton2DRegionAttachmentVertices",
             "scope": "module",
@@ -267405,7 +267435,7 @@
             "line": 56,
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/regionAttachment2D.ts",
-            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/regionAttachment2D.ts\",2373]",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/regionAttachment2D.ts\",2376]",
             "kind": "variable",
             "name": "_local",
             "scope": "module",
@@ -267426,7 +267456,7 @@
             "line": 57,
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/regionAttachment2D.ts",
-            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/regionAttachment2D.ts\",2442]",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/regionAttachment2D.ts\",2445]",
             "kind": "variable",
             "name": "_bone",
             "scope": "module",
@@ -267447,7 +267477,7 @@
             "line": 58,
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/regionAttachment2D.ts",
-            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/regionAttachment2D.ts\",2510]",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/regionAttachment2D.ts\",2513]",
             "kind": "variable",
             "name": "_combined",
             "scope": "module",
@@ -267468,7 +267498,7 @@
             "line": 59,
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/regionAttachment2D.ts",
-            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/regionAttachment2D.ts\",2582]",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/regionAttachment2D.ts\",2585]",
             "kind": "variable",
             "name": "_corner",
             "scope": "module",
@@ -267490,7 +267520,7 @@
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/regionAttachment2D.ts"
           },
-          "specifier": "./skeleton2dConstants",
+          "specifier": "./skeleton2dConstants.ts",
           "target": {
             "name": "Skeleton2dConstants",
             "packageName": "@flighthq/skeleton2d",
@@ -267679,7 +267709,7 @@
               "line": 56,
               "packageName": "@flighthq/skeleton2d",
               "source": "packages/skeleton2d/src/regionAttachment2D.ts",
-              "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/regionAttachment2D.ts\",2373]",
+              "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/regionAttachment2D.ts\",2376]",
               "kind": "variable",
               "name": "_local",
               "scope": "module",
@@ -267702,7 +267732,7 @@
               "line": 57,
               "packageName": "@flighthq/skeleton2d",
               "source": "packages/skeleton2d/src/regionAttachment2D.ts",
-              "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/regionAttachment2D.ts\",2442]",
+              "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/regionAttachment2D.ts\",2445]",
               "kind": "variable",
               "name": "_bone",
               "scope": "module",
@@ -267725,7 +267755,7 @@
               "line": 58,
               "packageName": "@flighthq/skeleton2d",
               "source": "packages/skeleton2d/src/regionAttachment2D.ts",
-              "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/regionAttachment2D.ts\",2510]",
+              "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/regionAttachment2D.ts\",2513]",
               "kind": "variable",
               "name": "_combined",
               "scope": "module",
@@ -267748,7 +267778,7 @@
               "line": 59,
               "packageName": "@flighthq/skeleton2d",
               "source": "packages/skeleton2d/src/regionAttachment2D.ts",
-              "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/regionAttachment2D.ts\",2582]",
+              "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/regionAttachment2D.ts\",2585]",
               "kind": "variable",
               "name": "_corner",
               "scope": "module",
@@ -303998,6 +304028,906 @@
     {
       "bindings": [
         {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
+            "line": 1,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",9]",
+            "kind": "import",
+            "name": "allocateEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "allocateEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 26,
+            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
+            "line": 1,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",25]",
+            "kind": "import",
+            "name": "finishEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "finishEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:568d9f7bab3abbfe16cc1ae624bd476d841142dd4c3b0d1e5de5af40516c8ec0",
+            "line": 2,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",83]",
+            "kind": "import",
+            "name": "inverseMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "inverseMatrix",
+            "kind": "dependency",
+            "module": {
+              "name": "Matrix",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/matrix.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 25,
+            "fingerprint": "sha256:9ad755c8e0771b239f70f880a774065f8b43605731a71c6d58db97739dea7843",
+            "line": 2,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",98]",
+            "kind": "import",
+            "name": "multiplyMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "multiplyMatrix",
+            "kind": "dependency",
+            "module": {
+              "name": "Matrix",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/matrix.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:9297ab84587f4b5413e65a55a7dacc75024a9110900c90c78222c62eaad5b8c3",
+            "line": 5,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",284]",
+            "kind": "variable",
+            "name": "DEG_TO_RAD",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:166fb5fd85f0a05018d7dab69f81357f79bd4de4640fb0b065a5715006e8e5a9",
+            "line": 6,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",318]",
+            "kind": "variable",
+            "name": "MATRIX_STRIDE",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:10169f13e360659c8828e9d07200f8033754bbbe755c8d01539330defab72770",
+            "line": 11,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",627]",
+            "kind": "function",
+            "name": "cloneSkeleton2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:61ecaa1a0d3002fbfa0dff55747d12b485b60d293cb6fa6cef07fea6d7f3e0d8",
+            "line": 29,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",1485]",
+            "kind": "function",
+            "name": "computeSkeleton2DBoneMatrices",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:e48e13de4a17206a444f5aa5dcbccddfb8d531836ef35b9aed4e294cbb44dbcc",
+            "line": 48,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",2504]",
+            "kind": "function",
+            "name": "computeSkeleton2DBoneWorldTransform",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:8290dbe7304066e2a2d353f7c0f97ddbaf7445f5e00ed6fe536feef5e7f36721",
+            "line": 142,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",6631]",
+            "kind": "function",
+            "name": "computeSkeleton2DWorldTransforms",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:0db281359abc7e593f2e8c24bd8ceacc0c4c6b4b2f62206b048d0e1a100c5e9e",
+            "line": 152,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",7346]",
+            "kind": "function",
+            "name": "createSkeleton2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:b0c5b645743df90c2e6351e371cebd29d79d0164b3a3d5c76792d145a8c366f3",
+            "line": 169,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",7951]",
+            "kind": "function",
+            "name": "disposeSkeleton2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:beb4fe56ed35639cd047f92382afeffbde9e31fd941cd4799885a2f8a52a7513",
+            "line": 174,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",8066]",
+            "kind": "function",
+            "name": "equalsSkeleton2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:34fe3939b91db48d1d510cbf5575d3b2e772e2f21245a96cc10cca11ade27624",
+            "line": 202,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",9025]",
+            "kind": "function",
+            "name": "getSkeleton2DBoneIndexByName",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:c81753ae1020ed462470cd5ca2bff8c06c592950c1ff4747e9cba1a4cf21b0d1",
+            "line": 213,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",9561]",
+            "kind": "function",
+            "name": "getSkeleton2DBoneWorldMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:418d97846de0e08ff74d61c745e6d37c70598c970ae4010156bed395701695b5",
+            "line": 225,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",10044]",
+            "kind": "function",
+            "name": "getSkeleton2DSkin",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:77b1e41ac6b03a880a5720e77d64a8711f238955548ff33f9d355f5c5d48b779",
+            "line": 234,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",10334]",
+            "kind": "function",
+            "name": "initializeSkeleton2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:894d33cb11988c033cb5ea38f90a724eecf3937884889cc5b63e877233966a1c",
+            "line": 252,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",10879]",
+            "kind": "function",
+            "name": "resetSkeleton2DToSetup",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:d4028b133e19fb1d3df2f719df75a349eb278d31f3b76a144752c77f7ec74acb",
+            "line": 271,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",11678]",
+            "kind": "function",
+            "name": "setSkeleton2DBindPose",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:4f26387c30e815f582e1c472cb526ea0dbd22f7c71b655946c7fc24eb8b26096",
+            "line": 296,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",13271]",
+            "kind": "function",
+            "name": "setSkeleton2DSkin",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:d8cdd03f6aa651999729ddeb83569a68bbe7afed1826458597016380ed3c2fc0",
+            "line": 306,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",13839]",
+            "kind": "function",
+            "name": "validateSkeleton2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:6acb7a9ac656d5c4353f7be54c1bd571263f4961df73e57b539ca653cf2b7b34",
+            "line": 325,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",14754]",
+            "kind": "function",
+            "name": "readMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:a40edcbef77ebc0a48462dbce45765c39129c0f6d667be4351bb9ce7c40be30c",
+            "line": 334,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",15028]",
+            "kind": "function",
+            "name": "setMatrixIdentityLocal",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:4b5fd3d6fda2c10cef0ae6dc4696024e33bec7671862120b61ba07c439129a30",
+            "line": 343,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",15168]",
+            "kind": "function",
+            "name": "writeMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:7ca87fc9a1e34d83a96e846228bdb832a1157174c92e99bf3bb98242f945f058",
+            "line": 352,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",15461]",
+            "kind": "variable",
+            "name": "_scratchA",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 2
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:a7c60e9c06f870af890cea037e6ddd5b514d776d655a4e2273097f00e21cf452",
+            "line": 353,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",15533]",
+            "kind": "variable",
+            "name": "_scratchB",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 3
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:1186db9812d03bc947895dbc6773534541c5ec6ce6d5d0a0f54e61fb77a2735b",
+            "line": 354,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",15605]",
+            "kind": "variable",
+            "name": "_scratchC",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 4
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Skeleton2d",
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts"
+          },
+          "specifier": "@flighthq/entity/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/entity",
+            "source": "packages/entity/src/entity.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Skeleton2d",
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts"
+          },
+          "specifier": "@flighthq/geometry/contract",
+          "target": {
+            "name": "Matrix",
+            "packageName": "@flighthq/geometry",
+            "source": "packages/geometry/src/matrix.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Skeleton2d",
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts"
+          },
+          "importedNames": [
+            "Attachment2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Attachment2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Attachment2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Skeleton2d",
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts"
+          },
+          "importedNames": [
+            "AttachmentSkin2D",
+            "SkinAttachment2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "AttachmentSkin2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/AttachmentSkin2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Skeleton2d",
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts"
+          },
+          "importedNames": [
+            "Bone2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Bone2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Bone2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Skeleton2d",
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts"
+          },
+          "importedNames": [
+            "Entity",
+            "EntityConstruction",
+            "EntityWithoutRuntime"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Skeleton2d",
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts"
+          },
+          "importedNames": [
+            "Matrix",
+            "MatrixLike"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Matrix",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Matrix.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Skeleton2d",
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts"
+          },
+          "importedNames": [
+            "Skeleton2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Skeleton2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Skeleton2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Skeleton2d",
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts"
+          },
+          "importedNames": [
+            "Skeleton2DSlotDeform"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Skeleton2DSlotDeform",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Skeleton2DSlotDeform.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Skeleton2d",
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts"
+          },
+          "importedNames": [
+            "Slot2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Slot2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Slot2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Skeleton2d",
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/skeleton2d.ts"
+          },
+          "importedNames": [
+            "TransformInherit2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "TransformInherit2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TransformInherit2D.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Skeleton2d",
+        "packageName": "@flighthq/skeleton2d",
+        "source": "packages/skeleton2d/src/skeleton2d.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:9297ab84587f4b5413e65a55a7dacc75024a9110900c90c78222c62eaad5b8c3",
+              "line": 5,
+              "packageName": "@flighthq/skeleton2d",
+              "source": "packages/skeleton2d/src/skeleton2d.ts",
+              "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",284]",
+              "kind": "variable",
+              "name": "DEG_TO_RAD",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            0
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:166fb5fd85f0a05018d7dab69f81357f79bd4de4640fb0b065a5715006e8e5a9",
+              "line": 6,
+              "packageName": "@flighthq/skeleton2d",
+              "source": "packages/skeleton2d/src/skeleton2d.ts",
+              "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",318]",
+              "kind": "variable",
+              "name": "MATRIX_STRIDE",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            1
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:7ca87fc9a1e34d83a96e846228bdb832a1157174c92e99bf3bb98242f945f058",
+              "line": 352,
+              "packageName": "@flighthq/skeleton2d",
+              "source": "packages/skeleton2d/src/skeleton2d.ts",
+              "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",15461]",
+              "kind": "variable",
+              "name": "_scratchA",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            20
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:a7c60e9c06f870af890cea037e6ddd5b514d776d655a4e2273097f00e21cf452",
+              "line": 353,
+              "packageName": "@flighthq/skeleton2d",
+              "source": "packages/skeleton2d/src/skeleton2d.ts",
+              "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",15533]",
+              "kind": "variable",
+              "name": "_scratchB",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            21
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:1186db9812d03bc947895dbc6773534541c5ec6ce6d5d0a0f54e61fb77a2735b",
+              "line": 354,
+              "packageName": "@flighthq/skeleton2d",
+              "source": "packages/skeleton2d/src/skeleton2d.ts",
+              "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skeleton2d.ts\",15605]",
+              "kind": "variable",
+              "name": "_scratchC",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            22
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
           "access": "temporal-until-evaluation",
           "binding": {
             "column": 14,
@@ -304945,7 +305875,7 @@
             "line": 4,
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/skinAttachment2DPoints.ts",
-            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skinAttachment2DPoints.ts\",162]",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skinAttachment2DPoints.ts\",165]",
             "kind": "import",
             "name": "reportSkeleton2DDeformLengthMismatch",
             "scope": "module",
@@ -304971,7 +305901,7 @@
             "line": 34,
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/skinAttachment2DPoints.ts",
-            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skinAttachment2DPoints.ts\",2592]",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/skinAttachment2DPoints.ts\",2598]",
             "kind": "function",
             "name": "skinSkeleton2DAttachmentPoints",
             "scope": "module",
@@ -304993,7 +305923,7 @@
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/skinAttachment2DPoints.ts"
           },
-          "specifier": "./skeleton2dConstants",
+          "specifier": "./skeleton2dConstants.ts",
           "target": {
             "name": "Skeleton2dConstants",
             "packageName": "@flighthq/skeleton2d",
@@ -305007,7 +305937,7 @@
             "packageName": "@flighthq/skeleton2d",
             "source": "packages/skeleton2d/src/skinAttachment2DPoints.ts"
           },
-          "specifier": "./skeleton2dGuards",
+          "specifier": "./skeleton2dGuards.ts",
           "target": {
             "name": "Skeleton2dGuards",
             "packageName": "@flighthq/skeleton2d",
@@ -305900,6 +306830,111 @@
         "name": "Slot2D",
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Slot2D.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:7f687c6b533dada8a10ad0a0e1bef2b7352b1564c4c50af06401018332969b33",
+            "line": 18,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/slotDeform2D.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/slotDeform2D.ts\",1414]",
+            "kind": "function",
+            "name": "getSkeleton2DSlotDeformOffsets",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:08dd2a477e28523a18f6adc8d87749af6b0fe338c6d4d790f20427c2e05af73e",
+            "line": 27,
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/slotDeform2D.ts",
+            "id": "binding:[\"@flighthq/skeleton2d\",\"packages/skeleton2d/src/slotDeform2D.ts\",1973]",
+            "kind": "function",
+            "name": "setSkeleton2DSlotDeform",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SlotDeform2D",
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/slotDeform2D.ts"
+          },
+          "importedNames": [
+            "Attachment2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Attachment2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Attachment2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SlotDeform2D",
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/slotDeform2D.ts"
+          },
+          "importedNames": [
+            "Skeleton2DSlotDeform"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Skeleton2DSlotDeform",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Skeleton2DSlotDeform.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SlotDeform2D",
+            "packageName": "@flighthq/skeleton2d",
+            "source": "packages/skeleton2d/src/slotDeform2D.ts"
+          },
+          "importedNames": [
+            "Slot2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Slot2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Slot2D.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "SlotDeform2D",
+        "packageName": "@flighthq/skeleton2d",
+        "source": "packages/skeleton2d/src/slotDeform2D.ts"
       },
       "steps": []
     },

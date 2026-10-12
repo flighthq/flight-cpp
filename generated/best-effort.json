@@ -34307,7 +34307,8 @@
     },
     {
       "consumers": [
-        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts"
+        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts"
       ],
       "module": {
         "name": "ApplyAnimationClipToSkeleton2D",
@@ -34322,7 +34323,8 @@
     },
     {
       "consumers": [
-        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts"
+        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts"
       ],
       "module": {
         "name": "BoundingBoxAttachment2D",
@@ -34334,7 +34336,8 @@
     },
     {
       "consumers": [
-        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts"
+        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts"
       ],
       "module": {
         "name": "ClippingAttachment2D",
@@ -34345,9 +34348,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/skeleton2d",
@@ -34360,10 +34361,8 @@
         "@flighthq/skeleton2d/packages/skeleton2d/src/enableSkeleton2DGuards.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/ikConstraint2D.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/pathConstraint2D.ts",
-        "@flighthq/skeleton2d/packages/skeleton2d/src/skeleton2d.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dDrawOrderTarget.ts",
-        "@flighthq/skeleton2d/packages/skeleton2d/src/slotDeform2D.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/transformConstraint2D.ts"
       ],
       "status": "dependency-incomplete"
@@ -34371,7 +34370,8 @@
     {
       "classification": "target-runtime",
       "consumers": [
-        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts"
+        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:a9fee858d8b241ab1f4111a7d437ba7b493c85062d7422712192dd6484f41093",
@@ -34389,7 +34389,8 @@
     },
     {
       "consumers": [
-        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts"
+        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts"
       ],
       "module": {
         "name": "DeformMeshAttachment2D",
@@ -34402,6 +34403,7 @@
     {
       "consumers": [
         "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/pathConstraint2D.ts"
       ],
       "module": {
@@ -34414,7 +34416,8 @@
     },
     {
       "consumers": [
-        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts"
+        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts"
       ],
       "module": {
         "name": "EnableSkeleton2DGuards",
@@ -34429,7 +34432,8 @@
     },
     {
       "consumers": [
-        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts"
+        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts"
       ],
       "module": {
         "name": "ExplainSkeleton2DChannel",
@@ -34441,7 +34445,8 @@
     },
     {
       "consumers": [
-        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts"
+        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts"
       ],
       "module": {
         "name": "ExplainSkeleton2DDeformLength",
@@ -34454,7 +34459,8 @@
     {
       "classification": "source-portability",
       "consumers": [
-        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts"
+        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:08e82375fcb9c3fe43dd3fd0288cb2d038bc4d6b025c157ddeb4afe515c4e610",
@@ -34483,14 +34489,22 @@
       },
       "path": "flight/skeleton2d/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts"
+        "@flighthq/skeleton2d/packages/skeleton2d/src/applyAnimationClipToSkeleton2D.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/deformAnimationTarget2D.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/enableSkeleton2DGuards.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/ikConstraint2D.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/pathConstraint2D.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dDrawOrderTarget.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/transformConstraint2D.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "classification": "source-portability",
       "consumers": [
-        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts"
+        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:08a611f813d67be3b2077e3f5a408e0752e71565bf3dfaed0951d4ee154695f1",
@@ -34522,7 +34536,8 @@
     },
     {
       "consumers": [
-        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts"
+        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts"
       ],
       "module": {
         "name": "PointAttachment2D",
@@ -34534,7 +34549,8 @@
     },
     {
       "consumers": [
-        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts"
+        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts"
       ],
       "module": {
         "name": "RegionAttachment2D",
@@ -34545,7 +34561,6 @@
       "status": "emitted"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveSkeleton.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParse.ts",
@@ -34553,33 +34568,9 @@
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineParse.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/ikConstraint2D.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/pathConstraint2D.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/transformConstraint2D.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:0a618e6da5efa440c26995dcf62e891eddb2901829c7d842a5e06aec812a8c43",
-        "sha256:0c73240138b30d79135437f3d655c2e8c21049f49fbdab3d3cc9fdde5a0ee160",
-        "sha256:2d01354f1bc06edbc9ae76e8b2e3848ea6514ce82e6e4cebf2e635e22cfe8c0c",
-        "sha256:30e966a12b88fea59d4dd24ea49b7ee861120d0b2ced632b3af9ab53903cbc0c",
-        "sha256:32306a021909eab2803fe6d2c2168f85e7f3c8604a80bcff8297468cd637500c",
-        "sha256:355d7ad364c673e78b7ecacfa74b2fb4ca27e8ec29eecf352d63d789a7785a7b",
-        "sha256:5b111ee092b0966939f49d61ed27ab4f22017e3b0c78b9a56d9d4154f4ff7944",
-        "sha256:5ba88661bc5b1be317738ff7e325673f226c160dc959d1cc99e1a17da29b762c",
-        "sha256:621dec8d9e83057083be6d3d46e8b12c37e79d7ecaeb1d31633699ffeeeefb7f",
-        "sha256:79ee2060c0e1260095b069e6a6981da4355e308d8f1af4ef6b0cd54949ffce30",
-        "sha256:8066d6573149bcf68390a13b4796a50b8b72192528116c56d640d652fa25ea14",
-        "sha256:85a509af0ab0eb102468783354a99c5e0043e12edcaff3fa89db006987b6c649",
-        "sha256:8ed71dac0a86abfaea7586e44894eab7726fee726b6307a0ff572a6da8ac57b6",
-        "sha256:8f58086fb2f5e9ea8e9a3d358eeb91b8e58800563f14b8f0dfcd2ee7213708ed",
-        "sha256:a351cde8e3d6fbd800555d6861eb2ca9a2d1dd9b855ac0d82cfe407bfd12b145",
-        "sha256:be23729ba4bd3210cc592ddea973f2e728d038f3da72113325f338415a59de9d",
-        "sha256:c3ea7563a0d9ddf425e75190325cab4f794cae7af67bf104dea50ed6118cfd26",
-        "sha256:d02c288ce071537462ea002f4cc1afda2db409ce353eef2ea4fbba7202233fa3",
-        "sha256:d9353da6f1f789db5b94ab181cf2ade8b9fb157d28d2afdd7f6aecac59114323",
-        "sha256:e58e95395a40509cca05801fd2b9f21e0d53456d4ef622301c6863529d67779c",
-        "sha256:f73daf45d42c1bdc3bc36a8e103297f4e85cb782d2759a565644bdbbd4c9132a",
-        "sha256:f850cd748e31f6ba893d8ddbc554b46674950ae3861a76cace6e3e7e0cfc93e5",
-        "sha256:ff00e569f583ea749612eb03975a5e46fcd8fa6658759969ba59095da15732f1"
       ],
       "module": {
         "name": "Skeleton2d",
@@ -34587,8 +34578,7 @@
         "source": "packages/skeleton2d/src/skeleton2d.ts"
       },
       "path": "flight/skeleton2d/skeleton2d.hpp",
-      "rule": "cpp-contextual-union-value-type-unrepresented",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "classification": "target-runtime",
@@ -34600,26 +34590,27 @@
         "@flighthq/skeleton2d/packages/skeleton2d/src/applyAnimationClipToSkeleton2D.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/deformAnimationTarget2D.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dDrawOrderTarget.ts"
       ],
       "declarationFingerprints": [
-        "sha256:065a3de46b9b051de8ca602eaa0b231d6a7642aca09e50539408265c7f558582",
-        "sha256:1199c87e121f80686e27a972e8cd36ab2fe942f94099fc6c5868c80525d0c20a",
         "sha256:11d479723fc3468d7baedb5dca06695e8f8c04120851f35cc82d9e6263db5a6d",
-        "sha256:13ab118a61e9b4db8121b6bbc19680caa3c0762bdf72d398ad08652d5be0830a",
+        "sha256:2b4e5b51d5cea3301756e980f5e0d6cd89fc7ebd47b6b9eee98db4a74a9fb93c",
+        "sha256:2c6f2c663dfa41e63b860902bc875df394be5b9f014db072de0c720855a69a0d",
         "sha256:36f7d0fc651ab3dd7cbe9993af3aa3b8559ca72a244090544cbf32713df9b430",
-        "sha256:47e2c98f982edacdaf618be2df043cfbb5da4d7bdcc9a625cb632675cb280f0c",
         "sha256:67285a11fafbc5c5cc698562bcaa529ca88d0f8119374561c8b0ab35f3748bfb",
         "sha256:6796e4ff31cb0fbfce7bf30d94bffc923c8963021ac68c9a2251c7511a25d523",
+        "sha256:6e7900ec971416f78f074934c36af60b5519c12159de8125b1e7a8f806134d52",
         "sha256:7056c76245fb1934cccfe6bf95fbb92827f40bb73e8c34a44e1e70b8f2c67d43",
         "sha256:7c591e06898b12781e1688c75c009a59361546d8c2fdc60d34fe44ca3e88f44d",
+        "sha256:8b12b00aebc2f72dd63fcd7769f0d685d58d26dd8af2d24b271c20bc1c912cfe",
         "sha256:a8e447f21197ccbc8398da480193fb6867a47bbbb71badefa712a13d27f34a62",
-        "sha256:ae6903b37eb1570fd751f38b1210180b2f3c986a3e3cefac040759535afd40ed",
+        "sha256:b6a3f9833348a19d4bdd1b66e60001f102e1d06c5a80d1a220a7375b3c2c3ebd",
         "sha256:beb7531519f37616c5456a03034b7b5e28cc145e5fac39eab4f2f77b525e44d3",
-        "sha256:c037f0c908d333d34078c275ad9853134a4451709b2a8f35ab16ee1f9d213b8c",
         "sha256:c6e4902d4503e2e88fb29fe3d2d92773deb22a0a34b52ab5faecdb33c181f0a2",
         "sha256:e25d5c04dd252598683e7e3dff5971aaeef6acc5220a61b188b4d86aa6a7a931",
-        "sha256:e850f3d3d31fce0bf824e4620080058ef58381e4596ad3bd03973d080748acd0"
+        "sha256:e850f3d3d31fce0bf824e4620080058ef58381e4596ad3bd03973d080748acd0",
+        "sha256:f2ef1c631f23d095d55a85a1aa574637d7ffdc3624cb1b95d23fccbd7d27b260"
       ],
       "module": {
         "name": "Skeleton2dAnimationTarget",
@@ -34632,7 +34623,9 @@
     },
     {
       "consumers": [
+        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/ikConstraint2D.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/pathConstraint2D.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/pointAttachment2D.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/regionAttachment2D.ts",
@@ -34651,6 +34644,7 @@
       "consumers": [
         "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/ikConstraint2D.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/pathConstraint2D.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/transformConstraint2D.ts"
       ],
@@ -34665,7 +34659,8 @@
     {
       "classification": "target-runtime",
       "consumers": [
-        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts"
+        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:08bed96c1c261bb149f02ffe15f766047bcff79bd0039c23f7542fd9d8e833a1",
@@ -34708,7 +34703,8 @@
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParse.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryParse.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineParse.ts",
-        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts"
+        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts"
       ],
       "module": {
         "name": "Skin2D",
@@ -34724,7 +34720,8 @@
         "@flighthq/skeleton2d/packages/skeleton2d/src/clippingAttachment2D.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/deformMeshAttachment2D.ts",
-        "@flighthq/skeleton2d/packages/skeleton2d/src/deformPathAttachment2D.ts"
+        "@flighthq/skeleton2d/packages/skeleton2d/src/deformPathAttachment2D.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts"
       ],
       "module": {
         "name": "SkinAttachment2DPoints",
@@ -34735,14 +34732,10 @@
       "status": "emitted"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
-        "@flighthq/skeleton2d/packages/skeleton2d/src/deformAnimationTarget2D.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:02b71e1b57373814fbd3fcaaec2ff32bd17302f2a1d269804c96382250aa704d",
-        "sha256:c8d7b20d484684539856e7adcb13c1dd22c4a070970cf8b0aea2c7ec2dd86a14"
+        "@flighthq/skeleton2d/packages/skeleton2d/src/deformAnimationTarget2D.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts"
       ],
       "module": {
         "name": "SlotDeform2D",
@@ -34750,12 +34743,13 @@
         "source": "packages/skeleton2d/src/slotDeform2D.ts"
       },
       "path": "flight/skeleton2d/slot_deform2_d.hpp",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "classification": "source-portability",
       "consumers": [
-        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts"
+        "@flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:08e82375fcb9c3fe43dd3fd0288cb2d038bc4d6b025c157ddeb4afe515c4e610",

@@ -7584,14 +7584,14 @@
       "code": "dependency-refused",
       "module": "packages/skeleton2d/src/applyAnimationClipToSkeleton2D.ts",
       "package": "@flighthq/skeleton2d",
-      "reason": "dependency ./skeleton2dAnimationTarget was refused for @flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts",
+      "reason": "dependency ./skeleton2dAnimationTarget.ts was refused for @flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/skeleton2d/src/contract.ts",
       "package": "@flighthq/skeleton2d",
-      "reason": "dependency ./applyAnimationClipToSkeleton2D was refused for @flighthq/skeleton2d/packages/skeleton2d/src/applyAnimationClipToSkeleton2D.ts",
+      "reason": "dependency ./applyAnimationClipToSkeleton2D.ts was refused for @flighthq/skeleton2d/packages/skeleton2d/src/applyAnimationClipToSkeleton2D.ts",
       "stage": "dependency"
     },
     {
@@ -7623,7 +7623,7 @@
       "code": "dependency-refused",
       "module": "packages/skeleton2d/src/index.ts",
       "package": "@flighthq/skeleton2d",
-      "reason": "dependency ./contract was refused for @flighthq/skeleton2d/packages/skeleton2d/src/contract.ts",
+      "reason": "dependency ./applyAnimationClipToSkeleton2D.ts was refused for @flighthq/skeleton2d/packages/skeleton2d/src/applyAnimationClipToSkeleton2D.ts",
       "stage": "dependency"
     },
     {
@@ -7638,16 +7638,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 11,
-      "module": "packages/skeleton2d/src/skeleton2d.ts",
-      "package": "@flighthq/skeleton2d",
-      "reason": "cpp emission failed for @flighthq/skeleton2d/packages/skeleton2d/src/skeleton2d.ts: contextual union value type flight::Array<flight::Ref<attachment_deform_bone_index_color_name_04874bb6aa21a4ba>> is not a represented runtime domain",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 126,
+      "line": 120,
       "module": "packages/skeleton2d/src/skeleton2dAnimationTarget.ts",
       "package": "@flighthq/skeleton2d",
       "reason": "cpp emission failed for @flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts: an actually erased value cannot be asserted as structural row Readonly: flight::Any has no structural-row alternative or checked row projection. Preserve the represented row through the assertion, or keep the API typed to the structural source before erasure; the compiler will not cast, copy, or materialize a replacement row",
@@ -7660,15 +7651,6 @@
       "module": "packages/skeleton2d/src/skeleton2dDrawOrderTarget.ts",
       "package": "@flighthq/skeleton2d",
       "reason": "cpp emission failed for @flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dDrawOrderTarget.ts: an actually erased value cannot be asserted as structural row Readonly: flight::Any has no structural-row alternative or checked row projection. Preserve the represented row through the assertion, or keep the API typed to the structural source before erasure; the compiler will not cast, copy, or materialize a replacement row",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 27,
-      "module": "packages/skeleton2d/src/slotDeform2D.ts",
-      "package": "@flighthq/skeleton2d",
-      "reason": "cpp emission failed for @flighthq/skeleton2d/packages/skeleton2d/src/slotDeform2D.ts: ambient value Float32Array member from has no C++ binding",
       "stage": "emission"
     },
     {

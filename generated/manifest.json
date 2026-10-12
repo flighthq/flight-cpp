@@ -548,7 +548,6 @@
         "flight/scene3d_wgpu/wgpu_shaded_modifier_snippet.hpp",
         "flight/scene3d_wgpu/wgpu_shaded_prelude.hpp",
         "flight/shape_formats/shape_command_schemas.hpp",
-        "flight/skeleton2d/skeleton2d_animation_target.hpp",
         "flight/skeleton2d_formats/skeleton_detect.hpp",
         "flight/spritesheet_formats/spritesheet_detect.hpp"
       ],
@@ -1618,11 +1617,7 @@
       "id": "shortcut-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/skeleton2d/path_constraint2_d.hpp",
-        "flight/skeleton2d/skeleton2d_animation_target.hpp",
-        "flight/skeleton2d/skeleton2d_draw_order_target.hpp"
-      ],
+      "files": [],
       "id": "skeleton2d-unqualified-entity-names"
     },
     {
@@ -3195,21 +3190,15 @@
       "id": "scene2d-formats-unqualified-xml-names"
     },
     {
-      "files": [
-        "flight/skeleton2d/skeleton2d.hpp"
-      ],
+      "files": [],
       "id": "skeleton2d-unqualified-geometry-names"
     },
     {
-      "files": [
-        "flight/skeleton2d/skeleton2d_draw_order_target.hpp"
-      ],
+      "files": [],
       "id": "skeleton2d-unqualified-node-names"
     },
     {
-      "files": [
-        "flight/skeleton2d/skeleton2d_animation_target.hpp"
-      ],
+      "files": [],
       "id": "skeleton2d-unqualified-registry-names"
     },
     {
@@ -5063,7 +5052,7 @@
     },
     {
       "dependency": "flight",
-      "digest": "dd741a243f66c6c4bd17152ec3086e8e600b2ff45be1071bb3d4cbcbc35bebad",
+      "digest": "4028516cf90eda06e4e34ad21fa1430f87d4ab411a65c98dcb1c4af0479325f9",
       "id": "skeleton2d-target-kind-binding",
       "module": "packages/skeleton2d/src/skeleton2dAnimationTarget.ts",
       "package": "@flighthq/skeleton2d"
@@ -5091,8 +5080,36 @@
     },
     {
       "dependency": "flight",
-      "digest": "dbf20e57aca4430995790549cc09b4a3e322c91beb64d1cf36196cd8b1b43cc4",
+      "digest": "766d9c49d3ae6ee1e7f23cee41119bce520582869bfc5ab1dcd30e054b661d70",
       "id": "skeleton2d-local-numeric-constants",
+      "module": "packages/skeleton2d/src/skeleton2d.ts",
+      "package": "@flighthq/skeleton2d"
+    },
+    {
+      "dependency": "flight",
+      "digest": "f81648a28e77a2c4301bb958043659b713d52c8e2d2d9608e9c2f29c4acca928",
+      "id": "skeleton2d-clone-slot-copy-declared-type",
+      "module": "packages/skeleton2d/src/skeleton2d.ts",
+      "package": "@flighthq/skeleton2d"
+    },
+    {
+      "dependency": "flight",
+      "digest": "472b363c3d68e6e81f576d2d4adc77bca26d997059c1ef852a973b3d1a321190",
+      "id": "skeleton2d-create-two-state-slots-default",
+      "module": "packages/skeleton2d/src/skeleton2d.ts",
+      "package": "@flighthq/skeleton2d"
+    },
+    {
+      "dependency": "flight",
+      "digest": "dc7687f7f930f8478bd84edda35df13ae1ed62493934efb2259a4858bff50256",
+      "id": "skeleton2d-slot-deform-offsets-slice",
+      "module": "packages/skeleton2d/src/slotDeform2D.ts",
+      "package": "@flighthq/skeleton2d"
+    },
+    {
+      "dependency": "flight",
+      "digest": "64dacae63b2d1e446378625dd366b294b4b86ef34567f3e07255406a63ddbb47",
+      "id": "skeleton2d-bone-name-present-comparison",
       "module": "packages/skeleton2d/src/skeleton2d.ts",
       "package": "@flighthq/skeleton2d"
     },
@@ -6467,12 +6484,6 @@
       "flight/shape/shape.hpp",
       "flight/shape/shape_bounds.hpp",
       "flight/shape_formats/shape_json.hpp",
-      "flight/skeleton2d/deform_animation_target2_d.hpp",
-      "flight/skeleton2d/ik_constraint2_d.hpp",
-      "flight/skeleton2d/path_constraint2_d.hpp",
-      "flight/skeleton2d/skeleton2d_animation_target.hpp",
-      "flight/skeleton2d/skeleton2d_draw_order_target.hpp",
-      "flight/skeleton2d/transform_constraint2_d.hpp",
       "flight/skeleton2d_formats/skeleton_detect.hpp",
       "flight/skeleton2d_formats/spine_binary_parse.hpp",
       "flight/skeleton2d_formats/spine_binary_versioned.hpp",
@@ -6501,7 +6512,7 @@
       "flight/tilemap_formats/tiled_xml_parse.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 919
+    "includes": 904
   },
   "packages": [
     {
@@ -8042,14 +8053,14 @@
       "sourceModules": 10
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/skeleton2d",
       "cppNamespace": "flight::skeleton2d",
-      "emittedModules": 17,
+      "emittedModules": 19,
       "package": "@flighthq/skeleton2d",
-      "refusedModules": 8,
+      "refusedModules": 6,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 25
@@ -8547,8 +8558,8 @@
   },
   "summary": {
     "packages": 156,
-    "emittedModules": 2457,
-    "refusedModules": 576,
+    "emittedModules": 2459,
+    "refusedModules": 574,
     "sourceModules": 3033
   }
 }
