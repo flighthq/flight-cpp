@@ -1520,7 +1520,7 @@
       "id": "input-manager-refused-state-and-timer-boundaries",
       "path": "flight/input/input_manager.hpp",
       "package": "@flighthq/input",
-      "status": "complete",
+      "status": "partial",
       "supplies": "packages/input/src/inputManager.ts",
       "derivedFrom": "4e59071a1f5cf58c61139a2e5027bb557c428ea2af991f857a184db4b7850241",
       "reason": "After imported names and readonly callback carriers are repaired, the emitter still refuses the repeat-timer initializer and state-binding closures and instantiates SignalData callback storage at an invalid broad callable type.",
