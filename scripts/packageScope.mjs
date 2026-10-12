@@ -1213,6 +1213,11 @@ export function readmeWithSummary(readme, summary) {
 // The README's opening provenance sentence, in the manifest's form. The uniform text is exactly the one
 // scripts/sdkGeneration.mjs#generatedReadme writes, so a collapsed inventory reads as a full run's.
 export function readmeWithProvenance(readme, manifest) {
+  return readmeWithProfiles(readmeWithSourceProvenance(readme, manifest), manifest);
+}
+
+// The opening source-provenance paragraph alone; readmeWithProvenance adds the binding-profile sentence.
+function readmeWithSourceProvenance(readme, manifest) {
   const pattern = /^This directory is generated from [\s\S]*?\nDo not edit it by hand\.$/mu;
   if (!pattern.test(readme)) throw new Error('generated/README.md no longer carries the provenance sentence this script updates.');
   const compilerRevision = manifest.compiler.revision;
@@ -1237,7 +1242,54 @@ export function readmeWithProvenance(readme, manifest) {
       `different Flight revisions, each recorded on its row in \`manifest.json\`:\n\n${counts.join('\n')}\n\n` +
       `Every package was emitted by \`flight-compiler\` at \`${compilerRevision}\`.\nDo not edit it by hand.`;
   }
-  return readmeWithProfiles(readme.replace(pattern, text), manifest);
+  return readme.replace(pattern, text);
+}
+
+// The README's derived sentences -- the module summary, the source provenance and the binding-profile
+// record -- are pure functions of manifest.json, re-rendered by every scoped merge. A TEXT merge of two
+// branches that each moved a package can still leave them stale while the manifest is right: the counts
+// then lag by one package, and nothing but a full sdk:check would notice. This names every derived
+// section that disagrees with the manifest, without generating anything and without writing, so
+// `sdk:check` can hold it even where the pinned checkouts are absent.
+export function generatedReadmeProblems(generatedRoot) {
+  const readmeFile = path.join(generatedRoot, 'README.md');
+  const manifestFile = path.join(generatedRoot, 'manifest.json');
+  if (!existsSync(readmeFile) || !existsSync(manifestFile)) return [`${portable(generatedRoot)} has no README.md and manifest.json pair to compare.`];
+  const readme = readFileSync(readmeFile, 'utf8');
+  const manifest = JSON.parse(readFileSync(manifestFile, 'utf8'));
+  const problems = [];
+  try {
+    validateProvenance(manifest);
+  } catch (error) {
+    return [`manifest.json provenance is invalid, so the README cannot be checked against it: ${error.message}`];
+  }
+  const rows = {
+    packages: manifest.packages.length,
+    emittedModules: sum(manifest.packages, 'emittedModules'),
+    refusedModules: sum(manifest.packages, 'refusedModules'),
+    sourceModules: sum(manifest.packages, 'sourceModules'),
+  };
+  for (const field of Object.keys(rows)) {
+    if (manifest.summary?.[field] !== rows[field]) {
+      problems.push(`manifest.json summary.${field} is ${String(manifest.summary?.[field])}, but its rows total ${String(rows[field])}.`);
+    }
+  }
+  const sections = [
+    ['the module summary sentence', (text) => readmeWithSummary(text, rows)],
+    ['the source provenance paragraph', (text) => readmeWithSourceProvenance(text, manifest)],
+    ['the binding-profile sentence', (text) => readmeWithProfiles(text, manifest)],
+  ];
+  for (const [name, render] of sections) {
+    let expected;
+    try {
+      expected = render(readme);
+    } catch (error) {
+      problems.push(`README.md ${name} cannot be found: ${error.message}`);
+      continue;
+    }
+    if (expected !== readme) problems.push(`README.md ${name} disagrees with manifest.json.`);
+  }
+  return problems;
 }
 
 // The README's binding-profile sentence, in the manifest's form. The global text is exactly the one

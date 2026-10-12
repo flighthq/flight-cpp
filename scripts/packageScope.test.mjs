@@ -14,6 +14,7 @@ import {
   ctestLabelOf,
   evaluationGroups,
   finalizeProvenance,
+  generatedReadmeProblems,
   mergeSortedRows,
   normalizePackageName,
   packageHeaders,
@@ -881,6 +882,92 @@ describe('package retirement', () => {
     const plan = retire(neighbour, leaf);
     assert.ok(!plan.writes.has(`include/${sibling}`));
     assert.ok([...plan.writes].filter(([, contents]) => contents === null).every(([file]) => file.startsWith(`include/${prefixOf(leaf)}`)));
+  });
+});
+
+describe('generated README invariant', () => {
+  const read = (tree, file) => readFileSync(path.join(tree, file), 'utf8');
+
+  test('holds for a full-run inventory and for the committed tree', () => {
+    assert.deepEqual(generatedReadmeProblems(generated), []);
+    assert.deepEqual(generatedReadmeProblems(path.join(root, 'generated')), []);
+  });
+
+  test('holds for a mixed inventory a scoped merge wrote', () => {
+    const committed = copyTree('readme-mixed');
+    const NEW = 'b'.repeat(40);
+    const candidate = copyTree('readme-mixed-candidate');
+    editJson(candidate, 'manifest.json', (value) => {
+      value.source.revision = NEW;
+    });
+    editJson(candidate, 'refusals.json', (value) => {
+      value.sourceRevision = NEW;
+    });
+    applyPackageMerge(planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName: '@flighthq/math' }), committed);
+    assert.match(read(committed, 'README.md'), /during a pin transition/u);
+    assert.deepEqual(generatedReadmeProblems(committed), []);
+  });
+
+  test('names a stale module summary sentence', () => {
+    const tree = copyTree('readme-stale-summary');
+    const { summary } = JSON.parse(read(tree, 'manifest.json'));
+    const readme = read(tree, 'README.md');
+    const stale = readme.replace(`\n${String(summary.packages)} SDK packages and refused`, `\n${String(summary.packages - 1)} SDK packages and refused`);
+    assert.notEqual(stale, readme);
+    writeFileSync(path.join(tree, 'README.md'), stale);
+    assert.deepEqual(generatedReadmeProblems(tree), ['README.md the module summary sentence disagrees with manifest.json.']);
+  });
+
+  test('names a stale provenance paragraph', () => {
+    const tree = copyTree('readme-stale-provenance');
+    const { source } = JSON.parse(read(tree, 'manifest.json'));
+    const readme = read(tree, 'README.md');
+    const stale = readme.replace(`\`${source.revision}\``, `\`${'c'.repeat(40)}\``);
+    assert.notEqual(stale, readme);
+    writeFileSync(path.join(tree, 'README.md'), stale);
+    assert.deepEqual(generatedReadmeProblems(tree), ['README.md the source provenance paragraph disagrees with manifest.json.']);
+  });
+
+  test('names a stale binding-profile sentence', () => {
+    const tree = copyTree('readme-stale-profiles');
+    const [first] = JSON.parse(read(tree, 'manifest.json')).bindingProfiles;
+    const readme = read(tree, 'README.md');
+    const stale = readme.replace(`\`${first.identity}\``, '`flighthq/flight-cpp/not-applied/1`');
+    assert.notEqual(stale, readme);
+    writeFileSync(path.join(tree, 'README.md'), stale);
+    assert.deepEqual(generatedReadmeProblems(tree), ['README.md the binding-profile sentence disagrees with manifest.json.']);
+  });
+
+  test('names a manifest summary that does not total its rows, and the README that follows it', () => {
+    const tree = copyTree('readme-stale-manifest-summary');
+    editJson(tree, 'manifest.json', (value) => {
+      value.summary.emittedModules += 1;
+    });
+    const readme = read(tree, 'README.md');
+    const followed = readme.replace(/The current compiler emitted (\d+) of/u, (_, count) => `The current compiler emitted ${String(Number(count) + 1)} of`);
+    writeFileSync(path.join(tree, 'README.md'), followed);
+    const problems = generatedReadmeProblems(tree);
+    assert.equal(problems.length, 2);
+    assert.match(problems[0], /summary\.emittedModules is \d+, but its rows total \d+/u);
+    assert.equal(problems[1], 'README.md the module summary sentence disagrees with manifest.json.');
+  });
+
+  test('reports a missing derived sentence instead of throwing, and never writes', () => {
+    const tree = copyTree('readme-missing-sentence');
+    const readme = read(tree, 'README.md').replace(/^This directory is generated from [\s\S]*?\nDo not edit it by hand\.$/mu, 'Hand-written.');
+    writeFileSync(path.join(tree, 'README.md'), readme);
+    const manifestBefore = read(tree, 'manifest.json');
+    const problems = generatedReadmeProblems(tree);
+    assert.equal(problems.length, 1);
+    assert.match(problems[0], /source provenance paragraph cannot be found/u);
+    assert.equal(read(tree, 'README.md'), readme);
+    assert.equal(read(tree, 'manifest.json'), manifestBefore);
+  });
+
+  test('reports an absent pair rather than passing', () => {
+    const empty = path.join(scratch, 'readme-empty');
+    mkdirSync(empty, { recursive: true });
+    assert.equal(generatedReadmeProblems(empty).length, 1);
   });
 });
 
