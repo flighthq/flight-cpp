@@ -25,6 +25,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-constructor-parameter-property-assignment.patch`](../../source-patches/compiler-constructor-parameter-property-assignment.patch) | [Constructor parameter properties are declared but never assigned](constructor-parameter-properties-dropped.md) |
 | [`compiler-indexed-element-presence-test.patch`](../../source-patches/compiler-indexed-element-presence-test.patch) | [A null test on an element of a nullable-element array tests the wrong optional layer](nullable-array-element-null-test.md) |
 | [`compiler-constrained-type-parameter-union-slot.patch`](../../source-patches/compiler-constrained-type-parameter-union-slot.patch) | [A local typed by a constrained type parameter is stored as the constraint](constrained-type-parameter-local-storage.md) |
+| [`compiler-dependent-callable-pack-reuse.patch`](../../source-patches/compiler-dependent-callable-pack-reuse.patch) | [A forwarded parameter pack is consumed more than once](forwarded-parameter-pack-reused.md) |
 | [`compiler-contextual-imported-union-owner.patch`](../../source-patches/compiler-contextual-imported-union-owner.patch) | [Contextual construction of an imported union](compiler-contextual-imported-union-owner.md) |
 | [`compiler-erased-ref-weak-map-view.patch`](../../source-patches/compiler-erased-ref-weak-map-view.patch) | [Checked typed view of an erased WeakMap](compiler-erased-ref-weak-map-view.md) |
 | [`compiler-error-stack-cause-presence.patch`](../../source-patches/compiler-error-stack-cause-presence.patch) | [Runtime-declared Error members and their presence tests](compiler-error-stack-cause-presence.md) |
@@ -314,4 +315,4 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [A local typed by a constrained type parameter is stored as the constraint](constrained-type-parameter-local-storage.md) —
   `@flighthq/signals`' `emitSignalSafe` could not be instantiated for any signal. Carried by the `compiler-constrained-type-parameter-union-slot` patch.
 - [A forwarded parameter pack is consumed more than once](forwarded-parameter-pack-reused.md) —
-  silent miscompilation: signal dispatch forwards an rvalue argument into every slot, so slots after the first receive moved-from values. No workaround is carried.
+  silent miscompilation: signal dispatch forwarded an rvalue argument into every slot, so slots after the first received moved-from values. Carried by the `compiler-dependent-callable-pack-reuse` patch.

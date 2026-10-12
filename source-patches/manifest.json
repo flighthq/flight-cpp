@@ -3136,6 +3136,23 @@
       "unblocks": "@flighthq/signals emitSignalSafe (safe.ts). Other packages with constrained type parameters inside unions are fixed when next regenerated; this change does not move them.",
       "expires": "when upstream spells a single-domain constrained type parameter as itself inside a union (docs/compiler-requests/constrained-type-parameter-local-storage.md).",
       "appliedOn": "2026-10-12"
+    },
+    {
+      "id": "compiler-dependent-callable-pack-reuse",
+      "dependency": "flight-compiler",
+      "patch": "compiler-dependent-callable-pack-reuse.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "silent miscompilation, not a refusal: a dependent callable rest parameter spread into a call (`slot(...args)`) was emitted as `std::forward<ArgsPack>(args)...` at every use, so a pack spread inside a loop or in two calls moved an rvalue argument into the first call and gave every later call a moved-from value. @flighthq/signals dispatch therefore delivered an empty String (or a null Ref) to every slot after the first whenever it was emitted with a temporary.",
+      "rewrite": "The emit context records, module-wide, every dependent callable pack that is spread more than once or inside a loop (for, for-of, for-in, while, do; a spread anywhere under the loop statement, so its condition and increment count) in its declaring function. Such a pack's spreads emit `args...` (lvalues). A pack's single use outside any loop still forwards.",
+      "equivalence": "JavaScript passes the same argument values to every call that spreads the rest parameter. An lvalue spread binds or copies each element exactly as an lvalue argument always did; only rvalues change, from moved-from at later calls to the value the caller passed. A single use keeps perfect forwarding, so it moves exactly when the source's one call is the value's last use.",
+      "verification": "New cppDependentCallablePackReuse.test.ts, 7 pass: a single use and a single use in a branch forward (both controls pass without the rewrite); two uses and a single spread in for, while, do and for-of loops pass lvalues (all 5 fail without it). The existing 'keeps signal slot owners while binding only represented dispatch callables' expectation, which pinned the forwarding inside the dispatch loop, now expects lvalues. compiler-backend-cpp suite: the same 47 pre-existing failures by name with and without the patch, 1749 passing with it. Native, on the emitted loop, two-call and one-call functions: double, String and Ref arguments as rvalues and lvalues, 18 expectations, all hold; without the rewrite exactly the four non-trivial rvalue reuse cells fail. @flighthq/signals regenerated package-scoped; two-slot temporary String and Ref delivery and the nested safe String case are asserted.",
+      "whyNotUpstreamFirst": "It is a backend lowering defect that silently corrupts arguments; upstream receives the request with the repro, and the patch keeps native signal dispatch correct meanwhile.",
+      "unblocks": "@flighthq/signals emitSignal and emitSignalSafe with temporary non-trivial payloads. Every other package that spreads a rest parameter more than once is fixed when next regenerated; this change does not move them.",
+      "expires": "when upstream forwards a parameter pack only at its last use (docs/compiler-requests/forwarded-parameter-pack-reused.md).",
+      "appliedOn": "2026-10-12"
     }
   ]
 }

@@ -1,0 +1,155 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+index 241c9f5..fd9670d 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -21994,7 +21994,9 @@ int main() {
+     expect(signalSlot.diagnostics).toEqual([]);
+     expect(emitted.match(/flight::bind_callable_v1<T>\(/g)).toHaveLength(4);
+     expect(emitted).toContain('(signal->emit = flight::bind_callable_v1<T>(null_signal_emit));');
+-    expect(emitted).toContain('slot.value()(std::forward<ArgsPack>(args)...);');
++    // The dispatch loop reuses the pack for every slot, so each call receives it as lvalues; forwarding
++    // here would move an rvalue argument into the first slot only.
++    expect(emitted).toContain('slot.value()(args...);');
+     expect(emitted).toContain('return value;');
+     expect(emitted).not.toContain('flight::Any::');
+     expect(emitted).not.toContain('static_cast');
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 536d48e..4c97076 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -347,6 +347,8 @@ interface EmitContext {
+   immediateDenseArrayElementPresence: ReadonlySet<Readonly<Extract<IrExpression, { kind: 'element' }>>>;
+   denseArraySequentialAppendPlans: ReadonlyMap<string, Readonly<CppDenseArraySequentialAppendPlan>>;
+   dependentCallablePacks: ReadonlyMap<string, Readonly<IrParameter>>;
++  // Dependent callable packs spread more than once, or inside a loop, in their declaring function.
++  reusedDependentCallablePackIds: ReadonlySet<string>;
+   exceptionPointerBindingIds: ReadonlySet<string>;
+   directBindingOwners: ReadonlyMap<string, CppDirectBindingOwner | null>;
+   // The bindings whose declaration elected the erased dynamic value as its storage. A presence test
+@@ -615,6 +617,7 @@ function emitIrModuleCppWithContext(
+     immediateDenseArrayElementPresence: new Set(),
+     denseArraySequentialAppendPlans,
+     dependentCallablePacks: collectIrModuleDependentCallablePacksCpp(module),
++    reusedDependentCallablePackIds: collectIrModuleReusedDependentCallablePackIdsCpp(module),
+     directBindingOwners: directBindingOwners ?? createCppDirectBindingOwners(sourceModules),
+     erasedDynamicStorageBindingIds,
+     erasedObjectParameterBindingIds,
+@@ -24566,9 +24569,12 @@ function emitCppDependentCallableSpreadArgument(
+   if (index !== argumentCount - 1) {
+     emissionError(context, 'dependent callable parameter packs require terminal call expansion');
+   }
++  const name = getBindingTargetName(parameter.binding, context);
++  // A reused pack reaches each call as lvalues; only its single use may forward (and so move).
++  if (context.reusedDependentCallablePackIds.has(parameter.binding.id)) return `${name}...`;
+   const pack = getCppDependentCallablePack(parameter, context);
+   context.includes.add('utility');
+-  return `std::forward<${pack.typeName}>(${getBindingTargetName(parameter.binding, context)})...`;
++  return `std::forward<${pack.typeName}>(${name})...`;
+ }
+ 
+ function unwrapCppAnyRestCallableCast(expression: Readonly<IrExpression>): Readonly<IrExpression> {
+@@ -30996,6 +31002,48 @@ function collectIrModuleDependentCallablePacksCpp(
+   return packs;
+ }
+ 
++// A forwarded pack element is moved when it is an rvalue, so forwarding is right only at the pack's one
++// use. JavaScript hands the same argument values to every call that spreads the rest parameter, so a pack
++// spread twice, or once inside a loop (whose body, condition and increment all repeat), must reach each
++// call as lvalues: a later call would otherwise receive moved-from values. Pack bindings are unique to
++// their declaring function, so counting spreads module-wide counts them within that function.
++function collectIrModuleReusedDependentCallablePackIdsCpp(module: Readonly<IrModule>): ReadonlySet<string> {
++  const packIds = new Set(collectIrModuleDependentCallablePacksCpp(module).keys());
++  const loopPaths: (readonly (number | string)[])[] = [];
++  const spreadPaths = new Map<string, (readonly (number | string)[])[]>();
++  analyzeIrModuleTraversal(module, {
++    statement(statement, path) {
++      if (
++        statement.kind === 'for' ||
++        statement.kind === 'forOf' ||
++        statement.kind === 'forIn' ||
++        statement.kind === 'while' ||
++        statement.kind === 'do'
++      ) {
++        loopPaths.push(path);
++      }
++    },
++    expression(expression, path) {
++      if (
++        expression.kind === 'spread' &&
++        expression.expression.kind === 'identifier' &&
++        expression.expression.reference.kind === 'binding' &&
++        packIds.has(expression.expression.reference.binding.id)
++      ) {
++        const id = expression.expression.reference.binding.id;
++        spreadPaths.set(id, [...(spreadPaths.get(id) ?? []), path]);
++      }
++    },
++  });
++  const within = (path: readonly (number | string)[], prefix: readonly (number | string)[]): boolean =>
++    prefix.length < path.length && prefix.every((segment, index) => path[index] === segment);
++  const reused = new Set<string>();
++  for (const [id, paths] of spreadPaths) {
++    if (paths.length > 1 || paths.some((path) => loopPaths.some((loop) => within(path, loop)))) reused.add(id);
++  }
++  return reused;
++}
++
+ function mergeIrTypeParametersCpp(
+   outer: readonly IrTypeParameter[],
+   inner: readonly IrTypeParameter[],
+diff --git a/packages/compiler-backend-cpp/src/cppDependentCallablePackReuse.test.ts b/packages/compiler-backend-cpp/src/cppDependentCallablePackReuse.test.ts
+new file mode 100644
+index 0000000..afbb4d7
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppDependentCallablePackReuse.test.ts
+@@ -0,0 +1,50 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/x/src/x.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/x', upstreamDirectory: '/flight' });
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++const callable = 'T extends (...args: any[]) => void';
++const forwarded = 'std::forward<ArgsPack>(args)...';
++
++// A forwarded rvalue is moved, so only a rest parameter's single use may forward it. JavaScript passes the
++// same argument values to every call that spreads the parameter.
++describe('spreading a dependent callable rest parameter', () => {
++  it('forwards a single use', () => {
++    const contents = emit(`export function once<${callable}>(a: T, ...args: Parameters<T>): void { a(...args); }`);
++    expect(contents).toContain(`a(${forwarded});`);
++  });
++
++  it('forwards a single use inside a branch, which runs at most once', () => {
++    const contents = emit(
++      `export function maybe<${callable}>(a: T, go: boolean, ...args: Parameters<T>): void { if (go) a(...args); }`,
++    );
++    expect(contents).toContain(`a(${forwarded});`);
++  });
++
++  it('passes lvalues to every call when the pack is spread twice', () => {
++    const contents = emit(
++      `export function twice<${callable}>(a: T, b: T, ...args: Parameters<T>): void { a(...args); b(...args); }`,
++    );
++    expect(contents).toContain('a(args...);');
++    expect(contents).toContain('b(args...);');
++    expect(contents).not.toContain(forwarded);
++  });
++
++  it.each([
++    ['for', 'for (let i = 0; i < slots.length; i++) slots[i](...args);'],
++    ['while', 'let i = 0; while (i < slots.length) { slots[i](...args); i++; }'],
++    ['do', 'let i = 0; do { slots[i](...args); i++; } while (i < slots.length);'],
++    ['for-of', 'for (const slot of slots) slot(...args);'],
++  ])('passes lvalues to a single spread inside a %s loop', (_, body) => {
++    const contents = emit(`export function all<${callable}>(slots: T[], ...args: Parameters<T>): void { ${body} }`);
++    expect(contents).toContain('(args...);');
++    expect(contents).not.toContain(forwarded);
++  });
++});

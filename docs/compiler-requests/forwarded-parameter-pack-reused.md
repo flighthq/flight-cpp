@@ -47,4 +47,20 @@ slots.element(i)(args...);
 
 ## Workaround carried
 
-None.
+[`compiler-dependent-callable-pack-reuse.patch`](../../source-patches/compiler-dependent-callable-pack-reuse.patch).
+The emit context records every dependent callable pack that its declaring function spreads more than once,
+or inside a loop: `for`, `for-of`, `for-in`, `while` and `do`, including a loop's condition and increment.
+Such a pack's spreads pass `args...` as lvalues, and a single use outside any loop still forwards.
+
+Verified four ways:
+- **Emission tests:** `cppDependentCallablePackReuse.test.ts` has 7 cases. The 5 reuse cases (two calls,
+  and one spread in each loop form) fail without the patch, and the 2 single-use controls pass both ways.
+- **Existing expectation:** the dispatch expectation in `cppCompilerBackend.test.ts` that pinned the
+  forwarded spelling now expects lvalues. The backend suite's pre-existing failures are otherwise
+  unchanged.
+- **Native emitted code:** the loop, two-call and one-call functions were run with `double`, `String` and
+  `Ref` arguments, as rvalues and as lvalues. All 18 expectations hold. Without the patch, exactly the four
+  non-trivial rvalue reuse cells fail.
+- **Signals:** `@flighthq/signals` is regenerated with the patch. The nested safe `String` case and direct
+  two-slot temporary `String` and `Ref` delivery, through both `emitSignal` and `emitSignalSafe`, are
+  asserted in `tests/generated_signals_test.cpp`, and all five fail against the pre-patch headers.
