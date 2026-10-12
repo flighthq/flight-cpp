@@ -2829,14 +2829,14 @@
       "code": "dependency-refused",
       "module": "packages/lighting/src/contract.ts",
       "package": "@flighthq/lighting",
-      "reason": "dependency ./lightAnalysis was refused for @flighthq/lighting/packages/lighting/src/lightAnalysis.ts",
+      "reason": "dependency ./lightAnalysis.ts was refused for @flighthq/lighting/packages/lighting/src/lightAnalysis.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/lighting/src/index.ts",
       "package": "@flighthq/lighting",
-      "reason": "dependency ./contract was refused for @flighthq/lighting/packages/lighting/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/lighting/packages/lighting/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -2852,7 +2852,7 @@
       "code": "dependency-refused",
       "module": "packages/lighting/src/sceneForwardLights.ts",
       "package": "@flighthq/lighting",
-      "reason": "dependency ./lightAnalysis was refused for @flighthq/lighting/packages/lighting/src/lightAnalysis.ts",
+      "reason": "dependency ./lightAnalysis.ts was refused for @flighthq/lighting/packages/lighting/src/lightAnalysis.ts",
       "stage": "dependency"
     },
     {
