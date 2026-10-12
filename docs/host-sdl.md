@@ -277,7 +277,7 @@ capability.
 
 ### Which PLAT packages this host serves
 
-Nine of the `@flighthq/*` platform packages have an SDL seam here. The table is read from the capability files
+Eight of the `@flighthq/*` platform packages have an SDL seam here. The table is read from the capability files
 above and the types they declare, not from package names — a name is not evidence of coverage, and the reverse
 holds too: `bindings/sdl-app.json` is an application-shell binding profile whose bindings live in
 `web_platform_types.hpp`, not an `@flighthq/app` seam.
@@ -286,7 +286,6 @@ holds too: `bindings/sdl-app.json` is an application-shell binding profile whose
 | --- | --- | --- |
 | `platform` | `sdk_platform.hpp`, `src/host_sdl/sdk_platform.cpp` | `HostPlatformCapability` |
 | `keyboard` | `sdk_keyboard.hpp`, `src/host_sdl/sdk_keyboard.cpp` | `HostSoftKeyboardInfoCapability`, `HostSoftKeyboardVisibilityCapability`, `HostSoftKeyboardChangeCapability` |
-| `input` | `input.hpp`, `src/host_sdl/input.cpp`, with `window.hpp` and `sdk_window.hpp` | `InputDispatcher`, `InputSink`, `GamepadNavigator`, and the normalized `InputKeyboardData`, `InputPointerData`, `InputTextData` and `InputGamepad*Data` records |
 | `host` | the capability set itself — `sdk_audio`, `sdk_clipboard`, `sdk_cursor`, `sdk_device`, `sdk_haptics`, `sdk_keyboard`, `sdk_platform`, `sdk_screen`, `sdk_window` | the `Host*Capability` records those headers declare |
 | `audio` | `audio.hpp`, `sdk_audio.hpp`, `src/host_sdl/audio.cpp`, `src/host_sdl/sdk_audio.cpp` | `SdlAudioDeviceBackend`, `HostAudioDeviceCapability` |
 | `clipboard` | `sdk_clipboard.hpp`, `src/host_sdl/sdk_clipboard.cpp` | `HostClipboardTextCapability` |
@@ -299,8 +298,15 @@ PLAT package facade. `sdk_window.hpp` additionally declares `HostInputFocusCapab
 `HostInputPointerLockCapability` and `HostElementFullscreenCapability`, which together with `InputDispatcher`'s
 normalized records are what the wiring lane below still has to adopt.
 
-**The other thirty PLAT packages are declared capability facades with no SDL seam**: `app`, `lifecycle`,
-`accessibility`, `interaction`, `gui`, `layout`, `media`, `mediasession`, `video`, `webcam`, `midi`, `sensors`,
+**`input.hpp` and `InputDispatcher` are not `@flighthq/input`'s seam.** The input *runtime* seam —
+`InputDispatcher`, `InputSink`, `GamepadNavigator` and the normalized `InputKeyboardData`,
+`InputPointerData`, `InputTextData` and `InputGamepad*Data` records in `input.hpp` — is what a future
+generated ingress adapter is built on; it is not a provider for the package. `@flighthq/input` consumes
+`HostInputIngressCapability`, which has **no** SDL implementation, so the package is facade-only for the
+capability it actually reads even though this host has an input surface to build one from.
+
+**The other thirty-one PLAT packages are declared capability facades with no SDL seam**: `app`, `lifecycle`,
+`accessibility`, `interaction`, `gui`, `layout`, `input`, `media`, `mediasession`, `video`, `webcam`, `midi`, `sensors`,
 `geolocation`, `power`, `dialog`, `menu`, `tray`, `statusbar`, `notification`, `share`, `shortcut`, `shell`, `ipc`,
 `protocol`, `permissions`, `filesystem`, `preferences`, `updater`, `useragent` and `connectivity`. Nothing under
 `include/flight/host_sdl/` or `src/host_sdl/` names any of their types. Two adjacent capabilities exist and neither
