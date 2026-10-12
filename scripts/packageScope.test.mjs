@@ -23,6 +23,7 @@ import {
   readmeWithProvenance,
   replaceRowsInPlace,
   replaceSortedRows,
+  rowProvenance,
   syncTree,
   testTargetOf,
   treeDifferences,
@@ -729,11 +730,15 @@ function uniformInventory(committed, target) {
   const refusalsFile = path.join(target, 'refusals.json');
   const value = JSON.parse(readFileSync(manifestFile, 'utf8'));
   if (value.schema !== 'flight-generated-sdk/2') return target;
+  // Revision and binding profiles collapse together, onto the provenance most rows were generated from.
   const counts = new Map();
-  for (const row of value.packages) counts.set(row.source.revision, (counts.get(row.source.revision) ?? 0) + 1);
-  const [revision] = [...counts].sort(([l, left], [r, right]) => right - left || compareText(l, r))[0];
-  const { version } = value.packages.find((row) => row.source.revision === revision).source;
-  value.packages = value.packages.map((row) => ({ ...row, source: { revision, version } }));
+  for (const row of value.packages) {
+    const key = JSON.stringify(rowProvenance(value, row));
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  const [majority] = [...counts].sort(([l, left], [r, right]) => right - left || compareText(l, r))[0];
+  const source = JSON.parse(majority);
+  value.packages = value.packages.map(({ bindingProfileSet: _set, ...row }) => ({ ...row, source }));
   const refusals = JSON.parse(readFileSync(refusalsFile, 'utf8'));
   finalizeProvenance(value, refusals);
   writeFileSync(manifestFile, `${JSON.stringify(value, undefined, 2)}\n`);
