@@ -2423,6 +2423,23 @@
       "appliedOn": "2026-10-12"
     },
     {
+      "id": "compiler-host-timer-return-type-handle",
+      "dependency": "flight-compiler",
+      "patch": "compiler-host-timer-return-type-handle.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-semantic/src/typeScriptSemanticLowering.ts",
+      "package": "@flighthq/compiler-semantic",
+      "answers": "refusal",
+      "refusal": "external call result type flight::host::TimerHandle is not one represented contextual runtime domain (followed, once that clears, by: missing required call argument at position 2)",
+      "rewrite": "Two parts. (1) Semantic: `ReturnType<typeof setInterval>` and `ReturnType<typeof setTimeout>`, where the operand names the ambient host function (a library or `declare`d declaration), are lowered as authored -- the utility over a `typeof` of the ambient function -- instead of taking the library's `number` evidence. The backend then resolves them through the external binding's declared callResultType, or refuses when no binding names one. Every other ReturnType<...> keeps its checker evidence. (2) Backend: a call whose callee is an ambient host function with a value-space external binding passes its provided arguments as written, instead of padding the library declaration's optional and rest positions with std::nullopt; the bound C++ target's own signature and defaults are authoritative.",
+      "equivalence": "A host timer handle is an identity. The library's `number` is a token the target never issues, and upstream's own timer contract forbids defaulting a handle to a numeric token. Storing the bound carrier keeps the exact handle the host returned, so a later clearInterval receives that same handle. Absence still uses the declared `| null` (std::optional). Unpadded bound calls supply exactly the arguments the source wrote; the target's defaults stand in for the omitted ones, as the host function's own declaration intends. No other utility type, callee or call changes.",
+      "verification": "New fixtures in cppHostTimerReturnType.test.ts (4 pass): a nullable interval handle stored as std::optional<host::TimerHandle> with set, has_value/value presence and nullopt reset; a bound call without padding; an unrelated bound ReturnType<typeof requestAnimationFrame> union kept as std::optional<double>; no binding refuses instead of storing a number. cppCompilerBackend.test.ts plus compiler-semantic tests: the same 46 pre-existing failures with and without the patch. Scoped log generation at a627849: createBufferedLogSink lowers (timer is std::optional<flight::host::TimerHandle>, set_interval(flush, interval_ms)).",
+      "whyNotUpstreamFirst": "The fix needs the library's evidence set aside for exactly the host timer functions, which only a target with a handle binding can use; upstream's tests assert the binding contract but use Node typings, where ReturnType<typeof setInterval> is NodeJS.Timeout. Flight's tsconfig has no Node types, so the DOM `number` is what reaches the compiler.",
+      "unblocks": "createBufferedLogSink in @flighthq/log; the same pattern in signals throttle, gui scrollBar/tooltip controllers, tray, loader and render-wgpu screen capture (impact recorded in the request).",
+      "expires": "when upstream lowers ReturnType of a bound host timer to the binding result carrier and does not pad bound host calls from library signatures.",
+      "appliedOn": "2026-10-12"
+    },
+    {
       "id": "scene2d-canvas-host-image-draw-flow",
       "dependency": "flight",
       "patch": "scene2d-canvas-host-image-draw-flow.patch",

@@ -26,6 +26,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-external-optional-result-widening.patch`](../../source-patches/compiler-external-optional-result-widening.patch) | [External optional result widening](compiler-external-optional-result-widening.md) |
 | [`compiler-flattened-optional-chain-union-storage.patch`](../../source-patches/compiler-flattened-optional-chain-union-storage.patch) | [Optional-chain payload union storage](compiler-flattened-optional-chain-union-storage.md) |
 | [`compiler-generic-erased-map-reference-recovery.patch`](../../source-patches/compiler-generic-erased-map-reference-recovery.patch) | [Reference recovery from an erased Map](compiler-generic-erased-map-reference-recovery.md) |
+| [`compiler-host-timer-return-type-handle.patch`](../../source-patches/compiler-host-timer-return-type-handle.patch) | [ReturnType of a bound host timer keeps its handle carrier](return-type-of-bound-external-in-union.md) |
 | [`compiler-imported-alias-call-declaration-recovery.patch`](../../source-patches/compiler-imported-alias-call-declaration-recovery.patch) | [Recovering an exact call-result alias](compiler-imported-alias-call-declaration-recovery.md) |
 | [`compiler-imported-alias-local-flow-abi.patch`](../../source-patches/compiler-imported-alias-local-flow-abi.patch) | [Exact imported alias through local flow](compiler-imported-alias-local-flow-abi.md) |
 | [`compiler-imported-alias-outer-union-abi.patch`](../../source-patches/compiler-imported-alias-outer-union-abi.patch) | [Exact imported alias inside an outer union](compiler-imported-alias-outer-union-abi.md) |
@@ -49,8 +50,6 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 
 - [A binding initialized from a non-null-asserted collection get is present](non-null-asserted-collection-get-binding.md) —
   carried for log by the source patch `log-buffered-sink-state-explicit-guard`.
-- [`ReturnType<typeof boundExternal>` inside a union keeps the binding's result carrier](return-type-of-bound-external-in-union.md) —
-  no workaround; blocks log.ts and the timer-storing sites in signals, gui, tray, loader and render-wgpu.
 - [Emit declared interface heritage so derived references widen to their base](interface-heritage-widening.md) —
   carried by the emission repairs `adjustments-color-matrix-interface-heritage` and `adjustments-tint-interface-heritage`.
 - [Narrow an optional local in the else-branch of a negated truthiness test](negated-truthiness-else-narrowing.md) —

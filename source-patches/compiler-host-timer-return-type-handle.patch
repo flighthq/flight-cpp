@@ -1,0 +1,184 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 7bcfb97..dc21f57 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -23970,6 +23970,17 @@ function appendCppOmittedInvocationArguments(
+     return [...emitted, ...omitted.map(() => 'std::nullopt')];
+   }
+   if (emitted.length >= plan.parameterCount) return emitted;
++  // A host function bound through externalBindings is called at its C++ target, whose own signature --
++  // including its own defaults -- is authoritative. The source plan comes from the library declaration
++  // (`setInterval(handler, timeout?, ...arguments)`), whose optional and rest positions are not the
++  // target's ABI, so the provided arguments are passed as written and nothing is padded.
++  if (
++    expression.callee.kind === 'identifier' &&
++    expression.callee.reference.kind === 'ambient' &&
++    getCompilerExternalBindingEvidenceCpp(expression.callee.reference.name, 'value', context.options.externalBindings)
++  ) {
++    return emitted;
++  }
+   if (expression.callee.kind === 'property') {
+     const receiverType = getIrExpressionTypeEvidenceCpp(expression.callee.object, context);
+     const structuralReceiver = receiverType
+diff --git a/packages/compiler-backend-cpp/src/cppHostTimerReturnType.test.ts b/packages/compiler-backend-cpp/src/cppHostTimerReturnType.test.ts
+new file mode 100644
+index 0000000..308b22a
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppHostTimerReturnType.test.ts
+@@ -0,0 +1,107 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { isBackendEmissionFailure } from '../../compiler-emission/src/index.js';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++// The library declarations the DOM program supplies, including the standard ReturnType so the checker has
++// concrete evidence: a timer returns `number` there, which is exactly the numeric token a host handle must
++// not become, while an unrelated host function keeps that evidence.
++const domTimers = `
++  type ReturnType<T extends (...args: any) => any> = T extends (...args: any) => infer R ? R : any;
++  declare function setInterval(handler: () => void, timeout?: number, ...rest: unknown[]): number;
++  declare function clearInterval(id: number | undefined): void;
++  declare function requestAnimationFrame(callback: (time: number) => void): number;
++`;
++
++const timerBindings = {
++  bindings: [
++    {
++      callResultType: 'host::TimerHandle',
++      headers: ['host/timer.hpp'],
++      nullability: 'non-null' as const,
++      ownership: 'borrowed' as const,
++      sourceName: 'setInterval',
++      space: 'value' as const,
++      targetName: 'host::set_interval',
++    },
++    {
++      headers: ['host/timer.hpp'],
++      nullability: 'non-null' as const,
++      ownership: 'borrowed' as const,
++      sourceName: 'clearInterval',
++      space: 'value' as const,
++      targetName: 'host::clear_interval',
++    },
++    {
++      headers: ['host/frame.hpp'],
++      nullability: 'non-null' as const,
++      ownership: 'borrowed' as const,
++      sourceName: 'requestAnimationFrame',
++      space: 'value' as const,
++      targetName: 'host::request_animation_frame',
++    },
++  ],
++  schema: 'flight-cpp-external-bindings/1' as const,
++};
++
++function lower(source: string) {
++  const sourceFile = ts.createSourceFile('/flight/packages/log/src/Timers.ts', domTimers + source, ts.ScriptTarget.Latest, true);
++  return lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/log', upstreamDirectory: '/flight' });
++}
++
++function emit(source: string, externalBindings?: typeof timerBindings): string {
++  return emitIrModuleCpp(lower(source).module, { externalBindings, runtimeProfile: 'flight-cpp' }).contents;
++}
++
++describe('ReturnType of an ambient host timer', () => {
++  it('stores a nullable interval handle as the bound result carrier, present and absent', () => {
++    const contents = emit(
++      `export interface State { timer: ReturnType<typeof setInterval> | null }
++       export function start(state: State, tick: () => void, ms: number): void { state.timer = setInterval(tick, ms); }
++       export function stop(state: State): void {
++         if (state.timer !== null) clearInterval(state.timer);
++         state.timer = null;
++       }`,
++      timerBindings,
++    );
++    expect(contents).toContain('std::optional<host::TimerHandle> timer;');
++    expect(contents).toContain('host::set_interval(tick, ms)');
++    expect(contents).toContain('std::nullopt');
++    expect(contents).not.toContain('std::optional<double> timer');
++    expect(contents).toContain('if (state->timer.has_value())');
++    expect(contents).toContain('host::clear_interval(state->timer.value())');
++    expect(contents).not.toMatch(/timer = .*flight::Any/u);
++  });
++
++  it('passes a bound host call its provided arguments without padding the library optional or rest positions', () => {
++    const contents = emit(
++      `export function every(tick: () => void): ReturnType<typeof setInterval> { return setInterval(tick); }`,
++      timerBindings,
++    );
++    expect(contents).toContain('host::set_interval(tick)');
++    expect(contents).not.toContain('host::set_interval(tick, std::nullopt');
++  });
++
++  it('leaves an unrelated ambient ReturnType union on its declared numeric domain', () => {
++    const contents = emit(
++      `export interface Frame { id: ReturnType<typeof requestAnimationFrame> | null }
++       export function schedule(frame: Frame, draw: (time: number) => void): void { frame.id = requestAnimationFrame(draw); }
++       export function clear(frame: Frame): void { frame.id = null; }`,
++      timerBindings,
++    );
++    expect(contents).toContain('std::optional<double> id;');
++    expect(contents).not.toContain('TimerHandle> id');
++  });
++
++  it('refuses the timer handle rather than storing a numeric token when no binding names its carrier', () => {
++    let failure: unknown;
++    try {
++      emit(`export interface State { timer: ReturnType<typeof setInterval> | null }`);
++    } catch (error) {
++      failure = error;
++    }
++    expect(isBackendEmissionFailure(failure)).toBe(true);
++  });
++});
+diff --git a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+index f98422e..7bfb587 100644
+--- a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
++++ b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+@@ -4124,6 +4124,23 @@ function lowerTypeScriptFunctionLocalTypeReference(
+   };
+ }
+
++// `typeof setInterval` or `typeof setTimeout` naming the ambient host function -- a library declaration
++// or a `declare`d one -- rather than a local binding that happens to share the name.
++function isTypeScriptAmbientHostTimerQuery(argument: ts.TypeNode, context: LoweringContext): boolean {
++  if (!ts.isTypeQueryNode(argument) || !ts.isIdentifier(argument.exprName)) return false;
++  const name = argument.exprName.text;
++  if (name !== 'setInterval' && name !== 'setTimeout') return false;
++  const declarations = context.checker.getSymbolAtLocation(argument.exprName)?.declarations ?? [];
++  return (
++    declarations.length > 0 &&
++    declarations.every(
++      (declaration) =>
++        declaration.getSourceFile().isDeclarationFile ||
++        (ts.getCombinedModifierFlags(declaration) & ts.ModifierFlags.Ambient) !== 0,
++    )
++  );
++}
++
+ function lowerConcreteTypeScriptCallableUtilityReference(
+   node: ts.TypeReferenceNode,
+   context: LoweringContext,
+@@ -4142,6 +4159,20 @@ function lowerConcreteTypeScriptCallableUtilityReference(
+     const symbol = context.checker.getSymbolAtLocation(argument.typeName);
+     if (symbol?.declarations?.some(ts.isTypeParameterDeclaration)) return undefined;
+   }
++  // A host timer handle is an identity, not a number. The DOM library declares `setInterval` and
++  // `setTimeout` as returning `number`, and taking that evidence would store the handle as a numeric
++  // token the target never issued. Lowering the authored `ReturnType<typeof setInterval>` as written --
++  // the utility over a `typeof` of the ambient host function -- lets a backend use the external binding's
++  // declared result carrier, or refuse when no binding names one. Falling through instead would hand the
++  // reference to the conditional-alias lowering, which has no host to resolve it against.
++  if (node.typeName.text === 'ReturnType' && isTypeScriptAmbientHostTimerQuery(argument, context)) {
++    const timer = ((argument as ts.TypeQueryNode).exprName as ts.Identifier).text;
++    return {
++      kind: 'named',
++      reference: { kind: 'ambient', name: 'ReturnType' },
++      typeArguments: [{ kind: 'typeOf', reference: { kind: 'ambient', name: timer } }],
++    };
++  }
+   const evidence = getTypeScriptCheckerTypeEvidence(context.checker.getTypeFromTypeNode(node), context, 0, true);
+   // A deliberately minimal source program may not include a host library declaration for these
+   // standard utilities. In that case the checker reports `any`, but retaining the authored utility
