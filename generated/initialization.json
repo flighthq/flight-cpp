@@ -100235,7 +100235,7 @@
             "packageName": "@flighthq/accessibility",
             "source": "packages/accessibility/src/contract.ts"
           },
-          "specifier": "./accessibility",
+          "specifier": "./accessibility.ts",
           "target": {
             "name": "Accessibility",
             "packageName": "@flighthq/accessibility",
@@ -171043,7 +171043,7 @@
             "packageName": "@flighthq/accessibility",
             "source": "packages/accessibility/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/accessibility",
