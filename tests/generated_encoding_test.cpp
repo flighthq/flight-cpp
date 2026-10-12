@@ -69,6 +69,18 @@ int main() {
   check(throws<flight::RangeError>([&] { static_cast<void>(encoding::decode_utf8(one, -1.0)); }) &&
             throws<flight::RangeError>([&] { static_cast<void>(encoding::decode_utf8(one, 0.0, 2.0)); }),
         "decodeUTF8 rejects windows outside the byte array with a RangeError");
+  // Not upstream cases: the boundary inputs the upstream suite does not feed. Expected values are what upstream's
+  // own decodeUTF8 (packages/encoding/src/utf8.ts at a627849, run under node) returns for these bytes, which
+  // also equals the platform TextDecoder's output for each. Every invalid byte or truncated sequence becomes
+  // one U+FFFD and the next byte is decoded on its own.
+  check(encoding::decode_utf8(bytes({0xe0, 0x80, 0x80, 0x41})) == units(u"\ufffd\ufffd\ufffdA"),
+        "decodeUTF8 rejects an overlong three-byte sequence (E0 must be followed by A0..BF)");
+  check(encoding::decode_utf8(bytes({0xf0, 0x80, 0x80, 0x80, 0x41})) == units(u"\ufffd\ufffd\ufffd\ufffdA"),
+        "decodeUTF8 rejects an overlong four-byte sequence (F0 must be followed by 90..BF)");
+  check(encoding::decode_utf8(bytes({0xf4, 0x90, 0x80, 0x80, 0x41})) == units(u"\ufffd\ufffd\ufffd\ufffdA"),
+        "decodeUTF8 rejects a four-byte sequence above U+10FFFF (F4 must be followed by 80..8F)");
+  check(encoding::decode_utf8(bytes({0xc0, 0xaf, 0x41})) == units(u"\ufffd\ufffdA"),
+        "decodeUTF8 rejects a C0 lead byte, which could only encode an overlong form");
 
   // encodeUTF8
   check(bytes_equal(encoding::encode_utf8(String("")), {}) &&
