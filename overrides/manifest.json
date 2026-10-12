@@ -14,7 +14,7 @@
       "equivalence": "The constraint admits exactly RenderProxy, callers supply no template argument, and the copied optional retains the same shared owner and absence state. The optional-chain body and destroy callback invocation are otherwise byte-for-byte emitted code.",
       "whyNotAPatchOrRepair": "The TypeScript file declares interfaces and contains neither the synthesized helper nor the emitted include order. A source rewrite cannot template the generated helper, while an insertion repair cannot make its existing member expressions dependent.",
       "unblocks": "With the a627849 GL source patches active, direct Clang 22 checks of gl_texture_resolver.hpp, gl_render_state.hpp, and the aggregate types/_internal_index.hpp all compile through the reverse include path; without this override they stop at render_state.hpp on incomplete RenderProxy member access.",
-      "remaining": "The independent package header gate still measures unrelated generated-header defects separately.",
+      "remaining": "None in this override at this pin. The independent package header gate measures unrelated generated-header defects separately.",
       "expires": "when the emitter places the synthesized destroy-data helper after complete RenderProxy and Renderer definitions, factors the cyclic declarations from the inline implementation, or emits a standards-conforming dependent body itself.",
       "authoredOn": "2026-10-11"
     },
