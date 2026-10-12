@@ -1646,6 +1646,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("saved") && requires { object.saved; }) return (object.saved);
   else if constexpr (Key::name.view() == std::string_view("sc") && requires { object.sc; }) return (object.sc);
   else if constexpr (Key::name.view() == std::string_view("scale") && requires { object.scale; }) return (object.scale);
+  else if constexpr (Key::name.view() == std::string_view("scale9Grid") && requires { object.scale9_grid; }) return (object.scale9_grid);
   else if constexpr (Key::name.view() == std::string_view("scaleCurve") && requires { object.scale_curve; }) return (object.scale_curve);
   else if constexpr (Key::name.view() == std::string_view("scaleEnd") && requires { object.scale_end; }) return (object.scale_end);
   else if constexpr (Key::name.view() == std::string_view("scaleFactor") && requires { object.scale_factor; }) return (object.scale_factor);
@@ -1658,6 +1659,8 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("scaling") && requires { object.scaling; }) return (object.scaling);
   else if constexpr (Key::name.view() == std::string_view("scanlineIntensity") && requires { object.scanline_intensity; }) return (object.scanline_intensity);
   else if constexpr (Key::name.view() == std::string_view("scattering") && requires { object.scattering; }) return (object.scattering);
+  else if constexpr (Key::name.view() == std::string_view("scene2dHeight") && requires { object.scene2d_height; }) return (object.scene2d_height);
+  else if constexpr (Key::name.view() == std::string_view("scene2dWidth") && requires { object.scene2d_width; }) return (object.scene2d_width);
   else if constexpr (Key::name.view() == std::string_view("sceneDepthTexture") && requires { object.scene_depth_texture; }) return (object.scene_depth_texture);
   else if constexpr (Key::name.view() == std::string_view("sceneGraphSyncPolicy") && requires { object.scene_graph_sync_policy; }) return (object.scene_graph_sync_policy);
   else if constexpr (Key::name.view() == std::string_view("sceneTarget") && requires { object.scene_target; }) return (object.scene_target);
@@ -3790,6 +3793,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("saved") && requires(Object& object) { object.saved; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().saved)>>{};
   else if constexpr (Key::name.view() == std::string_view("sc") && requires(Object& object) { object.sc; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sc)>>{};
   else if constexpr (Key::name.view() == std::string_view("scale") && requires(Object& object) { object.scale; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scale)>>{};
+  else if constexpr (Key::name.view() == std::string_view("scale9Grid") && requires(Object& object) { object.scale9_grid; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scale9_grid)>>{};
   else if constexpr (Key::name.view() == std::string_view("scaleCurve") && requires(Object& object) { object.scale_curve; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scale_curve)>>{};
   else if constexpr (Key::name.view() == std::string_view("scaleEnd") && requires(Object& object) { object.scale_end; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scale_end)>>{};
   else if constexpr (Key::name.view() == std::string_view("scaleFactor") && requires(Object& object) { object.scale_factor; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scale_factor)>>{};
@@ -3802,6 +3806,8 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("scaling") && requires(Object& object) { object.scaling; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scaling)>>{};
   else if constexpr (Key::name.view() == std::string_view("scanlineIntensity") && requires(Object& object) { object.scanline_intensity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scanline_intensity)>>{};
   else if constexpr (Key::name.view() == std::string_view("scattering") && requires(Object& object) { object.scattering; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scattering)>>{};
+  else if constexpr (Key::name.view() == std::string_view("scene2dHeight") && requires(Object& object) { object.scene2d_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scene2d_height)>>{};
+  else if constexpr (Key::name.view() == std::string_view("scene2dWidth") && requires(Object& object) { object.scene2d_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scene2d_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("sceneDepthTexture") && requires(Object& object) { object.scene_depth_texture; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scene_depth_texture)>>{};
   else if constexpr (Key::name.view() == std::string_view("sceneGraphSyncPolicy") && requires(Object& object) { object.scene_graph_sync_policy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scene_graph_sync_policy)>>{};
   else if constexpr (Key::name.view() == std::string_view("sceneTarget") && requires(Object& object) { object.scene_target; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().scene_target)>>{};
@@ -5937,6 +5943,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->saved; }) owner.bind_named("saved", [object]() -> decltype(auto) { return (object->saved); });
   if constexpr (requires { object->sc; }) owner.bind_named("sc", [object]() -> decltype(auto) { return (object->sc); });
   if constexpr (requires { object->scale; }) owner.bind_named("scale", [object]() -> decltype(auto) { return (object->scale); });
+  if constexpr (requires { object->scale9_grid; }) owner.bind_named("scale9Grid", [object]() -> decltype(auto) { return (object->scale9_grid); });
   if constexpr (requires { object->scale_curve; }) owner.bind_named("scaleCurve", [object]() -> decltype(auto) { return (object->scale_curve); });
   if constexpr (requires { object->scale_end; }) owner.bind_named("scaleEnd", [object]() -> decltype(auto) { return (object->scale_end); });
   if constexpr (requires { object->scale_factor; }) owner.bind_named("scaleFactor", [object]() -> decltype(auto) { return (object->scale_factor); });
@@ -5949,6 +5956,8 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->scaling; }) owner.bind_named("scaling", [object]() -> decltype(auto) { return (object->scaling); });
   if constexpr (requires { object->scanline_intensity; }) owner.bind_named("scanlineIntensity", [object]() -> decltype(auto) { return (object->scanline_intensity); });
   if constexpr (requires { object->scattering; }) owner.bind_named("scattering", [object]() -> decltype(auto) { return (object->scattering); });
+  if constexpr (requires { object->scene2d_height; }) owner.bind_named("scene2dHeight", [object]() -> decltype(auto) { return (object->scene2d_height); });
+  if constexpr (requires { object->scene2d_width; }) owner.bind_named("scene2dWidth", [object]() -> decltype(auto) { return (object->scene2d_width); });
   if constexpr (requires { object->scene_depth_texture; }) owner.bind_named("sceneDepthTexture", [object]() -> decltype(auto) { return (object->scene_depth_texture); });
   if constexpr (requires { object->scene_graph_sync_policy; }) owner.bind_named("sceneGraphSyncPolicy", [object]() -> decltype(auto) { return (object->scene_graph_sync_policy); });
   if constexpr (requires { object->scene_target; }) owner.bind_named("sceneTarget", [object]() -> decltype(auto) { return (object->scene_target); });
@@ -8117,6 +8126,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(saved)
   FLIGHT_SDK_ROW_WIDENS(sc)
   FLIGHT_SDK_ROW_WIDENS(scale)
+  FLIGHT_SDK_ROW_WIDENS(scale9_grid)
   FLIGHT_SDK_ROW_WIDENS(scale_curve)
   FLIGHT_SDK_ROW_WIDENS(scale_end)
   FLIGHT_SDK_ROW_WIDENS(scale_factor)
@@ -8129,6 +8139,8 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(scaling)
   FLIGHT_SDK_ROW_WIDENS(scanline_intensity)
   FLIGHT_SDK_ROW_WIDENS(scattering)
+  FLIGHT_SDK_ROW_WIDENS(scene2d_height)
+  FLIGHT_SDK_ROW_WIDENS(scene2d_width)
   FLIGHT_SDK_ROW_WIDENS(scene_depth_texture)
   FLIGHT_SDK_ROW_WIDENS(scene_graph_sync_policy)
   FLIGHT_SDK_ROW_WIDENS(scene_target)

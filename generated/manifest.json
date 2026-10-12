@@ -359,7 +359,10 @@
         "flight/render/render_material.hpp",
         "flight/render_gl/gl_shader_binding.hpp",
         "flight/render_wgpu/wgpu_shader_binding.hpp",
+        "flight/scene2d/display_object.hpp",
+        "flight/scene2d/html_view.hpp",
         "flight/scene2d/scene_kind_usage.hpp",
+        "flight/scene2d/sprite.hpp",
         "flight/scene2d_canvas/canvas_bitmap_text.hpp",
         "flight/scene2d_canvas/canvas_cssfilter_binding.hpp",
         "flight/scene2d_canvas/canvas_particle_emitter2_d.hpp",
@@ -784,7 +787,6 @@
         "flight/interaction/interaction_manager.hpp",
         "flight/lifecycle/lifecycle.hpp",
         "flight/quadbatch/quad_batch.hpp",
-        "flight/scene2d/scene2d.hpp",
         "flight/text/rich_text.hpp",
         "flight/tilemap/tilemap.hpp"
       ],
@@ -848,17 +850,11 @@
       "id": "animation-unqualified-types-names"
     },
     {
-      "files": [
-        "flight/scene2d/scene2d.hpp",
-        "flight/scene2d/sprite.hpp"
-      ],
+      "files": [],
       "id": "scene2d-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/scene2d/display_object.hpp",
-        "flight/scene2d/html_view.hpp"
-      ],
+      "files": [],
       "id": "scene2d-unqualified-node-names"
     },
     {
@@ -1811,9 +1807,7 @@
       "id": "render-wgpu-entity-runtime-key-member"
     },
     {
-      "files": [
-        "flight/scene2d/scene2d.hpp"
-      ],
+      "files": [],
       "id": "scene2d-entity-runtime-key-member"
     },
     {
@@ -2104,9 +2098,7 @@
       "id": "physics2d-collision-sweep-include-order"
     },
     {
-      "files": [
-        "flight/scene2d/display_object.hpp"
-      ],
+      "files": [],
       "id": "scene2d-runtime-accessor-declaration"
     },
     {
@@ -5930,6 +5922,13 @@
       "id": "velocity-transform-trait-traversal",
       "module": "packages/velocity/src/transformVelocity.ts",
       "package": "@flighthq/velocity"
+    },
+    {
+      "dependency": "flight",
+      "digest": "ea2fbaed4a0b6152b1bd8aa5babb790c6870e37e84936fe3761ed3864b5095a6",
+      "id": "scene2d-sprite-exact-runtime-runner",
+      "module": "packages/types/src/Sprite.ts and packages/scene2d/src/sprite.ts",
+      "package": "@flighthq/scene2d"
     }
   ],
   "duplicateStructuralStructAliases": {
@@ -5987,7 +5986,6 @@
       "flight/render_wgpu/wgpu_mipmap.hpp",
       "flight/render_wgpu/wgpu_render_state.hpp",
       "flight/render_wgpu/wgpu_shader.hpp",
-      "flight/scene2d/sprite.hpp",
       "flight/scene2d_canvas/canvas_shape_commands.hpp",
       "flight/scene2d_canvas/canvas_texture_window_source.hpp",
       "flight/scene2d_dom/dom_bitmap_texture_resolver.hpp",
@@ -6312,10 +6310,6 @@
       "flight/render_wgpu/wgpu_render_texture_pool.hpp",
       "flight/render_wgpu/wgpu_screen_antialias.hpp",
       "flight/render_wgpu/wgpu_texture_resolver.hpp",
-      "flight/scene2d/html_view.hpp",
-      "flight/scene2d/scale9_sprite.hpp",
-      "flight/scene2d/scene2d.hpp",
-      "flight/scene2d/sprite.hpp",
       "flight/scene2d_canvas/canvas_cache.hpp",
       "flight/scene2d_canvas/canvas_clip.hpp",
       "flight/scene2d_canvas/canvas_material_registry.hpp",
@@ -6501,7 +6495,7 @@
       "flight/tilemap_formats/tiled_xml_parse.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 964
+    "includes": 959
   },
   "packages": [
     {
@@ -7754,7 +7748,7 @@
       "sourceModules": 11
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/scene2d",
       "cppNamespace": "flight::scene2d",
       "emittedModules": 4,

@@ -2901,6 +2901,23 @@
       "appliedOn": "2026-10-12"
     },
     {
+      "id": "scene2d-sprite-exact-runtime-runner",
+      "dependency": "flight",
+      "patch": "scene2d-sprite-exact-runtime-runner.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/types/src/Sprite.ts and packages/scene2d/src/sprite.ts",
+      "package": "@flighthq/scene2d",
+      "answers": "refusal",
+      "refusal": "a structural assertion from the readonly row Readonly<Node2DRuntime> to the writable row SpriteRuntime claims mutation only to pass the value to the readonly row Readonly<SpriteRuntime>; the erased bounds callback also loses the Sprite-only runtime cells",
+      "rewrite": "Refines Sprite's existing runtime slot as SpriteRuntime, reads that exact structural slot directly, carries the Sprite source through a named SpriteRuntimeRunner installed only on Sprite runtimes, and declares the renderer-data texture local with its existing Texture-or-null type.",
+      "equivalence": "Every type annotation and interface declaration erases in JavaScript. The same Sprite object owns the same runtime object in the same EntityRuntimeKey slot; direct slot reads return that identical object without copying, casting, side storage, or a new identity. The same two bounds callbacks are installed on each Sprite runtime and receive the same Sprite that owns that runtime. Texture lookup, size writes, cached identity/version writes, and renderer-data initialization retain their original order and values. The explicit texture annotation names the field's existing type and changes no runtime value.",
+      "verification": "The full Flight patch stack must apply and reverse cleanly. Scoped @flighthq/scene2d regeneration must preserve the named SpriteRuntime runner, reduce sprite.ts from eleven missing declarations to four, and leave scene2d-gl and Render rows unchanged. Package-scoped compilation and tier evidence must name the remaining initializer, dirty check, runtime factory, and Sprite factory rather than claiming complete parity.",
+      "whyNotUpstreamFirst": "Sprite already owns a SpriteRuntime and installs Sprite-only callbacks, but its source types erase both facts through the Node2D base. Naming the existing exact slot and runner is a target-neutral typing correction while the compiler cannot recover a derived readonly owner after a base-row callback boundary.",
+      "unblocks": "Recovers getSpriteRuntime, initializeSpriteData, createSpriteData, both Sprite bounds callbacks, the named runner binding, and cloneSprite while preserving the exact structural runtime path. initializeSpriteRendererData, isSpriteRendererDirty, createSpriteRuntime, and createSprite remain refused, so this partial does not yet unblock MovieClip construction.",
+      "expires": "when Flight declares Sprite's exact runtime slot and typed bounds runner upstream, or the compiler can prove and recover the same readonly derived owner through the generic bounds callback.",
+      "appliedOn": "2026-10-12"
+    },
+    {
       "id": "compiler-constructor-parameter-property-assignment",
       "dependency": "flight-compiler",
       "patch": "compiler-constructor-parameter-property-assignment.patch",

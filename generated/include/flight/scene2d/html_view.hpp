@@ -5,12 +5,13 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function computeHtmlViewLocalBoundsRectangle -- source line 18
 //   missing: function getHtmlViewRuntime -- source line 38
-//   missing: function initializeHtmlViewData -- source line 42
-//   missing: function createHtmlViewData -- source line 28
 //   missing: variable (binding) -- source line 58
 //   missing: function createHtmlViewRuntime -- source line 34
 //   missing: function createHtmlView -- source line 24
+#include <flight/host_sdl/web_platform.hpp>
+#include <flight/structural_ref.hpp>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -24,25 +25,30 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/html_view.hpp>
 
-#include <flight/types/entity.hpp>
+namespace flight::types { struct HasBoundsRectangle; }
+namespace flight::types { struct HtmlView; }
+namespace flight::types { struct HtmlViewData; }
+namespace flight::types { struct HtmlViewRuntime; }
+namespace flight::types { struct Node2DData; }
+namespace flight::types { struct Node2DRuntime; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Rectangle; }
+namespace flight::types { template <typename Traits> struct Node; }
 
+#include <flight/entity/entity.hpp>
 #include <flight/node/revision.hpp>
-
-#include <flight/scene2d/display_object.hpp>
+#include <flight/types/contract.hpp>
 
 namespace flight::scene2d {
 
-using flight::types::EntityConstruction;
 using flight::types::HtmlView;
 using flight::types::Node;
 using flight::types::Node2DTraits;
 using flight::types::Rectangle;
 
-using flight::node::invalidate_node_local_bounds;
-
 
 // NOT GENERATED: function computeHtmlViewLocalBoundsRectangle -- source line 18
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function computeHtmlViewLocalBoundsRectangle(out: Rectangle, source: Readonly<BoundsNode<Node2DTraits>>): void {
@@ -51,82 +57,92 @@ using flight::node::invalidate_node_local_bounds;
 //     out.height = data.height;
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: a reference assertion from
-// flight::Ref<BoundsNode<flight::Ref<Node2DTraits>>> to flight::Ref<HtmlView> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: a structural assertion from the
+// readonly row Readonly<BoundsNode<Node2DTraits>> to the writable row HtmlView claims mutation the source
+// refused: a readonly row never becomes writable, because the boundary the value came through said its subject
+// must not be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld.
+// Assert to the readonly row where the value is only read, or declare the source -- its parameter, slot, or
+// accessor result -- as the writable type where that object may really be mutated. Choosing between those two
+// repairs is the question this assertion was answering, so ask it of the value's ROLE rather than of its
+// spelling: a RUNTIME OWNER that the mutating paths must write needs a mutable-source accessor returning the
+// full writable owner from the typed runtime slot, with the readonly accessor kept for reads, because the
+// capability has to exist on the storage and accessor that establish those cells; a NODE that the read paths
+// only traverse and never mutate needs the two authorities separated instead, with a readonly view on every read
+// path and a separate mutable entry point for the paths that really mutate, because laundering a writable node
+// out of a readonly boundary grants mutation no caller asked for. Both repairs keep the exact Traits or generic
+// specialization the retained row carries; neither adds cells to a row that does not declare them. Making only
+// that boundary writable is insufficient here: the source owner does not declare EntityRuntimeKey and data, so
+// it has no cells for the asserted row to mutate. Declare both the storage slot and the accessor result as the
+// full writable HtmlView row where initialization establishes those cells, rather than widening
+// Readonly<BoundsNode<Node2DTraits>> at the use site.
 
 
 // NOT GENERATED: function getHtmlViewRuntime -- source line 38
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getHtmlViewRuntime(source: Readonly<HtmlView>): Readonly<HtmlViewRuntime> {
 //     return getNode2DRuntime(source) as HtmlViewRuntime;
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<HtmlViewRuntime> has no heritage to cast along: the declarations
-// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
-// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: a structural assertion from the
+// readonly row Readonly<Node2DRuntime> to the writable row HtmlViewRuntime claims mutation the source refused: a
+// readonly row never becomes writable, because the boundary the value came through said its subject must not be
+// mutated through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the
+// readonly row where the value is only read, or declare the source -- its parameter, slot, or accessor result --
+// as the writable type where that object may really be mutated. Choosing between those two repairs is the
+// question this assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME
+// OWNER that the mutating paths must write needs a mutable-source accessor returning the full writable owner
+// from the typed runtime slot, with the readonly accessor kept for reads, because the capability has to exist on
+// the storage and accessor that establish those cells; a NODE that the read paths only traverse and never mutate
+// needs the two authorities separated instead, with a readonly view on every read path and a separate mutable
+// entry point for the paths that really mutate, because laundering a writable node out of a readonly boundary
+// grants mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained
+// row carries; neither adds cells to a row that does not declare them.
 
+inline void initialize_html_view_data(flight::types::EntityConstruction<flight::Ref<flight::types::HtmlViewData>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::HtmlViewData>>>>>> data = std::nullopt) {
+  flight::row_set<flight::RowKey<"element">>(out, ([&]() -> std::optional<flight::host_sdl::HtmlElement> { auto nullish_coalesce_left = ([&]() -> std::variant<flight::host_sdl::HtmlElement, flight::Null, flight::Undefined> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::variant<flight::host_sdl::HtmlElement, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return flight::row_get<flight::RowKey<"element">>(optional_chain_receiver.value()); }()); if (const auto* alternative = std::get_if<flight::host_sdl::HtmlElement>(&nullish_coalesce_left)) return std::optional<flight::host_sdl::HtmlElement>{*alternative}; return std::nullopt; }()));
+  flight::row_set<flight::RowKey<"height">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"height">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 100.0; }()));
+  flight::row_set<flight::RowKey<"width">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"width">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 100.0; }()));
+}
 
-// NOT GENERATED: function initializeHtmlViewData -- source line 42
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   export function initializeHtmlViewData(
-//     out: EntityConstruction<HtmlViewData>,
-//     data?: Readonly<Partial<HtmlViewData>>,
-//   ): void {
-//     out.element = data?.element ?? null;
-//     out.height = data?.height ?? 100;
-//     out.width = data?.width ?? 100;
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
+inline flight::Ref<flight::types::HtmlViewData> create_html_view_data(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::HtmlViewData>>>>>> data = std::nullopt) {
+  flight::types::EntityConstruction<flight::Ref<flight::types::HtmlViewData>> out = flight::entity::allocate_entity<flight::Ref<flight::types::HtmlViewData>>();
+  initialize_html_view_data(out, data);
+  return flight::entity::finish_entity<flight::Ref<flight::types::HtmlViewData>>(out);
+}
 
-
-// NOT GENERATED: function createHtmlViewData -- source line 28
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   export function createHtmlViewData(data?: Readonly<Partial<HtmlViewData>>): HtmlViewData {
-//     const out = allocateEntity<HtmlViewData>();
-//     initializeHtmlViewData(out, data);
-//     return finishEntity(out);
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
-
-inline void set_html_view_size(flight::Ref<HtmlView> source, double width, double height) {
-  if (((source->data.width == width) && (source->data.height == height))) {
+inline void set_html_view_size(flight::Ref<flight::types::HtmlView> source, double width, double height) {
+  if (((source->data->width == width) && (source->data->height == height))) {
     return;
   }
-  (source->data.width = width);
-  (source->data.height = height);
-  invalidate_node_local_bounds(source);
+  (source->data->width = width);
+  (source->data->height = height);
+  flight::node::invalidate_node_local_bounds(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::HtmlView>>>>(source)));
 }
 
 
 // NOT GENERATED: variable (binding) -- source line 58
-// refusal: cpp-partial-shape-unresolvable [source-portability]
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   const defaultMethods: Partial<MethodsOf<HtmlViewRuntime>> = {
 //     computeLocalBoundsRectangle: computeHtmlViewLocalBoundsRectangle,
 //   };
 //   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: contextual union callable value
+// type std::function<void(flight::Ref<flight::types::Rectangle>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>,
+// flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>,
+// flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>,
+// flight::RowOf<flight::Ref<entity_runtime_key_5ddead04740ae9a0>>>>>)> agrees with no alternative's signature:
+// the destination holds [std::function<void(flight::Ref<flight::types::Rectangle>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>,
+// flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>,
+// flight::RowOf<flight::Ref<flight::types::HasBoundsRectangle>>,
+// flight::RowOf<flight::Ref<entity_runtime_key_2a5696294f4ba375>>>>>)>]. A callable is a represented domain, so
+// the obstacle is that the destination's signature cannot call this one. Declare the value's parameters so the
+// destination's signature supplies them, and its result as one the destination holds
 
 
 // NOT GENERATED: function createHtmlViewRuntime -- source line 34
@@ -138,24 +154,29 @@ inline void set_html_view_size(flight::Ref<HtmlView> source, double width, doubl
 //   }
 //   
 // cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<HtmlViewRuntime> has no heritage to cast along: the declarations
-// share no emitted C++ class-heritage path (source interface and intersection relationships flatten into
-// independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// flight::Ref<flight::types::Node2DRuntime> to flight::Ref<flight::types::HtmlViewRuntime> has no heritage to
+// cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection
+// relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner
+// that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
+// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
+// replacement row, or invent side storage
 
 
 // NOT GENERATED: function createHtmlView -- source line 24
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   export function createHtmlView(obj?: Readonly<PartialNode<HtmlView>>): HtmlView {
 //     return createNode2D(HtmlViewKind, obj, createHtmlViewData, createHtmlViewRuntime) as HtmlView;
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: intersection types require C++
-// multiple-inheritance lowering: no shape for Node (argument Node2DTraits has no shape either), Node2DTraits.
-// Declare the object shape the code reads rather than intersecting a conjunct that has none
+// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: contextual union callable value
+// type
+// std::function<flight::Ref<flight::types::HtmlViewData>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::HtmlViewData>>>>>>)>
+// agrees with no alternative's signature: the destination holds
+// [std::function<flight::Ref<flight::types::Node2DData>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Node2DData>>>>>>)>].
+// A callable is a represented domain, so the obstacle is that the destination's signature cannot call this one.
+// Declare the value's parameters so the destination's signature supplies them, and its result as one the
+// destination holds
 
 } // namespace flight::scene2d

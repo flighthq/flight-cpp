@@ -6,14 +6,20 @@
 //   missing: function createNode2DRuntime -- source line 63
 //   missing: function createDisplayObjectRuntime -- source line 36
 //   missing: function createNode2D -- source line 40
-//   missing: function createDisplayObject -- source line 32
 //   missing: function getNode2DRuntime -- source line 78
 //   missing: function getDisplayObjectRuntime -- source line 74
+#include <flight/structural_ref.hpp>
+#include <flight/symbol.hpp>
+#include <functional>
 #include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
+
+#include <flight/types/scene2_d.hpp>
+
+#include <flight/types/rectangle.hpp>
 
 #include <flight/types/node2_d.hpp>
 
@@ -21,24 +27,48 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/clip_region.hpp>
 
+namespace flight::types { struct ClipRegion; }
+namespace flight::types { struct DisplayObjectRuntime; }
+namespace flight::types { struct HasAppearance; }
+namespace flight::types { struct HasBlendMode; }
+namespace flight::types { struct HasBoundsRectangle; }
+namespace flight::types { struct HasClip; }
+namespace flight::types { struct HasMaterial; }
+namespace flight::types { struct HasTransform2D; }
+namespace flight::types { struct Material2D; }
+namespace flight::types { struct MaterialData; }
+namespace flight::types { struct Node2DData; }
+namespace flight::types { struct Node2DRuntime; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct NodeTraits; }
+namespace flight::types { struct Rectangle; }
+namespace flight::types { struct Scene2D; }
+namespace flight::types { template <typename Data> struct NodeInitialization; }
+namespace flight::types { template <typename Traits> struct Node; }
+namespace flight::types { template <typename Traits> struct NodeRuntime; }
+
+#include <flight/node/has_appearance.hpp>
+#include <flight/node/has_blend_mode.hpp>
+#include <flight/node/has_bounds_rectangle.hpp>
+#include <flight/node/has_clip.hpp>
+#include <flight/node/has_material.hpp>
+#include <flight/node/has_transform2d.hpp>
+#include <flight/node/node.hpp>
 #include <flight/node/revision.hpp>
+#include <flight/types/contract.hpp>
 
 namespace flight::scene2d {
-
-using flight::node::get_node_runtime;
 
 using flight::types::ClipRegion;
 using flight::types::Node;
 using flight::types::Node2D;
 using flight::types::Node2DTraits;
-using flight::types::NodeAny;
-using flight::types::node2_dtraits_key;
-
-using flight::node::invalidate_node_appearance;
+using flight::types::Rectangle;
+using flight::types::Scene2D;
 
 
 // NOT GENERATED: function createNode2DRuntime -- source line 63
-// refusal: cpp-partial-shape-unresolvable [source-portability]
+// refusal: cpp-reference-assertion-without-heritage [target-runtime]
 //
 // The source it stood for:
 //   export function createNode2DRuntime(
@@ -51,9 +81,14 @@ using flight::node::invalidate_node_appearance;
 //     initBoundsRectangleRuntimeTrait(out, methods);
 //     return out;
 //   }
-//
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/displayObject.ts: Partial<T> requires a
-// statically resolvable C++ object shape; T is intersection
+//   
+// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/displayObject.ts: a reference assertion from
+// std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>> to
+// flight::Ref<flight::types::Node2DRuntime> has no heritage to cast along: the declarations share no emitted C++
+// class-heritage path (source interface and intersection relationships flatten into independent owners), and the
+// source carrier does not retain a checked dynamic owner that can recover the target. Keep the exact declared
+// owner at the API boundary, or add a runtime contract that validates and recovers the target owner; the
+// compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
 
 
 // NOT GENERATED: function createDisplayObjectRuntime -- source line 36
@@ -63,18 +98,18 @@ using flight::node::invalidate_node_appearance;
 //   export function createDisplayObjectRuntime(): DisplayObjectRuntime {
 //     return createNode2DRuntime() as DisplayObjectRuntime;
 //   }
-//
+//   
 // cpp emission failed for @flighthq/scene2d/packages/scene2d/src/displayObject.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<DisplayObjectRuntime> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// flight::Ref<flight::types::Node2DRuntime> to flight::Ref<flight::types::DisplayObjectRuntime> has no heritage
+// to cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection
+// relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner
+// that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
+// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
+// replacement row, or invent side storage
 
 
 // NOT GENERATED: function createNode2D -- source line 40
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-inequivalent [source-portability]
 //
 // The source it stood for:
 //   export function createNode2D<R extends Node2DRuntime>(
@@ -99,68 +134,76 @@ using flight::node::invalidate_node_appearance;
 //     initClipTrait(out, obj);
 //     return finishEntity(out);
 //   }
-//
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/displayObject.ts: intersection types require
-// C++ multiple-inheritance lowering: no shape for Node (argument Node2DTraits has no shape either),
-// Node2DTraits. Declare the object shape the code reads rather than intersecting a conjunct that has none
+//   
+// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/displayObject.ts: contextual C++ union
+// conversion requires equivalent source union evidence: target optionalSingle carriers
+// [flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NodeInitialization<flight::Ref<flight::types::Node2DData>>>>>>]
+// from identifier source optionalSingle carriers
+// [flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::types::Node2D>>>>]. Narrow
+// or convert the source expression so each of its alternatives names exactly one destination union alternative.
+// The carrier lists show which alternatives lack an exact carrier; preserve the declared collection or member
+// union alias before flow expansion. For a Map or WeakMap lookup followed by a rebind, ensure every rebound
+// member already has the declared value owner member's carrier -- a Readonly structural view does not become a
+// mutable nominal Ref.
 
-
-// NOT GENERATED: function createDisplayObject -- source line 32
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
-//
-// The source it stood for:
-//   export function createDisplayObject(obj?: Readonly<PartialNode<DisplayObject>>): DisplayObject {
-//     return createNode2D(DisplayObjectKind, obj, undefined, createDisplayObjectRuntime) as DisplayObject;
-//   }
-//
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/displayObject.ts: a reference assertion from
-// flight::Ref<Node2D> to flight::Ref<DisplayObject> has no heritage to cast along: the declarations share no
-// emitted C++ class-heritage path (source interface and intersection relationships flatten into independent
-// owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the
-// exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target
-// owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
+inline flight::types::DisplayObject create_display_object(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::types::DisplayObject>>>>> obj = std::nullopt) {
+  return flight::structural_ref_cast<flight::types::DisplayObject>(create_node2_d<flight::Ref<flight::types::DisplayObjectRuntime>>(flight::types::display_object_kind, obj, std::nullopt, std::optional<std::function<flight::Ref<flight::types::DisplayObjectRuntime>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::DisplayObjectRuntime>>>>>>)>>{[](std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::DisplayObjectRuntime>>>>>> contextual_callable_argument0) -> flight::Ref<flight::types::DisplayObjectRuntime> { return create_display_object_runtime(); }}));
+}
 
 
 // NOT GENERATED: function getNode2DRuntime -- source line 78
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getNode2DRuntime(source: Readonly<Node2D>): Readonly<Node2DRuntime> {
 //     return getNodeRuntime(source) as Node2DRuntime;
 //   }
-//
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/displayObject.ts: a reference assertion from
-// std::shared_ptr<NodeRuntime<flight::Ref<Node2DTraits>>> to flight::Ref<Node2DRuntime> has no heritage to cast
-// along: the declarations share no emitted C++ class-heritage path (source interface and intersection
-// relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner
-// that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
-// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
-// replacement row, or invent side storage
+//   
+// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/displayObject.ts: a structural assertion from
+// the readonly row Readonly<NodeRuntime<Node2DTraits>> to the writable row Node2DRuntime claims mutation only to
+// pass the value to the readonly row Readonly<Node2DRuntime>. Spell the assertion as Readonly<Node2DRuntime> to
+// remove the writable-capability claim, but that alone cannot recover the derived owner:
+// Readonly<NodeRuntime<Node2DTraits>> does not declare boundsRectangle, computeLocalBoundsRectangle,
+// isLocalBoundsRectangleValid, localBoundsRectangle, localMatrix, rotationAngle, rotationCosine, rotationSine,
+// scene2d, worldBoundsRectangle and worldMatrix, so the retained row has no proven cells for those members. No
+// writable carrier is justified for this read-only call. Preserve Node2DRuntime in the callback parameter
+// through a named typed runner or carrier, or make an intentionally erased registry validate and recover that
+// owner before invoking the typed runner; a tag or registry key carried beside the value does not prove which
+// owner the reference retains. If mutation is intended elsewhere, the storage and accessor themselves must
+// retain writable Node2DRuntime capability rather than adding it with an assertion. The compiler will not cast,
+// copy, materialize, or create side storage for either missing proof.
 
 
 // NOT GENERATED: function getDisplayObjectRuntime -- source line 74
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getDisplayObjectRuntime(source: Readonly<DisplayObject>): Readonly<DisplayObjectRuntime> {
 //     return getNode2DRuntime(source) as DisplayObjectRuntime;
 //   }
-//
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/displayObject.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<DisplayObjectRuntime> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+//   
+// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/displayObject.ts: a structural assertion from
+// the readonly row Readonly<Node2DRuntime> to the writable row DisplayObjectRuntime claims mutation the source
+// refused: a readonly row never becomes writable, because the boundary the value came through said its subject
+// must not be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld.
+// Assert to the readonly row where the value is only read, or declare the source -- its parameter, slot, or
+// accessor result -- as the writable type where that object may really be mutated. Choosing between those two
+// repairs is the question this assertion was answering, so ask it of the value's ROLE rather than of its
+// spelling: a RUNTIME OWNER that the mutating paths must write needs a mutable-source accessor returning the
+// full writable owner from the typed runtime slot, with the readonly accessor kept for reads, because the
+// capability has to exist on the storage and accessor that establish those cells; a NODE that the read paths
+// only traverse and never mutate needs the two authorities separated instead, with a readonly view on every read
+// path and a separate mutable entry point for the paths that really mutate, because laundering a writable node
+// out of a readonly boundary grants mutation no caller asked for. Both repairs keep the exact Traits or generic
+// specialization the retained row carries; neither adds cells to a row that does not declare them.
 
-inline bool is_node2_d(flight::Ref<NodeAny> node) {
-  return (get_node_runtime(node)->traits == node2_dtraits_key);
+inline bool is_node2_d(flight::types::NodeAny node) {
+  return (flight::row_get<flight::RowKey<"traits">>(flight::node::get_node_runtime<flight::Ref<flight::types::NodeTraits>>(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::NodeTraits>>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::types::NodeAny>>>(node)))) == flight::types::node2_dtraits_key);
 }
 
-inline void set_node2_dclip(flight::Ref<Node2D> source, std::optional<flight::Ref<ClipRegion>> value) {
-  (source->clip = value);
-  invalidate_node_appearance(source);
+inline void set_node2_dclip(flight::types::Node2D source, std::optional<flight::Ref<flight::types::ClipRegion>> value) {
+  flight::row_set<flight::RowKey<"clip">>(source, value);
+  flight::node::invalidate_node_appearance(source);
 }
 
 } // namespace flight::scene2d

@@ -3,24 +3,18 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function getSpriteRuntime -- source line 65
-//   missing: function initializeSpriteData -- source line 69
-//   missing: function createSpriteData -- source line 46
-//   missing: function initializeSpriteRendererData -- source line 75
-//   missing: function isSpriteRendererDirty -- source line 87
-//   missing: function isSpriteLocalBoundsRectangleValid -- source line 102
-//   missing: function computeSpriteLocalBoundsRectangle -- source line 26
-//   missing: variable (binding) -- source line 109
-//   missing: function createSpriteRuntime -- source line 58
-//   missing: function createSprite -- source line 42
-//   missing: function cloneSprite -- source line 22
+//   missing: function initializeSpriteRendererData -- source line 72
+//   missing: function isSpriteRendererDirty -- source line 84
+//   missing: function createSpriteRuntime -- source line 55
+//   missing: function createSprite -- source line 39
+#include <flight/structural_ref.hpp>
+#include <functional>
 #include <optional>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/types/screen.hpp>
 
 #include <flight/types/sprite_identity_renderer_data.hpp>
 
@@ -34,9 +28,21 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/entity.hpp>
 
-#include <flight/entity/entity.hpp>
-
-#include <flight/scene2d/display_object.hpp>
+namespace flight::types { struct Node2DData; }
+namespace flight::types { struct Node2DRuntime; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Rectangle; }
+namespace flight::types { struct RenderState; }
+namespace flight::types { struct RendererData; }
+namespace flight::types { struct Sprite; }
+namespace flight::types { struct SpriteData; }
+namespace flight::types { struct SpriteIdentityRendererData; }
+namespace flight::types { struct SpriteRuntime; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::scene2d {
 
@@ -47,57 +53,33 @@ using flight::types::NodeAny;
 using flight::types::Rectangle;
 using flight::types::RenderState;
 using flight::types::SpriteIdentityRendererData;
+using flight::types::entity_runtime_key;
+struct SpriteRuntimeRunner;
+} // namespace flight::scene2d
 
-using flight::entity::allocate_entity;
-using flight::entity::finish_entity;
+#include <flight/entity/entity.hpp>
+#include <flight/texture/texture.hpp>
+#include <flight/types/contract.hpp>
+
+namespace flight::scene2d {
+
+inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpriteRuntime>>>> get_sprite_runtime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Sprite>>>> source) {
+  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpriteRuntime>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SpriteRuntime>>>>(flight::row_get<std::optional<flight::Ref<flight::types::SpriteRuntime>>>(source, flight::types::entity_runtime_key).value()));
+}
+
+inline void initialize_sprite_data(flight::types::EntityConstruction<flight::Ref<flight::types::SpriteData>> out, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::SpriteData>>>>>> data = std::nullopt) {
+  flight::row_set<flight::RowKey<"texture">>(out, ([&]() -> std::optional<flight::types::Texture> { auto optional_chain_receiver = data; if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"texture">>(optional_chain_receiver.value()); }()));
+}
+
+inline flight::Ref<flight::types::SpriteData> create_sprite_data(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::SpriteData>>>>>> data = std::nullopt) {
+  flight::types::EntityConstruction<flight::Ref<flight::types::SpriteData>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpriteData>>();
+  initialize_sprite_data(out, data);
+  return flight::entity::finish_entity<flight::Ref<flight::types::SpriteData>>(out);
+}
 
 
-// NOT GENERATED: function getSpriteRuntime -- source line 65
+// NOT GENERATED: function initializeSpriteRendererData -- source line 72
 // refusal: cpp-reference-assertion-without-heritage [target-runtime]
-//
-// The source it stood for:
-//   export function getSpriteRuntime(source: Readonly<Sprite>): Readonly<SpriteRuntime> {
-//     return getNode2DRuntime(source) as SpriteRuntime;
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<SpriteRuntime> has no heritage to cast along: the declarations share
-// no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent
-// owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the
-// exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target
-// owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
-
-
-// NOT GENERATED: function initializeSpriteData -- source line 69
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   export function initializeSpriteData(out: EntityConstruction<SpriteData>, data?: Readonly<Partial<SpriteData>>): void {
-//     out.texture = data?.texture ?? null;
-//   }
-//   
-//   // Creates the per-state identity stamp used by a Sprite renderer's optional dirty hook. The data is
-//   // attached to that state's render proxy, so separate render pipelines compare independently.
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
-
-
-// NOT GENERATED: function createSpriteData -- source line 46
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   export function createSpriteData(data?: Readonly<Partial<SpriteData>>): SpriteData {
-//     const out = allocateEntity<SpriteData>();
-//     initializeSpriteData(out, data);
-//     return finishEntity(out);
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
-
-
-// NOT GENERATED: function initializeSpriteRendererData -- source line 75
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
 //   export function initializeSpriteRendererData(
@@ -105,25 +87,30 @@ using flight::entity::finish_entity;
 //     _state: RenderState,
 //     source: NodeAny,
 //   ): void {
-//     const texture = (source as Sprite).data.texture;
+//     const texture: Texture | null = (source as Sprite).data.texture;
 //     out.textureIdentity = texture;
 //     out.textureVersion = texture?.version ?? -1;
 //   }
 //   
 //   // Detects Texture identity/version changes before requiresInvalidation can skip a Sprite. Each
 //   // backend opts into this through its registered renderer; the generic walk never knows SpriteKind.
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: contextual optionalSingle
-// construction requires expression type evidence
+// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: a reference assertion from
+// std::shared_ptr<flight::types::Node<flight::Any>> to flight::Ref<flight::types::Sprite> has no heritage to cast
+// along: the declarations share no emitted C++ class-heritage path (source interface and intersection
+// relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner
+// that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
+// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
+// replacement row, or invent side storage
 
-inline flight::Ref<SpriteIdentityRendererData> create_sprite_renderer_data(flight::Ref<RenderState> state, flight::Ref<NodeAny> source) {
-  flight::Ref<EntityConstruction<flight::Ref<SpriteIdentityRendererData>>> out = allocate_entity<flight::Ref<SpriteIdentityRendererData>>();
+inline flight::Ref<flight::types::SpriteIdentityRendererData> create_sprite_renderer_data(flight::Ref<flight::types::RenderState> state, flight::types::NodeAny source) {
+  flight::types::EntityConstruction<flight::Ref<flight::types::SpriteIdentityRendererData>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SpriteIdentityRendererData>>();
   initialize_sprite_renderer_data(out, state, source);
-  return finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::SpriteIdentityRendererData>>(out);
 }
 
 
-// NOT GENERATED: function isSpriteRendererDirty -- source line 87
-// refusal: cpp-type-assertion-unidentified [source-portability]
+// NOT GENERATED: function isSpriteRendererDirty -- source line 84
+// refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
 //   export function isSpriteRendererDirty(
@@ -141,121 +128,135 @@ inline flight::Ref<SpriteIdentityRendererData> create_sprite_renderer_data(fligh
 //     return dirty;
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: type assertion target must identify
-// exactly one C++ variant alternative: target flight::Ref<SpriteIdentityRendererData> against
-// [flight::Ref<RendererData>]
+// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: the asserted row from
+// flight::Ref<flight::types::RendererData> to flight::Ref<flight::types::SpriteIdentityRendererData> reads
+// textureIdentity and textureVersion, which the source type does not declare, and a structural owner binds the
+// members and storage representations of the type the object was first reached as, so a member the source's own
+// declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back
+// from retained storage does not recover a wider owner: an assertion cannot add those cells, change their
+// representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type
+// through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or
+// tokens into storage that remains typed as SpriteIdentityRendererData, rather than storing an erased reference
+// and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies
+// an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery
+// contract that validates and returns the exact owner before dispatch. Declare the source as a type that
+// declares textureIdentity and textureVersion -- construct SpriteIdentityRendererData explicitly, then type the
+// retaining slot and every accessor result as SpriteIdentityRendererData wherever that concrete owner is known;
+// changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather
+// than asserting past flight::Ref<flight::types::RendererData>. The compiler will not reinterpret the owner,
+// cast it, copy or materialize a replacement, or add side storage.
+
+inline bool is_sprite_local_bounds_rectangle_valid(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Sprite>>>> sprite) {
+  auto runtime = flight::row_get<std::optional<flight::Ref<flight::types::SpriteRuntime>>>(sprite, flight::types::entity_runtime_key).value();
+  std::optional<flight::types::Texture> texture = flight::row_get<flight::RowKey<"data">>(sprite)->texture;
+  return ((runtime->local_bounds_texture == texture) && (runtime->local_bounds_texture_version == ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = texture; if (!optional_chain_receiver.has_value()) return std::nullopt; return std::visit([](const auto& value) { return value->version; }, optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return -1.0; }())));
+}
+
+struct SpriteRuntimeRunner : public flight::ReferenceEnabled {
+  std::function<void(flight::Ref<flight::types::Rectangle>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Sprite>>>>)> compute_local_bounds_rectangle;
+  std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Sprite>>>>)> is_local_bounds_rectangle_valid;
+};
+
+inline flight::Ref<flight::types::Vector2> sprite_view_size = flight::make_ref<flight::types::Vector2>(flight::types::Vector2{.x = 0.0, .y = 0.0});
+
+inline void compute_sprite_local_bounds_rectangle(flight::Ref<flight::types::Rectangle> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Sprite>>>> sprite) {
+  std::optional<flight::types::Texture> texture = flight::row_get<flight::RowKey<"data">>(sprite)->texture;
+  if (!texture.has_value()) {
+    (out->width = 0.0);
+    (out->height = 0.0);
+  }
+  else {
+    flight::texture::get_texture_view_size(sprite_view_size, texture.value());
+    (out->width = sprite_view_size->x);
+    (out->height = sprite_view_size->y);
+  }
+  auto runtime = flight::row_get<std::optional<flight::Ref<flight::types::SpriteRuntime>>>(sprite, flight::types::entity_runtime_key).value();
+  (runtime->local_bounds_texture = texture);
+  (runtime->local_bounds_texture_version = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = texture; if (!optional_chain_receiver.has_value()) return std::nullopt; return std::visit([](const auto& value) { return value->version; }, optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return -1.0; }()));
+}
+
+inline flight::Ref<SpriteRuntimeRunner> sprite_runtime_runner = flight::make_ref<SpriteRuntimeRunner>(SpriteRuntimeRunner{.compute_local_bounds_rectangle = compute_sprite_local_bounds_rectangle, .is_local_bounds_rectangle_valid = is_sprite_local_bounds_rectangle_valid});
 
 
-// NOT GENERATED: function isSpriteLocalBoundsRectangleValid -- source line 102
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
-//
-// The source it stood for:
-//   function isSpriteLocalBoundsRectangleValid(source: Readonly<BoundsNode<Node2DTraits>>): boolean {
-//     const sprite = source as Readonly<Sprite>;
-//     const runtime = getNode2DRuntime(sprite) as SpriteRuntime;
-//     const texture = sprite.data.texture;
-//     return runtime.localBoundsTexture === texture && runtime.localBoundsTextureVersion === (texture?.version ?? -1);
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: a reference assertion from
-// flight::Ref<BoundsNode<flight::Ref<Node2DTraits>>> to flight::Ref<Sprite> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_X_Y_8365950BD60F783F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_X_Y_8365950BD60F783F
-using x_y_8365950bd60f783f = flight::types::x_y_8365950bd60f783f;
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_X_Y_8365950BD60F783F
-
-inline flight::Ref<x_y_8365950bd60f783f> sprite_view_size = flight::make_ref<x_y_8365950bd60f783f>(x_y_8365950bd60f783f{.x = 0.0, .y = 0.0});
-
-
-// NOT GENERATED: function computeSpriteLocalBoundsRectangle -- source line 26
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
-//
-// The source it stood for:
-//   export function computeSpriteLocalBoundsRectangle(out: Rectangle, source: Readonly<BoundsNode<Node2DTraits>>): void {
-//     const sprite = source as Readonly<Sprite>;
-//     const texture = sprite.data.texture;
-//     if (texture === null) {
-//       out.width = 0;
-//       out.height = 0;
-//     } else {
-//       getTextureViewSize(spriteViewSize, texture);
-//       out.width = spriteViewSize.x;
-//       out.height = spriteViewSize.y;
-//     }
-//     const runtime = getNode2DRuntime(sprite) as SpriteRuntime;
-//     runtime.localBoundsTexture = texture;
-//     runtime.localBoundsTextureVersion = texture?.version ?? -1;
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: a reference assertion from
-// flight::Ref<BoundsNode<flight::Ref<Node2DTraits>>> to flight::Ref<Sprite> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
-
-
-// NOT GENERATED: variable (binding) -- source line 109
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   const defaultMethods: Partial<MethodsOf<SpriteRuntime> & Pick<SpriteRuntime, 'isLocalBoundsRectangleValid'>> = {
-//     computeLocalBoundsRectangle: computeSpriteLocalBoundsRectangle,
-//     isLocalBoundsRectangleValid: isSpriteLocalBoundsRectangleValid,
-//   };
-//   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is intersection
-
-
-// NOT GENERATED: function createSpriteRuntime -- source line 58
+// NOT GENERATED: function createSpriteRuntime -- source line 55
 // refusal: cpp-reference-assertion-without-heritage [target-runtime]
 //
 // The source it stood for:
 //   export function createSpriteRuntime(): SpriteRuntime {
-//     const runtime = createNode2DRuntime(defaultMethods) as SpriteRuntime;
+//     const runtime = createNode2DRuntime(spriteRuntimeRunner) as SpriteRuntime;
 //     runtime.localBoundsTexture = null;
 //     runtime.localBoundsTextureVersion = -1;
 //     return runtime;
 //   }
 //   
 // cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: a reference assertion from
-// flight::Ref<Node2DRuntime> to flight::Ref<SpriteRuntime> has no heritage to cast along: the declarations share
-// no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent
-// owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the
-// exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target
-// owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
+// flight::Ref<flight::types::Node2DRuntime> to flight::Ref<flight::types::SpriteRuntime> has no heritage to cast
+// along: the declarations share no emitted C++ class-heritage path (source interface and intersection
+// relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner
+// that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that
+// validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a
+// replacement row, or invent side storage
 
 
-// NOT GENERATED: function createSprite -- source line 42
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// NOT GENERATED: function createSprite -- source line 39
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   export function createSprite(obj?: Readonly<PartialNode<Sprite>>): Sprite {
 //     return createNode2D(SpriteKind, obj, createSpriteData, createSpriteRuntime) as Sprite;
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: intersection types require C++
-// multiple-inheritance lowering: no shape for Node (argument Node2DTraits has no shape either), Node2DTraits.
-// Declare the object shape the code reads rather than intersecting a conjunct that has none
+// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: contextual union callable value type
+// std::function<flight::Ref<flight::types::SpriteData>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::SpriteData>>>>>>)>
+// agrees with no alternative's signature: the destination holds
+// [std::function<flight::Ref<flight::types::Node2DData>(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::Node2DData>>>>>>)>].
+// A callable is a represented domain, so the obstacle is that the destination's signature cannot call this one.
+// Declare the value's parameters so the destination's signature supplies them, and its result as one the
+// destination holds
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_ENTITY_RUNTIME_KEY_TEXTURE_2EE086BC1479C030
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_ENTITY_RUNTIME_KEY_TEXTURE_2EE086BC1479C030
+struct entity_runtime_key_texture_2ee086bc1479c030 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
+  std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, flight::Null, flight::Undefined> texture = std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_ENTITY_RUNTIME_KEY_TEXTURE_2EE086BC1479C030
 
-// NOT GENERATED: function cloneSprite -- source line 22
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function cloneSprite(source: Readonly<Sprite>): Sprite {
-//     return createSprite({ data: { texture: source.data.texture } });
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: contextual optionalSingle
-// construction requires expression type evidence
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_TEXTURE_68EE85FA7393B186
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_TEXTURE_68EE85FA7393B186
+struct texture_68ee85fa7393b186 : public flight::ReferenceEnabled {
+  std::optional<flight::types::Texture> texture;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_TEXTURE_68EE85FA7393B186
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_480FEB592FA82925
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_480FEB592FA82925
+struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_480feb592fa82925 : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<entity_runtime_key_texture_2ee086bc1479c030>> data;
+  std::optional<bool> enabled;
+  std::optional<flight::String> kind;
+  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<flight::Ref<flight::types::SpriteRuntime>> entity_runtime_key;
+  std::optional<double> alpha;
+  std::optional<bool> visible;
+  std::variant<flight::String, flight::Null, flight::Undefined> blend_mode = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::ClipRegion>, flight::Null, flight::Undefined> clip = std::variant<flight::Ref<flight::types::ClipRegion>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::Material2D>, flight::Null, flight::Undefined> material = std::variant<flight::Ref<flight::types::Material2D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Ref<flight::types::MaterialData>, flight::Null, flight::Undefined> material_data = std::variant<flight::Ref<flight::types::MaterialData>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<double> pivot_x;
+  std::optional<double> pivot_y;
+  std::optional<double> rotation;
+  std::optional<double> scale_x;
+  std::optional<double> scale_y;
+  std::optional<double> skew_x;
+  std::optional<double> skew_y;
+  std::optional<double> x;
+  std::optional<double> y;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_480FEB592FA82925
+
+inline flight::Ref<flight::types::Sprite> clone_sprite(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Sprite>>>> source) {
+  return create_sprite(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_480feb592fa82925>>>>(flight::row_field<flight::RowKey<"data">>(std::optional<flight::Ref<entity_runtime_key_texture_2ee086bc1479c030>>{flight::make_ref<texture_68ee85fa7393b186>(texture_68ee85fa7393b186{.texture = flight::row_get<flight::RowKey<"data">>(source)->texture})})));
+}
 
 } // namespace flight::scene2d

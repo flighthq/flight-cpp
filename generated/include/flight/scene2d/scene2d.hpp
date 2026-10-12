@@ -5,9 +5,12 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function getScene2DRoot -- source line 51
 //   missing: function getScene2DSignals -- source line 62
-//   missing: function initializeScene2D -- source line 67
 //   missing: function createScene2D -- source line 21
 //   missing: function setScene2DSize -- source line 86
+//   missing: function ensureScene2DRuntime -- source line 94
+#include <flight/erased_ref.hpp>
+#include <flight/structural_ref.hpp>
+#include <functional>
 #include <optional>
 #include <variant>
 #include <flight/runtime.hpp>
@@ -15,41 +18,46 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/signals/signal.hpp>
-
 #include <flight/types/scene2_dsignals.hpp>
 
 #include <flight/types/scene2_d.hpp>
 
 #include <flight/types/node2_d.hpp>
 
-#include <flight/types/entity.hpp>
+#include <flight/types/node.hpp>
+
+namespace flight::types { struct Node2DRuntime; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Scene2D; }
+namespace flight::types { struct Scene2DRuntime; }
+namespace flight::types { struct Scene2DSignals; }
+namespace flight::types { template <typename T> struct Signal; }
+namespace flight::types { template <typename Traits> struct Node; }
+namespace flight::types { template <typename Traits> struct NodeRuntime; }
 
 #include <flight/entity/entity.hpp>
-
-#include <flight/scene2d/display_object.hpp>
+#include <flight/signals/emitter.hpp>
+#include <flight/signals/signal.hpp>
+#include <flight/types/contract.hpp>
 
 namespace flight::scene2d {
 
 using flight::signals::create_signal;
 
-using flight::types::EntityConstruction;
+using flight::types::Node;
 using flight::types::Node2D;
+using flight::types::Node2DTraits;
 using flight::types::Scene2D;
 using flight::types::Scene2DRuntime;
 using flight::types::Scene2DSignals;
-using flight::types::entity_runtime_key;
 
-using flight::entity::allocate_entity;
-using flight::entity::finish_entity;
-
-inline flight::Ref<Scene2DRuntime> create_scene2_druntime() {
-  return flight::make_ref<Scene2DRuntime>(Scene2DRuntime{.binding = nullptr, .scene2d_signals = nullptr});
+inline flight::Ref<flight::types::Scene2DRuntime> create_scene2_druntime() {
+  return flight::make_ref<flight::types::Scene2DRuntime>(flight::types::Scene2DRuntime{.binding = std::nullopt, .scene2d_signals = std::nullopt});
 }
 
 
 // NOT GENERATED: function getScene2DRoot -- source line 51
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getScene2DRoot(source: Readonly<Node2D>): Scene2D | null {
@@ -59,11 +67,30 @@ inline flight::Ref<Scene2DRuntime> create_scene2_druntime() {
 //   
 //   // The scene2d's runtime, allocated on first access (the entity is created unbound). Callers that only read
 //   // enabled signals should use getScene2DSignals, which does not allocate.
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/scene2d.ts: contextual optionalSingle
-// construction requires expression type evidence
+// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/scene2d.ts: a structural assertion from the
+// readonly row Readonly<NodeRuntime<Node2DTraits>> to the writable row Node2DRuntime claims mutation the source
+// refused: a readonly row never becomes writable, because the boundary the value came through said its subject
+// must not be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld.
+// Assert to the readonly row where the value is only read, or declare the source -- its parameter, slot, or
+// accessor result -- as the writable type where that object may really be mutated. Choosing between those two
+// repairs is the question this assertion was answering, so ask it of the value's ROLE rather than of its
+// spelling: a RUNTIME OWNER that the mutating paths must write needs a mutable-source accessor returning the
+// full writable owner from the typed runtime slot, with the readonly accessor kept for reads, because the
+// capability has to exist on the storage and accessor that establish those cells; a NODE that the read paths
+// only traverse and never mutate needs the two authorities separated instead, with a readonly view on every read
+// path and a separate mutable entry point for the paths that really mutate, because laundering a writable node
+// out of a readonly boundary grants mutation no caller asked for. Both repairs keep the exact Traits or generic
+// specialization the retained row carries; neither adds cells to a row that does not declare them. Making only
+// that boundary writable is insufficient here: the source owner does not declare boundsRectangle,
+// computeLocalBoundsRectangle, isLocalBoundsRectangleValid, localBoundsRectangle, localMatrix, rotationAngle,
+// rotationCosine, rotationSine, scene2d, worldBoundsRectangle and worldMatrix, so it has no cells for the
+// asserted row to mutate. Declare both the storage slot and the accessor result as the full writable
+// Node2DRuntime row where initialization establishes those cells, rather than widening
+// Readonly<NodeRuntime<Node2DTraits>> at the use site.
 
 
 // NOT GENERATED: function getScene2DSignals -- source line 62
+// refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getScene2DSignals(source: Readonly<Scene2D>): Scene2DSignals | null {
@@ -71,33 +98,46 @@ inline flight::Ref<Scene2DRuntime> create_scene2_druntime() {
 //     return runtime?.scene2dSignals ?? null;
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/scene2d.ts: dual-sentinel optional property
-// result requires one represented member value domain
+// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/scene2d.ts: the asserted row from
+// flight::Ref<flight::types::EntityRuntime> to flight::Ref<flight::types::Scene2DRuntime> reads scene2dSignals,
+// which the source type does not declare, and a structural owner binds the members and storage representations
+// of the type the object was first reached as, so a member the source's own declaration lacks or carries
+// differently has no compatible cell to answer the read. Reading the value back from retained storage does not
+// recover a wider owner: an assertion cannot add those cells, change their representation, or prove which
+// concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and
+// accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains
+// typed as Scene2DRuntime, rather than storing an erased reference and asserting it back; an identity map, tag,
+// sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If
+// heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact
+// owner before dispatch. Declare the source as a type that declares scene2dSignals -- construct Scene2DRuntime
+// explicitly, then type the retaining slot and every accessor result as Scene2DRuntime wherever that concrete
+// owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased
+// it -- rather than asserting past flight::Ref<flight::types::EntityRuntime>. The compiler will not reinterpret
+// the owner, cast it, copy or materialize a replacement, or add side storage.
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_ALIGN_COLOR_SCALE_MODE_SCENE2D_HEIGHT_SCENE2D_WIDTH_50B58C1D4DC14149
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_ALIGN_COLOR_SCALE_MODE_SCENE2D_HEIGHT_SCENE2D_WIDTH_50B58C1D4DC14149
+struct align_color_scale_mode_scene2d_height_scene2d_width_50b58c1d4dc14149 : public flight::ReferenceEnabled {
+  std::optional<flight::types::ViewportAlign> align;
+  std::variant<double, flight::Null, flight::Undefined> color = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::optional<flight::types::ViewportScaleMode> scale_mode;
+  std::optional<double> scene2d_height;
+  std::optional<double> scene2d_width;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_ALIGN_COLOR_SCALE_MODE_SCENE2D_HEIGHT_SCENE2D_WIDTH_50B58C1D4DC14149
 
-// NOT GENERATED: function initializeScene2D -- source line 67
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   export function initializeScene2D(
-//     out: EntityConstruction<Scene2D>,
-//     root: Node2D,
-//     obj?: Readonly<Partial<Pick<Scene2D, 'align' | 'color' | 'scaleMode' | 'scene2dHeight' | 'scene2dWidth'>>>,
-//   ): void {
-//     out.align = obj?.align ?? 'topleft';
-//     out.color = obj?.color ?? null;
-//     out.root = root;
-//     out.scaleMode = obj?.scaleMode ?? 'noscale';
-//     out.scene2dHeight = obj?.scene2dHeight ?? 550;
-//     out.scene2dWidth = obj?.scene2dWidth ?? 400;
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/scene2d.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
+inline void initialize_scene2_d(flight::types::EntityConstruction<flight::Ref<flight::types::Scene2D>> out, flight::types::Node2D root, std::optional<flight::Ref<align_color_scale_mode_scene2d_height_scene2d_width_50b58c1d4dc14149>> obj = std::nullopt) {
+  flight::row_set<flight::RowKey<"align">>(out, ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::types::ViewportAlign> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->align; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("topleft"); }()));
+  flight::row_set<flight::RowKey<"color">>(out, ([&]() -> std::optional<double> { auto nullish_coalesce_left_2 = ([&]() -> std::variant<double, flight::Null, flight::Undefined> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return optional_chain_receiver.value()->color; }()); if (const auto* alternative = std::get_if<double>(&nullish_coalesce_left_2)) return std::optional<double>{*alternative}; return std::nullopt; }()));
+  flight::row_set<flight::RowKey<"root">>(out, root);
+  flight::row_set<flight::RowKey<"scaleMode">>(out, ([&]() -> flight::String { auto nullish_coalesce_left_3 = ([&]() -> std::optional<flight::types::ViewportScaleMode> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->scale_mode; }()); if (nullish_coalesce_left_3.has_value()) return nullish_coalesce_left_3.value(); return flight::String("noscale"); }()));
+  flight::row_set<flight::RowKey<"scene2dHeight">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->scene2d_height; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 550.0; }()));
+  flight::row_set<flight::RowKey<"scene2dWidth">>(out, ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = obj; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->scene2d_width; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 400.0; }()));
+}
 
 
 // NOT GENERATED: function createScene2D -- source line 21
-// refusal: cpp-partial-shape-unresolvable [source-portability]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export function createScene2D(
@@ -110,23 +150,42 @@ inline flight::Ref<Scene2DRuntime> create_scene2_druntime() {
 //     return scene2d;
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/scene2d.ts: Partial<T> requires a statically
-// resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/scene2d.ts: a structural assertion from the
+// readonly row Readonly<NodeRuntime<Node2DTraits>> to the writable row Node2DRuntime claims mutation the source
+// refused: a readonly row never becomes writable, because the boundary the value came through said its subject
+// must not be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld.
+// Assert to the readonly row where the value is only read, or declare the source -- its parameter, slot, or
+// accessor result -- as the writable type where that object may really be mutated. Choosing between those two
+// repairs is the question this assertion was answering, so ask it of the value's ROLE rather than of its
+// spelling: a RUNTIME OWNER that the mutating paths must write needs a mutable-source accessor returning the
+// full writable owner from the typed runtime slot, with the readonly accessor kept for reads, because the
+// capability has to exist on the storage and accessor that establish those cells; a NODE that the read paths
+// only traverse and never mutate needs the two authorities separated instead, with a readonly view on every read
+// path and a separate mutable entry point for the paths that really mutate, because laundering a writable node
+// out of a readonly boundary grants mutation no caller asked for. Both repairs keep the exact Traits or generic
+// specialization the retained row carries; neither adds cells to a row that does not declare them. Making only
+// that boundary writable is insufficient here: the source owner does not declare boundsRectangle,
+// computeLocalBoundsRectangle, isLocalBoundsRectangleValid, localBoundsRectangle, localMatrix, rotationAngle,
+// rotationCosine, rotationSine, scene2d, worldBoundsRectangle and worldMatrix, so it has no cells for the
+// asserted row to mutate. Declare both the storage slot and the accessor result as the full writable
+// Node2DRuntime row where initialization establishes those cells, rather than widening
+// Readonly<NodeRuntime<Node2DTraits>> at the use site.
 
-inline void initialize_scene2_dsignals(flight::Ref<EntityConstruction<flight::Ref<Scene2DSignals>>> out) {
-  (out->on_fullscreen_changed = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_fullscreen_changed)>::element_type>>());
-  (out->on_orientation_changed = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_orientation_changed)>::element_type>>());
-  (out->on_resize = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_resize)>::element_type>>());
+inline void initialize_scene2_dsignals(flight::types::EntityConstruction<flight::Ref<flight::types::Scene2DSignals>> out) {
+  flight::row_set<flight::RowKey<"onFullscreenChanged">>(out, flight::signals::create_signal<std::function<void()>>());
+  flight::row_set<flight::RowKey<"onOrientationChanged">>(out, flight::signals::create_signal<std::function<void()>>());
+  flight::row_set<flight::RowKey<"onResize">>(out, flight::signals::create_signal<std::function<void()>>());
 }
 
-inline flight::Ref<Scene2DSignals> create_scene2_dsignals() {
-  flight::Ref<EntityConstruction<flight::Ref<Scene2DSignals>>> out = allocate_entity<flight::Ref<Scene2DSignals>>();
+inline flight::Ref<flight::types::Scene2DSignals> create_scene2_dsignals() {
+  flight::types::EntityConstruction<flight::Ref<flight::types::Scene2DSignals>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Scene2DSignals>>();
   initialize_scene2_dsignals(out);
-  return finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Scene2DSignals>>(out);
 }
 
 
 // NOT GENERATED: function setScene2DSize -- source line 86
+// refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
 //   export function setScene2DSize(source: Scene2D, width: number, height: number): void {
@@ -137,26 +196,60 @@ inline flight::Ref<Scene2DSignals> create_scene2_dsignals() {
 //     if (runtime?.scene2dSignals) emitSignal(runtime.scene2dSignals.onResize);
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/scene2d.ts: dual-sentinel optional property
-// result requires one represented member value domain
+// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/scene2d.ts: the asserted row from
+// flight::Ref<flight::types::EntityRuntime> to flight::Ref<flight::types::Scene2DRuntime> reads scene2dSignals,
+// which the source type does not declare, and a structural owner binds the members and storage representations
+// of the type the object was first reached as, so a member the source's own declaration lacks or carries
+// differently has no compatible cell to answer the read. Reading the value back from retained storage does not
+// recover a wider owner: an assertion cannot add those cells, change their representation, or prove which
+// concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and
+// accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains
+// typed as Scene2DRuntime, rather than storing an erased reference and asserting it back; an identity map, tag,
+// sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If
+// heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact
+// owner before dispatch. Declare the source as a type that declares scene2dSignals -- construct Scene2DRuntime
+// explicitly, then type the retaining slot and every accessor result as Scene2DRuntime wherever that concrete
+// owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased
+// it -- rather than asserting past flight::Ref<flight::types::EntityRuntime>. The compiler will not reinterpret
+// the owner, cast it, copy or materialize a replacement, or add side storage.
 
-inline flight::Ref<Scene2DRuntime> ensure_scene2_druntime(flight::Ref<Scene2D> source) {
-  std::optional<flight::Ref<Scene2DRuntime>> existing = static_cast<std::optional<flight::Ref<Scene2DRuntime>>>(source->entity_runtime_key);
-  if (existing.has_value()) {
-    return existing.value();
-  }
-  flight::Ref<Scene2DRuntime> runtime = create_scene2_druntime();
-  (source->entity_runtime_key = runtime);
-  return runtime;
+
+// NOT GENERATED: function ensureScene2DRuntime -- source line 94
+// refusal: cpp-structural-assertion-owner-unproven [source-portability]
+//
+// The source it stood for:
+//   function ensureScene2DRuntime(source: Scene2D): Scene2DRuntime {
+//     const existing = source[EntityRuntimeKey] as Scene2DRuntime | undefined;
+//     if (existing !== undefined) return existing;
+//     const runtime = createScene2DRuntime();
+//     source[EntityRuntimeKey] = runtime;
+//     return runtime;
+//   }
+//   
+// cpp emission failed for @flighthq/scene2d/packages/scene2d/src/scene2d.ts: the asserted row from
+// flight::Ref<flight::types::EntityRuntime> to flight::Ref<flight::types::Scene2DRuntime> reads scene2dSignals,
+// which the source type does not declare, and a structural owner binds the members and storage representations
+// of the type the object was first reached as, so a member the source's own declaration lacks or carries
+// differently has no compatible cell to answer the read. Reading the value back from retained storage does not
+// recover a wider owner: an assertion cannot add those cells, change their representation, or prove which
+// concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and
+// accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains
+// typed as Scene2DRuntime, rather than storing an erased reference and asserting it back; an identity map, tag,
+// sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If
+// heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact
+// owner before dispatch. Declare the source as a type that declares scene2dSignals -- construct Scene2DRuntime
+// explicitly, then type the retaining slot and every accessor result as Scene2DRuntime wherever that concrete
+// owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased
+// it -- rather than asserting past flight::Ref<flight::types::EntityRuntime>. The compiler will not reinterpret
+// the owner, cast it, copy or materialize a replacement, or add side storage.
+
+inline flight::Ref<flight::types::Scene2DSignals> enable_scene2_dsignals(flight::Ref<flight::types::Scene2D> source) {
+  auto runtime = ensure_scene2_druntime(source);
+  return ([&]() { auto&& assignment_target = runtime->scene2d_signals; if (!assignment_target.has_value()) assignment_target = std::optional<flight::Ref<flight::types::Scene2DSignals>>{create_scene2_dsignals()}; return assignment_target.value(); }());
 }
 
-inline flight::Ref<Scene2DSignals> enable_scene2_dsignals(flight::Ref<Scene2D> source) {
-  flight::Ref<Scene2DRuntime> runtime = ensure_scene2_druntime(source);
-  return ([&]() { auto&& assignment_target = runtime->scene2d_signals; if (!assignment_target.has_value()) assignment_target = create_scene2_dsignals(); return assignment_target.value(); }());
-}
-
-inline flight::Ref<Scene2DRuntime> get_scene2_druntime(flight::Ref<Scene2D> source) {
-  return ensure_scene2_druntime(source);
+inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2DRuntime>>>> get_scene2_druntime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2D>>>> source) {
+  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2DRuntime>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scene2DRuntime>>>>(ensure_scene2_druntime(flight::structural_ref_cast<flight::Ref<flight::types::Scene2D>>(source))));
 }
 
 } // namespace flight::scene2d

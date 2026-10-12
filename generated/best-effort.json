@@ -22767,7 +22767,7 @@
       "status": "emitted"
     },
     {
-      "classification": "source-portability",
+      "classification": "target-runtime",
       "consumers": [
         "@flighthq/movieclip/packages/movieclip/src/spritesheetTimelineSource.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasScale9Sprite.ts",
@@ -22785,18 +22785,19 @@
         "@flighthq/swf/packages/swf/src/swfDocument.ts"
       ],
       "declarationFingerprints": [
+        "sha256:0153c34e039eb6f737e56daddeb03d7ed0da0b4f1f0010f6712a694cf9268dcc",
         "sha256:13e0552f7eb3f10fd2fc7f3c8ad82eb7fa669bda7fa1f3e43548494b496f762f",
-        "sha256:4c2d40dd19bff78b74e96b5708ceeeb120d29fb5af2125766d3996c07beab12e",
-        "sha256:4cd9c96da8708aea05faddd63f17bbec024a50bac330bfefe2f9a7b9fa062bc9",
+        "sha256:15f394fd8eecf3ce535bbaf4f0c658c8d7d69c67e19c5dd3075d1697946f7527",
+        "sha256:1d7c7548df0d8d4f7a0b6c6a7d301243a40a520b62daa9e86207ff634062a4da",
+        "sha256:35aacb5aa859352f5d9a28887c8923c47fe8476693033dcdedde0716620152a2",
+        "sha256:52bdb197e3f714c815ed0a35d9b1c91f6f8a89f95b96a2d12b40a7f6d68b237c",
         "sha256:59d1094847348de53e1d146e6ef3a461cf37b5a562693a5e2675858cc025fba9",
         "sha256:80b348f0a2b26c2f7f1991752e3ee18377b910b8df523c997376ad695a1676df",
-        "sha256:8853de2d67c0153700bc934362a985930a1b8c302c53bef8ce96bb35e6795799",
+        "sha256:846a63fa542f2ff9ae0087c3717fd0fa1fcac54fe439dde23df9979e413e71a1",
         "sha256:9355594890ea14757b9ecbdffbd4fb4717269eba355f0c6b6721354d2f2527a1",
-        "sha256:99c55304c2e22239c9990146530f31591e2febb10b269d5dd6e74c563757c6b1",
-        "sha256:bc073453796e34b94a116ee6864c7ca713fe56eb0291b88614f4798883345428",
+        "sha256:c4a2083429bb3fdd1433139ea879ae854807403f2539c1d8cf44c7b6873794ee",
         "sha256:cbbdc42a8476fb2d98b9787e046482b535a000c51f5d22a205bc5581027467f6",
         "sha256:e8339dedf5857eeb7b034e41b0b75375a321950d1423f50b0cfdc1f3ed248b04",
-        "sha256:ee3ac14b869b54c140b38b78c69d8633a867e73d7f64b1600c24e93b8f5131c8",
         "sha256:ff2f763068b2e993ed9269136f852eb8975e0b5f7f9a16b0e332ad4f2bda1068"
       ],
       "module": {
@@ -22805,7 +22806,7 @@
         "source": "packages/scene2d/src/sprite.ts"
       },
       "path": "flight/scene2d/sprite.hpp",
-      "rule": "cpp-structural-assertion-writable-capability-unproven",
+      "rule": "cpp-reference-assertion-without-heritage",
       "status": "refused-placeholder"
     },
     {

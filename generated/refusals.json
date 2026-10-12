@@ -4451,10 +4451,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 65,
+      "line": 72,
       "module": "packages/scene2d/src/sprite.ts",
       "package": "@flighthq/scene2d",
-      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: a structural assertion from the readonly row Readonly<Node2DRuntime> to the writable row SpriteRuntime claims mutation only to pass the value to the readonly row Readonly<SpriteRuntime>. Spell the assertion as Readonly<SpriteRuntime> to remove the writable-capability claim, but that alone cannot recover the derived owner: Readonly<Node2DRuntime> does not declare localBoundsTexture and localBoundsTextureVersion, so the retained row has no proven cells for those members. No writable carrier is justified for this read-only call. Preserve SpriteRuntime in the callback parameter through a named typed runner or carrier, or make an intentionally erased registry validate and recover that owner before invoking the typed runner; a tag or registry key carried beside the value does not prove which owner the reference retains. If mutation is intended elsewhere, the storage and accessor themselves must retain writable SpriteRuntime capability rather than adding it with an assertion. The compiler will not cast, copy, materialize, or create side storage for either missing proof.",
+      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: a reference assertion from flight::Ref<flight::types::Node<flight::Any>> to flight::Ref<flight::types::Sprite> has no heritage to cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage",
       "stage": "emission"
     },
     {
