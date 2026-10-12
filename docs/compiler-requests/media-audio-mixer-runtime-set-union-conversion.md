@@ -1,8 +1,10 @@
-# A call result and its destination must be the same anonymous shape, not two with equal members
+# Equivalent structural payloads must share one generic owner
 
-`audioMixer.ts` refuses with a union-conversion error whose two carriers differ only in the *name* of an
-anonymous structural shape: the destination names the shape after the members it read, the source names
-it after the runtime record the call returned.
+Structurally equivalent payloads can acquire different emitted names before they are nested in a generic
+container. The resulting `Set<...>` or `Signal<...>` specializations are unrelated C++ owners even
+though TypeScript proved the payloads equivalent. `audioMixer.ts` supplies the anonymous-shape case: the
+destination names the shape after the members it read, while the source names it after the runtime
+record the call returned.
 
 Measured at `2b687ea`, flight `a627849`, after `compiler-array-from-runtime-member` cleared the module's
 first refusal (`Array.from` on the ambient `Array`).
@@ -41,10 +43,46 @@ across packages.
 
 ## Affected modules
 
-`@flighthq/media` — `audioMixer.ts`. No other package is known to hit it today; the shape (a call result
-stored into a row whose fields were read) is common enough that the request is worth filing on its own.
+The initial measured module was `@flighthq/media` — `audioMixer.ts`. The P-3D2 audit below adds the
+same carrier-identity rule through a different generic container.
+
+## Same carrier family: a Signal over equivalent readonly rows
+
+The P-3D2 resource loader supplies a second exact reduction. Two progress interfaces declare the same
+four cells, but their readonly projections keep the nominal declaration name inside a callback, and
+that callback keeps the differing name inside its `Signal` owner:
+
+```ts
+interface Signal<T extends (...args: any[]) => void> { slots: T[] }
+interface LoadProgress { loaded: number; phase: 'download' | 'upload'; total: number; url: string }
+interface SceneProgress { loaded: number; phase: 'download' | 'upload'; total: number; url: string }
+interface LoadOptions { progress?: Signal<(value: Readonly<LoadProgress>) => void> }
+interface SceneOptions { progress?: Signal<(value: Readonly<SceneProgress>) => void> }
+
+declare function load(options?: Readonly<LoadOptions>): void;
+export function forward(options?: Readonly<SceneOptions>): void {
+  load(options ? { progress: options.progress } : undefined);
+}
+```
+
+At flight-compiler `2b687eaf6b631e0fa4d7d6e18dad93b845f99633` this refuses with two optional
+carriers whose only difference is `RowOf<Ref<LoadProgress>>` versus `RowOf<Ref<SceneProgress>>` inside
+the callback and `Signal`. Changing `SceneOptions` to use `LoadProgress` emits, proving that optional
+construction and `Signal` are both represented. The same-member readonly rows need one canonical
+structural runtime identity before the generic owner is selected; converting two already-distinct
+`Signal<...>` structs afterward would not preserve identity.
+
+The corpus site is `scene3d-resources/sceneDocumentSource.ts:16`, where
+`Scene3DDocumentLoadOptions.progress` is forwarded to `LoadOptions.progress` for `loadBytes` and
+`loadText`. It is the same representation rule as the Set case above — equal structural payloads must
+not mint different generic-container owners — rather than a new imported-union request.
+
+The affected modules are therefore `@flighthq/media`'s `audioMixer.ts` and
+`@flighthq/scene3d-resources`'s `sceneDocumentSource.ts`.
 
 ## Carrying workaround
 
 None. Nothing narrower is available: the source expression is `Array.from(runtime.activeChannels)`, and
 the disagreement is between two emitter-chosen names for one shape, which a source edit cannot reach.
+For the progress site, reusing `LoadProgress` in the public Scene3D callback would remove the duplicate
+declaration, but that is a Flight API decision rather than a compiler workaround and is not carried.

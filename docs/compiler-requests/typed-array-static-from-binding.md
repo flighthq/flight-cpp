@@ -73,6 +73,30 @@ The committed refusal ledger has five direct instances of the missing static mem
 Additional modules use typed-array `from` behind earlier blockers, so this list is the directly measured
 frontier rather than a claim that only five call sites exist.
 
+### P-3D2 OBJ has a second boundary after the binding
+
+`scene3d-formats/objParse.ts` calls `Uint32Array.from(indices)` twice while building this field:
+
+```ts
+indices?: Readonly<Uint16Array<ArrayBuffer>> | Readonly<Uint32Array<ArrayBuffer>> | null;
+```
+
+Its partial generated header currently drops both functions at the missing ambient `from` binding. The
+refusal ledger also retains the later contextual boundary for the topology helper:
+
+```text
+contextual union value type flight::Uint32Array is not a represented runtime domain
+```
+
+That later record is useful acceptance evidence, not a separate request: binding `from` must produce the
+concrete `Uint32Array<ArrayBuffer>` carrier and contextual construction must then select the exact
+readonly Uint32 arm of `MeshGeometryOptions.indices`. It must not erase the buffer type, choose the
+Uint16 arm, or copy the freshly constructed typed array into a replacement owner.
+
+The existing pin without a typed-array member mapping stops at the ambient binding, so the contextual
+record is a corpus site to rerun after item 1 below. It is kept here with the operation that exposes it
+instead of creating a duplicate request from the second diagnostic.
+
 ## Acceptance
 
 1. Bind static `from` for every concrete typed-array value without changing its constructor or type
@@ -81,6 +105,7 @@ frontier rather than a claim that only five call sites exist.
    conversion oracle.
 3. Add a distinct length-only array-like fixture and prove source evaluation, `ToLength`, mapper order,
    `undefined` element arguments, and post-map typed conversion.
-4. Re-run `gltfSkins.ts`; do not mark P-3D2 unblocked when only the represented-sequence fixture passes.
+4. Re-run `gltfSkins.ts` and both OBJ geometry builders; do not mark P-3D2 unblocked when only the
+   represented-sequence fixture or ambient binding passes.
 
 No Flight source rewrite or downstream duplicate binding is carried.

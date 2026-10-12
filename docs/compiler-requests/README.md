@@ -80,7 +80,8 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   target does not; blocks Scene3D materialization and notification subscription construction.
 - [Typed-array static `from` needs a flight-cpp binding](typed-array-static-from-binding.md) —
   five direct refusals reach the missing ambient member, including `scene3d-formats/gltfSkins.ts`; that
-  length-only array-like source also needs lowering beyond the represented-range runtime operation.
+  length-only array-like source also needs lowering beyond the represented-range runtime operation,
+  while OBJ's two calls expose a following exact readonly-union insertion boundary.
 - [An `undefined` logical-OR fallback loses the present value domain](logical-or-undefined-fallback-evidence.md) —
   seven P-3D2 name/group sites refuse on `string || undefined`, while the same pinned fixtures with
   `null` or a concrete string fallback emit.
@@ -153,9 +154,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [A lambda whose fallback is absence is declared to return the present type](logical-or-lambda-return-type.md) —
   `blob.type || undefined` becomes a `String`-returning lambda with `return std::nullopt`; the audio
   override has hand-fixed this shape since the pin before last.
-- [A call result and its destination must be the same anonymous shape, not two with equal members](media-audio-mixer-runtime-set-union-conversion.md) —
-  `@flighthq/media`'s `audioMixer.ts` refuses on two `flight::Set<…>` carriers that differ only in the
-  emitter's name for one anonymous shape.
+- [Equivalent structural payloads must share one generic owner](media-audio-mixer-runtime-set-union-conversion.md) —
+  media's `Set` and Scene3D resources' `Signal` become distinct C++ owners because equivalent structural
+  payloads retain different emitter-chosen or nominal row names.
 - [A WeakMap value needs a representable C++ type, and naming the literal is not enough](media-weakmap-value-representation.md) —
   `@flighthq/media`'s `videoChannel.ts`; records the measured negative result that naming the literal with
   its declared interface does not clear the refusal.
@@ -206,7 +207,8 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   the binding stage; carried by the rewritten `glyphatlas-iterator-result-binding` source patch.
 - [Interface heritage is not a C++ owner relation](compiler-interface-heritage-owner-widening.md) —
   a sub-interface value cannot widen into a super-interface slot across a nullable union; no faithful
-  source spelling exists, so `glyphSource.ts` stays refused.
+  source spelling exists, so `glyphSource.ts`, `bitmapFontGlyphSource.ts`, and Scene3D's punctual-light
+  factory stay refused.
 - [intl is refused for carried union and absence evidence](compiler-intl-optional-and-union-carrier-evidence.md)
   — 7 of 9 `@flighthq/intl` modules; one is supplied by the intl-formatter-cache override, the rest
   are retained refusals.

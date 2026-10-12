@@ -88,3 +88,17 @@ each should be read together rather than as two separate capabilities.
 
 Both packages also have a wider consumer: `@flighthq/bitmapfont-formats` depends on bitmapfont, so the
 bitmapfont refusal cascades into that package's denominator as well.
+
+## Same defect in P-3D2
+
+`@flighthq/scene3d-formats` records the same rule at
+`gltfPunctualLights.ts:47`. `buildGltfPunctualLight` declares `Light | null`, but its directional branch
+returns `createDirectionalLight(...)`, whose exact owner is `DirectionalLight`. TypeScript accepts the
+declared `DirectionalLight extends Light` heritage; flight-cpp emits independent
+`flight::Ref<flight::types::DirectionalLight>` and `flight::Ref<flight::types::Light>` owners and refuses
+the nullable crossing for the same identity reason as Bitmap and VoxelGrid above.
+
+Point and spot branches reach their own concrete light owners. They do not make the directional
+conversion safe, and copying a common `Light` prefix would still replace the object returned by the
+factory. This site therefore extends the affected package set; it does not define a third compiler
+request.
