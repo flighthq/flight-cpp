@@ -48,6 +48,19 @@ from. Which one is the emitter's decision; emitting the source keyword is not av
 packages that were refused before reaching an `instanceof` may surface the same defect as their
 refusals clear.
 
+Also `@flighthq/loader` at `a627849`, `packages/loader/src/load.ts:29`:
+
+```ts
+return response.ok && response.body instanceof ArrayBuffer ? new Uint8Array(response.body) : null;
+```
+
+That emits `(response->body instanceof flight::ArrayBuffer)` in `load.hpp:51`, and the narrowed
+`new Uint8Array(response.body)` passes the whole `NetResponseBody` optional-variant to `flight::Uint8Array`.
+So the lowering also has to project the narrowed read, `std::get<flight::ArrayBuffer>(response->body.value())`.
+`NetResponseBody` is `string | unknown | ArrayBuffer | Blob | null`, which TypeScript reduces to `unknown`,
+yet it is emitted with an `Any` arm beside `ArrayBuffer`. The kind test therefore has to answer for an
+`ArrayBuffer` held in the `Any` arm too. This fails `load.hpp`, `contract.hpp` and `_internal_index.hpp`.
+
 ## Carrying workaround
 
 None. The audio override that shadows this module comments the enclosing function out rather than
