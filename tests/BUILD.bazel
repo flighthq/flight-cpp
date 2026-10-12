@@ -149,6 +149,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_input_test",
+    srcs = ["generated_input_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_intl_cache_test",
     srcs = ["generated_intl_cache_test.cpp"],
     size = "small",
@@ -260,6 +267,7 @@ test_suite(
         ":generated_dialog_test",
         ":generated_image_test_helper_test",
         ":generated_interaction_test",
+        ":generated_input_test",
         ":generated_intl_cache_test",
         ":generated_lifecycle_test",
         ":generated_log_test",
