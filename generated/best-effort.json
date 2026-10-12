@@ -735,8 +735,8 @@
         "@flighthq/app/packages/app/src/contract.ts"
       ],
       "declarationFingerprints": [
-        "sha256:00593503761fe276fcbf655dfaf1c55c268ef4423e58630e6983d4fba9bd78ed",
         "sha256:293828b736b062af739fc4f33b27bfef36355dedfdfb877ad08eef1a47466f91",
+        "sha256:34cef77c966fe951f236b8c0c9cd09ed679627c2493572e0d85475896f77a918",
         "sha256:5e99baf4199b878cb95b101aeb33094b44672228d797dea9de6d8efc93a10c74",
         "sha256:96a547cb4c35b4b1cec1b4c41cd0703ac35e9fbbb5cef69e71c3d1f090c286ed",
         "sha256:9e2a7287e1408993ece61848617acc8e240357b8175768107cad8ef067f030ba",
@@ -754,7 +754,6 @@
     },
     {
       "consumers": [
-        "@flighthq/app/packages/app/src/appRenderView.ts",
         "@flighthq/app/packages/app/src/contract.ts"
       ],
       "module": {

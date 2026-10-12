@@ -36012,10 +36012,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:4609ad6599005e772c3b630874d1587291862df83650625ef2c090d9e5283fa1",
-            "line": 196,
+            "line": 194,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",6359]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",6173]",
             "kind": "function",
             "name": "attachWindowRenderState",
             "scope": "module",
@@ -36033,10 +36033,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:73153b9a55ff074d792466be3a636aa668da0ba386273c2232e23bd96eea4075",
-            "line": 217,
+            "line": 214,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",7045]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",6757]",
             "kind": "function",
             "name": "attachWindowResize",
             "scope": "module",
@@ -36054,10 +36054,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:afd04c40a7b61f73873db44f4283a4d4355cec04c1ac0173e0ba01081cb4692f",
-            "line": 237,
+            "line": 234,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",7622]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",7334]",
             "kind": "function",
             "name": "attachWindowVisibility",
             "scope": "module",
@@ -36075,10 +36075,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:09f40e675e7108dd01bab8554cdac3b89de2e204c2f84484cf885440f8e87193",
-            "line": 254,
+            "line": 251,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",8178]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",7890]",
             "kind": "function",
             "name": "centerWindow",
             "scope": "module",
@@ -36096,10 +36096,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:579832b2820c39f5ed55bea864eb3f385b535369928a8c86e66bf7a2e29b7efe",
-            "line": 264,
+            "line": 261,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",8627]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",8339]",
             "kind": "function",
             "name": "closeWindow",
             "scope": "module",
@@ -36117,10 +36117,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:eeff8510266b48aca89574fbd03ddf509a7b2176fd6091181d3722548c00d627",
-            "line": 275,
+            "line": 272,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",9255]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",8934]",
             "kind": "function",
             "name": "computeWindowDeviceTransform",
             "scope": "module",
@@ -36138,10 +36138,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:1a5d4640c58b36e5c98f14a3ac49fa3b208132825bf4e0fcaf731dd76401fb46",
-            "line": 286,
+            "line": 283,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",9492]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",9171]",
             "kind": "function",
             "name": "createAppWindow",
             "scope": "module",
@@ -36159,10 +36159,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:46d0a0b80d1f12c06d57591d93608b8fb74224f23713a38d14861630d54622df",
-            "line": 292,
+            "line": 289,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",9641]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",9320]",
             "kind": "function",
             "name": "detachWindowClose",
             "scope": "module",
@@ -36180,10 +36180,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:0317016eca4f194b7e524c0c625599b62ee61af318e3247de0c86cc1a6c158fa",
-            "line": 298,
+            "line": 295,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",9807]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",9486]",
             "kind": "function",
             "name": "detachWindowDropFile",
             "scope": "module",
@@ -36201,10 +36201,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:e0332f0e4a7e38a3a308c4ecdb2ac67b650a99623b6a5fb92811fc76b644858f",
-            "line": 304,
+            "line": 301,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",9982]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",9661]",
             "kind": "function",
             "name": "detachWindowFocus",
             "scope": "module",
@@ -36222,10 +36222,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:3e235e0b617685fc67a6d6936393595e495f929f824291dc6ee1a2c406672176",
-            "line": 310,
+            "line": 307,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",10148]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",9827]",
             "kind": "function",
             "name": "detachWindowFullscreen",
             "scope": "module",
@@ -36243,10 +36243,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:596853e9ff14a616a1b48c92e6d57393c9aca2f712760ca1b4db7ff0a83f688b",
-            "line": 316,
+            "line": 313,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",10329]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",10008]",
             "kind": "function",
             "name": "detachWindowMove",
             "scope": "module",
@@ -36264,10 +36264,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:417eec48b0490e6b85d0ddb2285ac4ccfaea17f3a7771757771d0ee467de914b",
-            "line": 322,
+            "line": 319,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",10492]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",10171]",
             "kind": "function",
             "name": "detachWindowOrientation",
             "scope": "module",
@@ -36285,10 +36285,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:41015eae88c993bdc2d80a1d98d489d80224bfb3c734fc1a9023a26f4365c5cd",
-            "line": 328,
+            "line": 325,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",10676]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",10355]",
             "kind": "function",
             "name": "detachWindowRenderContext",
             "scope": "module",
@@ -36306,10 +36306,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:ba1924936b2fdcd1c5c426cf5e43d23aef78919b78b8d5a5f64fdd67a650de79",
-            "line": 334,
+            "line": 331,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",10866]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",10545]",
             "kind": "function",
             "name": "detachWindowRenderState",
             "scope": "module",
@@ -36327,10 +36327,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:d94e2cc5dfb63ca57646d5e2b568098d99790e990085460c9c55380f23791564",
-            "line": 340,
+            "line": 337,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",11050]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",10729]",
             "kind": "function",
             "name": "detachWindowResize",
             "scope": "module",
@@ -36348,10 +36348,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:766cbe3ba3c2053f8cfcd72b607d5ab6d9d6d5ed0820d0811fd247ae9f4b9dde",
-            "line": 346,
+            "line": 343,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",11219]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",10898]",
             "kind": "function",
             "name": "detachWindowVisibility",
             "scope": "module",
@@ -36369,10 +36369,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:6fd3dc61f54cefc0cfe267f509f94b31d841bb774630889846c1e9077b0285ef",
-            "line": 352,
+            "line": 349,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",11400]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",11079]",
             "kind": "function",
             "name": "disposeAppWindow",
             "scope": "module",
@@ -36390,10 +36390,10 @@
           "binding": {
             "column": 23,
             "fingerprint": "sha256:f4473207312b878c9bd61a9a58e16807844040220722d2ae582b170ba9af8dea",
-            "line": 359,
+            "line": 356,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",11661]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",11340]",
             "kind": "function",
             "name": "exitAppInputPointerLock",
             "scope": "module",
@@ -36411,10 +36411,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:dba9410738c374191e56c3ea5f9ffbee386fa2d31791fadc545fcae0ed511282",
-            "line": 368,
+            "line": 365,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",12028]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",11707]",
             "kind": "function",
             "name": "exitAppWindowFullscreen",
             "scope": "module",
@@ -36432,10 +36432,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:b69b51405c11202b07aeafcf2027be88ecb73800f6dfff1dc098fd1d2c76cca2",
-            "line": 374,
+            "line": 371,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",12359]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",12038]",
             "kind": "function",
             "name": "flashWindowFrame",
             "scope": "module",
@@ -36453,10 +36453,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:9576602e3ca4180a8c4b62875bba66bd933063a830cc664c1459a1716befc4a6",
-            "line": 384,
+            "line": 381,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",12670]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",12349]",
             "kind": "function",
             "name": "focusWindow",
             "scope": "module",
@@ -36474,10 +36474,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:a416578adac36fcd8db9711da5307a2a795be801639873a3b1c504306763146b",
-            "line": 390,
+            "line": 387,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",12907]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",12586]",
             "kind": "function",
             "name": "getWindowBounds",
             "scope": "module",
@@ -36495,10 +36495,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:154f369e2d91b283270ffead4fb6bef5163fd6f3c1653e96a442b546de812a70",
-            "line": 399,
+            "line": 396,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",13174]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",12853]",
             "kind": "function",
             "name": "hideWindow",
             "scope": "module",
@@ -36516,10 +36516,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:e165e4b1ca3e9f30faef19944028efb4eb5bb6e494e937600d33210b133904c4",
-            "line": 405,
+            "line": 402,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",13377]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",13056]",
             "kind": "function",
             "name": "initializeAppWindow",
             "scope": "module",
@@ -36537,10 +36537,10 @@
           "binding": {
             "column": 23,
             "fingerprint": "sha256:3ccbca6479ea6d8ef149f86606891ca248b2bdc1bac6b9dae58e1eb216bb1b86",
-            "line": 448,
+            "line": 445,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",14864]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",14543]",
             "kind": "function",
             "name": "lockAppInputPointer",
             "scope": "module",
@@ -36558,10 +36558,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:a7e2d6470a9d5aefec29f1bda83d602d176d0a6b9975bfe94d2d211f055e7d62",
-            "line": 459,
+            "line": 456,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",15297]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",14976]",
             "kind": "function",
             "name": "maximizeWindow",
             "scope": "module",
@@ -36579,10 +36579,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:6a1efd1338f10067479c83920f2b9114df5dfb86c3362d0abb7fae0ca6c0f9ed",
-            "line": 467,
+            "line": 464,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",15609]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",15288]",
             "kind": "function",
             "name": "minimizeWindow",
             "scope": "module",
@@ -36600,10 +36600,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:8c26055da0de6e52a699c826fcae768d9e3a713b37074e927a3b2cf4f1a4c035",
-            "line": 478,
+            "line": 475,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",16251]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",15930]",
             "kind": "function",
             "name": "notifyWindowClosed",
             "scope": "module",
@@ -36621,10 +36621,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:e3a69a4d134ce9721483b732d3ea530ce88fcd756f18a97bbb69b669a8f31e75",
-            "line": 492,
+            "line": 489,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",16777]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",16456]",
             "kind": "function",
             "name": "openWindow",
             "scope": "module",
@@ -36642,10 +36642,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:67782a0306a3c03bd90b15266e6d45c9dbe97b285372750915b8faebd9770def",
-            "line": 525,
+            "line": 522,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",18565]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",18244]",
             "kind": "function",
             "name": "prepareElementForInput",
             "scope": "module",
@@ -36663,10 +36663,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:6fb21d958dd6f3d153a25d2a3e825bd94e3462c754b051493320f4a670ca9200",
-            "line": 532,
+            "line": 529,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",18738]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",18417]",
             "kind": "function",
             "name": "requestAppWindowFullscreen",
             "scope": "module",
@@ -36684,10 +36684,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:0621b6c886a0312bd00da51922eafdb6a9e3c8f4354f521a3b7eba76890bbfc6",
-            "line": 540,
+            "line": 537,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",19035]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",18714]",
             "kind": "function",
             "name": "requestWindowAttention",
             "scope": "module",
@@ -36705,10 +36705,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:af5594395ec684b080f461b58cdaa42724fa11f2e3bd0ceabd773183815b10be",
-            "line": 550,
+            "line": 547,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",19442]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",19121]",
             "kind": "function",
             "name": "requestWindowClose",
             "scope": "module",
@@ -36726,10 +36726,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:2f4a9885c458ce87b71401d2bc95c2c8c17b99753337f6de581c3f4c24b0062b",
-            "line": 556,
+            "line": 553,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",19688]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",19367]",
             "kind": "function",
             "name": "restoreWindow",
             "scope": "module",
@@ -36747,10 +36747,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:fccfbdc18514fb9f2fd8d52f7c717efad9ea49feb322ac0e7509b545cd33b54c",
-            "line": 565,
+            "line": 562,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",20006]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",19685]",
             "kind": "function",
             "name": "setWindowAlwaysOnTop",
             "scope": "module",
@@ -36768,10 +36768,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:2f55548d1269768d3ea63297e227a93658ea318e813f47242fb6ae1aaa69bc2f",
-            "line": 577,
+            "line": 574,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",20468]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",20147]",
             "kind": "function",
             "name": "setWindowContentProtection",
             "scope": "module",
@@ -36789,10 +36789,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:8561bae14dfccbea5a2de92da34f7a83201a0355753480d55f468964a04e6c93",
-            "line": 586,
+            "line": 583,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",20803]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",20482]",
             "kind": "function",
             "name": "setWindowFullscreen",
             "scope": "module",
@@ -36810,10 +36810,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:a06f2d718ce8362f676c1f5b89dda1412af632f0354c3b0eea4f55af1b9e8ec7",
-            "line": 598,
+            "line": 595,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",21216]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",20895]",
             "kind": "function",
             "name": "setWindowHasShadow",
             "scope": "module",
@@ -36831,10 +36831,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:790b3735488262b72d188396043add678404c4cc9ccf5b38f7b772adb66232a2",
-            "line": 607,
+            "line": 604,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",21486]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",21165]",
             "kind": "function",
             "name": "setWindowIcon",
             "scope": "module",
@@ -36852,10 +36852,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:0ca1812b09f8efd895fb9272a389710db0e83efaee74d21515621897966ffde9",
-            "line": 619,
+            "line": 616,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",21830]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",21509]",
             "kind": "function",
             "name": "setWindowMaximumSize",
             "scope": "module",
@@ -36873,10 +36873,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:59ee87c01eec0800f8d3c988b3100ea3f670622019c6de1ab040820a2fc2181d",
-            "line": 631,
+            "line": 628,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",22191]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",21870]",
             "kind": "function",
             "name": "setWindowMenuBarVisible",
             "scope": "module",
@@ -36894,10 +36894,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:75852c963f1a5a96fd26735d913601e7a986116e40154c448175e866b0ce148f",
-            "line": 640,
+            "line": 637,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",22506]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",22185]",
             "kind": "function",
             "name": "setWindowMinimumSize",
             "scope": "module",
@@ -36915,10 +36915,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:1648abb4879b0112e1ea594af26c3b2ca47ddb1c413dcf890f4f8b1ff14deab8",
-            "line": 652,
+            "line": 649,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",22838]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",22517]",
             "kind": "function",
             "name": "setWindowOpacity",
             "scope": "module",
@@ -36936,10 +36936,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:35a5e43bbfd3ff7965b0c938276dc19798f16a9548ecc1a0f4cd3a3246334b49",
-            "line": 664,
+            "line": 661,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",23234]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",22913]",
             "kind": "function",
             "name": "setWindowParent",
             "scope": "module",
@@ -36957,10 +36957,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:48fd23f1507fc06fc73fd796d43b4a5a6e3e6c5bce0b15a41541045fe8027fc1",
-            "line": 673,
+            "line": 670,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",23532]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",23211]",
             "kind": "function",
             "name": "setWindowPosition",
             "scope": "module",
@@ -36978,10 +36978,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:338b0ee50c3a3ede4ea4370179342ef147f3dfc48ab983fc2fe8f9e3e04282e8",
-            "line": 686,
+            "line": 683,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",23866]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",23545]",
             "kind": "function",
             "name": "setWindowProgress",
             "scope": "module",
@@ -36999,10 +36999,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:de551b6f2fa39c72f2f340563434b9e790694c1205fbe9105db5b54cb109a5ec",
-            "line": 695,
+            "line": 692,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",24111]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",23790]",
             "kind": "function",
             "name": "setWindowResizable",
             "scope": "module",
@@ -37020,10 +37020,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:7f5ef6eb0fe08f4a5e688fd485d97c4eaabff2acbfc25698e7dfc946ee5ae47c",
-            "line": 707,
+            "line": 704,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",24533]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",24212]",
             "kind": "function",
             "name": "setWindowSize",
             "scope": "module",
@@ -37041,10 +37041,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:52738e9c2b21f5f0352cc53402505ba13d799782060df7cf9c859e697c3c0ecf",
-            "line": 720,
+            "line": 717,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",24883]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",24562]",
             "kind": "function",
             "name": "setWindowSkipTaskbar",
             "scope": "module",
@@ -37062,10 +37062,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:60263e02149abf859665ca55ae68d5963664f82be1d8c773c1fd386e136cbf32",
-            "line": 730,
+            "line": 727,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",25189]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",24868]",
             "kind": "function",
             "name": "setWindowTitle",
             "scope": "module",
@@ -37083,10 +37083,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:92f6fb102145182893bab21dc6e081a66574c49714631fb7c21679ba939a5821",
-            "line": 740,
+            "line": 737,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",25427]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",25106]",
             "kind": "function",
             "name": "showWindow",
             "scope": "module",
@@ -37104,10 +37104,10 @@
           "binding": {
             "column": 7,
             "fingerprint": "sha256:bc447b936e1083802187aceb031e91f0269c695349f3a6d782bff570fc04a42d",
-            "line": 749,
+            "line": 746,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",25814]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",25493]",
             "kind": "variable",
             "name": "_applicationWindowObservers",
             "scope": "module",
@@ -37125,10 +37125,10 @@
           "binding": {
             "column": 7,
             "fingerprint": "sha256:4a74651fe6c779b2949742cafeb8f5be965a093f0d3223725edd26926eed2be2",
-            "line": 751,
+            "line": 748,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",25902]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",25581]",
             "kind": "variable",
             "name": "_terminalWindows",
             "scope": "module",
@@ -37146,10 +37146,10 @@
           "binding": {
             "column": 7,
             "fingerprint": "sha256:ee9464548fbac79fef77c4a40288d4b1913017a519b0c1618b60df51f04d0cf8",
-            "line": 752,
+            "line": 749,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",25953]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",25632]",
             "kind": "variable",
             "name": "_windowBackends",
             "scope": "module",
@@ -37167,10 +37167,10 @@
           "binding": {
             "column": 5,
             "fingerprint": "sha256:0ea359450898c196ef037c6b477e9da76b25048eba48b4237bd1c868fba12727",
-            "line": 753,
+            "line": 750,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",26032]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",25711]",
             "kind": "variable",
             "name": "_pointerLockBackend",
             "scope": "module",
@@ -37188,10 +37188,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:721f15dcf355f3b389759d02569f3fd777a70aac511896a634794230f8b99e62",
-            "line": 755,
+            "line": 752,
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts",
-            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",26109]",
+            "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",25788]",
             "kind": "function",
             "name": "getAppWindowObservers",
             "scope": "module",
@@ -37279,11 +37279,269 @@
             "packageName": "@flighthq/app",
             "source": "packages/app/src/appWindow.ts"
           },
+          "importedNames": [
+            "AppWindow",
+            "HostWindowAppearanceCapability",
+            "HostWindowAttachCapability",
+            "HostWindowAttentionCapability",
+            "HostWindowContentProtectionCapability",
+            "HostWindowFocusCapability",
+            "HostWindowFullscreenCapability",
+            "HostWindowGeometryCapability",
+            "HostWindowHierarchyCapability",
+            "HostWindowLifecycleCapability",
+            "HostWindowProgressCapability",
+            "HostWindowShadowCapability",
+            "HostWindowShellCapability",
+            "HostWindowSizeConstraintsCapability",
+            "HostWindowStateCapability",
+            "HostWindowVisibilityCapability",
+            "HostWindowZOrderCapability",
+            "NativeWindowHandle",
+            "WindowAttachmentOwnership",
+            "WindowBounds",
+            "WindowOptions",
+            "WindowResizeTargetHandle"
+          ],
           "specifier": "@flighthq/types/contract",
           "target": {
-            "name": "Contract",
+            "name": "AppWindow",
             "packageName": "@flighthq/types",
-            "source": "packages/types/src/contract.ts"
+            "source": "packages/types/src/AppWindow.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AppWindow",
+            "packageName": "@flighthq/app",
+            "source": "packages/app/src/appWindow.ts"
+          },
+          "importedNames": [
+            "Entity",
+            "EntityConstruction"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AppWindow",
+            "packageName": "@flighthq/app",
+            "source": "packages/app/src/appWindow.ts"
+          },
+          "importedNames": [
+            "GlContext",
+            "GlContextOptions"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "GlContext",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlContext.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AppWindow",
+            "packageName": "@flighthq/app",
+            "source": "packages/app/src/appWindow.ts"
+          },
+          "importedNames": [
+            "FullscreenTargetHandle",
+            "HostElementFullscreenCapability"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostFullscreen",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostFullscreen.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AppWindow",
+            "packageName": "@flighthq/app",
+            "source": "packages/app/src/appWindow.ts"
+          },
+          "importedNames": [
+            "HostGlCapability"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostGl",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostGl.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AppWindow",
+            "packageName": "@flighthq/app",
+            "source": "packages/app/src/appWindow.ts"
+          },
+          "importedNames": [
+            "HostInputDropFileCapability",
+            "HostInputFocusCapability",
+            "HostInputPointerLockCapability",
+            "InputPointerLockExitOutcome",
+            "InputPointerLockRequestOutcome"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostInput",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostInput.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AppWindow",
+            "packageName": "@flighthq/app",
+            "source": "packages/app/src/appWindow.ts"
+          },
+          "importedNames": [
+            "HostInputTargetCapability",
+            "InputTargetHandle"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostInputTarget",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostInputTarget.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AppWindow",
+            "packageName": "@flighthq/app",
+            "source": "packages/app/src/appWindow.ts"
+          },
+          "importedNames": [
+            "HostSurfaceResizeCapability"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostSurface",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostSurface.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AppWindow",
+            "packageName": "@flighthq/app",
+            "source": "packages/app/src/appWindow.ts"
+          },
+          "importedNames": [
+            "Matrix"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Matrix",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Matrix.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AppWindow",
+            "packageName": "@flighthq/app",
+            "source": "packages/app/src/appWindow.ts"
+          },
+          "importedNames": [
+            "RenderState"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "RenderState",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RenderState.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AppWindow",
+            "packageName": "@flighthq/app",
+            "source": "packages/app/src/appWindow.ts"
+          },
+          "importedNames": [
+            "HostScreenChangeCapability",
+            "ScreenInfo"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Screen",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Screen.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AppWindow",
+            "packageName": "@flighthq/app",
+            "source": "packages/app/src/appWindow.ts"
+          },
+          "importedNames": [
+            "ScreenChangeEvent",
+            "ScreenChangeKind",
+            "ScreenChangedMetrics"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ScreenChangeEvent",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ScreenChangeEvent.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AppWindow",
+            "packageName": "@flighthq/app",
+            "source": "packages/app/src/appWindow.ts"
+          },
+          "importedNames": [
+            "Signal",
+            "SignalData"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Signal",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Signal.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AppWindow",
+            "packageName": "@flighthq/app",
+            "source": "packages/app/src/appWindow.ts"
+          },
+          "importedNames": [
+            "NativeSurfaceHandle",
+            "Surface"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Surface",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Surface.ts"
           }
         }
       ],
@@ -37529,10 +37787,10 @@
             {
               "column": 7,
               "fingerprint": "sha256:bc447b936e1083802187aceb031e91f0269c695349f3a6d782bff570fc04a42d",
-              "line": 749,
+              "line": 746,
               "packageName": "@flighthq/app",
               "source": "packages/app/src/appWindow.ts",
-              "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",25814]",
+              "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",25493]",
               "kind": "variable",
               "name": "_applicationWindowObservers",
               "scope": "module",
@@ -37552,10 +37810,10 @@
             {
               "column": 7,
               "fingerprint": "sha256:4a74651fe6c779b2949742cafeb8f5be965a093f0d3223725edd26926eed2be2",
-              "line": 751,
+              "line": 748,
               "packageName": "@flighthq/app",
               "source": "packages/app/src/appWindow.ts",
-              "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",25902]",
+              "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",25581]",
               "kind": "variable",
               "name": "_terminalWindows",
               "scope": "module",
@@ -37575,10 +37833,10 @@
             {
               "column": 7,
               "fingerprint": "sha256:ee9464548fbac79fef77c4a40288d4b1913017a519b0c1618b60df51f04d0cf8",
-              "line": 752,
+              "line": 749,
               "packageName": "@flighthq/app",
               "source": "packages/app/src/appWindow.ts",
-              "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",25953]",
+              "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",25632]",
               "kind": "variable",
               "name": "_windowBackends",
               "scope": "module",
@@ -37598,10 +37856,10 @@
             {
               "column": 5,
               "fingerprint": "sha256:0ea359450898c196ef037c6b477e9da76b25048eba48b4237bd1c868fba12727",
-              "line": 753,
+              "line": 750,
               "packageName": "@flighthq/app",
               "source": "packages/app/src/appWindow.ts",
-              "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",26032]",
+              "id": "binding:[\"@flighthq/app\",\"packages/app/src/appWindow.ts\",25711]",
               "kind": "variable",
               "name": "_pointerLockBackend",
               "scope": "module",

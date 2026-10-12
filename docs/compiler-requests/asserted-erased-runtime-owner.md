@@ -1,0 +1,48 @@
+# An assertion from the erased runtime slot to a module-local runtime reads members it does not declare
+
+A module recovers its runtime from the entity's erased slot and asserts it to a local runtime interface.
+The emitter refuses because the target declares members the source type does not, and it will not
+reinterpret a structural owner into a richer one.
+
+Measured at `2b687ea`, flight `a627849`.
+
+## Observed
+
+```
+cpp emission failed for @flighthq/app/packages/app/src/appRenderView.ts: the asserted row from
+flight::Ref<flight::types::EntityRuntime> to flight::Ref<AppRenderViewRuntime<flight::Ref<flight::types::RenderState>,
+flight::Ref<flight::types::RenderTargetDimensions>>> reads attached, resize and synchronize, which the source
+type does not declare, and a structural owner binds the members and storage representations of the type the
+object was first reached as …
+```
+
+## Why the module does it
+
+`appRenderView.ts` keeps a per-view runtime — `attached`, `resize`, `synchronize` — beside the view entity,
+reached through the entity's runtime slot. The slot is declared as `EntityRuntime`, the local runtime is
+`AppRenderViewRuntime`, and the recovery is an assertion from the former to the latter. This is the same
+shape the tray lane carried with a source patch that narrows the entity's slot to the local runtime
+(`tray-create-result-and-runtime-owner.patch`): the slot's declared type, not the assertion, is what makes
+the recovery expressible.
+
+## Expected behavior
+
+Either the package's own declaration narrows the slot the way tray's now does — in which case this is a
+source-side change the owning lane makes deliberately, and the request is the record that it is owed — or
+the emitter represents a checked recovery from the erased slot instead of an unchecked reinterpretation.
+The second is a runtime capability, and it is the one that would serve every package holding a local
+runtime behind the erased slot; today each one either narrows its declaration or refuses.
+
+## Affected modules
+
+`@flighthq/app` — `appRenderView.ts`, one of its two refused modules, supplied by the
+`app-render-view-unqualified-types-and-member-access` override.
+
+## Carrying workaround
+
+The override above supplies the module by hand at this pin.
+
+## Related
+
+[`entity-intersection-arm-sibling-carriers.md`](entity-intersection-arm-sibling-carriers.md) — the tray
+lane's version of the same family, carried by the `tray-create-result-and-runtime-owner` source patch.

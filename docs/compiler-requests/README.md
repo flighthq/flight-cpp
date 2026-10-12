@@ -181,6 +181,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [An assertion to `T | null` must name which alternative it means](assertion-to-nullable-variant-alternative.md) —
   `flexLayout.ts` and `gridLayout.ts` refuse the same construct; the message's own target spelling suggests
   the count is the emitter's reading of one nullable alternative as several.
+- [An assertion from the erased runtime slot to a module-local runtime reads members it does not declare](asserted-erased-runtime-owner.md) —
+  `@flighthq/app`'s `appRenderView.ts`; the tray lane's fix narrows the slot in the declaration, which is
+  the shape this request points at.
 - [Union carriers need canonical alternative order](canonical-union-carrier-order.md) — identical
   named unions currently become incompatible `std::variant` types at array callback boundaries.
 - [Nullable and optional storage needs two absence channels](nullable-optional-presence.md) — one

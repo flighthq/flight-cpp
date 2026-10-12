@@ -80,6 +80,15 @@ not mint different generic-container owners — rather than a new imported-union
 The affected modules are therefore `@flighthq/media`'s `audioMixer.ts` and
 `@flighthq/scene3d-resources`'s `sceneDocumentSource.ts`.
 
+## A second package, same rule, different pair of names
+
+`@flighthq/app`'s `appLoop.ts` refuses identically — `contextual C++ union conversion requires
+equivalent source union evidence` — with the destination naming an anonymous shape after its members
+(`fixed_accumulator_fixed_time_step_fps_buffer_…_67b4093dbdac7169`) and the source naming a `LoopState`
+record. Two packages now, and in both the disagreement is the emitter's name for one shape rather than a
+member or representation difference. `compiler-intl-optional-and-union-carrier-evidence.md` covers the
+adjacent carrier-evidence question.
+
 ## Carrying workaround
 
 None. Nothing narrower is available: the source expression is `Array.from(runtime.activeChannels)`, and
