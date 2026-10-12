@@ -2474,6 +2474,23 @@
       "appliedOn": "2026-10-12"
     },
     {
+      "id": "compiler-host-object-dynamic-index-refusal",
+      "dependency": "flight-compiler",
+      "patch": "compiler-host-object-dynamic-index-refusal.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "unsound emission, not a refusal: `(console as any)[name](line)` emits `static_cast<flight::Any>(host::console)[static_cast<size_t>(name)](line)`, and a Record cast of the host emits a keyed `.get()` on the host carrier; neither compiles or selects a member",
+      "rewrite": "At the start of element emission, an element access whose receiver -- after stripping casts -- is an ambient value with a value-space external binding (a bound host object) is refused with cpp-host-object-dynamic-index. Finite-key calls that name bound members are taken by the dispatch lane in call emission before the callee element is ever emitted, and named member reads are property reads, so neither reaches this check.",
+      "equivalence": "Behavior-preserving by construction: the code this replaces could not compile, so no correct program changes. Every program the emitter lowered correctly before still lowers the same way, because no Flight source indexes a bound host object other than through the finite-key dispatch lane, and that lane precedes this check. An open key now produces a named refusal instead of an uncompilable header.",
+      "verification": "New cppHostObjectDynamicIndex.test.ts, 7 pass. Refused: an any-cast open-key call on console, a Record cast of console, an any-cast read on performance. Still refused upstream: keyof the whole host. Kept: a finite-key call on the dispatch lane, a named member call, and non-host array indexing. cppClosedKeyExternalMemberCall.test.ts still passes (8). Backend and semantic suites: identical 46 pre-existing failures. Flight source has no other host-object indexing (grep across packages).",
+      "whyNotUpstreamFirst": "Bound host objects exist only through this repository's externalBindings profile; upstream has no host carrier to protect.",
+      "unblocks": "Turns an uncompilable header into a structured refusal; no package depends on the unsound form.",
+      "expires": "when upstream refuses element access on bound host objects (docs/compiler-requests/host-object-dynamic-index.md).",
+      "appliedOn": "2026-10-12"
+    },
+    {
       "id": "scene2d-canvas-host-image-draw-flow",
       "dependency": "flight",
       "patch": "scene2d-canvas-host-image-draw-flow.patch",

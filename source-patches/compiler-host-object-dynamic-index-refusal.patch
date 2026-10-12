@@ -1,0 +1,144 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index f45a2cb..acc8d81 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -5020,6 +5020,7 @@ function emitExpression(
+       return `(${emitCppTruthinessExpression(expression.condition, context)} ? ${emitCppConditionalBranchCpp(expression.whenTrue, getCppConditionBranchContextCpp(expression.condition, true, context), expectedType)} : ${emitCppConditionalBranchCpp(expression.whenFalse, getCppConditionBranchContextCpp(expression.condition, false, context), expectedType)})`;
+     }
+     case 'element': {
++      refuseCppHostObjectDynamicIndexCpp(expression, context);
+       const narrowedPresent = emitCppNarrowedPresentAccessCpp(expression, context, expectedType);
+       if (narrowedPresent) return narrowedPresent;
+       if (expression.optional) return emitOptionalElementExpressionCpp(expression, context);
+@@ -14244,6 +14245,29 @@ function getCppClosedKeyElementWriteTypeCpp(
+ // evaluated once and in source order before the dispatch. A key outside the proven set can only arrive
+ // through unsound typing; it calls no target and throws the TypeError JavaScript raises for calling
+ // `undefined`. An open key, a spread argument, or a non-void result keeps the existing paths and refusals.
++// A host object the profile binds -- `console`, `performance` -- has members, not a subscript. A represented
++// access to one never reaches element emission: a named member is a property read, and a finite key proven
++// to name bound members is a call the dispatch lane takes first. Any element access that does reach here is
++// an open key -- a `string`, an `any` cast, a Record cast of the host -- and every remaining lowering would
++// index the host carrier, which neither compiles nor selects a member. Refused and named instead, with no
++// cast of the host to an erased value.
++function refuseCppHostObjectDynamicIndexCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'element' }>>,
++  context: EmitContext,
++): void {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return;
++  let receiver: Readonly<IrExpression> = expression.object;
++  while (receiver.kind === 'cast') receiver = receiver.expression;
++  if (receiver.kind !== 'identifier' || receiver.reference.kind !== 'ambient') return;
++  const name = receiver.reference.name;
++  if (!getCompilerExternalBindingEvidenceCpp(name, 'value', context.options.externalBindings)) return;
++  emissionError(
++    context,
++    `dynamic index on the bound host object ${name} requires a finite key that names declared members: ${name}[key] has no subscript in C++, and an open string or any-typed key cannot be resolved to a member target. Select the member through a closed union of its declared member names, or call the member by name`,
++    'cpp-host-object-dynamic-index',
++  );
++}
++
+ function emitCppClosedKeyExternalMemberCallCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'call' }>>,
+   context: EmitContext,
+diff --git a/packages/compiler-backend-cpp/src/cppHostObjectDynamicIndex.test.ts b/packages/compiler-backend-cpp/src/cppHostObjectDynamicIndex.test.ts
+new file mode 100644
+index 0000000..35060ed
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppHostObjectDynamicIndex.test.ts
+@@ -0,0 +1,96 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { isBackendEmissionFailure } from '../../compiler-emission/src/index.js';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++const hostLibrary = `
++  declare const console: {
++    debug(...data: unknown[]): void; log(...data: unknown[]): void; warn(...data: unknown[]): void;
++  };
++  declare const performance: { now(): number };
++`;
++
++const hostBindings = {
++  bindings: [
++    {
++      headers: ['host/console.hpp'],
++      members: ['debug', 'log', 'warn'].map((member) => ({ sourceMember: member, targetName: `host::console_${member}` })),
++      nullability: 'non-null' as const,
++      ownership: 'borrowed' as const,
++      sourceName: 'console',
++      space: 'value' as const,
++      targetName: 'host::console',
++    },
++    {
++      headers: ['host/performance.hpp'],
++      members: [{ sourceMember: 'now', targetName: 'host::performance_now' }],
++      nullability: 'non-null' as const,
++      ownership: 'borrowed' as const,
++      sourceName: 'performance',
++      space: 'value' as const,
++      targetName: 'host::performance',
++    },
++  ],
++  schema: 'flight-cpp-external-bindings/1' as const,
++};
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/log/src/Host.ts', hostLibrary + source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/log', upstreamDirectory: '/flight' });
++  return emitIrModuleCpp(result.module, { externalBindings: hostBindings, runtimeProfile: 'flight-cpp' }).contents;
++}
++
++function rule(source: string): string | undefined {
++  try {
++    emit(source);
++  } catch (error) {
++    if (isBackendEmissionFailure(error)) return (error as { rule?: string }).rule;
++    throw error;
++  }
++  return undefined;
++}
++
++describe('dynamic index on a bound host object', () => {
++  it('refuses an any-cast open-key call instead of indexing the host carrier', () => {
++    expect(rule(`export function f(name: string, line: string): void { (console as any)[name](line); }`)).toBe(
++      'cpp-host-object-dynamic-index',
++    );
++  });
++
++  it('refuses a Record cast of the host object rather than emitting a keyed lookup on it', () => {
++    expect(
++      rule(`export function f(name: string, line: string): void { (console as unknown as Record<string, (m: string) => void>)[name]!(line); }`),
++    ).toBe('cpp-host-object-dynamic-index');
++  });
++
++  it('still refuses an open key typed as keyof the whole host object', () => {
++    // keyof is refused by the type lowering before any index is emitted; it must never reach the host carrier.
++    expect(() => emit(`export function f(name: keyof typeof console, line: string): void { console[name](line); }`)).toThrow();
++  });
++
++  it('refuses an any-cast open-key read on another bound host object', () => {
++    expect(rule(`export function f(name: string): unknown { return (performance as any)[name]; }`)).toBe(
++      'cpp-host-object-dynamic-index',
++    );
++  });
++
++  it('keeps a finite key that names bound members on the dispatch lane', () => {
++    const contents = emit(`export function f(k: 'log' | 'warn', line: string): void { console[k](line); }`);
++    expect(contents).toContain('host::console_log(member_argument');
++    expect(contents).toContain('host::console_warn(member_argument');
++    expect(contents).not.toContain('static_cast<size_t>');
++  });
++
++  it('keeps a named member call on its target', () => {
++    const contents = emit(`export function f(line: string): void { console.log(line); }`);
++    expect(contents).toContain('host::console_log(line)');
++  });
++
++  it('does not apply to indexing a value that is not a bound host object', () => {
++    expect(rule(`export function f(values: number[], i: number): number { return values[i]!; }`)).not.toBe(
++      'cpp-host-object-dynamic-index',
++    );
++  });
++});
