@@ -163116,6 +163116,27 @@
             "source": "packages/host/src/host.ts"
           },
           "importedNames": [
+            "HostCompressDeflateCapability",
+            "HostCompressLzmaCapability",
+            "HostDecompressBrotliCapability",
+            "HostDecompressDeflateCapability",
+            "HostDecompressLzmaCapability"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Compression",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Compression.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Host",
+            "packageName": "@flighthq/host",
+            "source": "packages/host/src/host.ts"
+          },
+          "importedNames": [
             "HostConnectivityChangeCapability",
             "HostConnectivityReachabilityCapability",
             "HostConnectivityStatusCapability"
@@ -163246,7 +163267,9 @@
             "HostBitmapCapabilities",
             "HostCanvasCapabilities",
             "HostClipboardCapabilities",
+            "HostCompressCapabilities",
             "HostConnectivityCapabilities",
+            "HostDecompressCapabilities",
             "HostDeviceCapabilities",
             "HostDialogCapabilities",
             "HostFileSystemCapabilities",
@@ -163343,6 +163366,23 @@
             "name": "HostAudioCodec",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/HostAudioCodec.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Host",
+            "packageName": "@flighthq/host",
+            "source": "packages/host/src/host.ts"
+          },
+          "importedNames": [
+            "HostAudioDecodeCapabilities"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostAudioDecode",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostAudioDecode.ts"
           }
         },
         {
@@ -163498,6 +163538,40 @@
             "name": "HostGl",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/HostGl.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Host",
+            "packageName": "@flighthq/host",
+            "source": "packages/host/src/host.ts"
+          },
+          "importedNames": [
+            "HostImageDecodeCapabilities"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostImageDecode",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostImageDecode.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Host",
+            "packageName": "@flighthq/host",
+            "source": "packages/host/src/host.ts"
+          },
+          "importedNames": [
+            "HostImageEncodeCapabilities"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostImageEncode",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostImageEncode.ts"
           }
         },
         {
@@ -167492,6 +167566,27 @@
             "source": "packages/host/src/hostQuery.ts"
           },
           "importedNames": [
+            "HostCompressDeflateCapability",
+            "HostCompressLzmaCapability",
+            "HostDecompressBrotliCapability",
+            "HostDecompressDeflateCapability",
+            "HostDecompressLzmaCapability"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Compression",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Compression.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "HostQuery",
+            "packageName": "@flighthq/host",
+            "source": "packages/host/src/hostQuery.ts"
+          },
+          "importedNames": [
             "HostConnectivityChangeCapability",
             "HostConnectivityReachabilityCapability",
             "HostConnectivityStatusCapability"
@@ -167603,7 +167698,9 @@
             "HostBitmapCapabilities",
             "HostCanvasCapabilities",
             "HostClipboardCapabilities",
+            "HostCompressCapabilities",
             "HostConnectivityCapabilities",
+            "HostDecompressCapabilities",
             "HostDeviceCapabilities",
             "HostDialogCapabilities",
             "HostFileSystemCapabilities",
@@ -167700,6 +167797,23 @@
             "name": "HostAudioCodec",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/HostAudioCodec.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "HostQuery",
+            "packageName": "@flighthq/host",
+            "source": "packages/host/src/hostQuery.ts"
+          },
+          "importedNames": [
+            "HostAudioDecodeCapabilities"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostAudioDecode",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostAudioDecode.ts"
           }
         },
         {
@@ -167855,6 +167969,40 @@
             "name": "HostGl",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/HostGl.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "HostQuery",
+            "packageName": "@flighthq/host",
+            "source": "packages/host/src/hostQuery.ts"
+          },
+          "importedNames": [
+            "HostImageDecodeCapabilities"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostImageDecode",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostImageDecode.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "HostQuery",
+            "packageName": "@flighthq/host",
+            "source": "packages/host/src/hostQuery.ts"
+          },
+          "importedNames": [
+            "HostImageEncodeCapabilities"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostImageEncode",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostImageEncode.ts"
           }
         },
         {

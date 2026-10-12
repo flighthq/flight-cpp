@@ -101,6 +101,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("attenuationDistance") && requires { object.attenuation_distance; }) return (object.attenuation_distance);
   else if constexpr (Key::name.view() == std::string_view("attributes") && requires { object.attributes; }) return (object.attributes);
   else if constexpr (Key::name.view() == std::string_view("audio") && requires { object.audio; }) return (object.audio);
+  else if constexpr (Key::name.view() == std::string_view("audioDecode") && requires { object.audio_decode; }) return (object.audio_decode);
   else if constexpr (Key::name.view() == std::string_view("audioResources") && requires { object.audio_resources; }) return (object.audio_resources);
   else if constexpr (Key::name.view() == std::string_view("autoSize") && requires { object.auto_size; }) return (object.auto_size);
   else if constexpr (Key::name.view() == std::string_view("avif") && requires { object.avif; }) return (object.avif);
@@ -310,6 +311,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("componentY") && requires { object.component_y; }) return (object.component_y);
   else if constexpr (Key::name.view() == std::string_view("components") && requires { object.components; }) return (object.components);
   else if constexpr (Key::name.view() == std::string_view("compositeStream") && requires { object.composite_stream; }) return (object.composite_stream);
+  else if constexpr (Key::name.view() == std::string_view("compress") && requires { object.compress; }) return (object.compress);
   else if constexpr (Key::name.view() == std::string_view("compressed") && requires { object.compressed; }) return (object.compressed);
   else if constexpr (Key::name.view() == std::string_view("compressedAlphaBytes") && requires { object.compressed_alpha_bytes; }) return (object.compressed_alpha_bytes);
   else if constexpr (Key::name.view() == std::string_view("compressedTextureDecoder") && requires { object.compressed_texture_decoder; }) return (object.compressed_texture_decoder);
@@ -748,6 +750,8 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("illuminance") && requires { object.illuminance; }) return (object.illuminance);
   else if constexpr (Key::name.view() == std::string_view("image") && requires { object.image; }) return (object.image);
   else if constexpr (Key::name.view() == std::string_view("imageCount") && requires { object.image_count; }) return (object.image_count);
+  else if constexpr (Key::name.view() == std::string_view("imageDecode") && requires { object.image_decode; }) return (object.image_decode);
+  else if constexpr (Key::name.view() == std::string_view("imageEncode") && requires { object.image_encode; }) return (object.image_encode);
   else if constexpr (Key::name.view() == std::string_view("imageFile") && requires { object.image_file; }) return (object.image_file);
   else if constexpr (Key::name.view() == std::string_view("imageHeight") && requires { object.image_height; }) return (object.image_height);
   else if constexpr (Key::name.view() == std::string_view("imageName") && requires { object.image_name; }) return (object.image_name);
@@ -2137,6 +2141,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("attenuationDistance") && requires(Object& object) { object.attenuation_distance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().attenuation_distance)>>{};
   else if constexpr (Key::name.view() == std::string_view("attributes") && requires(Object& object) { object.attributes; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().attributes)>>{};
   else if constexpr (Key::name.view() == std::string_view("audio") && requires(Object& object) { object.audio; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().audio)>>{};
+  else if constexpr (Key::name.view() == std::string_view("audioDecode") && requires(Object& object) { object.audio_decode; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().audio_decode)>>{};
   else if constexpr (Key::name.view() == std::string_view("audioResources") && requires(Object& object) { object.audio_resources; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().audio_resources)>>{};
   else if constexpr (Key::name.view() == std::string_view("autoSize") && requires(Object& object) { object.auto_size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().auto_size)>>{};
   else if constexpr (Key::name.view() == std::string_view("avif") && requires(Object& object) { object.avif; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().avif)>>{};
@@ -2346,6 +2351,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("componentY") && requires(Object& object) { object.component_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().component_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("components") && requires(Object& object) { object.components; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().components)>>{};
   else if constexpr (Key::name.view() == std::string_view("compositeStream") && requires(Object& object) { object.composite_stream; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().composite_stream)>>{};
+  else if constexpr (Key::name.view() == std::string_view("compress") && requires(Object& object) { object.compress; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().compress)>>{};
   else if constexpr (Key::name.view() == std::string_view("compressed") && requires(Object& object) { object.compressed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().compressed)>>{};
   else if constexpr (Key::name.view() == std::string_view("compressedAlphaBytes") && requires(Object& object) { object.compressed_alpha_bytes; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().compressed_alpha_bytes)>>{};
   else if constexpr (Key::name.view() == std::string_view("compressedTextureDecoder") && requires(Object& object) { object.compressed_texture_decoder; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().compressed_texture_decoder)>>{};
@@ -2784,6 +2790,8 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("illuminance") && requires(Object& object) { object.illuminance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().illuminance)>>{};
   else if constexpr (Key::name.view() == std::string_view("image") && requires(Object& object) { object.image; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().image)>>{};
   else if constexpr (Key::name.view() == std::string_view("imageCount") && requires(Object& object) { object.image_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().image_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("imageDecode") && requires(Object& object) { object.image_decode; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().image_decode)>>{};
+  else if constexpr (Key::name.view() == std::string_view("imageEncode") && requires(Object& object) { object.image_encode; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().image_encode)>>{};
   else if constexpr (Key::name.view() == std::string_view("imageFile") && requires(Object& object) { object.image_file; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().image_file)>>{};
   else if constexpr (Key::name.view() == std::string_view("imageHeight") && requires(Object& object) { object.image_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().image_height)>>{};
   else if constexpr (Key::name.view() == std::string_view("imageName") && requires(Object& object) { object.image_name; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().image_name)>>{};
@@ -4176,6 +4184,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->attenuation_distance; }) owner.bind_named("attenuationDistance", [object]() -> decltype(auto) { return (object->attenuation_distance); });
   if constexpr (requires { object->attributes; }) owner.bind_named("attributes", [object]() -> decltype(auto) { return (object->attributes); });
   if constexpr (requires { object->audio; }) owner.bind_named("audio", [object]() -> decltype(auto) { return (object->audio); });
+  if constexpr (requires { object->audio_decode; }) owner.bind_named("audioDecode", [object]() -> decltype(auto) { return (object->audio_decode); });
   if constexpr (requires { object->audio_resources; }) owner.bind_named("audioResources", [object]() -> decltype(auto) { return (object->audio_resources); });
   if constexpr (requires { object->auto_size; }) owner.bind_named("autoSize", [object]() -> decltype(auto) { return (object->auto_size); });
   if constexpr (requires { object->avif; }) owner.bind_named("avif", [object]() -> decltype(auto) { return (object->avif); });
@@ -4385,6 +4394,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->component_y; }) owner.bind_named("componentY", [object]() -> decltype(auto) { return (object->component_y); });
   if constexpr (requires { object->components; }) owner.bind_named("components", [object]() -> decltype(auto) { return (object->components); });
   if constexpr (requires { object->composite_stream; }) owner.bind_named("compositeStream", [object]() -> decltype(auto) { return (object->composite_stream); });
+  if constexpr (requires { object->compress; }) owner.bind_named("compress", [object]() -> decltype(auto) { return (object->compress); });
   if constexpr (requires { object->compressed; }) owner.bind_named("compressed", [object]() -> decltype(auto) { return (object->compressed); });
   if constexpr (requires { object->compressed_alpha_bytes; }) owner.bind_named("compressedAlphaBytes", [object]() -> decltype(auto) { return (object->compressed_alpha_bytes); });
   if constexpr (requires { object->compressed_texture_decoder; }) owner.bind_named("compressedTextureDecoder", [object]() -> decltype(auto) { return (object->compressed_texture_decoder); });
@@ -4823,6 +4833,8 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->illuminance; }) owner.bind_named("illuminance", [object]() -> decltype(auto) { return (object->illuminance); });
   if constexpr (requires { object->image; }) owner.bind_named("image", [object]() -> decltype(auto) { return (object->image); });
   if constexpr (requires { object->image_count; }) owner.bind_named("imageCount", [object]() -> decltype(auto) { return (object->image_count); });
+  if constexpr (requires { object->image_decode; }) owner.bind_named("imageDecode", [object]() -> decltype(auto) { return (object->image_decode); });
+  if constexpr (requires { object->image_encode; }) owner.bind_named("imageEncode", [object]() -> decltype(auto) { return (object->image_encode); });
   if constexpr (requires { object->image_file; }) owner.bind_named("imageFile", [object]() -> decltype(auto) { return (object->image_file); });
   if constexpr (requires { object->image_height; }) owner.bind_named("imageHeight", [object]() -> decltype(auto) { return (object->image_height); });
   if constexpr (requires { object->image_name; }) owner.bind_named("imageName", [object]() -> decltype(auto) { return (object->image_name); });
@@ -6248,6 +6260,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(attenuation_distance)
   FLIGHT_SDK_ROW_WIDENS(attributes)
   FLIGHT_SDK_ROW_WIDENS(audio)
+  FLIGHT_SDK_ROW_WIDENS(audio_decode)
   FLIGHT_SDK_ROW_WIDENS(audio_resources)
   FLIGHT_SDK_ROW_WIDENS(auto_size)
   FLIGHT_SDK_ROW_WIDENS(avif)
@@ -6457,6 +6470,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(component_y)
   FLIGHT_SDK_ROW_WIDENS(components)
   FLIGHT_SDK_ROW_WIDENS(composite_stream)
+  FLIGHT_SDK_ROW_WIDENS(compress)
   FLIGHT_SDK_ROW_WIDENS(compressed)
   FLIGHT_SDK_ROW_WIDENS(compressed_alpha_bytes)
   FLIGHT_SDK_ROW_WIDENS(compressed_texture_decoder)
@@ -6895,6 +6909,8 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(illuminance)
   FLIGHT_SDK_ROW_WIDENS(image)
   FLIGHT_SDK_ROW_WIDENS(image_count)
+  FLIGHT_SDK_ROW_WIDENS(image_decode)
+  FLIGHT_SDK_ROW_WIDENS(image_encode)
   FLIGHT_SDK_ROW_WIDENS(image_file)
   FLIGHT_SDK_ROW_WIDENS(image_height)
   FLIGHT_SDK_ROW_WIDENS(image_name)

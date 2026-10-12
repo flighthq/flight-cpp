@@ -11646,9 +11646,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/host/packages/host/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/host",
@@ -11662,7 +11660,8 @@
     },
     {
       "consumers": [
-        "@flighthq/host/packages/host/src/contract.ts"
+        "@flighthq/host/packages/host/src/contract.ts",
+        "@flighthq/host/packages/host/src/index.ts"
       ],
       "module": {
         "name": "EnableHostGuards",
@@ -11690,7 +11689,8 @@
     {
       "consumers": [
         "@flighthq/host/packages/host/src/contract.ts",
-        "@flighthq/host/packages/host/src/enableHostGuards.ts"
+        "@flighthq/host/packages/host/src/enableHostGuards.ts",
+        "@flighthq/host/packages/host/src/index.ts"
       ],
       "module": {
         "name": "HostExplain",
@@ -11702,7 +11702,8 @@
     },
     {
       "consumers": [
-        "@flighthq/host/packages/host/src/contract.ts"
+        "@flighthq/host/packages/host/src/contract.ts",
+        "@flighthq/host/packages/host/src/index.ts"
       ],
       "module": {
         "name": "HostQuery",
@@ -11721,7 +11722,7 @@
       },
       "path": "flight/host/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/host/packages/host/src/contract.ts"
+        "@flighthq/host/packages/host/src/enableHostGuards.ts"
       ],
       "status": "dependency-incomplete"
     },

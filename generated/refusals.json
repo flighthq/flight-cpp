@@ -2409,7 +2409,7 @@
       "code": "dependency-refused",
       "module": "packages/host/src/contract.ts",
       "package": "@flighthq/host",
-      "reason": "dependency ./enableHostGuards was refused for @flighthq/host/packages/host/src/enableHostGuards.ts",
+      "reason": "dependency ./enableHostGuards.ts was refused for @flighthq/host/packages/host/src/enableHostGuards.ts",
       "stage": "dependency"
     },
     {
@@ -2423,7 +2423,7 @@
       "code": "dependency-refused",
       "module": "packages/host/src/index.ts",
       "package": "@flighthq/host",
-      "reason": "dependency ./contract was refused for @flighthq/host/packages/host/src/contract.ts",
+      "reason": "dependency ./enableHostGuards.ts was refused for @flighthq/host/packages/host/src/enableHostGuards.ts",
       "stage": "dependency"
     },
     {
