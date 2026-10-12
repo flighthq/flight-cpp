@@ -2729,6 +2729,23 @@
         "lane": "2D",
         "reason": "context drift: the patched code still exists (3/3 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
       }
+    },
+    {
+      "id": "compiler-readonly-view-argument-substitution",
+      "dependency": "flight-compiler",
+      "patch": "compiler-readonly-view-argument-substitution.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/power",
+      "answers": "diagnostic",
+      "refusal": "deduction compares a callee's `Readonly<Signal<T>>` parameter against the caller's `Signal<() => void>` argument by name, finds `Readonly` against `Signal`, and gives up, so the callee's own type parameter reaches emission unsubstituted and the call site spells an undeclared `Signal<T>`",
+      "rewrite": "`collectCppResultTypeSubstitutionsCpp` looks through an ambient `Readonly<T>` on either side before the nominal comparison, so the type argument is deduced from the argument's own type evidence.",
+      "equivalence": "`Readonly<T>` is a view over the same value, not a second owner: a readonly structural parameter receives the concrete reference itself, which is what `getCppStructuralProjectionRowCpp` already records when it answers a `readonly` row for `Readonly`, and what the emitted `StructuralRef<RowReadonly<RowOf<Ref<T>>>>` says. The patch changes which type argument is named, never which value is passed: the emitted cast, the row, the reference, and the callee are the same object graph, and no runtime representation, absence, equality, ordering, or settlement rule is touched. Only `Readonly` is unwrapped -- `NoInfer`, unions, and every other ambient wrapper keep the comparison they had -- and an argument whose owner differs from the parameter's still fails deduction, so no substitution is invented.",
+      "verification": "Two-module fixture (helper imported from its package, since an ambient `declare function` refuses earlier) asserts the emitted row names `Signal<std::function<void()>>` and contains no `Signal<T>`; the negative fixture asserts a `Readonly<Signal<T>>` parameter is not filled from an `Emitter<() => void>` argument. The substituted pair syntax-checks with the pinned C++ toolchain. The C++ backend suite is unchanged by the patch: 24 failures before and after (all pre-existing in this checkout), 1461 -> 1463 passing, 32 -> 33 skipped.",
+      "whyNotUpstreamFirst": "The representation layer already treats `Readonly<T>` and `T` as one value and deduces across them elsewhere; this makes type-parameter deduction agree with it. Upstream has no newer commit than the pin.",
+      "unblocks": "`@flighthq/power` compiles instead of failing all three of its headers on `use of undeclared identifier 'T'`; `@flighthq/preferences` reaches the same helper through `storage.ts`.",
+      "expires": "when upstream deduces a generic parameter through a readonly view from argument evidence.",
+      "appliedOn": "2026-10-12"
     }
   ]
 }

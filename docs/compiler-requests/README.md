@@ -41,6 +41,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-owner-preserving-named-write.patch`](../../source-patches/compiler-owner-preserving-named-write.patch) | [Owner-preserving dynamic named write](compiler-owner-preserving-named-write.md) |
 | [`compiler-present-dual-sentinel-multivariant.patch`](../../source-patches/compiler-present-dual-sentinel-multivariant.patch) | [Present projection of a dual-sentinel multivariant](compiler-present-dual-sentinel-multivariant.md) |
 | [`compiler-readonly-union-view-conversion.patch`](../../source-patches/compiler-readonly-union-view-conversion.patch) | [Nominal union to readonly-view union](compiler-readonly-union-view-conversion.md) |
+| [`compiler-readonly-view-argument-substitution.patch`](../../source-patches/compiler-readonly-view-argument-substitution.patch) | [A callee's type parameter must not survive into an emitted structural row](compiler-generic-signal-row-projection.md) |
 | [`compiler-scoped-emission-semantic-context.patch`](../../source-patches/compiler-scoped-emission-semantic-context.patch) | [Scoped emission must retain semantic context](compiler-scoped-emission-semantic-context.md) |
 | [`compiler-sdk-lane-local-reexports.patch`](../../source-patches/compiler-sdk-lane-local-reexports.patch) | [SDK-local re-exports in an SDK export lane](compiler-sdk-lane-local-reexports.md) |
 | [`compiler-structural-row-weak-keys.patch`](../../source-patches/compiler-structural-row-weak-keys.patch) | [Structural rows as WeakMap keys](compiler-structural-row-weak-keys.md) |
@@ -62,9 +63,6 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   carried by the emission repairs `adjustments-color-matrix-interface-heritage` and `adjustments-tint-interface-heritage`.
 - [Narrow an optional local in the else-branch of a negated truthiness test](negated-truthiness-else-narrowing.md) —
   carried by the source patch `node-bounds-rectangle-explicit-narrowing`.
-- [A callee's type parameter must not survive into an emitted structural row](compiler-generic-signal-row-projection.md) —
-  `hasSignalSlots<T>(signal: Signal<T>)` leaves the helper's `T` in the emitted row, so `@flighthq/power`
-  emits cleanly and compiles not at all.
 - [Union carriers need canonical alternative order](canonical-union-carrier-order.md) — identical
   named unions currently become incompatible `std::variant` types at array callback boundaries.
 - [Nullable and optional storage needs two absence channels](nullable-optional-presence.md) — one

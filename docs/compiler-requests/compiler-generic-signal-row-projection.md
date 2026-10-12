@@ -48,23 +48,74 @@ and the package emits cleanly otherwise: **3/3 modules emitted, 0 refused, 0/3 h
 `packages/preferences/src/storage.ts` — so `@flighthq/preferences` is expected to meet the same defect
 and was not measured separately here.
 
-## Status, and what a reduction has to look like
+## The cause, and the carried patch
 
-**No patch is carried yet, and the reduction is half done.** Attempting it produced one concrete
-constraint worth recording rather than rediscovering: a fixture that writes the helper as an ambient
-declaration —
+The defect is in type-parameter **deduction**, not in row projection. The caller's argument has type
+evidence `Ref<Signal<() => void>>`; the callee's parameter is `Readonly<Signal<T>>`, which the
+representation planner resolves to `StructuralRef<RowReadonly<RowOf<Ref<Signal<T>>>>>`. Deduction walks
+the parameter pattern against the argument evidence, reaches `named` vs `named`, compares target
+names — `Readonly` against `Signal` — and stops. Nothing is substituted, `T` survives to emission, and
+the row is spelled with it.
+
+The representation already treats the two as one value: `getCppStructuralProjectionRowCpp` answers a
+`readonly` row for `Readonly<T>` over the *same* owner, which is why the source side of the cast spells
+the concrete `Signal<std::function<void()>>` correctly while the target side does not. The patch makes
+deduction agree with that — `collectCppResultTypeSubstitutionsCpp` looks through an ambient
+`Readonly<T>` on either side before the nominal comparison, so the type argument is deduced from the
+argument's own evidence:
+
+[`compiler-readonly-view-argument-substitution.patch`](../../source-patches/compiler-readonly-view-argument-substitution.patch)
+
+Only `Readonly` is unwrapped; `NoInfer`, unions, and every other wrapper keep the comparison they had,
+and an argument whose owner differs from the parameter's still fails deduction — the wrapper is looked
+through, the owner is not.
+
+## The reduction
+
+A fixture that writes the helper as an ambient declaration —
 
 ```ts
 declare function hasSignalSlots<T extends (...args: any[]) => void>(signal: Readonly<Signal<T>>): boolean;
 ```
 
 — refuses *earlier* and for a different reason (`cpp-runtime-external-symbol-binding-incomplete`), so it
-never reaches this defect. The fixture has to import the helper from the package that defines it, the
+never reaches this defect. The fixture has to **import** the helper from the module that defines it, the
 way the real caller does, which is what the harness supports by lowering a fixture inside a package
-closure (`lower(file, source)` lowers into `@flighthq/math` by default, and imports of `@flighthq/*`
-resolve against the pinned checkout).
+closure with an explicit resolution edge:
 
-So the remaining step is small but not trivial: author that two-module fixture, confirm the emitted
-`Signal<T>`, then lower the cast's target side from the argument's type evidence and carry the patch with
-its request. Filing the request first was deliberate — the observed emission is enough for a reader to
-find the substitution site, and the fixture constraint now tells them where to put the reproduction.
+```ts
+{ specifier: '@flighthq/signals/contract',
+  target: { packageName: '@flighthq/signals', source: 'packages/signals/src/contract.ts' } }
+```
+
+`lowerGenericReadonlyViewArgument(owner, argumentType)` in `cppCompilerBackend.test.ts` is that
+two-module graph: `@flighthq/signals` declares `Signal<T>` and the helper, `@flighthq/power` imports
+both and calls the helper with an `onIdleStateChange: Signal<() => void> | null` — once passing the
+parameter straight through, once reaching it through a local read of a property, which is the shape
+`power.ts` actually writes. The `owner` parameter reuses the same graph for the negative case.
+
+Three tests carry it:
+
+- **substitutes a generic parameter through a readonly structural view from argument evidence** — both
+  call sites emit `flight::RowReadonly<flight::RowOf<flight::Ref<flighthq_signals::Signal<std::function<void()>>>>>`,
+  and the consumer contains no `Signal<T>`;
+- **does not fill a readonly view parameter with an owner the argument does not share** — with an
+  `Emitter<() => void>` argument the call retains `flighthq_signals::Emitter<std::function<void()>>` and
+  does not acquire `Signal<std::function<void()>>`;
+- **compiles a generic parameter substituted through a readonly view** (skipped when no C++ toolchain is
+  configured) — syntax-checks the substituted pair.
+
+## Verification and what it does not cover
+
+The substituted pair syntax-checks against the runtime's installed headers with the pinned C++20
+toolchain (`cxx-zig`, clang 22.1.8 / libc++): the emitted consumer compiles, where before the patch the
+same translation unit failed on `use of undeclared identifier 'T'`. The C++ backend suite is unchanged
+by the patch — 24 failures before and after on this checkout (all pre-existing), 1461 → 1463 passing,
+32 → 33 skipped — and the package typechecks clean.
+
+**Residual boundary, recorded rather than hidden:** when *no* argument determines the type parameter,
+the emitter still spells it. A structurally compatible argument whose owner is declared under a
+different name (`Emitter<() => void>` into `Readonly<Signal<T>>`) is the reproduction; deduction
+correctly declines to conflate the owners, and emission writes `Signal<T>` rather than refusing. That is
+a separate change — refusing an undetermined type parameter at emission instead of emitting it — and no
+SDK module reaches it today: `hasSignalSlots` is called with a `Signal` in both of its callers.

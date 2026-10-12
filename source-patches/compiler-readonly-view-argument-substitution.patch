@@ -1,0 +1,196 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+index d30c0ce..00333a4 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -220,6 +220,61 @@ function lowerReexportedGenericCallableRowArgument() {
+   return { moduleResolution, results };
+ }
+
++// A generic helper reached through a readonly view: `@flighthq/signals` declares
++// `hasSignalSlots<T extends (...args: any[]) => void>(signal: Readonly<Signal<T>>): boolean`, and
++// `@flighthq/power` calls it with an `onIdleStateChange` narrowed to `Signal<() => void>`. The two
++// modules are separate because the helper has to be IMPORTED the way the real caller imports it: an
++// ambient `declare function` refuses earlier (`cpp-runtime-external-symbol-binding-incomplete`) and
++// never reaches the substitution this pins. `owner` names the interface the caller's argument is
++// declared as, so the same graph answers what happens when that owner and the parameter's differ.
++function lowerGenericReadonlyViewArgument(owner: string, argumentType: string) {
++  const signals = ts.createSourceFile(
++    '/flight/packages/signals/src/contract.ts',
++    `export interface Signal<T extends (...args: any[]) => void> { emit: T; data: object | null }
++     export interface Emitter<T extends (...args: any[]) => void> { emit: T; data: object | null }
++     export function hasSignalSlots<T extends (...args: any[]) => void>(
++       signal: Readonly<Signal<T>>,
++     ): boolean {
++       return signal.data !== null;
++     }`,
++    ts.ScriptTarget.Latest,
++    true,
++  );
++  const consumer = ts.createSourceFile(
++    '/flight/packages/power/src/power.ts',
++    `import { hasSignalSlots } from '@flighthq/signals/contract';
++     import type { ${owner} } from '@flighthq/signals/contract';
++     export function pollIdle(onIdleStateChange: ${argumentType} | null): boolean {
++       if (onIdleStateChange === null || !hasSignalSlots(onIdleStateChange)) return false;
++       return true;
++     }
++     export function pollIdleProperty(host: { onIdleStateChange: ${argumentType} | null }): boolean {
++       const idleSignal = host.onIdleStateChange;
++       if (idleSignal === null || !hasSignalSlots(idleSignal)) return false;
++       return true;
++     }`,
++    ts.ScriptTarget.Latest,
++    true,
++  );
++  const moduleResolution: CompilerModuleResolutionPlan = {
++    edges: [
++      {
++        specifier: '@flighthq/signals/contract',
++        target: { packageName: '@flighthq/signals', source: 'packages/signals/src/contract.ts' },
++      },
++    ],
++    schema: 'flight-compiler-module-resolution/1',
++  };
++  const results = lowerTypeScriptSources(
++    [
++      { packageName: '@flighthq/signals', sourceFile: signals, upstreamDirectory: '/flight' },
++      { packageName: '@flighthq/power', sourceFile: consumer, upstreamDirectory: '/flight' },
++    ],
++    moduleResolution,
++  );
++  return { moduleResolution, results, consumerIndex: 1 };
++}
++
+ function lower(file: string, source: string) {
+   return lowerPackage('@flighthq/math', file, source);
+ }
+@@ -41295,6 +41350,79 @@ int main() {
+     }
+   });
+
++  it('substitutes a generic parameter through a readonly structural view from argument evidence', () => {
++    const { moduleResolution, results, consumerIndex } = lowerGenericReadonlyViewArgument(
++      'Signal',
++      'Signal<() => void>',
++    );
++
++    expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
++    const output = emitCppModuleCppSession(results, moduleResolution, consumerIndex);
++    expect(output).toContain(
++      'flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flighthq_signals::Signal<std::function<void()>>>>>>',
++    );
++    // Both call sites substitute: the one passing the parameter straight through and the one reaching
++    // it through a local read of a property, which is the shape `power.ts` writes.
++    expect(output.split('flighthq_signals::has_signal_slots<std::function<void()>>').length - 1).toBe(2);
++    expect(output).not.toContain('Signal<T>');
++  });
++
++  it('does not fill a readonly view parameter with an owner the argument does not share', () => {
++    const { moduleResolution, results, consumerIndex } = lowerGenericReadonlyViewArgument(
++      'Emitter',
++      'Emitter<() => void>',
++    );
++
++    expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
++    const output = emitCppModuleCppSession(results, moduleResolution, consumerIndex);
++    // The wrapper is looked through; the owner is not. Deduction may cross the readonly view because
++    // that view is over the same value, but `Signal<T>` and `Emitter` name two different owners, so
++    // the callee's type parameter must not be filled with this argument's type argument.
++    expect(output).toContain('flighthq_signals::Emitter<std::function<void()>>');
++    expect(output).not.toContain('Signal<std::function<void()>>');
++  });
++
++  it.skipIf(!canCompileCpp)('compiles a generic parameter substituted through a readonly view', () => {
++    if (cppToolchain === undefined) throw new Error('the C++ toolchain was not found');
++    const { moduleResolution, results, consumerIndex } = lowerGenericReadonlyViewArgument(
++      'Signal',
++      'Signal<() => void>',
++    );
++    const modules = results.map((result) => result.module);
++    const session = createCppCompilerBackend().createEmissionSession!({
++      moduleResolution,
++      modules,
++      options: {
++        packageTargets: {
++          '@flighthq/power': { includePrefix: 'test/power', namespace: 'flighthq_power' },
++          '@flighthq/signals': { includePrefix: 'test/signals', namespace: 'flighthq_signals' },
++        },
++        runtimeProfile: 'flight-cpp',
++      },
++    });
++    const emitted = modules.map((module) => session.emitModule(module)[0]!);
++    const directory = mkdtempSync(path.join(tmpdir(), 'flight-readonly-view-argument-'));
++
++    expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
++    try {
++      for (const output of emitted) {
++        const outputPath = path.join(directory, output.path);
++        mkdirSync(path.dirname(outputPath), { recursive: true });
++        writeFileSync(outputPath, output.contents, 'utf8');
++      }
++      const consumer = emitted[consumerIndex]!;
++      const arguments_ = createCppSyntaxOnlyArguments(cppToolchain, path.join(directory, consumer.path), [
++        directory,
++        ...cppRuntimeIncludeDirectories,
++      ]);
++      expect(() =>
++        execFileSync(cppToolchain.command, arguments_, { cwd: directory, encoding: 'utf8', stdio: 'pipe' }),
++      ).not.toThrow();
++    } finally {
++      rmSync(directory, { force: true, recursive: true });
++    }
++  });
++
+   it('widens readonly derived structural rows at argument, assignment, and return boundaries', () => {
+     const output = emitIrModuleCpp(
+       lower(
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index fae6209..ae0b047 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -20947,6 +20947,21 @@ function getCppProvidedOptionalArgumentTypeCpp(type: Readonly<IrType>): Readonly
+   return { kind: 'union', types: [present[0]!, present[1]!, ...present.slice(2)] };
+ }
+
++// The single type argument of an ambient `Readonly<T>`, which names the same value under a readonly
++// view. Deduction has to see through it; the representation already does, and comparing the wrapper's
++// own target name against a concrete owner name finds nothing in common.
++function getCppReadonlyViewArgumentCpp(type: Readonly<IrType>): Readonly<IrType> | undefined {
++  if (
++    type.kind === 'named' &&
++    type.reference.kind === 'ambient' &&
++    type.reference.name === 'Readonly' &&
++    type.typeArguments.length === 1
++  ) {
++    return type.typeArguments[0];
++  }
++  return undefined;
++}
++
+ function collectCppResultTypeSubstitutionsCpp(
+   pattern: Readonly<IrType>,
+   candidate: Readonly<IrType>,
+@@ -20969,6 +20984,23 @@ function collectCppResultTypeSubstitutionsCpp(
+     }
+     return normalizeCompilerStructuralValueCanonical(previous) === normalizeCompilerStructuralValueCanonical(candidate);
+   }
++  // `Readonly<T>` is a view over the same value, not a second owner: a readonly structural parameter
++  // receives the concrete reference itself, which is exactly what `getCppStructuralProjectionRowCpp`
++  // records when it answers a `readonly` row for `Readonly`. Comparing the two target names instead
++  // finds `Readonly` against `Signal` and gives up, which leaves a callee's own type parameter
++  // unsubstituted and emits it into the row (`Signal<T>` at the call site). Look through the wrapper --
++  // on either side -- before the nominal comparison, so the type argument is deduced from the value.
++  const unwrappedPatternReadonly = getCppReadonlyViewArgumentCpp(pattern);
++  const unwrappedCandidateReadonly = getCppReadonlyViewArgumentCpp(candidate);
++  if (unwrappedPatternReadonly || unwrappedCandidateReadonly) {
++    return collectCppResultTypeSubstitutionsCpp(
++      unwrappedPatternReadonly ?? pattern,
++      unwrappedCandidateReadonly ?? candidate,
++      parameterIds,
++      substitutions,
++      context,
++    );
++  }
+   // A generic parameter can sit below a closed union alias while the supplied value names one arm:
+   // `RegistryTable<T>` receiving `KeyedTable<Schema>` is the canonical case. Template deduction cannot
+   // see through the eventual std::variant, but the source declaration does provide one exact owner path.
