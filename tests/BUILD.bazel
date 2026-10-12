@@ -107,6 +107,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_abc_test",
+    srcs = ["generated_abc_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_animation_test",
     srcs = ["generated_animation_test.cpp"],
     size = "small",
@@ -420,6 +427,7 @@ cc_test(
 test_suite(
     name = "generated_tests",
     tests = [
+        ":generated_abc_test",
         ":generated_animation_test",
         ":generated_app_render_view_test",
         ":generated_assets_test",
