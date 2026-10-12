@@ -889,34 +889,25 @@
     },
     {
       "consumers": [
-        "@flighthq/audio/packages/audio/src/audioResourceFrom.ts",
         "@flighthq/audio/packages/audio/src/contract.ts",
-        "@flighthq/audio/packages/audio/src/decodeAudioResourceBytes.ts"
+        "@flighthq/audio/packages/audio/src/decodeAudioResourceBytes.ts",
+        "@flighthq/audio/packages/audio/src/index.ts"
       ],
       "module": {
-        "name": "AudioDecoderRegistry",
+        "name": "AudioDecodeSlot",
         "packageName": "@flighthq/audio",
-        "source": "packages/audio/src/audioDecoderRegistry.ts"
+        "source": "packages/audio/src/audioDecodeSlot.ts"
       },
-      "path": "flight/audio/audio_decoder_registry.hpp",
-      "refusedDependencies": [
-        "@flighthq/audio/packages/audio/src/audioFormat.ts"
-      ],
-      "status": "dependency-incomplete"
+      "path": "flight/audio/audio_decode_slot.hpp",
+      "status": "emitted"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/audio/packages/audio/src/audioDecoderRegistry.ts",
+        "@flighthq/audio/packages/audio/src/audioDecodeSlot.ts",
         "@flighthq/audio/packages/audio/src/audioResourceFrom.ts",
-        "@flighthq/audio/packages/audio/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:08f4b2dbe12297449e212bdf39173408d4a1c662eee7b6e5889647f2c5611891",
-        "sha256:48adf8d5b5e8b37dfe52f0c390f61ba39d29c9b0d2a7655ea1561294a677f551",
-        "sha256:795274018d5c72a73ec04686aa533a19acc4a88e6ac27621d53695247c6ef41c",
-        "sha256:c64cb8c64b8dc46bc5f594205233ecd21e8ef4cc9b556bf51749b7dc80f22dec",
-        "sha256:d7bbf9c044552dd8fe13dd9ed3c490bfc1c28e7b0d974954be214242e71fc6b6"
+        "@flighthq/audio/packages/audio/src/contract.ts",
+        "@flighthq/audio/packages/audio/src/decodeAudioResourceBytes.ts",
+        "@flighthq/audio/packages/audio/src/index.ts"
       ],
       "module": {
         "name": "AudioFormat",
@@ -924,8 +915,7 @@
         "source": "packages/audio/src/audioFormat.ts"
       },
       "path": "flight/audio/audio_format.hpp",
-      "rule": "cpp-member-projection-without-present-storage",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -933,6 +923,7 @@
         "@flighthq/audio/packages/audio/src/audioResourceReference.ts",
         "@flighthq/audio/packages/audio/src/contract.ts",
         "@flighthq/audio/packages/audio/src/decodeAudioResourceBytes.ts",
+        "@flighthq/audio/packages/audio/src/index.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts"
       ],
       "module": {
@@ -944,20 +935,9 @@
       "status": "emitted"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/audio/packages/audio/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:4a7878660a1e449a499171497493cfc8fef7b8d493d2f54f3a61b359482cc401",
-        "sha256:60d23bcfe1a2c4796fe3dab3561fdd7c2d58594b220f0f3359df25c75aba5556",
-        "sha256:61506ee8c07db919f0185caaba918bf2540dcdb20fa67498bb7a0072eb2dfbd6",
-        "sha256:8ab55cae27b249b8b38b8e834673f6efe7ffad4ed2cfd7c49060d94d5dfaf27a",
-        "sha256:ad8e49f1cdec23f42a893a83d585ae73135cc552fddb5af50ee485c0d8cbc504",
-        "sha256:ae596497f938651470909367231615fc8ca5829be69d1a6d775f9e1ea6ae5363",
-        "sha256:c2ce3fdc4afa367668c8f97364480fc22c3ba7968e481a49cd8cfbfe0603e3d1",
-        "sha256:cd59d4a1bc8797010cd96c7fa6c2eda04517cee74f52f7c9bb7063cde337a5e8",
-        "sha256:e28c9b08c526be7d3ebfa8fb387e757e243d92c30e06a4eb958707f5e286c44e"
+        "@flighthq/audio/packages/audio/src/contract.ts",
+        "@flighthq/audio/packages/audio/src/index.ts"
       ],
       "module": {
         "name": "AudioResourceFrom",
@@ -965,26 +945,14 @@
         "source": "packages/audio/src/audioResourceFrom.ts"
       },
       "path": "flight/audio/audio_resource_from.hpp",
-      "rule": "cpp-member-projection-without-present-storage",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
-      "classification": "target-runtime",
       "consumers": [
         "@flighthq/audio/packages/audio/src/contract.ts",
+        "@flighthq/audio/packages/audio/src/index.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/loadScene2DAudioResources.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:5099687e5e0af57c91535d7afd5ecd8569a88e8919a79a5b4824ed8d1c3e271a",
-        "sha256:5a845e3cffd3792b72c7bd12ca2364b3f259a14e3f069c97552d8ab32d2ff2dc",
-        "sha256:5d28529e72f36294fe70b08602269c73e8d9239094e07a03f6e811972db63e5a",
-        "sha256:672224604f8a0c8bfec1dff260a865082b6b1bc74062afa27c1b5d71688f720d",
-        "sha256:a5d2eb89dfafd90c819f306f80f7522798825c963a7ab92993e7e7b3fab807e2",
-        "sha256:aebd7dfef348431beb8038cdbaf4078029b6aa8c2676271d3f16dcf6f179fe2f",
-        "sha256:e6968eb93b10d7652933ab7d419c03e7d4c41225822a0f323df5a5da829ab709",
-        "sha256:ebbf7d6ed4b3204e1f43a728b64b29ba7f7fb6da7538dd71eb6f57820d4428ad",
-        "sha256:f271be19913934eefdeef8e73cb5a8e1a1e9556426ba527162269b46d773124e"
       ],
       "module": {
         "name": "AudioResourceReference",
@@ -992,31 +960,23 @@
         "source": "packages/audio/src/audioResourceReference.ts"
       },
       "path": "flight/audio/audio_resource_reference.hpp",
-      "rule": "cpp-erased-error-view-runtime-required",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/audio/packages/audio/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/audio",
         "source": "packages/audio/src/contract.ts"
       },
       "path": "flight/audio/contract.hpp",
-      "refusedDependencies": [
-        "@flighthq/audio/packages/audio/src/audioDecoderRegistry.ts",
-        "@flighthq/audio/packages/audio/src/audioFormat.ts",
-        "@flighthq/audio/packages/audio/src/audioResourceFrom.ts",
-        "@flighthq/audio/packages/audio/src/audioResourceReference.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "consumers": [
         "@flighthq/audio/packages/audio/src/audioResourceFrom.ts",
-        "@flighthq/audio/packages/audio/src/audioResourceReference.ts"
+        "@flighthq/audio/packages/audio/src/audioResourceReference.ts",
+        "@flighthq/audio/packages/audio/src/contract.ts"
       ],
       "module": {
         "name": "DecodeAudioResourceBytes",
@@ -1024,10 +984,7 @@
         "source": "packages/audio/src/decodeAudioResourceBytes.ts"
       },
       "path": "flight/audio/decode_audio_resource_bytes.hpp",
-      "refusedDependencies": [
-        "@flighthq/audio/packages/audio/src/audioDecoderRegistry.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "consumers": [],
@@ -1037,10 +994,7 @@
         "source": "packages/audio/src/index.ts"
       },
       "path": "flight/audio/_internal_index.hpp",
-      "refusedDependencies": [
-        "@flighthq/audio/packages/audio/src/contract.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "consumers": [

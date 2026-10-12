@@ -2807,6 +2807,22 @@
       "unblocks": "@flighthq/net: the only compile error in its five headers at a627849 (net.hpp, through which _internal_index, contract and enable_net_guards fail).",
       "expires": "when upstream emits presence tests on narrowed optional-nullable members against their storage (docs/compiler-requests/nested-nullable-property-narrowed-null-test.md).",
       "appliedOn": "2026-10-12"
+    },
+    {
+      "id": "audio-indexed-member-presence-proof",
+      "dependency": "flight",
+      "patch": "audio-indexed-member-presence-proof.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/audio/src/audioFormat.ts plus packages/audio/src/audioResourceFrom.ts",
+      "package": "@flighthq/audio",
+      "answers": "refusal",
+      "refusal": "member split on optional C++ storage requires proven present payload, and member length on optional C++ storage requires proven present payload",
+      "rewrite": "Proves the presence of the element each read was happening on: the query-less part of the URL is named with an unreachable `?? ''` fallback, and `channels[0]` is named after an early return that already established the array is non-empty, so the length read sits on a present local.",
+      "equivalence": "Both indexed reads are provably present: `String.prototype.split` always yields at least one element, so the `?? ''` fallback is unreachable, and `channels` is non-empty exactly when `numberOfChannels > 0`, which the early return now tests directly before the element is named. The early return replaces the original ternary and compound condition with the same two outcomes in the same cases -- empty array and zero length both return `createAudioResource()` -- so the mime inference, the channel count, the computed length and every downstream buffer construction are unchanged. No value is copied, no absence is invented, and no member is read that the source did not already read.",
+      "whyNotUpstreamFirst": "The reads are ordinary TypeScript that the checker widens with `| undefined` under the project's own settings; naming the element is what the emitter asks for in the refusal message itself, and upstream has no newer commit than the pin.",
+      "unblocks": "@flighthq/audio: `audioFormat.ts` and `audioResourceFrom.ts` no longer refuse, which also clears the five dependency refusals cascading from them (audioDecodeSlot, audioResourceReference, contract, decodeAudioResourceBytes, index).",
+      "expires": "when the emitter proves presence for an indexed read it can see cannot be absent, or Flight names the elements upstream.",
+      "appliedOn": "2026-10-12"
     }
   ]
 }

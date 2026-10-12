@@ -134,61 +134,6 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
-      "module": "packages/audio/src/audioDecoderRegistry.ts",
-      "package": "@flighthq/audio",
-      "reason": "dependency ./audioFormat was refused for @flighthq/audio/packages/audio/src/audioFormat.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 65,
-      "module": "packages/audio/src/audioFormat.ts",
-      "package": "@flighthq/audio",
-      "reason": "cpp emission failed for @flighthq/audio/packages/audio/src/audioFormat.ts: member split on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 18,
-      "module": "packages/audio/src/audioResourceFrom.ts",
-      "package": "@flighthq/audio",
-      "reason": "cpp emission failed for @flighthq/audio/packages/audio/src/audioResourceFrom.ts: member length on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 23,
-      "module": "packages/audio/src/audioResourceReference.ts",
-      "package": "@flighthq/audio",
-      "reason": "cpp emission failed for @flighthq/audio/packages/audio/src/audioResourceReference.ts: reading Error.message after narrowing an erased value requires flight::Any to expose a checked Error view that accepts Error subclasses; keep the value typed as Error before erasure or add that runtime contract",
-      "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/audio/src/contract.ts",
-      "package": "@flighthq/audio",
-      "reason": "dependency ./audioDecoderRegistry was refused for @flighthq/audio/packages/audio/src/audioDecoderRegistry.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/audio/src/decodeAudioResourceBytes.ts",
-      "package": "@flighthq/audio",
-      "reason": "dependency ./audioDecoderRegistry was refused for @flighthq/audio/packages/audio/src/audioDecoderRegistry.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/audio/src/index.ts",
-      "package": "@flighthq/audio",
-      "reason": "dependency ./contract was refused for @flighthq/audio/packages/audio/src/contract.ts",
-      "stage": "dependency"
-    },
-    {
       "code": "unsupported-ir",
       "column": 1,
       "line": 16,

@@ -1405,9 +1405,7 @@
       "id": "assets-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/audio/audio_resource_reference.hpp"
-      ],
+      "files": [],
       "id": "audio-unqualified-entity-names"
     },
     {
@@ -2579,7 +2577,6 @@
     },
     {
       "files": [
-        "flight/audio/audio_decoder_registry.hpp",
         "flight/audio/audio_format.hpp",
         "flight/audio/audio_resource.hpp",
         "flight/audio/audio_resource_from.hpp",
@@ -5962,6 +5959,13 @@
       "id": "tray-create-result-and-runtime-owner",
       "module": "packages/types/src/Tray.ts plus packages/tray/src/tray.ts",
       "package": "@flighthq/tray"
+    },
+    {
+      "dependency": "flight",
+      "digest": "b1f7f30e280c93c505cb3eb924428a9a1c83820314e7b0c9738ee448378b32d5",
+      "id": "audio-indexed-member-presence-proof",
+      "module": "packages/audio/src/audioFormat.ts plus packages/audio/src/audioResourceFrom.ts",
+      "package": "@flighthq/audio"
     }
   ],
   "duplicateStructuralStructAliases": {
@@ -6122,8 +6126,6 @@
   "canonicalPackageLocalIncludes": {
     "files": [
       "flight/app/app_render_view.hpp",
-      "flight/audio/audio_resource_from.hpp",
-      "flight/audio/audio_resource_reference.hpp",
       "flight/bitmapfont/bitmap_font_glyph_source.hpp",
       "flight/bitmapfont_formats/bitmap_font_json.hpp",
       "flight/bitmaptext/update_bitmap_text.hpp",
@@ -6537,7 +6539,7 @@
       "flight/velocity/transform_velocity.hpp",
       "flight/video/video_resource_from.hpp"
     ],
-    "includes": 980
+    "includes": 974
   },
   "packages": [
     {
@@ -6619,14 +6621,14 @@
       "sourceModules": 5
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/audio",
       "cppNamespace": "flight::audio",
-      "emittedModules": 5,
+      "emittedModules": 8,
       "package": "@flighthq/audio",
-      "refusedModules": 3,
+      "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 8
@@ -8583,8 +8585,8 @@
   },
   "summary": {
     "packages": 156,
-    "emittedModules": 2449,
-    "refusedModules": 584,
+    "emittedModules": 2452,
+    "refusedModules": 581,
     "sourceModules": 3033
   }
 }

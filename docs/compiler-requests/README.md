@@ -106,6 +106,11 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `@flighthq/video` refuses because six element domains map to `flight::host_sdl::ImageSource`, whose
   runtime carrier **already carries `ImageSourceKind`** for exactly this; the binding schema simply has
   no field to declare it. Same profile family as `render-wgpu`'s image-source refusals.
+- [TypeScript `instanceof` is emitted verbatim as C++ text](instanceof-lowered-verbatim.md) — `@flighthq/audio`
+  cannot parse `audio_resource_from.hpp:102`; surfaced once the module emitted further.
+- [A lambda whose fallback is absence is declared to return the present type](logical-or-lambda-return-type.md) —
+  `blob.type || undefined` becomes a `String`-returning lambda with `return std::nullopt`; the audio
+  override has hand-fixed this shape since the pin before last.
 - [Union carriers need canonical alternative order](canonical-union-carrier-order.md) — identical
   named unions currently become incompatible `std::variant` types at array callback boundaries.
 - [Nullable and optional storage needs two absence channels](nullable-optional-presence.md) — one

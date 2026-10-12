@@ -1,0 +1,33 @@
+diff --git a/packages/audio/src/audioFormat.ts b/packages/audio/src/audioFormat.ts
+--- a/packages/audio/src/audioFormat.ts
++++ b/packages/audio/src/audioFormat.ts
+@@ -67,7 +67,10 @@
+ }
+ 
+ export function inferAudioMimeType(url: string): string | null {
+-  const ext = url.split('?')[0].split('.').pop()?.toLowerCase();
++  // The first split result of a string is always present; proving that with a fallback keeps the read
++  // off a storage the emitter would otherwise have to treat as possibly absent.
++  const pathWithoutQuery = url.split('?')[0] ?? '';
++  const ext = pathWithoutQuery.split('.').pop()?.toLowerCase();
+   switch (ext) {
+     case 'mp3':
+       return 'audio/mpeg';
+diff --git a/packages/audio/src/audioResourceFrom.ts b/packages/audio/src/audioResourceFrom.ts
+--- a/packages/audio/src/audioResourceFrom.ts
++++ b/packages/audio/src/audioResourceFrom.ts
+@@ -18,8 +18,12 @@
+ // thread. Returns a null-buffer resource for empty or zero-length input.
+ export function createAudioResourceFromSamples(channels: readonly Float32Array[], sampleRate: number): AudioResource {
+   const numberOfChannels = channels.length;
+-  const length = numberOfChannels > 0 ? channels[0].length : 0;
+-  if (numberOfChannels === 0 || length === 0) return createAudioResource();
++  if (numberOfChannels === 0) return createAudioResource();
++  // Non-empty here, so the first channel is present; saying so keeps the length read off a storage the
++  // emitter would otherwise treat as possibly absent.
++  const firstChannel = channels[0]!;
++  const length = firstChannel.length;
++  if (length === 0) return createAudioResource();
+   const buffer = new AudioBuffer({ length, numberOfChannels, sampleRate });
+   for (let channel = 0; channel < numberOfChannels; channel++) {
+     // Narrow the widened ArrayBufferLike backing to the ArrayBuffer that copyToChannel requires.

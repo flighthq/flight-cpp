@@ -60,7 +60,7 @@ cc_library(
         "include/flight/assets/enable_asset_guards.hpp",
         "include/flight/assets/explain_asset_load.hpp",
         "include/flight/audio/_internal_index.hpp",
-        "include/flight/audio/audio_decoder_registry.hpp",
+        "include/flight/audio/audio_decode_slot.hpp",
         "include/flight/audio/audio_format.hpp",
         "include/flight/audio/audio_resource.hpp",
         "include/flight/audio/audio_resource_from.hpp",

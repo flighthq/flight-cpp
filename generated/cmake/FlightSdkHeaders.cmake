@@ -54,7 +54,7 @@ set(FLIGHT_SDK_GENERATED_HEADERS
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/assets/enable_asset_guards.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/assets/explain_asset_load.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/audio/_internal_index.hpp"
-  "${CMAKE_CURRENT_LIST_DIR}/../include/flight/audio/audio_decoder_registry.hpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../include/flight/audio/audio_decode_slot.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/audio/audio_format.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/audio/audio_resource.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/audio/audio_resource_from.hpp"

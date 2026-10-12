@@ -181,9 +181,44 @@
       "source": "packages/assets/src/explainAssetLoad.ts"
     },
     {
+      "name": "AudioDecodeSlot",
+      "packageName": "@flighthq/audio",
+      "source": "packages/audio/src/audioDecodeSlot.ts"
+    },
+    {
+      "name": "AudioFormat",
+      "packageName": "@flighthq/audio",
+      "source": "packages/audio/src/audioFormat.ts"
+    },
+    {
       "name": "AudioResource",
       "packageName": "@flighthq/audio",
       "source": "packages/audio/src/audioResource.ts"
+    },
+    {
+      "name": "AudioResourceFrom",
+      "packageName": "@flighthq/audio",
+      "source": "packages/audio/src/audioResourceFrom.ts"
+    },
+    {
+      "name": "AudioResourceReference",
+      "packageName": "@flighthq/audio",
+      "source": "packages/audio/src/audioResourceReference.ts"
+    },
+    {
+      "name": "Contract",
+      "packageName": "@flighthq/audio",
+      "source": "packages/audio/src/contract.ts"
+    },
+    {
+      "name": "DecodeAudioResourceBytes",
+      "packageName": "@flighthq/audio",
+      "source": "packages/audio/src/decodeAudioResourceBytes.ts"
+    },
+    {
+      "name": "Index",
+      "packageName": "@flighthq/audio",
+      "source": "packages/audio/src/index.ts"
     },
     {
       "name": "Contract",
@@ -20026,9 +20061,89 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "AudioFormat",
+          "packageName": "@flighthq/audio",
+          "source": "packages/audio/src/audioFormat.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "AudioDecodeSlot",
+          "packageName": "@flighthq/audio",
+          "source": "packages/audio/src/audioDecodeSlot.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "AudioResource",
           "packageName": "@flighthq/audio",
           "source": "packages/audio/src/audioResource.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "DecodeAudioResourceBytes",
+          "packageName": "@flighthq/audio",
+          "source": "packages/audio/src/decodeAudioResourceBytes.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Net",
+          "packageName": "@flighthq/net",
+          "source": "packages/net/src/net.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "AudioResourceFrom",
+          "packageName": "@flighthq/audio",
+          "source": "packages/audio/src/audioResourceFrom.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "AudioResourceReference",
+          "packageName": "@flighthq/audio",
+          "source": "packages/audio/src/audioResourceReference.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Contract",
+          "packageName": "@flighthq/audio",
+          "source": "packages/audio/src/contract.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Index",
+          "packageName": "@flighthq/audio",
+          "source": "packages/audio/src/index.ts"
         }
       ]
     },
@@ -23444,16 +23559,6 @@
           "name": "SpotLight",
           "packageName": "@flighthq/lighting",
           "source": "packages/lighting/src/spotLight.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "Net",
-          "packageName": "@flighthq/net",
-          "source": "packages/net/src/net.ts"
         }
       ]
     },
@@ -39874,12 +39979,251 @@
       ]
     },
     {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:6fe78a29265234ceaae06cd141b5868c51434e39a773bdb558a9ae902c2595e2",
+            "line": 3,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioDecodeSlot.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioDecodeSlot.ts\",120]",
+            "kind": "import",
+            "name": "getAudioMimeTypeEssence",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getAudioMimeTypeEssence",
+            "kind": "dependency",
+            "module": {
+              "name": "AudioFormat",
+              "packageName": "@flighthq/audio",
+              "source": "packages/audio/src/audioFormat.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:a0f808b2380677f0c680b7ad2525a491cfe6db297ec2ed9a3c4fa473ca49064b",
+            "line": 13,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioDecodeSlot.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioDecodeSlot.ts\",873]",
+            "kind": "function",
+            "name": "getAudioDecodeSlot",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:d37e5ce40bb17a2b487fe834d311f30e577abf85a427a49a4cf8682af6472fd0",
+            "line": 49,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioDecodeSlot.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioDecodeSlot.ts\",1830]",
+            "kind": "function",
+            "name": "hasAudioDecodeSlot",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "AudioDecodeSlot",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioDecodeSlot.ts"
+          },
+          "specifier": "./audioFormat.ts",
+          "target": {
+            "name": "AudioFormat",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioFormat.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AudioDecodeSlot",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioDecodeSlot.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostAudioDecode",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostAudioDecode.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "AudioDecodeSlot",
+        "packageName": "@flighthq/audio",
+        "source": "packages/audio/src/audioDecodeSlot.ts"
+      },
+      "steps": []
+    },
+    {
       "bindings": [],
       "dependencies": [],
       "module": {
         "name": "AudioDeviceHandle",
         "packageName": "@flighthq/types",
         "source": "packages/types/src/AudioDeviceHandle.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:bff06175a5a827e4a0d552961de76049d78e04b88c551cb5aa9acd9575767c86",
+            "line": 3,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioFormat.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioFormat.ts\",91]",
+            "kind": "function",
+            "name": "canPlayAudioType",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:4ba75e81b9893fe1972ca909f9e62de46b311a13c94d1d00ced5d06fc05aac7a",
+            "line": 8,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioFormat.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioFormat.ts\",292]",
+            "kind": "function",
+            "name": "detectAudioMimeType",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:6fe78a29265234ceaae06cd141b5868c51434e39a773bdb558a9ae902c2595e2",
+            "line": 43,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioFormat.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioFormat.ts\",1653]",
+            "kind": "function",
+            "name": "getAudioMimeTypeEssence",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:ecfd864f21d84414aaa9e83cad34e8c437d3501a58e229124cc1d1247de747be",
+            "line": 48,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioFormat.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioFormat.ts\",1841]",
+            "kind": "function",
+            "name": "getAudioMimeTypeParameter",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:a8826e296d320eba02a8462e1a372b265030f34e39a4dc68f24998bf8551c978",
+            "line": 69,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioFormat.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioFormat.ts\",2631]",
+            "kind": "function",
+            "name": "inferAudioMimeType",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AudioFormat",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioFormat.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostAudioCodec",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostAudioCodec.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "AudioFormat",
+        "packageName": "@flighthq/audio",
+        "source": "packages/audio/src/audioFormat.ts"
       },
       "steps": []
     },
@@ -40263,6 +40607,972 @@
         "name": "AudioResource",
         "packageName": "@flighthq/types",
         "source": "packages/types/src/AudioResource.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:026178c3c7dd5aeb5ca6f9862ec4ec142447822b03ef71c139e579019ec57d0e",
+            "line": 1,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceFrom.ts\",9]",
+            "kind": "import",
+            "name": "sendNetRequest",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "sendNetRequest",
+            "kind": "dependency",
+            "module": {
+              "name": "Net",
+              "packageName": "@flighthq/net",
+              "source": "packages/net/src/net.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:bff06175a5a827e4a0d552961de76049d78e04b88c551cb5aa9acd9575767c86",
+            "line": 11,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceFrom.ts\",257]",
+            "kind": "import",
+            "name": "canPlayAudioType",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "canPlayAudioType",
+            "kind": "dependency",
+            "module": {
+              "name": "AudioFormat",
+              "packageName": "@flighthq/audio",
+              "source": "packages/audio/src/audioFormat.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 28,
+            "fingerprint": "sha256:6fe78a29265234ceaae06cd141b5868c51434e39a773bdb558a9ae902c2595e2",
+            "line": 11,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceFrom.ts\",275]",
+            "kind": "import",
+            "name": "getAudioMimeTypeEssence",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getAudioMimeTypeEssence",
+            "kind": "dependency",
+            "module": {
+              "name": "AudioFormat",
+              "packageName": "@flighthq/audio",
+              "source": "packages/audio/src/audioFormat.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 53,
+            "fingerprint": "sha256:a8826e296d320eba02a8462e1a372b265030f34e39a4dc68f24998bf8551c978",
+            "line": 11,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceFrom.ts\",300]",
+            "kind": "import",
+            "name": "inferAudioMimeType",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "inferAudioMimeType",
+            "kind": "dependency",
+            "module": {
+              "name": "AudioFormat",
+              "packageName": "@flighthq/audio",
+              "source": "packages/audio/src/audioFormat.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:33f9f774a6f1068fe871e1e34674923c4c02b8e694e392858f85350e1c165807",
+            "line": 12,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceFrom.ts\",355]",
+            "kind": "import",
+            "name": "createAudioResource",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createAudioResource",
+            "kind": "dependency",
+            "module": {
+              "name": "AudioResource",
+              "packageName": "@flighthq/audio",
+              "source": "packages/audio/src/audioResource.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:5a891e99e180fe579d601fe1c02303cace9bb66e089adf49905bd282e5567d36",
+            "line": 13,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceFrom.ts\",413]",
+            "kind": "import",
+            "name": "decodeAudioResourceBytes",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "decodeAudioResourceBytes",
+            "kind": "dependency",
+            "module": {
+              "name": "DecodeAudioResourceBytes",
+              "packageName": "@flighthq/audio",
+              "source": "packages/audio/src/decodeAudioResourceBytes.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:c3b6b5095d17b03fccf74489de5d02d0a2fb8cda31818573db51324c14fc5cc4",
+            "line": 19,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceFrom.ts\",857]",
+            "kind": "function",
+            "name": "createAudioResourceFromSamples",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 23,
+            "fingerprint": "sha256:0d1bc5945133cf7eb4e1893acfa559f14260ceae54379df1c8cafe60a592907f",
+            "line": 37,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceFrom.ts\",1932]",
+            "kind": "function",
+            "name": "loadAudioResourceFromBase64",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 23,
+            "fingerprint": "sha256:5bc945f27f917fb89b2c6a43c709afa1c0b8f0706c1ec79126fb224592d87a36",
+            "line": 50,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceFrom.ts\",2403]",
+            "kind": "function",
+            "name": "loadAudioResourceFromBlob",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 23,
+            "fingerprint": "sha256:492945968e990fab2289028ac133ecf9ded297fa34bcef00b3571c9f59b749bb",
+            "line": 63,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceFrom.ts\",3061]",
+            "kind": "function",
+            "name": "loadAudioResourceFromBytes",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 23,
+            "fingerprint": "sha256:c36c8ff7c91a7578a6c6b01b97f1851a3dbf51fb50fed8ce4d777bb6e45da369",
+            "line": 81,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceFrom.ts\",3588]",
+            "kind": "function",
+            "name": "loadAudioResourceFromUrl",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 16,
+            "fingerprint": "sha256:0d655a7d895af5adc4c1ccba3902dd25bf00f4b3c58fce5b8ac76c33dfd7b60e",
+            "line": 91,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceFrom.ts\",3947]",
+            "kind": "function",
+            "name": "_loadAudioResourceFromUrl",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 23,
+            "fingerprint": "sha256:92564e95b41128f6ffd0fdd1ff561b397845c9fb8a7652a0ace71ec647239ec1",
+            "line": 118,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceFrom.ts\",5090]",
+            "kind": "function",
+            "name": "loadAudioResourceFromUrls",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:737b3e69b1d8a2e2d8cfba77631ba5e51914820e8b12fc16d4d7d0b492dbdb60",
+            "line": 132,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceFrom.ts\",5731]",
+            "kind": "function",
+            "name": "selectAudioResourceUrl",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:c8361bf311d30f23620f584042b0814ee87ac2060a202206036619104bf5571a",
+            "line": 148,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceFrom.ts\",6620]",
+            "kind": "function",
+            "name": "_selectAudioResourceSource",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "AudioResourceFrom",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts"
+          },
+          "specifier": "./audioFormat.ts",
+          "target": {
+            "name": "AudioFormat",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioFormat.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "AudioResourceFrom",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts"
+          },
+          "specifier": "./audioResource.ts",
+          "target": {
+            "name": "AudioResource",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResource.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "AudioResourceFrom",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts"
+          },
+          "specifier": "./decodeAudioResourceBytes.ts",
+          "target": {
+            "name": "DecodeAudioResourceBytes",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/decodeAudioResourceBytes.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "AudioResourceFrom",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts"
+          },
+          "specifier": "@flighthq/net/contract",
+          "target": {
+            "name": "Net",
+            "packageName": "@flighthq/net",
+            "source": "packages/net/src/net.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AudioResourceFrom",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts"
+          },
+          "importedNames": [
+            "AudioResource",
+            "AudioResourceUrl"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "AudioResource",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/AudioResource.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AudioResourceFrom",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts"
+          },
+          "importedNames": [
+            "AudioDecoder",
+            "AudioDecoderRegistry"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "AudioResourceReference",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/AudioResourceReference.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AudioResourceFrom",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts"
+          },
+          "importedNames": [
+            "HostAudioCodecCapability"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostAudioCodec",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostAudioCodec.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AudioResourceFrom",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts"
+          },
+          "importedNames": [
+            "HostAudioDecodeCapabilities"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostAudioDecode",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostAudioDecode.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AudioResourceFrom",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts"
+          },
+          "importedNames": [
+            "HostNetCapability",
+            "NetBody",
+            "NetCredentials",
+            "NetMethod",
+            "NetProgress",
+            "NetRedirect",
+            "NetRequest",
+            "NetRequestOptions",
+            "NetResponse",
+            "NetResponseBody",
+            "NetResponseType"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Net",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Net.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "AudioResourceFrom",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts"
+          },
+          "importedNames": [
+            "Signal"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Signal",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Signal.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "AudioResourceFrom",
+        "packageName": "@flighthq/audio",
+        "source": "packages/audio/src/audioResourceFrom.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
+            "line": 1,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceReference.ts\",9]",
+            "kind": "import",
+            "name": "allocateEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "allocateEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 26,
+            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
+            "line": 1,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceReference.ts\",25]",
+            "kind": "import",
+            "name": "finishEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "finishEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:da446e5f02db10e6ecdbe4aa41f2c29db9bfdf9b2e68e14d8becdbc68c470c49",
+            "line": 15,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceReference.ts\",415]",
+            "kind": "import",
+            "name": "AudioResourceFailureKind",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "AudioResourceFailureKind",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:eb93181eaa74a51a78795818f1ab72a4aa21944fbbbaa4af97dee2bfaac030c2",
+            "line": 16,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceReference.ts\",443]",
+            "kind": "import",
+            "name": "AudioResourceReferenceKind",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "AudioResourceReferenceKind",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:478d683635622cb71628d4a008a63a0c1dd4b9bc4fbb098dc2db3a52cf5ebe8f",
+            "line": 17,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceReference.ts\",473]",
+            "kind": "import",
+            "name": "ResourceResolutionState",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "ResourceResolutionState",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:33f9f774a6f1068fe871e1e34674923c4c02b8e694e392858f85350e1c165807",
+            "line": 20,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceReference.ts\",543]",
+            "kind": "import",
+            "name": "createAudioResource",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createAudioResource",
+            "kind": "dependency",
+            "module": {
+              "name": "AudioResource",
+              "packageName": "@flighthq/audio",
+              "source": "packages/audio/src/audioResource.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:5a891e99e180fe579d601fe1c02303cace9bb66e089adf49905bd282e5567d36",
+            "line": 21,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceReference.ts\",601]",
+            "kind": "import",
+            "name": "decodeAudioResourceBytes",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "decodeAudioResourceBytes",
+            "kind": "dependency",
+            "module": {
+              "name": "DecodeAudioResourceBytes",
+              "packageName": "@flighthq/audio",
+              "source": "packages/audio/src/decodeAudioResourceBytes.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:c3910ebf7b28d401ad50ce65e4a68f2e68625ab0c99d60e0da0155e5ae28fda4",
+            "line": 25,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceReference.ts\",898]",
+            "kind": "function",
+            "name": "createAudioResourceFailure",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:ae7883197f06368c56238f03f4330d84decfd0c83bc243baa287186d40ffb0b6",
+            "line": 40,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceReference.ts\",1390]",
+            "kind": "function",
+            "name": "createEmbeddedAudioResourceReference",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:d3e70bc3d8fffd2c54fd5801766fdb309fee70c5786cc23c2af6fa2ec7a686dc",
+            "line": 50,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceReference.ts\",1732]",
+            "kind": "function",
+            "name": "createExternalAudioResourceReference",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:9da841a365a3e034fcd70acc829b5cf0fcc5ccb3d2e9b3e8fb777b8b5f497fab",
+            "line": 63,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceReference.ts\",2272]",
+            "kind": "function",
+            "name": "explainAudioResourceReferenceResolution",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:7d2fe576b339b60ee5e9f67d41faadcef834ab9e287a7fb23765bf26650bd9a3",
+            "line": 77,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceReference.ts\",2882]",
+            "kind": "function",
+            "name": "findAudioResourceReferenceByName",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:214d8ecf54b1426a7960d9e9a235267b2e387e1266ee9322a12d8c417a4079a2",
+            "line": 91,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceReference.ts\",3550]",
+            "kind": "function",
+            "name": "initializeEmbeddedAudioResourceReference",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:30a3c7875ceba27dcec4c87e7f2eea1fbc57a348d37e4b3c52efb8ae1829922a",
+            "line": 106,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceReference.ts\",3994]",
+            "kind": "function",
+            "name": "initializeExternalAudioResourceReference",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:32ca4183a25f8d80a94fd6225514748c58d0554e15afb5d250481bd6bbd90e2a",
+            "line": 125,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceReference.ts\",4689]",
+            "kind": "function",
+            "name": "resetFailedAudioResourceReference",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 23,
+            "fingerprint": "sha256:8bdc45e2c2eaea8309578642d12b907208e0ed20490e65bfba6d3547b439d78f",
+            "line": 141,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/audioResourceReference.ts\",5670]",
+            "kind": "function",
+            "name": "resolveAudioResourceReference",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "AudioResourceReference",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts"
+          },
+          "specifier": "./audioResource.ts",
+          "target": {
+            "name": "AudioResource",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResource.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "AudioResourceReference",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts"
+          },
+          "specifier": "./decodeAudioResourceBytes.ts",
+          "target": {
+            "name": "DecodeAudioResourceBytes",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/decodeAudioResourceBytes.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "AudioResourceReference",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts"
+          },
+          "specifier": "@flighthq/entity/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/entity",
+            "source": "packages/entity/src/entity.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "AudioResourceReference",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "AudioResourceReference",
+        "packageName": "@flighthq/audio",
+        "source": "packages/audio/src/audioResourceReference.ts"
       },
       "steps": []
     },
@@ -99238,6 +100548,101 @@
           "evaluation": "runtime",
           "importer": {
             "name": "Contract",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/contract.ts"
+          },
+          "specifier": "./audioDecodeSlot.ts",
+          "target": {
+            "name": "AudioDecodeSlot",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioDecodeSlot.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/contract.ts"
+          },
+          "specifier": "./audioFormat.ts",
+          "target": {
+            "name": "AudioFormat",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioFormat.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/contract.ts"
+          },
+          "specifier": "./audioResource.ts",
+          "target": {
+            "name": "AudioResource",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResource.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/contract.ts"
+          },
+          "specifier": "./audioResourceFrom.ts",
+          "target": {
+            "name": "AudioResourceFrom",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/contract.ts"
+          },
+          "specifier": "./audioResourceReference.ts",
+          "target": {
+            "name": "AudioResourceReference",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/contract.ts"
+          },
+          "specifier": "./decodeAudioResourceBytes.ts",
+          "target": {
+            "name": "DecodeAudioResourceBytes",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/decodeAudioResourceBytes.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Contract",
+        "packageName": "@flighthq/audio",
+        "source": "packages/audio/src/contract.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
             "packageName": "@flighthq/binpack",
             "source": "packages/binpack/src/contract.ts"
           },
@@ -121649,6 +123054,259 @@
         "name": "DecimatePath",
         "packageName": "@flighthq/path",
         "source": "packages/path/src/decimatePath.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:a0f808b2380677f0c680b7ad2525a491cfe6db297ec2ed9a3c4fa473ca49064b",
+            "line": 8,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/decodeAudioResourceBytes.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/decodeAudioResourceBytes.ts\",166]",
+            "kind": "import",
+            "name": "getAudioDecodeSlot",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getAudioDecodeSlot",
+            "kind": "dependency",
+            "module": {
+              "name": "AudioDecodeSlot",
+              "packageName": "@flighthq/audio",
+              "source": "packages/audio/src/audioDecodeSlot.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:4ba75e81b9893fe1972ca909f9e62de46b311a13c94d1d00ced5d06fc05aac7a",
+            "line": 9,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/decodeAudioResourceBytes.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/decodeAudioResourceBytes.ts\",225]",
+            "kind": "import",
+            "name": "detectAudioMimeType",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "detectAudioMimeType",
+            "kind": "dependency",
+            "module": {
+              "name": "AudioFormat",
+              "packageName": "@flighthq/audio",
+              "source": "packages/audio/src/audioFormat.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 31,
+            "fingerprint": "sha256:6fe78a29265234ceaae06cd141b5868c51434e39a773bdb558a9ae902c2595e2",
+            "line": 9,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/decodeAudioResourceBytes.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/decodeAudioResourceBytes.ts\",246]",
+            "kind": "import",
+            "name": "getAudioMimeTypeEssence",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getAudioMimeTypeEssence",
+            "kind": "dependency",
+            "module": {
+              "name": "AudioFormat",
+              "packageName": "@flighthq/audio",
+              "source": "packages/audio/src/audioFormat.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:33f9f774a6f1068fe871e1e34674923c4c02b8e694e392858f85350e1c165807",
+            "line": 10,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/decodeAudioResourceBytes.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/decodeAudioResourceBytes.ts\",306]",
+            "kind": "import",
+            "name": "createAudioResource",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createAudioResource",
+            "kind": "dependency",
+            "module": {
+              "name": "AudioResource",
+              "packageName": "@flighthq/audio",
+              "source": "packages/audio/src/audioResource.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 23,
+            "fingerprint": "sha256:5a891e99e180fe579d601fe1c02303cace9bb66e089adf49905bd282e5567d36",
+            "line": 19,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/decodeAudioResourceBytes.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/decodeAudioResourceBytes.ts\",972]",
+            "kind": "function",
+            "name": "decodeAudioResourceBytes",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:af9245d041d3726ac88b7f6305b2f4c169656df2bd652ee6d064c3f46b5b64f5",
+            "line": 48,
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/decodeAudioResourceBytes.ts",
+            "id": "binding:[\"@flighthq/audio\",\"packages/audio/src/decodeAudioResourceBytes.ts\",2290]",
+            "kind": "function",
+            "name": "resolveAudioDecodeSlot",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "DecodeAudioResourceBytes",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/decodeAudioResourceBytes.ts"
+          },
+          "specifier": "./audioDecodeSlot.ts",
+          "target": {
+            "name": "AudioDecodeSlot",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioDecodeSlot.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "DecodeAudioResourceBytes",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/decodeAudioResourceBytes.ts"
+          },
+          "specifier": "./audioFormat.ts",
+          "target": {
+            "name": "AudioFormat",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioFormat.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "DecodeAudioResourceBytes",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/decodeAudioResourceBytes.ts"
+          },
+          "specifier": "./audioResource.ts",
+          "target": {
+            "name": "AudioResource",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResource.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "DecodeAudioResourceBytes",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/decodeAudioResourceBytes.ts"
+          },
+          "importedNames": [
+            "AudioResource"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "AudioResource",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/AudioResource.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "DecodeAudioResourceBytes",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/decodeAudioResourceBytes.ts"
+          },
+          "importedNames": [
+            "AudioDecoder",
+            "AudioDecoderRegistry"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "AudioResourceReference",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/AudioResourceReference.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "DecodeAudioResourceBytes",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/decodeAudioResourceBytes.ts"
+          },
+          "importedNames": [
+            "HostAudioDecodeCapabilities",
+            "HostAudioDecodeFormatCapability"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostAudioDecode",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostAudioDecode.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "DecodeAudioResourceBytes",
+        "packageName": "@flighthq/audio",
+        "source": "packages/audio/src/decodeAudioResourceBytes.ts"
       },
       "steps": []
     },
@@ -169674,6 +171332,87 @@
         "name": "Index",
         "packageName": "@flighthq/adjustments",
         "source": "packages/adjustments/src/index.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/index.ts"
+          },
+          "specifier": "./audioDecodeSlot.ts",
+          "target": {
+            "name": "AudioDecodeSlot",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioDecodeSlot.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/index.ts"
+          },
+          "specifier": "./audioFormat.ts",
+          "target": {
+            "name": "AudioFormat",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioFormat.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/index.ts"
+          },
+          "specifier": "./audioResource.ts",
+          "target": {
+            "name": "AudioResource",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResource.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/index.ts"
+          },
+          "specifier": "./audioResourceFrom.ts",
+          "target": {
+            "name": "AudioResourceFrom",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceFrom.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/index.ts"
+          },
+          "specifier": "./audioResourceReference.ts",
+          "target": {
+            "name": "AudioResourceReference",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Index",
+        "packageName": "@flighthq/audio",
+        "source": "packages/audio/src/index.ts"
       },
       "steps": []
     },
