@@ -8695,14 +8695,14 @@
       "code": "dependency-refused",
       "module": "packages/updater/src/contract.ts",
       "package": "@flighthq/updater",
-      "reason": "dependency ./updater was refused for @flighthq/updater/packages/updater/src/updater.ts",
+      "reason": "dependency ./updater.ts was refused for @flighthq/updater/packages/updater/src/updater.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/updater/src/index.ts",
       "package": "@flighthq/updater",
-      "reason": "dependency ./contract was refused for @flighthq/updater/packages/updater/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/updater/packages/updater/src/contract.ts",
       "stage": "dependency"
     },
     {

@@ -15,9 +15,16 @@ namespace flight::updater {
 using CheckReason = flight::types::reason_01523507f7b21613;
 using CheckReasonRow = flight::StructuralRef<flight::RowReadonly<
     flight::RowOf<flight::Ref<CheckReason>>>>;
-using DownloadedReason = flight::types::reason_update_938ed6a0d2da8e0c;
-using DownloadedReasonRow = flight::StructuralRef<flight::RowReadonly<
-    flight::RowOf<flight::Ref<DownloadedReason>>>>;
+// The downloaded-reason shape is an ANONYMOUS structural type, and the emitter names those by a hash
+// of their members -- a hash that this override cannot track, because it is derived from the pin's own
+// emission rather than from anything here. Naming the hash broke this override at the a627849 pin: the
+// generated copy in flight/types moved to reason_update_457a6ef5d21e9081 while the hand-written copy
+// still named the previous hash, and the whole module stopped compiling on an undeclared type.
+// So the type is taken from the public variant instead. `AppUpdateCheckOutcome`'s first alternative IS
+// the downloaded-reason row, and its element type IS the struct, whatever the current hash is: the
+// override now tracks the emitter's naming instead of freezing one spelling of it.
+using DownloadedReasonRow = std::variant_alternative_t<0, flight::types::AppUpdateCheckOutcome>;
+using DownloadedReason = typename DownloadedReasonRow::object_type;
 
 [[nodiscard]] inline flight::types::AppUpdateCheckOutcome make_check_reason(
     flight::String reason) {

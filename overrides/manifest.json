@@ -104,7 +104,7 @@
       "package": "@flighthq/updater",
       "status": "complete",
       "supplies": "packages/updater/src/updater.ts",
-      "derivedFrom": "c1b345404a2859bfe29d861d140f0b8e4e6614ae675deede667ab144c6d52b17",
+      "derivedFrom": "f081311a113aab1e09ccf2700430a97c351efc5d665b6887849760f6ea3c640c",
       "reason": "The emitter refuses the DownloadedUpdate-to-provider WeakMap value as unproven and then refuses checkForAppUpdate because it tries to represent the AppUpdateCheckOutcome variant as Ref<AppUpdateCheckOutcome>. Its retained constants also structurally cast anonymous records into a variant reference carrier that does not exist. The missing owner table makes the retained install function uncompilable even after qualification.",
       "change": "Supplies the complete updater transaction module over the generated two-arm check-outcome variant, concrete install outcome, DownloadedUpdate identity, provider Tasks, and flight::WeakMap.",
       "equivalence": "Each check awaits exactly one provider call, collapses rejection and unknown outcomes to operation-failed, preserves stable sentinel identity within the generated check carrier, and returns a fresh downloaded wrapper retaining the exact update reference. The weak owner map keys by update identity and strongly retains its provider while the key is live. Install rejects unowned handles, routes a handle only to its exact origin after provider replacement, retains ownership across failure, consumes it only after ok, and hides provider exceptions behind operation-failed. Destroy remains a synchronous direct call.",
