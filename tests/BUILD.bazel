@@ -219,6 +219,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_velocity_test",
+    srcs = ["generated_velocity_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_spring_test",
     srcs = ["generated_spring_test.cpp"],
     size = "small",
@@ -342,6 +349,7 @@ test_suite(
         ":generated_midi_test",
         ":generated_spring_test",
         ":generated_timeline_test",
+        ":generated_velocity_test",
         ":generated_signals_throttle_test",
         ":generated_materials_test",
         ":generated_registry_test",
