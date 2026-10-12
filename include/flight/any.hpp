@@ -678,6 +678,25 @@ template <typename Value>
 
 } // namespace detail
 
+// ES2022 `ErrorOptions`. Only `cause` is defined by the language.
+struct ErrorOptions {
+  std::optional<Any> cause;
+};
+
+inline Error::Error(String message, const ErrorOptions& options) : Error(std::move(message)) {
+  // `cause()` answers what reading `error.cause` yields, so an explicit `{ cause: undefined }` reads as
+  // absent exactly like an omitted one. Only an `in` test could tell them apart, and the runtime
+  // offers none on an Error.
+  if (options.cause && options.cause->kind() != AnyKind::undefined) {
+    cause_ = std::make_shared<const Any>(*options.cause);
+  }
+}
+
+inline std::optional<Any> Error::cause() const {
+  if (!cause_) return std::nullopt;
+  return *cause_;
+}
+
 } // namespace flight
 
 namespace std {

@@ -1390,6 +1390,55 @@ void test_symbol_absent_description() {
 
 // The emitter lowers `catch (e)` to `catch (const std::exception&)` and reaches `.message` through
 // `static_cast<flight::Error>(e)`. The message must survive that, not be replaced.
+// `stack` and `cause`, the two Error members beyond name/message that source reads. This runtime
+// records no call stack, so `stack` is absent on every Error. `cause` is present exactly when the Error
+// was constructed with ES2022 ErrorOptions carrying one, and it is the same value -- an object cause
+// keeps its identity.
+void test_error_stack_and_cause() {
+  const flight::Error plain(flight::String("plain"));
+  check(!plain.stack().has_value(), "an Error carries no stack: this runtime records none");
+  check(!plain.cause().has_value(), "an Error constructed without options has no cause");
+
+  const flight::Error explicit_undefined(flight::String("m"), flight::ErrorOptions{flight::Any()});
+  check(!explicit_undefined.cause().has_value(),
+        "{ cause: undefined } reads as an absent cause, exactly like an omitted one");
+
+  const auto inner = flight::make_ref<flight::RangeError>(flight::String("inner"));
+  const flight::Error outer(flight::String("outer"), flight::ErrorOptions{flight::Any::object(inner)});
+  const auto cause = outer.cause();
+  check(cause.has_value() && cause->error_if().get() == inner.get() &&
+            cause->error_if()->name() == flight::String("RangeError"),
+        "an object cause is the same object, still a RangeError");
+
+  const flight::TypeError typed(flight::String("typed"), flight::ErrorOptions{flight::Any(1.0)});
+  check(typed.cause().has_value() && typed.cause()->kind() == flight::AnyKind::number &&
+            typed.cause()->as_number() == 1.0 && typed.name() == flight::String("TypeError") &&
+            !typed.stack().has_value(),
+        "subclasses forward ErrorOptions, keep their own name, and carry no stack");
+
+  const flight::RangeError range_without(flight::String("r"));
+  check(!range_without.cause().has_value() && !range_without.stack().has_value(),
+        "a subclass constructed the existing way has neither cause nor stack");
+
+  // A non-Error object cause keeps its identity, and the checked Error projection refuses it rather
+  // than inventing an Error: a cause can be any value, and only Errors answer the Error view.
+  struct PlainCause final : public flight::ReferenceEnabled {};
+  const auto plain_cause = flight::make_ref<PlainCause>();
+  const flight::Error with_object(flight::String("o"), flight::ErrorOptions{flight::Any::object(plain_cause)});
+  const auto object_cause = with_object.cause();
+  check(object_cause.has_value() && object_cause->object_if<PlainCause>().get() == plain_cause.get() &&
+            !object_cause->error_if(),
+        "an object cause is the same object, and is not projected as an Error");
+
+  const flight::Error with_string(flight::String("s"), flight::ErrorOptions{flight::Any(flight::String("why"))});
+  check(with_string.cause().has_value() && with_string.cause()->as_string() == flight::String("why") &&
+            !with_string.cause()->error_if(),
+        "a primitive cause is kept as given and is not an Error");
+
+  const flight::Error omitted_options(flight::String("m"), flight::ErrorOptions{});
+  check(!omitted_options.cause().has_value(), "ErrorOptions without a cause leaves the cause absent");
+}
+
 void test_error_from_caught_exception() {
   try {
     throw std::runtime_error("plain what text");
@@ -3793,6 +3842,7 @@ int main() {
   test_error();
   test_error_name_is_dynamic();
   test_erased_error_view();
+  test_error_stack_and_cause();
   test_host();
   test_reference_projection();
   test_number_to_fixed();

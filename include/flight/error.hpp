@@ -1,6 +1,8 @@
 #pragma once
 
 #include <exception>
+#include <memory>
+#include <optional>
 #include <stdexcept>
 #include <utility>
 
@@ -8,6 +10,12 @@
 #include <flight/string.hpp>
 
 namespace flight {
+
+class Any;
+
+// ES2022 `ErrorOptions`: the second argument of `new Error(message, { cause })`. Defined in
+// flight/any.hpp, where `Any` is complete, because a cause is any source value.
+struct ErrorOptions;
 
 // `ReferenceEnabled` because a source-language error is an OBJECT: `catch` hands out the value that
 // was thrown, `e === caught` is identity, and a `RangeError` read through an `Error` binding must
@@ -26,7 +34,21 @@ class Error : public std::runtime_error, public ReferenceEnabled {
   // it cannot hijack copy construction: for an `Error` argument the copy constructor is the better match.
   explicit Error(const std::exception& caught) : Error(String(caught.what())) {}
 
+  // `new Error(message, { cause })`. The cause is kept exactly as given -- the same erased value,
+  // so an object cause keeps its identity -- and `cause()` answers it. Defined in flight/any.hpp.
+  Error(String message, const ErrorOptions& options);
+
   [[nodiscard]] const String& message() const noexcept { return message_; }
+
+  // `error.stack`. ECMAScript does not define `stack`; it is an implementation-defined property that
+  // engines which capture a call stack add to their errors. This runtime captures none, so an Error
+  // here has no `stack` and reading it is `undefined` -- the answer the source gets from any engine
+  // that records no trace. Nothing is fabricated: there is no trace to report.
+  [[nodiscard]] std::optional<String> stack() const { return std::nullopt; }
+
+  // `error.cause`: present exactly when the Error was constructed with an `ErrorOptions` carrying a
+  // cause, `undefined` otherwise. Defined in flight/any.hpp.
+  [[nodiscard]] std::optional<Any> cause() const;
 
   // `name` is a DYNAMIC source property, and the emitted read is `value.name` through an Error-typed
   // value that may hold a subclass: `catch` hands back whatever was thrown, and `e instanceof Error`
@@ -38,11 +60,14 @@ class Error : public std::runtime_error, public ReferenceEnabled {
 
  private:
   String message_;
+  // Held behind a pointer because `Any` is incomplete here; null means no cause was given.
+  std::shared_ptr<const Any> cause_;
 };
 
 class RangeError final : public Error {
  public:
   explicit RangeError(String message = String()) : Error(std::move(message)) {}
+  RangeError(String message, const ErrorOptions& options) : Error(std::move(message), options) {}
 
   [[nodiscard]] String name() const override { return String("RangeError"); }
 };
@@ -50,6 +75,7 @@ class RangeError final : public Error {
 class TypeError final : public Error {
  public:
   explicit TypeError(String message = String()) : Error(std::move(message)) {}
+  TypeError(String message, const ErrorOptions& options) : Error(std::move(message), options) {}
 
   [[nodiscard]] String name() const override { return String("TypeError"); }
 };

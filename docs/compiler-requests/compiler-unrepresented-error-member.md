@@ -58,3 +58,15 @@ represents the member and the emitter lowers it.
 This refusal is deliberately distinct from the absence-channel refusals (`nullable-optional-presence`,
 the optional-storage present-payload class): those are about storage that may hold absence, and this is
 about a member that does not exist. Both stay named separately so neither gets absorbed into the other.
+
+## Update: `stack` and `cause` are now represented
+
+The runtime now declares two of these members under a stated profile contract
+([runtime-semantics.md](../runtime-semantics.md)): `Error::stack()` is always absent, because this
+runtime captures no call stack, and `Error::cause()` is the exact value given to ES2022
+`ErrorOptions`. Following this request's own rule, a runtime that grows the member earns the lowering,
+so [`compiler-error-stack-cause-presence.patch`](../../source-patches/compiler-error-stack-cause-presence.patch)
+lowers those two reads and their presence tests. It is applied after this request's refusal patch and
+narrows the refusal to skip exactly `stack` and `cause`. Every other member the runtime does not
+declare is still refused with `cpp-error-member-unrepresented`. The upstream lowering is requested in
+[compiler-error-stack-cause-presence](compiler-error-stack-cause-presence.md).

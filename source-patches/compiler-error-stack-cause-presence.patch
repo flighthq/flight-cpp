@@ -1,0 +1,101 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index a67b248..7bcfb97 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -13395,6 +13395,8 @@ function emitCppPresenceTestCpp(
+   strict: boolean,
+   context: EmitContext,
+ ): string {
++  const errorMemberTest = emitCppErrorPresenceMemberTestCpp(operand, sentinel, present, strict, context);
++  if (errorMemberTest) return errorMemberTest;
+   const operandType = getCppNullishComparisonOperandTypeCpp(operand, context);
+   const union = operandType ? getIrUnionTypeCpp(operandType, context, new Set()) : undefined;
+   const plan = union ? getCppUnionRepresentationPlan(union, context) : undefined;
+@@ -13730,6 +13732,36 @@ function hasCppErasedDynamicStorageCpp(
+   return isCppErasedDynamicValueTypeCpp(declaration.type);
+ }
+ 
++// A presence test on `error.stack` or `error.cause`, whose storage the Error read itself names: `stack`
++// is `std::optional<String>` and can only be absent, never null; `cause` is the erased value, which keeps
++// presence in its own kind tag. Each is answered on that storage with the same predicates the
++// optional-storage and erased-value lanes use, and the operand is evaluated once.
++function emitCppErrorPresenceMemberTestCpp(
++  operand: Readonly<IrExpression>,
++  sentinel: 'null' | 'undefined',
++  present: boolean,
++  strict: boolean,
++  context: EmitContext,
++): string | undefined {
++  if (
++    getCppRuntimeProfile(context.options) !== 'flight-cpp' ||
++    operand.kind !== 'property' ||
++    operand.member?.receiver !== 'error' ||
++    !isCppRepresentedErrorPresenceMemberCpp(operand.name)
++  ) {
++    return undefined;
++  }
++  const read = emitExpression(operand, context);
++  if (operand.name === 'stack') {
++    context.includes.add('optional');
++    // A strict `=== null` can never hold: the runtime's stack is a string or absent.
++    if (strict && sentinel === 'null') return present ? 'true' : 'false';
++    return `${present ? '' : '!'}${read}.has_value()`;
++  }
++  const predicate = strict ? (sentinel === 'null' ? 'is_null' : 'is_undefined') : 'is_nullish';
++  return `([&]() { const auto& presence_operand = ${read}; return ${present ? '!' : ''}presence_operand.${predicate}(); }())`;
++}
++
+ // A presence test whose emitted storage has no absence channel at all, which happens only where the
+ // type admits the sentinel: the value can be absent at runtime and the representation cannot say so.
+ // Reported with a named rule rather than guessed at.
+@@ -25318,9 +25350,19 @@ function emitCppErrorPropertyReadCpp(
+     expression.structuralAccess === 'narrowed' &&
+     isCppErasedDynamicValueTypeCpp(getIrExpressionTypeEvidenceCpp(expression.object, context));
+   if (!requiresErasedView) {
+-    if (expression.name !== 'name') return undefined;
++    if (expression.name === 'name') {
++      context.includes.add('flight/error.hpp');
++      return `${emitExpression(expression.object, context)}.name()`;
++    }
++    if (!isCppRepresentedErrorPresenceMemberCpp(expression.name)) return undefined;
++    context.includes.add('flight/any.hpp');
++    context.includes.add('flight/error.hpp');
++    return emitCppErrorPresenceMemberReadCpp(`${emitExpression(expression.object, context)}.`, expression.name);
++  }
++  if (isCppRepresentedErrorPresenceMemberCpp(expression.name)) {
++    context.includes.add('flight/any.hpp');
+     context.includes.add('flight/error.hpp');
+-    return `${emitExpression(expression.object, context)}.name()`;
++    return emitCppErrorPresenceMemberReadCpp(`${emitExpression(expression.object, context)}.error_if()->`, expression.name);
+   }
+   if (expression.name !== 'name' && expression.name !== 'message') return undefined;
+   context.includes.add('flight/any.hpp');
+@@ -25328,6 +25370,20 @@ function emitCppErrorPropertyReadCpp(
+   return `${emitExpression(expression.object, context)}.error_if()->${expression.name}()`;
+ }
+ 
++// The two Error members beyond name/message that flight::Error represents, each with the absence the
++// source can observe. `stack` is `string | undefined` in the source and `std::optional<String>` in the
++// runtime, which records no call stack, so it is absent on every Error; a presence test on it then takes
++// the optional-storage lane. `cause` is `unknown`, so the read yields the erased value itself -- the
++// cause given to ErrorOptions, or an `undefined` Any when there was none -- which is exactly what reading
++// `error.cause` yields, and a presence test on it takes the erased-value lane.
++function isCppRepresentedErrorPresenceMemberCpp(name: string): boolean {
++  return name === 'stack' || name === 'cause';
++}
++
++function emitCppErrorPresenceMemberReadCpp(receiverAccess: string, name: string): string {
++  return name === 'cause' ? `${receiverAccess}cause().value_or(flight::Any())` : `${receiverAccess}stack()`;
++}
++
+ // The Error members the runtime does not carry. `flight::Error` declares `name` and `message`; a
+ // `stack`, a `cause`, or anything else the source language allows on an Error has no representation
+ // here, and neither carrier can answer it. On the erased carrier there is no member at all, so
+@@ -25344,6 +25400,7 @@ function refuseCppUnsupportedErrorMemberReadCpp(
+     return;
+   }
+   if (expression.name === 'name' || expression.name === 'message') return;
++  if (isCppRepresentedErrorPresenceMemberCpp(expression.name)) return;
+   emissionError(
+     context,
+     `reading Error.${expression.name} requires a runtime Error member this profile does not represent; flight::Error declares name and message, and the checked Error view reads only those`,

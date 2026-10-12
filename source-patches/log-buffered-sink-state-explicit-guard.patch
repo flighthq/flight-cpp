@@ -1,0 +1,23 @@
+diff --git a/packages/log/src/log.ts b/packages/log/src/log.ts
+index 68beec9..f42f0e5 100644
+--- a/packages/log/src/log.ts
++++ b/packages/log/src/log.ts
+@@ -106,14 +106,16 @@ export function createBufferedLogSink(
+   const intervalMs = options.intervalMs ?? 1000;
+ 
+   const flush = (): void => {
+-    const state = _bufferedSinkStates.get(handle)!;
++    const state = _bufferedSinkStates.get(handle);
++    if (state === undefined) throw new TypeError("Cannot read properties of undefined (reading 'buf')");
+     if (state.buf.length === 0) return;
+     const batch = state.buf.splice(0);
+     for (const entry of batch) target(entry);
+   };
+ 
+   const sink: LogSink = (entry: Readonly<LogEntry>) => {
+-    const state = _bufferedSinkStates.get(handle)!;
++    const state = _bufferedSinkStates.get(handle);
++    if (state === undefined) throw new TypeError("Cannot read properties of undefined (reading 'buf')");
+     state.buf.push({ level: entry.level, channel: entry.channel, data: entry.data });
+     if (state.buf.length >= size) flush();
+   };

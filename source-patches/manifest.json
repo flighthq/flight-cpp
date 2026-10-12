@@ -2419,6 +2419,23 @@
       "appliedOn": "2026-10-11"
     },
     {
+      "id": "compiler-error-stack-cause-presence",
+      "dependency": "flight-compiler",
+      "patch": "compiler-error-stack-cause-presence.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "a presence test against undefined has no absence channel in the emitted C++ storage for property (serializeLogError: `value.stack !== undefined`, `value.cause !== undefined`), and compiler-unrepresented-error-member refuses the reads themselves (cpp-error-member-unrepresented)",
+      "rewrite": "Once flight::Error declares them, lowers exactly two more Error members. `stack` becomes `stack()` (std::optional<String>), and `cause` becomes `cause().value_or(flight::Any())` (the erased value). This applies on a typed Error receiver and through the checked `error_if()` view of an erased one. A presence test on either answers on that storage: has_value() for stack (which can never be null), and the erased value's is_undefined/is_null/is_nullish for cause. compiler-unrepresented-error-member is narrowed to skip only these two names, so every other undeclared Error member still refuses.",
+      "equivalence": "The reads are of members the runtime now declares under a stated profile contract (docs/runtime-semantics.md): stack is always absent because this runtime captures no call stack, which is the undefined the source reads, and no string is fabricated. cause is the exact erased value given to ErrorOptions, or an undefined Any when there was none, which is what reading error.cause yields. The presence tests evaluate the operand once and ask the same predicates the optional-storage and erased-value lanes use. No other member, receiver or presence test changes.",
+      "verification": "Scoped log generation at a627849: serializeLogError emits `value.error_if()->stack().has_value()` and `presence_operand.is_undefined()` on `value.error_if()->cause().value_or(flight::Any())`, and log.ts no longer refuses on stack/cause; runtime tests for the Error contract pass under clang 22.",
+      "whyNotUpstreamFirst": "The members exist only because this repository's runtime now declares them under its own profile contract; upstream has no flight::Error to lower to. Upstream needs the presence-test lane for runtime-declared Error members.",
+      "unblocks": "@flighthq/log serializeLogError (log.ts).",
+      "expires": "when the emitter lowers runtime-declared Error members and their presence tests upstream (see docs/compiler-requests/compiler-unrepresented-error-member.md).",
+      "appliedOn": "2026-10-12"
+    },
+    {
       "id": "scene2d-canvas-host-image-draw-flow",
       "dependency": "flight",
       "patch": "scene2d-canvas-host-image-draw-flow.patch",
@@ -2617,6 +2634,23 @@
       "whyNotUpstreamFirst": "The emitter narrows an optional local on the then-branch of a truthiness test but not on the else-branch of its negation; that is a compiler request (compiler-requests/negated-truthiness-else-narrowing.md). node blocks every lane.",
       "unblocks": "flight/node/bounds_rectangle.hpp and the node headers that include it (_internal_index, contract).",
       "expires": "when the emitter unwraps an optional local in the else-branch of a negated truthiness test.",
+      "appliedOn": "2026-10-12"
+    },
+    {
+      "id": "log-buffered-sink-state-explicit-guard",
+      "dependency": "flight",
+      "patch": "log-buffered-sink-state-explicit-guard.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/log/src/log.ts",
+      "package": "@flighthq/log",
+      "answers": "refusal",
+      "refusal": "property buf on C++ absence-carrying storage requires narrowed access: no present-value proof reaches this read (createBufferedLogSink flush/sink: `const state = _bufferedSinkStates.get(handle)!; state.buf...`)",
+      "rewrite": "In createBufferedLogSink's flush and sink closures, replaces `const state = _bufferedSinkStates.get(handle)!;` with `const state = _bufferedSinkStates.get(handle); if (state === undefined) throw new TypeError(\"Cannot read properties of undefined (reading 'buf')\");`.",
+      "equivalence": "When the entry is present, which is the assertion's claim and true for every sink this function creates, both forms bind the same state object and run the same statements. When it is absent, the original's first statement after the binding reads `state.buf` and throws a TypeError; the rewrite throws a TypeError at the same point, before any other statement runs. The exception type is the same; only the engine-specific message text is written out. No other behavior changes.",
+      "verification": "Scoped log generation at a627849: the buf refusal is gone. log.ts then stops at the separate ReturnType<typeof setInterval> carrier defect (docs/compiler-requests/return-type-of-bound-external-in-union.md), so log.ts is still refused and log keeps its override.",
+      "whyNotUpstreamFirst": "A const bound from a non-null-asserted Map/WeakMap get keeps the call's optional storage with no present-value proof (docs/compiler-requests/non-null-asserted-collection-get-binding.md). An explicit guard is the smallest source change the emitter already lowers, and it keeps the exception type.",
+      "unblocks": "createBufferedLogSink in @flighthq/log, one of two remaining blockers for log.ts.",
+      "expires": "when the emitter treats a binding initialized from a non-null-asserted collection get as present storage.",
       "appliedOn": "2026-10-12"
     },
     {
