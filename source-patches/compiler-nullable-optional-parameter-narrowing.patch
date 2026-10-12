@@ -1,0 +1,121 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index dc21f57..4b6efe2 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -16441,9 +16441,36 @@ function emitNarrowedUnionMemberCpp(
+   const union = bindingType ? getIrUnionTypeCpp(bindingType, context, new Set()) : undefined;
+   if (!union) return undefined;
+   const binding = emitInitializedBindingValueCpp(expression.reference.binding, context);
++  // `f(x?: T | null)` keeps three states: the outer optional is the parameter's own presence (omitted is
++  // undefined) and the inner optional is the declared `T | null`. A test that excluded only `undefined`
++  // proves the outer optional present and nothing more, so the narrowed value IS the inner `T | null`
++  // carrier -- null still null, a value still the value. Reading it is the outer `value()`; the inner
++  // optional is the declared storage of the narrowed type and is not unpacked here.
++  if (
++    narrowedType &&
++    !expression.narrowedMember &&
++    getCppOptionalParameterNullishStorageCpp(expression, context) === 'nestedNullable' &&
++    !isCppTypeAdmittingUndefinedCpp(narrowedType, context) &&
++    isCppTypeAdmittingNullCpp(narrowedType, context)
++  ) {
++    context.includes.add('optional');
++    return `${binding}.value()`;
++  }
+   return emitCppNarrowedUnionValueCpp(binding, union, narrowedType, expression.narrowedMember, context);
+ }
+
++function isCppTypeAdmittingUndefinedCpp(type: Readonly<IrType>, context: EmitContext): boolean {
++  if (type.kind === 'undefined') return true;
++  const union = getIrUnionTypeCpp(type, context, new Set());
++  return union !== undefined && union.types.some((member) => member.kind === 'undefined');
++}
++
++function isCppTypeAdmittingNullCpp(type: Readonly<IrType>, context: EmitContext): boolean {
++  if (type.kind === 'null') return true;
++  const union = getIrUnionTypeCpp(type, context, new Set());
++  return union !== undefined && union.types.some((member) => member.kind === 'null');
++}
++
+ // A recursive union alias is emitted as a named derived carrier, so narrowing a surrounding union back
+ // to that alias must reconstruct the named carrier rather than its anonymous optional/variant base. An
+ // imported reference has a different binding id from the declaration -- and may arrive through a barrel --
+diff --git a/packages/compiler-backend-cpp/src/cppNullableOptionalParameter.test.ts b/packages/compiler-backend-cpp/src/cppNullableOptionalParameter.test.ts
+new file mode 100644
+index 0000000..6adc1a3
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppNullableOptionalParameter.test.ts
+@@ -0,0 +1,74 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { isBackendEmissionFailure } from '../../compiler-emission/src/index.js';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/log/src/Channel.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/log', upstreamDirectory: '/flight' });
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++function emissionFailure(source: string): unknown {
++  try {
++    emit(source);
++  } catch (error) {
++    return error;
++  }
++  return undefined;
++}
++
++// `x?: T | null` is three source states: omitted (undefined), present null, and a present value. The
++// parameter is stored as an outer optional for its own presence around the declared `T | null` carrier.
++describe('nullable optional parameter narrowed past undefined', () => {
++  it('keeps omitted, null and a value distinct when only undefined is excluded', () => {
++    const contents = emit(
++      `export interface Ctx { channel: string | null }
++       export function child(parent: Readonly<Ctx>, channel?: string | null): string | null {
++         return channel !== undefined ? channel : parent.channel;
++       }`,
++    );
++    expect(contents).toContain('std::optional<std::optional<flight::String>> channel = std::nullopt');
++    // The presence test asks the outer optional; the present branch is the inner `string | null` carrier.
++    expect(contents).toContain('presence_operand.has_value()');
++    expect(contents).toContain('? channel.value() :');
++    expect(contents).not.toContain('channel.value().value()');
++  });
++
++  it('passes null through as null and a value as the value in the narrowed branch', () => {
++    const contents = emit(
++      `export function describeChannel(channel?: string | null): string {
++         const value = channel !== undefined ? channel : 'omitted';
++         return value === null ? 'null' : value;
++       }`,
++    );
++    expect(contents).toContain('const std::optional<flight::String> value =');
++    expect(contents).toContain('? channel.value() : std::optional<flight::String>{flight::String("omitted")}');
++    expect(contents).toContain('!value.has_value() ? flight::String("null") : value.value()');
++  });
++
++  it('still refuses a narrowing that leaves the parameter possibly omitted', () => {
++    const failure = emissionFailure(
++      `export function pick(channel?: string | null): string | undefined {
++         return channel !== null ? channel : 'none';
++       }`,
++    );
++    expect(isBackendEmissionFailure(failure)).toBe(true);
++    expect((failure as { rule?: string }).rule).toBe('cpp-member-projection-without-present-storage');
++  });
++
++  it('does not extend to an optional nullable object member, which still has one absence channel', () => {
++    const failure = emissionFailure(
++      `interface NodeData { runtime: object | null }
++       export function state(value: Readonly<Partial<NodeData>>): number {
++         if (value.runtime === undefined) return 0;
++         if (value.runtime === null) return 1;
++         return 2;
++       }`,
++    );
++    expect(isBackendEmissionFailure(failure)).toBe(true);
++    expect((failure as { rule?: string }).rule).toBe('cpp-dual-sentinel-comparison-unrepresented');
++  });
++});

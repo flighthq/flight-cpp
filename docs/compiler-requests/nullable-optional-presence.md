@@ -44,3 +44,18 @@ There is no semantics-preserving downstream representation workaround: convertin
 patches avoid some optional-chain spellings, while the refusal ledger deliberately keeps the remaining
 sites blocked. This request closes when flight-compiler emits `flight::Presence<T>` (or an equivalent
 three-state carrier) only for optional-and-nullable cells.
+
+## Parameters: carried by a compiler patch
+
+An optional nullable *parameter* (`f(x?: T | null)`) already has the three-state carrier this request
+asks for. The parameter is an outer `std::optional` for its own presence around the declared `T | null`
+`std::optional`. Only the projection was refused: after `x !== undefined`, the narrowed `T | null` still
+"admits absence" (null), so the generic rule refused it. Reading it as the outer `value()` yields
+exactly the inner `T | null` carrier.
+[`compiler-nullable-optional-parameter-narrowing.patch`](../../source-patches/compiler-nullable-optional-parameter-narrowing.patch)
+does that for this one shape. Fixtures pin the createChildLogContext form, a narrowing that still admits
+omission (still refused), and an optional nullable member (still refused). An emitted function
+compiled and run under clang returns distinct results for omitted, null and a value.
+
+**Optional nullable members remain open**: they still have a single `std::optional` and still refuse with
+`cpp-dual-sentinel-comparison-unrepresented` / `cpp-presence-test-without-absence-storage`.

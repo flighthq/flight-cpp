@@ -2440,6 +2440,23 @@
       "appliedOn": "2026-10-12"
     },
     {
+      "id": "compiler-nullable-optional-parameter-narrowing",
+      "dependency": "flight-compiler",
+      "patch": "compiler-nullable-optional-parameter-narrowing.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "narrowed C++ union projection requires proven present payload: the narrowing still admits absence (createChildLogContext: `channel !== undefined ? channel : parent.channel` with `channel?: string | null`)",
+      "rewrite": "For an identifier that is an optional nullable parameter (`x?: T | null`, emitted as nestedNullable storage: an outer std::optional for the parameter's own presence around the declared `T | null` std::optional), a flow narrowing that excludes `undefined` but still admits `null` is read as the outer `value()`: the inner `T | null` carrier, unchanged. Every other narrowing, binding and member keeps the existing path, including its refusal.",
+      "equivalence": "The three source states stay distinct and nothing is collapsed or invented. Omitted is the empty outer optional, which a narrowing that excluded undefined has proven present. Present null is the empty inner optional, which is still the narrowed value's null. A present value is the engaged inner optional. The narrowed type is exactly `T | null`, which is the inner carrier's declared type, so the read neither unpacks a sentinel nor uses a fake one.",
+      "verification": "New fixtures in cppNullableOptionalParameter.test.ts (4 pass): the createChildLogContext shape; null passed through as null in the narrowed branch; a narrowing that leaves the parameter possibly omitted still refuses (cpp-member-projection-without-present-storage); an optional nullable object member still refuses (cpp-dual-sentinel-comparison-unrepresented). An emitted describeChannel(channel?: string | null) compiled and run under clang 22 returns \"omitted\", \"null\" and \"ui\" for the three states. Backend and semantic suites: identical 46 pre-existing failures. Scoped log generation: line 134 lowers; log.ts next refuses at line 816 (closed-key console method selection).",
+      "whyNotUpstreamFirst": "The parameter already has a three-state carrier upstream; only the projection after an undefined-only narrowing refused. Fixing that is local to the narrowed identifier read, while the member case in the same request needs a new carrier and stays open.",
+      "unblocks": "createChildLogContext in @flighthq/log.",
+      "expires": "when upstream projects a narrowed nullable optional parameter to its inner carrier (docs/compiler-requests/nullable-optional-presence.md, parameter section).",
+      "appliedOn": "2026-10-12"
+    },
+    {
       "id": "scene2d-canvas-host-image-draw-flow",
       "dependency": "flight",
       "patch": "scene2d-canvas-host-image-draw-flow.patch",
