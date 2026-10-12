@@ -2277,14 +2277,14 @@
       "code": "dependency-refused",
       "module": "packages/glyphatlas/src/contract.ts",
       "package": "@flighthq/glyphatlas",
-      "reason": "dependency ./explainGlyphAtlasEntry was refused for @flighthq/glyphatlas/packages/glyphatlas/src/explainGlyphAtlasEntry.ts",
+      "reason": "dependency ./explainGlyphAtlasEntry.ts was refused for @flighthq/glyphatlas/packages/glyphatlas/src/explainGlyphAtlasEntry.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/glyphatlas/src/enableGlyphAtlasGuards.ts",
       "package": "@flighthq/glyphatlas",
-      "reason": "dependency ./glyphAtlasEntry was refused for @flighthq/glyphatlas/packages/glyphatlas/src/glyphAtlasEntry.ts",
+      "reason": "dependency @flighthq/log/contract was refused for @flighthq/log/packages/log/src/log.ts",
       "stage": "dependency"
     },
     {
@@ -2294,13 +2294,6 @@
       "module": "packages/glyphatlas/src/explainGlyphAtlasEntry.ts",
       "package": "@flighthq/glyphatlas",
       "reason": "cpp emission failed for @flighthq/glyphatlas/packages/glyphatlas/src/explainGlyphAtlasEntry.ts: property width on C++ absence-carrying storage requires narrowed access: no present-value proof reaches this read. Guard this exact receiver (bind a property or call result to a local first if evaluating it again would produce a different value), then read the member only in the present branch. The compiler will not discard the absence state or call value() without that proof",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "module": "packages/glyphatlas/src/glyphAtlasEntry.ts",
-      "package": "@flighthq/glyphatlas",
-      "reason": "cpp emission failed for @flighthq/glyphatlas/packages/glyphatlas/src/glyphAtlasEntry.ts: runtime external symbol binding plan is incomplete (missing: IteratorResult[type], IteratorYieldResult[type])",
       "stage": "emission"
     },
     {
@@ -2316,7 +2309,7 @@
       "code": "dependency-refused",
       "module": "packages/glyphatlas/src/index.ts",
       "package": "@flighthq/glyphatlas",
-      "reason": "dependency ./contract was refused for @flighthq/glyphatlas/packages/glyphatlas/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/glyphatlas/packages/glyphatlas/src/contract.ts",
       "stage": "dependency"
     },
     {

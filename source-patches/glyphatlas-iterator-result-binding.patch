@@ -1,12 +1,26 @@
 diff --git a/packages/glyphatlas/src/glyphAtlasEntry.ts b/packages/glyphatlas/src/glyphAtlasEntry.ts
 --- a/packages/glyphatlas/src/glyphAtlasEntry.ts
 +++ b/packages/glyphatlas/src/glyphAtlasEntry.ts
-@@ -93,7 +93,7 @@ function _blitGlyphIntoAtlasBitmap(
+@@ -93,14 +93,14 @@ function _blitGlyphIntoAtlasBitmap(
  // cached.
  function _evictLeastRecentlyUsedGlyph(runtime: GlyphAtlasRuntime): boolean {
    // Insertion order makes the first key the least recently used, since every touch re-inserts.
 -  const oldest = runtime.lru.keys().next();
-+  const oldest: IteratorResult<number> = runtime.lru.keys().next();
-   if (oldest.done === true) return false;
-   const codepoint = oldest.value;
-   runtime.lru.delete(codepoint);
+-  if (oldest.done === true) return false;
+-  const codepoint = oldest.value;
+-  runtime.lru.delete(codepoint);
+-  _releaseGlyphBudget(runtime, codepoint);
+-  runtime.entries.delete(codepoint);
+-  runtime.bitmaps.delete(codepoint);
+-  return true;
++  for (const codepoint of runtime.lru.keys()) {
++    runtime.lru.delete(codepoint);
++    _releaseGlyphBudget(runtime, codepoint);
++    runtime.entries.delete(codepoint);
++    runtime.bitmaps.delete(codepoint);
++    return true;
++  }
++  return false;
+ }
+ 
+ // Unions the rectangle (`x`,`y`,`width`,`height`) into the atlas's dirty region, starting a fresh

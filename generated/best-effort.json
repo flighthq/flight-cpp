@@ -11094,7 +11094,6 @@
       "refusedDependencies": [
         "@flighthq/glyphatlas/packages/glyphatlas/src/enableGlyphAtlasGuards.ts",
         "@flighthq/glyphatlas/packages/glyphatlas/src/explainGlyphAtlasEntry.ts",
-        "@flighthq/glyphatlas/packages/glyphatlas/src/glyphAtlasEntry.ts",
         "@flighthq/glyphatlas/packages/glyphatlas/src/glyphSource.ts"
       ],
       "status": "dependency-incomplete"
@@ -11110,7 +11109,6 @@
       },
       "path": "flight/glyphatlas/enable_glyph_atlas_guards.hpp",
       "refusedDependencies": [
-        "@flighthq/glyphatlas/packages/glyphatlas/src/glyphAtlasEntry.ts",
         "@flighthq/log/packages/log/src/log.ts"
       ],
       "status": "dependency-incomplete"
@@ -11158,24 +11156,10 @@
       "status": "emitted"
     },
     {
-      "classification": "target-runtime",
       "consumers": [
         "@flighthq/glyphatlas/packages/glyphatlas/src/contract.ts",
         "@flighthq/glyphatlas/packages/glyphatlas/src/enableGlyphAtlasGuards.ts",
         "@flighthq/glyphatlas/packages/glyphatlas/src/glyphSource.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:264f3adb2fd29c2b4bed4bc6e874551c451fce45962e830c1439d7643ba7d6be",
-        "sha256:640516d788cbfff85c0ee51bf0ba35ae7e55b394332896551b11ba84d1d39d83",
-        "sha256:6ca05e78143b6a1d330a1e180083c9d6468ac200b2ef7f39d976a498d4196ca0",
-        "sha256:734794abf1faa7b3a44e8649e1ea624e3ee61328eacf67358b0a77035c1929c6",
-        "sha256:91431b6559316d2dda506b10d65d8942d605c96c711cad6e154868276991d22f",
-        "sha256:9f45f67db9cfcdb60883b371cea2f2f36b9467c62c191678cfab5ac8de85b70f",
-        "sha256:a4fc8c55ac5fe32740c2435de0c823c0dd78341820494ab4153b7a5997f721e2",
-        "sha256:abbeff1ed13c5b7ff5c8ee375474010e378baf0398c0bc75a7a8c6ab46a2596a",
-        "sha256:b3157c81de5730cdf5f2681c33c215286ed181c847312cf023add4d6f1a83945",
-        "sha256:e6d8b481a5f1f76bb92daf29b62f67132f50b3e72cc3a4a72f74a1a1315d1408",
-        "sha256:f75457205c34c4c8886a32315c915eadeea0c2711c5a33aa522e516fa4ff3723"
       ],
       "module": {
         "name": "GlyphAtlasEntry",
@@ -11183,8 +11167,7 @@
         "source": "packages/glyphatlas/src/glyphAtlasEntry.ts"
       },
       "path": "flight/glyphatlas/glyph_atlas_entry.hpp",
-      "rule": "cpp-runtime-external-symbol-binding-incomplete",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [

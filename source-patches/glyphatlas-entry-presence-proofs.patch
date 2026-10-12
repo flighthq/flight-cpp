@@ -1,0 +1,23 @@
+diff --git a/packages/glyphatlas/src/glyphAtlasEntry.ts b/packages/glyphatlas/src/glyphAtlasEntry.ts
+--- a/packages/glyphatlas/src/glyphAtlasEntry.ts
++++ b/packages/glyphatlas/src/glyphAtlasEntry.ts
+@@ -182,12 +182,16 @@ function _repackGlyphAtlas(runtime: GlyphAtlasRuntime): void {
+   runtime.bitmap.data.fill(0);
+ 
+   const codepoints = [...runtime.entries.keys()].sort((a, b) => {
+-    const heightDelta = runtime.entries.get(b)!.height - runtime.entries.get(a)!.height;
++    const entryA = runtime.entries.get(a);
++    const entryB = runtime.entries.get(b);
++    if (entryA === undefined || entryB === undefined) return a - b;
++    const heightDelta = entryB.height - entryA.height;
+     return heightDelta !== 0 ? heightDelta : a - b;
+   });
+   for (const codepoint of codepoints) {
+-    const entry = runtime.entries.get(codepoint)!;
+-    const bitmap = runtime.bitmaps.get(codepoint)!;
++    const entry = runtime.entries.get(codepoint);
++    const bitmap = runtime.bitmaps.get(codepoint);
++    if (entry === undefined || bitmap === undefined) continue;
+     const placement = _placeGlyphOnShelf(runtime, bitmap.width, bitmap.height);
+     if (placement === null) {
+       _entryGuard?.('repack-dropped', codepoint);

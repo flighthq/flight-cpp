@@ -1011,6 +1011,7 @@
       "files": [
         "flight/glyphatlas/glyph_atlas.hpp",
         "flight/glyphatlas/glyph_atlas_dirty.hpp",
+        "flight/glyphatlas/glyph_atlas_entry.hpp",
         "flight/glyphatlas/glyph_atlas_metrics.hpp"
       ],
       "id": "glyphatlas-glyphatlasruntime-using-declaration"
@@ -1026,6 +1027,7 @@
         "flight/glyphatlas/explain_glyph_atlas_entry.hpp",
         "flight/glyphatlas/glyph_atlas.hpp",
         "flight/glyphatlas/glyph_atlas_dirty.hpp",
+        "flight/glyphatlas/glyph_atlas_entry.hpp",
         "flight/glyphatlas/glyph_atlas_metrics.hpp",
         "flight/glyphatlas/glyph_rasterizer_backend.hpp",
         "flight/glyphatlas/glyph_source.hpp"
@@ -4906,8 +4908,15 @@
     },
     {
       "dependency": "flight",
-      "digest": "8f71e828e194f9af6abbe37958ae7fba9f34affac9b2c9d62b1ccfe317b84362",
+      "digest": "9d28bda2f35c2cecf060ac6fe0e2d798aba386b022cea991eeb9179138fe2453",
       "id": "glyphatlas-iterator-result-binding",
+      "module": "packages/glyphatlas/src/glyphAtlasEntry.ts",
+      "package": "@flighthq/glyphatlas"
+    },
+    {
+      "dependency": "flight",
+      "digest": "4580a4a025422f1778f03e7149387dfa8b77c9716611297f0dc79578c24c8d8d",
+      "id": "glyphatlas-entry-presence-proofs",
       "module": "packages/glyphatlas/src/glyphAtlasEntry.ts",
       "package": "@flighthq/glyphatlas"
     },
@@ -5829,6 +5838,7 @@
       "flight/effects/render_effect_interpolation.hpp",
       "flight/effects_canvas/canvas_effect_state.hpp",
       "flight/effects_gl/gl_effect_state.hpp",
+      "flight/glyphatlas/glyph_atlas_entry.hpp",
       "flight/input/input_manager.hpp",
       "flight/interaction/focus_manager.hpp",
       "flight/interaction/hit_tests.hpp",
@@ -6827,11 +6837,11 @@
     {
       "cppIncludePrefix": "flight/glyphatlas",
       "cppNamespace": "flight::glyphatlas",
-      "emittedModules": 7,
+      "emittedModules": 8,
       "package": "@flighthq/glyphatlas",
-      "refusedModules": 3,
+      "refusedModules": 2,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 10
@@ -8206,8 +8216,8 @@
   },
   "summary": {
     "packages": 154,
-    "emittedModules": 2377,
-    "refusedModules": 561,
+    "emittedModules": 2378,
+    "refusedModules": 560,
     "sourceModules": 2938
   }
 }

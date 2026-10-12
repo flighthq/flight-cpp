@@ -1576,6 +1576,11 @@
       "source": "packages/glyphatlas/src/glyphAtlasDirty.ts"
     },
     {
+      "name": "GlyphAtlasEntry",
+      "packageName": "@flighthq/glyphatlas",
+      "source": "packages/glyphatlas/src/glyphAtlasEntry.ts"
+    },
+    {
       "name": "GlyphAtlasMetrics",
       "packageName": "@flighthq/glyphatlas",
       "source": "packages/glyphatlas/src/glyphAtlasMetrics.ts"
@@ -22879,6 +22884,16 @@
           "name": "GlyphAtlasDirty",
           "packageName": "@flighthq/glyphatlas",
           "source": "packages/glyphatlas/src/glyphAtlasDirty.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "GlyphAtlasEntry",
+          "packageName": "@flighthq/glyphatlas",
+          "source": "packages/glyphatlas/src/glyphAtlasEntry.ts"
         }
       ]
     },
@@ -155076,6 +155091,468 @@
         "source": "packages/glyphatlas/src/glyphAtlasDirty.ts"
       },
       "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:1ac489fcc3fc2178eb15c06a64cc2e4bf59e3c4f5ca5c3b6839fb5b688397fe2",
+            "line": 1,
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts",
+            "id": "binding:[\"@flighthq/glyphatlas\",\"packages/glyphatlas/src/glyphAtlasEntry.ts\",9]",
+            "kind": "import",
+            "name": "createBitmapRegion",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createBitmapRegion",
+            "kind": "dependency",
+            "module": {
+              "name": "BitmapRegion",
+              "packageName": "@flighthq/bitmap",
+              "source": "packages/bitmap/src/bitmapRegion.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 30,
+            "fingerprint": "sha256:172a5ceeb1a9b7759044a906a693f455f2ca35a131218d8981712eb3e0cfb644",
+            "line": 1,
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts",
+            "id": "binding:[\"@flighthq/glyphatlas\",\"packages/glyphatlas/src/glyphAtlasEntry.ts\",29]",
+            "kind": "import",
+            "name": "writeBitmapPixels",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "writeBitmapPixels",
+            "kind": "dependency",
+            "module": {
+              "name": "BitmapComposite",
+              "packageName": "@flighthq/bitmap",
+              "source": "packages/bitmap/src/bitmapComposite.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:d8266a27378c5a0ea0aaec469d161677c2f4e900d14db2cdb9640e8e838f6c93",
+            "line": 9,
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts",
+            "id": "binding:[\"@flighthq/glyphatlas\",\"packages/glyphatlas/src/glyphAtlasEntry.ts\",719]",
+            "kind": "function",
+            "name": "getGlyphAtlasEntry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:1dbb798c856a6a67db73cc180afddc127befd92e0c13b2218c92f1fee3bb3210",
+            "line": 81,
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts",
+            "id": "binding:[\"@flighthq/glyphatlas\",\"packages/glyphatlas/src/glyphAtlasEntry.ts\",3805]",
+            "kind": "function",
+            "name": "_blitGlyphIntoAtlasBitmap",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:05ed01ebb196f16a804a652d607237126a940e980beea552efa9888147517d90",
+            "line": 94,
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts",
+            "id": "binding:[\"@flighthq/glyphatlas\",\"packages/glyphatlas/src/glyphAtlasEntry.ts\",4387]",
+            "kind": "function",
+            "name": "_evictLeastRecentlyUsedGlyph",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:db68f9c1f0b152cb167891bad4ae5bab991e8cb0f9b93ec67ef0f03a0bec0104",
+            "line": 108,
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts",
+            "id": "binding:[\"@flighthq/glyphatlas\",\"packages/glyphatlas/src/glyphAtlasEntry.ts\",4937]",
+            "kind": "function",
+            "name": "_markGlyphAtlasDirtyRect",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:21118b9dcb9a9e98fbbfc35a83b702eec4534cf812115a89ef1892d6cb8eb44b",
+            "line": 135,
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts",
+            "id": "binding:[\"@flighthq/glyphatlas\",\"packages/glyphatlas/src/glyphAtlasEntry.ts\",5923]",
+            "kind": "function",
+            "name": "_placeGlyphOnShelf",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:efc2477b7f42aa1984228d6ecebfcad41e2336a4ac6d8713fe490cad2767e8c3",
+            "line": 173,
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts",
+            "id": "binding:[\"@flighthq/glyphatlas\",\"packages/glyphatlas/src/glyphAtlasEntry.ts\",7324]",
+            "kind": "function",
+            "name": "_repackGlyphAtlas",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:d91486738125f6cf3339f1321363ca1e5bac3597bf6c656206b2df0012765fde",
+            "line": 213,
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts",
+            "id": "binding:[\"@flighthq/glyphatlas\",\"packages/glyphatlas/src/glyphAtlasEntry.ts\",9259]",
+            "kind": "function",
+            "name": "_touchGlyphLru",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:66ad5d2aaa0c609aa40e337af3aa0eeb8d6e967dc3ab3b394095159f9d89d7a8",
+            "line": 224,
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts",
+            "id": "binding:[\"@flighthq/glyphatlas\",\"packages/glyphatlas/src/glyphAtlasEntry.ts\",9966]",
+            "kind": "function",
+            "name": "_isGlyphAtlasOverBudget",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:d8d37e86cf090ceec792349f535096e5e1af1cb8c784664f72ec75745bc3d062",
+            "line": 235,
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts",
+            "id": "binding:[\"@flighthq/glyphatlas\",\"packages/glyphatlas/src/glyphAtlasEntry.ts\",10685]",
+            "kind": "function",
+            "name": "_releaseGlyphBudget",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:1545f8969c034739e63b7d42941e8f413d515a81ee23d403ed229992aabdcaef",
+            "line": 249,
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts",
+            "id": "binding:[\"@flighthq/glyphatlas\",\"packages/glyphatlas/src/glyphAtlasEntry.ts\",11574]",
+            "kind": "function",
+            "name": "setGlyphAtlasEntryGuard",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 5,
+            "fingerprint": "sha256:4f4e010cfcef5d9fd1bb0d20ee77196e94f5c03a846a0c3ade23e160c80226ae",
+            "line": 253,
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts",
+            "id": "binding:[\"@flighthq/glyphatlas\",\"packages/glyphatlas/src/glyphAtlasEntry.ts\",11695]",
+            "kind": "variable",
+            "name": "_entryGuard",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "GlyphAtlasEntry",
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts"
+          },
+          "importedNames": [
+            "writeBitmapPixels"
+          ],
+          "specifier": "@flighthq/bitmap/contract",
+          "target": {
+            "name": "BitmapComposite",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapComposite.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "GlyphAtlasEntry",
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts"
+          },
+          "importedNames": [
+            "createBitmapRegion"
+          ],
+          "specifier": "@flighthq/bitmap/contract",
+          "target": {
+            "name": "BitmapRegion",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapRegion.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "GlyphAtlasEntry",
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts"
+          },
+          "importedNames": [
+            "AlphaType"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "AlphaType",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/AlphaType.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "GlyphAtlasEntry",
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts"
+          },
+          "importedNames": [
+            "Bitmap"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Bitmap",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Bitmap.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "GlyphAtlasEntry",
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts"
+          },
+          "importedNames": [
+            "BitmapRegion"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "BitmapRegion",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/BitmapRegion.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "GlyphAtlasEntry",
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts"
+          },
+          "importedNames": [
+            "GlyphAtlas",
+            "GlyphAtlasRuntime",
+            "GlyphAtlasShelf",
+            "GlyphEntry",
+            "GlyphMetrics",
+            "GlyphRasterizeOptions",
+            "GlyphRasterizedBitmap",
+            "HostGlyphRasterizerCapability"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "GlyphSource",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlyphSource.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "GlyphAtlasEntry",
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts"
+          },
+          "importedNames": [
+            "PixelFormat"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "PixelFormat",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/PixelFormat.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "GlyphAtlasEntry",
+            "packageName": "@flighthq/glyphatlas",
+            "source": "packages/glyphatlas/src/glyphAtlasEntry.ts"
+          },
+          "importedNames": [
+            "TextureSourceKind"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "TextureSourceKind",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TextureSourceKind.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "GlyphAtlasEntry",
+        "packageName": "@flighthq/glyphatlas",
+        "source": "packages/glyphatlas/src/glyphAtlasEntry.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 5,
+              "fingerprint": "sha256:4f4e010cfcef5d9fd1bb0d20ee77196e94f5c03a846a0c3ade23e160c80226ae",
+              "line": 253,
+              "packageName": "@flighthq/glyphatlas",
+              "source": "packages/glyphatlas/src/glyphAtlasEntry.ts",
+              "id": "binding:[\"@flighthq/glyphatlas\",\"packages/glyphatlas/src/glyphAtlasEntry.ts\",11695]",
+              "kind": "variable",
+              "name": "_entryGuard",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            10
+          ]
+        }
+      ]
     },
     {
       "bindings": [],

@@ -1314,6 +1314,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("pixelDepth") && requires { object.pixel_depth; }) return (object.pixel_depth);
   else if constexpr (Key::name.view() == std::string_view("pixelFormat") && requires { object.pixel_format; }) return (object.pixel_format);
   else if constexpr (Key::name.view() == std::string_view("pixelRatio") && requires { object.pixel_ratio; }) return (object.pixel_ratio);
+  else if constexpr (Key::name.view() == std::string_view("pixels") && requires { object.pixels; }) return (object.pixels);
   else if constexpr (Key::name.view() == std::string_view("placements") && requires { object.placements; }) return (object.placements);
   else if constexpr (Key::name.view() == std::string_view("platform") && requires { object.platform; }) return (object.platform);
   else if constexpr (Key::name.view() == std::string_view("platformString") && requires { object.platform_string; }) return (object.platform_string);
@@ -3321,6 +3322,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("pixelDepth") && requires(Object& object) { object.pixel_depth; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pixel_depth)>>{};
   else if constexpr (Key::name.view() == std::string_view("pixelFormat") && requires(Object& object) { object.pixel_format; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pixel_format)>>{};
   else if constexpr (Key::name.view() == std::string_view("pixelRatio") && requires(Object& object) { object.pixel_ratio; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pixel_ratio)>>{};
+  else if constexpr (Key::name.view() == std::string_view("pixels") && requires(Object& object) { object.pixels; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pixels)>>{};
   else if constexpr (Key::name.view() == std::string_view("placements") && requires(Object& object) { object.placements; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().placements)>>{};
   else if constexpr (Key::name.view() == std::string_view("platform") && requires(Object& object) { object.platform; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().platform)>>{};
   else if constexpr (Key::name.view() == std::string_view("platformString") && requires(Object& object) { object.platform_string; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().platform_string)>>{};
@@ -5331,6 +5333,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->pixel_depth; }) owner.bind_named("pixelDepth", [object]() -> decltype(auto) { return (object->pixel_depth); });
   if constexpr (requires { object->pixel_format; }) owner.bind_named("pixelFormat", [object]() -> decltype(auto) { return (object->pixel_format); });
   if constexpr (requires { object->pixel_ratio; }) owner.bind_named("pixelRatio", [object]() -> decltype(auto) { return (object->pixel_ratio); });
+  if constexpr (requires { object->pixels; }) owner.bind_named("pixels", [object]() -> decltype(auto) { return (object->pixels); });
   if constexpr (requires { object->placements; }) owner.bind_named("placements", [object]() -> decltype(auto) { return (object->placements); });
   if constexpr (requires { object->platform; }) owner.bind_named("platform", [object]() -> decltype(auto) { return (object->platform); });
   if constexpr (requires { object->platform_string; }) owner.bind_named("platformString", [object]() -> decltype(auto) { return (object->platform_string); });
@@ -7374,6 +7377,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(pixel_depth)
   FLIGHT_SDK_ROW_WIDENS(pixel_format)
   FLIGHT_SDK_ROW_WIDENS(pixel_ratio)
+  FLIGHT_SDK_ROW_WIDENS(pixels)
   FLIGHT_SDK_ROW_WIDENS(placements)
   FLIGHT_SDK_ROW_WIDENS(platform)
   FLIGHT_SDK_ROW_WIDENS(platform_string)

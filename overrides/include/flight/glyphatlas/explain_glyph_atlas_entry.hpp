@@ -1,15 +1,18 @@
 // Derived from @flighthq/glyphatlas/packages/glyphatlas/src/explainGlyphAtlasEntry.ts
-// at generated digest b3cd2582c7b2d313cae68a835a2426e686ef1e835fa61616a997f355f81bf52f.
+// at generated digest e01100e80fe8fe5f30629a60f6cfaea088d0f38b5346090b8d87fba63f49e443.
 #pragma once
 
 #include <flight/runtime.hpp>
-#include <flight/types/glyph_atlas_entry_explanation.hpp>
-#include <flight/types/glyph_source.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/glyph_atlas_entry_explanation.hpp>
+#include <flight/types/glyph_source.hpp>
+
 namespace flight::glyphatlas {
+
+using flight::types::GlyphAtlas;
 
 // OVERRIDE: Map::has proves the following Map::get is present in TypeScript, but the emitter does not
 // carry that proof to the entry member reads. Bind and test the optional result directly in C++.

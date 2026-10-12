@@ -95,3 +95,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `SignalScope.connections` would split identity and state, so no workaround is carried.
 - [Partial row reads must materialize three-state returns](partial-row-three-state-return.md) — an
   `optional<Value>` row read cannot be returned directly as `variant<Value, Null, Undefined>`.
+- [The runtime binding plan has no iterator-result type](external-binding-iterator-result-type-plan.md)
+  — `IteratorResult` / `IteratorYieldResult` are unbound, so any direct `keys().next()` is refused at
+  the binding stage; carried by the rewritten `glyphatlas-iterator-result-binding` source patch.
+- [Interface heritage is not a C++ owner relation](compiler-interface-heritage-owner-widening.md) —
+  a sub-interface value cannot widen into a super-interface slot across a nullable union; no faithful
+  source spelling exists, so `glyphSource.ts` stays refused.
