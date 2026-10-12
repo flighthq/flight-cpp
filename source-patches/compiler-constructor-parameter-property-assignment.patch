@@ -1,0 +1,146 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index c6fbc44..b76cc65 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -31,6 +31,7 @@ import {
+   createCompilerLoweringPassSwitchFallthrough,
+   createCompilerLoweringPassSwitchSuspension,
+   createCompilerLoweringPassVariableHoisting,
++  createIrClassInitializationPlan,
+   isCompilerLoweringFailure,
+   lowerIrModuleWithCompilerPasses,
+ } from '../../compiler-lowering/src/index.js';
+@@ -1933,6 +1934,7 @@ function emitClass(declaration: Readonly<IrClassDeclaration>, outer: EmitContext
+       ...indentSourceLines(
+         [
+           ...emitParameterInitializersCpp(declaration.classConstructor.parameters, constructorContext),
++          ...emitParameterPropertyAssignmentsCpp(declaration, constructorContext),
+           ...emitStatements(body, constructorContext),
+         ],
+         2,
+@@ -29977,6 +29979,27 @@ function collectCppOptionalParameterBindingIds(module: Readonly<IrModule>): Read
+   return bindingIds;
+ }
+ 
++// A constructor parameter property -- `constructor(readonly source: T)` -- declares a field AND assigns the
++// argument to it. The field is emitted with the other fields; this emits the assignment, at constructor body
++// entry after default parameter values are resolved, in field order, as the shared class-initialization plan
++// times it. A derived class's body already runs after its base initializer, which is TypeScript's
++// assign-after-super() order. A defaulted parameter is still its optional carrier here, now known present.
++function emitParameterPropertyAssignmentsCpp(declaration: Readonly<IrClassDeclaration>, context: EmitContext): string[] {
++  const constructor = declaration.classConstructor;
++  if (!constructor) return [];
++  const plan = createIrClassInitializationPlan(declaration);
++  const lines: string[] = [];
++  for (const initialization of plan.fields) {
++    if (initialization.value !== 'parameter' || initialization.parameterIndex === undefined) continue;
++    const field = declaration.fields[initialization.fieldIndex]!;
++    const parameter = constructor.parameters[initialization.parameterIndex]!;
++    const parameterTargetName = getBindingTargetName(parameter.binding, context);
++    const value = parameter.initializer ? `${parameterTargetName}.value()` : parameterTargetName;
++    lines.push(`this->${safeCppName(field.name)} = ${value};`);
++  }
++  return lines;
++}
++
+ function emitParameterInitializersCpp(parameters: readonly IrParameter[], context: EmitContext): string[] {
+   const parameterBindingIds = new Set(parameters.map((parameter) => parameter.binding.id));
+   const initializedSharedCaptureTargetNames = new Map(
+diff --git a/packages/compiler-backend-cpp/src/cppConstructorParameterProperties.test.ts b/packages/compiler-backend-cpp/src/cppConstructorParameterProperties.test.ts
+new file mode 100644
+index 0000000..4b630d1
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppConstructorParameterProperties.test.ts
+@@ -0,0 +1,92 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/x/src/x.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/x', upstreamDirectory: '/flight' });
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++// The constructor of `struct <name>`, from its signature line to its closing brace.
++function constructorOf(contents: string, name: string): string[] {
++  const lines = contents.split('\n');
++  const start = lines.findIndex((line) => line.startsWith(`  ${name}(`));
++  expect(start).toBeGreaterThanOrEqual(0);
++  const end = lines.findIndex((line, index) => index > start && line === '  }');
++  return lines.slice(start, end + 1).map((line) => line.trim());
++}
++
++describe('constructor parameter properties', () => {
++  it('assigns readonly and public parameter properties, but not plain parameters, before the body', () => {
++    const contents = emit(`export class Reader {
++      offset = 0;
++      constructor(readonly source: Uint8Array, public position: number, start: number) {
++        this.offset = start;
++      }
++      read(): number { return this.source[this.position++]; }
++    }`);
++    expect(constructorOf(contents, 'Reader')).toEqual([
++      'Reader(flight::Uint8Array source, double position, double start) {',
++      'this->source = source;',
++      'this->position = position;',
++      '(this->offset = start);',
++      '}',
++    ]);
++  });
++
++  it('assigns private and protected parameter properties the same way', () => {
++    const contents = emit(`export class Holder {
++      constructor(private readonly a: number, protected b: string) {}
++      sum(): string { return this.b + String(this.a); }
++    }`);
++    expect(constructorOf(contents, 'Holder')).toEqual([
++      'Holder(double a, flight::String b) {',
++      'this->a = a;',
++      'this->b = b;',
++      '}',
++    ]);
++  });
++
++  it('assigns a defaulted parameter property from its resolved default', () => {
++    const contents = emit(`export class Sized {
++      constructor(readonly size: number = 4) {}
++    }`);
++    const constructor = constructorOf(contents, 'Sized');
++    const resolved = constructor.findIndex((line) => line.startsWith('size = size.value_or('));
++    const assigned = constructor.indexOf('this->size = size.value();');
++    expect(resolved).toBeGreaterThan(0);
++    expect(assigned).toBeGreaterThan(resolved);
++  });
++
++  it('assigns an optional parameter property as its optional carrier', () => {
++    const contents = emit(`export class Labelled {
++      constructor(readonly label?: string) {}
++    }`);
++    expect(constructorOf(contents, 'Labelled')).toContain('this->label = label;');
++  });
++
++  it('assigns a derived class parameter property in the body, after the base initializer', () => {
++    const contents = emit(`export class Base { constructor(readonly id: number) {} }
++    export class Derived extends Base {
++      constructor(id: number, readonly name: string) {
++        super(id);
++      }
++    }`);
++    const derived = constructorOf(contents, 'Derived');
++    expect(derived[0]).toMatch(/^Derived\(double id, flight::String name\) : Base\(id\) \{$/u);
++    expect(derived).toContain('this->name = name;');
++    expect(derived).not.toContain('this->id = id;');
++    expect(constructorOf(contents, 'Base')).toContain('this->id = id;');
++  });
++
++  it('leaves a constructor without parameter properties unchanged', () => {
++    const contents = emit(`export class Plain {
++      value = 0;
++      constructor(start: number) { this.value = start; }
++    }`);
++    expect(constructorOf(contents, 'Plain')).toEqual(['Plain(double start) {', '(this->value = start);', '}']);
++  });
++});

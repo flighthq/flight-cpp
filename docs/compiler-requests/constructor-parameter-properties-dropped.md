@@ -59,5 +59,22 @@ all three are emitted this way:
 
 ## Carrying workaround
 
-None. Measured by tests/generated_compression_test.cpp, which excludes the cases this blocks rather
-than asserting them.
+[`compiler-constructor-parameter-property-assignment.patch`](../../source-patches/compiler-constructor-parameter-property-assignment.patch)
+emits `this->field = parameter;` for each parameter property at constructor body entry, from the shared
+`createIrClassInitializationPlan` (the plan the Haxe and Rust backends already consume). The assignments
+come after default parameter values are resolved, so a defaulted parameter property is read as `.value()`,
+and before the constructor's own statements. A derived class's body runs after its base initializer, which
+is TypeScript's assign-after-`super()` order.
+
+## Edge cases, stated rather than widened
+
+- A NON-parameter field initializer that reads a parameter property (`len = this.source.length`) would
+  run as a C++ default member initializer, before the body assigns the parameter property. TypeScript
+  rejects that source under `useDefineForClassFields` (TS2729, "used before its initialization"), and
+  none of the three affected classes does it, so the patch does not reorder field initialization.
+- A parameter property that also redeclares an abstract base field is assigned through `this->` into
+  the base storage, the same field TypeScript writes.
+- A parameter captured by a closure that mutates it is still read from the parameter at entry, which is
+  the value the property receives in TypeScript.
+- SWF and ABC are fixed by the same patch when their packages are next regenerated. This change does
+  not move them.

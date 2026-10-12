@@ -2899,6 +2899,23 @@
       "unblocks": "Emits contributeTransformVelocity and with it the velocity contract and index modules.",
       "expires": "when Flight constrains the traversal to the transform capability upstream, or the compiler can lower a checked readonly-to-writable recovery and a widening row assertion over the retained owner.",
       "appliedOn": "2026-10-12"
+    },
+    {
+      "id": "compiler-constructor-parameter-property-assignment",
+      "dependency": "flight-compiler",
+      "patch": "compiler-constructor-parameter-property-assignment.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "silent miscompilation, not a refusal: a TypeScript constructor parameter property (`constructor(readonly source: Uint8Array, public position: number)`) is emitted as a declared field with NO assignment, so the field stays empty or uninitialized (an uninitialized double is undefined behaviour). compression InflateState therefore throws 'deflate: read past end of stream' on any input and decompressDeflate returns null for everything.",
+      "rewrite": "emitClass emits, at constructor body entry and after default parameter values are resolved, `this->field = parameter;` for every field the shared createIrClassInitializationPlan marks as initialized from a parameter (the plan the Haxe and Rust backends already consume). A defaulted parameter property is read as `.value()` of its resolved optional carrier.",
+      "equivalence": "TypeScript assigns each parameter property from its argument at constructor entry, after super() in a derived class and before the constructor's own statements. The emitted assignment is exactly that: same value, same order (field order, which is parameter order), in the body that C++ runs after the base initializer. Plain parameters are untouched. No absence, identity, equality, ordering, exception or settlement behavior changes beyond the field now holding the value TypeScript gives it; the replaced code left the field unassigned.",
+      "verification": "New cppConstructorParameterProperties.test.ts, 6 pass: the filed minimal repro (readonly and public assigned before the body; plain `start` not assigned); private and protected; a defaulted property assigned from its resolved default; an optional property assigned as its optional carrier; a derived class assigning after its base initializer, with the base assigning its own; and a constructor without parameter properties unchanged. Without the rewrite the five behaviour cases fail and the control passes. compiler-backend-cpp suite: the same 46 pre-existing failures by name with and without the patch, 1709 passing with it. Natively: @flighthq/compression regenerated package-scoped; tests/generated_compression_test.cpp now inflates every upstream deflate fixture.",
+      "whyNotUpstreamFirst": "The fix is a backend omission with a shared contract already in place (createIrClassInitializationPlan); upstream receives the request with the repro, and the patch keeps the native decoder correct meanwhile.",
+      "unblocks": "@flighthq/compression decompressDeflate (and every compress round trip that checks through it). @flighthq/swf SwfReader and @flighthq/abc AbcReader are fixed by the same patch when those packages are next regenerated; this change does not move them.",
+      "expires": "when upstream emits parameter-property assignments in C++ constructors (docs/compiler-requests/constructor-parameter-properties-dropped.md).",
+      "appliedOn": "2026-10-12"
     }
   ]
 }
