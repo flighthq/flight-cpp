@@ -277,3 +277,5 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   scope](partial-module-placeholder-qualification.md) — the swf video handler placeholder.
 - [Calls to overloaded functions lower through the selected overload](source-overload-call-through-selected-signature.md) —
   tween's timer and swf's texture construction.
+- [An inferred `any` type argument leaks its parameter name into a readonly conversion](node-any-generic-traits-leak.md) —
+  `@flighthq/command` captures child indices of `NodeAny` nodes; carried by the `command-undeclared-node-helpers` override.
