@@ -1,0 +1,70 @@
+# `typeof` on a recursively union-typed value lowers to a constant comparison
+
+A `typeof x === 'string'` guard on a value whose type is the recursive union `FlightDocumentValue`
+does not become a runtime test. The emitter folds `typeof` from the declared type and emits a
+comparison of two string literals, so the guard is a **constant** — and the narrowed binding after it
+is never narrowed.
+
+Found at flight `a62784923f` while regenerating `@flighthq/tokens`. This one is worth calling out
+separately from its package because the emitted code is not merely rejected: a guard that
+`std::bool_constant`-folds to `false` is a silently wrong branch, and only the follow-on conversion
+error happens to stop it compiling.
+
+## Minimal TypeScript
+
+```ts
+export type FlightDocumentValue =
+  | string | number | boolean | null | FlightDocumentValue[] | { [key: string]: FlightDocumentValue };
+
+export function isReference(value: FlightDocumentValue): value is string {
+  if (typeof value !== 'string') return false;
+  const text: string = value;
+  return text.startsWith('$') && !text.startsWith('$$');
+}
+```
+
+## Observed C++
+
+```cpp
+inline bool is_reference(flight::Ref<FlightDocumentValue> value) {
+  if ((flight::String("object") != flight::String("string"))) {   // constant, and false
+    return false;
+  }
+  const flight::String text = value;                              // error: no viable conversion
+  return (text.starts_with(reference_sigil) && !text.starts_with(reference_escape));
+}
+```
+
+`"object"` is the declared type's name, not the value's runtime type. For a union there is no single
+name to fold, and the safe answer is a real test, not a constant.
+
+Two consequences:
+- the guard collapses (here to `false`, so the function would always return `false` rather than
+  dereferencing the value — the opposite of the source's intent);
+- the narrowed binding keeps the union carrier, so the string method call cannot be emitted at all.
+
+## Expected C++
+
+```cpp
+if (!value.is_string()) return false;          // or std::holds_alternative on the carrier
+const flight::String text = value.as_string();
+```
+
+The runtime already carries the discriminator for the union; the guard should consult it.
+
+## Affected modules
+
+`@flighthq/tokens`' `flightDocumentTokenReference.ts` (both `isFlightDocumentTokenReference` and
+`substituteFlightDocumentTokenValue`, which use the same guard) and `flightDocumentSceneTokens.ts`.
+Anywhere a `typeof` guard narrows a recursive value union — `FlightDocumentValue` is the shape that
+makes it obvious, but the pattern is general.
+
+## Carrying workaround
+
+There is a patch, [`tokens-string-narrowing-binding`](../../source-patches/tokens-string-narrowing-binding.patch),
+which restates the guard as an early return and binds the narrowed value to an explicit `string` local.
+At `a627849` **it no longer helps**: the emitted header above *is* its output, so the rewrite reaches
+the same fold. It is recorded here rather than silently left in place, because a carried patch that
+appears to address a defect while emitting a constant guard is worse than no patch — it hides the
+defect behind work that looks done. Reverting or re-deriving it should wait until this lowering exists,
+since without it the module does not emit at all.
