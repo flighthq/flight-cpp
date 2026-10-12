@@ -16995,6 +16995,7 @@
     {
       "consumers": [
         "@flighthq/path-boolean/packages/path-boolean/src/contract.ts",
+        "@flighthq/path-boolean/packages/path-boolean/src/index.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveClipping.ts"
       ],
       "module": {
@@ -17006,9 +17007,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/path-boolean/packages/path-boolean/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/path-boolean",
@@ -17022,7 +17021,8 @@
     },
     {
       "consumers": [
-        "@flighthq/path-boolean/packages/path-boolean/src/contract.ts"
+        "@flighthq/path-boolean/packages/path-boolean/src/contract.ts",
+        "@flighthq/path-boolean/packages/path-boolean/src/index.ts"
       ],
       "module": {
         "name": "ExplainPathBoolean",
@@ -17041,14 +17041,15 @@
       },
       "path": "flight/path_boolean/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/path-boolean/packages/path-boolean/src/contract.ts"
+        "@flighthq/path-boolean/packages/path-boolean/src/martinezKernel.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/path-boolean/packages/path-boolean/src/contract.ts"
+        "@flighthq/path-boolean/packages/path-boolean/src/contract.ts",
+        "@flighthq/path-boolean/packages/path-boolean/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:092ec11211baeff4e72a4cdfb254e52ff6fa0c5d9fafbc859417f55e0640bd27",
@@ -17107,7 +17108,8 @@
     {
       "consumers": [
         "@flighthq/path-boolean/packages/path-boolean/src/contract.ts",
-        "@flighthq/path-boolean/packages/path-boolean/src/explainPathBoolean.ts"
+        "@flighthq/path-boolean/packages/path-boolean/src/explainPathBoolean.ts",
+        "@flighthq/path-boolean/packages/path-boolean/src/index.ts"
       ],
       "module": {
         "name": "OffsetPath",
@@ -17119,6 +17121,8 @@
     },
     {
       "consumers": [
+        "@flighthq/path-boolean/packages/path-boolean/src/contract.ts",
+        "@flighthq/path-boolean/packages/path-boolean/src/index.ts",
         "@flighthq/path-boolean/packages/path-boolean/src/offsetPath.ts",
         "@flighthq/path-boolean/packages/path-boolean/src/simplifyPath.ts"
       ],
@@ -17134,6 +17138,7 @@
       "consumers": [
         "@flighthq/path-boolean/packages/path-boolean/src/contract.ts",
         "@flighthq/path-boolean/packages/path-boolean/src/explainPathBoolean.ts",
+        "@flighthq/path-boolean/packages/path-boolean/src/index.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveClipping.ts"
       ],
       "module": {
@@ -17146,7 +17151,8 @@
     },
     {
       "consumers": [
-        "@flighthq/path-boolean/packages/path-boolean/src/contract.ts"
+        "@flighthq/path-boolean/packages/path-boolean/src/contract.ts",
+        "@flighthq/path-boolean/packages/path-boolean/src/index.ts"
       ],
       "module": {
         "name": "UnionAllPaths",
@@ -17159,6 +17165,8 @@
     {
       "consumers": [
         "@flighthq/path-boolean/packages/path-boolean/src/booleanPaths.ts",
+        "@flighthq/path-boolean/packages/path-boolean/src/contract.ts",
+        "@flighthq/path-boolean/packages/path-boolean/src/index.ts",
         "@flighthq/path-boolean/packages/path-boolean/src/resolvePathRegions.ts",
         "@flighthq/path-boolean/packages/path-boolean/src/unionAllPaths.ts"
       ],

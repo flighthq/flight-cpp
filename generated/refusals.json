@@ -3266,14 +3266,14 @@
       "code": "dependency-refused",
       "module": "packages/path-boolean/src/contract.ts",
       "package": "@flighthq/path-boolean",
-      "reason": "dependency ./martinezKernel was refused for @flighthq/path-boolean/packages/path-boolean/src/martinezKernel.ts",
+      "reason": "dependency ./martinezKernel.ts was refused for @flighthq/path-boolean/packages/path-boolean/src/martinezKernel.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/path-boolean/src/index.ts",
       "package": "@flighthq/path-boolean",
-      "reason": "dependency ./contract was refused for @flighthq/path-boolean/packages/path-boolean/src/contract.ts",
+      "reason": "dependency ./martinezKernel.ts was refused for @flighthq/path-boolean/packages/path-boolean/src/martinezKernel.ts",
       "stage": "dependency"
     },
     {
