@@ -184,6 +184,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_mediasession_test",
+    srcs = ["generated_mediasession_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_signals_throttle_test",
     srcs = ["generated_signals_throttle_test.cpp"],
     size = "small",
@@ -301,6 +308,7 @@ test_suite(
         ":generated_intl_cache_test",
         ":generated_lifecycle_test",
         ":generated_log_test",
+        ":generated_mediasession_test",
         ":generated_spring_test",
         ":generated_timeline_test",
         ":generated_signals_throttle_test",
