@@ -4,6 +4,22 @@
   "note": "Patches applied to a pinned sibling checkout before generation, so a module the compiler refuses to lower today can still ship. A patch here may only rewrite an expression into an equivalent the compiler does lower. It may NEVER change observable behavior -- absence, reference identity, equality, ordering, exception shape, task settlement -- because the generated header is then tested against the patched source, so a behavioral patch is a lie our own tests would certify. Each patch states the equivalence that makes it safe and the refusal it answers. The patch is applied after the pin integrity check and reverted when generation ends, so the checkout is only ever dirty inside one run. `baseCommit` pins the patch to the revision it was written against: a pin move that breaks the patch fails loudly instead of silently applying to different code.",
   "patches": [
     {
+      "id": "compiler-error-name-and-erased-error-reads",
+      "dependency": "flight-compiler",
+      "patch": "compiler-error-name-and-erased-error-reads.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/log",
+      "answers": "refusal",
+      "refusal": "reading Error.name from an erased value requires both an instance flight::Error::name() const accessor",
+      "rewrite": "Lowers the two Error reads the runtime now answers: a typed `Error.name` becomes a call on the instance accessor, and an erased Error property read goes through the checked `flight::Any` Error view with the `instanceof Error` guard lowered to that view's own presence test. The refusal is retained only for an erased read the view cannot answer.",
+      "equivalence": "The emitted C++ reads the same object the source named: `name()` is virtual, so a RangeError held as an Error answers RangeError; `error_if()` recovers the boxed object with no copy and no second Error, and `has_value()` is true exactly when the value is an Error or a subclass, which is what `instanceof Error` tests. A value that is not an Error follows the same branch the source's else-branch would take, and `.value()` after the guard throws rather than reading an invented member. No reflection, no coercion, and no behavior change for any other type.",
+      "whyNotUpstreamFirst": "The runtime half landed at flight-cpp commit 48e4424 (instance accessor, reference-backed Error, checked Any view); this is the lowering that consumes it, and upstream has no newer commit than the pin.",
+      "unblocks": "the erased Error property reads in @flighthq/log and @flighthq/audio, plus the typed Error.name reads in @flighthq/log.",
+      "expires": "when upstream lowers Error.name to an instance accessor and erased Error reads through a checked projection of its own.",
+      "appliedOn": "2026-10-12"
+    },
+    {
       "id": "animation-layer-stack-channel-projection",
       "dependency": "flight",
       "patch": "animation-layer-stack-channel-projection.patch",
