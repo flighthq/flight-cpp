@@ -99827,7 +99827,7 @@
             "packageName": "@flighthq/ipc",
             "source": "packages/ipc/src/contract.ts"
           },
-          "specifier": "./ipc",
+          "specifier": "./ipc.ts",
           "target": {
             "name": "Ipc",
             "packageName": "@flighthq/ipc",
@@ -100755,7 +100755,7 @@
             "packageName": "@flighthq/permissions",
             "source": "packages/permissions/src/contract.ts"
           },
-          "specifier": "./permission",
+          "specifier": "./permission.ts",
           "target": {
             "name": "Permission",
             "packageName": "@flighthq/permissions",
@@ -100805,7 +100805,7 @@
             "packageName": "@flighthq/protocol",
             "source": "packages/protocol/src/contract.ts"
           },
-          "specifier": "./protocol",
+          "specifier": "./protocol.ts",
           "target": {
             "name": "Protocol",
             "packageName": "@flighthq/protocol",
@@ -101008,7 +101008,7 @@
             "packageName": "@flighthq/shell",
             "source": "packages/shell/src/contract.ts"
           },
-          "specifier": "./shell",
+          "specifier": "./shell.ts",
           "target": {
             "name": "Shell",
             "packageName": "@flighthq/shell",
@@ -170275,7 +170275,7 @@
             "packageName": "@flighthq/ipc",
             "source": "packages/ipc/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/ipc",
@@ -170475,7 +170475,7 @@
             "packageName": "@flighthq/permissions",
             "source": "packages/permissions/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/permissions",
@@ -170525,7 +170525,7 @@
             "packageName": "@flighthq/protocol",
             "source": "packages/protocol/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/protocol",
@@ -170728,7 +170728,7 @@
             "packageName": "@flighthq/shell",
             "source": "packages/shell/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/shell",
@@ -240785,7 +240785,7 @@
             "line": 17,
             "packageName": "@flighthq/permissions",
             "source": "packages/permissions/src/permission.ts",
-            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",628]",
+            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",629]",
             "kind": "function",
             "name": "getPermissionState",
             "scope": "module",
@@ -240806,7 +240806,7 @@
             "line": 31,
             "packageName": "@flighthq/permissions",
             "source": "packages/permissions/src/permission.ts",
-            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",1304]",
+            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",1305]",
             "kind": "function",
             "name": "getPermissionStates",
             "scope": "module",
@@ -240827,7 +240827,7 @@
             "line": 50,
             "packageName": "@flighthq/permissions",
             "source": "packages/permissions/src/permission.ts",
-            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",2149]",
+            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",2150]",
             "kind": "function",
             "name": "requestPermission",
             "scope": "module",
@@ -240848,7 +240848,7 @@
             "line": 88,
             "packageName": "@flighthq/permissions",
             "source": "packages/permissions/src/permission.ts",
-            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",3864]",
+            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",3865]",
             "kind": "function",
             "name": "capturePermissionQueryOrigins",
             "scope": "module",
@@ -240869,7 +240869,7 @@
             "line": 108,
             "packageName": "@flighthq/permissions",
             "source": "packages/permissions/src/permission.ts",
-            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",4809]",
+            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",4810]",
             "kind": "function",
             "name": "queryPermissionState",
             "scope": "module",
@@ -240890,7 +240890,7 @@
             "line": 123,
             "packageName": "@flighthq/permissions",
             "source": "packages/permissions/src/permission.ts",
-            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",5415]",
+            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",5416]",
             "kind": "function",
             "name": "queryMidiPermission",
             "scope": "module",
@@ -240911,7 +240911,7 @@
             "line": 134,
             "packageName": "@flighthq/permissions",
             "source": "packages/permissions/src/permission.ts",
-            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",5725]",
+            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",5726]",
             "kind": "function",
             "name": "queryStoragePersistencePermission",
             "scope": "module",
@@ -240932,7 +240932,7 @@
             "line": 145,
             "packageName": "@flighthq/permissions",
             "source": "packages/permissions/src/permission.ts",
-            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",6095]",
+            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",6096]",
             "kind": "function",
             "name": "queryNotificationPermission",
             "scope": "module",
@@ -240953,7 +240953,7 @@
             "line": 161,
             "packageName": "@flighthq/permissions",
             "source": "packages/permissions/src/permission.ts",
-            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",6617]",
+            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",6618]",
             "kind": "function",
             "name": "requestNotificationPermission",
             "scope": "module",
@@ -240974,7 +240974,7 @@
             "line": 182,
             "packageName": "@flighthq/permissions",
             "source": "packages/permissions/src/permission.ts",
-            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",7308]",
+            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",7309]",
             "kind": "function",
             "name": "requestStoragePersistencePermission",
             "scope": "module",
@@ -240995,7 +240995,7 @@
             "line": 193,
             "packageName": "@flighthq/permissions",
             "source": "packages/permissions/src/permission.ts",
-            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",7684]",
+            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",7685]",
             "kind": "function",
             "name": "projectStoragePersistenceQuery",
             "scope": "module",
@@ -241016,7 +241016,7 @@
             "line": 204,
             "packageName": "@flighthq/permissions",
             "source": "packages/permissions/src/permission.ts",
-            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",8070]",
+            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",8072]",
             "kind": "function",
             "name": "projectStoragePersistenceRequest",
             "scope": "module",
@@ -241037,7 +241037,7 @@
             "line": 215,
             "packageName": "@flighthq/permissions",
             "source": "packages/permissions/src/permission.ts",
-            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",8471]",
+            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",8474]",
             "kind": "function",
             "name": "requestHostMediaAccess",
             "scope": "module",
@@ -241058,7 +241058,7 @@
             "line": 226,
             "packageName": "@flighthq/permissions",
             "source": "packages/permissions/src/permission.ts",
-            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",8767]",
+            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",8770]",
             "kind": "function",
             "name": "requestHostWakeLock",
             "scope": "module",
@@ -241079,7 +241079,7 @@
             "line": 240,
             "packageName": "@flighthq/permissions",
             "source": "packages/permissions/src/permission.ts",
-            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",9343]",
+            "id": "binding:[\"@flighthq/permissions\",\"packages/permissions/src/permission.ts\",9346]",
             "kind": "function",
             "name": "requestGeolocationAccessPermission",
             "scope": "module",
@@ -241186,7 +241186,7 @@
           "importedNames": [
             "HostPreferencesPersistenceQueryCapability",
             "HostPreferencesPersistenceRequestCapability",
-            "StoragePersistenceResult"
+            "StoragePersistenceOutcome"
           ],
           "specifier": "@flighthq/types/contract",
           "target": {
