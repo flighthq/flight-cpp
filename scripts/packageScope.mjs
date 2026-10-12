@@ -779,6 +779,260 @@ function pruneEmptyDirectories(directory, stopAt) {
   }
 }
 
+// Package retirement.
+//
+// A package the Flight source no longer has cannot be moved by a scoped run: there is no candidate row to
+// splice in, so its committed slice would stay forever, attributed to a revision nobody regenerates. A
+// retirement is the explicit removal of that slice, and it is guarded rather than trusted because it is
+// the one scoped operation that deletes. It is refused unless
+//
+//   - exactly one inventory row is the package, and its include prefix and namespace are its own, so the
+//     removal cannot reach a neighbour that merely shares a name prefix (`requirement` vs `requirements`);
+//   - the pinned Flight source has no package by that name, and nothing there depends on or imports it;
+//   - nothing left in the inventory, the runtime, the tests or the overrides includes its headers or names
+//     its namespace, and no other module records a dependency on it;
+//   - no repository declaration -- emission repair, override, source patch, deferral -- still targets it.
+//     Those are authored records, so they are removed by their author in the same change, not here.
+//
+// Every shared ledger then loses exactly the package's share, by the same merges a scoped move uses with
+// an empty candidate slice, and every derived file is re-rendered from the remaining tree.
+export function planPackageRetirement({
+  committedRoot,
+  declarations = repositoryDeclarations(REPOSITORY_ROOT),
+  packageName,
+  referenceRoots = REFERENCE_ROOTS.map((directory) => path.join(REPOSITORY_ROOT, directory)),
+  sourceRoot,
+}) {
+  const read = (file) => readFileSync(path.join(committedRoot, file), 'utf8');
+  const readJson = (file) => JSON.parse(read(file));
+  const committedManifest = readJson('manifest.json');
+  validateProvenance(committedManifest);
+
+  if (!/^@flighthq\/[a-z0-9][a-z0-9-]*$/u.test(packageName)) {
+    throw new Error(`${packageName} is not an SDK package name; retirement names exactly one package.`);
+  }
+  const rows = committedManifest.packages.filter((row) => row.package === packageName);
+  if (rows.length === 0) throw new Error(`${packageName} has no row in the inventory; there is nothing to retire.`);
+  if (rows.length > 1) throw new Error(`${packageName} has ${String(rows.length)} rows in the inventory; the target is ambiguous.`);
+  const [row] = rows;
+  const prefix = includePrefixOf(packageName);
+  const namespace = `flight::${cppPackageName(packageName)}`;
+  if (`${row.cppIncludePrefix}/` !== prefix || row.cppNamespace !== namespace) {
+    throw new Error(
+      `${packageName}'s row records include prefix ${String(row.cppIncludePrefix)} and namespace ${String(row.cppNamespace)}, ` +
+        `not ${prefix.slice(0, -1)} and ${namespace}; retiring it could remove what another name owns.`,
+    );
+  }
+  const sharing = committedManifest.packages
+    .filter((other) => other !== row && (`${other.cppIncludePrefix}/` === prefix || other.cppNamespace === namespace))
+    .map((other) => other.package);
+  if (sharing.length > 0) throw new Error(`${packageName} shares its include prefix or namespace with ${sharing.join(', ')}; the target is ambiguous.`);
+
+  const sourceReferences = pinnedSourceReferences(sourceRoot, packageName);
+  if (sourceReferences.present) {
+    throw new Error(`${packageName} still exists in the pinned Flight source at packages/${sourceReferences.present}; move it, do not retire it.`);
+  }
+  if (sourceReferences.users.length > 0) {
+    throw new Error(`${packageName} is absent from the pinned Flight source but still referenced there: ${sourceReferences.users.join(', ')}.`);
+  }
+
+  const headers = includeFilesUnder(committedRoot, prefix);
+  const removed = new Set(headers);
+  const references = [];
+  for (const header of includeFilesUnder(committedRoot, '')) {
+    if (removed.has(header)) continue;
+    const found = textReferences(read(`include/${header}`), prefix, namespace);
+    if (found) references.push(`generated/include/${header} (${found})`);
+  }
+  for (const record of readJson('initialization.json').modules) {
+    if (record.module.packageName === packageName) continue;
+    const uses = record.dependencies.filter((dependency) => dependency.target.packageName === packageName);
+    if (uses.length > 0) references.push(`${record.module.packageName} module ${record.module.source} (initialization dependency)`);
+  }
+  for (const directory of referenceRoots) {
+    if (!existsSync(directory)) continue;
+    for (const filename of filesUnder(directory)) {
+      if (!/\.(?:c|cc|cpp|h|hh|hpp|ipp|txt|cmake)$/u.test(filename)) continue;
+      const text = readFileSync(filename, 'utf8');
+      const found = textReferences(text, prefix, namespace) ?? labelReference(text, packageName);
+      if (found) references.push(`${portable(path.relative(path.dirname(directory), filename))} (${found})`);
+    }
+  }
+  if (references.length > 0) {
+    throw new Error(`${packageName} is still referenced, so retiring it would leave dangling uses: ${references.join('; ')}.`);
+  }
+  const declared = declarationsTargeting(declarations, packageName, prefix, namespace);
+  if (declared.length > 0) {
+    throw new Error(
+      `${packageName} is still the target of repository declarations: ${declared.join(', ')}. Remove them in the same change; ` +
+        'retirement does not edit authored records.',
+    );
+  }
+
+  const writes = new Map();
+  for (const header of headers) writes.set(`include/${header}`, null);
+  const keep = (file) => !file.startsWith(prefix);
+  const inPrefix = (file) => file.startsWith(prefix);
+  const remainingText = (file) => (removed.has(file) ? null : read(`include/${file}`));
+
+  const manifest = structuredClone(committedManifest);
+  manifest.packages = committedManifest.packages
+    .filter((candidate) => candidate !== row)
+    .map((candidate) => ({ ...candidate, source: rowProvenance(committedManifest, candidate) }));
+  manifest.summary = {
+    packages: manifest.packages.length,
+    emittedModules: sum(manifest.packages, 'emittedModules'),
+    refusedModules: sum(manifest.packages, 'refusedModules'),
+    sourceModules: sum(manifest.packages, 'sourceModules'),
+  };
+  const declaredRepairs = new Set(declarations.repairs.map((repair) => repair.id));
+  manifest.emissionRepairs = mergeRepairRecords(committedManifest.emissionRepairs, [], inPrefix).filter(
+    (record, index) =>
+      declaredRepairs.has(record.id) ||
+      committedManifest.emissionRepairs[index].files.length === 0 ||
+      !committedManifest.emissionRepairs[index].files.every(inPrefix),
+  );
+  manifest.sourcePatches = (committedManifest.sourcePatches ?? []).filter((patch) => patch.package !== packageName);
+  const aliases = committedManifest.duplicateStructuralStructAliases;
+  const aliasFiles = aliases.files.filter(keep);
+  manifest.duplicateStructuralStructAliases = {
+    files: aliasFiles,
+    structs: mergeAliasedStructs({
+      aliasFiles,
+      committedFiles: aliases.files,
+      committedStructs: aliases.structs,
+      committedText: (file) => read(`include/${file}`),
+      mergedText: remainingText,
+      prefix,
+    }),
+  };
+  const includes = committedManifest.canonicalPackageLocalIncludes;
+  manifest.canonicalPackageLocalIncludes = {
+    files: includes.files.filter(keep),
+    includes:
+      includes.includes -
+      includes.files.filter(inPrefix).reduce((total, file) => total + samePackageIncludes(file, read(`include/${file}`)), 0),
+  };
+
+  const refusals = readJson('refusals.json');
+  refusals.refusals = refusals.refusals.filter((refusal) => refusal.package !== packageName);
+  finalizeProvenance(manifest, refusals);
+  writes.set('manifest.json', `${JSON.stringify(manifest, undefined, 2)}\n`);
+  writes.set('refusals.json', `${JSON.stringify(refusals, undefined, 2)}\n`);
+
+  if (existsSync(path.join(committedRoot, 'best-effort.json'))) {
+    const bestEffort = readJson('best-effort.json');
+    bestEffort.modules = bestEffort.modules
+      .filter((record) => record.module.packageName !== packageName)
+      .map((record) =>
+        record.consumers === undefined
+          ? record
+          : { ...record, consumers: record.consumers.filter((consumer) => consumerPackage(consumer) !== packageName) },
+      );
+    writes.set('best-effort.json', `${JSON.stringify(bestEffort, undefined, 2)}\n`);
+  }
+
+  const initialization = readJson('initialization.json');
+  initialization.entries = initialization.entries.filter((entry) => entry.packageName !== packageName);
+  initialization.modules = initialization.modules.filter((record) => record.module.packageName !== packageName);
+  initialization.groups = evaluationGroups(initialization);
+  writes.set('initialization.json', `${JSON.stringify(initialization, undefined, 2)}\n`);
+
+  const remaining = includeFilesUnder(committedRoot, '').filter((file) => !removed.has(file));
+  const metadata = sdkBuildMetadata(remaining);
+  writes.set('cmake/FlightSdkHeaders.cmake', metadata.cmake);
+  writes.set('BUILD.bazel', metadata.bazel);
+  writes.set('README.md', readmeWithProvenance(readmeWithSummary(read('README.md'), manifest.summary), manifest));
+  const table = structuralMemberTable(
+    remaining.filter((file) => file !== STRUCTURAL_MEMBERS).map((file) => ({ contents: read(`include/${file}`), path: file })),
+    overrideHeaderFiles(REPOSITORY_ROOT),
+  );
+  const problems = [];
+  if (table.contents === undefined) problems.push(`No remaining header uses a structural row key; ${STRUCTURAL_MEMBERS} was left as committed.`);
+  else writes.set(`include/${STRUCTURAL_MEMBERS}`, table.contents);
+
+  for (const [file, contents] of [...writes]) {
+    if (contents !== null && readIfPresent(committedRoot, file) === contents) writes.delete(file);
+  }
+  return { headers, problems, row, writes };
+}
+
+// The directories outside generated/ whose text could still use a retired package's headers.
+const REFERENCE_ROOTS = ['include', 'src', 'tests', 'examples', 'overrides/include'];
+
+// What the pinned Flight checkout says about a package: the directory that declares it, if any, and every
+// other package that depends on it in package.json or imports it from its sources.
+function pinnedSourceReferences(sourceRoot, packageName) {
+  const packagesRoot = path.join(sourceRoot, 'packages');
+  if (!existsSync(packagesRoot)) throw new Error(`${portable(sourceRoot)} has no packages/ directory; it is not a Flight checkout.`);
+  const specifier = new RegExp(`(['"])${packageName.replace(/\//gu, '\\/')}(?:/[^'"]*)?\\1`, 'u');
+  let present;
+  const users = [];
+  for (const directory of readdirSync(packagesRoot).sort(compareText)) {
+    const manifestFile = path.join(packagesRoot, directory, 'package.json');
+    if (!existsSync(manifestFile)) continue;
+    const declared = JSON.parse(readFileSync(manifestFile, 'utf8'));
+    if (declared.name === packageName) {
+      present = directory;
+      continue;
+    }
+    const dependencyFields = ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies'];
+    if (dependencyFields.some((field) => Object.hasOwn(declared[field] ?? {}, packageName))) {
+      users.push(`packages/${directory}/package.json`);
+    }
+    const sources = path.join(packagesRoot, directory, 'src');
+    if (!existsSync(sources)) continue;
+    for (const filename of filesUnder(sources)) {
+      if (!/\.(?:[cm]?ts|tsx)$/u.test(filename)) continue;
+      if (specifier.test(readFileSync(filename, 'utf8'))) users.push(portable(path.relative(sourceRoot, filename)));
+    }
+  }
+  return { present, users };
+}
+
+// An include of one of the package's headers, or a use of its namespace, in C++ or build text.
+function textReferences(text, prefix, namespace) {
+  const include = text.match(new RegExp(`["<]${prefix.replace(/[/.]/gu, '\\$&')}[^">\\r\\n]+[">]`, 'u'));
+  if (include) return `includes ${include[0].slice(1, -1)}`;
+  const named = text.match(new RegExp(`\\b${namespace}(?:::|\\b)`, 'u'));
+  if (named) return `names ${namespace}`;
+  return undefined;
+}
+
+// A CTest package label (see ctestLabelOf) still naming the package.
+function labelReference(text, packageName) {
+  const label = packageName.slice(SDK_PREFIX.length);
+  for (const [, names] of text.matchAll(/flight_cpp_package_test_labels\(\S+ ([^)]*)\)/gu)) {
+    if (names.split(/\s+/u).includes(label)) return `labels tests pkg:${label}`;
+  }
+  return undefined;
+}
+
+function repositoryDeclarations(root) {
+  const readIf = (file, fallback) => (existsSync(path.join(root, file)) ? JSON.parse(readFileSync(path.join(root, file), 'utf8')) : fallback);
+  return {
+    deferred: readIf('deferred-packages.json', { deferred: [] }).deferred ?? [],
+    overrides: readIf('overrides/manifest.json', { overrides: [] }).overrides ?? [],
+    patches: readIf('source-patches/manifest.json', { patches: [] }).patches ?? [],
+    repairs: readIf('repairs/emission-repairs.json', { repairs: [] }).repairs ?? [],
+  };
+}
+
+function declarationsTargeting(declarations, packageName, prefix, namespace) {
+  const directory = `packages/${packageName.slice(SDK_PREFIX.length)}/`;
+  const names = (text) => text.includes(prefix) || new RegExp(`\\b${namespace}(?:::|\\b)`, 'u').test(text);
+  return [
+    ...declarations.repairs.filter((repair) => names(JSON.stringify(repair))).map((repair) => `emission repair ${repair.id}`),
+    ...declarations.overrides
+      .filter((override) => override.package === packageName || String(override.path ?? '').startsWith(prefix))
+      .map((override) => `override ${override.id}`),
+    ...declarations.patches
+      .filter((patch) => patch.package === packageName || String(patch.module ?? '').startsWith(directory))
+      .map((patch) => `source patch ${patch.id}`),
+    ...declarations.deferred.filter((entry) => entry.package === packageName).map((entry) => `deferral of ${entry.package}`),
+  ];
+}
+
 // What `sdk:check` can honestly say about a MIXED inventory, given a full generation at the current pin.
 //
 // A row at the candidate's revision must be reproduced by it, package by package, through the same merge

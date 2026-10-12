@@ -4,11 +4,13 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { resolveDependency } from './dependencyLock.mjs';
 import {
   applyPackageMerge,
   danglingIncludes,
   parsePackageArguments,
   planPackageMerge,
+  planPackageRetirement,
   portable,
   rowProvenance,
   syncTree,
@@ -28,6 +30,9 @@ import {
 // only if all of them succeed.
 //
 //   --check            write nothing; fail if the named packages' slices of generated/ are not current
+//   --retire           remove ONE package the pinned Flight source no longer has; generates nothing. See
+//                      planPackageRetirement in scripts/packageScope.mjs for what it must prove first. With
+//                      --check, fail while the package still has a row.
 //   --progress         pass through to scripts/sdkGeneration.mjs
 //   --generated=DIR    the inventory to splice into (default: generated)
 
@@ -36,7 +41,7 @@ let parsed;
 try {
   parsed = parsePackageArguments(process.argv.slice(2), {
     allowGroup: true,
-    flags: ['--check', '--progress'],
+    flags: ['--check', '--progress', '--retire'],
     valued: ['--generated'],
   });
 } catch (error) {
@@ -58,8 +63,9 @@ if (check && !existsSync(path.join(root, '.dependencies', 'flight', '.git'))) {
   process.exit(0);
 }
 
+if (parsed.flags.has('--retire')) retire();
+
 const temporary = mkdtempSync(path.join(tmpdir(), 'flight-cpp-pkg-generate-'));
-const untouched = () => `${relative} is untouched.`;
 try {
   const candidateRoot = path.join(temporary, 'generated');
   process.stdout.write(`Generating ${named} with ${packageNames.length > 1 ? 'their' : 'its'} dependency closure into a temporary tree...\n`);
@@ -204,4 +210,55 @@ function reportTransition(manifest, plan) {
     `Inventory is mixed during a pin transition: ${[...byRevision].map(([revision, count]) => `${String(count)} at ${revision.slice(0, 7)}`).join(', ')}; ` +
       `${String(behind)} package(s) are not at ${plan.provenance.revision.slice(0, 7)}. It returns to a single revision when every row matches.\n`,
   );
+}
+
+// Retirement generates nothing, so the only source it reads is the pinned checkout's package list -- and
+// that is only evidence at the pinned revision with nothing applied on top, so both are checked.
+function retire() {
+  if (packageNames.length !== 1) {
+    process.stderr.write('pkg:generate: --retire removes exactly one package; name it alone.\n');
+    process.exit(1);
+  }
+  const [packageName] = packageNames;
+  const committed = JSON.parse(readFileSync(path.join(generatedRoot, 'manifest.json'), 'utf8'));
+  if (check && !committed.packages.some((row) => row.package === packageName)) {
+    process.stdout.write(`${packageName} is retired from ${relative}.\n`);
+    process.exit(0);
+  }
+  const flight = resolveDependency(root, 'flight');
+  const head = spawnSync('git', ['-C', flight.directory, 'rev-parse', 'HEAD'], { encoding: 'utf8' });
+  const status = spawnSync('git', ['-C', flight.directory, 'status', '--porcelain', '--untracked-files=no'], { encoding: 'utf8' });
+  if (head.status !== 0 || head.stdout.trim() !== flight.commit) {
+    process.stderr.write(`pkg:generate: the flight checkout is not at its pin ${flight.commit.slice(0, 7)}; run \`npm run rehydrate\`. ${untouched()}\n`);
+    process.exit(1);
+  }
+  if (status.status !== 0 || status.stdout.trim().length > 0) {
+    process.stderr.write(`pkg:generate: the flight checkout has local changes, so it is not the pinned source. ${untouched()}\n`);
+    process.exit(1);
+  }
+  let plan;
+  try {
+    plan = planPackageRetirement({ committedRoot: generatedRoot, packageName, sourceRoot: flight.directory });
+  } catch (error) {
+    process.stderr.write(`pkg:generate: ${error.message}\n${untouched()}\n`);
+    process.exit(1);
+  }
+  const files = [...plan.writes.keys()].sort();
+  if (check) {
+    process.stderr.write(`${packageName} still has a row in ${relative}; retiring it would change ${String(files.length)} path(s):\n`);
+    for (const file of files) process.stderr.write(`- ${file}\n`);
+    process.stderr.write(`Run \`npm run pkg:generate -- ${packageName} --retire\` and commit the result.\n`);
+    process.exit(1);
+  }
+  applyPackageMerge(plan, generatedRoot);
+  process.stdout.write(
+    `${packageName}: retired at ${flight.commit.slice(0, 7)}; removed ${String(plan.headers.length)} header(s) and its rows; ` +
+      `${String(files.length)} path(s) written in ${relative}.\n`,
+  );
+  for (const problem of plan.problems) process.stderr.write(`- ${problem}\n`);
+  process.exit(plan.problems.length > 0 ? 1 : 0);
+}
+
+function untouched() {
+  return `${relative} is untouched.`;
 }

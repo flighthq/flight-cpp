@@ -20,6 +20,7 @@ import {
   parseJobs,
   parsePackageArguments,
   planPackageMerge,
+  planPackageRetirement,
   readmeWithProvenance,
   replaceRowsInPlace,
   replaceSortedRows,
@@ -701,6 +702,185 @@ describe('binding-profile transition', () => {
     const dishonest = verifyMixedInventory({ candidateRoot: candidate, committedRoot: committed });
     assert.deepEqual(dishonest.failed.map((entry) => entry.package), [neighbour]);
     assert.deepEqual(dishonest.pending, []);
+  });
+});
+
+describe('package retirement', () => {
+  const NO_DECLARATIONS = { deferred: [], overrides: [], patches: [], repairs: [] };
+  const prefixOf = (name) => `flight/${name.slice('@flighthq/'.length).replaceAll('-', '_')}/`;
+
+  // A Flight checkout that declares `names` and nothing else, so tests need no rehydrated sibling.
+  function sourceTree(name, names, extra = () => {}) {
+    const tree = path.join(scratch, name);
+    for (const packageName of names) {
+      const directory = path.join(tree, 'packages', packageName.slice('@flighthq/'.length));
+      mkdirSync(path.join(directory, 'src'), { recursive: true });
+      writeFileSync(path.join(directory, 'package.json'), `${JSON.stringify({ name: packageName })}\n`);
+    }
+    extra(tree);
+    return tree;
+  }
+
+  function retire(committedRoot, packageName, options = {}) {
+    return planPackageRetirement({
+      committedRoot,
+      declarations: NO_DECLARATIONS,
+      packageName,
+      referenceRoots: [],
+      sourceRoot: sourceTree(`retire-source-${String(Math.random()).slice(2)}`, packages.filter((name) => name !== packageName)),
+      ...options,
+    });
+  }
+
+  // The first package, in name order, that nothing in the fixture tree uses: what a retirement can remove.
+  const leaf = packages.find((name) => {
+    try {
+      retire(generated, name);
+      return true;
+    } catch {
+      return false;
+    }
+  });
+  const user = packages.find((name) => name !== leaf && packageHeaders(generated, name).length > 0);
+
+  test('the fixture has a package nothing uses', () => {
+    assert.ok(leaf !== undefined);
+    assert.ok(packageHeaders(generated, leaf).length > 0, leaf);
+  });
+
+  test('a retirement removes exactly the package and keeps every other row byte for byte', () => {
+    const committed = copyTree('retire-leaf');
+    const before = JSON.parse(readFileSync(path.join(committed, 'manifest.json'), 'utf8'));
+    const headers = packageHeaders(committed, leaf);
+    const plan = retire(committed, leaf);
+    const deleted = [...plan.writes].filter(([, contents]) => contents === null).map(([file]) => file);
+    assert.deepEqual(deleted.sort(compareText), headers.map((header) => `include/${header}`).sort(compareText));
+    const derived = new Set([
+      'manifest.json',
+      'refusals.json',
+      'README.md',
+      'initialization.json',
+      'best-effort.json',
+      'cmake/FlightSdkHeaders.cmake',
+      'BUILD.bazel',
+      'include/flight/sdk/structural_members.hpp',
+    ]);
+    assert.deepEqual([...plan.writes].filter(([file, contents]) => contents !== null && !derived.has(file)), []);
+
+    applyPackageMerge(plan, committed);
+    const after = JSON.parse(readFileSync(path.join(committed, 'manifest.json'), 'utf8'));
+    assert.doesNotThrow(() => validateProvenance(after));
+    const rowText = (manifestValue) => new Map(manifestValue.packages.map((row) => [row.package, JSON.stringify(row)]));
+    const kept = rowText(before);
+    kept.delete(leaf);
+    assert.deepEqual(rowText(after), kept);
+    assert.equal(after.summary.packages, before.summary.packages - 1);
+    assert.ok(!existsSync(path.join(committed, 'include', ...prefixOf(leaf).split('/').filter(Boolean))));
+    const ledger = (file) => readFileSync(path.join(committed, file), 'utf8');
+    for (const file of ['refusals.json', 'initialization.json', 'best-effort.json', 'cmake/FlightSdkHeaders.cmake', 'BUILD.bazel']) {
+      assert.ok(!ledger(file).includes(`"${leaf}"`) && !ledger(file).includes(prefixOf(leaf)), `${file} still names ${leaf}`);
+    }
+    assert.ok(!ledger('best-effort.json').includes(`"${leaf}/packages/`), 'a consumer entry still names the package');
+    assert.match(ledger('README.md'), new RegExp(`from\\n?\\s*${String(after.summary.packages)} SDK packages`, 'u'));
+    // Every other header is exactly as it was.
+    assert.deepEqual(treeDifferences(generated, committed).filter((file) => file.startsWith('include/') && !file.startsWith(`include/${prefixOf(leaf)}`) && file !== 'include/flight/sdk/structural_members.hpp'), []);
+    // Retiring is idempotent in the only sense that matters: the package is gone, so a second attempt has no target.
+    assert.throws(() => retire(committed, leaf), /has no row/u);
+  });
+
+  test('a package the pinned source still has is moved, not retired', () => {
+    assert.throws(
+      () => retire(generated, leaf, { sourceRoot: sourceTree('retire-present', [leaf]) }),
+      /still exists in the pinned Flight source/u,
+    );
+  });
+
+  test('a package the pinned source still depends on or imports is refused', () => {
+    const others = packages.filter((name) => name !== leaf);
+    const dependent = sourceTree('retire-depended', others, (tree) => {
+      const file = path.join(tree, 'packages', user.slice('@flighthq/'.length), 'package.json');
+      writeFileSync(file, `${JSON.stringify({ name: user, dependencies: { [leaf]: '*' } })}\n`);
+    });
+    assert.throws(() => retire(generated, leaf, { sourceRoot: dependent }), /still referenced there: .*package\.json/u);
+    const importer = sourceTree('retire-imported', others, (tree) => {
+      writeFileSync(path.join(tree, 'packages', user.slice('@flighthq/'.length), 'src', 'use.ts'), `export * from '${leaf}/sub';\n`);
+    });
+    assert.throws(() => retire(generated, leaf, { sourceRoot: importer }), /still referenced there: .*use\.ts/u);
+  });
+
+  test('a package something in the inventory or repository still uses is refused', () => {
+    const [leafHeader] = packageHeaders(generated, leaf);
+    const [userHeader] = packageHeaders(generated, user);
+
+    const included = copyTree('retire-included');
+    appendTo(included, `include/${userHeader}`, `\n#include <${leafHeader}>\n`);
+    assert.throws(() => retire(included, leaf), new RegExp(`still referenced.*${userHeader.replace(/[/.]/gu, '\\$&')} \\(includes`, 'u'));
+
+    const named = copyTree('retire-named');
+    appendTo(named, `include/${userHeader}`, `\n// uses flight::${prefixOf(leaf).split('/')[1]}::thing\n`);
+    assert.throws(() => retire(named, leaf), /still referenced.*\(names flight::/u);
+
+    const depended = copyTree('retire-initialization');
+    editJson(depended, 'initialization.json', (value) => {
+      const record = value.modules.find((candidate) => candidate.module.packageName === user);
+      const target = value.modules.find((candidate) => candidate.module.packageName === leaf).module;
+      record.dependencies.push({ target });
+    });
+    assert.throws(() => retire(depended, leaf), /still referenced.*initialization dependency/u);
+
+    const runtime = path.join(scratch, 'retire-runtime', 'tests');
+    mkdirSync(runtime, { recursive: true });
+    writeFileSync(path.join(runtime, 'use_test.cpp'), `#include <${leafHeader}>\n`);
+    assert.throws(() => retire(generated, leaf, { referenceRoots: [runtime] }), /still referenced.*use_test\.cpp/u);
+    writeFileSync(path.join(runtime, 'use_test.cpp'), '\n');
+    writeFileSync(path.join(runtime, 'CMakeLists.txt'), `flight_cpp_package_test_labels(some_test ${leaf.slice('@flighthq/'.length)})\n`);
+    assert.throws(() => retire(generated, leaf, { referenceRoots: [runtime] }), /labels tests pkg:/u);
+  });
+
+  test('a package an authored declaration still targets is refused', () => {
+    const [leafHeader] = packageHeaders(generated, leaf);
+    for (const [kind, declarations] of [
+      ['emission repair', { ...NO_DECLARATIONS, repairs: [{ appliesTo: leafHeader, id: 'x' }] }],
+      ['override', { ...NO_DECLARATIONS, overrides: [{ id: 'x', package: leaf, path: leafHeader }] }],
+      ['source patch', { ...NO_DECLARATIONS, patches: [{ id: 'x', module: `packages/${leaf.slice('@flighthq/'.length)}/src/a.ts`, package: leaf }] }],
+      ['deferral', { ...NO_DECLARATIONS, deferred: [{ package: leaf }] }],
+    ]) {
+      assert.throws(() => retire(generated, leaf, { declarations }), new RegExp(`repository declarations: ${kind}`, 'u'), kind);
+    }
+  });
+
+  test('an unknown, malformed or ambiguous target is refused', () => {
+    assert.throws(() => retire(generated, '@flighthq/definitely-not-a-package'), /has no row/u);
+    for (const name of ['@flighthq/', 'flight', '@flighthq/../types', '@flighthq/*', '@other/math']) {
+      assert.throws(() => retire(generated, name), /not an SDK package name/u, name);
+    }
+    const duplicated = copyTree('retire-duplicate');
+    editJson(duplicated, 'manifest.json', (value) => {
+      value.packages.push({ ...value.packages.find((row) => row.package === leaf) });
+    });
+    assert.throws(() => retire(duplicated, leaf), /ambiguous/u);
+    const shared = copyTree('retire-shared-prefix');
+    editJson(shared, 'manifest.json', (value) => {
+      value.packages.find((row) => row.package === user).cppIncludePrefix = prefixOf(leaf).slice(0, -1);
+    });
+    assert.throws(() => retire(shared, leaf), /shares its include prefix/u);
+  });
+
+  test('a retirement cannot reach past its own directory', () => {
+    // A row that claims a broader prefix than its name is refused before anything is planned.
+    const broad = copyTree('retire-broad');
+    editJson(broad, 'manifest.json', (value) => {
+      value.packages.find((row) => row.package === leaf).cppIncludePrefix = 'flight';
+    });
+    assert.throws(() => retire(broad, leaf), /retiring it could remove what another name owns/u);
+    // A sibling directory whose name merely extends the package's is untouched.
+    const neighbour = copyTree('retire-neighbour');
+    const sibling = `${prefixOf(leaf).slice(0, -1)}_neighbour/kept.hpp`;
+    mkdirSync(path.dirname(path.join(neighbour, 'include', sibling)), { recursive: true });
+    writeFileSync(path.join(neighbour, 'include', sibling), '#pragma once\n');
+    const plan = retire(neighbour, leaf);
+    assert.ok(!plan.writes.has(`include/${sibling}`));
+    assert.ok([...plan.writes].filter(([, contents]) => contents === null).every(([file]) => file.startsWith(`include/${prefixOf(leaf)}`)));
   });
 });
 

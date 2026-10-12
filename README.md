@@ -226,6 +226,27 @@ drop what only other members use. `generated/` changes only if every member merg
 Any move, single or grouped, is also refused when a moved package includes a header no include root provides,
 which means a dependency it needs is still at an older revision and has to move first.
 
+### Retiring a package the source no longer has
+
+A pin move can drop a package outright, as `a627849` replaced `requirements` with `requirement`. A scoped run
+cannot move such a package, because the candidate has no row for it, so its old slice stays until it is
+retired explicitly:
+
+```sh
+npm run pkg:generate -- requirements --retire          # add --check to see what it would remove
+```
+
+Retirement generates nothing and deletes only that package's headers and its share of every ledger. Shared
+files are re-derived from what remains, and every other row is left byte for byte. It is refused unless:
+
+- the pinned Flight checkout, at its pin with nothing applied, has no package by that name and nothing in it
+  depends on or imports it;
+- exactly one row is the package, and its include prefix and namespace are its own;
+- no remaining header includes it or names its namespace, no other module records a dependency on it, and
+  no runtime, test, example or override file uses it;
+- no emission repair, override, source patch or deferral targets it. Those are authored records, so their
+  author removes them in the same change.
+
 ### Moving the pin one package at a time
 
 A pin move changes every package, but lanes move their own packages one at a time, so the inventory may be
