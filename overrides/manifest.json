@@ -1580,13 +1580,14 @@
       "path": "flight/notification/notification.hpp",
       "package": "@flighthq/notification",
       "status": "complete",
-      "derivedFrom": "34ad4ed7931907d0e0b80ce9ce59b22b5590e7df1f6ede4717da419d18452e22",
+      "derivedFrom": "fb529e84a6ebe16060543cff3fac500a3ed02737da0bb249d469bdf3cecc875b",
       "reason": "Imported outcome names need repair and the emitter refuses subscription creation, attach and dispose because generic signal construction and runtime owner state are not represented.",
       "change": "Supplies typed signals, identity-keyed unsubscribe ownership, attach replacement, event forwarding, and disposal for the generated subscription entity.",
       "equivalence": "Each live subscription owns at most one backend callback; replacement and disposal invoke the exact prior unsubscribe once, events reach their matching signals, and unavailable refused host operations return their declared failure outcomes.",
       "whyNotAPatchOrRepair": "Using declarations solve only the missing names. A source patch cannot express the target runtime owner table without changing the public entity shape, while a declaration repair cannot supply lifecycle behavior.",
       "unblocks": "notification.hpp compiles independently and supplies the notification package aggregators.",
-      "remaining": "Compiler-refused backend operations without a safe emitted call surface conservatively return the declared operation-failed outcome.",
+      "remaining": "The subscription lifecycle is not implemented. attachNotification*Subscription (five exports) ignore the host capability and always return {attachFailed: true, reason: operation-failed}; detachNotification*Subscription (five) always report not-attached; disposeNotification*Subscription (five) always report already-disposed; and createNotification*Subscription do not register the per-subscription runtime row those paths would read. The source keys one WeakMap by Entity, and the emitted subscription types share no C++ base, so the table has to be keyed per subscription type; the source also stores the pending attach promise and awaits it twice (guarded by promise identity), which the emitted Task carrier does not express directly.",
+
       "expires": "when generic signals, subscription runtime ownership, and notification operation unions emit directly.",
       "authoredOn": "2026-10-07"
     },

@@ -68,6 +68,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   a bound capability's `keys()` result is read as `result->reason` on a `std::variant`, so
   `@flighthq/preferences` refuses at emission and its header compiles nowhere; carried by the
   hand-written `preferences-storage-outcome-dispatch` override, which declares its own JSON boundary.
+- [`Object.assign` lowers only for a `Record` target](object-assign-onto-structural-record.md) —
+  assigning into a closed structural record (or an allocated entity) is refused in every form tried,
+  so `@flighthq/notification` refuses at emission; supplied by hand, with the lifecycle gap declared.
 - [Union carriers need canonical alternative order](canonical-union-carrier-order.md) — identical
   named unions currently become incompatible `std::variant` types at array callback boundaries.
 - [Nullable and optional storage needs two absence channels](nullable-optional-presence.md) — one

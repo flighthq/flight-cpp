@@ -3113,14 +3113,14 @@
       "code": "dependency-refused",
       "module": "packages/notification/src/contract.ts",
       "package": "@flighthq/notification",
-      "reason": "dependency ./notification was refused for @flighthq/notification/packages/notification/src/notification.ts",
+      "reason": "dependency ./notification.ts was refused for @flighthq/notification/packages/notification/src/notification.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/notification/src/index.ts",
       "package": "@flighthq/notification",
-      "reason": "dependency ./contract was refused for @flighthq/notification/packages/notification/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/notification/packages/notification/src/contract.ts",
       "stage": "dependency"
     },
     {
