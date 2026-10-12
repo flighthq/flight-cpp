@@ -7,8 +7,7 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 namespace flight::types { struct Environment; }
-namespace flight::types { struct Node3DTraits; }
-namespace flight::types { template <typename Traits> struct Node; }
+namespace flight::types { struct Node3D; }
 
 namespace flight::types {
 struct GlEnvironmentCaptureOptions;
@@ -21,7 +20,7 @@ namespace flight::types {
 
 struct GlEnvironmentCaptureOptions : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::Environment>> environment;
-  std::optional<flight::types::Node3D> exclude_node;
+  std::optional<flight::Ref<flight::types::Node3D>> exclude_node;
   std::optional<double> far;
   std::optional<double> near;
 };

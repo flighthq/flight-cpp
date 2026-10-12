@@ -186388,10 +186388,10 @@
           "binding": {
             "column": 14,
             "fingerprint": "sha256:efb2ae11a7848e115dc2e0c0f2303776b0e8458e182054f69df4110e14689032",
-            "line": 42,
+            "line": 44,
             "packageName": "@flighthq/types",
             "source": "packages/types/src/InstancedMesh.ts",
-            "id": "binding:[\"@flighthq/types\",\"packages/types/src/InstancedMesh.ts\",2312]",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/InstancedMesh.ts\",2432]",
             "kind": "variable",
             "name": "InstancedMeshKind",
             "scope": "module",
@@ -186418,6 +186418,20 @@
             "name": "Aabb",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/Aabb.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "InstancedMesh",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/InstancedMesh.ts"
+          },
+          "specifier": "./Entity.ts",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
           }
         },
         {
@@ -186483,6 +186497,20 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/InstancedMesh.ts"
           },
+          "specifier": "./Node.js",
+          "target": {
+            "name": "Node",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Node.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "InstancedMesh",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/InstancedMesh.ts"
+          },
           "specifier": "./Node3D.ts",
           "target": {
             "name": "Node3D",
@@ -186503,10 +186531,10 @@
             {
               "column": 14,
               "fingerprint": "sha256:efb2ae11a7848e115dc2e0c0f2303776b0e8458e182054f69df4110e14689032",
-              "line": 42,
+              "line": 44,
               "packageName": "@flighthq/types",
               "source": "packages/types/src/InstancedMesh.ts",
-              "id": "binding:[\"@flighthq/types\",\"packages/types/src/InstancedMesh.ts\",2312]",
+              "id": "binding:[\"@flighthq/types\",\"packages/types/src/InstancedMesh.ts\",2432]",
               "kind": "variable",
               "name": "InstancedMeshKind",
               "scope": "module",
@@ -211369,10 +211397,10 @@
           "binding": {
             "column": 14,
             "fingerprint": "sha256:1d8e1781a1529b496c361965799ccaace1b96edcfa9dce0679a6333561ff8644",
-            "line": 54,
+            "line": 56,
             "packageName": "@flighthq/types",
             "source": "packages/types/src/Mesh.ts",
-            "id": "binding:[\"@flighthq/types\",\"packages/types/src/Mesh.ts\",3285]",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/Mesh.ts\",3397]",
             "kind": "variable",
             "name": "MeshKind",
             "scope": "module",
@@ -211399,6 +211427,20 @@
             "name": "Aabb",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/Aabb.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Mesh",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Mesh.ts"
+          },
+          "specifier": "./Entity.ts",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
           }
         },
         {
@@ -211450,6 +211492,20 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/Mesh.ts"
           },
+          "specifier": "./Node.js",
+          "target": {
+            "name": "Node",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Node.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Mesh",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Mesh.ts"
+          },
           "specifier": "./Node3D.ts",
           "target": {
             "name": "Node3D",
@@ -211484,10 +211540,10 @@
             {
               "column": 14,
               "fingerprint": "sha256:1d8e1781a1529b496c361965799ccaace1b96edcfa9dce0679a6333561ff8644",
-              "line": 54,
+              "line": 56,
               "packageName": "@flighthq/types",
               "source": "packages/types/src/Mesh.ts",
-              "id": "binding:[\"@flighthq/types\",\"packages/types/src/Mesh.ts\",3285]",
+              "id": "binding:[\"@flighthq/types\",\"packages/types/src/Mesh.ts\",3397]",
               "kind": "variable",
               "name": "MeshKind",
               "scope": "module",
@@ -223975,10 +224031,10 @@
           "binding": {
             "column": 14,
             "fingerprint": "sha256:845115f54ca716fd825a04bd400ae10ce46bcbebf4aa383b799f94201f7f4e47",
-            "line": 4,
+            "line": 5,
             "packageName": "@flighthq/types",
             "source": "packages/types/src/Node3D.ts",
-            "id": "binding:[\"@flighthq/types\",\"packages/types/src/Node3D.ts\",226]",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/Node3D.ts\",279]",
             "kind": "variable",
             "name": "Node3DKind",
             "scope": "module",
@@ -223996,10 +224052,10 @@
           "binding": {
             "column": 14,
             "fingerprint": "sha256:40eb9a92f19d7147099576deb2d2a0a0838acddd1a6bfe7d6ee7a3e6b9118238",
-            "line": 8,
+            "line": 11,
             "packageName": "@flighthq/types",
             "source": "packages/types/src/Node3D.ts",
-            "id": "binding:[\"@flighthq/types\",\"packages/types/src/Node3D.ts\",491]",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/Node3D.ts\",617]",
             "kind": "variable",
             "name": "Node3DTraitsKey",
             "scope": "module",
@@ -224014,6 +224070,20 @@
         }
       ],
       "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Node3D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Node3D.ts"
+          },
+          "specifier": "./Entity.ts",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        },
         {
           "evaluation": "type-only",
           "importer": {
@@ -224040,6 +224110,20 @@
             "name": "HasTransform3D",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/HasTransform3D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Node3D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Node3D.ts"
+          },
+          "specifier": "./Matrix4.js",
+          "target": {
+            "name": "Matrix4",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Matrix4.ts"
           }
         },
         {
@@ -224097,10 +224181,10 @@
             {
               "column": 14,
               "fingerprint": "sha256:845115f54ca716fd825a04bd400ae10ce46bcbebf4aa383b799f94201f7f4e47",
-              "line": 4,
+              "line": 5,
               "packageName": "@flighthq/types",
               "source": "packages/types/src/Node3D.ts",
-              "id": "binding:[\"@flighthq/types\",\"packages/types/src/Node3D.ts\",226]",
+              "id": "binding:[\"@flighthq/types\",\"packages/types/src/Node3D.ts\",279]",
               "kind": "variable",
               "name": "Node3DKind",
               "scope": "module",
@@ -224120,10 +224204,10 @@
             {
               "column": 14,
               "fingerprint": "sha256:40eb9a92f19d7147099576deb2d2a0a0838acddd1a6bfe7d6ee7a3e6b9118238",
-              "line": 8,
+              "line": 11,
               "packageName": "@flighthq/types",
               "source": "packages/types/src/Node3D.ts",
-              "id": "binding:[\"@flighthq/types\",\"packages/types/src/Node3D.ts\",491]",
+              "id": "binding:[\"@flighthq/types\",\"packages/types/src/Node3D.ts\",617]",
               "kind": "variable",
               "name": "Node3DTraitsKey",
               "scope": "module",
@@ -262064,32 +262148,11 @@
           "access": "available-after-instantiation",
           "binding": {
             "column": 17,
-            "fingerprint": "sha256:84407ec1ffe91193eed17814a63e586789693d97721c37f35382558a3897b2c6",
+            "fingerprint": "sha256:a7cdf3f05938bc068d4d8c5035e67a662535a1422a0326f970ffa3ba64281f0a",
             "line": 130,
             "packageName": "@flighthq/types",
             "source": "packages/types/src/RenderState.ts",
             "id": "binding:[\"@flighthq/types\",\"packages/types/src/RenderState.ts\",7205]",
-            "kind": "function",
-            "name": "invokeRenderProxyDestroyData",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:a7cdf3f05938bc068d4d8c5035e67a662535a1422a0326f970ffa3ba64281f0a",
-            "line": 136,
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/RenderState.ts",
-            "id": "binding:[\"@flighthq/types\",\"packages/types/src/RenderState.ts\",7454]",
             "kind": "function",
             "name": "readRenderStateRuntimeOwner",
             "scope": "module",
@@ -262107,10 +262170,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:450986d9bf089e2440ab0889372f5719d6e1c538f567fc942547508e4f138d79",
-            "line": 140,
+            "line": 134,
             "packageName": "@flighthq/types",
             "source": "packages/types/src/RenderState.ts",
-            "id": "binding:[\"@flighthq/types\",\"packages/types/src/RenderState.ts\",7588]",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/RenderState.ts\",7339]",
             "kind": "function",
             "name": "writeRenderStateRuntimeOwner",
             "scope": "module",
@@ -262151,20 +262214,6 @@
             "name": "CanvasShapeRegistry",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/CanvasShapeRegistry.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "RenderState",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/RenderState.ts"
-          },
-          "specifier": "./ColorScaleBias.js",
-          "target": {
-            "name": "ColorScaleBias",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/ColorScaleBias.ts"
           }
         },
         {
@@ -262221,20 +262270,6 @@
             "name": "ImageResource",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/ImageResource.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "RenderState",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/RenderState.ts"
-          },
-          "specifier": "./Material.js",
-          "target": {
-            "name": "Material",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Material.ts"
           }
         },
         {
@@ -262347,20 +262382,6 @@
             "name": "RenderRegistrySignals",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/RenderRegistrySignals.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "RenderState",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/RenderState.ts"
-          },
-          "specifier": "./RendererData.js",
-          "target": {
-            "name": "RendererData",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/RendererData.ts"
           }
         },
         {

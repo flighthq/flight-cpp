@@ -17,11 +17,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 namespace flight::types { struct Camera3D; }
 namespace flight::types { struct CustomShaderMaterial; }
 namespace flight::types { struct Matrix4; }
-namespace flight::types { struct Node3DTraits; }
+namespace flight::types { struct Node3D; }
 namespace flight::types { struct Scene3DLights; }
 namespace flight::types { struct WgpuMeshPipeline; }
 namespace flight::types { struct WgpuRenderState; }
-namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct WgpuScene3DShadow;
@@ -31,7 +30,7 @@ struct WgpuScene3DDrawEntry;
 struct WgpuScene3DRuntime;
 struct WgpuMeshUpload;
 struct WgpuMaterialBinding;
-using WgpuScene3DPass = std::function<void(flight::Ref<flight::types::WgpuRenderState>, flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<Node3DTraits>>>>, flight::RowOf<flight::Ref<Node3DTraits>>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Scene3DLights>>>>)>;
+using WgpuScene3DPass = std::function<void(flight::Ref<flight::types::WgpuRenderState>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Scene3DLights>>>>)>;
 } // namespace flight::types
 
 #include <flight/types/blend_mode.hpp>

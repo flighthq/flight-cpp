@@ -43,7 +43,7 @@ namespace flight::types { struct HostCanvasCapability; }
 namespace flight::types { struct HostImageCapability; }
 namespace flight::types { struct Material; }
 namespace flight::types { struct Matrix; }
-namespace flight::types { struct Node3DTraits; }
+namespace flight::types { struct Node3D; }
 namespace flight::types { struct NodeRenderer; }
 namespace flight::types { struct Path; }
 namespace flight::types { struct PathMesh; }

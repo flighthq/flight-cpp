@@ -10,17 +10,22 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 namespace flight::types { struct Aabb; }
-namespace flight::types { struct HasAppearanceRuntime; }
-namespace flight::types { struct HasTransform3DRuntime; }
+namespace flight::types { struct Adjustment; }
+namespace flight::types { struct ColorScaleBias; }
 namespace flight::types { struct InstancedMeshSignals; }
+namespace flight::types { struct InteractionSignals; }
 namespace flight::types { struct Material3D; }
 namespace flight::types { struct Matrix4; }
 namespace flight::types { struct MeshGeometry; }
+namespace flight::types { struct Node3D; }
+namespace flight::types { struct Node3DRuntime; }
 namespace flight::types { struct Node3DTraits; }
 namespace flight::types { struct NodeData; }
+namespace flight::types { struct NodeInteractionState; }
+namespace flight::types { struct NodeSignals; }
 namespace flight::types { struct Quaternion; }
 namespace flight::types { struct Vector3; }
-namespace flight::types { template <typename Traits> struct NodeRuntime; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct InstancedMesh;
@@ -30,6 +35,7 @@ struct InstancedMeshRuntime;
 } // namespace flight::types
 
 #include <flight/types/aabb.hpp>
+#include <flight/types/entity.hpp>
 #include <flight/types/instanced_mesh_signals.hpp>
 #include <flight/types/material3_d.hpp>
 #include <flight/types/matrix4.hpp>
@@ -37,30 +43,17 @@ struct InstancedMeshRuntime;
 #include <flight/types/node3_d.hpp>
 #include <flight/types/node.hpp>
 #include <flight/types/entity.hpp>
-#include <flight/types/node3_d.hpp>
 #include <flight/types/vector3.hpp>
 #include <flight/types/quaternion.hpp>
+#include <flight/types/adjustment.hpp>
+#include <flight/types/color_scale_bias.hpp>
+#include <flight/types/node3_d.hpp>
+#include <flight/types/interaction_signals.hpp>
+#include <flight/types/node_signals.hpp>
+#include <flight/types/node_interaction_state.hpp>
+#include <flight/types/matrix4.hpp>
 
 namespace flight::types {
-
-struct InstancedMesh : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::NodeData>> data;
-  bool enabled;
-  flight::String kind;
-  std::optional<flight::String> name;
-  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node3DTraits>>>> entity_runtime_key;
-  double alpha;
-  bool visible;
-  flight::Ref<flight::types::Vector3> position;
-  flight::Ref<flight::types::Quaternion> rotation;
-  flight::Ref<flight::types::Vector3> scale;
-  flight::Ref<flight::types::MeshGeometry> geometry;
-  std::optional<flight::Uint32Array> instance_colors;
-  double instance_count;
-  flight::Array<flight::Ref<flight::types::Matrix4>> instance_matrices;
-  flight::Array<std::optional<flight::Ref<flight::types::Material3D>>> materials;
-  double version;
-};
 
 struct InstancedMeshCullRuntime : public flight::ReferenceEnabled {
   std::variant<flight::Ref<flight::types::Aabb>, flight::Null, flight::Undefined> instance_local_bounds = std::variant<flight::Ref<flight::types::Aabb>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
@@ -71,21 +64,21 @@ struct InstancedMeshSignalsRuntime : public flight::ReferenceEnabled {
   std::variant<flight::Ref<flight::types::InstancedMeshSignals>, flight::Null, flight::Undefined> instanced_mesh_signals = std::variant<flight::Ref<flight::types::InstancedMeshSignals>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_A1321F3D8790C3C1
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_A1321F3D8790C3C1
-struct data_enabled_kind_name_entity_runtime_key_alpha_visible_position_rotation_scale_a1321f3d8790c3c1 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_ED4E5F18F5182C64
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_ED4E5F18F5182C64
+struct data_enabled_kind_name_entity_runtime_key_alpha_visible_position_rotation_scale_ed4e5f18f5182c64 : public flight::ReferenceEnabled {
   std::optional<flight::Ref<flight::types::NodeData>> data;
   bool enabled;
   flight::String kind;
   std::optional<flight::String> name;
-  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node3DTraits>>>> entity_runtime_key;
+  std::optional<std::shared_ptr<NodeRuntime<flight::Ref<flight::types::Node3DTraits>>>> entity_runtime_key;
   double alpha;
   bool visible;
   flight::Ref<flight::types::Vector3> position;
   flight::Ref<flight::types::Quaternion> rotation;
   flight::Ref<flight::types::Vector3> scale;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_A1321F3D8790C3C1
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TYPES_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_POSITION_ROTATION_SCALE_ED4E5F18F5182C64
 
 struct InstancedMeshRuntime : public flight::ReferenceEnabled {
   std::optional<flight::ErasedRef> binding;
@@ -97,10 +90,10 @@ struct InstancedMeshRuntime : public flight::ReferenceEnabled {
   double appearance_id;
   double bounds_using_local_bounds_id;
   double bounds_using_local_transform_id;
-  std::function<bool(NodeOf<flight::Ref<flight::types::Node3DTraits>>, NodeOf<flight::Ref<flight::types::Node3DTraits>>)> can_add_child;
-  std::optional<flight::Array<NodeOf<flight::Ref<flight::types::Node3DTraits>>>> children;
+  std::function<bool(flight::types::NodeOf<flight::Ref<flight::types::Node3DTraits>>, flight::types::NodeOf<flight::Ref<flight::types::Node3DTraits>>)> can_add_child;
+  std::optional<flight::Array<flight::types::NodeOf<flight::Ref<flight::types::Node3DTraits>>>> children;
   double children_id;
-  std::optional<NodeTraitsKey<flight::Ref<flight::types::Node3DTraits>>> traits;
+  std::optional<flight::Ref<flight::types::NodeTraitsKey<flight::Ref<flight::types::Node3DTraits>>>> traits;
   std::optional<flight::Ref<flight::types::InteractionSignals>> interaction_signals;
   double local_bounds_id;
   double local_bounds_using_local_bounds_id;
@@ -109,7 +102,7 @@ struct InstancedMeshRuntime : public flight::ReferenceEnabled {
   double local_transform_using_local_transform_id;
   std::optional<flight::Ref<flight::types::NodeSignals>> node_signals;
   std::optional<flight::Ref<flight::types::NodeInteractionState>> interaction_state;
-  std::optional<NodeOf<flight::Ref<flight::types::Node3DTraits>>> parent;
+  std::optional<flight::types::NodeOf<flight::Ref<flight::types::Node3DTraits>>> parent;
   double parent_reference_id;
   double world_bounds_using_local_bounds_id;
   double world_bounds_using_world_transform_id;
@@ -126,6 +119,25 @@ struct InstancedMeshRuntime : public flight::ReferenceEnabled {
   std::variant<flight::Ref<flight::types::Aabb>, flight::Null, flight::Undefined> instance_local_bounds = std::variant<flight::Ref<flight::types::Aabb>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::optional<double> instance_local_bounds_version;
   std::variant<flight::Ref<flight::types::InstancedMeshSignals>, flight::Null, flight::Undefined> instanced_mesh_signals = std::variant<flight::Ref<flight::types::InstancedMeshSignals>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+};
+
+struct InstancedMesh : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::NodeData>> data;
+  bool enabled;
+  flight::String kind;
+  std::optional<flight::String> name;
+  std::optional<flight::Ref<InstancedMeshRuntime>> entity_runtime_key;
+  double alpha;
+  bool visible;
+  flight::Ref<flight::types::Vector3> position;
+  flight::Ref<flight::types::Quaternion> rotation;
+  flight::Ref<flight::types::Vector3> scale;
+  flight::Ref<flight::types::MeshGeometry> geometry;
+  std::optional<flight::Uint32Array> instance_colors;
+  double instance_count;
+  flight::Array<flight::Ref<flight::types::Matrix4>> instance_matrices;
+  flight::Array<std::optional<flight::Ref<flight::types::Material3D>>> materials;
+  double version;
 };
 
 inline const flight::String instanced_mesh_kind = flight::String("InstancedMesh");

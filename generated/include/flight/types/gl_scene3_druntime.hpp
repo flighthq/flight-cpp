@@ -21,7 +21,7 @@ namespace flight::types { struct GlTextureRenderTarget; }
 namespace flight::types { struct Matrix4; }
 namespace flight::types { struct Mesh; }
 namespace flight::types { struct MeshGeometry; }
-namespace flight::types { struct Node3DTraits; }
+namespace flight::types { struct Node3D; }
 namespace flight::types { struct PbrExtension; }
 namespace flight::types { struct Scene3DLightBlock; }
 namespace flight::types { struct Scene3DLights; }
@@ -30,7 +30,6 @@ namespace flight::types { struct Texture2D; }
 namespace flight::types { struct Texture2DArray; }
 namespace flight::types { struct Texture3D; }
 namespace flight::types { struct TextureCube; }
-namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
 struct GlScene3DShadow;
@@ -39,7 +38,7 @@ struct GlScene3DDrawEntry;
 struct GlMeshSkinFeature;
 struct GlScene3DRuntime;
 struct GlMeshUpload;
-using GlScene3DPass = std::function<void(flight::Ref<flight::types::GlRenderState>, flight::StructuralRef<flight::RowReadonly<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<Node3DTraits>>>>, flight::RowOf<flight::Ref<Node3DTraits>>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Scene3DLights>>>>)>;
+using GlScene3DPass = std::function<void(flight::Ref<flight::types::GlRenderState>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Node3D>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Camera3D>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<Scene3DLights>>>>)>;
 } // namespace flight::types
 
 #include <flight/types/camera3_d.hpp>

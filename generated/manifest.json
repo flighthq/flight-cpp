@@ -339,8 +339,6 @@
         "flight/types/focus_event_data.hpp",
         "flight/types/focus_manager.hpp",
         "flight/types/frame_script.hpp",
-        "flight/types/gl_scene3_druntime.hpp",
-        "flight/types/group.hpp",
         "flight/types/gui_controller.hpp",
         "flight/types/has_appearance.hpp",
         "flight/types/has_blend_mode.hpp",
@@ -360,8 +358,6 @@
         "flight/types/native_text.hpp",
         "flight/types/node.hpp",
         "flight/types/node2_d.hpp",
-        "flight/types/node3_d.hpp",
-        "flight/types/node3_dvisitor.hpp",
         "flight/types/node_descendant_visitor.hpp",
         "flight/types/node_interaction.hpp",
         "flight/types/node_interactive_state_binding.hpp",
@@ -384,8 +380,7 @@
         "flight/types/sprite.hpp",
         "flight/types/svg_registry.hpp",
         "flight/types/text_label.hpp",
-        "flight/types/tilemap.hpp",
-        "flight/types/wgpu_scene3_druntime.hpp"
+        "flight/types/tilemap.hpp"
       ],
       "id": "respell-reference-alias-node"
     },
@@ -406,12 +401,10 @@
         "flight/scene2d_formats/rive_asset_binding.hpp",
         "flight/scene3d/billboard.hpp",
         "flight/scene3d/scene_material.hpp",
-        "flight/types/billboard.hpp",
         "flight/types/bitmap_text.hpp",
         "flight/types/display_object.hpp",
         "flight/types/html_view.hpp",
         "flight/types/instanced_mesh.hpp",
-        "flight/types/lod_mesh.hpp",
         "flight/types/mesh.hpp",
         "flight/types/morph_shape.hpp",
         "flight/types/movie_clip.hpp",
@@ -420,7 +413,6 @@
         "flight/types/node2_d.hpp",
         "flight/types/node3_d.hpp",
         "flight/types/particle_emitter2_d.hpp",
-        "flight/types/particle_emitter3_d.hpp",
         "flight/types/quad_batch.hpp",
         "flight/types/rich_text.hpp",
         "flight/types/scale9_shape.hpp",
@@ -5267,6 +5259,13 @@
       "digest": "52c4a9162d6d319c8ab0670f804d31d616e4e2d11e67c74fd06747c4f2a7c8b9",
       "id": "texture-like-concrete-value-arms",
       "module": "packages/types/src/Texture.ts",
+      "package": "@flighthq/types"
+    },
+    {
+      "dependency": "flight",
+      "digest": "24323d32bdb09a289add8adec7d62e77adf762f9fbbf10d2aa17ec479ad2493b",
+      "id": "node3d-named-runtime-carriers",
+      "module": "Node3D, Mesh, and InstancedMesh runtime carriers",
       "package": "@flighthq/types"
     },
     {

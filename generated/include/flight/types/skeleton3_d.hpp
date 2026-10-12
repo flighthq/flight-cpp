@@ -9,8 +9,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct Entity; }
 namespace flight::types { struct EntityRuntime; }
-namespace flight::types { struct Node3DTraits; }
-namespace flight::types { template <typename Traits> struct Node; }
+namespace flight::types { struct Node3D; }
 
 namespace flight::types {
 struct Skeleton3D;
@@ -27,7 +26,7 @@ struct Skeleton3D : public flight::ReferenceEnabled {
   flight::Float32Array inverse_bind_matrices;
   flight::Float32Array joint_matrices;
   flight::Float32Array normal_matrices;
-  flight::Array<flight::types::Node3D> joints;
+  flight::Array<flight::Ref<flight::types::Node3D>> joints;
   std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined> names = std::variant<flight::Array<flight::String>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
 

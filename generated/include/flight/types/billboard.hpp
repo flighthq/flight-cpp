@@ -6,19 +6,18 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-namespace flight::types { struct HasAppearanceRuntime; }
-namespace flight::types { struct HasTransform3DRuntime; }
 namespace flight::types { struct Material3D; }
 namespace flight::types { struct MeshGeometry; }
-namespace flight::types { struct Node3DTraits; }
+namespace flight::types { struct Node3D; }
+namespace flight::types { struct Node3DRuntime; }
 namespace flight::types { struct NodeData; }
 namespace flight::types { struct Quaternion; }
 namespace flight::types { struct Vector3; }
-namespace flight::types { template <typename Traits> struct NodeRuntime; }
 
 namespace flight::types {
 struct Billboard;
 using BillboardMode = flight::String;
+using BillboardRuntime = flight::Ref<flight::types::Node3DRuntime>;
 } // namespace flight::types
 
 #include <flight/types/material3_d.hpp>
@@ -37,7 +36,7 @@ struct Billboard : public flight::ReferenceEnabled {
   bool enabled;
   flight::String kind;
   std::optional<flight::String> name;
-  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node3DTraits>>>> entity_runtime_key;
+  std::optional<flight::Ref<flight::types::Node3DRuntime>> entity_runtime_key;
   double alpha;
   bool visible;
   flight::Ref<flight::types::Vector3> position;
@@ -47,8 +46,6 @@ struct Billboard : public flight::ReferenceEnabled {
   flight::Array<std::optional<flight::Ref<flight::types::Material3D>>> materials;
   BillboardMode mode;
 };
-
-using BillboardRuntime = flight::Ref<flight::types::Node3DRuntime>;
 
 inline const flight::String billboard_kind = flight::String("Billboard");
 
