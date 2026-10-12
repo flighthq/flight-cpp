@@ -227,6 +227,12 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `static_cast<T>(x)`, which an erased carrier cannot serve and which the runtime refuses to coerce.
 - [Readonly structural owners must enter their exact nominal union arm](readonly-structural-owner-to-nominal-union.md) —
   a retained concrete owner is not recovered when its readonly row enters `TextureLike`.
+- [Strict identity must compare a readonly structural view with its nominal owner](readonly-structural-nominal-identity-comparison.md) —
+  spritesheet emits `optional<StructuralRef<...>> == optional<Ref<...>>` without a refusal; the carried
+  source local preserves the common readonly carrier and the same object identity.
+- [An iterated element's property must retain its type at a contextual optional field](iterated-element-property-contextual-optional.md) —
+  spritesheet refuses hydration and data validation after typed callback/iterator elements reach C++
+  storage erased at optional destination fields; distinct from absence and presence-test defects.
 - [Flattened interface refinements need an identity-preserving carrier](flattened-interface-refinement-identity.md) —
   independent emitted structs cannot represent a `Texture2D` → `RenderTexture` refinement.
 - [Named union shapes must survive `Partial<T>`](named-union-partial-shape.md) — the emitter

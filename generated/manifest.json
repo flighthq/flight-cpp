@@ -3520,9 +3520,7 @@
       "id": "gizmo-node-bounds-access"
     },
     {
-      "files": [
-        "flight/spritesheet/spritesheet_from.hpp"
-      ],
+      "files": [],
       "id": "spritesheet-unqualified-textureatlas-names"
     },
     {
@@ -5013,8 +5011,8 @@
     },
     {
       "dependency": "flight",
-      "digest": "c63ff611ecbc19ecd8e761ecf5a82af38a1ca7c94648aa2de63d96ee4435ca5d",
-      "id": "spritesheet-player-options-shape",
+      "digest": "ffbbb53db99e7191d96b5fe84c7fb9429b76a304db2240661d79e9c47daa862e",
+      "id": "spritesheet-player-readonly-identity-comparison",
       "module": "packages/spritesheet/src/spritesheetPlayer.ts",
       "package": "@flighthq/spritesheet"
     },
@@ -6500,8 +6498,6 @@
       "flight/skeleton2d_formats/spine_parse.hpp",
       "flight/snapshot/enable_snapshot_guards.hpp",
       "flight/spatial/format_spatial_indexing_notice.hpp",
-      "flight/spritesheet/spritesheet_from.hpp",
-      "flight/spritesheet/spritesheet_validation.hpp",
       "flight/spritesheet_formats/spritesheet_detect.hpp",
       "flight/text/rich_text.hpp",
       "flight/text/text_label.hpp",
@@ -6522,7 +6518,7 @@
       "flight/tilemap_formats/tiled_xml_parse.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 904
+    "includes": 899
   },
   "packages": [
     {
@@ -8154,14 +8150,14 @@
       "sourceModules": 6
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/spritesheet",
       "cppNamespace": "flight::spritesheet",
       "emittedModules": 7,
       "package": "@flighthq/spritesheet",
       "refusedModules": 2,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 9

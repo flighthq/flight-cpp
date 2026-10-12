@@ -7907,14 +7907,14 @@
       "code": "dependency-refused",
       "module": "packages/spritesheet/src/contract.ts",
       "package": "@flighthq/spritesheet",
-      "reason": "dependency ./spritesheetFrom was refused for @flighthq/spritesheet/packages/spritesheet/src/spritesheetFrom.ts",
+      "reason": "dependency ./spritesheetFrom.ts was refused for @flighthq/spritesheet/packages/spritesheet/src/spritesheetFrom.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/spritesheet/src/index.ts",
       "package": "@flighthq/spritesheet",
-      "reason": "dependency ./contract was refused for @flighthq/spritesheet/packages/spritesheet/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/spritesheet/packages/spritesheet/src/contract.ts",
       "stage": "dependency"
     },
     {

@@ -1,0 +1,15 @@
+diff --git a/packages/spritesheet/src/spritesheetPlayer.ts b/packages/spritesheet/src/spritesheetPlayer.ts
+--- a/packages/spritesheet/src/spritesheetPlayer.ts
++++ b/packages/spritesheet/src/spritesheetPlayer.ts
+@@ -116,7 +116,10 @@ export function playSpritesheetAnimation(
+   animation: Readonly<SpritesheetAnimation> | null,
+   restart = true,
+ ): void {
+-  if (!restart && animation === player.animation) return;
++  if (!restart) {
++    const currentAnimation: Readonly<SpritesheetAnimation> | null = player.animation;
++    if (animation === currentAnimation) return;
++  }
+   player.animation = animation;
+   player.complete = animation === null;
+   player.elapsed = 0;

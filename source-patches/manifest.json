@@ -257,20 +257,21 @@
       "appliedOn": "2026-10-07"
     },
     {
-      "id": "spritesheet-player-options-shape",
+      "id": "spritesheet-player-readonly-identity-comparison",
       "dependency": "flight",
-      "patch": "spritesheet-player-options-shape.patch",
+      "patch": "spritesheet-player-readonly-identity-comparison.patch",
       "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/spritesheet/src/spritesheetPlayer.ts",
       "package": "@flighthq/spritesheet",
-      "answers": "refusal",
-      "refusal": "Partial<SpritesheetPlayer> has no statically resolvable C++ object shape, so both construction functions are omitted",
-      "rewrite": "Names the exact optional fields consumed by the constructor in a private SpritesheetPlayerOptions interface and uses it for both construction functions.",
-      "equivalence": "The private interface is structurally identical to the relevant Partial<SpritesheetPlayer> surface: every SpritesheetPlayer field remains optional with the same value type. Type declarations are erased, accepted callers and defaults are unchanged, and the same object reference is read in the same order.",
-      "whyNotUpstreamFirst": "The compiler explicitly requests a declared object shape. A private target-neutral options interface documents the actual constructor surface without copying player behavior into C++.",
-      "unblocks": "Restores initialize_spritesheet_player and create_spritesheet_player, including the acquire-player call site.",
-      "expires": "when Partial of a named record lowers to RowPartial automatically, or Flight adopts the explicit options interface.",
-      "appliedOn": "2026-10-07"
+      "answers": "diagnostic",
+      "refusal": "silent compile defect: strict identity compares an optional readonly structural view with the player's optional nominal reference, which has no C++ operator==; the header has no PARTIAL or NOT GENERATED marker",
+      "rewrite": "Inside the existing restart=false branch, binds player.animation to the same readonly-nullable type as the animation parameter before applying the unchanged strict identity comparison.",
+      "equivalence": "The new branch reads restart once and reads player.animation once only when restart is false, exactly as the original short-circuit expression does. The local retains the identical animation object or null value; it is immediately compared by strict identity and is otherwise unobservable. Playback state, reset order, identity, and the early-return condition are unchanged.",
+      "verification": "Regenerate @flighthq/spritesheet without the obsolete options-shape patch. spritesheet_player.hpp must compare two optional readonly structural refs, the package-scoped header gate must compile it, and the native spritesheet test must prove restart=false preserves elapsed time only for the identical animation.",
+      "whyNotUpstreamFirst": "The source comparison is valid TypeScript and the runtime structural view already retains owner identity. The local only preserves the shared contextual carrier the emitter loses when reading the nominal member directly, while the compiler request records the general lowering defect.",
+      "unblocks": "Makes spritesheet_player.hpp compile and enables native evidence for construction, lookup, playback, timing, queues, signals, and pooling.",
+      "expires": "when strict equality between a readonly structural view and its exact nominal owner compares their retained object identity directly, or Flight adopts the explicit local.",
+      "appliedOn": "2026-10-12"
     },
     {
       "id": "layout-node-reference-bindings",
