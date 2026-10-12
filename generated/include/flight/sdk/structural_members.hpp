@@ -1264,6 +1264,9 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("onLooped") && requires { object.on_looped; }) return (object.on_looped);
   else if constexpr (Key::name.view() == std::string_view("onMagnetometer") && requires { object.on_magnetometer; }) return (object.on_magnetometer);
   else if constexpr (Key::name.view() == std::string_view("onMaximize") && requires { object.on_maximize; }) return (object.on_maximize);
+  else if constexpr (Key::name.view() == std::string_view("onMidiAccessStateChange") && requires { object.on_midi_access_state_change; }) return (object.on_midi_access_state_change);
+  else if constexpr (Key::name.view() == std::string_view("onMidiInputMessage") && requires { object.on_midi_input_message; }) return (object.on_midi_input_message);
+  else if constexpr (Key::name.view() == std::string_view("onMidiPortStateChange") && requires { object.on_midi_port_state_change; }) return (object.on_midi_port_state_change);
   else if constexpr (Key::name.view() == std::string_view("onMinimize") && requires { object.on_minimize; }) return (object.on_minimize);
   else if constexpr (Key::name.view() == std::string_view("onMiss") && requires { object.on_miss; }) return (object.on_miss);
   else if constexpr (Key::name.view() == std::string_view("onMove") && requires { object.on_move; }) return (object.on_move);
@@ -3358,6 +3361,9 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("onLooped") && requires(Object& object) { object.on_looped; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_looped)>>{};
   else if constexpr (Key::name.view() == std::string_view("onMagnetometer") && requires(Object& object) { object.on_magnetometer; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_magnetometer)>>{};
   else if constexpr (Key::name.view() == std::string_view("onMaximize") && requires(Object& object) { object.on_maximize; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_maximize)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onMidiAccessStateChange") && requires(Object& object) { object.on_midi_access_state_change; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_midi_access_state_change)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onMidiInputMessage") && requires(Object& object) { object.on_midi_input_message; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_midi_input_message)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onMidiPortStateChange") && requires(Object& object) { object.on_midi_port_state_change; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_midi_port_state_change)>>{};
   else if constexpr (Key::name.view() == std::string_view("onMinimize") && requires(Object& object) { object.on_minimize; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_minimize)>>{};
   else if constexpr (Key::name.view() == std::string_view("onMiss") && requires(Object& object) { object.on_miss; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_miss)>>{};
   else if constexpr (Key::name.view() == std::string_view("onMove") && requires(Object& object) { object.on_move; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_move)>>{};
@@ -5455,6 +5461,9 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->on_looped; }) owner.bind_named("onLooped", [object]() -> decltype(auto) { return (object->on_looped); });
   if constexpr (requires { object->on_magnetometer; }) owner.bind_named("onMagnetometer", [object]() -> decltype(auto) { return (object->on_magnetometer); });
   if constexpr (requires { object->on_maximize; }) owner.bind_named("onMaximize", [object]() -> decltype(auto) { return (object->on_maximize); });
+  if constexpr (requires { object->on_midi_access_state_change; }) owner.bind_named("onMidiAccessStateChange", [object]() -> decltype(auto) { return (object->on_midi_access_state_change); });
+  if constexpr (requires { object->on_midi_input_message; }) owner.bind_named("onMidiInputMessage", [object]() -> decltype(auto) { return (object->on_midi_input_message); });
+  if constexpr (requires { object->on_midi_port_state_change; }) owner.bind_named("onMidiPortStateChange", [object]() -> decltype(auto) { return (object->on_midi_port_state_change); });
   if constexpr (requires { object->on_minimize; }) owner.bind_named("onMinimize", [object]() -> decltype(auto) { return (object->on_minimize); });
   if constexpr (requires { object->on_miss; }) owner.bind_named("onMiss", [object]() -> decltype(auto) { return (object->on_miss); });
   if constexpr (requires { object->on_move; }) owner.bind_named("onMove", [object]() -> decltype(auto) { return (object->on_move); });
@@ -7585,6 +7594,9 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(on_looped)
   FLIGHT_SDK_ROW_WIDENS(on_magnetometer)
   FLIGHT_SDK_ROW_WIDENS(on_maximize)
+  FLIGHT_SDK_ROW_WIDENS(on_midi_access_state_change)
+  FLIGHT_SDK_ROW_WIDENS(on_midi_input_message)
+  FLIGHT_SDK_ROW_WIDENS(on_midi_port_state_change)
   FLIGHT_SDK_ROW_WIDENS(on_minimize)
   FLIGHT_SDK_ROW_WIDENS(on_miss)
   FLIGHT_SDK_ROW_WIDENS(on_move)

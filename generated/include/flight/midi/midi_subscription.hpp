@@ -5,21 +5,19 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function untrackMidiSubscription -- source line 279
 //   missing: function detachMidiSubscription -- source line 217
-//   missing: function disposeMidiSubscription -- source line 236
-//   missing: function performMidiAttach -- source line 190
+//   missing: function attachMidiInputMessageSubscription -- source line 39
+//   missing: function attachMidiPortStateSubscription -- source line 54
 #include <coroutine>
 #include <flight/boolean.hpp>
+#include <flight/structural_ref.hpp>
 #include <flight/weak_map.hpp>
 #include <functional>
 #include <optional>
-#include <tuple>
 #include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
-
-#include <flight/signals/emitter.hpp>
 
 #include <flight/signals/signal.hpp>
 
@@ -27,95 +25,106 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/entity.hpp>
 
-#include <flight/entity/entity.hpp>
+namespace flight::types { struct Entity; }
+namespace flight::types { struct MidiAccess; }
+namespace flight::types { struct MidiAccessResourceOperations; }
+namespace flight::types { struct MidiAccessStateSubscription; }
+namespace flight::types { struct MidiEventAttachment; }
+namespace flight::types { struct MidiInputMessage; }
+namespace flight::types { struct MidiInputMessageSubscription; }
+namespace flight::types { struct MidiInputPort; }
+namespace flight::types { struct MidiInputPortResourceOperations; }
+namespace flight::types { struct MidiOutputPort; }
+namespace flight::types { struct MidiOutputPortResourceOperations; }
+namespace flight::types { struct MidiPortStateSubscription; }
+namespace flight::types { template <typename T> struct Signal; }
+namespace flight::types { template <typename T> struct SignalData; }
 
 namespace flight::midi {
-
-using flight::signals::emit_signal;
 
 using flight::signals::create_signal;
 
 using flight::types::Entity;
-using flight::types::EntityConstruction;
 using flight::types::MidiAccess;
-using flight::types::MidiAccessDisposeOutcome;
 using flight::types::MidiAccessResourceOperations;
 using flight::types::MidiAccessStateSubscription;
 using flight::types::MidiEventAttachment;
-using flight::types::MidiEventBackendAttachOutcome;
 using flight::types::MidiInputMessage;
 using flight::types::MidiInputMessageSubscription;
 using flight::types::MidiInputPort;
 using flight::types::MidiInputPortResourceOperations;
+using flight::types::MidiOutputPort;
 using flight::types::MidiOutputPortResourceOperations;
 using flight::types::MidiPort;
-using flight::types::MidiPortDisposeOutcome;
 using flight::types::MidiPortStateSubscription;
 using flight::types::MidiSubscriptionAttachOutcome;
 using flight::types::MidiSubscriptionDetachOutcome;
-using flight::types::MidiSubscriptionDisposeOutcome;
-
-using flight::entity::allocate_entity;
-using flight::entity::finish_entity;
 struct MidiSubscriptionRuntime;
 } // namespace flight::midi
 
+#include <flight/entity/entity.hpp>
+#include <flight/signals/emitter.hpp>
+#include <flight/signals/signal.hpp>
+#include <flight/signals/slot.hpp>
+#include <flight/types/entity.hpp>
+#include <flight/types/midi.hpp>
+#include <flight/types/signal.hpp>
 #include <flight/midi/midi_resource.hpp>
 
 namespace flight::midi {
 
-inline void initialize_midi_access_state_subscription(flight::Ref<EntityConstruction<flight::Ref<MidiAccessStateSubscription>>> out) {
-  (out->on_midi_access_state_change = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_midi_access_state_change)>::element_type>>());
+inline void initialize_midi_access_state_subscription(flight::types::EntityConstruction<flight::Ref<flight::types::MidiAccessStateSubscription>> out) {
+  flight::row_set<flight::RowKey<"onMidiAccessStateChange">>(out, flight::signals::create_signal<std::function<void(flight::types::MidiPort)>>());
 }
 
-inline void initialize_midi_input_message_subscription(flight::Ref<EntityConstruction<flight::Ref<MidiInputMessageSubscription>>> out) {
-  (out->on_midi_input_message = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_midi_input_message)>::element_type>>());
+inline void initialize_midi_input_message_subscription(flight::types::EntityConstruction<flight::Ref<flight::types::MidiInputMessageSubscription>> out) {
+  flight::row_set<flight::RowKey<"onMidiInputMessage">>(out, flight::signals::create_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MidiInputMessage>>>>)>>());
 }
 
-inline void initialize_midi_port_state_subscription(flight::Ref<EntityConstruction<flight::Ref<MidiPortStateSubscription>>> out) {
-  (out->on_midi_port_state_change = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_midi_port_state_change)>::element_type>>());
+inline void initialize_midi_port_state_subscription(flight::types::EntityConstruction<flight::Ref<flight::types::MidiPortStateSubscription>> out) {
+  flight::row_set<flight::RowKey<"onMidiPortStateChange">>(out, flight::signals::create_signal<std::function<void(flight::types::MidiPort)>>());
 }
 
 template <typename Arguments>
-using MidiAttach = std::function<flight::Task<flight::Ref<MidiEventBackendAttachOutcome>>(std::function<void(Arguments)>)>;
+using MidiAttach = std::function<flight::Task<flight::types::MidiEventBackendAttachOutcome>(std::function<void(Arguments)>)>;
 
 struct MidiSubscriptionRuntime : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<MidiEventAttachment>> attachment;
-  std::optional<flight::Task<flight::Ref<MidiSubscriptionAttachOutcome>>> attaching;
+  std::optional<flight::Ref<flight::types::MidiEventAttachment>> attachment;
+  std::optional<flight::Task<flight::types::MidiSubscriptionAttachOutcome>> attaching;
   bool dispose_completed;
   bool disposed;
   double generation;
-  std::optional<flight::Set<flight::Ref<Entity>>> owner_subscriptions;
+  std::optional<flight::Set<flight::Ref<flight::types::Entity>>> owner_subscriptions;
 };
 
-inline flight::WeakMap<flight::Ref<Entity>, flight::Ref<MidiSubscriptionRuntime>> subscription_states = flight::WeakMap<flight::Ref<Entity>, flight::Ref<MidiSubscriptionRuntime>>();
+inline flight::WeakMap<flight::Ref<flight::types::Entity>, flight::Ref<MidiSubscriptionRuntime>> subscription_states = flight::WeakMap<flight::Ref<flight::types::Entity>, flight::Ref<MidiSubscriptionRuntime>>();
 
 template <typename Subscription>
-inline Subscription create_midi_subscription(std::function<void(flight::Ref<EntityConstruction<Subscription>>)> init) {
-  flight::Ref<EntityConstruction<Subscription>> subscription = allocate_entity<Subscription>();
+inline Subscription create_midi_subscription(std::function<void(flight::types::EntityConstruction<Subscription>)> init) {
+  flight::types::EntityConstruction<Subscription> subscription = flight::entity::allocate_entity<Subscription>();
   init(subscription);
-  finish_entity(subscription);
+  flight::entity::finish_entity<Subscription>(subscription);
   subscription_states.set(subscription, flight::make_ref<MidiSubscriptionRuntime>(MidiSubscriptionRuntime{.attachment = std::nullopt, .attaching = std::nullopt, .dispose_completed = false, .disposed = false, .generation = 0.0, .owner_subscriptions = std::nullopt}));
-  return subscription;
+  return flight::structural_ref_cast<Subscription>(subscription);
 }
 
-inline flight::Ref<MidiAccessStateSubscription> create_midi_access_state_subscription() {
-  return create_midi_subscription<flight::Ref<MidiAccessStateSubscription>>(initialize_midi_access_state_subscription);
+inline flight::Ref<flight::types::MidiAccessStateSubscription> create_midi_access_state_subscription() {
+  return create_midi_subscription<flight::Ref<flight::types::MidiAccessStateSubscription>>(initialize_midi_access_state_subscription);
 }
 
-inline flight::Ref<MidiInputMessageSubscription> create_midi_input_message_subscription() {
-  return create_midi_subscription<flight::Ref<MidiInputMessageSubscription>>(initialize_midi_input_message_subscription);
+inline flight::Ref<flight::types::MidiInputMessageSubscription> create_midi_input_message_subscription() {
+  return create_midi_subscription<flight::Ref<flight::types::MidiInputMessageSubscription>>(initialize_midi_input_message_subscription);
 }
 
-inline flight::Ref<MidiPortStateSubscription> create_midi_port_state_subscription() {
-  return create_midi_subscription<flight::Ref<MidiPortStateSubscription>>(initialize_midi_port_state_subscription);
+inline flight::Ref<flight::types::MidiPortStateSubscription> create_midi_port_state_subscription() {
+  return create_midi_subscription<flight::Ref<flight::types::MidiPortStateSubscription>>(initialize_midi_port_state_subscription);
 }
 
-inline flight::Ref<MidiSubscriptionAttachOutcome> attach_failure() {
-  return flight::make_ref<MidiSubscriptionAttachOutcome>(MidiSubscriptionAttachOutcome{.attach_failed = true, .reason = flight::String("operation-failed"), .release_failed = false});
+inline flight::types::MidiSubscriptionAttachOutcome attach_failure() {
+  return std::variant<flight::Ref<flight::types::attach_failed_reason_release_failed_a670bac8ba62ef94>, flight::Ref<flight::types::reason_43a745d20647bfb6>>{std::in_place_type<flight::Ref<flight::types::attach_failed_reason_release_failed_a670bac8ba62ef94>>, flight::make_ref<flight::types::attach_failed_reason_release_failed_a670bac8ba62ef94>(flight::types::attach_failed_reason_release_failed_a670bac8ba62ef94{.attach_failed = true, .reason = flight::String("operation-failed"), .release_failed = false})};
 }
 
-inline flight::Task<bool> release_midi_attachment(flight::Ref<MidiEventAttachment> attachment) {
+inline flight::Task<bool> release_midi_attachment(flight::Ref<flight::types::MidiEventAttachment> attachment) {
   try {
     {
       auto await_value = co_await attachment->release();
@@ -140,7 +149,7 @@ inline flight::Task<bool> release_midi_attachment(flight::Ref<MidiEventAttachmen
 // cpp emission failed for @flighthq/midi/packages/midi/src/midiSubscription.ts: optional property call delete
 // requires callable result evidence
 
-inline flight::Task<bool> release_tracked_midi_attachment(flight::Ref<Entity> subscription, flight::Ref<MidiSubscriptionRuntime> runtime) {
+inline flight::Task<bool> release_tracked_midi_attachment(flight::Ref<flight::types::Entity> subscription, flight::Ref<MidiSubscriptionRuntime> runtime) {
   {
     auto await_logical_condition = !runtime->attachment.has_value();
     if (!flight::to_boolean(await_logical_condition)) {
@@ -158,6 +167,7 @@ inline flight::Task<bool> release_tracked_midi_attachment(flight::Ref<Entity> su
 
 
 // NOT GENERATED: function detachMidiSubscription -- source line 217
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   async function detachMidiSubscription(subscription: Entity): Promise<MidiSubscriptionDetachOutcome> {
@@ -179,109 +189,189 @@ inline flight::Task<bool> release_tracked_midi_attachment(flight::Ref<Entity> su
 //     return { reason: 'ok' };
 //   }
 //   
-// cpp emission failed for @flighthq/midi/packages/midi/src/midiSubscription.ts: union member test requires a C++
-// variant binding
+// cpp emission failed for @flighthq/types/packages/types/src/Midi.ts: contextual union value type
+// flight::Task<flight::types::MidiSubscriptionDetachOutcome> is not a represented runtime domain
 
-inline flight::Task<flight::Ref<MidiSubscriptionDetachOutcome>> detach_midi_access_state_subscription(flight::Ref<MidiAccessStateSubscription> subscription) {
+inline flight::Task<flight::types::MidiSubscriptionDetachOutcome> detach_midi_access_state_subscription(flight::Ref<flight::types::MidiAccessStateSubscription> subscription) {
   return detach_midi_subscription(subscription);
 }
 
-inline flight::Task<flight::Ref<MidiSubscriptionDetachOutcome>> detach_midi_input_message_subscription(flight::Ref<MidiInputMessageSubscription> subscription) {
+inline flight::Task<flight::types::MidiSubscriptionDetachOutcome> detach_midi_input_message_subscription(flight::Ref<flight::types::MidiInputMessageSubscription> subscription) {
   return detach_midi_subscription(subscription);
 }
 
-inline flight::Task<flight::Ref<MidiSubscriptionDetachOutcome>> detach_midi_port_state_subscription(flight::Ref<MidiPortStateSubscription> subscription) {
+inline flight::Task<flight::types::MidiSubscriptionDetachOutcome> detach_midi_port_state_subscription(flight::Ref<flight::types::MidiPortStateSubscription> subscription) {
   return detach_midi_subscription(subscription);
 }
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_REASON_6495C3EEAAC4FAC2
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_REASON_6495C3EEAAC4FAC2
+template <typename Arguments>
+struct reason_6495c3eeaac4fac2 : public flight::ReferenceEnabled {
+  flight::String reason;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_REASON_6495C3EEAAC4FAC2
 
-// NOT GENERATED: function disposeMidiSubscription -- source line 236
-//
-// The source it stood for:
-//   async function disposeMidiSubscription<Arguments extends unknown[]>(
-//     subscription: Entity,
-//     signal: Signal<(...args: Arguments) => void>,
-//   ): Promise<MidiSubscriptionDisposeOutcome> {
-//     const runtime = subscriptionStates.get(subscription);
-//     if (runtime === undefined || runtime.disposeCompleted) return { reason: 'already-disposed' };
-//     runtime.disposed = true;
-//     runtime.generation++;
-//     let attachFailed = false;
-//     let releaseFailed = false;
-//     if (runtime.attaching !== null) {
-//       const outcome = await runtime.attaching;
-//       if (outcome.reason === 'operation-failed') ({ attachFailed, releaseFailed } = outcome);
-//     }
-//     if (!releaseFailed) {
-//       const detached = await detachMidiSubscription(subscription);
-//       if (detached.reason === 'operation-failed') releaseFailed = true;
-//     }
-//     clearSignal(signal);
-//     if (attachFailed || releaseFailed) return { attachFailed, reason: 'operation-failed', releaseFailed };
-//     runtime.disposeCompleted = true;
-//     return { reason: 'ok' };
-//   }
-//   
-// cpp emission failed for @flighthq/midi/packages/midi/src/midiSubscription.ts: union member test requires a C++
-// variant binding
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_ATTACH_FAILED_REASON_RELEASE_FAILED_88FDD7AC0D121268
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_ATTACH_FAILED_REASON_RELEASE_FAILED_88FDD7AC0D121268
+template <typename Arguments>
+struct attach_failed_reason_release_failed_88fdd7ac0d121268 : public flight::ReferenceEnabled {
+  bool attach_failed;
+  flight::String reason;
+  bool release_failed;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_ATTACH_FAILED_REASON_RELEASE_FAILED_88FDD7AC0D121268
 
-inline flight::Task<flight::Ref<MidiSubscriptionDisposeOutcome>> dispose_midi_access_state_subscription(flight::Ref<MidiAccessStateSubscription> subscription) {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_REASON_RELEASE_FAILED_C7A14AC11AD3FC8D
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_REASON_RELEASE_FAILED_C7A14AC11AD3FC8D
+template <typename Arguments>
+struct reason_release_failed_c7a14ac11ad3fc8d : public flight::ReferenceEnabled {
+  flight::String reason;
+  bool release_failed;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_REASON_RELEASE_FAILED_C7A14AC11AD3FC8D
+
+template <typename Arguments>
+inline flight::Task<flight::types::MidiSubscriptionDisposeOutcome> dispose_midi_subscription(flight::Ref<flight::types::Entity> subscription, std::shared_ptr<flight::types::Signal<std::function<void(Arguments)>>> signal) {
+  auto runtime = subscription_states.get(subscription);
+  if ((!runtime.has_value() || runtime.value()->dispose_completed)) {
+    co_return std::variant<flight::Ref<flight::types::attach_failed_reason_release_failed_88fdd7ac0d121268<Arguments>>, flight::Ref<flight::types::reason_6495c3eeaac4fac2<Arguments>>>{std::in_place_type<flight::Ref<flight::types::reason_6495c3eeaac4fac2<Arguments>>>, flight::make_ref<flight::types::reason_6495c3eeaac4fac2<Arguments>>(flight::types::reason_6495c3eeaac4fac2<Arguments>{.reason = flight::String("already-disposed")})};
+  }
+  (runtime.value()->disposed = true);
+  runtime.value()->generation++;
+  bool attach_failed = false;
+  bool release_failed = false;
+  if (runtime.value()->attaching.has_value()) {
+    auto outcome = co_await runtime.value()->attaching.value();
+    if (outcome.index() == 0) {
+      auto destructuring_assignment_value = std::get<0>(outcome);
+      (attach_failed = destructuring_assignment_value->attach_failed);
+      (release_failed = destructuring_assignment_value->release_failed);
+    }
+  }
+  if (!release_failed) {
+    auto detached = co_await detach_midi_subscription(subscription);
+    if ((std::visit([](const auto& value) { return value->reason; }, detached) == flight::String("operation-failed"))) {
+      (release_failed = true);
+    }
+  }
+  flight::signals::clear_signal<std::function<void(Arguments)>>(signal);
+  if ((attach_failed || release_failed)) {
+    co_return std::variant<flight::Ref<flight::types::attach_failed_reason_release_failed_88fdd7ac0d121268<Arguments>>, flight::Ref<flight::types::reason_6495c3eeaac4fac2<Arguments>>>{std::in_place_type<flight::Ref<flight::types::attach_failed_reason_release_failed_88fdd7ac0d121268<Arguments>>>, flight::make_ref<flight::types::attach_failed_reason_release_failed_88fdd7ac0d121268<Arguments>>(flight::types::attach_failed_reason_release_failed_88fdd7ac0d121268<Arguments>{.attach_failed = attach_failed, .reason = flight::String("operation-failed"), .release_failed = release_failed})};
+  }
+  (runtime.value()->dispose_completed = true);
+  co_return std::variant<flight::Ref<flight::types::attach_failed_reason_release_failed_88fdd7ac0d121268<Arguments>>, flight::Ref<flight::types::reason_6495c3eeaac4fac2<Arguments>>>{std::in_place_type<flight::Ref<flight::types::reason_6495c3eeaac4fac2<Arguments>>>, flight::make_ref<flight::types::reason_6495c3eeaac4fac2<Arguments>>(flight::types::reason_6495c3eeaac4fac2<Arguments>{.reason = flight::String("ok")})};
+}
+
+inline flight::Task<flight::types::MidiSubscriptionDisposeOutcome> dispose_midi_access_state_subscription(flight::Ref<flight::types::MidiAccessStateSubscription> subscription) {
   return dispose_midi_subscription(subscription, subscription->on_midi_access_state_change);
 }
 
-inline flight::Task<flight::Ref<MidiSubscriptionDisposeOutcome>> dispose_midi_input_message_subscription(flight::Ref<MidiInputMessageSubscription> subscription) {
+inline flight::Task<flight::types::MidiSubscriptionDisposeOutcome> dispose_midi_input_message_subscription(flight::Ref<flight::types::MidiInputMessageSubscription> subscription) {
   return dispose_midi_subscription(subscription, subscription->on_midi_input_message);
 }
 
-inline flight::Task<flight::Ref<MidiSubscriptionDisposeOutcome>> dispose_midi_port_state_subscription(flight::Ref<MidiPortStateSubscription> subscription) {
+inline flight::Task<flight::types::MidiSubscriptionDisposeOutcome> dispose_midi_port_state_subscription(flight::Ref<flight::types::MidiPortStateSubscription> subscription) {
   return dispose_midi_subscription(subscription, subscription->on_midi_port_state_change);
 }
 
-inline flight::Task<flight::Ref<MidiEventBackendAttachOutcome>> settle_midi_attach(flight::Task<flight::Ref<MidiEventBackendAttachOutcome>> pending) {
+inline flight::Task<flight::types::MidiEventBackendAttachOutcome> settle_midi_attach(flight::Task<flight::types::MidiEventBackendAttachOutcome> pending) {
   try {
     co_return co_await pending;
   }
   catch (...) {
-    co_return flight::make_ref<MidiEventBackendAttachOutcome>(MidiEventBackendAttachOutcome{.reason = flight::String("operation-failed"), .release_failed = false});
+    co_return std::variant<flight::Ref<flight::types::attachment_reason_7d5308d64bfac63a>, flight::Ref<flight::types::reason_release_failed_df3bba2de4a03669>>{std::in_place_type<flight::Ref<flight::types::reason_release_failed_df3bba2de4a03669>>, flight::make_ref<flight::types::reason_release_failed_df3bba2de4a03669>(flight::types::reason_release_failed_df3bba2de4a03669{.reason = flight::String("operation-failed"), .release_failed = false})};
   }
 }
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_ATTACHMENT_REASON_82BF45285755334C
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_ATTACHMENT_REASON_82BF45285755334C
+template <typename Arguments>
+struct attachment_reason_82bf45285755334c : public flight::ReferenceEnabled {
+  flight::Ref<flight::types::MidiEventAttachment> attachment;
+  flight::String reason;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_ATTACHMENT_REASON_82BF45285755334C
 
-// NOT GENERATED: function performMidiAttach -- source line 190
-//
-// The source it stood for:
-//   async function performMidiAttach<Arguments extends unknown[]>(
-//     subscription: Entity,
-//     runtime: MidiSubscriptionRuntime,
-//     generation: number,
-//     attach: MidiAttach<Arguments>,
-//     listener: (...args: Arguments) => void,
-//   ): Promise<MidiSubscriptionAttachOutcome> {
-//     let pending: Promise<MidiEventBackendAttachOutcome>;
-//     try {
-//       pending = attach(listener);
-//     } catch {
-//       untrackMidiSubscription(subscription, runtime);
-//       return attachFailure();
-//     }
-//     const outcome = await settleMidiAttach(pending);
-//     if (outcome.reason === 'operation-failed') {
-//       untrackMidiSubscription(subscription, runtime);
-//       return { attachFailed: true, reason: 'operation-failed', releaseFailed: outcome.releaseFailed };
-//     }
-//     runtime.attachment = outcome.attachment;
-//     if (runtime.disposed || runtime.generation !== generation) {
-//       const released = await releaseTrackedMidiAttachment(subscription, runtime);
-//       return released ? { reason: 'ok' } : { attachFailed: false, reason: 'operation-failed', releaseFailed: true };
-//     }
-//     return { reason: 'ok' };
-//   }
-//   
-// cpp emission failed for @flighthq/midi/packages/midi/src/midiSubscription.ts: union member test requires a C++
-// variant binding
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_REASON_RELEASE_FAILED_B7FE56FFEE126F4B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_REASON_RELEASE_FAILED_B7FE56FFEE126F4B
+template <typename Arguments>
+struct reason_release_failed_b7fe56ffee126f4b : public flight::ReferenceEnabled {
+  flight::String reason;
+  bool release_failed;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_REASON_RELEASE_FAILED_B7FE56FFEE126F4B
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_REASON_C241A7E8F0DB42DC
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_REASON_C241A7E8F0DB42DC
+template <typename Arguments>
+struct reason_c241a7e8f0db42dc : public flight::ReferenceEnabled {
+  flight::String reason;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_REASON_C241A7E8F0DB42DC
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_ATTACH_FAILED_REASON_RELEASE_FAILED_481AED1E0F69CDFA
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_ATTACH_FAILED_REASON_RELEASE_FAILED_481AED1E0F69CDFA
+template <typename Arguments>
+struct attach_failed_reason_release_failed_481aed1e0f69cdfa : public flight::ReferenceEnabled {
+  bool attach_failed;
+  flight::String reason;
+  bool release_failed;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_ATTACH_FAILED_REASON_RELEASE_FAILED_481AED1E0F69CDFA
+
+template <typename Arguments>
+inline flight::Task<flight::types::MidiSubscriptionAttachOutcome> perform_midi_attach(flight::Ref<flight::types::Entity> subscription, flight::Ref<MidiSubscriptionRuntime> runtime, double generation, MidiAttach<Arguments> attach, std::function<void(Arguments)> listener) {
+  flight::Task<flight::types::MidiEventBackendAttachOutcome> pending;
+  try {
+    (pending = attach(listener));
+  }
+  catch (...) {
+    untrack_midi_subscription(subscription, runtime);
+    co_return attach_failure();
+  }
+  auto outcome = co_await settle_midi_attach(pending);
+  if (outcome.index() == 1) {
+    untrack_midi_subscription(subscription, runtime);
+    co_return std::variant<flight::Ref<flight::types::attach_failed_reason_release_failed_481aed1e0f69cdfa<Arguments>>, flight::Ref<flight::types::reason_c241a7e8f0db42dc<Arguments>>>{std::in_place_type<flight::Ref<flight::types::attach_failed_reason_release_failed_481aed1e0f69cdfa<Arguments>>>, flight::make_ref<flight::types::attach_failed_reason_release_failed_481aed1e0f69cdfa<Arguments>>(flight::types::attach_failed_reason_release_failed_481aed1e0f69cdfa<Arguments>{.attach_failed = true, .reason = flight::String("operation-failed"), .release_failed = std::get<1>(outcome)->release_failed})};
+  }
+  (runtime->attachment = std::optional<flight::Ref<flight::types::MidiEventAttachment>>{std::get<0>(outcome)->attachment});
+  if ((runtime->disposed || (runtime->generation != generation))) {
+    const bool released = co_await release_tracked_midi_attachment(subscription, runtime);
+    co_return (released ? std::variant<flight::Ref<flight::types::attach_failed_reason_release_failed_481aed1e0f69cdfa<Arguments>>, flight::Ref<flight::types::reason_c241a7e8f0db42dc<Arguments>>>{std::in_place_type<flight::Ref<flight::types::reason_c241a7e8f0db42dc<Arguments>>>, flight::make_ref<flight::types::reason_c241a7e8f0db42dc<Arguments>>(flight::types::reason_c241a7e8f0db42dc<Arguments>{.reason = flight::String("ok")})} : std::variant<flight::Ref<flight::types::attach_failed_reason_release_failed_481aed1e0f69cdfa<Arguments>>, flight::Ref<flight::types::reason_c241a7e8f0db42dc<Arguments>>>{std::in_place_type<flight::Ref<flight::types::attach_failed_reason_release_failed_481aed1e0f69cdfa<Arguments>>>, flight::make_ref<flight::types::attach_failed_reason_release_failed_481aed1e0f69cdfa<Arguments>>(flight::types::attach_failed_reason_release_failed_481aed1e0f69cdfa<Arguments>{.attach_failed = false, .reason = flight::String("operation-failed"), .release_failed = true})});
+  }
+  co_return std::variant<flight::Ref<flight::types::attach_failed_reason_release_failed_481aed1e0f69cdfa<Arguments>>, flight::Ref<flight::types::reason_c241a7e8f0db42dc<Arguments>>>{std::in_place_type<flight::Ref<flight::types::reason_c241a7e8f0db42dc<Arguments>>>, flight::make_ref<flight::types::reason_c241a7e8f0db42dc<Arguments>>(flight::types::reason_c241a7e8f0db42dc<Arguments>{.reason = flight::String("ok")})};
+}
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_REASON_0CA31EAB13D6159F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_REASON_0CA31EAB13D6159F
+template <typename Subscription, typename Arguments>
+struct reason_0ca31eab13d6159f : public flight::ReferenceEnabled {
+  flight::String reason;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_REASON_0CA31EAB13D6159F
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_REASON_RELEASE_FAILED_E19EE6A8ABA264D4
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_REASON_RELEASE_FAILED_E19EE6A8ABA264D4
+template <typename Subscription, typename Arguments>
+struct reason_release_failed_e19ee6a8aba264d4 : public flight::ReferenceEnabled {
+  flight::String reason;
+  bool release_failed;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_REASON_RELEASE_FAILED_E19EE6A8ABA264D4
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_ATTACH_FAILED_REASON_RELEASE_FAILED_021AF24B6FD02FCF
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_ATTACH_FAILED_REASON_RELEASE_FAILED_021AF24B6FD02FCF
+template <typename Subscription, typename Arguments>
+struct attach_failed_reason_release_failed_021af24b6fd02fcf : public flight::ReferenceEnabled {
+  bool attach_failed;
+  flight::String reason;
+  bool release_failed;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_ATTACH_FAILED_REASON_RELEASE_FAILED_021AF24B6FD02FCF
 
 template <typename Subscription, typename Arguments>
-inline flight::Task<flight::Ref<MidiSubscriptionAttachOutcome>> attach_midi_subscription(Subscription subscription, flight::Set<Subscription> owner_subscriptions, MidiAttach<Arguments> attach, std::function<void(Arguments)> listener) {
+inline flight::Task<flight::types::MidiSubscriptionAttachOutcome> attach_midi_subscription(Subscription subscription, flight::Set<Subscription> owner_subscriptions, MidiAttach<Arguments> attach, std::function<void(Arguments)> listener) {
   auto runtime = subscription_states.get(subscription);
   if ((!runtime.has_value() || runtime.value()->disposed)) {
     co_return attach_failure();
@@ -294,90 +384,96 @@ inline flight::Task<flight::Ref<MidiSubscriptionAttachOutcome>> attach_midi_subs
     }
   }
   if (runtime.value()->attachment.has_value()) {
-    flight::Ref<MidiSubscriptionDetachOutcome> detached = co_await detach_midi_subscription(subscription);
-    if ((detached->reason == flight::String("operation-failed"))) {
-      co_return flight::make_ref<MidiSubscriptionAttachOutcome>(MidiSubscriptionAttachOutcome{.attach_failed = false, .reason = flight::String("operation-failed"), .release_failed = true});
+    auto detached = co_await detach_midi_subscription(subscription);
+    if ((std::visit([](const auto& value) { return value->reason; }, detached) == flight::String("operation-failed"))) {
+      co_return std::variant<flight::Ref<flight::types::attach_failed_reason_release_failed_021af24b6fd02fcf<Subscription, Arguments>>, flight::Ref<flight::types::reason_0ca31eab13d6159f<Subscription, Arguments>>>{std::in_place_type<flight::Ref<flight::types::attach_failed_reason_release_failed_021af24b6fd02fcf<Subscription, Arguments>>>, flight::make_ref<flight::types::attach_failed_reason_release_failed_021af24b6fd02fcf<Subscription, Arguments>>(flight::types::attach_failed_reason_release_failed_021af24b6fd02fcf<Subscription, Arguments>{.attach_failed = false, .reason = flight::String("operation-failed"), .release_failed = true})};
     }
     if (flight::to_boolean(runtime.value()->disposed)) {
       co_return attach_failure();
     }
   }
   const double generation = ++runtime.value()->generation;
-  (runtime.value()->owner_subscriptions = std::optional<flight::Set<flight::Ref<Entity>>>{static_cast<flight::Set<flight::Ref<Entity>>>(owner_subscriptions)});
+  (runtime.value()->owner_subscriptions = std::optional<flight::Set<flight::Ref<flight::types::Entity>>>{static_cast<flight::Set<flight::Ref<flight::types::Entity>>>(owner_subscriptions)});
   owner_subscriptions.add(subscription);
-  flight::Task<flight::Ref<MidiSubscriptionAttachOutcome>> attaching = perform_midi_attach<Arguments>(subscription, runtime.value(), generation, attach, listener);
-  (runtime.value()->attaching = std::optional<flight::Task<flight::Ref<MidiSubscriptionAttachOutcome>>>{attaching});
-  flight::Ref<MidiSubscriptionAttachOutcome> outcome = co_await attaching;
+  flight::Task<flight::types::MidiSubscriptionAttachOutcome> attaching = perform_midi_attach<Arguments>(subscription, runtime.value(), generation, attach, listener);
+  (runtime.value()->attaching = std::optional<flight::Task<flight::types::MidiSubscriptionAttachOutcome>>{attaching});
+  auto outcome = co_await attaching;
   if ((runtime.value()->attaching.value() == attaching)) {
     (runtime.value()->attaching = std::nullopt);
   }
   co_return outcome;
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_DISPOSE_COMPLETED_DISPOSE_PENDING_DISPOSED_KNOWN_PORTS_OPERATIONS_SUBSCRIPTIONS_6FA54DB2EA8317E6
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_DISPOSE_COMPLETED_DISPOSE_PENDING_DISPOSED_KNOWN_PORTS_OPERATIONS_SUBSCRIPTIONS_6FA54DB2EA8317E6
-struct dispose_completed_dispose_pending_disposed_known_ports_operations_subscriptions_6fa54db2ea8317e6 : public flight::ReferenceEnabled {
-  bool dispose_completed;
-  std::optional<flight::Task<flight::Ref<MidiAccessDisposeOutcome>>> dispose_pending;
-  bool disposed;
-  flight::Set<flight::Ref<MidiPort>> known_ports;
-  flight::Ref<MidiAccessResourceOperations> operations;
-  flight::Set<flight::Ref<MidiAccessStateSubscription>> subscriptions;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_DISPOSE_COMPLETED_DISPOSE_PENDING_DISPOSED_KNOWN_PORTS_OPERATIONS_SUBSCRIPTIONS_6FA54DB2EA8317E6
-
-inline flight::Task<flight::Ref<MidiSubscriptionAttachOutcome>> attach_midi_access_state_subscription(flight::Ref<MidiAccess> access, flight::Ref<MidiAccessStateSubscription> subscription) {
-  auto state = get_midi_access_resource_state(access);
+inline flight::Task<flight::types::MidiSubscriptionAttachOutcome> attach_midi_access_state_subscription(flight::Ref<flight::types::MidiAccess> access, flight::Ref<flight::types::MidiAccessStateSubscription> subscription) {
+  auto state = flight::midi::get_midi_access_resource_state(access);
   if ((!state.has_value() || state.value()->disposed)) {
     return flight::resolve_task(attach_failure());
   }
-  return attach_midi_subscription<flight::Ref<MidiAccessStateSubscription>, flight::Array<flight::Ref<MidiPort>>>(subscription, state.value()->subscriptions, [=](std::function<void(flight::Array<flight::Ref<MidiPort>>)> listener) { return state.value()->operations->attach_state_change(listener); }, [=](flight::Ref<MidiPort> port) {
+  return attach_midi_subscription<flight::Ref<flight::types::MidiAccessStateSubscription>, flight::Array<flight::types::MidiPort>>(subscription, state.value()->subscriptions, [=](std::function<void(flight::Array<flight::types::MidiPort>)> listener) { return state.value()->operations->attach_state_change(listener); }, [=](flight::types::MidiPort port) {
   state.value()->known_ports.add(port);
-  emit_signal(subscription->on_midi_access_state_change, port);
+  flight::signals::emit_signal<std::function<void(flight::types::MidiPort)>>(subscription->on_midi_access_state_change, port);
 });
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_KIND_MESSAGE_SUBSCRIPTIONS_OPERATIONS_DISPOSE_COMPLETED_DISPOSE_PENDING_DISPOSED_FLIGHT_OPENED_STATE_SUBSCRIPTIONS_7EC6BD6EB4B74ABA
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_KIND_MESSAGE_SUBSCRIPTIONS_OPERATIONS_DISPOSE_COMPLETED_DISPOSE_PENDING_DISPOSED_FLIGHT_OPENED_STATE_SUBSCRIPTIONS_7EC6BD6EB4B74ABA
-struct kind_message_subscriptions_operations_dispose_completed_dispose_pending_disposed_flight_opened_state_subscriptions_7ec6bd6eb4b74aba : public flight::ReferenceEnabled {
-  flight::String kind;
-  flight::Set<flight::Ref<MidiInputMessageSubscription>> message_subscriptions;
-  flight::Ref<MidiInputPortResourceOperations> operations;
-  bool dispose_completed;
-  std::optional<flight::Task<flight::Ref<MidiPortDisposeOutcome>>> dispose_pending;
-  bool disposed;
-  bool flight_opened;
-  flight::Set<flight::Ref<MidiPortStateSubscription>> state_subscriptions;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_KIND_MESSAGE_SUBSCRIPTIONS_OPERATIONS_DISPOSE_COMPLETED_DISPOSE_PENDING_DISPOSED_FLIGHT_OPENED_STATE_SUBSCRIPTIONS_7EC6BD6EB4B74ABA
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_KIND_OPERATIONS_DISPOSE_COMPLETED_DISPOSE_PENDING_DISPOSED_FLIGHT_OPENED_STATE_SUBSCRIPTIONS_B6243E116F9628ED
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_KIND_OPERATIONS_DISPOSE_COMPLETED_DISPOSE_PENDING_DISPOSED_FLIGHT_OPENED_STATE_SUBSCRIPTIONS_B6243E116F9628ED
-struct kind_operations_dispose_completed_dispose_pending_disposed_flight_opened_state_subscriptions_b6243e116f9628ed : public flight::ReferenceEnabled {
-  flight::String kind;
-  flight::Ref<MidiOutputPortResourceOperations> operations;
-  bool dispose_completed;
-  std::optional<flight::Task<flight::Ref<MidiPortDisposeOutcome>>> dispose_pending;
-  bool disposed;
-  bool flight_opened;
-  flight::Set<flight::Ref<MidiPortStateSubscription>> state_subscriptions;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_KIND_OPERATIONS_DISPOSE_COMPLETED_DISPOSE_PENDING_DISPOSED_FLIGHT_OPENED_STATE_SUBSCRIPTIONS_B6243E116F9628ED
+// NOT GENERATED: function attachMidiInputMessageSubscription -- source line 39
+// refusal: cpp-contextual-union-inequivalent [target-runtime]
+//
+// The source it stood for:
+//   export function attachMidiInputMessageSubscription(
+//     input: MidiInputPort,
+//     subscription: MidiInputMessageSubscription,
+//   ): Promise<MidiSubscriptionAttachOutcome> {
+//     const state = getMidiPortResourceState(input);
+//     if (state === undefined || state.kind !== 'input' || state.disposed) return Promise.resolve(attachFailure());
+//     return attachMidiSubscription(
+//       subscription,
+//       state.messageSubscriptions,
+//       (listener) => state.operations.attachMessage(listener),
+//       (data: Uint8Array, timestamp: number) =>
+//         emitSignal(subscription.onMidiInputMessage, { data: new Uint8Array(data), timestamp }),
+//     );
+//   }
+//   
+// cpp emission failed for @flighthq/midi/packages/midi/src/midiSubscription.ts: contextual C++ union conversion
+// requires equivalent source union evidence: target optionalVariant carriers
+// [flight::Ref<kind_message_subscriptions_operations_dispose_completed_dispose_pending_disposed_flight_opened_state_subscriptions_7ec6bd6eb4b74aba>,
+// flight::Ref<kind_operations_dispose_completed_dispose_pending_disposed_flight_opened_state_subscriptions_b6243e116f9628ed>]
+// from call source optionalVariant carriers [flight::Ref<MidiOutputPortResourceState>,
+// flight::Ref<MidiInputPortResourceState>]. The alternatives match uniquely, but no checked target-runtime
+// conversion exists between their C++ carriers. Keep both sides on the same declared union alias; for a Map or
+// WeakMap lookup followed by a rebind, construct its declared value owner and ensure every rebound member
+// already has that owner member's carrier -- a Readonly structural view does not become a mutable nominal Ref.
+// Otherwise add an identity-preserving runtime conversion contract.
 
-inline flight::Task<flight::Ref<MidiSubscriptionAttachOutcome>> attach_midi_input_message_subscription(flight::Ref<MidiInputPort> input, flight::Ref<MidiInputMessageSubscription> subscription) {
-  std::optional<std::variant<flight::Ref<kind_message_subscriptions_operations_dispose_completed_dispose_pending_disposed_flight_opened_state_subscriptions_7ec6bd6eb4b74aba>, flight::Ref<kind_operations_dispose_completed_dispose_pending_disposed_flight_opened_state_subscriptions_b6243e116f9628ed>>> state = get_midi_port_resource_state(input);
-  if (((!state.has_value() || (state.value().kind != flight::String("input"))) || std::get<0>(state.value())->disposed)) {
-    return flight::resolve_task(attach_failure());
-  }
-  return attach_midi_subscription<flight::Ref<MidiInputMessageSubscription>, std::tuple<flight::Uint8Array, double>>(subscription, std::get<0>(state.value())->message_subscriptions, [=](std::function<void(std::tuple<flight::Uint8Array, double>)> listener) { return std::get<0>(state.value())->operations->attach_message(listener); }, [=](flight::Uint8Array data, double timestamp) { return emit_signal(subscription->on_midi_input_message, flight::make_ref<MidiInputMessage>(MidiInputMessage{.data = flight::Uint8Array(data), .timestamp = timestamp})); });
-}
 
-inline flight::Task<flight::Ref<MidiSubscriptionAttachOutcome>> attach_midi_port_state_subscription(flight::Ref<MidiPort> port, flight::Ref<MidiPortStateSubscription> subscription) {
-  std::optional<std::variant<flight::Ref<kind_message_subscriptions_operations_dispose_completed_dispose_pending_disposed_flight_opened_state_subscriptions_7ec6bd6eb4b74aba>, flight::Ref<kind_operations_dispose_completed_dispose_pending_disposed_flight_opened_state_subscriptions_b6243e116f9628ed>>> state = get_midi_port_resource_state(port);
-  if ((!state.has_value() || state.value().disposed)) {
-    return flight::resolve_task(attach_failure());
-  }
-  return attach_midi_subscription<flight::Ref<MidiPortStateSubscription>, std::tuple<>>(subscription, state.value().state_subscriptions, [=](std::function<void(std::tuple<>)> listener) { return state.value().operations.attach_state_change(listener); }, [=]() { return emit_signal(subscription->on_midi_port_state_change, port); });
-}
+// NOT GENERATED: function attachMidiPortStateSubscription -- source line 54
+// refusal: cpp-contextual-union-inequivalent [target-runtime]
+//
+// The source it stood for:
+//   export function attachMidiPortStateSubscription(
+//     port: MidiPort,
+//     subscription: MidiPortStateSubscription,
+//   ): Promise<MidiSubscriptionAttachOutcome> {
+//     const state = getMidiPortResourceState(port);
+//     if (state === undefined || state.disposed) return Promise.resolve(attachFailure());
+//     return attachMidiSubscription(
+//       subscription,
+//       state.stateSubscriptions,
+//       (listener) => state.operations.attachStateChange(listener),
+//       () => emitSignal(subscription.onMidiPortStateChange, port),
+//     );
+//   }
+//   
+// cpp emission failed for @flighthq/midi/packages/midi/src/midiSubscription.ts: contextual C++ union conversion
+// requires equivalent source union evidence: target optionalVariant carriers
+// [flight::Ref<kind_message_subscriptions_operations_dispose_completed_dispose_pending_disposed_flight_opened_state_subscriptions_7ec6bd6eb4b74aba>,
+// flight::Ref<kind_operations_dispose_completed_dispose_pending_disposed_flight_opened_state_subscriptions_b6243e116f9628ed>]
+// from call source optionalVariant carriers [flight::Ref<MidiOutputPortResourceState>,
+// flight::Ref<MidiInputPortResourceState>]. The alternatives match uniquely, but no checked target-runtime
+// conversion exists between their C++ carriers. Keep both sides on the same declared union alias; for a Map or
+// WeakMap lookup followed by a rebind, construct its declared value owner and ensure every rebound member
+// already has that owner member's carrier -- a Readonly structural view does not become a mutable nominal Ref.
+// Otherwise add an identity-preserving runtime conversion contract.
 
 } // namespace flight::midi

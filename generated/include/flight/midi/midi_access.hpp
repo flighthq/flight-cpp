@@ -86,10 +86,7 @@ using attach_failed_reason_release_failed_a670bac8ba62ef94 = flight::types::atta
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_FAILURES_REASON_F82A2518CF67B45C
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_FAILURES_REASON_F82A2518CF67B45C
-struct failures_reason_f82a2518cf67b45c : public flight::ReferenceEnabled {
-  flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MidiPortLifecycleFailure>>>>> failures;
-  flight::String reason;
-};
+using failures_reason_f82a2518cf67b45c = flight::types::failures_reason_f82a2518cf67b45c;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_MIDI_FAILURES_REASON_F82A2518CF67B45C
 
 inline flight::Task<flight::types::MidiAccessDisposeOutcome> dispose_midi_access_known_ports(flight::Ref<flight::types::MidiAccess> access) {

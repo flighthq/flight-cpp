@@ -37,6 +37,24 @@ is about *why* `loadVideoResourceFromUrl` cannot be lowered; this one is about w
 callers, and it would outlive that refusal: any partial module whose retained functions call its refused
 ones has the same outcome.
 
+## Second measured site: `@flighthq/midi`
+
+The same failure, from the same increment, at `generated/include/flight/midi/midi_subscription.hpp`: the
+module omits `untrackMidiSubscription` (source line 279) and its retained declarations call it.
+
+```
+flight/midi/midi_subscription.hpp: use of undeclared identifier 'untrack_midi_subscription'
+flight/midi/contract.hpp:          use of undeclared identifier 'untrack_midi_subscription'
+flight/midi/_internal_index.hpp:   use of undeclared identifier 'untrack_midi_subscription'
+flight/midi/midi_access.hpp:       use of undeclared identifier 'untrack_midi_subscription'
+```
+
+Four of that package's seven headers fail, every one of them at `midi_subscription.hpp:164`. The omitted
+function is filed separately as
+[`optional-property-call-result-evidence.md`](optional-property-call-result-evidence.md); the module's
+three other omissions are filed too and none of them is what breaks the header today. `@flighthq/midi` is
+`partial` with those four failures reported.
+
 ## Reduction
 
 The reduction is the emission itself: the refusal is in `loadVideoResourceFromUrl`, and the two retained

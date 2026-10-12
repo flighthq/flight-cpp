@@ -218,6 +218,7 @@
         "flight/gui/gui_controller.hpp",
         "flight/loader/load.hpp",
         "flight/media/audio_channel.hpp",
+        "flight/midi/midi_subscription.hpp",
         "flight/net/net.hpp",
         "flight/power/power.hpp",
         "flight/scene2d_resources/scene2_ddocument_source.hpp",
@@ -781,7 +782,6 @@
         "flight/interaction/interaction_manager.hpp",
         "flight/lifecycle/lifecycle.hpp",
         "flight/menu/menu.hpp",
-        "flight/midi/midi_subscription.hpp",
         "flight/preferences/storage.hpp",
         "flight/quadbatch/quad_batch.hpp",
         "flight/scene2d/scene2d.hpp",
@@ -1497,9 +1497,7 @@
       "id": "menu-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/midi/midi_subscription.hpp"
-      ],
+      "files": [],
       "id": "midi-unqualified-entity-names"
     },
     {
@@ -2847,9 +2845,7 @@
       "id": "menu-unqualified-signals-names"
     },
     {
-      "files": [
-        "flight/midi/midi_subscription.hpp"
-      ],
+      "files": [],
       "id": "midi-unqualified-signals-names"
     },
     {
@@ -6074,6 +6070,7 @@
       "element_version_02719fb3b3a4e4e7",
       "end_start_97b3a2515eda198d",
       "end_start_b3d703e568b779f1",
+      "failures_reason_f82a2518cf67b45c",
       "height_width_86f909d1d50ed705",
       "khr_lights_punctual_57088e9c45e874e0",
       "khr_texture_basisu_e59745e8c15a4024",
@@ -6275,7 +6272,6 @@
       "flight/materials/material_presets.hpp",
       "flight/media/audio_mixer.hpp",
       "flight/media/video_channel.hpp",
-      "flight/midi/midi_subscription.hpp",
       "flight/particleemitter/particle_emitter3_d.hpp",
       "flight/particleemitter/step_particle_emitter3_d.hpp",
       "flight/particleemitter/update_particle_emitter2_d.hpp",
@@ -6519,7 +6515,7 @@
       "flight/tokens/substitute_flight_document_scene_tokens.hpp",
       "flight/velocity/transform_velocity.hpp"
     ],
-    "includes": 966
+    "includes": 965
   },
   "packages": [
     {

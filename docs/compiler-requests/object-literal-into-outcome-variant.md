@@ -42,6 +42,29 @@ error: initialization of non-aggregate type 'MidiSubscriptionAttachOutcome'
 Four of `@flighthq/midi`'s seven headers fail on this one line: `midi_subscription.hpp` itself, and
 `contract.hpp`, `midi_access.hpp` and `_internal_index.hpp` through it.
 
+**Corrected: this is no longer how the emitter lowers it.** Re-generated at the same pin
+(`@flighthq/midi` 5/7 modules emitted, 2 refused), `attach_failure` now emits the shape this request asked
+for — the literal selects its alternative with `std::in_place_type`, and the arm's own struct keeps its
+designated initializer:
+
+```cpp
+inline flight::types::MidiSubscriptionAttachOutcome attach_failure() {
+  return std::variant<flight::Ref<flight::types::attach_failed_reason_release_failed_a670bac8ba62ef94>,
+                      flight::Ref<flight::types::reason_43a745d20647bfb6>>{
+      std::in_place_type<flight::Ref<flight::types::attach_failed_reason_release_failed_a670bac8ba62ef94>>,
+      flight::make_ref<flight::types::attach_failed_reason_release_failed_a670bac8ba62ef94>(
+          flight::types::attach_failed_reason_release_failed_a670bac8ba62ef94{
+              .attach_failed = true, .reason = flight::String("operation-failed"), .release_failed = false})};
+}
+```
+
+The four headers named above still fail, but at `midi_subscription.hpp:164` and on a different cause — a
+retained declaration calling a declaration the module omitted
+([`retained-declaration-calls-omitted-callee.md`](retained-declaration-calls-omitted-callee.md)) — so the
+construct recorded here needs no further work. The initializer half of this request is closed; the
+`Task<MidiSubscriptionDetachOutcome>` refusal in the same module is the live half, filed as
+[`task-of-union-domain-unrepresented.md`](task-of-union-domain-unrepresented.md).
+
 ## Expected behavior
 
 The literal selects an alternative, the way the emitter already does when the target is not a
