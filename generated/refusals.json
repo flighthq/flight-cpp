@@ -302,7 +302,7 @@
       "code": "dependency-refused",
       "module": "packages/camera/src/contract.ts",
       "package": "@flighthq/camera",
-      "reason": "dependency ./enableCameraGuards was refused for @flighthq/camera/packages/camera/src/enableCameraGuards.ts",
+      "reason": "dependency ./enableCameraGuards.ts was refused for @flighthq/camera/packages/camera/src/enableCameraGuards.ts",
       "stage": "dependency"
     },
     {
@@ -316,7 +316,7 @@
       "code": "dependency-refused",
       "module": "packages/camera/src/index.ts",
       "package": "@flighthq/camera",
-      "reason": "dependency ./contract was refused for @flighthq/camera/packages/camera/src/contract.ts",
+      "reason": "dependency ./enableCameraGuards.ts was refused for @flighthq/camera/packages/camera/src/enableCameraGuards.ts",
       "stage": "dependency"
     },
     {

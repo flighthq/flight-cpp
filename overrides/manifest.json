@@ -441,7 +441,7 @@
       "path": "flight/camera/frustum_corners.hpp",
       "package": "@flighthq/camera",
       "status": "complete",
-      "derivedFrom": "ab9f0f86c6fd06f9f1afce3788dccca8a45297ecd271f478ec6d1ac86755f468",
+      "derivedFrom": "a0691bb583a0058e537b205e94c46826a09a1c5c027021af4b7d4d4f0a312f58",
       "reason": "get_camera3_dfrustum_corners writes `out.element(i_2).x = ...` where `out` is Array<Vector3Like> and Vector3Like is flight::Ref<Vector3>, a std::shared_ptr. The TypeScript is `out[i].x = results[i][0]`, a member assignment THROUGH a reference, and the emitter wrote it as a direct member access on the element: \"'std::shared_ptr<flight::types::Vector3>' has no member named 'x'\".",
       "change": "Three characters, three times: `.` becomes `->` on the three component assignments. Nothing else in the function changes.",
       "equivalence": "Array::element returns a reference to the stored shared_ptr, so `->x = v` assigns through to the pointee -- the same object the caller passed in, mutated in place, which is what the TypeScript does to the array it was given. No declaration is added or removed, no control flow changes, and the function's result is unchanged.",

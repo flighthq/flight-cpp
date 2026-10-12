@@ -2046,6 +2046,7 @@
     {
       "consumers": [
         "@flighthq/camera/packages/camera/src/contract.ts",
+        "@flighthq/camera/packages/camera/src/index.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts",
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuMeshPipeline.ts"
       ],
@@ -2065,6 +2066,7 @@
         "@flighthq/camera/packages/camera/src/culling.ts",
         "@flighthq/camera/packages/camera/src/enableCameraGuards.ts",
         "@flighthq/camera/packages/camera/src/frustumCorners.ts",
+        "@flighthq/camera/packages/camera/src/index.ts",
         "@flighthq/camera/packages/camera/src/picking.ts",
         "@flighthq/camera/packages/camera/src/shadowCamera.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene3DMaterialization.ts",
@@ -2086,7 +2088,8 @@
     },
     {
       "consumers": [
-        "@flighthq/camera/packages/camera/src/contract.ts"
+        "@flighthq/camera/packages/camera/src/contract.ts",
+        "@flighthq/camera/packages/camera/src/index.ts"
       ],
       "module": {
         "name": "Camera2d",
@@ -2097,9 +2100,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/camera/packages/camera/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/camera",
@@ -2114,6 +2115,7 @@
     {
       "consumers": [
         "@flighthq/camera/packages/camera/src/contract.ts",
+        "@flighthq/camera/packages/camera/src/index.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/glEnvironmentCapture.ts"
       ],
       "module": {
@@ -2126,7 +2128,8 @@
     },
     {
       "consumers": [
-        "@flighthq/camera/packages/camera/src/contract.ts"
+        "@flighthq/camera/packages/camera/src/contract.ts",
+        "@flighthq/camera/packages/camera/src/index.ts"
       ],
       "module": {
         "name": "Culling",
@@ -2138,7 +2141,8 @@
     },
     {
       "consumers": [
-        "@flighthq/camera/packages/camera/src/contract.ts"
+        "@flighthq/camera/packages/camera/src/contract.ts",
+        "@flighthq/camera/packages/camera/src/index.ts"
       ],
       "module": {
         "name": "Depth",
@@ -2150,7 +2154,8 @@
     },
     {
       "consumers": [
-        "@flighthq/camera/packages/camera/src/contract.ts"
+        "@flighthq/camera/packages/camera/src/contract.ts",
+        "@flighthq/camera/packages/camera/src/index.ts"
       ],
       "module": {
         "name": "EnableCameraGuards",
@@ -2166,7 +2171,8 @@
     {
       "consumers": [
         "@flighthq/camera/packages/camera/src/contract.ts",
-        "@flighthq/camera/packages/camera/src/enableCameraGuards.ts"
+        "@flighthq/camera/packages/camera/src/enableCameraGuards.ts",
+        "@flighthq/camera/packages/camera/src/index.ts"
       ],
       "module": {
         "name": "ExplainCamera3DView",
@@ -2178,7 +2184,8 @@
     },
     {
       "consumers": [
-        "@flighthq/camera/packages/camera/src/contract.ts"
+        "@flighthq/camera/packages/camera/src/contract.ts",
+        "@flighthq/camera/packages/camera/src/index.ts"
       ],
       "module": {
         "name": "FrustumCorners",
@@ -2197,13 +2204,14 @@
       },
       "path": "flight/camera/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/camera/packages/camera/src/contract.ts"
+        "@flighthq/camera/packages/camera/src/enableCameraGuards.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "consumers": [
-        "@flighthq/camera/packages/camera/src/contract.ts"
+        "@flighthq/camera/packages/camera/src/contract.ts",
+        "@flighthq/camera/packages/camera/src/index.ts"
       ],
       "module": {
         "name": "Intersection",
@@ -2215,7 +2223,8 @@
     },
     {
       "consumers": [
-        "@flighthq/camera/packages/camera/src/contract.ts"
+        "@flighthq/camera/packages/camera/src/contract.ts",
+        "@flighthq/camera/packages/camera/src/index.ts"
       ],
       "module": {
         "name": "Parallax",
@@ -2228,6 +2237,7 @@
     {
       "consumers": [
         "@flighthq/camera/packages/camera/src/contract.ts",
+        "@flighthq/camera/packages/camera/src/index.ts",
         "@flighthq/camera/packages/camera/src/intersection.ts",
         "@flighthq/picking/packages/picking/src/pickScene3D.ts"
       ],
@@ -2244,6 +2254,7 @@
         "@flighthq/camera/packages/camera/src/camera.ts",
         "@flighthq/camera/packages/camera/src/contract.ts",
         "@flighthq/camera/packages/camera/src/cubeCapture.ts",
+        "@flighthq/camera/packages/camera/src/index.ts",
         "@flighthq/camera/packages/camera/src/shadowCamera.ts",
         "@flighthq/render/packages/render/src/sceneRender.ts",
         "@flighthq/scene-document/packages/scene-document/src/flightDocumentText.ts",
@@ -2266,6 +2277,7 @@
     {
       "consumers": [
         "@flighthq/camera/packages/camera/src/contract.ts",
+        "@flighthq/camera/packages/camera/src/index.ts",
         "@flighthq/camera/packages/camera/src/zoom.ts",
         "@flighthq/gizmo/packages/gizmo/src/gizmoState.ts"
       ],
@@ -2281,6 +2293,7 @@
       "consumers": [
         "@flighthq/camera/packages/camera/src/camera.ts",
         "@flighthq/camera/packages/camera/src/contract.ts",
+        "@flighthq/camera/packages/camera/src/index.ts",
         "@flighthq/render/packages/render/src/sceneRender.ts"
       ],
       "module": {
@@ -2293,7 +2306,8 @@
     },
     {
       "consumers": [
-        "@flighthq/camera/packages/camera/src/contract.ts"
+        "@flighthq/camera/packages/camera/src/contract.ts",
+        "@flighthq/camera/packages/camera/src/index.ts"
       ],
       "module": {
         "name": "ShadowCamera",
@@ -2306,6 +2320,7 @@
     {
       "consumers": [
         "@flighthq/camera/packages/camera/src/contract.ts",
+        "@flighthq/camera/packages/camera/src/index.ts",
         "@flighthq/camera/packages/camera/src/parallax.ts",
         "@flighthq/camera/packages/camera/src/projection2d.ts",
         "@flighthq/camera/packages/camera/src/visibleBounds.ts"
@@ -2322,7 +2337,8 @@
       "consumers": [
         "@flighthq/camera-controls/packages/camera-controls/src/follow.ts",
         "@flighthq/camera/packages/camera/src/contract.ts",
-        "@flighthq/camera/packages/camera/src/enableCameraGuards.ts"
+        "@flighthq/camera/packages/camera/src/enableCameraGuards.ts",
+        "@flighthq/camera/packages/camera/src/index.ts"
       ],
       "module": {
         "name": "VisibleBounds",
@@ -2334,7 +2350,8 @@
     },
     {
       "consumers": [
-        "@flighthq/camera/packages/camera/src/contract.ts"
+        "@flighthq/camera/packages/camera/src/contract.ts",
+        "@flighthq/camera/packages/camera/src/index.ts"
       ],
       "module": {
         "name": "Zoom",

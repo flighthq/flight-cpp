@@ -1972,8 +1972,6 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("video") && requires { object.video; }) return (object.video);
   else if constexpr (Key::name.view() == std::string_view("view") && requires { object.view; }) return (object.view);
   else if constexpr (Key::name.view() == std::string_view("viewport") && requires { object.viewport; }) return (object.viewport);
-  else if constexpr (Key::name.view() == std::string_view("viewportHeight") && requires { object.viewport_height; }) return (object.viewport_height);
-  else if constexpr (Key::name.view() == std::string_view("viewportWidth") && requires { object.viewport_width; }) return (object.viewport_width);
   else if constexpr (Key::name.view() == std::string_view("vignette") && requires { object.vignette; }) return (object.vignette);
   else if constexpr (Key::name.view() == std::string_view("visible") && requires { object.visible; }) return (object.visible);
   else if constexpr (Key::name.view() == std::string_view("visibleMeshes") && requires { object.visible_meshes; }) return (object.visible_meshes);
@@ -4000,8 +3998,6 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("video") && requires(Object& object) { object.video; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().video)>>{};
   else if constexpr (Key::name.view() == std::string_view("view") && requires(Object& object) { object.view; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().view)>>{};
   else if constexpr (Key::name.view() == std::string_view("viewport") && requires(Object& object) { object.viewport; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().viewport)>>{};
-  else if constexpr (Key::name.view() == std::string_view("viewportHeight") && requires(Object& object) { object.viewport_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().viewport_height)>>{};
-  else if constexpr (Key::name.view() == std::string_view("viewportWidth") && requires(Object& object) { object.viewport_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().viewport_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("vignette") && requires(Object& object) { object.vignette; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().vignette)>>{};
   else if constexpr (Key::name.view() == std::string_view("visible") && requires(Object& object) { object.visible; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().visible)>>{};
   else if constexpr (Key::name.view() == std::string_view("visibleMeshes") && requires(Object& object) { object.visible_meshes; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().visible_meshes)>>{};
@@ -6031,8 +6027,6 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->video; }) owner.bind_named("video", [object]() -> decltype(auto) { return (object->video); });
   if constexpr (requires { object->view; }) owner.bind_named("view", [object]() -> decltype(auto) { return (object->view); });
   if constexpr (requires { object->viewport; }) owner.bind_named("viewport", [object]() -> decltype(auto) { return (object->viewport); });
-  if constexpr (requires { object->viewport_height; }) owner.bind_named("viewportHeight", [object]() -> decltype(auto) { return (object->viewport_height); });
-  if constexpr (requires { object->viewport_width; }) owner.bind_named("viewportWidth", [object]() -> decltype(auto) { return (object->viewport_width); });
   if constexpr (requires { object->vignette; }) owner.bind_named("vignette", [object]() -> decltype(auto) { return (object->vignette); });
   if constexpr (requires { object->visible; }) owner.bind_named("visible", [object]() -> decltype(auto) { return (object->visible); });
   if constexpr (requires { object->visible_meshes; }) owner.bind_named("visibleMeshes", [object]() -> decltype(auto) { return (object->visible_meshes); });
@@ -8095,8 +8089,6 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(video)
   FLIGHT_SDK_ROW_WIDENS(view)
   FLIGHT_SDK_ROW_WIDENS(viewport)
-  FLIGHT_SDK_ROW_WIDENS(viewport_height)
-  FLIGHT_SDK_ROW_WIDENS(viewport_width)
   FLIGHT_SDK_ROW_WIDENS(vignette)
   FLIGHT_SDK_ROW_WIDENS(visible)
   FLIGHT_SDK_ROW_WIDENS(visible_meshes)
