@@ -4,20 +4,26 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function loadVideoResourceFromUrl -- source line 32
-//   missing: function loadVideoResourceFromBlob -- source line 11
 #include <coroutine>
 #include <flight/abort.hpp>
 #include <flight/blob.hpp>
+#include <flight/structural_ref.hpp>
+#include <functional>
 #include <optional>
+#include <stdexcept>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/video_resource.hpp>
+namespace flight::types { struct HostVideoCapability; }
+namespace flight::types { struct VideoResource; }
+namespace flight::types { struct VideoResourceLoadOptions; }
+namespace flight::types { struct VideoResourceUrl; }
 
+#include <flight/types/host_image_source.hpp>
 #include <flight/types/host_video.hpp>
-
+#include <flight/types/video_resource.hpp>
 #include <flight/video/video_format.hpp>
 #include <flight/video/video_resource.hpp>
 
@@ -30,7 +36,7 @@ using flight::types::VideoResourceUrl;
 
 
 // NOT GENERATED: function loadVideoResourceFromUrl -- source line 32
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
+// refusal: cpp-union-runtime-domains-erased [target-runtime]
 //
 // The source it stood for:
 //   export function loadVideoResourceFromUrl(
@@ -43,42 +49,34 @@ using flight::types::VideoResourceUrl;
 //     return hostVideo.loadUrl(url, options, signal).then((element) => createVideoResource(element, undefined, true));
 //   }
 //   
-// cpp emission failed for @flighthq/video/packages/video/src/videoResourceFrom.ts: a presence test against
-// undefined has no absence channel in the emitted C++ storage for property
+// cpp emission failed for @flighthq/video/packages/video/src/videoResourceFrom.ts: C++ runtime contract maps
+// distinct union domains to one carrier without a discriminator or checked projection (HTMLImageElement |
+// HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame ->
+// flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each reaches
+// a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the
+// emitter does -- or provide that runtime contract
 
+inline flight::Task<flight::Ref<flight::types::VideoResource>> load_video_resource_from_blob(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostVideoCapability>>>> host_video, flight::Blob blob, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResourceLoadOptions>>>>> options = std::nullopt, std::optional<flight::AbortSignal> signal = std::nullopt) {
+  if ((!flight::row_get<flight::RowKey<"createObjectUrl">>(host_video).has_value() || !flight::row_get<flight::RowKey<"revokeObjectUrl">>(host_video).has_value())) {
+    throw flight::Error(flight::String("No video object URL backend available"));
+  }
+  const flight::String url = flight::row_get<flight::RowKey<"createObjectUrl">>(host_video).value()(blob);
+  flight::Ref<flight::types::VideoResource> resource;
+  try {
+    (resource = co_await load_video_resource_from_url(host_video, url, options, signal));
+  }
+  catch (const std::exception& error) {
+    flight::row_get<flight::RowKey<"revokeObjectUrl">>(host_video).value()(url);
+    throw error;
+  }
+  (resource->object_url = std::optional<flight::String>{url});
+  co_return resource;
+}
 
-// NOT GENERATED: function loadVideoResourceFromBlob -- source line 11
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export async function loadVideoResourceFromBlob(
-//     hostVideo: Readonly<HostVideoCapability>,
-//     blob: Blob,
-//     options?: Readonly<VideoResourceLoadOptions>,
-//     signal?: AbortSignal,
-//   ): Promise<VideoResource> {
-//     if (hostVideo.createObjectUrl === undefined || hostVideo.revokeObjectUrl === undefined) {
-//       throw new Error('No video object URL backend available');
-//     }
-//     const url = hostVideo.createObjectUrl(blob);
-//     let resource: VideoResource;
-//     try {
-//       resource = await loadVideoResourceFromUrl(hostVideo, url, options, signal);
-//     } catch (error) {
-//       hostVideo.revokeObjectUrl(url);
-//       throw error;
-//     }
-//     resource.objectUrl = url;
-//     return resource;
-//   }
-//   
-// cpp emission failed for @flighthq/video/packages/video/src/videoResourceFrom.ts: a presence test against
-// undefined has no absence channel in the emitted C++ storage for property
-
-inline flight::Task<flight::Ref<VideoResource>> load_video_resource_from_urls(flight::Ref<HostVideoCapability> host_video, flight::Array<flight::Ref<VideoResourceUrl>> sources, std::optional<flight::Ref<VideoResourceLoadOptions>> options = std::nullopt, std::optional<flight::AbortSignal> signal = std::nullopt) {
-  std::optional<flight::Ref<VideoResourceUrl>> selected = select_video_resource_url(host_video, sources);
+inline flight::Task<flight::Ref<flight::types::VideoResource>> load_video_resource_from_urls(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostVideoCapability>>>> host_video, flight::Array<flight::Ref<flight::types::VideoResourceUrl>> sources, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::VideoResourceLoadOptions>>>>> options = std::nullopt, std::optional<flight::AbortSignal> signal = std::nullopt) {
+  auto selected = flight::video::select_video_resource_url(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostVideoCapability>>>>>(host_video), sources);
   if (!selected.has_value()) {
-    return flight::resolve_task(create_video_resource(std::nullopt, std::nullopt, std::nullopt));
+    return flight::resolve_task(flight::video::create_video_resource(std::nullopt, std::nullopt, std::nullopt));
   }
   return load_video_resource_from_url(host_video, selected.value()->url, options, signal);
 }

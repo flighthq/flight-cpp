@@ -365,6 +365,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("create") && requires { object.create; }) return (object.create);
   else if constexpr (Key::name.view() == std::string_view("createBuffer") && requires { object.create_buffer; }) return (object.create_buffer);
   else if constexpr (Key::name.view() == std::string_view("createImageSurface") && requires { object.create_image_surface; }) return (object.create_image_surface);
+  else if constexpr (Key::name.view() == std::string_view("createObjectUrl") && requires { object.create_object_url; }) return (object.create_object_url);
   else if constexpr (Key::name.view() == std::string_view("createRenderSurface") && requires { object.create_render_surface; }) return (object.create_render_surface);
   else if constexpr (Key::name.view() == std::string_view("createSource") && requires { object.create_source; }) return (object.create_source);
   else if constexpr (Key::name.view() == std::string_view("createWorld") && requires { object.create_world; }) return (object.create_world);
@@ -2457,6 +2458,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("create") && requires(Object& object) { object.create; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().create)>>{};
   else if constexpr (Key::name.view() == std::string_view("createBuffer") && requires(Object& object) { object.create_buffer; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().create_buffer)>>{};
   else if constexpr (Key::name.view() == std::string_view("createImageSurface") && requires(Object& object) { object.create_image_surface; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().create_image_surface)>>{};
+  else if constexpr (Key::name.view() == std::string_view("createObjectUrl") && requires(Object& object) { object.create_object_url; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().create_object_url)>>{};
   else if constexpr (Key::name.view() == std::string_view("createRenderSurface") && requires(Object& object) { object.create_render_surface; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().create_render_surface)>>{};
   else if constexpr (Key::name.view() == std::string_view("createSource") && requires(Object& object) { object.create_source; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().create_source)>>{};
   else if constexpr (Key::name.view() == std::string_view("createWorld") && requires(Object& object) { object.create_world; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().create_world)>>{};
@@ -4552,6 +4554,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->create; }) owner.bind_named("create", [object]() -> decltype(auto) { return (object->create); });
   if constexpr (requires { object->create_buffer; }) owner.bind_named("createBuffer", [object]() -> decltype(auto) { return (object->create_buffer); });
   if constexpr (requires { object->create_image_surface; }) owner.bind_named("createImageSurface", [object]() -> decltype(auto) { return (object->create_image_surface); });
+  if constexpr (requires { object->create_object_url; }) owner.bind_named("createObjectUrl", [object]() -> decltype(auto) { return (object->create_object_url); });
   if constexpr (requires { object->create_render_surface; }) owner.bind_named("createRenderSurface", [object]() -> decltype(auto) { return (object->create_render_surface); });
   if constexpr (requires { object->create_source; }) owner.bind_named("createSource", [object]() -> decltype(auto) { return (object->create_source); });
   if constexpr (requires { object->create_world; }) owner.bind_named("createWorld", [object]() -> decltype(auto) { return (object->create_world); });
@@ -6680,6 +6683,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(create)
   FLIGHT_SDK_ROW_WIDENS(create_buffer)
   FLIGHT_SDK_ROW_WIDENS(create_image_surface)
+  FLIGHT_SDK_ROW_WIDENS(create_object_url)
   FLIGHT_SDK_ROW_WIDENS(create_render_surface)
   FLIGHT_SDK_ROW_WIDENS(create_source)
   FLIGHT_SDK_ROW_WIDENS(create_world)

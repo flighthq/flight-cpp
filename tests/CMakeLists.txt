@@ -227,6 +227,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_mediasession_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_mediasession COMMAND flight_cpp_generated_mediasession_tests)
 
+add_executable(flight_cpp_generated_video_tests generated_video_test.cpp)
+target_include_directories(
+  flight_cpp_generated_video_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_video_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_video COMMAND flight_cpp_generated_video_tests)
+
 add_executable(flight_cpp_generated_connectivity_tests generated_connectivity_test.cpp)
 target_include_directories(
   flight_cpp_generated_connectivity_tests
@@ -360,6 +368,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_audio audio)
 flight_cpp_package_test_labels(flight_cpp.generated_input input)
 flight_cpp_package_test_labels(flight_cpp.generated_app_render_view app)
 flight_cpp_package_test_labels(flight_cpp.generated_mediasession mediasession)
+flight_cpp_package_test_labels(flight_cpp.generated_video video)
 flight_cpp_package_test_labels(flight_cpp.generated_connectivity connectivity)
 flight_cpp_package_test_labels(flight_cpp.generated_share share)
 flight_cpp_package_test_labels(flight_cpp.generated_updater updater)

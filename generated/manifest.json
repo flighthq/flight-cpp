@@ -6523,10 +6523,9 @@
       "flight/tilemap_formats/tiled_tmx_format.hpp",
       "flight/tilemap_formats/tiled_xml_parse.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp",
-      "flight/velocity/transform_velocity.hpp",
-      "flight/video/video_resource_from.hpp"
+      "flight/velocity/transform_velocity.hpp"
     ],
-    "includes": 968
+    "includes": 966
   },
   "packages": [
     {

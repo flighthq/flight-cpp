@@ -36,8 +36,12 @@ reaches a carrier of its own -- a union of two declarations that differ only in 
 whatever the emitter does -- or provide that runtime contract
 ```
 
-The module refuses, omitting `loadVideoResourceFromUrl` (line 32) and `loadVideoResourceFromBlob` (line
-11), and three of the package's five headers fail behind it.
+The module is refused for `loadVideoResourceFromUrl` (line 32) and the emitter omits that declaration
+alone: its sibling `loadVideoResourceFromBlob` (line 11) is emitted at the current binding profiles, and
+`loadVideoResourceFromUrls` (line 37) with it. Three of the package's five headers still fail, now because
+both retained callers call the omitted function — that second-order failure is filed separately as
+[`retained-declaration-calls-omitted-callee.md`](retained-declaration-calls-omitted-callee.md), and this
+refusal is what would have to lift first.
 
 ## What makes this actionable: the discriminator already exists
 
