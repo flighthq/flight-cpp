@@ -20,18 +20,12 @@ namespace flight::types { struct TextureAtlas; }
 
 // Override: the emitter refused getTextureAtlasByteSize (cpp-contextual-union-missing-expression-type:
 // optionalSingle). The function inspects the texture's source kind and returns the bitmap or
-// compressed-image byte length. Since the source-kind type hierarchy (Bitmap extends TextureSource)
-// is not expressed as C++ inheritance in the generated tree, the full implementation cannot be
-// written from the emitted types alone. This stub returns 0 -- the same result as the
-// null/absent-texture codepath in the original TypeScript -- which is safe for a summary value
-// and introduces no behavior.
-namespace flight::textureatlas {
-  inline double get_texture_atlas_byte_size(
-      flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextureAtlas>>>> /*atlas*/) {
-    return 0.0;
-  }
-}
-
+// compressed-image byte length.
+//
+// The stub that used to live here returned 0 for that byte length, and the gap it stood for is now
+// CLOSED: @flighthq/textureatlas migrated to the current pin and emits a real
+// flight::textureatlas::get_texture_atlas_byte_size, so this override no longer defines one. Keeping
+// the stub alongside it was a redefinition, which is how the closure announced itself.
 namespace flight::bitmapfont {
 
 using flight::types::GlyphMetrics;

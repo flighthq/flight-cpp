@@ -57,10 +57,10 @@ inline flight::Ref<BitmapFont> create_bitmap_font_from_glyph_atlas(flight::Ref<G
       .texture = std::optional<flight::Ref<flight::types::Texture2D>>{
           flight::texture::create_texture(
               CreateTextureOptions{
-                  std::in_place_type<flight::Ref<flight::types::flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_source_dimension_resource_56b24da6433b9dfa>>,
-                  flight::make_ref<flight::types::flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_source_dimension_resource_56b24da6433b9dfa>(
-                      flight::types::flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_source_dimension_resource_56b24da6433b9dfa{
-                          .source = std::variant<flight::Ref<flight::types::TextureSource>, flight::Null, flight::Undefined>{
+                  std::in_place_type<flight::Ref<flight::types::color_space_version_source_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_5a93a3871f953593>>,
+                  flight::make_ref<flight::types::color_space_version_source_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_5a93a3871f953593>(
+                      flight::types::color_space_version_source_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_dimension_resource_5a93a3871f953593{
+                          .source = std::variant<flight::Ref<flight::types::VoxelGrid>, flight::Ref<flight::types::TextureSource>, flight::Ref<flight::types::ExternalTexture>, flight::Ref<flight::types::Bitmap>, flight::Ref<flight::types::CompressedImageResource>, flight::Ref<flight::types::RenderTarget>, flight::Ref<flight::types::ImageResource>, flight::Null, flight::Undefined>{
                               std::in_place_type<flight::Ref<flight::types::TextureSource>>,
                               std::reinterpret_pointer_cast<flight::types::TextureSource>(runtime->bitmap)
                           }

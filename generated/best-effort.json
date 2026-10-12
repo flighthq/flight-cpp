@@ -1614,7 +1614,8 @@
         "@flighthq/bitmapfont/packages/bitmapfont/src/bitmapFontFromGlyphAtlas.ts",
         "@flighthq/bitmapfont/packages/bitmapfont/src/bitmapFontGlyphSource.ts",
         "@flighthq/bitmapfont/packages/bitmapfont/src/contract.ts",
-        "@flighthq/bitmapfont/packages/bitmapfont/src/enableBitmapFontGuards.ts"
+        "@flighthq/bitmapfont/packages/bitmapfont/src/enableBitmapFontGuards.ts",
+        "@flighthq/bitmapfont/packages/bitmapfont/src/index.ts"
       ],
       "module": {
         "name": "BitmapFont",
@@ -1626,7 +1627,8 @@
     },
     {
       "consumers": [
-        "@flighthq/bitmapfont/packages/bitmapfont/src/contract.ts"
+        "@flighthq/bitmapfont/packages/bitmapfont/src/contract.ts",
+        "@flighthq/bitmapfont/packages/bitmapfont/src/index.ts"
       ],
       "module": {
         "name": "BitmapFontFromGlyphAtlas",
@@ -1639,7 +1641,8 @@
     {
       "classification": "target-runtime",
       "consumers": [
-        "@flighthq/bitmapfont/packages/bitmapfont/src/contract.ts"
+        "@flighthq/bitmapfont/packages/bitmapfont/src/contract.ts",
+        "@flighthq/bitmapfont/packages/bitmapfont/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:13fb29e8d56d1e34262b0a402e9aa1f06efb32344159ebe36b4f15a25926f193",
@@ -1655,9 +1658,7 @@
       "status": "refused-placeholder"
     },
     {
-      "consumers": [
-        "@flighthq/bitmapfont/packages/bitmapfont/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/bitmapfont",
@@ -1672,7 +1673,8 @@
     },
     {
       "consumers": [
-        "@flighthq/bitmapfont/packages/bitmapfont/src/contract.ts"
+        "@flighthq/bitmapfont/packages/bitmapfont/src/contract.ts",
+        "@flighthq/bitmapfont/packages/bitmapfont/src/index.ts"
       ],
       "module": {
         "name": "EnableBitmapFontGuards",
@@ -1687,7 +1689,8 @@
     },
     {
       "consumers": [
-        "@flighthq/bitmapfont/packages/bitmapfont/src/contract.ts"
+        "@flighthq/bitmapfont/packages/bitmapfont/src/contract.ts",
+        "@flighthq/bitmapfont/packages/bitmapfont/src/index.ts"
       ],
       "module": {
         "name": "ExplainBitmapFontGlyph",
@@ -1706,13 +1709,15 @@
       },
       "path": "flight/bitmapfont/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/bitmapfont/packages/bitmapfont/src/contract.ts"
+        "@flighthq/bitmapfont/packages/bitmapfont/src/bitmapFontGlyphSource.ts",
+        "@flighthq/bitmapfont/packages/bitmapfont/src/enableBitmapFontGuards.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "consumers": [
-        "@flighthq/bitmapfont/packages/bitmapfont/src/contract.ts"
+        "@flighthq/bitmapfont/packages/bitmapfont/src/contract.ts",
+        "@flighthq/bitmapfont/packages/bitmapfont/src/index.ts"
       ],
       "module": {
         "name": "SummarizeBitmapFont",

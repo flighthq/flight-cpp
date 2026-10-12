@@ -57685,7 +57685,7 @@
             "line": 23,
             "packageName": "@flighthq/bitmapfont",
             "source": "packages/bitmapfont/src/bitmapFontFromGlyphAtlas.ts",
-            "id": "binding:[\"@flighthq/bitmapfont\",\"packages/bitmapfont/src/bitmapFontFromGlyphAtlas.ts\",1489]",
+            "id": "binding:[\"@flighthq/bitmapfont\",\"packages/bitmapfont/src/bitmapFontFromGlyphAtlas.ts\",1492]",
             "kind": "function",
             "name": "createBitmapFontFromGlyphAtlas",
             "scope": "module",
@@ -57707,7 +57707,7 @@
             "packageName": "@flighthq/bitmapfont",
             "source": "packages/bitmapfont/src/bitmapFontFromGlyphAtlas.ts"
           },
-          "specifier": "./bitmapFont",
+          "specifier": "./bitmapFont.ts",
           "target": {
             "name": "BitmapFont",
             "packageName": "@flighthq/bitmapfont",
