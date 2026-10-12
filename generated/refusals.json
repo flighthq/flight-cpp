@@ -8086,7 +8086,7 @@
       "code": "dependency-refused",
       "module": "packages/textbidi/src/contract.ts",
       "package": "@flighthq/textbidi",
-      "reason": "dependency ./resolveBidiLevels was refused for @flighthq/textbidi/packages/textbidi/src/resolveBidiLevels.ts",
+      "reason": "dependency ./resolveBidiLevels.ts was refused for @flighthq/textbidi/packages/textbidi/src/resolveBidiLevels.ts",
       "stage": "dependency"
     },
     {
@@ -8100,14 +8100,14 @@
       "code": "dependency-refused",
       "module": "packages/textbidi/src/getBidiRuns.ts",
       "package": "@flighthq/textbidi",
-      "reason": "dependency ./resolveBidiLevels was refused for @flighthq/textbidi/packages/textbidi/src/resolveBidiLevels.ts",
+      "reason": "dependency ./resolveBidiLevels.ts was refused for @flighthq/textbidi/packages/textbidi/src/resolveBidiLevels.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/textbidi/src/index.ts",
       "package": "@flighthq/textbidi",
-      "reason": "dependency ./contract was refused for @flighthq/textbidi/packages/textbidi/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/textbidi/packages/textbidi/src/contract.ts",
       "stage": "dependency"
     },
     {
