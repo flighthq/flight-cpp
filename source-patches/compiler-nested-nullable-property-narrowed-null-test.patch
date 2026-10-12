@@ -1,0 +1,125 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 1a81136..adc4cf1 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -13479,7 +13479,15 @@ function emitCppPresenceTestCpp(
+   }
+   if (hasCppNestedNullableOptionalPropertyStorageCpp(operand, context)) {
+     context.includes.add('optional');
+-    const value = emitExpression(operand, context);
++    // The two-level test below reads the member's STORAGE: the outer optional is undefined, the inner one
++    // null. A property read whose flow type was narrowed by an earlier `!== undefined` would otherwise be
++    // emitted as its projected inner value, and the test would ask the payload variant for a presence it
++    // does not have. The same storage rule as the dual-sentinel lane applies: short-circuit control flow
++    // supplies the narrowing, and the comparison inspects the carrier.
++    const value =
++      operand.kind === 'property' && operand.narrowedType
++        ? emitExpression({ ...operand, narrowedType: undefined, presence: undefined }, context)
++        : emitExpression(operand, context);
+     let test: string;
+     if (!strict) {
+       test = present
+diff --git a/packages/compiler-backend-cpp/src/cppNestedNullablePropertyPresence.test.ts b/packages/compiler-backend-cpp/src/cppNestedNullablePropertyPresence.test.ts
+new file mode 100644
+index 0000000..1061bb2
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppNestedNullablePropertyPresence.test.ts
+@@ -0,0 +1,98 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import type { CompilerModuleResolutionPlan, CppCompilerExternalBinding } from '../../compiler-types/src/index.js';
++import { createCppCompilerBackend } from './cppCompilerBackend.js';
++
++// `body?: Body` with `Body = ... | null` is stored as two optionals: the outer is undefined, the inner null.
++const moduleResolution: CompilerModuleResolutionPlan = {
++  edges: [{ specifier: './body', target: { packageName: '@flighthq/types', source: 'packages/types/src/body.ts' } }],
++  schema: 'flight-compiler-module-resolution/1',
++};
++
++// The defect needs a profile-bound payload arm, as ArrayBufferView is in flight-cpp's runtime profile.
++const bufferBindings: CppCompilerExternalBinding[] = [
++  { headers: ['flight/array_buffer_view.hpp'], nullability: 'non-null', ownership: 'value', sourceName: 'ArrayBufferView', space: 'type', targetName: 'flight::ArrayBufferView' },
++];
++
++function emitConsumer(payload: string, body: string): string {
++  const source = (file: string, text: string) => ({
++    packageName: '@flighthq/types',
++    sourceFile: ts.createSourceFile(`/flight/packages/types/src/${file}`, text, ts.ScriptTarget.Latest, true),
++    upstreamDirectory: '/flight',
++  });
++  const results = lowerTypeScriptSources(
++    [
++      source('body.ts', `export type Body = ${payload} | null;\nexport interface Request { method: string; body?: Body }`),
++      source('consumer.ts', `import type { Request } from './body';\n${body}`),
++    ],
++    moduleResolution,
++  );
++  expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
++  const session = createCppCompilerBackend().createEmissionSession!({
++    moduleResolution,
++    modules: results.map((result) => result.module),
++    options: {
++      externalBindings: { bindings: bufferBindings, schema: 'flight-cpp-external-bindings/1' },
++      runtimeProfile: 'flight-cpp',
++    },
++  });
++  const consumer = results.find((result) => result.module.source.endsWith('consumer.ts'))!;
++  return session.emitModule(consumer.module)[0]!.contents;
++}
++
++// Every presence lambda's operand and test, in source order.
++function presenceTests(contents: string): string[] {
++  return [...contents.matchAll(/const auto& presence_operand = ([^;]+); return ([^;]+);/gu)].map(
++    (match) => `${match[1]!} => ${match[2]!}`,
++  );
++}
++
++const storage = 'flight::row_get<flight::RowKey<"body">>(request)';
++const BUFFERS = 'string | ArrayBuffer | ArrayBufferView';
++
++describe('presence tests on an optional member whose type admits null', () => {
++  it('tests null on the storage after an undefined test narrowed a runtime-bound payload', () => {
++    const contents = emitConsumer(
++      BUFFERS,
++      `export function f(request: Readonly<Request>): boolean { return request.body !== undefined && request.body !== null; }`,
++    );
++    expect(presenceTests(contents)).toEqual([
++      `${storage} => presence_operand.has_value()`,
++      `${storage} => !presence_operand.has_value() || presence_operand.value().has_value()`,
++    ]);
++    expect(contents).not.toContain(`${storage}.value(); return`);
++  });
++
++  it('tests null on the storage when the negated form narrows first', () => {
++    const contents = emitConsumer(
++      BUFFERS,
++      `export function f(request: Readonly<Request>): boolean { return request.body === undefined || request.body === null; }`,
++    );
++    expect(presenceTests(contents)).toEqual([
++      `${storage} => !presence_operand.has_value()`,
++      `${storage} => presence_operand.has_value() && !presence_operand.value().has_value()`,
++    ]);
++  });
++
++  it('leaves an un-narrowed null test and a loose test on the storage as before', () => {
++    expect(
++      presenceTests(emitConsumer(BUFFERS, `export function f(request: Readonly<Request>): boolean { return request.body !== null; }`)),
++    ).toEqual([`${storage} => !presence_operand.has_value() || presence_operand.value().has_value()`]);
++    expect(
++      presenceTests(emitConsumer(BUFFERS, `export function f(request: Readonly<Request>): boolean { return request.body != null; }`)),
++    ).toEqual([`${storage} => presence_operand.has_value() && presence_operand.value().has_value()`]);
++  });
++
++  it('emits the same storage test for a payload with no runtime-bound arm', () => {
++    const contents = emitConsumer(
++      'string | number[]',
++      `export function f(request: Readonly<Request>): boolean { return request.body !== undefined && request.body !== null; }`,
++    );
++    expect(presenceTests(contents)).toEqual([
++      `${storage} => presence_operand.has_value()`,
++      `${storage} => !presence_operand.has_value() || presence_operand.value().has_value()`,
++    ]);
++  });
++});

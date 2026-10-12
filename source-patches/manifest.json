@@ -2795,6 +2795,23 @@
       "unblocks": "@flighthq/tray: ten refused functions across `cpp-intersection-member-shapeless`, `cpp-uninitialized-variable-missing-type-evidence` and `cpp-reference-assertion-without-heritage`, and the four tray headers that fail to compile on the erased runtime accessor.",
       "expires": "when the compiler joins an intersection arm to the value that fills it and can read an entity's runtime slot through an owner it does not declare, or Flight names the arm and narrows the slot upstream.",
       "appliedOn": "2026-10-12"
+    },
+    {
+      "id": "compiler-nested-nullable-property-narrowed-null-test",
+      "dependency": "flight-compiler",
+      "patch": "compiler-nested-nullable-property-narrowed-null-test.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "uncompilable emission, not a refusal: after `request.body !== undefined` narrows an optional member typed `string | ArrayBuffer | ArrayBufferView | null`, the following `request.body !== null` reads the projected inner value (`row_get<\"body\">(request).value()`) and applies the two-level storage test to it, calling has_value() on the payload std::variant (net.hpp:52)",
+      "rewrite": "In the nested-nullable property branch of emitCppPresenceTestCpp, a property operand whose flow type was narrowed is emitted without its narrowed type and presence, so the test reads the member's optional<optional<...>> storage. This is the same rule the dual-sentinel branch already applies to narrowed property reads.",
+      "equivalence": "The test is evaluated on the storage the member actually has: outer optional = undefined, inner optional = null. For `!== null` the storage test answers true for undefined, false for null and true for a present value, which is the source semantics. Short-circuit evaluation keeps the earlier `!== undefined` guard in force, so narrowing is supplied by control flow rather than by projecting the operand. Un-narrowed reads, plain-payload members and every other presence lane emit exactly what they did before. No absence, identity, equality, ordering, exception or settlement behavior changes; the code it replaces did not compile.",
+      "verification": "New cppNestedNullablePropertyPresence.test.ts, 4 pass. Two-module repro with a profile-bound ArrayBufferView arm: `!== undefined && !== null` and `=== undefined || === null` both test the storage. Controls: an un-narrowed strict test, a loose `!= null`, and a plain `string | number[]` payload are unchanged. Without the rewrite the two narrowed cases fail and the controls pass. compiler-backend-cpp suite: the same 46 pre-existing failures by name with and without the patch, 1699 passing with it.",
+      "whyNotUpstreamFirst": "The projection appears only when a payload arm is a profile-bound runtime type, which exists only through this repository's binding profiles; upstream receives the request with the fixture.",
+      "unblocks": "@flighthq/net: the only compile error in its five headers at a627849 (net.hpp, through which _internal_index, contract and enable_net_guards fail).",
+      "expires": "when upstream emits presence tests on narrowed optional-nullable members against their storage (docs/compiler-requests/nested-nullable-property-narrowed-null-test.md).",
+      "appliedOn": "2026-10-12"
     }
   ]
 }
