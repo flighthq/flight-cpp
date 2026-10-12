@@ -136,7 +136,7 @@
       "package": "@flighthq/connectivity",
       "status": "complete",
       "supplies": "packages/connectivity/src/connectivity.ts",
-      "derivedFrom": "08986a429846d415051e56933d14bda76fbd94bfdeed4e4b6171b21b8e5815c7",
+      "derivedFrom": "3787b81da35602d9c2f71a9741e830fcf2e27be9b5fded58db3151242ef9dbef",
       "reason": "The emitter leaves every imported type and function unqualified, and refuses getConnectivityOnline plus attachConnectivity because their nullable optional values lack contextual union evidence. The retained signal initialization and status sentinel also depend on generated spellings that do not compile as emitted, so the angle-only module root and both aggregators fail.",
       "change": "Supplies the complete connectivity module over the generated host-capability and entity types: snapshot queries, reachability delegation, five signal lifecycles, exact subscription replacement and release, and status-diff event routing.",
       "equivalence": "The status sentinel retains null online and the source's remaining eight defaults. Attach snapshots before subscribing, emits onChange for every host notification, emits online/offline only for the corresponding changed boolean arm, and independently emits changed type and metered values. Replacement consumes the prior provider's exact unsubscribe; removal precedes invocation so re-entrant detach remains idempotent. A failed subscribe stores nothing, dispose detaches and clears all signals, provider Task settlement is returned unchanged, and status results preserve their reference identity.",

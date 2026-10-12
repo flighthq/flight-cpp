@@ -588,14 +588,14 @@
       "code": "dependency-refused",
       "module": "packages/connectivity/src/contract.ts",
       "package": "@flighthq/connectivity",
-      "reason": "dependency ./connectivity was refused for @flighthq/connectivity/packages/connectivity/src/connectivity.ts",
+      "reason": "dependency ./connectivity.ts was refused for @flighthq/connectivity/packages/connectivity/src/connectivity.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/connectivity/src/index.ts",
       "package": "@flighthq/connectivity",
-      "reason": "dependency ./contract was refused for @flighthq/connectivity/packages/connectivity/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/connectivity/packages/connectivity/src/contract.ts",
       "stage": "dependency"
     },
     {
