@@ -3677,7 +3677,7 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "target-runtime",
+      "classification": "source-portability",
       "consumers": [
         "@flighthq/command/packages/command/src/commandHistory.ts",
         "@flighthq/command/packages/command/src/commandTransaction.ts",
@@ -3686,10 +3686,10 @@
         "@flighthq/command/packages/command/src/index.ts"
       ],
       "declarationFingerprints": [
-        "sha256:0efbb7465592b684f031068ad80a58dd0878f94e7da6c11b3257e173cf7007e8",
         "sha256:137260200063cf38259bb415855e503f53c89637ebcdce83d4d9adc37fbf517b",
-        "sha256:1eabd2cf4d99aa7447b5421f32c64b54c8311246aa93dc93e3e39e84188ea196",
         "sha256:2e5b34106bc676159db11e63a9b0442639a81c47bde8be660a453631065c15a5",
+        "sha256:49c565a98bb23e07467815e7f8d3be4d49c77052b680d0c3a1e54618ffea9ec6",
+        "sha256:4d36a2098ee40148a2beb1bbcf1cc70f83dce7a304de573c5b83c285f14ce80a",
         "sha256:520e6dfd96a17c6e026366afaaac7bf1fb3932904c2a4e56a3a2c0cab0ce86ac",
         "sha256:67a5e2c71593fbb3864eff82826422b15ba5a9f6cdd9502d1bb4a6d037de8126",
         "sha256:91c188ba6a56b4cb0958ccff469fecad9acff04d7b5ad7f01e0e7ae004509a0a",
@@ -3698,7 +3698,7 @@
         "sha256:d9351cb372cbb139ea9c143abbee244e78b3d7629fde8f9227694d99343c5da5",
         "sha256:de3b262d21bf14fc14bf8b9d8e34ad8a35242612e122ec5cf64e7819b963e20f",
         "sha256:e4ce604adc10f4f96321f83a3d36431dc3c7f617f972b046eb8364d91d9e8222",
-        "sha256:f07ac52f774e97db9c36a97325b69e7408963da2289738016c9a68881b191a7f"
+        "sha256:eb825153f8bad9ea2380502a2d10ea09d8e17f062d83364e09aa2c2ae9537e59"
       ],
       "module": {
         "name": "CommandBinding",
@@ -3706,7 +3706,7 @@
         "source": "packages/command/src/commandBinding.ts"
       },
       "path": "flight/command/command_binding.hpp",
-      "rule": "cpp-contextual-union-interface-heritage-carrier-unrepresented",
+      "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
     {

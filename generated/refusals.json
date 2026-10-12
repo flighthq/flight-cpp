@@ -479,45 +479,45 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 33,
+      "line": 90,
       "module": "packages/command/src/commandBinding.ts",
       "package": "@flighthq/command",
-      "reason": "cpp emission failed for @flighthq/types/packages/types/src/RegistryTable.ts: contextual nullable interface conversion from CommandBindingTable to KeyedTable follows TypeScript interface heritage, but flight-cpp stores those declarations in independent flight::Ref<CommandBindingTable> and flight::Ref<KeyedTable<flight::Ref<flight::types::CommandBinding>>> owner types: each interface struct is emitted flattened, so the heritage is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would claim C++ inheritance the emitted interface structs do not have, materializing the target would replace object identity, and a structural row would change the declared result carrier. Preserve the exact source owner in the declared result, or add an owner-preserving interface-heritage carrier to the runtime contract. Declaring the destination as the derived interface where the concrete type is known -- or converting where the type is still concrete rather than widening it through a nullable union -- avoids the boundary altogether; closing it at the carrier needs either that runtime carrier or interface structs emitted with the heritage as a C++ base relation.",
+      "reason": "cpp emission failed for @flighthq/command/packages/command/src/commandBinding.ts: the asserted row from flight::Ref<flight::types::Command> to flight::Ref<flight::types::CompositeCommand> reads children, which the source type does not declare, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as CompositeCommand, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that declares children -- construct CompositeCommand explicitly, then type the retaining slot and every accessor result as CompositeCommand wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::Command>. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
       "stage": "emission"
     },
     {
       "code": "dependency-refused",
       "module": "packages/command/src/commandHistory.ts",
       "package": "@flighthq/command",
-      "reason": "dependency ./commandBinding was refused for @flighthq/command/packages/command/src/commandBinding.ts",
+      "reason": "dependency ./commandBinding.ts was refused for @flighthq/command/packages/command/src/commandBinding.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/command/src/commandTransaction.ts",
       "package": "@flighthq/command",
-      "reason": "dependency ./command was refused for @flighthq/command/packages/command/src/command.ts",
+      "reason": "dependency ./command.ts was refused for @flighthq/command/packages/command/src/command.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/command/src/contract.ts",
       "package": "@flighthq/command",
-      "reason": "dependency ./command was refused for @flighthq/command/packages/command/src/command.ts",
+      "reason": "dependency ./command.ts was refused for @flighthq/command/packages/command/src/command.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/command/src/explainCommandDispatch.ts",
       "package": "@flighthq/command",
-      "reason": "dependency ./commandBinding was refused for @flighthq/command/packages/command/src/commandBinding.ts",
+      "reason": "dependency ./commandBinding.ts was refused for @flighthq/command/packages/command/src/commandBinding.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/command/src/index.ts",
       "package": "@flighthq/command",
-      "reason": "dependency ./command was refused for @flighthq/command/packages/command/src/command.ts",
+      "reason": "dependency ./command.ts was refused for @flighthq/command/packages/command/src/command.ts",
       "stage": "dependency"
     },
     {

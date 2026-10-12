@@ -326,6 +326,7 @@
     },
     {
       "files": [
+        "flight/command/command.hpp",
         "flight/gizmo/node2d_gizmo_features.hpp",
         "flight/gui/button_controller.hpp",
         "flight/gui/combo_box_controller.hpp",
@@ -1408,9 +1409,7 @@
       "id": "collision-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/command/command.hpp"
-      ],
+      "files": [],
       "id": "command-unqualified-entity-names"
     },
     {
@@ -2863,9 +2862,7 @@
       "id": "statusbar-unqualified-signals-names"
     },
     {
-      "files": [
-        "flight/command/command_binding.hpp"
-      ],
+      "files": [],
       "id": "command-unqualified-registry-names"
     },
     {
@@ -6773,14 +6770,14 @@
       "sourceModules": 11
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/command",
       "cppNamespace": "flight::command",
       "emittedModules": 6,
       "package": "@flighthq/command",
       "refusedModules": 2,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 8

@@ -240,6 +240,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("checkboxLabel") && requires { object.checkbox_label; }) return (object.checkbox_label);
   else if constexpr (Key::name.view() == std::string_view("checked") && requires { object.checked; }) return (object.checked);
   else if constexpr (Key::name.view() == std::string_view("checkedState") && requires { object.checked_state; }) return (object.checked_state);
+  else if constexpr (Key::name.view() == std::string_view("child") && requires { object.child; }) return (object.child);
   else if constexpr (Key::name.view() == std::string_view("child1") && requires { object.child1; }) return (object.child1);
   else if constexpr (Key::name.view() == std::string_view("child2") && requires { object.child2; }) return (object.child2);
   else if constexpr (Key::name.view() == std::string_view("childCount") && requires { object.child_count; }) return (object.child_count);
@@ -1132,6 +1133,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("measureText") && requires { object.measure_text; }) return (object.measure_text);
   else if constexpr (Key::name.view() == std::string_view("mediaSession") && requires { object.media_session; }) return (object.media_session);
   else if constexpr (Key::name.view() == std::string_view("menu") && requires { object.menu; }) return (object.menu);
+  else if constexpr (Key::name.view() == std::string_view("mergeWindow") && requires { object.merge_window; }) return (object.merge_window);
   else if constexpr (Key::name.view() == std::string_view("meshCount") && requires { object.mesh_count; }) return (object.mesh_count);
   else if constexpr (Key::name.view() == std::string_view("meshLightBlocks") && requires { object.mesh_light_blocks; }) return (object.mesh_light_blocks);
   else if constexpr (Key::name.view() == std::string_view("meshMaterialRenderers") && requires { object.mesh_material_renderers; }) return (object.mesh_material_renderers);
@@ -2370,6 +2372,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("checkboxLabel") && requires(Object& object) { object.checkbox_label; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().checkbox_label)>>{};
   else if constexpr (Key::name.view() == std::string_view("checked") && requires(Object& object) { object.checked; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().checked)>>{};
   else if constexpr (Key::name.view() == std::string_view("checkedState") && requires(Object& object) { object.checked_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().checked_state)>>{};
+  else if constexpr (Key::name.view() == std::string_view("child") && requires(Object& object) { object.child; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().child)>>{};
   else if constexpr (Key::name.view() == std::string_view("child1") && requires(Object& object) { object.child1; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().child1)>>{};
   else if constexpr (Key::name.view() == std::string_view("child2") && requires(Object& object) { object.child2; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().child2)>>{};
   else if constexpr (Key::name.view() == std::string_view("childCount") && requires(Object& object) { object.child_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().child_count)>>{};
@@ -3262,6 +3265,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("measureText") && requires(Object& object) { object.measure_text; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().measure_text)>>{};
   else if constexpr (Key::name.view() == std::string_view("mediaSession") && requires(Object& object) { object.media_session; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().media_session)>>{};
   else if constexpr (Key::name.view() == std::string_view("menu") && requires(Object& object) { object.menu; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().menu)>>{};
+  else if constexpr (Key::name.view() == std::string_view("mergeWindow") && requires(Object& object) { object.merge_window; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().merge_window)>>{};
   else if constexpr (Key::name.view() == std::string_view("meshCount") && requires(Object& object) { object.mesh_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().mesh_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("meshLightBlocks") && requires(Object& object) { object.mesh_light_blocks; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().mesh_light_blocks)>>{};
   else if constexpr (Key::name.view() == std::string_view("meshMaterialRenderers") && requires(Object& object) { object.mesh_material_renderers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().mesh_material_renderers)>>{};
@@ -4503,6 +4507,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->checkbox_label; }) owner.bind_named("checkboxLabel", [object]() -> decltype(auto) { return (object->checkbox_label); });
   if constexpr (requires { object->checked; }) owner.bind_named("checked", [object]() -> decltype(auto) { return (object->checked); });
   if constexpr (requires { object->checked_state; }) owner.bind_named("checkedState", [object]() -> decltype(auto) { return (object->checked_state); });
+  if constexpr (requires { object->child; }) owner.bind_named("child", [object]() -> decltype(auto) { return (object->child); });
   if constexpr (requires { object->child1; }) owner.bind_named("child1", [object]() -> decltype(auto) { return (object->child1); });
   if constexpr (requires { object->child2; }) owner.bind_named("child2", [object]() -> decltype(auto) { return (object->child2); });
   if constexpr (requires { object->child_count; }) owner.bind_named("childCount", [object]() -> decltype(auto) { return (object->child_count); });
@@ -5395,6 +5400,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->measure_text; }) owner.bind_named("measureText", [object]() -> decltype(auto) { return (object->measure_text); });
   if constexpr (requires { object->media_session; }) owner.bind_named("mediaSession", [object]() -> decltype(auto) { return (object->media_session); });
   if constexpr (requires { object->menu; }) owner.bind_named("menu", [object]() -> decltype(auto) { return (object->menu); });
+  if constexpr (requires { object->merge_window; }) owner.bind_named("mergeWindow", [object]() -> decltype(auto) { return (object->merge_window); });
   if constexpr (requires { object->mesh_count; }) owner.bind_named("meshCount", [object]() -> decltype(auto) { return (object->mesh_count); });
   if constexpr (requires { object->mesh_light_blocks; }) owner.bind_named("meshLightBlocks", [object]() -> decltype(auto) { return (object->mesh_light_blocks); });
   if constexpr (requires { object->mesh_material_renderers; }) owner.bind_named("meshMaterialRenderers", [object]() -> decltype(auto) { return (object->mesh_material_renderers); });
@@ -6669,6 +6675,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(checkbox_label)
   FLIGHT_SDK_ROW_WIDENS(checked)
   FLIGHT_SDK_ROW_WIDENS(checked_state)
+  FLIGHT_SDK_ROW_WIDENS(child)
   FLIGHT_SDK_ROW_WIDENS(child1)
   FLIGHT_SDK_ROW_WIDENS(child2)
   FLIGHT_SDK_ROW_WIDENS(child_count)
@@ -7561,6 +7568,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(measure_text)
   FLIGHT_SDK_ROW_WIDENS(media_session)
   FLIGHT_SDK_ROW_WIDENS(menu)
+  FLIGHT_SDK_ROW_WIDENS(merge_window)
   FLIGHT_SDK_ROW_WIDENS(mesh_count)
   FLIGHT_SDK_ROW_WIDENS(mesh_light_blocks)
   FLIGHT_SDK_ROW_WIDENS(mesh_material_renderers)
