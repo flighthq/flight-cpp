@@ -7,9 +7,9 @@ index b1cba013..97953d12 100644
  import { ensureNodeWorldMatrix, getNodeChildAt, getNodeChildCount, getNodeWorldMatrix } from '@flighthq/node/contract';
 -import type { Transform2DNode, VelocityField } from '@flighthq/types/contract';
 +import type { HasTransform2D, NodeOf, VelocityField } from '@flighthq/types/contract';
- 
+
  import { ensureVelocitySample } from './velocityField.ts';
- 
+
 @@ -13,20 +13,16 @@ import { ensureVelocitySample } from './velocityField.ts';
  // but still have their previous transform updated, so order relative to explicit contributors does not
  // matter. Run once per frame after beginVelocityFrame. Velocity is in node units; a producer scales by
@@ -22,7 +22,7 @@ index b1cba013..97953d12 100644
  ): void {
    visitTransformVelocity(field, root);
  }
- 
+
 -function visitTransformVelocity<Traits extends object>(
 -  field: VelocityField,
 -  node: Readonly<Transform2DNode<Traits>>,
@@ -34,12 +34,12 @@ index b1cba013..97953d12 100644
 +  ensureNodeWorldMatrix(node);
 +  const world = getNodeWorldMatrix(node);
    const sample = ensureVelocitySample(field, node);
- 
-   if (sample.explicitFrameId !== field.frameId) {
+
+  if (sample.explicitFrameId !== field.frameId) {
 @@ -43,11 +39,11 @@ function visitTransformVelocity<Traits extends object>(
    if (sample.previousWorldTransform === null) sample.previousWorldTransform = createMatrix();
    copyMatrix(sample.previousWorldTransform, world);
- 
+
 -  // Children of a transform node in a homogeneous display/sprite graph are themselves transform nodes;
 -  // the hierarchy type does not carry that, so the trait is asserted.
 -  const count = getNodeChildCount(mutableNode);
