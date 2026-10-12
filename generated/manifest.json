@@ -7719,6 +7719,19 @@
       "sourceModules": 4
     },
     {
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
+      "cppIncludePrefix": "flight/requirement_catalog",
+      "cppNamespace": "flight::requirement_catalog",
+      "emittedModules": 4,
+      "package": "@flighthq/requirement-catalog",
+      "refusedModules": 0,
+      "source": {
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
+        "version": "0.5.0"
+      },
+      "sourceModules": 4
+    },
+    {
       "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
       "cppIncludePrefix": "flight/requirements",
       "cppNamespace": "flight::requirements",
@@ -8537,9 +8550,9 @@
     ]
   },
   "summary": {
-    "packages": 155,
-    "emittedModules": 2420,
+    "packages": 156,
+    "emittedModules": 2424,
     "refusedModules": 574,
-    "sourceModules": 2994
+    "sourceModules": 2998
   }
 }

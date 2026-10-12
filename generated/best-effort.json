@@ -22173,6 +22173,52 @@
       "status": "emitted"
     },
     {
+      "consumers": [
+        "@flighthq/requirement-catalog/packages/requirement-catalog/src/contract.ts",
+        "@flighthq/requirement-catalog/packages/requirement-catalog/src/index.ts"
+      ],
+      "module": {
+        "name": "BuiltInRequirementCatalogEntries",
+        "packageName": "@flighthq/requirement-catalog",
+        "source": "packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts"
+      },
+      "path": "flight/requirement_catalog/built_in_requirement_catalog_entries.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [],
+      "module": {
+        "name": "Contract",
+        "packageName": "@flighthq/requirement-catalog",
+        "source": "packages/requirement-catalog/src/contract.ts"
+      },
+      "path": "flight/requirement_catalog/contract.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [],
+      "module": {
+        "name": "Index",
+        "packageName": "@flighthq/requirement-catalog",
+        "source": "packages/requirement-catalog/src/index.ts"
+      },
+      "path": "flight/requirement_catalog/_internal_index.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/requirement-catalog/packages/requirement-catalog/src/contract.ts",
+        "@flighthq/requirement-catalog/packages/requirement-catalog/src/index.ts"
+      ],
+      "module": {
+        "name": "RequirementCatalog",
+        "packageName": "@flighthq/requirement-catalog",
+        "source": "packages/requirement-catalog/src/requirementCatalog.ts"
+      },
+      "path": "flight/requirement_catalog/requirement_catalog.hpp",
+      "status": "emitted"
+    },
+    {
       "consumers": [],
       "module": {
         "name": "Contract",

@@ -2906,6 +2906,26 @@
       "source": "packages/requirement/src/requirementSet.ts"
     },
     {
+      "name": "BuiltInRequirementCatalogEntries",
+      "packageName": "@flighthq/requirement-catalog",
+      "source": "packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts"
+    },
+    {
+      "name": "Contract",
+      "packageName": "@flighthq/requirement-catalog",
+      "source": "packages/requirement-catalog/src/contract.ts"
+    },
+    {
+      "name": "Index",
+      "packageName": "@flighthq/requirement-catalog",
+      "source": "packages/requirement-catalog/src/index.ts"
+    },
+    {
+      "name": "RequirementCatalog",
+      "packageName": "@flighthq/requirement-catalog",
+      "source": "packages/requirement-catalog/src/requirementCatalog.ts"
+    },
+    {
       "name": "Contract",
       "packageName": "@flighthq/requirements",
       "source": "packages/requirements/src/contract.ts"
@@ -25484,6 +25504,46 @@
           "name": "Index",
           "packageName": "@flighthq/requirement",
           "source": "packages/requirement/src/index.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "BuiltInRequirementCatalogEntries",
+          "packageName": "@flighthq/requirement-catalog",
+          "source": "packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "RequirementCatalog",
+          "packageName": "@flighthq/requirement-catalog",
+          "source": "packages/requirement-catalog/src/requirementCatalog.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Contract",
+          "packageName": "@flighthq/requirement-catalog",
+          "source": "packages/requirement-catalog/src/contract.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Index",
+          "packageName": "@flighthq/requirement-catalog",
+          "source": "packages/requirement-catalog/src/index.ts"
         }
       ]
     },
@@ -66525,6 +66585,209 @@
       ]
     },
     {
+      "bindings": [
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:24241dc4f073782278b1db3cefe6e9bb0cc7b02e76038d86d786dc190c3e1c86",
+            "line": 10,
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts",
+            "id": "binding:[\"@flighthq/requirement-catalog\",\"packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts\",338]",
+            "kind": "variable",
+            "name": "BUILT_IN_REQUIREMENT_CATALOG_ENTRIES",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:6451d31805765a73b7b664a4c3dceb8cd56e18de7299d79d2c29e04598172f5b",
+            "line": 2793,
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts",
+            "id": "binding:[\"@flighthq/requirement-catalog\",\"packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts\",79629]",
+            "kind": "variable",
+            "name": "BUILT_IN_REQUIREMENT_TRANSLATIONS",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:cf36caff964fe96ce08064fec021b6f3773df73d5e869de3fe6e2a08ab82c8ba",
+            "line": 2914,
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts",
+            "id": "binding:[\"@flighthq/requirement-catalog\",\"packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts\",83702]",
+            "kind": "variable",
+            "name": "BUILT_IN_REQUIREMENT_BACKENDS",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 2
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:17708b8e951a0581163d462d7377113611ac2b6cf5756f3e4db61a38dc625761",
+            "line": 2940,
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts",
+            "id": "binding:[\"@flighthq/requirement-catalog\",\"packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts\",84558]",
+            "kind": "variable",
+            "name": "BUILT_IN_REQUIREMENT_DISPOSITIONS",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 3
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "BuiltInRequirementCatalogEntries",
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "BuiltInRequirementCatalogEntries",
+        "packageName": "@flighthq/requirement-catalog",
+        "source": "packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:24241dc4f073782278b1db3cefe6e9bb0cc7b02e76038d86d786dc190c3e1c86",
+              "line": 10,
+              "packageName": "@flighthq/requirement-catalog",
+              "source": "packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts",
+              "id": "binding:[\"@flighthq/requirement-catalog\",\"packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts\",338]",
+              "kind": "variable",
+              "name": "BUILT_IN_REQUIREMENT_CATALOG_ENTRIES",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            0
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:6451d31805765a73b7b664a4c3dceb8cd56e18de7299d79d2c29e04598172f5b",
+              "line": 2793,
+              "packageName": "@flighthq/requirement-catalog",
+              "source": "packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts",
+              "id": "binding:[\"@flighthq/requirement-catalog\",\"packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts\",79629]",
+              "kind": "variable",
+              "name": "BUILT_IN_REQUIREMENT_TRANSLATIONS",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            1
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:cf36caff964fe96ce08064fec021b6f3773df73d5e869de3fe6e2a08ab82c8ba",
+              "line": 2914,
+              "packageName": "@flighthq/requirement-catalog",
+              "source": "packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts",
+              "id": "binding:[\"@flighthq/requirement-catalog\",\"packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts\",83702]",
+              "kind": "variable",
+              "name": "BUILT_IN_REQUIREMENT_BACKENDS",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            2
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:17708b8e951a0581163d462d7377113611ac2b6cf5756f3e4db61a38dc625761",
+              "line": 2940,
+              "packageName": "@flighthq/requirement-catalog",
+              "source": "packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts",
+              "id": "binding:[\"@flighthq/requirement-catalog\",\"packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts\",84558]",
+              "kind": "variable",
+              "name": "BUILT_IN_REQUIREMENT_DISPOSITIONS",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            3
+          ]
+        }
+      ]
+    },
+    {
       "bindings": [],
       "dependencies": [
         {
@@ -101299,6 +101562,45 @@
         "name": "Contract",
         "packageName": "@flighthq/requirement",
         "source": "packages/requirement/src/contract.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/contract.ts"
+          },
+          "specifier": "./builtInRequirementCatalogEntries.ts",
+          "target": {
+            "name": "BuiltInRequirementCatalogEntries",
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/contract.ts"
+          },
+          "specifier": "./requirementCatalog.ts",
+          "target": {
+            "name": "RequirementCatalog",
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/requirementCatalog.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Contract",
+        "packageName": "@flighthq/requirement-catalog",
+        "source": "packages/requirement-catalog/src/contract.ts"
       },
       "steps": []
     },
@@ -171100,6 +171402,45 @@
         "name": "Index",
         "packageName": "@flighthq/requirement",
         "source": "packages/requirement/src/index.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/index.ts"
+          },
+          "specifier": "./builtInRequirementCatalogEntries.ts",
+          "target": {
+            "name": "BuiltInRequirementCatalogEntries",
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/builtInRequirementCatalogEntries.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/index.ts"
+          },
+          "specifier": "./requirementCatalog.ts",
+          "target": {
+            "name": "RequirementCatalog",
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/requirementCatalog.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Index",
+        "packageName": "@flighthq/requirement-catalog",
+        "source": "packages/requirement-catalog/src/index.ts"
       },
       "steps": []
     },
@@ -266076,6 +266417,221 @@
         "name": "Requirement",
         "packageName": "@flighthq/types",
         "source": "packages/types/src/Requirement.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:a5b605f313590df397cf7a5b9aa2e528c143d70a8c00b5a09737cff5291cfe62",
+            "line": 20,
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/requirementCatalog.ts",
+            "id": "binding:[\"@flighthq/requirement-catalog\",\"packages/requirement-catalog/src/requirementCatalog.ts\",809]",
+            "kind": "function",
+            "name": "createRequirementCatalog",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:fff3a1f4fc0caa0b96152c50be0f89d9c75fb1f04f483052b1cf904e0234b156",
+            "line": 34,
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/requirementCatalog.ts",
+            "id": "binding:[\"@flighthq/requirement-catalog\",\"packages/requirement-catalog/src/requirementCatalog.ts\",1488]",
+            "kind": "function",
+            "name": "copyCatalogDisposition",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:684b4d22af99269512382ce914726c9af00a0c400ff1da1a5a4de54d9e8a2e2e",
+            "line": 41,
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/requirementCatalog.ts",
+            "id": "binding:[\"@flighthq/requirement-catalog\",\"packages/requirement-catalog/src/requirementCatalog.ts\",1925]",
+            "kind": "function",
+            "name": "copyCatalogTranslation",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:af73e100e892f5797629f2015c797c693fc181ea1a3253456f60e150295439de",
+            "line": 48,
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/requirementCatalog.ts",
+            "id": "binding:[\"@flighthq/requirement-catalog\",\"packages/requirement-catalog/src/requirementCatalog.ts\",2158]",
+            "kind": "function",
+            "name": "findRequirementCatalogEntries",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:e8c3e1ad5f7ca10cca0c5cdbd9c40d5a2bc5433f39db8d19aa8ea05e914b3588",
+            "line": 59,
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/requirementCatalog.ts",
+            "id": "binding:[\"@flighthq/requirement-catalog\",\"packages/requirement-catalog/src/requirementCatalog.ts\",2500]",
+            "kind": "function",
+            "name": "getRequirementCatalogEntries",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:3fad80367d53a903e54702b023ad73f5468b674a77e22e39a4a98a927aee3f0d",
+            "line": 67,
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/requirementCatalog.ts",
+            "id": "binding:[\"@flighthq/requirement-catalog\",\"packages/requirement-catalog/src/requirementCatalog.ts\",2880]",
+            "kind": "function",
+            "name": "registerRequirementCatalogEntry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:f264cae91286a01afa78cbd9c909123da10ba3e674c4e2820d1b9f0c8b0eb9c0",
+            "line": 79,
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/requirementCatalog.ts",
+            "id": "binding:[\"@flighthq/requirement-catalog\",\"packages/requirement-catalog/src/requirementCatalog.ts\",3297]",
+            "kind": "function",
+            "name": "unregisterRequirementCatalogEntry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:6ca6b6bf315fae91335b86ba0437ce5fae9429f1a68d6f03c554923700e54848",
+            "line": 107,
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/requirementCatalog.ts",
+            "id": "binding:[\"@flighthq/requirement-catalog\",\"packages/requirement-catalog/src/requirementCatalog.ts\",4908]",
+            "kind": "function",
+            "name": "copyCatalogEntry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:380a9be1c622b7a72dc6b5d920ee6151678d17ac35eb983655e4a7f6b674df62",
+            "line": 111,
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/requirementCatalog.ts",
+            "id": "binding:[\"@flighthq/requirement-catalog\",\"packages/requirement-catalog/src/requirementCatalog.ts\",5029]",
+            "kind": "function",
+            "name": "requirementCatalogEntryIdentity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "RequirementCatalog",
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/requirementCatalog.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "RequirementCatalog",
+        "packageName": "@flighthq/requirement-catalog",
+        "source": "packages/requirement-catalog/src/requirementCatalog.ts"
       },
       "steps": []
     },
