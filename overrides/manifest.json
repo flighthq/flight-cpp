@@ -1853,7 +1853,7 @@
       "package": "@flighthq/scene2d",
       "status": "complete",
       "supplies": "packages/scene2d/src/displayObject.ts",
-      "derivedFrom": "949500a11773808df650a141c265029d7bd9f6fe30a83d7e3548490df9a6a41d",
+      "derivedFrom": "195620987ff1c27751397c2edbfc273fd36fb980d0c61e63b5d746271e614162",
       "reason": "The emitter refuses Node2D creation because its source intersection has no nominal C++ owner and refuses runtime recovery because the flattened runtime interfaces have no emitted heritage; two retained functions also use nominal pointer operations on structural rows.",
       "change": "Constructs the schema-only DisplayObject row with its exact generated fields, including the migrated Material2D and MaterialData carriers, attaches an initialized NodeRuntime<Node2DTraits> through EntityRuntimeKey, and exposes creation, checked runtime access, kind testing, and clip mutation over that retained owner.",
       "equivalence": "Every default Node2D field matches the source defaults, including absent Material2D and MaterialData slots, the entity runtime is unique per node and carries the Node2D trait symbol, revision counters and hierarchy slots start at their source values, and clip mutation increments only appearance revision.",
