@@ -17,6 +17,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | Carried patch | Compiler request |
 | --- | --- |
 | [`compiler-canvas-context-overload-result.patch`](../../source-patches/compiler-canvas-context-overload-result.patch) | [Literal-selected Canvas context result](compiler-canvas-context-overload-result.md) |
+| [`compiler-closed-key-external-member-call.patch`](../../source-patches/compiler-closed-key-external-member-call.patch) | [Finite-key calls on a bound host object](closed-key-bound-member-call.md) |
 | [`compiler-concrete-owner-union-row-assertions.patch`](../../source-patches/compiler-concrete-owner-union-row-assertions.patch) | [Concrete owner assertion from an open union](compiler-concrete-owner-union-row-assertions.md) |
 | [`compiler-concrete-structural-union-view-selection.patch`](../../source-patches/compiler-concrete-structural-union-view-selection.patch) | [Concrete owner entering a structural-view union](compiler-concrete-structural-union-view-selection.md) |
 | [`compiler-contextual-imported-union-owner.patch`](../../source-patches/compiler-contextual-imported-union-owner.patch) | [Contextual construction of an imported union](compiler-contextual-imported-union-owner.md) |
@@ -49,6 +50,8 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 
 ## Active requests without a compiler patch
 
+- [Variadic console calls with non-string arguments](console-variadic-arguments.md) —
+  needs a declared console-formatting contract; blocks log.ts `_writeConsoleCaptureEntry`.
 - [A binding initialized from a non-null-asserted collection get is present](non-null-asserted-collection-get-binding.md) —
   carried for log by the source patch `log-buffered-sink-state-explicit-guard`.
 - [Emit declared interface heritage so derived references widen to their base](interface-heritage-widening.md) —

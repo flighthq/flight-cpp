@@ -9,6 +9,7 @@
 #include <concepts>
 #include <exception>
 #include <iostream>
+#include <sstream>
 #include <limits>
 #include <memory>
 #include <flight/callable.hpp>
@@ -1406,6 +1407,27 @@ void test_symbol_absent_description() {
 // records no call stack, so `stack` is absent on every Error. `cause` is present exactly when the Error
 // was constructed with ES2022 ErrorOptions carrying one, and it is the same value -- an object cause
 // keeps its identity.
+// Each console method writes one unformatted line to its own stream: log/info to standard output,
+// warn/error to standard error, debug to the log stream.
+void test_host_console_streams() {
+  std::ostringstream out;
+  std::ostringstream err;
+  std::ostringstream log;
+  auto* const saved_out = std::cout.rdbuf(out.rdbuf());
+  auto* const saved_err = std::cerr.rdbuf(err.rdbuf());
+  auto* const saved_log = std::clog.rdbuf(log.rdbuf());
+  flight::host::console_log(flight::String("l"));
+  flight::host::console_info(flight::String("i"));
+  flight::host::console_warn(flight::String("w"));
+  flight::host::console_error(flight::String("e"));
+  flight::host::console_debug(flight::String("d"));
+  std::cout.rdbuf(saved_out);
+  std::cerr.rdbuf(saved_err);
+  std::clog.rdbuf(saved_log);
+  check(out.str() == "l\ni\n" && err.str() == "w\ne\n" && log.str() == "d\n",
+        "console methods write one unformatted line each to their own stream");
+}
+
 void test_error_stack_and_cause() {
   const flight::Error plain(flight::String("plain"));
   check(!plain.stack().has_value(), "an Error carries no stack: this runtime records none");
@@ -3855,6 +3877,7 @@ int main() {
   test_error_name_is_dynamic();
   test_erased_error_view();
   test_error_stack_and_cause();
+  test_host_console_streams();
   test_host();
   test_reference_projection();
   test_number_to_fixed();

@@ -2457,6 +2457,23 @@
       "appliedOn": "2026-10-12"
     },
     {
+      "id": "compiler-closed-key-external-member-call",
+      "dependency": "flight-compiler",
+      "patch": "compiler-closed-key-external-member-call.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "closed-key element access over an unevidenced receiver requires represented object storage (log.ts `console[_consoleMethods[level]](...)`, `console[method](...)`)",
+      "rewrite": "Adds one call lane: `X[key](arg)` where X is an ambient value whose external binding declares members, key's type is a finite set of string literals, every literal names a bound member, the call's result is void, and the single argument is a string (or a template literal). It emits an immediately invoked lambda: it evaluates the key, then the argument, once each; dispatches to the matching member target; and throws flight::TypeError when no key matches. Any other key set, arity, argument type or result is refused with a named rule (cpp-closed-key-external-member-unbound / -result / -arguments / -spread), or left to the existing paths.",
+      "equivalence": "JavaScript evaluates the receiver, the key, then the arguments, and calls the property the key names on the receiver. The lambda evaluates the key and argument in that order exactly once and calls the target the binding declares for that member, so the same method receives the same message. The key's type proves it is one of the dispatched members, so the final throw is reached only through unsound typing; there it raises the TypeError JavaScript gives for calling undefined. The lane covers void one-string sinks only, so there is no result to unify and no formatting to imitate.",
+      "verification": "New cppClosedKeyExternalMemberCall.test.ts, 8 pass. Positive: the full debug/error/info/log/warn family through a closed key union; a subset family with key-then-argument evaluation order; a template-literal message. Negative: a key outside the bound set (cpp-closed-key-external-member-unbound); a non-void member (-result); two arguments and a number argument (-arguments); keyof the whole host object and an open string key are never dispatched. Backend and semantic suites: identical 46 pre-existing failures. Runtime console log/info/warn/error stream test passes under clang. Scoped log generation: _writeConsoleLogEntry and the template branch lower; log.ts next refuses at `console[method](prefix, data)` (object argument).",
+      "whyNotUpstreamFirst": "The lane only applies once a target binding declares the selected members, which is this repository's profile; upstream has no console member set to prove a key domain against.",
+      "unblocks": "@flighthq/log console sinks that select a console method by level with one string message.",
+      "expires": "when upstream lowers finite-key calls on bound host objects (docs/compiler-requests/closed-key-bound-member-call.md).",
+      "appliedOn": "2026-10-12"
+    },
+    {
       "id": "scene2d-canvas-host-image-draw-flow",
       "dependency": "flight",
       "patch": "scene2d-canvas-host-image-draw-flow.patch",

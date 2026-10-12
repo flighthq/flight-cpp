@@ -1,0 +1,236 @@
+diff --git a/packages/compiler-backend-cpp/src/cppClosedKeyExternalMemberCall.test.ts b/packages/compiler-backend-cpp/src/cppClosedKeyExternalMemberCall.test.ts
+new file mode 100644
+index 0000000..347d4af
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppClosedKeyExternalMemberCall.test.ts
+@@ -0,0 +1,124 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { isBackendEmissionFailure } from '../../compiler-emission/src/index.js';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++// The console the program sees: the library's variadic, void-returning methods.
++const consoleLibrary = `
++  declare const console: {
++    debug(...data: unknown[]): void; error(...data: unknown[]): void; info(...data: unknown[]): void;
++    log(...data: unknown[]): void; warn(...data: unknown[]): void; table(...data: unknown[]): void;
++    count(label: string): number;
++  };
++`;
++
++const members = ['debug', 'error', 'info', 'log', 'warn'] as const;
++const consoleBinding = {
++  bindings: [
++    {
++      headers: ['host/console.hpp'],
++      members: [
++        ...members.map((member) => ({ sourceMember: member, targetName: `host::console_${member}` })),
++        { sourceMember: 'count', targetName: 'host::console_count' },
++      ],
++      nullability: 'non-null' as const,
++      ownership: 'borrowed' as const,
++      sourceName: 'console',
++      space: 'value' as const,
++      targetName: 'host::console',
++    },
++  ],
++  schema: 'flight-cpp-external-bindings/1' as const,
++};
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/log/src/Console.ts', consoleLibrary + source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/log', upstreamDirectory: '/flight' });
++  return emitIrModuleCpp(result.module, { externalBindings: consoleBinding, runtimeProfile: 'flight-cpp' }).contents;
++}
++
++function failure(source: string): { rule?: string } | undefined {
++  try {
++    emit(source);
++  } catch (error) {
++    if (isBackendEmissionFailure(error)) return error as { rule?: string };
++    throw error;
++  }
++  return undefined;
++}
++
++describe('finite-key call on a bound host object', () => {
++  it('dispatches every member of the full console method family selected through a closed key union', () => {
++    const contents = emit(
++      `type Method = 'debug' | 'error' | 'info' | 'log' | 'warn';
++       function methodFor(level: number): Method {
++         return level === 0 ? 'debug' : level === 1 ? 'error' : level === 2 ? 'info' : level === 3 ? 'log' : 'warn';
++       }
++       export function write(level: number, line: string): void { console[methodFor(level)](line); }`,
++    );
++    for (const member of members) {
++      expect(contents).toContain(`== flight::String("${member}")) { host::console_${member}(`);
++    }
++    expect(contents).toContain('throw flight::TypeError(flight::String("console[key] is not a function"))');
++  });
++
++  it('dispatches a subset family and evaluates the key before the argument, each once', () => {
++    const contents = emit(
++      `export function report(severe: boolean, line: string): void { console[severe ? 'error' : 'warn'](line); }`,
++    );
++    expect(contents).toMatch(/const auto member_key[^;]*= \(severe \? [^;]*; const auto member_argument[^;]*= line;/u);
++    expect(contents).toContain('host::console_error(');
++    expect(contents).toContain('host::console_warn(');
++    expect(contents).not.toContain('host::console_debug(');
++  });
++
++  it('forwards a template-literal message, which is always a string', () => {
++    const contents = emit(`export function tagged(k: 'log' | 'warn', tag: string, n: number): void { console[k](\`[\${tag}] \${n}\`); }`);
++    expect(contents).toContain('host::console_log(member_argument');
++    expect(contents).toContain('host::console_warn(member_argument');
++  });
++
++  it('refuses an open string key', () => {
++    // A plain string key proves no member set, so this lane does not dispatch it.
++    const open = failure(`export function any(name: string, line: string): void { (console as never as Record<string, (m: string) => void>)[name]!(line); }`);
++    expect(open?.rule).not.toBe('cpp-closed-key-external-member-result');
++    // keyof the whole host object is not a key set this lane proves: it never dispatches it.
++    let openContents = '';
++    try {
++      openContents = emit(`export function open(name: keyof typeof console, line: string): void { console[name](line); }`);
++    } catch {
++      openContents = '';
++    }
++    expect(openContents).not.toContain('member_key');
++  });
++
++  it('refuses forwarding arguments the members do not declare', () => {
++    expect(
++      failure(`export function two(k: 'log' | 'warn', prefix: string, detail: string): void { console[k](prefix, detail); }`)?.rule,
++    ).toBe('cpp-closed-key-external-member-arguments');
++    expect(failure(`export function num(k: 'log' | 'warn', value: number): void { console[k](value); }`)?.rule).toBe(
++      'cpp-closed-key-external-member-arguments',
++    );
++  });
++
++  it('refuses a key set that reaches a member the binding does not declare', () => {
++    expect(failure(`export function t(k: 'log' | 'table', line: string): void { console[k](line); }`)?.rule).toBe(
++      'cpp-closed-key-external-member-unbound',
++    );
++  });
++
++  it('refuses a non-void result rather than unifying member results', () => {
++    expect(failure(`export function c(k: 'count', label: string): number { return console[k](label); }`)?.rule).toBe(
++      'cpp-closed-key-external-member-result',
++    );
++  });
++
++  it('leaves dynamic indexing of an unbound object to the existing path', () => {
++    const result = failure(
++      `export function d(sinks: Record<string, (m: string) => void>, k: string, line: string): void { sinks[k]!(line); }`,
++    );
++    expect(result?.rule).not.toBe('cpp-closed-key-external-member-unbound');
++  });
++});
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 4b6efe2..f45a2cb 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -3929,6 +3929,8 @@ function emitExpression(
+     case 'call': {
+       const objectCreated = emitCppObjectCreateCpp(expression, expectedType, context);
+       if (objectCreated) return objectCreated;
++      const closedKeyMemberCall = emitCppClosedKeyExternalMemberCallCpp(expression, context);
++      if (closedKeyMemberCall) return closedKeyMemberCall;
+       const variantArrayPredicate = emitCppVariantArrayPredicateCpp(expression, context);
+       if (variantArrayPredicate) return variantArrayPredicate;
+       const variantPropertyArrayPredicate = emitCppVariantPropertyArrayPredicateCpp(expression, context);
+@@ -14235,6 +14237,92 @@ function getCppClosedKeyElementWriteTypeCpp(
+   return createIrTypeEvidenceUnionCpp(keys.map((key) => members.get(key)!.type));
+ }
+
++// `console[method](message)` where `method` is a finite set of string literals. The receiver is an ambient
++// value whose external binding declares members, so each key names one C++ member target and the call
++// dispatches to it. It is lowered only when every key is a declared member and the call's result is void:
++// the targets are then interchangeable call sites with no result to unify. Key, then arguments, are
++// evaluated once and in source order before the dispatch. A key outside the proven set can only arrive
++// through unsound typing; it calls no target and throws the TypeError JavaScript raises for calling
++// `undefined`. An open key, a spread argument, or a non-void result keeps the existing paths and refusals.
++function emitCppClosedKeyExternalMemberCallCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'call' }>>,
++  context: EmitContext,
++): string | undefined {
++  const callee = expression.callee;
++  if (
++    getCppRuntimeProfile(context.options) !== 'flight-cpp' ||
++    expression.optional ||
++    callee.kind !== 'element' ||
++    callee.object.kind !== 'identifier' ||
++    callee.object.reference.kind !== 'ambient'
++  ) {
++    return undefined;
++  }
++  const sourceName = callee.object.reference.name;
++  if (!getCompilerExternalBindingEvidenceCpp(sourceName, 'value', context.options.externalBindings)) return undefined;
++  const keys = getCppClosedElementKeyNamesCpp(callee, context);
++  if (!keys || keys.length === 0) return undefined;
++  const targets = keys.map((key) =>
++    getCompilerRuntimeExternalMemberTargetCpp(
++      sourceName,
++      key,
++      getCppRuntimeProfile(context.options),
++      context.options.externalBindings,
++    ),
++  );
++  const unbound = keys.filter((_, index) => targets[index] === undefined);
++  if (unbound.length > 0) {
++    emissionError(
++      context,
++      `finite-key call ${sourceName}[key](...) selects ${unbound.join(', ')}, which the external binding for ${sourceName} does not declare as members; every key in the proven set must name a bound member target`,
++      'cpp-closed-key-external-member-unbound',
++    );
++  }
++  const result = getIrExpressionTypeEvidenceCpp(expression, context);
++  if (!result || !(result.kind === 'primitive' && result.name === 'void')) {
++    emissionError(
++      context,
++      `finite-key call ${sourceName}[key](...) is lowered only when its result is void; a non-void result would need one C++ type every selected member returns`,
++      'cpp-closed-key-external-member-result',
++    );
++  }
++  // The bound console-style members are one-string sinks: the runtime declares them taking one message,
++  // and that is the only argument contract this lane forwards. The source's variadic methods accept any
++  // values -- an object argument is rendered by an engine's own inspection formatting, which no target here
++  // reproduces -- so any other arity or argument type is refused rather than forwarded.
++  const [message] = expression.arguments;
++  const messageType = message && message.kind !== 'spread' ? getIrExpressionTypeEvidenceCpp(message, context) : undefined;
++  // A template literal always evaluates to a string, whatever its parts; it carries no separate evidence.
++  const isStringMessage =
++    message?.kind === 'template' || (messageType !== undefined && isCppStringValueTypeCpp(messageType, context, new Set()));
++  if (expression.arguments.length !== 1 || !isStringMessage) {
++    emissionError(
++      context,
++      `finite-key call ${sourceName}[key](...) forwards exactly one string message to its bound members; this call passes ${String(expression.arguments.length)} argument(s)${expression.arguments.length === 1 ? ' of a non-string type' : ''}, which no bound member target accepts`,
++      'cpp-closed-key-external-member-arguments',
++    );
++  }
++  if (expression.arguments.some((argument) => argument.kind === 'spread')) {
++    emissionError(
++      context,
++      `finite-key call ${sourceName}[key](...) with a spread argument requires argument-pack lowering`,
++      'cpp-closed-key-external-member-spread',
++    );
++  }
++  addCppExternalBindingHeaders(sourceName, 'value', context);
++  context.includes.add('flight/error.hpp');
++  const key = getGeneratedTargetName('memberKey', context);
++  const argumentNames = expression.arguments.map(() => getGeneratedTargetName('memberArgument', context));
++  const bindings = expression.arguments.map(
++    (argument, index) => `const auto ${argumentNames[index]} = ${emitExpression(argument, context)};`,
++  );
++  const branches = keys.map(
++    (member, index) =>
++      `if (${key} == ${emitLiteral(member, context)}) { ${targets[index]}(${argumentNames.join(', ')}); return; }`,
++  );
++  return `([&]() -> void { const auto ${key} = ${emitExpression(callee.index, context)}; ${bindings.join(' ')} ${branches.join(' ')} throw flight::TypeError(flight::String("${sourceName}[key] is not a function")); }())`;
++}
++
+ function emitCppClosedKeyElementSelectionCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'element' }>>,
+   keys: readonly string[],

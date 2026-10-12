@@ -31,6 +31,22 @@
         {
           "sourceMember": "debug",
           "targetName": "flight::host::console_debug"
+        },
+        {
+          "sourceMember": "error",
+          "targetName": "flight::host::console_error"
+        },
+        {
+          "sourceMember": "info",
+          "targetName": "flight::host::console_info"
+        },
+        {
+          "sourceMember": "log",
+          "targetName": "flight::host::console_log"
+        },
+        {
+          "sourceMember": "warn",
+          "targetName": "flight::host::console_warn"
         }
       ],
       "nullability": "non-null",
