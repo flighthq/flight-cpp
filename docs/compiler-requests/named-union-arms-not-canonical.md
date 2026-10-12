@@ -92,6 +92,25 @@ problem of the first two sites, on a record. `@flighthq/statusbar` is `assisted`
 the rest of the module, including the full `applyTopStyleEntry` resolver that was refused at an earlier pin,
 is the emission's own.
 
+## Fourth measured site: `@flighthq/shortcut`'s attach
+
+`attachGlobalShortcut` refuses under the same code and the same wording, on an awaited provider outcome:
+
+```
+cpp emission failed for @flighthq/shortcut/packages/shortcut/src/shortcutExplicitDependency.ts: contextual
+C++ union conversion requires equivalent source union evidence: target multiVariant carriers
+[flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_4890f49c03969010>>>>,
+ flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_subscription_aad5bb6f4cfbab8b>>>>]
+from await source multiVariant carriers …
+```
+
+The module *does* emit the subscribe outcome union — `ShortcutTriggerSubscribeOutcome`, whose second
+alternative is a row over `reason_subscription_c16c6a57c767b33b` — but the awaited call site needs the same
+union with the arms spelled `…aad5bb6f4cfbab8b`, so the two expansions are once again unrelated carriers and
+the conversion has nothing to convert along. `@flighthq/shortcut` compiles because
+`overrides/include/flight/shortcut/shortcut_explicit_dependency.hpp` supplies the one refused function over
+the emitted carriers.
+
 ## Reduction
 
 The missing piece is the guard's own emission record: the union alias is emitted once from the named

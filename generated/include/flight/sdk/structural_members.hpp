@@ -26,6 +26,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("aac") && requires { object.aac; }) return (object.aac);
   else if constexpr (Key::name.view() == std::string_view("aberration") && requires { object.aberration; }) return (object.aberration);
   else if constexpr (Key::name.view() == std::string_view("absolute") && requires { object.absolute; }) return (object.absolute);
+  else if constexpr (Key::name.view() == std::string_view("accelerator") && requires { object.accelerator; }) return (object.accelerator);
   else if constexpr (Key::name.view() == std::string_view("accessibility") && requires { object.accessibility; }) return (object.accessibility);
   else if constexpr (Key::name.view() == std::string_view("accuracy") && requires { object.accuracy; }) return (object.accuracy);
   else if constexpr (Key::name.view() == std::string_view("acquire") && requires { object.acquire; }) return (object.acquire);
@@ -1323,6 +1324,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("onTextInput") && requires { object.on_text_input; }) return (object.on_text_input);
   else if constexpr (Key::name.view() == std::string_view("onThermalStateChange") && requires { object.on_thermal_state_change; }) return (object.on_thermal_state_change);
   else if constexpr (Key::name.view() == std::string_view("onTick") && requires { object.on_tick; }) return (object.on_tick);
+  else if constexpr (Key::name.view() == std::string_view("onTrigger") && requires { object.on_trigger; }) return (object.on_trigger);
   else if constexpr (Key::name.view() == std::string_view("onUnlockScreen") && requires { object.on_unlock_screen; }) return (object.on_unlock_screen);
   else if constexpr (Key::name.view() == std::string_view("onUpdate") && requires { object.on_update; }) return (object.on_update);
   else if constexpr (Key::name.view() == std::string_view("onWheel") && requires { object.on_wheel; }) return (object.on_wheel);
@@ -1366,6 +1368,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("parentReferenceId") && requires { object.parent_reference_id; }) return (object.parent_reference_id);
   else if constexpr (Key::name.view() == std::string_view("parentWindow") && requires { object.parent_window; }) return (object.parent_window);
   else if constexpr (Key::name.view() == std::string_view("parse") && requires { object.parse; }) return (object.parse);
+  else if constexpr (Key::name.view() == std::string_view("parseError") && requires { object.parse_error; }) return (object.parse_error);
   else if constexpr (Key::name.view() == std::string_view("particleCount") && requires { object.particle_count; }) return (object.particle_count);
   else if constexpr (Key::name.view() == std::string_view("particleLifespan") && requires { object.particle_lifespan; }) return (object.particle_lifespan);
   else if constexpr (Key::name.view() == std::string_view("particleLifespanVariance") && requires { object.particle_lifespan_variance; }) return (object.particle_lifespan_variance);
@@ -2016,6 +2019,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("unresolved") && requires { object.unresolved; }) return (object.unresolved);
   else if constexpr (Key::name.view() == std::string_view("unresolvedIndexes") && requires { object.unresolved_indexes; }) return (object.unresolved_indexes);
   else if constexpr (Key::name.view() == std::string_view("unselectedState") && requires { object.unselected_state; }) return (object.unselected_state);
+  else if constexpr (Key::name.view() == std::string_view("unsubscribe") && requires { object.unsubscribe; }) return (object.unsubscribe);
   else if constexpr (Key::name.view() == std::string_view("unsupportedFields") && requires { object.unsupported_fields; }) return (object.unsupported_fields);
   else if constexpr (Key::name.view() == std::string_view("up") && requires { object.up; }) return (object.up);
   else if constexpr (Key::name.view() == std::string_view("upState") && requires { object.up_state; }) return (object.up_state);
@@ -2146,6 +2150,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("aac") && requires(Object& object) { object.aac; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().aac)>>{};
   else if constexpr (Key::name.view() == std::string_view("aberration") && requires(Object& object) { object.aberration; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().aberration)>>{};
   else if constexpr (Key::name.view() == std::string_view("absolute") && requires(Object& object) { object.absolute; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().absolute)>>{};
+  else if constexpr (Key::name.view() == std::string_view("accelerator") && requires(Object& object) { object.accelerator; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().accelerator)>>{};
   else if constexpr (Key::name.view() == std::string_view("accessibility") && requires(Object& object) { object.accessibility; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().accessibility)>>{};
   else if constexpr (Key::name.view() == std::string_view("accuracy") && requires(Object& object) { object.accuracy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().accuracy)>>{};
   else if constexpr (Key::name.view() == std::string_view("acquire") && requires(Object& object) { object.acquire; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().acquire)>>{};
@@ -3443,6 +3448,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("onTextInput") && requires(Object& object) { object.on_text_input; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_text_input)>>{};
   else if constexpr (Key::name.view() == std::string_view("onThermalStateChange") && requires(Object& object) { object.on_thermal_state_change; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_thermal_state_change)>>{};
   else if constexpr (Key::name.view() == std::string_view("onTick") && requires(Object& object) { object.on_tick; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_tick)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onTrigger") && requires(Object& object) { object.on_trigger; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_trigger)>>{};
   else if constexpr (Key::name.view() == std::string_view("onUnlockScreen") && requires(Object& object) { object.on_unlock_screen; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_unlock_screen)>>{};
   else if constexpr (Key::name.view() == std::string_view("onUpdate") && requires(Object& object) { object.on_update; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_update)>>{};
   else if constexpr (Key::name.view() == std::string_view("onWheel") && requires(Object& object) { object.on_wheel; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_wheel)>>{};
@@ -3486,6 +3492,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("parentReferenceId") && requires(Object& object) { object.parent_reference_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().parent_reference_id)>>{};
   else if constexpr (Key::name.view() == std::string_view("parentWindow") && requires(Object& object) { object.parent_window; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().parent_window)>>{};
   else if constexpr (Key::name.view() == std::string_view("parse") && requires(Object& object) { object.parse; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().parse)>>{};
+  else if constexpr (Key::name.view() == std::string_view("parseError") && requires(Object& object) { object.parse_error; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().parse_error)>>{};
   else if constexpr (Key::name.view() == std::string_view("particleCount") && requires(Object& object) { object.particle_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().particle_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("particleLifespan") && requires(Object& object) { object.particle_lifespan; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().particle_lifespan)>>{};
   else if constexpr (Key::name.view() == std::string_view("particleLifespanVariance") && requires(Object& object) { object.particle_lifespan_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().particle_lifespan_variance)>>{};
@@ -4136,6 +4143,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("unresolved") && requires(Object& object) { object.unresolved; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().unresolved)>>{};
   else if constexpr (Key::name.view() == std::string_view("unresolvedIndexes") && requires(Object& object) { object.unresolved_indexes; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().unresolved_indexes)>>{};
   else if constexpr (Key::name.view() == std::string_view("unselectedState") && requires(Object& object) { object.unselected_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().unselected_state)>>{};
+  else if constexpr (Key::name.view() == std::string_view("unsubscribe") && requires(Object& object) { object.unsubscribe; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().unsubscribe)>>{};
   else if constexpr (Key::name.view() == std::string_view("unsupportedFields") && requires(Object& object) { object.unsupported_fields; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().unsupported_fields)>>{};
   else if constexpr (Key::name.view() == std::string_view("up") && requires(Object& object) { object.up; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().up)>>{};
   else if constexpr (Key::name.view() == std::string_view("upState") && requires(Object& object) { object.up_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().up_state)>>{};
@@ -4269,6 +4277,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->aac; }) owner.bind_named("aac", [object]() -> decltype(auto) { return (object->aac); });
   if constexpr (requires { object->aberration; }) owner.bind_named("aberration", [object]() -> decltype(auto) { return (object->aberration); });
   if constexpr (requires { object->absolute; }) owner.bind_named("absolute", [object]() -> decltype(auto) { return (object->absolute); });
+  if constexpr (requires { object->accelerator; }) owner.bind_named("accelerator", [object]() -> decltype(auto) { return (object->accelerator); });
   if constexpr (requires { object->accessibility; }) owner.bind_named("accessibility", [object]() -> decltype(auto) { return (object->accessibility); });
   if constexpr (requires { object->accuracy; }) owner.bind_named("accuracy", [object]() -> decltype(auto) { return (object->accuracy); });
   if constexpr (requires { object->acquire; }) owner.bind_named("acquire", [object]() -> decltype(auto) { return (object->acquire); });
@@ -5566,6 +5575,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->on_text_input; }) owner.bind_named("onTextInput", [object]() -> decltype(auto) { return (object->on_text_input); });
   if constexpr (requires { object->on_thermal_state_change; }) owner.bind_named("onThermalStateChange", [object]() -> decltype(auto) { return (object->on_thermal_state_change); });
   if constexpr (requires { object->on_tick; }) owner.bind_named("onTick", [object]() -> decltype(auto) { return (object->on_tick); });
+  if constexpr (requires { object->on_trigger; }) owner.bind_named("onTrigger", [object]() -> decltype(auto) { return (object->on_trigger); });
   if constexpr (requires { object->on_unlock_screen; }) owner.bind_named("onUnlockScreen", [object]() -> decltype(auto) { return (object->on_unlock_screen); });
   if constexpr (requires { object->on_update; }) owner.bind_named("onUpdate", [object]() -> decltype(auto) { return (object->on_update); });
   if constexpr (requires { object->on_wheel; }) owner.bind_named("onWheel", [object]() -> decltype(auto) { return (object->on_wheel); });
@@ -5609,6 +5619,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->parent_reference_id; }) owner.bind_named("parentReferenceId", [object]() -> decltype(auto) { return (object->parent_reference_id); });
   if constexpr (requires { object->parent_window; }) owner.bind_named("parentWindow", [object]() -> decltype(auto) { return (object->parent_window); });
   if constexpr (requires { object->parse; }) owner.bind_named("parse", [object]() -> decltype(auto) { return (object->parse); });
+  if constexpr (requires { object->parse_error; }) owner.bind_named("parseError", [object]() -> decltype(auto) { return (object->parse_error); });
   if constexpr (requires { object->particle_count; }) owner.bind_named("particleCount", [object]() -> decltype(auto) { return (object->particle_count); });
   if constexpr (requires { object->particle_lifespan; }) owner.bind_named("particleLifespan", [object]() -> decltype(auto) { return (object->particle_lifespan); });
   if constexpr (requires { object->particle_lifespan_variance; }) owner.bind_named("particleLifespanVariance", [object]() -> decltype(auto) { return (object->particle_lifespan_variance); });
@@ -6259,6 +6270,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->unresolved; }) owner.bind_named("unresolved", [object]() -> decltype(auto) { return (object->unresolved); });
   if constexpr (requires { object->unresolved_indexes; }) owner.bind_named("unresolvedIndexes", [object]() -> decltype(auto) { return (object->unresolved_indexes); });
   if constexpr (requires { object->unselected_state; }) owner.bind_named("unselectedState", [object]() -> decltype(auto) { return (object->unselected_state); });
+  if constexpr (requires { object->unsubscribe; }) owner.bind_named("unsubscribe", [object]() -> decltype(auto) { return (object->unsubscribe); });
   if constexpr (requires { object->unsupported_fields; }) owner.bind_named("unsupportedFields", [object]() -> decltype(auto) { return (object->unsupported_fields); });
   if constexpr (requires { object->up; }) owner.bind_named("up", [object]() -> decltype(auto) { return (object->up); });
   if constexpr (requires { object->up_state; }) owner.bind_named("upState", [object]() -> decltype(auto) { return (object->up_state); });
@@ -6425,6 +6437,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(aac)
   FLIGHT_SDK_ROW_WIDENS(aberration)
   FLIGHT_SDK_ROW_WIDENS(absolute)
+  FLIGHT_SDK_ROW_WIDENS(accelerator)
   FLIGHT_SDK_ROW_WIDENS(accessibility)
   FLIGHT_SDK_ROW_WIDENS(accuracy)
   FLIGHT_SDK_ROW_WIDENS(acquire)
@@ -7722,6 +7735,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(on_text_input)
   FLIGHT_SDK_ROW_WIDENS(on_thermal_state_change)
   FLIGHT_SDK_ROW_WIDENS(on_tick)
+  FLIGHT_SDK_ROW_WIDENS(on_trigger)
   FLIGHT_SDK_ROW_WIDENS(on_unlock_screen)
   FLIGHT_SDK_ROW_WIDENS(on_update)
   FLIGHT_SDK_ROW_WIDENS(on_wheel)
@@ -7765,6 +7779,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(parent_reference_id)
   FLIGHT_SDK_ROW_WIDENS(parent_window)
   FLIGHT_SDK_ROW_WIDENS(parse)
+  FLIGHT_SDK_ROW_WIDENS(parse_error)
   FLIGHT_SDK_ROW_WIDENS(particle_count)
   FLIGHT_SDK_ROW_WIDENS(particle_lifespan)
   FLIGHT_SDK_ROW_WIDENS(particle_lifespan_variance)
@@ -8415,6 +8430,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(unresolved)
   FLIGHT_SDK_ROW_WIDENS(unresolved_indexes)
   FLIGHT_SDK_ROW_WIDENS(unselected_state)
+  FLIGHT_SDK_ROW_WIDENS(unsubscribe)
   FLIGHT_SDK_ROW_WIDENS(unsupported_fields)
   FLIGHT_SDK_ROW_WIDENS(up)
   FLIGHT_SDK_ROW_WIDENS(up_state)

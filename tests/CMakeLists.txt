@@ -267,6 +267,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_menu_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_menu COMMAND flight_cpp_generated_menu_tests)
 
+add_executable(flight_cpp_generated_shortcut_tests generated_shortcut_test.cpp)
+target_include_directories(
+  flight_cpp_generated_shortcut_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_shortcut_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_shortcut COMMAND flight_cpp_generated_shortcut_tests)
+
 add_executable(flight_cpp_generated_connectivity_tests generated_connectivity_test.cpp)
 target_include_directories(
   flight_cpp_generated_connectivity_tests
@@ -460,6 +468,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_mediasession mediasession)
 flight_cpp_package_test_labels(flight_cpp.generated_midi midi)
 flight_cpp_package_test_labels(flight_cpp.generated_dialog_modules dialog)
 flight_cpp_package_test_labels(flight_cpp.generated_menu menu)
+flight_cpp_package_test_labels(flight_cpp.generated_shortcut shortcut)
 flight_cpp_package_test_labels(flight_cpp.generated_video video)
 flight_cpp_package_test_labels(flight_cpp.generated_connectivity connectivity)
 flight_cpp_package_test_labels(flight_cpp.generated_share share)

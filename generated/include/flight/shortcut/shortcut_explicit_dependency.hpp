@@ -3,11 +3,12 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
+//   missing: variable (binding) -- source line 31
+//   missing: variable (binding) -- source line 32
+//   missing: variable (binding) -- source line 33
 //   missing: function attachGlobalShortcut -- source line 44
-//   missing: function formatParsedAccelerator -- source line 163
 #include <coroutine>
 #include <exception>
-#include <flight/erased_ref.hpp>
 #include <flight/structural_ref.hpp>
 #include <flight/weak_map.hpp>
 #include <functional>
@@ -19,54 +20,65 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/signals/slot.hpp>
-
 #include <flight/signals/signal.hpp>
 
 #include <flight/types/shortcut.hpp>
 
 #include <flight/types/parsed_accelerator.hpp>
 
-#include <flight/types/entity.hpp>
-
 #include <flight/types/accelerator_parse_error.hpp>
 
-#include <flight/types/accelerator.hpp>
-
-#include <flight/entity/entity.hpp>
+namespace flight::types { struct AcceleratorParseError; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct GlobalShortcut; }
+namespace flight::types { struct HostShortcutQueryCapability; }
+namespace flight::types { struct HostShortcutTriggerCapability; }
+namespace flight::types { struct ParsedAccelerator; }
+namespace flight::types { struct ShortcutTriggerSubscription; }
+namespace flight::types { struct ShortcutTriggerUnsubscribeOutcome; }
+namespace flight::types { template <typename T> struct Signal; }
 
 namespace flight::shortcut {
 
-using flight::signals::clear_signal;
-
 using flight::signals::create_signal;
 
-using flight::types::Accelerator;
 using flight::types::AcceleratorParseError;
-using flight::types::CreateGlobalShortcutOutcome;
-using flight::types::EntityConstruction;
 using flight::types::GlobalShortcut;
 using flight::types::GlobalShortcutAttachOutcome;
-using flight::types::GlobalShortcutDetachOutcome;
 using flight::types::GlobalShortcutQueryOutcome;
 using flight::types::HostShortcutQueryCapability;
 using flight::types::HostShortcutTriggerCapability;
 using flight::types::ParsedAccelerator;
 using flight::types::ShortcutTriggerSubscription;
-
-using flight::entity::allocate_entity;
-using flight::entity::finish_entity;
 struct GlobalShortcutAttachment;
 } // namespace flight::shortcut
 
+#include <flight/entity/entity.hpp>
+#include <flight/signals/emitter.hpp>
+#include <flight/signals/signal.hpp>
+#include <flight/signals/slot.hpp>
+#include <flight/types/accelerator.hpp>
+#include <flight/types/accelerator_parse_error.hpp>
+#include <flight/types/entity.hpp>
+#include <flight/types/non_entity_create_result.hpp>
+#include <flight/types/parsed_accelerator.hpp>
+#include <flight/types/shortcut.hpp>
+#include <flight/types/shortcut_key_name.hpp>
+#include <flight/types/shortcut_modifier.hpp>
+#include <flight/types/signal.hpp>
 #include <flight/shortcut/shortcut.hpp>
 
 namespace flight::shortcut {
 
 struct GlobalShortcutAttachment : public flight::ReferenceEnabled {
-  flight::Ref<HostShortcutTriggerCapability> provider;
-  flight::Ref<ShortcutTriggerSubscription> subscription;
+  flight::Ref<flight::types::HostShortcutTriggerCapability> provider;
+  flight::Ref<flight::types::ShortcutTriggerSubscription> subscription;
 };
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_B3999EADECA23809
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_B3999EADECA23809
+using reason_b3999eadeca23809 = flight::types::reason_b3999eadeca23809;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_B3999EADECA23809
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_E78BC865CC377071
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_E78BC865CC377071
@@ -75,7 +87,7 @@ struct reason_e78bc865cc377071 : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_E78BC865CC377071
 
-inline flight::Ref<GlobalShortcutAttachOutcome> already_attached = flight::structural_ref_cast<flight::Ref<GlobalShortcutAttachOutcome>>(flight::make_ref<reason_e78bc865cc377071>(reason_e78bc865cc377071{.reason = flight::String("already-attached")}));
+inline flight::types::GlobalShortcutAttachOutcome already_attached = flight::structural_ref_cast<flight::types::GlobalShortcutAttachOutcome>(flight::make_ref<reason_e78bc865cc377071>(reason_e78bc865cc377071{.reason = flight::String("already-attached")}));
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_188E8EB9B943F82D
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_188E8EB9B943F82D
@@ -84,7 +96,7 @@ struct reason_188e8eb9b943f82d : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_188E8EB9B943F82D
 
-inline flight::Ref<GlobalShortcutAttachOutcome> already_registered = flight::structural_ref_cast<flight::Ref<GlobalShortcutAttachOutcome>>(flight::make_ref<reason_188e8eb9b943f82d>(reason_188e8eb9b943f82d{.reason = flight::String("already-registered")}));
+inline flight::types::GlobalShortcutAttachOutcome already_registered = flight::structural_ref_cast<flight::types::GlobalShortcutAttachOutcome>(flight::make_ref<reason_188e8eb9b943f82d>(reason_188e8eb9b943f82d{.reason = flight::String("already-registered")}));
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_796E7E6CAA240480
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_796E7E6CAA240480
@@ -93,7 +105,12 @@ struct reason_796e7e6caa240480 : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_796E7E6CAA240480
 
-inline flight::Ref<GlobalShortcutAttachOutcome> attached = flight::structural_ref_cast<flight::Ref<GlobalShortcutAttachOutcome>>(flight::make_ref<reason_796e7e6caa240480>(reason_796e7e6caa240480{.reason = flight::String("attached")}));
+inline flight::types::GlobalShortcutAttachOutcome attached = flight::structural_ref_cast<flight::types::GlobalShortcutAttachOutcome>(flight::make_ref<reason_796e7e6caa240480>(reason_796e7e6caa240480{.reason = flight::String("attached")}));
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_3CFF4E0108D25BFD
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_3CFF4E0108D25BFD
+using reason_3cff4e0108d25bfd = flight::types::reason_3cff4e0108d25bfd;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_3CFF4E0108D25BFD
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_33A3530EC6EE8932
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_33A3530EC6EE8932
@@ -102,7 +119,7 @@ struct reason_33a3530ec6ee8932 : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_33A3530EC6EE8932
 
-inline flight::Ref<GlobalShortcutDetachOutcome> detached = flight::structural_ref_cast<flight::Ref<GlobalShortcutDetachOutcome>>(flight::make_ref<reason_33a3530ec6ee8932>(reason_33a3530ec6ee8932{.reason = flight::String("detached")}));
+inline flight::types::GlobalShortcutDetachOutcome detached = flight::structural_ref_cast<flight::types::GlobalShortcutDetachOutcome>(flight::make_ref<reason_33a3530ec6ee8932>(reason_33a3530ec6ee8932{.reason = flight::String("detached")}));
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_D5B5AFE22E2ABA7E
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_D5B5AFE22E2ABA7E
@@ -111,7 +128,7 @@ struct reason_d5b5afe22e2aba7e : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_D5B5AFE22E2ABA7E
 
-inline flight::Ref<GlobalShortcutAttachOutcome> native_refused = flight::structural_ref_cast<flight::Ref<GlobalShortcutAttachOutcome>>(flight::make_ref<reason_d5b5afe22e2aba7e>(reason_d5b5afe22e2aba7e{.reason = flight::String("native-refused")}));
+inline flight::types::GlobalShortcutAttachOutcome native_refused = flight::structural_ref_cast<flight::types::GlobalShortcutAttachOutcome>(flight::make_ref<reason_d5b5afe22e2aba7e>(reason_d5b5afe22e2aba7e{.reason = flight::String("native-refused")}));
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_8B6A22B80E81421C
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_8B6A22B80E81421C
@@ -120,34 +137,31 @@ struct reason_8b6a22b80e81421c : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_8B6A22B80E81421C
 
-inline flight::Ref<GlobalShortcutDetachOutcome> not_attached = flight::structural_ref_cast<flight::Ref<GlobalShortcutDetachOutcome>>(flight::make_ref<reason_8b6a22b80e81421c>(reason_8b6a22b80e81421c{.reason = flight::String("not-attached")}));
+inline flight::types::GlobalShortcutDetachOutcome not_attached = flight::structural_ref_cast<flight::types::GlobalShortcutDetachOutcome>(flight::make_ref<reason_8b6a22b80e81421c>(reason_8b6a22b80e81421c{.reason = flight::String("not-attached")}));
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_E925F6482B83AA54
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_E925F6482B83AA54
-struct reason_e925f6482b83aa54 : public flight::ReferenceEnabled {
-  flight::String reason;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_E925F6482B83AA54
 
-inline flight::Ref<GlobalShortcutQueryOutcome> not_registered = flight::structural_ref_cast<flight::Ref<GlobalShortcutQueryOutcome>>(flight::make_ref<reason_e925f6482b83aa54>(reason_e925f6482b83aa54{.reason = flight::String("not-registered")}));
+// NOT GENERATED: variable (binding) -- source line 31
+//
+// The source it stood for:
+//   const NOT_REGISTERED = Object.freeze({ reason: 'not-registered' }) as GlobalShortcutQueryOutcome;
+// cpp emission failed for @flighthq/shortcut/packages/shortcut/src/shortcutExplicitDependency.ts: structural-row
+// projection requires a represented object-reference target
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_1F478934844018D8
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_1F478934844018D8
-struct reason_1f478934844018d8 : public flight::ReferenceEnabled {
-  flight::String reason;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_1F478934844018D8
 
-inline flight::Ref<GlobalShortcutQueryOutcome> query_provider_failed = flight::structural_ref_cast<flight::Ref<GlobalShortcutQueryOutcome>>(flight::make_ref<reason_1f478934844018d8>(reason_1f478934844018d8{.reason = flight::String("query-provider-failed")}));
+// NOT GENERATED: variable (binding) -- source line 32
+//
+// The source it stood for:
+//   const QUERY_PROVIDER_FAILED = Object.freeze({ reason: 'query-provider-failed' }) as GlobalShortcutQueryOutcome;
+// cpp emission failed for @flighthq/shortcut/packages/shortcut/src/shortcutExplicitDependency.ts: structural-row
+// projection requires a represented object-reference target
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_C00F9F0CD1DDDE48
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_C00F9F0CD1DDDE48
-struct reason_c00f9f0cd1ddde48 : public flight::ReferenceEnabled {
-  flight::String reason;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_C00F9F0CD1DDDE48
 
-inline flight::Ref<GlobalShortcutQueryOutcome> registered = flight::structural_ref_cast<flight::Ref<GlobalShortcutQueryOutcome>>(flight::make_ref<reason_c00f9f0cd1ddde48>(reason_c00f9f0cd1ddde48{.reason = flight::String("registered")}));
+// NOT GENERATED: variable (binding) -- source line 33
+//
+// The source it stood for:
+//   const REGISTERED = Object.freeze({ reason: 'registered' }) as GlobalShortcutQueryOutcome;
+// cpp emission failed for @flighthq/shortcut/packages/shortcut/src/shortcutExplicitDependency.ts: structural-row
+// projection requires a represented object-reference target
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_EE505317D5309B73
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_EE505317D5309B73
@@ -156,7 +170,7 @@ struct reason_ee505317d5309b73 : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_EE505317D5309B73
 
-inline flight::Ref<GlobalShortcutAttachOutcome> registration_in_progress = flight::structural_ref_cast<flight::Ref<GlobalShortcutAttachOutcome>>(flight::make_ref<reason_ee505317d5309b73>(reason_ee505317d5309b73{.reason = flight::String("registration-in-progress")}));
+inline flight::types::GlobalShortcutAttachOutcome registration_in_progress = flight::structural_ref_cast<flight::types::GlobalShortcutAttachOutcome>(flight::make_ref<reason_ee505317d5309b73>(reason_ee505317d5309b73{.reason = flight::String("registration-in-progress")}));
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_D1E4B1D002B56DEC
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_D1E4B1D002B56DEC
@@ -165,47 +179,19 @@ struct reason_d1e4b1d002b56dec : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_D1E4B1D002B56DEC
 
-inline flight::Ref<GlobalShortcutAttachOutcome> trigger_attach_failed = flight::structural_ref_cast<flight::Ref<GlobalShortcutAttachOutcome>>(flight::make_ref<reason_d1e4b1d002b56dec>(reason_d1e4b1d002b56dec{.reason = flight::String("trigger-provider-failed")}));
+inline flight::types::GlobalShortcutAttachOutcome trigger_attach_failed = flight::structural_ref_cast<flight::types::GlobalShortcutAttachOutcome>(flight::make_ref<reason_d1e4b1d002b56dec>(reason_d1e4b1d002b56dec{.reason = flight::String("trigger-provider-failed")}));
 
-inline flight::Ref<GlobalShortcutDetachOutcome> trigger_detach_failed = flight::structural_ref_cast<flight::Ref<GlobalShortcutDetachOutcome>>(flight::make_ref<reason_d1e4b1d002b56dec>(reason_d1e4b1d002b56dec{.reason = flight::String("trigger-provider-failed")}));
+inline flight::types::GlobalShortcutDetachOutcome trigger_detach_failed = flight::structural_ref_cast<flight::types::GlobalShortcutDetachOutcome>(flight::make_ref<reason_d1e4b1d002b56dec>(reason_d1e4b1d002b56dec{.reason = flight::String("trigger-provider-failed")}));
 
-inline flight::WeakMap<flight::Ref<GlobalShortcut>, flight::Ref<GlobalShortcutAttachment>> attachments = flight::WeakMap<flight::Ref<GlobalShortcut>, flight::Ref<GlobalShortcutAttachment>>();
+inline flight::WeakMap<flight::Ref<flight::types::GlobalShortcut>, flight::Ref<GlobalShortcutAttachment>> attachments = flight::WeakMap<flight::Ref<flight::types::GlobalShortcut>, flight::Ref<GlobalShortcutAttachment>>();
 
-inline flight::Map<flight::Ref<Accelerator>, flight::Ref<GlobalShortcut>> attached_by_accelerator = flight::Map<flight::Ref<Accelerator>, flight::Ref<GlobalShortcut>>();
+inline flight::Map<flight::String, flight::Ref<flight::types::GlobalShortcut>> attached_by_accelerator = flight::Map<flight::String, flight::Ref<flight::types::GlobalShortcut>>();
 
-inline flight::Set<flight::Ref<Accelerator>> pending_accelerators = flight::Set<flight::Ref<Accelerator>>();
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_4890F49C03969010
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_4890F49C03969010
-using reason_4890f49c03969010 = flight::types::reason_4890f49c03969010;
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_4890F49C03969010
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_BINDING_UID_06E64A362B012722
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_BINDING_UID_06E64A362B012722
-struct binding_uid_06e64a362b012722 : public flight::ReferenceEnabled {
-  std::optional<flight::ErasedRef> binding;
-  std::optional<flight::String> uid;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_BINDING_UID_06E64A362B012722
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_ENTITY_RUNTIME_KEY_0D35DD407CB64604
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_ENTITY_RUNTIME_KEY_0D35DD407CB64604
-struct entity_runtime_key_0d35dd407cb64604 : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<binding_uid_06e64a362b012722>> entity_runtime_key;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_ENTITY_RUNTIME_KEY_0D35DD407CB64604
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_SUBSCRIPTION_AAD5BB6F4CFBAB8B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_SUBSCRIPTION_AAD5BB6F4CFBAB8B
-struct reason_subscription_aad5bb6f4cfbab8b : public flight::ReferenceEnabled {
-  flight::String reason;
-  flight::Ref<entity_runtime_key_0d35dd407cb64604> subscription;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_SUBSCRIPTION_AAD5BB6F4CFBAB8B
+inline flight::Set<flight::String> pending_accelerators = flight::Set<flight::String>();
 
 
 // NOT GENERATED: function attachGlobalShortcut -- source line 44
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-contextual-union-inequivalent [target-runtime]
 //
 // The source it stood for:
 //   export async function attachGlobalShortcut(
@@ -245,29 +231,32 @@ struct reason_subscription_aad5bb6f4cfbab8b : public flight::ReferenceEnabled {
 //   // Creates the consumer Entity only after parsing and normalization succeed. Malformed input is a core
 //   // value error and cannot reach a provider. The outcome itself is a plain-data result — the entity it
 //   // carries on the success arm is the Flight object; the union is how the failure arm is reported.
-// cpp emission failed for @flighthq/shortcut/packages/shortcut/src/shortcutExplicitDependency.ts: contextual
-// union value type flight::Ref<ShortcutTriggerSubscribeOutcome> is not a represented runtime domain
+// cpp emission failed for @flighthq/shortcut/packages/shortcut/src/shortcutExplicitDependency.ts: contextual C++
+// union conversion requires equivalent source union evidence: target multiVariant carriers
+// [flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_4890f49c03969010>>>>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_subscription_aad5bb6f4cfbab8b>>>>]
+// from await source multiVariant carriers
+// [flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_4890f49c03969010>>>>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_subscription_c16c6a57c767b33b>>>>].
+// The alternatives match uniquely, but no checked target-runtime conversion exists between their C++ carriers.
+// Keep both sides on the same declared union alias; for a Map or WeakMap lookup followed by a rebind, construct
+// its declared value owner and ensure every rebound member already has that owner member's carrier -- a Readonly
+// structural view does not become a mutable nominal Ref. Otherwise add an identity-preserving runtime conversion
+// contract.
 
-inline flight::Task<void> destroy_shortcut_trigger(flight::Ref<HostShortcutTriggerCapability> host_shortcut_trigger) {
-  return host_shortcut_trigger->destroy();
+inline flight::Task<void> destroy_shortcut_trigger(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostShortcutTriggerCapability>>>> host_shortcut_trigger) {
+  return flight::row_get<flight::RowKey<"destroy">>(host_shortcut_trigger)();
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_60627BAE3A4F1392
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_60627BAE3A4F1392
-struct reason_60627bae3a4f1392 : public flight::ReferenceEnabled {
-  flight::String reason;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_60627BAE3A4F1392
-
-inline flight::Task<flight::Ref<GlobalShortcutDetachOutcome>> detach_global_shortcut(flight::Ref<HostShortcutTriggerCapability> host_shortcut_trigger, flight::Ref<GlobalShortcut> shortcut) {
+inline flight::Task<flight::types::GlobalShortcutDetachOutcome> detach_global_shortcut(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostShortcutTriggerCapability>>>> host_shortcut_trigger, flight::Ref<flight::types::GlobalShortcut> shortcut) {
   auto attachment = attachments.get(shortcut);
   if (!attachment.has_value()) {
     co_return not_attached;
   }
-  flight::Ref<HostShortcutTriggerCapability> selected = host_shortcut_trigger;
-  flight::Ref<HostShortcutTriggerCapability> provider = ((selected == attachment.value()->provider) ? selected : attachment.value()->provider);
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostShortcutTriggerCapability>>>> selected = host_shortcut_trigger;
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostShortcutTriggerCapability>>>> provider = ((selected == flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostShortcutTriggerCapability>>>>(attachment.value()->provider)) ? selected : flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostShortcutTriggerCapability>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::HostShortcutTriggerCapability>>>>(attachment.value()->provider)));
   try {
-    flight::Ref<reason_60627bae3a4f1392> outcome = co_await provider->unsubscribe(attachment.value()->subscription);
+    auto outcome = co_await flight::row_get<flight::RowKey<"unsubscribe">>(provider)(attachment.value()->subscription);
     if ((outcome->reason != flight::String("unsubscribed"))) {
       co_return trigger_detach_failed;
     }
@@ -282,8 +271,8 @@ inline flight::Task<flight::Ref<GlobalShortcutDetachOutcome>> detach_global_shor
   co_return detached;
 }
 
-inline flight::Task<flight::Ref<GlobalShortcutDetachOutcome>> dispose_global_shortcut(flight::Ref<HostShortcutTriggerCapability> host_shortcut_trigger, flight::Ref<GlobalShortcut> shortcut) {
-  std::optional<flight::Ref<GlobalShortcutDetachOutcome>> finally_return_2;
+inline flight::Task<flight::types::GlobalShortcutDetachOutcome> dispose_global_shortcut(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostShortcutTriggerCapability>>>> host_shortcut_trigger, flight::Ref<flight::types::GlobalShortcut> shortcut) {
+  std::optional<flight::types::GlobalShortcutDetachOutcome> finally_return_2;
   std::exception_ptr finally_exception_2;
   try {
     finally_return_2 = co_await detach_global_shortcut(host_shortcut_trigger, shortcut);
@@ -291,52 +280,57 @@ inline flight::Task<flight::Ref<GlobalShortcutDetachOutcome>> dispose_global_sho
   catch (...) {
     finally_exception_2 = std::current_exception();
   }
-  clear_signal(shortcut->on_trigger);
+  flight::signals::clear_signal<std::function<void()>>(shortcut->on_trigger);
   if (finally_exception_2) std::rethrow_exception(finally_exception_2);
   if (finally_return_2.has_value()) co_return finally_return_2.value();
   co_await std::suspend_never{};
   throw std::logic_error("Flight async function completed without a value");
 }
 
-inline void initialize_global_shortcut(flight::Ref<EntityConstruction<flight::Ref<GlobalShortcut>>> out, flight::Ref<Accelerator> accelerator) {
-  (out->accelerator = accelerator);
-  (out->on_trigger = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_trigger)>::element_type>>());
+inline void initialize_global_shortcut(flight::types::EntityConstruction<flight::Ref<flight::types::GlobalShortcut>> out, flight::String accelerator) {
+  flight::row_set<flight::RowKey<"accelerator">>(out, accelerator);
+  flight::row_set<flight::RowKey<"onTrigger">>(out, flight::signals::create_signal<std::function<void()>>());
 }
 
-
-// NOT GENERATED: function formatParsedAccelerator -- source line 163
-//
-// The source it stood for:
-//   function formatParsedAccelerator(parsed: Readonly<ParsedAccelerator>): Accelerator {
-//     if (parsed.modifiers.length === 0) return parsed.key;
-//     return [...parsed.modifiers, parsed.key].join('+');
-//   }
-//   
-// cpp emission failed for @flighthq/shortcut/packages/shortcut/src/shortcutExplicitDependency.ts: array spread
-// requires contextual or iterable element type evidence
-
-inline flight::Ref<CreateGlobalShortcutOutcome> create_global_shortcut(flight::String accelerator) {
-  flight::Ref<ParsedAccelerator> parsed = make_parsed_accelerator();
-  std::variant<flight::Ref<ParsedAccelerator>, flight::Ref<AcceleratorParseError>> outcome = parse_accelerator_detailed(accelerator, parsed);
-  if (outcome.index() == 1) {
-    return flight::make_ref<CreateGlobalShortcutOutcome>(CreateGlobalShortcutOutcome{.parse_error = std::get<1>(outcome), .reason = flight::String("unparseable")});
+inline flight::String format_parsed_accelerator(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParsedAccelerator>>>> parsed) {
+  if ((static_cast<double>(flight::row_get<flight::RowKey<"modifiers">>(parsed).size()) == 0.0)) {
+    return flight::row_get<flight::RowKey<"key">>(parsed);
   }
-  return flight::make_ref<CreateGlobalShortcutOutcome>(CreateGlobalShortcutOutcome{.reason = flight::String("created"), .shortcut = ([=]() {
-  flight::Ref<EntityConstruction<flight::Ref<GlobalShortcut>>> out = allocate_entity<flight::Ref<GlobalShortcut>>();
-  initialize_global_shortcut(out, format_parsed_accelerator(std::get<0>(outcome)));
-  return finish_entity(out);
-})()});
+  return ([&]() { flight::Array<flight::types::ShortcutModifier> array_spread_result; for (const auto& array_spread_item : flight::row_get<flight::RowKey<"modifiers">>(parsed)) { array_spread_result.push(array_spread_item); } array_spread_result.push(flight::row_get<flight::RowKey<"key">>(parsed)); return array_spread_result; }()).join(flight::String("+"));
 }
 
-inline flight::Task<flight::Ref<GlobalShortcutQueryOutcome>> query_global_shortcut_registration(flight::Ref<HostShortcutQueryCapability> host_shortcut_query, flight::String accelerator) {
-  flight::Ref<ParsedAccelerator> parsed = make_parsed_accelerator();
-  std::variant<flight::Ref<ParsedAccelerator>, flight::Ref<AcceleratorParseError>> outcome = parse_accelerator_detailed(accelerator, parsed);
+inline flight::types::CreateGlobalShortcutOutcome create_global_shortcut(flight::String accelerator) {
+  auto parsed = flight::shortcut::make_parsed_accelerator();
+  std::variant<flight::Ref<flight::types::ParsedAccelerator>, flight::Ref<flight::types::AcceleratorParseError>> outcome = flight::shortcut::parse_accelerator_detailed(accelerator, parsed);
   if (outcome.index() == 1) {
-    co_return flight::make_ref<GlobalShortcutQueryOutcome>(GlobalShortcutQueryOutcome{.parse_error = std::get<1>(outcome), .reason = flight::String("unparseable")});
+    return std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::parse_error_reason_541454762c1ce542>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::reason_shortcut_760c69092525ee35>>>>>{std::in_place_type<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::parse_error_reason_541454762c1ce542>>>>>, flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::parse_error_reason_541454762c1ce542>>>>(flight::row_field<flight::RowKey<"parseError">>(std::get<1>(outcome)), flight::row_field<flight::RowKey<"reason">>(flight::String("unparseable")))};
+  }
+  return std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::parse_error_reason_541454762c1ce542>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::reason_shortcut_760c69092525ee35>>>>>{std::in_place_type<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::reason_shortcut_760c69092525ee35>>>>>, flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::reason_shortcut_760c69092525ee35>>>>(flight::row_field<flight::RowKey<"reason">>(flight::String("created")), flight::row_field<flight::RowKey<"shortcut">>(([&]() -> flight::Ref<flight::types::GlobalShortcut> { const auto structural_record_source = ([=]() {
+  flight::types::EntityConstruction<flight::Ref<flight::types::GlobalShortcut>> out = flight::entity::allocate_entity<flight::Ref<flight::types::GlobalShortcut>>();
+  initialize_global_shortcut(out, format_parsed_accelerator(std::get<0>(outcome)));
+  return flight::entity::finish_entity(out);
+})(); return flight::make_ref<flight::types::GlobalShortcut>(flight::types::GlobalShortcut{.entity_runtime_key = structural_record_source->entity_runtime_key, .accelerator = structural_record_source->accelerator, .on_trigger = structural_record_source->on_trigger}); }())))};
+}
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_FBB74A314A7A269D
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_FBB74A314A7A269D
+using reason_fbb74a314a7a269d = flight::types::reason_fbb74a314a7a269d;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_REASON_FBB74A314A7A269D
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_PARSE_ERROR_REASON_541454762C1CE542
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_PARSE_ERROR_REASON_541454762C1CE542
+using parse_error_reason_541454762c1ce542 = flight::types::parse_error_reason_541454762c1ce542;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHORTCUT_PARSE_ERROR_REASON_541454762C1CE542
+
+inline flight::Task<flight::types::GlobalShortcutQueryOutcome> query_global_shortcut_registration(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostShortcutQueryCapability>>>> host_shortcut_query, flight::String accelerator) {
+  auto parsed = flight::shortcut::make_parsed_accelerator();
+  std::variant<flight::Ref<flight::types::ParsedAccelerator>, flight::Ref<flight::types::AcceleratorParseError>> outcome = flight::shortcut::parse_accelerator_detailed(accelerator, parsed);
+  if (outcome.index() == 1) {
+    co_return std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::parse_error_reason_541454762c1ce542>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::reason_fbb74a314a7a269d>>>>>{std::in_place_type<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::parse_error_reason_541454762c1ce542>>>>>, flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::parse_error_reason_541454762c1ce542>>>>(flight::row_field<flight::RowKey<"parseError">>(std::get<1>(outcome)), flight::row_field<flight::RowKey<"reason">>(flight::String("unparseable")))};
   }
   try {
     {
-      auto await_value = co_await host_shortcut_query->is_registered(format_parsed_accelerator(std::get<0>(outcome)));
+      auto await_value = co_await flight::row_get<flight::RowKey<"isRegistered">>(host_shortcut_query)(format_parsed_accelerator(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParsedAccelerator>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ParsedAccelerator>>>>(std::get<0>(outcome)))));
       co_return (await_value ? registered : not_registered);
     }
   }
@@ -345,7 +339,7 @@ inline flight::Task<flight::Ref<GlobalShortcutQueryOutcome>> query_global_shortc
   }
 }
 
-inline flight::Task<flight::Ref<GlobalShortcutQueryOutcome>> query_global_shortcut_conflict(flight::Ref<HostShortcutQueryCapability> host_shortcut_query, flight::String accelerator) {
+inline flight::Task<flight::types::GlobalShortcutQueryOutcome> query_global_shortcut_conflict(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostShortcutQueryCapability>>>> host_shortcut_query, flight::String accelerator) {
   co_return co_await query_global_shortcut_registration(host_shortcut_query, accelerator);
 }
 

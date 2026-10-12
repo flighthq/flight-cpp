@@ -155,23 +155,74 @@
       "appliesTo": "flight/render_gl/gl_draw.hpp",
       "namespace": "flight::types",
       "symbols": [
-        { "include": "flight/types/bitmap.hpp", "name": "Bitmap" },
-        { "include": "flight/types/blend_mode.hpp", "name": "BlendMode" },
-        { "include": "flight/types/compressed_image_resource.hpp", "name": "CompressedImageResource" },
-        { "include": "flight/types/gl_context.hpp", "name": "GlContext" },
-        { "include": "flight/types/gl_render_state.hpp", "name": "GlBlendRealization" },
-        { "include": "flight/types/gl_render_state.hpp", "name": "GlBlendSignature" },
-        { "include": "flight/types/gl_render_state.hpp", "name": "GlRenderState" },
-        { "include": "flight/types/gl_render_state.hpp", "name": "GlRenderStateRuntime" },
-        { "include": "flight/types/gl_texture_resolver.hpp", "name": "GlTextureRealization" },
-        { "include": "flight/types/image_resource.hpp", "name": "ImageResource" },
-        { "include": "flight/types/registry_table.hpp", "name": "RegistryEntryState" },
-        { "include": "flight/types/sampler.hpp", "name": "SamplerLike" },
-        { "include": "flight/types/texture.hpp", "name": "TextureColorSpace" },
-        { "include": "flight/types/sampler.hpp", "name": "TextureFilter" },
-        { "include": "flight/types/texture.hpp", "name": "TextureLike" },
-        { "include": "flight/types/texture_source.hpp", "name": "TextureSource" },
-        { "include": "flight/types/sampler.hpp", "name": "TextureWrap" }
+        {
+          "include": "flight/types/bitmap.hpp",
+          "name": "Bitmap"
+        },
+        {
+          "include": "flight/types/blend_mode.hpp",
+          "name": "BlendMode"
+        },
+        {
+          "include": "flight/types/compressed_image_resource.hpp",
+          "name": "CompressedImageResource"
+        },
+        {
+          "include": "flight/types/gl_context.hpp",
+          "name": "GlContext"
+        },
+        {
+          "include": "flight/types/gl_render_state.hpp",
+          "name": "GlBlendRealization"
+        },
+        {
+          "include": "flight/types/gl_render_state.hpp",
+          "name": "GlBlendSignature"
+        },
+        {
+          "include": "flight/types/gl_render_state.hpp",
+          "name": "GlRenderState"
+        },
+        {
+          "include": "flight/types/gl_render_state.hpp",
+          "name": "GlRenderStateRuntime"
+        },
+        {
+          "include": "flight/types/gl_texture_resolver.hpp",
+          "name": "GlTextureRealization"
+        },
+        {
+          "include": "flight/types/image_resource.hpp",
+          "name": "ImageResource"
+        },
+        {
+          "include": "flight/types/registry_table.hpp",
+          "name": "RegistryEntryState"
+        },
+        {
+          "include": "flight/types/sampler.hpp",
+          "name": "SamplerLike"
+        },
+        {
+          "include": "flight/types/texture.hpp",
+          "name": "TextureColorSpace"
+        },
+        {
+          "include": "flight/types/sampler.hpp",
+          "name": "TextureFilter"
+        },
+        {
+          "include": "flight/types/texture.hpp",
+          "name": "TextureLike"
+        },
+        {
+          "include": "flight/types/texture_source.hpp",
+          "name": "TextureSource"
+        },
+        {
+          "include": "flight/types/sampler.hpp",
+          "name": "TextureWrap"
+        }
       ],
       "diagnostic": "GlRenderState was not declared in this scope; did you mean flight::types::GlRenderState?",
       "defect": "The emitted render-gl draw module imports these types from @flighthq/types but writes their names unqualified inside flight::render_gl. Insert the includes and using-declarations represented by those source imports.",
@@ -1567,7 +1618,10 @@
       "appliesTo": "flight/requirement_codegen/requirement_codegen.hpp",
       "namespace": "flight::types",
       "symbols": [
-        { "include": "flight/types/requirement.hpp", "name": "Requirement" }
+        {
+          "include": "flight/types/requirement.hpp",
+          "name": "Requirement"
+        }
       ],
       "diagnostic": "use of undeclared identifier 'Requirement'",
       "defect": "The emitter writes flight::Ref<Requirement> unqualified inside namespace flight::requirement_codegen for requirementIdentity's parameter, while every other use in the header spells flight::types::Requirement. Collected by compiling the header with -ferror-limit=0: this is its only error at a627849.",
@@ -11982,11 +12036,26 @@
       "appliesTo": "flight/debug/",
       "namespace": "flight::log",
       "symbols": [
-        { "include": "flight/log/log.hpp", "name": "add_log_sink" },
-        { "include": "flight/log/log.hpp", "name": "clear_log_channel_level" },
-        { "include": "flight/log/log.hpp", "name": "remove_log_sink" },
-        { "include": "flight/log/log.hpp", "name": "set_log_channel_level" },
-        { "include": "flight/log/log.hpp", "name": "set_log_level" }
+        {
+          "include": "flight/log/log.hpp",
+          "name": "add_log_sink"
+        },
+        {
+          "include": "flight/log/log.hpp",
+          "name": "clear_log_channel_level"
+        },
+        {
+          "include": "flight/log/log.hpp",
+          "name": "remove_log_sink"
+        },
+        {
+          "include": "flight/log/log.hpp",
+          "name": "set_log_channel_level"
+        },
+        {
+          "include": "flight/log/log.hpp",
+          "name": "set_log_level"
+        }
       ],
       "diagnostic": "log helpers such as 'set_log_level' were not declared in this scope",
       "defect": "The emitter leaves functions imported from @flighthq/log unqualified inside namespace flight::debug and does not include their defining header.",
@@ -11999,8 +12068,14 @@
       "appliesTo": "flight/debug/",
       "namespace": "flight::render",
       "symbols": [
-        { "include": "flight/render/enable_color_adjustment_guards.hpp", "name": "enable_color_adjustment_guards" },
-        { "include": "flight/render/render_registry_guards.hpp", "name": "enable_render_registries_guards" }
+        {
+          "include": "flight/render/enable_color_adjustment_guards.hpp",
+          "name": "enable_color_adjustment_guards"
+        },
+        {
+          "include": "flight/render/render_registry_guards.hpp",
+          "name": "enable_render_registries_guards"
+        }
       ],
       "diagnostic": "render guard helpers were not declared in this scope",
       "defect": "The emitter leaves functions imported from @flighthq/render unqualified inside namespace flight::debug and does not include their defining headers.",
@@ -12095,13 +12170,34 @@
       "appliesTo": "flight/bitmapfont_formats/bitmap_font_json.hpp",
       "namespace": "flight::types",
       "symbols": [
-        { "include": "flight/types/bitmap_font.hpp", "name": "BitmapFont" },
-        { "include": "flight/types/bitmap_font_record.hpp", "name": "BitmapFontCharRecord" },
-        { "include": "flight/types/bitmap_font.hpp", "name": "BitmapFontEncoding" },
-        { "include": "flight/types/bitmap_font_record.hpp", "name": "BitmapFontKerningRecord" },
-        { "include": "flight/types/bitmap_font.hpp", "name": "BitmapFontParseOptions" },
-        { "include": "flight/types/bitmap_font_record.hpp", "name": "BitmapFontRecord" },
-        { "include": "flight/types/import_diagnostic.hpp", "name": "ImportDiagnostic" }
+        {
+          "include": "flight/types/bitmap_font.hpp",
+          "name": "BitmapFont"
+        },
+        {
+          "include": "flight/types/bitmap_font_record.hpp",
+          "name": "BitmapFontCharRecord"
+        },
+        {
+          "include": "flight/types/bitmap_font.hpp",
+          "name": "BitmapFontEncoding"
+        },
+        {
+          "include": "flight/types/bitmap_font_record.hpp",
+          "name": "BitmapFontKerningRecord"
+        },
+        {
+          "include": "flight/types/bitmap_font.hpp",
+          "name": "BitmapFontParseOptions"
+        },
+        {
+          "include": "flight/types/bitmap_font_record.hpp",
+          "name": "BitmapFontRecord"
+        },
+        {
+          "include": "flight/types/import_diagnostic.hpp",
+          "name": "ImportDiagnostic"
+        }
       ],
       "diagnostic": "imported bitmap-font types such as 'BitmapFontEncoding' and 'BitmapFontCharRecord' were not declared in this scope",
       "defect": "The emitter leaves the imported bitmap-font result, record, encoding, parse-option, and diagnostic types unqualified inside namespace flight::bitmapfont_formats while their defining generated headers own the names in flight::types.",
@@ -12206,7 +12302,9 @@
       "id": "animation-layer-stack-channel-array-row-write",
       "kind": "project-array-at-row-write",
       "appliesTo": "flight/animation/animation_layer_stack.hpp",
-      "keys": ["channels"],
+      "keys": [
+        "channels"
+      ],
       "element": "flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationLayerStackChannel>>>>",
       "identityArgument": "channels is a local created during stack initialization, is written once into the construction row as its final use, and is neither returned nor captured. array_of preserves every channel object identity while projecting only that unobservable local container handle.",
       "sourceDeclaration": "packages/animation/src/animationLayerStack.ts -- initializeAnimationLayerStack stores the locally built channel array into the stack's readonly channel member",
@@ -13497,6 +13595,18 @@
       "defect": "The type emitter flattens inherited interface fields into unrelated C++ owners: ColorMatrixAdjustment repeats Adjustment's fields and TintAdjustment repeats both, with no heritage. TypeScript widens a TintAdjustment to Adjustment implicitly, so setNodeColorAdjustmentsTint builds flight::Array<flight::Ref<Adjustment>>{create_tint_adjustment(tint)}, which has no conversion from Ref<TintAdjustment>. Restoring the declared interface heritage removes only duplicated member declarations; every field keeps its name, type and declaration order (entity_runtime_key, kind, color_matrix), and Ref<TintAdjustment> then converts to Ref<Adjustment> sharing the same object, which is the reference identity TypeScript has.",
       "expectedWhen": "always",
       "expires": "when emitted reference-backed interfaces retain declared interface heritage instead of duplicating inherited fields; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "structural-record-on-trigger-member-spelling",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/",
+      "from": ".onTrigger = structural_record_source->onTrigger",
+      "to": ".on_trigger = structural_record_source->on_trigger",
+      "sourceDeclaration": "packages/types/src/Shortcut.ts -- the Shortcut entity's onTrigger field is emitted as the C++ member on_trigger",
+      "diagnostic": "a structural-record materialization names onTrigger instead of the emitted on_trigger member",
+      "defect": "The structural-record materializer retains the TypeScript field spelling in both sides of a C++ designated member copy instead of using the normalized emitted member name. The same repair kind already covers EntityRuntimeKey, colorAttachments and surfaceOwnership; this is the Shortcut entity's remaining field.",
+      "expectedWhen": "always",
+      "expires": "when structural-record materialization consistently uses normalized emitted C++ member names; sdk:check fails if this repair matches no header"
     }
   ]
 }

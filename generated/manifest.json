@@ -784,7 +784,6 @@
         "flight/preferences/storage.hpp",
         "flight/quadbatch/quad_batch.hpp",
         "flight/scene2d/scene2d.hpp",
-        "flight/shortcut/shortcut_explicit_dependency.hpp",
         "flight/text/rich_text.hpp",
         "flight/tilemap/tilemap.hpp"
       ],
@@ -1622,9 +1621,7 @@
       "id": "share-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/shortcut/shortcut_explicit_dependency.hpp"
-      ],
+      "files": [],
       "id": "shortcut-unqualified-entity-names"
     },
     {
@@ -2859,9 +2856,7 @@
       "id": "share-unqualified-signals-names"
     },
     {
-      "files": [
-        "flight/shortcut/shortcut_explicit_dependency.hpp"
-      ],
+      "files": [],
       "id": "shortcut-unqualified-signals-names"
     },
     {
@@ -4041,7 +4036,8 @@
         "flight/scene3d_gl/gl_environment_cube.hpp",
         "flight/scene3d_wgpu/wgpu_pbr_pipeline_cache.hpp",
         "flight/scene3d_wgpu/wgpu_unlit_prelude.hpp",
-        "flight/scene3d_wgpu/wgpu_wireframe_prelude.hpp"
+        "flight/scene3d_wgpu/wgpu_wireframe_prelude.hpp",
+        "flight/shortcut/shortcut_explicit_dependency.hpp"
       ],
       "id": "structural-record-entity-runtime-key-member-spelling"
     },
@@ -4770,6 +4766,12 @@
         "flight/skeleton3d/skin_mesh_geometry.hpp"
       ],
       "id": "skeleton3d-mesh-weights-exact-geometry-owner"
+    },
+    {
+      "files": [
+        "flight/shortcut/shortcut_explicit_dependency.hpp"
+      ],
+      "id": "structural-record-on-trigger-member-spelling"
     }
   ],
   "sourcePatches": [
@@ -6069,11 +6071,14 @@
       "light_811413dfcb370a33",
       "min_x_min_y_max_x_max_y_kind_329d6080b4f31db4",
       "min_x_min_y_min_z_max_x_max_y_max_z_kind_748c675e8e0cf88a",
+      "parse_error_reason_541454762c1ce542",
       "points_kind_35a8f5f2a3a8bd66",
       "points_kind_9b00ebdad27cdb4e",
       "reason_01523507f7b21613",
+      "reason_3cff4e0108d25bfd",
       "reason_43a745d20647bfb6",
-      "reason_4890f49c03969010",
+      "reason_b3999eadeca23809",
+      "reason_fbb74a314a7a269d",
       "reflection_rotation_scale_translation_9dff6858eecb0eb4",
       "shape_edges_side_ad397097fb67afdb",
       "source_7d365186fbb687ba",
@@ -6452,7 +6457,6 @@
       "flight/shape/shape.hpp",
       "flight/shape/shape_bounds.hpp",
       "flight/shape_formats/shape_json.hpp",
-      "flight/shortcut/shortcut_explicit_dependency.hpp",
       "flight/signals/connection.hpp",
       "flight/signals/throttle.hpp",
       "flight/skeleton2d/deform_animation_target2_d.hpp",
@@ -6501,7 +6505,7 @@
       "flight/tilemap_formats/tiled_xml_parse.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 965
+    "includes": 964
   },
   "packages": [
     {
@@ -8016,7 +8020,7 @@
       "sourceModules": 3
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/shortcut",
       "cppNamespace": "flight::shortcut",
       "emittedModules": 3,
