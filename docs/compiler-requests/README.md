@@ -149,3 +149,12 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [`typeof` on a recursively union-typed value lowers to a constant comparison](compiler-typeof-narrowing-on-recursive-union.md)
   — `@flighthq/tokens`; the existing tokens-string-narrowing-binding patch no longer helps at a627849
   because it reaches the same fold.
+- [Readonly structural sequences stored as owning arrays](readonly-sequence-owning-array.md) — swf
+  timeline frames; font-formats CFF charstrings (supplied by override).
+- [Callables as arms of a contextual union](callable-arm-in-contextual-union.md) — four swf tag handlers.
+- [Narrowing must prove the payload present](narrowed-union-presence-proof.md) — swf parse-option merge;
+  font format inference (supplied by override).
+- [Intersections with a shapeless conjunct](intersection-with-shapeless-conjunct.md) — swf morph shapes.
+- [Row assertions to undeclared members](assertion-to-undeclared-row-member.md) — swf authored bounds.
+- [Unbounded spread into a rest call](unbounded-spread-into-rest-call.md) — swf tag-stream test helper.
+- [Distinct union domains on one carrier](distinct-union-domains-one-carrier.md) — font-formats test helper.

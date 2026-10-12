@@ -504,7 +504,7 @@
       "status": "complete",
       "supplies": "packages/font/src/fontFormat.ts",
       "remaining": "None in the supplied module at this pin.",
-      "derivedFrom": "18b158ba53bc6c22575636be5f1475049682a3ebb882b35f62a9b38c4d85dadb",
+      "derivedFrom": "eeba9c3ec2af4dc70e6abea5b13f812f96bce8cc0e7009f55bae812503e0eefa",
       "reason": "The emitter generated detectFontFormat but refused inferFontFormatFromUrl because the optional result of Array.pop reached a member projection without a recorded proof that storage was present.",
       "change": "Adds the one refused function, explicitly testing the pop result before lowercasing and mapping the six supported font extensions.",
       "equivalence": "The query is removed before extension inference, only the final dot-separated component is considered, matching is case-insensitive, woff/woff2 pass through, ttf/otf/eot map to the source's CSS format names, svg passes through, and an absent or unknown component returns nullopt. Array::element(0) is valid because String.split always returns at least one component, while the explicit pop presence check is the proof the source optional chain supplies.",
@@ -536,7 +536,7 @@
       "status": "complete",
       "supplies": "packages/font-formats/src/cffCharstring.ts",
       "remaining": "None in the supplied module at this pin.",
-      "derivedFrom": "9f6667a6e2e1e3f2e3d884645bdd8499e3050c3a7ef4c05aa8043d71e2b2c0f6",
+      "derivedFrom": "2cc2daf358b5df02a12bc82347f1eb49cdc4d7887b3bc9981b7dbed2ebc0b036",
       "reason": "The emitter generated the numeric decoder and helper shapes but refused runCffCharstring because readonly arrays of structural {start,end} views could not be stored as owning arrays without changing the nominal CffIndexEntry array identity.",
       "change": "Supplies the one refused Type 2 charstring interpreter. Its public boundary retains the exact Array<Ref<CffIndexEntry>> carrier generated callers already own, while the individual charstring keeps the generated readonly structural row; the body implements operand decoding, width consumption, stems and inline masks, moves, lines, cubic operators, biased local and global subroutines, recursion depth, escaped-operator handling, contour closure, and path replacement.",
       "equivalence": "The interpreter preserves the source's shared input and output identities, clears commands and data before execution, always writes nonZero winding, negates y only at the Path seam, closes an open contour before another move and after unterminated input, applies a leading width only once, counts explicit and implicit stems before skipping mask bytes, shares the operand stack across subroutine calls, uses the three specified bias ranges, and rejects the same truncated operands, masks, absent subroutines, depth overflow, and unknown operators. Direct probes cover all path operator families, 16-bit and 16.16 operands, width and mask rules, local and global calls, depth rejection, empty glyphs, replacement, and implicit closure.",
@@ -1588,7 +1588,6 @@
       "whyNotAPatchOrRepair": "Using declarations solve only the missing names. A source patch cannot express the target runtime owner table without changing the public entity shape, while a declaration repair cannot supply lifecycle behavior.",
       "unblocks": "notification.hpp compiles independently and supplies the notification package aggregators.",
       "remaining": "The subscription lifecycle is not implemented. attachNotification*Subscription (five exports) ignore the host capability and always return {attachFailed: true, reason: operation-failed}; detachNotification*Subscription (five) always report not-attached; disposeNotification*Subscription (five) always report already-disposed; and createNotification*Subscription do not register the per-subscription runtime row those paths would read. The source keys one WeakMap by Entity, and the emitted subscription types share no C++ base, so the table has to be keyed per subscription type; the source also stores the pending attach promise and awaits it twice (guarded by promise identity), which the emitted Task carrier does not express directly.",
-
       "expires": "when generic signals, subscription runtime ownership, and notification operation unions emit directly.",
       "authoredOn": "2026-10-07"
     },
@@ -1683,36 +1682,6 @@
       "unblocks": "physics2_dabi_command.hpp compiles independently.",
       "remaining": "Derived-only joint flags and values remain zero until the emitted API retains a joint variant or checked owner heritage.",
       "expires": "when imported constant objects use pointer access, shape unions emit visitation, and joint narrowing retains recoverable derived ownership.",
-      "authoredOn": "2026-10-07"
-    },
-    {
-      "id": "swf-explain-portable-uncompress-boundary",
-      "path": "flight/swf/swf_explain.hpp",
-      "package": "@flighthq/swf",
-      "status": "complete",
-      "derivedFrom": "6ca8b0e7559ece246dc7faaaea95692578789c3b772fc9a25d33bfa699cbdaaf",
-      "reason": "The module calls the compiler-refused SWF uncompress function and accesses emitted pair values with a source-only tuple spelling.",
-      "change": "Uses the generated pair carrier correctly and supplies the unavailable decompression boundary as an absent optional result.",
-      "equivalence": "Uncompressed sources continue through the retained explanation path. Compressed sources cannot be decoded by this dependency-free profile and report absence rather than fabricated bytes or metadata.",
-      "whyNotAPatchOrRepair": "A declaration alone would leave no implementation, while adding a decompression library would violate the runtime dependency boundary. The target-neutral source must retain decompression for capable hosts.",
-      "unblocks": "swf_explain.hpp compiles independently.",
-      "remaining": "Compressed SWF explanation returns absent until a host decompressor is bound.",
-      "expires": "when the profile binds decompression and emitted tuple access matches the generated pair carrier.",
-      "authoredOn": "2026-10-07"
-    },
-    {
-      "id": "swf-tag-registry-refused-handler-boundaries",
-      "path": "flight/swf/swf_tag_registry.hpp",
-      "package": "@flighthq/swf",
-      "status": "complete",
-      "derivedFrom": "4a4af91672828c0c608d0364a3066e190d7138a0906110d22cef32de75d0b6e2",
-      "reason": "The generated registry retains references to compiler-refused font and bounded-definition handlers, so the otherwise emitted registration table cannot compile.",
-      "change": "Supplies exact-signature conservative handlers for the two refused functions and retains every generated tag-to-handler registration.",
-      "equivalence": "Unsupported definitions report unhandled by returning false and do not mutate parser state or diagnostics. All handlers the compiler emitted remain registered at their original tag codes.",
-      "whyNotAPatchOrRepair": "Forward declarations would compile the header but leave any use undefined. Implementing the full refused parsers requires unrepresented source narrowing, so an explicit conservative handler is safer than fabricated parsing.",
-      "unblocks": "swf_tag_registry.hpp compiles independently.",
-      "remaining": "The two refused definition handlers return false until their source parsers emit.",
-      "expires": "when the font and bounded-definition tag handlers emit directly.",
       "authoredOn": "2026-10-07"
     },
     {

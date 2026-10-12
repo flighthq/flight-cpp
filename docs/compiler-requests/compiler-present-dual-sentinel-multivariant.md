@@ -38,3 +38,6 @@ native owners after nullish checks.
 [`compiler-present-dual-sentinel-multivariant.patch`](../../source-patches/compiler-present-dual-sentinel-multivariant.patch)
 maps every remaining exact slot into a smaller present-only variant. It expires when upstream
 presence projection supports multiple represented value domains.
+
+Also refused at a627849 for the same reason, without a supply: `swfControlHandler.ts`,
+`swfPlaceObjectHandler.ts` and `swfText.ts` in `@flighthq/swf`.

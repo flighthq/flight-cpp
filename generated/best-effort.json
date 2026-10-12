@@ -3863,24 +3863,6 @@
     {
       "consumers": [
         "@flighthq/compression/packages/compression/src/contract.ts",
-        "@flighthq/compression/packages/compression/src/deflate.ts",
-        "@flighthq/compression/packages/compression/src/index.ts",
-        "@flighthq/font-formats/packages/font-formats/src/openTypeGlyphOutlineSource.ts",
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
-        "@flighthq/swf/packages/swf/src/swfBitmap.ts",
-        "@flighthq/swf/packages/swf/src/swfDocument.ts"
-      ],
-      "module": {
-        "name": "Decompressor",
-        "packageName": "@flighthq/compression",
-        "source": "packages/compression/src/decompressor.ts"
-      },
-      "path": "flight/compression/decompressor.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/compression/packages/compression/src/contract.ts",
         "@flighthq/compression/packages/compression/src/index.ts"
       ],
       "module": {
@@ -3894,6 +3876,7 @@
     {
       "consumers": [
         "@flighthq/compression/packages/compression/src/compress.ts",
+        "@flighthq/compression/packages/compression/src/contract.ts",
         "@flighthq/compression/packages/compression/src/deflate.ts"
       ],
       "module": {
@@ -3912,6 +3895,32 @@
         "source": "packages/compression/src/index.ts"
       },
       "path": "flight/compression/_internal_index.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/compression/packages/compression/src/contract.ts",
+        "@flighthq/compression/packages/compression/src/index.ts"
+      ],
+      "module": {
+        "name": "Lzma",
+        "packageName": "@flighthq/compression",
+        "source": "packages/compression/src/lzma.ts"
+      },
+      "path": "flight/compression/lzma.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/compression/packages/compression/src/contract.ts",
+        "@flighthq/compression/packages/compression/src/index.ts"
+      ],
+      "module": {
+        "name": "LzmaCompress",
+        "packageName": "@flighthq/compression",
+        "source": "packages/compression/src/lzmaCompress.ts"
+      },
+      "path": "flight/compression/lzma_compress.hpp",
       "status": "emitted"
     },
     {
@@ -9908,6 +9917,7 @@
     },
     {
       "consumers": [
+        "@flighthq/font/packages/font/src/contract.ts",
         "@flighthq/font/packages/font/src/fontResourceFrom.ts"
       ],
       "module": {
@@ -9922,9 +9932,7 @@
       "status": "dependency-incomplete"
     },
     {
-      "consumers": [
-        "@flighthq/font/packages/font/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/font",
@@ -9932,6 +9940,7 @@
       },
       "path": "flight/font/contract.hpp",
       "refusedDependencies": [
+        "@flighthq/font/packages/font/src/_fontFaceLoad.ts",
         "@flighthq/font/packages/font/src/fontFormat.ts",
         "@flighthq/font/packages/font/src/fontResourceFrom.ts"
       ],
@@ -9942,7 +9951,8 @@
       "consumers": [
         "@flighthq/font-formats/packages/font-formats/src/openTypeGlyphOutlineSource.ts",
         "@flighthq/font/packages/font/src/_fontFaceLoad.ts",
-        "@flighthq/font/packages/font/src/contract.ts"
+        "@flighthq/font/packages/font/src/contract.ts",
+        "@flighthq/font/packages/font/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:3140ebce2f9115cbcbf154351767fc3a52c9e7d111d8f70747434be2eda15a98",
@@ -9959,7 +9969,8 @@
     },
     {
       "consumers": [
-        "@flighthq/font/packages/font/src/contract.ts"
+        "@flighthq/font/packages/font/src/contract.ts",
+        "@flighthq/font/packages/font/src/index.ts"
       ],
       "module": {
         "name": "FontResource",
@@ -9971,7 +9982,8 @@
     },
     {
       "consumers": [
-        "@flighthq/font/packages/font/src/contract.ts"
+        "@flighthq/font/packages/font/src/contract.ts",
+        "@flighthq/font/packages/font/src/index.ts"
       ],
       "module": {
         "name": "FontResourceFrom",
@@ -9988,7 +10000,8 @@
       "consumers": [
         "@flighthq/font/packages/font/src/_fontFaceLoad.ts",
         "@flighthq/font/packages/font/src/contract.ts",
-        "@flighthq/font/packages/font/src/fontStatus.ts"
+        "@flighthq/font/packages/font/src/fontStatus.ts",
+        "@flighthq/font/packages/font/src/index.ts"
       ],
       "module": {
         "name": "FontShorthand",
@@ -10000,7 +10013,8 @@
     },
     {
       "consumers": [
-        "@flighthq/font/packages/font/src/contract.ts"
+        "@flighthq/font/packages/font/src/contract.ts",
+        "@flighthq/font/packages/font/src/index.ts"
       ],
       "module": {
         "name": "FontStatus",
@@ -10012,7 +10026,8 @@
     },
     {
       "consumers": [
-        "@flighthq/font/packages/font/src/contract.ts"
+        "@flighthq/font/packages/font/src/contract.ts",
+        "@flighthq/font/packages/font/src/index.ts"
       ],
       "module": {
         "name": "GlyphOutlineSource",
@@ -10031,7 +10046,8 @@
       },
       "path": "flight/font/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/font/packages/font/src/contract.ts"
+        "@flighthq/font/packages/font/src/fontFormat.ts",
+        "@flighthq/font/packages/font/src/fontResourceFrom.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -10039,6 +10055,7 @@
       "classification": "target-runtime",
       "consumers": [
         "@flighthq/font-formats/packages/font-formats/src/contract.ts",
+        "@flighthq/font-formats/packages/font-formats/src/index.ts",
         "@flighthq/font-formats/packages/font-formats/src/openTypeGlyphOutlineSource.ts"
       ],
       "declarationFingerprints": [
@@ -10059,7 +10076,8 @@
     {
       "consumers": [
         "@flighthq/font-formats/packages/font-formats/src/cffTable.ts",
-        "@flighthq/font-formats/packages/font-formats/src/contract.ts"
+        "@flighthq/font-formats/packages/font-formats/src/contract.ts",
+        "@flighthq/font-formats/packages/font-formats/src/index.ts"
       ],
       "module": {
         "name": "CffDict",
@@ -10072,7 +10090,8 @@
     {
       "consumers": [
         "@flighthq/font-formats/packages/font-formats/src/cffTable.ts",
-        "@flighthq/font-formats/packages/font-formats/src/contract.ts"
+        "@flighthq/font-formats/packages/font-formats/src/contract.ts",
+        "@flighthq/font-formats/packages/font-formats/src/index.ts"
       ],
       "module": {
         "name": "CffFdSelect",
@@ -10085,7 +10104,8 @@
     {
       "consumers": [
         "@flighthq/font-formats/packages/font-formats/src/cffTable.ts",
-        "@flighthq/font-formats/packages/font-formats/src/contract.ts"
+        "@flighthq/font-formats/packages/font-formats/src/contract.ts",
+        "@flighthq/font-formats/packages/font-formats/src/index.ts"
       ],
       "module": {
         "name": "CffIndex",
@@ -10098,6 +10118,7 @@
     {
       "consumers": [
         "@flighthq/font-formats/packages/font-formats/src/contract.ts",
+        "@flighthq/font-formats/packages/font-formats/src/index.ts",
         "@flighthq/font-formats/packages/font-formats/src/openTypeGlyphOutlineSource.ts"
       ],
       "module": {
@@ -10118,14 +10139,13 @@
       "path": "flight/font_formats/contract.hpp",
       "refusedDependencies": [
         "@flighthq/font-formats/packages/font-formats/src/cffCharstring.ts",
-        "@flighthq/font-formats/packages/font-formats/src/index.ts"
+        "@flighthq/font-formats/packages/font-formats/src/openTypeGlyphOutlineSource.ts",
+        "@flighthq/font-formats/packages/font-formats/src/openTypeTestHelper.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
-      "consumers": [
-        "@flighthq/font-formats/packages/font-formats/src/contract.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Index",
         "packageName": "@flighthq/font-formats",
@@ -10133,13 +10153,16 @@
       },
       "path": "flight/font_formats/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/font-formats/packages/font-formats/src/openTypeGlyphOutlineSource.ts"
+        "@flighthq/font-formats/packages/font-formats/src/cffCharstring.ts",
+        "@flighthq/font-formats/packages/font-formats/src/openTypeGlyphOutlineSource.ts",
+        "@flighthq/font-formats/packages/font-formats/src/openTypeTestHelper.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "consumers": [
         "@flighthq/font-formats/packages/font-formats/src/contract.ts",
+        "@flighthq/font-formats/packages/font-formats/src/index.ts",
         "@flighthq/font-formats/packages/font-formats/src/openTypeGlyphOutlineSource.ts"
       ],
       "module": {
@@ -10153,6 +10176,7 @@
     {
       "consumers": [
         "@flighthq/font-formats/packages/font-formats/src/contract.ts",
+        "@flighthq/font-formats/packages/font-formats/src/index.ts",
         "@flighthq/font-formats/packages/font-formats/src/openTypeGlyphOutlineSource.ts"
       ],
       "module": {
@@ -10165,6 +10189,7 @@
     },
     {
       "consumers": [
+        "@flighthq/font-formats/packages/font-formats/src/contract.ts",
         "@flighthq/font-formats/packages/font-formats/src/index.ts"
       ],
       "module": {
@@ -10182,6 +10207,7 @@
     {
       "consumers": [
         "@flighthq/font-formats/packages/font-formats/src/contract.ts",
+        "@flighthq/font-formats/packages/font-formats/src/index.ts",
         "@flighthq/font-formats/packages/font-formats/src/openTypeGlyphOutlineSource.ts"
       ],
       "module": {
@@ -10194,7 +10220,10 @@
     },
     {
       "classification": "target-runtime",
-      "consumers": [],
+      "consumers": [
+        "@flighthq/font-formats/packages/font-formats/src/contract.ts",
+        "@flighthq/font-formats/packages/font-formats/src/index.ts"
+      ],
       "declarationFingerprints": [
         "sha256:012a74a568ade801029c7a0992868053e887942214ae458990db56565aed0b4f",
         "sha256:032c9478c48cf66b63d28f77cf99c5bf820d71e5ca0f9410c0fbb86744f56bb8",
@@ -10236,6 +10265,7 @@
     {
       "consumers": [
         "@flighthq/font-formats/packages/font-formats/src/contract.ts",
+        "@flighthq/font-formats/packages/font-formats/src/index.ts",
         "@flighthq/font-formats/packages/font-formats/src/woff2Font.ts",
         "@flighthq/font-formats/packages/font-formats/src/woff2GlyfTransform.ts",
         "@flighthq/font-formats/packages/font-formats/src/woffFont.ts"
@@ -10251,6 +10281,7 @@
     {
       "consumers": [
         "@flighthq/font-formats/packages/font-formats/src/contract.ts",
+        "@flighthq/font-formats/packages/font-formats/src/index.ts",
         "@flighthq/font-formats/packages/font-formats/src/openTypeGlyphOutlineSource.ts"
       ],
       "module": {
@@ -10263,7 +10294,8 @@
     },
     {
       "consumers": [
-        "@flighthq/font-formats/packages/font-formats/src/contract.ts"
+        "@flighthq/font-formats/packages/font-formats/src/contract.ts",
+        "@flighthq/font-formats/packages/font-formats/src/index.ts"
       ],
       "module": {
         "name": "Woff2Font",
@@ -10275,7 +10307,8 @@
     },
     {
       "consumers": [
-        "@flighthq/font-formats/packages/font-formats/src/contract.ts"
+        "@flighthq/font-formats/packages/font-formats/src/contract.ts",
+        "@flighthq/font-formats/packages/font-formats/src/index.ts"
       ],
       "module": {
         "name": "Woff2GlyfTransform",
@@ -10288,6 +10321,7 @@
     {
       "consumers": [
         "@flighthq/font-formats/packages/font-formats/src/contract.ts",
+        "@flighthq/font-formats/packages/font-formats/src/index.ts",
         "@flighthq/font-formats/packages/font-formats/src/openTypeGlyphOutlineSource.ts"
       ],
       "module": {
@@ -11894,7 +11928,6 @@
       "consumers": [
         "@flighthq/image-codec/packages/image-codec/src/contract.ts",
         "@flighthq/image-codec/packages/image-codec/src/decodeImage.ts",
-        "@flighthq/image-codec/packages/image-codec/src/explainImageDecodeFailure.ts",
         "@flighthq/image/packages/image/src/imageResourceFrom.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts"
@@ -11917,60 +11950,6 @@
         "source": "packages/image-codec/src/encodeImage.ts"
       },
       "path": "flight/image_codec/encode_image.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/image-codec/packages/image-codec/src/contract.ts",
-        "@flighthq/image/packages/image/src/imageResourceReference.ts"
-      ],
-      "module": {
-        "name": "ExplainImageDecodeFailure",
-        "packageName": "@flighthq/image-codec",
-        "source": "packages/image-codec/src/explainImageDecodeFailure.ts"
-      },
-      "path": "flight/image_codec/explain_image_decode_failure.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/image-codec/packages/image-codec/src/contract.ts"
-      ],
-      "module": {
-        "name": "ExplainImageEncodeFailure",
-        "packageName": "@flighthq/image-codec",
-        "source": "packages/image-codec/src/explainImageEncodeFailure.ts"
-      },
-      "path": "flight/image_codec/explain_image_encode_failure.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/image-codec/packages/image-codec/src/contract.ts",
-        "@flighthq/image-codec/packages/image-codec/src/decodeImage.ts",
-        "@flighthq/image-codec/packages/image-codec/src/explainImageDecodeFailure.ts",
-        "@flighthq/swf/packages/swf/src/swfImageDecoder.ts"
-      ],
-      "module": {
-        "name": "ImageDecoderRegistry",
-        "packageName": "@flighthq/image-codec",
-        "source": "packages/image-codec/src/imageDecoderRegistry.ts"
-      },
-      "path": "flight/image_codec/image_decoder_registry.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/image-codec/packages/image-codec/src/contract.ts",
-        "@flighthq/image-codec/packages/image-codec/src/encodeImage.ts",
-        "@flighthq/image-codec/packages/image-codec/src/explainImageEncodeFailure.ts"
-      ],
-      "module": {
-        "name": "ImageEncoderRegistry",
-        "packageName": "@flighthq/image-codec",
-        "source": "packages/image-codec/src/imageEncoderRegistry.ts"
-      },
-      "path": "flight/image_codec/image_encoder_registry.hpp",
       "status": "emitted"
     },
     {
@@ -36530,10 +36509,42 @@
       "path": "flight/swf/contract.hpp",
       "refusedDependencies": [
         "@flighthq/swf/packages/swf/src/enableSwfGuards.ts",
+        "@flighthq/swf/packages/swf/src/mergeSwfParseOptions.ts",
+        "@flighthq/swf/packages/swf/src/swfAllTagHandlers.ts",
+        "@flighthq/swf/packages/swf/src/swfBitmapTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfContentCapabilities.ts",
+        "@flighthq/swf/packages/swf/src/swfControlHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfControlTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineMorphShapeHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineShapeHandler.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts",
-        "@flighthq/swf/packages/swf/src/swfExplain.ts",
+        "@flighthq/swf/packages/swf/src/swfEditText.ts",
+        "@flighthq/swf/packages/swf/src/swfEditTextHandler.ts",
         "@flighthq/swf/packages/swf/src/swfFilter.ts",
-        "@flighthq/swf/packages/swf/src/swfTagRegistry.ts"
+        "@flighthq/swf/packages/swf/src/swfFontHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfFontTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfFrameAction.ts",
+        "@flighthq/swf/packages/swf/src/swfHeader.ts",
+        "@flighthq/swf/packages/swf/src/swfJpegBitmapHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfMorphShape.ts",
+        "@flighthq/swf/packages/swf/src/swfNode.ts",
+        "@flighthq/swf/packages/swf/src/swfPlaceObject3Handler.ts",
+        "@flighthq/swf/packages/swf/src/swfPlaceObjectHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfPlacementTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfRequirements.ts",
+        "@flighthq/swf/packages/swf/src/swfScriptHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfScriptTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfShape.ts",
+        "@flighthq/swf/packages/swf/src/swfShapeTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfSoundHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfSoundTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfStaticTextHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfTagCensus.ts",
+        "@flighthq/swf/packages/swf/src/swfTagStreamTestHelper.ts",
+        "@flighthq/swf/packages/swf/src/swfText.ts",
+        "@flighthq/swf/packages/swf/src/swfTextTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfVideoHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfVideoTagFamily.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -36555,6 +36566,20 @@
       "status": "dependency-incomplete"
     },
     {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/swfDocument.ts",
+        "@flighthq/swf/packages/swf/src/swfTagStreamTestHelper.ts"
+      ],
+      "module": {
+        "name": "ExpandSwfTagHandlerDispatch",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/expandSwfTagHandlerDispatch.ts"
+      },
+      "path": "flight/swf/expand_swf_tag_handler_dispatch.hpp",
+      "status": "emitted"
+    },
+    {
       "consumers": [],
       "module": {
         "name": "Index",
@@ -36564,15 +36589,103 @@
       "path": "flight/swf/_internal_index.hpp",
       "refusedDependencies": [
         "@flighthq/swf/packages/swf/src/enableSwfGuards.ts",
+        "@flighthq/swf/packages/swf/src/mergeSwfParseOptions.ts",
+        "@flighthq/swf/packages/swf/src/swfAllTagHandlers.ts",
+        "@flighthq/swf/packages/swf/src/swfBitmapTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfContentCapabilities.ts",
+        "@flighthq/swf/packages/swf/src/swfControlHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfControlTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineMorphShapeHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineShapeHandler.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts",
-        "@flighthq/swf/packages/swf/src/swfExplain.ts",
-        "@flighthq/swf/packages/swf/src/swfTagRegistry.ts"
+        "@flighthq/swf/packages/swf/src/swfEditText.ts",
+        "@flighthq/swf/packages/swf/src/swfEditTextHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfFilter.ts",
+        "@flighthq/swf/packages/swf/src/swfFontHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfFontTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfFrameAction.ts",
+        "@flighthq/swf/packages/swf/src/swfHeader.ts",
+        "@flighthq/swf/packages/swf/src/swfJpegBitmapHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfMorphShape.ts",
+        "@flighthq/swf/packages/swf/src/swfPlaceObject3Handler.ts",
+        "@flighthq/swf/packages/swf/src/swfPlaceObjectHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfPlacementTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfScriptHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfScriptTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfShape.ts",
+        "@flighthq/swf/packages/swf/src/swfShapeTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfSoundHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfSoundTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfStaticTextHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfText.ts",
+        "@flighthq/swf/packages/swf/src/swfTextTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfVideoHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfVideoTagFamily.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:319a0c99ad50527097c1e161806d74fe5063cebbb62d9f46ffb8177f1fd18e50"
+      ],
+      "module": {
+        "name": "MergeSwfParseOptions",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/mergeSwfParseOptions.ts"
+      },
+      "path": "flight/swf/merge_swf_parse_options.hpp",
+      "rule": "cpp-member-projection-without-present-storage",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfTagStreamTestHelper.ts"
+      ],
+      "module": {
+        "name": "SwfAllTagHandlers",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfAllTagHandlers.ts"
+      },
+      "path": "flight/swf/swf_all_tag_handlers.hpp",
+      "refusedDependencies": [
+        "@flighthq/swf/packages/swf/src/swfBitmapTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfControlTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfFontTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfPlacementTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfScriptTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfShapeTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfSoundTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfTextTagFamily.ts",
+        "@flighthq/swf/packages/swf/src/swfVideoTagFamily.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "consumers": [
         "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/swfControlHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfPlaceObject3Handler.ts",
+        "@flighthq/swf/packages/swf/src/swfPlaceObjectHandler.ts"
+      ],
+      "module": {
+        "name": "SwfAppearance",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfAppearance.ts"
+      },
+      "path": "flight/swf/swf_appearance.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
         "@flighthq/swf/packages/swf/src/swfImageDecoder.ts"
       ],
       "module": {
@@ -36584,274 +36697,211 @@
       "status": "emitted"
     },
     {
-      "classification": "source-portability",
       "consumers": [
         "@flighthq/swf/packages/swf/src/contract.ts",
         "@flighthq/swf/packages/swf/src/index.ts",
-        "@flighthq/swf/packages/swf/src/swfExplain.ts",
-        "@flighthq/swf/packages/swf/src/swfTagRegistry.ts"
+        "@flighthq/swf/packages/swf/src/swfAllTagHandlers.ts"
+      ],
+      "module": {
+        "name": "SwfBitmapTagFamily",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfBitmapTagFamily.ts"
+      },
+      "path": "flight/swf/swf_bitmap_tag_family.hpp",
+      "refusedDependencies": [
+        "@flighthq/swf/packages/swf/src/swfJpegBitmapHandler.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineMorphShapeHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineShapeHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfEditTextHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfStaticTextHandler.ts"
+      ],
+      "module": {
+        "name": "SwfBoundedDefinition",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfBoundedDefinition.ts"
+      },
+      "path": "flight/swf/swf_bounded_definition.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfRequirements.ts"
+      ],
+      "module": {
+        "name": "SwfContentCapabilities",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfContentCapabilities.ts"
+      },
+      "path": "flight/swf/swf_content_capabilities.hpp",
+      "refusedDependencies": [
+        "@flighthq/swf/packages/swf/src/swfDocument.ts",
+        "@flighthq/swf/packages/swf/src/swfHeader.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfControlTagFamily.ts"
       ],
       "declarationFingerprints": [
-        "sha256:010d21490d53dcca7061171632a0b68ef4d56f5c66b1e42c283a772ef22315a4",
-        "sha256:01822600945805da2f0729f770295692dc673a2ab0e384dfac6b26cdd4fa321f",
-        "sha256:0522e0193e0ee0c584f7cae86bbdb37c2320b42c727972f569fcbf7634935eb4",
-        "sha256:05283adef419f862fcde8bbc346018337c47bcda48773d043f02ccb110a5ccd6",
-        "sha256:058f4cedc53714aa38fc5cd6c8f42d6d58eb6dfedb9a6c1d1f1cc06dbcc751ea",
-        "sha256:064fea39a305211e4416a8bd5d1045d7d5c387f00bf834f30afcaf7c1c844164",
-        "sha256:0a145cf91a6cc4dd88ca458347956ca457f47c3dfbb2a5554420577eb6eba6ad",
-        "sha256:0a9c864a7e203b7aaac46194fafaf44af338b4507ef05cda1fbee2e5b27bac2f",
-        "sha256:0b026d57e1dadfb93335366b1b243e0b92c69bef08539f5a7cf855a7c3dff22a",
-        "sha256:0b3182a2ee85b48d87e483a3c11842ba3f3bffb1abad45326d96dff491c66150",
-        "sha256:0b9e4c018e7d34ce119c463411df9b5cf7e8f8d58b77216ee17a1bc492f77a5d",
-        "sha256:0e6d20a97a404d4417f1b31bcaf352099b281509c79fc9c979bde3fcb616624e",
-        "sha256:114cd5abf95b3861776a7960bcb243ab5fd364db278c3ab75d272534e6a3dda0",
-        "sha256:11cc2f7e896a9e14825db28d69a04f376e02ca3c6b7b01487a17028b7e561cb5",
-        "sha256:1236ff0155a3358e352bd61a4a5ba1cedfba01016b228966251492aa1f71aeb3",
-        "sha256:13b44a6d696697513dd560ebd8f8f89b5a73efaace2976013b0ab46a6cc00ffd",
-        "sha256:155458276fce41187f69016c95be4ba302daaa15957aa3d82c49500aa86d4c1f",
-        "sha256:15632d2b235fbd70643985cb136e7f67873dc5837dc1aab8f828e2bcf5b14fa9",
-        "sha256:17ebaa16907b963c4bfc0aa73c1ff388de268cc36a831e1be629f5fbf5c91e0c",
+        "sha256:12a62bf0c8e11fa96ae4638f4e975bbd4d361bd3d06524110335ca9bc9403735",
+        "sha256:135475472a533081a32f16fc0996b67ea16caaa5c3511251497564ca62800873",
         "sha256:17f812364448f91990c9ecd89d529634007ead00dd936655da47f2abb8935bda",
-        "sha256:1a66b6797cae81d9ff776659316e27ee74ba93a1f8568aed61d5ab5742f3a185",
-        "sha256:1c56677ca04d7e478f70fefa97c4522217f1df38e78330e2b332d9701021448a",
-        "sha256:1ca3a72e73618c16f21a2f95b3c53e7985dd0347163e18ef502ac2dcd88df7ab",
-        "sha256:1cf370cd360f546d9edb0dce5162df7a1e65d3c99a1c1db99f350fa6dc7b6a2a",
-        "sha256:1cf5c5ed0e6fba0050e2fcbd80290f30c0090b37ab6508ee2c733309f117f1e1",
-        "sha256:1f7582636643b48352ae4d1b802b014ed58f3d13c61fded4327fda69e20c6b92",
-        "sha256:202da04e8cad71030620b20e5216f83787854129001dd6419d0b077c8e8629e0",
-        "sha256:2035c227d1978c9b3845f834538334c755171eb728db047b102fae32cdcd39d2",
-        "sha256:210d0ecc677cf0553ff9d90c074d790c64d915d989999bdf760aab737c2784b6",
-        "sha256:21e5e86e43df6e6afc6b383deb8cb875fc2ac4f64d7059c5371261bab91e78eb",
-        "sha256:22509db1b8f02930564a122a87d982bae58eadff464a37088b74b8291474a390",
-        "sha256:230d15f817961c0c02cd97d3953583a6c25ee2e9f3a784c33180a0825efa8e11",
-        "sha256:23a6f06a8b786dda410a90ec8303fe0359d65a26bf9828ace781d5317ac4cec5",
-        "sha256:240adacbab13c55a8f944cab1232a38254f33e98519a0b51a74f769f8eb5be9f",
-        "sha256:24624686c2312df1f496a1269cf64265878effc3b7fbe16acee5a4b890805f64",
-        "sha256:25f62e07bf81d6f7d05ee9404751e25d47ffbec3bc3f0d3eab09c416d31ed08b",
-        "sha256:263f073a8f6f21afda962495f196aa38c5e859c13cb05764b3cf211df09d5eae",
-        "sha256:26f7b93e2d8b6514dcf400e13949f8684a0c281e9b6348067af1be591514f3c4",
-        "sha256:28341588891553f90604441b7781b3f60ad3fb71c483a465c1222fe0668f94a3",
-        "sha256:292344792926220320942d131a866cbbced256d5d6d149920c741bca0593e1bb",
-        "sha256:2ae464155668c9f7b0d438a66d22dbce19f19a606c3ac2dc160c70039861672c",
-        "sha256:2c30e097bf9d3abea702cff88e2c767cf27d5669b3ccae3929839991a505b2dd",
-        "sha256:2d4a2870585e42461841c6863ee81b87934a897c6c9937fce964b332a0ec9cb6",
-        "sha256:2e5dd24acf6d7a4fafec18eb4b8bfb17cbb3a975d83bf0c102e2db3b6b37f0a8",
-        "sha256:2fe80cda9af949b8bb55e165db1273fc7f51e8b2c12667383f71b6a43c924327",
-        "sha256:305ae36eeaa28e186ea044b9d0277bf0c6773ce428102143c01ab164e5fc2f21",
-        "sha256:31ba5138d206f7236a7808f5547a03ef99004d9557b20f818c75804bc789a87f",
-        "sha256:343d4a03ccb8f4eba1fb78239800404a104531aae4f9d96ff31813fafa006468",
-        "sha256:3458b32f8df6605f38226f563cafc688b60063f9d892eaf65f79a3be742b883e",
-        "sha256:34be1888925ff3d8275f101ca5c6aef487c493b3731adf0daa9fa365a5866b81",
-        "sha256:34e3c84305c1b65fbf74fb2aa8174756f887aa4e96f5ad898d6b240ce80b0b55",
-        "sha256:35bbc838ae1868e4457f9239bd9eaa2c660ae91b0c3f3fede112c51783b106a4",
-        "sha256:35e7dcda00640567b7a923dd0f32aae257504d34c22d506bd69e3bd65b9167bf",
-        "sha256:36127e224ae33a59eea6f52cef99bae472e4c2371e2feeaf2ebaddfe19e990c8",
-        "sha256:36f00473f76e461f1dc62129e206bad698c728e007dc95cf1862052c3c31cea8",
-        "sha256:3a280430eeb839349944aa6b6fa72a0978d31a3dce2bfbd982e7a0c23294efd2",
-        "sha256:3b500c97cc2814f086f0d90169ff92da3aa42f09581bbf65be7f027dcc151d34",
-        "sha256:3b7a0863da2ef83e76194ef537eeccf1d27543074bcc641c805d1009e439859f",
+        "sha256:1ed2feca5bf21b0c4ea344fdefb3277734979aef24161d9a199191f7e04323c2",
         "sha256:3b7d4ab9e82d01e8be5528d4c2ee1f7df1ed0e71a92b4e93f02d42612de71fef",
-        "sha256:3c23c04e3bade556ee82a6911f59794e45f56c7f660f5a1dfb860d78fecde8da",
-        "sha256:3c4f28a7ab35c68a2b49896f97b8666c434b174e3497088d283f329d36465d90",
-        "sha256:3ca215ca6faeda02de39e0e83cc2e5c316bbcf26c6522f9a6afb8aa170b12dc1",
-        "sha256:3f9843f554ce8c30f6fe7cd8807e2510d2452bd8b33b60e904c7099d408b14f1",
-        "sha256:403fe0d1d601f3acd74b14fc2cbbcc692d5705aa745e81e79e04c1f66bdfc1be",
-        "sha256:408cd8f27071e5702ee47d854a24fb6ca108ba4b31c452874eca8ff2217840ef",
-        "sha256:41ac507db51cf0f347f161e4a5e2e7e1217019b4bc75f3491f40ec255671050e",
-        "sha256:41d863b1528a8b9ab0c26bd2d58747f65da88775522870752d4dd9935f71ffeb",
-        "sha256:43bdab8aa6c41263399ac1905d359704d785bc178cdea79dcba416e52427d274",
-        "sha256:4405b9df8eade4fc76ac91a0ce9faba82cd576bb7dca5459aa03c5ede1feb556",
-        "sha256:454df45bddee53124532d47e50eb6c38cb0631466c8462df44b8e41bc1b59aed",
-        "sha256:46a289ebd10f792c0cffe36cc66bccab4de5c9110cdae5059f018e7260cb0f68",
-        "sha256:473cd80cc3350f5b59e54a28d84d38de3e47f6bff522197468b88bb74e52c27b",
-        "sha256:481bb9bb617256a2739a6fd98d15192437d5ab724be2d149264a7e9061c0b244",
-        "sha256:4873c51f7a9d9152dc113ff8bcc2dbb4e77e7335c357b4cfd8a01e892e9d63f3",
-        "sha256:48fd350aff6fe1be06c0b5bf3bf2a6981a1a2d3bd6a6308adcc6130aee3d4cf8",
-        "sha256:4b48d7c731aa568dd6a07fe5d8e7f859112cebab5de3f11f08926b18417ab887",
-        "sha256:4b7a9d592a189a82e91d4040874e4868210fd2dfc2ffdb8c0b07d941144c2967",
         "sha256:4b7fe056e1c3e4243fa7d36f25dbef2e97c5ac655271888843426b4a2c020e5d",
-        "sha256:4bc31e8918d7386928ba194dde29dc0de39af1e73518378fbe31cc5dc402f14a",
-        "sha256:4be2401bad7835fe245f6caaa2db74dc233cbfbdc4d5e64d2486c2f5d96bd419",
-        "sha256:4f4357ddb0edab95fd26e8027238016a687aa37fafa25854260a9cb7983ac8a3",
-        "sha256:505635f1dabe474c118ea591cd5bd67d897e219358e17eb664e61d0af79dcf54",
-        "sha256:5120a99fbff7a9ba0c4decfe1cbb3b792cd1ccd9c1d0fff24253e53d8ad204f0",
-        "sha256:52237c2818e43ace8550bb2487bb8869f169dd5870a38b0e4ed7a5568c91a55b",
-        "sha256:531f8fe8b9f8de2fdae806c45ea4213921ed5065b6f806f234bf0a18cd64f3f4",
-        "sha256:5684b75ed22b0b013157cc611ba6714fb8d523744fb72d61a18fb79a0b2feb0b",
-        "sha256:56a48ba6d104769da42f8b00f68add926bf38a59913a9c5567b412511cf7c8ce",
-        "sha256:57b113c152214f719bf3256f5d917f614240423dbb9d8aba0f988aad8e57f4ed",
-        "sha256:5944bee05cf4e641ba3964d5efdcbbea178099e0bc6ac88a14808b1a32a88725",
-        "sha256:597283f683ac5a5d5f0b981415fa1631a3f39ef6343006c32cb969ca7d43f01f",
-        "sha256:5a8498ca9fb57707438f3cca15df1f458fc58b264e1a3208d92a2b9fd906bc4e",
         "sha256:5ac86761becc08340a388c1d7d4a4aef8c3f8e0a10cd82034a2f56745bc7bedc",
-        "sha256:5ad7191583d283b1c899fc2481c2814d3de96f630597d5f23855499640e833b5",
-        "sha256:5b53b8407be60b856825b792e55fbc8e4d0b2c0ee53869e53db773049e13c77c",
-        "sha256:5babf8a3273cc78c23dfcc3436fa6eb9a01f57c70728e2c872e2f464efa53690",
-        "sha256:5c383fe4006e676b7acdcb81f1562323945ecc1e556e087006e59b84a197a3d8",
-        "sha256:5e0224734322410b64a91f4804d8d4a14acbe26f667f55f473a8b0d4602f963e",
-        "sha256:5f6ea11bf8c018166b36625128d65e9e293a31d095ead74a8e98f67d0b5a9f21",
-        "sha256:5f81cdafb85424d0e77d83cf506503960ae8c61714b0d7c751c572ebc854537c",
-        "sha256:5feb2d4e9b46170019cd2fc1bb824d85d0ef29a6a9dbbb0d93e59657d7047282",
-        "sha256:6005ac70f96846d79a31b6a4d0c510828a42612317bfddeacc4c0c8f9cd81083",
-        "sha256:6046972818e3dc239aef54844cbb396f455ea96272005f7d0513c5bc68d7c2d5",
         "sha256:614ca877e62ca294fe08c242b4d94255681f38dc0940e9129dcdee05a8f4d719",
-        "sha256:634b8b05ea831c968da687483aed118a0333f4355109210b0f24bd301ba39f5f",
-        "sha256:636b12557b54f9b71aa0751140645914d80c808bfc97cd36dd8bfbd75b82749b",
-        "sha256:66eb610e7f26d2112883d8af8ac183b819a883b95b7b5658b9874c3d05b5f2e1",
-        "sha256:671de88930d0ca9e1f6ef83baf6549383a369b4ce91c1d09279dfcecb4450fc9",
-        "sha256:675a7185fff90207aeeb0d41cc79772cbee9f386c7735cfe0b653941386725bd",
-        "sha256:6866f82e4dbb6711566dcaa97e90181a4a2025fd5f6e7fe763204ad15dced293",
-        "sha256:6b25fd200c55d827d219ba49e5f7dcacc172552ed89d18ef01e70d21bc0cf73d",
-        "sha256:6b7626821e00b713f31fa8fb4ba69bdf7302c6bdb2332d0fb042733f28a45cb9",
-        "sha256:6c968f45412f02527fd0147614835fc52995b9d58b115b8784ddc6278aa97d53",
-        "sha256:6de5bf08693ade7ca029200ec9b39a7da27b8443ef37360a16fadefeea9abff3",
-        "sha256:6e655caed258aa2e1be16da6cb23f63013cf1f19ac50359d5ccae26c39f77ed6",
-        "sha256:6f4092453e35b817c680698444ebd2a572b66444740d8cac40d0002236d451f2",
-        "sha256:6f7212398cc4ba729584ea3ebd6f5bd06fd76df764f6366d2772a24681f4d302",
-        "sha256:7339887ad4b51e509b2da2c94410743c101dc179808340200484a834daf719be",
-        "sha256:733ec7d382ec448f87c1f3a3c39191cc36acb456bd44f63ee6ffee8ad2a877a1",
-        "sha256:7360421bdfc4cdb17a62f04ed3742437986439e98559f6b1a32f45e8e549e96a",
-        "sha256:738e64af4f21a407378331c30f0f4e23cfbeec86be70d51149020f622d25e0d9",
-        "sha256:73ef9a544e27a0222215444b6a316fc169dc952f79d1a02c5bb448cab7187f1d",
-        "sha256:74d47655eba7aee3c3dafe0b312833f7f2dd8e4d498304641594a080f42fac25",
-        "sha256:7b4e815f20835b2ac8e18eaf7867f48ee81462c437df9c79b1ab98f2e3938dab",
-        "sha256:7c4eefd878cb9e7bed52b28fcdfcb734a39439eb8a6f317f0b731a85be90bf83",
-        "sha256:7cbf0ba7b3976cfd579e91400100c4c5833e052d0b787cc8c5015c95c5cc52f4",
-        "sha256:7d69c6ca212d3f2501cc25dc73bcf629499e56bf23e891d3c6cb4763c690eb18",
-        "sha256:7d930f9be9ec1f2416adc9e38a0fdc30f63240d1269ddc0d4ebc32b36305c63d",
-        "sha256:7d9f872eec27d0bfeb9bd4762ad421ae1fd82e269f1b0c01bc35f6abfba53f04",
-        "sha256:7de1cb989fafbae43fae057b0b705c6ed09ceb408e3893bb1552e502d5194385",
-        "sha256:7e7612b94364cd032c60a6d4065aad0cc2272d1bb0fe4af4adbb2dafea55bfe7",
-        "sha256:801627fd75d4cdbea84e0ae097fc47907c6245d14538272a04960ce462367e60",
-        "sha256:80405598b495f05b0473eff194d4dc2cf222bec276d6ad2a152e613657aca7b8",
-        "sha256:8042609a4d70a532f11a9cad509506e71ae3679afd4a3120652ef93780f0f5fd",
-        "sha256:80c78fd6f0bc956a0325ae4d31a5e2d220751a198955796ab4868c127393c26b",
-        "sha256:8135cffd244365cdde7bfca4158fb123ddf24ddbcec7fb933677a4e162c3b680",
-        "sha256:81c5504afc6a07e52db7674f7dc4504df0d22a1f1767306cf9cdb8c5d0ed56e6",
-        "sha256:8230667fb377023d7e1f35253698bf8f5d0375855e3f285c1543c813ae91084d",
-        "sha256:8470032baf410facbbf1ac9c8d3196721460bd14a0e208625f9b366260feb10f",
-        "sha256:858e4b2b00e78fe74e4326312d20d1b16e04e5d4488bfc2e3a08d21fc6c6d2ad",
-        "sha256:8621228b92eaf09f913327c220f85473f6fb8c0c9f28377e13529d6a14cc62f4",
-        "sha256:86365989a7ce03f6c5b036301d9d46503decd0f3364a4a91e7c5fbedd17b1618",
-        "sha256:86ed668a847983e6b693d18e8f0a83a2942d7498820ae538f6696bb367439a7c",
-        "sha256:8b386204cd74b58151d3a9da1226a82ece429ea6e0bb76af6f4a7beeb50b9c76",
+        "sha256:69e4f6483aba39f4c06336312d24bd04ed8bc3455a992eea45ae4855fb19597e",
         "sha256:8be05e0180e90cb98eadcb47dafec478d457e38f4c91f9d2d5458f9bf1bfc2c1",
-        "sha256:8cb1170329e2a11942d9cf127ab89b2a0e47c0b4ad3d7b3328b8268f049f00f3",
-        "sha256:8ea6665fdd8a784d305f5413c54ea13362f4605d944edae8a9c24b157fcf1f3a",
         "sha256:8ee1a79b0b6bf9f1e750481993f241d95b851096e29c66a7329b4157ce1528fa",
-        "sha256:94188c5762298e0ed1603b9e021f372eb34406d90c808ffb1c86f10b7670bbcf",
-        "sha256:94e8ae71d9e25107e3d2f4ec12746ea3d692981765d347b562cd9ff7a58a0b80",
-        "sha256:954aecb3983b9e0df2a9784b8e35b722186d7034754bf8cbe83dbd28d9e27ec9",
-        "sha256:963517f385b183b67381046cb7c6ba6cdf7b1f2d97010e875ed34651faa1e6de",
-        "sha256:96bdf1e5f628d9c765198a56a89b429b1bbbfa643c87d7f954bfa7c570b6bd0e",
-        "sha256:97d264f78f02a62855c657205f883a084ea621611298c0710e920f7d9c141d82",
-        "sha256:98b83b831134696f13e949ce9db3825e1e4755c46306a4d22b2d3967715555bc",
-        "sha256:9a7bb766fc0e702f43e64c146349dee28a7e4363c12d5cf47f99ee3c4ee25a34",
-        "sha256:9bc657378557a72550710a1146b69f52243937d7c63d9d951c2296443fc9ec81",
-        "sha256:9c728bf61ee4e6713f49cf4450d95df973ff7af4c4b9cba8cd7c4721ca75b198",
-        "sha256:9f17e006ce02a9b9fb1bead6a04507edf773b7ac89184b61e9f6f7efca52e7f8",
-        "sha256:9fb64b74472b25f8534a5423a3514a9749902b17512b07c57f919c20a99f1e35",
-        "sha256:a11c9eedacea5a4ba0ebc1e51094f4251d79e7b75f560283b12d2908e602662a",
-        "sha256:a244c6539c675c09afa8b24c2de9eb49a1f8ae004034d08d1160c3be3e455fbc",
-        "sha256:a25d6bed388ee0f3c3bd91c066d3e368c46a7aae55ad08014b39f99d924362a4",
-        "sha256:a3dd621a32ead5b7fa18cfeed3ce25673022e52e621c04eb0ab61a2cd4abc460",
+        "sha256:a336423df83220eb4eee94ed453652ca5de4aacf454649e4f0cb5a1bbc3461a9",
         "sha256:a47c6456ab93586e795fbef3c902d6c272d7c4a87c207f2922f60c8cbe841e49",
-        "sha256:a48b6764e997bb5513bb770a454506ccd7c8954c0ec62e948575a9415e066b22",
-        "sha256:a4d47852a162d62a1bbec77632b7e28de071500b135f4f803df5967213b0466f",
-        "sha256:a5d5047f212956ae59dac3e0cf32344431849b8ffcaba2bc109a500dd7670408",
-        "sha256:a65ca7ed2c041464eb24c2b5fa10ddc619309d50a5729c023c514846ade30949",
-        "sha256:a7bb406a0a759a7268b0a5384629e12d7c21fa28b791a9f321658c7bf8d93414",
-        "sha256:aac84bbbd023ab3c7869f251b0aa3079b744e91944b345969e26cdd5571f5378",
-        "sha256:ab7064248168b0e939212ddce9c233d31e51b77ca3db3a4da2fe1990c7e095b5",
-        "sha256:ac9b44054b66e9eed0ee5049c6caad82be1fd3ab4661520b479254602e010ecb",
-        "sha256:ad96672875f6d30c64121e77242ae63d2ea9a8bd70fc4982532970df2ad68947",
-        "sha256:ae51a7939e82474d432ad909fa395fb315b07519d93f92755e0aab078fadad0e",
-        "sha256:ae82cc9bd1a6b8138acb6dd11699014d2a17fc5da1d730f320cd909eadb95e04",
-        "sha256:b046e0f21b14a6ac88821ee3548c4e4ff09b5b9cd22b76bd04f1c41de108ad7c",
-        "sha256:b0ab6dfb98145f9d6a7b6504c420f9bbfbb04de66ae00c0a15a563c15c73a1e2",
-        "sha256:b1b7c28ff3f0c15e8918d60d3f4eeb6d3f84ae2e1ca4f20ab6127355004e9884",
-        "sha256:b70ce36b1cd9eff67ad0a74ac8d2425093d4358b08323f21754ba4ef6cbae1e4",
-        "sha256:b7515934a3e0141d1cc70ed813ed78ac451dfb5d00b1bc8e4b6a6cb57f629cde",
-        "sha256:b81fc25bb45def639d0e55fc5d8cc18ef80e8850396deb85ca0fb899be6d3caa",
-        "sha256:b8f517a403d6343e5887316c08749a8076c90a30b97fa71e96cea08c1ba9e086",
-        "sha256:b9b91fa71bc7f9d25293e8ecfecae3ca60770e2e901da9678dcfb614d5ac41a6",
-        "sha256:ba98dac4c9fa939e3641220405c0ea21606dfd5850a64e5b4aff36f3db8b267c",
-        "sha256:baa0e287d68c242caffaedb54280f1c67387ec694b1103a1a47139da8fcfd4f1",
-        "sha256:baccd05664f5a60c7e2a9b01f05979e48e04d5f58723cedb2180e23ca9acb737",
-        "sha256:bc11b6c07ca98a1621d9b0e4a3214035ca01e59267f312822a31d27c47b8f25a",
         "sha256:bcc01648f69f4f14ba3be6134aeb19d9423e7357c5dcf4be010ff50655d3ef62",
-        "sha256:bd6a8ee2952596e6292c7b02be96d3e101700113d086f288f6e07e1550dc142d",
-        "sha256:bd9b06358e94e82d1dde9a08ba274fb2a8e53e89b711d9a21af435813c4e205a",
-        "sha256:be803c034c7ef348b659a8c6c53860b4ac2b07205b22ee528b1f6fa9fc5219d3",
-        "sha256:bea4598856924714fd6099fbcdcc8dbb2808529ef64d385a38dcd0fde062ab04",
-        "sha256:bf25296c20aed6787c10db3a7643ecf46fe032a152c12e547861fec602b83c46",
-        "sha256:bf2e8c5bff435422403299a15c76eb7bfcbead45151261978b7b3e393eef5a25",
+        "sha256:cef34cc81ccce3ce7e5e9c2e40e64a9498aca3871d7c7b2af7afa4aa067570d6",
+        "sha256:cf8a1171c97b88f26dea01927f378fe7d868e2e00f3e97f6ebed8a5768472d5f",
+        "sha256:e62d9d52f92d79c93922e94dab6c4bc976d7855e1c425960a41d8713f34a0739",
+        "sha256:e8105efe4dc0bbbcf4e077f325b369ea6d4b37c19b607441797207c6201cdba7"
+      ],
+      "module": {
+        "name": "SwfControlHandler",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfControlHandler.ts"
+      },
+      "path": "flight/swf/swf_control_handler.hpp",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfAllTagHandlers.ts"
+      ],
+      "module": {
+        "name": "SwfControlTagFamily",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfControlTagFamily.ts"
+      },
+      "path": "flight/swf/swf_control_tag_family.hpp",
+      "refusedDependencies": [
+        "@flighthq/swf/packages/swf/src/swfControlHandler.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfShapeTagFamily.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:0c31ab35c07504783311311d71a6f1140f28451e04ee961140acd043c2520087",
+        "sha256:954aecb3983b9e0df2a9784b8e35b722186d7034754bf8cbe83dbd28d9e27ec9",
+        "sha256:d6b0240ed5c4b1253b8e6ec3b9418df601ee73e5b9cbd3ff2cb9241e76cba06d",
+        "sha256:e215f96735af65a5f84827932f8964bc704ff30d99793b839a41843c97c87718",
+        "sha256:f8f1c272622c117f8bd1b265475a565e27d2322bc8fb0413d30fd2ed2855e395"
+      ],
+      "module": {
+        "name": "SwfDefineMorphShapeHandler",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfDefineMorphShapeHandler.ts"
+      },
+      "path": "flight/swf/swf_define_morph_shape_handler.hpp",
+      "rule": "cpp-contextual-union-value-type-unrepresented",
+      "status": "refused-placeholder"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfShapeTagFamily.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:43bdab8aa6c41263399ac1905d359704d785bc178cdea79dcba416e52427d274",
+        "sha256:455d3af3e6a75676755431b6ca2f5250a3c89c2f95614600b462c4397b14515e",
+        "sha256:6005ac70f96846d79a31b6a4d0c510828a42612317bfddeacc4c0c8f9cd81083",
+        "sha256:7e7612b94364cd032c60a6d4065aad0cc2272d1bb0fe4af4adbb2dafea55bfe7",
+        "sha256:9fef4ef85c818941b5dc6abcb1e7e15b908541ac08108e0c847fed949ff12795",
+        "sha256:bf5b5b4f844f66285c53b1bcd110b25189af8390ce18e89265250bd5b8fc233b",
+        "sha256:e0f6dc240bded65e411f6b6be8363cea9a58b99f2474d68d8f1c22bb4fd9dc99",
+        "sha256:ecb0a33ad8571ad818de3feb60b4b620d902a9d5b672ecf966ced329ea902a1f",
+        "sha256:f6ae137965857d052029af2d712344f399fdb2b4c7008e7338075ea7d175d44c"
+      ],
+      "module": {
+        "name": "SwfDefineShapeHandler",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfDefineShapeHandler.ts"
+      },
+      "path": "flight/swf/swf_define_shape_handler.hpp",
+      "rule": "cpp-contextual-union-value-type-unrepresented",
+      "status": "refused-placeholder"
+    },
+    {
+      "classification": "target-runtime",
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfContentCapabilities.ts",
+        "@flighthq/swf/packages/swf/src/swfHeader.ts",
+        "@flighthq/swf/packages/swf/src/swfTagCensus.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:10448da1ac64fef313682b8beb19ee5c869744dabfed21205c4fee81d2218533",
+        "sha256:1a66b6797cae81d9ff776659316e27ee74ba93a1f8568aed61d5ab5742f3a185",
+        "sha256:1fb6acf8514cad240b53ec8467fdf184520778df7c2b3bbced123423e9c999ed",
+        "sha256:31ba5138d206f7236a7808f5547a03ef99004d9557b20f818c75804bc789a87f",
+        "sha256:326f6e45d4040b59846409fca3cd2350dd06c6d4b0941838c0709a9edf0f3a8e",
+        "sha256:35bbc838ae1868e4457f9239bd9eaa2c660ae91b0c3f3fede112c51783b106a4",
+        "sha256:39fba3a3b8a0a2096419dbfc965c215f1971b5c34dd85107c84c84e02df2fbaf",
+        "sha256:4252e6f5e1aea1954f20f838540016f0472f469762af16e880e84f4e8df4d27a",
+        "sha256:49129b457b4b4a92d9221de56039032d4178fc045fbeadb6950f97ca05e9735f",
+        "sha256:4a09917cd432979ef965d5eaea7b5ee73e762595a49d608e7d7c32e70e96e872",
+        "sha256:4b48d7c731aa568dd6a07fe5d8e7f859112cebab5de3f11f08926b18417ab887",
+        "sha256:505635f1dabe474c118ea591cd5bd67d897e219358e17eb664e61d0af79dcf54",
+        "sha256:5684b75ed22b0b013157cc611ba6714fb8d523744fb72d61a18fb79a0b2feb0b",
+        "sha256:56a2262b7d82f6ab0b442d0a66291f36f957d27e28eab8a14610580b244f37a7",
+        "sha256:5c383fe4006e676b7acdcb81f1562323945ecc1e556e087006e59b84a197a3d8",
+        "sha256:5e3b5651c1e3ffa2aa6e55c0d66485eda1b9c8e1440751683f5ea9e50d63379c",
+        "sha256:6046972818e3dc239aef54844cbb396f455ea96272005f7d0513c5bc68d7c2d5",
+        "sha256:62cde5b42ffd85d196b987d30cb64cdc82259cfdef64a95755e565005bd60b35",
+        "sha256:69c299884c5a002b57a4e9779d0a90ae540cb289ca07852960ed8fb4ed430ba7",
+        "sha256:7d9f872eec27d0bfeb9bd4762ad421ae1fd82e269f1b0c01bc35f6abfba53f04",
+        "sha256:801627fd75d4cdbea84e0ae097fc47907c6245d14538272a04960ce462367e60",
+        "sha256:8a5fb3469d3da1ea56ed2cc496b25badb64be125c5c1bbc7798e311849c09f11",
+        "sha256:8cb1170329e2a11942d9cf127ab89b2a0e47c0b4ad3d7b3328b8268f049f00f3",
+        "sha256:9956e49b6690a834ce41bbb70f352f498b226f6c1e4a9bef3a76b9361834bae6",
+        "sha256:9a323f0b06b12eae64493ab3fc819539637613aa732a6699238ec6d7bfdeeef3",
+        "sha256:a237b0f4388612e0adc0ee1c9df1ac57b6c03c3254bab40ffd0b22efc7badfc7",
+        "sha256:a470a12e4820d61246565b6f58a1811b2e4c35afe5f4290bdd7f8fc3af092bda",
+        "sha256:ab5f31d944f9d158ba170d473aa343187e60286fb31c051a38be3c3d05eec884",
+        "sha256:ae4b5fc33b388e51d8d1998c527364dd72b1273677bbd2a6dbbe3f9edc09ffdf",
+        "sha256:af1f3f09b1fc602ac7e86fed8921810a682cfaed86ce79bb22358a3ad078516b",
+        "sha256:afe8aa6f78d799109c0a0b740b392871b1ae9f3fc01e2be00882131e2c776096",
+        "sha256:b6077ba0a02b4393f0a3a3db4d860f41b19470a651b0ee7cbf563b2ce52fa8c7",
+        "sha256:bb1a512b9f64d79aa07438cb5e9f9b3a83577a6ab117c12070458c99ea3ed0b3",
         "sha256:bfe4cab17758bf2551174515ec76024153b82558d9728fed04e65819120b1312",
-        "sha256:c22aff0f2504d0788c121cbca76ab9e4ad9e6c12e3004d36e78301d8d9e6283e",
-        "sha256:c36c9c3f6c9fcc7ebd347b07544db16291485c655181657a5d6a4b87a1654012",
-        "sha256:c4a221f3f488a2f4723bdcc124f2ffecfb8625da60f689a091f7dbac3f1b07e7",
-        "sha256:c51657b29f96eb4410a4b9d75ef2015ff9d94c51d8959a3baac4ad6cf381a33c",
-        "sha256:c52f67d7722aa716d501564a0b5693f4061b6f3a544aa5e6fba8236823d9158d",
-        "sha256:c5b3d886219d81415ca99233abace0665a1d19cc25ce3e56272766b3e6b11af7",
-        "sha256:c5d92c2f7f1e4b04bfccac7ce1fc897e4d21b1c6d0662e7caac1c542a330a1b6",
-        "sha256:c6aa3f000d4c5d73697f7ed3585ab5d3c0580ae23759fe7fa49bf974f007589d",
         "sha256:c901fe0124246614fcb85ace1c858fdd1620272f24049820d59ab6989786349c",
         "sha256:c9757e07571c37f091575676d569c91d1dc862d69dcbe48ad8fd5a03849cc90b",
-        "sha256:c9f5df63a4c5045ca7655610c14e38d9fb9c5d2fde0780914e92f71f9ec1206d",
-        "sha256:cbb36eb28805fd67e89bbcc197e80619ce1c8d0cf6053964ade0310ba42b58db",
-        "sha256:cbd9936f339c25f18a83af7e402341c31f282af5b4e55ff9717efba6ff58ccf7",
-        "sha256:cc1df571227a9e5b592768847a1a300ae9d49b665495c0997e991b6c8ab766e4",
-        "sha256:cef34cc81ccce3ce7e5e9c2e40e64a9498aca3871d7c7b2af7afa4aa067570d6",
-        "sha256:cf38362d1524ead4439147aa925a295e3a2c8b0a3a95c5e31e646b6c7ff6e55a",
-        "sha256:cf82f41cbed006db6e1f620102351094f1785dae5770888f8604040025d6cdc7",
-        "sha256:cf8a1171c97b88f26dea01927f378fe7d868e2e00f3e97f6ebed8a5768472d5f",
-        "sha256:d06cfd879b5967bbc98adfb076a6dcbabb29551b5522ebd95490584322a64137",
-        "sha256:d231c5091691023cc203e5baa302a4ca37b96e4b68f2dddbed34a7515f6c20da",
-        "sha256:d352ae2897c9f3f41c83abacc45c64467370ec3fd1992c78788d7de7d3cc13b0",
-        "sha256:d3e5a13bdfc1dad3110eacd91e07ea2e2e8bda1d30399d48a28840e7d041c5ec",
-        "sha256:d6b0240ed5c4b1253b8e6ec3b9418df601ee73e5b9cbd3ff2cb9241e76cba06d",
-        "sha256:d7eece187a0a2632c45357e9431308b23d19a52cf38392fb37e856a81bf7157d",
-        "sha256:d8042adc63855e727290cf9626b9bd35962ede833adb423392c25742c2c1281d",
-        "sha256:d98f54ad35138ba98db3cd1e051554895b83e9a0fa74603de56320e6a17b251b",
-        "sha256:d9ca3c321b4ec04da546a69cabe2d0061c93f4ccb2839da5bc612ccc0e109c91",
-        "sha256:da42c7ab6fd86addf83fc50b6a4a917e1420d20f60c6dbaf6c6b96b5383ad9c5",
-        "sha256:dad999ef0b08d9a4914053ec5b8b3a618877fea8e73a19024b572da46f62e304",
-        "sha256:db7185ba6c15d7269011fa0d8fdb64c8272cfff796a481a849bb39c99f3256b9",
-        "sha256:dbe62d08147ae40518431619cb5a840705a16ace0d0a229772179aa4b866f3d0",
-        "sha256:ded0116c8036ea0718b3e5693fe3c8ccc86ce436186ac79e754912b8a597bd57",
-        "sha256:defdcb1832cfe06b580ebe8906a83b8029c39609729fb6a728dc8615605d96e4",
-        "sha256:df1898ba2e27ee3dad63686bbadabe2df6aa3aa29ae1891db706b0822b4faeaa",
-        "sha256:e0e817a32c17e10d33e64cc5ad1c1fa583d32214c9353078b303cf0222c8cdc1",
+        "sha256:ce0f7e1a600a14bb51c718ff605fcb1f94d21678b04d440252196f9cf27f118c",
+        "sha256:d51712ed2d188fe6402f026c8133f62e5a8078f373b1a909f3a3cece04a6b4d4",
         "sha256:e25a4681609c2135ab3ce2c9702046b73bf6a8fee232c18ccedfcc51d10ae6bd",
-        "sha256:e3be6cc7dbced12871a3794bed47cfba5d8e277f8f1d7cb3f82b66f4fd9c8efc",
-        "sha256:e40426ce6dd61f03988668fe9c1e9b08e376cd3377e82d9083057b2decad85e1",
-        "sha256:e405b5b4b5cebcf47d38729360bf234f515015e42279d59994c2aa7d7567b1d2",
-        "sha256:e585a3a6b351db747c3c92a5960dec49aad070187a8ada019c92d4e761ba10e5",
-        "sha256:e5e4da1e41940d08bd87a9157f4c6d7c6a937d33bae31dd9dbad3c9025f470f4",
-        "sha256:e62d9d52f92d79c93922e94dab6c4bc976d7855e1c425960a41d8713f34a0739",
         "sha256:e7da6347faf6c4c55ec282daeed6a21fb6b42dd080310c9e0287a69f87979e57",
-        "sha256:e84332b14e430f5ed594659751991d5d5030eab132a07d3b370f84504ccac7a4",
-        "sha256:e861011468b3216d5ee0b75bace9768f4f462b988932b05df4d178d492ec899d",
-        "sha256:e98a843cc926f9be02732a49e7fffecfcff1237afa5b048df3e5ab0460ac7122",
-        "sha256:e99bbf41126c6e1cfb72d8d154862af5f28e01cf64eccf35ab04e01daa59830a",
-        "sha256:ea302095645a570c3ac8a00fa4f1b5f6f22f62597bb146d97d05d43d59522da6",
-        "sha256:eb7b34370f147fe5d24e1f4bbf6e994345aad43963ff6a6d24e27f1ed996f6b1",
-        "sha256:ec2b23515b3ff756976e581bff9350291c7a424914359338a25b58e24f695f7a",
-        "sha256:ecb0a33ad8571ad818de3feb60b4b620d902a9d5b672ecf966ced329ea902a1f",
-        "sha256:ed790ae65a6679c660714938ff8894ed63d067b5f23206cccca750b1e4a4a421",
-        "sha256:f0d6b13ff9d29594967c5d23c868b1ec42ec5dd73482db0c2c8dd0f9fd72662f",
-        "sha256:f168d4a823f63aec9a12c89fda184ae8840c3aa09889c1bc098b0c612b50a694",
-        "sha256:f2b21df96918bfdcca0b507362b37531425d4ff0196bccb65e85fc6c6993644e",
-        "sha256:f6ae137965857d052029af2d712344f399fdb2b4c7008e7338075ea7d175d44c",
-        "sha256:f73e60654bb3a7ffe2f3d01789a0fc49e8b252cf514df6e1c76d5c9bcce6cff1",
-        "sha256:f7428787acbb78a28057662ab8afc965452273f01c75ad1342b925d1d965a6fa",
-        "sha256:f77aa813f93fd245ad164a7fb2d28282a8eb3b76b1d3d4f949541ca39c14743c",
-        "sha256:f87bb27834804a89951f5c1d4878c4fb59a889356e7dc6c0a50ccc96d8e0ccb1",
-        "sha256:f8f1c272622c117f8bd1b265475a565e27d2322bc8fb0413d30fd2ed2855e395",
-        "sha256:f9655034decea8c07dfc140aedc46568e33bb49408024970dc8ee9331aef9f88",
-        "sha256:f9d6483ce6256be1f2da9d53f70f233d3ee2cd20f1643240f3b10c4e2e683598",
-        "sha256:fe335f6dd44a940171cedd2314914b9b80fd2f4d0a04d169c57122ba8b32cf56",
-        "sha256:ff1da49bd35eac85545a0bd6a28f69ef0f21de3c4dec18e3c7822ed0b4690b41"
+        "sha256:ed05193ace499b90c5f19b6db86b60fcc9fd00c0f9358a672efd2c5661e844e3",
+        "sha256:fa68a6b02a24692676f8bfd0e357ef8e5a6046ac4934121a5f715fbd3cc6fa6d",
+        "sha256:fbd06faf6a3a1c40a56c7bb30ba8866517e3bee9cd2f99356e55a431fb0d64f0"
       ],
       "module": {
         "name": "SwfDocument",
@@ -36859,12 +36909,14 @@
         "source": "packages/swf/src/swfDocument.ts"
       },
       "path": "flight/swf/swf_document.hpp",
-      "rule": "cpp-contextual-union-value-type-unrepresented",
+      "rule": "cpp-contextual-structural-array-nominal-recovery-unproven",
       "status": "refused-placeholder"
     },
     {
       "consumers": [
-        "@flighthq/swf/packages/swf/src/swfDocument.ts"
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfEditTextHandler.ts"
       ],
       "module": {
         "name": "SwfEditText",
@@ -36881,16 +36933,18 @@
     {
       "consumers": [
         "@flighthq/swf/packages/swf/src/contract.ts",
-        "@flighthq/swf/packages/swf/src/index.ts"
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfTextTagFamily.ts"
       ],
       "module": {
-        "name": "SwfExplain",
+        "name": "SwfEditTextHandler",
         "packageName": "@flighthq/swf",
-        "source": "packages/swf/src/swfExplain.ts"
+        "source": "packages/swf/src/swfEditTextHandler.ts"
       },
-      "path": "flight/swf/swf_explain.hpp",
+      "path": "flight/swf/swf_edit_text_handler.hpp",
       "refusedDependencies": [
-        "@flighthq/swf/packages/swf/src/swfDocument.ts"
+        "@flighthq/swf/packages/swf/src/swfEditText.ts",
+        "@flighthq/swf/packages/swf/src/swfNode.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -36898,7 +36952,8 @@
       "consumers": [
         "@flighthq/swf/packages/swf/src/contract.ts",
         "@flighthq/swf/packages/swf/src/enableSwfGuards.ts",
-        "@flighthq/swf/packages/swf/src/swfDocument.ts"
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfPlaceObject3Handler.ts"
       ],
       "module": {
         "name": "SwfFilter",
@@ -36921,7 +36976,43 @@
     },
     {
       "consumers": [
-        "@flighthq/swf/packages/swf/src/swfDocument.ts"
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfFontTagFamily.ts"
+      ],
+      "module": {
+        "name": "SwfFontHandler",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfFontHandler.ts"
+      },
+      "path": "flight/swf/swf_font_handler.hpp",
+      "refusedDependencies": [
+        "@flighthq/swf/packages/swf/src/swfText.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfAllTagHandlers.ts"
+      ],
+      "module": {
+        "name": "SwfFontTagFamily",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfFontTagFamily.ts"
+      },
+      "path": "flight/swf/swf_font_tag_family.hpp",
+      "refusedDependencies": [
+        "@flighthq/swf/packages/swf/src/swfFontHandler.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfScriptHandler.ts"
       ],
       "module": {
         "name": "SwfFrameAction",
@@ -36935,7 +37026,9 @@
       "status": "dependency-incomplete"
     },
     {
-      "consumers": [],
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts"
+      ],
       "module": {
         "name": "SwfFrameActionTestHelper",
         "packageName": "@flighthq/swf",
@@ -36948,7 +37041,39 @@
       "consumers": [
         "@flighthq/swf/packages/swf/src/contract.ts",
         "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfContentCapabilities.ts",
+        "@flighthq/swf/packages/swf/src/swfTagCensus.ts"
+      ],
+      "module": {
+        "name": "SwfHeader",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfHeader.ts"
+      },
+      "path": "flight/swf/swf_header.hpp",
+      "refusedDependencies": [
         "@flighthq/swf/packages/swf/src/swfDocument.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/swfContentCapabilities.ts",
+        "@flighthq/swf/packages/swf/src/swfHeader.ts",
+        "@flighthq/swf/packages/swf/src/swfTagCensus.ts"
+      ],
+      "module": {
+        "name": "SwfHeaderReader",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfHeaderReader.ts"
+      },
+      "path": "flight/swf/swf_header_reader.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts"
       ],
       "module": {
         "name": "SwfImageDecoder",
@@ -36960,7 +37085,81 @@
     },
     {
       "consumers": [
-        "@flighthq/swf/packages/swf/src/swfDocument.ts"
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfImageDecoder.ts",
+        "@flighthq/swf/packages/swf/src/swfJpegBitmapHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfLosslessBitmapHandler.ts"
+      ],
+      "module": {
+        "name": "SwfImageMimeType",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfImageMimeType.ts"
+      },
+      "path": "flight/swf/swf_image_mime_type.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineMorphShapeHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineShapeHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfJpegBitmapHandler.ts"
+      ],
+      "module": {
+        "name": "SwfImageTexture",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfImageTexture.ts"
+      },
+      "path": "flight/swf/swf_image_texture.hpp",
+      "status": "emitted"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfBitmapTagFamily.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:0522e0193e0ee0c584f7cae86bbdb37c2320b42c727972f569fcbf7634935eb4",
+        "sha256:1236ff0155a3358e352bd61a4a5ba1cedfba01016b228966251492aa1f71aeb3",
+        "sha256:13b44a6d696697513dd560ebd8f8f89b5a73efaace2976013b0ab46a6cc00ffd",
+        "sha256:21e5e86e43df6e6afc6b383deb8cb875fc2ac4f64d7059c5371261bab91e78eb",
+        "sha256:28341588891553f90604441b7781b3f60ad3fb71c483a465c1222fe0668f94a3",
+        "sha256:3f9843f554ce8c30f6fe7cd8807e2510d2452bd8b33b60e904c7099d408b14f1",
+        "sha256:41ac507db51cf0f347f161e4a5e2e7e1217019b4bc75f3491f40ec255671050e",
+        "sha256:59750fc8cab861138807889beb294aef0904818e20c07efbcf818bc26b3a0474",
+        "sha256:59be15d5a14a72b10d6799ef6fd3114a9560192113bcc6a1451e943e0bfe7878",
+        "sha256:5a8498ca9fb57707438f3cca15df1f458fc58b264e1a3208d92a2b9fd906bc4e",
+        "sha256:634b8b05ea831c968da687483aed118a0333f4355109210b0f24bd301ba39f5f",
+        "sha256:6695bc44731a6481841746818a3ae12745aafbf2115ee23e359b79deb65c152c",
+        "sha256:7cbf0ba7b3976cfd579e91400100c4c5833e052d0b787cc8c5015c95c5cc52f4",
+        "sha256:81c5504afc6a07e52db7674f7dc4504df0d22a1f1767306cf9cdb8c5d0ed56e6",
+        "sha256:97d264f78f02a62855c657205f883a084ea621611298c0710e920f7d9c141d82",
+        "sha256:a3dd621a32ead5b7fa18cfeed3ce25673022e52e621c04eb0ab61a2cd4abc460",
+        "sha256:a841c6433d0d5adf5ba75263c5d9da1dba391208b531b98449cf09f6d20626e1",
+        "sha256:bea4598856924714fd6099fbcdcc8dbb2808529ef64d385a38dcd0fde062ab04",
+        "sha256:bf2e8c5bff435422403299a15c76eb7bfcbead45151261978b7b3e393eef5a25",
+        "sha256:d8509d026b1086ec6808a0552c6238b99fa57bd9643e1c3ed8a203150f5a3969",
+        "sha256:e124c7ee2f59f6044d4c4500d60360c028fa02754f28e57e03932a0b75ac3664",
+        "sha256:f168d4a823f63aec9a12c89fda184ae8840c3aa09889c1bc098b0c612b50a694",
+        "sha256:ff1da49bd35eac85545a0bd6a28f69ef0f21de3c4dec18e3c7822ed0b4690b41"
+      ],
+      "module": {
+        "name": "SwfJpegBitmapHandler",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfJpegBitmapHandler.ts"
+      },
+      "path": "flight/swf/swf_jpeg_bitmap_handler.hpp",
+      "rule": "cpp-contextual-union-value-type-unrepresented",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfTimelineParse.ts"
       ],
       "module": {
         "name": "SwfKnownTags",
@@ -36971,9 +37170,25 @@
       "status": "emitted"
     },
     {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfBitmapTagFamily.ts"
+      ],
+      "module": {
+        "name": "SwfLosslessBitmapHandler",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfLosslessBitmapHandler.ts"
+      },
+      "path": "flight/swf/swf_lossless_bitmap_handler.hpp",
+      "status": "emitted"
+    },
+    {
       "classification": "source-portability",
       "consumers": [
-        "@flighthq/swf/packages/swf/src/swfDocument.ts"
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineMorphShapeHandler.ts"
       ],
       "declarationFingerprints": [
         "sha256:0771c0539acfa5087dc90871cac25be08599395c596f009b29ac8937ab7d7f77",
@@ -37027,15 +37242,150 @@
       "status": "refused-placeholder"
     },
     {
+      "classification": "source-portability",
       "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineMorphShapeHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineShapeHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfDocument.ts",
+        "@flighthq/swf/packages/swf/src/swfEditTextHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfJpegBitmapHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfVideoHandler.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:034aa7259ee9c0532055a41d8508ab7df3f919af820fc54ed4d59fdfa683d40f",
+        "sha256:0945dc81ac21df751970b5f67513dba364d6d0afb97e09765b1fc4e48146cbff",
+        "sha256:17e779029b4ad000e9e0d4db2e8747e0f7ee326ef03dd389b3fd367edb74b4af",
+        "sha256:2339cf8a67817dadb398a13da34bce2bc25659f8912ec0747ee4e03dca77c5ea",
+        "sha256:8231bddb48072a2991b3a45acc8595fc79ee9dae67dac986000ba8075f18c6a7",
+        "sha256:8d6068533dd65e173a6cd112b66f3c91dec5dfb322bf13637782b3f5e5cbe25b",
+        "sha256:b8ef8a2a2dbdba649b86f745acbcb0ce94571aecf3832973dcb57ba7d6c75215",
+        "sha256:bed3daae66625bfd24ee2227154e072dbca0bdc0e4ab6849adeec71e955dc79d",
+        "sha256:c5d92c2f7f1e4b04bfccac7ce1fc897e4d21b1c6d0662e7caac1c542a330a1b6",
+        "sha256:cac656c4ed2872bab48b82239d8a935cd61d4f718136748418d19f2a4abae256"
+      ],
+      "module": {
+        "name": "SwfNode",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfNode.ts"
+      },
+      "path": "flight/swf/swf_node.hpp",
+      "rule": "cpp-structural-assertion-owner-unproven",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts"
+      ],
+      "module": {
+        "name": "SwfNodeKinds",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfNodeKinds.ts"
+      },
+      "path": "flight/swf/swf_node_kinds.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfPlacementTagFamily.ts"
+      ],
+      "module": {
+        "name": "SwfPlaceObject3Handler",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfPlaceObject3Handler.ts"
+      },
+      "path": "flight/swf/swf_place_object3_handler.hpp",
+      "refusedDependencies": [
+        "@flighthq/swf/packages/swf/src/swfFilter.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfPlacementTagFamily.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:36f00473f76e461f1dc62129e206bad698c728e007dc95cf1862052c3c31cea8",
+        "sha256:3ca215ca6faeda02de39e0e83cc2e5c316bbcf26c6522f9a6afb8aa170b12dc1",
+        "sha256:4be2401bad7835fe245f6caaa2db74dc233cbfbdc4d5e64d2486c2f5d96bd419",
+        "sha256:5e0224734322410b64a91f4804d8d4a14acbe26f667f55f473a8b0d4602f963e",
+        "sha256:820af81cd29bc11f27b84e3d083c66c62bbbe38814582937fdd591bdf24c384f",
+        "sha256:8f9bd3bac9a322a68cd900775a8a7f4efb5c6a43f5f8c7211ecb1bda26a5136a",
+        "sha256:96586ce66fb9623b2a31ebbd71036603397854988aa19142e5065fa43a10b334",
+        "sha256:e8fa3c65fca341c0752a037ad86a23e0b44a7540f5fbba8fdfb4cb7f47b0d94c",
+        "sha256:ed790ae65a6679c660714938ff8894ed63d067b5f23206cccca750b1e4a4a421"
+      ],
+      "module": {
+        "name": "SwfPlaceObjectHandler",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfPlaceObjectHandler.ts"
+      },
+      "path": "flight/swf/swf_place_object_handler.hpp",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfAllTagHandlers.ts"
+      ],
+      "module": {
+        "name": "SwfPlacementTagFamily",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfPlacementTagFamily.ts"
+      },
+      "path": "flight/swf/swf_placement_tag_family.hpp",
+      "refusedDependencies": [
+        "@flighthq/swf/packages/swf/src/swfPlaceObject3Handler.ts",
+        "@flighthq/swf/packages/swf/src/swfPlaceObjectHandler.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/swfAppearance.ts",
+        "@flighthq/swf/packages/swf/src/swfBoundedDefinition.ts",
+        "@flighthq/swf/packages/swf/src/swfControlHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineShapeHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfDocument.ts",
+        "@flighthq/swf/packages/swf/src/swfJpegBitmapHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfPlaceObject3Handler.ts",
+        "@flighthq/swf/packages/swf/src/swfPlaceObjectHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfStaticTextHandler.ts"
+      ],
+      "module": {
+        "name": "SwfPrimitive",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfPrimitive.ts"
+      },
+      "path": "flight/swf/swf_primitive.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/swfControlHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineMorphShapeHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineShapeHandler.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts",
         "@flighthq/swf/packages/swf/src/swfEditText.ts",
+        "@flighthq/swf/packages/swf/src/swfEditTextHandler.ts",
         "@flighthq/swf/packages/swf/src/swfFilter.ts",
+        "@flighthq/swf/packages/swf/src/swfFontHandler.ts",
         "@flighthq/swf/packages/swf/src/swfFrameAction.ts",
         "@flighthq/swf/packages/swf/src/swfMorphShape.ts",
+        "@flighthq/swf/packages/swf/src/swfScriptHandler.ts",
         "@flighthq/swf/packages/swf/src/swfShape.ts",
         "@flighthq/swf/packages/swf/src/swfShapeTestHelper.ts",
-        "@flighthq/swf/packages/swf/src/swfText.ts"
+        "@flighthq/swf/packages/swf/src/swfSpriteHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfStaticTextHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfText.ts",
+        "@flighthq/swf/packages/swf/src/swfTimelineParse.ts"
       ],
       "module": {
         "name": "SwfReader",
@@ -37047,7 +37397,59 @@
     },
     {
       "consumers": [
-        "@flighthq/swf/packages/swf/src/swfDocument.ts",
+        "@flighthq/swf/packages/swf/src/contract.ts"
+      ],
+      "module": {
+        "name": "SwfRequirements",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfRequirements.ts"
+      },
+      "path": "flight/swf/swf_requirements.hpp",
+      "refusedDependencies": [
+        "@flighthq/swf/packages/swf/src/swfContentCapabilities.ts",
+        "@flighthq/swf/packages/swf/src/swfTagCensus.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfScriptTagFamily.ts"
+      ],
+      "module": {
+        "name": "SwfScriptHandler",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfScriptHandler.ts"
+      },
+      "path": "flight/swf/swf_script_handler.hpp",
+      "refusedDependencies": [
+        "@flighthq/swf/packages/swf/src/swfFrameAction.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfAllTagHandlers.ts"
+      ],
+      "module": {
+        "name": "SwfScriptTagFamily",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfScriptTagFamily.ts"
+      },
+      "path": "flight/swf/swf_script_tag_family.hpp",
+      "refusedDependencies": [
+        "@flighthq/swf/packages/swf/src/swfScriptHandler.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineShapeHandler.ts",
         "@flighthq/swf/packages/swf/src/swfMorphShape.ts",
         "@flighthq/swf/packages/swf/src/swfText.ts"
       ],
@@ -37059,6 +37461,24 @@
       "path": "flight/swf/swf_shape.hpp",
       "refusedDependencies": [
         "@flighthq/shape/packages/shape/src/shape.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfAllTagHandlers.ts"
+      ],
+      "module": {
+        "name": "SwfShapeTagFamily",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfShapeTagFamily.ts"
+      },
+      "path": "flight/swf/swf_shape_tag_family.hpp",
+      "refusedDependencies": [
+        "@flighthq/swf/packages/swf/src/swfDefineMorphShapeHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfDefineShapeHandler.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -37075,22 +37495,137 @@
     {
       "consumers": [
         "@flighthq/swf/packages/swf/src/contract.ts",
-        "@flighthq/swf/packages/swf/src/index.ts"
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfSoundTagFamily.ts"
       ],
       "module": {
-        "name": "SwfTagRegistry",
+        "name": "SwfSoundHandler",
         "packageName": "@flighthq/swf",
-        "source": "packages/swf/src/swfTagRegistry.ts"
+        "source": "packages/swf/src/swfSoundHandler.ts"
       },
-      "path": "flight/swf/swf_tag_registry.hpp",
+      "path": "flight/swf/swf_sound_handler.hpp",
       "refusedDependencies": [
-        "@flighthq/swf/packages/swf/src/swfDocument.ts"
+        "@flighthq/audio/packages/audio/src/audioResourceReference.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "consumers": [
-        "@flighthq/swf/packages/swf/src/swfExplain.ts"
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfAllTagHandlers.ts"
+      ],
+      "module": {
+        "name": "SwfSoundTagFamily",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfSoundTagFamily.ts"
+      },
+      "path": "flight/swf/swf_sound_tag_family.hpp",
+      "refusedDependencies": [
+        "@flighthq/swf/packages/swf/src/swfSoundHandler.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfSpriteTagFamily.ts"
+      ],
+      "module": {
+        "name": "SwfSpriteHandler",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfSpriteHandler.ts"
+      },
+      "path": "flight/swf/swf_sprite_handler.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfAllTagHandlers.ts"
+      ],
+      "module": {
+        "name": "SwfSpriteTagFamily",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfSpriteTagFamily.ts"
+      },
+      "path": "flight/swf/swf_sprite_tag_family.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfTextTagFamily.ts"
+      ],
+      "module": {
+        "name": "SwfStaticTextHandler",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfStaticTextHandler.ts"
+      },
+      "path": "flight/swf/swf_static_text_handler.hpp",
+      "refusedDependencies": [
+        "@flighthq/swf/packages/swf/src/swfText.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/swfRequirements.ts"
+      ],
+      "module": {
+        "name": "SwfTagCensus",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfTagCensus.ts"
+      },
+      "path": "flight/swf/swf_tag_census.hpp",
+      "refusedDependencies": [
+        "@flighthq/swf/packages/swf/src/swfDocument.ts",
+        "@flighthq/swf/packages/swf/src/swfHeader.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:11f3f9f778276d45212bceb1e96f289c9ce188054144a4930751c87ba68785f2",
+        "sha256:17278340453ebb4540712a274cb61ba330ab5d98fc2332ef5623a742e6041407",
+        "sha256:2d429718dff323e2ef1345f936f71f57ea4ba481a308c2de10f6928fc2a5cd22",
+        "sha256:3883c98ce8d02194eef233a7e5123000043f0a78062e2d8ab094503fb0d828ba",
+        "sha256:460e0be6af0ad970621655bacbc229d05a9730f85e29b81e658e0ae57cf72825",
+        "sha256:4b48d7c731aa568dd6a07fe5d8e7f859112cebab5de3f11f08926b18417ab887",
+        "sha256:5b510ad89c88ee870a39c25064c9e806b58bd5f073e9d922594bd1c6dabd642c",
+        "sha256:6fed5a2a34e4f1c71edef8cb437e7b736d80303b5951bb13cf7d3b6adb0a821b",
+        "sha256:7c3156b3ae090b3f532c8055b55489d808490ac097048a5d78615bcddf66d7b4",
+        "sha256:9b420dd3e909f81667ba2569eae52ea8d6cbb6cc65f5585ad2c51bcf95529b11",
+        "sha256:a417fe926c1cabb06384b31674a623e141e9fadafffbc0daec4a7f300f6106a7",
+        "sha256:b65bcefd06fac20482f58a5449e64a5b86f361c736a63219b24a69e00ebb60f1",
+        "sha256:d3e5a13bdfc1dad3110eacd91e07ea2e2e8bda1d30399d48a28840e7d041c5ec",
+        "sha256:f1c84f172988d8625b265af806002e0d95d68e98bcff2cdc72b8c6b7e06aab76",
+        "sha256:f2ebba0b4a257ff02ca7f4c0f6970d74fc2a88a3ae1f64c2e40b086175ba5b2a",
+        "sha256:f4f2b0aa4bd16a0cdcd3a10c8de4c313c30231bc41112e48517827d15b826d16"
+      ],
+      "module": {
+        "name": "SwfTagStreamTestHelper",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfTagStreamTestHelper.ts"
+      },
+      "path": "flight/swf/_internal_swf_tag_stream_test_helper.hpp",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfRequirements.ts",
+        "@flighthq/swf/packages/swf/src/swfTagCensus.ts",
+        "@flighthq/swf/packages/swf/src/swfTimelineParse.ts"
       ],
       "module": {
         "name": "SwfTagVocabulary",
@@ -37103,7 +37638,10 @@
     {
       "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/swf/packages/swf/src/swfDocument.ts"
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfFontHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfStaticTextHandler.ts"
       ],
       "declarationFingerprints": [
         "sha256:1149b89615fdadae1c2d131e1a2471a931e9cbd570671e8aaa272943276f4074",
@@ -37142,6 +37680,79 @@
       },
       "path": "flight/swf/swf_text.hpp",
       "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfAllTagHandlers.ts"
+      ],
+      "module": {
+        "name": "SwfTextTagFamily",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfTextTagFamily.ts"
+      },
+      "path": "flight/swf/swf_text_tag_family.hpp",
+      "refusedDependencies": [
+        "@flighthq/swf/packages/swf/src/swfEditTextHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfStaticTextHandler.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/swfControlHandler.ts",
+        "@flighthq/swf/packages/swf/src/swfDocument.ts",
+        "@flighthq/swf/packages/swf/src/swfSpriteHandler.ts"
+      ],
+      "module": {
+        "name": "SwfTimelineParse",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfTimelineParse.ts"
+      },
+      "path": "flight/swf/swf_timeline_parse.hpp",
+      "status": "emitted"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfVideoTagFamily.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:1f7582636643b48352ae4d1b802b014ed58f3d13c61fded4327fda69e20c6b92",
+        "sha256:2ae464155668c9f7b0d438a66d22dbce19f19a606c3ac2dc160c70039861672c",
+        "sha256:6ac381096aa06c84ac0380a56525c498887874302cd03c2e76bb3daa2c11073a",
+        "sha256:984845894adba4ade9f98abe83bb40308ddcd8ead9b59224ad8ef6e878f24727",
+        "sha256:a799c99250ea69533b01251f8f23840b3f38e95cb1a342a660327f6dbb27ca64"
+      ],
+      "module": {
+        "name": "SwfVideoHandler",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfVideoHandler.ts"
+      },
+      "path": "flight/swf/swf_video_handler.hpp",
+      "rule": "cpp-contextual-union-value-type-unrepresented",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/swf/packages/swf/src/contract.ts",
+        "@flighthq/swf/packages/swf/src/index.ts",
+        "@flighthq/swf/packages/swf/src/swfAllTagHandlers.ts"
+      ],
+      "module": {
+        "name": "SwfVideoTagFamily",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfVideoTagFamily.ts"
+      },
+      "path": "flight/swf/swf_video_tag_family.hpp",
+      "refusedDependencies": [
+        "@flighthq/swf/packages/swf/src/swfVideoHandler.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [

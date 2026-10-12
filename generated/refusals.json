@@ -2157,14 +2157,14 @@
       "code": "dependency-refused",
       "module": "packages/font/src/_fontFaceLoad.ts",
       "package": "@flighthq/font",
-      "reason": "dependency ./fontFormat was refused for @flighthq/font/packages/font/src/fontFormat.ts",
+      "reason": "dependency ./fontFormat.ts was refused for @flighthq/font/packages/font/src/fontFormat.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/font/src/contract.ts",
       "package": "@flighthq/font",
-      "reason": "dependency ./fontFormat was refused for @flighthq/font/packages/font/src/fontFormat.ts",
+      "reason": "dependency ./_fontFaceLoad.ts was refused for @flighthq/font/packages/font/src/_fontFaceLoad.ts",
       "stage": "dependency"
     },
     {
@@ -2180,14 +2180,14 @@
       "code": "dependency-refused",
       "module": "packages/font/src/fontResourceFrom.ts",
       "package": "@flighthq/font",
-      "reason": "dependency ./_fontFaceLoad was refused for @flighthq/font/packages/font/src/_fontFaceLoad.ts",
+      "reason": "dependency ./_fontFaceLoad.ts was refused for @flighthq/font/packages/font/src/_fontFaceLoad.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/font/src/index.ts",
       "package": "@flighthq/font",
-      "reason": "dependency ./contract was refused for @flighthq/font/packages/font/src/contract.ts",
+      "reason": "dependency ./fontFormat.ts was refused for @flighthq/font/packages/font/src/fontFormat.ts",
       "stage": "dependency"
     },
     {
@@ -2203,21 +2203,21 @@
       "code": "dependency-refused",
       "module": "packages/font-formats/src/contract.ts",
       "package": "@flighthq/font-formats",
-      "reason": "dependency ./cffCharstring was refused for @flighthq/font-formats/packages/font-formats/src/cffCharstring.ts",
+      "reason": "dependency ./cffCharstring.ts was refused for @flighthq/font-formats/packages/font-formats/src/cffCharstring.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/font-formats/src/index.ts",
       "package": "@flighthq/font-formats",
-      "reason": "dependency ./openTypeGlyphOutlineSource was refused for @flighthq/font-formats/packages/font-formats/src/openTypeGlyphOutlineSource.ts",
+      "reason": "dependency ./cffCharstring.ts was refused for @flighthq/font-formats/packages/font-formats/src/cffCharstring.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/font-formats/src/openTypeGlyphOutlineSource.ts",
       "package": "@flighthq/font-formats",
-      "reason": "dependency ./cffCharstring was refused for @flighthq/font-formats/packages/font-formats/src/cffCharstring.ts",
+      "reason": "dependency ./cffCharstring.ts was refused for @flighthq/font-formats/packages/font-formats/src/cffCharstring.ts",
       "stage": "dependency"
     },
     {
@@ -8198,7 +8198,7 @@
       "code": "dependency-refused",
       "module": "packages/swf/src/contract.ts",
       "package": "@flighthq/swf",
-      "reason": "dependency ./swfDocument was refused for @flighthq/swf/packages/swf/src/swfDocument.ts",
+      "reason": "dependency ./mergeSwfParseOptions.ts was refused for @flighthq/swf/packages/swf/src/mergeSwfParseOptions.ts",
       "stage": "dependency"
     },
     {
@@ -8212,16 +8212,80 @@
       "code": "dependency-refused",
       "module": "packages/swf/src/index.ts",
       "package": "@flighthq/swf",
-      "reason": "dependency ./enableSwfGuards was refused for @flighthq/swf/packages/swf/src/enableSwfGuards.ts",
+      "reason": "dependency ./enableSwfGuards.ts was refused for @flighthq/swf/packages/swf/src/enableSwfGuards.ts",
       "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 1056,
+      "line": 21,
+      "module": "packages/swf/src/mergeSwfParseOptions.ts",
+      "package": "@flighthq/swf",
+      "reason": "cpp emission failed for @flighthq/swf/packages/swf/src/mergeSwfParseOptions.ts: narrowed C++ union projection requires proven present payload: the narrowing still admits absence, so nothing proved the payload present and reading the value alternative here would unpack storage that may still be holding the sentinel the test left reachable. Test both at once with `x != null`, or narrow the value into a present local the same way",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/swf/src/swfAllTagHandlers.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency ./swfBitmapTagFamily.ts was refused for @flighthq/swf/packages/swf/src/swfBitmapTagFamily.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/swf/src/swfBitmapTagFamily.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency ./swfJpegBitmapHandler.ts was refused for @flighthq/swf/packages/swf/src/swfJpegBitmapHandler.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/swf/src/swfContentCapabilities.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency ./swfDocument.ts was refused for @flighthq/swf/packages/swf/src/swfDocument.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 128,
+      "module": "packages/swf/src/swfControlHandler.ts",
+      "package": "@flighthq/swf",
+      "reason": "cpp emission failed for @flighthq/swf/packages/swf/src/swfControlHandler.ts: dual-sentinel optional property result requires one represented member value domain",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/swf/src/swfControlTagFamily.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency ./swfControlHandler.ts was refused for @flighthq/swf/packages/swf/src/swfControlHandler.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 42,
+      "module": "packages/swf/src/swfDefineMorphShapeHandler.ts",
+      "package": "@flighthq/swf",
+      "reason": "cpp emission failed for @flighthq/swf/packages/swf/src/swfDefineMorphShapeHandler.ts: contextual union value type std::function<flight::Ref<flight::types::Texture2D>(double, bool, bool)> is not a represented runtime domain",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 63,
+      "module": "packages/swf/src/swfDefineShapeHandler.ts",
+      "package": "@flighthq/swf",
+      "reason": "cpp emission failed for @flighthq/swf/packages/swf/src/swfDefineShapeHandler.ts: contextual union value type std::function<flight::Ref<flight::types::Texture2D>(double, bool, bool)> is not a represented runtime domain",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 507,
       "module": "packages/swf/src/swfDocument.ts",
       "package": "@flighthq/swf",
-      "reason": "cpp emission failed for @flighthq/swf/packages/swf/src/swfDocument.ts: contextual union value type flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<advanced_blend_mode_alpha_blend_mode_color_adjustments_color_transform_adjustments_character_id_clip_depth_depth_direct_linkage_effects_filter_adjustments_matrix_name_ratio_0fb22876f56b0b82>>>> is not a represented runtime domain: the value leaves a member the destination requires optional or absent, or gives it an incompatible type, so it is not the shape an alternative declares. This expression refers to an existing owner. Keep the value in the declared destination arm from the point it is created, or explicitly rebuild the declared result in source where changing identity is intended. The compiler will not retype, copy, or materialize the existing object into a sibling owner.",
+      "reason": "cpp emission failed for @flighthq/swf/packages/swf/src/swfDocument.ts: a readonly structural sequence cannot be stored as an owning array without changing array identity: each RowOf element retains its exact nominal referent, but the view keeps the outer owner only behind opaque identity and accessors, so recovering the elements would still require copying them into a different array object. Until flight-cpp provides identity-preserving projected-sequence storage, declare both the target and the source with the nominal element type rather than its Readonly projection.",
       "stage": "emission"
     },
     {
@@ -8233,9 +8297,9 @@
     },
     {
       "code": "dependency-refused",
-      "module": "packages/swf/src/swfExplain.ts",
+      "module": "packages/swf/src/swfEditTextHandler.ts",
       "package": "@flighthq/swf",
-      "reason": "dependency ./swfDocument was refused for @flighthq/swf/packages/swf/src/swfDocument.ts",
+      "reason": "dependency ./swfEditText.ts was refused for @flighthq/swf/packages/swf/src/swfEditText.ts",
       "stage": "dependency"
     },
     {
@@ -8247,10 +8311,40 @@
     },
     {
       "code": "dependency-refused",
+      "module": "packages/swf/src/swfFontHandler.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency ./swfText.ts was refused for @flighthq/swf/packages/swf/src/swfText.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/swf/src/swfFontTagFamily.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency ./swfFontHandler.ts was refused for @flighthq/swf/packages/swf/src/swfFontHandler.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
       "module": "packages/swf/src/swfFrameAction.ts",
       "package": "@flighthq/swf",
       "reason": "dependency @flighthq/movieclip/contract was refused for @flighthq/movieclip/packages/movieclip/src/movieClip.ts",
       "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/swf/src/swfHeader.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency ./swfDocument.ts was refused for @flighthq/swf/packages/swf/src/swfDocument.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 14,
+      "line": 30,
+      "module": "packages/swf/src/swfJpegBitmapHandler.ts",
+      "package": "@flighthq/swf",
+      "reason": "cpp emission failed for @flighthq/swf/packages/swf/src/swfJpegBitmapHandler.ts: contextual union callable value type std::function<std::optional<flight::Ref<flight::types::Sprite>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>, double, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>)> agrees with no alternative's signature: the destination holds [std::function<std::optional<flight::types::Node2D>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>, double, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>)>]. A callable is a represented domain, so the obstacle is that the destination's signature cannot call this one. Declare the value's parameters so the destination's signature supplies them, and its result as one the destination holds",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -8258,6 +8352,59 @@
       "package": "@flighthq/swf",
       "reason": "cpp emission failed for @flighthq/swf/packages/swf/src/swfMorphShape.ts: intersection types require C++ multiple-inheritance lowering: no shape for unknown, unknown. Declare the object shape the code reads rather than intersecting a conjunct that has none",
       "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 55,
+      "module": "packages/swf/src/swfNode.ts",
+      "package": "@flighthq/swf",
+      "reason": "cpp emission failed for @flighthq/swf/packages/swf/src/swfNode.ts: the asserted row from flight::Ref<flight::types::Node2DData> to flight::Ref<SwfAuthoredBoundsData> reads authoredBounds, which the source type does not declare, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as SwfAuthoredBoundsData, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that declares authoredBounds -- construct SwfAuthoredBoundsData explicitly, then type the retaining slot and every accessor result as SwfAuthoredBoundsData wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::Node2DData>. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/swf/src/swfPlaceObject3Handler.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency ./swfFilter.ts was refused for @flighthq/swf/packages/swf/src/swfFilter.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 60,
+      "module": "packages/swf/src/swfPlaceObjectHandler.ts",
+      "package": "@flighthq/swf",
+      "reason": "cpp emission failed for @flighthq/swf/packages/swf/src/swfPlaceObjectHandler.ts: dual-sentinel optional property result requires one represented member value domain",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/swf/src/swfPlacementTagFamily.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency ./swfPlaceObject3Handler.ts was refused for @flighthq/swf/packages/swf/src/swfPlaceObject3Handler.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/swf/src/swfRequirements.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency ./swfContentCapabilities.ts was refused for @flighthq/swf/packages/swf/src/swfContentCapabilities.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/swf/src/swfScriptHandler.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency ./swfFrameAction.ts was refused for @flighthq/swf/packages/swf/src/swfFrameAction.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/swf/src/swfScriptTagFamily.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency ./swfScriptHandler.ts was refused for @flighthq/swf/packages/swf/src/swfScriptHandler.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -8268,10 +8415,47 @@
     },
     {
       "code": "dependency-refused",
-      "module": "packages/swf/src/swfTagRegistry.ts",
+      "module": "packages/swf/src/swfShapeTagFamily.ts",
       "package": "@flighthq/swf",
-      "reason": "dependency ./swfDocument was refused for @flighthq/swf/packages/swf/src/swfDocument.ts",
+      "reason": "dependency ./swfDefineMorphShapeHandler.ts was refused for @flighthq/swf/packages/swf/src/swfDefineMorphShapeHandler.ts",
       "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/swf/src/swfSoundHandler.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency @flighthq/audio/contract was refused for @flighthq/audio/packages/audio/src/audioResourceReference.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/swf/src/swfSoundTagFamily.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency ./swfSoundHandler.ts was refused for @flighthq/swf/packages/swf/src/swfSoundHandler.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/swf/src/swfStaticTextHandler.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency ./swfText.ts was refused for @flighthq/swf/packages/swf/src/swfText.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/swf/src/swfTagCensus.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency ./swfDocument.ts was refused for @flighthq/swf/packages/swf/src/swfDocument.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 19,
+      "module": "packages/swf/src/swfTagStreamTestHelper.ts",
+      "package": "@flighthq/swf",
+      "reason": "cpp emission failed for @flighthq/swf/packages/swf/src/swfTagStreamTestHelper.ts: spreading an unbounded collection requires a fold or a variadic target",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -8281,6 +8465,29 @@
       "package": "@flighthq/swf",
       "reason": "cpp emission failed for @flighthq/swf/packages/swf/src/swfText.ts: dual-sentinel optional property result requires one represented member value domain",
       "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/swf/src/swfTextTagFamily.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency ./swfEditTextHandler.ts was refused for @flighthq/swf/packages/swf/src/swfEditTextHandler.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 14,
+      "line": 18,
+      "module": "packages/swf/src/swfVideoHandler.ts",
+      "package": "@flighthq/swf",
+      "reason": "cpp emission failed for @flighthq/swf/packages/swf/src/swfVideoHandler.ts: contextual union callable value type std::function<std::optional<flight::Ref<flight::types::Sprite>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>, double, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>)> agrees with no alternative's signature: the destination holds [std::function<std::optional<flight::types::Node2D>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>, double, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>)>]. A callable is a represented domain, so the obstacle is that the destination's signature cannot call this one. Declare the value's parameters so the destination's signature supplies them, and its result as one the destination holds",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/swf/src/swfVideoTagFamily.ts",
+      "package": "@flighthq/swf",
+      "reason": "dependency ./swfVideoHandler.ts was refused for @flighthq/swf/packages/swf/src/swfVideoHandler.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",

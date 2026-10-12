@@ -392,6 +392,7 @@
         "flight/selection/pointer_selection_policy.hpp",
         "flight/skeleton2d/skeleton2d_draw_order_target.hpp",
         "flight/skeleton3d/prepare_scene3_dskinning.hpp",
+        "flight/swf/swf_edit_text_handler.hpp",
         "flight/timeline/timeline.hpp",
         "flight/types/bitmap_text.hpp",
         "flight/types/display_object.hpp",
@@ -931,6 +932,8 @@
         "flight/scene3d_wgpu/render_wgpu_scene3_d.hpp",
         "flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp",
         "flight/skeleton2d_formats/spine_binary_parse.hpp",
+        "flight/swf/swf_bounded_definition.hpp",
+        "flight/swf/swf_place_object3_handler.hpp",
         "flight/textinput/text_input_editing.hpp",
         "flight/texture/video_texture.hpp",
         "flight/texture_formats/parse_atf.hpp",
@@ -3723,6 +3726,7 @@
         "flight/scene3d_gl/specular_glossiness_pbr_gl_mesh_material_renderer.hpp",
         "flight/scene3d_wgpu/specular_glossiness_pbr_wgpu_mesh_material_renderer.hpp",
         "flight/swf/_internal_swf_shape_test_helper.hpp",
+        "flight/swf/_internal_swf_tag_stream_test_helper.hpp",
         "flight/swf/swf_reader.hpp"
       ],
       "id": "math-power-runtime-call-namespace-collision"
@@ -5341,7 +5345,7 @@
     },
     {
       "dependency": "flight",
-      "digest": "9141c543a3448c25f7f5e5f1c917cd3821418d2012e8a8a001bc3753abd01eef",
+      "digest": "3ddeae713ae2ee8a9e03aa43090c1143ee6b2fd1545d1512370e3b065477a94b",
       "id": "font-formats-name-woff-diagnostic-details",
       "module": "packages/font-formats/src/woffFont.ts",
       "package": "@flighthq/font-formats"
@@ -6051,7 +6055,15 @@
       "flight/skeleton2d/path_constraint2_d.hpp",
       "flight/skeleton2d/transform_constraint2_d.hpp",
       "flight/skeleton2d_formats/spine_binary_parse.hpp",
+      "flight/swf/_internal_swf_tag_stream_test_helper.hpp",
+      "flight/swf/swf_document.hpp",
+      "flight/swf/swf_jpeg_bitmap_handler.hpp",
+      "flight/swf/swf_lossless_bitmap_handler.hpp",
+      "flight/swf/swf_script_handler.hpp",
       "flight/swf/swf_shape.hpp",
+      "flight/swf/swf_sound_handler.hpp",
+      "flight/swf/swf_static_text_handler.hpp",
+      "flight/swf/swf_video_handler.hpp",
       "flight/tilemap_formats/tiled_tmx_format.hpp",
       "flight/updater/updater.hpp"
     ],
@@ -6060,6 +6072,15 @@
       "attach_failed_reason_release_failed_a670bac8ba62ef94",
       "bind_group_layout_pipeline_833b0848238ca1cc",
       "buffer_byte_offset_byte_length_view_cb5f900d5c8eb8e9",
+      "bytes_mime_type_0f132ce875cdb3fc",
+      "bytes_mime_type_resource_0c07297b9c0324ff",
+      "bytes_mime_type_sample_rate_5485cac285dc53ee",
+      "bytes_named_a0691cdc21805510",
+      "character_id_cue_1789e18ad131005e",
+      "character_id_end_source_start_version_3182d1468e182b72",
+      "character_id_script_7fe7df2e7341fc1a",
+      "class_name_cue_ca53ee8b35497d37",
+      "codec_id_deblocking_frame_count_height_smoothing_width_e646285bb518325f",
       "color_de12e9ee597cac6a",
       "colors_timeline_79cefceb3eed9427",
       "element_version_02719fb3b3a4e4e7",
@@ -6484,7 +6505,15 @@
       "flight/spritesheet/spritesheet_from.hpp",
       "flight/spritesheet/spritesheet_validation.hpp",
       "flight/spritesheet_formats/spritesheet_detect.hpp",
+      "flight/swf/_internal_swf_tag_stream_test_helper.hpp",
+      "flight/swf/swf_control_handler.hpp",
+      "flight/swf/swf_define_morph_shape_handler.hpp",
+      "flight/swf/swf_define_shape_handler.hpp",
+      "flight/swf/swf_document.hpp",
+      "flight/swf/swf_jpeg_bitmap_handler.hpp",
+      "flight/swf/swf_place_object_handler.hpp",
       "flight/swf/swf_text.hpp",
+      "flight/swf/swf_video_handler.hpp",
       "flight/text/rich_text.hpp",
       "flight/text/text_label.hpp",
       "flight/text_markup/text_markup.hpp",
@@ -6511,7 +6540,7 @@
       "flight/velocity/transform_velocity.hpp",
       "flight/video/video_resource_from.hpp"
     ],
-    "includes": 951
+    "includes": 980
   },
   "packages": [
     {
@@ -6788,17 +6817,17 @@
       "sourceModules": 8
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/compression",
       "cppNamespace": "flight::compression",
-      "emittedModules": 6,
+      "emittedModules": 7,
       "package": "@flighthq/compression",
       "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
-      "sourceModules": 6
+      "sourceModules": 7
     },
     {
       "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
@@ -6971,27 +7000,27 @@
       "sourceModules": 4
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/font",
       "cppNamespace": "flight::font",
       "emittedModules": 8,
       "package": "@flighthq/font",
       "refusedModules": 1,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 9
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/font_formats",
       "cppNamespace": "flight::font_formats",
       "emittedModules": 15,
       "package": "@flighthq/font-formats",
       "refusedModules": 2,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 17
@@ -7101,17 +7130,17 @@
       "sourceModules": 7
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/image_codec",
       "cppNamespace": "flight::image_codec",
-      "emittedModules": 9,
+      "emittedModules": 5,
       "package": "@flighthq/image-codec",
       "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
-      "sourceModules": 9
+      "sourceModules": 5
     },
     {
       "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
@@ -8221,17 +8250,17 @@
       "sourceModules": 7
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/swf",
       "cppNamespace": "flight::swf",
-      "emittedModules": 16,
+      "emittedModules": 46,
       "package": "@flighthq/swf",
-      "refusedModules": 3,
+      "refusedModules": 12,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
-      "sourceModules": 19
+      "sourceModules": 58
     },
     {
       "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
@@ -8570,8 +8599,8 @@
   },
   "summary": {
     "packages": 157,
-    "emittedModules": 2426,
-    "refusedModules": 575,
-    "sourceModules": 3001
+    "emittedModules": 2453,
+    "refusedModules": 584,
+    "sourceModules": 3037
   }
 }
