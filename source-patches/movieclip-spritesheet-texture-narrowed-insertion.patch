@@ -1,0 +1,15 @@
+diff --git a/packages/movieclip/src/spritesheetTimelineSource.ts b/packages/movieclip/src/spritesheetTimelineSource.ts
+index 04fcdf82..92d8b2b7 100644
+--- a/packages/movieclip/src/spritesheetTimelineSource.ts
++++ b/packages/movieclip/src/spritesheetTimelineSource.ts
+@@ -76,7 +76,9 @@ export function initializeSpritesheetTimelineSource(
+     if (sheetFrame === undefined) return;
+     const region = getTextureAtlasRegionById(atlas, sheetFrame.id);
+     if (region === null) return;
+-    bitmap.data.texture = getTextureAtlasRegionTexture(atlas, sheetFrame.id);
++    const texture = getTextureAtlasRegionTexture(atlas, sheetFrame.id);
++    if (texture === null) bitmap.data.texture = null;
++    else bitmap.data.texture = texture;
+     bitmap.x = sheetFrame.offsetX - animation.originX;
+     bitmap.y = sheetFrame.offsetY - animation.originY;
+     getTextureAtlasRegionFrame(region, regionFrame);

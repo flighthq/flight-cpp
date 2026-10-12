@@ -35,6 +35,12 @@ The cube branch must select the qualified `flight::Ref<types::TextureCube>` slot
 
 The environment cube/IBL chain and particle-atlas texture insertion in `@flighthq/scene3d-gl`.
 
+`@flighthq/movieclip` reaches a site the carrying compiler patch does not: assigning the
+`Texture2D | null` result of `getTextureAtlasRegionTexture` into the nullable `Texture` member
+`bitmap.data.texture` (`spritesheetTimelineSource.ts`) is refused as a nullable single-carrier conversion.
+The `movieclip-spritesheet-texture-narrowed-insertion` source patch narrows the value first so it
+takes the covered concrete-value insertion.
+
 ## Carrying workaround
 
 [`compiler-imported-variant-owner-qualification.patch`](../../source-patches/compiler-imported-variant-owner-qualification.patch)

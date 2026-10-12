@@ -2954,21 +2954,21 @@
       "code": "dependency-refused",
       "module": "packages/movieclip/src/contract.ts",
       "package": "@flighthq/movieclip",
-      "reason": "dependency ./movieClip was refused for @flighthq/movieclip/packages/movieclip/src/movieClip.ts",
+      "reason": "dependency ./movieClip.ts was refused for @flighthq/movieclip/packages/movieclip/src/movieClip.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/movieclip/src/enableMovieClipGuards.ts",
       "package": "@flighthq/movieclip",
-      "reason": "dependency ./spritesheetTimelineSource was refused for @flighthq/movieclip/packages/movieclip/src/spritesheetTimelineSource.ts",
+      "reason": "dependency @flighthq/log/contract was refused for @flighthq/log/packages/log/src/log.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/movieclip/src/index.ts",
       "package": "@flighthq/movieclip",
-      "reason": "dependency ./contract was refused for @flighthq/movieclip/packages/movieclip/src/contract.ts",
+      "reason": "dependency ./enableMovieClipGuards.ts was refused for @flighthq/movieclip/packages/movieclip/src/enableMovieClipGuards.ts",
       "stage": "dependency"
     },
     {
@@ -2981,13 +2981,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 50,
+      "code": "dependency-refused",
       "module": "packages/movieclip/src/spritesheetTimelineSource.ts",
       "package": "@flighthq/movieclip",
-      "reason": "cpp emission failed for @flighthq/types/packages/types/src/Texture.ts: contextual C++ union conversion requires equivalent source union evidence: target optionalVariant carriers [flight::Ref<Texture2DArray>, flight::Ref<TextureCube>, flight::Ref<Texture2D>, flight::Ref<Texture3D>] from call source optionalSingle carriers [flight::Ref<flight::types::Texture2D>]. Narrow or convert the source expression so each of its alternatives names exactly one destination union alternative. The carrier lists show which alternatives lack an exact carrier; preserve the declared collection or member union alias before flow expansion. For a Map or WeakMap lookup followed by a rebind, ensure every rebound member already has the declared value owner member's carrier -- a Readonly structural view does not become a mutable nominal Ref.",
-      "stage": "emission"
+      "reason": "dependency @flighthq/scene2d/contract was refused for @flighthq/scene2d/packages/scene2d/src/sprite.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",

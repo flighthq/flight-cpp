@@ -2916,6 +2916,23 @@
       "unblocks": "@flighthq/compression decompressDeflate (and every compress round trip that checks through it). @flighthq/swf SwfReader and @flighthq/abc AbcReader are fixed by the same patch when those packages are next regenerated; this change does not move them.",
       "expires": "when upstream emits parameter-property assignments in C++ constructors (docs/compiler-requests/constructor-parameter-properties-dropped.md).",
       "appliedOn": "2026-10-12"
+    },
+    {
+      "id": "movieclip-spritesheet-texture-narrowed-insertion",
+      "dependency": "flight",
+      "patch": "movieclip-spritesheet-texture-narrowed-insertion.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/movieclip/src/spritesheetTimelineSource.ts",
+      "package": "@flighthq/movieclip",
+      "answers": "refusal",
+      "refusal": "contextual C++ union conversion requires equivalent source union evidence: target optionalVariant carriers [Texture2DArray, TextureCube, Texture2D, Texture3D] from call source optionalSingle carriers [flight::types::Texture2D]",
+      "rewrite": "Binds the Texture2D-or-null result of getTextureAtlasRegionTexture to a local and assigns the sprite texture in two branches: null when absent, otherwise the narrowed Texture2D, so the union receives a concrete-value insertion instead of a nullable single-carrier conversion.",
+      "equivalence": "getTextureAtlasRegionTexture is called once, at the same point, with the same atlas and frame id, and no other expression moves. The member receives exactly the value the call returned: null when it returned null, otherwise the identical Texture2D reference. Both arms store into the same bitmap.data.texture slot before the same offset, pivot and invalidation writes.",
+      "verification": "Guarded pkg:generate of @flighthq/movieclip at a627849 emits spritesheetTimelineSource; pkg:compile compiles its header; the generated_movieclip CTest drives a MovieClip through setMovieClipSource and the timeline.",
+      "whyNotUpstreamFirst": "The source is correct TypeScript; the defect is the documented imported-variant-owner qualification gap (docs/compiler-requests/compiler-imported-variant-owner-qualification.md), whose carrying compiler patch covers concrete-value insertion but not a nullable single-carrier member assignment. This rewrite moves the value onto the covered path without changing it.",
+      "unblocks": "Emits spritesheetTimelineSource and, through it, enableMovieClipGuards and the package index.",
+      "expires": "when the emitter converts a nullable union arm into its nullable union member directly, or the imported-variant-owner qualification fix lands upstream.",
+      "appliedOn": "2026-10-12"
     }
   ]
 }

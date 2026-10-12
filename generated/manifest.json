@@ -455,6 +455,7 @@
         "flight/interaction/interaction_manager.hpp",
         "flight/interaction/node_interaction_state.hpp",
         "flight/interaction/spatial_query.hpp",
+        "flight/movieclip/movie_clip.hpp",
         "flight/node/hierarchy.hpp",
         "flight/node/node.hpp",
         "flight/node/node_transform2d.hpp",
@@ -5141,6 +5142,13 @@
     },
     {
       "dependency": "flight",
+      "digest": "87a6cb003b62e3931e85d21bf984d23b2854b29650f7e40d74fef23f4eca0e72",
+      "id": "movieclip-spritesheet-texture-narrowed-insertion",
+      "module": "packages/movieclip/src/spritesheetTimelineSource.ts",
+      "package": "@flighthq/movieclip"
+    },
+    {
+      "dependency": "flight",
       "digest": "fa8849ad734afab9babc965e60aabe961bb6de05f1cc3b882c8ac669908cf202",
       "id": "image-resource-discriminant-literals",
       "module": "packages/image/src/imageResourceReference.ts",
@@ -7359,14 +7367,14 @@
       "sourceModules": 3
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/movieclip",
       "cppNamespace": "flight::movieclip",
-      "emittedModules": 3,
+      "emittedModules": 4,
       "package": "@flighthq/movieclip",
-      "refusedModules": 2,
+      "refusedModules": 1,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 5
@@ -8555,8 +8563,8 @@
   },
   "summary": {
     "packages": 156,
-    "emittedModules": 2454,
-    "refusedModules": 579,
+    "emittedModules": 2455,
+    "refusedModules": 578,
     "sourceModules": 3033
   }
 }

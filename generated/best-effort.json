@@ -14914,9 +14914,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/movieclip/packages/movieclip/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/movieclip",
@@ -14932,7 +14930,8 @@
     },
     {
       "consumers": [
-        "@flighthq/movieclip/packages/movieclip/src/contract.ts"
+        "@flighthq/movieclip/packages/movieclip/src/contract.ts",
+        "@flighthq/movieclip/packages/movieclip/src/index.ts"
       ],
       "module": {
         "name": "EnableMovieClipGuards",
@@ -14955,7 +14954,9 @@
       },
       "path": "flight/movieclip/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/movieclip/packages/movieclip/src/contract.ts"
+        "@flighthq/movieclip/packages/movieclip/src/enableMovieClipGuards.ts",
+        "@flighthq/movieclip/packages/movieclip/src/movieClip.ts",
+        "@flighthq/movieclip/packages/movieclip/src/spritesheetTimelineSource.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -14963,6 +14964,7 @@
       "classification": "target-runtime",
       "consumers": [
         "@flighthq/movieclip/packages/movieclip/src/contract.ts",
+        "@flighthq/movieclip/packages/movieclip/src/index.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts",
         "@flighthq/swf/packages/swf/src/swfFrameAction.ts"
       ],
@@ -15001,21 +15003,10 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "source-portability",
       "consumers": [
         "@flighthq/movieclip/packages/movieclip/src/contract.ts",
-        "@flighthq/movieclip/packages/movieclip/src/enableMovieClipGuards.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:03537770966af31a77670c135e81b56768cee4a1fc91b14bcaad9a9f3d0bf259",
-        "sha256:1b47826b63752c3c86400910e0d8d4f50abfa6a0ff7ffe171c6e529adc9a989e",
-        "sha256:33a88f13a47c1783e39bab3bfdf8f05236922eb4eb4714dd5830de4ed62fddb2",
-        "sha256:44d71a818a3644995388283fdb3866671c977efae43a27284ab0fa90c1b58b11",
-        "sha256:9683f5c318a04ea69d724195488a9d8dfd8575fa07622204d3df923479383bba",
-        "sha256:9bbc33b2c1d8941b261807f4179a9c7f8331c283632d4e6be39b60a037970768",
-        "sha256:c4422098ceb4242c638c8f0c880db60bfbef94c17620b1d5aaeb97222b9d4846",
-        "sha256:cb23524a5875093a78393b1d64ee65c661124321ea8d009e7b90b0bc6ed40b53",
-        "sha256:ef1f846b44d32570179d6cac619d1159c7c1bbd4c92b575a96f1f57b8f787f82"
+        "@flighthq/movieclip/packages/movieclip/src/enableMovieClipGuards.ts",
+        "@flighthq/movieclip/packages/movieclip/src/index.ts"
       ],
       "module": {
         "name": "SpritesheetTimelineSource",
@@ -15023,8 +15014,11 @@
         "source": "packages/movieclip/src/spritesheetTimelineSource.ts"
       },
       "path": "flight/movieclip/spritesheet_timeline_source.hpp",
-      "rule": "cpp-contextual-union-inequivalent",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/scene2d/packages/scene2d/src/sprite.ts",
+        "@flighthq/textureatlas/packages/textureatlas/src/textureAtlasRegion.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
