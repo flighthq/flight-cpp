@@ -100867,7 +100867,7 @@
             "packageName": "@flighthq/mediasession",
             "source": "packages/mediasession/src/contract.ts"
           },
-          "specifier": "./mediasession",
+          "specifier": "./mediasession.ts",
           "target": {
             "name": "Mediasession",
             "packageName": "@flighthq/mediasession",
@@ -170302,7 +170302,7 @@
             "packageName": "@flighthq/mediasession",
             "source": "packages/mediasession/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/mediasession",
