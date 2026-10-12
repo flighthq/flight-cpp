@@ -84037,7 +84037,7 @@
             "line": 14,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/cleanPath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/cleanPath.ts\",999]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/cleanPath.ts\",1002]",
             "kind": "function",
             "name": "cleanPath",
             "scope": "module",
@@ -84058,7 +84058,7 @@
             "line": 52,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/cleanPath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/cleanPath.ts\",2667]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/cleanPath.ts\",2670]",
             "kind": "function",
             "name": "collapseClosedSeam",
             "scope": "module",
@@ -84079,7 +84079,7 @@
             "line": 75,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/cleanPath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/cleanPath.ts\",3622]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/cleanPath.ts\",3625]",
             "kind": "function",
             "name": "isMiddleRemovable",
             "scope": "module",
@@ -84100,7 +84100,7 @@
             "line": 94,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/cleanPath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/cleanPath.ts\",4326]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/cleanPath.ts\",4329]",
             "kind": "function",
             "name": "isRedundantMiddle",
             "scope": "module",
@@ -84121,7 +84121,7 @@
             "line": 114,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/cleanPath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/cleanPath.ts\",4969]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/cleanPath.ts\",4972]",
             "kind": "function",
             "name": "pushCleanVertex",
             "scope": "module",
@@ -84142,7 +84142,7 @@
             "line": 126,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/cleanPath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/cleanPath.ts\",5452]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/cleanPath.ts\",5455]",
             "kind": "function",
             "name": "withinTolerance",
             "scope": "module",
@@ -84164,7 +84164,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/cleanPath.ts"
           },
-          "specifier": "./flattenPath",
+          "specifier": "./flattenPath.ts",
           "target": {
             "name": "FlattenPath",
             "packageName": "@flighthq/path",
@@ -101064,7 +101064,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./cleanPath",
+          "specifier": "./cleanPath.ts",
           "target": {
             "name": "CleanPath",
             "packageName": "@flighthq/path",
@@ -101078,7 +101078,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./containsPathPoint",
+          "specifier": "./containsPathPoint.ts",
           "target": {
             "name": "ContainsPathPoint",
             "packageName": "@flighthq/path",
@@ -101092,7 +101092,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./copyPath",
+          "specifier": "./copyPath.ts",
           "target": {
             "name": "CopyPath",
             "packageName": "@flighthq/path",
@@ -101106,7 +101106,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./dashPath",
+          "specifier": "./dashPath.ts",
           "target": {
             "name": "DashPath",
             "packageName": "@flighthq/path",
@@ -101120,7 +101120,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./decimatePath",
+          "specifier": "./decimatePath.ts",
           "target": {
             "name": "DecimatePath",
             "packageName": "@flighthq/path",
@@ -101134,7 +101134,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./explainPathMorphCreation",
+          "specifier": "./explainPathMorphCreation.ts",
           "target": {
             "name": "ExplainPathMorphCreation",
             "packageName": "@flighthq/path",
@@ -101148,7 +101148,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./explainStrokePathTessellation",
+          "specifier": "./explainStrokePathTessellation.ts",
           "target": {
             "name": "ExplainStrokePathTessellation",
             "packageName": "@flighthq/path",
@@ -101162,7 +101162,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./fitPathCurves",
+          "specifier": "./fitPathCurves.ts",
           "target": {
             "name": "FitPathCurves",
             "packageName": "@flighthq/path",
@@ -101176,7 +101176,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./flattenPath",
+          "specifier": "./flattenPath.ts",
           "target": {
             "name": "FlattenPath",
             "packageName": "@flighthq/path",
@@ -101190,7 +101190,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./forEachPathSegment",
+          "specifier": "./forEachPathSegment.ts",
           "target": {
             "name": "ForEachPathSegment",
             "packageName": "@flighthq/path",
@@ -101204,7 +101204,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./getPathBounds",
+          "specifier": "./getPathBounds.ts",
           "target": {
             "name": "GetPathBounds",
             "packageName": "@flighthq/path",
@@ -101218,7 +101218,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./getPathContourLengths",
+          "specifier": "./getPathContourLengths.ts",
           "target": {
             "name": "GetPathContourLengths",
             "packageName": "@flighthq/path",
@@ -101232,7 +101232,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./getPathCurvatureAtDistance",
+          "specifier": "./getPathCurvatureAtDistance.ts",
           "target": {
             "name": "GetPathCurvatureAtDistance",
             "packageName": "@flighthq/path",
@@ -101246,7 +101246,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./getPathLength",
+          "specifier": "./getPathLength.ts",
           "target": {
             "name": "GetPathLength",
             "packageName": "@flighthq/path",
@@ -101260,7 +101260,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./getPathNearestPoint",
+          "specifier": "./getPathNearestPoint.ts",
           "target": {
             "name": "GetPathNearestPoint",
             "packageName": "@flighthq/path",
@@ -101274,7 +101274,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./getPathPointAtDistance",
+          "specifier": "./getPathPointAtDistance.ts",
           "target": {
             "name": "GetPathPointAtDistance",
             "packageName": "@flighthq/path",
@@ -101288,7 +101288,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./getPathSegmentAtParameter",
+          "specifier": "./getPathSegmentAtParameter.ts",
           "target": {
             "name": "GetPathSegmentAtParameter",
             "packageName": "@flighthq/path",
@@ -101302,7 +101302,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./getPathSignedArea",
+          "specifier": "./getPathSignedArea.ts",
           "target": {
             "name": "GetPathSignedArea",
             "packageName": "@flighthq/path",
@@ -101316,7 +101316,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./path",
+          "specifier": "./path.ts",
           "target": {
             "name": "Path",
             "packageName": "@flighthq/path",
@@ -101330,7 +101330,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./pathMeshPool",
+          "specifier": "./pathMeshPool.ts",
           "target": {
             "name": "PathMeshPool",
             "packageName": "@flighthq/path",
@@ -101344,7 +101344,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./pathMorph",
+          "specifier": "./pathMorph.ts",
           "target": {
             "name": "PathMorph",
             "packageName": "@flighthq/path",
@@ -101358,7 +101358,21 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./reversePath",
+          "specifier": "./pathMorphGeometry.ts",
+          "target": {
+            "name": "PathMorphGeometry",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/pathMorphGeometry.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/contract.ts"
+          },
+          "specifier": "./reversePath.ts",
           "target": {
             "name": "ReversePath",
             "packageName": "@flighthq/path",
@@ -101372,7 +101386,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./strokePath",
+          "specifier": "./strokePath.ts",
           "target": {
             "name": "StrokePath",
             "packageName": "@flighthq/path",
@@ -101386,7 +101400,21 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./tessellatePath",
+          "specifier": "./strokePathGeometry.ts",
+          "target": {
+            "name": "StrokePathGeometry",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/strokePathGeometry.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/contract.ts"
+          },
+          "specifier": "./tessellatePath.ts",
           "target": {
             "name": "TessellatePath",
             "packageName": "@flighthq/path",
@@ -101400,7 +101428,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./tessellatePathTyped",
+          "specifier": "./tessellatePathTyped.ts",
           "target": {
             "name": "TessellatePathTyped",
             "packageName": "@flighthq/path",
@@ -101414,7 +101442,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./tessellateStrokePath",
+          "specifier": "./tessellateStrokePath.ts",
           "target": {
             "name": "TessellateStrokePath",
             "packageName": "@flighthq/path",
@@ -101428,7 +101456,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
-          "specifier": "./transformPath",
+          "specifier": "./transformPath.ts",
           "target": {
             "name": "TransformPath",
             "packageName": "@flighthq/path",
@@ -121330,7 +121358,7 @@
             "line": 11,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/dashPath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/dashPath.ts\",551]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/dashPath.ts\",554]",
             "kind": "function",
             "name": "dashPath",
             "scope": "module",
@@ -121351,7 +121379,7 @@
             "line": 35,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/dashPath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/dashPath.ts\",1155]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/dashPath.ts\",1158]",
             "kind": "function",
             "name": "applyDashToContour",
             "scope": "module",
@@ -121372,7 +121400,7 @@
             "line": 116,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/dashPath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/dashPath.ts\",3245]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/dashPath.ts\",3248]",
             "kind": "function",
             "name": "copyCommands",
             "scope": "module",
@@ -121393,7 +121421,7 @@
             "line": 129,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/dashPath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/dashPath.ts\",3613]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/dashPath.ts\",3616]",
             "kind": "function",
             "name": "dashTotal",
             "scope": "module",
@@ -121415,7 +121443,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/dashPath.ts"
           },
-          "specifier": "./flattenPath",
+          "specifier": "./flattenPath.ts",
           "target": {
             "name": "FlattenPath",
             "packageName": "@flighthq/path",
@@ -121531,7 +121559,7 @@
             "line": 14,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/decimatePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/decimatePath.ts\",795]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/decimatePath.ts\",798]",
             "kind": "function",
             "name": "decimatePath",
             "scope": "module",
@@ -121552,7 +121580,7 @@
             "line": 48,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/decimatePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/decimatePath.ts\",1838]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/decimatePath.ts\",1841]",
             "kind": "function",
             "name": "douglasPeucker",
             "scope": "module",
@@ -121574,7 +121602,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/decimatePath.ts"
           },
-          "specifier": "./flattenPath",
+          "specifier": "./flattenPath.ts",
           "target": {
             "name": "FlattenPath",
             "packageName": "@flighthq/path",
@@ -136420,7 +136448,7 @@
             "line": 17,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/explainPathMorphCreation.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/explainPathMorphCreation.ts\",767]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/explainPathMorphCreation.ts\",770]",
             "kind": "function",
             "name": "explainPathMorphCreation",
             "scope": "module",
@@ -136441,7 +136469,7 @@
             "line": 26,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/explainPathMorphCreation.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/explainPathMorphCreation.ts\",1059]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/explainPathMorphCreation.ts\",1062]",
             "kind": "function",
             "name": "getReason",
             "scope": "module",
@@ -136463,7 +136491,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/explainPathMorphCreation.ts"
           },
-          "specifier": "./pathMorphGeometry",
+          "specifier": "./pathMorphGeometry.ts",
           "target": {
             "name": "PathMorphGeometry",
             "packageName": "@flighthq/path",
@@ -137849,7 +137877,7 @@
             "line": 24,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/explainStrokePathTessellation.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/explainStrokePathTessellation.ts\",929]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/explainStrokePathTessellation.ts\",932]",
             "kind": "function",
             "name": "explainStrokePathTessellation",
             "scope": "module",
@@ -137870,7 +137898,7 @@
             "line": 37,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/explainStrokePathTessellation.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/explainStrokePathTessellation.ts\",1333]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/explainStrokePathTessellation.ts\",1336]",
             "kind": "function",
             "name": "getReason",
             "scope": "module",
@@ -137892,7 +137920,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/explainStrokePathTessellation.ts"
           },
-          "specifier": "./strokePathGeometry",
+          "specifier": "./strokePathGeometry.ts",
           "target": {
             "name": "StrokePathGeometry",
             "packageName": "@flighthq/path",
@@ -139471,7 +139499,7 @@
             "line": 11,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/fitPathCurves.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",614]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",617]",
             "kind": "function",
             "name": "fitPathCurves",
             "scope": "module",
@@ -139492,7 +139520,7 @@
             "line": 57,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/fitPathCurves.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",2160]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",2163]",
             "kind": "function",
             "name": "findCorners",
             "scope": "module",
@@ -139513,7 +139541,7 @@
             "line": 74,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/fitPathCurves.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",2779]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",2782]",
             "kind": "function",
             "name": "computeLeftTangent",
             "scope": "module",
@@ -139534,7 +139562,7 @@
             "line": 81,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/fitPathCurves.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",3066]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",3069]",
             "kind": "function",
             "name": "computeRightTangent",
             "scope": "module",
@@ -139555,7 +139583,7 @@
             "line": 88,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/fitPathCurves.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",3355]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",3358]",
             "kind": "function",
             "name": "chordLengthParameterize",
             "scope": "module",
@@ -139576,7 +139604,7 @@
             "line": 102,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/fitPathCurves.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",3814]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",3817]",
             "kind": "function",
             "name": "fitCubic",
             "scope": "module",
@@ -139597,7 +139625,7 @@
             "line": 150,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/fitPathCurves.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",5312]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",5315]",
             "kind": "function",
             "name": "generateBezier",
             "scope": "module",
@@ -139618,7 +139646,7 @@
             "line": 220,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/fitPathCurves.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",7269]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",7272]",
             "kind": "function",
             "name": "computeMaxError",
             "scope": "module",
@@ -139639,7 +139667,7 @@
             "line": 249,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/fitPathCurves.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",8096]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",8099]",
             "kind": "function",
             "name": "reparameterize",
             "scope": "module",
@@ -139660,7 +139688,7 @@
             "line": 263,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/fitPathCurves.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",8451]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",8454]",
             "kind": "function",
             "name": "newtonRaphsonRootFind",
             "scope": "module",
@@ -139681,7 +139709,7 @@
             "line": 284,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/fitPathCurves.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",9540]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/fitPathCurves.ts\",9543]",
             "kind": "function",
             "name": "computeCenterTangent",
             "scope": "module",
@@ -139703,7 +139731,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/fitPathCurves.ts"
           },
-          "specifier": "./flattenPath",
+          "specifier": "./flattenPath.ts",
           "target": {
             "name": "FlattenPath",
             "packageName": "@flighthq/path",
@@ -145784,7 +145812,7 @@
             "line": 7,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathContourLengths.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathContourLengths.ts\",301]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathContourLengths.ts\",304]",
             "kind": "function",
             "name": "getPathContourLengths",
             "scope": "module",
@@ -145805,7 +145833,7 @@
             "line": 16,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathContourLengths.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathContourLengths.ts\",586]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathContourLengths.ts\",589]",
             "kind": "function",
             "name": "contourLength",
             "scope": "module",
@@ -145827,7 +145855,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathContourLengths.ts"
           },
-          "specifier": "./flattenPath",
+          "specifier": "./flattenPath.ts",
           "target": {
             "name": "FlattenPath",
             "packageName": "@flighthq/path",
@@ -145892,7 +145920,7 @@
             "line": 11,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathCurvatureAtDistance.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathCurvatureAtDistance.ts\",526]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathCurvatureAtDistance.ts\",529]",
             "kind": "function",
             "name": "getPathCurvatureAtDistance",
             "scope": "module",
@@ -145913,7 +145941,7 @@
             "line": 16,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathCurvatureAtDistance.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathCurvatureAtDistance.ts\",732]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathCurvatureAtDistance.ts\",735]",
             "kind": "function",
             "name": "samplePathCurvature",
             "scope": "module",
@@ -145934,7 +145962,7 @@
             "line": 53,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathCurvatureAtDistance.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathCurvatureAtDistance.ts\",1799]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathCurvatureAtDistance.ts\",1802]",
             "kind": "function",
             "name": "curvatureAtVertex",
             "scope": "module",
@@ -145955,7 +145983,7 @@
             "line": 68,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathCurvatureAtDistance.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathCurvatureAtDistance.ts\",2339]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathCurvatureAtDistance.ts\",2342]",
             "kind": "function",
             "name": "mengerCurvature",
             "scope": "module",
@@ -145977,7 +146005,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathCurvatureAtDistance.ts"
           },
-          "specifier": "./flattenPath",
+          "specifier": "./flattenPath.ts",
           "target": {
             "name": "FlattenPath",
             "packageName": "@flighthq/path",
@@ -146042,7 +146070,7 @@
             "line": 8,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathLength.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathLength.ts\",331]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathLength.ts\",334]",
             "kind": "function",
             "name": "getPathLength",
             "scope": "module",
@@ -146063,7 +146091,7 @@
             "line": 18,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathLength.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathLength.ts\",674]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathLength.ts\",677]",
             "kind": "function",
             "name": "contourLength",
             "scope": "module",
@@ -146085,7 +146113,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathLength.ts"
           },
-          "specifier": "./flattenPath",
+          "specifier": "./flattenPath.ts",
           "target": {
             "name": "FlattenPath",
             "packageName": "@flighthq/path",
@@ -146150,7 +146178,7 @@
             "line": 8,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathNearestPoint.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathNearestPoint.ts\",396]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathNearestPoint.ts\",399]",
             "kind": "function",
             "name": "getPathNearestPoint",
             "scope": "module",
@@ -146172,7 +146200,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathNearestPoint.ts"
           },
-          "specifier": "./flattenPath",
+          "specifier": "./flattenPath.ts",
           "target": {
             "name": "FlattenPath",
             "packageName": "@flighthq/path",
@@ -146276,7 +146304,7 @@
             "line": 13,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathPointAtDistance.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathPointAtDistance.ts\",608]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathPointAtDistance.ts\",611]",
             "kind": "function",
             "name": "getPathPointAtDistance",
             "scope": "module",
@@ -146297,7 +146325,7 @@
             "line": 25,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathPointAtDistance.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathPointAtDistance.ts\",1039]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathPointAtDistance.ts\",1042]",
             "kind": "function",
             "name": "getPathPositionAtDistance",
             "scope": "module",
@@ -146318,7 +146346,7 @@
             "line": 42,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathPointAtDistance.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathPointAtDistance.ts\",1781]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathPointAtDistance.ts\",1784]",
             "kind": "function",
             "name": "getPathTangentAtDistance",
             "scope": "module",
@@ -146339,7 +146367,7 @@
             "line": 53,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathPointAtDistance.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathPointAtDistance.ts\",2096]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathPointAtDistance.ts\",2099]",
             "kind": "function",
             "name": "samplePathPoint",
             "scope": "module",
@@ -146360,7 +146388,7 @@
             "line": 87,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathPointAtDistance.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathPointAtDistance.ts\",3261]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathPointAtDistance.ts\",3264]",
             "kind": "function",
             "name": "samplePathTangent",
             "scope": "module",
@@ -146382,7 +146410,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathPointAtDistance.ts"
           },
-          "specifier": "./flattenPath",
+          "specifier": "./flattenPath.ts",
           "target": {
             "name": "FlattenPath",
             "packageName": "@flighthq/path",
@@ -146769,7 +146797,7 @@
             "line": 7,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathSignedArea.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathSignedArea.ts\",273]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathSignedArea.ts\",276]",
             "kind": "function",
             "name": "getPathContourOrientation",
             "scope": "module",
@@ -146790,7 +146818,7 @@
             "line": 22,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathSignedArea.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathSignedArea.ts\",1100]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathSignedArea.ts\",1103]",
             "kind": "function",
             "name": "getPathSignedArea",
             "scope": "module",
@@ -146811,7 +146839,7 @@
             "line": 33,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathSignedArea.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathSignedArea.ts\",1553]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/getPathSignedArea.ts\",1556]",
             "kind": "function",
             "name": "shoelaceArea",
             "scope": "module",
@@ -146833,7 +146861,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/getPathSignedArea.ts"
           },
-          "specifier": "./flattenPath",
+          "specifier": "./flattenPath.ts",
           "target": {
             "name": "FlattenPath",
             "packageName": "@flighthq/path",
@@ -170446,11 +170474,403 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./cleanPath.ts",
           "target": {
-            "name": "Contract",
+            "name": "CleanPath",
             "packageName": "@flighthq/path",
-            "source": "packages/path/src/contract.ts"
+            "source": "packages/path/src/cleanPath.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./containsPathPoint.ts",
+          "target": {
+            "name": "ContainsPathPoint",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/containsPathPoint.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./copyPath.ts",
+          "target": {
+            "name": "CopyPath",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/copyPath.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./dashPath.ts",
+          "target": {
+            "name": "DashPath",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/dashPath.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./decimatePath.ts",
+          "target": {
+            "name": "DecimatePath",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/decimatePath.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./explainPathMorphCreation.ts",
+          "target": {
+            "name": "ExplainPathMorphCreation",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/explainPathMorphCreation.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./explainStrokePathTessellation.ts",
+          "target": {
+            "name": "ExplainStrokePathTessellation",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/explainStrokePathTessellation.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./fitPathCurves.ts",
+          "target": {
+            "name": "FitPathCurves",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/fitPathCurves.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./flattenPath.ts",
+          "target": {
+            "name": "FlattenPath",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/flattenPath.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./forEachPathSegment.ts",
+          "target": {
+            "name": "ForEachPathSegment",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/forEachPathSegment.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./getPathBounds.ts",
+          "target": {
+            "name": "GetPathBounds",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/getPathBounds.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./getPathContourLengths.ts",
+          "target": {
+            "name": "GetPathContourLengths",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/getPathContourLengths.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./getPathCurvatureAtDistance.ts",
+          "target": {
+            "name": "GetPathCurvatureAtDistance",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/getPathCurvatureAtDistance.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./getPathLength.ts",
+          "target": {
+            "name": "GetPathLength",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/getPathLength.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./getPathNearestPoint.ts",
+          "target": {
+            "name": "GetPathNearestPoint",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/getPathNearestPoint.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./getPathPointAtDistance.ts",
+          "target": {
+            "name": "GetPathPointAtDistance",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/getPathPointAtDistance.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./getPathSegmentAtParameter.ts",
+          "target": {
+            "name": "GetPathSegmentAtParameter",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/getPathSegmentAtParameter.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./getPathSignedArea.ts",
+          "target": {
+            "name": "GetPathSignedArea",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/getPathSignedArea.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./path.ts",
+          "target": {
+            "name": "Path",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/path.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./pathMeshPool.ts",
+          "target": {
+            "name": "PathMeshPool",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/pathMeshPool.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./pathMorph.ts",
+          "target": {
+            "name": "PathMorph",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/pathMorph.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./pathMorphGeometry.ts",
+          "target": {
+            "name": "PathMorphGeometry",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/pathMorphGeometry.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./reversePath.ts",
+          "target": {
+            "name": "ReversePath",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/reversePath.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./strokePath.ts",
+          "target": {
+            "name": "StrokePath",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/strokePath.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./strokePathGeometry.ts",
+          "target": {
+            "name": "StrokePathGeometry",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/strokePathGeometry.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./tessellatePath.ts",
+          "target": {
+            "name": "TessellatePath",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/tessellatePath.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./tessellatePathTyped.ts",
+          "target": {
+            "name": "TessellatePathTyped",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/tessellatePathTyped.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./tessellateStrokePath.ts",
+          "target": {
+            "name": "TessellateStrokePath",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/tessellateStrokePath.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/index.ts"
+          },
+          "specifier": "./transformPath.ts",
+          "target": {
+            "name": "TransformPath",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/transformPath.ts"
           }
         }
       ],
@@ -242940,7 +243360,7 @@
             "line": 4,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMeshPool.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",144]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",147]",
             "kind": "import",
             "name": "tessellatePathTypedInto",
             "scope": "module",
@@ -242966,7 +243386,7 @@
             "line": 14,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMeshPool.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",897]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",903]",
             "kind": "function",
             "name": "acquirePathMesh",
             "scope": "module",
@@ -242987,7 +243407,7 @@
             "line": 23,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMeshPool.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",1440]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",1446]",
             "kind": "function",
             "name": "acquirePathMeshTyped",
             "scope": "module",
@@ -243008,7 +243428,7 @@
             "line": 31,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMeshPool.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",1849]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",1855]",
             "kind": "function",
             "name": "releasePathMesh",
             "scope": "module",
@@ -243029,7 +243449,7 @@
             "line": 38,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMeshPool.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",2078]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",2084]",
             "kind": "function",
             "name": "releasePathMeshTyped",
             "scope": "module",
@@ -243050,7 +243470,7 @@
             "line": 47,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMeshPool.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",2462]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",2468]",
             "kind": "variable",
             "name": "POOL_HIGH_WATER",
             "scope": "module",
@@ -243071,7 +243491,7 @@
             "line": 48,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMeshPool.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",2490]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",2496]",
             "kind": "variable",
             "name": "pathMeshPool",
             "scope": "module",
@@ -243092,7 +243512,7 @@
             "line": 49,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMeshPool.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",2527]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",2533]",
             "kind": "variable",
             "name": "typedPool",
             "scope": "module",
@@ -243114,7 +243534,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMeshPool.ts"
           },
-          "specifier": "./tessellatePath",
+          "specifier": "./tessellatePath.ts",
           "target": {
             "name": "TessellatePath",
             "packageName": "@flighthq/path",
@@ -243128,7 +243548,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMeshPool.ts"
           },
-          "specifier": "./tessellatePathTyped",
+          "specifier": "./tessellatePathTyped.ts",
           "target": {
             "name": "TessellatePathTyped",
             "packageName": "@flighthq/path",
@@ -243202,7 +243622,7 @@
               "line": 47,
               "packageName": "@flighthq/path",
               "source": "packages/path/src/pathMeshPool.ts",
-              "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",2462]",
+              "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",2468]",
               "kind": "variable",
               "name": "POOL_HIGH_WATER",
               "scope": "module",
@@ -243225,7 +243645,7 @@
               "line": 48,
               "packageName": "@flighthq/path",
               "source": "packages/path/src/pathMeshPool.ts",
-              "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",2490]",
+              "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",2496]",
               "kind": "variable",
               "name": "pathMeshPool",
               "scope": "module",
@@ -243248,7 +243668,7 @@
               "line": 49,
               "packageName": "@flighthq/path",
               "source": "packages/path/src/pathMeshPool.ts",
-              "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",2527]",
+              "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMeshPool.ts\",2533]",
               "kind": "variable",
               "name": "typedPool",
               "scope": "module",
@@ -243362,7 +243782,7 @@
             "line": 13,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorph.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorph.ts\",792]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorph.ts\",795]",
             "kind": "function",
             "name": "createPathMorph",
             "scope": "module",
@@ -243378,12 +243798,12 @@
         {
           "access": "available-after-instantiation",
           "binding": {
-            "column": 17,
+            "column": 10,
             "fingerprint": "sha256:8d6cdfc6428abf7b728d5fa5df0caf5b01fed3a7c9f59403e077f440639467cc",
             "line": 21,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorph.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorph.ts\",1082]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorph.ts\",1078]",
             "kind": "function",
             "name": "initializePathMorph",
             "scope": "module",
@@ -243404,7 +243824,7 @@
             "line": 31,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorph.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorph.ts\",1614]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorph.ts\",1610]",
             "kind": "function",
             "name": "samplePathMorph",
             "scope": "module",
@@ -243426,7 +243846,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorph.ts"
           },
-          "specifier": "./pathMorphGeometry",
+          "specifier": "./pathMorphGeometry.ts",
           "target": {
             "name": "PathMorphGeometry",
             "packageName": "@flighthq/path",
@@ -243657,7 +244077,7 @@
             "line": 7,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",289]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",292]",
             "kind": "variable",
             "name": "PathMorphIssueNone",
             "scope": "module",
@@ -243678,7 +244098,7 @@
             "line": 8,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",326]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",329]",
             "kind": "variable",
             "name": "PathMorphIssueWindingMismatch",
             "scope": "module",
@@ -243699,7 +244119,7 @@
             "line": 9,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",374]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",377]",
             "kind": "variable",
             "name": "PathMorphIssueContourCountMismatch",
             "scope": "module",
@@ -243720,7 +244140,7 @@
             "line": 10,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",427]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",430]",
             "kind": "variable",
             "name": "PathMorphIssueContourClosednessMismatch",
             "scope": "module",
@@ -243741,7 +244161,7 @@
             "line": 11,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",485]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",488]",
             "kind": "variable",
             "name": "PathMorphIssueContourOrientationMismatch",
             "scope": "module",
@@ -243762,7 +244182,7 @@
             "line": 23,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",981]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",984]",
             "kind": "function",
             "name": "buildPathMorph",
             "scope": "module",
@@ -243783,7 +244203,7 @@
             "line": 69,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",2674]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",2677]",
             "kind": "function",
             "name": "initializePathMorph",
             "scope": "module",
@@ -243804,7 +244224,7 @@
             "line": 87,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",3450]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",3453]",
             "kind": "function",
             "name": "normalizeCubicContourOrientations",
             "scope": "module",
@@ -243825,7 +244245,7 @@
             "line": 120,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",4615]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",4618]",
             "kind": "function",
             "name": "getCubicContourOrientation",
             "scope": "module",
@@ -243846,7 +244266,7 @@
             "line": 126,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",4824]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",4827]",
             "kind": "function",
             "name": "reverseClosedCubicContour",
             "scope": "module",
@@ -243867,7 +244287,7 @@
             "line": 153,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",5710]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",5713]",
             "kind": "function",
             "name": "getCubicContourSignedArea",
             "scope": "module",
@@ -243888,7 +244308,7 @@
             "line": 190,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",6992]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",6995]",
             "kind": "function",
             "name": "getCubicPowerCoefficients",
             "scope": "module",
@@ -243909,7 +244329,7 @@
             "line": 194,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",7181]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",7184]",
             "kind": "function",
             "name": "alignClosedCubicContour",
             "scope": "module",
@@ -243930,7 +244350,7 @@
             "line": 219,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",7996]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",7999]",
             "kind": "function",
             "name": "appendCubicContourPair",
             "scope": "module",
@@ -243951,7 +244371,7 @@
             "line": 239,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",8663]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",8666]",
             "kind": "function",
             "name": "appendCubicSegment",
             "scope": "module",
@@ -243972,7 +244392,7 @@
             "line": 262,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",9054]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",9057]",
             "kind": "function",
             "name": "appendLineAsCubic",
             "scope": "module",
@@ -243993,7 +244413,7 @@
             "line": 276,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",9357]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",9360]",
             "kind": "function",
             "name": "appendQuadraticAsCubic",
             "scope": "module",
@@ -244014,7 +244434,7 @@
             "line": 290,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",9737]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",9740]",
             "kind": "function",
             "name": "closeCubicContour",
             "scope": "module",
@@ -244035,7 +244455,7 @@
             "line": 297,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",9955]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",9958]",
             "kind": "function",
             "name": "createCubicContour",
             "scope": "module",
@@ -244056,7 +244476,7 @@
             "line": 301,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",10098]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",10101]",
             "kind": "function",
             "name": "cubicControlPolygonLength",
             "scope": "module",
@@ -244077,7 +244497,7 @@
             "line": 309,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",10453]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",10456]",
             "kind": "function",
             "name": "decodeCubicContours",
             "scope": "module",
@@ -244098,7 +244518,7 @@
             "line": 344,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",11628]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",11631]",
             "kind": "function",
             "name": "equalizeCubicContourSegments",
             "scope": "module",
@@ -244119,7 +244539,7 @@
             "line": 351,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",11998]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",12001]",
             "kind": "function",
             "name": "pointDistance",
             "scope": "module",
@@ -244140,7 +244560,7 @@
             "line": 357,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",12165]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",12168]",
             "kind": "function",
             "name": "splitCubicSegment",
             "scope": "module",
@@ -244161,7 +244581,7 @@
             "line": 394,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",13293]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",13296]",
             "kind": "function",
             "name": "subdivideCubicSegments",
             "scope": "module",
@@ -244183,7 +244603,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/pathMorphGeometry.ts"
           },
-          "specifier": "./forEachPathSegment",
+          "specifier": "./forEachPathSegment.ts",
           "target": {
             "name": "ForEachPathSegment",
             "packageName": "@flighthq/path",
@@ -244234,7 +244654,7 @@
               "line": 7,
               "packageName": "@flighthq/path",
               "source": "packages/path/src/pathMorphGeometry.ts",
-              "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",289]",
+              "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",292]",
               "kind": "variable",
               "name": "PathMorphIssueNone",
               "scope": "module",
@@ -244257,7 +244677,7 @@
               "line": 8,
               "packageName": "@flighthq/path",
               "source": "packages/path/src/pathMorphGeometry.ts",
-              "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",326]",
+              "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",329]",
               "kind": "variable",
               "name": "PathMorphIssueWindingMismatch",
               "scope": "module",
@@ -244280,7 +244700,7 @@
               "line": 9,
               "packageName": "@flighthq/path",
               "source": "packages/path/src/pathMorphGeometry.ts",
-              "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",374]",
+              "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",377]",
               "kind": "variable",
               "name": "PathMorphIssueContourCountMismatch",
               "scope": "module",
@@ -244303,7 +244723,7 @@
               "line": 10,
               "packageName": "@flighthq/path",
               "source": "packages/path/src/pathMorphGeometry.ts",
-              "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",427]",
+              "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",430]",
               "kind": "variable",
               "name": "PathMorphIssueContourClosednessMismatch",
               "scope": "module",
@@ -244326,7 +244746,7 @@
               "line": 11,
               "packageName": "@flighthq/path",
               "source": "packages/path/src/pathMorphGeometry.ts",
-              "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",485]",
+              "id": "binding:[\"@flighthq/path\",\"packages/path/src/pathMorphGeometry.ts\",488]",
               "kind": "variable",
               "name": "PathMorphIssueContourOrientationMismatch",
               "scope": "module",
@@ -269585,7 +270005,7 @@
             "line": 13,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/reversePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/reversePath.ts\",738]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/reversePath.ts\",741]",
             "kind": "function",
             "name": "reversePath",
             "scope": "module",
@@ -269606,7 +270026,7 @@
             "line": 23,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/reversePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/reversePath.ts\",1011]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/reversePath.ts\",1014]",
             "kind": "function",
             "name": "decodeSubpaths",
             "scope": "module",
@@ -269627,7 +270047,7 @@
             "line": 64,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/reversePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/reversePath.ts\",2317]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/reversePath.ts\",2320]",
             "kind": "function",
             "name": "encodeReversedSubpath",
             "scope": "module",
@@ -269649,7 +270069,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/reversePath.ts"
           },
-          "specifier": "./forEachPathSegment",
+          "specifier": "./forEachPathSegment.ts",
           "target": {
             "name": "ForEachPathSegment",
             "packageName": "@flighthq/path",
@@ -314853,7 +315273,7 @@
             "line": 4,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePath.ts\",167]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePath.ts\",170]",
             "kind": "import",
             "name": "buildStrokePathGeometry",
             "scope": "module",
@@ -314879,7 +315299,7 @@
             "line": 12,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePath.ts\",728]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePath.ts\",734]",
             "kind": "function",
             "name": "strokePath",
             "scope": "module",
@@ -314900,7 +315320,7 @@
             "line": 19,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePath.ts\",1073]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePath.ts\",1079]",
             "kind": "function",
             "name": "appendPieceOutline",
             "scope": "module",
@@ -314921,7 +315341,7 @@
             "line": 41,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePath.ts\",1638]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePath.ts\",1644]",
             "kind": "function",
             "name": "appendContour",
             "scope": "module",
@@ -314942,7 +315362,7 @@
             "line": 62,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePath.ts\",2341]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePath.ts\",2347]",
             "kind": "function",
             "name": "appendPoints",
             "scope": "module",
@@ -314963,7 +315383,7 @@
             "line": 66,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePath.ts\",2551]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePath.ts\",2557]",
             "kind": "variable",
             "name": "EMPTY_POINTS",
             "scope": "module",
@@ -314985,7 +315405,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePath.ts"
           },
-          "specifier": "./path",
+          "specifier": "./path.ts",
           "target": {
             "name": "Path",
             "packageName": "@flighthq/path",
@@ -314999,7 +315419,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePath.ts"
           },
-          "specifier": "./strokePathGeometry",
+          "specifier": "./strokePathGeometry.ts",
           "target": {
             "name": "StrokePathGeometry",
             "packageName": "@flighthq/path",
@@ -315036,7 +315456,7 @@
               "line": 66,
               "packageName": "@flighthq/path",
               "source": "packages/path/src/strokePath.ts",
-              "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePath.ts\",2551]",
+              "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePath.ts\",2557]",
               "kind": "variable",
               "name": "EMPTY_POINTS",
               "scope": "module",
@@ -315088,7 +315508,7 @@
             "line": 5,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",127]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",130]",
             "kind": "variable",
             "name": "StrokePathTessellationIssueNone",
             "scope": "module",
@@ -315109,7 +315529,7 @@
             "line": 6,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",177]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",180]",
             "kind": "variable",
             "name": "StrokePathTessellationIssueInvalidStyle",
             "scope": "module",
@@ -315130,7 +315550,7 @@
             "line": 7,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",235]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",238]",
             "kind": "variable",
             "name": "StrokePathTessellationIssueInvalidPath",
             "scope": "module",
@@ -315151,7 +315571,7 @@
             "line": 8,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",292]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",295]",
             "kind": "variable",
             "name": "StrokePathTessellationIssueSelfIntersectingCenterline",
             "scope": "module",
@@ -315172,7 +315592,7 @@
             "line": 9,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",364]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",367]",
             "kind": "variable",
             "name": "StrokePathTessellationIssueReversingJoin",
             "scope": "module",
@@ -315193,7 +315613,7 @@
             "line": 10,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",423]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",426]",
             "kind": "variable",
             "name": "StrokePathTessellationIssueSelfIntersectingOutline",
             "scope": "module",
@@ -315214,7 +315634,7 @@
             "line": 45,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",1432]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",1435]",
             "kind": "function",
             "name": "buildStrokePathGeometry",
             "scope": "module",
@@ -315235,7 +315655,7 @@
             "line": 110,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",3794]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",3797]",
             "kind": "function",
             "name": "createStrokeSubpaths",
             "scope": "module",
@@ -315256,7 +315676,7 @@
             "line": 130,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",4475]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",4478]",
             "kind": "function",
             "name": "buildStrokePiece",
             "scope": "module",
@@ -315277,7 +315697,7 @@
             "line": 204,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",6823]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",6826]",
             "kind": "function",
             "name": "appendEndpointSection",
             "scope": "module",
@@ -315298,7 +315718,7 @@
             "line": 232,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",7660]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",7663]",
             "kind": "function",
             "name": "appendJoinSections",
             "scope": "module",
@@ -315319,7 +315739,7 @@
             "line": 306,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",10553]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",10556]",
             "kind": "function",
             "name": "signedJoinSweep",
             "scope": "module",
@@ -315340,7 +315760,7 @@
             "line": 315,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",10988]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",10991]",
             "kind": "function",
             "name": "appendSection",
             "scope": "module",
@@ -315361,7 +315781,7 @@
             "line": 320,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",11157]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",11160]",
             "kind": "function",
             "name": "createArcInteriorPoints",
             "scope": "module",
@@ -315382,7 +315802,7 @@
             "line": 332,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",11424]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",11427]",
             "kind": "function",
             "name": "createArcPoints",
             "scope": "module",
@@ -315403,7 +315823,7 @@
             "line": 351,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",11991]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",11994]",
             "kind": "function",
             "name": "intersectLines",
             "scope": "module",
@@ -315424,7 +315844,7 @@
             "line": 367,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",12387]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",12390]",
             "kind": "function",
             "name": "applyDash",
             "scope": "module",
@@ -315445,7 +315865,7 @@
             "line": 423,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",14592]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",14595]",
             "kind": "function",
             "name": "pushDash",
             "scope": "module",
@@ -315466,7 +315886,7 @@
             "line": 427,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",14764]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",14767]",
             "kind": "function",
             "name": "findCenterlineIntersection",
             "scope": "module",
@@ -315487,7 +315907,7 @@
             "line": 439,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",15232]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",15235]",
             "kind": "function",
             "name": "hasInvalidOutline",
             "scope": "module",
@@ -315508,7 +315928,7 @@
             "line": 453,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",15781]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",15784]",
             "kind": "function",
             "name": "hasPolylineSelfIntersection",
             "scope": "module",
@@ -315529,7 +315949,7 @@
             "line": 468,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",16397]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",16400]",
             "kind": "function",
             "name": "doPolylinesIntersect",
             "scope": "module",
@@ -315550,7 +315970,7 @@
             "line": 485,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",17063]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",17066]",
             "kind": "function",
             "name": "getPolylinePointCount",
             "scope": "module",
@@ -315571,7 +315991,7 @@
             "line": 490,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",17272]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",17275]",
             "kind": "function",
             "name": "segmentsAreAdjacent",
             "scope": "module",
@@ -315592,7 +316012,7 @@
             "line": 495,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",17462]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",17465]",
             "kind": "function",
             "name": "segmentsIntersect",
             "scope": "module",
@@ -315613,7 +316033,7 @@
             "line": 527,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",18683]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",18686]",
             "kind": "function",
             "name": "pointOnSegment",
             "scope": "module",
@@ -315634,7 +316054,7 @@
             "line": 536,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",19002]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",19005]",
             "kind": "function",
             "name": "removeConsecutiveDuplicates",
             "scope": "module",
@@ -315655,7 +316075,7 @@
             "line": 550,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",19414]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",19417]",
             "kind": "function",
             "name": "reversePoints",
             "scope": "module",
@@ -315676,7 +316096,7 @@
             "line": 556,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",19616]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",19619]",
             "kind": "function",
             "name": "areFinitePoints",
             "scope": "module",
@@ -315697,7 +316117,7 @@
             "line": 561,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",19786]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",19789]",
             "kind": "function",
             "name": "samePoint",
             "scope": "module",
@@ -315718,7 +316138,7 @@
             "line": 565,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",19987]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",19990]",
             "kind": "function",
             "name": "approximatelyEqual",
             "scope": "module",
@@ -315739,7 +316159,7 @@
             "line": 569,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",20097]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",20100]",
             "kind": "function",
             "name": "cross",
             "scope": "module",
@@ -315760,7 +316180,7 @@
             "line": 573,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",20198]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",20201]",
             "kind": "variable",
             "name": "EMPTY_DASH",
             "scope": "module",
@@ -315781,7 +316201,7 @@
             "line": 574,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",20240]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",20243]",
             "kind": "variable",
             "name": "GEOMETRY_EPSILON",
             "scope": "module",
@@ -315803,7 +316223,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/strokePathGeometry.ts"
           },
-          "specifier": "./flattenPath",
+          "specifier": "./flattenPath.ts",
           "target": {
             "name": "FlattenPath",
             "packageName": "@flighthq/path",
@@ -315860,7 +316280,7 @@
               "line": 5,
               "packageName": "@flighthq/path",
               "source": "packages/path/src/strokePathGeometry.ts",
-              "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",127]",
+              "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",130]",
               "kind": "variable",
               "name": "StrokePathTessellationIssueNone",
               "scope": "module",
@@ -315883,7 +316303,7 @@
               "line": 6,
               "packageName": "@flighthq/path",
               "source": "packages/path/src/strokePathGeometry.ts",
-              "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",177]",
+              "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",180]",
               "kind": "variable",
               "name": "StrokePathTessellationIssueInvalidStyle",
               "scope": "module",
@@ -315906,7 +316326,7 @@
               "line": 7,
               "packageName": "@flighthq/path",
               "source": "packages/path/src/strokePathGeometry.ts",
-              "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",235]",
+              "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",238]",
               "kind": "variable",
               "name": "StrokePathTessellationIssueInvalidPath",
               "scope": "module",
@@ -315929,7 +316349,7 @@
               "line": 8,
               "packageName": "@flighthq/path",
               "source": "packages/path/src/strokePathGeometry.ts",
-              "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",292]",
+              "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",295]",
               "kind": "variable",
               "name": "StrokePathTessellationIssueSelfIntersectingCenterline",
               "scope": "module",
@@ -315952,7 +316372,7 @@
               "line": 9,
               "packageName": "@flighthq/path",
               "source": "packages/path/src/strokePathGeometry.ts",
-              "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",364]",
+              "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",367]",
               "kind": "variable",
               "name": "StrokePathTessellationIssueReversingJoin",
               "scope": "module",
@@ -315975,7 +316395,7 @@
               "line": 10,
               "packageName": "@flighthq/path",
               "source": "packages/path/src/strokePathGeometry.ts",
-              "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",423]",
+              "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",426]",
               "kind": "variable",
               "name": "StrokePathTessellationIssueSelfIntersectingOutline",
               "scope": "module",
@@ -315998,7 +316418,7 @@
               "line": 573,
               "packageName": "@flighthq/path",
               "source": "packages/path/src/strokePathGeometry.ts",
-              "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",20198]",
+              "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",20201]",
               "kind": "variable",
               "name": "EMPTY_DASH",
               "scope": "module",
@@ -316021,7 +316441,7 @@
               "line": 574,
               "packageName": "@flighthq/path",
               "source": "packages/path/src/strokePathGeometry.ts",
-              "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",20240]",
+              "id": "binding:[\"@flighthq/path\",\"packages/path/src/strokePathGeometry.ts\",20243]",
               "kind": "variable",
               "name": "GEOMETRY_EPSILON",
               "scope": "module",
@@ -325188,7 +325608,7 @@
             "line": 10,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/tessellatePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellatePath.ts\",638]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellatePath.ts\",641]",
             "kind": "function",
             "name": "tessellatePath",
             "scope": "module",
@@ -325209,7 +325629,7 @@
             "line": 22,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/tessellatePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellatePath.ts\",1177]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellatePath.ts\",1180]",
             "kind": "function",
             "name": "tessellatePathInto",
             "scope": "module",
@@ -325230,7 +325650,7 @@
             "line": 33,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/tessellatePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellatePath.ts\",1686]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellatePath.ts\",1689]",
             "kind": "function",
             "name": "tessellateContour",
             "scope": "module",
@@ -325251,7 +325671,7 @@
             "line": 95,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/tessellatePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellatePath.ts\",4010]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellatePath.ts\",4013]",
             "kind": "function",
             "name": "isEar",
             "scope": "module",
@@ -325272,7 +325692,7 @@
             "line": 112,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/tessellatePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellatePath.ts\",4646]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellatePath.ts\",4649]",
             "kind": "function",
             "name": "isPointInTriangle",
             "scope": "module",
@@ -325294,7 +325714,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/tessellatePath.ts"
           },
-          "specifier": "./flattenPath",
+          "specifier": "./flattenPath.ts",
           "target": {
             "name": "FlattenPath",
             "packageName": "@flighthq/path",
@@ -325379,7 +325799,7 @@
             "line": 8,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/tessellatePathTyped.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellatePathTyped.ts\",436]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellatePathTyped.ts\",439]",
             "kind": "function",
             "name": "tessellatePathTyped",
             "scope": "module",
@@ -325400,7 +325820,7 @@
             "line": 18,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/tessellatePathTyped.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellatePathTyped.ts\",860]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellatePathTyped.ts\",863]",
             "kind": "function",
             "name": "tessellatePathTypedInto",
             "scope": "module",
@@ -325422,7 +325842,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/tessellatePathTyped.ts"
           },
-          "specifier": "./tessellatePath",
+          "specifier": "./tessellatePath.ts",
           "target": {
             "name": "TessellatePath",
             "packageName": "@flighthq/path",
@@ -325550,7 +325970,7 @@
             "line": 13,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/tessellateStrokePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellateStrokePath.ts\",608]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellateStrokePath.ts\",611]",
             "kind": "function",
             "name": "tessellateStrokePath",
             "scope": "module",
@@ -325571,7 +325991,7 @@
             "line": 25,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/tessellateStrokePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellateStrokePath.ts\",1069]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellateStrokePath.ts\",1072]",
             "kind": "function",
             "name": "appendStrokePieceMesh",
             "scope": "module",
@@ -325592,7 +326012,7 @@
             "line": 64,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/tessellateStrokePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellateStrokePath.ts\",2456]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellateStrokePath.ts\",2459]",
             "kind": "function",
             "name": "appendRoundCap",
             "scope": "module",
@@ -325613,7 +326033,7 @@
             "line": 78,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/tessellateStrokePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellateStrokePath.ts\",3033]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellateStrokePath.ts\",3036]",
             "kind": "function",
             "name": "appendTriangle",
             "scope": "module",
@@ -325634,7 +326054,7 @@
             "line": 89,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/tessellateStrokePath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellateStrokePath.ts\",3457]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellateStrokePath.ts\",3460]",
             "kind": "variable",
             "name": "TRIANGLE_EPSILON",
             "scope": "module",
@@ -325656,7 +326076,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/tessellateStrokePath.ts"
           },
-          "specifier": "./strokePathGeometry",
+          "specifier": "./strokePathGeometry.ts",
           "target": {
             "name": "StrokePathGeometry",
             "packageName": "@flighthq/path",
@@ -325730,7 +326150,7 @@
               "line": 89,
               "packageName": "@flighthq/path",
               "source": "packages/path/src/tessellateStrokePath.ts",
-              "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellateStrokePath.ts\",3457]",
+              "id": "binding:[\"@flighthq/path\",\"packages/path/src/tessellateStrokePath.ts\",3460]",
               "kind": "variable",
               "name": "TRIANGLE_EPSILON",
               "scope": "module",
@@ -341555,7 +341975,7 @@
             "line": 12,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/transformPath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/transformPath.ts\",551]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/transformPath.ts\",554]",
             "kind": "function",
             "name": "transformPath",
             "scope": "module",
@@ -341576,7 +341996,7 @@
             "line": 60,
             "packageName": "@flighthq/path",
             "source": "packages/path/src/transformPath.ts",
-            "id": "binding:[\"@flighthq/path\",\"packages/path/src/transformPath.ts\",2492]",
+            "id": "binding:[\"@flighthq/path\",\"packages/path/src/transformPath.ts\",2495]",
             "kind": "function",
             "name": "translatePath",
             "scope": "module",
@@ -341598,7 +342018,7 @@
             "packageName": "@flighthq/path",
             "source": "packages/path/src/transformPath.ts"
           },
-          "specifier": "./copyPath",
+          "specifier": "./copyPath.ts",
           "target": {
             "name": "CopyPath",
             "packageName": "@flighthq/path",
