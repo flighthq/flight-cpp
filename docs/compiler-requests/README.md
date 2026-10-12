@@ -76,6 +76,11 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `tray-create-result-and-runtime-owner`, which names the create-result arms once and narrows the
   entity's runtime slot, advancing the refusal to a member-presence narrow (`'error' in result`) that is
   still refused.
+- [A member-presence narrow must select across every alternative that carries the member](narrowed-member-multi-alternative-selection.md) —
+  `'error' in result` over the four failure arms of `TrayCreateCapabilityResult` narrows to three, and
+  the emitter requires exactly one C++ alternative, so `@flighthq/tray` refuses at emission. No
+  workaround carried: the discriminant rewrite answers a different question and would be a source change
+  made solely for the emitter.
 - [Union carriers need canonical alternative order](canonical-union-carrier-order.md) — identical
   named unions currently become incompatible `std::variant` types at array callback boundaries.
 - [Nullable and optional storage needs two absence channels](nullable-optional-presence.md) — one
