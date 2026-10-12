@@ -31861,7 +31861,6 @@
       },
       "path": "flight/shading/contract.hpp",
       "refusedDependencies": [
-        "@flighthq/shading/packages/shading/src/getModifierDefineKey.ts",
         "@flighthq/shading/packages/shading/src/registerBuiltInModifiers.ts"
       ],
       "status": "dependency-incomplete"
@@ -31976,15 +31975,10 @@
       "status": "emitted"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/glShadedPrelude.ts",
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadedPrelude.ts",
         "@flighthq/shading/packages/shading/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:a6dd6a3f8ef4fe346daa14dc6f22296be199187e7af55a2109761a8e5fdc6e98",
-        "sha256:b78923df2a393fb7c1a5fccf60c254a1235967f83f3a7fe4942800cce7ce57e0"
       ],
       "module": {
         "name": "GetModifierDefineKey",
@@ -31992,8 +31986,7 @@
         "source": "packages/shading/src/getModifierDefineKey.ts"
       },
       "path": "flight/shading/get_modifier_define_key.hpp",
-      "rule": "cpp-presence-test-without-absence-storage",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -32070,7 +32063,6 @@
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/glShadedPrelude.ts",
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/wgpuShadedPrelude.ts",
         "@flighthq/shading/packages/shading/src/contract.ts",
-        "@flighthq/shading/packages/shading/src/getModifierDefineKey.ts",
         "@flighthq/shading/packages/shading/src/getUnregisteredModifierKinds.ts",
         "@flighthq/shading/packages/shading/src/registerBuiltInModifiers.ts"
       ],
@@ -32099,20 +32091,20 @@
       "status": "emitted"
     },
     {
-      "classification": "compiler-restriction",
+      "classification": "source-portability",
       "consumers": [
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts",
         "@flighthq/shading/packages/shading/src/contract.ts"
       ],
       "declarationFingerprints": [
         "sha256:004f1879c6798f2b0b534e1e295be68a8f3850a65ccfe86361b4e00caa0181d9",
-        "sha256:26bf1ac55251821637676051094206e3e64fa6031397a2402b9f095e1eeb5d25",
+        "sha256:16b7cbac81500de4cc0cf6ee6014f147b376855ce49accca7e112400139ec392",
         "sha256:3ad2bc49559a5232377b35f5573b832eea01b40b1cd7d7ac898e277d2a87b428",
-        "sha256:6e1b37e1f82a85b195521fdc4d657a136c4bd3c4ac4d1206260b6e7494fde439",
-        "sha256:c6e2bfc7cc8da63dc6999470c214a21bf97f7b2364bbe832d93290991a79c0fe",
-        "sha256:c9eb5f82612f88380a395cf9316daec5a1a3faf2cd15f42473d07bb0205caf41",
-        "sha256:e0dd640d45108a6a8ea24df3ee90c67f40bee0841c6200e419f1b0576038384b",
+        "sha256:59785c477871f4ee6f4dc9a626a90dca7375364343e77e886b56d383c0722d90",
+        "sha256:69080196dacd34d96dc5275245bad5cf06c6795d2e784f2a42d411480201cc86",
+        "sha256:7b70f9346d3d5dce7b527a0b2e6e143d90537f15925b4efd6984c199da1d11f4",
         "sha256:e4eb5efafd059fe562f4d5241aff97da73bbbf1b7c3354a5d616f16545054fac",
+        "sha256:e6cceec50bf1a0d75e79f6d83cd301ebb4325afd994cc03f7ca87c8a5edcf437",
         "sha256:ec08ba0ff16b444a131373d22bf4e55336c4c1f61ddba5999a1bb35d84adddbb"
       ],
       "module": {
@@ -32121,7 +32113,7 @@
         "source": "packages/shading/src/registerBuiltInModifiers.ts"
       },
       "path": "flight/shading/register_built_in_modifiers.hpp",
-      "rule": "cpp-type-assertion-unidentified",
+      "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
     {

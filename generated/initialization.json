@@ -3356,6 +3356,11 @@
       "source": "packages/shading/src/createVertexDisplaceModifier.ts"
     },
     {
+      "name": "GetModifierDefineKey",
+      "packageName": "@flighthq/shading",
+      "source": "packages/shading/src/getModifierDefineKey.ts"
+    },
+    {
       "name": "GetUnregisteredModifierKinds",
       "packageName": "@flighthq/shading",
       "source": "packages/shading/src/getUnregisteredModifierKinds.ts"
@@ -26251,6 +26256,26 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "OrderModifierStack",
+          "packageName": "@flighthq/shading",
+          "source": "packages/shading/src/orderModifierStack.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "GetModifierDefineKey",
+          "packageName": "@flighthq/shading",
+          "source": "packages/shading/src/getModifierDefineKey.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "ModifierRegistry",
           "packageName": "@flighthq/shading",
           "source": "packages/shading/src/modifierRegistry.ts"
@@ -26284,16 +26309,6 @@
           "name": "IsModifierStackValid",
           "packageName": "@flighthq/shading",
           "source": "packages/shading/src/isModifierStackValid.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "OrderModifierStack",
-          "packageName": "@flighthq/shading",
-          "source": "packages/shading/src/orderModifierStack.ts"
         }
       ]
     },
@@ -116223,7 +116238,7 @@
             "line": 16,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createAnimatedNormalModifier.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createAnimatedNormalModifier.ts\",710]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createAnimatedNormalModifier.ts\",713]",
             "kind": "function",
             "name": "createAnimatedNormalModifier",
             "scope": "module",
@@ -116244,7 +116259,7 @@
             "line": 28,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createAnimatedNormalModifier.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createAnimatedNormalModifier.ts\",1476]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createAnimatedNormalModifier.ts\",1479]",
             "kind": "function",
             "name": "initializeAnimatedNormalModifier",
             "scope": "module",
@@ -116266,7 +116281,7 @@
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createAnimatedNormalModifier.ts"
           },
-          "specifier": "./modifier",
+          "specifier": "./modifier.ts",
           "target": {
             "name": "Modifier",
             "packageName": "@flighthq/shading",
@@ -116488,7 +116503,7 @@
             "line": 11,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createDissolveModifier.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createDissolveModifier.ts\",636]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createDissolveModifier.ts\",639]",
             "kind": "function",
             "name": "createDissolveModifier",
             "scope": "module",
@@ -116509,7 +116524,7 @@
             "line": 23,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createDissolveModifier.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createDissolveModifier.ts\",1465]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createDissolveModifier.ts\",1468]",
             "kind": "function",
             "name": "initializeDissolveModifier",
             "scope": "module",
@@ -116531,7 +116546,7 @@
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createDissolveModifier.ts"
           },
-          "specifier": "./modifier",
+          "specifier": "./modifier.ts",
           "target": {
             "name": "Modifier",
             "packageName": "@flighthq/shading",
@@ -116740,7 +116755,7 @@
             "line": 12,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createEmissiveModifier.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createEmissiveModifier.ts\",672]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createEmissiveModifier.ts\",675]",
             "kind": "function",
             "name": "createEmissiveModifier",
             "scope": "module",
@@ -116761,7 +116776,7 @@
             "line": 24,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createEmissiveModifier.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createEmissiveModifier.ts\",1424]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createEmissiveModifier.ts\",1427]",
             "kind": "function",
             "name": "initializeEmissiveModifier",
             "scope": "module",
@@ -116783,7 +116798,7 @@
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createEmissiveModifier.ts"
           },
-          "specifier": "./modifier",
+          "specifier": "./modifier.ts",
           "target": {
             "name": "Modifier",
             "packageName": "@flighthq/shading",
@@ -116966,7 +116981,7 @@
             "line": 11,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createEnvReflectModifier.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createEnvReflectModifier.ts\",619]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createEnvReflectModifier.ts\",622]",
             "kind": "function",
             "name": "createEnvReflectModifier",
             "scope": "module",
@@ -116987,7 +117002,7 @@
             "line": 23,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createEnvReflectModifier.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createEnvReflectModifier.ts\",1456]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createEnvReflectModifier.ts\",1459]",
             "kind": "function",
             "name": "initializeEnvReflectModifier",
             "scope": "module",
@@ -117009,7 +117024,7 @@
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createEnvReflectModifier.ts"
           },
-          "specifier": "./modifier",
+          "specifier": "./modifier.ts",
           "target": {
             "name": "Modifier",
             "packageName": "@flighthq/shading",
@@ -117257,7 +117272,7 @@
             "line": 12,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createFogModifier.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createFogModifier.ts\",648]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createFogModifier.ts\",651]",
             "kind": "function",
             "name": "createFogModifier",
             "scope": "module",
@@ -117278,7 +117293,7 @@
             "line": 23,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createFogModifier.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createFogModifier.ts\",1284]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createFogModifier.ts\",1287]",
             "kind": "function",
             "name": "initializeFogModifier",
             "scope": "module",
@@ -117300,7 +117315,7 @@
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createFogModifier.ts"
           },
-          "specifier": "./modifier",
+          "specifier": "./modifier.ts",
           "target": {
             "name": "Modifier",
             "packageName": "@flighthq/shading",
@@ -117550,7 +117565,7 @@
             "line": 11,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createRimModifier.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createRimModifier.ts\",599]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createRimModifier.ts\",602]",
             "kind": "function",
             "name": "createRimModifier",
             "scope": "module",
@@ -117571,7 +117586,7 @@
             "line": 22,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createRimModifier.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createRimModifier.ts\",1256]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createRimModifier.ts\",1259]",
             "kind": "function",
             "name": "initializeRimModifier",
             "scope": "module",
@@ -117593,7 +117608,7 @@
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createRimModifier.ts"
           },
-          "specifier": "./modifier",
+          "specifier": "./modifier.ts",
           "target": {
             "name": "Modifier",
             "packageName": "@flighthq/shading",
@@ -117750,7 +117765,7 @@
             "line": 19,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createShadedMaterial.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createShadedMaterial.ts\",1497]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createShadedMaterial.ts\",1487]",
             "kind": "function",
             "name": "createShadedMaterial",
             "scope": "module",
@@ -117771,7 +117786,7 @@
             "line": 25,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createShadedMaterial.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createShadedMaterial.ts\",1722]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createShadedMaterial.ts\",1712]",
             "kind": "function",
             "name": "initializeShadedMaterial",
             "scope": "module",
@@ -118057,7 +118072,7 @@
             "line": 11,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createToonModifier.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createToonModifier.ts\",588]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createToonModifier.ts\",591]",
             "kind": "function",
             "name": "createToonModifier",
             "scope": "module",
@@ -118078,7 +118093,7 @@
             "line": 22,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createToonModifier.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createToonModifier.ts\",1267]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createToonModifier.ts\",1270]",
             "kind": "function",
             "name": "initializeToonModifier",
             "scope": "module",
@@ -118100,7 +118115,7 @@
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createToonModifier.ts"
           },
-          "specifier": "./modifier",
+          "specifier": "./modifier.ts",
           "target": {
             "name": "Modifier",
             "packageName": "@flighthq/shading",
@@ -118283,7 +118298,7 @@
             "line": 17,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createVertexDisplaceModifier.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createVertexDisplaceModifier.ts\",693]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createVertexDisplaceModifier.ts\",696]",
             "kind": "function",
             "name": "createVertexDisplaceModifier",
             "scope": "module",
@@ -118304,7 +118319,7 @@
             "line": 28,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createVertexDisplaceModifier.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createVertexDisplaceModifier.ts\",1453]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createVertexDisplaceModifier.ts\",1456]",
             "kind": "function",
             "name": "initializeVertexDisplaceModifier",
             "scope": "module",
@@ -118325,7 +118340,7 @@
             "line": 42,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createVertexDisplaceModifier.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createVertexDisplaceModifier.ts\",2002]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createVertexDisplaceModifier.ts\",2005]",
             "kind": "variable",
             "name": "DEFAULT_DIRECTION",
             "scope": "module",
@@ -118347,7 +118362,7 @@
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/createVertexDisplaceModifier.ts"
           },
-          "specifier": "./modifier",
+          "specifier": "./modifier.ts",
           "target": {
             "name": "Modifier",
             "packageName": "@flighthq/shading",
@@ -118398,7 +118413,7 @@
               "line": 42,
               "packageName": "@flighthq/shading",
               "source": "packages/shading/src/createVertexDisplaceModifier.ts",
-              "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createVertexDisplaceModifier.ts\",2002]",
+              "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/createVertexDisplaceModifier.ts\",2005]",
               "kind": "variable",
               "name": "DEFAULT_DIRECTION",
               "scope": "module",
@@ -145125,6 +145140,114 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
+            "fingerprint": "sha256:f56bf8bc8b5b04aa8d868a4a505cc351b90ccd0f5ff548efecd2724e0ee35acf",
+            "line": 4,
+            "packageName": "@flighthq/shading",
+            "source": "packages/shading/src/getModifierDefineKey.ts",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/getModifierDefineKey.ts\",134]",
+            "kind": "import",
+            "name": "orderModifierStack",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "orderModifierStack",
+            "kind": "dependency",
+            "module": {
+              "name": "OrderModifierStack",
+              "packageName": "@flighthq/shading",
+              "source": "packages/shading/src/orderModifierStack.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:687777ffae90330b319661de5bcac523857c68bececa26d3c5c3ca6b5250df1f",
+            "line": 21,
+            "packageName": "@flighthq/shading",
+            "source": "packages/shading/src/getModifierDefineKey.ts",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/getModifierDefineKey.ts\",1519]",
+            "kind": "function",
+            "name": "getModifierDefineKey",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:5da242685245ce61df4e8179ea2a697e0d304b83f231f839aeac34e5cd1254ea",
+            "line": 32,
+            "packageName": "@flighthq/shading",
+            "source": "packages/shading/src/getModifierDefineKey.ts",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/getModifierDefineKey.ts\",1950]",
+            "kind": "function",
+            "name": "getDefineSignature",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "GetModifierDefineKey",
+            "packageName": "@flighthq/shading",
+            "source": "packages/shading/src/getModifierDefineKey.ts"
+          },
+          "specifier": "./orderModifierStack.ts",
+          "target": {
+            "name": "OrderModifierStack",
+            "packageName": "@flighthq/shading",
+            "source": "packages/shading/src/orderModifierStack.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "GetModifierDefineKey",
+            "packageName": "@flighthq/shading",
+            "source": "packages/shading/src/getModifierDefineKey.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "GetModifierDefineKey",
+        "packageName": "@flighthq/shading",
+        "source": "packages/shading/src/getModifierDefineKey.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
             "fingerprint": "sha256:b36bbe7191de36ae9fdfe7c31d0262287f2cd16a80cc49ce34744c660db5a3dc",
             "line": 2,
             "packageName": "@flighthq/path",
@@ -146442,7 +146565,7 @@
             "line": 4,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/getUnregisteredModifierKinds.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/getUnregisteredModifierKinds.ts\",153]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/getUnregisteredModifierKinds.ts\",148]",
             "kind": "import",
             "name": "resolveModifier",
             "scope": "module",
@@ -146468,7 +146591,7 @@
             "line": 10,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/getUnregisteredModifierKinds.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/getUnregisteredModifierKinds.ts\",585]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/getUnregisteredModifierKinds.ts\",583]",
             "kind": "function",
             "name": "getUnregisteredModifierKinds",
             "scope": "module",
@@ -146490,7 +146613,7 @@
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/getUnregisteredModifierKinds.ts"
           },
-          "specifier": "./modifierRegistry",
+          "specifier": "./modifierRegistry.ts",
           "target": {
             "name": "ModifierRegistry",
             "packageName": "@flighthq/shading",
@@ -146504,252 +146627,11 @@
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/getUnregisteredModifierKinds.ts"
           },
-          "importedNames": [
-            "AnimatedNormalModifier"
-          ],
           "specifier": "@flighthq/types/contract",
           "target": {
-            "name": "AnimatedNormalModifier",
+            "name": "Contract",
             "packageName": "@flighthq/types",
-            "source": "packages/types/src/AnimatedNormalModifier.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "GetUnregisteredModifierKinds",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/getUnregisteredModifierKinds.ts"
-          },
-          "importedNames": [
-            "DissolveModifier"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "DissolveModifier",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/DissolveModifier.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "GetUnregisteredModifierKinds",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/getUnregisteredModifierKinds.ts"
-          },
-          "importedNames": [
-            "EmissiveModifier"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "EmissiveModifier",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/EmissiveModifier.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "GetUnregisteredModifierKinds",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/getUnregisteredModifierKinds.ts"
-          },
-          "importedNames": [
-            "EnvReflectModifier"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "EnvReflectModifier",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/EnvReflectModifier.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "GetUnregisteredModifierKinds",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/getUnregisteredModifierKinds.ts"
-          },
-          "importedNames": [
-            "FogModifier"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "FogModifier",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/FogModifier.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "GetUnregisteredModifierKinds",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/getUnregisteredModifierKinds.ts"
-          },
-          "importedNames": [
-            "GlModifierSnippet"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "GlModifierSnippet",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/GlModifierSnippet.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "GetUnregisteredModifierKinds",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/getUnregisteredModifierKinds.ts"
-          },
-          "importedNames": [
-            "Modifier"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Modifier",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Modifier.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "GetUnregisteredModifierKinds",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/getUnregisteredModifierKinds.ts"
-          },
-          "importedNames": [
-            "ModifierDefinition"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "ModifierDefinition",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/ModifierDefinition.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "GetUnregisteredModifierKinds",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/getUnregisteredModifierKinds.ts"
-          },
-          "importedNames": [
-            "ModifierKind"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "ModifierKind",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/ModifierKind.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "GetUnregisteredModifierKinds",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/getUnregisteredModifierKinds.ts"
-          },
-          "importedNames": [
-            "ModifierRegistry"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "ModifierRegistry",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/ModifierRegistry.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "GetUnregisteredModifierKinds",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/getUnregisteredModifierKinds.ts"
-          },
-          "importedNames": [
-            "ModifierValue"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "ModifierValue",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/ModifierValue.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "GetUnregisteredModifierKinds",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/getUnregisteredModifierKinds.ts"
-          },
-          "importedNames": [
-            "RimModifier"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "RimModifier",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/RimModifier.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "GetUnregisteredModifierKinds",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/getUnregisteredModifierKinds.ts"
-          },
-          "importedNames": [
-            "ToonModifier"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "ToonModifier",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/ToonModifier.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "GetUnregisteredModifierKinds",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/getUnregisteredModifierKinds.ts"
-          },
-          "importedNames": [
-            "VertexDisplaceModifier"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "VertexDisplaceModifier",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/VertexDisplaceModifier.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "GetUnregisteredModifierKinds",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/getUnregisteredModifierKinds.ts"
-          },
-          "importedNames": [
-            "WgpuModifierSnippet"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "WgpuModifierSnippet",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/WgpuModifierSnippet.ts"
+            "source": "packages/types/src/contract.ts"
           }
         }
       ],
@@ -188472,7 +188354,7 @@
             "line": 4,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/isModifierStackValid.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/isModifierStackValid.ts\",139]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/isModifierStackValid.ts\",134]",
             "kind": "import",
             "name": "getUnregisteredModifierKinds",
             "scope": "module",
@@ -188498,7 +188380,7 @@
             "line": 9,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/isModifierStackValid.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/isModifierStackValid.ts\",523]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/isModifierStackValid.ts\",521]",
             "kind": "function",
             "name": "isModifierStackValid",
             "scope": "module",
@@ -188520,11 +188402,28 @@
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/isModifierStackValid.ts"
           },
-          "specifier": "./getUnregisteredModifierKinds",
+          "specifier": "./getUnregisteredModifierKinds.ts",
           "target": {
             "name": "GetUnregisteredModifierKinds",
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/getUnregisteredModifierKinds.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "IsModifierStackValid",
+            "packageName": "@flighthq/shading",
+            "source": "packages/shading/src/isModifierStackValid.ts"
+          },
+          "importedNames": [
+            "Modifier"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Modifier",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Modifier.ts"
           }
         },
         {
@@ -188542,23 +188441,6 @@
             "name": "ModifierRegistry",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/ModifierRegistry.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "IsModifierStackValid",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/isModifierStackValid.ts"
-          },
-          "importedNames": [
-            "ModifierValue"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "ModifierValue",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/ModifierValue.ts"
           }
         }
       ],
@@ -218001,66 +217883,14 @@
     {
       "bindings": [
         {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
-            "line": 1,
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/modifierRegistry.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/modifierRegistry.ts\",9]",
-            "kind": "import",
-            "name": "allocateEntity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "allocateEntity",
-            "kind": "dependency",
-            "module": {
-              "name": "Entity",
-              "packageName": "@flighthq/entity",
-              "source": "packages/entity/src/entity.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 26,
-            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
-            "line": 1,
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/modifierRegistry.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/modifierRegistry.ts\",25]",
-            "kind": "import",
-            "name": "finishEntity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "finishEntity",
-            "kind": "dependency",
-            "module": {
-              "name": "Entity",
-              "packageName": "@flighthq/entity",
-              "source": "packages/entity/src/entity.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
           "access": "available-after-instantiation",
           "binding": {
             "column": 17,
             "fingerprint": "sha256:c96a54c4fb7eb775b2466b74fe78f251e04cb6998971008f928474f9acbd0613",
-            "line": 29,
+            "line": 28,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/modifierRegistry.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/modifierRegistry.ts\",1859]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/modifierRegistry.ts\",1783]",
             "kind": "function",
             "name": "createModifierRegistry",
             "scope": "module",
@@ -218077,32 +217907,11 @@
           "access": "available-after-instantiation",
           "binding": {
             "column": 17,
-            "fingerprint": "sha256:5059fd3d64ce497e378993190db47edc68587d50167fb9ce5d58b1d41ee3948e",
-            "line": 35,
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/modifierRegistry.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/modifierRegistry.ts\",2036]",
-            "kind": "function",
-            "name": "initializeModifierRegistry",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
             "fingerprint": "sha256:2464063b7d28e3e4f035495843148bbb420a58f44a57b0bc216ea5039094975a",
-            "line": 43,
+            "line": 36,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/modifierRegistry.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/modifierRegistry.ts\",2503]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/modifierRegistry.ts\",2260]",
             "kind": "function",
             "name": "registerModifier",
             "scope": "module",
@@ -218120,10 +217929,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:a73128193574c377259cc1b751fa5e9339e90e17da3603472c3db02336327483",
-            "line": 52,
+            "line": 42,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/modifierRegistry.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/modifierRegistry.ts\",2870]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/modifierRegistry.ts\",2615]",
             "kind": "function",
             "name": "resolveModifier",
             "scope": "module",
@@ -218139,137 +217948,17 @@
       ],
       "dependencies": [
         {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "ModifierRegistry",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/modifierRegistry.ts"
-          },
-          "specifier": "@flighthq/entity/contract",
-          "target": {
-            "name": "Entity",
-            "packageName": "@flighthq/entity",
-            "source": "packages/entity/src/entity.ts"
-          }
-        },
-        {
           "evaluation": "type-only",
           "importer": {
             "name": "ModifierRegistry",
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/modifierRegistry.ts"
           },
-          "importedNames": [
-            "Entity",
-            "EntityConstruction"
-          ],
           "specifier": "@flighthq/types/contract",
           "target": {
-            "name": "Entity",
+            "name": "Contract",
             "packageName": "@flighthq/types",
-            "source": "packages/types/src/Entity.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "ModifierRegistry",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/modifierRegistry.ts"
-          },
-          "importedNames": [
-            "GlModifierSnippet"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "GlModifierSnippet",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/GlModifierSnippet.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "ModifierRegistry",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/modifierRegistry.ts"
-          },
-          "importedNames": [
-            "ModifierDefinition"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "ModifierDefinition",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/ModifierDefinition.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "ModifierRegistry",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/modifierRegistry.ts"
-          },
-          "importedNames": [
-            "ModifierDefinitionValue"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "ModifierDefinitionValue",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/ModifierDefinitionValue.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "ModifierRegistry",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/modifierRegistry.ts"
-          },
-          "importedNames": [
-            "ModifierKind"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "ModifierKind",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/ModifierKind.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "ModifierRegistry",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/modifierRegistry.ts"
-          },
-          "importedNames": [
-            "ModifierRegistry"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "ModifierRegistry",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/ModifierRegistry.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "ModifierRegistry",
-            "packageName": "@flighthq/shading",
-            "source": "packages/shading/src/modifierRegistry.ts"
-          },
-          "importedNames": [
-            "WgpuModifierSnippet"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "WgpuModifierSnippet",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/WgpuModifierSnippet.ts"
+            "source": "packages/types/src/contract.ts"
           }
         }
       ],
@@ -230148,7 +229837,7 @@
             "line": 2,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/orderModifierStack.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/orderModifierStack.ts\",72]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/orderModifierStack.ts\",67]",
             "kind": "import",
             "name": "ModifierSlot",
             "scope": "module",
@@ -230174,7 +229863,7 @@
             "line": 16,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/orderModifierStack.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/orderModifierStack.ts\",1051]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/orderModifierStack.ts\",1046]",
             "kind": "function",
             "name": "orderModifierStack",
             "scope": "module",
@@ -230195,7 +229884,7 @@
             "line": 27,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/orderModifierStack.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/orderModifierStack.ts\",1655]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/orderModifierStack.ts\",1640]",
             "kind": "function",
             "name": "getModifierSlotRank",
             "scope": "module",
@@ -230216,7 +229905,7 @@
             "line": 32,
             "packageName": "@flighthq/shading",
             "source": "packages/shading/src/orderModifierStack.ts",
-            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/orderModifierStack.ts\",1803]",
+            "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/orderModifierStack.ts\",1788]",
             "kind": "variable",
             "name": "SLOT_RANK",
             "scope": "module",
@@ -230261,7 +229950,7 @@
               "line": 32,
               "packageName": "@flighthq/shading",
               "source": "packages/shading/src/orderModifierStack.ts",
-              "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/orderModifierStack.ts\",1803]",
+              "id": "binding:[\"@flighthq/shading\",\"packages/shading/src/orderModifierStack.ts\",1788]",
               "kind": "variable",
               "name": "SLOT_RANK",
               "scope": "module",

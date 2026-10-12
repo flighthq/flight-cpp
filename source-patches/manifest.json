@@ -250,12 +250,12 @@
       "module": "packages/shading/src/createShadedMaterial.ts and packages/shading/src/getModifierDefineKey.ts",
       "package": "@flighthq/shading",
       "answers": "diagnostic",
-      "refusal": "nullable texture options retain a nested optional reference and a readonly registry loses its const structural owner at downstream calls",
-      "rewrite": "Binds each texture option to its exact Texture | null field type and the present registry to Readonly<ModifierRegistry> before use.",
-      "equivalence": "All annotations are erased. Each texture expression and the registry are evaluated once at the same point, retaining the identical references and null fallback before the same assignments and lookup.",
-      "whyNotUpstreamFirst": "These target-neutral locals state the destination contracts already required by the APIs and avoid copied material and modifier logic.",
-      "unblocks": "Removes nested optional texture probing in create_shaded_material.hpp and preserves the readonly modifier registry carrier.",
-      "expires": "when nullish reference storage and readonly structural bindings retain their contextual owners, or Flight adopts the explicit locals.",
+      "refusal": "nullable texture options retain a nested optional reference, and a guarded readonly optional registry is round-tripped through a writable structural row when passed to a readonly helper",
+      "rewrite": "Binds each texture option to its exact Texture | null field type; after the registry guard, reads its definitions map directly instead of calling the one-line resolveModifier wrapper.",
+      "equivalence": "All texture annotations are erased and preserve the identical references and null fallbacks. The registry expression is still read only after the same undefined guard; definitions.get(kind) ?? null is exactly resolveModifier's body, performs the same single map lookup, and returns the same retained definition owner or null.",
+      "whyNotUpstreamFirst": "The target-neutral texture locals state destination contracts already required by the APIs. The direct registry lookup avoids copying any algorithm while working around an emitter-only const upgrade at the helper boundary.",
+      "unblocks": "Removes nested optional texture probing in create_shaded_material.hpp and the readonly-to-writable registry conversion in get_modifier_define_key.hpp and its aggregate consumers.",
+      "expires": "when nullish reference storage retains its contextual owner and guarded readonly optional rows pass to readonly helpers without a writable round trip, or Flight adopts these equivalent forms.",
       "appliedOn": "2026-10-07"
     },
     {

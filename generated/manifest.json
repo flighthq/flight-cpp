@@ -4944,7 +4944,7 @@
     },
     {
       "dependency": "flight",
-      "digest": "0c7af8ccfb9956ed11c4133ada89f32dad3548e9465c4d72b2ee33816eb0cee7",
+      "digest": "09ba5bca4c97d5f9618841afdff91b88e129458b61d9c7c158b8b915ba2d8bd9",
       "id": "shading-explicit-reference-storage",
       "module": "packages/shading/src/createShadedMaterial.ts and packages/shading/src/getModifierDefineKey.ts",
       "package": "@flighthq/shading"
@@ -6220,7 +6220,6 @@
       "flight/scene_document/scene_document_materialization_selection.hpp",
       "flight/scene_document/scene_document_scene2_dmaterialization.hpp",
       "flight/scene_document/scene_document_scene3_dmaterialization.hpp",
-      "flight/shading/get_modifier_define_key.hpp",
       "flight/shading/register_built_in_modifiers.hpp",
       "flight/shape/morph_shape.hpp",
       "flight/shape/scale9_shape.hpp",
@@ -6273,7 +6272,7 @@
       "flight/velocity/transform_velocity.hpp",
       "flight/video/video_resource_from.hpp"
     ],
-    "includes": 910
+    "includes": 908
   },
   "packages": [
     {
@@ -7590,11 +7589,11 @@
     {
       "cppIncludePrefix": "flight/shading",
       "cppNamespace": "flight::shading",
-      "emittedModules": 17,
+      "emittedModules": 18,
       "package": "@flighthq/shading",
-      "refusedModules": 2,
+      "refusedModules": 1,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 19
@@ -8139,8 +8138,8 @@
   },
   "summary": {
     "packages": 154,
-    "emittedModules": 2377,
-    "refusedModules": 561,
+    "emittedModules": 2378,
+    "refusedModules": 560,
     "sourceModules": 2938
   }
 }

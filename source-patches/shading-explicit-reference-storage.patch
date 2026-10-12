@@ -28,13 +28,12 @@ diff --git a/packages/shading/src/createShadedMaterial.ts b/packages/shading/src
 diff --git a/packages/shading/src/getModifierDefineKey.ts b/packages/shading/src/getModifierDefineKey.ts
 --- a/packages/shading/src/getModifierDefineKey.ts
 +++ b/packages/shading/src/getModifierDefineKey.ts
-@@ -32,7 +32,8 @@ export function getModifierDefineKey(stack: readonly Modifier[], registry?: Reado
- 
+@@ -4,2 +4 @@
+-import { resolveModifier } from './modifierRegistry.ts';
+ import { orderModifierStack } from './orderModifierStack.ts';
+@@ -33,4 +32,4 @@ function getDefineSignature(modifier: Readonly<Modifier>, registry?: Readonly<Mo
  function getDefineSignature(modifier: Readonly<Modifier>, registry?: Readonly<ModifierRegistry>): string {
    if (registry === undefined) return '';
 -  const definition = resolveModifier(registry, modifier.kind);
-+  const selected: Readonly<ModifierRegistry> = registry;
-+  const definition = resolveModifier(selected, modifier.kind);
++  const definition = registry.definitions.get(modifier.kind) ?? null;
    if (definition === null || definition.getDefineSignature === undefined) return '';
-   return definition.getDefineSignature(modifier);
- }

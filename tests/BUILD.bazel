@@ -90,6 +90,16 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_shading_test",
+    srcs = ["generated_shading_test.cpp"],
+    size = "small",
+    deps = [
+        "//:cpp",
+        "//:sdk_preview",
+    ],
+)
+
+cc_test(
     name = "generated_animation_test",
     srcs = ["generated_animation_test.cpp"],
     size = "small",
@@ -243,6 +253,7 @@ test_suite(
         ":generated_render_state_test",
         ":generated_runtime_test",
         ":generated_scene3d_test",
+        ":generated_shading_test",
         ":generated_share_test",
         ":generated_socket_statechart_test",
         ":generated_statusbar_test",
