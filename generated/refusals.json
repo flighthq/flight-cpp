@@ -7828,21 +7828,21 @@
       "code": "dependency-refused",
       "module": "packages/skeleton3d/src/contract.ts",
       "package": "@flighthq/skeleton3d",
-      "reason": "dependency ./prepareScene3DSkinning was refused for @flighthq/skeleton3d/packages/skeleton3d/src/prepareScene3DSkinning.ts",
+      "reason": "dependency ./prepareScene3DSkinning.ts was refused for @flighthq/skeleton3d/packages/skeleton3d/src/prepareScene3DSkinning.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/skeleton3d/src/enableSkeleton3DGuards.ts",
       "package": "@flighthq/skeleton3d",
-      "reason": "dependency ./skeleton3d was refused for @flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts",
+      "reason": "dependency ./skeleton3d.ts was refused for @flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/skeleton3d/src/index.ts",
       "package": "@flighthq/skeleton3d",
-      "reason": "dependency ./contract was refused for @flighthq/skeleton3d/packages/skeleton3d/src/contract.ts",
+      "reason": "dependency ./enableSkeleton3DGuards.ts was refused for @flighthq/skeleton3d/packages/skeleton3d/src/enableSkeleton3DGuards.ts",
       "stage": "dependency"
     },
     {
@@ -7867,14 +7867,14 @@
       "code": "dependency-refused",
       "module": "packages/skeleton3d/src/updateMeshDeformation.ts",
       "package": "@flighthq/skeleton3d",
-      "reason": "dependency ./updateMeshSkin was refused for @flighthq/skeleton3d/packages/skeleton3d/src/updateMeshSkin.ts",
+      "reason": "dependency ./updateMeshSkin.ts was refused for @flighthq/skeleton3d/packages/skeleton3d/src/updateMeshSkin.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/skeleton3d/src/updateMeshSkin.ts",
       "package": "@flighthq/skeleton3d",
-      "reason": "dependency ./skeleton3d was refused for @flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts",
+      "reason": "dependency ./skeleton3d.ts was refused for @flighthq/skeleton3d/packages/skeleton3d/src/skeleton3d.ts",
       "stage": "dependency"
     },
     {

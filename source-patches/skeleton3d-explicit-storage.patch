@@ -1,13 +1,12 @@
 diff --git a/packages/skeleton3d/src/skeleton3d.ts b/packages/skeleton3d/src/skeleton3d.ts
 --- a/packages/skeleton3d/src/skeleton3d.ts
 +++ b/packages/skeleton3d/src/skeleton3d.ts
-@@ -18,12 +18,15 @@ import type {
+@@ -18,12 +18,14 @@ import type {
  } from '@flighthq/types/contract';
  
  export function cloneSkeleton3D(skeleton: Readonly<Skeleton3D>): Skeleton3D {
 +  const joints: Node3D[] = skeleton.joints.slice();
-+  const names: Skeleton3D['names'] =
-+    skeleton.names === undefined ? undefined : skeleton.names === null ? null : skeleton.names.slice();
++  const names = cloneSkeleton3DNames(skeleton.names);
    const clone = allocateEntity<Skeleton3D>();
    initializeSkeleton3D(
      clone,
@@ -33,11 +32,16 @@ diff --git a/packages/skeleton3d/src/skeleton3d.ts b/packages/skeleton3d/src/ske
 +    joints.push(clone);
      clonesBySource.set(source, clone);
    }
-@@ -55,11 +58,13 @@ export function cloneSkeleton3DJointHierarchy(
-     if (parentClone !== undefined) addNodeChild(parentClone, joints[i]);
+@@ -53,15 +56,16 @@ export function cloneSkeleton3DJointHierarchy(
+   for (let i = 0; i < sourceJoints.length; i++) {
+     const sourceParent = getNodeParent(sourceJoints[i]);
+     if (sourceParent === null) continue;
+-    const parentClone = clonesBySource.get(sourceParent);
+-    if (parentClone !== undefined) addNodeChild(parentClone, joints[i]);
++    if (!clonesBySource.has(sourceParent)) continue;
++    addNodeChild(clonesBySource.get(sourceParent)!, joints[i]);
    }
-+  const names: Skeleton3D['names'] =
-+    skeleton.names === undefined ? undefined : skeleton.names === null ? null : skeleton.names.slice();
++  const names = cloneSkeleton3DNames(skeleton.names);
    const out = allocateEntity<Skeleton3D>();
    initializeSkeleton3D(
      out,
@@ -48,23 +52,36 @@ diff --git a/packages/skeleton3d/src/skeleton3d.ts b/packages/skeleton3d/src/ske
 +    names,
      new Float32Array(skeleton.normalMatrices),
    );
-@@ -120,6 +125,6 @@ export function equalsSkeleton3D(a: Readonly<Skeleton3D>, b: Readonly<Skeleton3D
+@@ -120,8 +123,10 @@ export function equalsSkeleton3D(a: Readonly<Skeleton3D>, b: Readonly<Skeleton3D
    for (let i = 0; i < a.inverseBindMatrices.length; i++) {
      if (a.inverseBindMatrices[i] !== b.inverseBindMatrices[i]) return false;
    }
 -  const aNames = a.names ?? null;
 -  const bNames = b.names ?? null;
-+  const aNames: readonly string[] | null = a.names ?? null;
-+  const bNames: readonly string[] | null = b.names ?? null;
-   if (aNames === null || bNames === null) return aNames === bNames;
-@@ -132,5 +137,5 @@ export function equalsSkeleton3D(a: Readonly<Skeleton3D>, b: Readonly<Skeleton3D
+-  if (aNames === null || bNames === null) return aNames === bNames;
++  const aNames = a.names;
++  const bNames = b.names;
++  const aNamesAbsent = aNames === undefined || aNames === null;
++  const bNamesAbsent = bNames === undefined || bNames === null;
++  if (aNamesAbsent || bNamesAbsent) return aNamesAbsent && bNamesAbsent;
+   if (aNames.length !== bNames.length) return false;
+   for (let i = 0; i < aNames.length; i++) {
+@@ -132,6 +137,12 @@ export function equalsSkeleton3D(a: Readonly<Skeleton3D>, b: Readonly<Skeleton3D
  
  export function getSkeleton3DJointIndexByName(skeleton: Readonly<Skeleton3D>, name: string): number {
 -  const { names } = skeleton;
-+  const names: readonly string[] | null | undefined = skeleton.names;
-   if (names == null) return -1;
+-  if (names == null) return -1;
++  const names = skeleton.names;
++  if (names === undefined || names === null) return -1;
    return names.indexOf(name);
-@@ -206,8 +211,8 @@ export function validateSkeleton3D(skeleton: Readonly<Skeleton3D>): Skeleton3DVal
++}
++
++function cloneSkeleton3DNames(names: Skeleton3D['names']): Skeleton3D['names'] {
++  if (names === undefined) return undefined;
++  if (names === null) return null;
++  return names.slice();
+ }
+@@ -206,8 +217,8 @@ export function validateSkeleton3D(skeleton: Readonly<Skeleton3D>): Skeleton3DVal
    const inverseBindMatricesLength = skeleton.inverseBindMatrices.length;
    if (inverseBindMatricesLength === expectedInverseBindMatricesLength) return null;
    return {
@@ -75,3 +92,45 @@ diff --git a/packages/skeleton3d/src/skeleton3d.ts b/packages/skeleton3d/src/ske
 +    expectedInverseBindMatricesLength,
      message: `Skeleton3D inverseBindMatrices length ${inverseBindMatricesLength} does not match jointCount ${jointCount} * 16 = ${expectedInverseBindMatricesLength}.`,
    };
+diff --git a/packages/skeleton3d/src/prepareScene3DSkinning.ts b/packages/skeleton3d/src/prepareScene3DSkinning.ts
+--- a/packages/skeleton3d/src/prepareScene3DSkinning.ts
++++ b/packages/skeleton3d/src/prepareScene3DSkinning.ts
+@@ -1,4 +1,4 @@
+ import { createAabb } from '@flighthq/geometry/contract';
+ import { getMeshGeometrySkinBindPose, setMeshGeometrySkinBindPose } from '@flighthq/mesh/contract';
+-import { getNodeRuntime } from '@flighthq/node/contract';
++import { getMutableNodeRuntime, getNodeRuntime } from '@flighthq/node/contract';
+ import type { Mesh, MeshRuntime, NodeAny } from '@flighthq/types/contract';
+@@ -25,6 +25,6 @@ import { captureMeshSkinBindPose } from './skinMeshGeometry.ts';
+ // transformed by each referenced joint's palette matrix, costing one box-transform per joint rather
+ // than an O(vertices) pass — cheap enough to run before the cull, which is the only ordering that culls
+ // a posed mesh correctly. This is the per-mesh primitive; prepareScene3DSkinning drives a whole scene.
+-export function prepareMeshSkinning(mesh: Readonly<Mesh>): void {
++export function prepareMeshSkinning(mesh: Mesh): void {
+   const skin = mesh.skin;
+   if (skin == null) return;
+@@ -41,2 +41,2 @@ export function prepareMeshSkinning(mesh: Readonly<Mesh>): void {
+-  const runtime = getNodeRuntime(mesh as NodeAny) as MeshRuntime;
++  const runtime: MeshRuntime = getMutableNodeRuntime(mesh);
+   let bounds = runtime.deformedLocalBounds;
+@@ -62,9 +62,8 @@ export function prepareMeshSkinning(mesh: Readonly<Mesh>): void {
+-export function prepareScene3DSkinning(scene: Readonly<NodeAny>): void {
++export function prepareScene3DSkinning(scene: NodeAny): void {
+   if (!scene.enabled) return;
+-
++
+   // Structural mesh test (carries geometry), so it holds for meshes created with a custom kind — the
+   // same discrimination collectVisibleMeshes uses.
+-  const mesh = scene as unknown as Mesh;
+-  if (mesh.geometry != null) prepareMeshSkinning(mesh);
+-
++  if (isSceneSkinMesh(scene)) prepareMeshSkinning(scene);
++
+   const children = getNodeRuntime(scene).children;
+@@ -76 +75,6 @@ export function prepareScene3DSkinning(scene: Readonly<NodeAny>): void {
+ }
++
++function isSceneSkinMesh(node: NodeAny): node is Mesh {
++  const candidate: Partial<Pick<Mesh, 'geometry'>> & { enabled?: boolean } = node;
++  return candidate.geometry != null;
++}
