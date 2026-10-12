@@ -212,6 +212,7 @@
     {
       "files": [
         "flight/animation/animation_player.hpp",
+        "flight/app/app_loop.hpp",
         "flight/clock/clock_signals.hpp",
         "flight/command/command_history_signals.hpp",
         "flight/gui/gui_controller.hpp",
@@ -776,7 +777,6 @@
     },
     {
       "files": [
-        "flight/app/app_loop.hpp",
         "flight/connectivity/connectivity.hpp",
         "flight/interaction/interaction_manager.hpp",
         "flight/lifecycle/lifecycle.hpp",
@@ -898,6 +898,7 @@
     },
     {
       "files": [
+        "flight/app/app_loop.hpp",
         "flight/assets/asset_library.hpp",
         "flight/bitmapfont_formats/bitmap_font_fnt.hpp",
         "flight/command/command_history.hpp",
@@ -1393,9 +1394,7 @@
       "id": "skeleton2d-formats-unqualified-types-names"
     },
     {
-      "files": [
-        "flight/app/app_loop.hpp"
-      ],
+      "files": [],
       "id": "app-unqualified-entity-names"
     },
     {
@@ -1807,9 +1806,7 @@
       "id": "textinput-unqualified-node-names"
     },
     {
-      "files": [
-        "flight/app/app_render_view.hpp"
-      ],
+      "files": [],
       "id": "app-entity-runtime-key-member"
     },
     {
@@ -2803,10 +2800,7 @@
       "id": "tilemap-create-signal-using-declaration"
     },
     {
-      "files": [
-        "flight/app/app_loop.hpp",
-        "flight/app/app_render_view.hpp"
-      ],
+      "files": [],
       "id": "app-unqualified-signals-names"
     },
     {
@@ -6129,7 +6123,6 @@
   },
   "canonicalPackageLocalIncludes": {
     "files": [
-      "flight/app/app_render_view.hpp",
       "flight/bitmapfont/bitmap_font_glyph_source.hpp",
       "flight/bitmapfont_formats/bitmap_font_json.hpp",
       "flight/bitmaptext/update_bitmap_text.hpp",
@@ -6594,14 +6587,14 @@
       "sourceModules": 13
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/app",
       "cppNamespace": "flight::app",
       "emittedModules": 4,
       "package": "@flighthq/app",
       "refusedModules": 2,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 6
