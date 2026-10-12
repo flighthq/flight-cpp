@@ -56,6 +56,10 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 
 - [Variadic console calls with non-string arguments](console-variadic-arguments.md) —
   needs a declared console-formatting contract; blocks log.ts `_writeConsoleCaptureEntry`.
+- [An object literal passed through an optional call must build the parameter's reference owner](optional-call-object-literal-into-reference-owner.md) —
+  carried for socket by the override `socket-complete-lifecycle`.
+- [Member reads on a collapsed union record must use one access form](collapsed-union-record-member-access.md) —
+  carried for socket by the override `socket-guard-reporting`.
 - [`@flighthq/log` native-compile defect inventory](log-native-compile-defects.md) — fifteen emitter
   defects make log.hpp fail clang once the console refusal is set aside; the log override stubs twelve
   functions with throws, so log parity is not honest.
