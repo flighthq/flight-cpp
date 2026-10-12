@@ -1577,6 +1577,19 @@
       "expires": "when the emitter projects an array into the row element type its member declares; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "requirement-codegen-unqualified-types-names",
+      "kind": "insert-using-declaration",
+      "appliesTo": "flight/requirement_codegen/requirement_codegen.hpp",
+      "namespace": "flight::types",
+      "symbols": [
+        { "include": "flight/types/requirement.hpp", "name": "Requirement" }
+      ],
+      "diagnostic": "use of undeclared identifier 'Requirement'",
+      "defect": "The emitter writes flight::Ref<Requirement> unqualified inside namespace flight::requirement_codegen for requirementIdentity's parameter, while every other use in the header spells flight::types::Requirement. Collected by compiling the header with -ferror-limit=0: this is its only error at a627849.",
+      "expectedWhen": "always",
+      "expires": "when the emitter qualifies names it uses from another package's namespace; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "registry-codegen-row-write-array-projection",
       "kind": "project-array-at-row-write",
       "appliesTo": "flight/registry_codegen/registry_codegen.hpp",
