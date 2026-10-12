@@ -123,6 +123,10 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [An optional member must construct its declared Record value carrier](contextual-record-value-carrier-projection.md) —
   P-3D2 glTF loading refuses when an existing `Record<string, Uint8Array>` fills an optional
   `Record<string, ArrayLike<number>>` member; direct widening instead emits invalid invariant C++.
+- [A reference-keyed WeakMap is emitted as a strong Map](reference-keyed-weak-map-as-strong-map.md) —
+  `@flighthq/clipboard`'s `_watchSubscriptions` and `@flighthq/connectivity`'s `_subscriptions` are the
+  same source shape and took different containers; only lifetime differs, so the clipboard audit
+  records it as a bound rather than asserting against it.
 - [A WeakMap value may be a nullable reference carrier](nullable-reference-weak-map-value.md) —
   P-3D2 resource guards refuse `ImageResourceFailure | null` even though the runtime faithfully stores
   and distinguishes the nested optional carrier.

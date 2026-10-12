@@ -51,6 +51,14 @@ target_link_libraries(flight_cpp_variant_set_identity_tests PRIVATE Flight::Cpp 
 flight_cpp_set_project_warnings(flight_cpp_variant_set_identity_tests)
 add_test(NAME flight_cpp.variant_set_identity COMMAND flight_cpp_variant_set_identity_tests)
 
+add_executable(flight_cpp_generated_clipboard_tests generated_clipboard_test.cpp)
+target_include_directories(
+  flight_cpp_generated_clipboard_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_clipboard_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_clipboard COMMAND flight_cpp_generated_clipboard_tests)
+
 add_executable(flight_cpp_generated_collision_tests generated_collision_test.cpp)
 target_include_directories(
   flight_cpp_generated_collision_tests
@@ -677,6 +685,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_protocol protocol)
 flight_cpp_package_test_labels(flight_cpp.generated_permissions permissions)
 flight_cpp_package_test_labels(flight_cpp.generated_filesystem filesystem)
 flight_cpp_package_test_labels(flight_cpp.generated_preferences preferences)
+flight_cpp_package_test_labels(flight_cpp.generated_clipboard clipboard signals)
 flight_cpp_package_test_labels(flight_cpp.generated_power power)
 flight_cpp_package_test_labels(flight_cpp.generated_video video)
 flight_cpp_package_test_labels(flight_cpp.generated_connectivity connectivity)
