@@ -34,6 +34,14 @@
 //   ported; the collection half needs connectSignalTracked (above).
 // - initializeSignal / initializeSignalScope / nullSignalEmit `typeof === 'function'` and "returns
 //   undefined" halves are established at compile time (static_assert on the declared void result).
+//
+// Three source patches carry behaviour these cases assert. Each case fails with its patch reverted:
+// - compiler-indexed-element-presence-test: the tombstone compaction and live-slot cases;
+// - compiler-constrained-type-parameter-union-slot: every emitSignalSafe case, since no instantiation
+//   compiled before it;
+// - compiler-dependent-callable-pack-reuse: dispatch hands each slot the same arguments, which "emitSignalSafe
+//   gives a nested safe emission its own snapshot and arguments" observes upstream (String arguments) and
+//   test_temporary_argument_delivery pins directly for String and Ref temporaries.
 
 namespace {
 
@@ -60,15 +68,6 @@ flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::type
   out->once = once;
   out->priority = priority;
   return flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SignalConnectOptions>>>>(out);
-}
-
-// A faithful upstream check that fails because of the known emitted defect listed at the top of this file.
-// It is reported on every run but does not fail the test, and it says so once the defect is fixed.
-void known_defect(bool condition, const std::string& message) {
-  if (condition)
-    std::cerr << "NOTE: known-defect case now passes, promote it to check(): " << message << '\n';
-  else
-    std::cerr << "KNOWN DEFECT (not asserted): " << message << '\n';
 }
 
 template <typename Call>
@@ -514,7 +513,7 @@ void test_safe() {
                         }));
     sig::connect_signal(signal, fn<void(flight::String)>([&](flight::String value) { calls.push_back("b:" + value.to_utf8()); }));
     sig::emit_signal_safe(signal, flight::String("outer"));
-    known_defect(calls == Strings{"a:outer", "a:nested", "b:nested", "b:outer"}, "emitSignalSafe gives a nested safe emission its own snapshot and arguments");
+    check(calls == Strings{"a:outer", "a:nested", "b:nested", "b:outer"}, "emitSignalSafe gives a nested safe emission its own snapshot and arguments");
   }
   {
     auto signal = sig::create_signal<Void>();
@@ -554,6 +553,39 @@ void test_safe() {
   }
 }
 
+// Not an upstream case: the delivery guarantee the forwarding fix restores, asserted directly. Two slots
+// receive the same temporary, and a Ref temporary reaches both as the same live object.
+struct Payload : flight::ReferenceEnabled {
+  double value = 7;
+};
+
+void test_temporary_argument_delivery() {
+  {
+    auto signal = sig::create_signal<std::function<void(flight::String)>>();
+    Strings received;
+    sig::connect_signal(signal, fn<void(flight::String)>([&](flight::String v) { received.push_back("a:" + v.to_utf8()); }));
+    sig::connect_signal(signal, fn<void(flight::String)>([&](flight::String v) { received.push_back("b:" + v.to_utf8()); }));
+    sig::emit_signal(signal, flight::String("x"));
+    check(received == Strings{"a:x", "b:x"}, "emitSignal delivers a temporary String to every slot");
+    received.clear();
+    sig::emit_signal_safe(signal, flight::String("y"));
+    check(received == Strings{"a:y", "b:y"}, "emitSignalSafe delivers a temporary String to every slot");
+  }
+  {
+    auto signal = sig::create_signal<std::function<void(flight::Ref<Payload>)>>();
+    std::vector<flight::Ref<Payload>> received;
+    sig::connect_signal(signal, fn<void(flight::Ref<Payload>)>([&](flight::Ref<Payload> p) { received.push_back(p); }));
+    sig::connect_signal(signal, fn<void(flight::Ref<Payload>)>([&](flight::Ref<Payload> p) { received.push_back(p); }));
+    sig::emit_signal(signal, flight::make_ref<Payload>());
+    check(received.size() == 2 && received[0] != nullptr && received[0] == received[1] && received[1]->value == 7,
+          "emitSignal delivers one temporary Ref, the same live object, to every slot");
+    received.clear();
+    sig::emit_signal_safe(signal, flight::make_ref<Payload>());
+    check(received.size() == 2 && received[0] != nullptr && received[0] == received[1],
+          "emitSignalSafe delivers one temporary Ref, the same live object, to every slot");
+  }
+}
+
 void test_scope() {
   {
     auto scope = sig::create_signal_scope();
@@ -576,6 +608,7 @@ int main() {
   test_queries();
   test_emitter();
   test_safe();
+  test_temporary_argument_delivery();
   test_scope();
   return failures == 0 ? 0 : 1;
 }
