@@ -78,24 +78,42 @@ try {
     process.exit(generation.status ?? 1);
   }
 
-  // Every package is merged into a staging copy, so a group lands all at once or not at all.
+  // Every package is merged into a staging copy, so a group lands all at once or not at all. The copy is
+  // taken AFTER generation, but the merge itself takes a while over a large tree, and a working tree that
+  // is fast-forwarded meanwhile would have its newer shared files overwritten by the staging copy's older
+  // ones. So the tree is copied twice -- one untouched baseline -- and if generated/ no longer matches the
+  // baseline when the merge is done, the merge is planned again against what is there now. The candidate
+  // does not change, so a retry costs a merge, not a generation.
   const stagingRoot = path.join(temporary, 'staging');
-  cpSync(generatedRoot, stagingRoot, { recursive: true });
-  const plans = [];
-  for (const packageName of packageNames) {
-    try {
-      const plan = planPackageMerge({
-        candidateRoot,
-        committedRoot: stagingRoot,
-        movingTogether: packageNames.filter((name) => name !== packageName),
-        packageName,
-      });
-      applyPackageMerge(plan, stagingRoot);
-      plans.push({ packageName, plan });
-    } catch (error) {
-      process.stderr.write(`pkg:generate: ${error.message}\n${untouched()}\n`);
+  const baselineRoot = path.join(temporary, 'baseline');
+  let plans;
+  for (let attempt = 1; ; attempt++) {
+    rmSync(stagingRoot, { force: true, recursive: true });
+    rmSync(baselineRoot, { force: true, recursive: true });
+    cpSync(generatedRoot, baselineRoot, { recursive: true });
+    cpSync(baselineRoot, stagingRoot, { recursive: true });
+    plans = [];
+    for (const packageName of packageNames) {
+      try {
+        const plan = planPackageMerge({
+          candidateRoot,
+          committedRoot: stagingRoot,
+          movingTogether: packageNames.filter((name) => name !== packageName),
+          packageName,
+        });
+        applyPackageMerge(plan, stagingRoot);
+        plans.push({ packageName, plan });
+      } catch (error) {
+        process.stderr.write(`pkg:generate: ${error.message}\n${untouched()}\n`);
+        process.exit(1);
+      }
+    }
+    if (treeDifferences(baselineRoot, generatedRoot).length === 0) break;
+    if (attempt === 3) {
+      process.stderr.write(`pkg:generate: ${relative} kept changing while the merge ran; ${untouched()} Run it again.\n`);
       process.exit(1);
     }
+    process.stdout.write(`${relative} changed while merging (a fast-forward?); merging again against it.\n`);
   }
 
   // A package that moved may now include a header its dependencies only have at the new revision.
@@ -126,6 +144,10 @@ try {
       process.exitCode = 1;
     }
   } else {
+    if (treeDifferences(baselineRoot, generatedRoot).length > 0) {
+      process.stderr.write(`pkg:generate: ${relative} changed just before writing; ${untouched()} Run it again.\n`);
+      process.exit(1);
+    }
     syncTree(stagingRoot, generatedRoot);
     for (const { packageName, plan } of plans) {
       const row = plan.row;

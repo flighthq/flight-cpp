@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 // Patches applied to a pinned sibling checkout before generation, so a module the compiler refuses to
@@ -123,14 +123,18 @@ export function applySourcePatches(patches, dependency) {
           'refusal it answers is gone.',
       );
     }
-    const check = git(dependency.directory, ['apply', '--check', '--verbose', patch.file]);
+    // The exact bytes applied are kept beside the ownership marker, and every later revert uses them.
+    // A patch file can change while a run is in flight -- a fast-forwarded working tree rewrites it --
+    // and reverting the NEW file against the OLD application fails, leaving the checkout dirty.
+    const file = snapshotPatch(dependency, patch);
+    const check = git(dependency.directory, ['apply', '--check', '--verbose', file]);
     if (check.status !== 0) {
       throw new Error(
         `Source patch ${patch.id} no longer applies to ${dependency.name} at ${dependency.commit.slice(0, 7)}:\n` +
           `${check.stderr}`,
       );
     }
-    const result = git(dependency.directory, ['apply', patch.file]);
+    const result = git(dependency.directory, ['apply', file]);
     if (result.status !== 0) throw new Error(`Source patch ${patch.id} failed to apply: ${result.stderr}`);
     applied.push({
       dependency: patch.dependency,
@@ -160,6 +164,31 @@ export function applySourcePatches(patches, dependency) {
 // so recording ownership does not itself dirty the tree the integrity check reads.
 function ownershipMarker(dependency) {
   return path.join(path.dirname(dependency.directory), `.${path.basename(dependency.directory)}-source-patches.json`);
+}
+
+// Where the applied bytes of each patch are kept for the life of the patched state.
+function snapshotDirectory(dependency) {
+  return `${ownershipMarker(dependency)}.applied`;
+}
+
+function snapshotPatch(dependency, patch) {
+  const directory = snapshotDirectory(dependency);
+  mkdirSync(directory, { recursive: true });
+  const file = path.join(directory, `${patch.id}.patch`);
+  copyFileSync(patch.file, file);
+  return file;
+}
+
+// The file to reverse for a patch: the bytes that were applied when a snapshot exists, otherwise the
+// declared file (a checkout patched before snapshots existed).
+function appliedFile(dependency, patch) {
+  const file = path.join(snapshotDirectory(dependency), `${patch.id}.patch`);
+  return existsSync(file) ? file : patch.file;
+}
+
+function releaseOwnership(dependency) {
+  rmSync(ownershipMarker(dependency), { force: true });
+  rmSync(snapshotDirectory(dependency), { force: true, recursive: true });
 }
 
 function readOwner(dependency) {
@@ -224,11 +253,20 @@ export function recoverStalePatches(patches, dependency) {
     .filter((line) => line.length > 0);
   if (dirty.length === 0) {
     // The owner died after reverting but before removing its marker. Nothing to undo; clear the marker.
-    rmSync(ownershipMarker(dependency), { force: true });
+    releaseOwnership(dependency);
     return { recovered: [] };
   }
-  const ownedIds = new Set(Array.isArray(owner.patches) ? owner.patches : mine.map((patch) => patch.id));
-  const owned = mine.filter((patch) => ownedIds.has(patch.id));
+  const ownedIds = Array.isArray(owner.patches) ? owner.patches : mine.map((patch) => patch.id);
+  // A patch the owner applied may since have been renamed or retired in the manifest; its snapshot is
+  // still the exact bytes to unwind. Without one, only a patch the manifest still declares is usable.
+  const declaredById = new Map(mine.map((patch) => [patch.id, patch]));
+  const owned = ownedIds
+    .map((id) => {
+      const snapshot = path.join(snapshotDirectory(dependency), `${id}.patch`);
+      if (existsSync(snapshot)) return { file: snapshot, id };
+      return declaredById.get(id);
+    })
+    .filter((patch) => patch !== undefined);
   const declared = new Set(owned.flatMap((patch) => patchedPaths(patch)));
   if (dirty.some((filename) => !declared.has(filename))) return { recovered: [] };
   const reverted = [];
@@ -252,7 +290,7 @@ export function recoverStalePatches(patches, dependency) {
     restoreRevertedPatches(dependency, reverted);
     return { recovered: [] };
   }
-  rmSync(ownershipMarker(dependency), { force: true });
+  releaseOwnership(dependency);
   return { recovered: reverted.map((patch) => patch.id).reverse() };
 }
 
@@ -270,18 +308,19 @@ export function revertSourcePatches(patches, dependency) {
   const mine = patches.filter((patch) => patch.dependency === dependency.name);
   let clean = true;
   for (const patch of [...mine].reverse()) {
-    if (git(dependency.directory, ['apply', '--reverse', '--check', patch.file]).status === 0) {
-      if (git(dependency.directory, ['apply', '--reverse', '--quiet', patch.file]).status !== 0) clean = false;
+    const file = appliedFile(dependency, patch);
+    if (git(dependency.directory, ['apply', '--reverse', '--check', file]).status === 0) {
+      if (git(dependency.directory, ['apply', '--reverse', '--quiet', file]).status !== 0) clean = false;
       continue;
     }
     // Safe when cleanup is called before this dependency was patched or after a partial unwind.
-    if (git(dependency.directory, ['apply', '--check', patch.file]).status !== 0) clean = false;
+    if (git(dependency.directory, ['apply', '--check', file]).status !== 0) clean = false;
   }
   // Releases ownership. Removed after the reverts so a process killed mid-revert still leaves a marker
   // naming it, which is what lets the next run recover rather than refuse.
   const status = git(dependency.directory, ['status', '--porcelain']);
   if (mine.length > 0 && clean && status.status === 0 && status.stdout.length === 0) {
-    rmSync(ownershipMarker(dependency), { force: true });
+    releaseOwnership(dependency);
   }
 }
 
