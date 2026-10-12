@@ -79,6 +79,14 @@ directly and read the slot without erasure); tray.ts has the same two sites — 
 `@flighthq/tray` in full: `contract.ts`, `enableTrayGuards.ts` and `index.ts` are dependency-refused
 from `tray.ts`, and all four headers fail to compile.
 
+Ten functions in `tray.ts` are refused, which is why the remedy is a unit of work rather than one
+expression: `createTrayIcon`, `initializeTrayCreateFailedResult`,
+`initializeTrayCreateProviderFailureResult`, `initializeTrayCreateSuccessResult`, `destroyTrayRuntime`,
+`isTrayIconAnimating`, `attachTrayEvent`, `startTrayIconAnimation`, `queueAnimationWrite` and
+`invokeUpdate`, under `cpp-intersection-member-shapeless` (four), plus
+`cpp-uninitialized-variable-missing-type-evidence` and `cpp-reference-assertion-without-heritage`.
+Only the first refusal is reported per module, so the set is a floor.
+
 ## Carrying workaround
 
 None. No patch and no override is carried for `@flighthq/tray` today; `pkg:tier -- tray` reports it
