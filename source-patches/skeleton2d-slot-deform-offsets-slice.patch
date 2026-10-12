@@ -1,0 +1,13 @@
+diff --git a/packages/skeleton2d/src/slotDeform2D.ts b/packages/skeleton2d/src/slotDeform2D.ts
+index f5f867ab..b7af103b 100644
+--- a/packages/skeleton2d/src/slotDeform2D.ts
++++ b/packages/skeleton2d/src/slotDeform2D.ts
+@@ -39,7 +39,7 @@ export function setSkeleton2DSlotDeform(
+     existing.attachment = attachment;
+     return existing;
+   }
+-  const record: Skeleton2DSlotDeform = { attachment, offsets: Float32Array.from(offsets) };
++  const record: Skeleton2DSlotDeform = { attachment, offsets: offsets.slice() };
+   slot.deform = record;
+   return record;
+ }

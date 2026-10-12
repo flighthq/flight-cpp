@@ -1,0 +1,21 @@
+diff --git a/packages/skeleton2d/src/skeleton2d.ts b/packages/skeleton2d/src/skeleton2d.ts
+index 3253b887..f247b8a9 100644
+--- a/packages/skeleton2d/src/skeleton2d.ts
++++ b/packages/skeleton2d/src/skeleton2d.ts
+@@ -1,6 +1,6 @@
+ import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
+ import { inverseMatrix, multiplyMatrix } from '@flighthq/geometry/contract';
+-import type { AttachmentSkin2D, Bone2D, EntityConstruction, MatrixLike, Skeleton2D } from '@flighthq/types/contract';
++import type { AttachmentSkin2D, Bone2D, EntityConstruction, MatrixLike, Skeleton2D, Slot2D } from '@flighthq/types/contract';
+ 
+ const DEG_TO_RAD = Math.PI / 180;
+ const MATRIX_STRIDE = 6;
+@@ -16,7 +16,7 @@ export function cloneSkeleton2D(skeleton: Readonly<Skeleton2D>): Skeleton2D {
+     skeleton.bones.map((bone) => ({ ...bone })),
+     skeleton.inverseBindMatrices.slice(),
+     skeleton.skins,
+-    skeleton.slots === null || skeleton.slots === undefined ? skeleton.slots : skeleton.slots.map((s) => ({ ...s })),
++    skeleton.slots === null || skeleton.slots === undefined ? skeleton.slots : skeleton.slots.map((s): Slot2D => ({ ...s })),
+     skeleton.worldMatrices.slice(),
+   );
+   return finishEntity(out);

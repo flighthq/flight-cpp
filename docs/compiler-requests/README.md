@@ -290,6 +290,14 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `@flighthq/geometry`'s aabb writers cannot take a `createAabb` result; scene3d's culling and bounds scratches depend on it (masked). No workaround is carried.
 - [Type-argument deduction must follow interface heritage](heritage-argument-generic-deduction.md) —
   `@flighthq/movieclip`'s spritesheet source adds and invalidates a `Sprite` under a `Node2D`; the third leaked-`Traits` cause, cross-linked with the `any` and readonly-view requests. No workaround is carried.
+- [Recovering an erased value as a readonly row must take the checked recovery a writable assertion takes](erased-value-readonly-row-recovery.md) —
+  skeleton2d's three animation binders read `unknown` targets as readonly rows; `as T` already emits `object_if<T>`.
+- [An inferred spread copy must keep its named type when it enters an optional, nullable array](spread-copy-into-optional-nullable-array.md) —
+  skeleton2d's `cloneSkeleton2D` slot copy; carried by the `skeleton2d-clone-slot-copy-declared-type` source patch.
+- [A default value on an optional, nullable parameter must lower without a presence proof](default-on-optional-nullable-parameter.md) —
+  skeleton2d's `createSkeleton2D`; carried by the `skeleton2d-create-two-state-slots-default` source patch.
+- [Strict equality between a nullable, optional value and a present value must not lower to a raw `==`](nullish-variant-strict-equality.md) —
+  skeleton2d's `getSkeleton2DBoneIndexByName`; carried by the `skeleton2d-bone-name-present-comparison` source patch.
 - [A null test on an element of a nullable-element array tests the wrong optional layer](nullable-array-element-null-test.md) —
   silent miscompilation: `slots[i] !== null` emitted `get(i).has_value()`, so signals' tombstoned slots counted as live and were never compacted. Carried by the `compiler-indexed-element-presence-test` patch.
 - [A local typed by a constrained type parameter is stored as the constraint](constrained-type-parameter-local-storage.md) —

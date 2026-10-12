@@ -1,0 +1,13 @@
+diff --git a/packages/skeleton2d/src/skeleton2d.ts b/packages/skeleton2d/src/skeleton2d.ts
+index f247b8a9..b7b16305 100644
+--- a/packages/skeleton2d/src/skeleton2d.ts
++++ b/packages/skeleton2d/src/skeleton2d.ts
+@@ -149,7 +149,7 @@ export function computeSkeleton2DWorldTransforms(skeleton: Readonly<Skeleton2D>)
+ // `setSkeleton2DBindPose` captures `inverseBindMatrices`; `computeSkeleton2DBoneMatrices` fills the palette.
+ // Pass `slots` for a drawable skeleton (null for a pure bone rig). Bones must be topologically ordered
+ // (each bone's `parentIndex` < its own index); `validateSkeleton2D` checks this.
+-export function createSkeleton2D(bones: Bone2D[], slots: Skeleton2D['slots'] = null): Skeleton2D {
++export function createSkeleton2D(bones: Bone2D[], slots: Slot2D[] | null = null): Skeleton2D {
+   const count = bones.length;
+   const out = allocateEntity<Skeleton2D>();
+   initializeSkeleton2D(

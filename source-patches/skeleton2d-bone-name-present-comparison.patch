@@ -1,0 +1,14 @@
+diff --git a/packages/skeleton2d/src/skeleton2d.ts b/packages/skeleton2d/src/skeleton2d.ts
+index b7b16305..78363e04 100644
+--- a/packages/skeleton2d/src/skeleton2d.ts
++++ b/packages/skeleton2d/src/skeleton2d.ts
+@@ -202,7 +202,8 @@ export function equalsSkeleton2D(a: Readonly<Skeleton2D>, b: Readonly<Skeleton2D
+ export function getSkeleton2DBoneIndexByName(skeleton: Readonly<Skeleton2D>, name: string): number {
+   const bones = skeleton.bones;
+   for (let i = 0; i < bones.length; i++) {
+-    if (bones[i].name === name) return i;
++    const boneName = bones[i].name;
++    if (boneName !== null && boneName !== undefined && boneName === name) return i;
+   }
+   return -1;
+ }

@@ -37,3 +37,15 @@ Also: a nominal downcast assertion lowered to a structural view. In `@flighthq/s
 `structural_ref_cast<StructuralRef<RowWritable<RowOf<Ref<MovieClip>>>>>(target)`. Every movieclip call
 then needs the nominal `Ref<MovieClip>`: `swf_frame_action.hpp` fails at 6 sites. The same checked owner
 recovery described above is the fix. No workaround is carried.
+
+`@flighthq/skeleton2d` at flight `a627849` refuses three whole modules on the same downcast, each a
+solver or accessor dispatched by the value's `kind` before it asserts the concrete row:
+- `ikConstraint2D.ts`: `constraint as Readonly<Skeleton2DIkConstraint>` from `Readonly<Skeleton2DConstraint>`
+  (reads `bendPositive`, `boneIndices`, `compress`, `stretch`, `targetBoneIndex`);
+- `transformConstraint2D.ts`: `constraint as Readonly<Skeleton2DTransformConstraint>` (reads the `mix*` and
+  `offset*` members and `boneIndices`);
+- `pathConstraint2D.ts`: `attachment.kind === PathAttachment2DKind ? (attachment as Readonly<PathAttachment2D>) : null`
+  from `Attachment2D` (reads `commands`, `pointCount`, `skin`, `vertices`, `winding`).
+
+The checked owner recovery above serves all three; the readonly target only removes write capability. No
+workaround is carried.

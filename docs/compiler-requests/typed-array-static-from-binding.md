@@ -65,7 +65,9 @@ general lowering may not omit it.
 The committed refusal ledger has five direct instances of the missing static member:
 
 - `scene3d-formats/gltfSkins.ts` (`Float32Array.from`), the P-3D2 site above;
-- `skeleton2d/slotDeform2D.ts` (`Float32Array.from`);
+- `skeleton2d/slotDeform2D.ts` (`Float32Array.from`), now carried by the
+  [`skeleton2d-slot-deform-offsets-slice`](../../source-patches/skeleton2d-slot-deform-offsets-slice.patch)
+  source patch, which copies with the typed array's own `slice()`;
 - `skeleton2d-formats/spineBinaryParse.ts` (`Float32Array.from`);
 - `tilemap-formats/tiledLayerData.ts` (`Uint32Array.from`); and
 - `tilemap-formats/tiledXmlParse.ts` (`Uint32Array.from`).
