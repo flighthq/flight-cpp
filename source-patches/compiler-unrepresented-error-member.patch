@@ -5,7 +5,7 @@ index bf9b771..01de44e 100644
 @@ -33136,6 +33136,34 @@ Resolver make_resolver(TextureRef texture) {
      expect(failure.message).toContain('narrow or assert an erased operand');
    });
- 
+
 +  it('refuses an Error member the runtime does not represent instead of emitting raw access', () => {
 +    const cases = [
 +      [
@@ -53,7 +53,7 @@ index 36039a7..ed82316 100644
 @@ -24731,25 +24731,26 @@ function emitCppErrorPropertyReadCpp(
    return `${emitExpression(expression.object, context)}.error_if()->${expression.name}()`;
  }
- 
+
 -// The Error reads that stay refused: the erased carrier does hold the object, but the runtime's Error
 -// declares only `name` and `message`, so any other member has no representation to read and no binding
 -// profile can add one to a runtime type. Refusing keeps the read honest rather than reaching through to
@@ -87,7 +87,7 @@ index 36039a7..ed82316 100644
 +    'cpp-error-member-unrepresented',
    );
  }
- 
+
 @@ -31815,6 +31816,7 @@ const cppTargetRuntimeRefusalRules: ReadonlySet<string> = new Set([
    'cpp-erased-array-assertion-runtime-required',
    'cpp-erased-array-predicate-runtime-required',
