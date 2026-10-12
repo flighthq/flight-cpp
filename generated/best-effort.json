@@ -4142,9 +4142,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/easing/packages/easing/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/easing",
@@ -4160,7 +4158,8 @@
     {
       "classification": "target-runtime",
       "consumers": [
-        "@flighthq/easing/packages/easing/src/contract.ts"
+        "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:2ff4b2a8079db2701c75ab71bb5f6ae78a3bbf526db7691fcd3971acdc577649"
@@ -4176,7 +4175,8 @@
     },
     {
       "consumers": [
-        "@flighthq/easing/packages/easing/src/contract.ts"
+        "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts"
       ],
       "module": {
         "name": "EaseBack",
@@ -4188,7 +4188,8 @@
     },
     {
       "consumers": [
-        "@flighthq/easing/packages/easing/src/contract.ts"
+        "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts"
       ],
       "module": {
         "name": "EaseBounce",
@@ -4200,7 +4201,8 @@
     },
     {
       "consumers": [
-        "@flighthq/easing/packages/easing/src/contract.ts"
+        "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts"
       ],
       "module": {
         "name": "EaseCircular",
@@ -4212,7 +4214,8 @@
     },
     {
       "consumers": [
-        "@flighthq/easing/packages/easing/src/contract.ts"
+        "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts"
       ],
       "module": {
         "name": "EaseCombinators",
@@ -4224,7 +4227,8 @@
     },
     {
       "consumers": [
-        "@flighthq/easing/packages/easing/src/contract.ts"
+        "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts"
       ],
       "module": {
         "name": "EaseCubic",
@@ -4237,6 +4241,7 @@
     {
       "consumers": [
         "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAnimation.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParse.ts",
@@ -4254,6 +4259,7 @@
     {
       "consumers": [
         "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAnimation.ts"
       ],
       "module": {
@@ -4266,7 +4272,8 @@
     },
     {
       "consumers": [
-        "@flighthq/easing/packages/easing/src/contract.ts"
+        "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts"
       ],
       "module": {
         "name": "EaseElastic",
@@ -4279,6 +4286,7 @@
     {
       "consumers": [
         "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts",
         "@flighthq/tween/packages/tween/src/tweenManager.ts"
       ],
       "module": {
@@ -4291,7 +4299,8 @@
     },
     {
       "consumers": [
-        "@flighthq/easing/packages/easing/src/contract.ts"
+        "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts"
       ],
       "module": {
         "name": "EaseLinear",
@@ -4303,7 +4312,8 @@
     },
     {
       "consumers": [
-        "@flighthq/easing/packages/easing/src/contract.ts"
+        "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts"
       ],
       "module": {
         "name": "EasePiecewise",
@@ -4315,7 +4325,8 @@
     },
     {
       "consumers": [
-        "@flighthq/easing/packages/easing/src/contract.ts"
+        "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts"
       ],
       "module": {
         "name": "EasePower",
@@ -4327,7 +4338,8 @@
     },
     {
       "consumers": [
-        "@flighthq/easing/packages/easing/src/contract.ts"
+        "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts"
       ],
       "module": {
         "name": "EaseQuadratic",
@@ -4339,7 +4351,8 @@
     },
     {
       "consumers": [
-        "@flighthq/easing/packages/easing/src/contract.ts"
+        "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts"
       ],
       "module": {
         "name": "EaseQuartic",
@@ -4351,7 +4364,8 @@
     },
     {
       "consumers": [
-        "@flighthq/easing/packages/easing/src/contract.ts"
+        "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts"
       ],
       "module": {
         "name": "EaseQuintic",
@@ -4363,7 +4377,8 @@
     },
     {
       "consumers": [
-        "@flighthq/easing/packages/easing/src/contract.ts"
+        "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts"
       ],
       "module": {
         "name": "EaseSine",
@@ -4375,7 +4390,8 @@
     },
     {
       "consumers": [
-        "@flighthq/easing/packages/easing/src/contract.ts"
+        "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts"
       ],
       "module": {
         "name": "EaseSmoothstep",
@@ -4388,7 +4404,8 @@
     {
       "consumers": [
         "@flighthq/easing/packages/easing/src/contract.ts",
-        "@flighthq/easing/packages/easing/src/enableEasingGuards.ts"
+        "@flighthq/easing/packages/easing/src/enableEasingGuards.ts",
+        "@flighthq/easing/packages/easing/src/index.ts"
       ],
       "module": {
         "name": "EaseSteps",
@@ -4400,7 +4417,8 @@
     },
     {
       "consumers": [
-        "@flighthq/easing/packages/easing/src/contract.ts"
+        "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts"
       ],
       "module": {
         "name": "EnableEasingGuards",
@@ -4415,7 +4433,8 @@
     },
     {
       "consumers": [
-        "@flighthq/easing/packages/easing/src/contract.ts"
+        "@flighthq/easing/packages/easing/src/contract.ts",
+        "@flighthq/easing/packages/easing/src/index.ts"
       ],
       "module": {
         "name": "GetEasingDerivative",
@@ -4434,7 +4453,8 @@
       },
       "path": "flight/easing/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/easing/packages/easing/src/contract.ts"
+        "@flighthq/easing/packages/easing/src/createEasingSamples.ts",
+        "@flighthq/easing/packages/easing/src/enableEasingGuards.ts"
       ],
       "status": "dependency-incomplete"
     },

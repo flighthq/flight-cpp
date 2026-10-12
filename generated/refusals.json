@@ -600,7 +600,7 @@
       "code": "dependency-refused",
       "module": "packages/easing/src/contract.ts",
       "package": "@flighthq/easing",
-      "reason": "dependency ./createEasingSamples was refused for @flighthq/easing/packages/easing/src/createEasingSamples.ts",
+      "reason": "dependency ./createEasingSamples.ts was refused for @flighthq/easing/packages/easing/src/createEasingSamples.ts",
       "stage": "dependency"
     },
     {
@@ -623,7 +623,7 @@
       "code": "dependency-refused",
       "module": "packages/easing/src/index.ts",
       "package": "@flighthq/easing",
-      "reason": "dependency ./contract was refused for @flighthq/easing/packages/easing/src/contract.ts",
+      "reason": "dependency ./createEasingSamples.ts was refused for @flighthq/easing/packages/easing/src/createEasingSamples.ts",
       "stage": "dependency"
     },
     {
