@@ -1231,6 +1231,8 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("onClose") && requires { object.on_close; }) return (object.on_close);
   else if constexpr (Key::name.view() == std::string_view("onCloseRequest") && requires { object.on_close_request; }) return (object.on_close_request);
   else if constexpr (Key::name.view() == std::string_view("onComplete") && requires { object.on_complete; }) return (object.on_complete);
+  else if constexpr (Key::name.view() == std::string_view("onContextMenuClose") && requires { object.on_context_menu_close; }) return (object.on_context_menu_close);
+  else if constexpr (Key::name.view() == std::string_view("onContextMenuOpen") && requires { object.on_context_menu_open; }) return (object.on_context_menu_open);
   else if constexpr (Key::name.view() == std::string_view("onCopy") && requires { object.on_copy; }) return (object.on_copy);
   else if constexpr (Key::name.view() == std::string_view("onDeactivate") && requires { object.on_deactivate; }) return (object.on_deactivate);
   else if constexpr (Key::name.view() == std::string_view("onDischarging") && requires { object.on_discharging; }) return (object.on_discharging);
@@ -1264,6 +1266,8 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("onLooped") && requires { object.on_looped; }) return (object.on_looped);
   else if constexpr (Key::name.view() == std::string_view("onMagnetometer") && requires { object.on_magnetometer; }) return (object.on_magnetometer);
   else if constexpr (Key::name.view() == std::string_view("onMaximize") && requires { object.on_maximize; }) return (object.on_maximize);
+  else if constexpr (Key::name.view() == std::string_view("onMenuItemHighlight") && requires { object.on_menu_item_highlight; }) return (object.on_menu_item_highlight);
+  else if constexpr (Key::name.view() == std::string_view("onMenuItemSelect") && requires { object.on_menu_item_select; }) return (object.on_menu_item_select);
   else if constexpr (Key::name.view() == std::string_view("onMidiAccessStateChange") && requires { object.on_midi_access_state_change; }) return (object.on_midi_access_state_change);
   else if constexpr (Key::name.view() == std::string_view("onMidiInputMessage") && requires { object.on_midi_input_message; }) return (object.on_midi_input_message);
   else if constexpr (Key::name.view() == std::string_view("onMidiPortStateChange") && requires { object.on_midi_port_state_change; }) return (object.on_midi_port_state_change);
@@ -1412,6 +1416,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("points") && requires { object.points; }) return (object.points);
   else if constexpr (Key::name.view() == std::string_view("polar") && requires { object.polar; }) return (object.polar);
   else if constexpr (Key::name.view() == std::string_view("pool") && requires { object.pool; }) return (object.pool);
+  else if constexpr (Key::name.view() == std::string_view("popup") && requires { object.popup; }) return (object.popup);
   else if constexpr (Key::name.view() == std::string_view("position") && requires { object.position; }) return (object.position);
   else if constexpr (Key::name.view() == std::string_view("positionLocation") && requires { object.position_location; }) return (object.position_location);
   else if constexpr (Key::name.view() == std::string_view("positions") && requires { object.positions; }) return (object.positions);
@@ -1663,6 +1668,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("setAccessoryBarVisible") && requires { object.set_accessory_bar_visible; }) return (object.set_accessory_bar_visible);
   else if constexpr (Key::name.view() == std::string_view("setActivationPolicy") && requires { object.set_activation_policy; }) return (object.set_activation_policy);
   else if constexpr (Key::name.view() == std::string_view("setAlwaysOnTop") && requires { object.set_always_on_top; }) return (object.set_always_on_top);
+  else if constexpr (Key::name.view() == std::string_view("setAppMenu") && requires { object.set_app_menu; }) return (object.set_app_menu);
   else if constexpr (Key::name.view() == std::string_view("setAsDefault") && requires { object.set_as_default; }) return (object.set_as_default);
   else if constexpr (Key::name.view() == std::string_view("setBadgeCount") && requires { object.set_badge_count; }) return (object.set_badge_count);
   else if constexpr (Key::name.view() == std::string_view("setContentProtection") && requires { object.set_content_protection; }) return (object.set_content_protection);
@@ -1844,6 +1850,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("style") && requires { object.style; }) return (object.style);
   else if constexpr (Key::name.view() == std::string_view("styleIndex") && requires { object.style_index; }) return (object.style_index);
   else if constexpr (Key::name.view() == std::string_view("subject") && requires { object.subject; }) return (object.subject);
+  else if constexpr (Key::name.view() == std::string_view("submenu") && requires { object.submenu; }) return (object.submenu);
   else if constexpr (Key::name.view() == std::string_view("subpixel") && requires { object.subpixel; }) return (object.subpixel);
   else if constexpr (Key::name.view() == std::string_view("subscribe") && requires { object.subscribe; }) return (object.subscribe);
   else if constexpr (Key::name.view() == std::string_view("subscribeAbsoluteOrientation") && requires { object.subscribe_absolute_orientation; }) return (object.subscribe_absolute_orientation);
@@ -3329,6 +3336,8 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("onClose") && requires(Object& object) { object.on_close; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_close)>>{};
   else if constexpr (Key::name.view() == std::string_view("onCloseRequest") && requires(Object& object) { object.on_close_request; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_close_request)>>{};
   else if constexpr (Key::name.view() == std::string_view("onComplete") && requires(Object& object) { object.on_complete; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_complete)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onContextMenuClose") && requires(Object& object) { object.on_context_menu_close; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_context_menu_close)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onContextMenuOpen") && requires(Object& object) { object.on_context_menu_open; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_context_menu_open)>>{};
   else if constexpr (Key::name.view() == std::string_view("onCopy") && requires(Object& object) { object.on_copy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_copy)>>{};
   else if constexpr (Key::name.view() == std::string_view("onDeactivate") && requires(Object& object) { object.on_deactivate; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_deactivate)>>{};
   else if constexpr (Key::name.view() == std::string_view("onDischarging") && requires(Object& object) { object.on_discharging; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_discharging)>>{};
@@ -3362,6 +3371,8 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("onLooped") && requires(Object& object) { object.on_looped; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_looped)>>{};
   else if constexpr (Key::name.view() == std::string_view("onMagnetometer") && requires(Object& object) { object.on_magnetometer; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_magnetometer)>>{};
   else if constexpr (Key::name.view() == std::string_view("onMaximize") && requires(Object& object) { object.on_maximize; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_maximize)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onMenuItemHighlight") && requires(Object& object) { object.on_menu_item_highlight; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_menu_item_highlight)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onMenuItemSelect") && requires(Object& object) { object.on_menu_item_select; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_menu_item_select)>>{};
   else if constexpr (Key::name.view() == std::string_view("onMidiAccessStateChange") && requires(Object& object) { object.on_midi_access_state_change; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_midi_access_state_change)>>{};
   else if constexpr (Key::name.view() == std::string_view("onMidiInputMessage") && requires(Object& object) { object.on_midi_input_message; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_midi_input_message)>>{};
   else if constexpr (Key::name.view() == std::string_view("onMidiPortStateChange") && requires(Object& object) { object.on_midi_port_state_change; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_midi_port_state_change)>>{};
@@ -3510,6 +3521,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("points") && requires(Object& object) { object.points; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().points)>>{};
   else if constexpr (Key::name.view() == std::string_view("polar") && requires(Object& object) { object.polar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().polar)>>{};
   else if constexpr (Key::name.view() == std::string_view("pool") && requires(Object& object) { object.pool; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pool)>>{};
+  else if constexpr (Key::name.view() == std::string_view("popup") && requires(Object& object) { object.popup; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().popup)>>{};
   else if constexpr (Key::name.view() == std::string_view("position") && requires(Object& object) { object.position; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().position)>>{};
   else if constexpr (Key::name.view() == std::string_view("positionLocation") && requires(Object& object) { object.position_location; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().position_location)>>{};
   else if constexpr (Key::name.view() == std::string_view("positions") && requires(Object& object) { object.positions; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().positions)>>{};
@@ -3761,6 +3773,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("setAccessoryBarVisible") && requires(Object& object) { object.set_accessory_bar_visible; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_accessory_bar_visible)>>{};
   else if constexpr (Key::name.view() == std::string_view("setActivationPolicy") && requires(Object& object) { object.set_activation_policy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_activation_policy)>>{};
   else if constexpr (Key::name.view() == std::string_view("setAlwaysOnTop") && requires(Object& object) { object.set_always_on_top; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_always_on_top)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setAppMenu") && requires(Object& object) { object.set_app_menu; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_app_menu)>>{};
   else if constexpr (Key::name.view() == std::string_view("setAsDefault") && requires(Object& object) { object.set_as_default; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_as_default)>>{};
   else if constexpr (Key::name.view() == std::string_view("setBadgeCount") && requires(Object& object) { object.set_badge_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_badge_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("setContentProtection") && requires(Object& object) { object.set_content_protection; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_content_protection)>>{};
@@ -3942,6 +3955,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("style") && requires(Object& object) { object.style; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().style)>>{};
   else if constexpr (Key::name.view() == std::string_view("styleIndex") && requires(Object& object) { object.style_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().style_index)>>{};
   else if constexpr (Key::name.view() == std::string_view("subject") && requires(Object& object) { object.subject; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().subject)>>{};
+  else if constexpr (Key::name.view() == std::string_view("submenu") && requires(Object& object) { object.submenu; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().submenu)>>{};
   else if constexpr (Key::name.view() == std::string_view("subpixel") && requires(Object& object) { object.subpixel; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().subpixel)>>{};
   else if constexpr (Key::name.view() == std::string_view("subscribe") && requires(Object& object) { object.subscribe; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().subscribe)>>{};
   else if constexpr (Key::name.view() == std::string_view("subscribeAbsoluteOrientation") && requires(Object& object) { object.subscribe_absolute_orientation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().subscribe_absolute_orientation)>>{};
@@ -5430,6 +5444,8 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->on_close; }) owner.bind_named("onClose", [object]() -> decltype(auto) { return (object->on_close); });
   if constexpr (requires { object->on_close_request; }) owner.bind_named("onCloseRequest", [object]() -> decltype(auto) { return (object->on_close_request); });
   if constexpr (requires { object->on_complete; }) owner.bind_named("onComplete", [object]() -> decltype(auto) { return (object->on_complete); });
+  if constexpr (requires { object->on_context_menu_close; }) owner.bind_named("onContextMenuClose", [object]() -> decltype(auto) { return (object->on_context_menu_close); });
+  if constexpr (requires { object->on_context_menu_open; }) owner.bind_named("onContextMenuOpen", [object]() -> decltype(auto) { return (object->on_context_menu_open); });
   if constexpr (requires { object->on_copy; }) owner.bind_named("onCopy", [object]() -> decltype(auto) { return (object->on_copy); });
   if constexpr (requires { object->on_deactivate; }) owner.bind_named("onDeactivate", [object]() -> decltype(auto) { return (object->on_deactivate); });
   if constexpr (requires { object->on_discharging; }) owner.bind_named("onDischarging", [object]() -> decltype(auto) { return (object->on_discharging); });
@@ -5463,6 +5479,8 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->on_looped; }) owner.bind_named("onLooped", [object]() -> decltype(auto) { return (object->on_looped); });
   if constexpr (requires { object->on_magnetometer; }) owner.bind_named("onMagnetometer", [object]() -> decltype(auto) { return (object->on_magnetometer); });
   if constexpr (requires { object->on_maximize; }) owner.bind_named("onMaximize", [object]() -> decltype(auto) { return (object->on_maximize); });
+  if constexpr (requires { object->on_menu_item_highlight; }) owner.bind_named("onMenuItemHighlight", [object]() -> decltype(auto) { return (object->on_menu_item_highlight); });
+  if constexpr (requires { object->on_menu_item_select; }) owner.bind_named("onMenuItemSelect", [object]() -> decltype(auto) { return (object->on_menu_item_select); });
   if constexpr (requires { object->on_midi_access_state_change; }) owner.bind_named("onMidiAccessStateChange", [object]() -> decltype(auto) { return (object->on_midi_access_state_change); });
   if constexpr (requires { object->on_midi_input_message; }) owner.bind_named("onMidiInputMessage", [object]() -> decltype(auto) { return (object->on_midi_input_message); });
   if constexpr (requires { object->on_midi_port_state_change; }) owner.bind_named("onMidiPortStateChange", [object]() -> decltype(auto) { return (object->on_midi_port_state_change); });
@@ -5611,6 +5629,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->points; }) owner.bind_named("points", [object]() -> decltype(auto) { return (object->points); });
   if constexpr (requires { object->polar; }) owner.bind_named("polar", [object]() -> decltype(auto) { return (object->polar); });
   if constexpr (requires { object->pool; }) owner.bind_named("pool", [object]() -> decltype(auto) { return (object->pool); });
+  if constexpr (requires { object->popup; }) owner.bind_named("popup", [object]() -> decltype(auto) { return (object->popup); });
   if constexpr (requires { object->position; }) owner.bind_named("position", [object]() -> decltype(auto) { return (object->position); });
   if constexpr (requires { object->position_location; }) owner.bind_named("positionLocation", [object]() -> decltype(auto) { return (object->position_location); });
   if constexpr (requires { object->positions; }) owner.bind_named("positions", [object]() -> decltype(auto) { return (object->positions); });
@@ -5862,6 +5881,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->set_accessory_bar_visible; }) owner.bind_named("setAccessoryBarVisible", [object]() -> decltype(auto) { return (object->set_accessory_bar_visible); });
   if constexpr (requires { object->set_activation_policy; }) owner.bind_named("setActivationPolicy", [object]() -> decltype(auto) { return (object->set_activation_policy); });
   if constexpr (requires { object->set_always_on_top; }) owner.bind_named("setAlwaysOnTop", [object]() -> decltype(auto) { return (object->set_always_on_top); });
+  if constexpr (requires { object->set_app_menu; }) owner.bind_named("setAppMenu", [object]() -> decltype(auto) { return (object->set_app_menu); });
   if constexpr (requires { object->set_as_default; }) owner.bind_named("setAsDefault", [object]() -> decltype(auto) { return (object->set_as_default); });
   if constexpr (requires { object->set_badge_count; }) owner.bind_named("setBadgeCount", [object]() -> decltype(auto) { return (object->set_badge_count); });
   if constexpr (requires { object->set_content_protection; }) owner.bind_named("setContentProtection", [object]() -> decltype(auto) { return (object->set_content_protection); });
@@ -6043,6 +6063,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->style; }) owner.bind_named("style", [object]() -> decltype(auto) { return (object->style); });
   if constexpr (requires { object->style_index; }) owner.bind_named("styleIndex", [object]() -> decltype(auto) { return (object->style_index); });
   if constexpr (requires { object->subject; }) owner.bind_named("subject", [object]() -> decltype(auto) { return (object->subject); });
+  if constexpr (requires { object->submenu; }) owner.bind_named("submenu", [object]() -> decltype(auto) { return (object->submenu); });
   if constexpr (requires { object->subpixel; }) owner.bind_named("subpixel", [object]() -> decltype(auto) { return (object->subpixel); });
   if constexpr (requires { object->subscribe; }) owner.bind_named("subscribe", [object]() -> decltype(auto) { return (object->subscribe); });
   if constexpr (requires { object->subscribe_absolute_orientation; }) owner.bind_named("subscribeAbsoluteOrientation", [object]() -> decltype(auto) { return (object->subscribe_absolute_orientation); });
@@ -7564,6 +7585,8 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(on_close)
   FLIGHT_SDK_ROW_WIDENS(on_close_request)
   FLIGHT_SDK_ROW_WIDENS(on_complete)
+  FLIGHT_SDK_ROW_WIDENS(on_context_menu_close)
+  FLIGHT_SDK_ROW_WIDENS(on_context_menu_open)
   FLIGHT_SDK_ROW_WIDENS(on_copy)
   FLIGHT_SDK_ROW_WIDENS(on_deactivate)
   FLIGHT_SDK_ROW_WIDENS(on_discharging)
@@ -7597,6 +7620,8 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(on_looped)
   FLIGHT_SDK_ROW_WIDENS(on_magnetometer)
   FLIGHT_SDK_ROW_WIDENS(on_maximize)
+  FLIGHT_SDK_ROW_WIDENS(on_menu_item_highlight)
+  FLIGHT_SDK_ROW_WIDENS(on_menu_item_select)
   FLIGHT_SDK_ROW_WIDENS(on_midi_access_state_change)
   FLIGHT_SDK_ROW_WIDENS(on_midi_input_message)
   FLIGHT_SDK_ROW_WIDENS(on_midi_port_state_change)
@@ -7745,6 +7770,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(points)
   FLIGHT_SDK_ROW_WIDENS(polar)
   FLIGHT_SDK_ROW_WIDENS(pool)
+  FLIGHT_SDK_ROW_WIDENS(popup)
   FLIGHT_SDK_ROW_WIDENS(position)
   FLIGHT_SDK_ROW_WIDENS(position_location)
   FLIGHT_SDK_ROW_WIDENS(positions)
@@ -7996,6 +8022,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(set_accessory_bar_visible)
   FLIGHT_SDK_ROW_WIDENS(set_activation_policy)
   FLIGHT_SDK_ROW_WIDENS(set_always_on_top)
+  FLIGHT_SDK_ROW_WIDENS(set_app_menu)
   FLIGHT_SDK_ROW_WIDENS(set_as_default)
   FLIGHT_SDK_ROW_WIDENS(set_badge_count)
   FLIGHT_SDK_ROW_WIDENS(set_content_protection)
@@ -8177,6 +8204,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(style)
   FLIGHT_SDK_ROW_WIDENS(style_index)
   FLIGHT_SDK_ROW_WIDENS(subject)
+  FLIGHT_SDK_ROW_WIDENS(submenu)
   FLIGHT_SDK_ROW_WIDENS(subpixel)
   FLIGHT_SDK_ROW_WIDENS(subscribe)
   FLIGHT_SDK_ROW_WIDENS(subscribe_absolute_orientation)

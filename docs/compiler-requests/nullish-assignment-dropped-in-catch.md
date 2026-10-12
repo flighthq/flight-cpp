@@ -72,6 +72,37 @@ The attempt-all half is correct — the sibling *is* attempted and the loop *doe
 is only the record-and-rethrow half. That is enough to make a failed teardown indistinguishable from a
 successful one at the call site.
 
+## Second measured site: `@flighthq/menu` `destroyAppMenu`
+
+The same emission, from the P-PL3 increment, on the attempt-all teardown of the application menu
+provider:
+
+```cpp
+  flight::Any failure = nullptr;
+  for (auto provider_2 : pending) {
+    try {
+      if (provider_2->destroy.has_value()) {
+        assert_sync_void<flight::Undefined>((provider_2->destroy.value()(), flight::undefined));
+      }
+    }
+    catch (const std::exception& error) {
+      failure;            // <- the assignment is gone here too
+      continue;
+    }
+    destroyed_app_loop.add(provider_2);
+  }
+  if (([&]() { const auto& presence_operand = failure; return !presence_operand.is_null(); }())) {
+    throw failure;
+  }
+```
+
+`generated/include/flight/menu/menu.hpp:247`, from `packages/menu/src/menu.ts`'s `destroyAppMenu`. The
+retention half is correct — the provider whose `destroy` threw is not added to `destroyed_app_loop`, so a
+later call retries exactly the failures, and a provider that succeeded is never destroyed twice — and the
+record-and-rethrow half is lost exactly as in `power.ts`: measured against the emitted function, the
+first failure is never rethrown. The behaviour test that covers this function asserts the retention and
+deliberately does not assert the rethrow.
+
 ## What would close this
 
 Lower `??=` in a statement position to the same nullish-assignment block the expression position already

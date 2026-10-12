@@ -3,46 +3,49 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function cloneMenuTemplate -- source line 41
-//   missing: function createMenuItemTemplate -- source line 58
 //   missing: function _validateItem -- source line 186
-//   missing: function destroyAppMenu -- source line 88
 #include <flight/any.hpp>
+#include <flight/presence.hpp>
+#include <flight/sequence_view.hpp>
+#include <flight/structural_ref.hpp>
 #include <flight/weak_map.hpp>
 #include <flight/weak_set.hpp>
 #include <functional>
 #include <optional>
+#include <stdexcept>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/signals/slot.hpp>
-
-#include <flight/signals/emitter.hpp>
-
-#include <flight/signals/signal.hpp>
-
-#include <flight/types/menu_signals.hpp>
-
-#include <flight/types/menu_select.hpp>
-
-#include <flight/types/menu_highlight.hpp>
-
-#include <flight/types/menu.hpp>
-
-#include <flight/types/entity.hpp>
+namespace flight::types { struct Entity; }
+namespace flight::types { struct HostAppMenuCapability; }
+namespace flight::types { struct HostMenuHighlightCapability; }
+namespace flight::types { struct HostMenuPopupCapability; }
+namespace flight::types { struct HostMenuSelectCapability; }
+namespace flight::types { struct MenuHighlight; }
+namespace flight::types { struct MenuItemTemplate; }
+namespace flight::types { struct MenuSelect; }
+namespace flight::types { struct MenuSignals; }
+namespace flight::types { template <typename T> struct Signal; }
 
 #include <flight/entity/entity.hpp>
+#include <flight/signals/emitter.hpp>
+#include <flight/signals/signal.hpp>
+#include <flight/signals/slot.hpp>
+#include <flight/types/entity.hpp>
+#include <flight/types/menu.hpp>
+#include <flight/types/menu_highlight.hpp>
+#include <flight/types/menu_select.hpp>
+#include <flight/types/menu_signals.hpp>
+#include <flight/types/non_entity_create_result.hpp>
+#include <flight/types/signal.hpp>
+#include <flight/types/well_known_menu_item_role.hpp>
 
 namespace flight::menu {
 
-using flight::signals::clear_signal;
-using flight::signals::emit_signal;
-
 using flight::signals::create_signal;
 
-using flight::types::EntityConstruction;
 using flight::types::HostAppMenuCapability;
 using flight::types::HostMenuHighlightCapability;
 using flight::types::HostMenuPopupCapability;
@@ -52,79 +55,54 @@ using flight::types::MenuItemTemplate;
 using flight::types::MenuSelect;
 using flight::types::MenuSignals;
 
-using flight::entity::allocate_entity;
-using flight::entity::finish_entity;
-
-
-// NOT GENERATED: function cloneMenuTemplate -- source line 41
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function cloneMenuTemplate(template: Readonly<MenuItemTemplate>): MenuItemTemplate {
-//     const clone: MenuItemTemplate = { ...template };
-//     if (template.submenu !== undefined) {
-//       clone.submenu = template.submenu.map(cloneMenuTemplate);
-//     }
-//     return clone;
-//   }
-//   
-// cpp emission failed for @flighthq/menu/packages/menu/src/menu.ts: a presence test against undefined has no
-// absence channel in the emitted C++ storage for property
-
-
-// NOT GENERATED: function createMenuItemTemplate -- source line 58
-// refusal: cpp-partial-shape-unresolvable [source-portability]
-//
-// The source it stood for:
-//   export function createMenuItemTemplate(
-//     template?: Readonly<Partial<MenuItemTemplate>>,
-//   ): NonEntityCreateResult<MenuItemTemplate, 'descriptor'> {
-//     const item: MenuItemTemplate = {
-//       type: 'normal',
-//       enabled: true,
-//       ...template,
-//     };
-//     if (item.submenu !== undefined) {
-//       item.submenu = item.submenu.map((child) => createMenuItemTemplate(child));
-//     }
-//     return item;
-//   }
-//   
-// cpp emission failed for @flighthq/menu/packages/menu/src/menu.ts: Partial<T> requires a statically resolvable
-// C++ object shape; T is named
-
-inline void initialize_menu_highlight(flight::Ref<EntityConstruction<flight::Ref<MenuHighlight>>> out) {
-  (out->on_menu_item_highlight = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_menu_item_highlight)>::element_type>>());
+inline flight::Ref<flight::types::MenuItemTemplate> clone_menu_template(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MenuItemTemplate>>>> template_) {
+  flight::Ref<flight::types::MenuItemTemplate> clone = flight::make_ref<flight::types::MenuItemTemplate>(*flight::structural_ref_cast<flight::Ref<flight::types::MenuItemTemplate>>(template_));
+  if (flight::row_get<flight::RowKey<"submenu">>(template_).has_value()) {
+    (clone->submenu = std::optional<flight::Array<flight::Ref<flight::types::MenuItemTemplate>>>{flight::row_get<flight::RowKey<"submenu">>(template_).value().map(clone_menu_template)});
+  }
+  return clone;
 }
 
-inline flight::Ref<MenuHighlight> create_menu_highlight() {
-  flight::Ref<EntityConstruction<flight::Ref<MenuHighlight>>> out = allocate_entity<flight::Ref<MenuHighlight>>();
+inline flight::Ref<flight::types::MenuItemTemplate> create_menu_item_template(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::MenuItemTemplate>>>>>> template_ = std::nullopt) {
+  flight::Ref<flight::types::MenuItemTemplate> item = flight::make_ref<flight::types::MenuItemTemplate>(flight::types::MenuItemTemplate{.type = std::optional<flight::String>{flight::String("normal")}, .enabled = std::optional<bool>{true}});
+  if (item->submenu.has_value()) {
+    (item->submenu = std::optional<flight::Array<flight::Ref<flight::types::MenuItemTemplate>>>{item->submenu.value().map([=](flight::Ref<flight::types::MenuItemTemplate> child) { return create_menu_item_template(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<flight::types::MenuItemTemplate>>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MenuItemTemplate>>>>(child))); })});
+  }
+  return item;
+}
+
+inline void initialize_menu_highlight(flight::types::EntityConstruction<flight::Ref<flight::types::MenuHighlight>> out) {
+  flight::row_set<flight::RowKey<"onMenuItemHighlight">>(out, flight::signals::create_signal<std::function<void(flight::String)>>());
+}
+
+inline flight::Ref<flight::types::MenuHighlight> create_menu_highlight() {
+  flight::types::EntityConstruction<flight::Ref<flight::types::MenuHighlight>> out = flight::entity::allocate_entity<flight::Ref<flight::types::MenuHighlight>>();
   initialize_menu_highlight(out);
-  return finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::MenuHighlight>>(out);
 }
 
-inline void initialize_menu_select(flight::Ref<EntityConstruction<flight::Ref<MenuSelect>>> out) {
-  (out->on_menu_item_select = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_menu_item_select)>::element_type>>());
+inline void initialize_menu_select(flight::types::EntityConstruction<flight::Ref<flight::types::MenuSelect>> out) {
+  flight::row_set<flight::RowKey<"onMenuItemSelect">>(out, flight::signals::create_signal<std::function<void(flight::String)>>());
 }
 
-inline flight::Ref<MenuSelect> create_menu_select() {
-  flight::Ref<EntityConstruction<flight::Ref<MenuSelect>>> out = allocate_entity<flight::Ref<MenuSelect>>();
+inline flight::Ref<flight::types::MenuSelect> create_menu_select() {
+  flight::types::EntityConstruction<flight::Ref<flight::types::MenuSelect>> out = flight::entity::allocate_entity<flight::Ref<flight::types::MenuSelect>>();
   initialize_menu_select(out);
-  return finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::MenuSelect>>(out);
 }
 
-inline bool set_app_menu(flight::Ref<HostAppMenuCapability> host_app_menu, flight::Array<flight::Ref<MenuItemTemplate>> items) {
-  return host_app_menu->set_app_menu(items);
+inline bool set_app_menu(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostAppMenuCapability>>>> host_app_menu, flight::Array<flight::Ref<flight::types::MenuItemTemplate>> items) {
+  return flight::row_get<flight::RowKey<"setAppMenu">>(host_app_menu)(items);
 }
 
-inline std::optional<flight::String> validate_radio_groups(flight::Array<flight::Ref<MenuItemTemplate>> items) {
+inline std::optional<flight::String> validate_radio_groups(flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MenuItemTemplate>>>>> items) {
   double checked_in_run = 0.0;
   for (auto item : items) {
-    if ((item->type != flight::String("radio"))) {
+    if ((flight::row_get<flight::RowKey<"type">>(item) != flight::String("radio"))) {
       (checked_in_run = 0.0);
       continue;
     }
-    if ((item->checked == true)) {
+    if ((flight::row_get<flight::RowKey<"checked">>(item) == true)) {
       checked_in_run++;
     }
     if ((checked_in_run > 1.0)) {
@@ -136,7 +114,7 @@ inline std::optional<flight::String> validate_radio_groups(flight::Array<flight:
 
 
 // NOT GENERATED: function _validateItem -- source line 186
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
+// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
 //
 // The source it stood for:
 //   function _validateItem(item: Readonly<MenuItemTemplate>, seen: Set<Readonly<MenuItemTemplate>>): string | null {
@@ -183,78 +161,80 @@ inline std::optional<flight::String> validate_radio_groups(flight::Array<flight:
 //   // widget cannot represent, and each provider picks a different winner. Checked on a non-radio item is
 //   // caught per-item above; this is the rule that only exists across siblings, which is why it runs where
 //   // the child list is known rather than inside the per-item walk.
-// cpp emission failed for @flighthq/menu/packages/menu/src/menu.ts: a presence test against undefined has no
-// absence channel in the emitted C++ storage for property
+// cpp emission failed for @flighthq/menu/packages/menu/src/menu.ts: narrowed C++ union projection requires
+// proven present payload: the narrowing still admits absence, so nothing proved the payload present and reading
+// the value alternative here would unpack storage that may still be holding the sentinel the test left
+// reachable. Test both at once with `x != null`, or narrow the value into a present local the same way
 
-inline std::optional<flight::String> validate_menu_item_template(flight::Ref<MenuItemTemplate> template_) {
-  return validate_item(template_, flight::Set<flight::Ref<MenuItemTemplate>>());
+inline std::optional<flight::String> validate_menu_item_template(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MenuItemTemplate>>>> template_) {
+  return validate_item(template_, flight::Set<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MenuItemTemplate>>>>>());
 }
 
-inline std::optional<flight::Ref<MenuSignals>> menu_signals = std::nullopt;
+inline std::optional<flight::Ref<flight::types::MenuSignals>> menu_signals = std::nullopt;
 
-inline flight::Ref<MenuSignals> enable_menu_signals() {
-  ([&]() { auto&& assignment_target = menu_signals; if (!assignment_target.has_value()) assignment_target = std::optional<flight::Ref<MenuSignals>>{([=]() {
-  flight::Ref<EntityConstruction<flight::Ref<MenuSignals>>> out = allocate_entity<flight::Ref<MenuSignals>>();
-  (out->on_context_menu_close = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_context_menu_close)>::element_type>>());
-  (out->on_context_menu_open = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_context_menu_open)>::element_type>>());
-  return finish_entity(out);
+inline flight::Ref<flight::types::MenuSignals> enable_menu_signals() {
+  ([&]() { auto&& assignment_target = menu_signals; if (!assignment_target.has_value()) assignment_target = std::optional<flight::Ref<flight::types::MenuSignals>>{([=]() {
+  flight::types::EntityConstruction<flight::Ref<flight::types::MenuSignals>> out = flight::entity::allocate_entity<flight::Ref<flight::types::MenuSignals>>();
+  flight::row_set<flight::RowKey<"onContextMenuClose">>(out, flight::signals::create_signal<std::function<void()>>());
+  flight::row_set<flight::RowKey<"onContextMenuOpen">>(out, flight::signals::create_signal<std::function<void()>>());
+  return flight::entity::finish_entity<flight::Ref<flight::types::MenuSignals>>(out);
 })()}; return assignment_target.value(); }());
   return menu_signals.value();
 }
 
-inline std::optional<flight::Ref<MenuSignals>> get_menu_signals() {
-  return menu_signals;
+inline std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MenuSignals>>>>> get_menu_signals() {
+  return ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MenuSignals>>>>> { auto contextual_union_source = menu_signals; if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MenuSignals>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MenuSignals>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MenuSignals>>>>(contextual_union_source.value()))}; }());
 }
 
-inline flight::Task<std::optional<flight::String>> show_context_menu(flight::Ref<HostMenuPopupCapability> host_menu_popup, flight::Array<flight::Ref<MenuItemTemplate>> items, double x, double y) {
-  std::optional<flight::Ref<MenuSignals>> signals = menu_signals;
+inline flight::Task<std::optional<flight::String>> show_context_menu(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMenuPopupCapability>>>> host_menu_popup, flight::Array<flight::Ref<flight::types::MenuItemTemplate>> items, double x, double y) {
+  auto signals = menu_signals;
   if (signals.has_value()) {
-    emit_signal(signals.value()->on_context_menu_open);
+    flight::signals::emit_signal<std::function<void()>>(signals.value()->on_context_menu_open);
   }
-  flight::Task<std::optional<flight::String>> promise = host_menu_popup->popup(items, x, y);
+  flight::Task<std::optional<flight::String>> promise = flight::row_get<flight::RowKey<"popup">>(host_menu_popup)(items, x, y);
   if (signals.has_value()) {
-    (void)promise.then([=](std::optional<flight::String> ignored_callback_argument) { (void)ignored_callback_argument; return emit_signal(signals.value()->on_context_menu_close); });
+    (void)promise.then([=](std::optional<flight::String> ignored_callback_argument) { (void)ignored_callback_argument; return flight::signals::emit_signal<std::function<void()>>(signals.value()->on_context_menu_close); });
   }
   return promise;
 }
 
-inline flight::WeakMap<flight::Ref<MenuHighlight>, std::function<void()>> highlight_unsubscribe = flight::WeakMap<flight::Ref<MenuHighlight>, std::function<void()>>();
+inline flight::WeakMap<flight::Ref<flight::types::MenuHighlight>, std::function<void()>> highlight_unsubscribe = flight::WeakMap<flight::Ref<flight::types::MenuHighlight>, std::function<void()>>();
 
-inline void detach_menu_highlight(flight::Ref<MenuHighlight> highlight) {
+inline void detach_menu_highlight(flight::Ref<flight::types::MenuHighlight> highlight) {
   ([&]() { auto optional_chain_receiver = highlight_unsubscribe.get(highlight); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(); }());
   highlight_unsubscribe.erase(highlight);
 }
 
-inline void attach_menu_highlight(flight::Ref<HostMenuHighlightCapability> host_menu_highlight, flight::Ref<MenuHighlight> highlight) {
+inline void attach_menu_highlight(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMenuHighlightCapability>>>> host_menu_highlight, flight::Ref<flight::types::MenuHighlight> highlight) {
   detach_menu_highlight(highlight);
-  std::function<void()> unsubscribe = host_menu_highlight->subscribe([=](flight::String id) { return emit_signal(highlight->on_menu_item_highlight, id); });
+  std::function<void()> unsubscribe = flight::row_get<flight::RowKey<"subscribe">>(host_menu_highlight)([=](flight::String id) { return flight::signals::emit_signal<std::function<void(flight::String)>>(highlight->on_menu_item_highlight, id); });
   highlight_unsubscribe.set(highlight, unsubscribe);
 }
 
-inline void dispose_menu_highlight(flight::Ref<MenuHighlight> highlight) {
+inline void dispose_menu_highlight(flight::Ref<flight::types::MenuHighlight> highlight) {
   detach_menu_highlight(highlight);
-  clear_signal(highlight->on_menu_item_highlight);
+  flight::signals::clear_signal<std::function<void(flight::String)>>(highlight->on_menu_item_highlight);
 }
 
-inline flight::WeakMap<flight::Ref<MenuSelect>, std::function<void()>> select_unsubscribe = flight::WeakMap<flight::Ref<MenuSelect>, std::function<void()>>();
+inline flight::WeakMap<flight::Ref<flight::types::MenuSelect>, std::function<void()>> select_unsubscribe = flight::WeakMap<flight::Ref<flight::types::MenuSelect>, std::function<void()>>();
 
-inline void detach_menu_select(flight::Ref<MenuSelect> select) {
+inline void detach_menu_select(flight::Ref<flight::types::MenuSelect> select) {
   ([&]() { auto optional_chain_receiver = select_unsubscribe.get(select); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(); }());
   select_unsubscribe.erase(select);
 }
 
-inline void attach_menu_select(flight::Ref<HostMenuSelectCapability> host_menu_select, flight::Ref<MenuSelect> select) {
+inline void attach_menu_select(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostMenuSelectCapability>>>> host_menu_select, flight::Ref<flight::types::MenuSelect> select) {
   detach_menu_select(select);
-  std::function<void()> unsubscribe = host_menu_select->subscribe([=](flight::String id) { return emit_signal(select->on_menu_item_select, id); });
+  std::function<void()> unsubscribe = flight::row_get<flight::RowKey<"subscribe">>(host_menu_select)([=](flight::String id) { return flight::signals::emit_signal<std::function<void(flight::String)>>(select->on_menu_item_select, id); });
   select_unsubscribe.set(select, unsubscribe);
 }
 
-inline void dispose_menu_select(flight::Ref<MenuSelect> select) {
+inline void dispose_menu_select(flight::Ref<flight::types::MenuSelect> select) {
   detach_menu_select(select);
-  clear_signal(select->on_menu_item_select);
+  flight::signals::clear_signal<std::function<void(flight::String)>>(select->on_menu_item_select);
 }
 
-inline flight::WeakSet<flight::Ref<HostAppMenuCapability>> destroyed_app_loop = flight::WeakSet<flight::Ref<HostAppMenuCapability>>();
+inline flight::WeakSet<flight::Ref<flight::types::HostAppMenuCapability>> destroyed_app_loop = flight::WeakSet<flight::Ref<flight::types::HostAppMenuCapability>>();
 
 template <typename T>
 using IsAny = bool;
@@ -264,30 +244,29 @@ inline void assert_sync_void(T value) {
   (void)value;
 }
 
-
-// NOT GENERATED: function destroyAppMenu -- source line 88
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function destroyAppMenu(...hostAppMenu: readonly Readonly<HostAppMenuCapability>[]): void {
-//     const pending = new Set<HostAppMenuCapability>();
-//     for (const provider of hostAppMenu) {
-//       if (!_destroyedAppLoop.has(provider)) pending.add(provider);
-//     }
-//     let failure: unknown = null;
-//     for (const provider of pending) {
-//       try {
-//         if (provider.destroy !== undefined) assertSyncVoid(provider.destroy());
-//       } catch (error) {
-//         failure ??= error;
-//         continue;
-//       }
-//       _destroyedAppLoop.add(provider);
-//     }
-//     if (failure !== null) throw failure;
-//   }
-//   
-// cpp emission failed for @flighthq/menu/packages/menu/src/menu.ts: a presence test against undefined has no
-// absence channel in the emitted C++ storage for property
+inline void destroy_app_menu(flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostAppMenuCapability>>>>> host_app_menu) {
+  auto pending = flight::Set<flight::Ref<flight::types::HostAppMenuCapability>>();
+  for (auto provider : host_app_menu) {
+    if (!destroyed_app_loop.has(flight::structural_ref_cast<flight::Ref<flight::types::HostAppMenuCapability>>(provider))) {
+      pending.add(flight::structural_ref_cast<flight::Ref<flight::types::HostAppMenuCapability>>(provider));
+    }
+  }
+  flight::Any failure = nullptr;
+  for (auto provider_2 : pending) {
+    try {
+      if (provider_2->destroy.has_value()) {
+        assert_sync_void<flight::Undefined>((provider_2->destroy.value()(), flight::undefined));
+      }
+    }
+    catch (const std::exception& error) {
+      failure;
+      continue;
+    }
+    destroyed_app_loop.add(provider_2);
+  }
+  if (([&]() { const auto& presence_operand = failure; return !presence_operand.is_null(); }())) {
+    throw failure;
+  }
+}
 
 } // namespace flight::menu

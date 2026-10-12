@@ -780,7 +780,6 @@
         "flight/connectivity/connectivity.hpp",
         "flight/interaction/interaction_manager.hpp",
         "flight/lifecycle/lifecycle.hpp",
-        "flight/menu/menu.hpp",
         "flight/preferences/storage.hpp",
         "flight/quadbatch/quad_batch.hpp",
         "flight/scene2d/scene2d.hpp",
@@ -1488,9 +1487,7 @@
       "id": "media-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/menu/menu.hpp"
-      ],
+      "files": [],
       "id": "menu-unqualified-entity-names"
     },
     {
@@ -2836,9 +2833,7 @@
       "id": "log-unqualified-signals-names"
     },
     {
-      "files": [
-        "flight/menu/menu.hpp"
-      ],
+      "files": [],
       "id": "menu-unqualified-signals-names"
     },
     {

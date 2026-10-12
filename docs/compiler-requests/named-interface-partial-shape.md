@@ -5,6 +5,13 @@ named object interface, even when semantic type information and the generated ow
 statically known row for every member. The original rule no longer reproduces in the minimal fixture at
 flight-compiler `2b687ea`; the carried full module still refuses later under a different diagnostic.
 
+**At `a627849` the shape is emitted and the spread over it is dropped.** `@flighthq/menu`'s
+`createMenuItemTemplate(template?: Readonly<Partial<MenuItemTemplate>>)` now emits with a
+`RowReadonly<RowPartial<…>>` parameter — the shape this request asked for — and then never reads it,
+so the caller's fields are lost and the recursive default-fill never runs. That is filed as
+[`object-spread-of-a-parameter-dropped.md`](object-spread-of-a-parameter-dropped.md): the shape half
+of this request is done at this pin, and what remains is consuming it.
+
 ## Minimal TypeScript
 
 ```ts

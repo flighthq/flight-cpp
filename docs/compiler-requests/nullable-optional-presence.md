@@ -15,6 +15,24 @@ export function state(value: Readonly<Partial<NodeData>>): number {
 }
 ```
 
+## A second site: the menu validator
+
+`@flighthq/menu`'s `_validateItem` refuses with the same rule at this pin, and its message names the shape
+of the fix it wants:
+
+```
+cpp emission failed for @flighthq/menu/packages/menu/src/menu.ts: narrowed C++ union projection requires
+proven present payload: the narrowing still admits absence, so nothing proved the payload present and
+reading the value alternative here would unpack storage that may still be holding the sentinel the test
+left reachable. Test both at once with `x != null`, or narrow the value into a present local the same way
+```
+
+The tests it refuses are `item.label !== undefined`, `item.accelerator !== undefined`,
+`item.submenu !== undefined` and `item.checked !== undefined` on a `Readonly<MenuItemTemplate>` whose
+emitted row is a single optional per member. `@flighthq/menu` is `assisted`: the
+`menu-recursive-template-validation` override supplies that one declaration, and the validator's rules are
+exercised natively by `tests/generated_menu_test.cpp`.
+
 ## Expected C++
 
 The partial nullable cell needs all three states:

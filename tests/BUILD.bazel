@@ -233,6 +233,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_menu_test",
+    srcs = ["generated_menu_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_log_test",
     srcs = ["generated_log_test.cpp"],
     size = "small",
@@ -346,6 +353,7 @@ test_suite(
         ":generated_lifecycle_test",
         ":generated_log_test",
         ":generated_mediasession_test",
+        ":generated_menu_test",
         ":generated_midi_test",
         ":generated_spring_test",
         ":generated_timeline_test",
