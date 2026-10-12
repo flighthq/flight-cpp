@@ -2972,14 +2972,14 @@
       "code": "dependency-refused",
       "module": "packages/menu/src/contract.ts",
       "package": "@flighthq/menu",
-      "reason": "dependency ./menu was refused for @flighthq/menu/packages/menu/src/menu.ts",
+      "reason": "dependency ./menu.ts was refused for @flighthq/menu/packages/menu/src/menu.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/menu/src/index.ts",
       "package": "@flighthq/menu",
-      "reason": "dependency ./contract was refused for @flighthq/menu/packages/menu/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/menu/packages/menu/src/contract.ts",
       "stage": "dependency"
     },
     {

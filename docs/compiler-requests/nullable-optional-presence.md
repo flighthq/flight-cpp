@@ -33,8 +33,8 @@ Members that are only nullable or only optional should remain `std::optional<T>`
 
 ## Affected modules
 
-Current generated refusals span `@flighthq/node`, lighting, loader, mesh, render, texture, WGPU, and
-format parsers. The committed refusal taxonomy records this as
+Current generated refusals span `@flighthq/node`, lighting, loader, mesh, render, texture, WGPU, menu,
+and format parsers. The committed refusal taxonomy records this as
 `cpp-presence-test-without-absence-storage`.
 
 ## Carrying workaround

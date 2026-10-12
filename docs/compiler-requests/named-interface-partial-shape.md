@@ -38,6 +38,11 @@ All eleven exported functions in `@flighthq/materials/materialPresets` are curre
 `cpp-partial-shape-unresolvable`. Ten use `Partial<StandardPbrMaterial>` directly; the glass preset
 reaches the same refusal while constructing its named partial material and extension rows.
 
+`@flighthq/menu`'s `createMenuItemTemplate(template?: Readonly<Partial<MenuItemTemplate>>)` is the same
+refusal on another named interface, and it is the reason the whole module is refused: the emitted
+`MenuItemTemplate` already carries every member as `std::optional`, so the partial has a closed shape
+the emitter declines to resolve. Supplied by the `menu-recursive-template-validation` override.
+
 ## Carrying workaround
 
 `materials-upstream-preset-assemblies` supplies the refused module with explicit partial-row aliases
