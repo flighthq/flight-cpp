@@ -241,7 +241,7 @@ inline flight::Ref<LoopState> get_or_create_loop_state(flight::Ref<flight::types
 //     }
 //     return loopState;
 //   }
-//   
+//
 // cpp emission failed for @flighthq/app/packages/app/src/appLoop.ts: contextual C++ union conversion requires
 // equivalent source union evidence: target optionalSingle carriers
 // [flight::Ref<fixed_accumulator_fixed_time_step_fps_buffer_fps_head_frame_handle_frame_rate_accumulated_last_time_max_delta_time_max_updates_per_frame_67b4093dbdac7169>]
