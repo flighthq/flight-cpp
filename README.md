@@ -195,12 +195,14 @@ is measured against its real dependencies, but splices back only `include/flight
 package's rows in `manifest.json`, `refusals.json`, `best-effort.json` and `initialization.json`; the header
 lists and README summary are re-derived from the merged tree. Reports land in `out/pkg/<package>/`.
 
-Two things are shared by every package and are deliberately not rewritten by a scoped run. Each is reported
-as a failure rather than left silently stale, and each needs `npm run sdk:generate`:
+One thing cannot be scoped, and is refused rather than left silently stale; it needs `npm run sdk:generate`:
 
-- a row key the package uses that `flight/sdk/structural_members.hpp` does not yet list;
 - a different compiler, binding-profile set or namespace mapping, which moves every package at once (a different
   Flight revision is allowed: see the pin transition below).
+
+`flight/sdk/structural_members.hpp` is shared vocabulary, every row key and computed cell any emitted header or
+override uses, rendered by `scripts/structuralMembers.mjs` from that file set. A scoped run that changes a
+package's headers re-renders it from the merged tree with the same code a full run uses.
 
 The evaluation groups in `initialization.json` are not owned by any package: they are the compiler's Tarjan walk
 over the merged `entries` and runtime `dependencies`, and a scoped run recomputes them exactly that way, so a

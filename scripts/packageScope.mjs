@@ -1,5 +1,8 @@
 import { existsSync, lstatSync, mkdirSync, readdirSync, readFileSync, rmdirSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { overrideHeaderFiles, structuralMemberTable } from './structuralMembers.mjs';
 
 // Package-scoped edits to the committed SDK inventory.
 //
@@ -12,17 +15,19 @@ import path from 'node:path';
 //   include/flight/<package>/**         replaced wholesale (files the candidate no longer emits go)
 //   manifest.json                       the package's row, and the package's share of each per-file list
 //   refusals.json, best-effort.json     the package's rows
-//   initialization.json                 the package's entries, modules and evaluation groups
+//   initialization.json                 the package's entries and modules; groups are recomputed
 //   cmake/FlightSdkHeaders.cmake,
-//   BUILD.bazel, README.md              re-derived from the merged tree, never from the candidate
+//   BUILD.bazel, README.md,
+//   flight/sdk/structural_members.hpp   re-derived from the merged tree, never from the candidate
 //
-// Everything else is shared by every package and is NOT rewritten here: structural_members.hpp is built
-// from the row keys of the whole SDK, and the repair identity proof from the whole declaration file. A
-// scoped run that would need either to change says so as a failure rather than quietly leaving them stale.
+// The repair identity proof is built from the whole declaration file and is not rewritten here.
 //
 // Every ordered ledger is merged by removing the package's rows and re-inserting the candidate's at the
 // position a full run would put them. That claim is checked, not assumed: scripts/packageScope.test.mjs
 // removes and re-inserts every package of the committed tree and requires the result to be byte-identical.
+
+// The repository this script belongs to, whose override tree contributes to the structural member table.
+const REPOSITORY_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 export const SDK_PREFIX = '@flighthq/';
 export const STRUCTURAL_MEMBERS = 'flight/sdk/structural_members.hpp';
@@ -430,20 +435,20 @@ export function planPackageMerge({ candidateRoot, committedRoot, movingTogether 
   writes.set('BUILD.bazel', metadata.bazel);
   writes.set('README.md', readmeWithProvenance(readmeWithSummary(read(committedRoot, 'README.md'), manifest.summary), manifest));
 
-  // Row keys are vocabulary shared by every package; a key this package introduces has no case in the
-  // committed table, and `row_get` on it would fail with a static_assert far from the cause.
-  const table = existsSync(path.join(committedRoot, 'include', STRUCTURAL_MEMBERS))
-    ? structuralTableKeys(read(committedRoot, `include/${STRUCTURAL_MEMBERS}`))
-    : new Set();
-  const missingKeys = new Set();
-  for (const header of candidateHeaders) {
-    for (const key of rowKeysIn(read(candidateRoot, `include/${header}`))) if (!table.has(key)) missingKeys.add(key);
-  }
-  if (missingKeys.size > 0) {
-    problems.push(
-      `${packageName} uses row key(s) absent from ${STRUCTURAL_MEMBERS}: ${[...missingKeys].sort(compareText).join(', ')}. ` +
-        'That table is shared by every package; it needs `npm run sdk:generate`.',
-    );
+  // The structural member table is shared vocabulary: every row key and computed cell any emitted header
+  // or override uses. It is a pure function of that file set (scripts/structuralMembers.mjs), so it is
+  // re-rendered from the merged tree exactly as a full run renders it -- but only when this package's
+  // headers changed, because otherwise its inputs did not.
+  if (changedHeaders.length > 0) {
+    const files = mergedIncludeFiles
+      .filter((file) => file !== STRUCTURAL_MEMBERS)
+      .map((file) => ({ contents: mergedHeaderText(file), path: file }));
+    const table = structuralMemberTable(files, overrideHeaderFiles(REPOSITORY_ROOT));
+    if (table.contents === undefined) {
+      problems.push(`No emitted header uses a structural row key; ${STRUCTURAL_MEMBERS} was left as committed.`);
+    } else {
+      writes.set(`include/${STRUCTURAL_MEMBERS}`, table.contents);
+    }
   }
 
   // Drop no-op writes so a check reports only real drift and an apply touches only what moved.

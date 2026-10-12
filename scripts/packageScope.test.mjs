@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { after, describe, test } from 'node:test';
@@ -27,7 +27,9 @@ import {
   treeDifferences,
   validateProvenance,
   verifyMixedInventory,
+  structuralTableKeys,
 } from './packageScope.mjs';
+import { overrideHeaderFiles, structuralMemberTable } from './structuralMembers.mjs';
 
 // Run with `npm run pkg:test`. Needs nothing but the committed generated/ tree.
 
@@ -367,14 +369,27 @@ describe('scoped merge', () => {
     assert.deepEqual(treeDifferences(left, right), []);
   });
 
-  test('a row key absent from the shared table is reported, not silently written', () => {
+  test('a row key new to the package is added to the shared structural member table', () => {
     const committed = copyTree('rowkey-committed');
     const candidate = copyTree('rowkey-candidate');
     const [header] = packageHeaders(candidate, '@flighthq/math');
     appendTo(candidate, `include/${header}`, '\n// flight::RowKey<"definitelyNotAKeyAnywhere">\n');
     const plan = planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName: '@flighthq/math' });
-    assert.equal(plan.problems.length, 1);
-    assert.match(plan.problems[0], /definitelyNotAKeyAnywhere/u);
+    assert.deepEqual(plan.problems, []);
+    const table = plan.writes.get('include/flight/sdk/structural_members.hpp');
+    assert.ok(structuralTableKeys(table).has('definitelyNotAKeyAnywhere'));
+    assert.ok([...structuralTableKeys(readFileSync(path.join(committed, 'include/flight/sdk/structural_members.hpp'), 'utf8'))].every((key) => structuralTableKeys(table).has(key)));
+  });
+
+  test('the structural member table is exactly what the shared renderer computes from the tree', () => {
+    const include = path.join(generated, 'include');
+    const files = [];
+    for (const name of packages) for (const header of packageHeaders(generated, name)) files.push({ contents: readFileSync(path.join(include, header), 'utf8'), path: header });
+    // Headers outside any package directory (the repair identity proof) contribute too.
+    const extra = path.join(include, 'flight', 'repairs');
+    if (existsSync(extra)) for (const name of readdirSync(extra)) files.push({ contents: readFileSync(path.join(extra, name), 'utf8'), path: `flight/repairs/${name}` });
+    const table = structuralMemberTable(files, overrideHeaderFiles(root));
+    assert.equal(table.contents, readFileSync(path.join(include, 'flight', 'sdk', 'structural_members.hpp'), 'utf8'));
   });
 
   test('a different compiler, binding profile set or namespace mapping is still refused', () => {
