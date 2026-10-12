@@ -144,6 +144,25 @@ bool doubles_equal(const flight::Array<double>& actual, std::initializer_list<do
   return true;
 }
 
+// The fixture itself, pinned byte for byte. These are the 102 bytes upstream's own buildAbc
+// (packages/abc/src/abcFile.test.ts at a627849, run under node with the pinned @flighthq/types enums)
+// produces. Every readAbcFile case reads build_abc(), so this keeps the C++ builder port from silently
+// testing different bytes.
+void test_fixture_matches_upstream_builder() {
+  const std::string expected =
+    "10002e0002f9ffffff0f020902000000000000f83f04044d61696e0473746f700d666c6173682e646973706c61790216"
+    "030201010307010109020102000002000100010188010103010001010100000101020100000000010000010002010102"
+    "03d030470000";
+  const auto bytes = build_abc();
+  std::string actual;
+  static const char* digits = "0123456789abcdef";
+  for (std::size_t i = 0; i < bytes.size(); ++i) {
+    actual.push_back(digits[bytes[i] >> 4]);
+    actual.push_back(digits[bytes[i] & 0x0f]);
+  }
+  check(actual == expected, "build_abc produces exactly the bytes of upstream's buildAbc");
+}
+
 void test_read_abc_file() {
   const auto file = abc::read_abc_file(build_abc());
   if (!file.has_value()) {
@@ -265,6 +284,7 @@ void test_read_abc_instructions() {
 }  // namespace
 
 int main() {
+  test_fixture_matches_upstream_builder();
   test_read_abc_file();
   test_read_abc_instructions();
   return failures == 0 ? 0 : 1;
