@@ -384,6 +384,18 @@ void test_copy_within() {
   auto receiver = digits();
   auto& returned = receiver.copy_within(0, 1);
   check(&returned == &receiver, "copyWithin returns the array it mutated");
+
+  flight::Float32Array typed{1.0F, 2.0F, 3.0F, 4.0F, 5.0F};
+  const auto typed_identity = typed.identity();
+  auto& typed_returned = typed.copy_within(2, 0);
+  check(typed.get_index(2.0) == 1.0F && typed.get_index(3.0) == 2.0F &&
+            typed.get_index(4.0) == 3.0F,
+        "typed-array copyWithin handles upward overlap");
+  check(&typed_returned == &typed && typed.identity() == typed_identity,
+        "typed-array copyWithin returns and preserves the receiver");
+  typed.copy_within(-2, 0, 2);
+  check(typed.get_index(3.0) == 1.0F && typed.get_index(4.0) == 2.0F,
+        "typed-array copyWithin normalizes negative indices");
 }
 
 void test_sequence_view_map() {

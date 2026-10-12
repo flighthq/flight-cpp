@@ -154,6 +154,15 @@ inline void compute_mesh_geometry_bounds(
   compute_detail::write_bounds(out, geometry);
 }
 
+template <typename Bounds, typename Schema>
+inline void compute_mesh_geometry_bounds(
+    std::shared_ptr<Bounds> out,
+    const flight::StructuralRef<Schema>& geometry) {
+  const auto owner = geometry.template shared_exact_object<MeshGeometry>();
+  if (!owner) throw flight::Error(flight::String("mesh: geometry row has no exact owner"));
+  compute_mesh_geometry_bounds(std::move(out), owner);
+}
+
 inline void compute_mesh_geometry_bounding_sphere(
     flight::types::BoundingSphereLike out,
     flight::Ref<MeshGeometry> geometry) {

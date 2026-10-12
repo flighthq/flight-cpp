@@ -3,8 +3,8 @@
 This directory is generated from `@flighthq/sdk` during a pin transition, so its packages come from
 different Flight revisions, each recorded on its row in `manifest.json`:
 
-- `7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad` (117 packages)
-- `a62784923f3be814463286c9fb28edfe6ab15789` (38 packages)
+- `7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad` (116 packages)
+- `a62784923f3be814463286c9fb28edfe6ab15789` (39 packages)
 
 Every package was emitted by `flight-compiler` at `2b687eaf6b631e0fa4d7d6e18dad93b845f99633`.
 Do not edit it by hand.

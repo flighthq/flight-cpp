@@ -251,6 +251,30 @@ class TypedArray {
     return const_cast<TypedArray&>(*this);
   }
 
+  // `%TypedArray%.prototype.copyWithin`: mutate this view without changing its length or backing
+  // identity. The source and destination may overlap, so choose the copy direction exactly as the
+  // ECMAScript operation does after clamping its relative indices to this view.
+  TypedArray& copy_within(
+      std::ptrdiff_t target_index, std::ptrdiff_t begin_index = 0,
+      std::ptrdiff_t end_index = std::numeric_limits<std::ptrdiff_t>::max()) const {
+    const auto target = normalize_boundary(target_index);
+    const auto first = normalize_boundary(begin_index);
+    const auto last = normalize_boundary(end_index);
+    if (last <= first || target >= length_) return const_cast<TypedArray&>(*this);
+    const auto count = std::min(last - first, length_ - target);
+    auto* const values = mutable_data();
+    if (target <= first) {
+      std::copy(values + static_cast<std::ptrdiff_t>(first),
+                values + static_cast<std::ptrdiff_t>(first + count),
+                values + static_cast<std::ptrdiff_t>(target));
+    } else {
+      std::copy_backward(values + static_cast<std::ptrdiff_t>(first),
+                         values + static_cast<std::ptrdiff_t>(first + count),
+                         values + static_cast<std::ptrdiff_t>(target + count));
+    }
+    return const_cast<TypedArray&>(*this);
+  }
+
   [[nodiscard]] size_type size() const noexcept { return length_; }
 
   template <typename Range>

@@ -14553,9 +14553,7 @@
       "status": "refused-placeholder"
     },
     {
-      "consumers": [
-        "@flighthq/mesh/packages/mesh/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/mesh",
@@ -14577,6 +14575,7 @@
     {
       "consumers": [
         "@flighthq/mesh/packages/mesh/src/contract.ts",
+        "@flighthq/mesh/packages/mesh/src/index.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryBuilders.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryDeformationClone.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryIndex.ts",
@@ -14608,6 +14607,7 @@
     {
       "consumers": [
         "@flighthq/mesh/packages/mesh/src/contract.ts",
+        "@flighthq/mesh/packages/mesh/src/index.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryDeformationClone.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryTransforms.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryUvs.ts",
@@ -14627,7 +14627,8 @@
     },
     {
       "consumers": [
-        "@flighthq/mesh/packages/mesh/src/contract.ts"
+        "@flighthq/mesh/packages/mesh/src/contract.ts",
+        "@flighthq/mesh/packages/mesh/src/index.ts"
       ],
       "module": {
         "name": "MeshGeometryBuilders",
@@ -14640,6 +14641,7 @@
     {
       "consumers": [
         "@flighthq/mesh/packages/mesh/src/contract.ts",
+        "@flighthq/mesh/packages/mesh/src/index.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryBuilders.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryDeformationClone.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryOperations.ts",
@@ -14664,6 +14666,7 @@
     {
       "consumers": [
         "@flighthq/mesh/packages/mesh/src/contract.ts",
+        "@flighthq/mesh/packages/mesh/src/index.ts",
         "@flighthq/scene3d/packages/scene3d/src/mesh.ts"
       ],
       "module": {
@@ -14677,6 +14680,7 @@
     {
       "consumers": [
         "@flighthq/mesh/packages/mesh/src/contract.ts",
+        "@flighthq/mesh/packages/mesh/src/index.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts"
       ],
       "module": {
@@ -14690,6 +14694,7 @@
     {
       "consumers": [
         "@flighthq/mesh/packages/mesh/src/contract.ts",
+        "@flighthq/mesh/packages/mesh/src/index.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryOperations.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts",
@@ -14707,6 +14712,7 @@
     {
       "consumers": [
         "@flighthq/mesh/packages/mesh/src/contract.ts",
+        "@flighthq/mesh/packages/mesh/src/index.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryCompute.ts",
         "@flighthq/picking/packages/picking/src/pickScene3D.ts",
         "@flighthq/picking/packages/picking/src/sceneHitAttributes.ts",
@@ -14723,6 +14729,7 @@
     {
       "consumers": [
         "@flighthq/mesh/packages/mesh/src/contract.ts",
+        "@flighthq/mesh/packages/mesh/src/index.ts",
         "@flighthq/picking/packages/picking/src/sceneHitAttributes.ts"
       ],
       "module": {
@@ -14735,7 +14742,8 @@
     },
     {
       "consumers": [
-        "@flighthq/mesh/packages/mesh/src/contract.ts"
+        "@flighthq/mesh/packages/mesh/src/contract.ts",
+        "@flighthq/mesh/packages/mesh/src/index.ts"
       ],
       "module": {
         "name": "MeshGeometryTransforms",
@@ -14747,7 +14755,8 @@
     },
     {
       "consumers": [
-        "@flighthq/mesh/packages/mesh/src/contract.ts"
+        "@flighthq/mesh/packages/mesh/src/contract.ts",
+        "@flighthq/mesh/packages/mesh/src/index.ts"
       ],
       "module": {
         "name": "MeshGeometryUvs",
@@ -14760,6 +14769,7 @@
     {
       "consumers": [
         "@flighthq/mesh/packages/mesh/src/contract.ts",
+        "@flighthq/mesh/packages/mesh/src/index.ts",
         "@flighthq/mesh/packages/mesh/src/updateMeshMorph.ts"
       ],
       "module": {
@@ -14773,6 +14783,7 @@
     {
       "consumers": [
         "@flighthq/mesh/packages/mesh/src/contract.ts",
+        "@flighthq/mesh/packages/mesh/src/index.ts",
         "@flighthq/scene3d/packages/scene3d/src/prepareScene3DMorph.ts",
         "@flighthq/skeleton3d/packages/skeleton3d/src/updateMeshDeformation.ts"
       ],
@@ -14786,6 +14797,7 @@
     },
     {
       "consumers": [
+        "@flighthq/mesh/packages/mesh/src/contract.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryAttributes.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryLayout.ts"
       ],

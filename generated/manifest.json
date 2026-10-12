@@ -5502,14 +5502,14 @@
     },
     {
       "dependency": "flight",
-      "digest": "1f6db51f971591668a4bec3d52a2db077a4c4d4c9acae8577d4977d9ad6e87be",
+      "digest": "fbde9226d25d4f0e8841b6ba462c84aa4e76a46b4ab9af33b6ee0228551885b0",
       "id": "meshgeometry-exact-runtime-owner",
       "module": "packages/types/src/MeshGeometry.ts and mesh runtime consumers in @flighthq/mesh",
       "package": "@flighthq/mesh"
     },
     {
       "dependency": "flight",
-      "digest": "3e9afe52a381f5fa7ae2df1f4d445de7e30692eca2c44497ad29479b4aee32e3",
+      "digest": "4126ef73e70b8abb477ea004fcb1f6260e102c5c5a0e0e6be1ead48d5e3321c0",
       "id": "meshgeometry-present-index-storage",
       "module": "mesh geometry options/creation, primitive building, tangent generation, index conversion, layout conversion, merge/validation, and mirrored transforms",
       "package": "@flighthq/mesh"
@@ -7111,7 +7111,7 @@
       "package": "@flighthq/mesh",
       "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 16

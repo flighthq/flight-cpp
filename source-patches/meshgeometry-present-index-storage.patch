@@ -261,7 +261,16 @@ diff --git a/packages/mesh/src/meshGeometryIndex.ts b/packages/mesh/src/meshGeom
      const dst = i * floatsPerVertex;
      for (let f = 0; f < floatsPerVertex; f++) {
        vertices[dst + f] = sourceVertices[src + f];
-@@ -188,10 +190,11 @@
+@@ -160,7 +162,7 @@
+     geometry.vertices.byteOffset,
+     geometry.vertices.byteLength,
+   );
+-  const uniqueBytes = new Uint8Array(sourceByteLength);
++  const uniqueBytes = new Uint8Array<ArrayBuffer>(sourceByteLength);
+   const sourceToUnique = new Uint32Array(vertexCount);
+   const candidatesByHash = new Map<number, number[]>();
+   let uniqueCount = 0;
+@@ -188,15 +190,17 @@
      sourceToUnique[vertex] = uniqueIndex;
    }
  
@@ -275,7 +284,14 @@ diff --git a/packages/mesh/src/meshGeometryIndex.ts b/packages/mesh/src/meshGeom
      if (sourceIndex >= vertexCount) return cloneMeshGeometry(geometry);
      indices[element] = sourceToUnique[sourceIndex];
    }
-@@ -203,6 +206,19 @@
+
+-  const weldedBuffer = uniqueBytes.buffer.slice(0, uniqueCount * stride);
++  const weldedBuffer = new ArrayBuffer(uniqueCount * stride);
++  new Uint8Array(weldedBuffer).set(uniqueBytes.subarray(0, uniqueCount * stride));
+   const out = cloneMeshGeometryMetadata(geometry);
+   out.vertices = new Float32Array(weldedBuffer);
+   out.indices = indices;
+@@ -203,6 +207,19 @@
    return out;
  }
  
@@ -593,4 +609,3 @@ diff --git a/packages/types/src/MeshGeometryOptions.ts b/packages/types/src/Mesh
    layout: VertexAttributeLayout;
    subsets?: readonly MeshSubset[];
    topology?: PrimitiveTopology;
-
