@@ -71,6 +71,10 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `@flighthq/assets` `registerAssetLoader`; an upstream source question, no workaround.
 - [A fresh array of `null` assigned to a nullable element union](fresh-null-array-into-nullable-element-union.md) —
   `@flighthq/registry` `createOrdinalTable`; a type-only source patch would carry it.
+- [A numeric enum value is widened to a `number` union in flow](numeric-enum-flow-widened-to-number-union.md) —
+  refuses `@flighthq/debug` `debug.ts` (`enableDebug`); no workaround.
+- [Nullable storage of an imported alias is spelled by its expansion](nullable-alias-storage-spelled-by-expansion.md) —
+  `@flighthq/debug` `install_debug_sink` under the LogSink override; no workaround yet.
 - [`@flighthq/log` native-compile defect inventory](log-native-compile-defects.md) — fifteen emitter
   defects make log.hpp fail clang once the console refusal is set aside; the log override stubs twelve
   functions with throws, so log parity is not honest.
