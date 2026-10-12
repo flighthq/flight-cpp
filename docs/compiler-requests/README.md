@@ -282,8 +282,6 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   tween's timer and swf's texture construction.
 - [An inferred `any` type argument leaks its parameter name into a readonly conversion](node-any-generic-traits-leak.md) —
   `@flighthq/command` captures child indices of `NodeAny` nodes; carried by the `command-undeclared-node-helpers` override.
-- [A concretely inferred type argument leaks its parameter name through an intersection-alias parameter](callee-type-parameter-leaked-into-call-site.md) —
-  sibling of the inferred-`any` leak: movieclip's spritesheet source converts to `NodeOf<Traits>` with no `any` involved.
 - [A wider owner passed as a writable structural out parameter must keep its identity](writable-structural-out-of-a-wider-owner.md) —
   `@flighthq/geometry`'s aabb writers cannot take a `createAabb` result; scene3d's culling and bounds scratches depend on it (masked). No workaround is carried.
 - [Type-argument deduction must follow interface heritage](heritage-argument-generic-deduction.md) —
