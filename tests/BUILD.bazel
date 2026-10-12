@@ -121,6 +121,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_audio_test",
+    srcs = ["generated_audio_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_dialog_test",
     srcs = ["generated_dialog_test.cpp"],
     size = "small",
@@ -246,6 +253,7 @@ test_suite(
     name = "generated_tests",
     tests = [
         ":generated_animation_test",
+        ":generated_audio_test",
         ":generated_canvas_texture_resolver_test",
         ":generated_collision_test",
         ":generated_connectivity_test",
