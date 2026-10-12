@@ -7819,14 +7819,14 @@
       "code": "dependency-refused",
       "module": "packages/statusbar/src/contract.ts",
       "package": "@flighthq/statusbar",
-      "reason": "dependency ./statusbar was refused for @flighthq/statusbar/packages/statusbar/src/statusbar.ts",
+      "reason": "dependency ./statusbar.ts was refused for @flighthq/statusbar/packages/statusbar/src/statusbar.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/statusbar/src/index.ts",
       "package": "@flighthq/statusbar",
-      "reason": "dependency ./contract was refused for @flighthq/statusbar/packages/statusbar/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/statusbar/packages/statusbar/src/contract.ts",
       "stage": "dependency"
     },
     {

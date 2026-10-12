@@ -152,7 +152,7 @@
       "package": "@flighthq/statusbar",
       "status": "complete",
       "supplies": "packages/statusbar/src/statusbar.ts",
-      "derivedFrom": "64965944b41cfda1610d4f8023b9f6e3ae7a10ea1bc143f563887e48cfc55eb0",
+      "derivedFrom": "aebceaa81aede9ba08e9bd4dc2cd1bcd4b74de6e85df38777b1cea2d79df842f",
       "reason": "The emitter leaves all imported types and functions unqualified, represents the value aliases StatusBarStyle, StatusBarAnimation and StatusBarStyleEntryHandle as Ref owners, and refuses applyTopStyleEntry's five optional accumulators. Those defects keep the module and both package aggregators from compiling.",
       "change": "Supplies the complete statusbar module over the generated host-capability and entity types, including subscription ownership, signal publication, direct host setters, last-pushed-wins style-stack resolution, baseline restoration, and exact numeric/string alias storage.",
       "equivalence": "Subscriptions retain and invoke the host unsubscribe closure exactly once per detach; status events allocate a fresh StatusBarInfo before emission. Style resolution scans entries newest-to-oldest independently per optional field, falls back to the captured baseline, invokes providers only for changed applied values, passes the winning animation only when visibility changes, preserves monotonically increasing handles, and drops an empty provider stack. The applied snapshot copies only public StatusBarInfo fields, so the entity runtime symbol is not spread.",
