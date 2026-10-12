@@ -1622,6 +1622,18 @@ throw stays partial. That is the taxonomy doing its job.
 `flight.environment` and never inferred from a package name — an inference would have parked it as
 web-only. It compiles on a native SDL host, and now it ships.
 
+**What shipping means for `webcam` specifically: an empty surface.** Its two source modules are
+`export {};`, so its two emitted headers declare nothing but the generator banner, the runtime-contract
+assertions and an empty `namespace flight::webcam`. Nothing in the emitted tree includes
+`flight/webcam`, and nothing can call it. It was already in this state at the pin and generation
+reproduces it byte for byte (`0 header(s) changed`, `0 path(s) written`), which is also why the pin move
+left `webcam` as the one package whose source is untouched. Its only upstream test is a placeholder
+(`missing.test.ts`: `it('will have tests later', () => { assert(true); })`), so no behavioral evidence
+exists upstream either — and none can be written natively, because there is no declaration to exercise.
+That readiness is therefore purely a statement about emission and compilation; the applicability argument
+above is the substantive part of `webcam`'s entry, and it stands unchanged. Recorded so a later reader
+does not take `ready` here as evidence that a webcam feature area exists.
+
 ### The sharpest remaining target: fully emitted and still failing
 
 A package with **no refusals** cannot have a never-generated function behind its diagnostics, so whatever
