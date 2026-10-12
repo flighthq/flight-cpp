@@ -41,6 +41,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-nested-nullable-property-narrowed-null-test.patch`](../../source-patches/compiler-nested-nullable-property-narrowed-null-test.patch) | [A null test on a narrowed optional-nullable member must read its storage](nested-nullable-property-narrowed-null-test.md) |
 | [`compiler-nullable-optional-parameter-narrowing.patch`](../../source-patches/compiler-nullable-optional-parameter-narrowing.patch) | [Nullable and optional storage needs two absence channels (parameter section)](nullable-optional-presence.md) |
 | [`compiler-nullable-structural-row-widening.patch`](../../source-patches/compiler-nullable-structural-row-widening.patch) | [Nullable structural-row widening](compiler-nullable-structural-row-widening.md) |
+| [`compiler-nullish-assignment-statement-in-catch.patch`](../../source-patches/compiler-nullish-assignment-statement-in-catch.patch) | [A nullish assignment as a statement in a catch body is dropped](nullish-assignment-dropped-in-catch.md) |
 | [`compiler-owner-preserving-named-write.patch`](../../source-patches/compiler-owner-preserving-named-write.patch) | [Owner-preserving dynamic named write](compiler-owner-preserving-named-write.md) |
 | [`compiler-placeholder-graph-qualification.patch`](../../source-patches/compiler-placeholder-graph-qualification.patch) | [Partial-module placeholder qualification](partial-module-placeholder-qualification.md) |
 | [`compiler-present-dual-sentinel-multivariant.patch`](../../source-patches/compiler-present-dual-sentinel-multivariant.patch) | [Present projection of a dual-sentinel multivariant](compiler-present-dual-sentinel-multivariant.md) |
@@ -65,6 +66,11 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   carried for socket by the override `socket-complete-lifecycle`.
 - [Member reads on a collapsed union record must use one access form](collapsed-union-record-member-access.md) —
   carried for socket by the override `socket-guard-reporting`.
+- [A slot a catch records into needs the exception carrier, whatever its initializer](catch-recorded-slot-carrier.md) —
+  `@flighthq/power`'s `let failure: unknown = null` takes the erased `flight::Any`, which cannot hold the
+  caught value, while the same slot without an initializer takes `std::exception_ptr` and lowers
+  correctly; the record's lowering patch and this carrier have to land together or the module goes
+  from silently dropping the write to not compiling.
 - [A catch body that awaits and reads its binding needs an owned caught value](catch-binding-across-await.md) —
   refuses `@flighthq/loader` `resourceLoader.ts`; no workaround.
 - [Asserting a `Promise<unknown>` to `Promise<T>` needs a typed task view](generic-promise-assertion-to-type-parameter.md) —

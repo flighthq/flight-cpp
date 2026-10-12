@@ -994,7 +994,7 @@
       "equivalence": "Every source is lowered and every selected module is emitted exactly as before. Unselected modules still produce no output and remain reported as skipped; they now contribute only the type and owner declarations the documented scoped-analysis contract already promises. Unscoped runs have identical context and output module sets.",
       "verification": "A focused orchestration regression selects only an importing consumer, verifies both consumer and provider reach the emission session, verifies only the consumer file is written, and retains the provider's skipped report status. All 41 compiler-orchestration tests pass.",
       "whyNotUpstreamFirst": "The pinned compiler exposes emitPathPrefixes expressly for bounded corpus diagnosis, but its session construction contradicts that API's analysis contract. This narrowly versioned patch repairs the pinned implementation while preserving its output filter.",
-      "unblocks": "Allows bounded Scene3D GL and Canvas emission runs to retain exact material, texture, node, and callback owners from their dependency modules, reducing a 30–40 minute full-closure diagnostic loop to the requested package's emit phase without generating false refusals.",
+      "unblocks": "Allows bounded Scene3D GL and Canvas emission runs to retain exact material, texture, node, and callback owners from their dependency modules, reducing a 30\u201340 minute full-closure diagnostic loop to the requested package's emit phase without generating false refusals.",
       "expires": "when flight-compiler passes the complete analyzed semantic module set to scoped backend emission sessions upstream.",
       "appliedOn": "2026-10-08"
     },
@@ -2495,6 +2495,23 @@
       "unblocks": "Turns an uncompilable header into a structured refusal; no package depends on the unsound form.",
       "expires": "when upstream refuses element access on bound host objects (docs/compiler-requests/host-object-dynamic-index.md).",
       "appliedOn": "2026-10-12"
+    },
+    {
+      "id": "compiler-nullish-assignment-statement-in-catch",
+      "dependency": "flight-compiler",
+      "patch": "compiler-nullish-assignment-statement-in-catch.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "`x ??= y` whose target has a declared type with no absent member is emitted as the target alone, so the write disappears. An `unknown`/`any` target is carried as the erased `flight::Any`, whose nullishness is a runtime property of the value rather than of the type, so the no-op shortcut is unsound for exactly that carrier: `failure ??= error;` in a catch body emits a bare `failure;`, the first failure is never recorded, and the `if (failure !== null) throw failure;` that follows can never fire -- a failed teardown becomes indistinguishable from a successful one. Measured in `@flighthq/power`'s `destroyPowerKeepAwake` and `detachPower`; the same construct first appears in `particleEmitterSignals.ts`, whose record-typed target took a different lowering lane and so did not show it.",
+      "rewrite": "One branch of the assignment lowering: a `??=` target whose declared type has no absent member AND whose C++ carrier is the erased `flight::Any` (IR type kind `unknown`) now lowers to the guarded assignment `([&]() { auto&& assignment_target = LEFT; if (assignment_target.is_nullish()) assignment_target = RIGHT; return assignment_target; }())`, using the carrier's own loose nullish test. A target whose carrier cannot hold a nullish value -- a `number` target's `double` -- keeps the no-op, and a target carried as an optional keeps `emitLogicalAssignmentCpp`. Catch breadth is deliberately untouched: the handler remains `catch (const std::exception&)`, which is a separate open defect (docs/compiler-requests/catch-handler-breadth-attempt-all.md).",
+      "equivalence": "The old shortcut returned the target unmodified, which is the correct lowering only where the carrier cannot hold null or undefined; that is now the only case that keeps it. Where the carrier is the erased `flight::Any`, the emitted code records the right-hand side exactly when JavaScript would, and the loose `is_nullish()` matches `??=`'s rule that null and undefined both assign rather than either strict half. An assignment still evaluates to the target's value, the condition is evaluated once per evaluation, a target that already holds a value is left alone -- which is what retains the FIRST failure across later iterations -- and no absent member, no refusal, and no runtime capability is invented.",
+      "verification": "New `cppNullishAssignmentStatement.test.ts`, 4 pass: the `??=` statement inside a catch body keeps a conditional write and is no longer a bare target; the same holds in an expression position; the guard is the loose `is_nullish()`, not either strict half; and a number target keeps the no-op. Reverting the branch fails 3 of those 4 and leaves the number-target case passing. `cppCompilerBackend.test.ts` reports the same 24 failures before and after the change (pre-existing at this base, none of them this shape), so the branch adds no regression and removes none.",
+      "unblocks": "`@flighthq/power`'s attempt-all teardown: `destroyPowerKeepAwake` and `detachPower` promise in their own source comment to rethrow the first failure once the siblings have run, which their emitted bodies could not do. Regenerating the package's slice with this patch is what the unit's second half measures; the behaviour left unasserted there is the catch-breadth half, which stays open.",
+      "expires": "when the emitter distinguishes a carrier that cannot hold a nullish value from one whose value decides it without the declared-absence-member test.",
+      "appliedOn": "2026-10-12",
+      "whyNotUpstreamFirst": "The defect is one condition in the pinned backend's assignment lowering that mis-classifies an erased carrier, not a missing contract, so it needs no new runtime capability and no new evidence channel -- the carrier's own `is_nullish()` already exists and is already used elsewhere in the same file. A narrow versioned patch repairs the pinned implementation, and the focused backend test it carries is the regression guard for the exact shape."
     },
     {
       "id": "scene2d-canvas-host-image-draw-flow",

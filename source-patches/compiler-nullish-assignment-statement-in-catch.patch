@@ -1,0 +1,124 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index fae6209..6a1bbdb 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -3706,7 +3706,19 @@ function emitExpression(
+         );
+       }
+       if (expression.operator === '&&=' || expression.operator === '||=' || expression.operator === '??=') {
+-        if (expression.operator === '??=' && assignmentType && !hasIrTypeAbsentMember(assignmentType)) return left;
++        if (expression.operator === '??=' && assignmentType && !hasIrTypeAbsentMember(assignmentType)) {
++          // A declared type with no absent member can still reach a carrier that holds a nullish VALUE.
++          // An any/unknown target is emitted as the erased `flight::Any`, whose nullishness is a runtime
++          // property of the value rather than of the type -- `let failure: unknown = null` is exactly
++          // that case -- so returning the target alone drops the assignment the source wrote, in an
++          // expression position and in a statement position alike. The no-op is sound only where the
++          // carrier itself cannot hold null or undefined; an erased target takes the carrier's own loose
++          // nullish test, which is `??=`'s condition exactly (`null` and `undefined` both assign).
++          if (assignmentType.kind === 'unknown') {
++            return `([&]() { auto&& assignment_target = ${left}; if (assignment_target.is_nullish()) assignment_target = ${right}; return assignment_target; }())`;
++          }
++          return left;
++        }
+         return emitLogicalAssignmentCpp(left, expression.operator, right);
+       }
+       return `(${left} ${emitAssignmentOperator(expression.operator)} ${right})`;
+diff --git a/packages/compiler-backend-cpp/src/cppNullishAssignmentStatement.test.ts b/packages/compiler-backend-cpp/src/cppNullishAssignmentStatement.test.ts
+new file mode 100644
+index 0000000..58c492a
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppNullishAssignmentStatement.test.ts
+@@ -0,0 +1,93 @@
++import { describe, expect, it } from 'vitest';
++import ts from 'typescript';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++
++import { createCppCompilerBackend } from './cppCompilerBackend.js';
++
++// `x ??= y` on an erased carrier, in an expression position and as a statement inside a catch body.
++//
++// The target's declared type has no absent member, so the old no-op shortcut returned the target alone:
++// for an `unknown` binding the emitted carrier is the erased `flight::Any`, whose nullishness is a
++// runtime property of the value, so the assignment disappeared. The fixture below is the shape
++// `@flighthq/power`'s attempt-all teardown writes (`failure ??= error; continue;` then
++// `if (failure !== null) throw failure;`), where the dropped write makes a failed teardown
++// indistinguishable from a successful one.
++function emit(source: string): string {
++  const lowering = lowerTypeScriptSource(ts.createSourceFile('/flight/packages/power/src/probe.ts', source, ts.ScriptTarget.Latest, true), {
++    packageName: '@flighthq/power',
++    upstreamDirectory: '/flight',
++  });
++  const module = lowering.module;
++  const session = createCppCompilerBackend().createEmissionSession!({
++    modules: [module],
++    options: {
++      packageTargets: {
++        '@flighthq/power': { includePrefix: 'flight/power', namespace: 'flight::power' },
++      },
++      runtimeProfile: 'flight-cpp',
++    },
++  });
++  return session.emitModule(module)[0]!.contents;
++}
++
++const FAILURE_SLOT = `
++export function teardown(values: readonly number[]): void {
++  let failure: unknown = null;
++  for (const value of values) {
++    try {
++      if (value > 1) throw new Error('too big');
++    } catch (error) {
++      failure ??= error;
++      continue;
++    }
++  }
++  if (failure !== null) throw failure;
++}
++`;
++
++const EXPRESSION_POSITION = `
++export function pick(fallback: unknown): unknown {
++  let current: unknown = null;
++  const selected = current ??= fallback;
++  return selected;
++}
++`;
++
++describe('??= on an erased target', () => {
++  it('keeps the assignment as a statement inside a catch body', () => {
++    const contents = emit(FAILURE_SLOT);
++    // The write is present and conditional: it is the guarded form, not the bare target the old
++    // shortcut emitted, and the guard is the loose nullish test so the FIRST failure is retained.
++    expect(contents).toContain('if (assignment_target.is_nullish()) assignment_target = error;');
++    expect(contents).not.toMatch(/catch \(const std::exception& error\) \{\s*failure;/);
++  });
++
++  it('keeps the assignment in an expression position too', () => {
++    const contents = emit(EXPRESSION_POSITION);
++    expect(contents).toContain('if (assignment_target.is_nullish()) assignment_target = fallback;');
++  });
++
++  it('tests nullishness with the loose test, which is what retains the first failure', () => {
++    // `??=` assigns for null AND undefined, so the emitted guard must be `is_nullish()` and not either
++    // strict half: a strict test would keep only one of the two and overwrite the first failure when
++    // the caught value arrived as the other.
++    const contents = emit(FAILURE_SLOT);
++    expect(contents).not.toContain('assignment_target.is_undefined()');
++    expect(contents).not.toContain('assignment_target.is_null()');
++    expect(contents).toContain('assignment_target.is_nullish()');
++  });
++
++  it('leaves a target whose carrier cannot hold a nullish value alone', () => {
++    // A number target has no absent member and its C++ carrier is `double`, so the no-op shortcut is
++    // correct there and must survive this change.
++    const contents = emit(`
++export function bump(count: number): number {
++  let total: number = 0;
++  total ??= count;
++  return total;
++}
++`);
++    expect(contents).not.toContain('is_nullish');
++  });
++});

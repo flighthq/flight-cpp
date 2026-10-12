@@ -122,3 +122,36 @@ already has, and both are observable in the same function with a `std::runtime_e
 None. `@flighthq/power` is `assisted` at this pin and its failure path is a source-patch candidate — the
 pinned TypeScript can be rewritten to `if (failure === null) failure = error;` with no change in meaning —
 but a patch is a pin-pinned, verified instrument and this repository does not apply one speculatively.
+
+## Carried by a compiler patch
+
+[`compiler-nullish-assignment-statement-in-catch.patch`](../../source-patches/compiler-nullish-assignment-statement-in-catch.patch)
+repairs the one condition that caused this: a `??=` whose declared target type has no absent member was
+emitted as the target alone, on the reasoning that such a carrier can never be nullish. That reasoning
+misses the erased carrier -- an `unknown`/`any` target is emitted as `flight::Any`, whose nullishness is a
+runtime property of the value -- so the branch now keeps the no-op only where the carrier really cannot
+hold null or undefined and otherwise emits the carrier's own loose nullish test:
+
+```cpp
+([&]() { auto&& assignment_target = failure; if (assignment_target.is_nullish()) assignment_target = error; return assignment_target; }())
+```
+
+The loose test is the point: `??=` assigns for both `null` and `undefined`, so the first failure is
+retained across later iterations exactly as the source says. The patch's own backend test pins the
+statement and expression positions, the loose guard, and that a number target still takes the no-op; the
+manifest entry records the run. Regenerating `@flighthq/power` package-scoped is what shows both call
+sites above carrying the write.
+
+**Not carried, and still open**: the catch breadth in
+[`catch-handler-breadth-attempt-all.md`](catch-handler-breadth-attempt-all.md). The handler is still
+`catch (const std::exception&)`, so this fix records and rethrows the failures that reach it -- every
+`std::exception` -- while a non-class throw still escapes the loop. The two requests touch the same
+handler and should be resolved together if the fix is shared.
+
+**Measured outcome of the patch, and the blocker beside it.** With the patch applied, regenerating
+`@flighthq/power` package-scoped does emit the guarded assignment at both call sites -- and the module does
+not compile, because the slot the write lands in is the wrong carrier for a caught value:
+`flight/power/power.hpp:159` and `:292` fail with `no viable overloaded '='`. That is the defect filed as
+[`catch-recorded-slot-carrier.md`](catch-recorded-slot-carrier.md), and the package's slice was left
+unregenerated rather than committed in a state where a shippable module stops compiling. The two have to
+land together: this patch is the write, that request is the slot.
