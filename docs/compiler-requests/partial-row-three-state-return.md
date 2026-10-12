@@ -43,6 +43,10 @@ and retain the same record object when present.
 Its direct header and the package contract/index headers that include it fail together. Repairing the
 first site exposes the same malformed return at the second, so both declared keys belong to one defect.
 
+`@flighthq/movieclip/packages/movieclip/src/movieClip.ts` emits the same malformed return in
+`initializeMovieClipData` for `data?.timeline ?? null`. The `movieclip-timeline-node-construction`
+override carries that body in the required three-state shape.
+
 ## Carrying workaround
 
 The `materials-custom-shader-records-partial-row-absence` emission repair is anchored to
