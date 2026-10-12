@@ -2907,7 +2907,7 @@
     {
       "code": "unsupported-ir",
       "column": 7,
-      "line": 170,
+      "line": 167,
       "module": "packages/media/src/videoChannel.ts",
       "package": "@flighthq/media",
       "reason": "cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: flight-cpp WeakMap value requires a proven C++ representation",

@@ -3,23 +3,22 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: variable (binding) -- source line 170
-//   missing: function getElement -- source line 173
+//   missing: variable (binding) -- source line 167
+//   missing: function getElement -- source line 170
 //   missing: function destroyVideoChannel -- source line 13
 //   missing: function getVideoChannelCurrentTime -- source line 29
 //   missing: function getVideoChannelHeight -- source line 39
 //   missing: function getVideoChannelWidth -- source line 44
-//   missing: function setVideoChannelCurrentTime -- source line 116
-//   missing: function setVideoChannelGain -- source line 127
-//   missing: function setVideoChannelMuted -- source line 134
-//   missing: function setVideoChannelPlaybackRate -- source line 141
-//   missing: function emitVideoChannelSignal -- source line 194
+//   missing: function setVideoChannelCurrentTime -- source line 113
+//   missing: function setVideoChannelGain -- source line 124
+//   missing: function setVideoChannelMuted -- source line 131
+//   missing: function setVideoChannelPlaybackRate -- source line 138
+//   missing: function emitVideoChannelSignal -- source line 191
 //   missing: function pauseVideoChannel -- source line 57
-//   missing: function stopVideoChannel -- source line 152
-//   missing: function startVideoChannel -- source line 202
-//   missing: function resumeVideoChannel -- source line 110
-//   missing: function completeVideoChannel -- source line 177
-//   missing: function playVideoResource -- source line 67
+//   missing: function stopVideoChannel -- source line 149
+//   missing: function startVideoChannel -- source line 199
+//   missing: function resumeVideoChannel -- source line 107
+//   missing: function completeVideoChannel -- source line 174
 #include <flight/weak_map.hpp>
 #include <functional>
 #include <optional>
@@ -29,6 +28,8 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/signals/signal.hpp>
+
 #include <flight/types/video_resource.hpp>
 
 #include <flight/types/host_video.hpp>
@@ -36,6 +37,8 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/host_image_source.hpp>
 
 namespace flight::media {
+
+using flight::signals::create_signal;
 
 using flight::types::HostImageSource;
 using flight::types::HostVideoCapability;
@@ -67,7 +70,7 @@ struct VideoChannelRuntime : public flight::ReferenceEnabled {
 };
 
 
-// NOT GENERATED: variable (binding) -- source line 170
+// NOT GENERATED: variable (binding) -- source line 167
 // refusal: cpp-weak-map-value-representation-unproven [source-portability]
 //
 // The source it stood for:
@@ -78,7 +81,7 @@ struct VideoChannelRuntime : public flight::ReferenceEnabled {
 inline flight::WeakMap<flight::Ref<HostImageSource>, flight::Ref<VideoChannelRuntime>> video_channel_runtimes = flight::WeakMap<flight::Ref<HostImageSource>, flight::Ref<VideoChannelRuntime>>();
 
 
-// NOT GENERATED: function getElement -- source line 173
+// NOT GENERATED: function getElement -- source line 170
 //
 // The source it stood for:
 //   function getElement(resource: Readonly<VideoResource> | null): HostImageSource | null {
@@ -153,7 +156,7 @@ inline flight::WeakMap<flight::Ref<HostImageSource>, flight::Ref<VideoChannelRun
 // construction requires expression type evidence
 
 
-// NOT GENERATED: function setVideoChannelCurrentTime -- source line 116
+// NOT GENERATED: function setVideoChannelCurrentTime -- source line 113
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -172,7 +175,7 @@ inline flight::WeakMap<flight::Ref<HostImageSource>, flight::Ref<VideoChannelRun
 // construction requires expression type evidence
 
 
-// NOT GENERATED: function setVideoChannelGain -- source line 127
+// NOT GENERATED: function setVideoChannelGain -- source line 124
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -187,7 +190,7 @@ inline flight::WeakMap<flight::Ref<HostImageSource>, flight::Ref<VideoChannelRun
 // construction requires expression type evidence
 
 
-// NOT GENERATED: function setVideoChannelMuted -- source line 134
+// NOT GENERATED: function setVideoChannelMuted -- source line 131
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -202,7 +205,7 @@ inline flight::WeakMap<flight::Ref<HostImageSource>, flight::Ref<VideoChannelRun
 // construction requires expression type evidence
 
 
-// NOT GENERATED: function setVideoChannelPlaybackRate -- source line 141
+// NOT GENERATED: function setVideoChannelPlaybackRate -- source line 138
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -221,7 +224,7 @@ inline flight::WeakMap<flight::Ref<HostImageSource>, flight::Ref<VideoChannelRun
 // construction requires expression type evidence
 
 
-// NOT GENERATED: function emitVideoChannelSignal -- source line 194
+// NOT GENERATED: function emitVideoChannelSignal -- source line 191
 // refusal: cpp-closed-key-access-without-object-storage [compiler-restriction]
 //
 // The source it stood for:
@@ -258,7 +261,7 @@ inline flight::WeakMap<flight::Ref<HostImageSource>, flight::Ref<VideoChannelRun
 // construction requires expression type evidence
 
 
-// NOT GENERATED: function stopVideoChannel -- source line 152
+// NOT GENERATED: function stopVideoChannel -- source line 149
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -279,7 +282,7 @@ inline flight::WeakMap<flight::Ref<HostImageSource>, flight::Ref<VideoChannelRun
 // construction requires expression type evidence
 
 
-// NOT GENERATED: function startVideoChannel -- source line 202
+// NOT GENERATED: function startVideoChannel -- source line 199
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -297,7 +300,7 @@ inline flight::WeakMap<flight::Ref<HostImageSource>, flight::Ref<VideoChannelRun
 // construction requires expression type evidence
 
 
-// NOT GENERATED: function resumeVideoChannel -- source line 110
+// NOT GENERATED: function resumeVideoChannel -- source line 107
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -311,7 +314,7 @@ inline flight::WeakMap<flight::Ref<HostImageSource>, flight::Ref<VideoChannelRun
 // construction requires expression type evidence
 
 
-// NOT GENERATED: function completeVideoChannel -- source line 177
+// NOT GENERATED: function completeVideoChannel -- source line 174
 // refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
 //
 // The source it stood for:
@@ -335,55 +338,27 @@ inline flight::WeakMap<flight::Ref<HostImageSource>, flight::Ref<VideoChannelRun
 // cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: contextual optionalSingle
 // construction requires expression type evidence
 
-
-// NOT GENERATED: function playVideoResource -- source line 67
-// refusal: cpp-collection-argument-without-present-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function playVideoResource(
-//     hostVideo: HostVideoCapability,
-//     source: VideoResource,
-//     options?: Readonly<VideoPlayOptions>,
-//   ): VideoChannel | null {
-//     const element = getElement(source);
-//     if (element === null) return null;
-//   
-//     const runtime = videoChannelRuntimes.get(element);
-//     if (runtime !== undefined) {
-//       hostVideo.removeEndedListener!(element, runtime.onEnded);
-//     }
-//   
-//     const channel: VideoChannel = {
-//       currentTime: options?.currentTime ?? 0,
-//       gain: options?.gain ?? 1,
-//       length: hostVideo.getDuration!(element) * 1000,
-//       loops: options?.loops ?? 0,
-//       muted: false,
-//       playbackRate: options?.playbackRate ?? 1,
-//       source,
-//       state: 'stopped',
-//       onComplete: createSignal(),
-//     };
-//   
-//     const onEnded = (): void => completeVideoChannel(hostVideo, channel);
-//     // Named with the module's own runtime type: the WeakMap's value needs one declared owner, and the
-//     // literal already has exactly these members.
-//     const runtime: VideoChannelRuntime = { loopsRemaining: channel.loops, onEnded };
-//     videoChannelRuntimes.set(element, runtime);
-//     channelElements.set(channel, element);
-//   
-//     hostVideo.setCurrentTime!(element, channel.currentTime / 1000);
-//     hostVideo.setVolume!(element, channel.gain);
-//     hostVideo.setPlaybackRate!(element, channel.playbackRate);
-//     hostVideo.setLoop!(element, false);
-//     hostVideo.addEndedListener!(element, onEnded);
-//   
-//     startVideoChannel(hostVideo, channel);
-//     emitVideoChannelSignal(channel, 'onPlay');
-//     return channel;
-//   }
-//   
-// cpp emission failed for @flighthq/media/packages/media/src/videoChannel.ts: collection member set argument
-// from optional C++ storage requires proven present payload
+inline std::optional<flight::Ref<VideoChannel>> play_video_resource(flight::Ref<HostVideoCapability> host_video, flight::Ref<VideoResource> source, std::optional<flight::Ref<VideoPlayOptions>> options = std::nullopt) {
+  std::optional<flight::Ref<HostImageSource>> element = get_element(std::optional<flight::Ref<VideoResource>>{source});
+  if (!element.has_value()) {
+    return std::nullopt;
+  }
+  auto runtime = video_channel_runtimes.get(element.value());
+  if (runtime.has_value()) {
+    host_video->remove_ended_listener(element.value(), runtime.value()->on_ended);
+  }
+  flight::Ref<VideoChannel> channel = flight::make_ref<VideoChannel>(VideoChannel{.current_time = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->current_time; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()), .gain = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->gain; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()), .length = (host_video->get_duration(element.value()) * 1000.0), .loops = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->loops; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()), .muted = false, .playback_rate = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = options; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->playback_rate; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()), .source = source, .state = flight::String("stopped"), .on_complete = create_signal()});
+  std::function<void()> on_ended = [=]() { return complete_video_channel(host_video, channel); };
+  video_channel_runtimes.set(element.value(), flight::make_ref<VideoChannelRuntime>(VideoChannelRuntime{.loops_remaining = channel->loops, .on_ended = on_ended}));
+  channel_elements.set(channel, element.value());
+  host_video->set_current_time(element.value(), (channel->current_time / 1000.0));
+  host_video->set_volume(element.value(), channel->gain);
+  host_video->set_playback_rate(element.value(), channel->playback_rate);
+  host_video->set_loop(element.value(), false);
+  host_video->add_ended_listener(element.value(), on_ended);
+  start_video_channel(host_video, channel);
+  emit_video_channel_signal(channel, flight::String("onPlay"));
+  return std::optional<flight::Ref<VideoChannel>>{channel};
+}
 
 } // namespace flight::media

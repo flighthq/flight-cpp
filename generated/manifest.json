@@ -2704,7 +2704,8 @@
     {
       "files": [
         "flight/media/audio_channel.hpp",
-        "flight/media/media_channel_signals.hpp"
+        "flight/media/media_channel_signals.hpp",
+        "flight/media/video_channel.hpp"
       ],
       "id": "media-create-signal-using-declaration"
     },
@@ -5971,13 +5972,6 @@
       "digest": "cb33a85485e57bd6f2379dc4e5c68e0faafa897b30f3b1a1cc487c4b4daa5246",
       "id": "compiler-array-from-runtime-member",
       "module": "packages/compiler-backend-cpp/src/cppRuntimeExternalSymbolBinding.ts",
-      "package": "@flighthq/media"
-    },
-    {
-      "dependency": "flight",
-      "digest": "1c0c7689fb00c82d9a9e5898ffec182775d944d4dbb489f66631d094e1011352",
-      "id": "media-video-channel-runtime-owner",
-      "module": "packages/media/src/videoChannel.ts",
       "package": "@flighthq/media"
     }
   ],
