@@ -116,21 +116,21 @@
       "code": "dependency-refused",
       "module": "packages/assets/src/contract.ts",
       "package": "@flighthq/assets",
-      "reason": "dependency ./assetLibrary was refused for @flighthq/assets/packages/assets/src/assetLibrary.ts",
+      "reason": "dependency ./assetLibrary.ts was refused for @flighthq/assets/packages/assets/src/assetLibrary.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/assets/src/enableAssetGuards.ts",
       "package": "@flighthq/assets",
-      "reason": "dependency ./assetLibrary was refused for @flighthq/assets/packages/assets/src/assetLibrary.ts",
+      "reason": "dependency ./assetLibrary.ts was refused for @flighthq/assets/packages/assets/src/assetLibrary.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/assets/src/index.ts",
       "package": "@flighthq/assets",
-      "reason": "dependency ./contract was refused for @flighthq/assets/packages/assets/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/assets/packages/assets/src/contract.ts",
       "stage": "dependency"
     },
     {

@@ -50,7 +50,7 @@ inline flight::Task<T> acquire_asset(flight::Ref<AssetLibrary> library, flight::
   flight::Ref<AssetLibraryRuntime> runtime = library->runtime;
   std::optional<flight::Ref<AssetDescriptor>> descriptor = runtime->descriptors.get(id);
   if (!descriptor.has_value()) {
-    ([&]() { auto optional_chain_receiver = runtime->acquire_guard; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(library, flight::make_ref<AssetLoadExplanation>(AssetLoadExplanation{.id = id, .ref_count = 0.0, .status = flight::String("missing-descriptor"), .type = nullptr})); }());
+    ([&]() { auto optional_chain_receiver = runtime->acquire_guard; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(library, flight::make_ref<AssetLoadExplanation>(AssetLoadExplanation{.id = id, .ref_count = 0.0, .status = flight::String("missing-descriptor"), .type = std::nullopt})); }());
     return flight::reject_task<T>(flight::Error(flight::String("assets: no descriptor for id \"") + flight::to_string(id) + flight::String("\"")));
   }
   std::optional<flight::Ref<AssetLoaderAdapter<>>> adapter = runtime->adapters.get(descriptor.value()->type);
