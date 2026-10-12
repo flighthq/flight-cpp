@@ -71,6 +71,10 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [`Object.assign` lowers only for a `Record` target](object-assign-onto-structural-record.md) —
   assigning into a closed structural record (or an allocated entity) is refused in every form tried,
   so `@flighthq/notification` refuses at emission; supplied by hand, with the lifecycle gap declared.
+- [An entity intersection arm and the value that fills it are sibling C++ carriers](entity-intersection-arm-sibling-carriers.md) —
+  `@flighthq/tray` refuses at emission and none of its four headers compile; two blockers, one of them
+  the erased entity-runtime accessor the `node-exact-runtime-and-owner-paths` patch already carries for
+  another package. No patch or override is carried.
 - [Union carriers need canonical alternative order](canonical-union-carrier-order.md) — identical
   named unions currently become incompatible `std::variant` types at array callback boundaries.
 - [Nullable and optional storage needs two absence channels](nullable-optional-presence.md) — one

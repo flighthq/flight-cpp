@@ -8917,21 +8917,21 @@
       "code": "dependency-refused",
       "module": "packages/tray/src/contract.ts",
       "package": "@flighthq/tray",
-      "reason": "dependency ./tray was refused for @flighthq/tray/packages/tray/src/tray.ts",
+      "reason": "dependency ./tray.ts was refused for @flighthq/tray/packages/tray/src/tray.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/tray/src/enableTrayGuards.ts",
       "package": "@flighthq/tray",
-      "reason": "dependency ./tray was refused for @flighthq/tray/packages/tray/src/tray.ts",
+      "reason": "dependency ./tray.ts was refused for @flighthq/tray/packages/tray/src/tray.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/tray/src/index.ts",
       "package": "@flighthq/tray",
-      "reason": "dependency ./contract was refused for @flighthq/tray/packages/tray/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/tray/packages/tray/src/contract.ts",
       "stage": "dependency"
     },
     {
