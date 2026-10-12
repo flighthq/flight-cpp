@@ -112,3 +112,53 @@ where an explicit guard has not projected a dual-level carrier. Here the indexed
 nullish fallback already provides the present-flow fact.
 
 No source rewrite or generated repair is carried.
+
+## Third and fourth measured sites: `@flighthq/useragent`
+
+Both halves of this request's pattern turn up in one package, at the same pin, and the second one shows the
+invalid pre-lowering being emitted on a line whose *other* half does it correctly.
+
+**The refusal, from a bound match result** (`packages/useragent/src/userAgentParse.ts:86`,
+`cpp-member-projection-without-present-storage [compiler-restriction]`):
+
+```ts
+const ios = ua.match(/(?:iphone|ipad|ipod).*?os\s+([\d_]+)/i);
+if (ios) return ios[1].replace(/_/g, '.');
+```
+
+```
+member replace on optional C++ storage requires proven present payload: nothing proved the payload present,
+so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional
+chain, or narrow it into a present local first
+```
+
+The guard is present in the source (`if (ios)`), so this is the same evidence family as the indexed
+member-call reduction above with one more step in it: the guarded value is indexed (`ios[1]`) before the
+member call. The module's other two parsers emit, so one function's refusal withholds the whole module from
+the package's callers (see the fourth site in
+[retained-declaration-calls-omitted-callee.md](retained-declaration-calls-omitted-callee.md)).
+
+**The invalid pre-lowering, from a dynamic member through an optional chain**
+(`userAgent.ts`, `parseUserAgentRuntime`, emitted with no refusal marker at all):
+
+```ts
+const proc = win.process as Record<string, unknown> | undefined;
+if (proc?.versions && (proc.versions as Record<string, unknown>).electron) return 'electron';
+```
+
+```cpp
+auto optional_chain_receiver = proc;
+if (!optional_chain_receiver.has_value()) return std::nullopt;
+return optional_chain_receiver.value().versions;        // a STATIC member on a Record carrier
+...
+flight::named_properties(proc.value().get(flight::String("versions")).value())   // the same read, dynamic
+```
+
+`Record` has no `versions` member, so the first read does not compile while the second, on the same line, is
+the dynamic read the first should have been. This is the same invalid pre-projection as the `record[key]?.trim()`
+reduction above, on a member read rather than an indexed one, and it is the shape that makes the whole module
+uncompilable -- which matters here because the module carries **no** PARTIAL banner: nothing in the emitted
+header records that its own body cannot compile.
+
+Carrying workaround: `@flighthq/useragent` supplies the refused function and replaces this one body in
+`overrides/include/flight/useragent/`, keeping every other emitted line verbatim.

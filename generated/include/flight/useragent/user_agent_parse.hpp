@@ -4,9 +4,7 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function parseUserAgentOsVersion -- source line 86
-#include <flight/boolean.hpp>
 #include <flight/regexp.hpp>
-#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -16,40 +14,38 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::useragent {
 
-using flight::types::DeviceFormFactor;
-
-inline flight::Ref<DeviceFormFactor> parse_user_agent_form_factor(flight::String ua, double max_touch_points) {
+inline flight::String parse_user_agent_form_factor(flight::String ua, double max_touch_points) {
   if (flight::RegExp(flight::String("android auto|car browser|automotive"), flight::String("i")).test(ua)) {
-    return device_form_factor_car;
+    return flight::types::device_form_factor_car;
   }
   if (flight::RegExp(flight::String("smart[-_]?tv|smarttv|googletv|appletv|hbbtv|netcast|webos.*tv|tizen.*tv|tv safari"), flight::String("i")).test(ua)) {
-    return device_form_factor_tv;
+    return flight::types::device_form_factor_tv;
   }
   if (flight::RegExp(flight::String("watch\\s*os|watch[_ ]?kit|wearable"), flight::String("i")).test(ua)) {
-    return device_form_factor_watch;
+    return flight::types::device_form_factor_watch;
   }
   if (flight::RegExp(flight::String("ipad"), flight::String("i")).test(ua)) {
-    return device_form_factor_tablet;
+    return flight::types::device_form_factor_tablet;
   }
   if ((flight::RegExp(flight::String("android"), flight::String("i")).test(ua) && !flight::RegExp(flight::String("mobile"), flight::String("i")).test(ua))) {
-    return device_form_factor_tablet;
+    return flight::types::device_form_factor_tablet;
   }
   if (flight::RegExp(flight::String("tablet\\s*pc|silk|kindle fire"), flight::String("i")).test(ua)) {
-    return device_form_factor_tablet;
+    return flight::types::device_form_factor_tablet;
   }
   if (flight::RegExp(flight::String("iphone|ipod|android.*mobile|windows phone|blackberry|bb\\d+|mobile safari"), flight::String("i")).test(ua)) {
-    return device_form_factor_phone;
+    return flight::types::device_form_factor_phone;
   }
   if (((max_touch_points > 1.0) && flight::RegExp(flight::String("macintosh|mac os x"), flight::String("i")).test(ua))) {
-    return device_form_factor_tablet;
+    return flight::types::device_form_factor_tablet;
   }
   if (flight::RegExp(flight::String("win(?:dows)?nt|macintosh|mac os x|linux(?!.*android)|x11"), flight::String("i")).test(ua)) {
-    return device_form_factor_desktop;
+    return flight::types::device_form_factor_desktop;
   }
   if ((max_touch_points == 0.0)) {
-    return device_form_factor_desktop;
+    return flight::types::device_form_factor_desktop;
   }
-  return device_form_factor_unknown;
+  return flight::types::device_form_factor_unknown;
 }
 
 inline flight::String parse_user_agent_os_name(flight::String ua) {

@@ -110,3 +110,26 @@ Measured on the regenerated slice, emission alone, no override: `flight/updater/
 `138: no matching member function for call to 'return_value'`, `141: use of undeclared identifier 'install_ok'`,
 `144:` the same `return_value` failure -- and all three of the package's headers report the same 5, because
 `contract.hpp` and `_internal_index.hpp` both re-export the module.
+
+## Fourth measured site: `@flighthq/useragent` -- the caller is in another module
+
+The same outcome again, and this one shows the omission reaching *across* a module boundary.
+`packages/useragent/src/userAgentParse.ts` refuses `parseUserAgentOsVersion` (source line 86) and emits its
+other two parsers; `packages/useragent/src/userAgent.ts` is emitted in full and ends with:
+
+```cpp
+  return flight::useragent::parse_user_agent_os_version(ua);
+```
+
+```
+generated/include/flight/useragent/user_agent.hpp:192:29: error: no member named
+  'parse_user_agent_os_version' in namespace 'flight::useragent'
+```
+
+The caller's own module carries no marker either, so here the omission costs **two** modules rather than one:
+the refused module, and a module the emitter considers complete whose last function cannot compile.
+Measured on the emission alone, three of the package's four headers fail -- `user_agent.hpp` and both
+aggregators that re-export it, five errors each -- while the refused module's own header compiles cleanly,
+because it does not claim the missing function exists. This is the case the "What would close this" note above already describes -- the omission has to
+propagate to declarations that call it -- with the caller on the far side of a module boundary rather than
+inside the module that refused.
