@@ -45,3 +45,35 @@ Supplying `connectSignalTracked` by hand would have to store a different object 
 changes reference identity and lets the two copies' `connected`/`paused` state diverge. That is a change
 to the semantics this runtime exists to preserve, so it is left refused until the representation exists.
 Changing `SignalScope`'s element type is a `@flighthq/types` representation change, not a signals one.
+
+## Investigation at the current base
+
+Measured with all 44 compiler source patches applied (flight-compiler `2b687ea`, flight `a627849`).
+
+**The scope push is the only blocker.** The rest of `connectSignalTracked` emits and behaves:
+- `((...args: Parameters<T>) => …) as unknown as T` lowers to a `bind_callable_v1<T>` wrapper;
+- natively that wrapper skips a paused connection and forwards otherwise.
+
+The minimal reduction above still refuses with the same rule. Without the push it emits.
+
+**Candidate fixes inside `@flighthq/signals` and the compiler alone each fail:**
+- **A companion `SignalConnection<erased>` stored in the scope.** It splits `connected`/`paused` between two
+  objects and breaks `scope.connections[0] === connection`, which upstream's scope tests assert with
+  `toBe`.
+- **`SignalConnection<T>` deriving from `SignalConnection<erased>`.** The field types differ (`T slot`,
+  `Signal<T>` vs the erased carriers), so the base would carry a second copy of the state.
+- **An emitter-only respelling.** No spelling of the push denotes the same object, because the two
+  instantiations are unrelated C++ types.
+
+**What would work, and where it lives:**
+1. **A runtime identity-preserving erased owner view.** The widest instantiation would forward field
+   access to one retained exact owner, and a generic function instantiated at the erased argument
+   (`disconnect_signal_connection<erased>`) would dispatch back to the exact `T`. That is a flight-cpp
+   runtime representation plus compiler support for generic owners, not a signals change.
+2. **A different `SignalScope.connections` element type.** An erased handle with checked typed recovery,
+   or one teardown callable per member, would let the scope keep the exact handle. That is a
+   `@flighthq/types` representation change, or an upstream Flight API change.
+
+Until one of those is chosen, `connectSignalTracked` stays refused and no override is carried. The
+eleven connection cases and twelve member-registering scope cases in
+`tests/generated_signals_test.cpp` remain excluded on it.
