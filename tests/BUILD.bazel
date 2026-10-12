@@ -128,6 +128,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_compression_test",
+    srcs = ["generated_compression_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_connectivity_test",
     srcs = ["generated_connectivity_test.cpp"],
     size = "small",
@@ -391,6 +398,7 @@ test_suite(
         ":generated_audio_test",
         ":generated_canvas_texture_resolver_test",
         ":generated_collision_test",
+        ":generated_compression_test",
         ":generated_connectivity_test",
         ":generated_dialog_modules_test",
         ":generated_dialog_test",
