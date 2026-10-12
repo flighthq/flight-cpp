@@ -291,7 +291,7 @@
       "code": "dependency-refused",
       "module": "packages/clip/src/contract.ts",
       "package": "@flighthq/clip",
-      "reason": "dependency ./enableClipGuards was refused for @flighthq/clip/packages/clip/src/enableClipGuards.ts",
+      "reason": "dependency ./enableClipGuards.ts was refused for @flighthq/clip/packages/clip/src/enableClipGuards.ts",
       "stage": "dependency"
     },
     {
@@ -305,7 +305,7 @@
       "code": "dependency-refused",
       "module": "packages/clip/src/index.ts",
       "package": "@flighthq/clip",
-      "reason": "dependency ./contract was refused for @flighthq/clip/packages/clip/src/contract.ts",
+      "reason": "dependency ./enableClipGuards.ts was refused for @flighthq/clip/packages/clip/src/enableClipGuards.ts",
       "stage": "dependency"
     },
     {

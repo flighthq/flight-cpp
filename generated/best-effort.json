@@ -2465,6 +2465,7 @@
       "consumers": [
         "@flighthq/clip/packages/clip/src/contract.ts",
         "@flighthq/clip/packages/clip/src/enableClipGuards.ts",
+        "@flighthq/clip/packages/clip/src/index.ts",
         "@flighthq/interaction/packages/interaction/src/hitTests.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveClipping.ts",
@@ -2480,9 +2481,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/clip/packages/clip/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/clip",
@@ -2496,7 +2495,8 @@
     },
     {
       "consumers": [
-        "@flighthq/clip/packages/clip/src/contract.ts"
+        "@flighthq/clip/packages/clip/src/contract.ts",
+        "@flighthq/clip/packages/clip/src/index.ts"
       ],
       "module": {
         "name": "EnableClipGuards",
@@ -2518,7 +2518,7 @@
       },
       "path": "flight/clip/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/clip/packages/clip/src/contract.ts"
+        "@flighthq/clip/packages/clip/src/enableClipGuards.ts"
       ],
       "status": "dependency-incomplete"
     },
