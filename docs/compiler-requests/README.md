@@ -69,6 +69,8 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `@flighthq/assets` `loadAssetGroup`; no workaround.
 - [`registerAssetLoader` stores a readonly adapter as a writable one (Flight source)](readonly-adapter-stored-as-writable.md) —
   `@flighthq/assets` `registerAssetLoader`; an upstream source question, no workaround.
+- [A fresh array of `null` assigned to a nullable element union](fresh-null-array-into-nullable-element-union.md) —
+  `@flighthq/registry` `createOrdinalTable`; a type-only source patch would carry it.
 - [`@flighthq/log` native-compile defect inventory](log-native-compile-defects.md) — fifteen emitter
   defects make log.hpp fail clang once the console refusal is set aside; the log override stubs twelve
   functions with throws, so log parity is not honest.
