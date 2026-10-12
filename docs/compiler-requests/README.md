@@ -42,6 +42,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-structural-union-exact-native-owner.patch`](../../source-patches/compiler-structural-union-exact-native-owner.patch) | [Exact native owner recovery from a structural union](compiler-structural-union-exact-native-owner.md) |
 | [`compiler-union-import-runtime-identity.patch`](../../source-patches/compiler-union-import-runtime-identity.patch) | [Canonical runtime identity across union imports](compiler-union-import-runtime-identity.md) |
 | [`compiler-error-name-and-erased-error-reads.patch`](../../source-patches/compiler-error-name-and-erased-error-reads.patch) | [Error.name must be the runtime's instance accessor](compiler-error-name-instance-accessor.md), [An erased Error read needs a checked projection, and its `instanceof` guard needs lowering](compiler-erased-error-view-and-instanceof-guard.md) |
+| [`compiler-unrepresented-error-member.patch`](../../source-patches/compiler-unrepresented-error-member.patch) | [An Error member the runtime does not carry must be refused, not emitted](compiler-unrepresented-error-member.md) |
 
 ## Active requests without a compiler patch
 

@@ -20,6 +20,22 @@
       "appliedOn": "2026-10-12"
     },
     {
+      "id": "compiler-unrepresented-error-member",
+      "dependency": "flight-compiler",
+      "patch": "compiler-unrepresented-error-member.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/log",
+      "answers": "refusal",
+      "refusal": "an erased read of an Error member the runtime does not carry is emitted as raw member access",
+      "rewrite": "Refuses a property read on an Error receiver whose member the profile does not represent, for both the erased and the typed carrier, and records it as `cpp-error-member-unrepresented`; `name` and `message` keep the lowering the sibling patch adds.",
+      "equivalence": "Refusing changes no emitted code for any construct that previously compiled: the reads it now stops were emitting `cause.stack` on a `flight::Any` and `error.stack` on a `flight::Error`, neither of which is valid C++ for the runtime's Error. No member is invented and no field is added to `Error` or `Any`; a runtime that carries the member later earns the lowering, and this refusal then disappears with the patch.",
+      "whyNotUpstreamFirst": "The runtime's Error deliberately declares `name` and `message`; representing `stack` or `cause` is a runtime decision this repository has not made, and upstream has no newer commit than the pin.",
+      "unblocks": "nothing by itself -- it converts an invalid emitted access in @flighthq/log's serializeLogError into a named refusal, which is what lets log be measured honestly instead of failing a compile gate in an unrelated header.",
+      "expires": "when the runtime or a declared external binding represents the member and the emitter lowers it.",
+      "appliedOn": "2026-10-12"
+    },
+    {
       "id": "animation-layer-stack-channel-projection",
       "dependency": "flight",
       "patch": "animation-layer-stack-channel-projection.patch",

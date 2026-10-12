@@ -1,0 +1,98 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+index bf9b771..01de44e 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -33136,6 +33136,34 @@ Resolver make_resolver(TextureRef texture) {
+     expect(failure.message).toContain('narrow or assert an erased operand');
+   });
+ 
++  it('refuses an Error member the runtime does not represent instead of emitting raw access', () => {
++    const cases = [
++      [
++        'erased-error-stack.ts',
++        `export function f(cause: unknown): unknown {
++           if (cause instanceof Error) return cause.stack;
++           return null;
++         }`,
++      ],
++      [
++        'erased-error-cause.ts',
++        `export function f(cause: unknown): unknown {
++           if (cause instanceof Error) return cause.cause;
++           return null;
++         }`,
++      ],
++      ['typed-error-stack.ts', 'export function f(error: Error): unknown { return error.stack; }'],
++    ] as const;
++    for (const [file, source] of cases) {
++      const failure = captureBackendEmissionFailure(() =>
++        emitIrModuleCpp(lower(file, source).module, { runtimeProfile: 'flight-cpp' }),
++      );
++      expect(failure.rule).toBe('cpp-error-member-unrepresented');
++      expect(failure.classification).toBe('target-runtime');
++      expect(failure.message).toContain('requires a runtime Error member this profile does not represent');
++    }
++  });
++
+   it('lowers Error.name to the instance accessor and erased Error reads through the checked view', () => {
+     const erasedName = emitIrModuleCpp(
+       lower(
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 36039a7..ed82316 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -5917,7 +5917,7 @@ function emitExpression(
+     case 'property': {
+       const errorRead = emitCppErrorPropertyReadCpp(expression, context);
+       if (errorRead) return errorRead;
+-      refuseCppUnsupportedErasedErrorPropertyReadCpp(expression, context);
++      refuseCppUnsupportedErrorMemberReadCpp(expression, context);
+       const enumMember = emitCppEnumMemberReferenceCpp(expression, context);
+       if (enumMember) return enumMember;
+       const narrowedUnion = emitCppNarrowedPropertyUnionValueCpp(expression, context);
+@@ -24731,25 +24731,26 @@ function emitCppErrorPropertyReadCpp(
+   return `${emitExpression(expression.object, context)}.error_if()->${expression.name}()`;
+ }
+ 
+-// The Error reads that stay refused: the erased carrier does hold the object, but the runtime's Error
+-// declares only `name` and `message`, so any other member has no representation to read and no binding
+-// profile can add one to a runtime type. Refusing keeps the read honest rather than reaching through to
+-// whatever the erased value happens to be.
+-function refuseCppUnsupportedErasedErrorPropertyReadCpp(
++// The Error members the runtime does not carry. `flight::Error` declares `name` and `message`; a
++// `stack`, a `cause`, or anything else the source language allows on an Error has no representation
++// here, and neither carrier can answer it. On the erased carrier there is no member at all, so
++// `cause.stack` is invalid C++ that no compile gate can accept; on a typed Error it is a member the
++// runtime does not declare. Refusing names the gap rather than inventing a field -- a runtime that
++// grew `stack` would earn the lowering, and nothing here fabricates one. This is deliberately NOT the
++// absence-channel refusal: that one is about storage that may hold absence, and this one is about a
++// member that does not exist.
++function refuseCppUnsupportedErrorMemberReadCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'property' }>>,
+   context: EmitContext,
+ ): void {
+   if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || expression.member?.receiver !== 'error') {
+     return;
+   }
+-  const requiresErasedView =
+-    expression.structuralAccess === 'narrowed' &&
+-    isCppErasedDynamicValueTypeCpp(getIrExpressionTypeEvidenceCpp(expression.object, context));
+-  if (!requiresErasedView) return;
++  if (expression.name === 'name' || expression.name === 'message') return;
+   emissionError(
+     context,
+-    `reading Error.${expression.name} after narrowing an erased value requires flight::Error to declare that member; the checked Error view answers name and message, which are the members this runtime's Error has`,
+-    'cpp-erased-error-view-runtime-required',
++    `reading Error.${expression.name} requires a runtime Error member this profile does not represent; flight::Error declares name and message, and the checked Error view reads only those`,
++    'cpp-error-member-unrepresented',
+   );
+ }
+ 
+@@ -31815,6 +31816,7 @@ const cppTargetRuntimeRefusalRules: ReadonlySet<string> = new Set([
+   'cpp-erased-array-assertion-runtime-required',
+   'cpp-erased-array-predicate-runtime-required',
+   'cpp-erased-error-view-runtime-required',
++  'cpp-error-member-unrepresented',
+   'cpp-erased-structural-row-assertion-runtime-required',
+   'cpp-erased-structural-row-construction-unrepresented',
+   'cpp-erased-tag-unreportable',
