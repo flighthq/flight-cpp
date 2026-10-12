@@ -104,3 +104,28 @@ the same fold. It is recorded here rather than silently left in place, because a
 appears to address a defect while emitting a constant guard is worse than no patch — it hides the
 defect behind work that looks done. Reverting or re-deriving it should wait until this lowering exists,
 since without it the module does not emit at all.
+
+## Related but distinct: typeof on a `JsonValue` (linked evidence, 2026-10-12)
+
+`@flighthq/bitmapfont-formats` is refused twice for a `typeof` whose reason text names the missing piece
+explicitly:
+
+```
+cpp emission failed for .../bitmapFontJson.ts: typeof follows an indexed array-element read rooted in the
+exact flight::JsonValue returned by JSON.parse. JsonValue's closed kind tag can answer typeof on the
+retained value itself, but the runtime contract exposes no owner-preserving read ...
+cpp emission failed for .../explainBitmapFontParse.ts: typeof follows a named-property read rooted in the
+exact flight::JsonValue returned by JSON.parse. ...
+```
+
+This is NOT the same defect as the fold above, and the difference matters for whoever fixes them:
+
+- **This file (tokens)** — the guard on a *recursive union* folds to a constant comparison of type-name
+  literals. Reported as a lowering defect; a reduction does not reproduce it (see above).
+- **bitmapfont-formats** — the guard is on a `JsonValue` whose *closed kind tag already answers typeof*;
+  what is missing is an owner-preserving read the runtime contract does not expose. That is a **runtime
+  capability**, and its remedy is a `JsonValue` kind accessor, not a change to union-guard lowering.
+
+They are linked because both surface as "typeof is wrong", and because a reader meeting one will assume
+it explains the other. They should be fixed as two things; if a single change happens to clear both, that
+is worth saying explicitly rather than assuming.

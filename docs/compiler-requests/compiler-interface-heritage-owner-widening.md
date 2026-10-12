@@ -69,3 +69,22 @@ the module: an early return that removes the ternary, and declaring the lambda's
 `TextureSource | null` with the concrete value bound to a local first. Neither changes the fact that
 the crossing itself is unrepresentable, so this is left as a request and the module is reported as a
 retained refusal rather than papered over with an override.
+
+## Same defect, second package (linked evidence, 2026-10-12)
+
+`@flighthq/bitmapfont` is refused for the identical conversion, with different type names:
+
+```
+cpp emission failed for .../bitmapFontGlyphSource.ts: contextual nullable interface conversion from
+VoxelGrid to TextureSource follows TypeScript interface heritage, but flight-cpp stores those
+declarations in independent flight::Ref<flight::types::VoxelGrid> and
+flight::Ref<flight::types::TextureSource> owner types ...
+```
+
+`Bitmap -> TextureSource` (glyphatlas) and `VoxelGrid -> TextureSource` (bitmapfont) are one rule, not
+two: a sub-interface value widening into a super-interface slot across a nullable union, with the emitted
+structs carrying no base relation. A fix for either is a fix for both, and the `unblocks` figures for
+each should be read together rather than as two separate capabilities.
+
+Both packages also have a wider consumer: `@flighthq/bitmapfont-formats` depends on bitmapfont, so the
+bitmapfont refusal cascades into that package's denominator as well.
