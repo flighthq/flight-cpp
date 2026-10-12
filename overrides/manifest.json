@@ -2059,6 +2059,22 @@
       "authoredOn": "2026-10-08"
     },
     {
+      "id": "skeleton3d-complete-module",
+      "path": "flight/skeleton3d/skeleton3d.hpp",
+      "package": "@flighthq/skeleton3d",
+      "status": "complete",
+      "supplies": "packages/skeleton3d/src/skeleton3d.ts",
+      "derivedFrom": "8729727fdb39d7d1dcc0f4f01b01ac5bed0582adc5ac4a2392b053c895f18f8f",
+      "reason": "After the target-neutral storage patch, the emitter still refuses equality, name lookup, cloning, and hierarchy cloning because the names field has distinct null and undefined arms and the parent-clone lookup needs presence evidence. Retained joint-world-matrix calls also pass the flattened Node3D owner to a generated Transform3DNode row overload, so every aggregate consumer fails to compile.",
+      "change": "Supplies the complete skeleton module over the generated owners. It handles both name sentinels explicitly, clones every mutable typed-array buffer and array container, rebuilds cloned joint links by retained owner identity, and computes revision-aware local and world matrices through the established exact Scene3D runtime view before producing bind-pose and live joint palettes.",
+      "equivalence": "Null and undefined names remain distinct when cloned and compare equal only where the source applies nullish coalescing. Clone buffers and arrays have independent storage while joint references stay shared; hierarchy clones use the caller's fresh nodes, preserve dense joint order, and recreate only links whose parent is in the source joint set. World matrices retain the source node runtime's cached matrices and revision counters, compose parent-before-child in the same order, and the bind-pose singular-matrix fallback, guard callback, palettes, validation result, and disposal behavior follow the source branches exactly.",
+      "whyNotAPatchOrRepair": "The retained source patch already spells dense storage, sentinel branches, Map presence, declared diagnostic order, and exact mutable ownership in portable TypeScript; generation still records contextual-dual-sentinel and absence-storage refusals. A declaration insertion cannot implement omitted algorithms or replace the invalid flattened-node world-matrix calls.",
+      "unblocks": "skeleton3d.hpp and the seven package headers that include it compile against the a627849 package-scoped candidate, restoring skeleton cloning, hierarchy reconstruction, bind-pose capture, validation, and per-frame joint palettes.",
+      "remaining": "None in skeleton3d.ts at this pin; skinMeshGeometry.ts has a separate cross-module anonymous-struct diagnostic.",
+      "expires": "when dual-sentinel narrowing, Map presence, independent typed-array construction, flattened Node3D hierarchy identity, and Transform3D row projection emit directly.",
+      "authoredOn": "2026-10-11"
+    },
+    {
       "id": "effects-gl-color-lut-native-context",
       "path": "flight/effects_gl/gl_color_lut_pass.hpp",
       "package": "@flighthq/effects-gl",
