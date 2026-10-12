@@ -72,6 +72,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_log_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_log COMMAND flight_cpp_generated_log_tests)
 
+add_executable(flight_cpp_generated_log_levels_and_sinks_tests generated_log_levels_and_sinks_test.cpp)
+target_include_directories(
+  flight_cpp_generated_log_levels_and_sinks_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_log_levels_and_sinks_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_log_levels_and_sinks COMMAND flight_cpp_generated_log_levels_and_sinks_tests)
+
 add_executable(
   flight_cpp_generated_render_state_tests
   generated_render_state_test.cpp
@@ -394,6 +402,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_collision collision)
 flight_cpp_package_test_labels(flight_cpp.generated_registry registry)
 flight_cpp_package_test_labels(flight_cpp.generated_animation animation)
 flight_cpp_package_test_labels(flight_cpp.generated_log log)
+flight_cpp_package_test_labels(flight_cpp.generated_log_levels_and_sinks log)
 flight_cpp_package_test_labels(flight_cpp.generated_render_state types)
 flight_cpp_package_test_labels(flight_cpp.generated_canvas_texture_resolver scene2d-canvas)
 flight_cpp_package_test_labels(flight_cpp.generated_texture texture)
