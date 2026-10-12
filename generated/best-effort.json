@@ -9544,7 +9544,6 @@
         "@flighthq/render/packages/render/src/renderProxy.ts",
         "@flighthq/render/packages/render/src/renderQueue.ts",
         "@flighthq/render/packages/render/src/renderState.ts",
-        "@flighthq/requirements/packages/requirements/src/requirementSet.ts",
         "@flighthq/scene-document/packages/scene-document/src/flightDocumentText.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentRefusal.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene2DMaterialization.ts",
@@ -22243,53 +22242,6 @@
       "path": "flight/requirement_codegen/requirement_codegen.hpp",
       "rule": "cpp-contextual-structural-array-nominal-recovery-unproven",
       "status": "refused-placeholder"
-    },
-    {
-      "consumers": [],
-      "module": {
-        "name": "Contract",
-        "packageName": "@flighthq/requirements",
-        "source": "packages/requirements/src/contract.ts"
-      },
-      "path": "flight/requirements/contract.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [],
-      "module": {
-        "name": "Index",
-        "packageName": "@flighthq/requirements",
-        "source": "packages/requirements/src/index.ts"
-      },
-      "path": "flight/requirements/_internal_index.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/requirements/packages/requirements/src/contract.ts",
-        "@flighthq/requirements/packages/requirements/src/index.ts"
-      ],
-      "module": {
-        "name": "RequirementCollector",
-        "packageName": "@flighthq/requirements",
-        "source": "packages/requirements/src/requirementCollector.ts"
-      },
-      "path": "flight/requirements/requirement_collector.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/requirements/packages/requirements/src/contract.ts",
-        "@flighthq/requirements/packages/requirements/src/index.ts",
-        "@flighthq/requirements/packages/requirements/src/requirementCollector.ts"
-      ],
-      "module": {
-        "name": "RequirementSet",
-        "packageName": "@flighthq/requirements",
-        "source": "packages/requirements/src/requirementSet.ts"
-      },
-      "path": "flight/requirements/requirement_set.hpp",
-      "status": "emitted"
     },
     {
       "consumers": [],
@@ -61122,8 +61074,6 @@
         "@flighthq/render/packages/render/src/renderViewport.ts",
         "@flighthq/render/packages/render/src/renderer.ts",
         "@flighthq/render/packages/render/src/sceneRender.ts",
-        "@flighthq/requirements/packages/requirements/src/requirementCollector.ts",
-        "@flighthq/requirements/packages/requirements/src/requirementSet.ts",
         "@flighthq/scene-document/packages/scene-document/src/flightDocumentText.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentLayoutBindings.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentMaterializationSelection.ts",

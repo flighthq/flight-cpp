@@ -1547,21 +1547,6 @@
       "expires": "when the emitter unwraps a partial read of an already-three-state member; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "requirements-row-write-array-projection",
-      "kind": "project-array-at-row-write",
-      "appliesTo": "flight/requirements/requirement_set.hpp",
-      "keys": [
-        "requirements"
-      ],
-      "element": "flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>",
-      "identityArgument": "The written expression is `distinct_sorted_requirements(...)`, a TEMPORARY: no caller holds the array, so it has no identity anyone can observe. The function also mints fresh Requirement objects with make_ref from object literals, exactly as the TypeScript builds fresh objects, so there is no pre-existing element identity either. array_of preserves element identity and returns a separate array handle; here there is no array handle to preserve.",
-      "sourceDeclaration": "packages/requirements/src/requirementSet.ts -- initializeRequirementSet assigns distinctSortedRequirements(requirements) to a member declared as rows over Requirement",
-      "diagnostic": "static assertion failed: structural row write has an incompatible value type -- Array<flight::Ref<types::Requirement>> written where Array<StructuralRef<RowReadonly<RowOf<Ref<Requirement>>>>> is declared",
-      "defect": "The member is declared as an Array of readonly ROWS over Requirement, and the emitted write passes an Array of the Requirement references themselves. The element conversion is a row projection over the SAME subject, so nothing is reinterpreted; only the array has to be rebuilt, and flight::array_of does exactly that while keeping each element observing its own object. array_of is NOT generally legal at a row write -- it returns a separate array handle, so where TypeScript stores an existing array it would change array identity, which AGENTS.md forbids. It is legal here for the reason in identityArgument, which is why this kind anchors to named sites rather than matching the construct.",
-      "expectedWhen": "always",
-      "expires": "when the emitter projects an array into the row element type its member declares; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "requirement-row-write-array-projection",
       "kind": "project-array-at-row-write",
       "appliesTo": "flight/requirement/requirement_set.hpp",
