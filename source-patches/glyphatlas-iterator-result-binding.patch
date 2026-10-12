@@ -22,5 +22,5 @@ diff --git a/packages/glyphatlas/src/glyphAtlasEntry.ts b/packages/glyphatlas/sr
 +  }
 +  return false;
  }
- 
+
  // Unions the rectangle (`x`,`y`,`width`,`height`) into the atlas's dirty region, starting a fresh

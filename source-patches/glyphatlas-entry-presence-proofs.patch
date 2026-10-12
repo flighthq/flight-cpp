@@ -3,7 +3,7 @@ diff --git a/packages/glyphatlas/src/glyphAtlasEntry.ts b/packages/glyphatlas/sr
 +++ b/packages/glyphatlas/src/glyphAtlasEntry.ts
 @@ -182,12 +182,16 @@ function _repackGlyphAtlas(runtime: GlyphAtlasRuntime): void {
    runtime.bitmap.data.fill(0);
- 
+
    const codepoints = [...runtime.entries.keys()].sort((a, b) => {
 -    const heightDelta = runtime.entries.get(b)!.height - runtime.entries.get(a)!.height;
 +    const entryA = runtime.entries.get(a);
