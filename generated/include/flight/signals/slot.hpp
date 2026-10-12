@@ -7,7 +7,6 @@
 #include <functional>
 #include <optional>
 #include <type_traits>
-#include <utility>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -107,7 +106,7 @@ inline T make_dispatch(std::shared_ptr<flight::types::Signal<T>> signal, std::sh
       i++;
       continue;
     }
-    slot.value()(std::forward<ArgsPack>(args)...);
+    slot.value()(args...);
     if (flight::to_boolean(data->cancelled)) {
       break;
     }

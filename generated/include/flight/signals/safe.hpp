@@ -7,7 +7,6 @@
 #include <flight/structural_ref.hpp>
 #include <optional>
 #include <type_traits>
-#include <utility>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -100,7 +99,7 @@ inline void emit_signal_safe(std::shared_ptr<flight::types::Signal<T>> signal, A
           if (!repeat.element(i)) {
             tombstone_once_slot<T>(data.value(), slot.value(), priorities.element(i));
           }
-          slot.value()(std::forward<ArgsPack>(args)...);
+          slot.value()(args...);
           if (flight::to_boolean(data.value()->cancelled)) {
             break;
           }
