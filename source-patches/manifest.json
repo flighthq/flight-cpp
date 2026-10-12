@@ -505,7 +505,7 @@
       "id": "image-resource-discriminant-literals",
       "dependency": "flight",
       "patch": "image-resource-discriminant-literals.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/image/src/imageResourceReference.ts",
       "package": "@flighthq/image",
       "answers": "diagnostic",
@@ -515,12 +515,7 @@
       "whyNotUpstreamFirst": "String literals are the native spelling of these discriminated unions and avoid a backend member-access defect without adding a target-specific construct.",
       "unblocks": "Removes the shared discriminant carrier diagnostic from image_resource_reference.hpp and its downstream format consumers.",
       "expires": "when member access on reference-backed exported const objects emits pointer access, or Flight adopts the literal discriminants.",
-      "appliedOn": "2026-10-06",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "2D",
-        "reason": "context drift: the patched code still exists (23/24 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "appliedOn": "2026-10-12"
     },
     {
       "id": "text-data-binding",

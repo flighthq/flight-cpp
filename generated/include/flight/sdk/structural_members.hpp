@@ -141,6 +141,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("bind") && requires { object.bind; }) return (object.bind);
   else if constexpr (Key::name.view() == std::string_view("bindings") && requires { object.bindings; }) return (object.bindings);
   else if constexpr (Key::name.view() == std::string_view("bitmap") && requires { object.bitmap; }) return (object.bitmap);
+  else if constexpr (Key::name.view() == std::string_view("bitmapComposition") && requires { object.bitmap_composition; }) return (object.bitmap_composition);
   else if constexpr (Key::name.view() == std::string_view("blackTighten") && requires { object.black_tighten; }) return (object.black_tighten);
   else if constexpr (Key::name.view() == std::string_view("blend") && requires { object.blend; }) return (object.blend);
   else if constexpr (Key::name.view() == std::string_view("blendFuncDestination") && requires { object.blend_func_destination; }) return (object.blend_func_destination);
@@ -2228,6 +2229,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("bind") && requires(Object& object) { object.bind; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bind)>>{};
   else if constexpr (Key::name.view() == std::string_view("bindings") && requires(Object& object) { object.bindings; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bindings)>>{};
   else if constexpr (Key::name.view() == std::string_view("bitmap") && requires(Object& object) { object.bitmap; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bitmap)>>{};
+  else if constexpr (Key::name.view() == std::string_view("bitmapComposition") && requires(Object& object) { object.bitmap_composition; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().bitmap_composition)>>{};
   else if constexpr (Key::name.view() == std::string_view("blackTighten") && requires(Object& object) { object.black_tighten; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().black_tighten)>>{};
   else if constexpr (Key::name.view() == std::string_view("blend") && requires(Object& object) { object.blend; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blend)>>{};
   else if constexpr (Key::name.view() == std::string_view("blendFuncDestination") && requires(Object& object) { object.blend_func_destination; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().blend_func_destination)>>{};
@@ -4318,6 +4320,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->bind; }) owner.bind_named("bind", [object]() -> decltype(auto) { return (object->bind); });
   if constexpr (requires { object->bindings; }) owner.bind_named("bindings", [object]() -> decltype(auto) { return (object->bindings); });
   if constexpr (requires { object->bitmap; }) owner.bind_named("bitmap", [object]() -> decltype(auto) { return (object->bitmap); });
+  if constexpr (requires { object->bitmap_composition; }) owner.bind_named("bitmapComposition", [object]() -> decltype(auto) { return (object->bitmap_composition); });
   if constexpr (requires { object->black_tighten; }) owner.bind_named("blackTighten", [object]() -> decltype(auto) { return (object->black_tighten); });
   if constexpr (requires { object->blend; }) owner.bind_named("blend", [object]() -> decltype(auto) { return (object->blend); });
   if constexpr (requires { object->blend_func_destination; }) owner.bind_named("blendFuncDestination", [object]() -> decltype(auto) { return (object->blend_func_destination); });
@@ -6441,6 +6444,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(bind)
   FLIGHT_SDK_ROW_WIDENS(bindings)
   FLIGHT_SDK_ROW_WIDENS(bitmap)
+  FLIGHT_SDK_ROW_WIDENS(bitmap_composition)
   FLIGHT_SDK_ROW_WIDENS(black_tighten)
   FLIGHT_SDK_ROW_WIDENS(blend)
   FLIGHT_SDK_ROW_WIDENS(blend_func_destination)

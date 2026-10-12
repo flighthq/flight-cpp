@@ -23,6 +23,7 @@
 //   type { AlphaType } from '@flighthq/types/contract'
 //   type { TextureSourceKind } from '@flighthq/types/contract'
 //   type { HostImageSource } from '@flighthq/types/contract'
+//   type { Surface } from '@flighthq/types/contract'
 
 namespace flight::image {
 

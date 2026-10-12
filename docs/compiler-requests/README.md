@@ -232,7 +232,14 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [Interface heritage is not a C++ owner relation](compiler-interface-heritage-owner-widening.md) —
   a sub-interface value cannot widen into a super-interface slot across a nullable union; no faithful
   source spelling exists, so `glyphSource.ts`, `bitmapFontGlyphSource.ts`, and Scene3D's punctual-light
-  factory stay refused.
+  factory stay refused; image resource resolution now records the same Bitmap/ImageResource-to-
+  TextureSource identity boundary.
+- [Browser URL and location values need runtime bindings](browser-url-location-runtime-bindings.md) —
+  `@flighthq/image` cannot emit `imageResourceFrom.ts` because the runtime profile has `Blob` but no
+  `location` value or URL construction/object-URL lifetime contract.
+- [String conversion of an erased value needs a runtime contract](erased-value-stringification.md) —
+  `String(cause)` over `unknown` emits an invalid `to_string(Any)` call in image resource failure
+  handling; object conversion cannot be approximated without changing diagnostics.
 - [intl is refused for carried union and absence evidence](compiler-intl-optional-and-union-carrier-evidence.md)
   — 7 of 9 `@flighthq/intl` modules; one is supplied by the intl-formatter-cache override, the rest
   are retained refusals.

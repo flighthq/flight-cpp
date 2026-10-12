@@ -2430,7 +2430,7 @@
       "code": "dependency-refused",
       "module": "packages/image/src/contract.ts",
       "package": "@flighthq/image",
-      "reason": "dependency ./imageResourceFrom was refused for @flighthq/image/packages/image/src/imageResourceFrom.ts",
+      "reason": "dependency ./imageResourceFrom.ts was refused for @flighthq/image/packages/image/src/imageResourceFrom.ts",
       "stage": "dependency"
     },
     {
@@ -2443,10 +2443,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 67,
+      "line": 163,
       "module": "packages/image/src/imageResourceReference.ts",
       "package": "@flighthq/image",
-      "reason": "cpp emission failed for @flighthq/image/packages/image/src/imageResourceReference.ts: reading Error.message after narrowing an erased value requires flight::Any to expose a checked Error view that accepts Error subclasses; keep the value typed as Error before erasure or add that runtime contract",
+      "reason": "cpp emission failed for @flighthq/image/packages/image/src/imageResourceReference.ts: contextual C++ union conversion requires equivalent source union evidence: target optionalSingle carriers [flight::Ref<flight::types::TextureSource>] from identifier source multiVariant carriers [flight::Ref<flight::types::Bitmap>, flight::Ref<flight::types::ImageResource>]. Narrow or convert the source expression so each of its alternatives names exactly one destination union alternative. The carrier lists show which alternatives lack an exact carrier; preserve the declared collection or member union alias before flow expansion. For a Map or WeakMap lookup followed by a rebind, ensure every rebound member already has the declared value owner member's carrier -- a Readonly structural view does not become a mutable nominal Ref.",
       "stage": "emission"
     },
     {
@@ -2462,7 +2462,7 @@
       "code": "dependency-refused",
       "module": "packages/image/src/index.ts",
       "package": "@flighthq/image",
-      "reason": "dependency ./contract was refused for @flighthq/image/packages/image/src/contract.ts",
+      "reason": "dependency ./imageResourceFrom.ts was refused for @flighthq/image/packages/image/src/imageResourceFrom.ts",
       "stage": "dependency"
     },
     {

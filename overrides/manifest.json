@@ -1476,7 +1476,7 @@
       "package": "@flighthq/image",
       "status": "complete",
       "supplies": "packages/image/src/imageTestHelper.ts",
-      "derivedFrom": "28e0d0068d86bb4376fc64a8dbe015d2bb5f9cf2b50d12abc060a88e976c7ba7",
+      "derivedFrom": "eb091c3dd0b0e36264e940edd504aca4a87e2707e015495fa9b0715acc962c8a",
       "reason": "The emitter refuses the test dimension resolver when the SDL binding collapses HostImageSource to its native carrier, then retains registration code that names the missing resolver.",
       "change": "Defines the exact host resolver slot, reads dimensions from the SDL image carrier, rejects an empty source, and preserves the source registration and cleanup functions.",
       "equivalence": "Every non-empty SDL image source has numeric width and height and writes those exact values to the caller-owned output before returning true. An empty carrier has no dimensions and returns false without mutating output. Registration installs the same function object and cleanup clears the shared slot.",

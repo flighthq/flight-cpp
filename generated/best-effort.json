@@ -11746,9 +11746,7 @@
       "status": "dependency-incomplete"
     },
     {
-      "consumers": [
-        "@flighthq/image/packages/image/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/image",
@@ -11765,6 +11763,7 @@
     {
       "consumers": [
         "@flighthq/image/packages/image/src/contract.ts",
+        "@flighthq/image/packages/image/src/index.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glRasterShapeRenderer.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glRichText.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glScale9Shape.ts",
@@ -11786,6 +11785,7 @@
       "classification": "target-runtime",
       "consumers": [
         "@flighthq/image/packages/image/src/contract.ts",
+        "@flighthq/image/packages/image/src/index.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domBitmapTextureResolver.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/imageResourceFetch.ts",
@@ -11809,9 +11809,10 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "target-runtime",
+      "classification": "source-portability",
       "consumers": [
         "@flighthq/image/packages/image/src/contract.ts",
+        "@flighthq/image/packages/image/src/index.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2DDocument.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/loadScene2DImageResources.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts",
@@ -11822,16 +11823,16 @@
         "@flighthq/swf/packages/swf/src/swfDocument.ts"
       ],
       "declarationFingerprints": [
-        "sha256:03ac6a920f5336ae1ea115890b115671305e9db137c2c773045d57ffba04e920",
+        "sha256:1f9baf10724b4eb1dfd5ce785637676861104503f3e9bc95d1e161bfab998a16",
         "sha256:3b2fbef4451147934350fca6d654c7dff9601517db611aa0a1ac5a0ff4a626be",
         "sha256:48f4c84077612e11271bd31c35f3aeab11a52020da3e690910e866b3c3b98598",
         "sha256:4cd44866a4f20c2901cfcc89fd31cc62be72d14579ed328293a26fde551e8492",
         "sha256:6012f619cb06bc4c8c11ccc657b623cf5645716d3e3e517b32913182bec4829e",
-        "sha256:6ce80592c0bf894b1272f77f8c186708a549e055c38d4db224aaee68033312a7",
         "sha256:7a7d5be124f2fa7ab29a0762c264bd36af0d78ca5e02999cbc2dcf7bf8654e0a",
         "sha256:91c7115ade406084cd09180eebb8597848f0dc855af364cb166a8bd9be2292cb",
         "sha256:9b2c498eaccec755ab12e46213d62f14bc8ef46f4f03c651f77e306535c9e35d",
         "sha256:a0bb4890609414d3e8bd3d01e2ca71a96e7ba31e410c174a20320d2d4358bc98",
+        "sha256:c57a3392916373b55cf514b384c6879a2f4ba75d9c42190fe650b55ce068a571",
         "sha256:e8903a56b60ba4f73ebb4d47fb4c7824e0994d9cc095c9711d27be5a8f8a7054"
       ],
       "module": {
@@ -11840,7 +11841,7 @@
         "source": "packages/image/src/imageResourceReference.ts"
       },
       "path": "flight/image/image_resource_reference.hpp",
-      "rule": "cpp-erased-error-view-runtime-required",
+      "rule": "cpp-contextual-union-inequivalent",
       "status": "refused-placeholder"
     },
     {
@@ -11885,7 +11886,8 @@
       },
       "path": "flight/image/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/image/packages/image/src/contract.ts"
+        "@flighthq/image/packages/image/src/imageResourceFrom.ts",
+        "@flighthq/image/packages/image/src/imageResourceReference.ts"
       ],
       "status": "dependency-incomplete"
     },

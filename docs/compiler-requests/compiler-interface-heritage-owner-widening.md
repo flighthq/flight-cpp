@@ -102,3 +102,16 @@ Point and spot branches reach their own concrete light owners. They do not make 
 conversion safe, and copying a common `Light` prefix would still replace the object returned by the
 factory. This site therefore extends the affected package set; it does not define a third compiler
 request.
+
+## Same defect in image resource resolution
+
+`@flighthq/image` reaches the same boundary in `imageResourceReference.ts`. Its resolver selects a
+`Bitmap | null` from the embedded decode arm or an `ImageResource | null` from the external fetch arm,
+then returns the selected value through the declared `Promise<TextureSource | null>` result. Both
+concrete interfaces extend `TextureSource` in TypeScript, but the emitted owners are independent. At
+Flight `a627849` and flight-compiler `2b687ea`, the module refuses with concrete
+`Ref<Bitmap>`/`Ref<ImageResource>` source alternatives against a `Ref<TextureSource>` destination.
+
+Annotating the local or splitting the branch does not create an owner-preserving C++ relationship.
+Copying the common fields into a new `TextureSource` would discard the exact resource identity returned
+by the decoder or fetch callback. The resolver therefore remains an explicit refusal under this request.
