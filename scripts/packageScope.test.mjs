@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 import {
   applyPackageMerge,
+  bindingProfileSetId,
   compareInitializationModules,
   danglingIncludes,
   compareText,
@@ -392,11 +393,10 @@ describe('scoped merge', () => {
     assert.equal(table.contents, readFileSync(path.join(include, 'flight', 'sdk', 'structural_members.hpp'), 'utf8'));
   });
 
-  test('a different compiler, binding profile set or namespace mapping is still refused', () => {
+  test('a different compiler or namespace mapping is still refused', () => {
     const committed = copyTree('shared-committed');
     for (const [field, edit] of [
       ['compiler', (value) => (value.compiler.revision = '1'.repeat(40))],
-      ['bindingProfiles', (value) => (value.bindingProfiles[0].digest = 'sha256:0')],
       ['namespaceMapping', (value) => (value.namespaceMapping.desiredRoot = 'other')],
     ]) {
       const candidate = copyTree(`shared-${field}`);
@@ -508,6 +508,198 @@ describe('mixed-pin transition', () => {
     appendTo(committed, `include/${header}`, '\n// hand edit\n');
     const tampered = verifyMixedInventory({ candidateRoot: candidate, committedRoot: committed });
     assert.deepEqual(tampered.failed.map((entry) => entry.package), [target]);
+  });
+});
+
+describe('binding-profile transition', () => {
+  const REVISION = manifest.source.revision;
+  const NEW = 'a'.repeat(40);
+  const OLD_PROFILES = manifest.bindingProfiles;
+  // The same profile list with one profile's bindings changed, as editing bindings/headless.json does.
+  const NEW_PROFILES = OLD_PROFILES.map((profile, index) => (index === 0 ? { ...profile, digest: `sha256:${'b'.repeat(64)}` } : profile));
+  const OLD_SET = bindingProfileSetId(OLD_PROFILES);
+  const NEW_SET = bindingProfileSetId(NEW_PROFILES);
+  const target = '@flighthq/math';
+  const neighbour = '@flighthq/xml';
+
+  // A single-revision, single-profile inventory, as a closure or full run under these inputs writes it.
+  function candidateUnder(name, { profiles = NEW_PROFILES, revision = REVISION } = {}) {
+    const tree = copyTree(name);
+    editJson(tree, 'manifest.json', (value) => {
+      value.source.revision = revision;
+      value.bindingProfiles = profiles;
+    });
+    editJson(tree, 'refusals.json', (value) => {
+      value.sourceRevision = revision;
+    });
+    const readme = path.join(tree, 'README.md');
+    writeFileSync(readme, readmeWithProvenance(readFileSync(readme, 'utf8'), JSON.parse(readFileSync(path.join(tree, 'manifest.json'), 'utf8'))));
+    return tree;
+  }
+
+  function moved(committed, candidate, packageName) {
+    const plan = planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName });
+    applyPackageMerge(plan, committed);
+    return plan;
+  }
+
+  test('assumes the fixture has a binding profile to change', () => {
+    assert.ok(OLD_PROFILES.length > 0);
+    assert.notEqual(OLD_SET, NEW_SET);
+  });
+
+  test('a scoped move under changed profiles records them on the moved row only', () => {
+    const committed = copyTree('profiles-committed');
+    const before = JSON.parse(readFileSync(path.join(committed, 'manifest.json'), 'utf8'));
+    const plan = planPackageMerge({ candidateRoot: candidateUnder('profiles-candidate'), committedRoot: committed, packageName: target });
+    const merged = JSON.parse(plan.writes.get('manifest.json'));
+    assert.doesNotThrow(() => validateProvenance(merged));
+    assert.equal(merged.schema, 'flight-generated-sdk/2');
+    assert.equal(merged.bindingProfiles, undefined);
+    assert.deepEqual(merged.bindingProfileSets, [
+      { id: OLD_SET, profiles: OLD_PROFILES },
+      { id: NEW_SET, profiles: NEW_PROFILES },
+    ].sort((left, right) => compareText(left.id, right.id)));
+    // The profile record keeps the position a full run gives bindingProfiles.
+    assert.deepEqual(Object.keys(merged).slice(0, 4), ['schema', 'compiler', 'bindingProfileSets', 'namespaceMapping']);
+    // One Flight revision throughout: only the profiles are mixed.
+    assert.deepEqual(merged.source.revisions, [REVISION]);
+    for (const row of merged.packages) {
+      assert.equal(row.bindingProfileSet, row.package === target ? NEW_SET : OLD_SET, row.package);
+      assert.deepEqual(Object.keys(row), [...Object.keys(row)].sort(compareText), row.package);
+    }
+    const refusals = JSON.parse(plan.writes.get('refusals.json'));
+    assert.deepEqual(refusals.sourceRevisions, [REVISION]);
+    const readme = plan.writes.get('README.md');
+    assert.match(readme, /Binding profiles differ between packages during a profile transition/u);
+    assert.match(readme, new RegExp(`\`${NEW_SET}\` \\(1 package\\)`, 'u'));
+    assert.match(readme, new RegExp(`generated from \`${before.source.package}\` ${before.source.version} at\n\`${REVISION}\``, 'u'));
+    // math was generated against types, which stays under the old profiles.
+    assert.ok(plan.warnings.some((warning) => /other profiles.*@flighthq\/types/u.test(warning)));
+  });
+
+  test('untouched rows keep their row, headers and profile record', () => {
+    const committed = copyTree('profiles-untouched');
+    const before = JSON.parse(readFileSync(path.join(committed, 'manifest.json'), 'utf8'));
+    const plan = moved(committed, candidateUnder('profiles-untouched-candidate'), target);
+    const prefix = `include/${before.packages.find((row) => row.package === target).cppIncludePrefix}/`;
+    const shared = new Set(['manifest.json', 'refusals.json', 'README.md', 'initialization.json', 'best-effort.json', 'cmake/FlightSdkHeaders.cmake', 'BUILD.bazel', 'include/flight/sdk/structural_members.hpp']);
+    assert.deepEqual([...plan.writes.keys()].filter((file) => !file.startsWith(prefix) && !shared.has(file)), []);
+    const after = JSON.parse(readFileSync(path.join(committed, 'manifest.json'), 'utf8'));
+    for (const row of before.packages.filter((candidate) => candidate.package !== target)) {
+      const { bindingProfileSet, source, ...rest } = after.packages.find((candidate) => candidate.package === row.package);
+      assert.deepEqual(rest, row, row.package);
+      assert.equal(bindingProfileSet, OLD_SET, row.package);
+      assert.deepEqual(source, { revision: REVISION, version: before.source.version }, row.package);
+    }
+  });
+
+  test('profiles and revisions mix independently and collapse only when both agree', () => {
+    const committed = copyTree('profiles-mixed');
+    moved(committed, candidateUnder('profiles-mixed-math', { revision: NEW }), target);
+    moved(committed, candidateUnder('profiles-mixed-xml', { profiles: OLD_PROFILES, revision: NEW }), neighbour);
+    const merged = JSON.parse(readFileSync(path.join(committed, 'manifest.json'), 'utf8'));
+    assert.doesNotThrow(() => validateProvenance(merged));
+    assert.deepEqual(merged.source.revisions, [REVISION, NEW].sort(compareText));
+    const of = (name) => merged.packages.find((row) => row.package === name);
+    assert.deepEqual([of(target).source.revision, of(target).bindingProfileSet], [NEW, NEW_SET]);
+    assert.deepEqual([of(neighbour).source.revision, of(neighbour).bindingProfileSet], [NEW, OLD_SET]);
+    assert.deepEqual([of('@flighthq/types').source.revision, of('@flighthq/types').bindingProfileSet], [REVISION, OLD_SET]);
+    const readme = readFileSync(path.join(committed, 'README.md'), 'utf8');
+    assert.match(readme, /during a pin transition/u);
+    assert.match(readme, /during a profile transition/u);
+  });
+
+  test('the last row to move under the new profiles collapses to the full run, byte for byte', () => {
+    const committed = copyTree('profiles-collapse');
+    editJson(committed, 'manifest.json', (value) => {
+      value.packages = value.packages.map((row) => ({
+        ...row,
+        source: { bindingProfiles: row.package === target ? OLD_PROFILES : NEW_PROFILES, revision: REVISION, version: value.source.version },
+      }));
+    });
+    const manifestFile = path.join(committed, 'manifest.json');
+    const refusalsFile = path.join(committed, 'refusals.json');
+    const mixed = JSON.parse(readFileSync(manifestFile, 'utf8'));
+    const mixedRefusals = JSON.parse(readFileSync(refusalsFile, 'utf8'));
+    finalizeProvenance(mixed, mixedRefusals);
+    assert.equal(mixed.schema, 'flight-generated-sdk/2');
+    assert.doesNotThrow(() => validateProvenance(mixed));
+    writeFileSync(manifestFile, `${JSON.stringify(mixed, undefined, 2)}\n`);
+    writeFileSync(refusalsFile, `${JSON.stringify(mixedRefusals, undefined, 2)}\n`);
+    const readme = path.join(committed, 'README.md');
+    writeFileSync(readme, readmeWithProvenance(readFileSync(readme, 'utf8'), mixed));
+
+    const candidate = candidateUnder('profiles-collapse-candidate');
+    const plan = planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName: target });
+    for (const file of ['manifest.json', 'refusals.json', 'README.md']) {
+      assert.equal(plan.writes.get(file), readFileSync(path.join(candidate, file), 'utf8'), file);
+    }
+  });
+
+  test('missing or ambiguous profile provenance is refused by the splice', () => {
+    const mixedTree = () => {
+      const tree = copyTree(`profiles-refuse-${String(Math.random()).slice(2)}`);
+      moved(tree, candidateUnder(`${path.basename(tree)}-candidate`), target);
+      return tree;
+    };
+    for (const [why, edit, message] of [
+      ['a row names no set', (value) => delete value.packages.find((row) => row.package === neighbour).bindingProfileSet, /without a listed binding-profile set.*@flighthq\/xml/u],
+      ['a row names an unlisted set', (value) => (value.packages.find((row) => row.package === neighbour).bindingProfileSet = `sha256:${'c'.repeat(64)}`), /without a listed binding-profile set.*@flighthq\/xml/u],
+      ['global and per-row records together', (value) => (value.bindingProfiles = NEW_PROFILES), /ambiguous/u],
+      ['a set that is not the digest of its profiles', (value) => (value.bindingProfileSets[0].profiles = []), /not the digest/u],
+      ['one set written per row', (value) => {
+        value.bindingProfileSets = value.bindingProfileSets.filter((set) => set.id === OLD_SET);
+        for (const row of value.packages) row.bindingProfileSet = OLD_SET;
+      }, /at least two distinct sets/u],
+      ['a uniform manifest naming sets', (value) => {
+        value.schema = 'flight-generated-sdk/1';
+      }, /./u],
+    ]) {
+      const committed = mixedTree();
+      editJson(committed, 'manifest.json', edit);
+      assert.throws(
+        () => planPackageMerge({ candidateRoot: candidateUnder(`${path.basename(committed)}-again`), committedRoot: committed, packageName: target }),
+        message,
+        why,
+      );
+    }
+  });
+
+  test('a global refresh that relabels untouched rows fails verification instead of passing as pending', () => {
+    // The full run under the new profiles emits xml differently, as the console binding changed log.
+    const candidate = candidateUnder('profiles-verify-candidate');
+    const [header] = packageHeaders(candidate, neighbour);
+    appendTo(candidate, `include/${header}`, '\n// emitted differently under the new profiles\n');
+    const committed = copyTree('profiles-verify-committed');
+    moved(committed, candidate, target);
+
+    const honest = verifyMixedInventory({ candidateRoot: candidate, committedRoot: committed });
+    assert.deepEqual(honest.reproduced, [target]);
+    assert.deepEqual(honest.failed, []);
+    assert.equal(honest.pending.length, packages.length - 1);
+    assert.ok(honest.pending.every((entry) => entry.bindingProfileSet === OLD_SET && entry.revision === REVISION));
+
+    // Refreshing the recorded digests globally claims every row was generated under the new profiles. The
+    // result is a well-formed uniform manifest; only reproduction can tell that it lies.
+    const manifestFile = path.join(committed, 'manifest.json');
+    const refusalsFile = path.join(committed, 'refusals.json');
+    const refreshed = JSON.parse(readFileSync(manifestFile, 'utf8'));
+    const refreshedRefusals = JSON.parse(readFileSync(refusalsFile, 'utf8'));
+    refreshed.packages = refreshed.packages.map((row) => ({
+      ...row,
+      source: { bindingProfiles: NEW_PROFILES, revision: REVISION, version: row.source.version },
+    }));
+    finalizeProvenance(refreshed, refreshedRefusals);
+    assert.equal(refreshed.schema, 'flight-generated-sdk/1');
+    assert.doesNotThrow(() => validateProvenance(refreshed));
+    writeFileSync(manifestFile, `${JSON.stringify(refreshed, undefined, 2)}\n`);
+    writeFileSync(refusalsFile, `${JSON.stringify(refreshedRefusals, undefined, 2)}\n`);
+    const readme = path.join(committed, 'README.md');
+    writeFileSync(readme, readmeWithProvenance(readFileSync(readme, 'utf8'), refreshed));
+    const dishonest = verifyMixedInventory({ candidateRoot: candidate, committedRoot: committed });
+    assert.deepEqual(dishonest.failed.map((entry) => entry.package), [neighbour]);
+    assert.deepEqual(dishonest.pending, []);
   });
 });
 

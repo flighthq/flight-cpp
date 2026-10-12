@@ -164,6 +164,10 @@ function reportStaleRows(plans) {
 
 // Says where the inventory stands in a pin transition, as the staging tree has it after this run.
 function reportTransition(manifest, plan) {
+  if (manifest.bindingProfileSets !== undefined) {
+    const counts = manifest.bindingProfileSets.map((set) => `${String(manifest.packages.filter((row) => row.bindingProfileSet === set.id).length)} under ${set.id.slice(7, 19)}`);
+    process.stdout.write(`Binding profiles are mixed during a profile transition: ${counts.join(', ')}.\n`);
+  }
   const byRevision = new Map();
   for (const row of manifest.packages) {
     const { revision } = rowProvenance(manifest, row);

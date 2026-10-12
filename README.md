@@ -197,8 +197,8 @@ lists and README summary are re-derived from the merged tree. Reports land in `o
 
 One thing cannot be scoped, and is refused rather than left silently stale; it needs `npm run sdk:generate`:
 
-- a different compiler, binding-profile set or namespace mapping, which moves every package at once (a different
-  Flight revision is allowed: see the pin transition below).
+- a different compiler or namespace mapping, which moves every package at once (a different Flight revision or
+  binding-profile set is allowed: see the transitions below).
 
 `flight/sdk/structural_members.hpp` is shared vocabulary, every row key and computed cell any emitted header or
 override uses, rendered by `scripts/structuralMembers.mjs` from that file set. A scoped run that changes a
@@ -236,16 +236,24 @@ schema `flight-generated-sdk/2`: every package row then carries `source: { revis
 the revision they were really generated from. `pkg:generate` prints where the transition stands and warns
 when a package now sits beside dependencies still at the older revision.
 
-Only the Flight revision may vary per package. A different compiler, binding-profile set or namespace mapping
-cannot be represented per package, because rows produced that way would not link together, so it is still
-refused and needs `npm run sdk:generate`.
+The binding profiles move the same way. Editing `bindings/*.json` changes the emission of exactly the packages
+that reach the changed bindings, so a scoped move records the profiles it was generated under on the moved row
+alone. While rows disagree, `manifest.json` replaces the global `bindingProfiles` with `bindingProfileSets`, each
+distinct profile list under the sha256 of its content, and every row names its set in `bindingProfileSet`. Rows
+nobody has regenerated keep the profiles they were really generated under. Refreshing the recorded digests globally
+would claim every row was generated under bindings it never saw. That claim is refused in two places. The splice
+rejects a manifest whose profile record is missing, ambiguous or not the digest of its content. `sdk:check` fails a
+row that claims the current profiles but does not reproduce under them, rather than listing it as pending.
+
+A different compiler or namespace mapping cannot be represented per package, because rows produced that way would
+not link together, so it is still refused and needs `npm run sdk:generate`.
 
 `sdk:check` on a mixed inventory regenerates at the current pin and requires every row recorded at that
-revision to reproduce exactly as `pkg:generate --check` would. Rows at another revision cannot be reproduced at
-this pin; they are listed as pending rather than failed or silently passed. `pkg:compile` and `pkg:tier`
+revision and profile set to reproduce exactly as `pkg:generate --check` would. Rows at another revision or under
+other profiles cannot be reproduced by this run; they are listed as pending rather than failed or silently passed. `pkg:compile` and `pkg:tier`
 record the row's own revision in their reports.
 
-The transition ends on its own: when the last row reaches the new revision, the merge writes the uniform
+The transition ends on its own: when the last row reaches the new revision and profiles, the merge writes the uniform
 `flight-generated-sdk/1` form again, byte-identical to a full `sdk:generate` at that pin.
 
 `canonicalPackageLocalIncludes.includes` is a whole-tree count of rewritten includes, and a rewritten include
