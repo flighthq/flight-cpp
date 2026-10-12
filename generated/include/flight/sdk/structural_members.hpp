@@ -1533,6 +1533,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("requiredCount") && requires { object.required_count; }) return (object.required_count);
   else if constexpr (Key::name.view() == std::string_view("requiredPointCount") && requires { object.required_point_count; }) return (object.required_point_count);
   else if constexpr (Key::name.view() == std::string_view("requirements") && requires { object.requirements; }) return (object.requirements);
+  else if constexpr (Key::name.view() == std::string_view("resident") && requires { object.resident; }) return (object.resident);
   else if constexpr (Key::name.view() == std::string_view("resizable") && requires { object.resizable; }) return (object.resizable);
   else if constexpr (Key::name.view() == std::string_view("resize") && requires { object.resize; }) return (object.resize);
   else if constexpr (Key::name.view() == std::string_view("resizeHandle") && requires { object.resize_handle; }) return (object.resize_handle);
@@ -3603,6 +3604,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("requiredCount") && requires(Object& object) { object.required_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().required_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("requiredPointCount") && requires(Object& object) { object.required_point_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().required_point_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("requirements") && requires(Object& object) { object.requirements; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().requirements)>>{};
+  else if constexpr (Key::name.view() == std::string_view("resident") && requires(Object& object) { object.resident; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().resident)>>{};
   else if constexpr (Key::name.view() == std::string_view("resizable") && requires(Object& object) { object.resizable; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().resizable)>>{};
   else if constexpr (Key::name.view() == std::string_view("resize") && requires(Object& object) { object.resize; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().resize)>>{};
   else if constexpr (Key::name.view() == std::string_view("resizeHandle") && requires(Object& object) { object.resize_handle; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().resize_handle)>>{};
@@ -5676,6 +5678,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->required_count; }) owner.bind_named("requiredCount", [object]() -> decltype(auto) { return (object->required_count); });
   if constexpr (requires { object->required_point_count; }) owner.bind_named("requiredPointCount", [object]() -> decltype(auto) { return (object->required_point_count); });
   if constexpr (requires { object->requirements; }) owner.bind_named("requirements", [object]() -> decltype(auto) { return (object->requirements); });
+  if constexpr (requires { object->resident; }) owner.bind_named("resident", [object]() -> decltype(auto) { return (object->resident); });
   if constexpr (requires { object->resizable; }) owner.bind_named("resizable", [object]() -> decltype(auto) { return (object->resizable); });
   if constexpr (requires { object->resize; }) owner.bind_named("resize", [object]() -> decltype(auto) { return (object->resize); });
   if constexpr (requires { object->resize_handle; }) owner.bind_named("resizeHandle", [object]() -> decltype(auto) { return (object->resize_handle); });
@@ -7782,6 +7785,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(required_count)
   FLIGHT_SDK_ROW_WIDENS(required_point_count)
   FLIGHT_SDK_ROW_WIDENS(requirements)
+  FLIGHT_SDK_ROW_WIDENS(resident)
   FLIGHT_SDK_ROW_WIDENS(resizable)
   FLIGHT_SDK_ROW_WIDENS(resize)
   FLIGHT_SDK_ROW_WIDENS(resize_handle)

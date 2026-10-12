@@ -898,6 +898,7 @@
     },
     {
       "files": [
+        "flight/assets/asset_library.hpp",
         "flight/bitmapfont_formats/bitmap_font_fnt.hpp",
         "flight/command/command_history.hpp",
         "flight/flow/flow.hpp",
@@ -1398,9 +1399,7 @@
       "id": "app-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/assets/asset_library.hpp"
-      ],
+      "files": [],
       "id": "assets-unqualified-entity-names"
     },
     {
