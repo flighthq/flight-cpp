@@ -222,6 +222,7 @@
         "flight/net/net.hpp",
         "flight/notification/notification.hpp",
         "flight/power/power.hpp",
+        "flight/preferences/storage.hpp",
         "flight/scene2d_resources/scene2_ddocument_source.hpp",
         "flight/signals/emitter.hpp",
         "flight/signals/safe.hpp",
@@ -782,7 +783,6 @@
         "flight/connectivity/connectivity.hpp",
         "flight/interaction/interaction_manager.hpp",
         "flight/lifecycle/lifecycle.hpp",
-        "flight/preferences/storage.hpp",
         "flight/quadbatch/quad_batch.hpp",
         "flight/scene2d/scene2d.hpp",
         "flight/text/rich_text.hpp",
@@ -1539,9 +1539,7 @@
       "id": "power-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/preferences/storage.hpp"
-      ],
+      "files": [],
       "id": "preferences-unqualified-entity-names"
     },
     {
@@ -2840,9 +2838,7 @@
       "id": "power-unqualified-signals-names"
     },
     {
-      "files": [
-        "flight/preferences/storage.hpp"
-      ],
+      "files": [],
       "id": "preferences-unqualified-signals-names"
     },
     {

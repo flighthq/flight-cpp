@@ -1603,14 +1603,14 @@
       "package": "@flighthq/preferences",
       "status": "partial",
       "supplies": "packages/preferences/src/storage.ts",
-      "derivedFrom": "b81919e3547729926e48b9e1a98b564185e1d0eb4a30d12f2d319fd7ffb063ac",
-      "reason": "The emitter treats reference-backed outcome variants as records throughout the storage module and loses contextual construction for their success and failure arms.",
+      "derivedFrom": "cfe78f9741a50ec2adc3929e2498d17de53acd1b3ef11a4daada5788c7045ca2",
+      "reason": "Re-read against this module's a627849 emission, which has advanced: the emitter now emits 642 lines of the module itself and refuses ELEVEN declarations under one rule, `contextual union value type \u2026 is not a represented runtime domain` (filed as contextual-union-value-arm-member-shape.md) \u2014 the JSON readers, the batch setters and removers, the namespace entries and clear, the two backend item helpers and migrateStorage. The defect this entry recorded earlier (reference-backed outcome variants treated as records throughout) no longer fires. The copy is RETAINED rather than re-derived in this pass: re-deriving would trade a working copy for another copy of the same eleven declarations carrying the same declared gap, because that gap is a runtime representation limit around the same rule.",
       "change": "Provides typed outcome factories and accessors, JSON conversion for represented JSON values, exact optional failed-key states, signal ownership, namespace operations and migrations over the generated carriers.",
       "equivalence": "Every backend reason, value, completed count and failed key follows the source branch, including absent failed keys before enumeration. Namespacing, byte counts, JSON fallbacks, change signals, migration ordering and checkpoint failures preserve the source behavior.",
       "whyNotAPatchOrRepair": "The invalid variant accesses and constructions occur throughout behavioral code. Source changes would have to encode C++ alternative indices and reference wrappers; declaration repairs cannot replace those expressions.",
       "unblocks": "storage.hpp compiles independently and supplies the preferences package aggregators.",
       "remaining": "The generic JSON readers can only build values the target represents. A read whose Value is not one of the runtime's JsonValue, scalar, array, or object domains reports parse-failed, where the source's unchecked `as Value` would have returned the parsed value; every other path in the module follows the source.",
-      "expires": "when reference-backed union narrowing, contextual outcome construction and generic JSON conversion emit directly.",
+      "expires": "when a constructed value may keep the declared destination arm's member shape, and generic JSON conversion covers the value domains the runtime represents.",
       "authoredOn": "2026-10-07"
     },
     {
