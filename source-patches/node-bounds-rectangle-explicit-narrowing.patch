@@ -1,0 +1,32 @@
+diff --git a/packages/node/src/boundsRectangle.ts b/packages/node/src/boundsRectangle.ts
+index 4241bf3..214b552 100644
+--- a/packages/node/src/boundsRectangle.ts
++++ b/packages/node/src/boundsRectangle.ts
+@@ -36,7 +36,7 @@ export function computeNodeBoundsRectangle<Traits extends object>(
+   targetCoordinateSpace: Spatial2DNode<Traits> | null | undefined,
+ ): void {
+   if (!targetCoordinateSpace) targetCoordinateSpace = source;
+-  let bounds;
++  let bounds: Readonly<Rectangle> | undefined;
+   if (getNodeChildCount(source) === 0) {
+     // only world bounds considers children
+     if (targetCoordinateSpace === source) {
+@@ -47,15 +47,15 @@ export function computeNodeBoundsRectangle<Traits extends object>(
+       bounds = getNodeParentBoundsRectangle(source);
+     }
+   }
+-  if (!bounds) {
++  if (bounds) {
++    copyRectangle(out, bounds);
++  } else {
+     // translate world bounds into target coordinate space
+     const worldBounds = getNodeWorldBoundsRectangle(source);
+     const transform = acquireMatrix();
+     inverseMatrix(transform, getNodeWorldMatrix(targetCoordinateSpace));
+     matrixTransformRectangle(out, transform, worldBounds);
+     releaseMatrix(transform);
+-  } else {
+-    copyRectangle(out, bounds);
+   }
+ }
+ 

@@ -4701,6 +4701,18 @@
         "flight/node/node_transform3d.hpp"
       ],
       "id": "node-transform3d-world-revision-forward-declaration"
+    },
+    {
+      "files": [
+        "flight/types/color_matrix_adjustment.hpp"
+      ],
+      "id": "adjustments-color-matrix-interface-heritage"
+    },
+    {
+      "files": [
+        "flight/types/tint_adjustment.hpp"
+      ],
+      "id": "adjustments-tint-interface-heritage"
     }
   ],
   "sourcePatches": [
@@ -5458,6 +5470,13 @@
       "digest": "eba48b1d8650e71f7fa9f6fcdc4e31c8b7b64e4be04c2944fc690fb2d2a85248",
       "id": "node-revision-required-parent-runtime",
       "module": "packages/node/src/revision.ts",
+      "package": "@flighthq/node"
+    },
+    {
+      "dependency": "flight",
+      "digest": "82ad334a6b389aa974d54e14947339209c3a27a70f7de0c1e8cc6adb01de815b",
+      "id": "node-bounds-rectangle-explicit-narrowing",
+      "module": "packages/node/src/boundsRectangle.ts",
       "package": "@flighthq/node"
     },
     {

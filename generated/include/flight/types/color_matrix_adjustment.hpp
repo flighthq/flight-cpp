@@ -19,9 +19,7 @@ struct ColorMatrixAdjustment;
 
 namespace flight::types {
 
-struct ColorMatrixAdjustment : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
+struct ColorMatrixAdjustment : public Adjustment {
   flight::Array<double> color_matrix;
 };
 

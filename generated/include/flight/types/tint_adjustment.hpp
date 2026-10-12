@@ -19,10 +19,7 @@ struct TintAdjustment;
 
 namespace flight::types {
 
-struct TintAdjustment : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  flight::String kind;
-  flight::Array<double> color_matrix;
+struct TintAdjustment : public ColorMatrixAdjustment {
 };
 
 } // namespace flight::types

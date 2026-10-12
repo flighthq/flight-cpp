@@ -2587,6 +2587,23 @@
       "verification": "Node-scoped generation at a627849 emits the definition without a default; with the forward-declaration repairs, flight/node/revision.hpp, node_transform2d.hpp, node_transform3d.hpp and node.hpp each compile alone under clang 22. TypeScript overloads were tried first and the emitter collapses them into the same defaulted definition."
     },
     {
+      "id": "node-bounds-rectangle-explicit-narrowing",
+      "dependency": "flight",
+      "patch": "node-bounds-rectangle-explicit-narrowing.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/node/src/boundsRectangle.ts",
+      "package": "@flighthq/node",
+      "answers": "diagnostic",
+      "refusal": "flight/node/bounds_rectangle.hpp: no viable conversion from std::optional<StructuralRef<RowReadonly<RowOf<Ref<Rectangle>>>>> to StructuralRef<...> -- computeNodeBoundsRectangle's `let bounds;` is emitted as an optional and the else-branch of `if (!bounds)` passes it to copyRectangle without unwrapping",
+      "rewrite": "Declares `bounds` as `Readonly<Rectangle> | undefined` and tests it positively, `if (bounds) { copyRectangle(out, bounds); } else { <world-bounds branch> }`, instead of `if (!bounds) { <world-bounds branch> } else { copyRectangle(out, bounds); }`.",
+      "equivalence": "The annotation erases. The two branches are swapped together with the negation, so each body runs under exactly the same condition: bounds is only ever undefined or a Rectangle object, and an object is always truthy. Statement order inside each branch and every call are unchanged.",
+      "verification": "Node-scoped generation at a627849 (emission limited to boundsRectangle.ts) produces flight/node/bounds_rectangle.hpp that compiles alone under clang 22; without the patch it fails at the copy_rectangle call.",
+      "whyNotUpstreamFirst": "The emitter narrows an optional local on the then-branch of a truthiness test but not on the else-branch of its negation; that is a compiler request (compiler-requests/negated-truthiness-else-narrowing.md). node blocks every lane.",
+      "unblocks": "flight/node/bounds_rectangle.hpp and the node headers that include it (_internal_index, contract).",
+      "expires": "when the emitter unwraps an optional local in the else-branch of a negated truthiness test.",
+      "appliedOn": "2026-10-12"
+    },
+    {
       "id": "scene2d-canvas-text-label-base-cache",
       "dependency": "flight",
       "patch": "scene2d-canvas-text-label-base-cache.patch",

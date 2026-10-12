@@ -13408,6 +13408,30 @@
       "defect": "revision.hpp includes node.hpp, which reaches node_transform2d.hpp/node_transform3d.hpp while revision.hpp is still guarded and incomplete, so their qualified calls to compute_node_world_transform_revision are parsed before its definition. A declaration at the import boundary names the same function template and breaks only the declaration-order cycle; it relies on source patch node-revision-required-parent-runtime having removed the default argument.",
       "expectedWhen": "always",
       "expires": "when cyclic imported functions are declared before package bodies; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "adjustments-color-matrix-interface-heritage",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/types/color_matrix_adjustment.hpp",
+      "sourceDeclaration": "packages/types/src/ColorMatrixAdjustment.ts -- ColorMatrixAdjustment extends Adjustment",
+      "from": "struct ColorMatrixAdjustment : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  flight::String kind;\n  flight::Array<double> color_matrix;\n};",
+      "to": "struct ColorMatrixAdjustment : public Adjustment {\n  flight::Array<double> color_matrix;\n};",
+      "diagnostic": "no matching constructor for initialization of 'flight::Array<flight::Ref<flight::types::Adjustment>>'",
+      "defect": "The type emitter flattens inherited interface fields into unrelated C++ owners: ColorMatrixAdjustment repeats Adjustment's fields and TintAdjustment repeats both, with no heritage. TypeScript widens a TintAdjustment to Adjustment implicitly, so setNodeColorAdjustmentsTint builds flight::Array<flight::Ref<Adjustment>>{create_tint_adjustment(tint)}, which has no conversion from Ref<TintAdjustment>. Restoring the declared interface heritage removes only duplicated member declarations; every field keeps its name, type and declaration order (entity_runtime_key, kind, color_matrix), and Ref<TintAdjustment> then converts to Ref<Adjustment> sharing the same object, which is the reference identity TypeScript has.",
+      "expectedWhen": "always",
+      "expires": "when emitted reference-backed interfaces retain declared interface heritage instead of duplicating inherited fields; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "adjustments-tint-interface-heritage",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/types/tint_adjustment.hpp",
+      "sourceDeclaration": "packages/types/src/TintAdjustment.ts -- TintAdjustment extends ColorMatrixAdjustment",
+      "from": "struct TintAdjustment : public flight::ReferenceEnabled {\n  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;\n  flight::String kind;\n  flight::Array<double> color_matrix;\n};",
+      "to": "struct TintAdjustment : public ColorMatrixAdjustment {\n};",
+      "diagnostic": "no matching constructor for initialization of 'flight::Array<flight::Ref<flight::types::Adjustment>>'",
+      "defect": "The type emitter flattens inherited interface fields into unrelated C++ owners: ColorMatrixAdjustment repeats Adjustment's fields and TintAdjustment repeats both, with no heritage. TypeScript widens a TintAdjustment to Adjustment implicitly, so setNodeColorAdjustmentsTint builds flight::Array<flight::Ref<Adjustment>>{create_tint_adjustment(tint)}, which has no conversion from Ref<TintAdjustment>. Restoring the declared interface heritage removes only duplicated member declarations; every field keeps its name, type and declaration order (entity_runtime_key, kind, color_matrix), and Ref<TintAdjustment> then converts to Ref<Adjustment> sharing the same object, which is the reference identity TypeScript has.",
+      "expectedWhen": "always",
+      "expires": "when emitted reference-backed interfaces retain declared interface heritage instead of duplicating inherited fields; sdk:check fails if this repair matches no header."
     }
   ]
 }
