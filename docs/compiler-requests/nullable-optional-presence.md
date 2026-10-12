@@ -77,3 +77,37 @@ compiled and run under clang returns distinct results for omitted, null and a va
 
 **Optional nullable members remain open**: they still have a single `std::optional` and still refuse with
 `cpp-dual-sentinel-comparison-unrepresented` / `cpp-presence-test-without-absence-storage`.
+
+## A third site: `@flighthq/connectivity`, where the union declares only `| null`
+
+The same message refuses `attachConnectivity` at this pin, on the one test that decides whether a
+subscription could be established:
+
+```ts
+const unsubscribe = hostConnectivityChange.subscribe(() => { … });
+if (unsubscribe === null) return false;
+_subscriptions.set(connectivity, unsubscribe);
+return true;
+```
+
+`subscribe` is declared `(() => void) | null` — **null only, no undefined arm** — and the emitted carrier
+is a single `std::optional<std::function<void()>>`. That carrier is what makes the test refuse: `=== null`
+is unambiguous in TypeScript for this declaration, but a single optional represents null and absence with
+one sentinel, so a test that names only null leaves the other one reachable and the emitter will not read
+the value. The emitter's advice (`x != null`) is therefore exactly right *for this union*, and unlike the
+`Partial<Row>` sites above it is not a weakening: no `undefined` can reach this value, so `!= null` and
+`=== null` select the same set.
+
+`@flighthq/connectivity` is `assisted`: the `connectivity-complete-module` override supplies
+`attachConnectivity` (written as `!unsubscribe.has_value()`, the emitted optional's own presence test) and
+re-exports the emitter's other ten functions verbatim; the function's semantics are exercised natively by
+`tests/generated_connectivity_test.cpp`, including the unknown-as-unmeasured transition the nullable
+baseline needs.
+
+Two facts about this site worth recording against the request rather than against the emitter:
+
+- it is the *call-result* form of the family, not a member read, so it is the shape the "affected modules"
+  list above does not name;
+- the emitter's fix direction is a source spelling that its own message supplies. Where the union really
+  is `| null` only, taking that spelling is a semantics-preserving one-line source change; where an
+  `undefined` arm exists it is not, and the three-state carrier this request asks for is the only fix.

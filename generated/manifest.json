@@ -781,7 +781,6 @@
     },
     {
       "files": [
-        "flight/connectivity/connectivity.hpp",
         "flight/interaction/interaction_manager.hpp",
         "flight/lifecycle/lifecycle.hpp",
         "flight/quadbatch/quad_batch.hpp",
@@ -1413,9 +1412,7 @@
       "id": "command-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/connectivity/connectivity.hpp"
-      ],
+      "files": [],
       "id": "connectivity-unqualified-entity-names"
     },
     {
@@ -2778,9 +2775,7 @@
       "id": "app-unqualified-signals-names"
     },
     {
-      "files": [
-        "flight/connectivity/connectivity.hpp"
-      ],
+      "files": [],
       "id": "connectivity-unqualified-signals-names"
     },
     {
@@ -6796,7 +6791,7 @@
       "sourceModules": 7
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/connectivity",
       "cppNamespace": "flight::connectivity",
       "emittedModules": 2,

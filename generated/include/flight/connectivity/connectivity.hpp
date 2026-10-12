@@ -3,8 +3,8 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function getConnectivityOnline -- source line 89
 //   missing: function attachConnectivity -- source line 18
+#include <flight/structural_ref.hpp>
 #include <flight/weak_map.hpp>
 #include <functional>
 #include <optional>
@@ -13,84 +13,79 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/signals/slot.hpp>
-
-#include <flight/signals/signal.hpp>
-
-#include <flight/types/connectivity.hpp>
+namespace flight::types { struct Connectivity; }
+namespace flight::types { struct ConnectivityReachability; }
+namespace flight::types { struct ConnectivityReachabilityOptions; }
+namespace flight::types { struct ConnectivityStatus; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct HostConnectivityChangeCapability; }
+namespace flight::types { struct HostConnectivityReachabilityCapability; }
+namespace flight::types { struct HostConnectivityStatusCapability; }
+namespace flight::types { template <typename T> struct Signal; }
 
 #include <flight/entity/entity.hpp>
+#include <flight/signals/emitter.hpp>
+#include <flight/signals/signal.hpp>
+#include <flight/signals/slot.hpp>
+#include <flight/types/connectivity.hpp>
+#include <flight/types/entity.hpp>
+#include <flight/types/signal.hpp>
 
 namespace flight::connectivity {
-
-using flight::signals::clear_signal;
 
 using flight::signals::create_signal;
 
 using flight::types::HostConnectivityChangeCapability;
 
-using flight::entity::allocate_entity;
-using flight::entity::finish_entity;
-
-inline void destroy_connectivity(flight::Ref<HostConnectivityChangeCapability> host_connectivity_change) {
-  host_connectivity_change->destroy();
+inline void destroy_connectivity(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostConnectivityChangeCapability>>>> host_connectivity_change) {
+  flight::row_get<flight::RowKey<"destroy">>(host_connectivity_change)();
 }
 
-inline flight::Task<flight::Ref<ConnectivityReachability>> detect_connectivity_reachability(flight::Ref<HostConnectivityReachabilityCapability> host_connectivity_reachability, flight::Ref<ConnectivityReachabilityOptions> options, flight::Ref<ConnectivityReachability> out) {
-  return host_connectivity_reachability->detect_reachability(options, out);
+inline flight::Task<flight::Ref<flight::types::ConnectivityReachability>> detect_connectivity_reachability(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostConnectivityReachabilityCapability>>>> host_connectivity_reachability, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ConnectivityReachabilityOptions>>>> options, flight::Ref<flight::types::ConnectivityReachability> out) {
+  return flight::row_get<flight::RowKey<"detectReachability">>(host_connectivity_reachability)(options, out);
 }
 
-inline flight::Ref<ConnectivityStatus> get_connectivity_status(flight::Ref<HostConnectivityStatusCapability> host_connectivity_status, flight::Ref<ConnectivityStatus> out) {
-  return host_connectivity_status->get_status(out);
+inline flight::Ref<flight::types::ConnectivityStatus> get_connectivity_status(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostConnectivityStatusCapability>>>> host_connectivity_status, flight::Ref<flight::types::ConnectivityStatus> out) {
+  return flight::row_get<flight::RowKey<"getStatus">>(host_connectivity_status)(out);
 }
 
-inline bool has_connectivity_status_changed(flight::Ref<ConnectivityStatus> a, flight::Ref<ConnectivityStatus> b) {
-  return ((((((((a->online != b->online) || (a->type != b->type)) || (a->downlink != b->downlink)) || (a->downlink_max != b->downlink_max)) || (a->effective_type != b->effective_type)) || (a->rtt != b->rtt)) || (a->save_data != b->save_data)) || (a->metered != b->metered));
+inline bool has_connectivity_status_changed(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ConnectivityStatus>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ConnectivityStatus>>>> b) {
+  return ((((((((flight::row_get<flight::RowKey<"online">>(a) != flight::row_get<flight::RowKey<"online">>(b)) || (flight::row_get<flight::RowKey<"type">>(a) != flight::row_get<flight::RowKey<"type">>(b))) || (flight::row_get<flight::RowKey<"downlink">>(a) != flight::row_get<flight::RowKey<"downlink">>(b))) || (flight::row_get<flight::RowKey<"downlinkMax">>(a) != flight::row_get<flight::RowKey<"downlinkMax">>(b))) || (flight::row_get<flight::RowKey<"effectiveType">>(a) != flight::row_get<flight::RowKey<"effectiveType">>(b))) || (flight::row_get<flight::RowKey<"rtt">>(a) != flight::row_get<flight::RowKey<"rtt">>(b))) || (flight::row_get<flight::RowKey<"saveData">>(a) != flight::row_get<flight::RowKey<"saveData">>(b))) || (flight::row_get<flight::RowKey<"metered">>(a) != flight::row_get<flight::RowKey<"metered">>(b)));
 }
 
-inline void initialize_connectivity(flight::Ref<EntityConstruction<flight::Ref<Connectivity>>> out) {
-  (out->on_change = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_change)>::element_type>>());
-  (out->on_connection_type_change = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_connection_type_change)>::element_type>>());
-  (out->on_metered_change = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_metered_change)>::element_type>>());
-  (out->on_offline = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_offline)>::element_type>>());
-  (out->on_online = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_online)>::element_type>>());
+inline void initialize_connectivity(flight::types::EntityConstruction<flight::Ref<flight::types::Connectivity>> out) {
+  flight::row_set<flight::RowKey<"onChange">>(out, flight::signals::create_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ConnectivityStatus>>>>)>>());
+  flight::row_set<flight::RowKey<"onConnectionTypeChange">>(out, flight::signals::create_signal<std::function<void(flight::types::ConnectivityConnectionType)>>());
+  flight::row_set<flight::RowKey<"onMeteredChange">>(out, flight::signals::create_signal<std::function<void(bool)>>());
+  flight::row_set<flight::RowKey<"onOffline">>(out, flight::signals::create_signal<std::function<void()>>());
+  flight::row_set<flight::RowKey<"onOnline">>(out, flight::signals::create_signal<std::function<void()>>());
 }
 
-inline flight::Ref<Connectivity> create_connectivity() {
-  flight::Ref<EntityConstruction<flight::Ref<Connectivity>>> out = allocate_entity<flight::Ref<Connectivity>>();
+inline flight::Ref<flight::types::Connectivity> create_connectivity() {
+  flight::types::EntityConstruction<flight::Ref<flight::types::Connectivity>> out = flight::entity::allocate_entity<flight::Ref<flight::types::Connectivity>>();
   initialize_connectivity(out);
-  return finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::Connectivity>>(out);
 }
 
-inline flight::Ref<ConnectivityStatus> connectivity_status_out() {
-  return flight::make_ref<ConnectivityStatus>(ConnectivityStatus{.downlink = -1.0, .downlink_max = -1.0, .effective_type = flight::String(""), .metered = false, .online = nullptr, .rtt = -1.0, .save_data = false, .type = flight::String("unknown")});
+inline flight::Ref<flight::types::ConnectivityStatus> connectivity_status_out() {
+  return ([&]() { auto object_member_downlink = -1.0; auto object_member_downlink_max = -1.0; auto object_member_effective_type = flight::String(""); auto object_member_metered = false; auto object_member_online = std::nullopt; auto object_member_rtt = -1.0; auto object_member_save_data = false; auto object_member_type = flight::String("unknown"); return flight::make_ref<flight::types::ConnectivityStatus>(flight::types::ConnectivityStatus{.online = object_member_online, .type = object_member_type, .downlink = object_member_downlink, .downlink_max = object_member_downlink_max, .effective_type = object_member_effective_type, .rtt = object_member_rtt, .save_data = object_member_save_data, .metered = object_member_metered}); }());
 }
 
-
-// NOT GENERATED: function getConnectivityOnline -- source line 89
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function getConnectivityOnline(
-//     hostConnectivityStatus: Readonly<HostConnectivityStatusCapability>,
-//   ): boolean | null {
-//     return hostConnectivityStatus.getStatus(connectivityStatusOut()).online;
-//   }
-//   
-// cpp emission failed for @flighthq/connectivity/packages/connectivity/src/connectivity.ts: contextual
-// optionalSingle construction requires expression type evidence
-
-inline bool is_connectivity_metered(flight::Ref<HostConnectivityStatusCapability> host_connectivity_status) {
-  return host_connectivity_status->get_status(connectivity_status_out())->metered;
+inline std::optional<bool> get_connectivity_online(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostConnectivityStatusCapability>>>> host_connectivity_status) {
+  return flight::row_get<flight::RowKey<"getStatus">>(host_connectivity_status)(connectivity_status_out())->online;
 }
 
-inline bool is_connectivity_save_data_enabled(flight::Ref<HostConnectivityStatusCapability> host_connectivity_status) {
-  return host_connectivity_status->get_status(connectivity_status_out())->save_data;
+inline bool is_connectivity_metered(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostConnectivityStatusCapability>>>> host_connectivity_status) {
+  return flight::row_get<flight::RowKey<"getStatus">>(host_connectivity_status)(connectivity_status_out())->metered;
 }
 
-inline flight::WeakMap<flight::Ref<Connectivity>, std::function<void()>> subscriptions = flight::WeakMap<flight::Ref<Connectivity>, std::function<void()>>();
+inline bool is_connectivity_save_data_enabled(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostConnectivityStatusCapability>>>> host_connectivity_status) {
+  return flight::row_get<flight::RowKey<"getStatus">>(host_connectivity_status)(connectivity_status_out())->save_data;
+}
 
-inline void detach_connectivity(flight::Ref<Connectivity> connectivity) {
+inline flight::WeakMap<flight::Ref<flight::types::Connectivity>, std::function<void()>> subscriptions = flight::WeakMap<flight::Ref<flight::types::Connectivity>, std::function<void()>>();
+
+inline void detach_connectivity(flight::Ref<flight::types::Connectivity> connectivity) {
   std::optional<std::function<void()>> unsubscribe = subscriptions.get(connectivity);
   if (!unsubscribe.has_value()) {
     return;
@@ -101,7 +96,7 @@ inline void detach_connectivity(flight::Ref<Connectivity> connectivity) {
 
 
 // NOT GENERATED: function attachConnectivity -- source line 18
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
+// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
 //
 // The source it stood for:
 //   export function attachConnectivity(
@@ -137,16 +132,18 @@ inline void detach_connectivity(flight::Ref<Connectivity> connectivity) {
 //     return true;
 //   }
 //   
-// cpp emission failed for @flighthq/connectivity/packages/connectivity/src/connectivity.ts: contextual
-// optionalSingle construction requires expression type evidence
+// cpp emission failed for @flighthq/connectivity/packages/connectivity/src/connectivity.ts: narrowed C++ union
+// projection requires proven present payload: the narrowing still admits absence, so nothing proved the payload
+// present and reading the value alternative here would unpack storage that may still be holding the sentinel the
+// test left reachable. Test both at once with `x != null`, or narrow the value into a present local the same way
 
-inline void dispose_connectivity(flight::Ref<Connectivity> connectivity) {
+inline void dispose_connectivity(flight::Ref<flight::types::Connectivity> connectivity) {
   detach_connectivity(connectivity);
-  clear_signal(connectivity->on_change);
-  clear_signal(connectivity->on_connection_type_change);
-  clear_signal(connectivity->on_metered_change);
-  clear_signal(connectivity->on_offline);
-  clear_signal(connectivity->on_online);
+  flight::signals::clear_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ConnectivityStatus>>>>)>>(connectivity->on_change);
+  flight::signals::clear_signal<std::function<void(flight::types::ConnectivityConnectionType)>>(connectivity->on_connection_type_change);
+  flight::signals::clear_signal<std::function<void(bool)>>(connectivity->on_metered_change);
+  flight::signals::clear_signal<std::function<void()>>(connectivity->on_offline);
+  flight::signals::clear_signal<std::function<void()>>(connectivity->on_online);
 }
 
 } // namespace flight::connectivity
