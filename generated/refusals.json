@@ -2804,14 +2804,14 @@
       "code": "dependency-refused",
       "module": "packages/loader/src/contract.ts",
       "package": "@flighthq/loader",
-      "reason": "dependency ./resourceLoader was refused for @flighthq/loader/packages/loader/src/resourceLoader.ts",
+      "reason": "dependency ./resourceLoader.ts was refused for @flighthq/loader/packages/loader/src/resourceLoader.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/loader/src/index.ts",
       "package": "@flighthq/loader",
-      "reason": "dependency ./contract was refused for @flighthq/loader/packages/loader/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/loader/packages/loader/src/contract.ts",
       "stage": "dependency"
     },
     {
