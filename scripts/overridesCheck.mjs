@@ -1,10 +1,17 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { driftedOverrides, loadOverrides, overridesIncludeDirectory, unresolvedHashReferences } from './overrides.mjs';
+import {
+  driftedOverrides,
+  loadOverrides,
+  overridesIncludeDirectory,
+  unmanifestedOverrideHeaders,
+  unresolvedHashReferences,
+} from './overrides.mjs';
 
-// Reports every hand-written override whose generated source has moved underneath it, and every one that
-// names an anonymous structural shape the generated tree no longer carries.
+// Reports every hand-written override whose generated source has moved underneath it, every one that
+// names an anonymous structural shape the generated tree no longer carries, and every header under the
+// override include directory that the manifest does not name at all.
 //
 // An override is a COPY with edits, and a copy's hazard is that it keeps compiling after the thing it
 // replaced has changed. `derivedFrom` records the sha256 of the generated file the override was written
@@ -33,20 +40,35 @@ if (overrides.length === 0) {
   process.stdout.write('No hand-written overrides are declared.\n');
   process.exit(0);
 }
+const includeDirectory = overridesIncludeDirectory(root);
 const drifted = driftedOverrides(overrides, generatedRoot);
-const unresolved = unresolvedHashReferences(overrides, overridesIncludeDirectory(root), generatedRoot);
+const unresolved = unresolvedHashReferences(overrides, includeDirectory, generatedRoot);
+const unmanifested = unmanifestedOverrideHeaders(overrides, includeDirectory);
 process.stdout.write(
   `${String(overrides.length)} override(s) declared against ${portable(path.relative(root, generatedRoot))}.\n`,
 );
 for (const entry of overrides) process.stdout.write(`- ${entry.path} (${entry.id})\n`);
-if (drifted.length === 0 && unresolved.length === 0) {
-  process.stdout.write('Each one still matches the generated file it was derived from.\n');
+if (drifted.length === 0 && unresolved.length === 0 && unmanifested.length === 0) {
+  process.stdout.write(
+    'Each one still matches the generated file it was derived from, and no file shadows the tree unmanifested.\n',
+  );
   process.exit(0);
 }
 if (drifted.length > 0) {
   process.stderr.write(`\n${String(drifted.length)} override(s) have drifted:\n`);
   for (const entry of drifted) process.stderr.write(`- ${entry.id}: ${entry.reason}\n`);
   process.stderr.write('Re-derive each from the current generated file, or drop it if it is no longer needed.\n');
+}
+if (unmanifested.length > 0) {
+  process.stderr.write(
+    `\n${String(unmanifested.length)} header(s) under ${portable(path.relative(root, includeDirectory))} are not ` +
+      'named by the manifest and still shadow the generated tree:\n',
+  );
+  for (const relative of unmanifested) process.stderr.write(`- ${relative}\n`);
+  process.stderr.write(
+    'Add a manifest entry for each (with its derivedFrom, status and equivalence) or remove the file: an ' +
+      'unmanifested header has no drift check and no tier accounting, so nothing else will notice it changing.\n',
+  );
 }
 if (unresolved.length > 0) {
   process.stderr.write(

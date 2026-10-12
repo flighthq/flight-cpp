@@ -4,7 +4,12 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
 
-import { hashSuffixedIdentifiers, loadOverrides, unresolvedHashReferences } from './overrides.mjs';
+import {
+  hashSuffixedIdentifiers,
+  loadOverrides,
+  unmanifestedOverrideHeaders,
+  unresolvedHashReferences,
+} from './overrides.mjs';
 
 // The hash-reference check is the one part of override validation that looks at what an override SAYS
 // rather than at which file it came from, so it is the part that can be wrong in both directions: a
@@ -150,4 +155,69 @@ test('a complete override that supplies a module still owes nothing', () => {
   const root = statusFixture([{ status: 'complete', supplies: 'packages/thing/src/thing.ts', remaining: 'None.' }]);
   assert.equal(loadOverrides(root).length, 1);
   rmSync(root, { recursive: true, force: true });
+});
+
+// The unmanifested-header check answers the opposite direction from drift: not "did this declared
+// override move" but "is every file that shadows the tree declared at all". An undeclared header still
+// wins include precedence, so it is a modification with no drift check and no tier accounting -- which
+// is how one sat unnoticed in this tree until a reader found it by hand.
+function overrideTreeFixture(files) {
+  const root = mkdtempSync(path.join(tmpdir(), 'flight-override-manifest-'));
+  for (const [relative, text] of files) {
+    const file = path.join(root, 'overrides', 'include', relative);
+    mkdirSync(path.dirname(file), { recursive: true });
+    writeFileSync(file, text);
+  }
+  return { includeDirectory: path.join(root, 'overrides', 'include'), root };
+}
+
+test('a header the manifest does not name is reported', () => {
+  const { includeDirectory, root } = overrideTreeFixture([
+    ['flight/thing/thing.hpp', '#pragma once\n'],
+    ['flight/thing/extra.hpp', '#pragma once\n'],
+  ]);
+  assert.deepEqual(unmanifestedOverrideHeaders(OVERRIDE, includeDirectory), ['flight/thing/extra.hpp']);
+  rmSync(root, { force: true, recursive: true });
+});
+
+test('a manifested header is not reported', () => {
+  const { includeDirectory, root } = overrideTreeFixture([['flight/thing/thing.hpp', '#pragma once\n']]);
+  assert.deepEqual(unmanifestedOverrideHeaders(OVERRIDE, includeDirectory), []);
+  rmSync(root, { force: true, recursive: true });
+});
+
+test('non-header files beside the overrides are not reported', () => {
+  // The directory may hold a note, a fixture or a data file a reader wants next to an override. Flagging
+  // those would teach the reader to ignore the gate, so only headers count.
+  const { includeDirectory, root } = overrideTreeFixture([
+    ['flight/thing/thing.hpp', '#pragma once\n'],
+    ['notes.md', 'scaffolding\n'],
+    ['flight/thing/readme.txt', 'prose\n'],
+    ['flight/thing/data.json', '{}\n'],
+    ['flight/thing/type_map.ts', 'export {};\n'],
+  ]);
+  assert.deepEqual(unmanifestedOverrideHeaders(OVERRIDE, includeDirectory), []);
+  rmSync(root, { force: true, recursive: true });
+});
+
+test('every unmanifested header is reported, nested ones included, in a deterministic order', () => {
+  // Creation order is deliberately not sorted, and one file is nested: the report has to be the same
+  // list every run, because a reader diffs it between runs to see what changed.
+  const { includeDirectory, root } = overrideTreeFixture([
+    ['flight/zeta/two.hpp', '#pragma once\n'],
+    ['flight/alpha/one.hpp', '#pragma once\n'],
+    ['flight/alpha/one.h', '#pragma once\n'],
+  ]);
+  assert.deepEqual(unmanifestedOverrideHeaders(OVERRIDE, includeDirectory), [
+    'flight/alpha/one.h',
+    'flight/alpha/one.hpp',
+    'flight/zeta/two.hpp',
+  ]);
+  rmSync(root, { force: true, recursive: true });
+});
+
+test('a base path with no include directory reports nothing rather than throwing', () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'flight-override-empty-'));
+  assert.deepEqual(unmanifestedOverrideHeaders(OVERRIDE, path.join(root, 'overrides', 'include')), []);
+  rmSync(root, { force: true, recursive: true });
 });

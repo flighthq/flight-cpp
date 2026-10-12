@@ -146,6 +146,43 @@ export function driftedOverrides(overrides, generatedRoot) {
   return drifted;
 }
 
+// A header under overrides/include that no manifest entry names. Nothing has to be declared for it to
+// take effect: the include directory is searched first, so the file shadows the generated one whatever
+// the manifest says. That makes it invisible to every other check here -- `derivedFrom` accounting only
+// reads the files the manifest lists, and the tier report counts the same set -- so an unmanifested
+// header is a modification nobody is tracking. Builder4 found one exactly this way
+// (flight/scene3d/scene_node_appearance.hpp, silently winning include precedence while missing from the
+// manifest), which is why this reports it rather than trusting the index.
+//
+// Only headers count: the directory may legitimately hold notes or fixtures a reader wants beside the
+// overrides, and flagging those would train its reader to ignore the gate.
+const OVERRIDE_HEADER_EXTENSIONS = new Set(['.h', '.hh', '.hpp', '.hxx']);
+
+export function unmanifestedOverrideHeaders(overrides, includeDirectory) {
+  const manifested = new Set(overrides.map((entry) => entry.path));
+  return headerFilesUnder(includeDirectory)
+    .filter((relative) => !manifested.has(relative))
+    .sort();
+}
+
+function headerFilesUnder(directory) {
+  const files = [];
+  const collect = (current, prefix) => {
+    for (const entry of readdirSync(current, { withFileTypes: true })) {
+      const relative = prefix === '' ? entry.name : `${prefix}/${entry.name}`;
+      if (entry.isDirectory()) {
+        collect(path.join(current, entry.name), relative);
+        continue;
+      }
+      if (!entry.isFile()) continue;
+      if (!OVERRIDE_HEADER_EXTENSIONS.has(path.extname(entry.name).toLowerCase())) continue;
+      files.push(relative);
+    }
+  };
+  if (existsSync(directory)) collect(directory, '');
+  return files;
+}
+
 function portable(filename) {
   return filename.split(path.sep).join('/');
 }
