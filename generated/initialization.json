@@ -9331,6 +9331,21 @@
       "source": "packages/types/src/index.ts"
     },
     {
+      "name": "Contract",
+      "packageName": "@flighthq/velocity",
+      "source": "packages/velocity/src/contract.ts"
+    },
+    {
+      "name": "Index",
+      "packageName": "@flighthq/velocity",
+      "source": "packages/velocity/src/index.ts"
+    },
+    {
+      "name": "TransformVelocity",
+      "packageName": "@flighthq/velocity",
+      "source": "packages/velocity/src/transformVelocity.ts"
+    },
+    {
       "name": "VelocityField",
       "packageName": "@flighthq/velocity",
       "source": "packages/velocity/src/velocityField.ts"
@@ -28036,9 +28051,39 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "TransformVelocity",
+          "packageName": "@flighthq/velocity",
+          "source": "packages/velocity/src/transformVelocity.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "VelocitySample",
           "packageName": "@flighthq/velocity",
           "source": "packages/velocity/src/velocitySample.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Contract",
+          "packageName": "@flighthq/velocity",
+          "source": "packages/velocity/src/contract.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Index",
+          "packageName": "@flighthq/velocity",
+          "source": "packages/velocity/src/index.ts"
         }
       ]
     },
@@ -118075,6 +118120,59 @@
     },
     {
       "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/contract.ts"
+          },
+          "specifier": "./transformVelocity.ts",
+          "target": {
+            "name": "TransformVelocity",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/contract.ts"
+          },
+          "specifier": "./velocityField.ts",
+          "target": {
+            "name": "VelocityField",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/velocityField.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/contract.ts"
+          },
+          "specifier": "./velocitySample.ts",
+          "target": {
+            "name": "VelocitySample",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/velocitySample.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Contract",
+        "packageName": "@flighthq/velocity",
+        "source": "packages/velocity/src/contract.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
       "dependencies": [],
       "module": {
         "name": "Contract",
@@ -187507,6 +187605,59 @@
         "name": "Index",
         "packageName": "@flighthq/types",
         "source": "packages/types/src/index.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/index.ts"
+          },
+          "specifier": "./transformVelocity.ts",
+          "target": {
+            "name": "TransformVelocity",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/index.ts"
+          },
+          "specifier": "./velocityField.ts",
+          "target": {
+            "name": "VelocityField",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/velocityField.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/index.ts"
+          },
+          "specifier": "./velocitySample.ts",
+          "target": {
+            "name": "VelocitySample",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/velocitySample.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Index",
+        "packageName": "@flighthq/velocity",
+        "source": "packages/velocity/src/index.ts"
       },
       "steps": []
     },
@@ -345911,6 +346062,379 @@
         "name": "TransformPath",
         "packageName": "@flighthq/path",
         "source": "packages/path/src/transformPath.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:9add97f50804024ff85aace648ce8fcd9ae0833d7241a6c4a2d4859b111d963f",
+            "line": 1,
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts",
+            "id": "binding:[\"@flighthq/velocity\",\"packages/velocity/src/transformVelocity.ts\",9]",
+            "kind": "import",
+            "name": "copyMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "copyMatrix",
+            "kind": "dependency",
+            "module": {
+              "name": "Matrix",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/matrix.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 22,
+            "fingerprint": "sha256:584fea3990b8ec9d66868b35d503dafc6d7571c0c2f785078cf2ff2618eeb2de",
+            "line": 1,
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts",
+            "id": "binding:[\"@flighthq/velocity\",\"packages/velocity/src/transformVelocity.ts\",21]",
+            "kind": "import",
+            "name": "createMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createMatrix",
+            "kind": "dependency",
+            "module": {
+              "name": "Matrix",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/matrix.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:66afb3939f70fe57ad1288b220875a96ec94b960b67c05e325736e626037073f",
+            "line": 2,
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts",
+            "id": "binding:[\"@flighthq/velocity\",\"packages/velocity/src/transformVelocity.ts\",81]",
+            "kind": "import",
+            "name": "ensureNodeWorldMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "ensureNodeWorldMatrix",
+            "kind": "dependency",
+            "module": {
+              "name": "NodeTransform2d",
+              "packageName": "@flighthq/node",
+              "source": "packages/node/src/nodeTransform2d.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 33,
+            "fingerprint": "sha256:b210154cac42da4ee7334f456c4922a5c719b7da854143e63d391d9c13df1585",
+            "line": 2,
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts",
+            "id": "binding:[\"@flighthq/velocity\",\"packages/velocity/src/transformVelocity.ts\",104]",
+            "kind": "import",
+            "name": "getNodeChildAt",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getNodeChildAt",
+            "kind": "dependency",
+            "module": {
+              "name": "Hierarchy",
+              "packageName": "@flighthq/node",
+              "source": "packages/node/src/hierarchy.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 49,
+            "fingerprint": "sha256:40b0344782e836d01f3175fb501f37f5f034e7e051ccc05b46a7921e5b4e3053",
+            "line": 2,
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts",
+            "id": "binding:[\"@flighthq/velocity\",\"packages/velocity/src/transformVelocity.ts\",120]",
+            "kind": "import",
+            "name": "getNodeChildCount",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getNodeChildCount",
+            "kind": "dependency",
+            "module": {
+              "name": "Hierarchy",
+              "packageName": "@flighthq/node",
+              "source": "packages/node/src/hierarchy.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 68,
+            "fingerprint": "sha256:daa24899aed7d3722e989445dfad8c3d03880984f21df6aafa6e44d9e2c815b3",
+            "line": 2,
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts",
+            "id": "binding:[\"@flighthq/velocity\",\"packages/velocity/src/transformVelocity.ts\",139]",
+            "kind": "import",
+            "name": "getNodeWorldMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getNodeWorldMatrix",
+            "kind": "dependency",
+            "module": {
+              "name": "NodeTransform2d",
+              "packageName": "@flighthq/node",
+              "source": "packages/node/src/nodeTransform2d.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:a6c90c192876269eec0800e8fcd730407767533c95a0f60a02fb5fe32eb2057f",
+            "line": 5,
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts",
+            "id": "binding:[\"@flighthq/velocity\",\"packages/velocity/src/transformVelocity.ts\",289]",
+            "kind": "import",
+            "name": "ensureVelocitySample",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "ensureVelocitySample",
+            "kind": "dependency",
+            "module": {
+              "name": "VelocityField",
+              "packageName": "@flighthq/velocity",
+              "source": "packages/velocity/src/velocityField.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:64ba349712c2a6f1c758270bd24312dd108e363950ad1f3b070287dff8eac919",
+            "line": 16,
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts",
+            "id": "binding:[\"@flighthq/velocity\",\"packages/velocity/src/transformVelocity.ts\",1119]",
+            "kind": "function",
+            "name": "contributeTransformVelocity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:f74d0b710a5d0b322c01cf3180c05e59d24e139d2221af2f3323afa14eb63fb4",
+            "line": 23,
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts",
+            "id": "binding:[\"@flighthq/velocity\",\"packages/velocity/src/transformVelocity.ts\",1288]",
+            "kind": "function",
+            "name": "visitTransformVelocity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "TransformVelocity",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts"
+          },
+          "specifier": "./velocityField.ts",
+          "target": {
+            "name": "VelocityField",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/velocityField.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "TransformVelocity",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts"
+          },
+          "specifier": "@flighthq/geometry/contract",
+          "target": {
+            "name": "Matrix",
+            "packageName": "@flighthq/geometry",
+            "source": "packages/geometry/src/matrix.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "TransformVelocity",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts"
+          },
+          "importedNames": [
+            "getNodeChildAt",
+            "getNodeChildCount"
+          ],
+          "specifier": "@flighthq/node/contract",
+          "target": {
+            "name": "Hierarchy",
+            "packageName": "@flighthq/node",
+            "source": "packages/node/src/hierarchy.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "TransformVelocity",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts"
+          },
+          "importedNames": [
+            "ensureNodeWorldMatrix",
+            "getNodeWorldMatrix"
+          ],
+          "specifier": "@flighthq/node/contract",
+          "target": {
+            "name": "NodeTransform2d",
+            "packageName": "@flighthq/node",
+            "source": "packages/node/src/nodeTransform2d.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "TransformVelocity",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts"
+          },
+          "importedNames": [
+            "HasTransform2D",
+            "Transform2DNode"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HasTransform2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HasTransform2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "TransformVelocity",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts"
+          },
+          "importedNames": [
+            "Matrix",
+            "MatrixLike"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Matrix",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Matrix.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "TransformVelocity",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts"
+          },
+          "importedNames": [
+            "Node",
+            "NodeOf"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Node",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Node.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "TransformVelocity",
+            "packageName": "@flighthq/velocity",
+            "source": "packages/velocity/src/transformVelocity.ts"
+          },
+          "importedNames": [
+            "Velocity2D",
+            "VelocityField",
+            "VelocitySample"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Velocity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Velocity.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "TransformVelocity",
+        "packageName": "@flighthq/velocity",
+        "source": "packages/velocity/src/transformVelocity.ts"
       },
       "steps": []
     },

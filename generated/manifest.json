@@ -558,8 +558,7 @@
     },
     {
       "files": [
-        "flight/scene2d_gl/gl_velocity.hpp",
-        "flight/velocity/transform_velocity.hpp"
+        "flight/scene2d_gl/gl_velocity.hpp"
       ],
       "id": "respell-reference-alias-transform2dnode"
     },
@@ -5946,6 +5945,13 @@
       "id": "swf-image-texture-2d-constructor",
       "module": "packages/swf/src/swfImageTexture.ts",
       "package": "@flighthq/swf"
+    },
+    {
+      "dependency": "flight",
+      "digest": "24c5deea8c620fdf601735ae6ac9320cd2324b7a1961a7f5b595c086d3ce8d39",
+      "id": "velocity-transform-trait-traversal",
+      "module": "packages/velocity/src/transformVelocity.ts",
+      "package": "@flighthq/velocity"
     }
   ],
   "duplicateStructuralStructAliases": {
@@ -6510,8 +6516,7 @@
       "flight/tilemap_formats/tiled_tmj_format.hpp",
       "flight/tilemap_formats/tiled_tmx_format.hpp",
       "flight/tilemap_formats/tiled_xml_parse.hpp",
-      "flight/tokens/substitute_flight_document_scene_tokens.hpp",
-      "flight/velocity/transform_velocity.hpp"
+      "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
     "includes": 965
   },
@@ -8497,14 +8502,14 @@
       "sourceModules": 4
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/velocity",
       "cppNamespace": "flight::velocity",
-      "emittedModules": 4,
+      "emittedModules": 5,
       "package": "@flighthq/velocity",
-      "refusedModules": 1,
+      "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 5
@@ -8559,8 +8564,8 @@
   },
   "summary": {
     "packages": 156,
-    "emittedModules": 2453,
-    "refusedModules": 580,
+    "emittedModules": 2454,
+    "refusedModules": 579,
     "sourceModules": 3033
   }
 }

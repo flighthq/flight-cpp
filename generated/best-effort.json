@@ -61566,19 +61566,14 @@
       "status": "refused-placeholder"
     },
     {
-      "consumers": [
-        "@flighthq/velocity/packages/velocity/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/velocity",
         "source": "packages/velocity/src/contract.ts"
       },
       "path": "flight/velocity/contract.hpp",
-      "refusedDependencies": [
-        "@flighthq/velocity/packages/velocity/src/transformVelocity.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "consumers": [],
@@ -61588,19 +61583,12 @@
         "source": "packages/velocity/src/index.ts"
       },
       "path": "flight/velocity/_internal_index.hpp",
-      "refusedDependencies": [
-        "@flighthq/velocity/packages/velocity/src/contract.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
-      "classification": "source-portability",
       "consumers": [
-        "@flighthq/velocity/packages/velocity/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:21591689572226d6c54cd76db9ce5fe84d3097da56c0c5f8445caa624c9011ca",
-        "sha256:2eaea24f2232ff6b5c60bcb2bf624fc316512af5e941be4bb8aaae2ddbdee1dc"
+        "@flighthq/velocity/packages/velocity/src/contract.ts",
+        "@flighthq/velocity/packages/velocity/src/index.ts"
       ],
       "module": {
         "name": "TransformVelocity",
@@ -61608,14 +61596,14 @@
         "source": "packages/velocity/src/transformVelocity.ts"
       },
       "path": "flight/velocity/transform_velocity.hpp",
-      "rule": "cpp-structural-assertion-writable-capability-unproven",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glVelocity.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuVelocity.ts",
         "@flighthq/velocity/packages/velocity/src/contract.ts",
+        "@flighthq/velocity/packages/velocity/src/index.ts",
         "@flighthq/velocity/packages/velocity/src/transformVelocity.ts"
       ],
       "module": {
@@ -61628,7 +61616,8 @@
     },
     {
       "consumers": [
-        "@flighthq/velocity/packages/velocity/src/contract.ts"
+        "@flighthq/velocity/packages/velocity/src/contract.ts",
+        "@flighthq/velocity/packages/velocity/src/index.ts"
       ],
       "module": {
         "name": "VelocitySample",
