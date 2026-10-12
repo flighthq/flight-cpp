@@ -82,6 +82,15 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [An `undefined` logical-OR fallback loses the present value domain](logical-or-undefined-fallback-evidence.md) —
   seven P-3D2 name/group sites refuse on `string || undefined`, while the same pinned fixtures with
   `null` or a concrete string fallback emit.
+- [A Math collection spread with fixed operands needs a seeded fold](math-spread-fold-with-fixed-seed.md) —
+  the pure range fold and ordinary array/Set spreads emit, but two P-3D2 COLLADA stride calculations
+  lose the Math specialization when a fixed lower bound precedes the spread.
+- [A length array needs proof before it becomes a dense carrier](dense-array-length-initialization-proof.md) —
+  bare holes must remain refused; two of three P-3D2 length arrays fill every index before observation,
+  while the COLLADA world-matrix array is honestly sparse.
+- [Optional index/member flow must preserve the present payload](optional-index-member-present-flow.md) —
+  an indexed string member call refuses for arrays and emits an invalid pre-unwrap for Records, while
+  direct optional members, guarded locals, and indexed object-property reads provide passing controls.
 - [An entity intersection arm and the value that fills it are sibling C++ carriers](entity-intersection-arm-sibling-carriers.md) —
   `@flighthq/tray` refuses at emission and none of its four headers compile; carried by the source patch
   `tray-create-result-and-runtime-owner`, which names the create-result arms once and narrows the

@@ -27,3 +27,10 @@ return join(parts);
 ## Affected modules
 
 `swfTagStreamTestHelper.ts` in `@flighthq/swf` (a test helper): refused, not supplied.
+
+## Boundary with Math folds
+
+This request is for an arbitrary rest callee. The backend already folds a sole collection spread in
+`Math.min(...values)` and `Math.max(...values)`. A fixed seed plus that spread reaches the same refusal
+text through a different path and is tracked separately in
+[the seeded Math-fold request](math-spread-fold-with-fixed-seed.md).
