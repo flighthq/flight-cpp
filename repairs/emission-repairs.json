@@ -12101,18 +12101,6 @@
       "expires": "when generic interface members retain their declared template parameter through nullable array element lowering; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "signals-generic-slot-operations",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/signals/slot.hpp",
-      "from": "std::function<void(flight::Array<flight::Any>)>",
-      "to": "T",
-      "sourceDeclaration": "packages/signals/src/slot.ts -- every slot local, initializer, and insertion uses the surrounding Signal<T> callback parameter",
-      "diagnostic": "optional<std::function<void(Array<Any>)>> cannot be constructed from the concrete signal slot T",
-      "defect": "The emitter erases the generic callback parameter to its unconstrained fallback signature in three slot operations even though the surrounding generated functions retain T.",
-      "expectedWhen": "always",
-      "expires": "when generic signal slot operations retain their surrounding template parameter; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "signals-flatten-generic-slot-read",
       "kind": "respell-reference-member-access",
       "appliesTo": "flight/signals/slot.hpp",
@@ -12123,6 +12111,30 @@
       "defect": "Array<optional<T>>::get distinguishes an out-of-range read from an empty in-range element, while JavaScript exposes both as the same nullish slot value in this length-bounded loop.",
       "expectedWhen": "always",
       "expires": "when length-bounded reads from nullable generic arrays flatten the bounds absence into the element absence; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "signals-safe-flatten-generic-slot-read",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/signals/safe.hpp",
+      "from": "std::optional<std::optional<T>> slot = slots.get(i);",
+      "to": "std::optional<T> slot = slots.get(i).value_or(std::nullopt);",
+      "sourceDeclaration": "packages/signals/src/safe.ts -- slots[i] reads the snapshot `(T | null)[]` inside `for (let i = 0; i < slots.length; i++)`, with exactly the one null absence channel the element declares",
+      "diagnostic": "the bounds optional from Array::get nests the slot element optional, so the narrowed slot is passed to tombstone_once_slot and called as optional<T>",
+      "defect": "The same nested read signals-flatten-generic-slot-read repairs in slot.hpp: Array<optional<T>>::get distinguishes an out-of-range read from an empty in-range element, while JavaScript exposes both as the same nullish slot value in this length-bounded loop, and the narrowed read unwraps only the outer layer. It was unreachable until emitSignalSafe could be instantiated (compiler-constrained-type-parameter-union-slot).",
+      "expectedWhen": "always",
+      "expires": "when length-bounded reads from nullable generic arrays flatten the bounds absence into the element absence; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "signals-safe-tombstone-identity-comparison",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/signals/safe.hpp",
+      "from": "if ((((data->slots.element(i) != slot) || data->repeat.element(i)) || (data->priorities.element(i) != priority))) {",
+      "to": "if ((((!data->slots.element(i).has_value() || !flight::callable_identity_equal(data->slots.element(i).value(), slot)) || data->repeat.element(i)) || (data->priorities.element(i) != priority))) {",
+      "sourceDeclaration": "packages/signals/src/safe.ts -- tombstoneOnceSlot compares each nullable slot to the requested JavaScript function by reference identity",
+      "diagnostic": "optional<T> and callback T have no valid inequality when T is std::function",
+      "defect": "The same nullable-slot comparison signals-slot-identity-comparison repairs in slot.hpp: the emitter compares the nullable slot carrier directly to its callback argument, and identity-erased std::function instantiations provide no equality operator. A null cell is never the requested function, as in JavaScript. It was unreachable until emitSignalSafe could be instantiated (compiler-constrained-type-parameter-union-slot).",
+      "expectedWhen": "always",
+      "expires": "when signal callbacks retain an identity-bearing carrier and nullable slot comparison unwraps the present value; sdk:check fails if this repair matches no header."
     },
     {
       "id": "signals-slot-identity-comparison",

@@ -3841,9 +3841,7 @@
       "id": "signals-generic-slot-storage"
     },
     {
-      "files": [
-        "flight/signals/slot.hpp"
-      ],
+      "files": [],
       "id": "signals-generic-slot-operations"
     },
     {
@@ -4739,6 +4737,18 @@
         "flight/shortcut/shortcut_explicit_dependency.hpp"
       ],
       "id": "structural-record-on-trigger-member-spelling"
+    },
+    {
+      "files": [
+        "flight/signals/safe.hpp"
+      ],
+      "id": "signals-safe-flatten-generic-slot-read"
+    },
+    {
+      "files": [
+        "flight/signals/safe.hpp"
+      ],
+      "id": "signals-safe-tombstone-identity-comparison"
     }
   ],
   "sourcePatches": [

@@ -5,7 +5,6 @@
 #include <flight/any.hpp>
 #include <flight/boolean.hpp>
 #include <flight/structural_ref.hpp>
-#include <functional>
 #include <optional>
 #include <type_traits>
 #include <utility>
@@ -30,7 +29,7 @@ inline void tombstone_once_slot(std::shared_ptr<flight::types::SignalData<T>> da
     double i = 0.0;
     while ((i < static_cast<double>(data->slots.size()))) {
       {
-        if ((((data->slots.element(i) != slot) || data->repeat.element(i)) || (data->priorities.element(i) != priority))) {
+        if ((((!data->slots.element(i).has_value() || !flight::callable_identity_equal(data->slots.element(i).value(), slot)) || data->repeat.element(i)) || (data->priorities.element(i) != priority))) {
           (i += 1.0);
           continue;
         }
@@ -82,7 +81,7 @@ inline void emit_signal_safe(std::shared_ptr<flight::types::Signal<T>> signal, A
   if (!data.has_value()) {
     return;
   }
-  flight::Array<std::optional<std::function<void(flight::Array<flight::Any>)>>> slots = data.value()->slots.slice();
+  flight::Array<std::optional<T>> slots = data.value()->slots.slice();
   flight::Array<double> priorities = data.value()->priorities.slice();
   flight::Array<bool> repeat = data.value()->repeat.slice();
   (data.value()->cancelled = false);
@@ -93,7 +92,7 @@ inline void emit_signal_safe(std::shared_ptr<flight::types::Signal<T>> signal, A
       double i = 0.0;
       while ((i < static_cast<double>(slots.size()))) {
         {
-          std::optional<std::optional<std::function<void(flight::Array<flight::Any>)>>> slot = slots.get(i);
+          std::optional<T> slot = slots.get(i).value_or(std::nullopt);
           if (([&](const auto& presence_operand) { if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(presence_operand.value())>>::optional) { return presence_operand.has_value() && !presence_operand.value().has_value(); } else { return !presence_operand.has_value(); } }(slot))) {
             (i += 1.0);
             continue;
