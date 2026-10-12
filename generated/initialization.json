@@ -99173,7 +99173,7 @@
             "packageName": "@flighthq/clipboard",
             "source": "packages/clipboard/src/contract.ts"
           },
-          "specifier": "./clipboard",
+          "specifier": "./clipboard.ts",
           "target": {
             "name": "Clipboard",
             "packageName": "@flighthq/clipboard",
@@ -99600,7 +99600,7 @@
             "packageName": "@flighthq/geolocation",
             "source": "packages/geolocation/src/contract.ts"
           },
-          "specifier": "./geolocation",
+          "specifier": "./geolocation.ts",
           "target": {
             "name": "Geolocation",
             "packageName": "@flighthq/geolocation",
@@ -99614,7 +99614,7 @@
             "packageName": "@flighthq/geolocation",
             "source": "packages/geolocation/src/contract.ts"
           },
-          "specifier": "./geolocationAccess",
+          "specifier": "./geolocationAccess.ts",
           "target": {
             "name": "GeolocationAccess",
             "packageName": "@flighthq/geolocation",
@@ -99639,7 +99639,7 @@
             "packageName": "@flighthq/haptics",
             "source": "packages/haptics/src/contract.ts"
           },
-          "specifier": "./haptics",
+          "specifier": "./haptics.ts",
           "target": {
             "name": "Haptics",
             "packageName": "@flighthq/haptics",
@@ -100943,7 +100943,7 @@
             "packageName": "@flighthq/screen",
             "source": "packages/screen/src/contract.ts"
           },
-          "specifier": "./screen",
+          "specifier": "./screen.ts",
           "target": {
             "name": "Screen",
             "packageName": "@flighthq/screen",
@@ -100968,7 +100968,7 @@
             "packageName": "@flighthq/sensors",
             "source": "packages/sensors/src/contract.ts"
           },
-          "specifier": "./sensors",
+          "specifier": "./sensors.ts",
           "target": {
             "name": "Sensors",
             "packageName": "@flighthq/sensors",
@@ -169397,7 +169397,7 @@
             "packageName": "@flighthq/clipboard",
             "source": "packages/clipboard/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/clipboard",
@@ -169698,7 +169698,7 @@
             "packageName": "@flighthq/geolocation",
             "source": "packages/geolocation/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/geolocation",
@@ -169723,7 +169723,7 @@
             "packageName": "@flighthq/haptics",
             "source": "packages/haptics/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/haptics",
@@ -170201,7 +170201,7 @@
             "packageName": "@flighthq/screen",
             "source": "packages/screen/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/screen",
@@ -170226,7 +170226,7 @@
             "packageName": "@flighthq/sensors",
             "source": "packages/sensors/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/sensors",

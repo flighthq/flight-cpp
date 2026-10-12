@@ -6542,7 +6542,7 @@
       "package": "@flighthq/clipboard",
       "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 3
@@ -6795,7 +6795,7 @@
       "package": "@flighthq/geolocation",
       "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 4
@@ -6855,7 +6855,7 @@
       "package": "@flighthq/haptics",
       "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 3
@@ -7625,7 +7625,7 @@
       "package": "@flighthq/screen",
       "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 3
@@ -7649,7 +7649,7 @@
       "package": "@flighthq/sensors",
       "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 3
