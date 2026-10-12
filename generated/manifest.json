@@ -311,7 +311,9 @@
         "flight/scene2d_canvas/canvas_tilemap.hpp",
         "flight/scene2d_dom/dom_cssfilter_binding.hpp",
         "flight/scene2d_dom/dom_html_view.hpp",
+        "flight/scene2d_formats/lottie_test_fixtures.hpp",
         "flight/scene2d_formats/rive_asset_binding.hpp",
+        "flight/scene2d_formats/svg_container_element.hpp",
         "flight/scene2d_gl/gl_cache.hpp",
         "flight/scene2d_resources/resolve_scene2_dresources.hpp",
         "flight/scene3d/billboard.hpp",
@@ -398,6 +400,7 @@
         "flight/render/scene_render.hpp",
         "flight/scene2d/display_object.hpp",
         "flight/scene2d_canvas/canvas_rich_text.hpp",
+        "flight/scene2d_formats/lottie_image_layer.hpp",
         "flight/scene2d_formats/rive_asset_binding.hpp",
         "flight/scene3d/billboard.hpp",
         "flight/scene3d/scene_material.hpp",
@@ -602,6 +605,7 @@
         "flight/node/enable_node_guards.hpp",
         "flight/render/enable_scene_render_guards.hpp",
         "flight/render_wgpu/enable_wgpu_texture_resolver_guards.hpp",
+        "flight/scene2d_formats/lottie_test_fixtures.hpp",
         "flight/scene3d/enable_scene3_dguards.hpp",
         "flight/scene3d_gl/enable_gl_scene3_dcolor_space_guards.hpp",
         "flight/scene3d_gl/enable_gl_scene3_dcustom_shader_guards.hpp",
@@ -806,7 +810,6 @@
     },
     {
       "files": [
-        "flight/scene2d/display_container.hpp",
         "flight/scene2d/display_object.hpp",
         "flight/scene2d/display_object_animation.hpp",
         "flight/scene2d/html_view.hpp",
@@ -851,6 +854,7 @@
         "flight/render_wgpu/wgpu_external_texture.hpp",
         "flight/scene2d_formats/rive_clipping.hpp",
         "flight/scene2d_formats/rive_text.hpp",
+        "flight/scene2d_formats/svg_container_element.hpp",
         "flight/scene2d_gl/gl_clip_rectangle.hpp",
         "flight/scene2d_wgpu/wgpu_clip_rectangle.hpp",
         "flight/scene3d_formats/awd2_parse.hpp",
@@ -1735,8 +1739,7 @@
     },
     {
       "files": [
-        "flight/scene2d_formats/lottie_document.hpp",
-        "flight/scene2d_formats/svg_document.hpp"
+        "flight/scene2d_formats/lottie_document.hpp"
       ],
       "id": "scene2d-formats-unqualified-node-names"
     },
@@ -1880,17 +1883,41 @@
     },
     {
       "files": [
+        "flight/scene2d_formats/lottie_bezier_path.hpp",
+        "flight/scene2d_formats/lottie_counts.hpp",
         "flight/scene2d_formats/lottie_document.hpp",
+        "flight/scene2d_formats/lottie_ellipse_shape_item.hpp",
+        "flight/scene2d_formats/lottie_fill_shape_item.hpp",
+        "flight/scene2d_formats/lottie_gradient_shape_items.hpp",
+        "flight/scene2d_formats/lottie_image_layer.hpp",
+        "flight/scene2d_formats/lottie_import.hpp",
+        "flight/scene2d_formats/lottie_mask.hpp",
+        "flight/scene2d_formats/lottie_path_shape_item.hpp",
+        "flight/scene2d_formats/lottie_polystar_shape_item.hpp",
+        "flight/scene2d_formats/lottie_precomposition_layer.hpp",
+        "flight/scene2d_formats/lottie_rectangle_shape_item.hpp",
+        "flight/scene2d_formats/lottie_shape_geometry.hpp",
+        "flight/scene2d_formats/lottie_shape_layer.hpp",
+        "flight/scene2d_formats/lottie_shape_paint.hpp",
+        "flight/scene2d_formats/lottie_shape_path_channels.hpp",
+        "flight/scene2d_formats/lottie_solid_layer.hpp",
+        "flight/scene2d_formats/lottie_test_fixtures.hpp",
+        "flight/scene2d_formats/lottie_text_layer.hpp",
+        "flight/scene2d_formats/lottie_trim_path_shape_item.hpp",
         "flight/scene2d_formats/rive_asset_binding.hpp",
         "flight/scene2d_formats/rive_assets.hpp",
         "flight/scene2d_formats/rive_clipping.hpp",
+        "flight/scene2d_formats/rive_core_type_census.hpp",
         "flight/scene2d_formats/rive_core_types.hpp",
         "flight/scene2d_formats/rive_document.hpp",
         "flight/scene2d_formats/rive_draw_order.hpp",
         "flight/scene2d_formats/rive_handlers.hpp",
+        "flight/scene2d_formats/rive_import.hpp",
         "flight/scene2d_formats/rive_import_registry.hpp",
         "flight/scene2d_formats/rive_layout.hpp",
         "flight/scene2d_formats/rive_object_graph.hpp",
+        "flight/scene2d_formats/rive_registrars.hpp",
+        "flight/scene2d_formats/rive_requirements.hpp",
         "flight/scene2d_formats/rive_scene2_d.hpp",
         "flight/scene2d_formats/rive_scene2_ddocument.hpp",
         "flight/scene2d_formats/rive_shape_node.hpp",
@@ -1901,7 +1928,21 @@
         "flight/scene2d_formats/rive_solo.hpp",
         "flight/scene2d_formats/rive_state_machine.hpp",
         "flight/scene2d_formats/rive_text.hpp",
-        "flight/scene2d_formats/svg_document.hpp"
+        "flight/scene2d_formats/svg_bounds.hpp",
+        "flight/scene2d_formats/svg_clip.hpp",
+        "flight/scene2d_formats/svg_container_element.hpp",
+        "flight/scene2d_formats/svg_counts.hpp",
+        "flight/scene2d_formats/svg_document.hpp",
+        "flight/scene2d_formats/svg_geometry_element.hpp",
+        "flight/scene2d_formats/svg_geometry_path.hpp",
+        "flight/scene2d_formats/svg_gradient.hpp",
+        "flight/scene2d_formats/svg_image_element.hpp",
+        "flight/scene2d_formats/svg_import.hpp",
+        "flight/scene2d_formats/svg_style.hpp",
+        "flight/scene2d_formats/svg_text_element.hpp",
+        "flight/scene2d_formats/svg_transform.hpp",
+        "flight/scene2d_formats/svg_use_element.hpp",
+        "flight/scene2d_formats/svg_xml.hpp"
       ],
       "id": "scene2d-formats-unqualified-types-names"
     },
@@ -3092,8 +3133,8 @@
     },
     {
       "files": [
-        "flight/scene2d_formats/rive_clipping.hpp",
-        "flight/scene2d_formats/svg_document.hpp"
+        "flight/scene2d_formats/lottie_mask.hpp",
+        "flight/scene2d_formats/rive_clipping.hpp"
       ],
       "id": "scene2d-formats-unqualified-clip-names"
     },
@@ -3105,9 +3146,8 @@
     },
     {
       "files": [
-        "flight/scene2d_formats/lottie_document.hpp",
         "flight/scene2d_formats/rive_clipping.hpp",
-        "flight/scene2d_formats/svg_document.hpp"
+        "flight/scene2d_formats/svg_text_element.hpp"
       ],
       "id": "scene2d-formats-unqualified-geometry-names"
     },
@@ -3118,16 +3158,25 @@
         "flight/scene2d_formats/rive_clipping.hpp",
         "flight/scene2d_formats/rive_layout.hpp",
         "flight/scene2d_formats/rive_text.hpp",
-        "flight/scene2d_formats/svg_document.hpp"
+        "flight/scene2d_formats/svg_geometry_element.hpp",
+        "flight/scene2d_formats/svg_text_element.hpp"
       ],
       "id": "scene2d-formats-unqualified-importdiagnostics-names"
     },
     {
       "files": [
-        "flight/scene2d_formats/lottie_document.hpp",
+        "flight/scene2d_formats/lottie_bezier_path.hpp",
+        "flight/scene2d_formats/lottie_ellipse_shape_item.hpp",
+        "flight/scene2d_formats/lottie_polystar_shape_item.hpp",
+        "flight/scene2d_formats/lottie_rectangle_shape_item.hpp",
+        "flight/scene2d_formats/lottie_shape_geometry.hpp",
+        "flight/scene2d_formats/lottie_shape_paint.hpp",
+        "flight/scene2d_formats/lottie_trim_path_shape_item.hpp",
         "flight/scene2d_formats/rive_clipping.hpp",
         "flight/scene2d_formats/rive_shape_paint.hpp",
-        "flight/scene2d_formats/svg_document.hpp"
+        "flight/scene2d_formats/svg_clip.hpp",
+        "flight/scene2d_formats/svg_geometry_element.hpp",
+        "flight/scene2d_formats/svg_gradient.hpp"
       ],
       "id": "scene2d-formats-unqualified-path-names"
     },
@@ -3138,35 +3187,31 @@
       "id": "scene2d-formats-unqualified-path-boolean-names"
     },
     {
-      "files": [
-        "flight/scene2d_formats/svg_document.hpp"
-      ],
+      "files": [],
       "id": "scene2d-formats-unqualified-path-formats-names"
     },
     {
-      "files": [
-        "flight/scene2d_formats/lottie_document.hpp"
-      ],
+      "files": [],
       "id": "scene2d-formats-unqualified-scene2d-names"
     },
     {
       "files": [
-        "flight/scene2d_formats/lottie_document.hpp",
-        "flight/scene2d_formats/svg_document.hpp"
+        "flight/scene2d_formats/lottie_fill_shape_item.hpp",
+        "flight/scene2d_formats/lottie_gradient_shape_items.hpp",
+        "flight/scene2d_formats/svg_document.hpp",
+        "flight/scene2d_formats/svg_geometry_element.hpp"
       ],
       "id": "scene2d-formats-unqualified-shape-names"
     },
     {
       "files": [
         "flight/scene2d_formats/rive_text.hpp",
-        "flight/scene2d_formats/svg_document.hpp"
+        "flight/scene2d_formats/svg_text_element.hpp"
       ],
       "id": "scene2d-formats-unqualified-textlayout-names"
     },
     {
-      "files": [
-        "flight/scene2d_formats/svg_document.hpp"
-      ],
+      "files": [],
       "id": "scene2d-formats-unqualified-xml-names"
     },
     {
@@ -6184,8 +6229,6 @@
       "flight/render_wgpu/wgpu_render_texture_pool.hpp",
       "flight/render_wgpu/wgpu_screen_antialias.hpp",
       "flight/render_wgpu/wgpu_texture_resolver.hpp",
-      "flight/scene2d/display_container.hpp",
-      "flight/scene2d/display_object.hpp",
       "flight/scene2d/html_view.hpp",
       "flight/scene2d/scale9_sprite.hpp",
       "flight/scene2d/scene2d.hpp",
@@ -6206,12 +6249,30 @@
       "flight/scene2d_dom/dom_node2_d.hpp",
       "flight/scene2d_dom/dom_shape_rasterizer.hpp",
       "flight/scene2d_dom/dom_texture_resolver.hpp",
+      "flight/scene2d_formats/lottie_document.hpp",
+      "flight/scene2d_formats/lottie_ellipse_shape_item.hpp",
+      "flight/scene2d_formats/lottie_fill_shape_item.hpp",
+      "flight/scene2d_formats/lottie_gradient_shape_items.hpp",
+      "flight/scene2d_formats/lottie_mask.hpp",
+      "flight/scene2d_formats/lottie_path_shape_item.hpp",
+      "flight/scene2d_formats/lottie_polystar_shape_item.hpp",
+      "flight/scene2d_formats/lottie_rectangle_shape_item.hpp",
+      "flight/scene2d_formats/lottie_shape_layer.hpp",
+      "flight/scene2d_formats/lottie_stroke_shape_item.hpp",
+      "flight/scene2d_formats/lottie_text_layer.hpp",
+      "flight/scene2d_formats/lottie_trim_path_shape_item.hpp",
       "flight/scene2d_formats/rive_assets.hpp",
       "flight/scene2d_formats/rive_clipping.hpp",
       "flight/scene2d_formats/rive_import_registry.hpp",
       "flight/scene2d_formats/rive_layout.hpp",
       "flight/scene2d_formats/rive_shape_node.hpp",
       "flight/scene2d_formats/rive_text.hpp",
+      "flight/scene2d_formats/svg_color.hpp",
+      "flight/scene2d_formats/svg_geometry_element.hpp",
+      "flight/scene2d_formats/svg_image_element.hpp",
+      "flight/scene2d_formats/svg_style.hpp",
+      "flight/scene2d_formats/svg_text_element.hpp",
+      "flight/scene2d_formats/svg_use_element.hpp",
       "flight/scene2d_gl/gl_bitmap_text.hpp",
       "flight/scene2d_gl/gl_clip_contours.hpp",
       "flight/scene2d_gl/gl_clip_rectangle.hpp",
@@ -6355,7 +6416,7 @@
       "flight/velocity/transform_velocity.hpp",
       "flight/video/video_resource_from.hpp"
     ],
-    "includes": 908
+    "includes": 951
   },
   "packages": [
     {
@@ -7504,12 +7565,12 @@
       "cppNamespace": "flight::scene2d",
       "emittedModules": 4,
       "package": "@flighthq/scene2d",
-      "refusedModules": 6,
+      "refusedModules": 5,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
-      "sourceModules": 10
+      "sourceModules": 9
     },
     {
       "cppIncludePrefix": "flight/scene2d_canvas",
@@ -7540,14 +7601,14 @@
     {
       "cppIncludePrefix": "flight/scene2d_formats",
       "cppNamespace": "flight::scene2d_formats",
-      "emittedModules": 17,
+      "emittedModules": 52,
       "package": "@flighthq/scene2d-formats",
-      "refusedModules": 10,
+      "refusedModules": 28,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
-      "sourceModules": 27
+      "sourceModules": 80
     },
     {
       "cppIncludePrefix": "flight/scene2d_gl",
@@ -8233,8 +8294,8 @@
   },
   "summary": {
     "packages": 155,
-    "emittedModules": 2382,
-    "refusedModules": 560,
-    "sourceModules": 2942
+    "emittedModules": 2417,
+    "refusedModules": 577,
+    "sourceModules": 2994
   }
 }

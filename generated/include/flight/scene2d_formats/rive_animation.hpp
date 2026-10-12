@@ -10,82 +10,83 @@
 // stopped at: packages/scene2d-formats/src/riveAnimation.ts
 
 // Declared here, for the replacement to supply:
-//   function applyAnimationClipToRiveDocument(clip: Readonly<AnimationClip>, time: number): void -- :40
-//   function createRiveAnimationClips(objects: Readonly<RiveCoreObject>[], range: Readonly<{ ... }>, nodes: DisplayObject | null[], artboard: Readonly<RiveArtboardGraph>, rebuilds: ReadonlyMap<number, () => void>, skeleton?: Readonly<RiveSkeleton2DImport> | null, diagnostics?: ImportDiagnostic[]): RiveAnimationClip[] -- :62
-//   interface RiveMutableTarget { riveApply: (sample: Readonly<number[] | Float32Array>) => void } -- :92
-//   function createRiveAnimationClip(objects: Readonly<RiveCoreObject>[], start: number, limit: number, nodes: DisplayObject | null[], interpolators: ReadonlyMap<number, EasingFunction>, artboard: Readonly<RiveArtboardGraph>, rebuilds: ReadonlyMap<number, () => void>, skeleton: Readonly<RiveSkeleton2DImport> | null, diagnostics: ImportDiagnostic[] | undefined): RiveAnimationClip -- :96
-//   function toRiveAnimationLoop(value: number, diagnostics: ImportDiagnostic[] | undefined): RiveAnimationLoop -- :236
-//   function createRiveBoneChannel(objects: Readonly<RiveCoreObject>[], propertyIndex: number, limit: number, fps: number, interpolators: ReadonlyMap<number, EasingFunction>, skeleton: Readonly<RiveSkeleton2DImport> | null, keyedIndex: number, propertyKey: number, diagnostics: ImportDiagnostic[] | undefined): AnimationChannel | null -- :273
-//   function toRiveBoneAnimationPath(propertyKey: number): Skeleton2DAnimationPath | null -- :318
-//   function toRiveBoneValueConversion(path: Skeleton2DAnimationPath, setup: Readonly<Bone2D>): (value: number) => number | null -- :336
-//   function createRiveChannel(objects: Readonly<RiveCoreObject>[], propertyIndex: number, limit: number, fps: number, interpolators: ReadonlyMap<number, EasingFunction>, convert: (value: number) => number, targetRef: unknown, diagnostics: ImportDiagnostic[] | undefined): AnimationChannel | null -- :349
-//   function createRiveMutableChannel(objects: Readonly<RiveCoreObject>[], propertyIndex: number, limit: number, fps: number, interpolators: ReadonlyMap<number, EasingFunction>, targetRef: RiveMutableTarget, diagnostics: ImportDiagnostic[] | undefined): AnimationChannel | null -- :375
-//   function createRiveTypedChannel(objects: Readonly<RiveCoreObject>[], propertyIndex: number, limit: number, fps: number, interpolators: ReadonlyMap<number, EasingFunction>, components: number, readValue: (keyframe: Readonly<RiveCoreObject>) => number[] | null, targetRef: unknown, diagnostics: ImportDiagnostic[] | undefined): AnimationChannel | null -- :401
-//   function readRiveColorKeyframe(keyframe: Readonly<RiveCoreObject>): number[] | null -- :438
-//   function createRiveMutableTarget(artboard: Readonly<RiveArtboardGraph>, rebuilds: ReadonlyMap<number, () => void>, objectIndex: number, propertyKey: number, defaultType: RiveFieldType): RiveMutableTarget | null -- :452
-//   function packRiveColorSample(sample: Readonly<number[] | Float32Array>): number -- :477
-//   function toRiveColorByte(value: number): number -- :485
-//   function findRiveShapeOwner(artboard: Readonly<RiveArtboardGraph>, index: number): number -- :490
-//   function toRiveSegmentEasing(keyframe: Readonly<RiveCoreObject>, interpolators: ReadonlyMap<number, EasingFunction>, diagnostics: ImportDiagnostic[] | undefined): EasingFunction | null -- :509
-//   function collectRiveInterpolators(objects: Readonly<RiveCoreObject>[], range: Readonly<{ ... }>, diagnostics: ImportDiagnostic[] | undefined): Map<number, EasingFunction> -- :543
-//   function toRiveElasticEasing(source: Readonly<RiveCoreObject>, diagnostics: ImportDiagnostic[] | undefined): EasingFunction -- :576
-//   function toRiveAnimationPath(propertyKey: number): Node2DAnimationPath | null -- :601
-//   function toRiveValueConversion(path: Node2DAnimationPath): (value: number) => number -- :613
-//   function readRiveNumber(source: Readonly<RiveCoreObject>, key: number, fallback: number): number -- :617
-//   function readRiveText(source: Readonly<RiveCoreObject>, key: number, fallback: string): string -- :622
-//   const RIVE_KEYED_OBJECT: number -- :627
-//   const RIVE_KEYED_PROPERTY: number -- :628
-//   const RIVE_KEYFRAME: number -- :629
-//   const RIVE_KEYFRAME_DOUBLE: number -- :630
-//   const RIVE_SHAPE_TYPE_KEY: number -- :631
-//   const RIVE_LINEAR_ANIMATION: number -- :632
-//   const RIVE_KEYFRAME_COLOR: number -- :633
-//   const RIVE_CUBIC_INTERPOLATOR: number -- :634
-//   const RIVE_ELASTIC_INTERPOLATOR: number -- :635
-//   const RIVE_INTERPOLATING_KEYFRAME: number -- :636
-//   const RIVE_X_LEGACY: number -- :638
-//   const RIVE_Y_LEGACY: number -- :639
-//   const RIVE_X: number -- :640
-//   const RIVE_Y: number -- :641
-//   const RIVE_ROTATION: number -- :642
-//   const RIVE_SCALE_X: number -- :643
-//   const RIVE_SCALE_Y: number -- :644
-//   const RIVE_OPACITY: number -- :645
-//   const RIVE_KEYED_OBJECT_ID: number -- :647
-//   const RIVE_KEYED_PROPERTY_KEY: number -- :648
-//   const RIVE_ANIMATION_NAME: number -- :649
-//   const RIVE_ANIMATION_FPS: number -- :650
-//   const RIVE_ANIMATION_DURATION: number -- :651
-//   const RIVE_ANIMATION_SPEED: number -- :652
-//   const RIVE_ANIMATION_LOOP: number -- :653
-//   const RIVE_ANIMATION_WORK_START: number -- :654
-//   const RIVE_ANIMATION_WORK_END: number -- :655
-//   const RIVE_ANIMATION_ENABLE_WORK_AREA: number -- :656
-//   const RIVE_INTERPOLATOR_X1: number -- :657
-//   const RIVE_INTERPOLATOR_Y1: number -- :658
-//   const RIVE_INTERPOLATOR_X2: number -- :659
-//   const RIVE_INTERPOLATOR_Y2: number -- :660
-//   const RIVE_KEYFRAME_FRAME: number -- :661
-//   const RIVE_KEYFRAME_INTERPOLATION: number -- :662
-//   const RIVE_KEYFRAME_INTERPOLATOR_ID: number -- :663
-//   const RIVE_KEYFRAME_DOUBLE_VALUE: number -- :664
-//   const RIVE_KEYFRAME_COLOR_VALUE: number -- :665
-//   const RIVE_INTERPOLATOR_EASING: number -- :666
-//   const RIVE_INTERPOLATOR_AMPLITUDE: number -- :667
-//   const RIVE_INTERPOLATOR_PERIOD: number -- :668
-//   const RIVE_LOOP_ONE_SHOT: number -- :670
-//   const RIVE_LOOP_LOOP: number -- :671
-//   const RIVE_LOOP_PING_PONG: number -- :672
-//   const RIVE_UNSET_FRAME: number -- :674
-//   const RIVE_ELASTIC_EASE_IN: number -- :677
-//   const RIVE_ELASTIC_EASE_OUT: number -- :678
-//   const RIVE_ELASTIC_EASE_IN_OUT: number -- :679
-//   const RIVE_DEFAULT_ELASTIC_PERIOD: number -- :681
-//   const RIVE_INTERPOLATION_HOLD: number -- :683
-//   const RIVE_INTERPOLATION_LINEAR: number -- :684
-//   const _holdEasing: EasingFunction -- :686
-//   const _sampleScratch: number[] -- :687
-//   const _pendingRebuilds: Set<() => void> -- :690
+//   function applyAnimationClipToRiveDocument(clip: Readonly<AnimationClip>, time: number): void -- :42
+//   function createRiveAnimationClips(objects: Readonly<RiveCoreObject>[], range: Readonly<{ ... }>, nodes: DisplayObject | null[], artboard: Readonly<RiveArtboardGraph>, rebuilds: ReadonlyMap<number, () => void>, skeleton?: Readonly<RiveSkeleton2DImport> | null, diagnostics?: ImportDiagnostic[]): RiveAnimationClip[] -- :56
+//   function registerRiveAnimationHandlers(registry: RiveImportRegistry): void -- :108
+//   interface RiveMutableTarget { riveApply: (sample: Readonly<number[] | Float32Array>) => void } -- :126
+//   function createRiveAnimationClip(objects: Readonly<RiveCoreObject>[], start: number, limit: number, nodes: DisplayObject | null[], interpolators: ReadonlyMap<number, EasingFunction>, artboard: Readonly<RiveArtboardGraph>, rebuilds: ReadonlyMap<number, () => void>, skeleton: Readonly<RiveSkeleton2DImport> | null, diagnostics: ImportDiagnostic[] | undefined): RiveAnimationClip -- :130
+//   function toRiveAnimationLoop(value: number, diagnostics: ImportDiagnostic[] | undefined): RiveAnimationLoop -- :270
+//   function createRiveBoneChannel(objects: Readonly<RiveCoreObject>[], propertyIndex: number, limit: number, fps: number, interpolators: ReadonlyMap<number, EasingFunction>, skeleton: Readonly<RiveSkeleton2DImport> | null, keyedIndex: number, propertyKey: number, diagnostics: ImportDiagnostic[] | undefined): AnimationChannel | null -- :307
+//   function toRiveBoneAnimationPath(propertyKey: number): Skeleton2DAnimationPath | null -- :352
+//   function toRiveBoneValueConversion(path: Skeleton2DAnimationPath, setup: Readonly<Bone2D>): (value: number) => number | null -- :370
+//   function createRiveChannel(objects: Readonly<RiveCoreObject>[], propertyIndex: number, limit: number, fps: number, interpolators: ReadonlyMap<number, EasingFunction>, convert: (value: number) => number, targetRef: unknown, diagnostics: ImportDiagnostic[] | undefined): AnimationChannel | null -- :383
+//   function createRiveMutableChannel(objects: Readonly<RiveCoreObject>[], propertyIndex: number, limit: number, fps: number, interpolators: ReadonlyMap<number, EasingFunction>, targetRef: RiveMutableTarget, diagnostics: ImportDiagnostic[] | undefined): AnimationChannel | null -- :409
+//   function createRiveTypedChannel(objects: Readonly<RiveCoreObject>[], propertyIndex: number, limit: number, fps: number, interpolators: ReadonlyMap<number, EasingFunction>, components: number, readValue: (keyframe: Readonly<RiveCoreObject>) => number[] | null, targetRef: unknown, diagnostics: ImportDiagnostic[] | undefined): AnimationChannel | null -- :435
+//   function readRiveColorKeyframe(keyframe: Readonly<RiveCoreObject>): number[] | null -- :472
+//   function createRiveMutableTarget(artboard: Readonly<RiveArtboardGraph>, rebuilds: ReadonlyMap<number, () => void>, objectIndex: number, propertyKey: number, defaultType: RiveFieldType): RiveMutableTarget | null -- :486
+//   function packRiveColorSample(sample: Readonly<number[] | Float32Array>): number -- :511
+//   function toRiveColorByte(value: number): number -- :519
+//   function findRiveShapeOwner(artboard: Readonly<RiveArtboardGraph>, index: number): number -- :524
+//   function toRiveSegmentEasing(keyframe: Readonly<RiveCoreObject>, interpolators: ReadonlyMap<number, EasingFunction>, diagnostics: ImportDiagnostic[] | undefined): EasingFunction | null -- :543
+//   function collectRiveInterpolators(objects: Readonly<RiveCoreObject>[], range: Readonly<{ ... }>, diagnostics: ImportDiagnostic[] | undefined): Map<number, EasingFunction> -- :577
+//   function toRiveElasticEasing(source: Readonly<RiveCoreObject>, diagnostics: ImportDiagnostic[] | undefined): EasingFunction -- :610
+//   function toRiveAnimationPath(propertyKey: number): Node2DAnimationPath | null -- :635
+//   function toRiveValueConversion(path: Node2DAnimationPath): (value: number) => number -- :647
+//   function readRiveNumber(source: Readonly<RiveCoreObject>, key: number, fallback: number): number -- :651
+//   function readRiveText(source: Readonly<RiveCoreObject>, key: number, fallback: string): string -- :656
+//   const RIVE_KEYED_OBJECT: number -- :661
+//   const RIVE_KEYED_PROPERTY: number -- :662
+//   const RIVE_KEYFRAME: number -- :663
+//   const RIVE_KEYFRAME_DOUBLE: number -- :664
+//   const RIVE_SHAPE_TYPE_KEY: number -- :665
+//   const RIVE_LINEAR_ANIMATION: number -- :666
+//   const RIVE_KEYFRAME_COLOR: number -- :667
+//   const RIVE_CUBIC_INTERPOLATOR: number -- :668
+//   const RIVE_ELASTIC_INTERPOLATOR: number -- :669
+//   const RIVE_INTERPOLATING_KEYFRAME: number -- :670
+//   const RIVE_X_LEGACY: number -- :672
+//   const RIVE_Y_LEGACY: number -- :673
+//   const RIVE_X: number -- :674
+//   const RIVE_Y: number -- :675
+//   const RIVE_ROTATION: number -- :676
+//   const RIVE_SCALE_X: number -- :677
+//   const RIVE_SCALE_Y: number -- :678
+//   const RIVE_OPACITY: number -- :679
+//   const RIVE_KEYED_OBJECT_ID: number -- :681
+//   const RIVE_KEYED_PROPERTY_KEY: number -- :682
+//   const RIVE_ANIMATION_NAME: number -- :683
+//   const RIVE_ANIMATION_FPS: number -- :684
+//   const RIVE_ANIMATION_DURATION: number -- :685
+//   const RIVE_ANIMATION_SPEED: number -- :686
+//   const RIVE_ANIMATION_LOOP: number -- :687
+//   const RIVE_ANIMATION_WORK_START: number -- :688
+//   const RIVE_ANIMATION_WORK_END: number -- :689
+//   const RIVE_ANIMATION_ENABLE_WORK_AREA: number -- :690
+//   const RIVE_INTERPOLATOR_X1: number -- :691
+//   const RIVE_INTERPOLATOR_Y1: number -- :692
+//   const RIVE_INTERPOLATOR_X2: number -- :693
+//   const RIVE_INTERPOLATOR_Y2: number -- :694
+//   const RIVE_KEYFRAME_FRAME: number -- :695
+//   const RIVE_KEYFRAME_INTERPOLATION: number -- :696
+//   const RIVE_KEYFRAME_INTERPOLATOR_ID: number -- :697
+//   const RIVE_KEYFRAME_DOUBLE_VALUE: number -- :698
+//   const RIVE_KEYFRAME_COLOR_VALUE: number -- :699
+//   const RIVE_INTERPOLATOR_EASING: number -- :700
+//   const RIVE_INTERPOLATOR_AMPLITUDE: number -- :701
+//   const RIVE_INTERPOLATOR_PERIOD: number -- :702
+//   const RIVE_LOOP_ONE_SHOT: number -- :704
+//   const RIVE_LOOP_LOOP: number -- :705
+//   const RIVE_LOOP_PING_PONG: number -- :706
+//   const RIVE_UNSET_FRAME: number -- :708
+//   const RIVE_ELASTIC_EASE_IN: number -- :711
+//   const RIVE_ELASTIC_EASE_OUT: number -- :712
+//   const RIVE_ELASTIC_EASE_IN_OUT: number -- :713
+//   const RIVE_DEFAULT_ELASTIC_PERIOD: number -- :715
+//   const RIVE_INTERPOLATION_HOLD: number -- :717
+//   const RIVE_INTERPOLATION_LINEAR: number -- :718
+//   const _holdEasing: EasingFunction -- :720
+//   const _sampleScratch: number[] -- :721
+//   const _pendingRebuilds: Set<() => void> -- :724
 
 // Imported by this module, which the replacement likely needs:
 //   { createAnimationChannel, createAnimationClip, createAnimationTrack, sampleAnimationTrack } from '@flighthq/animation/contract'
@@ -95,11 +96,19 @@
 //   { applyAnimationClipToNode2D } from '@flighthq/scene2d/contract'
 //   { createSkeleton2DBoneAnimationTarget } from '@flighthq/skeleton2d/contract'
 //   { RiveAnimationLoop, ImportDiagnosticSeverity, RiveFieldType, Skeleton2DAnimationPath } from '@flighthq/types/contract'
-//   type { AnimationChannel, AnimationClip, RiveArtboardGraph, RiveAnimationClip, RiveAnimationLoop, RiveSkeleton2DImport, Bone2D, ImportDiagnostic, DisplayObject, EasingFunction, Node2DAnimationPath, Node2DAnimationTarget, RiveCoreObject } from '@flighthq/types/contract'
-//   { isRiveCoreTypeDerivedFrom } from './riveCoreTypes'
+//   type { AnimationChannel, AnimationClip, RiveArtboardGraph, RiveAnimationClip, RiveAnimationLoop, RiveSkeleton2DImport, Bone2D, ImportDiagnostic, DisplayObject, EasingFunction, Node2DAnimationPath, Node2DAnimationTarget, RiveCoreObject, RiveImportRegistry } from '@flighthq/types/contract'
+//   { isRiveCoreTypeDerivedFrom } from './riveCoreTypes.ts'
+//   { registerRiveCoreObjectHandler } from './riveImportRegistry.ts'
 //   type { AnimationClipEvent } from '@flighthq/types/contract'
 //   type { AnimationTrack } from '@flighthq/types/contract'
 //   type { RiveProperty } from '@flighthq/types/contract'
+//   type { RiveCoreObjectHandler } from '@flighthq/types/contract'
+//   type { RiveArtboardImportContext } from '@flighthq/types/contract'
+//   type { RiveDocumentImportContext } from '@flighthq/types/contract'
+//   type { RiveAdvancedBlend } from '@flighthq/types/contract'
+//   type { RiveLayoutImport } from '@flighthq/types/contract'
+//   type { RivePathRecord } from '@flighthq/types/contract'
+//   type { RiveStateMachineDescriptor } from '@flighthq/types/contract'
 //   type { ImportDiagnosticSeverity } from '@flighthq/types/contract'
 //   type { Node2D } from '@flighthq/types/contract'
 //   type { RiveFieldType } from '@flighthq/types/contract'

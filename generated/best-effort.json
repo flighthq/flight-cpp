@@ -22620,7 +22620,6 @@
       },
       "path": "flight/scene2d/contract.hpp",
       "refusedDependencies": [
-        "@flighthq/scene2d/packages/scene2d/src/displayContainer.ts",
         "@flighthq/scene2d/packages/scene2d/src/displayObject.ts",
         "@flighthq/scene2d/packages/scene2d/src/displayObjectAnimation.ts",
         "@flighthq/scene2d/packages/scene2d/src/htmlView.ts",
@@ -22633,37 +22632,6 @@
     {
       "classification": "target-runtime",
       "consumers": [
-        "@flighthq/gizmo/packages/gizmo/src/gizmoState.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssets.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveLayout.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2D.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2DDocument.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapeNode.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveSolo.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
-        "@flighthq/scene2d/packages/scene2d/src/contract.ts",
-        "@flighthq/scene2d/packages/scene2d/src/displayObject.ts",
-        "@flighthq/scene2d/packages/scene2d/src/scene2d.ts",
-        "@flighthq/swf/packages/swf/src/swfDocument.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:0cc0d68a5e3bdf97098f2b76d054375a6b1900d070caf2b7c00aa83b368cf87c",
-        "sha256:80514775c678f551cbea596c9ac194659c427d7517d8abe879d8a1c82922d0da",
-        "sha256:e5bdf4833f2d4d5d16cda6cef0740f8eb6e3a88cb24413cf588cbea4405745f3"
-      ],
-      "module": {
-        "name": "DisplayContainer",
-        "packageName": "@flighthq/scene2d",
-        "source": "packages/scene2d/src/displayContainer.ts"
-      },
-      "path": "flight/scene2d/display_container.hpp",
-      "rule": "cpp-reference-assertion-without-heritage",
-      "status": "refused-placeholder"
-    },
-    {
-      "classification": "target-runtime",
-      "consumers": [
         "@flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts",
         "@flighthq/bitmaptext/packages/bitmaptext/src/updateBitmapText.ts",
         "@flighthq/movieclip/packages/movieclip/src/movieClip.ts",
@@ -22671,14 +22639,25 @@
         "@flighthq/quadbatch/packages/quadbatch/src/quadBatch.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasNode2D.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domNode2D.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssets.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveLayout.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2D.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2DDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapeNode.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveSolo.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgContainerElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgUseElement.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glBitmapText.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glNode2D.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuBitmapText.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuNode2D.ts",
         "@flighthq/scene2d/packages/scene2d/src/contract.ts",
-        "@flighthq/scene2d/packages/scene2d/src/displayContainer.ts",
         "@flighthq/scene2d/packages/scene2d/src/htmlView.ts",
         "@flighthq/scene2d/packages/scene2d/src/scale9Sprite.ts",
+        "@flighthq/scene2d/packages/scene2d/src/scene2d.ts",
         "@flighthq/scene2d/packages/scene2d/src/sprite.ts",
         "@flighthq/shape/packages/shape/src/morphShape.ts",
         "@flighthq/shape/packages/shape/src/scale9Shape.ts",
@@ -22693,9 +22672,12 @@
       ],
       "declarationFingerprints": [
         "sha256:0c0dc38ee90a02fb63eeada924a202eecc43703273e747a7e202fb5807bd2f2f",
+        "sha256:0cc0d68a5e3bdf97098f2b76d054375a6b1900d070caf2b7c00aa83b368cf87c",
         "sha256:4e16ceccf8c6d5fc89689588d2a804923774f366c8e2c1d0aea965f11a07c04c",
         "sha256:55c9a8985826976115f553c883522dcc20e8ae19a9a62fe40b085896c12b2a87",
+        "sha256:80514775c678f551cbea596c9ac194659c427d7517d8abe879d8a1c82922d0da",
         "sha256:a2c7f9e73e827fb6fd44edf8746e1ebab778a48c61a786fa3d31139802dbda37",
+        "sha256:e5bdf4833f2d4d5d16cda6cef0740f8eb6e3a88cb24413cf588cbea4405745f3",
         "sha256:f0d56270a9feea00a1901b21749258cb12448516c62927ee2218e9c2c1eaeae4"
       ],
       "module": {
@@ -22730,10 +22712,10 @@
         "@flighthq/scene2d/packages/scene2d/src/contract.ts"
       ],
       "declarationFingerprints": [
-        "sha256:09aa78e6c7e00949b476a87b96e374744939467daae960e18e7f44e6fc53e9e4",
         "sha256:2c1be3104797f1fac363b421fe21a6de0cdba1951a136f7640ff4cc05363a303",
         "sha256:55680085754483a5a07dc1dd470fd4f24a03deedc71dc9e04d4f979372963b67",
         "sha256:8cc0266dfb0644237d6a8eae45ffca1479311d530bbb2b1802ea616e46187e9f",
+        "sha256:8d532e5dcb6a211fbb3a35800435a0f40dfc6ac9bd22208ab7734885c36e4d2d",
         "sha256:cad6d93eaa4fcfeb327d10fe0cd0f4cae1b14e13da433b12ce1ad0394b93bfe0",
         "sha256:ce2cb3511aaf48db114ae03090f804e673fb9a06fa0a2ba407242e289db54f3b",
         "sha256:d7c43c780a9b75e78616a425c85edc68f37acce330ca1ab51369f19aa65f9dde",
@@ -22829,9 +22811,9 @@
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasScale9Sprite.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasSprite.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domSprite.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImageLayer.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssetBinding.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImageElement.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glScale9Sprite.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glSprite.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuScale9Sprite.ts",
@@ -22841,18 +22823,18 @@
         "@flighthq/swf/packages/swf/src/swfDocument.ts"
       ],
       "declarationFingerprints": [
-        "sha256:0e3704729f667eea35d48bf70813a4c035cec19acd1beae49a40b7769ec9944e",
-        "sha256:47f78f5dd43a9c8c7d47915448bb03c9836e386d25fa5bb803ce74a7b5eed1f5",
+        "sha256:13e0552f7eb3f10fd2fc7f3c8ad82eb7fa669bda7fa1f3e43548494b496f762f",
         "sha256:4c2d40dd19bff78b74e96b5708ceeeb120d29fb5af2125766d3996c07beab12e",
+        "sha256:4cd9c96da8708aea05faddd63f17bbec024a50bac330bfefe2f9a7b9fa062bc9",
         "sha256:59d1094847348de53e1d146e6ef3a461cf37b5a562693a5e2675858cc025fba9",
         "sha256:80b348f0a2b26c2f7f1991752e3ee18377b910b8df523c997376ad695a1676df",
-        "sha256:9260d8b74eccc07a081cd83d14e5627510d89288d378147546720bcdcddf3605",
+        "sha256:8853de2d67c0153700bc934362a985930a1b8c302c53bef8ce96bb35e6795799",
         "sha256:9355594890ea14757b9ecbdffbd4fb4717269eba355f0c6b6721354d2f2527a1",
+        "sha256:99c55304c2e22239c9990146530f31591e2febb10b269d5dd6e74c563757c6b1",
         "sha256:bc073453796e34b94a116ee6864c7ca713fe56eb0291b88614f4798883345428",
         "sha256:cbbdc42a8476fb2d98b9787e046482b535a000c51f5d22a205bc5581027467f6",
-        "sha256:ebdfdd51cb1b2e7bc60a356bf9f12c278374ee6c9c3c2151a3639ac9ba9d1502",
+        "sha256:e8339dedf5857eeb7b034e41b0b75375a321950d1423f50b0cfdc1f3ed248b04",
         "sha256:ee3ac14b869b54c140b38b78c69d8633a867e73d7f64b1600c24e93b8f5131c8",
-        "sha256:f2a6c47400939719678ec73c28255b35a9bb5054efc7906367564e60eda5632d",
         "sha256:ff2f763068b2e993ed9269136f852eb8975e0b5f7f9a16b0e332ad4f2bda1068"
       ],
       "module": {
@@ -24502,9 +24484,7 @@
       "status": "dependency-incomplete"
     },
     {
-      "consumers": [
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/scene2d-formats",
@@ -24512,14 +24492,42 @@
       },
       "path": "flight/scene2d_formats/contract.hpp",
       "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieBezierPath.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieCounts.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieEllipseShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieFillShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieGradientPaint.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieGradientShapeItems.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImageLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieLayerHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieMask.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieMaskHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePathShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePolystarShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePrecompositionLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieRectangleShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieRequirements.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeItemHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapePathChannels.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieSolidLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieStrokeShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieTextLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieTrimPathShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAnimation.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssetBinding.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssets.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveClipping.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveDrawOrder.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveImport.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveLayout.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRegistrars.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRequirements.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2D.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2DDocument.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapeNode.ts",
@@ -24529,7 +24537,22 @@
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveSolo.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveStateMachine.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveText.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts"
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgBounds.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgClip.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgClipHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgColor.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgContainerElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgElementHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGeometryElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGradient.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImageElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgStyle.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgTextElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgUseElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/testHelper.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -24542,7 +24565,59 @@
       },
       "path": "flight/scene2d_formats/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts"
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieCounts.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieEllipseShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieFillShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieGradientShapeItems.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImageLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieLayerHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieMask.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieMaskHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePathShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePolystarShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePrecompositionLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieRectangleShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieRequirements.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeItemHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieSolidLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieStrokeShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieTextLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieTrimPathShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAnimation.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssetBinding.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssets.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveClipping.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveDrawOrder.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveLayout.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRegistrars.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRequirements.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2D.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2DDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapeNode.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapePaint.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapePath.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveSkeleton.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveSolo.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveStateMachine.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveText.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgClip.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgClipHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgContainerElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgElementHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGeometryElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImageElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgTextElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgUseElement.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -24550,88 +24625,124 @@
       "classification": "target-runtime",
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieMask.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePathShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapePathChannels.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:21fa0b85685f180d4acb87718792fa0b482997a040a4c31e21771447bdbc2829",
+        "sha256:5f8cec29a8a142f3a6add0a5030342b41ff4f5418b28562ff26f8bcb43a35b3d",
+        "sha256:bf119c57e86cb9512bbd1d3deb372d7c9d5209dad8737ffa2e5cafe84bc49794",
+        "sha256:e09a085554228d566c6863a067001e50a9f59f88d5d6e1929e90e1b7a1ac1ff4"
+      ],
+      "module": {
+        "name": "LottieBezierPath",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieBezierPath.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_bezier_path.hpp",
+      "rule": "cpp-erased-value-assertion-unrepresented",
+      "status": "refused-placeholder"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieRequirements.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:1a703efa429827ec58bfd99b365b5fba9d51eed3d4a905feeada1d9e5a7725b8",
+        "sha256:20fd82d452963e50a0c65ebf22f99a2fd4437d82d93bf303ba9daff43d20a37b",
+        "sha256:54d4758b8578c70598e33ffceb75476759f1ddcea622e6f9d5ae507c8475eb95",
+        "sha256:653e93b495c0e73d3bfae5279d5ea42040985f37c33e9fb2d66e4edd23595467",
+        "sha256:7318490822a814efc1821d51c77da210c3ab0c43675e0bd26806d3edfc295d1f",
+        "sha256:8426f0ecc4aa8b80d25fdbd0cc025e2fa67db4a535bcf5fe092d2c14c64e24b3",
+        "sha256:9fa5506939cfa50b374e7ca6827c8808f97cb42a0312304eda23760f5506bce9",
+        "sha256:aabcb1588f85c4c45a434286c2b723baa4b4ad8488946290d34a59abe56b6889",
+        "sha256:d1be3fee84cc5aea1c4f0b4ad72e821b47d0451fb6af8b009fb49256a5e8f91b",
+        "sha256:f55a42543f00d0c487dc9ea695db8d06acf0e39c98360ea669c880e28c28137e",
+        "sha256:f7522f3994d20ebc001a5bbf61a954d6154498146eeb829ae43cb89eb623b2f9"
+      ],
+      "module": {
+        "name": "LottieCounts",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieCounts.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_counts.hpp",
+      "rule": "cpp-presence-test-without-absence-storage",
+      "status": "refused-placeholder"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieEllipseShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieFillShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieGradientPaint.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieGradientShapeItems.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImageLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieMask.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePathShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePolystarShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePrecompositionLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieRectangleShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapePathChannels.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieStrokeShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieTextLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieTrimPathShapeItem.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/builtInScene2DDocumentImporters.ts"
       ],
       "declarationFingerprints": [
         "sha256:034810002d29507248340dfa5e49a29c3bb576411fd769aa2e15e0660bbcb2af",
-        "sha256:0b8821f8d17b32e9eeca97b61d96336676d6d3da4a287d641fce0b1fe9f49aab",
-        "sha256:0c15fc66309e316130debe1ec42b3bc7adca702e4d2d6291600d9cff726e520a",
-        "sha256:0d3a6ca351bf520758c90b7a697911f1bb07d4e69010109c593dd5324b2313f6",
-        "sha256:0fe2d7c3aa3af16bd184617dd2ebd811027c425c86463fd372e823f3f7e5a224",
-        "sha256:1151c0a172ea12246e854afbceead1b890ca808ed12a2393d9cb625e5d97fa3b",
-        "sha256:16dc4374c614839f61912090cf44a7dcc97ee2a1974ad2e3c91bfaa61c070eea",
-        "sha256:1723b73c0d03997cdb5d6ee7e517ec19bf9cd6b91865071252981f0b251b4b12",
-        "sha256:1e66aa9cdc06973203c4c73d99b5b5e79d5e21049252b3b779944dab34fa2dfd",
-        "sha256:1e6714b72df6586dcc8a8ec24306d31fa8ba682ccd0d1a4d402f0833239fc22b",
-        "sha256:215885b4b40d156b9098f1151d75990d938428115fc840a760f8bcb602e93504",
+        "sha256:04735522dd87a939525d252c88370c7083ca8890056d438b7d0324164844a3f9",
+        "sha256:140ed641b4c300a7f1c13311ee59ea197fa247d40e0e705e971af1392c527a02",
+        "sha256:20e122e703f2a73a653bd526ead0f9bba033419ca0e0960169559dd9db702b85",
+        "sha256:22a23c501adbf78a199e601a9f360b2c89103e8583a6db3068d7351ffe661973",
+        "sha256:2712736997eaf41e000c1434228674b9c4978c537376914a1aacf75c5f1aa5dc",
         "sha256:2889ecdc14a15c17f9a95c08dbb3a7386b8da2d57a9f85cbccbef5edbf148686",
-        "sha256:2b31035683bd8d6c32e00c7dd139bb41033a2788ed5236ac4811feb07c8220cc",
         "sha256:2b530797fdac116319b4c8b519f8ca08e3aa21f65ab2bd34990e314f42a20adb",
-        "sha256:31f23f4cc81cd7fd7c113140a38fdd1b51a966df08586bca4c2d0966ef34ac9a",
+        "sha256:3a804d76218a3d9ea9fa285c8f41a42b419b1f06ce9f11f94b27a914d7b0e0f9",
         "sha256:3b726db069a0bd1de180f0e82a7b4f1c4aeaf0e20a65346f14734957ca56d874",
-        "sha256:3cf3391f4ecfa4fb726a3c5a8a9c2e4ce448064e5b135c3f3a036bd835519395",
+        "sha256:3bfecbbcb9eec04f9b0044ca88901840cc80faf68c0558634fb4d8d9e21616ae",
         "sha256:4120078e8d5029bc19064acbe3d2f336be0fe34d8921399a67e187038e834bc9",
-        "sha256:425f408122ab625e3a4e7bdb05aa7034eedb0dc1a8d8c2f25b1198a8448d7321",
         "sha256:4545d8b5be7554c76d120d94effbf2cebce056873f77f095bf0819ac9cab37f2",
         "sha256:46280eca434ca5c3ead8e13708fa277c75c0a08a7fc59609e2563201318396c3",
         "sha256:4e25ec1709cdf404986976b7865f03ee07a82e332f188231b353ef8688bc1443",
-        "sha256:4f8829e02b30e3971e6351efcaf12cf8c5c3a05d5f040f23fb0edab340064981",
-        "sha256:55509e862202a42d92df4c4d280befe6ec7ab4938f25ba7a83239778aa649053",
-        "sha256:57e31987427b0ba59e20a199c7814c48ae4982019512b4b6b49d9a94b34e8974",
-        "sha256:5a5b3f3c95ff0e53f228f45a574ecfa82466eec70ad2a22e34658aae1a5fc893",
-        "sha256:5aa2136e51a952f800f0b6e1234ad572a333234b08bb151b638d84e8917c5c9e",
+        "sha256:57746a6e32914d8d9bbe9f2c340b61d1a892e6b1a6eec87124babfda7353c3da",
+        "sha256:5821bcae354729e9967c94c2bf2e73221eb33626affda2676b4e472116e48c71",
+        "sha256:58cd14432590f0bb9c20a9244682102dc8abc281c005b38a73ec2011e5399ec9",
         "sha256:5ab649781a96d04f32eb20895b76126d4148d39b641ad391a6b442015d6083ab",
-        "sha256:5cfd2c0ad9a6d7a68c8e67fd1e6d1a52e0f5e4df1ff11f65a1070e880fb6ef70",
-        "sha256:5defc4051e548822a5f178a0adfa0dadd1c6cdae46827a6b80528fb9d7be55bb",
-        "sha256:5ff88c0f4c41de3531cb4e19a5af6edac0e62b1f5409d0ba2353cec12c26a770",
         "sha256:600a6168f20b54dca46241c5d4096a7056267d28bf6b1748cf06b5d6a7904d4d",
-        "sha256:610b1e8f4f1bd8bb2e99d48cda11b322e3ca46aa4662cc7055f1228aa1824bfc",
         "sha256:635e336504cacf05f3c697ffa77ab4bfabdfe8e669e9d0b30abb7128c471100a",
-        "sha256:67019da45467fa88e8ed5c9d96dcdc1eafa995608baa1ca1d74d799bff75a194",
-        "sha256:6af5093b080b187209972dd7c86e113d4160552f761d118d3c1dbad109407bb2",
-        "sha256:6c77e060fd02f8df660c79ac25caf00e80c15e74a74a95eb48a9084ad6288e1f",
-        "sha256:70d59650ebf6730eaf912fb5ad69937c3690588ff1df250d9f4a659fb40362ca",
-        "sha256:73c3f4bab4954f9c29323e32f032ef362138cddfe33b760c44143c93dfa6242d",
-        "sha256:760b1c5700772503fc48cfd853059d0686f1202e57b8d7a00aa42bd5d410b00f",
-        "sha256:778732790ded1c8304821edae41b05a7777d77c0f43055ac31e9154497fa156f",
-        "sha256:7f1e2abea4728c387098a930cf0477312e090c6ef2a6149b0163fdc85d8b9f89",
-        "sha256:824b8f169108cce802d2d7ee09e65c473edeff26ca8d9c7ad42b0683cab396bb",
-        "sha256:837a0fadda6b6cd0b4f15feea6327fb440797a800b5e15bc60921ee865d0cbff",
-        "sha256:856d816b3d816119465bda370f7e8cb324e8d497bca67aadbf6d1af8ef2aba7e",
-        "sha256:858f4026647d072577633580d6a28d8b43c70352403818ae8e4220f84bb15cd2",
-        "sha256:8af575d514cb2a5e621795ac3e9479a0973804bdebe9b5f43e78f1276a20ac03",
+        "sha256:64ff35bb2a7889d46535f4cd5cde1d6af1160f2fb4456100e3f6bed0d1823624",
+        "sha256:65aa3af85aae05edc32d68d7ea4b3f6cbb43debda2facfd52c1aab3f39bcadb7",
         "sha256:8cbf71cad788c8440ec395a34e27720703ebf1559ad3a19406f0d56f01868e49",
-        "sha256:98c53f4ad6d36a46deee36357fa3f311483949252f7a97709bea3c6cadc236d8",
-        "sha256:9dc62537b4d2ac31a70aba723ec0b5714e4ca670563b6718e099ddc612b05913",
+        "sha256:90ae37dc2150472723b92bcb9399f825e69e267fd9c988a2bcefe946e8255e22",
+        "sha256:9591af23d32a925dca6cb05cf9c5fa438238ba898e62b1344c068b6c04483601",
         "sha256:9dfbc798873253585f85881f676a00121b600453fe67559608147826f582fb27",
-        "sha256:a103e4dedb69b79f1be0ba029e1a191d5dfc488a69ee648c0387c657be456b4e",
-        "sha256:a92be272358e56bb08a57cbabfe104e22315f27c0c66fad41137963180d10693",
-        "sha256:a942b74ab09260458a77fe9ac3c98db4d6e3cdfc91584c0ea7c0668c33c1a376",
-        "sha256:ab1f42be6941aff064d60cc5470dc1804221922e26932998ec751adc46b860a1",
+        "sha256:a73e953f0a72726c27fe2a1c1b602c591d65fd69e7cf4e7bd629c5a8bd17c164",
         "sha256:abe7fd7487417dc6a78eddbd293d2e52245d131bbf048f3d3d6379c001dc2bce",
-        "sha256:b11822534b61c8c37be253f369901cc3943dc0897d55ff04619af4a36af5776a",
-        "sha256:b1ff186eba7bc55edbb14b601fd3c0f5041a04402199b144b92a4d705960d78b",
-        "sha256:b3bb756cab91cd86e8ab880001e26d96aaed3938862fe9660a3ee6894356bd87",
+        "sha256:b23dc49108abed44dc57a37e0602da0a816089fcca6e846ffceca3adc263e9f0",
         "sha256:bbcb06f2acfd2a057e0d1864c4b20d0697ba7b7062e37bfe574c38bd65c731d7",
+        "sha256:c299dae6637e084803889411e96f15de2ff6fce6e85deb74424c9db6cd08bda8",
         "sha256:c326d6865b283cf75138b79d3a6554fe7ccaad40620ede116d3f7cbe1e09ae50",
-        "sha256:c7bad5b144623f6ccf1c3f623019437aa250d52fccfff7be5142611d52d3f6ce",
-        "sha256:cef208813c092f5faa315299401596a7a72fbc77569aadfeeff80f1f872f0146",
+        "sha256:cc2ccefbf7c659b3e8162accdf49edb4f67fcb19fa4f616a5d5b4e46bde75814",
+        "sha256:ccad347f747f166473951318b7b212d5e0e26769cbb4dc0c8ed66ee1ef1175d6",
+        "sha256:d142b90b8287818c3655898071f30412ab19ea1e9a53eb26bdcc7006f291c977",
         "sha256:d1698bca62f50ee451a778c545383361e777d9225899af08658523e11724cadb",
-        "sha256:d1c12d9edc3a5d24a1bd18d631545c083d409497e3146c12ea1a31ad3318fe7e",
         "sha256:d1e57fb9fff883056975e65c26009d486658f2329c04d7831e07399604ff0bd5",
         "sha256:d23f9ead7e62c358ef95d4b7d212f8e6715b3d7bb19dee10c16d8c2770344c74",
         "sha256:d61f05f3819c1c5c2202df2087f8f551a2e5744f620755033499fd01f74dc3c3",
-        "sha256:db497d20184c6501a118072570ba1b1a849786034d03fb1bb5388125662c204c",
-        "sha256:dbd3aaf9a23fdcfee9c03bfb7ae0a1b1853d124f297973a3938450efd878d6ab",
-        "sha256:df441eb839927901f74b919dba76df8c36c82d6ccd38698b323595cb11f70f4e",
-        "sha256:e0f1da37bd28bf67865022442702fb1eff35fe4384a143568e339761e080bab8",
-        "sha256:e1026452885b3b46e8a1daec7afd688f1aed6183cef5d74a0f36bb6fd117cbf0",
+        "sha256:e689a9d365598287e45c6152ca89832cf7f1ebb54c42804821e1bd9229b6c464",
         "sha256:e78fe586339f8abe7f980939a862972088a20362484b2de1038f4d88947d9c25",
-        "sha256:e8cc5edc3f0172e84cf4cc7a568c7000113b9cc2387b76fe74b199635ad56ec4",
-        "sha256:ec7ee5ee22328fc1f88fb99c9567f2c770ff2d9d8cfa8e4999403642c2685e10",
+        "sha256:f40168e6a828b32e1f69965fd49d5c09551927af56641aa42ac70ca41de30913",
         "sha256:f4fa7c57e440d0f05219707057cbafbe63a6ed1cb0ca1546a0f7063a953b803f",
-        "sha256:f51cd12f05cdc4265731f084d0e0749518de670fb0d2e7d03b72a18b9d4902cb",
-        "sha256:f5b5b1585bb1850c634652fa9ed7f7422747d1d7c3ebdcbf7100bc8711fc15d5",
+        "sha256:f70f6f9328e353e9e4800cce6190c30dbda58e777b052aa758d72bbe34b9524a",
+        "sha256:f9f34afdef2ae517cd3af7a641a5065694829c490de0f2851a22434d2732859f",
         "sha256:ff09bf4ae24d6ba6b1d6c2fc3ff753c79f3d829b2bcaf3970419bf57579ce69c"
       ],
       "module": {
@@ -24640,13 +24751,542 @@
         "source": "packages/scene2d-formats/src/lottieDocument.ts"
       },
       "path": "flight/scene2d_formats/lottie_document.hpp",
-      "rule": "cpp-erased-value-assertion-unrepresented",
+      "rule": "cpp-union-member-access-unguarded",
       "status": "refused-placeholder"
     },
     {
       "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2D.ts"
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeItemHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:8f4532dbdfe5eb374d4e7ec80d4e6f1c115ad3dca49d082e580d235964c05a82"
+      ],
+      "module": {
+        "name": "LottieEllipseShapeItem",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieEllipseShapeItem.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_ellipse_shape_item.hpp",
+      "rule": "cpp-type-assertion-unidentified",
+      "status": "refused-placeholder"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeItemHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:6edd8149de73b418d81203763925233093d17423c0444aa8fc2263f966fdd504"
+      ],
+      "module": {
+        "name": "LottieFillShapeItem",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieFillShapeItem.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_fill_shape_item.hpp",
+      "rule": "cpp-type-assertion-unidentified",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieGradientShapeItems.ts"
+      ],
+      "module": {
+        "name": "LottieGradientPaint",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieGradientPaint.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_gradient_paint.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeItemHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:2aad38263bb020421aa32a0698ffb88df6f043d83bdf49841e9da4cd95a5d75c",
+        "sha256:2f009e1897688bbd2ed3b2c763e5098f1f5f07c11558dd5ad562b75fffd6baab",
+        "sha256:65eb513515f2537c41364120c83c968307afda919c491f5a907b1f55b72ca8b7",
+        "sha256:86e268e859e77f6117270d4e5bb49b3bbd687e17122c4665141c003d451f01b2",
+        "sha256:95189c4573c7f15623f066048c9f8eac428b7d73a9f683210220a207b3d2a320"
+      ],
+      "module": {
+        "name": "LottieGradientShapeItems",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieGradientShapeItems.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_gradient_shape_items.hpp",
+      "rule": "cpp-type-assertion-unidentified",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts"
+      ],
+      "module": {
+        "name": "LottieHandlers",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieHandlers.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_handlers.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieLayerHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieMaskHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeItemHandlers.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieLayerHandlers.ts"
+      ],
+      "module": {
+        "name": "LottieImageLayer",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieImageLayer.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_image_layer.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
+        "@flighthq/scene2d/packages/scene2d/src/sprite.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts"
+      ],
+      "module": {
+        "name": "LottieImport",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieImport.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_import.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieEllipseShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieFillShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieGradientShapeItems.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImageLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieMask.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePathShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePolystarShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePrecompositionLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieRectangleShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieSolidLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieStrokeShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieTextLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieTrimPathShapeItem.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieHandlers.ts"
+      ],
+      "module": {
+        "name": "LottieLayerHandlers",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieLayerHandlers.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_layer_handlers.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImageLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePrecompositionLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieSolidLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieTextLayer.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "target-runtime",
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieMaskHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:e97b064080efd66f76530116277cf5f8a7a8d163fa6fbb1e4b9611824199a9b0"
+      ],
+      "module": {
+        "name": "LottieMask",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieMask.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_mask.hpp",
+      "rule": "cpp-contextual-union-inequivalent",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieHandlers.ts"
+      ],
+      "module": {
+        "name": "LottieMaskHandlers",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieMaskHandlers.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_mask_handlers.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieMask.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieLayerHandlers.ts"
+      ],
+      "module": {
+        "name": "LottieNullLayer",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieNullLayer.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_null_layer.hpp",
+      "status": "emitted"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeItemHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:bcb333878c3fcaf3e0720f9cbe16909dead0e3a5d170f9c192f429650846f4f2"
+      ],
+      "module": {
+        "name": "LottiePathShapeItem",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottiePathShapeItem.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_path_shape_item.hpp",
+      "rule": "cpp-type-assertion-unidentified",
+      "status": "refused-placeholder"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeItemHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:60f897ccb3506395a52a966ab8bb8512d46cd50bfb8d88c36e15e05952eb2ed6",
+        "sha256:b1dac216290501c24e574d2c136697485743ae28c9c8efaec4415c7339b250a9"
+      ],
+      "module": {
+        "name": "LottiePolystarShapeItem",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottiePolystarShapeItem.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_polystar_shape_item.hpp",
+      "rule": "cpp-type-assertion-unidentified",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieLayerHandlers.ts"
+      ],
+      "module": {
+        "name": "LottiePrecompositionLayer",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottiePrecompositionLayer.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_precomposition_layer.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeItemHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:16bf3b23fa76720ee50ca3ae0aebd2ec2fb222f524796606b60d31c7a62464ca"
+      ],
+      "module": {
+        "name": "LottieRectangleShapeItem",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieRectangleShapeItem.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_rectangle_shape_item.hpp",
+      "rule": "cpp-type-assertion-unidentified",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieLayerHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieMaskHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeItemHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeLayer.ts"
+      ],
+      "module": {
+        "name": "LottieRegistry",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieRegistry.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_registry.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts"
+      ],
+      "module": {
+        "name": "LottieRequirements",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieRequirements.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_requirements.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieCounts.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieEllipseShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePathShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePolystarShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieRectangleShapeItem.ts"
+      ],
+      "module": {
+        "name": "LottieShapeGeometry",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieShapeGeometry.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_shape_geometry.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieHandlers.ts"
+      ],
+      "module": {
+        "name": "LottieShapeItemHandlers",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieShapeItemHandlers.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_shape_item_handlers.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieEllipseShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieFillShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieGradientShapeItems.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePathShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePolystarShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieRectangleShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieStrokeShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieTrimPathShapeItem.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieLayerHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:35ae8f484b9ef2aad132a6f96c12af04f82050b02ebaf3a8ab0f861d5f4fee65",
+        "sha256:5006c98fc3ed68233e4f0de6927c2b7c62040b960f5fb887ee8c527796241eb9",
+        "sha256:86aa2931a67daa9e616bc995b8b28d9f2e47d3790f6c33269b8442eb4ad0c155"
+      ],
+      "module": {
+        "name": "LottieShapeLayer",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieShapeLayer.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_shape_layer.hpp",
+      "rule": "cpp-type-assertion-unidentified",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieFillShapeItem.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieGradientShapeItems.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeLayer.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieStrokeShapeItem.ts"
+      ],
+      "module": {
+        "name": "LottieShapePaint",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieShapePaint.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_shape_paint.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieMask.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePathShapeItem.ts"
+      ],
+      "module": {
+        "name": "LottieShapePathChannels",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieShapePathChannels.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_shape_path_channels.hpp",
+      "refusedDependencies": [
+        "@flighthq/animation/packages/animation/src/animationClip.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieBezierPath.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieLayerHandlers.ts"
+      ],
+      "module": {
+        "name": "LottieSolidLayer",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieSolidLayer.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_solid_layer.hpp",
+      "refusedDependencies": [
+        "@flighthq/shape/packages/shape/src/shape.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieGradientShapeItems.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeItemHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:183a233b4dde40fc5ca18f0b549722c0c241a6ca1dd74b2c466eaf687d1327fc",
+        "sha256:880d623a3f71eb80a05ec9f1b0250ccbb50f2ec14a029587bda9670dbc4409b9",
+        "sha256:976fb71959088f625e451c9a203ffc974f55af342ff8caca52e183b653a5906f"
+      ],
+      "module": {
+        "name": "LottieStrokeShapeItem",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieStrokeShapeItem.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_stroke_shape_item.hpp",
+      "rule": "cpp-member-projection-without-present-storage",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts"
+      ],
+      "module": {
+        "name": "LottieTestFixtures",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieTestFixtures.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_test_fixtures.hpp",
+      "status": "emitted"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieLayerHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:16dc4374c614839f61912090cf44a7dcc97ee2a1974ad2e3c91bfaa61c070eea",
+        "sha256:1dbad74d0cb41ca301453345cf7641d10ffb7ec52955b6e10206bf038c97eb16",
+        "sha256:3cf3391f4ecfa4fb726a3c5a8a9c2e4ce448064e5b135c3f3a036bd835519395"
+      ],
+      "module": {
+        "name": "LottieTextLayer",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieTextLayer.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_text_layer.hpp",
+      "rule": "cpp-member-projection-without-present-storage",
+      "status": "refused-placeholder"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeItemHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:a211ea11d88b7a58127763906284d9b7e147bb9c5173ba9e0a70988af61a94bc",
+        "sha256:e2f82ae710980d4f16657963581533f787727b72464fb83258ec5087aa6c8f6f"
+      ],
+      "module": {
+        "name": "LottieTrimPathShapeItem",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieTrimPathShapeItem.ts"
+      },
+      "path": "flight/scene2d_formats/lottie_trim_path_shape_item.hpp",
+      "rule": "cpp-type-assertion-unidentified",
+      "status": "refused-placeholder"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRegistrars.ts"
       ],
       "declarationFingerprints": [
         "sha256:01101c05d3d830300a02aea0e2f79e9d807c8cd9be81cd2151a41f05c20a0879",
@@ -24672,6 +25312,7 @@
         "sha256:4efe6ef82661ce5deceddc715cf9f9970a2e4d949f0895748ff0e6bdc19c21d2",
         "sha256:5526305ef40b583c3430123837cf9c3b0bbd13ba9c65d2d3dbc1c833324cf6ed",
         "sha256:55f01db709ba1f7fb7285efa4915f7fbdb4d3cf420174a977283259f7cdf9216",
+        "sha256:57999301f1418d2abfd1c242ee6c4d247b0956d6fa0a05debdb0c9dd025cc3d9",
         "sha256:5b0f1279a128d1b44a6e180ca869e702b8bed41630c106d3d1058def59b00ca5",
         "sha256:5fd6e826dace3f436902c5419f9106c3df1b420fe0cf9a07db21c0f88abd8afc",
         "sha256:67fa671376c556ac1ecedb9452b6be6c882d160a43adb063cd59326377e69bf9",
@@ -24737,6 +25378,7 @@
     {
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssets.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2DDocument.ts"
       ],
@@ -24755,7 +25397,9 @@
       "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts"
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRegistrars.ts"
       ],
       "declarationFingerprints": [
         "sha256:100e2badd9f9dd03b153a1030c0b9eb993650e921548f26df38dede4104961d5",
@@ -24792,7 +25436,9 @@
       "classification": "target-runtime",
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts"
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRegistrars.ts"
       ],
       "declarationFingerprints": [
         "sha256:076b30ba45659a0460bf74c6eab73b9b24234fe0f612a0abff07e1a7715c1e7c",
@@ -24829,6 +25475,8 @@
     },
     {
       "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveDocument.ts"
       ],
       "module": {
@@ -24842,12 +25490,28 @@
     {
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRequirements.ts"
+      ],
+      "module": {
+        "name": "RiveCoreTypeCensus",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/riveCoreTypeCensus.ts"
+      },
+      "path": "flight/scene2d_formats/rive_core_type_census.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAnimation.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssets.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveClipping.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveLayout.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveObjectGraph.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRequirements.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2D.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapePaint.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapePath.ts",
@@ -24867,6 +25531,8 @@
     {
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveCoreTypeCensus.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2D.ts"
       ],
       "module": {
@@ -24880,7 +25546,9 @@
     {
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts"
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRegistrars.ts"
       ],
       "module": {
         "name": "RiveDrawOrder",
@@ -24896,7 +25564,9 @@
     {
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2D.ts"
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRequirements.ts"
       ],
       "module": {
         "name": "RiveHandlers",
@@ -24905,6 +25575,7 @@
       },
       "path": "flight/scene2d_formats/rive_handlers.hpp",
       "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAnimation.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssets.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveClipping.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveDrawOrder.ts",
@@ -24920,13 +25591,37 @@
       "status": "dependency-incomplete"
     },
     {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2DDocument.ts"
+      ],
+      "module": {
+        "name": "RiveImport",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/riveImport.ts"
+      },
+      "path": "flight/scene2d_formats/rive_import.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2D.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
       "classification": "target-runtime",
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAnimation.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssets.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveClipping.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveDrawOrder.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveImport.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveLayout.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRegistrars.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRequirements.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2D.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapeNode.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapePaint.ts",
@@ -24940,13 +25635,12 @@
         "sha256:0a7153e8eab237b5d87ddf52a6d295330b7ba393526c49e8facbe0eab775c450",
         "sha256:3413f50682fc858a44959ebe26c05bbc434a6f6446275ecd1c4efe8e2a5d112e",
         "sha256:3bee506861d7689e19e16f8fc47c8d642e111a23c31f633640ceb3c4a3efc2e3",
-        "sha256:48ff6344c0b3883dfdf7b3a4695932b06c9fd6d937c962ca67f72d7c975910e7",
+        "sha256:43a29a626b19a3013431226681085e55104329334f2a26c6f9cbb00c5592f3a7",
+        "sha256:502c1bef1e61395d78c174ae4e61b6cb8bbbc6b863e3b51cec2ffef5cd7b3f63",
         "sha256:5fe033a24f8812358a89ce03ffcfb9308881c4bbd77b673cb72461472908fb61",
         "sha256:a0e45d5dc687381fbcf5625233bc9e5b3f6a5746644ce6ca8ebfca8024e338fe",
         "sha256:ae77f44a277b58b9009ca5f16926fa7d040b3fcea232d7831cd40289b8fda54c",
         "sha256:d7dc52480ebf683f69eb3b9a9faa1ff2fe3ad104574b6c630aeadeab1e19f231",
-        "sha256:e8a6dbfbdecf53b1a7be189ee58159842d84998c1883e6f0ccb9c55df38878e4",
-        "sha256:f92693a4cda92d9a30c920bcdc9eaa68bc20979fd1a946e8169bc32b4b11df63",
         "sha256:fc60b66f02485aa045d316b551475041032daf8efec21865417980a6f86646e2",
         "sha256:ffa59e305c417d8c429bba8bb6bc94b677fcfc5eef538afbf3db50b37e2093ed"
       ],
@@ -24963,7 +25657,9 @@
       "classification": "source-portability",
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts"
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRegistrars.ts"
       ],
       "declarationFingerprints": [
         "sha256:02c4e8ba275916c21322b1c463e59b6bdeab60eead7cd79777a816938ae0d4da",
@@ -25094,6 +25790,7 @@
     {
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2D.ts"
       ],
       "module": {
@@ -25107,7 +25804,53 @@
     {
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2DDocument.ts"
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts"
+      ],
+      "module": {
+        "name": "RiveRegistrars",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/riveRegistrars.ts"
+      },
+      "path": "flight/scene2d_formats/rive_registrars.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAnimation.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssets.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveClipping.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveDrawOrder.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveLayout.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapeNode.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapePaint.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapePath.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveSkeleton.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveSolo.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveStateMachine.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveText.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts"
+      ],
+      "module": {
+        "name": "RiveRequirements",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/riveRequirements.ts"
+      },
+      "path": "flight/scene2d_formats/rive_requirements.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveImport.ts"
       ],
       "module": {
         "name": "RiveScene2D",
@@ -25116,16 +25859,15 @@
       },
       "path": "flight/scene2d_formats/rive_scene2_d.hpp",
       "refusedDependencies": [
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAnimation.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
-        "@flighthq/scene2d/packages/scene2d/src/displayContainer.ts"
+        "@flighthq/scene2d/packages/scene2d/src/displayObject.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/builtInScene2DDocumentImporters.ts"
       ],
       "module": {
@@ -25137,8 +25879,8 @@
       "refusedDependencies": [
         "@flighthq/image/packages/image/src/imageResourceReference.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssetBinding.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2D.ts",
-        "@flighthq/scene2d/packages/scene2d/src/displayContainer.ts"
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveImport.ts",
+        "@flighthq/scene2d/packages/scene2d/src/displayObject.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -25146,7 +25888,9 @@
       "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts"
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRegistrars.ts"
       ],
       "declarationFingerprints": [
         "sha256:0775b92e98288fe221b46703c8c9439b8e720792df130fe23e8982767353f10a",
@@ -25172,7 +25916,9 @@
     {
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRegistrars.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapeNode.ts"
       ],
       "module": {
@@ -25189,7 +25935,9 @@
     {
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRegistrars.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveShapeNode.ts"
       ],
       "module": {
@@ -25206,7 +25954,9 @@
     {
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts"
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRegistrars.ts"
       ],
       "module": {
         "name": "RiveSkeleton",
@@ -25222,7 +25972,8 @@
     },
     {
       "consumers": [
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts"
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts"
       ],
       "module": {
         "name": "RiveSkin",
@@ -25235,7 +25986,9 @@
     {
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts"
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRegistrars.ts"
       ],
       "module": {
         "name": "RiveSolo",
@@ -25245,14 +25998,16 @@
       "path": "flight/scene2d_formats/rive_solo.hpp",
       "refusedDependencies": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
-        "@flighthq/scene2d/packages/scene2d/src/displayContainer.ts"
+        "@flighthq/scene2d/packages/scene2d/src/displayObject.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts"
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRegistrars.ts"
       ],
       "module": {
         "name": "RiveStateMachine",
@@ -25269,7 +26024,9 @@
       "classification": "source-portability",
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts"
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveRegistrars.ts"
       ],
       "declarationFingerprints": [
         "sha256:0351167a5b60c36844406f2709526e0a2ac458dfb3b102fe3dcfe61286e21cf1",
@@ -25318,94 +26075,127 @@
       "status": "refused-placeholder"
     },
     {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgClip.ts"
+      ],
+      "module": {
+        "name": "SvgBounds",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgBounds.ts"
+      },
+      "path": "flight/scene2d_formats/svg_bounds.hpp",
+      "refusedDependencies": [
+        "@flighthq/shape/packages/shape/src/shape.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgClipHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImport.ts"
+      ],
+      "module": {
+        "name": "SvgClip",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgClip.ts"
+      },
+      "path": "flight/scene2d_formats/svg_clip.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgBounds.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgStyle.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgHandlers.ts"
+      ],
+      "module": {
+        "name": "SvgClipHandlers",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgClipHandlers.ts"
+      },
+      "path": "flight/scene2d_formats/svg_clip_handlers.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgClip.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
       "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
-        "@flighthq/scene2d-resources/packages/scene2d-resources/src/builtInScene2DDocumentImporters.ts"
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGeometryElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGradient.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgTextElement.ts"
       ],
       "declarationFingerprints": [
-        "sha256:00b3f3ec43f0625862df239c45d791e4ccb54d3b4029644300e359f63ecd86a8",
-        "sha256:012386e600d10b1fb09b0f8305bcca52e34ebb105eaf3eb19a9311905101027e",
         "sha256:062a23e1a909495f943c668dc39f08146211f54f0fd99f17284d35e27cc177df",
-        "sha256:083dbe662380e3f5ab2e95638ce01f28d6747fc625c10154e7c9768f5d3003df",
         "sha256:09cbaf5eb044b7cb756a0ad421d8feedb6d89b6b9149d0cab09552888c1102cb",
-        "sha256:0d08d10c981a53ad20723aa1347e9c26d7803697184f94e9e3ae396b89e64e77",
-        "sha256:0d1fbc1dbb87014d26b5553c5b0d7cf52a658ff604bab3a65a17370ce30b41e8",
-        "sha256:0e9b80b535cf0f2f883f0cea79a65864165914cafd482500ba8130fef82a3f4b",
-        "sha256:0ee6f717c38a1902296ef83666ed976a38beba89de4dab100cebaa3a5c6b5598",
-        "sha256:131df511aa489ab334455e3f2fac5045e8666bfb0acf092b4299f22a4075aee8",
-        "sha256:1c3125c66b754346bb193cc76fc3d9fd6f96cdd3b5f2497ac35f54f2fec6eece",
-        "sha256:20ecd9946bdbdd8fd328211f99fa695367e960e23fa592da8f2db3775a6e03e8",
-        "sha256:2224641eacbb55de8f6a3e946e8017f474e5b4a0985746b00a1f71c1dfcf20d8",
-        "sha256:260ed1d757a9d9ebc244a21466eec2d7563901540f672f75c6ddbede19f26657",
-        "sha256:2717d52896dfa3630244f78eb9fdc925c1a46fcba5969dc8d010d0b5f436b5e9",
-        "sha256:28f00c6b6d602d89f034a978acf0ecfd2d380914facd011eefece47bbfbae799",
-        "sha256:28fbf21ea41269a8f716bdfd7753e1c839865d8863b6ecf4a87a16ad4e849c39",
-        "sha256:2f2618a16aa6e74eebe7cb32062c836a7705512377167f3012974fca2ccf6243",
-        "sha256:353c9014175f1ef52f00f2ef498d3bd35b2ab5b0d5e20d5e0a6b316c751237d1",
-        "sha256:376433bc9e0e5058723602e11f95bbfe179050f312154af1d2e6f33fdfeaa428",
-        "sha256:3b6abac2a0e0e1221f1d1e752503992744f75bff13a116d28fe73ee73ab16d2b",
-        "sha256:408f4e930f52a440bcdd8ab63a1d38801ba8c3066e820ecf6b6fc1c9260165bf",
-        "sha256:49685628fd03655ea475bb972567dd771864cfb2df7fefca44b6cb0c9d486612",
-        "sha256:51e52effbed67a5d5e4799b81a0350f17dd071ce84922de4efa5fd4bdb178936",
-        "sha256:53933bdee6948babf7834282784d761ce73a748031b614defcd252d47717a0bb",
-        "sha256:5a41d48a38756c25342ddcb38106ff66fdbbf21fb7e78f5460122c10cf521a4e",
-        "sha256:5ea3a620b8a9dd6760356767cfeb35103b6845bbbc90cba1176484ead915842b",
-        "sha256:5f0ff94d2420c3e58741ce54c202ad8b1065067ca52765a5fd77f70a9d15c664",
+        "sha256:2d9a8cffc4dfefacf97ef6700bf450f93fa2836b7dc393026dabcca86c527360",
         "sha256:5f4ab525a0ca1172553a522ba2c4dc583c5e39b8761816ca12f784ee0b683551",
-        "sha256:60c1f5512e0e173ac282811ba93b38bab780de5ba92140cfab5234e6b034f1bf",
-        "sha256:64e82184e23547012eb9e7255186ed6d62755d3957bf19198137b3912172497c",
-        "sha256:6aff99eb22334ac76e24cd119f7a56a77403efb73c50afec19e94141007ab054",
-        "sha256:6c23e61bd7ee3d775eb743c9c7806c473ebc6ec7f0e8642090e8986439ddbbef",
-        "sha256:6d3828017def22191a5226494e653130674e43812b44c78d410623e0091f418a",
-        "sha256:6dfb128cb8a206c0b5443eb74dd5be40c92299b150901d3a014c93292d36ef3d",
-        "sha256:70375883a07af2d7fe253695c1d816b6adb16a8dbe11c44714bf2f202aaa9a1e",
-        "sha256:75ca3b845bae19af916d19ab14de64fdf004950756e7c0c6348ebac40b90a98b",
-        "sha256:769daf8f3e83d998316d50ff76d98013137060a8c653927a1a62baaf963f2cc5",
-        "sha256:7b61f2eed44a3ad0a27141e513389806b1fee8ee4bf3d66e9c3ca87200c45569",
-        "sha256:7c243d3c3979462a3ea1111ad39ac903b78071c04a903f1e6c1a55e11cd20ffe",
-        "sha256:81c311f94de57f9e1ce473f1d5ae00643ace8b5de8ea4630cb5e009a296639ec",
-        "sha256:830de9f5c39feacc9c69ffc89779a1c064b220df5aa3fee27fe65b1ae63b7a7f",
-        "sha256:8c74665f64c238e1e70999388a214cb37129ab0e76ae46c87baab2363a658a4a",
-        "sha256:9151da0548c94396583d6ebfb5b32fc179a5fb304bc428fd98a8f56b4e3caf96",
-        "sha256:930cd5585dbc2d7e7e55b51908373f7b88f148deb5ee1321d895342b21dcde04",
-        "sha256:9463419c6f89c32f3ad73d506bb4ace4c902897a2aeef3354d52681eac4da295",
-        "sha256:96efe3151d9417ec68027079664349a4a51ba2a23e784b70a21221aa604af266",
-        "sha256:98a11bbd8d565bc3b4935504e59a332f25c6ae13bd5528f45092f24a7e371f3e",
-        "sha256:9985387004248a54df375ffdc890701422293c05c8a1014a31b38df840d8dd10",
+        "sha256:6714caaac47681e6fc22baea93ca05c07f46f9cd424384b2fc16b2f86ac32c74",
         "sha256:9bc09e8499cb5d76118b0d620f98cdf7f2d4f9da4c99eb8862bf02a3b3b992d6",
-        "sha256:9c3f1cdb0b8d30a2e561658e00109b45112b8571532c403974b7386ee81f6f2c",
-        "sha256:9ec4478d82cdd347b4b61195cf12b6a4bcba187974274cc762ffb6225ef18287",
-        "sha256:aaa7d5fff9244bf2fd720638054f1deb4997595839b91ef1d923fc7cce246bdd",
-        "sha256:ab9b775a9254e73283cf6890ecaa5e19bd43c833e0bdd2cf8282903fe7ac3dd5",
-        "sha256:ae27315bffe789ad44f4ca53c7c131f69156271e88695720070daac9c8960758",
-        "sha256:ae5017907c7d8f66096e7de6d78e1495d7ed39496fc0ef9db85df9fc40dd3314",
-        "sha256:aed8f48c4867612bb3fa88d6e8744cb0a293b8134c9990a694e83830cc0c7043",
-        "sha256:af282665963aaa8b8a1be612349b90174f05532b8c130f5022f974753a6584f9",
-        "sha256:af8da88dd44d20341cdfaa0a84ad117748c1fdf2b444822196303aaba6d1418a",
-        "sha256:b2d1398ad6bc4e7c4f751f8acbe74e2e55ad234507b4d50db0ba2d75c067b3b4",
-        "sha256:b5f235162196732e594fbc2c04e884bbe27951aa2c8ad2eb73fee4f13938ccad",
-        "sha256:bec5510e106f021e16f9ec6b8e0ff17100407d121d3b30bb3364c4ae30783fc0",
-        "sha256:c1fb36562dff34efeaece2c0b1706714fea0646ac5ad3c51a0f47b23d60dbc70",
-        "sha256:c5b62fa796cb0144c0c1752bb23b8ed81042a73549ca85ac2496b7aa0c2a344a",
-        "sha256:c95e80b6d8f27a6672dad33bbd929d62afbd36b750f548439dcd24c931c7c80d",
-        "sha256:cd9991075f2ead4421ba9731ed1c82fa9e614b533aa0ffc9329a1c1183c4089e",
-        "sha256:ce666ebe33a5058047b3af9e7be7b5df5573d8190c1efe911daf0920d3e86bcd",
-        "sha256:d1d2c080d35162809ea74f1b36d6356aeda73da3f7dd02f6fe644fa75578d400",
-        "sha256:d6b60bb9538767c0202084059aba3591d5ef8da9481589b0ce663c1b2d1ba157",
-        "sha256:d86f5e22bfb52bca7c40d3856d9616f529c41c848703f526939598b6713aeaeb",
-        "sha256:d969003df6d578003b9bf93bf3745ae56ead1e6322bb1980a36888d9a26c9689",
-        "sha256:d9cb8a1722c3858068d0188d832dd8beb8b5e213246537015e88c3d4e1171d02",
-        "sha256:dc12e0fc15c584b4de8a76efba713a723ffa248c3c58892646bdcc0e275d50a8",
-        "sha256:dda32e91d64bf69d477311c4d9144a84e8663f9447176a2c3d0e9ffbeb57a24a",
-        "sha256:e076b12b2213f50aacfd0f7f92588f2af5bfd33454da8754a97933f17cce1d73",
-        "sha256:e1f6fb97a5674e14b17fd88c83f50803fca56c6769e046ab28faf66df5c06535",
-        "sha256:e36ecd1a1f1cf07f72465576a7b19991c5ced2259a6b88fb381ee275d43fcf71",
-        "sha256:e51d3c5ee143cc8f2a9e5fdea987c078d1de6f6ac474cc1aca79b10848ec667d",
-        "sha256:ecf47479d4561ce6daabcbccd7d2a6ebfe017a9a65bd017a38a422b1a718ebd2",
-        "sha256:f103214635b55c15f542d6ef41705d52d3e6de0c4ea845f28989dab73dc01924",
-        "sha256:f1f941d7fd931f186828bace60ec3e2e75cea37c1abfc9a2fa591afed2317616",
-        "sha256:f979e7175cec8280668a081b98d39d2d17a31afc101992e00caeec6cfd17c513"
+        "sha256:9c3f1cdb0b8d30a2e561658e00109b45112b8571532c403974b7386ee81f6f2c"
+      ],
+      "module": {
+        "name": "SvgColor",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgColor.ts"
+      },
+      "path": "flight/scene2d_formats/svg_color.hpp",
+      "rule": "cpp-member-projection-without-present-storage",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgElementHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImport.ts"
+      ],
+      "module": {
+        "name": "SvgContainerElement",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgContainerElement.ts"
+      },
+      "path": "flight/scene2d_formats/svg_container_element.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
+        "@flighthq/scene2d/packages/scene2d/src/displayObject.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgRequirements.ts"
+      ],
+      "module": {
+        "name": "SvgCounts",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgCounts.ts"
+      },
+      "path": "flight/scene2d_formats/svg_counts.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgContainerElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGeometryElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImageElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImport.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgTextElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgUseElement.ts",
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/builtInScene2DDocumentImporters.ts"
       ],
       "module": {
         "name": "SvgDocument",
@@ -25413,12 +26203,306 @@
         "source": "packages/scene2d-formats/src/svgDocument.ts"
       },
       "path": "flight/scene2d_formats/svg_document.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGradient.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgStyle.ts",
+        "@flighthq/scene2d/packages/scene2d/src/displayObject.ts",
+        "@flighthq/shape/packages/shape/src/registerDefaultShapeBoundsCommands.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgHandlers.ts"
+      ],
+      "module": {
+        "name": "SvgElementHandlers",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgElementHandlers.ts"
+      },
+      "path": "flight/scene2d_formats/svg_element_handlers.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgContainerElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGeometryElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImageElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgTextElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgUseElement.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "source-portability",
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgElementHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImport.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:1c6bd7a682aefa7f642a3482bb9b1508aed977a631eb1299f85027b909792ab4",
+        "sha256:5a41d48a38756c25342ddcb38106ff66fdbbf21fb7e78f5460122c10cf521a4e",
+        "sha256:7a9b53129f78955279698dd00bc50d62c1a4df1da00815cbf7690af339a20c81",
+        "sha256:f979e7175cec8280668a081b98d39d2d17a31afc101992e00caeec6cfd17c513"
+      ],
+      "module": {
+        "name": "SvgGeometryElement",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgGeometryElement.ts"
+      },
+      "path": "flight/scene2d_formats/svg_geometry_element.hpp",
+      "rule": "cpp-contextual-union-value-type-unrepresented",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgClip.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGeometryElement.ts"
+      ],
+      "module": {
+        "name": "SvgGeometryPath",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgGeometryPath.ts"
+      },
+      "path": "flight/scene2d_formats/svg_geometry_path.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGeometryElement.ts"
+      ],
+      "module": {
+        "name": "SvgGradient",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgGradient.ts"
+      },
+      "path": "flight/scene2d_formats/svg_gradient.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgColor.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgStyle.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts"
+      ],
+      "module": {
+        "name": "SvgHandlers",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgHandlers.ts"
+      },
+      "path": "flight/scene2d_formats/svg_handlers.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgClipHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgElementHandlers.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "source-portability",
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgElementHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImport.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:653b494dd3a3233f22900941854c32c19d09da6041875a17bbff1edd9976ea98",
+        "sha256:cb763990fdb834fa5558757bdc5d60c78e9f46aedffa80ffc3071f283c62144e"
+      ],
+      "module": {
+        "name": "SvgImageElement",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgImageElement.ts"
+      },
+      "path": "flight/scene2d_formats/svg_image_element.hpp",
+      "rule": "cpp-contextual-union-value-type-unrepresented",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts"
+      ],
+      "module": {
+        "name": "SvgImport",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgImport.ts"
+      },
+      "path": "flight/scene2d_formats/svg_import.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgClip.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgContainerElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGeometryElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImageElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgTextElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgUseElement.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgClipHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgElementHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImport.ts"
+      ],
+      "module": {
+        "name": "SvgRegistry",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgRegistry.ts"
+      },
+      "path": "flight/scene2d_formats/svg_registry.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts"
+      ],
+      "module": {
+        "name": "SvgRequirements",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgRequirements.ts"
+      },
+      "path": "flight/scene2d_formats/svg_requirements.hpp",
+      "status": "emitted"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgClip.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGeometryElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGradient.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgTextElement.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:1697998f53918ce15e017dfd2e2ae6135b1966fe26e3de5aae5064beb25b704d",
+        "sha256:45f485605cb2f4d005aa0e5ee4db94cd7d50c3a52172cb8365724832f62fdc3f",
+        "sha256:47012e177207be215ea393489bd1afa630251e7e091f3cde71ff365fc206ba07",
+        "sha256:7c243d3c3979462a3ea1111ad39ac903b78071c04a903f1e6c1a55e11cd20ffe",
+        "sha256:aad67f5feb7aefda2969cd218f25a450d49414635dbc38e10c10ad80e66c05b2",
+        "sha256:b6a11ddaa6b428c78c7ea210507fe8ae0f2368c56e5485aab51714ad93baa5d1",
+        "sha256:d4e8e9abc879e2a861f9d2c74f0bada8cbe7a7262165c87382a6c07acdf0e180",
+        "sha256:d6b60bb9538767c0202084059aba3591d5ef8da9481589b0ce663c1b2d1ba157",
+        "sha256:f1f941d7fd931f186828bace60ec3e2e75cea37c1abfc9a2fa591afed2317616"
+      ],
+      "module": {
+        "name": "SvgStyle",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgStyle.ts"
+      },
+      "path": "flight/scene2d_formats/svg_style.hpp",
       "rule": "cpp-member-projection-without-present-storage",
       "status": "refused-placeholder"
     },
     {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgElementHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImport.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:1af93a969975d2e1500024e9ccb73bbfa6f13272b613400a3916323a166e9811",
+        "sha256:2059258c85ccd7a12f69776980c69a0425735c268c8b0b45884b9b5b16b05550",
+        "sha256:376433bc9e0e5058723602e11f95bbfe179050f312154af1d2e6f33fdfeaa428",
+        "sha256:830de9f5c39feacc9c69ffc89779a1c064b220df5aa3fee27fe65b1ae63b7a7f",
+        "sha256:993282cbc90c6d6f050bd1356b2c4d52df3587fdd18d3e36df46393a2a2386f8",
+        "sha256:9985387004248a54df375ffdc890701422293c05c8a1014a31b38df840d8dd10",
+        "sha256:f3d92bb8648ec004e529c073bd5cef4c292bc79b452a356cfc1c785bbe5a8b85",
+        "sha256:fdc9eb748a72737196736cd3ffff55d387f952b153f1a441120d29c6d6712c75"
+      ],
+      "module": {
+        "name": "SvgTextElement",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgTextElement.ts"
+      },
+      "path": "flight/scene2d_formats/svg_text_element.hpp",
+      "rule": "cpp-optional-member-access-unproven",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgClip.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgContainerElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGradient.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImageElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgUseElement.ts"
+      ],
+      "module": {
+        "name": "SvgTransform",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgTransform.ts"
+      },
+      "path": "flight/scene2d_formats/svg_transform.hpp",
+      "status": "emitted"
+    },
+    {
       "classification": "source-portability",
-      "consumers": [],
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/index.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgElementHandlers.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImport.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:6604c45a44d6a9984ac40a1697d64fe75c33e6ad5faf8f71cd90f7f29fc75bbc",
+        "sha256:93c773f095ea80906d76eec3d62936df82fab21d7c84ccf3f7178306fe6b37cf",
+        "sha256:a27375be493fd0f100877f8a532616233e5dddcacca2697668fbdb5e08e3ce6d"
+      ],
+      "module": {
+        "name": "SvgUseElement",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgUseElement.ts"
+      },
+      "path": "flight/scene2d_formats/svg_use_element.hpp",
+      "rule": "cpp-contextual-union-value-type-unrepresented",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgClip.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgColor.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgContainerElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGeometryElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGeometryPath.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgGradient.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImageElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgStyle.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgTextElement.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgTransform.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgUseElement.ts"
+      ],
+      "module": {
+        "name": "SvgXml",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgXml.ts"
+      },
+      "path": "flight/scene2d_formats/svg_xml.hpp",
+      "status": "emitted"
+    },
+    {
+      "classification": "source-portability",
+      "consumers": [
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts"
+      ],
       "declarationFingerprints": [
         "sha256:37503d130e71590608482c6c3cae875ac04b81fd4f2f33c724cba2225b5dceae"
       ],

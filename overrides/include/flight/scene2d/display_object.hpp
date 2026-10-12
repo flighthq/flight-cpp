@@ -5,6 +5,8 @@
 #include <flight/runtime.hpp>
 #include <flight/types/display_object.hpp>
 #include <flight/types/entity.hpp>
+#include <flight/types/material.hpp>
+#include <flight/types/material2_d.hpp>
 #include <flight/types/node2_d.hpp>
 
 namespace flight::scene2d {
@@ -55,7 +57,7 @@ inline flight::types::DisplayObject make_display_object() {
       flight::row_field<flight::RowKey<"clip">>(
           std::optional<flight::Ref<flight::types::ClipRegion>>{}),
       flight::row_field<flight::RowKey<"material">>(
-          std::optional<flight::Ref<flight::types::Material>>{}),
+          std::optional<flight::Ref<flight::types::Material2D>>{}),
       flight::row_field<flight::RowKey<"materialData">>(
           std::optional<flight::Ref<flight::types::MaterialData>>{}),
       flight::row_field<flight::RowKey<"pivotX">>(0.0),

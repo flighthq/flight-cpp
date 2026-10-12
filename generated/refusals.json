@@ -4475,22 +4475,13 @@
       "code": "dependency-refused",
       "module": "packages/scene2d/src/contract.ts",
       "package": "@flighthq/scene2d",
-      "reason": "dependency ./displayContainer was refused for @flighthq/scene2d/packages/scene2d/src/displayContainer.ts",
+      "reason": "dependency ./displayObject.ts was refused for @flighthq/scene2d/packages/scene2d/src/displayObject.ts",
       "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 10,
-      "module": "packages/scene2d/src/displayContainer.ts",
-      "package": "@flighthq/scene2d",
-      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/displayContainer.ts: a reference assertion from flight::Ref<flight::types::Node2DRuntime> to flight::Ref<flight::types::DisplayObjectRuntime> has no heritage to cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 53,
+      "line": 63,
       "module": "packages/scene2d/src/displayObject.ts",
       "package": "@flighthq/scene2d",
       "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/displayObject.ts: a reference assertion from flight::Ref<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>> to flight::Ref<flight::types::Node2DRuntime> has no heritage to cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage",
@@ -4506,17 +4497,17 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 17,
+      "line": 18,
       "module": "packages/scene2d/src/htmlView.ts",
       "package": "@flighthq/scene2d",
-      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: a structural assertion from the readonly row Readonly<Node> to the writable row HtmlView claims mutation the source refused: a readonly row never becomes writable, because the boundary the value came through said its subject must not be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the readonly row where the value is only read, or declare the source -- its parameter, slot, or accessor result -- as the writable type where that object may really be mutated. Choosing between those two repairs is the question this assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME OWNER that the mutating paths must write needs a mutable-source accessor returning the full writable owner from the typed runtime slot, with the readonly accessor kept for reads, because the capability has to exist on the storage and accessor that establish those cells; a NODE that the read paths only traverse and never mutate needs the two authorities separated instead, with a readonly view on every read path and a separate mutable entry point for the paths that really mutate, because laundering a writable node out of a readonly boundary grants mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained row carries; neither adds cells to a row that does not declare them. Making only that boundary writable is insufficient here: the source owner does not declare EntityRuntimeKey, alpha, blendMode, clip, data, material, materialData, pivotX, pivotY, rotation, scaleX, scaleY, skewX, skewY, visible, x and y, so it has no cells for the asserted row to mutate. Declare both the storage slot and the accessor result as the full writable HtmlView row where initialization establishes those cells, rather than widening Readonly<Node> at the use site.",
+      "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/htmlView.ts: a structural assertion from the readonly row Readonly<BoundsNode<Node2DTraits>> to the writable row HtmlView claims mutation the source refused: a readonly row never becomes writable, because the boundary the value came through said its subject must not be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the readonly row where the value is only read, or declare the source -- its parameter, slot, or accessor result -- as the writable type where that object may really be mutated. Choosing between those two repairs is the question this assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME OWNER that the mutating paths must write needs a mutable-source accessor returning the full writable owner from the typed runtime slot, with the readonly accessor kept for reads, because the capability has to exist on the storage and accessor that establish those cells; a NODE that the read paths only traverse and never mutate needs the two authorities separated instead, with a readonly view on every read path and a separate mutable entry point for the paths that really mutate, because laundering a writable node out of a readonly boundary grants mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained row carries; neither adds cells to a row that does not declare them. Making only that boundary writable is insufficient here: the source owner does not declare EntityRuntimeKey and data, so it has no cells for the asserted row to mutate. Declare both the storage slot and the accessor result as the full writable HtmlView row where initialization establishes those cells, rather than widening Readonly<BoundsNode<Node2DTraits>> at the use site.",
       "stage": "emission"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d/src/index.ts",
       "package": "@flighthq/scene2d",
-      "reason": "dependency ./contract was refused for @flighthq/scene2d/packages/scene2d/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/scene2d/packages/scene2d/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -4540,7 +4531,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 64,
+      "line": 65,
       "module": "packages/scene2d/src/sprite.ts",
       "package": "@flighthq/scene2d",
       "reason": "cpp emission failed for @flighthq/scene2d/packages/scene2d/src/sprite.ts: a structural assertion from the readonly row Readonly<Node2DRuntime> to the writable row SpriteRuntime claims mutation only to pass the value to the readonly row Readonly<SpriteRuntime>. Spell the assertion as Readonly<SpriteRuntime> to remove the writable-capability claim, but that alone cannot recover the derived owner: Readonly<Node2DRuntime> does not declare localBoundsTexture and localBoundsTextureVersion, so the retained row has no proven cells for those members. No writable carrier is justified for this read-only call. Preserve SpriteRuntime in the callback parameter through a named typed runner or carrier, or make an intentionally erased registry validate and recover that owner before invoking the typed runner; a tag or registry key carried beside the value does not prove which owner the reference retains. If mutation is intended elsewhere, the storage and accessor themselves must retain writable SpriteRuntime capability rather than adding it with an assertion. The compiler will not cast, copy, materialize, or create side storage for either missing proof.",
@@ -5006,23 +4997,217 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-formats/src/contract.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency ./lottieDocument was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
+      "reason": "dependency ./lottieBezierPath.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieBezierPath.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-formats/src/index.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency ./contract was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/contract.ts",
+      "reason": "dependency ./lottieCounts.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieCounts.ts",
       "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 1292,
+      "line": 58,
+      "module": "packages/scene2d-formats/src/lottieBezierPath.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieBezierPath.ts: an actually erased value cannot be asserted as structural row Readonly: flight::Any has no structural-row alternative or checked row projection. Preserve the represented row through the assertion, or keep the API typed to the structural source before erasure; the compiler will not cast, copy, or materialize a replacement row",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 78,
+      "module": "packages/scene2d-formats/src/lottieCounts.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieCounts.ts: a presence test against null has no absence channel in the emitted C++ storage for identifier",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 656,
       "module": "packages/scene2d-formats/src/lottieDocument.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: an actually erased value cannot be asserted as structural row Readonly: flight::Any has no structural-row alternative or checked row projection. Preserve the represented row through the assertion, or keep the API typed to the structural source before erasure; the compiler will not cast, copy, or materialize a replacement row",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts: property length on a C++ variant requires proven union member access",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 14,
+      "module": "packages/scene2d-formats/src/lottieEllipseShapeItem.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieEllipseShapeItem.ts: type assertion target must identify exactly one C++ variant alternative: target flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieEllipseShapeItem>>>> against [flight::Ref<LottieRectangleShapeItem>, flight::Ref<LottieEllipseShapeItem>, flight::Ref<LottieStrokeShapeItem>, flight::Ref<LottiePolystarShapeItem>, flight::Record<flight::String, flight::Any>, flight::Ref<LottieFillShapeItem>, flight::Ref<LottieShapeGroup>, flight::Ref<LottieRepeaterShapeItem>, flight::Ref<LottieTrimPathShapeItem>, flight::Ref<LottieShapePathItem>, flight::Ref<LottieTransformShapeItem>, flight::Ref<LottieRoundedCornersShapeItem>, flight::Ref<LottieGradientShapeItem>, flight::Ref<LottieMergePathShapeItem>]; the value holds the target through an alternative whose members already satisfy it, but the two are separate flattened C++ structs with no base relation between them, so there is no narrowing to follow -- a CLASS heritage pair narrows here, because those structs really do inherit. Assert to the alternative the value actually holds and read this target's members from it, or declare the slot as this target where the concrete type is known",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 20,
+      "module": "packages/scene2d-formats/src/lottieFillShapeItem.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieFillShapeItem.ts: type assertion target must identify exactly one C++ variant alternative: target flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieFillShapeItem>>>> against [flight::Ref<LottieRectangleShapeItem>, flight::Ref<LottieEllipseShapeItem>, flight::Ref<LottieStrokeShapeItem>, flight::Ref<LottiePolystarShapeItem>, flight::Record<flight::String, flight::Any>, flight::Ref<LottieFillShapeItem>, flight::Ref<LottieShapeGroup>, flight::Ref<LottieRepeaterShapeItem>, flight::Ref<LottieTrimPathShapeItem>, flight::Ref<LottieShapePathItem>, flight::Ref<LottieTransformShapeItem>, flight::Ref<LottieRoundedCornersShapeItem>, flight::Ref<LottieGradientShapeItem>, flight::Ref<LottieMergePathShapeItem>]; the value holds the target through an alternative whose members already satisfy it, but the two are separate flattened C++ structs with no base relation between them, so there is no narrowing to follow -- a CLASS heritage pair narrows here, because those structs really do inherit. Assert to the alternative the value actually holds and read this target's members from it, or declare the slot as this target where the concrete type is known",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/lottieGradientPaint.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./lottieDocument.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 24,
+      "module": "packages/scene2d-formats/src/lottieGradientShapeItems.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieGradientShapeItems.ts: type assertion target must identify exactly one C++ variant alternative: target flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieGradientShapeItem>>>> against [flight::Ref<LottieRectangleShapeItem>, flight::Ref<LottieEllipseShapeItem>, flight::Ref<LottieStrokeShapeItem>, flight::Ref<LottiePolystarShapeItem>, flight::Record<flight::String, flight::Any>, flight::Ref<LottieFillShapeItem>, flight::Ref<LottieShapeGroup>, flight::Ref<LottieRepeaterShapeItem>, flight::Ref<LottieTrimPathShapeItem>, flight::Ref<LottieShapePathItem>, flight::Ref<LottieTransformShapeItem>, flight::Ref<LottieRoundedCornersShapeItem>, flight::Ref<LottieGradientShapeItem>, flight::Ref<LottieMergePathShapeItem>]; the value holds the target through an alternative whose members already satisfy it, but the two are separate flattened C++ structs with no base relation between them, so there is no narrowing to follow -- a CLASS heritage pair narrows here, because those structs really do inherit. Assert to the alternative the value actually holds and read this target's members from it, or declare the slot as this target where the concrete type is known",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/lottieHandlers.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./lottieLayerHandlers.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieLayerHandlers.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/lottieImageLayer.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./lottieDocument.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/lottieImport.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./lottieDocument.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/lottieLayerHandlers.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./lottieImageLayer.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImageLayer.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 21,
+      "module": "packages/scene2d-formats/src/lottieMask.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/LottieDocument.ts: contextual C++ union conversion requires equivalent source union evidence: target optionalVariant carriers [flight::Ref<LottieAnimatedProperty<T>>, flight::Ref<LottieStaticProperty<T>>] from property source multiVariant carriers [flight::Ref<LottieAnimatedProperty<flight::Ref<LottieShapePath>>>, flight::Ref<LottieStaticProperty<flight::Ref<LottieShapePath>>>]. The alternatives match uniquely, but no checked target-runtime conversion exists between their C++ carriers. Keep both sides on the same declared union alias; for a Map or WeakMap lookup followed by a rebind, construct its declared value owner and ensure every rebound member already has that owner member's carrier -- a Readonly structural view does not become a mutable nominal Ref. Otherwise add an identity-preserving runtime conversion contract.",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/lottieMaskHandlers.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./lottieMask.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieMask.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 19,
+      "module": "packages/scene2d-formats/src/lottiePathShapeItem.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePathShapeItem.ts: type assertion target must identify exactly one C++ variant alternative: target flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieShapePathItem>>>> against [flight::Ref<LottieRectangleShapeItem>, flight::Ref<LottieEllipseShapeItem>, flight::Ref<LottieStrokeShapeItem>, flight::Ref<LottiePolystarShapeItem>, flight::Record<flight::String, flight::Any>, flight::Ref<LottieFillShapeItem>, flight::Ref<LottieShapeGroup>, flight::Ref<LottieRepeaterShapeItem>, flight::Ref<LottieTrimPathShapeItem>, flight::Ref<LottieShapePathItem>, flight::Ref<LottieTransformShapeItem>, flight::Ref<LottieRoundedCornersShapeItem>, flight::Ref<LottieGradientShapeItem>, flight::Ref<LottieMergePathShapeItem>]; the value holds the target through an alternative whose members already satisfy it, but the two are separate flattened C++ structs with no base relation between them, so there is no narrowing to follow -- a CLASS heritage pair narrows here, because those structs really do inherit. Assert to the alternative the value actually holds and read this target's members from it, or declare the slot as this target where the concrete type is known",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 77,
+      "module": "packages/scene2d-formats/src/lottiePolystarShapeItem.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottiePolystarShapeItem.ts: type assertion target must identify exactly one C++ variant alternative: target flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottiePolystarShapeItem>>>> against [flight::Ref<LottieRectangleShapeItem>, flight::Ref<LottieEllipseShapeItem>, flight::Ref<LottieStrokeShapeItem>, flight::Ref<LottiePolystarShapeItem>, flight::Record<flight::String, flight::Any>, flight::Ref<LottieFillShapeItem>, flight::Ref<LottieShapeGroup>, flight::Ref<LottieRepeaterShapeItem>, flight::Ref<LottieTrimPathShapeItem>, flight::Ref<LottieShapePathItem>, flight::Ref<LottieTransformShapeItem>, flight::Ref<LottieRoundedCornersShapeItem>, flight::Ref<LottieGradientShapeItem>, flight::Ref<LottieMergePathShapeItem>]; the value holds the target through an alternative whose members already satisfy it, but the two are separate flattened C++ structs with no base relation between them, so there is no narrowing to follow -- a CLASS heritage pair narrows here, because those structs really do inherit. Assert to the alternative the value actually holds and read this target's members from it, or declare the slot as this target where the concrete type is known",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/lottiePrecompositionLayer.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./lottieDocument.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 20,
+      "module": "packages/scene2d-formats/src/lottieRectangleShapeItem.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieRectangleShapeItem.ts: type assertion target must identify exactly one C++ variant alternative: target flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieRectangleShapeItem>>>> against [flight::Ref<LottieRectangleShapeItem>, flight::Ref<LottieEllipseShapeItem>, flight::Ref<LottieStrokeShapeItem>, flight::Ref<LottiePolystarShapeItem>, flight::Record<flight::String, flight::Any>, flight::Ref<LottieFillShapeItem>, flight::Ref<LottieShapeGroup>, flight::Ref<LottieRepeaterShapeItem>, flight::Ref<LottieTrimPathShapeItem>, flight::Ref<LottieShapePathItem>, flight::Ref<LottieTransformShapeItem>, flight::Ref<LottieRoundedCornersShapeItem>, flight::Ref<LottieGradientShapeItem>, flight::Ref<LottieMergePathShapeItem>]; the value holds the target through an alternative whose members already satisfy it, but the two are separate flattened C++ structs with no base relation between them, so there is no narrowing to follow -- a CLASS heritage pair narrows here, because those structs really do inherit. Assert to the alternative the value actually holds and read this target's members from it, or declare the slot as this target where the concrete type is known",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/lottieRequirements.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./lottieCounts.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieCounts.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/lottieShapeItemHandlers.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./lottieEllipseShapeItem.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieEllipseShapeItem.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 33,
+      "module": "packages/scene2d-formats/src/lottieShapeLayer.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieShapeLayer.ts: type assertion target must identify exactly one C++ variant alternative: target flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieTransform>>>> against [flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieShapeGroup>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieEllipseShapeItem>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieFillShapeItem>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieGradientShapeItem>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieMergePathShapeItem>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottiePolystarShapeItem>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieRectangleShapeItem>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieRepeaterShapeItem>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieRoundedCornersShapeItem>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieShapePathItem>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieStrokeShapeItem>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieTransformShapeItem>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieTrimPathShapeItem>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Record<flight::String, flight::Any>>>>]; the value holds the target through an alternative whose members already satisfy it, but the two are separate flattened C++ structs with no base relation between them, so there is no narrowing to follow -- a CLASS heritage pair narrows here, because those structs really do inherit. Assert to the alternative the value actually holds and read this target's members from it, or declare the slot as this target where the concrete type is known",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/lottieShapePathChannels.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./lottieBezierPath.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieBezierPath.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/lottieSolidLayer.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency @flighthq/shape/contract was refused for @flighthq/shape/packages/shape/src/shape.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 104,
+      "module": "packages/scene2d-formats/src/lottieStrokeShapeItem.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieStrokeShapeItem.ts: narrowed C++ union projection requires proven present payload: the narrowing still admits absence, so nothing proved the payload present and reading the value alternative here would unpack storage that may still be holding the sentinel the test left reachable. Test both at once with `x != null`, or narrow the value into a present local the same way",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 44,
+      "module": "packages/scene2d-formats/src/lottieTextLayer.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieTextLayer.ts: narrowed C++ union projection requires proven present payload: the narrowing still admits absence, so nothing proved the payload present and reading the value alternative here would unpack storage that may still be holding the sentinel the test left reachable. Test both at once with `x != null`, or narrow the value into a present local the same way",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 29,
+      "module": "packages/scene2d-formats/src/lottieTrimPathShapeItem.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieTrimPathShapeItem.ts: type assertion target must identify exactly one C++ variant alternative: target flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LottieTrimPathShapeItem>>>> against [flight::Ref<LottieRectangleShapeItem>, flight::Ref<LottieEllipseShapeItem>, flight::Ref<LottieStrokeShapeItem>, flight::Ref<LottiePolystarShapeItem>, flight::Record<flight::String, flight::Any>, flight::Ref<LottieFillShapeItem>, flight::Ref<LottieShapeGroup>, flight::Ref<LottieRepeaterShapeItem>, flight::Ref<LottieTrimPathShapeItem>, flight::Ref<LottieShapePathItem>, flight::Ref<LottieTransformShapeItem>, flight::Ref<LottieRoundedCornersShapeItem>, flight::Ref<LottieGradientShapeItem>, flight::Ref<LottieMergePathShapeItem>]; the value holds the target through an alternative whose members already satisfy it, but the two are separate flattened C++ structs with no base relation between them, so there is no narrowing to follow -- a CLASS heritage pair narrows here, because those structs really do inherit. Assert to the alternative the value actually holds and read this target's members from it, or declare the slot as this target where the concrete type is known",
       "stage": "emission"
     },
     {
@@ -5061,20 +5246,27 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-formats/src/riveDrawOrder.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency ./riveImportRegistry was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
+      "reason": "dependency ./riveImportRegistry.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-formats/src/riveHandlers.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency ./riveAssets was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssets.ts",
+      "reason": "dependency ./riveAnimation.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveAnimation.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/riveImport.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./riveHandlers.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
       "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 104,
+      "line": 103,
       "module": "packages/scene2d-formats/src/riveImportRegistry.ts",
       "package": "@flighthq/scene2d-formats",
       "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts: a readonly structural sequence cannot be stored as an owning array without changing array identity: each RowOf element retains its exact nominal referent, but the view keeps the outer owner only behind opaque identity and accessors, so recovering the elements would still require copying them into a different array object. Until flight-cpp provides identity-preserving projected-sequence storage, declare the source as readonly RiveCoreObject[] rather than readonly Readonly<RiveCoreObject>[].",
@@ -5091,16 +5283,30 @@
     },
     {
       "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/riveRegistrars.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./riveAnimation.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveAnimation.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/riveRequirements.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./riveHandlers.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveHandlers.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
       "module": "packages/scene2d-formats/src/riveScene2D.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency ./riveAnimation was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveAnimation.ts",
+      "reason": "dependency ./riveImportRegistry.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-formats/src/riveScene2DDocument.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency ./riveAssetBinding was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssetBinding.ts",
+      "reason": "dependency ./riveAssetBinding.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssetBinding.ts",
       "stage": "dependency"
     },
     {
@@ -5116,35 +5322,35 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-formats/src/riveShapePaint.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency ./riveImportRegistry was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
+      "reason": "dependency ./riveImportRegistry.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-formats/src/riveShapePath.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency ./riveImportRegistry was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
+      "reason": "dependency ./riveImportRegistry.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-formats/src/riveSkeleton.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency ./riveImportRegistry was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
+      "reason": "dependency ./riveImportRegistry.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-formats/src/riveSolo.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency ./riveImportRegistry was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
+      "reason": "dependency ./riveImportRegistry.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-formats/src/riveStateMachine.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "dependency ./riveImportRegistry was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
+      "reason": "dependency ./riveImportRegistry.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
       "stage": "dependency"
     },
     {
@@ -5157,12 +5363,120 @@
       "stage": "emission"
     },
     {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/svgBounds.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency @flighthq/shape/contract was refused for @flighthq/shape/packages/shape/src/shape.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/svgClip.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./svgBounds.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgBounds.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/svgClipHandlers.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./svgClip.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgClip.ts",
+      "stage": "dependency"
+    },
+    {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 370,
+      "line": 16,
+      "module": "packages/scene2d-formats/src/svgColor.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgColor.ts: member split on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/svgContainerElement.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency @flighthq/scene2d/contract was refused for @flighthq/scene2d/packages/scene2d/src/displayObject.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
       "module": "packages/scene2d-formats/src/svgDocument.ts",
       "package": "@flighthq/scene2d-formats",
-      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts: member split on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
+      "reason": "dependency ./svgStyle.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgStyle.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/svgElementHandlers.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./svgContainerElement.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgContainerElement.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 41,
+      "module": "packages/scene2d-formats/src/svgGeometryElement.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgGeometryElement.ts: contextual union value type flight::Ref<flight::types::Shape> is not a represented runtime domain: the value leaves a member the destination requires optional or absent, or gives it an incompatible type, so it is not the shape an alternative declares. This expression refers to an existing owner. Keep the value in the declared destination arm from the point it is created, or explicitly rebuild the declared result in source where changing identity is intended. The compiler will not retype, copy, or materialize the existing object into a sibling owner.",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/svgGradient.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./svgColor.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgColor.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/svgHandlers.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./svgClipHandlers.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgClipHandlers.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 24,
+      "module": "packages/scene2d-formats/src/svgImageElement.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgImageElement.ts: contextual union value type flight::Ref<flight::types::Sprite> is not a represented runtime domain: the value leaves a member the destination requires optional or absent, or gives it an incompatible type, so it is not the shape an alternative declares. This expression refers to an existing owner. Keep the value in the declared destination arm from the point it is created, or explicitly rebuild the declared result in source where changing identity is intended. The compiler will not retype, copy, or materialize the existing object into a sibling owner.",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene2d-formats/src/svgImport.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "dependency ./svgClip.ts was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgClip.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 41,
+      "module": "packages/scene2d-formats/src/svgStyle.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgStyle.ts: member split on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 116,
+      "module": "packages/scene2d-formats/src/svgTextElement.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgTextElement.ts: property rgb on C++ absence-carrying storage requires narrowed access: no present-value proof reaches this read. Guard this exact receiver (bind a property or call result to a local first if evaluating it again would produce a different value), then read the member only in the present branch. The compiler will not discard the absence state or call value() without that proof",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 38,
+      "module": "packages/scene2d-formats/src/svgUseElement.ts",
+      "package": "@flighthq/scene2d-formats",
+      "reason": "cpp emission failed for @flighthq/scene2d-formats/packages/scene2d-formats/src/svgUseElement.ts: contextual union value type flight::types::DisplayObject is not a represented runtime domain: the value leaves a member the destination requires optional or absent, or gives it an incompatible type, so it is not the shape an alternative declares. The call has already selected a result owner from its arguments; the destination cannot retroactively replace that generic or anonymous owner. Constrain the call with the declared destination type where its type arguments are chosen, or change the called API to return the exact declared arm. The compiler will not cast, copy, or materialize the call result into another owner.",
       "stage": "emission"
     },
     {

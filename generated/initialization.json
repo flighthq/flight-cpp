@@ -3051,9 +3051,39 @@
       "source": "packages/scene2d-dom/src/domTransform.ts"
     },
     {
+      "name": "LottieNullLayer",
+      "packageName": "@flighthq/scene2d-formats",
+      "source": "packages/scene2d-formats/src/lottieNullLayer.ts"
+    },
+    {
+      "name": "LottieRegistry",
+      "packageName": "@flighthq/scene2d-formats",
+      "source": "packages/scene2d-formats/src/lottieRegistry.ts"
+    },
+    {
+      "name": "LottieShapeGeometry",
+      "packageName": "@flighthq/scene2d-formats",
+      "source": "packages/scene2d-formats/src/lottieShapeGeometry.ts"
+    },
+    {
+      "name": "LottieShapePaint",
+      "packageName": "@flighthq/scene2d-formats",
+      "source": "packages/scene2d-formats/src/lottieShapePaint.ts"
+    },
+    {
+      "name": "LottieTestFixtures",
+      "packageName": "@flighthq/scene2d-formats",
+      "source": "packages/scene2d-formats/src/lottieTestFixtures.ts"
+    },
+    {
       "name": "RiveCoreProperties",
       "packageName": "@flighthq/scene2d-formats",
       "source": "packages/scene2d-formats/src/riveCoreProperties.ts"
+    },
+    {
+      "name": "RiveCoreTypeCensus",
+      "packageName": "@flighthq/scene2d-formats",
+      "source": "packages/scene2d-formats/src/riveCoreTypeCensus.ts"
     },
     {
       "name": "RiveCoreTypes",
@@ -3074,6 +3104,36 @@
       "name": "RiveSkin",
       "packageName": "@flighthq/scene2d-formats",
       "source": "packages/scene2d-formats/src/riveSkin.ts"
+    },
+    {
+      "name": "SvgCounts",
+      "packageName": "@flighthq/scene2d-formats",
+      "source": "packages/scene2d-formats/src/svgCounts.ts"
+    },
+    {
+      "name": "SvgGeometryPath",
+      "packageName": "@flighthq/scene2d-formats",
+      "source": "packages/scene2d-formats/src/svgGeometryPath.ts"
+    },
+    {
+      "name": "SvgRegistry",
+      "packageName": "@flighthq/scene2d-formats",
+      "source": "packages/scene2d-formats/src/svgRegistry.ts"
+    },
+    {
+      "name": "SvgRequirements",
+      "packageName": "@flighthq/scene2d-formats",
+      "source": "packages/scene2d-formats/src/svgRequirements.ts"
+    },
+    {
+      "name": "SvgTransform",
+      "packageName": "@flighthq/scene2d-formats",
+      "source": "packages/scene2d-formats/src/svgTransform.ts"
+    },
+    {
+      "name": "SvgXml",
+      "packageName": "@flighthq/scene2d-formats",
+      "source": "packages/scene2d-formats/src/svgXml.ts"
     },
     {
       "name": "ExplainGlScene2DCoverage",
@@ -25646,6 +25706,66 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "LottieNullLayer",
+          "packageName": "@flighthq/scene2d-formats",
+          "source": "packages/scene2d-formats/src/lottieNullLayer.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "LottieRegistry",
+          "packageName": "@flighthq/scene2d-formats",
+          "source": "packages/scene2d-formats/src/lottieRegistry.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "LottieShapeGeometry",
+          "packageName": "@flighthq/scene2d-formats",
+          "source": "packages/scene2d-formats/src/lottieShapeGeometry.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "ShapeCommands",
+          "packageName": "@flighthq/shape",
+          "source": "packages/shape/src/shapeCommands.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "LottieShapePaint",
+          "packageName": "@flighthq/scene2d-formats",
+          "source": "packages/scene2d-formats/src/lottieShapePaint.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "LottieTestFixtures",
+          "packageName": "@flighthq/scene2d-formats",
+          "source": "packages/scene2d-formats/src/lottieTestFixtures.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "RiveCoreProperties",
           "packageName": "@flighthq/scene2d-formats",
           "source": "packages/scene2d-formats/src/riveCoreProperties.ts"
@@ -25656,9 +25776,9 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "RiveCoreTypes",
+          "name": "RiveDocument",
           "packageName": "@flighthq/scene2d-formats",
-          "source": "packages/scene2d-formats/src/riveCoreTypes.ts"
+          "source": "packages/scene2d-formats/src/riveDocument.ts"
         }
       ]
     },
@@ -25666,9 +25786,19 @@
       "cyclic": false,
       "modules": [
         {
-          "name": "RiveDocument",
+          "name": "RiveCoreTypeCensus",
           "packageName": "@flighthq/scene2d-formats",
-          "source": "packages/scene2d-formats/src/riveDocument.ts"
+          "source": "packages/scene2d-formats/src/riveCoreTypeCensus.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "RiveCoreTypes",
+          "packageName": "@flighthq/scene2d-formats",
+          "source": "packages/scene2d-formats/src/riveCoreTypes.ts"
         }
       ]
     },
@@ -25699,6 +25829,66 @@
           "name": "RiveSkin",
           "packageName": "@flighthq/scene2d-formats",
           "source": "packages/scene2d-formats/src/riveSkin.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SvgCounts",
+          "packageName": "@flighthq/scene2d-formats",
+          "source": "packages/scene2d-formats/src/svgCounts.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SvgXml",
+          "packageName": "@flighthq/scene2d-formats",
+          "source": "packages/scene2d-formats/src/svgXml.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SvgGeometryPath",
+          "packageName": "@flighthq/scene2d-formats",
+          "source": "packages/scene2d-formats/src/svgGeometryPath.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SvgRegistry",
+          "packageName": "@flighthq/scene2d-formats",
+          "source": "packages/scene2d-formats/src/svgRegistry.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SvgRequirements",
+          "packageName": "@flighthq/scene2d-formats",
+          "source": "packages/scene2d-formats/src/svgRequirements.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SvgTransform",
+          "packageName": "@flighthq/scene2d-formats",
+          "source": "packages/scene2d-formats/src/svgTransform.ts"
         }
       ]
     },
@@ -26439,16 +26629,6 @@
           "name": "ExplainShapeTessellation",
           "packageName": "@flighthq/shape",
           "source": "packages/shape/src/explainShapeTessellation.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "ShapeCommands",
-          "packageName": "@flighthq/shape",
-          "source": "packages/shape/src/shapeCommands.ts"
         }
       ]
     },
@@ -200620,6 +200800,289 @@
     {
       "bindings": [
         {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:6cf98d7f933c5a3984490888874a0efa4f8f6781bbcec13b125b3ddaaedef28f",
+            "line": 11,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieNullLayer.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieNullLayer.ts\",572]",
+            "kind": "function",
+            "name": "lottieNullLayerHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "LottieNullLayer",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieNullLayer.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "LottieRegistry",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/LottieRegistry.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "LottieNullLayer",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieNullLayer.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:43167c2a7dc3a865e26ef3bbb3e98b299f54db5de628ae0fb2f5d476dcbf4df3",
+            "line": 12,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieRegistry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieRegistry.ts\",238]",
+            "kind": "function",
+            "name": "createLottieRegistry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:987ef55f277d3781522023c04345866f2e66ad849be0ec744762471016c8cdf0",
+            "line": 16,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieRegistry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieRegistry.ts\",408]",
+            "kind": "function",
+            "name": "getLottieLayerHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:e815f9a35d520e32299d3af316d2a697170e58485a3cef9a874649715946cf2b",
+            "line": 23,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieRegistry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieRegistry.ts\",630]",
+            "kind": "function",
+            "name": "getLottieMaskHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:c6962042e0ab8f645702c6513b6503ad6e93af065ddce820f19e438b0f05935f",
+            "line": 30,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieRegistry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieRegistry.ts\",848]",
+            "kind": "function",
+            "name": "getLottieShapeItemHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:0264039a2716da8ea5d1be8c300765654ca8c303fef947e92cbd3bb2ab07ffed",
+            "line": 37,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieRegistry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieRegistry.ts\",1086]",
+            "kind": "function",
+            "name": "registerLottieLayerHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:555730f685965851858513acf366e48d82c029c379493b0b4cb4b5c1d6eaa610",
+            "line": 48,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieRegistry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieRegistry.ts\",1444]",
+            "kind": "function",
+            "name": "registerLottieMaskHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:2f1d88a9ca00f1f8693a4b132af1dca5911008f58b9fe0e53722a94c2e787ed6",
+            "line": 59,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieRegistry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieRegistry.ts\",1796]",
+            "kind": "function",
+            "name": "registerLottieShapeItemHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:3a72afc1bb56d34ba9f8e98b95af0c4e9645e1b3ba5a04180d91e50751ce73f6",
+            "line": 70,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieRegistry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieRegistry.ts\",2178]",
+            "kind": "function",
+            "name": "unregisterLottieLayerHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:c056eaecd69a13f4b4ef6e62f2d52aa9802405cb2c28fdb4224400377eaf7a69",
+            "line": 77,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieRegistry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieRegistry.ts\",2460]",
+            "kind": "function",
+            "name": "unregisterLottieMaskHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:25059de2b058fb25a2eb24c9a079440f79cbfbfefce235a332ed1db7423124ea",
+            "line": 84,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieRegistry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieRegistry.ts\",2738]",
+            "kind": "function",
+            "name": "unregisterLottieShapeItemHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "LottieRegistry",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieRegistry.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "LottieRegistry",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieRegistry.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
           "access": "temporal-until-evaluation",
           "binding": {
             "column": 14,
@@ -200887,6 +201350,728 @@
           ]
         }
       ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:f1bbd57e2256294655dfbe0b55aa92b7afcd6bcfbd05ee0d0d85e0982bbf6b09",
+            "line": 1,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieShapeGeometry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieShapeGeometry.ts\",9]",
+            "kind": "import",
+            "name": "createPath",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createPath",
+            "kind": "dependency",
+            "module": {
+              "name": "Path",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/path.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 22,
+            "fingerprint": "sha256:452910a7eb75bac1ac486ec26db18d46f739da197bda96ed215b56ba2e3222c4",
+            "line": 1,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieShapeGeometry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieShapeGeometry.ts\",21]",
+            "kind": "import",
+            "name": "reversePath",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "reversePath",
+            "kind": "dependency",
+            "module": {
+              "name": "ReversePath",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/reversePath.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:77b6e37f5ceefda7356c647a2f41744bf4643a88671aa188cc4d287736eff226",
+            "line": 11,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieShapeGeometry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieShapeGeometry.ts\",599]",
+            "kind": "function",
+            "name": "applyLottieShapeDirection",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "LottieShapeGeometry",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieShapeGeometry.ts"
+          },
+          "importedNames": [
+            "createPath"
+          ],
+          "specifier": "@flighthq/path/contract",
+          "target": {
+            "name": "Path",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/path.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "LottieShapeGeometry",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieShapeGeometry.ts"
+          },
+          "importedNames": [
+            "reversePath"
+          ],
+          "specifier": "@flighthq/path/contract",
+          "target": {
+            "name": "ReversePath",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/reversePath.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "LottieShapeGeometry",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieShapeGeometry.ts"
+          },
+          "importedNames": [
+            "Path"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Path",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Path.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "LottieShapeGeometry",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieShapeGeometry.ts"
+          },
+          "importedNames": [
+            "PathWinding"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ShapeCommand",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ShapeCommand.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "LottieShapeGeometry",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieShapeGeometry.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:f1bbd57e2256294655dfbe0b55aa92b7afcd6bcfbd05ee0d0d85e0982bbf6b09",
+            "line": 1,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieShapePaint.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieShapePaint.ts\",9]",
+            "kind": "import",
+            "name": "createPath",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createPath",
+            "kind": "dependency",
+            "module": {
+              "name": "Path",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/path.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 22,
+            "fingerprint": "sha256:6f6209364edb3f09a86764d164c001d619fe5aefd81502cc86a59eb1a0090837",
+            "line": 1,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieShapePaint.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieShapePaint.ts\",21]",
+            "kind": "import",
+            "name": "dashPath",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "dashPath",
+            "kind": "dependency",
+            "module": {
+              "name": "DashPath",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/dashPath.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:871b574279b1efb97bfcedd855d9ad1f8ed49e8f4cf754384252add2caa5ba3d",
+            "line": 2,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieShapePaint.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieShapePaint.ts\",73]",
+            "kind": "import",
+            "name": "appendShapePath",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "appendShapePath",
+            "kind": "dependency",
+            "module": {
+              "name": "ShapeCommands",
+              "packageName": "@flighthq/shape",
+              "source": "packages/shape/src/shapeCommands.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:32be2bdca8cd658a1e369d842f17fdaa2d39d70d2e3404cfcf05fcd7b60b5670",
+            "line": 13,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieShapePaint.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieShapePaint.ts\",713]",
+            "kind": "function",
+            "name": "appendLottieDashedShapePaths",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:4447ff9d48398d0e5d6f9d898aebeba0938471cd41b451bce23184395132de59",
+            "line": 33,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieShapePaint.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieShapePaint.ts\",1412]",
+            "kind": "function",
+            "name": "appendLottieShapePaths",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "LottieShapePaint",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieShapePaint.ts"
+          },
+          "importedNames": [
+            "dashPath"
+          ],
+          "specifier": "@flighthq/path/contract",
+          "target": {
+            "name": "DashPath",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/dashPath.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "LottieShapePaint",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieShapePaint.ts"
+          },
+          "importedNames": [
+            "createPath"
+          ],
+          "specifier": "@flighthq/path/contract",
+          "target": {
+            "name": "Path",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/path.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "LottieShapePaint",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieShapePaint.ts"
+          },
+          "specifier": "@flighthq/shape/contract",
+          "target": {
+            "name": "ShapeCommands",
+            "packageName": "@flighthq/shape",
+            "source": "packages/shape/src/shapeCommands.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "LottieShapePaint",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieShapePaint.ts"
+          },
+          "importedNames": [
+            "Path"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Path",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Path.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "LottieShapePaint",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieShapePaint.ts"
+          },
+          "importedNames": [
+            "Shape"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Shape",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Shape.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "LottieShapePaint",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieShapePaint.ts"
+          },
+          "importedNames": [
+            "PathWinding"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ShapeCommand",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ShapeCommand.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "LottieShapePaint",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieShapePaint.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:b210154cac42da4ee7334f456c4922a5c719b7da854143e63d391d9c13df1585",
+            "line": 1,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieTestFixtures.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieTestFixtures.ts\",9]",
+            "kind": "import",
+            "name": "getNodeChildAt",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getNodeChildAt",
+            "kind": "dependency",
+            "module": {
+              "name": "Hierarchy",
+              "packageName": "@flighthq/node",
+              "source": "packages/node/src/hierarchy.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 26,
+            "fingerprint": "sha256:40b0344782e836d01f3175fb501f37f5f034e7e051ccc05b46a7921e5b4e3053",
+            "line": 1,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieTestFixtures.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieTestFixtures.ts\",25]",
+            "kind": "import",
+            "name": "getNodeChildCount",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getNodeChildCount",
+            "kind": "dependency",
+            "module": {
+              "name": "Hierarchy",
+              "packageName": "@flighthq/node",
+              "source": "packages/node/src/hierarchy.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:683026ffbe5b6eb1631e92990eb24e0a0fdd6a2ab64f368e5d7219c49d66a0fc",
+            "line": 10,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieTestFixtures.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieTestFixtures.ts\",230]",
+            "kind": "function",
+            "name": "animatedLottieTestScalar",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:560b08f54152b6d9cdb942f0bd3a2f61d35e38d4fcec7fa19f82ef7a3d4d6e06",
+            "line": 20,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieTestFixtures.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieTestFixtures.ts\",406]",
+            "kind": "function",
+            "name": "animatedLottieTestVector",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:4dab49494681cddae026657b7a13bf16decb2aa20b3afefc6c14e5b2e73b387b",
+            "line": 45,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieTestFixtures.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieTestFixtures.ts\",1202]",
+            "kind": "function",
+            "name": "createLottieTestDocument",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:9dd07c36d82c06ddccd3e2209a4c2085f0b8f5f79175623fff9ce71c25db9d51",
+            "line": 49,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieTestFixtures.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieTestFixtures.ts\",1384]",
+            "kind": "function",
+            "name": "findLottieTestNodeByKind",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:bf16685a141a9de1beb6fb481029812351da8da696a2ef9feffd972dd2296f34",
+            "line": 58,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieTestFixtures.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieTestFixtures.ts\",1724]",
+            "kind": "function",
+            "name": "findLottieTestNodeByName",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:d15287e8cec8c4a978e56786610941b0d0ad60ccbb3036747689786dd828a6c7",
+            "line": 67,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieTestFixtures.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieTestFixtures.ts\",2064]",
+            "kind": "function",
+            "name": "lottieTestShapeLayer",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:55d0efe65942ebadd220c99c202e18a57e8515aa79c0b6e9dc9c54efbd356be5",
+            "line": 81,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieTestFixtures.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/lottieTestFixtures.ts\",2367]",
+            "kind": "function",
+            "name": "lottieTestSquarePath",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "LottieTestFixtures",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieTestFixtures.ts"
+          },
+          "specifier": "@flighthq/node/contract",
+          "target": {
+            "name": "Hierarchy",
+            "packageName": "@flighthq/node",
+            "source": "packages/node/src/hierarchy.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "LottieTestFixtures",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieTestFixtures.ts"
+          },
+          "importedNames": [
+            "Kind"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "LottieTestFixtures",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieTestFixtures.ts"
+          },
+          "importedNames": [
+            "LottieAnimatable",
+            "LottieAsset",
+            "LottieDocument",
+            "LottieEffect",
+            "LottieEllipseShapeItem",
+            "LottieFillShapeItem",
+            "LottieFont",
+            "LottieGradientShapeItem",
+            "LottieKeyframe",
+            "LottieLayer",
+            "LottieMarker",
+            "LottieMask",
+            "LottieMergePathShapeItem",
+            "LottiePolystarShapeItem",
+            "LottieRectangleShapeItem",
+            "LottieRepeaterShapeItem",
+            "LottieRoundedCornersShapeItem",
+            "LottieShapeGroup",
+            "LottieShapeItem",
+            "LottieShapePath",
+            "LottieShapePathItem",
+            "LottieStrokeShapeItem",
+            "LottieTextData",
+            "LottieTransform",
+            "LottieTransformShapeItem",
+            "LottieTrimPathShapeItem",
+            "LottieUnknownShapeItem"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "LottieDocument",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/LottieDocument.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "LottieTestFixtures",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieTestFixtures.ts"
+          },
+          "importedNames": [
+            "Node",
+            "NodeOf"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Node",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Node.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "LottieTestFixtures",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieTestFixtures.ts"
+          },
+          "importedNames": [
+            "Node2D",
+            "Node2DTraits"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Node2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Node2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "LottieTestFixtures",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/lottieTestFixtures.ts"
+          },
+          "importedNames": [
+            "NonEntityCreateResult"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "NonEntityCreateResult",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/NonEntityCreateResult.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "LottieTestFixtures",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/lottieTestFixtures.ts"
+      },
+      "steps": []
     },
     {
       "bindings": [
@@ -266240,6 +267425,114 @@
     {
       "bindings": [
         {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:1c6a3b4b53eeecb3d65dfca438079c582a55b39aaa83939e4c4f9a4708c483aa",
+            "line": 3,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/riveCoreTypeCensus.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveCoreTypeCensus.ts\",76]",
+            "kind": "import",
+            "name": "parseRiveDocument",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "parseRiveDocument",
+            "kind": "dependency",
+            "module": {
+              "name": "RiveDocument",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/riveDocument.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:f1d35b42895fe53017ccf6e198be2318090ba2a2e9aaa59812f0d20bbba2c5b8",
+            "line": 22,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/riveCoreTypeCensus.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveCoreTypeCensus.ts\",1354]",
+            "kind": "function",
+            "name": "collectRiveCoreTypeCounts",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:e59cfedadb8143f09c20fe71b84a19b98e46a6fdcd5b2a214a2bcea176e1e77d",
+            "line": 41,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/riveCoreTypeCensus.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveCoreTypeCensus.ts\",2155]",
+            "kind": "function",
+            "name": "isReadableRive",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "RiveCoreTypeCensus",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/riveCoreTypeCensus.ts"
+          },
+          "specifier": "./riveDocument.ts",
+          "target": {
+            "name": "RiveDocument",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/riveDocument.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "RiveCoreTypeCensus",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/riveCoreTypeCensus.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "RiveCoreTypeCensus",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/riveCoreTypeCensus.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
           "access": "available-after-instantiation",
           "binding": {
             "column": 17,
@@ -266605,7 +267898,7 @@
             "line": 24,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",1019]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",1022]",
             "kind": "function",
             "name": "parseRiveDocument",
             "scope": "module",
@@ -266626,7 +267919,7 @@
             "line": 66,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",2624]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",2627]",
             "kind": "function",
             "name": "readRiveHeader",
             "scope": "module",
@@ -266647,7 +267940,7 @@
             "line": 103,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",3971]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",3974]",
             "kind": "function",
             "name": "readRiveCoreObject",
             "scope": "module",
@@ -266668,7 +267961,7 @@
             "line": 129,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",5023]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",5026]",
             "kind": "function",
             "name": "readRiveValue",
             "scope": "module",
@@ -266689,7 +267982,7 @@
             "line": 138,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",5412]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",5415]",
             "kind": "function",
             "name": "readRiveVarUint",
             "scope": "module",
@@ -266710,7 +268003,7 @@
             "line": 155,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",5966]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",5969]",
             "kind": "function",
             "name": "readRiveUint32",
             "scope": "module",
@@ -266731,7 +268024,7 @@
             "line": 168,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",6345]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",6348]",
             "kind": "function",
             "name": "readRiveFloat32",
             "scope": "module",
@@ -266752,7 +268045,7 @@
             "line": 181,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",6779]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",6782]",
             "kind": "function",
             "name": "readRiveBytes",
             "scope": "module",
@@ -266773,7 +268066,7 @@
             "line": 192,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",7130]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",7133]",
             "kind": "function",
             "name": "readRiveString",
             "scope": "module",
@@ -266794,7 +268087,7 @@
             "line": 205,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",7618]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",7621]",
             "kind": "function",
             "name": "decodeRiveUtf8",
             "scope": "module",
@@ -266815,7 +268108,7 @@
             "line": 234,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",8520]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",8523]",
             "kind": "function",
             "name": "toRiveFieldType",
             "scope": "module",
@@ -266836,7 +268129,7 @@
             "line": 241,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",8815]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",8818]",
             "kind": "function",
             "name": "reportRiveReject",
             "scope": "module",
@@ -266857,7 +268150,7 @@
             "line": 249,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9067]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9070]",
             "kind": "variable",
             "name": "RIVE_FINGERPRINT",
             "scope": "module",
@@ -266878,7 +268171,7 @@
             "line": 251,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9215]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9218]",
             "kind": "variable",
             "name": "RIVE_SUPPORTED_MAJOR_VERSION",
             "scope": "module",
@@ -266899,7 +268192,7 @@
             "line": 252,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9255]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9258]",
             "kind": "variable",
             "name": "FIELD_TYPE_BITS_PER_WORD",
             "scope": "module",
@@ -266920,7 +268213,7 @@
             "line": 253,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9291]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9294]",
             "kind": "variable",
             "name": "_floatView",
             "scope": "module",
@@ -266941,7 +268234,7 @@
             "line": 254,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9344]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9347]",
             "kind": "variable",
             "name": "_floatBytes",
             "scope": "module",
@@ -266962,7 +268255,7 @@
             "line": 255,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9399]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9402]",
             "kind": "variable",
             "name": "_emptyBytes",
             "scope": "module",
@@ -266984,7 +268277,7 @@
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveDocument.ts"
           },
-          "specifier": "./riveCoreProperties",
+          "specifier": "./riveCoreProperties.ts",
           "target": {
             "name": "RiveCoreProperties",
             "packageName": "@flighthq/scene2d-formats",
@@ -267035,7 +268328,7 @@
               "line": 249,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveDocument.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9067]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9070]",
               "kind": "variable",
               "name": "RIVE_FINGERPRINT",
               "scope": "module",
@@ -267058,7 +268351,7 @@
               "line": 251,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveDocument.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9215]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9218]",
               "kind": "variable",
               "name": "RIVE_SUPPORTED_MAJOR_VERSION",
               "scope": "module",
@@ -267081,7 +268374,7 @@
               "line": 252,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveDocument.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9255]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9258]",
               "kind": "variable",
               "name": "FIELD_TYPE_BITS_PER_WORD",
               "scope": "module",
@@ -267104,7 +268397,7 @@
               "line": 253,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveDocument.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9291]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9294]",
               "kind": "variable",
               "name": "_floatView",
               "scope": "module",
@@ -267127,7 +268420,7 @@
               "line": 254,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveDocument.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9344]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9347]",
               "kind": "variable",
               "name": "_floatBytes",
               "scope": "module",
@@ -267150,7 +268443,7 @@
               "line": 255,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveDocument.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9399]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveDocument.ts\",9402]",
               "kind": "variable",
               "name": "_emptyBytes",
               "scope": "module",
@@ -267683,7 +268976,7 @@
             "line": 15,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveObjectGraph.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",466]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",469]",
             "kind": "function",
             "name": "createRiveObjectGraph",
             "scope": "module",
@@ -267704,7 +268997,7 @@
             "line": 37,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveObjectGraph.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",1481]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",1484]",
             "kind": "function",
             "name": "initializeRiveObjectGraph",
             "scope": "module",
@@ -267725,7 +269018,7 @@
             "line": 61,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveObjectGraph.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",2597]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",2600]",
             "kind": "function",
             "name": "resolveRiveParentIndices",
             "scope": "module",
@@ -267746,7 +269039,7 @@
             "line": 76,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveObjectGraph.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",3228]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",3231]",
             "kind": "function",
             "name": "readRiveParentIndex",
             "scope": "module",
@@ -267767,7 +269060,7 @@
             "line": 95,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveObjectGraph.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",3919]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",3922]",
             "kind": "function",
             "name": "hasRiveParentCycle",
             "scope": "module",
@@ -267788,7 +269081,7 @@
             "line": 109,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveObjectGraph.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",4348]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",4351]",
             "kind": "function",
             "name": "reportRiveGraphDrop",
             "scope": "module",
@@ -267809,7 +269102,7 @@
             "line": 118,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveObjectGraph.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",4605]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",4608]",
             "kind": "variable",
             "name": "RIVE_ARTBOARD_TYPE_KEY",
             "scope": "module",
@@ -267830,7 +269123,7 @@
             "line": 119,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveObjectGraph.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",4639]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",4642]",
             "kind": "variable",
             "name": "RIVE_COMPONENT_TYPE_KEY",
             "scope": "module",
@@ -267851,7 +269144,7 @@
             "line": 120,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveObjectGraph.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",4675]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",4678]",
             "kind": "variable",
             "name": "RIVE_PARENT_ID_PROPERTY_KEY",
             "scope": "module",
@@ -267872,7 +269165,7 @@
             "line": 121,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveObjectGraph.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",4714]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",4717]",
             "kind": "variable",
             "name": "RIVE_NO_PARENT",
             "scope": "module",
@@ -267894,7 +269187,7 @@
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveObjectGraph.ts"
           },
-          "specifier": "./riveCoreTypes",
+          "specifier": "./riveCoreTypes.ts",
           "target": {
             "name": "RiveCoreTypes",
             "packageName": "@flighthq/scene2d-formats",
@@ -267959,7 +269252,7 @@
               "line": 118,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveObjectGraph.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",4605]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",4608]",
               "kind": "variable",
               "name": "RIVE_ARTBOARD_TYPE_KEY",
               "scope": "module",
@@ -267982,7 +269275,7 @@
               "line": 119,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveObjectGraph.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",4639]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",4642]",
               "kind": "variable",
               "name": "RIVE_COMPONENT_TYPE_KEY",
               "scope": "module",
@@ -268005,7 +269298,7 @@
               "line": 120,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveObjectGraph.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",4675]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",4678]",
               "kind": "variable",
               "name": "RIVE_PARENT_ID_PROPERTY_KEY",
               "scope": "module",
@@ -268028,7 +269321,7 @@
               "line": 121,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveObjectGraph.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",4714]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveObjectGraph.ts\",4717]",
               "kind": "variable",
               "name": "RIVE_NO_PARENT",
               "scope": "module",
@@ -268262,7 +269555,7 @@
             "line": 40,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",2197]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",2200]",
             "kind": "function",
             "name": "createRiveSkin2D",
             "scope": "module",
@@ -268283,7 +269576,7 @@
             "line": 101,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",4704]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",4707]",
             "kind": "function",
             "name": "collectRiveTendonBones",
             "scope": "module",
@@ -268304,7 +269597,7 @@
             "line": 119,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",5414]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",5417]",
             "kind": "function",
             "name": "findRiveSkin",
             "scope": "module",
@@ -268325,7 +269618,7 @@
             "line": 127,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",5828]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",5831]",
             "kind": "function",
             "name": "findRiveWeight",
             "scope": "module",
@@ -268346,7 +269639,7 @@
             "line": 137,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",6386]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",6389]",
             "kind": "function",
             "name": "readRiveWeightSlots",
             "scope": "module",
@@ -268367,7 +269660,7 @@
             "line": 161,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",7232]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",7235]",
             "kind": "function",
             "name": "readRivePackedByte",
             "scope": "module",
@@ -268388,7 +269681,7 @@
             "line": 167,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",7505]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",7508]",
             "kind": "function",
             "name": "readRiveMatrix",
             "scope": "module",
@@ -268409,7 +269702,7 @@
             "line": 184,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",7953]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",7956]",
             "kind": "function",
             "name": "readRiveNumber",
             "scope": "module",
@@ -268430,7 +269723,7 @@
             "line": 189,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8232]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8235]",
             "kind": "variable",
             "name": "RIVE_SKIN",
             "scope": "module",
@@ -268451,7 +269744,7 @@
             "line": 190,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8254]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8257]",
             "kind": "variable",
             "name": "RIVE_TENDON",
             "scope": "module",
@@ -268472,7 +269765,7 @@
             "line": 191,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8278]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8281]",
             "kind": "variable",
             "name": "RIVE_WEIGHT",
             "scope": "module",
@@ -268493,7 +269786,7 @@
             "line": 192,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8302]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8305]",
             "kind": "variable",
             "name": "RIVE_CUBIC_WEIGHT",
             "scope": "module",
@@ -268514,7 +269807,7 @@
             "line": 194,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8333]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8336]",
             "kind": "variable",
             "name": "RIVE_TENDON_BONE_ID",
             "scope": "module",
@@ -268535,7 +269828,7 @@
             "line": 195,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8365]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8368]",
             "kind": "variable",
             "name": "RIVE_TENDON_XX",
             "scope": "module",
@@ -268556,7 +269849,7 @@
             "line": 196,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8392]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8395]",
             "kind": "variable",
             "name": "RIVE_TENDON_YX",
             "scope": "module",
@@ -268577,7 +269870,7 @@
             "line": 197,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8419]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8422]",
             "kind": "variable",
             "name": "RIVE_TENDON_XY",
             "scope": "module",
@@ -268598,7 +269891,7 @@
             "line": 198,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8446]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8449]",
             "kind": "variable",
             "name": "RIVE_TENDON_YY",
             "scope": "module",
@@ -268619,7 +269912,7 @@
             "line": 199,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8473]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8476]",
             "kind": "variable",
             "name": "RIVE_WEIGHT_VALUES",
             "scope": "module",
@@ -268640,7 +269933,7 @@
             "line": 200,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8505]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8508]",
             "kind": "variable",
             "name": "RIVE_WEIGHT_INDICES",
             "scope": "module",
@@ -268661,7 +269954,7 @@
             "line": 201,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8538]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8541]",
             "kind": "variable",
             "name": "RIVE_SKIN_XX",
             "scope": "module",
@@ -268682,7 +269975,7 @@
             "line": 202,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8564]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8567]",
             "kind": "variable",
             "name": "RIVE_SKIN_YX",
             "scope": "module",
@@ -268703,7 +269996,7 @@
             "line": 203,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8590]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8593]",
             "kind": "variable",
             "name": "RIVE_SKIN_XY",
             "scope": "module",
@@ -268724,7 +270017,7 @@
             "line": 204,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8616]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8619]",
             "kind": "variable",
             "name": "RIVE_SKIN_YY",
             "scope": "module",
@@ -268745,7 +270038,7 @@
             "line": 205,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8642]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8645]",
             "kind": "variable",
             "name": "RIVE_WEIGHT_IN_VALUES",
             "scope": "module",
@@ -268766,7 +270059,7 @@
             "line": 206,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8677]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8680]",
             "kind": "variable",
             "name": "RIVE_WEIGHT_IN_INDICES",
             "scope": "module",
@@ -268787,7 +270080,7 @@
             "line": 207,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8713]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8716]",
             "kind": "variable",
             "name": "RIVE_WEIGHT_OUT_VALUES",
             "scope": "module",
@@ -268808,7 +270101,7 @@
             "line": 208,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8749]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8752]",
             "kind": "variable",
             "name": "RIVE_WEIGHT_OUT_INDICES",
             "scope": "module",
@@ -268829,7 +270122,7 @@
             "line": 211,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8881]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8884]",
             "kind": "variable",
             "name": "RIVE_MATRIX_TX_OFFSET",
             "scope": "module",
@@ -268850,7 +270143,7 @@
             "line": 212,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8914]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8917]",
             "kind": "variable",
             "name": "RIVE_MATRIX_TY_OFFSET",
             "scope": "module",
@@ -268871,7 +270164,7 @@
             "line": 214,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8948]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8951]",
             "kind": "variable",
             "name": "RIVE_INFLUENCES_PER_WEIGHT",
             "scope": "module",
@@ -268892,7 +270185,7 @@
             "line": 215,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8986]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8989]",
             "kind": "variable",
             "name": "RIVE_WEIGHT_SCALE",
             "scope": "module",
@@ -268913,7 +270206,7 @@
             "line": 217,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",9108]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",9111]",
             "kind": "variable",
             "name": "RIVE_IDENTITY_BONE_SLOT",
             "scope": "module",
@@ -268934,7 +270227,7 @@
             "line": 219,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",9144]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",9147]",
             "kind": "variable",
             "name": "_bindSpace",
             "scope": "module",
@@ -268955,7 +270248,7 @@
             "line": 220,
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts",
-            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",9179]",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",9182]",
             "kind": "variable",
             "name": "_boneSpace",
             "scope": "module",
@@ -268977,7 +270270,7 @@
             "packageName": "@flighthq/scene2d-formats",
             "source": "packages/scene2d-formats/src/riveSkin.ts"
           },
-          "specifier": "./riveCoreTypes",
+          "specifier": "./riveCoreTypes.ts",
           "target": {
             "name": "RiveCoreTypes",
             "packageName": "@flighthq/scene2d-formats",
@@ -269056,7 +270349,7 @@
               "line": 189,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8232]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8235]",
               "kind": "variable",
               "name": "RIVE_SKIN",
               "scope": "module",
@@ -269079,7 +270372,7 @@
               "line": 190,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8254]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8257]",
               "kind": "variable",
               "name": "RIVE_TENDON",
               "scope": "module",
@@ -269102,7 +270395,7 @@
               "line": 191,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8278]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8281]",
               "kind": "variable",
               "name": "RIVE_WEIGHT",
               "scope": "module",
@@ -269125,7 +270418,7 @@
               "line": 192,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8302]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8305]",
               "kind": "variable",
               "name": "RIVE_CUBIC_WEIGHT",
               "scope": "module",
@@ -269148,7 +270441,7 @@
               "line": 194,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8333]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8336]",
               "kind": "variable",
               "name": "RIVE_TENDON_BONE_ID",
               "scope": "module",
@@ -269171,7 +270464,7 @@
               "line": 195,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8365]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8368]",
               "kind": "variable",
               "name": "RIVE_TENDON_XX",
               "scope": "module",
@@ -269194,7 +270487,7 @@
               "line": 196,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8392]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8395]",
               "kind": "variable",
               "name": "RIVE_TENDON_YX",
               "scope": "module",
@@ -269217,7 +270510,7 @@
               "line": 197,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8419]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8422]",
               "kind": "variable",
               "name": "RIVE_TENDON_XY",
               "scope": "module",
@@ -269240,7 +270533,7 @@
               "line": 198,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8446]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8449]",
               "kind": "variable",
               "name": "RIVE_TENDON_YY",
               "scope": "module",
@@ -269263,7 +270556,7 @@
               "line": 199,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8473]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8476]",
               "kind": "variable",
               "name": "RIVE_WEIGHT_VALUES",
               "scope": "module",
@@ -269286,7 +270579,7 @@
               "line": 200,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8505]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8508]",
               "kind": "variable",
               "name": "RIVE_WEIGHT_INDICES",
               "scope": "module",
@@ -269309,7 +270602,7 @@
               "line": 201,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8538]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8541]",
               "kind": "variable",
               "name": "RIVE_SKIN_XX",
               "scope": "module",
@@ -269332,7 +270625,7 @@
               "line": 202,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8564]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8567]",
               "kind": "variable",
               "name": "RIVE_SKIN_YX",
               "scope": "module",
@@ -269355,7 +270648,7 @@
               "line": 203,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8590]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8593]",
               "kind": "variable",
               "name": "RIVE_SKIN_XY",
               "scope": "module",
@@ -269378,7 +270671,7 @@
               "line": 204,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8616]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8619]",
               "kind": "variable",
               "name": "RIVE_SKIN_YY",
               "scope": "module",
@@ -269401,7 +270694,7 @@
               "line": 205,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8642]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8645]",
               "kind": "variable",
               "name": "RIVE_WEIGHT_IN_VALUES",
               "scope": "module",
@@ -269424,7 +270717,7 @@
               "line": 206,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8677]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8680]",
               "kind": "variable",
               "name": "RIVE_WEIGHT_IN_INDICES",
               "scope": "module",
@@ -269447,7 +270740,7 @@
               "line": 207,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8713]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8716]",
               "kind": "variable",
               "name": "RIVE_WEIGHT_OUT_VALUES",
               "scope": "module",
@@ -269470,7 +270763,7 @@
               "line": 208,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8749]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8752]",
               "kind": "variable",
               "name": "RIVE_WEIGHT_OUT_INDICES",
               "scope": "module",
@@ -269493,7 +270786,7 @@
               "line": 211,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8881]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8884]",
               "kind": "variable",
               "name": "RIVE_MATRIX_TX_OFFSET",
               "scope": "module",
@@ -269516,7 +270809,7 @@
               "line": 212,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8914]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8917]",
               "kind": "variable",
               "name": "RIVE_MATRIX_TY_OFFSET",
               "scope": "module",
@@ -269539,7 +270832,7 @@
               "line": 214,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8948]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8951]",
               "kind": "variable",
               "name": "RIVE_INFLUENCES_PER_WEIGHT",
               "scope": "module",
@@ -269562,7 +270855,7 @@
               "line": 215,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8986]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",8989]",
               "kind": "variable",
               "name": "RIVE_WEIGHT_SCALE",
               "scope": "module",
@@ -269585,7 +270878,7 @@
               "line": 217,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",9108]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",9111]",
               "kind": "variable",
               "name": "RIVE_IDENTITY_BONE_SLOT",
               "scope": "module",
@@ -269608,7 +270901,7 @@
               "line": 219,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",9144]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",9147]",
               "kind": "variable",
               "name": "_bindSpace",
               "scope": "module",
@@ -269631,7 +270924,7 @@
               "line": 220,
               "packageName": "@flighthq/scene2d-formats",
               "source": "packages/scene2d-formats/src/riveSkin.ts",
-              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",9179]",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/riveSkin.ts\",9182]",
               "kind": "variable",
               "name": "_boneSpace",
               "scope": "module",
@@ -311639,6 +312932,208 @@
       "steps": []
     },
     {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:d3d3aa8300cec142cfdcf9a383cee4862c86730399a20b51aab1a4d0c5cb698e",
+            "line": 2,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgCounts.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgCounts.ts\",69]",
+            "kind": "import",
+            "name": "SvgClipKind",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "SvgClipKind",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 23,
+            "fingerprint": "sha256:bed86ab38025ab742fa2e6053be4b139d945b7aba5858167e3e3930f6c15ac80",
+            "line": 2,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgCounts.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgCounts.ts\",82]",
+            "kind": "import",
+            "name": "SvgElementKind",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "SvgElementKind",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8d9515c78d7ccf75690c6db0cbd9cf876b4392739f1caf52023e8e3fa1553cd4",
+            "line": 3,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgCounts.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgCounts.ts\",141]",
+            "kind": "import",
+            "name": "parseXmlDocument",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "parseXmlDocument",
+            "kind": "dependency",
+            "module": {
+              "name": "XmlParse",
+              "packageName": "@flighthq/xml",
+              "source": "packages/xml/src/xmlParse.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:e09967d845499fb71c95d1f22b7e602e36fe4ee1ba9b0bbf943fc1f34d8a1be9",
+            "line": 5,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgCounts.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgCounts.ts\",208]",
+            "kind": "function",
+            "name": "collectSvgCounts",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:53b59c905d5ab4f6f3b134ed1998b9ea5da2adff0ed05d47d60ed77606734974",
+            "line": 13,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgCounts.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgCounts.ts\",503]",
+            "kind": "function",
+            "name": "elementKindName",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:f54bbfc6eb09c946bc7123710d943d41c950eeec3350a5668798141b2118c5fa",
+            "line": 39,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgCounts.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgCounts.ts\",1040]",
+            "kind": "function",
+            "name": "svgLocalName",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:9e9fb18de657d6804b51d30b597c63834ad01fdd52b09055cf17ce1910eb3dfe",
+            "line": 52,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgCounts.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgCounts.ts\",1654]",
+            "kind": "function",
+            "name": "tallyElements",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgCounts",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgCounts.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgCounts",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgCounts.ts"
+          },
+          "specifier": "@flighthq/xml/contract",
+          "target": {
+            "name": "XmlParse",
+            "packageName": "@flighthq/xml",
+            "source": "packages/xml/src/xmlParse.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "SvgCounts",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgCounts.ts"
+      },
+      "steps": []
+    },
+    {
       "bindings": [],
       "dependencies": [
         {
@@ -311674,6 +313169,496 @@
         "name": "SvgDocumentImport",
         "packageName": "@flighthq/types",
         "source": "packages/types/src/SvgDocumentImport.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e1cd21c725aaea21fbc65a831d86e14c5ff42c19d433c59901fa9e084e28dfc2",
+            "line": 1,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGeometryPath.ts\",9]",
+            "kind": "import",
+            "name": "parseSvgPathData",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "parseSvgPathData",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgPathData",
+              "packageName": "@flighthq/path-formats",
+              "source": "packages/path-formats/src/svgPathData.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:767df03447c98e5cbebd6336ba8826619e521eb7be45c3c10146791eda5f55f6",
+            "line": 3,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGeometryPath.ts\",79]",
+            "kind": "import",
+            "name": "appendPathCircle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "appendPathCircle",
+            "kind": "dependency",
+            "module": {
+              "name": "Path",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/path.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:492a95fe1495690db3d7a7a14c6d6b066a672ea53bba2f0bbab6b3e3052c15c3",
+            "line": 4,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGeometryPath.ts\",99]",
+            "kind": "import",
+            "name": "appendPathEllipse",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "appendPathEllipse",
+            "kind": "dependency",
+            "module": {
+              "name": "Path",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/path.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:7444f3154a32d9ac4199e79de8de3de390a4c02444fdae037409567f9e1b1d8d",
+            "line": 5,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGeometryPath.ts\",120]",
+            "kind": "import",
+            "name": "appendPathLineTo",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "appendPathLineTo",
+            "kind": "dependency",
+            "module": {
+              "name": "Path",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/path.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:e70e4ce155190f19cfd2c336bc8c5095cc19024c33823ac6e294a24a629a8fa2",
+            "line": 6,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGeometryPath.ts\",140]",
+            "kind": "import",
+            "name": "appendPathMoveTo",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "appendPathMoveTo",
+            "kind": "dependency",
+            "module": {
+              "name": "Path",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/path.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:0b5b30cc4caf89b06f83d32480b021f6de9e8ea7a24306b019da36511046b108",
+            "line": 7,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGeometryPath.ts\",160]",
+            "kind": "import",
+            "name": "appendPathPolygon",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "appendPathPolygon",
+            "kind": "dependency",
+            "module": {
+              "name": "Path",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/path.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:8ccf427feb7918fcc4149e0d72454e64f4bc7b6933646a26887ddb992a5639cb",
+            "line": 8,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGeometryPath.ts\",181]",
+            "kind": "import",
+            "name": "appendPathPolyline",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "appendPathPolyline",
+            "kind": "dependency",
+            "module": {
+              "name": "Path",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/path.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:e5d060d2c99243ab06b2d4725ac17e4f68e9aa32e86b4b04157c1f0b524bee4d",
+            "line": 9,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGeometryPath.ts\",203]",
+            "kind": "import",
+            "name": "appendPathRectangle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "appendPathRectangle",
+            "kind": "dependency",
+            "module": {
+              "name": "Path",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/path.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:c7052fc8eaac0168c1e6bcc1d74b0e644b507f6113327d821bbbb7de173e42d7",
+            "line": 10,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGeometryPath.ts\",226]",
+            "kind": "import",
+            "name": "appendPathRoundedRectangle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "appendPathRoundedRectangle",
+            "kind": "dependency",
+            "module": {
+              "name": "Path",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/path.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:f1bbd57e2256294655dfbe0b55aa92b7afcd6bcfbd05ee0d0d85e0982bbf6b09",
+            "line": 11,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGeometryPath.ts\",256]",
+            "kind": "import",
+            "name": "createPath",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createPath",
+            "kind": "dependency",
+            "module": {
+              "name": "Path",
+              "packageName": "@flighthq/path",
+              "source": "packages/path/src/path.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:a0a1e82daa17dc7174075cd98f65847bf97441a09b32dac395c106e95c4a7035",
+            "line": 15,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGeometryPath.ts\",391]",
+            "kind": "import",
+            "name": "svgAttribute",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "svgAttribute",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgXml",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgXml.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 24,
+            "fingerprint": "sha256:f54bbfc6eb09c946bc7123710d943d41c950eeec3350a5668798141b2118c5fa",
+            "line": 15,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGeometryPath.ts\",405]",
+            "kind": "import",
+            "name": "svgLocalName",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "svgLocalName",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgXml",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgXml.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 38,
+            "fingerprint": "sha256:3af72b35102f8deb55c11614e3b2b08f8cba27ba32099a4d5b911d71af240e7d",
+            "line": 15,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGeometryPath.ts\",419]",
+            "kind": "import",
+            "name": "svgNumberAttribute",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "svgNumberAttribute",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgXml",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgXml.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 58,
+            "fingerprint": "sha256:3bcad1cd1a9f6c9ffb3d6bc2dbe9a90b5a1ced1d30752843e300e0e261098c92",
+            "line": 15,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGeometryPath.ts\",439]",
+            "kind": "import",
+            "name": "parseSvgNumberList",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "parseSvgNumberList",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgXml",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgXml.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:2c0edf095c75031b9e578190d253cfd170ab0ed82a023ccd6f819c9895742ccd",
+            "line": 28,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgGeometryPath.ts\",1286]",
+            "kind": "function",
+            "name": "createSvgGeometryPath",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgGeometryPath",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts"
+          },
+          "specifier": "./svgXml.ts",
+          "target": {
+            "name": "SvgXml",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgXml.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgGeometryPath",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts"
+          },
+          "specifier": "@flighthq/path-formats/contract",
+          "target": {
+            "name": "SvgPathData",
+            "packageName": "@flighthq/path-formats",
+            "source": "packages/path-formats/src/svgPathData.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgGeometryPath",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts"
+          },
+          "specifier": "@flighthq/path/contract",
+          "target": {
+            "name": "Path",
+            "packageName": "@flighthq/path",
+            "source": "packages/path/src/path.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgGeometryPath",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts"
+          },
+          "importedNames": [
+            "Path"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Path",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Path.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgGeometryPath",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts"
+          },
+          "importedNames": [
+            "PathWinding"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ShapeCommand",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ShapeCommand.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgGeometryPath",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgGeometryPath.ts"
+          },
+          "importedNames": [
+            "XmlElement"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "XmlElement",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/XmlElement.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "SvgGeometryPath",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgGeometryPath.ts"
       },
       "steps": []
     },
@@ -312186,6 +314171,179 @@
     {
       "bindings": [
         {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:ed7e1e8b5f61057be7eba7f94e56e2f2622384d6ec5772f10645cceac1e902e2",
+            "line": 10,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgRegistry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgRegistry.ts\",178]",
+            "kind": "function",
+            "name": "createSvgRegistry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:eb22fef676746ecfb7b5839a92cfdf9180b167bc9de5df5c05056a0fa3850867",
+            "line": 14,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgRegistry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgRegistry.ts\",321]",
+            "kind": "function",
+            "name": "getSvgClipHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:4d3abf3bf7e23780dd58824e30cd7fca2fb6f5ae9aca1858c0d9a13bae3b0098",
+            "line": 18,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgRegistry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgRegistry.ts\",520]",
+            "kind": "function",
+            "name": "getSvgElementHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:7eb3431ec064cb481dea7a212dba6a003342fdb254e518665cd8a4ef6974c3b9",
+            "line": 22,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgRegistry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgRegistry.ts\",731]",
+            "kind": "function",
+            "name": "registerSvgClipHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:6beb1b55e46a830df8d957f0d635f64f6d153c7f615463a996ef3d200887365b",
+            "line": 29,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgRegistry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgRegistry.ts\",1062]",
+            "kind": "function",
+            "name": "registerSvgElementHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:fcf198ebad7caa6bbe6f5e9e9566069f241ffa06ddd1ba47a23aaf560d39f4b0",
+            "line": 40,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgRegistry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgRegistry.ts\",1420]",
+            "kind": "function",
+            "name": "unregisterSvgClipHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:27cbb2a7a2011baa2ba41c7c233e7cbd9f690dff64540f8b8b044e669271d369",
+            "line": 47,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgRegistry.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgRegistry.ts\",1689]",
+            "kind": "function",
+            "name": "unregisterSvgElementHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgRegistry",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgRegistry.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "SvgRegistry",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgRegistry.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
           "access": "temporal-until-evaluation",
           "binding": {
             "column": 14,
@@ -312381,6 +314539,966 @@
           ]
         }
       ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8ec50ce83fd8ba1548319e46de7a30b03920a87685a1c42cb4a2c033e651228f",
+            "line": 1,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgRequirements.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgRequirements.ts\",9]",
+            "kind": "import",
+            "name": "createRequirementSet",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createRequirementSet",
+            "kind": "dependency",
+            "module": {
+              "name": "RequirementSet",
+              "packageName": "@flighthq/requirement",
+              "source": "packages/requirement/src/requirementSet.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:2a6d9dbaa9c22d2a0558ad2e68bb88d805dbd39f42e85142b44ba609a1938c07",
+            "line": 3,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgRequirements.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgRequirements.ts\",157]",
+            "kind": "import",
+            "name": "RequirementFacet",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "RequirementFacet",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e09967d845499fb71c95d1f22b7e602e36fe4ee1ba9b0bbf943fc1f34d8a1be9",
+            "line": 5,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgRequirements.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgRequirements.ts\",219]",
+            "kind": "import",
+            "name": "collectSvgCounts",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "collectSvgCounts",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgCounts",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgCounts.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:48e7f4ebdfce998875761e95d7d768fcb0c717eaf4157d4124085ca13924c37a",
+            "line": 7,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgRequirements.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgRequirements.ts\",275]",
+            "kind": "variable",
+            "name": "SVG_REQUIREMENT_KEY_NAMESPACE",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:69854362810174afecccdb186ce94db4f7c76808390f10cadd85c82e3433fea7",
+            "line": 9,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgRequirements.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgRequirements.ts\",331]",
+            "kind": "function",
+            "name": "isReadableSvg",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:3820ee268a578d275824c0aeaf44d80c0e0e19497aa58abd9197c1a7d0d171b0",
+            "line": 13,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgRequirements.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgRequirements.ts\",435]",
+            "kind": "function",
+            "name": "parseSvgRequirements",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgRequirements",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgRequirements.ts"
+          },
+          "specifier": "./svgCounts.ts",
+          "target": {
+            "name": "SvgCounts",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgCounts.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgRequirements",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgRequirements.ts"
+          },
+          "specifier": "@flighthq/requirement/contract",
+          "target": {
+            "name": "RequirementSet",
+            "packageName": "@flighthq/requirement",
+            "source": "packages/requirement/src/requirementSet.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgRequirements",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgRequirements.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "SvgRequirements",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgRequirements.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:48e7f4ebdfce998875761e95d7d768fcb0c717eaf4157d4124085ca13924c37a",
+              "line": 7,
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgRequirements.ts",
+              "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgRequirements.ts\",275]",
+              "kind": "variable",
+              "name": "SVG_REQUIREMENT_KEY_NAMESPACE",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:584fea3990b8ec9d66868b35d503dafc6d7571c0c2f785078cf2ff2618eeb2de",
+            "line": 2,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgTransform.ts\",11]",
+            "kind": "import",
+            "name": "createMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createMatrix",
+            "kind": "dependency",
+            "module": {
+              "name": "Matrix",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/matrix.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:598bf182cf1b989bd8eae45a75888f0c9fee832a581b32a294c93339a492a6fa",
+            "line": 3,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgTransform.ts\",27]",
+            "kind": "import",
+            "name": "createTransform2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createTransform2D",
+            "kind": "dependency",
+            "module": {
+              "name": "Transform2d",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/transform2d.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:e699243e372555eccee48151011a603e4b101d5e92f49da68cc4eb0e595692fb",
+            "line": 4,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgTransform.ts\",48]",
+            "kind": "import",
+            "name": "decomposeMatrixToTransform2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "decomposeMatrixToTransform2D",
+            "kind": "dependency",
+            "module": {
+              "name": "Transform2d",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/transform2d.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:9ad755c8e0771b239f70f880a774065f8b43605731a71c6d58db97739dea7843",
+            "line": 5,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgTransform.ts\",80]",
+            "kind": "import",
+            "name": "multiplyMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "multiplyMatrix",
+            "kind": "dependency",
+            "module": {
+              "name": "Matrix",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/matrix.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:a0a1e82daa17dc7174075cd98f65847bf97441a09b32dac395c106e95c4a7035",
+            "line": 9,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgTransform.ts\",233]",
+            "kind": "import",
+            "name": "svgAttribute",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "svgAttribute",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgXml",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgXml.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 24,
+            "fingerprint": "sha256:3af72b35102f8deb55c11614e3b2b08f8cba27ba32099a4d5b911d71af240e7d",
+            "line": 9,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgTransform.ts\",247]",
+            "kind": "import",
+            "name": "svgNumberAttribute",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "svgNumberAttribute",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgXml",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgXml.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 44,
+            "fingerprint": "sha256:36de410d62998cddfb8510d17d3999ff28d8bea8dbf88abc01912e3489733cc6",
+            "line": 9,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgTransform.ts\",267]",
+            "kind": "import",
+            "name": "parseSvgLength",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "parseSvgLength",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgXml",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgXml.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 60,
+            "fingerprint": "sha256:3bcad1cd1a9f6c9ffb3d6bc2dbe9a90b5a1ced1d30752843e300e0e261098c92",
+            "line": 9,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgTransform.ts\",283]",
+            "kind": "import",
+            "name": "parseSvgNumberList",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "parseSvgNumberList",
+            "kind": "dependency",
+            "module": {
+              "name": "SvgXml",
+              "packageName": "@flighthq/scene2d-formats",
+              "source": "packages/scene2d-formats/src/svgXml.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:b3d63ac4fcc170b781a4b32806670251ff6d6034ba1d0bc1b6f0fb066f98d8d7",
+            "line": 19,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgTransform.ts\",842]",
+            "kind": "function",
+            "name": "applySvgTransform",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:546e11cf690418f8108bb0ac9fa267cc6a6797726accaf5a1d507a0320be54e1",
+            "line": 26,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgTransform.ts\",1100]",
+            "kind": "function",
+            "name": "assignSvgTransform",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:100f4ca96f11ec09f98ebebed9405a45005fb011aa1c3b282456f4dadd140e5d",
+            "line": 38,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgTransform.ts\",1500]",
+            "kind": "function",
+            "name": "createSvgViewBoxMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:63d3bd62ddaa3d352d4ede9c7229482643873871821912408b24b69a083eb7a0",
+            "line": 64,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgTransform.ts\",2734]",
+            "kind": "function",
+            "name": "createSvgViewportMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:e58cb86373fa4c65a7e26e8b7e237a8005d2f53e3a18ef5c90fe9b828592302d",
+            "line": 81,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgTransform.ts\",3555]",
+            "kind": "function",
+            "name": "multiplySvgMatrices",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:08a9c36f2f90410ffcc433f123b7123d12f07cc054824817357a07b7f683da60",
+            "line": 87,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgTransform.ts\",3719]",
+            "kind": "function",
+            "name": "parseSvgTransform",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgTransform",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts"
+          },
+          "specifier": "./svgXml.ts",
+          "target": {
+            "name": "SvgXml",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgXml.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgTransform",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts"
+          },
+          "importedNames": [
+            "createMatrix",
+            "multiplyMatrix"
+          ],
+          "specifier": "@flighthq/geometry/contract",
+          "target": {
+            "name": "Matrix",
+            "packageName": "@flighthq/geometry",
+            "source": "packages/geometry/src/matrix.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SvgTransform",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts"
+          },
+          "importedNames": [
+            "createTransform2D",
+            "decomposeMatrixToTransform2D"
+          ],
+          "specifier": "@flighthq/geometry/contract",
+          "target": {
+            "name": "Transform2d",
+            "packageName": "@flighthq/geometry",
+            "source": "packages/geometry/src/transform2d.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgTransform",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts"
+          },
+          "importedNames": [
+            "Matrix",
+            "MatrixLike"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Matrix",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Matrix.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgTransform",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts"
+          },
+          "importedNames": [
+            "Node"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Node",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Node.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgTransform",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts"
+          },
+          "importedNames": [
+            "Node2D",
+            "Node2DTraits"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Node2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Node2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgTransform",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts"
+          },
+          "importedNames": [
+            "Transform2D",
+            "Transform2DLike"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Transform2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Transform2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgTransform",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgTransform.ts"
+          },
+          "importedNames": [
+            "XmlElement"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "XmlElement",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/XmlElement.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "SvgTransform",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgTransform.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:54bcb3f592295c36a2ccecc5f2a4c904d35bec1c648e2df498404997a1ee5fda",
+            "line": 3,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgXml.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgXml.ts\",77]",
+            "kind": "function",
+            "name": "parseSvgCoordinate",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:6072beabeb702d3a4c7fc425eee27cbdeea75838cc3549dc384a4d5ec564fe43",
+            "line": 10,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgXml.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgXml.ts\",357]",
+            "kind": "function",
+            "name": "parseSvgCssNumber",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:36de410d62998cddfb8510d17d3999ff28d8bea8dbf88abc01912e3489733cc6",
+            "line": 16,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgXml.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgXml.ts\",590]",
+            "kind": "function",
+            "name": "parseSvgLength",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:3bcad1cd1a9f6c9ffb3d6bc2dbe9a90b5a1ced1d30752843e300e0e261098c92",
+            "line": 22,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgXml.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgXml.ts\",810]",
+            "kind": "function",
+            "name": "parseSvgNumberList",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:1c7730314b0e78b871dd2655e77cbd9ac5928ff2b32cf5f17e4c83dd0dc9f8c9",
+            "line": 27,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgXml.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgXml.ts\",987]",
+            "kind": "function",
+            "name": "parseUrlReference",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:a0a1e82daa17dc7174075cd98f65847bf97441a09b32dac395c106e95c4a7035",
+            "line": 43,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgXml.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgXml.ts\",1839]",
+            "kind": "function",
+            "name": "svgAttribute",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:df91221ef9074706ef312b831d6f4d7cd87841f11e66967af3bef449f878f440",
+            "line": 47,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgXml.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgXml.ts\",2015]",
+            "kind": "function",
+            "name": "svgFirstNumber",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:f54bbfc6eb09c946bc7123710d943d41c950eeec3350a5668798141b2118c5fa",
+            "line": 51,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgXml.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgXml.ts\",2156]",
+            "kind": "function",
+            "name": "svgLocalName",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:3af72b35102f8deb55c11614e3b2b08f8cba27ba32099a4d5b911d71af240e7d",
+            "line": 56,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgXml.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgXml.ts\",2301]",
+            "kind": "function",
+            "name": "svgNumberAttribute",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:a09e88f1d6a210eb3e5af26d2c67489ada3218bb906e17e7a1ad8d5e03a891cd",
+            "line": 60,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgXml.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgXml.ts\",2476]",
+            "kind": "function",
+            "name": "svgOptionalNumberAttribute",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:568771c315682a12bd8fa9db2e87827ebc42fd95519b711abf63a4d4d42c4dd1",
+            "line": 67,
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgXml.ts",
+            "id": "binding:[\"@flighthq/scene2d-formats\",\"packages/scene2d-formats/src/svgXml.ts\",2757]",
+            "kind": "function",
+            "name": "visitSvgElements",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SvgXml",
+            "packageName": "@flighthq/scene2d-formats",
+            "source": "packages/scene2d-formats/src/svgXml.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "XmlElement",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/XmlElement.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "SvgXml",
+        "packageName": "@flighthq/scene2d-formats",
+        "source": "packages/scene2d-formats/src/svgXml.ts"
+      },
+      "steps": []
     },
     {
       "bindings": [
