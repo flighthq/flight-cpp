@@ -4,13 +4,12 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function cloneNumberBuffer -- source line 203
-//   missing: function cloneAnimationTrack -- source line 12
-//   missing: function trimAnimationTrack -- source line 131
-//   missing: function validateAnimationTrack -- source line 169
 //   missing: function sampleAnimationTrack -- source line 72
 #include <cmath>
 #include <cstdint>
 #include <flight/sequence_view.hpp>
+#include <flight/structural_ref.hpp>
+#include <functional>
 #include <optional>
 #include <random>
 #include <variant>
@@ -19,25 +18,20 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/entity.hpp>
-
-#include <flight/types/easing_function.hpp>
-
-#include <flight/types/animation_track.hpp>
-
-#include <flight/types/animation_interpolation.hpp>
+namespace flight::types { struct AnimationTrack; }
+namespace flight::types { struct AnimationTrackValidationDiagnostic; }
+namespace flight::types { struct Entity; }
 
 #include <flight/entity/entity.hpp>
+#include <flight/types/animation_interpolation.hpp>
+#include <flight/types/animation_track.hpp>
+#include <flight/types/animation_track_validation_diagnostic.hpp>
+#include <flight/types/easing_function.hpp>
+#include <flight/types/entity.hpp>
 
 namespace flight::animation {
 
-using flight::types::AnimationInterpolation;
 using flight::types::AnimationTrack;
-using flight::types::EasingFunction;
-using flight::types::EntityConstruction;
-
-using flight::entity::allocate_entity;
-using flight::entity::finish_entity;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ANIMATION_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_9B0EADFED5E06042
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ANIMATION_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_9B0EADFED5E06042
@@ -45,32 +39,32 @@ struct times_values_components_interpolation_quaternion_easing_segment_easings_9
   flight::SequenceView<double> times;
   flight::SequenceView<double> values;
   std::optional<double> components;
-  std::optional<flight::Ref<AnimationInterpolation>> interpolation;
+  std::optional<flight::types::AnimationInterpolation> interpolation;
   std::optional<bool> quaternion;
-  std::variant<flight::Ref<EasingFunction>, flight::Null, flight::Undefined> easing = std::variant<flight::Ref<EasingFunction>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::Array<std::optional<flight::Ref<EasingFunction>>>, flight::Null, flight::Undefined> segment_easings = std::variant<flight::Array<std::optional<flight::Ref<EasingFunction>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<std::function<double(double)>, flight::Null, flight::Undefined> easing = std::variant<std::function<double(double)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
+  std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined> segment_easings = std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_ANIMATION_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_9B0EADFED5E06042
 
-inline void initialize_animation_track(flight::Ref<EntityConstruction<flight::Ref<AnimationTrack>>> out, flight::Ref<times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042> opts) {
+inline void initialize_animation_track(flight::types::EntityConstruction<flight::Ref<flight::types::AnimationTrack>> out, flight::Ref<times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042> opts) {
   const double components = ([&]() -> double { auto nullish_coalesce_left = opts->components; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
-  std::optional<flight::Ref<EasingFunction>> easing = ([&]() -> std::optional<flight::Ref<EasingFunction>> { auto nullish_coalesce_left = ([&]() -> std::variant<flight::Ref<EasingFunction>, flight::Null, flight::Undefined> { auto optional_property = opts->easing; if (std::holds_alternative<flight::Undefined>(optional_property)) return std::variant<flight::Ref<EasingFunction>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property)) return std::variant<flight::Ref<EasingFunction>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<EasingFunction>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<EasingFunction>>, std::get<flight::Ref<EasingFunction>>(optional_property)}; }()); if (const auto* alternative = std::get_if<flight::Ref<EasingFunction>>(&nullish_coalesce_left)) return std::optional<flight::Ref<EasingFunction>>{*alternative}; return std::nullopt; }());
-  flight::Ref<AnimationInterpolation> interpolation = ([&]() -> flight::Ref<AnimationInterpolation> { auto nullish_coalesce_left = opts->interpolation; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("Linear"); }());
+  std::optional<std::function<double(double)>> easing = ([&]() -> std::optional<std::function<double(double)>> { auto nullish_coalesce_left = ([&]() -> std::variant<std::function<double(double)>, flight::Null, flight::Undefined> { auto optional_property = opts->easing; if (std::holds_alternative<flight::Undefined>(optional_property)) return std::variant<std::function<double(double)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property)) return std::variant<std::function<double(double)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<std::function<double(double)>, flight::Null, flight::Undefined>{std::in_place_type<flight::types::EasingFunction>, std::get<std::function<double(double)>>(optional_property)}; }()); if (const auto* alternative = std::get_if<std::function<double(double)>>(&nullish_coalesce_left)) return std::optional<std::function<double(double)>>{*alternative}; return std::nullopt; }());
+  flight::types::AnimationInterpolation interpolation = ([&]() -> flight::String { auto nullish_coalesce_left_2 = opts->interpolation; if (nullish_coalesce_left_2.has_value()) return nullish_coalesce_left_2.value(); return flight::String("Linear"); }());
   const bool quaternion = ([&]() -> bool { auto nullish_coalesce_left = opts->quaternion; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return false; }());
-  std::optional<flight::Array<std::optional<flight::Ref<EasingFunction>>>> segment_easings = ([&]() -> std::optional<flight::Array<std::optional<flight::Ref<EasingFunction>>>> { auto nullish_coalesce_left_2 = ([&]() -> std::variant<flight::Array<std::optional<flight::Ref<EasingFunction>>>, flight::Null, flight::Undefined> { auto optional_property_2 = opts->segment_easings; if (std::holds_alternative<flight::Undefined>(optional_property_2)) return std::variant<flight::Array<std::optional<flight::Ref<EasingFunction>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_2)) return std::variant<flight::Array<std::optional<flight::Ref<EasingFunction>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<std::optional<flight::Ref<EasingFunction>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<std::optional<flight::Ref<EasingFunction>>>>, std::get<flight::Array<std::optional<flight::Ref<EasingFunction>>>>(optional_property_2)}; }()); if (const auto* alternative = std::get_if<flight::Array<std::optional<flight::Ref<EasingFunction>>>>(&nullish_coalesce_left_2)) return std::optional<flight::Array<std::optional<flight::Ref<EasingFunction>>>>{*alternative}; return std::nullopt; }());
-  (out->components = components);
-  (out->easing = easing);
-  (out->interpolation = interpolation);
-  (out->quaternion = quaternion);
-  (out->segment_easings = segment_easings);
-  (out->times = opts->times);
-  (out->values = opts->values);
+  std::optional<flight::Array<std::optional<std::function<double(double)>>>> segment_easings = ([&]() -> std::optional<flight::Array<std::optional<std::function<double(double)>>>> { auto nullish_coalesce_left_3 = ([&]() -> std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined> { auto optional_property_2 = opts->segment_easings; if (std::holds_alternative<flight::Undefined>(optional_property_2)) return std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_2)) return std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<std::optional<std::function<double(double)>>>>, std::get<flight::Array<std::optional<std::function<double(double)>>>>(optional_property_2)}; }()); if (const auto* alternative = std::get_if<flight::Array<std::optional<std::function<double(double)>>>>(&nullish_coalesce_left_3)) return std::optional<flight::Array<std::optional<std::function<double(double)>>>>{*alternative}; return std::nullopt; }());
+  flight::row_set<flight::RowKey<"components">>(out, components);
+  flight::row_set<flight::RowKey<"easing">>(out, easing);
+  flight::row_set<flight::RowKey<"interpolation">>(out, interpolation);
+  flight::row_set<flight::RowKey<"quaternion">>(out, quaternion);
+  flight::row_set<flight::RowKey<"segmentEasings">>(out, segment_easings);
+  flight::row_set<flight::RowKey<"times">>(out, opts->times);
+  flight::row_set<flight::RowKey<"values">>(out, opts->values);
 }
 
-inline flight::Ref<AnimationTrack> create_animation_track(flight::Ref<times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042> opts) {
-  flight::Ref<EntityConstruction<flight::Ref<AnimationTrack>>> out = allocate_entity<flight::Ref<AnimationTrack>>();
+inline flight::Ref<flight::types::AnimationTrack> create_animation_track(flight::Ref<times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042> opts) {
+  flight::types::EntityConstruction<flight::Ref<flight::types::AnimationTrack>> out = flight::entity::allocate_entity<flight::Ref<flight::types::AnimationTrack>>();
   initialize_animation_track(out, opts);
-  return finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::AnimationTrack>>(out);
 }
 
 
@@ -88,129 +82,104 @@ inline flight::Ref<AnimationTrack> create_animation_track(flight::Ref<times_valu
 // cpp emission failed for @flighthq/animation/packages/animation/src/animationTrack.ts: contextual union value
 // type flight::SequenceView<double> is not a represented runtime domain
 
-
-// NOT GENERATED: function cloneAnimationTrack -- source line 12
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function cloneAnimationTrack(track: Readonly<AnimationTrack>): AnimationTrack {
-//     const out = allocateEntity<AnimationTrack>();
-//     out.components = track.components;
-//     out.easing = track.easing;
-//     out.interpolation = track.interpolation;
-//     out.quaternion = track.quaternion;
-//     out.segmentEasings = track.segmentEasings === null ? null : track.segmentEasings.slice();
-//     out.times = cloneNumberBuffer(track.times);
-//     out.values = cloneNumberBuffer(track.values);
-//     return finishEntity(out);
-//   }
-//   
-// cpp emission failed for @flighthq/animation/packages/animation/src/animationTrack.ts: a presence test against
-// null has no absence channel in the emitted C++ storage for property
-
-inline double keyframe_stride(flight::Ref<AnimationTrack> track) {
-  return ((track->interpolation == flight::String("Cubic")) ? (track->components * 3.0) : track->components);
+inline flight::Ref<flight::types::AnimationTrack> clone_animation_track(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationTrack>>>> track) {
+  flight::types::EntityConstruction<flight::Ref<flight::types::AnimationTrack>> out = flight::entity::allocate_entity<flight::Ref<flight::types::AnimationTrack>>();
+  flight::row_set<flight::RowKey<"components">>(out, flight::row_get<flight::RowKey<"components">>(track));
+  flight::row_set<flight::RowKey<"easing">>(out, flight::row_get<flight::RowKey<"easing">>(track));
+  flight::row_set<flight::RowKey<"interpolation">>(out, flight::row_get<flight::RowKey<"interpolation">>(track));
+  flight::row_set<flight::RowKey<"quaternion">>(out, flight::row_get<flight::RowKey<"quaternion">>(track));
+  flight::row_set<flight::RowKey<"segmentEasings">>(out, (!flight::row_get<flight::RowKey<"segmentEasings">>(track).has_value() ? std::nullopt : std::optional<flight::Array<std::optional<std::function<double(double)>>>>{flight::row_get<flight::RowKey<"segmentEasings">>(track).value().slice()}));
+  flight::row_set<flight::RowKey<"times">>(out, clone_number_buffer(flight::row_get<flight::RowKey<"times">>(track)));
+  flight::row_set<flight::RowKey<"values">>(out, clone_number_buffer(flight::row_get<flight::RowKey<"values">>(track)));
+  return flight::entity::finish_entity<flight::Ref<flight::types::AnimationTrack>>(out);
 }
 
+inline double keyframe_stride(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationTrack>>>> track) {
+  return ((flight::row_get<flight::RowKey<"interpolation">>(track) == flight::String("Cubic")) ? (flight::row_get<flight::RowKey<"components">>(track) * 3.0) : flight::row_get<flight::RowKey<"components">>(track));
+}
 
-// NOT GENERATED: function trimAnimationTrack -- source line 131
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function trimAnimationTrack(
-//     track: Readonly<AnimationTrack>,
-//     startTime: number,
-//     endTime: number,
-//   ): AnimationTrack {
-//     const { components, times } = track;
-//     const count = times.length;
-//     const stride = keyframeStride(track);
-//     const outTimes: number[] = [];
-//     const outValues: number[] = [];
-//     const sourceKeyframes: number[] = [];
-//     for (let k = 0; k < count; k++) {
-//       const time = times[k];
-//       if (time < startTime || time > endTime) continue;
-//       outTimes.push(time - startTime);
-//       sourceKeyframes.push(k);
-//       const off = k * stride;
-//       for (let c = 0; c < stride; c++) outValues.push(track.values[off + c]);
-//     }
-//     const out = allocateEntity<AnimationTrack>();
-//     out.components = components;
-//     out.easing = track.easing;
-//     out.interpolation = track.interpolation;
-//     out.quaternion = track.quaternion;
-//     out.segmentEasings =
-//       track.segmentEasings === null || sourceKeyframes.length < 2
-//         ? track.segmentEasings === null
-//           ? null
-//           : []
-//         : track.segmentEasings.slice(sourceKeyframes[0], sourceKeyframes[sourceKeyframes.length - 1]);
-//     out.times = outTimes;
-//     out.values = outValues;
-//     return finishEntity(out);
-//   }
-//   
-//   // Structurally validates a track, returning null when it is well-formed or an array of diagnostics
-//   // otherwise. Checks that `times` is strictly ascending and that `values.length` equals
-//   // keyCount * componentsPerKeyframe (components for step/linear, 3 * components for cubic). Never throws.
-// cpp emission failed for @flighthq/animation/packages/animation/src/animationTrack.ts: a presence test against
-// null has no absence channel in the emitted C++ storage for property
-
-
-// NOT GENERATED: function validateAnimationTrack -- source line 169
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function validateAnimationTrack(track: Readonly<AnimationTrack>): AnimationTrackValidationDiagnostic[] | null {
-//     const diagnostics: AnimationTrackValidationDiagnostic[] = [];
-//     const { times, values } = track;
-//     const count = times.length;
-//     for (let k = 1; k < count; k++) {
-//       if (times[k] <= times[k - 1]) {
-//         diagnostics.push({
-//           code: 'nonAscendingTimes',
-//           index: k,
-//           message: `times[${k}] (${times[k]}) is not greater than times[${k - 1}] (${times[k - 1]}); times must be strictly ascending.`,
-//         });
-//       }
-//     }
-//     const expected = count * keyframeStride(track);
-//     if (values.length !== expected) {
-//       diagnostics.push({
-//         code: 'valuesLengthMismatch',
-//         index: null,
-//         message: `values.length (${values.length}) must equal keyCount * componentsPerKeyframe (${expected}).`,
-//       });
-//     }
-//     const expectedEasings = Math.max(0, count - 1);
-//     if (track.segmentEasings !== null && track.segmentEasings.length !== expectedEasings) {
-//       diagnostics.push({
-//         code: 'segmentEasingsLengthMismatch',
-//         index: null,
-//         message: `segmentEasings.length (${track.segmentEasings.length}) must equal keyCount - 1 (${expectedEasings}).`,
-//       });
-//     }
-//     return diagnostics.length > 0 ? diagnostics : null;
-//   }
-//   
-//   // Allocates a fresh number buffer with the same contents as `src`, preserving a Float32Array backing
-//   // when the source is one (so clones of typed-array tracks stay typed).
-// cpp emission failed for @flighthq/animation/packages/animation/src/animationTrack.ts: a presence test against
-// null has no absence channel in the emitted C++ storage for property
-
-inline double keyframe_value_offset(flight::Ref<AnimationTrack> track, double k) {
+inline flight::Ref<flight::types::AnimationTrack> trim_animation_track(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationTrack>>>> track, double start_time, double end_time) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationTrack>>>> object_pattern_value = track;
+  const double components = flight::row_get<flight::RowKey<"components">>(object_pattern_value);
+  flight::SequenceView<double> times = flight::row_get<flight::RowKey<"times">>(object_pattern_value);
+  const double count = times.length;
   const double stride = keyframe_stride(track);
-  return ((track->interpolation == flight::String("Cubic")) ? ((k * stride) + track->components) : (k * stride));
+  flight::Array<double> out_times = flight::Array<double>{};
+  flight::Array<double> out_values = flight::Array<double>{};
+  flight::Array<double> source_keyframes = flight::Array<double>{};
+  {
+    double k = 0.0;
+    while ((k < count)) {
+      {
+        const double time = times[k];
+        if (((time < start_time) || (time > end_time))) {
+          (k += 1.0);
+          continue;
+        }
+        out_times.push((time - start_time));
+        source_keyframes.push(k);
+        const double off = (k * stride);
+        {
+          double c = 0.0;
+          while ((c < stride)) {
+            out_values.push(flight::row_get<flight::RowKey<"values">>(track)[(off + c)]);
+            (c += 1.0);
+          }
+        }
+      }
+      (k += 1.0);
+    }
+  }
+  flight::types::EntityConstruction<flight::Ref<flight::types::AnimationTrack>> out = flight::entity::allocate_entity<flight::Ref<flight::types::AnimationTrack>>();
+  flight::row_set<flight::RowKey<"components">>(out, components);
+  flight::row_set<flight::RowKey<"easing">>(out, flight::row_get<flight::RowKey<"easing">>(track));
+  flight::row_set<flight::RowKey<"interpolation">>(out, flight::row_get<flight::RowKey<"interpolation">>(track));
+  flight::row_set<flight::RowKey<"quaternion">>(out, flight::row_get<flight::RowKey<"quaternion">>(track));
+  flight::row_set<flight::RowKey<"segmentEasings">>(out, ((!flight::row_get<flight::RowKey<"segmentEasings">>(track).has_value() || (static_cast<double>(source_keyframes.size()) < 2.0)) ? (!flight::row_get<flight::RowKey<"segmentEasings">>(track).has_value() ? std::nullopt : std::optional<flight::Array<std::optional<std::function<double(double)>>>>{flight::Array<std::optional<std::function<double(double)>>>{}}) : std::optional<flight::Array<std::optional<std::function<double(double)>>>>{flight::row_get<flight::RowKey<"segmentEasings">>(track).value().slice(source_keyframes.element(0.0), source_keyframes.element((static_cast<double>(source_keyframes.size()) - 1.0)))}));
+  flight::row_set<flight::RowKey<"times">>(out, out_times);
+  flight::row_set<flight::RowKey<"values">>(out, out_values);
+  return flight::entity::finish_entity<flight::Ref<flight::types::AnimationTrack>>(out);
 }
 
-inline void copy_keyframe_value(std::variant<flight::Array<double>, flight::Float32Array> out, flight::Ref<AnimationTrack> track, double k) {
+inline std::optional<flight::Array<flight::Ref<flight::types::AnimationTrackValidationDiagnostic>>> validate_animation_track(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationTrack>>>> track) {
+  flight::Array<flight::Ref<flight::types::AnimationTrackValidationDiagnostic>> diagnostics = flight::Array<flight::Ref<flight::types::AnimationTrackValidationDiagnostic>>{};
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationTrack>>>> object_pattern_value = track;
+  flight::SequenceView<double> times = flight::row_get<flight::RowKey<"times">>(object_pattern_value);
+  flight::SequenceView<double> values = flight::row_get<flight::RowKey<"values">>(object_pattern_value);
+  const double count = times.length;
+  {
+    double k = 1.0;
+    while ((k < count)) {
+      {
+        if ((times[k] <= times[(k - 1.0)])) {
+          diagnostics.push(flight::make_ref<flight::types::AnimationTrackValidationDiagnostic>(flight::types::AnimationTrackValidationDiagnostic{.code = flight::String("nonAscendingTimes"), .index = std::optional<double>{k}, .message = flight::String("times[") + flight::to_string(k) + flight::String("] (") + flight::to_string(times[k]) + flight::String(") is not greater than times[") + flight::to_string((k - 1.0)) + flight::String("] (") + flight::to_string(times[(k - 1.0)]) + flight::String("); times must be strictly ascending.")}));
+        }
+      }
+      (k += 1.0);
+    }
+  }
+  const double expected = (count * keyframe_stride(track));
+  if ((values.length != expected)) {
+    diagnostics.push(flight::make_ref<flight::types::AnimationTrackValidationDiagnostic>(flight::types::AnimationTrackValidationDiagnostic{.code = flight::String("valuesLengthMismatch"), .index = std::nullopt, .message = flight::String("values.length (") + flight::to_string(values.length) + flight::String(") must equal keyCount * componentsPerKeyframe (") + flight::to_string(expected) + flight::String(").")}));
+  }
+  const double expected_easings = flight::maximum(0.0, (count - 1.0));
+  if ((flight::row_get<flight::RowKey<"segmentEasings">>(track).has_value() && (static_cast<double>(flight::row_get<flight::RowKey<"segmentEasings">>(track).value().size()) != expected_easings))) {
+    diagnostics.push(flight::make_ref<flight::types::AnimationTrackValidationDiagnostic>(flight::types::AnimationTrackValidationDiagnostic{.code = flight::String("segmentEasingsLengthMismatch"), .index = std::nullopt, .message = flight::String("segmentEasings.length (") + flight::to_string(static_cast<double>(flight::row_get<flight::RowKey<"segmentEasings">>(track).value().size())) + flight::String(") must equal keyCount - 1 (") + flight::to_string(expected_easings) + flight::String(").")}));
+  }
+  return ((static_cast<double>(diagnostics.size()) > 0.0) ? std::optional<flight::Array<flight::Ref<flight::types::AnimationTrackValidationDiagnostic>>>{diagnostics} : std::nullopt);
+}
+
+inline double keyframe_value_offset(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationTrack>>>> track, double k) {
+  const double stride = keyframe_stride(track);
+  return ((flight::row_get<flight::RowKey<"interpolation">>(track) == flight::String("Cubic")) ? ((k * stride) + flight::row_get<flight::RowKey<"components">>(track)) : (k * stride));
+}
+
+inline void copy_keyframe_value(std::variant<flight::Array<double>, flight::Float32Array> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationTrack>>>> track, double k) {
   const double off = keyframe_value_offset(track, k);
   {
     double c = 0.0;
-    while ((c < track->components)) {
-      ([&]() { auto&& indexed_source = out; const auto indexed_index = c; const auto indexed_value = track->values[(off + c)]; std::visit([&](auto& indexed_receiver) { if constexpr (requires { indexed_receiver.set_index(indexed_index, indexed_value); }) indexed_receiver.set_index(indexed_index, indexed_value); else indexed_receiver.element(indexed_index) = indexed_value; }, indexed_source); return indexed_value; }());
+    while ((c < flight::row_get<flight::RowKey<"components">>(track))) {
+      ([&]() { auto&& indexed_source = out; const auto indexed_index = c; const auto indexed_value = flight::row_get<flight::RowKey<"values">>(track)[(off + c)]; std::visit([&](auto& indexed_receiver) { if constexpr (requires { indexed_receiver.set_index(indexed_index, indexed_value); }) indexed_receiver.set_index(indexed_index, indexed_value); else indexed_receiver.element(indexed_index) = indexed_value; }, indexed_source); return indexed_value; }());
       (c += 1.0);
     }
   }
@@ -231,10 +200,10 @@ inline void normalize_flat_quaternion(std::variant<flight::Array<double>, flight
   }
 }
 
-inline void sample_cubic_segment(std::variant<flight::Array<double>, flight::Float32Array> out, flight::Ref<AnimationTrack> track, double i, double alpha, double dt) {
-  flight::Ref<AnimationTrack> object_pattern_value = track;
-  const double components = object_pattern_value->components;
-  flight::SequenceView<double> values = object_pattern_value->values;
+inline void sample_cubic_segment(std::variant<flight::Array<double>, flight::Float32Array> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationTrack>>>> track, double i, double alpha, double dt) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationTrack>>>> object_pattern_value = track;
+  const double components = flight::row_get<flight::RowKey<"components">>(object_pattern_value);
+  flight::SequenceView<double> values = flight::row_get<flight::RowKey<"values">>(object_pattern_value);
   const double stride = (components * 3.0);
   const double a2 = (alpha * alpha);
   const double a3 = (a2 * alpha);
@@ -257,7 +226,7 @@ inline void sample_cubic_segment(std::variant<flight::Array<double>, flight::Flo
       (c += 1.0);
     }
   }
-  if ((track->quaternion && (components == 4.0))) {
+  if ((flight::row_get<flight::RowKey<"quaternion">>(track) && (components == 4.0))) {
     normalize_flat_quaternion(out);
   }
 }

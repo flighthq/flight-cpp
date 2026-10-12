@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <flight/any.hpp>
+#include <flight/array.hpp>
 #include <flight/error.hpp>
 #include <flight/number.hpp>
 #include <flight/sequence_view.hpp>
