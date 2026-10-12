@@ -91,6 +91,16 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [Optional index/member flow must preserve the present payload](optional-index-member-present-flow.md) —
   an indexed string member call refuses for arrays and emits an invalid pre-unwrap for Records, while
   direct optional members, guarded locals, and indexed object-property reads provide passing controls.
+- [A corpus-context structural row construction loses an exact Record spread](corpus-context-structural-row-record-spread.md) —
+  `threeDsParse.ts` is a committed P-3D2 refusal, but its closest minimal form reaches an adjacent
+  Record-spread rule and the split-module form emits; the page records the non-reproduction without
+  inventing a narrower root cause.
+- [An optional member must construct its declared Record value carrier](contextual-record-value-carrier-projection.md) —
+  P-3D2 glTF loading refuses when an existing `Record<string, Uint8Array>` fills an optional
+  `Record<string, ArrayLike<number>>` member; direct widening instead emits invalid invariant C++.
+- [A WeakMap value may be a nullable reference carrier](nullable-reference-weak-map-value.md) —
+  P-3D2 resource guards refuse `ImageResourceFailure | null` even though the runtime faithfully stores
+  and distinguishes the nested optional carrier.
 - [An entity intersection arm and the value that fills it are sibling C++ carriers](entity-intersection-arm-sibling-carriers.md) —
   `@flighthq/tray` refuses at emission and none of its four headers compile; carried by the source patch
   `tray-create-result-and-runtime-owner`, which names the create-result arms once and narrows the

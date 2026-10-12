@@ -1,7 +1,9 @@
 # Named interface shapes through `Partial<T>`
 
-The C++ emitter refuses `Partial<T>` when `T` is a named object interface, even when semantic type
-information and the generated owner expose a closed, statically known row for every member.
+At the compiler pin where this request was filed, the C++ emitter refused `Partial<T>` when `T` was a
+named object interface, even when semantic type information and the generated owner exposed a closed,
+statically known row for every member. The original rule no longer reproduces in the minimal fixture at
+flight-compiler `2b687ea`; the carried full module still refuses later under a different diagnostic.
 
 ## Minimal TypeScript
 
@@ -32,16 +34,38 @@ using MaterialOptions = flight::StructuralRef<flight::RowReadonly<
 Object spread must preserve source order: preset defaults are installed first, then every field
 present in the caller's partial row replaces its corresponding default.
 
-## Affected modules
+## Current pinned boundary
 
-All eleven exported functions in `@flighthq/materials/materialPresets` are currently refused with
+At `2b687ea`, the local fixture above emits. A simple cross-package version with `Material` and the
+constructor declared in separate modules also emits, as do both spread orders for the three-field row.
+The former `cpp-partial-shape-unresolvable` rule is therefore not an honest minimal explanation for the
+current corpus refusal.
+
+The committed `materialPresets.ts` row now stops at:
+
+```text
+structural-row construction requires explicit named properties
+```
+
+Its complete imported interface and inheritance graph has not been reduced to that diagnostic: smaller
+named-`Partial` constructions emit. The P-3D2 3DS Record-spread site carries the same wording but a
+different target and is recorded separately as a
+[corpus-context non-reproduction](corpus-context-structural-row-record-spread.md). Neither diagnostic
+should be reported upstream as the old mapped-shape failure without a fixture that preserves the
+additional failing context.
+
+## Originally affected modules
+
+All eleven exported functions in `@flighthq/materials/materialPresets` were refused with
 `cpp-partial-shape-unresolvable`. Ten use `Partial<StandardPbrMaterial>` directly; the glass preset
-reaches the same refusal while constructing its named partial material and extension rows.
+reached the same refusal while constructing its named partial material and extension rows. The full
+module remains refused at the current pin, but under the generic structural-row diagnostic above.
 
-`@flighthq/menu`'s `createMenuItemTemplate(template?: Readonly<Partial<MenuItemTemplate>>)` is the same
-refusal on another named interface, and it is the reason the whole module is refused: the emitted
-`MenuItemTemplate` already carries every member as `std::optional`, so the partial has a closed shape
-the emitter declines to resolve. Supplied by the `menu-recursive-template-validation` override.
+`@flighthq/menu`'s `createMenuItemTemplate(template?: Readonly<Partial<MenuItemTemplate>>)` carried the
+same original refusal on another named interface, and it was the reason the whole module was refused:
+the emitted `MenuItemTemplate` already carries every member as `std::optional`, so the partial has a
+closed shape the emitter declines to resolve. Supplied by the `menu-recursive-template-validation`
+override.
 
 ## Carrying workaround
 
@@ -50,5 +74,6 @@ and preserves spread-last precedence. Its glass path also records the separate g
 heritage limitation: until the Scene3D-GL-owned concrete extension value-arm patch is rebased, the
 same transmission allocation is retained through the generated `PbrExtension` prefix view.
 
-The workaround can be removed when named object interfaces resolve through `Partial<T>` and the
-emitter preserves concrete owners through source interface heritage.
+The workaround can be removed only when the complete preset module emits and source interface heritage
+preserves concrete owners through the `PbrExtension` view. The first condition must be tested against
+the full imported owner graph; the now-passing three-field fixture is not an expiry proof.
