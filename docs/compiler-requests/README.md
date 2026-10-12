@@ -81,6 +81,17 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   the emitter requires exactly one C++ alternative, so `@flighthq/tray` refuses at emission. No
   workaround carried: the discriminant rewrite answers a different question and would be a source change
   made solely for the emitter.
+- [An async closure needs the coroutine lowering a module-level function gets](async-closure-coroutine-lowering.md) —
+  an `async release()` inside an object literal and an `async () =>` handed to `then` are both refused;
+  three functions in `@flighthq/tray` and the notification attach/dispose path. No workaround carried.
+- [A union-member test needs the binding's carrier to still be a variant](union-member-test-without-variant-binding.md) —
+  fires on the *shared* helper of two families, so one rule holds ten notification functions and
+  `startTrayIconAnimation`; reduction attempts are recorded because four of them reached a neighbouring
+  rule instead.
+- [An assertion to a type parameter has no owner to cast to](generic-outcome-assertion-without-heritage.md) —
+  `invokeUpdate<Provider, Result extends { readonly outcome: string }>` builds an arm and asserts it to
+  `Result`; distinguished from the three declared-heritage requests, because here the destination is a
+  parameter and no identity is at stake.
 - [Union carriers need canonical alternative order](canonical-union-carrier-order.md) — identical
   named unions currently become incompatible `std::variant` types at array callback boundaries.
 - [Nullable and optional storage needs two absence channels](nullable-optional-presence.md) — one
