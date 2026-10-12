@@ -77,3 +77,43 @@ The minimal reduction above still refuses with the same rule. Without the push i
 Until one of those is chosen, `connectSignalTracked` stays refused and no override is carried. The
 eleven connection cases and twelve member-registering scope cases in
 `tests/generated_signals_test.cpp` remain excluded on it.
+
+## Option A feasibility (chosen for implementation, stopped at the escalation boundary)
+
+Option A was chosen: an identity-preserving widest-instantiation view, with one retained owner,
+bidirectional field visibility, reference equality, and no copy or side storage. It stops at the stated
+boundary, because the view cannot stay at the `SignalConnection` struct.
+
+**What the erased instantiation must support.** The only consumer is `disconnectSignalScope`, which emits
+`disconnect_signal_connection<std::function<void(flight::Array<flight::Any>)>>(member)`. That calls
+`disconnect_signal<Erased>(connection->signal, connection->slot)`, which at the erased type:
+- reads `signal->data` and `data->depth`, and assigns `signal->data` and `signal->emit` (a `T`-typed
+  callable);
+- tombstones (`slots.element(i) = std::nullopt`) and splices `slots`, `priorities` and `repeat`;
+- compares every slot's identity to the erased `slot`
+  (`generated/include/flight/signals/slot.hpp`, `disconnect_signal`).
+
+**Field forwarding therefore has to be transitive.**
+- `SignalConnection<Erased>` forwards to `SignalConnection<T>`, and its `signal` field must itself be a
+  `Signal<Erased>` view of `Signal<T>`.
+- That view's `data` must be a `SignalData<Erased>` view, and that view's `slots` must be an
+  `Array<std::optional<Erased>>` aliasing an `Array<std::optional<T>>`.
+- `flight::Array<V>` is a concrete owner over `std::shared_ptr<std::vector<V>>`, so it cannot alias storage
+  of another element type. Making it alias would take an element-type-erased array with bidirectional
+  `T` ↔ `Erased` conversion on every element read, write and splice, everywhere the runtime array is used.
+- The `emit` and `slot` fields need the same bidirectional callable conversion. `Erased` → `T` has no
+  general inverse.
+
+That is the "scope grows beyond reach" case: it is a runtime container redesign, not a view type.
+
+**Dispatching back to the exact `T` instead needs a registry.** The erased call could instead be routed to
+`disconnect_signal_connection<T>` on the retained exact owner. But the view is created at the push in
+`connection.ts`, and the generic function is applied in `scope.ts`. A type-erased model created at the
+push would have to know, in advance, every generic operation any module will apply to the erased handle.
+That is a cross-module registry of operations per generic owner, which is the "type registry" case.
+
+**What remains feasible without either.** For fields whose type does not depend on `T`
+(`connected`, `paused`), a forwarding view with reference equality to the exact owner is straightforward,
+but it does not make `connectSignalTracked`/`disconnectSignalScope` work. The `T`-dependent fields are
+exactly what scope teardown uses. So no partial view was carried, and no compiler patch, CTest or signals
+case changed.
