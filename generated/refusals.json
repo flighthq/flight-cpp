@@ -7265,14 +7265,14 @@
       "code": "dependency-refused",
       "module": "packages/share/src/contract.ts",
       "package": "@flighthq/share",
-      "reason": "dependency ./share was refused for @flighthq/share/packages/share/src/share.ts",
+      "reason": "dependency ./share.ts was refused for @flighthq/share/packages/share/src/share.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/share/src/index.ts",
       "package": "@flighthq/share",
-      "reason": "dependency ./contract was refused for @flighthq/share/packages/share/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/share/packages/share/src/contract.ts",
       "stage": "dependency"
     },
     {

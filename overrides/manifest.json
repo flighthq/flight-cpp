@@ -120,7 +120,7 @@
       "package": "@flighthq/share",
       "status": "complete",
       "supplies": "packages/share/src/share.ts",
-      "derivedFrom": "04fdfb25fde367a6cd40af16c16aab9093e149c49ebe718691cfb9426d2ad207",
+      "derivedFrom": "538641d4eb710000e195cbecf1c9931c6325f06a958e6db5ddaf6fdefba3411b",
       "reason": "The emitter leaves imported capabilities, entities, helpers and types unqualified, refuses hasShareContentFields because it loses the optional absence channel across the ShareContent variant, constructs variant arms as if ShareContent were a record, and constructs the non-empty files tuple as an Array. Those defects keep the angle-only module root and both aggregators from compiling.",
       "change": "Supplies the complete share module over the generated three-arm ShareContent variant, non-empty files tuple, host capability Tasks, ShareResult signal entity, and live attached-signal Set.",
       "equivalence": "Variant visitation tests each generated required or optional title/text/url carrier for a non-empty string without collapsing absence into empty. Invalid content and files resolve false without invoking a provider; valid calls return the provider Task directly. Result sharing awaits the provider, returns the same ShareResult reference, and iterates the live Set so callback-time detach and attach have JavaScript Set iteration behavior. File validation preserves all four source predicates, files content preserves the first element plus a sliced rest array, and signal disposal detaches before clearing.",
