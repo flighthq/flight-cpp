@@ -33303,6 +33303,8 @@
     },
     {
       "consumers": [
+        "@flighthq/shape/packages/shape/src/contract.ts",
+        "@flighthq/shape/packages/shape/src/index.ts",
         "@flighthq/shape/packages/shape/src/shapeStrokeOutline.ts"
       ],
       "module": {
@@ -33314,9 +33316,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/shape/packages/shape/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/shape",
@@ -33336,7 +33336,8 @@
     },
     {
       "consumers": [
-        "@flighthq/shape/packages/shape/src/contract.ts"
+        "@flighthq/shape/packages/shape/src/contract.ts",
+        "@flighthq/shape/packages/shape/src/index.ts"
       ],
       "module": {
         "name": "EnableShapeBoundsGuards",
@@ -33353,6 +33354,7 @@
     {
       "consumers": [
         "@flighthq/shape/packages/shape/src/contract.ts",
+        "@flighthq/shape/packages/shape/src/index.ts",
         "@flighthq/shape/packages/shape/src/morphShapePaint.ts"
       ],
       "module": {
@@ -33385,7 +33387,13 @@
       },
       "path": "flight/shape/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/shape/packages/shape/src/contract.ts"
+        "@flighthq/shape/packages/shape/src/enableShapeBoundsGuards.ts",
+        "@flighthq/shape/packages/shape/src/morphShape.ts",
+        "@flighthq/shape/packages/shape/src/morphShapeAnimation.ts",
+        "@flighthq/shape/packages/shape/src/registerDefaultShapeBoundsCommands.ts",
+        "@flighthq/shape/packages/shape/src/scale9Shape.ts",
+        "@flighthq/shape/packages/shape/src/shape.ts",
+        "@flighthq/shape/packages/shape/src/shapeBounds.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -33393,6 +33401,7 @@
       "classification": "target-runtime",
       "consumers": [
         "@flighthq/shape/packages/shape/src/contract.ts",
+        "@flighthq/shape/packages/shape/src/index.ts",
         "@flighthq/shape/packages/shape/src/morphShapeAnimation.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts",
         "@flighthq/swf/packages/swf/src/swfMorphShape.ts"
@@ -33417,7 +33426,8 @@
     },
     {
       "consumers": [
-        "@flighthq/shape/packages/shape/src/contract.ts"
+        "@flighthq/shape/packages/shape/src/contract.ts",
+        "@flighthq/shape/packages/shape/src/index.ts"
       ],
       "module": {
         "name": "MorphShapeAnimation",
@@ -33434,6 +33444,7 @@
     {
       "consumers": [
         "@flighthq/shape/packages/shape/src/contract.ts",
+        "@flighthq/shape/packages/shape/src/index.ts",
         "@flighthq/shape/packages/shape/src/morphShape.ts",
         "@flighthq/swf/packages/swf/src/swfMorphShape.ts"
       ],
@@ -33448,7 +33459,8 @@
     {
       "consumers": [
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
-        "@flighthq/shape/packages/shape/src/contract.ts"
+        "@flighthq/shape/packages/shape/src/contract.ts",
+        "@flighthq/shape/packages/shape/src/index.ts"
       ],
       "module": {
         "name": "RegisterDefaultShapeBoundsCommands",
@@ -33465,6 +33477,7 @@
       "classification": "target-runtime",
       "consumers": [
         "@flighthq/shape/packages/shape/src/contract.ts",
+        "@flighthq/shape/packages/shape/src/index.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts"
       ],
       "declarationFingerprints": [
@@ -33509,6 +33522,7 @@
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
         "@flighthq/shape-formats/packages/shape-formats/src/shapeJson.ts",
         "@flighthq/shape/packages/shape/src/contract.ts",
+        "@flighthq/shape/packages/shape/src/index.ts",
         "@flighthq/shape/packages/shape/src/morphShape.ts",
         "@flighthq/shape/packages/shape/src/scale9Shape.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts",
@@ -33516,18 +33530,18 @@
         "@flighthq/swf/packages/swf/src/swfText.ts"
       ],
       "declarationFingerprints": [
-        "sha256:048344c26b94d637fa1c3992cc47648eb04588bd8fce3a1d352b6f31f5751404",
         "sha256:11c9f5507befdf85008e269f0bbe1c8c9ae4623d40640fb54625615c79eef823",
         "sha256:1ecded6785ad8caedf9f79e8e3655fab3060f4eba7933823234c3a8bf501b2e5",
         "sha256:2edf33f4a62f1ca36ce77b006c79788c5cf89947c9032d8850c79194c9660ba9",
         "sha256:580f439bd71e16a3d01a07a00cc9a105bf9b77ddb3448962ebf82e6d06c974db",
         "sha256:5b1523f0659b826d7b2dbccc84e8eaf7840c62dbf8b4166301f78bf8b3529918",
         "sha256:6212f2970d0b2312716cd88bde64c6126bb78b78de6424541a9a12705aae2196",
+        "sha256:70a736e067371120b632ef8369f2334f750d5f6ee57b8e117fa41708966162b1",
         "sha256:7a7e261303764f60deb43e3357ff2c5114d1d9e4b37d4c99f53c483656b8d240",
+        "sha256:8a60e36d88ddb9bccd8ac9f55d81cf98e47cb646fbc0db7f0efa1b0d63d182cc",
         "sha256:94d297d69d6f28461b70189cc2948abb22f0a89a50bad6e5deef8dc984b7cda2",
         "sha256:9e601206c104f94404fa9473792f7556d04a3cb738540b6b2ac4f1f0fc0f43cb",
         "sha256:c3004648f023725e5fcbbde8c2de283b58b7e44284d6195e372c00e33d70c7e5",
-        "sha256:ec645df5a2e87f3177012d3cff00d970832f2f3a2dac3e8345ea5bb222d2ee7b",
         "sha256:fb954ac2966b9d69af6b7e6934ecea58c8623a1e69dd7b4ce11cbaad92826588"
       ],
       "module": {
@@ -33545,6 +33559,7 @@
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommands.ts",
         "@flighthq/shape/packages/shape/src/contract.ts",
         "@flighthq/shape/packages/shape/src/enableShapeBoundsGuards.ts",
+        "@flighthq/shape/packages/shape/src/index.ts",
         "@flighthq/shape/packages/shape/src/registerDefaultShapeBoundsCommands.ts",
         "@flighthq/shape/packages/shape/src/shape.ts"
       ],
@@ -33623,6 +33638,7 @@
       "consumers": [
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
         "@flighthq/shape/packages/shape/src/contract.ts",
+        "@flighthq/shape/packages/shape/src/index.ts",
         "@flighthq/shape/packages/shape/src/registerDefaultShapeBoundsCommands.ts",
         "@flighthq/shape/packages/shape/src/shape.ts",
         "@flighthq/shape/packages/shape/src/shapeBounds.ts"
@@ -33637,6 +33653,8 @@
     },
     {
       "consumers": [
+        "@flighthq/shape/packages/shape/src/contract.ts",
+        "@flighthq/shape/packages/shape/src/index.ts",
         "@flighthq/shape/packages/shape/src/shapeStroke.ts",
         "@flighthq/shape/packages/shape/src/shapeStrokeOutline.ts"
       ],
@@ -33656,6 +33674,7 @@
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts",
         "@flighthq/shape-formats/packages/shape-formats/src/shapeJson.ts",
         "@flighthq/shape/packages/shape/src/contract.ts",
+        "@flighthq/shape/packages/shape/src/index.ts",
         "@flighthq/shape/packages/shape/src/morphShape.ts",
         "@flighthq/shape/packages/shape/src/morphShapePaint.ts",
         "@flighthq/swf/packages/swf/src/swfShape.ts",
@@ -33676,6 +33695,7 @@
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuMeshShapeRenderer.ts",
         "@flighthq/shape/packages/shape/src/contract.ts",
         "@flighthq/shape/packages/shape/src/explainShapeTessellation.ts",
+        "@flighthq/shape/packages/shape/src/index.ts",
         "@flighthq/shape/packages/shape/src/shapeStroke.ts",
         "@flighthq/shape/packages/shape/src/shapeStrokeOutline.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts",
@@ -33694,7 +33714,8 @@
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glMeshShapeRenderer.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuMeshShapeRenderer.ts",
         "@flighthq/shape/packages/shape/src/contract.ts",
-        "@flighthq/shape/packages/shape/src/explainShapeTessellation.ts"
+        "@flighthq/shape/packages/shape/src/explainShapeTessellation.ts",
+        "@flighthq/shape/packages/shape/src/index.ts"
       ],
       "module": {
         "name": "ShapeStroke",
@@ -33709,7 +33730,8 @@
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glMeshShapeRenderer.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuMeshShapeRenderer.ts",
         "@flighthq/shape/packages/shape/src/contract.ts",
-        "@flighthq/shape/packages/shape/src/explainShapeTessellation.ts"
+        "@flighthq/shape/packages/shape/src/explainShapeTessellation.ts",
+        "@flighthq/shape/packages/shape/src/index.ts"
       ],
       "module": {
         "name": "ShapeStrokeOutline",

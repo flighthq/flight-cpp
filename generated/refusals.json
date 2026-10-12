@@ -7407,21 +7407,21 @@
       "code": "dependency-refused",
       "module": "packages/shape/src/contract.ts",
       "package": "@flighthq/shape",
-      "reason": "dependency ./morphShape was refused for @flighthq/shape/packages/shape/src/morphShape.ts",
+      "reason": "dependency ./morphShape.ts was refused for @flighthq/shape/packages/shape/src/morphShape.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/shape/src/enableShapeBoundsGuards.ts",
       "package": "@flighthq/shape",
-      "reason": "dependency ./shapeBounds was refused for @flighthq/shape/packages/shape/src/shapeBounds.ts",
+      "reason": "dependency ./shapeBounds.ts was refused for @flighthq/shape/packages/shape/src/shapeBounds.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/shape/src/index.ts",
       "package": "@flighthq/shape",
-      "reason": "dependency ./contract was refused for @flighthq/shape/packages/shape/src/contract.ts",
+      "reason": "dependency ./enableShapeBoundsGuards.ts was refused for @flighthq/shape/packages/shape/src/enableShapeBoundsGuards.ts",
       "stage": "dependency"
     },
     {
@@ -7437,14 +7437,14 @@
       "code": "dependency-refused",
       "module": "packages/shape/src/morphShapeAnimation.ts",
       "package": "@flighthq/shape",
-      "reason": "dependency ./morphShape was refused for @flighthq/shape/packages/shape/src/morphShape.ts",
+      "reason": "dependency ./morphShape.ts was refused for @flighthq/shape/packages/shape/src/morphShape.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/shape/src/registerDefaultShapeBoundsCommands.ts",
       "package": "@flighthq/shape",
-      "reason": "dependency ./shapeBounds was refused for @flighthq/shape/packages/shape/src/shapeBounds.ts",
+      "reason": "dependency ./shapeBounds.ts was refused for @flighthq/shape/packages/shape/src/shapeBounds.ts",
       "stage": "dependency"
     },
     {
@@ -7459,7 +7459,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 21,
+      "line": 22,
       "module": "packages/shape/src/shape.ts",
       "package": "@flighthq/shape",
       "reason": "cpp emission failed for @flighthq/shape/packages/shape/src/shape.ts: a reference assertion from flight::Ref<flight::types::Shape> to flight::Ref<flight::types::MorphShape> has no heritage to cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage",
