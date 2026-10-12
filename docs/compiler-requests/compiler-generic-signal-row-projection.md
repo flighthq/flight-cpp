@@ -48,11 +48,23 @@ and the package emits cleanly otherwise: **3/3 modules emitted, 0 refused, 0/3 h
 `packages/preferences/src/storage.ts` — so `@flighthq/preferences` is expected to meet the same defect
 and was not measured separately here.
 
-## Status
+## Status, and what a reduction has to look like
 
-**No patch is carried.** Filing only: the emission is observed directly at the pin, but a reduced
-reproduction inside the compiler's own harness was not confirmed in the session that found it, and a
-patch written against an unreduced report is a patch that fixes the spelling rather than the
-substitution. The source call above is the whole reduction — one `hasSignalSlots` call on an optional
-`Signal<() => void>` — so the owner can land a fixture in one step and then lower the target side from
-the argument's type evidence.
+**No patch is carried yet, and the reduction is half done.** Attempting it produced one concrete
+constraint worth recording rather than rediscovering: a fixture that writes the helper as an ambient
+declaration —
+
+```ts
+declare function hasSignalSlots<T extends (...args: any[]) => void>(signal: Readonly<Signal<T>>): boolean;
+```
+
+— refuses *earlier* and for a different reason (`cpp-runtime-external-symbol-binding-incomplete`), so it
+never reaches this defect. The fixture has to import the helper from the package that defines it, the
+way the real caller does, which is what the harness supports by lowering a fixture inside a package
+closure (`lower(file, source)` lowers into `@flighthq/math` by default, and imports of `@flighthq/*`
+resolve against the pinned checkout).
+
+So the remaining step is small but not trivial: author that two-module fixture, confirm the emitted
+`Signal<T>`, then lower the cast's target side from the argument's type evidence and carry the patch with
+its request. Filing the request first was deliberate — the observed emission is enough for a reader to
+find the substitution site, and the fixture constraint now tells them where to put the reproduction.
