@@ -59,6 +59,39 @@ retained declaration calling an omitted one,
 refusal is not what is blocking the build today. It is what keeps the package's public attach surface
 absent once that is fixed.
 
+## Third measured site: `@flighthq/statusbar`, and the same rule on a *record*
+
+`pushStatusBarStyleEntry` refuses with the same code and the same advice, over a declared **record**
+rather than a union:
+
+```
+cpp emission failed for @flighthq/statusbar/packages/statusbar/src/statusbar.ts: contextual C++ union
+conversion requires equivalent source union evidence: target optionalSingle carriers
+[flight::Ref<applied_baseline_color_provider_entries_overlays_provider_style_provider_visibility_provider_4a6fee11134dc47d>]
+from call source optionalSingle carriers [flight::Ref<StyleStackState>]. The alternatives match uniquely, but
+no checked target-runtime conversion exists between their C++ carriers. Keep both sides on the same declared
+union alias; for a Map or WeakMap lookup followed by a rebind, construct its declared value owner and ensure
+every rebound member already has that owner member's carrier -- a Readonly structural view does not become a
+mutable nominal Ref.
+```
+
+The source creates the stack state as an object literal and rebinds it into the WeakMap's value slot:
+
+```ts
+let state = _styleStacks.get(hostStatusBarInfo);
+if (state === undefined) {
+  state = { applied: { ...baseline }, baseline, colorProvider, entries: [], overlaysProvider, styleProvider, visibilityProvider };
+  _styleStacks.set(hostStatusBarInfo, state);
+}
+```
+
+The emitter builds an anonymous carrier for that literal (`applied_baseline_color_provider_…_4a6fee11134dc47d`)
+and the declared `StyleStackState` on the other side, and the two do not convert — exactly the flattened-arms
+problem of the first two sites, on a record. `@flighthq/statusbar` is `assisted` because
+`overrides/include/flight/statusbar/statusbar.hpp` supplies that one declaration over the emitted carriers;
+the rest of the module, including the full `applyTopStyleEntry` resolver that was refused at an earlier pin,
+is the emission's own.
+
 ## Reduction
 
 The missing piece is the guard's own emission record: the union alias is emitted once from the named

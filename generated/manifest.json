@@ -785,7 +785,6 @@
         "flight/scene2d/scene2d.hpp",
         "flight/share/share.hpp",
         "flight/shortcut/shortcut_explicit_dependency.hpp",
-        "flight/statusbar/statusbar.hpp",
         "flight/text/rich_text.hpp",
         "flight/tilemap/tilemap.hpp"
       ],
@@ -1641,9 +1640,7 @@
       "id": "skeleton2d-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/statusbar/statusbar.hpp"
-      ],
+      "files": [],
       "id": "statusbar-unqualified-entity-names"
     },
     {
@@ -2880,9 +2877,7 @@
       "id": "spritesheet-unqualified-signals-names"
     },
     {
-      "files": [
-        "flight/statusbar/statusbar.hpp"
-      ],
+      "files": [],
       "id": "statusbar-unqualified-signals-names"
     },
     {
@@ -8184,7 +8179,7 @@
       "sourceModules": 5
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/statusbar",
       "cppNamespace": "flight::statusbar",
       "emittedModules": 2,

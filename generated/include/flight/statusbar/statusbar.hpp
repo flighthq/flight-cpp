@@ -3,9 +3,10 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function applyTopStyleEntry -- source line 187
+//   missing: function pushStatusBarStyleEntry -- source line 112
 #include <cstddef>
 #include <flight/number.hpp>
+#include <flight/structural_ref.hpp>
 #include <flight/weak_map.hpp>
 #include <functional>
 #include <optional>
@@ -14,53 +15,65 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/signals/emitter.hpp>
-
 #include <flight/signals/signal.hpp>
 
 #include <flight/types/status_bar.hpp>
 
-#include <flight/entity/entity.hpp>
+namespace flight::types { struct Entity; }
+namespace flight::types { struct HostStatusBarChangeCapability; }
+namespace flight::types { struct HostStatusBarColorCapability; }
+namespace flight::types { struct HostStatusBarInfoCapability; }
+namespace flight::types { struct HostStatusBarOverlaysCapability; }
+namespace flight::types { struct HostStatusBarStyleCapability; }
+namespace flight::types { struct HostStatusBarVisibilityCapability; }
+namespace flight::types { struct StatusBar; }
+namespace flight::types { struct StatusBarInfo; }
+namespace flight::types { struct StatusBarStyleEntry; }
+namespace flight::types { template <typename T> struct Signal; }
 
 namespace flight::statusbar {
-
-using flight::signals::emit_signal;
 
 using flight::signals::create_signal;
 
 using flight::types::StatusBarInfo;
-
-using flight::entity::allocate_entity;
-using flight::entity::finish_entity;
-
 struct StyleStackState;
+} // namespace flight::statusbar
 
-inline flight::Ref<StatusBarInfo> get_status_bar_info(flight::Ref<HostStatusBarInfoCapability> host_status_bar_info, flight::Ref<StatusBarInfo> out) {
-  return host_status_bar_info->get_info(out);
+#include <flight/entity/entity.hpp>
+#include <flight/signals/emitter.hpp>
+#include <flight/signals/signal.hpp>
+#include <flight/types/entity.hpp>
+#include <flight/types/signal.hpp>
+#include <flight/types/status_bar.hpp>
+
+namespace flight::statusbar {
+
+inline flight::Ref<flight::types::StatusBarInfo> get_status_bar_info(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostStatusBarInfoCapability>>>> host_status_bar_info, flight::Ref<flight::types::StatusBarInfo> out) {
+  return flight::row_get<flight::RowKey<"getInfo">>(host_status_bar_info)(out);
 }
 
-inline void initialize_status_bar(flight::Ref<EntityConstruction<flight::Ref<StatusBar>>> out) {
-  (out->on_change = create_signal<flight::template_argument_t<typename std::remove_cvref_t<decltype(out->on_change)>::element_type>>());
+inline void initialize_status_bar(flight::types::EntityConstruction<flight::Ref<flight::types::StatusBar>> out) {
+  flight::row_set<flight::RowKey<"onChange">>(out, flight::signals::create_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::StatusBarInfo>>>>)>>());
 }
 
-inline flight::Ref<StatusBar> create_status_bar() {
-  flight::Ref<EntityConstruction<flight::Ref<StatusBar>>> out = allocate_entity<flight::Ref<StatusBar>>();
+inline flight::Ref<flight::types::StatusBar> create_status_bar() {
+  flight::types::EntityConstruction<flight::Ref<flight::types::StatusBar>> out = flight::entity::allocate_entity<flight::Ref<flight::types::StatusBar>>();
   initialize_status_bar(out);
-  return finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::StatusBar>>(out);
 }
 
-inline void initialize_status_bar_info(flight::Ref<EntityConstruction<flight::Ref<StatusBarInfo>>> out) {
-  (out->color = 0.0);
-  (out->height = -1.0);
-  (out->overlays_content = false);
-  (out->style = flight::String("default"));
-  (out->visible = true);
+inline void initialize_status_bar_info(flight::types::EntityConstruction<flight::Ref<flight::types::StatusBarInfo>> out) {
+  flight::row_set<flight::RowKey<"color">>(out, 0.0);
+  flight::row_set<flight::RowKey<"height">>(out, -1.0);
+  flight::row_set<flight::RowKey<"overlaysContent">>(out, false);
+  flight::row_set<flight::RowKey<"style">>(out, flight::String("default"));
+  flight::row_set<flight::RowKey<"visible">>(out, true);
 }
 
-inline flight::Ref<StatusBarInfo> create_status_bar_info() {
-  flight::Ref<EntityConstruction<flight::Ref<StatusBarInfo>>> out = allocate_entity<flight::Ref<StatusBarInfo>>();
+inline flight::Ref<flight::types::StatusBarInfo> create_status_bar_info() {
+  flight::types::EntityConstruction<flight::Ref<flight::types::StatusBarInfo>> out = flight::entity::allocate_entity<flight::Ref<flight::types::StatusBarInfo>>();
   initialize_status_bar_info(out);
-  return finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::StatusBarInfo>>(out);
 }
 
 inline flight::String packed_rgba_to_hex_color(double color) {
@@ -68,62 +81,62 @@ inline flight::String packed_rgba_to_hex_color(double color) {
   return flight::String("#") + flight::number_to_string(rgb, 16.0).pad_start(6.0, flight::String("0"));
 }
 
-inline void set_status_bar_color(flight::Ref<HostStatusBarColorCapability> host_status_bar_color, double color, std::optional<bool> animated = std::nullopt) {
-  host_status_bar_color->set_background_color(color, animated);
+inline void set_status_bar_color(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostStatusBarColorCapability>>>> host_status_bar_color, double color, std::optional<bool> animated = std::nullopt) {
+  flight::row_get<flight::RowKey<"setBackgroundColor">>(host_status_bar_color)(color, animated);
 }
 
-inline void set_status_bar_overlays_content(flight::Ref<HostStatusBarOverlaysCapability> host_status_bar_overlays, bool overlay) {
-  host_status_bar_overlays->set_overlays_content(overlay);
+inline void set_status_bar_overlays_content(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostStatusBarOverlaysCapability>>>> host_status_bar_overlays, bool overlay) {
+  flight::row_get<flight::RowKey<"setOverlaysContent">>(host_status_bar_overlays)(overlay);
 }
 
-inline void set_status_bar_style(flight::Ref<HostStatusBarStyleCapability> host_status_bar_style, flight::Ref<StatusBarStyle> style) {
-  host_status_bar_style->set_style(style);
+inline void set_status_bar_style(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostStatusBarStyleCapability>>>> host_status_bar_style, flight::types::StatusBarStyle style) {
+  flight::row_get<flight::RowKey<"setStyle">>(host_status_bar_style)(style);
 }
 
-inline void set_status_bar_visible(flight::Ref<HostStatusBarVisibilityCapability> host_status_bar_visibility, bool visible, std::optional<flight::Ref<StatusBarAnimation>> animation = std::nullopt) {
-  host_status_bar_visibility->set_visible(visible, animation);
+inline void set_status_bar_visible(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostStatusBarVisibilityCapability>>>> host_status_bar_visibility, bool visible, std::optional<flight::types::StatusBarAnimation> animation = std::nullopt) {
+  flight::row_get<flight::RowKey<"setVisible">>(host_status_bar_visibility)(visible, animation);
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_STATUSBAR_ENTRY_HANDLE_2B88DD181C4C7134
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_STATUSBAR_ENTRY_HANDLE_2B88DD181C4C7134
 struct entry_handle_2b88dd181c4c7134 : public flight::ReferenceEnabled {
-  flight::Ref<StatusBarStyleEntry> entry;
-  flight::Ref<StatusBarStyleEntryHandle> handle;
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::StatusBarStyleEntry>>>> entry;
+  double handle;
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_STATUSBAR_ENTRY_HANDLE_2B88DD181C4C7134
 
 struct StyleStackState : public flight::ReferenceEnabled {
-  flight::Ref<StatusBarInfo> applied;
-  flight::Ref<StatusBarInfo> baseline;
-  flight::Ref<HostStatusBarColorCapability> color_provider;
+  flight::Ref<flight::types::StatusBarInfo> applied;
+  flight::Ref<flight::types::StatusBarInfo> baseline;
+  flight::Ref<flight::types::HostStatusBarColorCapability> color_provider;
   flight::Array<flight::Ref<entry_handle_2b88dd181c4c7134>> entries;
-  flight::Ref<HostStatusBarOverlaysCapability> overlays_provider;
-  flight::Ref<HostStatusBarStyleCapability> style_provider;
-  flight::Ref<HostStatusBarVisibilityCapability> visibility_provider;
+  flight::Ref<flight::types::HostStatusBarOverlaysCapability> overlays_provider;
+  flight::Ref<flight::types::HostStatusBarStyleCapability> style_provider;
+  flight::Ref<flight::types::HostStatusBarVisibilityCapability> visibility_provider;
 };
 
-inline flight::Ref<StatusBarStyleEntryHandle> invalid_handle = -1.0;
+inline double invalid_handle = -1.0;
 
-inline flight::Ref<StatusBarStyleEntryHandle> next_handle = 1.0;
+inline double next_handle = 1.0;
 
-inline flight::Ref<StatusBarInfo> scratch_info = create_status_bar_info();
+inline flight::Ref<flight::types::StatusBarInfo> scratch_info = create_status_bar_info();
 
-inline double get_status_bar_height(flight::Ref<HostStatusBarInfoCapability> host_status_bar_info) {
-  return host_status_bar_info->get_info(scratch_info)->height;
+inline double get_status_bar_height(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostStatusBarInfoCapability>>>> host_status_bar_info) {
+  return flight::row_get<flight::RowKey<"getInfo">>(host_status_bar_info)(scratch_info)->height;
 }
 
-inline flight::WeakMap<flight::Ref<HostStatusBarInfoCapability>, flight::Ref<StyleStackState>> style_stacks = flight::WeakMap<flight::Ref<HostStatusBarInfoCapability>, flight::Ref<StyleStackState>>();
+inline flight::WeakMap<flight::Ref<flight::types::HostStatusBarInfoCapability>, flight::Ref<StyleStackState>> style_stacks = flight::WeakMap<flight::Ref<flight::types::HostStatusBarInfoCapability>, flight::Ref<StyleStackState>>();
 
-inline bool has_status_bar_style_entry(flight::Ref<HostStatusBarInfoCapability> host_status_bar_info, flight::Ref<StatusBarStyleEntryHandle> handle) {
+inline bool has_status_bar_style_entry(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostStatusBarInfoCapability>>>> host_status_bar_info, double handle) {
   if ((handle == invalid_handle)) {
     return false;
   }
-  return ([&]() -> bool { auto nullish_coalesce_left = ([&]() -> std::optional<bool> { auto optional_chain_receiver = ([&]() -> std::optional<flight::Array<flight::Ref<entry_handle_2b88dd181c4c7134>>> { auto optional_chain_receiver = style_stacks.get(host_status_bar_info); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->entries; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().some([=](flight::Ref<entry_handle_2b88dd181c4c7134> entry) { return (entry->handle == handle); }); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return false; }());
+  return ([&]() -> bool { auto nullish_coalesce_left = ([&]() -> std::optional<bool> { auto optional_chain_receiver = ([&]() -> std::optional<flight::Array<flight::Ref<entry_handle_2b88dd181c4c7134>>> { auto optional_chain_receiver = style_stacks.get(flight::structural_ref_cast<flight::Ref<flight::types::HostStatusBarInfoCapability>>(host_status_bar_info)); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->entries; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().some([=](flight::Ref<entry_handle_2b88dd181c4c7134> entry) { return (entry->handle == handle); }); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return false; }());
 }
 
-inline flight::WeakMap<flight::Ref<StatusBar>, std::function<void()>> subscriptions = flight::WeakMap<flight::Ref<StatusBar>, std::function<void()>>();
+inline flight::WeakMap<flight::Ref<flight::types::StatusBar>, std::function<void()>> subscriptions = flight::WeakMap<flight::Ref<flight::types::StatusBar>, std::function<void()>>();
 
-inline void detach_status_bar(flight::Ref<StatusBar> bar) {
+inline void detach_status_bar(flight::Ref<flight::types::StatusBar> bar) {
   std::optional<std::function<void()>> unsubscribe = subscriptions.get(bar);
   if (!unsubscribe.has_value()) {
     return;
@@ -132,64 +145,77 @@ inline void detach_status_bar(flight::Ref<StatusBar> bar) {
   subscriptions.erase(bar);
 }
 
-inline void attach_status_bar(flight::Ref<HostStatusBarChangeCapability> host_status_bar_change, flight::Ref<HostStatusBarInfoCapability> host_status_bar_info, flight::Ref<StatusBar> bar) {
+inline void attach_status_bar(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostStatusBarChangeCapability>>>> host_status_bar_change, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostStatusBarInfoCapability>>>> host_status_bar_info, flight::Ref<flight::types::StatusBar> bar) {
   detach_status_bar(bar);
-  flight::Ref<HostStatusBarChangeCapability> change_provider = host_status_bar_change;
-  flight::Ref<HostStatusBarInfoCapability> info_provider = host_status_bar_info;
-  std::function<void()> unsubscribe = change_provider->subscribe([=]() {
-  emit_signal(bar->on_change, info_provider->get_info(create_status_bar_info()));
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostStatusBarChangeCapability>>>> change_provider = host_status_bar_change;
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostStatusBarInfoCapability>>>> info_provider = host_status_bar_info;
+  std::function<void()> unsubscribe = flight::row_get<flight::RowKey<"subscribe">>(change_provider)([=]() {
+  flight::signals::emit_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::StatusBarInfo>>>>)>>(bar->on_change, flight::row_get<flight::RowKey<"getInfo">>(info_provider)(create_status_bar_info()));
 });
   subscriptions.set(bar, unsubscribe);
 }
 
-inline void dispose_status_bar(flight::Ref<StatusBar> bar) {
+inline void dispose_status_bar(flight::Ref<flight::types::StatusBar> bar) {
   detach_status_bar(bar);
 }
 
+inline void apply_top_style_entry(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostStatusBarInfoCapability>>>> host_status_bar_info, flight::Ref<StyleStackState> state) {
+  std::optional<flight::String> animation;
+  std::optional<double> color;
+  std::optional<bool> overlays_content;
+  std::optional<flight::String> style;
+  std::optional<bool> visible;
+  {
+    double index = (static_cast<double>(state->entries.size()) - 1.0);
+    while ((index >= 0.0)) {
+      {
+        flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::StatusBarStyleEntry>>>> entry = state->entries.element(index)->entry;
+        if ((!animation.has_value() && flight::row_get<flight::RowKey<"animation">>(entry).has_value())) {
+          (animation = std::optional<flight::String>{flight::row_get<flight::RowKey<"animation">>(entry).value()});
+        }
+        if ((!color.has_value() && flight::row_get<flight::RowKey<"color">>(entry).has_value())) {
+          (color = std::optional<double>{flight::row_get<flight::RowKey<"color">>(entry).value()});
+        }
+        if ((!overlays_content.has_value() && flight::row_get<flight::RowKey<"overlaysContent">>(entry).has_value())) {
+          (overlays_content = std::optional<bool>{flight::row_get<flight::RowKey<"overlaysContent">>(entry).value()});
+        }
+        if ((!style.has_value() && flight::row_get<flight::RowKey<"style">>(entry).has_value())) {
+          (style = std::optional<flight::String>{flight::row_get<flight::RowKey<"style">>(entry).value()});
+        }
+        if ((!visible.has_value() && flight::row_get<flight::RowKey<"visible">>(entry).has_value())) {
+          (visible = std::optional<bool>{flight::row_get<flight::RowKey<"visible">>(entry).value()});
+        }
+      }
+      (index -= 1.0);
+    }
+  }
+  ([&]() { auto&& assignment_target = color; if (!assignment_target.has_value()) assignment_target = std::optional<double>{state->baseline->color}; return assignment_target.value(); }());
+  ([&]() { auto&& assignment_target = overlays_content; if (!assignment_target.has_value()) assignment_target = std::optional<bool>{state->baseline->overlays_content}; return assignment_target.value(); }());
+  ([&]() { auto&& assignment_target = style; if (!assignment_target.has_value()) assignment_target = std::optional<flight::String>{state->baseline->style}; return assignment_target.value(); }());
+  ([&]() { auto&& assignment_target = visible; if (!assignment_target.has_value()) assignment_target = std::optional<bool>{state->baseline->visible}; return assignment_target.value(); }());
+  if ((color.value() != state->applied->color)) {
+    state->color_provider->set_background_color(color.value(), false);
+  }
+  if ((overlays_content.value() != state->applied->overlays_content)) {
+    state->overlays_provider->set_overlays_content(overlays_content.value());
+  }
+  if ((style.value() != state->applied->style)) {
+    state->style_provider->set_style(style.value());
+  }
+  if ((visible.value() != state->applied->visible)) {
+    state->visibility_provider->set_visible(visible.value(), ([&]() -> flight::String { auto nullish_coalesce_left = animation; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("none"); }()));
+  }
+  (state->applied->color = color.value());
+  (state->applied->overlays_content = overlays_content.value());
+  (state->applied->style = style.value());
+  (state->applied->visible = visible.value());
+  if ((static_cast<double>(state->entries.size()) == 0.0)) {
+    style_stacks.erase(flight::structural_ref_cast<flight::Ref<flight::types::HostStatusBarInfoCapability>>(host_status_bar_info));
+  }
+}
 
-// NOT GENERATED: function applyTopStyleEntry -- source line 187
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   function applyTopStyleEntry(hostStatusBarInfo: Readonly<HostStatusBarInfoCapability>, state: StyleStackState): void {
-//     let animation: StatusBarAnimation | undefined;
-//     let color: number | undefined;
-//     let overlaysContent: boolean | undefined;
-//     let style: StatusBarStyle | undefined;
-//     let visible: boolean | undefined;
-//     for (let index = state.entries.length - 1; index >= 0; index--) {
-//       const entry = state.entries[index].entry;
-//       if (animation === undefined && entry.animation !== undefined) animation = entry.animation;
-//       if (color === undefined && entry.color !== undefined) color = entry.color;
-//       if (overlaysContent === undefined && entry.overlaysContent !== undefined) {
-//         overlaysContent = entry.overlaysContent;
-//       }
-//       if (style === undefined && entry.style !== undefined) style = entry.style;
-//       if (visible === undefined && entry.visible !== undefined) visible = entry.visible;
-//     }
-//   
-//     color ??= state.baseline.color;
-//     overlaysContent ??= state.baseline.overlaysContent;
-//     style ??= state.baseline.style;
-//     visible ??= state.baseline.visible;
-//   
-//     if (color !== state.applied.color) state.colorProvider.setBackgroundColor(color, false);
-//     if (overlaysContent !== state.applied.overlaysContent) state.overlaysProvider.setOverlaysContent(overlaysContent);
-//     if (style !== state.applied.style) state.styleProvider.setStyle(style);
-//     if (visible !== state.applied.visible) state.visibilityProvider.setVisible(visible, animation ?? 'none');
-//   
-//     state.applied.color = color;
-//     state.applied.overlaysContent = overlaysContent;
-//     state.applied.style = style;
-//     state.applied.visible = visible;
-//     if (state.entries.length === 0) _styleStacks.delete(hostStatusBarInfo);
-//   }
-//   
-// cpp emission failed for @flighthq/statusbar/packages/statusbar/src/statusbar.ts: contextual optionalSingle
-// construction requires expression type evidence
-
-inline void clear_status_bar_style_stack(flight::Ref<HostStatusBarInfoCapability> host_status_bar_info) {
-  auto state = style_stacks.get(host_status_bar_info);
+inline void clear_status_bar_style_stack(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostStatusBarInfoCapability>>>> host_status_bar_info) {
+  auto state = style_stacks.get(flight::structural_ref_cast<flight::Ref<flight::types::HostStatusBarInfoCapability>>(host_status_bar_info));
   if ((!state.has_value() || (static_cast<double>(state.value()->entries.size()) == 0.0))) {
     return;
   }
@@ -197,11 +223,11 @@ inline void clear_status_bar_style_stack(flight::Ref<HostStatusBarInfoCapability
   apply_top_style_entry(host_status_bar_info, state.value());
 }
 
-inline void pop_status_bar_style_entry(flight::Ref<HostStatusBarInfoCapability> host_status_bar_info, flight::Ref<StatusBarStyleEntryHandle> handle) {
+inline void pop_status_bar_style_entry(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostStatusBarInfoCapability>>>> host_status_bar_info, double handle) {
   if ((handle == invalid_handle)) {
     return;
   }
-  auto state = style_stacks.get(host_status_bar_info);
+  auto state = style_stacks.get(flight::structural_ref_cast<flight::Ref<flight::types::HostStatusBarInfoCapability>>(host_status_bar_info));
   if (!state.has_value()) {
     return;
   }
@@ -213,18 +239,47 @@ inline void pop_status_bar_style_entry(flight::Ref<HostStatusBarInfoCapability> 
   apply_top_style_entry(host_status_bar_info, state.value());
 }
 
-inline flight::Ref<StatusBarStyleEntryHandle> push_status_bar_style_entry(flight::Ref<HostStatusBarColorCapability> host_status_bar_color, flight::Ref<HostStatusBarInfoCapability> host_status_bar_info, flight::Ref<HostStatusBarOverlaysCapability> host_status_bar_overlays, flight::Ref<HostStatusBarStyleCapability> host_status_bar_style, flight::Ref<HostStatusBarVisibilityCapability> host_status_bar_visibility, flight::Ref<StatusBarStyleEntry> entry) {
-  auto state = style_stacks.get(host_status_bar_info);
-  if (!state.has_value()) {
-    flight::Ref<HostStatusBarInfoCapability> info_provider = host_status_bar_info;
-    flight::Ref<StatusBarInfo> baseline = info_provider->get_info(create_status_bar_info());
-    (state = std::optional<flight::Ref<StyleStackState>>{flight::make_ref<StyleStackState>(StyleStackState{.applied = flight::make_ref<StatusBarInfo>(*baseline), .baseline = baseline, .color_provider = host_status_bar_color, .entries = flight::Array<flight::Ref<entry_handle_2b88dd181c4c7134>>{}, .overlays_provider = host_status_bar_overlays, .style_provider = host_status_bar_style, .visibility_provider = host_status_bar_visibility})});
-    style_stacks.set(host_status_bar_info, state.value());
-  }
-  const double handle = next_handle++;
-  state.value()->entries.push(flight::make_ref<entry_handle_2b88dd181c4c7134>(entry_handle_2b88dd181c4c7134{.entry = entry, .handle = handle}));
-  apply_top_style_entry(host_status_bar_info, state.value());
-  return handle;
-}
+
+// NOT GENERATED: function pushStatusBarStyleEntry -- source line 112
+// refusal: cpp-contextual-union-inequivalent [target-runtime]
+//
+// The source it stood for:
+//   export function pushStatusBarStyleEntry(
+//     hostStatusBarColor: Readonly<HostStatusBarColorCapability>,
+//     hostStatusBarInfo: Readonly<HostStatusBarInfoCapability>,
+//     hostStatusBarOverlays: Readonly<HostStatusBarOverlaysCapability>,
+//     hostStatusBarStyle: Readonly<HostStatusBarStyleCapability>,
+//     hostStatusBarVisibility: Readonly<HostStatusBarVisibilityCapability>,
+//     entry: Readonly<StatusBarStyleEntry>,
+//   ): StatusBarStyleEntryHandle {
+//     let state = _styleStacks.get(hostStatusBarInfo);
+//     if (state === undefined) {
+//       const infoProvider = hostStatusBarInfo;
+//       const baseline = infoProvider.getInfo(createStatusBarInfo());
+//       state = {
+//         applied: { ...baseline },
+//         baseline,
+//         colorProvider: hostStatusBarColor,
+//         entries: [],
+//         overlaysProvider: hostStatusBarOverlays,
+//         styleProvider: hostStatusBarStyle,
+//         visibilityProvider: hostStatusBarVisibility,
+//       };
+//       _styleStacks.set(hostStatusBarInfo, state);
+//     }
+//     const handle = _nextHandle++;
+//     state.entries.push({ entry, handle });
+//     applyTopStyleEntry(hostStatusBarInfo, state);
+//     return handle;
+//   }
+//   
+// cpp emission failed for @flighthq/statusbar/packages/statusbar/src/statusbar.ts: contextual C++ union
+// conversion requires equivalent source union evidence: target optionalSingle carriers
+// [flight::Ref<applied_baseline_color_provider_entries_overlays_provider_style_provider_visibility_provider_4a6fee11134dc47d>]
+// from call source optionalSingle carriers [flight::Ref<StyleStackState>]. The alternatives match uniquely, but
+// no checked target-runtime conversion exists between their C++ carriers. Keep both sides on the same declared
+// union alias; for a Map or WeakMap lookup followed by a rebind, construct its declared value owner and ensure
+// every rebound member already has that owner member's carrier -- a Readonly structural view does not become a
+// mutable nominal Ref. Otherwise add an identity-preserving runtime conversion contract.
 
 } // namespace flight::statusbar

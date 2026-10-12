@@ -1348,6 +1348,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("outerConeDegrees") && requires { object.outer_cone_degrees; }) return (object.outer_cone_degrees);
   else if constexpr (Key::name.view() == std::string_view("overState") && requires { object.over_state; }) return (object.over_state);
   else if constexpr (Key::name.view() == std::string_view("overlapping") && requires { object.overlapping; }) return (object.overlapping);
+  else if constexpr (Key::name.view() == std::string_view("overlaysContent") && requires { object.overlays_content; }) return (object.overlays_content);
   else if constexpr (Key::name.view() == std::string_view("overwrite") && requires { object.overwrite; }) return (object.overwrite);
   else if constexpr (Key::name.view() == std::string_view("ownsElement") && requires { object.owns_element; }) return (object.owns_element);
   else if constexpr (Key::name.view() == std::string_view("padding") && requires { object.padding; }) return (object.padding);
@@ -1670,6 +1671,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("setAlwaysOnTop") && requires { object.set_always_on_top; }) return (object.set_always_on_top);
   else if constexpr (Key::name.view() == std::string_view("setAppMenu") && requires { object.set_app_menu; }) return (object.set_app_menu);
   else if constexpr (Key::name.view() == std::string_view("setAsDefault") && requires { object.set_as_default; }) return (object.set_as_default);
+  else if constexpr (Key::name.view() == std::string_view("setBackgroundColor") && requires { object.set_background_color; }) return (object.set_background_color);
   else if constexpr (Key::name.view() == std::string_view("setBadgeCount") && requires { object.set_badge_count; }) return (object.set_badge_count);
   else if constexpr (Key::name.view() == std::string_view("setContentProtection") && requires { object.set_content_protection; }) return (object.set_content_protection);
   else if constexpr (Key::name.view() == std::string_view("setDisplaySize") && requires { object.set_display_size; }) return (object.set_display_size);
@@ -1687,6 +1689,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("setName") && requires { object.set_name; }) return (object.set_name);
   else if constexpr (Key::name.view() == std::string_view("setNode") && requires { object.set_node; }) return (object.set_node);
   else if constexpr (Key::name.view() == std::string_view("setOpacity") && requires { object.set_opacity; }) return (object.set_opacity);
+  else if constexpr (Key::name.view() == std::string_view("setOverlaysContent") && requires { object.set_overlays_content; }) return (object.set_overlays_content);
   else if constexpr (Key::name.view() == std::string_view("setParent") && requires { object.set_parent; }) return (object.set_parent);
   else if constexpr (Key::name.view() == std::string_view("setPlaybackState") && requires { object.set_playback_state; }) return (object.set_playback_state);
   else if constexpr (Key::name.view() == std::string_view("setPosition") && requires { object.set_position; }) return (object.set_position);
@@ -1703,6 +1706,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("setStyle") && requires { object.set_style; }) return (object.set_style);
   else if constexpr (Key::name.view() == std::string_view("setTitle") && requires { object.set_title; }) return (object.set_title);
   else if constexpr (Key::name.view() == std::string_view("setUserModelId") && requires { object.set_user_model_id; }) return (object.set_user_model_id);
+  else if constexpr (Key::name.view() == std::string_view("setVisible") && requires { object.set_visible; }) return (object.set_visible);
   else if constexpr (Key::name.view() == std::string_view("severity") && requires { object.severity; }) return (object.severity);
   else if constexpr (Key::name.view() == std::string_view("sh") && requires { object.sh; }) return (object.sh);
   else if constexpr (Key::name.view() == std::string_view("shCoefficients") && requires { object.sh_coefficients; }) return (object.sh_coefficients);
@@ -3453,6 +3457,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("outerConeDegrees") && requires(Object& object) { object.outer_cone_degrees; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().outer_cone_degrees)>>{};
   else if constexpr (Key::name.view() == std::string_view("overState") && requires(Object& object) { object.over_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().over_state)>>{};
   else if constexpr (Key::name.view() == std::string_view("overlapping") && requires(Object& object) { object.overlapping; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().overlapping)>>{};
+  else if constexpr (Key::name.view() == std::string_view("overlaysContent") && requires(Object& object) { object.overlays_content; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().overlays_content)>>{};
   else if constexpr (Key::name.view() == std::string_view("overwrite") && requires(Object& object) { object.overwrite; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().overwrite)>>{};
   else if constexpr (Key::name.view() == std::string_view("ownsElement") && requires(Object& object) { object.owns_element; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().owns_element)>>{};
   else if constexpr (Key::name.view() == std::string_view("padding") && requires(Object& object) { object.padding; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().padding)>>{};
@@ -3775,6 +3780,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("setAlwaysOnTop") && requires(Object& object) { object.set_always_on_top; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_always_on_top)>>{};
   else if constexpr (Key::name.view() == std::string_view("setAppMenu") && requires(Object& object) { object.set_app_menu; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_app_menu)>>{};
   else if constexpr (Key::name.view() == std::string_view("setAsDefault") && requires(Object& object) { object.set_as_default; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_as_default)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setBackgroundColor") && requires(Object& object) { object.set_background_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_background_color)>>{};
   else if constexpr (Key::name.view() == std::string_view("setBadgeCount") && requires(Object& object) { object.set_badge_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_badge_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("setContentProtection") && requires(Object& object) { object.set_content_protection; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_content_protection)>>{};
   else if constexpr (Key::name.view() == std::string_view("setDisplaySize") && requires(Object& object) { object.set_display_size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_display_size)>>{};
@@ -3792,6 +3798,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("setName") && requires(Object& object) { object.set_name; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_name)>>{};
   else if constexpr (Key::name.view() == std::string_view("setNode") && requires(Object& object) { object.set_node; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_node)>>{};
   else if constexpr (Key::name.view() == std::string_view("setOpacity") && requires(Object& object) { object.set_opacity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_opacity)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setOverlaysContent") && requires(Object& object) { object.set_overlays_content; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_overlays_content)>>{};
   else if constexpr (Key::name.view() == std::string_view("setParent") && requires(Object& object) { object.set_parent; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_parent)>>{};
   else if constexpr (Key::name.view() == std::string_view("setPlaybackState") && requires(Object& object) { object.set_playback_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_playback_state)>>{};
   else if constexpr (Key::name.view() == std::string_view("setPosition") && requires(Object& object) { object.set_position; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_position)>>{};
@@ -3808,6 +3815,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("setStyle") && requires(Object& object) { object.set_style; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_style)>>{};
   else if constexpr (Key::name.view() == std::string_view("setTitle") && requires(Object& object) { object.set_title; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_title)>>{};
   else if constexpr (Key::name.view() == std::string_view("setUserModelId") && requires(Object& object) { object.set_user_model_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_user_model_id)>>{};
+  else if constexpr (Key::name.view() == std::string_view("setVisible") && requires(Object& object) { object.set_visible; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_visible)>>{};
   else if constexpr (Key::name.view() == std::string_view("severity") && requires(Object& object) { object.severity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().severity)>>{};
   else if constexpr (Key::name.view() == std::string_view("sh") && requires(Object& object) { object.sh; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sh)>>{};
   else if constexpr (Key::name.view() == std::string_view("shCoefficients") && requires(Object& object) { object.sh_coefficients; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sh_coefficients)>>{};
@@ -5561,6 +5569,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->outer_cone_degrees; }) owner.bind_named("outerConeDegrees", [object]() -> decltype(auto) { return (object->outer_cone_degrees); });
   if constexpr (requires { object->over_state; }) owner.bind_named("overState", [object]() -> decltype(auto) { return (object->over_state); });
   if constexpr (requires { object->overlapping; }) owner.bind_named("overlapping", [object]() -> decltype(auto) { return (object->overlapping); });
+  if constexpr (requires { object->overlays_content; }) owner.bind_named("overlaysContent", [object]() -> decltype(auto) { return (object->overlays_content); });
   if constexpr (requires { object->overwrite; }) owner.bind_named("overwrite", [object]() -> decltype(auto) { return (object->overwrite); });
   if constexpr (requires { object->owns_element; }) owner.bind_named("ownsElement", [object]() -> decltype(auto) { return (object->owns_element); });
   if constexpr (requires { object->padding; }) owner.bind_named("padding", [object]() -> decltype(auto) { return (object->padding); });
@@ -5883,6 +5892,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->set_always_on_top; }) owner.bind_named("setAlwaysOnTop", [object]() -> decltype(auto) { return (object->set_always_on_top); });
   if constexpr (requires { object->set_app_menu; }) owner.bind_named("setAppMenu", [object]() -> decltype(auto) { return (object->set_app_menu); });
   if constexpr (requires { object->set_as_default; }) owner.bind_named("setAsDefault", [object]() -> decltype(auto) { return (object->set_as_default); });
+  if constexpr (requires { object->set_background_color; }) owner.bind_named("setBackgroundColor", [object]() -> decltype(auto) { return (object->set_background_color); });
   if constexpr (requires { object->set_badge_count; }) owner.bind_named("setBadgeCount", [object]() -> decltype(auto) { return (object->set_badge_count); });
   if constexpr (requires { object->set_content_protection; }) owner.bind_named("setContentProtection", [object]() -> decltype(auto) { return (object->set_content_protection); });
   if constexpr (requires { object->set_display_size; }) owner.bind_named("setDisplaySize", [object]() -> decltype(auto) { return (object->set_display_size); });
@@ -5900,6 +5910,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->set_name; }) owner.bind_named("setName", [object]() -> decltype(auto) { return (object->set_name); });
   if constexpr (requires { object->set_node; }) owner.bind_named("setNode", [object]() -> decltype(auto) { return (object->set_node); });
   if constexpr (requires { object->set_opacity; }) owner.bind_named("setOpacity", [object]() -> decltype(auto) { return (object->set_opacity); });
+  if constexpr (requires { object->set_overlays_content; }) owner.bind_named("setOverlaysContent", [object]() -> decltype(auto) { return (object->set_overlays_content); });
   if constexpr (requires { object->set_parent; }) owner.bind_named("setParent", [object]() -> decltype(auto) { return (object->set_parent); });
   if constexpr (requires { object->set_playback_state; }) owner.bind_named("setPlaybackState", [object]() -> decltype(auto) { return (object->set_playback_state); });
   if constexpr (requires { object->set_position; }) owner.bind_named("setPosition", [object]() -> decltype(auto) { return (object->set_position); });
@@ -5916,6 +5927,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->set_style; }) owner.bind_named("setStyle", [object]() -> decltype(auto) { return (object->set_style); });
   if constexpr (requires { object->set_title; }) owner.bind_named("setTitle", [object]() -> decltype(auto) { return (object->set_title); });
   if constexpr (requires { object->set_user_model_id; }) owner.bind_named("setUserModelId", [object]() -> decltype(auto) { return (object->set_user_model_id); });
+  if constexpr (requires { object->set_visible; }) owner.bind_named("setVisible", [object]() -> decltype(auto) { return (object->set_visible); });
   if constexpr (requires { object->severity; }) owner.bind_named("severity", [object]() -> decltype(auto) { return (object->severity); });
   if constexpr (requires { object->sh; }) owner.bind_named("sh", [object]() -> decltype(auto) { return (object->sh); });
   if constexpr (requires { object->sh_coefficients; }) owner.bind_named("shCoefficients", [object]() -> decltype(auto) { return (object->sh_coefficients); });
@@ -7702,6 +7714,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(outer_cone_degrees)
   FLIGHT_SDK_ROW_WIDENS(over_state)
   FLIGHT_SDK_ROW_WIDENS(overlapping)
+  FLIGHT_SDK_ROW_WIDENS(overlays_content)
   FLIGHT_SDK_ROW_WIDENS(overwrite)
   FLIGHT_SDK_ROW_WIDENS(owns_element)
   FLIGHT_SDK_ROW_WIDENS(padding)
@@ -8024,6 +8037,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(set_always_on_top)
   FLIGHT_SDK_ROW_WIDENS(set_app_menu)
   FLIGHT_SDK_ROW_WIDENS(set_as_default)
+  FLIGHT_SDK_ROW_WIDENS(set_background_color)
   FLIGHT_SDK_ROW_WIDENS(set_badge_count)
   FLIGHT_SDK_ROW_WIDENS(set_content_protection)
   FLIGHT_SDK_ROW_WIDENS(set_display_size)
@@ -8041,6 +8055,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(set_name)
   FLIGHT_SDK_ROW_WIDENS(set_node)
   FLIGHT_SDK_ROW_WIDENS(set_opacity)
+  FLIGHT_SDK_ROW_WIDENS(set_overlays_content)
   FLIGHT_SDK_ROW_WIDENS(set_parent)
   FLIGHT_SDK_ROW_WIDENS(set_playback_state)
   FLIGHT_SDK_ROW_WIDENS(set_position)
@@ -8057,6 +8072,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(set_style)
   FLIGHT_SDK_ROW_WIDENS(set_title)
   FLIGHT_SDK_ROW_WIDENS(set_user_model_id)
+  FLIGHT_SDK_ROW_WIDENS(set_visible)
   FLIGHT_SDK_ROW_WIDENS(severity)
   FLIGHT_SDK_ROW_WIDENS(sh)
   FLIGHT_SDK_ROW_WIDENS(sh_coefficients)
