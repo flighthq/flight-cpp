@@ -1949,6 +1949,22 @@
       "authoredOn": "2026-10-08"
     },
     {
+      "id": "scene3d-node-appearance-runtime-cache",
+      "path": "flight/scene3d/scene_node_appearance.hpp",
+      "package": "@flighthq/scene3d",
+      "status": "complete",
+      "supplies": "packages/scene3d/src/sceneNodeAppearance.ts",
+      "derivedFrom": "4e7c15f067ba59d005b6faace353b1d2234aba83dda70436cea37457480e7ff4",
+      "reason": "At a627849 the emitter preserves the appearance algorithm but produces an undeclared Traits owner in set_node3_dalpha, structural Node3D rows that cannot recover the flattened exact runtime, and invalid structural parent conversions in the recursive cache path.",
+      "change": "Uses the exact Node3D runtime owner to invalidate local appearance revisions and supplies recursive world-alpha caching with the upstream parent and local revision keys plus the nonzero monotonic world revision counter.",
+      "equivalence": "Directly incrementing Node3DRuntime::appearance_id is the exact invalidateNodeAppearance operation, and reading it is getNodeAppearanceRevision. The exact runtime parent carrier contains only represented Node3D parents, so recursion preserves the source isNode3D guard; after ensuring a parent its world alpha is populated, making value_or(1) equivalent to the source value access. Alpha multiplication, both cache keys, unsigned counter wrap handling, and stable runtime identity otherwise follow the source operation for operation.",
+      "whyNotAPatchOrRepair": "The TypeScript already expresses the portable behavior and its exact-owner boundary is covered by the Scene3D source patch, yet the a627849 emitter still loses that owner as undeclared Traits and structural rows. Declaration repair cannot replace the invalid calls and casts or recover their retained Node3DRuntime identity.",
+      "unblocks": "Scene3D's contract aggregate and scene3d-gl mesh plus instanced-mesh rendering, which consume cached world alpha for per-node opacity.",
+      "remaining": "None in sceneNodeAppearance.ts at this pin.",
+      "expires": "when exact Node3D ownership survives appearance invalidation, revision lookup, parent traversal, and world-alpha caching in the emitted header.",
+      "authoredOn": "2026-10-12"
+    },
+    {
       "id": "mesh-geometry-operations-complete-module",
       "path": "flight/mesh/mesh_geometry_operations.hpp",
       "package": "@flighthq/mesh",
