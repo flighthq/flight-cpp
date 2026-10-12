@@ -59,6 +59,7 @@ struct AbcReader : public flight::ReferenceEnabled {
   bool valid = true;
   flight::Uint8Array source;
   AbcReader(flight::Uint8Array source) {
+    this->source = source;
   }
   flight::Uint8Array read_bytes(double count) {
     if (((this->pos + count) > static_cast<double>(this->source.size()))) {
