@@ -13386,6 +13386,28 @@
       "defect": "The type emitter flattens inherited interface fields into five unrelated C++ owners, discarding the declared Command heritage and preventing identity-preserving shared_ptr widening from each concrete command to its base interface.",
       "expectedWhen": "always",
       "expires": "when emitted reference-backed interfaces retain declared interface heritage instead of duplicating inherited fields; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "node-transform2d-world-revision-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/node/node_transform2d.hpp",
+      "symbol": "compute_node_world_transform_revision",
+      "declaration": "namespace flight::node { template <typename Traits> inline void compute_node_world_transform_revision(std::shared_ptr<flight::types::NodeRuntime<Traits>> runtime, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>>> parent_runtime); }",
+      "diagnostic": "no member named 'compute_node_world_transform_revision' in namespace 'flight::node'",
+      "defect": "revision.hpp includes node.hpp, which reaches node_transform2d.hpp/node_transform3d.hpp while revision.hpp is still guarded and incomplete, so their qualified calls to compute_node_world_transform_revision are parsed before its definition. A declaration at the import boundary names the same function template and breaks only the declaration-order cycle; it relies on source patch node-revision-required-parent-runtime having removed the default argument.",
+      "expectedWhen": "always",
+      "expires": "when cyclic imported functions are declared before package bodies; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "node-transform3d-world-revision-forward-declaration",
+      "kind": "insert-forward-declaration",
+      "appliesTo": "flight/node/node_transform3d.hpp",
+      "symbol": "compute_node_world_transform_revision",
+      "declaration": "namespace flight::node { template <typename Traits> inline void compute_node_world_transform_revision(std::shared_ptr<flight::types::NodeRuntime<Traits>> runtime, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<std::shared_ptr<flight::types::NodeRuntime<Traits>>>>>> parent_runtime); }",
+      "diagnostic": "no member named 'compute_node_world_transform_revision' in namespace 'flight::node'",
+      "defect": "revision.hpp includes node.hpp, which reaches node_transform2d.hpp/node_transform3d.hpp while revision.hpp is still guarded and incomplete, so their qualified calls to compute_node_world_transform_revision are parsed before its definition. A declaration at the import boundary names the same function template and breaks only the declaration-order cycle; it relies on source patch node-revision-required-parent-runtime having removed the default argument.",
+      "expectedWhen": "always",
+      "expires": "when cyclic imported functions are declared before package bodies; sdk:check fails if this repair matches no header."
     }
   ]
 }

@@ -283,6 +283,7 @@
         "flight/interaction/hit_tests.hpp",
         "flight/node/bounds_rectangle.hpp",
         "flight/node/enable_node_guards.hpp",
+        "flight/node/has_bounds_rectangle.hpp",
         "flight/node/hierarchy.hpp",
         "flight/node/node.hpp",
         "flight/node/node_color_adjustment.hpp",
@@ -396,6 +397,8 @@
         "flight/interaction/spatial_query.hpp",
         "flight/node/hierarchy.hpp",
         "flight/node/node.hpp",
+        "flight/node/node_transform2d.hpp",
+        "flight/node/node_transform3d.hpp",
         "flight/node/revision.hpp",
         "flight/render/scene_render.hpp",
         "flight/scene2d/display_object.hpp",
@@ -643,6 +646,8 @@
     },
     {
       "files": [
+        "flight/node/bounds_rectangle.hpp",
+        "flight/node/has_bounds_rectangle.hpp",
         "flight/node/node.hpp",
         "flight/node/node_order_list.hpp",
         "flight/node/stage_fit.hpp",
@@ -1241,8 +1246,7 @@
         "flight/materials/material.hpp",
         "flight/materials/material_presets.hpp",
         "flight/materials/pbr_materials.hpp",
-        "flight/materials/phong_to_pbr.hpp",
-        "flight/materials/surface_material.hpp"
+        "flight/materials/phong_to_pbr.hpp"
       ],
       "id": "materials-unqualified-types-names"
     },
@@ -4673,6 +4677,30 @@
         "flight/types/command.hpp"
       ],
       "id": "command-interface-heritage"
+    },
+    {
+      "files": [
+        "flight/node/hierarchy.hpp"
+      ],
+      "id": "node-hierarchy-ensure-world-matrix-forward-declaration"
+    },
+    {
+      "files": [
+        "flight/node/hierarchy.hpp"
+      ],
+      "id": "node-hierarchy-get-world-matrix-forward-declaration"
+    },
+    {
+      "files": [
+        "flight/node/node_transform2d.hpp"
+      ],
+      "id": "node-transform2d-world-revision-forward-declaration"
+    },
+    {
+      "files": [
+        "flight/node/node_transform3d.hpp"
+      ],
+      "id": "node-transform3d-world-revision-forward-declaration"
     }
   ],
   "sourcePatches": [
@@ -5182,9 +5210,9 @@
     },
     {
       "dependency": "flight",
-      "digest": "7716df2ef0b4c407e6406c83929ff3079c2a924090db59f9b7761921f9831c1c",
-      "id": "materials-exact-construction-owner",
-      "module": "packages/materials/src/material.ts, surfaceMaterial.ts, and the six concrete constructor modules",
+      "digest": "393faa8f8661815524803bed000639d13c970e03180e39458a0059aee0c4a390",
+      "id": "materials-named-standard-block-clone",
+      "module": "packages/materials/src/material.ts",
       "package": "@flighthq/materials"
     },
     {
@@ -5399,23 +5427,37 @@
     },
     {
       "dependency": "flight",
-      "digest": "4651fd0e2285e55066f71f630d9943a09b49f55780fb0cacd34d5d2a3e44be20",
+      "digest": "fd8be781f5219275d68994724bf8c595d25a2113f946787715456306666cf76e",
       "id": "node-exact-runtime-and-owner-paths",
       "module": "packages/node/src/node.ts, hierarchy.ts, and traversal.ts",
       "package": "@flighthq/node"
     },
     {
       "dependency": "flight",
-      "digest": "9a1f0f48af038749d84b569d7367e7fd08346c0405ef9b7be342bd1e3a6bdc80",
+      "digest": "7ee1c044da0b9c0d3645862062ebe167442078d5d1a343ccc72cccf2dabe6fbf",
       "id": "node-exact-capability-runtimes",
       "module": "node transform, bounds, color-adjustment, revision, ordering, fit, hierarchy, traversal, and their capability type contracts",
       "package": "@flighthq/node"
     },
     {
       "dependency": "flight",
-      "digest": "fa4a0affb2f909ad6cf32356d5fd16d3cc8aaf352052f0384ac42aec769d9db3",
+      "digest": "330857683895def9c717aa2c6012db54b36c43b7514d7b7c3d7f111d808bced9",
       "id": "node-exact-runtime-helper-boundaries",
       "module": "packages/node/src/boundsRectangle.ts, nodeTransform2d.ts, and nodeTransform3d.ts",
+      "package": "@flighthq/node"
+    },
+    {
+      "dependency": "flight",
+      "digest": "af2e19a517930ee72ae17a5de1cdd42f816536a1a4af890187458aaad25cf024",
+      "id": "node-bounds-validity-explicit-carrier",
+      "module": "packages/node/src/hasBoundsRectangle.ts",
+      "package": "@flighthq/node"
+    },
+    {
+      "dependency": "flight",
+      "digest": "eba48b1d8650e71f7fa9f6fcdc4e31c8b7b64e4be04c2944fc690fb2d2a85248",
+      "id": "node-revision-required-parent-runtime",
+      "module": "packages/node/src/revision.ts",
       "package": "@flighthq/node"
     },
     {
@@ -5672,16 +5714,16 @@
     },
     {
       "dependency": "flight",
-      "digest": "393faa8f8661815524803bed000639d13c970e03180e39458a0059aee0c4a390",
-      "id": "materials-named-standard-block-clone",
-      "module": "packages/materials/src/material.ts",
+      "digest": "ce881c33e262bfcb225d49a6fbfcdbaf7da39197cf26d52e9a8701b501443be6",
+      "id": "materials-glass-preset-option-boundary",
+      "module": "packages/materials/src/materialPresets.ts",
       "package": "@flighthq/materials"
     },
     {
       "dependency": "flight",
-      "digest": "ce881c33e262bfcb225d49a6fbfcdbaf7da39197cf26d52e9a8701b501443be6",
-      "id": "materials-glass-preset-option-boundary",
-      "module": "packages/materials/src/materialPresets.ts",
+      "digest": "f1f2e82c09eec7231defeaa3810416b780d7f20630b51b57b6370c403b07ca98",
+      "id": "materials-exact-construction-owner",
+      "module": "packages/materials/src/material3d.ts",
       "package": "@flighthq/materials"
     },
     {
@@ -5693,7 +5735,7 @@
     },
     {
       "dependency": "flight",
-      "digest": "b9b0d3955a48fec20348c290f9c13744fe6f9b33e068e5d620ee7a17e85f8a76",
+      "digest": "0c1655f66804c636af13bf39f23fd6221094a2290437e89fc692997ba2176562",
       "id": "materials-standard-pbr-exact-owner-initialization",
       "module": "packages/materials/src/pbrMaterials.ts",
       "package": "@flighthq/materials"
@@ -6046,6 +6088,7 @@
       "flight/layout/anchor_layout.hpp",
       "flight/layout/flex_layout.hpp",
       "flight/layout/grid_layout.hpp",
+      "flight/materials/material_presets.hpp",
       "flight/media/audio_mixer.hpp",
       "flight/media/video_channel.hpp",
       "flight/midi/midi_subscription.hpp",
@@ -6306,7 +6349,7 @@
       "package": "@flighthq/adjustments",
       "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 22
@@ -6510,7 +6553,7 @@
       "package": "@flighthq/color",
       "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 11
@@ -6667,7 +6710,7 @@
       "package": "@flighthq/entity",
       "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 10
@@ -6739,7 +6782,7 @@
       "package": "@flighthq/geometry",
       "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 30
@@ -6955,7 +6998,7 @@
       "package": "@flighthq/log",
       "refusedModules": 1,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 3
@@ -6963,11 +7006,11 @@
     {
       "cppIncludePrefix": "flight/materials",
       "cppNamespace": "flight::materials",
-      "emittedModules": 24,
+      "emittedModules": 23,
       "package": "@flighthq/materials",
-      "refusedModules": 0,
+      "refusedModules": 1,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 24
@@ -6979,7 +7022,7 @@
       "package": "@flighthq/math",
       "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 17
@@ -7087,7 +7130,7 @@
       "package": "@flighthq/node",
       "refusedModules": 0,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 21
@@ -7665,7 +7708,7 @@
       "package": "@flighthq/signals",
       "refusedModules": 2,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 10
@@ -8138,8 +8181,8 @@
   },
   "summary": {
     "packages": 154,
-    "emittedModules": 2378,
-    "refusedModules": 560,
+    "emittedModules": 2377,
+    "refusedModules": 561,
     "sourceModules": 2938
   }
 }

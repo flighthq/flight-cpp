@@ -1,0 +1,13 @@
+diff --git a/packages/node/src/revision.ts b/packages/node/src/revision.ts
+index c75618a..d09e042 100644
+--- a/packages/node/src/revision.ts
++++ b/packages/node/src/revision.ts
+@@ -10,7 +10,7 @@ import { getMutableNodeRuntime, getNodeRuntime } from './node.ts';
+ // never reaches grandchildren. A fresh monotonic revision per recompute is unconditionally propagating.
+ export function computeNodeWorldTransformRevision<Traits extends object>(
+   runtime: NodeRuntime<Traits>,
+-  parentRuntime?: Readonly<NodeRuntime<Traits>>,
++  parentRuntime: Readonly<NodeRuntime<Traits>> | undefined,
+ ): void {
+   runtime.worldTransformUsingLocalTransformId = runtime.localTransformId;
+   runtime.worldTransformUsingParentTransformId = parentRuntime ? parentRuntime.worldTransformId : 0;

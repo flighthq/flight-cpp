@@ -2559,6 +2559,23 @@
       "appliedOn": "2026-10-09"
     },
     {
+      "id": "node-revision-required-parent-runtime",
+      "dependency": "flight",
+      "patch": "node-revision-required-parent-runtime.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/node/src/revision.ts",
+      "package": "@flighthq/node",
+      "answers": "diagnostic",
+      "refusal": "flight/node/revision.hpp: compute_node_world_transform_revision is defined with a defaulted parent_runtime parameter and reached through the revision -> node -> node_transform2d/3d include cycle before its definition; a forward declaration cannot be inserted because a function template may not gain a default argument after it is declared",
+      "rewrite": "Declares computeNodeWorldTransformRevision's parentRuntime as an explicit `Readonly<NodeRuntime<Traits>> | undefined` instead of an optional parameter, so the emitted definition has no default argument and the existing callers can be reached through a forward declaration (repairs node-transform2d/3d-world-revision-forward-declaration).",
+      "equivalence": "Both call sites (nodeTransform2d.ts and nodeTransform3d.ts) already pass parentRuntime explicitly, possibly undefined. In JavaScript an omitted argument and an explicit undefined are the same value, and the body only tests `parentRuntime ? ... : 0`, so every observable result is unchanged. This NARROWS the exported TypeScript/C++ signature: a one-argument call no longer type-checks. No caller in the SDK makes one; a consumer that does must pass undefined.",
+      "whyNotUpstreamFirst": "The emitter both writes the default on the definition and enters this function through an include cycle; upstream needs to emit default arguments on a leading declaration (as it did at 7e2fc7d). Until then the only alternatives are this signature change or a whole-file override of revision.hpp.",
+      "unblocks": "flight/node/revision.hpp, node_transform2d.hpp, node_transform3d.hpp and every header that includes node.hpp.",
+      "expires": "when the emitter places default arguments on a forward declaration for functions reached through an include cycle.",
+      "appliedOn": "2026-10-11",
+      "verification": "Node-scoped generation at a627849 emits the definition without a default; with the forward-declaration repairs, flight/node/revision.hpp, node_transform2d.hpp, node_transform3d.hpp and node.hpp each compile alone under clang 22. TypeScript overloads were tried first and the emitter collapses them into the same defaulted definition."
+    },
+    {
       "id": "scene2d-canvas-text-label-base-cache",
       "dependency": "flight",
       "patch": "scene2d-canvas-text-label-base-cache.patch",

@@ -2233,7 +2233,7 @@
       "code": "dependency-refused",
       "module": "packages/geometry/src/contract.ts",
       "package": "@flighthq/geometry",
-      "reason": "dependency ./enableGeometryPoolGuards was refused for @flighthq/geometry/packages/geometry/src/enableGeometryPoolGuards.ts",
+      "reason": "dependency ./enableGeometryPoolGuards.ts was refused for @flighthq/geometry/packages/geometry/src/enableGeometryPoolGuards.ts",
       "stage": "dependency"
     },
     {
@@ -2247,7 +2247,7 @@
       "code": "dependency-refused",
       "module": "packages/geometry/src/index.ts",
       "package": "@flighthq/geometry",
-      "reason": "dependency ./contract was refused for @flighthq/geometry/packages/geometry/src/contract.ts",
+      "reason": "dependency ./enableGeometryPoolGuards.ts was refused for @flighthq/geometry/packages/geometry/src/enableGeometryPoolGuards.ts",
       "stage": "dependency"
     },
     {
@@ -2887,14 +2887,14 @@
       "code": "dependency-refused",
       "module": "packages/log/src/contract.ts",
       "package": "@flighthq/log",
-      "reason": "dependency ./log was refused for @flighthq/log/packages/log/src/log.ts",
+      "reason": "dependency ./log.ts was refused for @flighthq/log/packages/log/src/log.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/log/src/index.ts",
       "package": "@flighthq/log",
-      "reason": "dependency ./contract was refused for @flighthq/log/packages/log/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/log/packages/log/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -2910,7 +2910,7 @@
       "code": "dependency-refused",
       "module": "packages/materials/src/contract.ts",
       "package": "@flighthq/materials",
-      "reason": "dependency ./enableMaterialConversionGuards was refused for @flighthq/materials/packages/materials/src/enableMaterialConversionGuards.ts",
+      "reason": "dependency ./materialPresets.ts was refused for @flighthq/materials/packages/materials/src/materialPresets.ts",
       "stage": "dependency"
     },
     {
@@ -2924,8 +2924,17 @@
       "code": "dependency-refused",
       "module": "packages/materials/src/index.ts",
       "package": "@flighthq/materials",
-      "reason": "dependency ./contract was refused for @flighthq/materials/packages/materials/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/materials/packages/materials/src/contract.ts",
       "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 21,
+      "module": "packages/materials/src/materialPresets.ts",
+      "package": "@flighthq/materials",
+      "reason": "cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: structural-row construction requires explicit named properties",
+      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -3090,7 +3099,7 @@
       "code": "dependency-refused",
       "module": "packages/node/src/contract.ts",
       "package": "@flighthq/node",
-      "reason": "dependency ./enableNodeGuards was refused for @flighthq/node/packages/node/src/enableNodeGuards.ts",
+      "reason": "dependency ./enableNodeGuards.ts was refused for @flighthq/node/packages/node/src/enableNodeGuards.ts",
       "stage": "dependency"
     },
     {
@@ -3104,7 +3113,7 @@
       "code": "dependency-refused",
       "module": "packages/node/src/index.ts",
       "package": "@flighthq/node",
-      "reason": "dependency ./contract was refused for @flighthq/node/packages/node/src/contract.ts",
+      "reason": "dependency ./enableNodeGuards.ts was refused for @flighthq/node/packages/node/src/enableNodeGuards.ts",
       "stage": "dependency"
     },
     {
@@ -7318,21 +7327,21 @@
       "code": "dependency-refused",
       "module": "packages/signals/src/contract.ts",
       "package": "@flighthq/signals",
-      "reason": "dependency ./connection was refused for @flighthq/signals/packages/signals/src/connection.ts",
+      "reason": "dependency ./connection.ts was refused for @flighthq/signals/packages/signals/src/connection.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/signals/src/index.ts",
       "package": "@flighthq/signals",
-      "reason": "dependency ./contract was refused for @flighthq/signals/packages/signals/src/contract.ts",
+      "reason": "dependency ./connection.ts was refused for @flighthq/signals/packages/signals/src/connection.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/signals/src/scope.ts",
       "package": "@flighthq/signals",
-      "reason": "dependency ./connection was refused for @flighthq/signals/packages/signals/src/connection.ts",
+      "reason": "dependency ./connection.ts was refused for @flighthq/signals/packages/signals/src/connection.ts",
       "stage": "dependency"
     },
     {

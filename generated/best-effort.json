@@ -98,7 +98,8 @@
     },
     {
       "consumers": [
-        "@flighthq/adjustments/packages/adjustments/src/contract.ts"
+        "@flighthq/adjustments/packages/adjustments/src/contract.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts"
       ],
       "module": {
         "name": "BrightnessContrastAdjustment",
@@ -110,7 +111,8 @@
     },
     {
       "consumers": [
-        "@flighthq/adjustments/packages/adjustments/src/contract.ts"
+        "@flighthq/adjustments/packages/adjustments/src/contract.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts"
       ],
       "module": {
         "name": "ChannelMixerAdjustment",
@@ -123,6 +125,7 @@
     {
       "consumers": [
         "@flighthq/adjustments/packages/adjustments/src/contract.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts",
         "@flighthq/node/packages/node/src/nodeColorAdjustment.ts"
       ],
       "module": {
@@ -135,7 +138,8 @@
     },
     {
       "consumers": [
-        "@flighthq/adjustments/packages/adjustments/src/contract.ts"
+        "@flighthq/adjustments/packages/adjustments/src/contract.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts"
       ],
       "module": {
         "name": "ColorBlindSimulationAdjustment",
@@ -147,7 +151,8 @@
     },
     {
       "consumers": [
-        "@flighthq/adjustments/packages/adjustments/src/contract.ts"
+        "@flighthq/adjustments/packages/adjustments/src/contract.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts"
       ],
       "module": {
         "name": "ColorGradeAdjustment",
@@ -161,6 +166,7 @@
       "consumers": [
         "@flighthq/adjustments/packages/adjustments/src/colorLutCache.ts",
         "@flighthq/adjustments/packages/adjustments/src/contract.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts",
         "@flighthq/adjustments/packages/adjustments/src/lookupTableGradeAdjustment.ts",
         "@flighthq/effects-canvas/packages/effects-canvas/src/canvasColorLutPass.ts"
       ],
@@ -178,6 +184,7 @@
         "@flighthq/adjustments/packages/adjustments/src/colorLutCache.ts",
         "@flighthq/adjustments/packages/adjustments/src/contract.ts",
         "@flighthq/adjustments/packages/adjustments/src/hueSaturationAdjustment.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts",
         "@flighthq/adjustments/packages/adjustments/src/liftGammaGainAdjustment.ts",
         "@flighthq/adjustments/packages/adjustments/src/lookupTableGradeAdjustment.ts",
         "@flighthq/effects-canvas/packages/effects-canvas/src/canvasEffectState.ts",
@@ -195,6 +202,7 @@
     {
       "consumers": [
         "@flighthq/adjustments/packages/adjustments/src/contract.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts",
         "@flighthq/effects-canvas/packages/effects-canvas/src/canvasEffectState.ts",
         "@flighthq/effects-gl/packages/effects-gl/src/glEffectState.ts",
         "@flighthq/effects-wgpu/packages/effects-wgpu/src/wgpuEffectState.ts"
@@ -218,6 +226,7 @@
         "@flighthq/adjustments/packages/adjustments/src/contract.ts",
         "@flighthq/adjustments/packages/adjustments/src/exposureAdjustment.ts",
         "@flighthq/adjustments/packages/adjustments/src/grayscaleAdjustment.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts",
         "@flighthq/adjustments/packages/adjustments/src/invertAdjustment.ts",
         "@flighthq/adjustments/packages/adjustments/src/sepiaAdjustment.ts",
         "@flighthq/adjustments/packages/adjustments/src/tintAdjustment.ts",
@@ -240,6 +249,7 @@
         "@flighthq/adjustments/packages/adjustments/src/colorAdjustmentResolution.ts",
         "@flighthq/adjustments/packages/adjustments/src/colorMatrixAdjustment.ts",
         "@flighthq/adjustments/packages/adjustments/src/contract.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts",
         "@flighthq/effects-canvas/packages/effects-canvas/src/canvasEffectState.ts",
         "@flighthq/effects-gl/packages/effects-gl/src/glEffectState.ts",
         "@flighthq/effects-wgpu/packages/effects-wgpu/src/wgpuEffectState.ts",
@@ -256,6 +266,7 @@
     {
       "consumers": [
         "@flighthq/adjustments/packages/adjustments/src/contract.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts"
       ],
       "module": {
@@ -267,9 +278,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/adjustments/packages/adjustments/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/adjustments",
@@ -280,7 +289,8 @@
     },
     {
       "consumers": [
-        "@flighthq/adjustments/packages/adjustments/src/contract.ts"
+        "@flighthq/adjustments/packages/adjustments/src/contract.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts"
       ],
       "module": {
         "name": "ExposureAdjustment",
@@ -292,7 +302,8 @@
     },
     {
       "consumers": [
-        "@flighthq/adjustments/packages/adjustments/src/contract.ts"
+        "@flighthq/adjustments/packages/adjustments/src/contract.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts"
       ],
       "module": {
         "name": "GrayscaleAdjustment",
@@ -304,7 +315,8 @@
     },
     {
       "consumers": [
-        "@flighthq/adjustments/packages/adjustments/src/contract.ts"
+        "@flighthq/adjustments/packages/adjustments/src/contract.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts"
       ],
       "module": {
         "name": "HueSaturationAdjustment",
@@ -326,7 +338,8 @@
     },
     {
       "consumers": [
-        "@flighthq/adjustments/packages/adjustments/src/contract.ts"
+        "@flighthq/adjustments/packages/adjustments/src/contract.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts"
       ],
       "module": {
         "name": "InvertAdjustment",
@@ -338,7 +351,8 @@
     },
     {
       "consumers": [
-        "@flighthq/adjustments/packages/adjustments/src/contract.ts"
+        "@flighthq/adjustments/packages/adjustments/src/contract.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts"
       ],
       "module": {
         "name": "LiftGammaGainAdjustment",
@@ -350,7 +364,8 @@
     },
     {
       "consumers": [
-        "@flighthq/adjustments/packages/adjustments/src/contract.ts"
+        "@flighthq/adjustments/packages/adjustments/src/contract.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts"
       ],
       "module": {
         "name": "LookupTableGradeAdjustment",
@@ -362,7 +377,8 @@
     },
     {
       "consumers": [
-        "@flighthq/adjustments/packages/adjustments/src/contract.ts"
+        "@flighthq/adjustments/packages/adjustments/src/contract.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts"
       ],
       "module": {
         "name": "SepiaAdjustment",
@@ -375,6 +391,7 @@
     {
       "consumers": [
         "@flighthq/adjustments/packages/adjustments/src/contract.ts",
+        "@flighthq/adjustments/packages/adjustments/src/index.ts",
         "@flighthq/node/packages/node/src/nodeColorAdjustment.ts"
       ],
       "module": {
@@ -9209,7 +9226,8 @@
     },
     {
       "consumers": [
-        "@flighthq/entity/packages/entity/src/contract.ts"
+        "@flighthq/entity/packages/entity/src/contract.ts",
+        "@flighthq/entity/packages/entity/src/index.ts"
       ],
       "module": {
         "name": "Binding",
@@ -9221,7 +9239,8 @@
     },
     {
       "consumers": [
-        "@flighthq/entity/packages/entity/src/contract.ts"
+        "@flighthq/entity/packages/entity/src/contract.ts",
+        "@flighthq/entity/packages/entity/src/index.ts"
       ],
       "module": {
         "name": "Clone",
@@ -9232,9 +9251,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/entity/packages/entity/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/entity",
@@ -9245,7 +9262,8 @@
     },
     {
       "consumers": [
-        "@flighthq/entity/packages/entity/src/contract.ts"
+        "@flighthq/entity/packages/entity/src/contract.ts",
+        "@flighthq/entity/packages/entity/src/index.ts"
       ],
       "module": {
         "name": "EnableEntityRuntimeGuards",
@@ -9383,6 +9401,7 @@
         "@flighthq/effects/packages/effects/src/volumetricLightEffect.ts",
         "@flighthq/effects/packages/effects/src/whiteBalanceEffect.ts",
         "@flighthq/entity/packages/entity/src/contract.ts",
+        "@flighthq/entity/packages/entity/src/index.ts",
         "@flighthq/flow/packages/flow/src/flow.ts",
         "@flighthq/font-formats/packages/font-formats/src/openTypeGlyphOutlineSource.ts",
         "@flighthq/font/packages/font/src/fontResource.ts",
@@ -9666,7 +9685,8 @@
     },
     {
       "consumers": [
-        "@flighthq/entity/packages/entity/src/contract.ts"
+        "@flighthq/entity/packages/entity/src/contract.ts",
+        "@flighthq/entity/packages/entity/src/index.ts"
       ],
       "module": {
         "name": "EntityUid",
@@ -9678,7 +9698,8 @@
     },
     {
       "consumers": [
-        "@flighthq/entity/packages/entity/src/contract.ts"
+        "@flighthq/entity/packages/entity/src/contract.ts",
+        "@flighthq/entity/packages/entity/src/index.ts"
       ],
       "module": {
         "name": "ExplainEntityRuntimeWrite",
@@ -9691,7 +9712,8 @@
     {
       "consumers": [
         "@flighthq/entity/packages/entity/src/contract.ts",
-        "@flighthq/entity/packages/entity/src/enableEntityRuntimeGuards.ts"
+        "@flighthq/entity/packages/entity/src/enableEntityRuntimeGuards.ts",
+        "@flighthq/entity/packages/entity/src/index.ts"
       ],
       "module": {
         "name": "Guards",
@@ -9718,6 +9740,7 @@
         "@flighthq/entity/packages/entity/src/binding.ts",
         "@flighthq/entity/packages/entity/src/contract.ts",
         "@flighthq/entity/packages/entity/src/entityUid.ts",
+        "@flighthq/entity/packages/entity/src/index.ts",
         "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuHost.ts",
         "@flighthq/render/packages/render/src/renderViewport.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene2DMaterialization.ts",
@@ -10324,6 +10347,7 @@
     {
       "consumers": [
         "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometry.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryCompute.ts",
         "@flighthq/mesh/packages/mesh/src/meshGeometryDeformationClone.ts",
@@ -10348,6 +10372,7 @@
     {
       "consumers": [
         "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/prepareGlScene3DForwardLights.ts",
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/prepareWgpuScene3DForwardLights.ts"
       ],
@@ -10361,7 +10386,8 @@
     },
     {
       "consumers": [
-        "@flighthq/geometry/packages/geometry/src/contract.ts"
+        "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts"
       ],
       "module": {
         "name": "Capsule",
@@ -10372,9 +10398,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/geometry/packages/geometry/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/geometry",
@@ -10388,7 +10412,8 @@
     },
     {
       "consumers": [
-        "@flighthq/geometry/packages/geometry/src/contract.ts"
+        "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts"
       ],
       "module": {
         "name": "EnableGeometryPoolGuards",
@@ -10405,6 +10430,7 @@
       "consumers": [
         "@flighthq/camera/packages/camera/src/culling.ts",
         "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/render/packages/render/src/sceneRender.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneNodeCulling.ts"
       ],
@@ -10418,6 +10444,7 @@
     },
     {
       "consumers": [
+        "@flighthq/geometry/packages/geometry/src/contract.ts",
         "@flighthq/geometry/packages/geometry/src/enableGeometryPoolGuards.ts",
         "@flighthq/geometry/packages/geometry/src/matrix3Pool.ts",
         "@flighthq/geometry/packages/geometry/src/matrix4Pool.ts",
@@ -10445,7 +10472,7 @@
       },
       "path": "flight/geometry/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/geometry/packages/geometry/src/contract.ts"
+        "@flighthq/geometry/packages/geometry/src/enableGeometryPoolGuards.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -10458,6 +10485,7 @@
         "@flighthq/clip/packages/clip/src/clipRegion.ts",
         "@flighthq/effects/packages/effects/src/renderEffectCaptureGeometry.ts",
         "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/geometry/packages/geometry/src/matrixPool.ts",
         "@flighthq/gizmo/packages/gizmo/src/node2dGizmoFeatures.ts",
         "@flighthq/interaction/packages/interaction/src/hitTests.ts",
@@ -10515,6 +10543,7 @@
     {
       "consumers": [
         "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/geometry/packages/geometry/src/matrix3Pool.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureView.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glScale9Sprite.ts",
@@ -10542,6 +10571,7 @@
     {
       "consumers": [
         "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/geometry/packages/geometry/src/matrix3.ts"
       ],
       "module": {
@@ -10562,6 +10592,7 @@
         "@flighthq/camera/packages/camera/src/projection.ts",
         "@flighthq/camera/packages/camera/src/reflection.ts",
         "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/geometry/packages/geometry/src/matrix4Pool.ts",
         "@flighthq/geometry/packages/geometry/src/transform3d.ts",
         "@flighthq/node/packages/node/src/nodeTransform3d.ts",
@@ -10596,6 +10627,7 @@
     {
       "consumers": [
         "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/geometry/packages/geometry/src/matrix4.ts",
         "@flighthq/node/packages/node/src/nodeTransform3d.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene3DMaterialization.ts"
@@ -10611,6 +10643,7 @@
     {
       "consumers": [
         "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/node/packages/node/src/boundsRectangle.ts",
         "@flighthq/node/packages/node/src/hierarchy.ts",
         "@flighthq/render-gl/packages/render-gl/src/glRenderTarget.ts",
@@ -10626,7 +10659,8 @@
     },
     {
       "consumers": [
-        "@flighthq/geometry/packages/geometry/src/contract.ts"
+        "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts"
       ],
       "module": {
         "name": "Obb",
@@ -10639,7 +10673,8 @@
     {
       "consumers": [
         "@flighthq/geometry/packages/geometry/src/contract.ts",
-        "@flighthq/geometry/packages/geometry/src/frustum.ts"
+        "@flighthq/geometry/packages/geometry/src/frustum.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts"
       ],
       "module": {
         "name": "Plane",
@@ -10652,6 +10687,7 @@
     {
       "consumers": [
         "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/geometry/packages/geometry/src/quaternionPool.ts",
         "@flighthq/geometry/packages/geometry/src/transform3d.ts",
         "@flighthq/node/packages/node/src/hasTransform3d.ts",
@@ -10674,7 +10710,8 @@
     },
     {
       "consumers": [
-        "@flighthq/geometry/packages/geometry/src/contract.ts"
+        "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts"
       ],
       "module": {
         "name": "QuaternionPool",
@@ -10687,6 +10724,7 @@
     {
       "consumers": [
         "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/picking/packages/picking/src/pickScene3D.ts"
       ],
       "module": {
@@ -10706,6 +10744,7 @@
         "@flighthq/clip/packages/clip/src/clipRegion.ts",
         "@flighthq/effects/packages/effects/src/renderEffectCaptureGeometry.ts",
         "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/geometry/packages/geometry/src/rectanglePool.ts",
         "@flighthq/gizmo/packages/gizmo/src/gizmoAlignment.ts",
         "@flighthq/gizmo/packages/gizmo/src/gizmoState.ts",
@@ -10735,7 +10774,8 @@
     },
     {
       "consumers": [
-        "@flighthq/geometry/packages/geometry/src/contract.ts"
+        "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts"
       ],
       "module": {
         "name": "RectanglePool",
@@ -10748,6 +10788,7 @@
     {
       "consumers": [
         "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/node/packages/node/src/hierarchy.ts",
         "@flighthq/node/packages/node/src/nodeTransform2d.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts"
@@ -10763,6 +10804,7 @@
     {
       "consumers": [
         "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/scene-document/packages/scene-document/src/flightDocumentText.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene3DMaterialization.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
@@ -10786,6 +10828,7 @@
         "@flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts",
         "@flighthq/bitmaptext/packages/bitmaptext/src/updateBitmapText.ts",
         "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/particleemitter/packages/particleemitter/src/particleEmitter.ts",
         "@flighthq/particleemitter/packages/particleemitter/src/particleEmitter3D.ts",
         "@flighthq/particles/packages/particles/src/particleEmitterState.ts",
@@ -10806,6 +10849,7 @@
         "@flighthq/camera/packages/camera/src/zoom.ts",
         "@flighthq/collision/packages/collision/src/shapeCollision2D.ts",
         "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/geometry/packages/geometry/src/vector2Pool.ts",
         "@flighthq/gizmo/packages/gizmo/src/gizmoState.ts",
         "@flighthq/motionpath/packages/motionpath/src/motionPath.ts",
@@ -10821,7 +10865,8 @@
     },
     {
       "consumers": [
-        "@flighthq/geometry/packages/geometry/src/contract.ts"
+        "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts"
       ],
       "module": {
         "name": "Vector2Pool",
@@ -10839,6 +10884,7 @@
         "@flighthq/geometry/packages/geometry/src/aabb.ts",
         "@flighthq/geometry/packages/geometry/src/boundingSphere.ts",
         "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/geometry/packages/geometry/src/ray3d.ts",
         "@flighthq/geometry/packages/geometry/src/transform3d.ts",
         "@flighthq/geometry/packages/geometry/src/vector3Pool.ts",
@@ -10868,7 +10914,8 @@
     },
     {
       "consumers": [
-        "@flighthq/geometry/packages/geometry/src/contract.ts"
+        "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts"
       ],
       "module": {
         "name": "Vector3Pool",
@@ -10881,6 +10928,7 @@
     {
       "consumers": [
         "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts",
         "@flighthq/geometry/packages/geometry/src/vector4Pool.ts"
       ],
       "module": {
@@ -10893,7 +10941,8 @@
     },
     {
       "consumers": [
-        "@flighthq/geometry/packages/geometry/src/contract.ts"
+        "@flighthq/geometry/packages/geometry/src/contract.ts",
+        "@flighthq/geometry/packages/geometry/src/index.ts"
       ],
       "module": {
         "name": "Vector4Pool",
@@ -13687,7 +13736,8 @@
       },
       "path": "flight/materials/contract.hpp",
       "refusedDependencies": [
-        "@flighthq/materials/packages/materials/src/enableMaterialConversionGuards.ts"
+        "@flighthq/materials/packages/materials/src/enableMaterialConversionGuards.ts",
+        "@flighthq/materials/packages/materials/src/materialPresets.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -13775,7 +13825,7 @@
     {
       "consumers": [
         "@flighthq/materials/packages/materials/src/contract.ts",
-        "@flighthq/materials/packages/materials/src/surfaceMaterial.ts",
+        "@flighthq/materials/packages/materials/src/material3d.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocument.ts"
       ],
       "module": {
@@ -13788,7 +13838,38 @@
     },
     {
       "consumers": [
+        "@flighthq/materials/packages/materials/src/classicMaterials.ts",
+        "@flighthq/materials/packages/materials/src/contract.ts",
+        "@flighthq/materials/packages/materials/src/customShaderMaterial.ts",
+        "@flighthq/materials/packages/materials/src/extendedPbrMaterial.ts",
+        "@flighthq/materials/packages/materials/src/pbrMaterials.ts",
+        "@flighthq/materials/packages/materials/src/unlitMaterials.ts"
+      ],
+      "module": {
+        "name": "Material3d",
+        "packageName": "@flighthq/materials",
+        "source": "packages/materials/src/material3d.ts"
+      },
+      "path": "flight/materials/material3d.hpp",
+      "status": "emitted"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
         "@flighthq/materials/packages/materials/src/contract.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:04afc2e7bba4c440318aa1234d2e79ad80935d76e564e78e977f7dcce1ff18b2",
+        "sha256:1488832639f4de322e3845d3849590d78bbbb088e67585a9281843b427830a3f",
+        "sha256:2bcb9bbc9b77831f94988de5bd8c0a87874f61efd7bc8f4b19c3453d7fd174ad",
+        "sha256:55c42fbb0bff41418539ff5c3a1f90a7d78f2bc2af6d4cf9095e65101d4efc76",
+        "sha256:7428f6b16bccff012e480fc0a7a57663747249c6d2cf7fb89276edf1cafe29d5",
+        "sha256:82dbf7e022e1bdbd7cead5177d34a8532e8022f8f2816b39e21346c495aeda22",
+        "sha256:9cc402b501a15e413ba5933662f34c5a77eb5704f2bfcd2c4b7d497f5e596ae7",
+        "sha256:af8bef03f149454ed63ba52e7ff8deb3b8b5f4edeee9b3642b16369fbe993dc6",
+        "sha256:e28e49a1b84a7e16e656194b46985c3ff96228c78fee24ae4022300f0cba392f",
+        "sha256:f424127342ad8ac8b907cec090826a374b397ec574dfc15cd39253c81529d4c0",
+        "sha256:fa9a67c2ecbd04baca94f4865806d84b3f0e7d3dd777914237de3a9766f9ecea"
       ],
       "module": {
         "name": "MaterialPresets",
@@ -13796,7 +13877,7 @@
         "source": "packages/materials/src/materialPresets.ts"
       },
       "path": "flight/materials/material_presets.hpp",
-      "status": "emitted"
+      "status": "refused-placeholder"
     },
     {
       "consumers": [
@@ -13906,23 +13987,6 @@
         "source": "packages/materials/src/standardMaterial.ts"
       },
       "path": "flight/materials/standard_material.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/materials/packages/materials/src/classicMaterials.ts",
-        "@flighthq/materials/packages/materials/src/contract.ts",
-        "@flighthq/materials/packages/materials/src/customShaderMaterial.ts",
-        "@flighthq/materials/packages/materials/src/extendedPbrMaterial.ts",
-        "@flighthq/materials/packages/materials/src/pbrMaterials.ts",
-        "@flighthq/materials/packages/materials/src/unlitMaterials.ts"
-      ],
-      "module": {
-        "name": "SurfaceMaterial",
-        "packageName": "@flighthq/materials",
-        "source": "packages/materials/src/surfaceMaterial.ts"
-      },
-      "path": "flight/materials/surface_material.hpp",
       "status": "emitted"
     },
     {
@@ -15118,6 +15182,7 @@
         "@flighthq/interaction/packages/interaction/src/interactionSpatialIndex.ts",
         "@flighthq/interaction/packages/interaction/src/spatialQuery.ts",
         "@flighthq/node/packages/node/src/contract.ts",
+        "@flighthq/node/packages/node/src/index.ts",
         "@flighthq/render/packages/render/src/renderViewport.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasCache.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domScale9Shape.ts",
@@ -15143,9 +15208,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/node/packages/node/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/node",
@@ -15159,7 +15222,8 @@
     },
     {
       "consumers": [
-        "@flighthq/node/packages/node/src/contract.ts"
+        "@flighthq/node/packages/node/src/contract.ts",
+        "@flighthq/node/packages/node/src/index.ts"
       ],
       "module": {
         "name": "EnableNodeGuards",
@@ -15176,6 +15240,7 @@
       "consumers": [
         "@flighthq/gui/packages/gui/src/guiTestHelper.ts",
         "@flighthq/node/packages/node/src/contract.ts",
+        "@flighthq/node/packages/node/src/index.ts",
         "@flighthq/scene2d/packages/scene2d/src/displayObject.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneNode.ts"
       ],
@@ -15190,6 +15255,7 @@
     {
       "consumers": [
         "@flighthq/node/packages/node/src/contract.ts",
+        "@flighthq/node/packages/node/src/index.ts",
         "@flighthq/scene2d/packages/scene2d/src/displayObject.ts"
       ],
       "module": {
@@ -15204,6 +15270,7 @@
       "consumers": [
         "@flighthq/gui/packages/gui/src/guiTestHelper.ts",
         "@flighthq/node/packages/node/src/contract.ts",
+        "@flighthq/node/packages/node/src/index.ts",
         "@flighthq/scene2d/packages/scene2d/src/displayObject.ts"
       ],
       "module": {
@@ -15217,6 +15284,7 @@
     {
       "consumers": [
         "@flighthq/node/packages/node/src/contract.ts",
+        "@flighthq/node/packages/node/src/index.ts",
         "@flighthq/scene2d/packages/scene2d/src/displayObject.ts"
       ],
       "module": {
@@ -15230,6 +15298,7 @@
     {
       "consumers": [
         "@flighthq/node/packages/node/src/contract.ts",
+        "@flighthq/node/packages/node/src/index.ts",
         "@flighthq/scene2d/packages/scene2d/src/displayObject.ts"
       ],
       "module": {
@@ -15244,6 +15313,7 @@
       "consumers": [
         "@flighthq/gui/packages/gui/src/guiTestHelper.ts",
         "@flighthq/node/packages/node/src/contract.ts",
+        "@flighthq/node/packages/node/src/index.ts",
         "@flighthq/scene2d/packages/scene2d/src/displayObject.ts"
       ],
       "module": {
@@ -15257,6 +15327,7 @@
     {
       "consumers": [
         "@flighthq/node/packages/node/src/contract.ts",
+        "@flighthq/node/packages/node/src/index.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneNode.ts"
       ],
       "module": {
@@ -15279,6 +15350,7 @@
         "@flighthq/node/packages/node/src/boundsRectangle.ts",
         "@flighthq/node/packages/node/src/contract.ts",
         "@flighthq/node/packages/node/src/enableNodeGuards.ts",
+        "@flighthq/node/packages/node/src/index.ts",
         "@flighthq/node/packages/node/src/node.ts",
         "@flighthq/node/packages/node/src/traversal.ts",
         "@flighthq/render/packages/render/src/renderProxy.ts",
@@ -15316,7 +15388,7 @@
       },
       "path": "flight/node/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/node/packages/node/src/contract.ts"
+        "@flighthq/node/packages/node/src/enableNodeGuards.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -15334,6 +15406,7 @@
         "@flighthq/node/packages/node/src/boundsRectangle.ts",
         "@flighthq/node/packages/node/src/contract.ts",
         "@flighthq/node/packages/node/src/hierarchy.ts",
+        "@flighthq/node/packages/node/src/index.ts",
         "@flighthq/node/packages/node/src/nodeColorAdjustment.ts",
         "@flighthq/node/packages/node/src/nodeOrderList.ts",
         "@flighthq/node/packages/node/src/revision.ts",
@@ -15372,6 +15445,7 @@
     {
       "consumers": [
         "@flighthq/node/packages/node/src/contract.ts",
+        "@flighthq/node/packages/node/src/index.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts"
       ],
       "module": {
@@ -15385,6 +15459,7 @@
     {
       "consumers": [
         "@flighthq/node/packages/node/src/contract.ts",
+        "@flighthq/node/packages/node/src/index.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveDrawOrder.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dDrawOrderTarget.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts"
@@ -15410,6 +15485,7 @@
         "@flighthq/node/packages/node/src/boundsRectangle.ts",
         "@flighthq/node/packages/node/src/contract.ts",
         "@flighthq/node/packages/node/src/hierarchy.ts",
+        "@flighthq/node/packages/node/src/index.ts",
         "@flighthq/particleemitter/packages/particleemitter/src/updateParticleEmitter2D.ts",
         "@flighthq/render/packages/render/src/renderTarget.ts",
         "@flighthq/render/packages/render/src/renderTransform2d.ts",
@@ -15430,6 +15506,7 @@
     {
       "consumers": [
         "@flighthq/node/packages/node/src/contract.ts",
+        "@flighthq/node/packages/node/src/index.ts",
         "@flighthq/particleemitter/packages/particleemitter/src/updateParticleEmitter3D.ts",
         "@flighthq/picking/packages/picking/src/pickScene3D.ts",
         "@flighthq/picking/packages/picking/src/sceneHitAttributes.ts",
@@ -15469,6 +15546,7 @@
         "@flighthq/node/packages/node/src/boundsRectangle.ts",
         "@flighthq/node/packages/node/src/contract.ts",
         "@flighthq/node/packages/node/src/hierarchy.ts",
+        "@flighthq/node/packages/node/src/index.ts",
         "@flighthq/node/packages/node/src/node.ts",
         "@flighthq/node/packages/node/src/nodeColorAdjustment.ts",
         "@flighthq/node/packages/node/src/nodeTransform2d.ts",
@@ -15520,7 +15598,8 @@
     },
     {
       "consumers": [
-        "@flighthq/node/packages/node/src/contract.ts"
+        "@flighthq/node/packages/node/src/contract.ts",
+        "@flighthq/node/packages/node/src/index.ts"
       ],
       "module": {
         "name": "StageFit",
@@ -15533,6 +15612,7 @@
     {
       "consumers": [
         "@flighthq/node/packages/node/src/contract.ts",
+        "@flighthq/node/packages/node/src/index.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentLayoutBindings.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene2DMaterialization.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene3DMaterialization.ts",
@@ -15557,6 +15637,7 @@
     {
       "consumers": [
         "@flighthq/node/packages/node/src/contract.ts",
+        "@flighthq/node/packages/node/src/index.ts",
         "@flighthq/render-gl/packages/render-gl/src/glRenderView.ts"
       ],
       "module": {
@@ -32785,6 +32866,7 @@
       "classification": "source-portability",
       "consumers": [
         "@flighthq/signals/packages/signals/src/contract.ts",
+        "@flighthq/signals/packages/signals/src/index.ts",
         "@flighthq/signals/packages/signals/src/scope.ts"
       ],
       "declarationFingerprints": [
@@ -32803,9 +32885,7 @@
       "status": "refused-placeholder"
     },
     {
-      "consumers": [
-        "@flighthq/signals/packages/signals/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/signals",
@@ -32877,6 +32957,7 @@
         "@flighthq/share/packages/share/src/share.ts",
         "@flighthq/shortcut/packages/shortcut/src/shortcutExplicitDependency.ts",
         "@flighthq/signals/packages/signals/src/contract.ts",
+        "@flighthq/signals/packages/signals/src/index.ts",
         "@flighthq/socket/packages/socket/src/socket.ts",
         "@flighthq/spritesheet/packages/spritesheet/src/spritesheetPlayer.ts",
         "@flighthq/statusbar/packages/statusbar/src/statusbar.ts",
@@ -32902,12 +32983,15 @@
       },
       "path": "flight/signals/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/signals/packages/signals/src/contract.ts"
+        "@flighthq/signals/packages/signals/src/connection.ts",
+        "@flighthq/signals/packages/signals/src/scope.ts",
+        "@flighthq/signals/packages/signals/src/throttle.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "consumers": [
+        "@flighthq/signals/packages/signals/src/contract.ts",
         "@flighthq/signals/packages/signals/src/safe.ts",
         "@flighthq/signals/packages/signals/src/signal.ts",
         "@flighthq/signals/packages/signals/src/slot.ts"
@@ -32922,7 +33006,8 @@
     },
     {
       "consumers": [
-        "@flighthq/signals/packages/signals/src/contract.ts"
+        "@flighthq/signals/packages/signals/src/contract.ts",
+        "@flighthq/signals/packages/signals/src/index.ts"
       ],
       "module": {
         "name": "Safe",
@@ -32934,7 +33019,8 @@
     },
     {
       "consumers": [
-        "@flighthq/signals/packages/signals/src/contract.ts"
+        "@flighthq/signals/packages/signals/src/contract.ts",
+        "@flighthq/signals/packages/signals/src/index.ts"
       ],
       "module": {
         "name": "Scope",
@@ -33004,6 +33090,7 @@
         "@flighthq/share/packages/share/src/share.ts",
         "@flighthq/shortcut/packages/shortcut/src/shortcutExplicitDependency.ts",
         "@flighthq/signals/packages/signals/src/contract.ts",
+        "@flighthq/signals/packages/signals/src/index.ts",
         "@flighthq/socket/packages/socket/src/socket.ts",
         "@flighthq/spritesheet/packages/spritesheet/src/spritesheetPlayer.ts",
         "@flighthq/statechart/packages/statechart/src/statechartSignals.ts",
@@ -33055,6 +33142,7 @@
         "@flighthq/shortcut/packages/shortcut/src/shortcutExplicitDependency.ts",
         "@flighthq/signals/packages/signals/src/connection.ts",
         "@flighthq/signals/packages/signals/src/contract.ts",
+        "@flighthq/signals/packages/signals/src/index.ts",
         "@flighthq/signals/packages/signals/src/throttle.ts",
         "@flighthq/spritesheet/packages/spritesheet/src/spritesheetPlayer.ts",
         "@flighthq/textinput/packages/textinput/src/textInputManager.ts",
@@ -33073,7 +33161,8 @@
     {
       "classification": "source-portability",
       "consumers": [
-        "@flighthq/signals/packages/signals/src/contract.ts"
+        "@flighthq/signals/packages/signals/src/contract.ts",
+        "@flighthq/signals/packages/signals/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:3c7fa9489332a5fa09ef7e7fc36bf67bd3b8f89292274ddfaea899049329c077",
