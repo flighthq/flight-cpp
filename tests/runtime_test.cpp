@@ -551,6 +551,29 @@ void test_array() {
   check(flight::Array<double>{1.0e-6, 1.0e21}.join(flight::String(",")) ==
             flight::String("0.000001,1e+21"),
         "array join uses source numeric formatting");
+  // `[a, absent, present]` is (string | undefined)[] in TypeScript: the literal deduces the common
+  // optional carrier, and join writes the absent element as the empty string, as Array.prototype.join does.
+  const std::optional<flight::String> absent_text;
+  const std::optional<flight::String> present_text = flight::String("p");
+  const auto mixed_literal = flight::Array{flight::String("a"), absent_text, present_text};
+  static_assert(std::same_as<decltype(mixed_literal), const flight::Array<std::optional<flight::String>>>);
+  check(mixed_literal.size() == 3 && !mixed_literal[1].has_value() &&
+            mixed_literal.join(flight::String("|")) == flight::String("a||p"),
+        "a mixed literal keeps absence and joins it as the empty string");
+  check(flight::Array<std::optional<double>>{std::nullopt, 2.0}.join(flight::String(",")) == flight::String(",2"),
+        "an absent numeric element also joins as the empty string");
+  static_assert(std::same_as<decltype(flight::Array{1.0, 2.0}), flight::Array<double>>,
+                "a literal of one type still deduces through the initializer-list constructor");
+  {
+    struct LiteralBase : flight::ReferenceEnabled {};
+    struct LiteralDerived : LiteralBase {};
+    const auto base = flight::make_ref<LiteralBase>();
+    const auto derived = flight::make_ref<LiteralDerived>();
+    const auto widened = flight::Array{base, derived};
+    static_assert(std::same_as<decltype(widened), const flight::Array<flight::Ref<LiteralBase>>>);
+    check(widened[0] == base && widened[1].get() == derived.get(),
+          "a base and a derived reference widen to the base without copying either element");
+  }
   flight::Array<double> spliced{1.0, 4.0};
   const auto removed = spliced.splice(1, 0, 2.0, 3.0);
   check(removed.empty() && spliced.size() == 4 && spliced[1] == 2.0 && spliced[2] == 3.0,

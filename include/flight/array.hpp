@@ -28,6 +28,12 @@ class String;
 
 namespace detail {
 
+template <typename Element>
+inline constexpr bool is_optional_element = false;
+
+template <typename Element>
+inline constexpr bool is_optional_element<std::optional<Element>> = true;
+
 template <typename Function, typename Element>
 decltype(auto) invoke_array_callback(Function& function, Element&& element, std::size_t index) {
   if constexpr (std::invocable<Function&, Element, double>) {
@@ -582,21 +588,33 @@ class Array {
     return std::min(static_cast<size_type>(index), size());
   }
 
-  template <typename StringValue>
-  [[nodiscard]] static StringValue stringify(const Value& value) {
-    if constexpr (std::constructible_from<StringValue, Value>) {
+  // `undefined` and `null` elements join as the empty string, as Array.prototype.join specifies; a
+  // present optional joins as its value.
+  template <typename StringValue, typename Element = Value>
+  [[nodiscard]] static StringValue stringify(const Element& value) {
+    if constexpr (detail::is_optional_element<Element>) {
+      if (!value.has_value()) return StringValue();
+      return stringify<StringValue, typename Element::value_type>(*value);
+    } else {
+      return stringify_present<StringValue, Element>(value);
+    }
+  }
+
+  template <typename StringValue, typename Present>
+  [[nodiscard]] static StringValue stringify_present(const Present& value) {
+    if constexpr (std::constructible_from<StringValue, Present>) {
       return StringValue(value);
-    } else if constexpr (std::same_as<Value, bool> && requires { StringValue::from_utf8(std::string_view{}); }) {
+    } else if constexpr (std::same_as<Present, bool> && requires { StringValue::from_utf8(std::string_view{}); }) {
       return StringValue::from_utf8(value ? "true" : "false");
-    } else if constexpr (std::is_arithmetic_v<Value> && requires { StringValue::from_number(double{}); }) {
+    } else if constexpr (std::is_arithmetic_v<Present> && requires { StringValue::from_number(double{}); }) {
       return StringValue::from_number(static_cast<double>(value));
-    } else if constexpr (std::is_arithmetic_v<Value>) {
+    } else if constexpr (std::is_arithmetic_v<Present>) {
       std::ostringstream output;
-      if constexpr (std::same_as<Value, bool>) output << std::boolalpha;
+      if constexpr (std::same_as<Present, bool>) output << std::boolalpha;
       output << value;
       return StringValue::from_utf8(output.str());
     } else {
-      static_assert(std::constructible_from<StringValue, Value>,
+      static_assert(std::constructible_from<StringValue, Present>,
                     "flight::Array::join requires a string-convertible element type");
     }
   }
@@ -627,6 +645,18 @@ class Array {
 // Single evaluation is the other reason it exists: writing `Array<B>(expr.begin(), expr.end())` at the
 // call site evaluates `expr` twice, which for `distinct_sorted_requirements(requirements)` means running
 // the whole deduplication twice.
+// A literal whose elements share no one type -- `[a, b]` where `b` is `string | undefined` -- is an array
+// of their common carrier, which is the element type TypeScript infers for it: `std::optional<String>`
+// for that literal, the base reference for a derived and a base reference. Only a literal with at least
+// two DIFFERENT element types reaches this guide; one that shares a type deduces through the
+// initializer-list constructor, and an iterator pair is excluded because its two types are the same.
+// Elements with no common carrier still fail to deduce rather than being guessed.
+template <typename First, typename Second, typename... Rest>
+  requires(!(std::same_as<std::remove_cvref_t<First>, std::remove_cvref_t<Second>> &&
+             (std::same_as<std::remove_cvref_t<First>, std::remove_cvref_t<Rest>> && ...))) &&
+          requires { typename std::common_type<First, Second, Rest...>::type; }
+Array(First, Second, Rest...) -> Array<std::common_type_t<First, Second, Rest...>>;
+
 template <typename Element, typename Source>
 [[nodiscard]] Array<Element> array_of(const Source& source) {
   Array<Element> result;
