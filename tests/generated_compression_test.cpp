@@ -3,22 +3,18 @@
 #include <cstdint>
 #include <functional>
 #include <iostream>
+#include <map>
 #include <string>
 #include <vector>
 
 // Native port of packages/compression/src/{deflateFormat,compress,deflate,lzma,lzmaCompress}.test.ts
 // (a627849) against the generated headers (no override). The compressed fixtures are the upstream ones,
 // precomputed by Node's zlib and Python's lzma and embedded as base64, so they are independent oracles.
-// The base64 fixture decoder below is ported from the test file itself.
+// The fixture builders below (base64, hex, the DEFLATE bit packers) are ported from the test file itself.
 //
-// BLOCKED: every case that needs decompressDeflate to inflate. raw_inflate's InflateState is emitted with
-// its constructor parameter properties (input, position, outputLimit) declared but never assigned, so
-// read_bit() throws "deflate: read past end of stream" on any input and decompressDeflate returns null for
-// everything; see docs/compiler-requests/constructor-parameter-properties-dropped.md. That removes all
-// compressDeflate and compressDeflateZlib round trips, the sdk slot round trips, and every decompressDeflate
-// success case. It also removes the rejection cases that reach raw_inflate, which would pass only because
-// everything is null. The cases kept below do not inflate, or are rejected by the zlib header and framing
-// checks before raw_inflate runs.
+// The deflate cases depend on source-patches/compiler-constructor-parameter-property-assignment.patch.
+// Without it, InflateState's parameter properties are never assigned and decompressDeflate returns null for
+// every input (docs/compiler-requests/constructor-parameter-properties-dropped.md).
 //
 // Not ported: 'sdkHostDecompressDeflate is a ready-made deflate slot' and its LZMA twin, which assert
 // `slot.decompress` is the SAME function object as decompressDeflate. std::function has no identity to
@@ -83,6 +79,119 @@ Uint8Array decode_base64(const std::string& input) {
   return out;
 }
 
+Uint8Array decode_hex(const std::string& input) {
+  Uint8Array out(input.size() / 2);
+  for (std::size_t i = 0; i < out.size(); ++i) out[i] = static_cast<std::uint8_t>(std::stoi(input.substr(i * 2, 2), nullptr, 16));
+  return out;
+}
+
+// --- the DEFLATE bit-stream builders from deflate.test.ts ---
+
+Uint8Array pack_deflate_bits(const std::vector<int>& bits) {
+  Uint8Array out((bits.size() + 7) / 8);
+  for (std::size_t i = 0; i < bits.size(); ++i) out[i >> 3] = static_cast<std::uint8_t>(out[i >> 3] | (bits[i] << (i & 7)));
+  return out;
+}
+
+void push_lsb_value(std::vector<int>& bits, int value, int count) {
+  for (int i = 0; i < count; ++i) bits.push_back((value >> i) & 1);
+}
+
+void push_canonical_code(std::vector<int>& bits, int code, int count) {
+  for (int i = count - 1; i >= 0; --i) bits.push_back((code >> i) & 1);
+}
+
+void push_fixed_literal_code(std::vector<int>& bits, int symbol) {
+  if (symbol <= 143) push_canonical_code(bits, 0x30 + symbol, 8);
+  else if (symbol <= 255) push_canonical_code(bits, 0x190 + symbol - 144, 9);
+  else if (symbol <= 279) push_canonical_code(bits, symbol - 256, 7);
+  else push_canonical_code(bits, 0xc0 + symbol - 280, 8);
+}
+
+Uint8Array create_fixed_back_reference_stream(int length_symbol, std::optional<int> distance_symbol = std::nullopt) {
+  std::vector<int> bits;
+  push_lsb_value(bits, 1, 1);
+  push_lsb_value(bits, 1, 2);
+  push_fixed_literal_code(bits, length_symbol);
+  if (distance_symbol.has_value()) push_canonical_code(bits, *distance_symbol, 5);
+  return pack_deflate_bits(bits);
+}
+
+const int code_length_order[] = {16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
+
+void push_dynamic_header(std::vector<int>& bits, int literal_count, int distance_count, const std::map<int, int>& code_lengths) {
+  const auto length_of = [&](int symbol) {
+    const auto found = code_lengths.find(symbol);
+    return found == code_lengths.end() ? 0 : found->second;
+  };
+  push_lsb_value(bits, 1, 1);
+  push_lsb_value(bits, 2, 2);
+  push_lsb_value(bits, literal_count - 257, 5);
+  push_lsb_value(bits, distance_count - 1, 5);
+  int code_length_count = 4;
+  for (int i = 0; i < 19; ++i)
+    if (length_of(code_length_order[i]) != 0) code_length_count = i + 1;
+  push_lsb_value(bits, code_length_count - 4, 4);
+  for (int i = 0; i < code_length_count; ++i) push_lsb_value(bits, length_of(code_length_order[i]), 3);
+}
+
+Uint8Array create_dynamic_repeat_overflow_stream(int symbol) {
+  std::vector<int> bits;
+  push_dynamic_header(bits, 257, 1, {{0, 1}, {1, 2}, {symbol, 2}});
+  for (int i = 0; i < 256; ++i) push_canonical_code(bits, 0, 1);
+  push_canonical_code(bits, 2, 2);
+  push_canonical_code(bits, 3, 2);
+  push_lsb_value(bits, 0, symbol == 16 ? 2 : symbol == 17 ? 3 : 7);
+  push_canonical_code(bits, 0, 1);
+  return pack_deflate_bits(bits);
+}
+
+Uint8Array create_valid_dynamic_repeat_stream(int symbol) {
+  std::vector<int> bits;
+  if (symbol == 16) {
+    push_dynamic_header(bits, 257, 1, {{0, 1}, {2, 2}, {16, 2}});
+    for (int i = 0; i < 254; ++i) push_canonical_code(bits, 0, 1);
+    push_canonical_code(bits, 2, 2);
+    push_canonical_code(bits, 3, 2);
+    push_lsb_value(bits, 0, 2);
+    push_canonical_code(bits, 2, 2);
+  } else {
+    push_dynamic_header(bits, 257, 1, {{0, 1}, {1, 2}, {symbol, 2}});
+    push_canonical_code(bits, 3, 2);
+    push_lsb_value(bits, 0, symbol == 17 ? 3 : 7);
+    const int repeat_count = symbol == 17 ? 3 : 11;
+    for (int i = repeat_count; i < 256; ++i) push_canonical_code(bits, 0, 1);
+    push_canonical_code(bits, 2, 2);
+    push_canonical_code(bits, 0, 1);
+    push_canonical_code(bits, 0, 1);
+  }
+  return pack_deflate_bits(bits);
+}
+
+Uint8Array create_reserved_dynamic_distance_stream() {
+  std::vector<int> bits;
+  push_dynamic_header(bits, 258, 31, {{0, 1}, {1, 1}});
+  for (int i = 0; i < 256; ++i) push_canonical_code(bits, 0, 1);
+  push_canonical_code(bits, 1, 1);
+  push_canonical_code(bits, 1, 1);
+  for (int i = 0; i < 30; ++i) push_canonical_code(bits, 0, 1);
+  push_canonical_code(bits, 1, 1);
+  push_canonical_code(bits, 1, 1);
+  push_canonical_code(bits, 0, 1);
+  return pack_deflate_bits(bits);
+}
+
+// xorshift32 with the JavaScript int32 semantics the upstream test relies on: the same bits in uint32.
+struct XorShift {
+  std::uint32_t seed;
+  std::uint32_t next() {
+    seed ^= seed << 13;
+    seed ^= seed >> 17;
+    seed ^= seed << 5;
+    return seed;
+  }
+};
+
 std::optional<Uint8Array> inflate(const Uint8Array& bytes, double length, const String& framing) {
   return compression::decompress_deflate(bytes, length, framing);
 }
@@ -126,10 +235,49 @@ void test_deflate_format() {
 }
 
 void test_compress_deflate() {
-  // Every upstream round trip is verified through decompressDeflate, which is blocked (see the header), so
-  // only the cases that do not inflate are ported here.
+  check(same(inflate(compression::compress_deflate(Uint8Array(0)), 0.0, raw()), Uint8Array(0)), "compressDeflate round-trips an empty input as a raw stream");
+  const auto fox = text("the quick brown fox jumps over the lazy dog");
+  check(same(inflate(compression::compress_deflate(fox), static_cast<double>(fox.size()), raw()), fox), "compressDeflate round-trips text through the raw framing");
+  const auto abc = text(repeat("abcabcabc", 400));
+  const auto abc_compressed = compression::compress_deflate(abc);
+  check(same(inflate(abc_compressed, static_cast<double>(abc.size()), raw()), abc) && abc_compressed.size() < abc.size() / 4,
+        "compressDeflate round-trips highly repetitive text and actually shrinks it");
+  Uint8Array noise(4096);
+  XorShift noise_seed{0x2545f491u};
+  for (std::size_t i = 0; i < noise.size(); ++i) noise[i] = static_cast<std::uint8_t>(noise_seed.next() & 0xff);
+  const auto noise_compressed = compression::compress_deflate(noise);
+  check(same(inflate(noise_compressed, static_cast<double>(noise.size()), raw()), noise) && noise_compressed.size() <= noise.size() + 16,
+        "compressDeflate round-trips incompressible binary without expanding it much");
+  Uint8Array long_input(70000);
+  for (std::size_t i = 0; i < long_input.size(); ++i) long_input[i] = static_cast<std::uint8_t>(i & 0xff);
+  check(same(inflate(compression::compress_deflate(long_input), static_cast<double>(long_input.size()), raw()), long_input),
+        "compressDeflate round-trips an input longer than one stored block can carry");
+  Uint8Array every(256);
+  for (std::size_t i = 0; i < 256; ++i) every[i] = static_cast<std::uint8_t>(i);
+  check(same(inflate(compression::compress_deflate(every), 256.0, raw()), every), "compressDeflate round-trips every byte value");
+  XorShift sweep{0x9e3779b9u};
+  bool sweep_ok = true;
+  for (int length = 0; length < 300; ++length) {
+    Uint8Array bytes(static_cast<std::size_t>(length));
+    const std::uint32_t alphabet = 1 + static_cast<std::uint32_t>(length % 7);
+    for (int i = 0; i < length; ++i) bytes[static_cast<std::size_t>(i)] = static_cast<std::uint8_t>(sweep.next() % alphabet);
+    sweep_ok = sweep_ok && same(inflate(compression::compress_deflate(bytes), length, raw()), bytes) &&
+               same(inflate(compression::compress_deflate_zlib(bytes), length, rfc1950()), bytes);
+  }
+  check(sweep_ok, "compressDeflate round-trips a deterministic sweep of shapes a fixed corpus would miss");
+  Uint8Array sevens(2048);
+  for (std::size_t i = 0; i < sevens.size(); ++i) sevens[i] = 7;
+  check(same(inflate(compression::compress_deflate(sevens), 2048.0, raw()), sevens), "compressDeflate round-trips a long run that exercises the maximum match length");
+  Uint8Array window(40000);
+  for (std::size_t i = 0; i < window.size(); ++i) window[i] = static_cast<std::uint8_t>((i * 31) & 0xff);
+  window.set(window.subarray(0, 64), static_cast<std::ptrdiff_t>(window.size() - 64));
+  check(same(inflate(compression::compress_deflate(window), static_cast<double>(window.size()), raw()), window),
+        "compressDeflate round-trips a repeat at the far edge of the window");
   const auto deterministic = text(repeat("deterministic output for a fixed input", 10));
   check(same(compression::compress_deflate(deterministic), compression::compress_deflate(deterministic)), "compressDeflate produces the same bytes for the same input");
+  const auto raw_means_raw = text(repeat("raw means raw", 20));
+  check(!inflate(compression::compress_deflate(raw_means_raw), static_cast<double>(raw_means_raw.size()), rfc1950()).has_value(),
+        "compressDeflate emits no zlib wrapper, so the zlib reader refuses it");
   const auto untouched = text("untouched");
   const auto untouched_copy = copy_of(untouched);
   static_cast<void>(compression::compress_deflate(untouched));
@@ -137,6 +285,12 @@ void test_compress_deflate() {
 }
 
 void test_compress_deflate_zlib() {
+  check(same(inflate(compression::compress_deflate_zlib(Uint8Array(0)), 0.0, rfc1950()), Uint8Array(0)), "compressDeflateZlib round-trips an empty input");
+  const auto fox = text("the quick brown fox jumps over the lazy dog");
+  check(same(inflate(compression::compress_deflate_zlib(fox), static_cast<double>(fox.size()), rfc1950()), fox), "compressDeflateZlib round-trips text");
+  Uint8Array binary(1024);
+  for (std::size_t i = 0; i < binary.size(); ++i) binary[i] = static_cast<std::uint8_t>((i * 37) & 0xff);
+  check(same(inflate(compression::compress_deflate_zlib(binary), 1024.0, rfc1950()), binary), "compressDeflateZlib round-trips binary bytes");
   const auto framing = text(repeat("framing is the only difference", 8));
   const auto raw_stream = compression::compress_deflate(framing);
   const auto wrapped = compression::compress_deflate_zlib(framing);
@@ -146,6 +300,14 @@ void test_compress_deflate_zlib() {
   const int cmf = header[0];
   const int flg = header[1];
   check((cmf & 0x0f) == 8 && (cmf >> 4) <= 7 && ((cmf << 8) | flg) % 31 == 0 && (flg & 0x20) == 0, "compressDeflateZlib emits a header the zlib reader accepts");
+  const auto checksum_me = text(repeat("checksum me", 30));
+  const auto with_trailer = compression::compress_deflate_zlib(checksum_me);
+  check(same(inflate(with_trailer, static_cast<double>(checksum_me.size()), rfc1950()), checksum_me) &&
+            !same(with_trailer.subarray(static_cast<std::ptrdiff_t>(with_trailer.size() - 4)), Uint8Array{0, 0, 0, 0}),
+        "compressDeflateZlib emits a non-zero Adler-32 trailer the reader verifies");
+  const auto zlib_means_zlib = text(repeat("zlib means zlib", 20));
+  const auto as_raw = inflate(compression::compress_deflate_zlib(zlib_means_zlib), static_cast<double>(zlib_means_zlib.size()), raw());
+  check(!same(as_raw, zlib_means_zlib), "compressDeflateZlib emits a wrapper, so the raw reader does not read it back unchanged");
   const auto deterministic = text(repeat("deterministic zlib output", 10));
   check(same(compression::compress_deflate_zlib(deterministic), compression::compress_deflate_zlib(deterministic)), "compressDeflateZlib produces the same bytes for the same input");
 }
@@ -157,16 +319,57 @@ void test_sdk_host_compress_deflate() {
   check(same(slot->compress(raw_bytes, raw()), compression::compress_deflate(raw_bytes)), "sdkHostCompressDeflate dispatches Raw framing to compressDeflate");
   const auto zlib_bytes = text(repeat("slot zlib framing", 10));
   check(same(slot->compress(zlib_bytes, rfc1950()), compression::compress_deflate_zlib(zlib_bytes)), "sdkHostCompressDeflate dispatches Rfc1950 framing to compressDeflateZlib");
+  const auto round = text(repeat("round trip through the slot", 8));
+  check(same(inflate(slot->compress(round, raw()), static_cast<double>(round.size()), raw()), round) &&
+            same(inflate(slot->compress(round, rfc1950()), static_cast<double>(round.size()), rfc1950()), round),
+        "sdkHostCompressDeflate round-trips through decompressDeflate for both framings");
 }
 
 void test_decompress_deflate() {
-  // Only rejections decided by the zlib header and framing checks, which return before InflateState is
-  // built, are genuine today. Every case that reaches raw_inflate is excluded: success cases fail, and
-  // rejection cases would pass for the wrong reason (see the header).
+  const std::string lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore. ";
+  const auto empty = decode_base64("eJwDAAAAAAE=");
+  const auto high_ratio = decode_base64(
+      "eJztxbEBADAEADC0/H+yQyRLIuv9npAkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIkSZIk3W4BATsAKQ==");
   const auto literal = decode_base64("eJxLy8lMzyjJKFQoTk7NS9VNyy/KTSwpBgBjVQiv");
   const auto raw_literal = decode_base64("S8vJTM8oyShUKE5OzUvVTcsvyk0sKQYA");
+  const auto repetitive = decode_base64("eJztxjEBACAIALBMYgIxCdC/g0HcrlXPybtil4iIiIiIiIiIiMgfeU6Y4Pw=");
+  const auto lorem_fixture = decode_base64(
+      "eJztzdENQyEMQ9FVPEDVSd4SlESVJUIQSfYvQ/STb+v6PL7VwBVlEB++EUw003yh+wztqVkbTbgYnfMLHTxjqJwAygpzQaqtE3N2CqVmohKjfc79G89FLnKRi/wX+QG1gr9k");
+  const auto stored = decode_base64("eAEBKwDU/3RoZSBxdWljayBicm93biBmb3gganVtcHMgb3ZlciB0aGUgbGF6eSBkb2dhPA/6");
+
+  check(same(inflate(empty, 0.0, rfc1950()), Uint8Array(0)), "decompressDeflate round-trips empty input");
+  Uint8Array sevens(64 * 1024);
+  for (std::size_t i = 0; i < sevens.size(); ++i) sevens[i] = static_cast<std::uint8_t>(i % 7);
+  check(same(inflate(high_ratio, 0.0, rfc1950()), sevens), "decompressDeflate keeps inflating a stream whose expansion ratio is large but bounded");
+  const auto bounded = inflate(high_ratio, 64 * 1024, rfc1950());
+  check(bounded.has_value() && bounded->size() == 64 * 1024 && !inflate(high_ratio, 64 * 1024 - 1, rfc1950()).has_value(),
+        "decompressDeflate stops expansion at the container-declared output bound");
+  check(same(inflate(literal, 0.0, rfc1950()), text("flighthq scene-formats")), "decompressDeflate round-trips a short literal run (zlib-wrapped)");
+  check(same(inflate(raw_literal, 0.0, raw()), text("flighthq scene-formats")), "decompressDeflate round-trips a headerless raw stream when requested");
+  Uint8Array payload(156);
+  for (std::size_t i = 0; i < payload.size(); ++i) payload[i] = static_cast<std::uint8_t>(i);
+  Uint8Array stream(1 + 4 + payload.size() + 5);
+  stream.set(Uint8Array{0x78, 0x9c, 0x00, 0x63, 0xff});
+  stream.set(payload, 5);
+  stream.set(Uint8Array{0x01, 0x00, 0x00, 0xff, 0xff}, static_cast<std::ptrdiff_t>(5 + payload.size()));
+  check(same(inflate(stream, static_cast<double>(payload.size()), raw()), payload) && !inflate(stream, static_cast<double>(payload.size()), rfc1950()).has_value(),
+        "decompressDeflate does not mistake a valid raw stream beginning 78 9c for zlib framing");
+  check(same(inflate(repetitive, 0.0, rfc1950()), text(repeat("abcABC123", 600))), "decompressDeflate round-trips repetitive data and grows the output buffer");
+  check(same(inflate(lorem_fixture, 0.0, rfc1950()), text(repeat(lorem, 12))), "decompressDeflate round-trips prose through a dynamic-Huffman block");
+  check(same(inflate(stored, 0.0, rfc1950()), text("the quick brown fox jumps over the lazy dog")), "decompressDeflate round-trips a stored (level 0) block");
+  check(!inflate(repetitive.subarray(0, 6), 0.0, rfc1950()).has_value(), "decompressDeflate returns null on a truncated stream rather than throwing");
+  check(!inflate(Uint8Array{0x78, 0x9c, 0xff, 0xff, 0, 0, 0, 0}, 0.0, rfc1950()).has_value(), "decompressDeflate returns null on an invalid block type");
   check(!inflate(Uint8Array{0x78, 0x9c, 0, 0, 0}, 0.0, rfc1950()).has_value() && !inflate(raw_literal, 0.0, String("Unknown")).has_value(),
         "decompressDeflate rejects undersized zlib wrappers and unknown framing values");
+  check(!inflate(Uint8Array{0x01, 0, 0}, 0.0, raw()).has_value() && !inflate(Uint8Array{0x01, 0x02, 0, 0xfd, 0xff, 0x41}, 0.0, raw()).has_value(),
+        "decompressDeflate rejects truncated stored-block headers and payloads");
+  check(!inflate(create_fixed_back_reference_stream(286), 0.0, raw()).has_value() && !inflate(create_fixed_back_reference_stream(257, 0), 0.0, raw()).has_value(),
+        "decompressDeflate rejects reserved fixed length symbols and back-references before the output");
+  check(!inflate(create_reserved_dynamic_distance_stream(), 0.0, raw()).has_value(), "decompressDeflate rejects a reserved dynamic distance symbol");
+  auto corrupt = copy_of(literal);
+  corrupt[corrupt.size() - 1] = static_cast<std::uint8_t>(corrupt[corrupt.size() - 1] ^ 1);
+  check(!inflate(literal.subarray(0, static_cast<std::ptrdiff_t>(literal.size() - 4)), 0.0, rfc1950()).has_value() && !inflate(corrupt, 0.0, rfc1950()).has_value(),
+        "decompressDeflate rejects a missing or corrupt zlib Adler-32 trailer");
   auto illegal_method = copy_of(literal);
   illegal_method[0] = 0x77;
   illegal_method[1] = 0x09;
@@ -180,6 +383,24 @@ void test_decompress_deflate() {
   check(!inflate(illegal_method, 0.0, rfc1950()).has_value() && !inflate(illegal_window, 0.0, rfc1950()).has_value() &&
             !inflate(illegal_check, 0.0, rfc1950()).has_value() && !inflate(preset_dictionary, 0.0, rfc1950()).has_value(),
         "decompressDeflate rejects illegal zlib methods, window sizes, check bits, and preset dictionaries");
+  check(same(inflate(decode_hex("05c0050900000000a0ffaf15"), 0.0, raw()), Uint8Array()) && !inflate(decode_hex("05c0050900000000a0ffaf0d"), 0.0, raw()).has_value(),
+        "decompressDeflate rejects a dynamic code-length repeat that exceeds the declared table");
+  for (const int symbol : {16, 17, 18}) {
+    check(!inflate(create_dynamic_repeat_overflow_stream(symbol), 0.0, raw()).has_value(),
+          "decompressDeflate rejects dynamic repeat symbol " + std::to_string(symbol) + " when it exceeds the declared table");
+  }
+  bool valid_repeats = true;
+  for (const int symbol : {16, 17, 18}) valid_repeats = valid_repeats && same(inflate(create_valid_dynamic_repeat_stream(symbol), 0.0, raw()), Uint8Array());
+  check(valid_repeats, "decompressDeflate accepts every dynamic repeat form when it ends inside the declared table");
+  std::vector<int> bits;
+  push_dynamic_header(bits, 257, 1, {{0, 1}, {1, 2}, {16, 2}});
+  push_canonical_code(bits, 3, 2);
+  check(!inflate(pack_deflate_bits(bits), 0.0, raw()).has_value(), "decompressDeflate rejects a previous-length repeat before any length has been declared");
+  check(same(inflate(decode_hex("edc0210900000000a0ffaf5d22"), 0.0, raw()), Uint8Array()) && !inflate(decode_hex("f5c0210900000000a0ffaf7d22"), 0.0, raw()).has_value() &&
+            !inflate(decode_hex("fdc0210900000000a0ffaf9d22"), 0.0, raw()).has_value(),
+        "decompressDeflate rejects forbidden dynamic literal counts without rejecting the maximum valid count");
+  check(same(compression::sdk_host_decompress_deflate->decompress(literal, 0.0, rfc1950()), text("flighthq scene-formats")),
+        "sdkHostDecompressDeflate inflates through the slot exactly as the bare function does");
 }
 
 void test_decompress_lzma() {
