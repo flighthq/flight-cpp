@@ -1675,9 +1675,7 @@
       "id": "text-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/text_markup/markup_tag_registry.hpp"
-      ],
+      "files": [],
       "id": "text-markup-unqualified-entity-names"
     },
     {
@@ -3493,7 +3491,6 @@
     },
     {
       "files": [
-        "flight/text_markup/markup_tag_registry.hpp",
         "flight/text_markup/text_markup.hpp"
       ],
       "id": "text-markup-unqualified-color-names"
@@ -3671,9 +3668,7 @@
       "id": "gizmo-rad-to-deg-binding"
     },
     {
-      "files": [
-        "flight/text_markup/markup_tag_registry.hpp"
-      ],
+      "files": [],
       "id": "text-markup-readonly-handler-parameter"
     },
     {
@@ -4998,9 +4993,16 @@
     },
     {
       "dependency": "flight",
-      "digest": "9763557fa54ca3a7656befe1ec1e5a8534e79810f4a7aa7bc7a43feff7be0bb0",
+      "digest": "148ed2fa15b9fc8025b0646524a40462066fcfe0914f2aaa74c15c28d4be3199",
       "id": "text-markup-handler-map-type",
       "module": "packages/text-markup/src/markupTagRegistry.ts plus packages/types/src/MarkupTagHandler.ts",
+      "package": "@flighthq/text-markup"
+    },
+    {
+      "dependency": "flight",
+      "digest": "37f96ee9a575dd652df83b9847ca499fb975ef4430ef6a0cfd037a34e3c315e1",
+      "id": "text-markup-spread-class-merge",
+      "module": "packages/text-markup/src/markupTagRegistry.ts",
       "package": "@flighthq/text-markup"
     },
     {
@@ -8194,14 +8196,14 @@
       "sourceModules": 9
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/text_markup",
       "cppNamespace": "flight::text_markup",
-      "emittedModules": 6,
+      "emittedModules": 7,
       "package": "@flighthq/text-markup",
-      "refusedModules": 2,
+      "refusedModules": 1,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 8
@@ -8517,8 +8519,8 @@
   },
   "summary": {
     "packages": 155,
-    "emittedModules": 2418,
-    "refusedModules": 576,
+    "emittedModules": 2419,
+    "refusedModules": 575,
     "sourceModules": 2994
   }
 }

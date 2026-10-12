@@ -69,6 +69,22 @@
       "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
       "rebasedOn": "2026-10-12"
     },
+{
+      "id": "text-markup-spread-class-merge",
+      "dependency": "flight",
+      "patch": "text-markup-spread-class-merge.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/text-markup/src/markupTagRegistry.ts",
+      "package": "@flighthq/text-markup",
+      "answers": "refusal",
+      "refusal": "Object.assign requires one closed callable-object target and an exact compatible object literal source",
+      "rewrite": "Merges a class resolver's contribution into the accumulating format with a spread assignment instead of Object.assign, and lets the accumulator be reassigned.",
+      "equivalence": "Both forms copy the contribution's own enumerable properties onto the accumulator in the same order, so a later class still overrides an earlier one on a shared field and every untouched field keeps its previous value. The accumulator starts empty, is never aliased by a caller, and is returned as a fresh object either way; a null contribution still leaves it unchanged. No property is read, coerced, or dropped that the source did not already read.",
+      "whyNotUpstreamFirst": "A spread assignment is the ordinary target-neutral spelling for merging one object into another, and it states the result as a new object rather than an in-place mutation the emitter cannot witness.",
+      "unblocks": "Lets packages/text-markup/src/markupTagRegistry.ts emit, which is what defines create_markup_font_tag_handler and the other standard tag handlers that markup_tag_registry.hpp already calls.",
+      "expires": "when Object.assign with an exact compatible object-literal source lowers directly.",
+      "appliedOn": "2026-10-12"
+},
     {
       "id": "glyphatlas-iterator-result-binding",
       "dependency": "flight",

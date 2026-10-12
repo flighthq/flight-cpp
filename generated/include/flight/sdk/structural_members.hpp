@@ -229,6 +229,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("children") && requires { object.children; }) return (object.children);
   else if constexpr (Key::name.view() == std::string_view("childrenId") && requires { object.children_id; }) return (object.children_id);
   else if constexpr (Key::name.view() == std::string_view("clamp") && requires { object.clamp; }) return (object.clamp);
+  else if constexpr (Key::name.view() == std::string_view("classResolver") && requires { object.class_resolver; }) return (object.class_resolver);
   else if constexpr (Key::name.view() == std::string_view("clear") && requires { object.clear; }) return (object.clear);
   else if constexpr (Key::name.view() == std::string_view("clearAccumulatedImpulses") && requires { object.clear_accumulated_impulses; }) return (object.clear_accumulated_impulses);
   else if constexpr (Key::name.view() == std::string_view("clearMetadata") && requires { object.clear_metadata; }) return (object.clear_metadata);
@@ -283,6 +284,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("colorLocation") && requires { object.color_location; }) return (object.color_location);
   else if constexpr (Key::name.view() == std::string_view("colorMatrix") && requires { object.color_matrix; }) return (object.color_matrix);
   else if constexpr (Key::name.view() == std::string_view("colorRenderbuffers") && requires { object.color_renderbuffers; }) return (object.color_renderbuffers);
+  else if constexpr (Key::name.view() == std::string_view("colorResolver") && requires { object.color_resolver; }) return (object.color_resolver);
   else if constexpr (Key::name.view() == std::string_view("colorScaleBias") && requires { object.color_scale_bias; }) return (object.color_scale_bias);
   else if constexpr (Key::name.view() == std::string_view("colorShift") && requires { object.color_shift; }) return (object.color_shift);
   else if constexpr (Key::name.view() == std::string_view("colorSpace") && requires { object.color_space; }) return (object.color_space);
@@ -680,6 +682,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("halfZ") && requires { object.half_z; }) return (object.half_z);
   else if constexpr (Key::name.view() == std::string_view("halo") && requires { object.halo; }) return (object.halo);
   else if constexpr (Key::name.view() == std::string_view("handle") && requires { object.handle; }) return (object.handle);
+  else if constexpr (Key::name.view() == std::string_view("handlers") && requires { object.handlers; }) return (object.handlers);
   else if constexpr (Key::name.view() == std::string_view("haptics") && requires { object.haptics; }) return (object.haptics);
   else if constexpr (Key::name.view() == std::string_view("hasAlphaMap") && requires { object.has_alpha_map; }) return (object.has_alpha_map);
   else if constexpr (Key::name.view() == std::string_view("hasBaseColorMap") && requires { object.has_base_color_map; }) return (object.has_base_color_map);
@@ -2229,6 +2232,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("children") && requires(Object& object) { object.children; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().children)>>{};
   else if constexpr (Key::name.view() == std::string_view("childrenId") && requires(Object& object) { object.children_id; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().children_id)>>{};
   else if constexpr (Key::name.view() == std::string_view("clamp") && requires(Object& object) { object.clamp; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clamp)>>{};
+  else if constexpr (Key::name.view() == std::string_view("classResolver") && requires(Object& object) { object.class_resolver; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().class_resolver)>>{};
   else if constexpr (Key::name.view() == std::string_view("clear") && requires(Object& object) { object.clear; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clear)>>{};
   else if constexpr (Key::name.view() == std::string_view("clearAccumulatedImpulses") && requires(Object& object) { object.clear_accumulated_impulses; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clear_accumulated_impulses)>>{};
   else if constexpr (Key::name.view() == std::string_view("clearMetadata") && requires(Object& object) { object.clear_metadata; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().clear_metadata)>>{};
@@ -2283,6 +2287,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("colorLocation") && requires(Object& object) { object.color_location; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_location)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorMatrix") && requires(Object& object) { object.color_matrix; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_matrix)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorRenderbuffers") && requires(Object& object) { object.color_renderbuffers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_renderbuffers)>>{};
+  else if constexpr (Key::name.view() == std::string_view("colorResolver") && requires(Object& object) { object.color_resolver; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_resolver)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorScaleBias") && requires(Object& object) { object.color_scale_bias; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_scale_bias)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorShift") && requires(Object& object) { object.color_shift; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_shift)>>{};
   else if constexpr (Key::name.view() == std::string_view("colorSpace") && requires(Object& object) { object.color_space; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().color_space)>>{};
@@ -2680,6 +2685,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("halfZ") && requires(Object& object) { object.half_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().half_z)>>{};
   else if constexpr (Key::name.view() == std::string_view("halo") && requires(Object& object) { object.halo; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().halo)>>{};
   else if constexpr (Key::name.view() == std::string_view("handle") && requires(Object& object) { object.handle; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().handle)>>{};
+  else if constexpr (Key::name.view() == std::string_view("handlers") && requires(Object& object) { object.handlers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().handlers)>>{};
   else if constexpr (Key::name.view() == std::string_view("haptics") && requires(Object& object) { object.haptics; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().haptics)>>{};
   else if constexpr (Key::name.view() == std::string_view("hasAlphaMap") && requires(Object& object) { object.has_alpha_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_alpha_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("hasBaseColorMap") && requires(Object& object) { object.has_base_color_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().has_base_color_map)>>{};
@@ -4232,6 +4238,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->children; }) owner.bind_named("children", [object]() -> decltype(auto) { return (object->children); });
   if constexpr (requires { object->children_id; }) owner.bind_named("childrenId", [object]() -> decltype(auto) { return (object->children_id); });
   if constexpr (requires { object->clamp; }) owner.bind_named("clamp", [object]() -> decltype(auto) { return (object->clamp); });
+  if constexpr (requires { object->class_resolver; }) owner.bind_named("classResolver", [object]() -> decltype(auto) { return (object->class_resolver); });
   if constexpr (requires { object->clear; }) owner.bind_named("clear", [object]() -> decltype(auto) { return (object->clear); });
   if constexpr (requires { object->clear_accumulated_impulses; }) owner.bind_named("clearAccumulatedImpulses", [object]() -> decltype(auto) { return (object->clear_accumulated_impulses); });
   if constexpr (requires { object->clear_metadata; }) owner.bind_named("clearMetadata", [object]() -> decltype(auto) { return (object->clear_metadata); });
@@ -4286,6 +4293,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->color_location; }) owner.bind_named("colorLocation", [object]() -> decltype(auto) { return (object->color_location); });
   if constexpr (requires { object->color_matrix; }) owner.bind_named("colorMatrix", [object]() -> decltype(auto) { return (object->color_matrix); });
   if constexpr (requires { object->color_renderbuffers; }) owner.bind_named("colorRenderbuffers", [object]() -> decltype(auto) { return (object->color_renderbuffers); });
+  if constexpr (requires { object->color_resolver; }) owner.bind_named("colorResolver", [object]() -> decltype(auto) { return (object->color_resolver); });
   if constexpr (requires { object->color_scale_bias; }) owner.bind_named("colorScaleBias", [object]() -> decltype(auto) { return (object->color_scale_bias); });
   if constexpr (requires { object->color_shift; }) owner.bind_named("colorShift", [object]() -> decltype(auto) { return (object->color_shift); });
   if constexpr (requires { object->color_space; }) owner.bind_named("colorSpace", [object]() -> decltype(auto) { return (object->color_space); });
@@ -4683,6 +4691,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->half_z; }) owner.bind_named("halfZ", [object]() -> decltype(auto) { return (object->half_z); });
   if constexpr (requires { object->halo; }) owner.bind_named("halo", [object]() -> decltype(auto) { return (object->halo); });
   if constexpr (requires { object->handle; }) owner.bind_named("handle", [object]() -> decltype(auto) { return (object->handle); });
+  if constexpr (requires { object->handlers; }) owner.bind_named("handlers", [object]() -> decltype(auto) { return (object->handlers); });
   if constexpr (requires { object->haptics; }) owner.bind_named("haptics", [object]() -> decltype(auto) { return (object->haptics); });
   if constexpr (requires { object->has_alpha_map; }) owner.bind_named("hasAlphaMap", [object]() -> decltype(auto) { return (object->has_alpha_map); });
   if constexpr (requires { object->has_base_color_map; }) owner.bind_named("hasBaseColorMap", [object]() -> decltype(auto) { return (object->has_base_color_map); });
@@ -6268,6 +6277,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(children)
   FLIGHT_SDK_ROW_WIDENS(children_id)
   FLIGHT_SDK_ROW_WIDENS(clamp)
+  FLIGHT_SDK_ROW_WIDENS(class_resolver)
   FLIGHT_SDK_ROW_WIDENS(clear)
   FLIGHT_SDK_ROW_WIDENS(clear_accumulated_impulses)
   FLIGHT_SDK_ROW_WIDENS(clear_metadata)
@@ -6322,6 +6332,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(color_location)
   FLIGHT_SDK_ROW_WIDENS(color_matrix)
   FLIGHT_SDK_ROW_WIDENS(color_renderbuffers)
+  FLIGHT_SDK_ROW_WIDENS(color_resolver)
   FLIGHT_SDK_ROW_WIDENS(color_scale_bias)
   FLIGHT_SDK_ROW_WIDENS(color_shift)
   FLIGHT_SDK_ROW_WIDENS(color_space)
@@ -6719,6 +6730,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(half_z)
   FLIGHT_SDK_ROW_WIDENS(halo)
   FLIGHT_SDK_ROW_WIDENS(handle)
+  FLIGHT_SDK_ROW_WIDENS(handlers)
   FLIGHT_SDK_ROW_WIDENS(haptics)
   FLIGHT_SDK_ROW_WIDENS(has_alpha_map)
   FLIGHT_SDK_ROW_WIDENS(has_base_color_map)

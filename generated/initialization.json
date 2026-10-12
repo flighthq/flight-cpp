@@ -3876,6 +3876,16 @@
       "source": "packages/text-markup/src/markupClassStyles.ts"
     },
     {
+      "name": "MarkupNamedColors",
+      "packageName": "@flighthq/text-markup",
+      "source": "packages/text-markup/src/markupNamedColors.ts"
+    },
+    {
+      "name": "MarkupTagRegistry",
+      "packageName": "@flighthq/text-markup",
+      "source": "packages/text-markup/src/markupTagRegistry.ts"
+    },
+    {
       "name": "TextMarkupGuards",
       "packageName": "@flighthq/text-markup",
       "source": "packages/text-markup/src/textMarkupGuards.ts"
@@ -27314,6 +27324,26 @@
           "name": "MarkupClassStyles",
           "packageName": "@flighthq/text-markup",
           "source": "packages/text-markup/src/markupClassStyles.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "MarkupTagRegistry",
+          "packageName": "@flighthq/text-markup",
+          "source": "packages/text-markup/src/markupTagRegistry.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "MarkupNamedColors",
+          "packageName": "@flighthq/text-markup",
+          "source": "packages/text-markup/src/markupNamedColors.ts"
         }
       ]
     },
@@ -202810,6 +202840,253 @@
       "steps": []
     },
     {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:916669061927a2db804273bdfafa92a16619867795b713de8f9c210ba4471455",
+            "line": 1,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupNamedColors.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupNamedColors.ts\",9]",
+            "kind": "import",
+            "name": "packOpaqueColor",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "packOpaqueColor",
+            "kind": "dependency",
+            "module": {
+              "name": "PackColor",
+              "packageName": "@flighthq/color",
+              "source": "packages/color/src/packColor.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:d36a5a93fde585af9662082b142fed74179780c1c60608daca0598279cc4237b",
+            "line": 4,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupNamedColors.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupNamedColors.ts\",137]",
+            "kind": "import",
+            "name": "resolveMarkupHexColor",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "resolveMarkupHexColor",
+            "kind": "dependency",
+            "module": {
+              "name": "MarkupTagRegistry",
+              "packageName": "@flighthq/text-markup",
+              "source": "packages/text-markup/src/markupTagRegistry.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:46f4ea6422a2c3f3b65b558fde46a558d9aaab00dbaf69d6f8f14c3abc0a9e21",
+            "line": 20,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupNamedColors.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupNamedColors.ts\",1203]",
+            "kind": "function",
+            "name": "registerMarkupNamedColors",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:05fd4796f98aab4ea5f946c3a0fc8ee2e9e393373bfe99ca75927dd920906db7",
+            "line": 26,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupNamedColors.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupNamedColors.ts\",1540]",
+            "kind": "function",
+            "name": "resolveMarkupNamedColor",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:358802c88997ab095ac63ca04e99c435a7b9bd28d4d17b29e92b4843269d9a6e",
+            "line": 36,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupNamedColors.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupNamedColors.ts\",2044]",
+            "kind": "variable",
+            "name": "markupNamedColors",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "MarkupNamedColors",
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupNamedColors.ts"
+          },
+          "specifier": "./markupTagRegistry.ts",
+          "target": {
+            "name": "MarkupTagRegistry",
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "MarkupNamedColors",
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupNamedColors.ts"
+          },
+          "specifier": "@flighthq/color/contract",
+          "target": {
+            "name": "PackColor",
+            "packageName": "@flighthq/color",
+            "source": "packages/color/src/packColor.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MarkupNamedColors",
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupNamedColors.ts"
+          },
+          "importedNames": [
+            "MarkupClassResolver"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "MarkupClassResolver",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/MarkupClassResolver.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MarkupNamedColors",
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupNamedColors.ts"
+          },
+          "importedNames": [
+            "MarkupColorResolver"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "MarkupColorResolver",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/MarkupColorResolver.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MarkupNamedColors",
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupNamedColors.ts"
+          },
+          "importedNames": [
+            "MarkupTagHandler"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "MarkupTagHandler",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/MarkupTagHandler.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MarkupNamedColors",
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupNamedColors.ts"
+          },
+          "importedNames": [
+            "MarkupTagRegistry"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "MarkupTagRegistry",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/MarkupTagRegistry.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "MarkupNamedColors",
+        "packageName": "@flighthq/text-markup",
+        "source": "packages/text-markup/src/markupNamedColors.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:358802c88997ab095ac63ca04e99c435a7b9bd28d4d17b29e92b4843269d9a6e",
+              "line": 36,
+              "packageName": "@flighthq/text-markup",
+              "source": "packages/text-markup/src/markupNamedColors.ts",
+              "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupNamedColors.ts\",2044]",
+              "kind": "variable",
+              "name": "markupNamedColors",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            2
+          ]
+        }
+      ]
+    },
+    {
       "bindings": [],
       "dependencies": [
         {
@@ -202831,6 +203108,601 @@
         "name": "MarkupTagHandler",
         "packageName": "@flighthq/types",
         "source": "packages/types/src/MarkupTagHandler.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:916669061927a2db804273bdfafa92a16619867795b713de8f9c210ba4471455",
+            "line": 1,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",9]",
+            "kind": "import",
+            "name": "packOpaqueColor",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "packOpaqueColor",
+            "kind": "dependency",
+            "module": {
+              "name": "PackColor",
+              "packageName": "@flighthq/color",
+              "source": "packages/color/src/packColor.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:04841da32c140aae31e005047b910eb980dab9fc4d8ec4bc1bfb03e5b83b0b27",
+            "line": 20,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",694]",
+            "kind": "function",
+            "name": "createMarkupTagRegistry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:0fe0aac304ae0745c68696c6ca44afdfbcdddc1c11666511a07ee2a3020e7444",
+            "line": 30,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",1270]",
+            "kind": "function",
+            "name": "registerMarkupTag",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:aec2be677b5345bcb1319a827233eb95c0af4f58974daed1f64a98d2161abd85",
+            "line": 55,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",2752]",
+            "kind": "function",
+            "name": "registerStandardMarkupTags",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:d36a5a93fde585af9662082b142fed74179780c1c60608daca0598279cc4237b",
+            "line": 79,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",4223]",
+            "kind": "function",
+            "name": "resolveMarkupHexColor",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:d7e5b0ca6bfd1f359289ee7347f45e82c699eb07e0641ad12586c661885dc111",
+            "line": 105,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",5481]",
+            "kind": "function",
+            "name": "createMarkupSpanTagHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:2169007531caa08642c3e34487d8cca3db0125a35e2a684d861540800afd9302",
+            "line": 124,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",6529]",
+            "kind": "function",
+            "name": "createMarkupFontTagHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:a91dfe20d362bc2bb2bcc50753d18a35ebf5297c03ff7b232d56d324573a19e7",
+            "line": 148,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",7552]",
+            "kind": "function",
+            "name": "isMarkupAlign",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:a75d6a3a8f581f1d350aba0907236b465d74cb17cead6c5ef721ce537b5c8035",
+            "line": 162,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",7801]",
+            "kind": "function",
+            "name": "isMarkupListMarker",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:aad385cd09cd1f9a72d05e54a5c76a544baf3e8ef74acb92d70d235677da3efe",
+            "line": 175,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",8039]",
+            "kind": "function",
+            "name": "markupAnchorTagHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:610aa2f45faa1f4345c54eae010c4b2d88196bf4e615811b8f7301c4bd58d509",
+            "line": 182,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",8365]",
+            "kind": "function",
+            "name": "markupBoldTagHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:309dd0eac7cb9f0d5ef48e10ca72c31df71e04d18a53b16844c6d1a714a8986d",
+            "line": 186,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",8524]",
+            "kind": "function",
+            "name": "markupBreakTagHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:5a78c927f3684647b5bd3f4adf7b7af1796b233f61702730a1c66d63b7dcdd93",
+            "line": 190,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",8689]",
+            "kind": "function",
+            "name": "markupItalicTagHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:c0cf0ffeffc5357c7a12864d12c3da27428b258ae47f45df92a2bec4e4530458",
+            "line": 194,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",8852]",
+            "kind": "function",
+            "name": "markupListItemTagHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:9153f5ad2b0c6f9d2694ff2a37ab81f372df40a33abda3774744c61dcff0e13e",
+            "line": 202,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",9243]",
+            "kind": "function",
+            "name": "markupParagraphTagHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:fbfd3fa531631082679d7e04cad154095c361a751f6a17ef136f96059f13e28c",
+            "line": 209,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",9599]",
+            "kind": "function",
+            "name": "markupStrikethroughTagHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:5e287e945ca9ce240bbf4a97e81c19ef1a5033abfc4c9b54df3d1ce3eaf974a9",
+            "line": 213,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",9776]",
+            "kind": "function",
+            "name": "markupTextformatTagHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:02ba4c2538a19de65cbb0068b515dd19b69f315339672b2dbe99548c5446529d",
+            "line": 230,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",10730]",
+            "kind": "function",
+            "name": "markupUnderlineTagHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:599eaac408ccaf34bcdf7b7efa26480aa24aa7de79c86ed7495eb5cfc7705a3c",
+            "line": 234,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",10899]",
+            "kind": "function",
+            "name": "parseMarkupNumber",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:26e391c2e77d58354dafdbd57c7ff13350e8eb03881724cd206c20471a1722bf",
+            "line": 239,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",11054]",
+            "kind": "function",
+            "name": "readMarkupNumberAttribute",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:f3d3d77affcb7c116c09cec5f44d606034ec341d3e2f9a9a782522d060517976",
+            "line": 244,
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts",
+            "id": "binding:[\"@flighthq/text-markup\",\"packages/text-markup/src/markupTagRegistry.ts\",11261]",
+            "kind": "function",
+            "name": "readMarkupTabStopsAttribute",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "MarkupTagRegistry",
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts"
+          },
+          "specifier": "@flighthq/color/contract",
+          "target": {
+            "name": "PackColor",
+            "packageName": "@flighthq/color",
+            "source": "packages/color/src/packColor.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MarkupTagRegistry",
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts"
+          },
+          "importedNames": [
+            "FontVariation"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "FontVariation",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/FontVariation.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MarkupTagRegistry",
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts"
+          },
+          "importedNames": [
+            "MarkupClassResolver"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "MarkupClassResolver",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/MarkupClassResolver.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MarkupTagRegistry",
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts"
+          },
+          "importedNames": [
+            "MarkupColorResolver"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "MarkupColorResolver",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/MarkupColorResolver.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MarkupTagRegistry",
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts"
+          },
+          "importedNames": [
+            "MarkupTagEffect",
+            "MarkupTagHandler",
+            "MarkupTagResult"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "MarkupTagHandler",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/MarkupTagHandler.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MarkupTagRegistry",
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts"
+          },
+          "importedNames": [
+            "MarkupTagRegistry"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "MarkupTagRegistry",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/MarkupTagRegistry.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MarkupTagRegistry",
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts"
+          },
+          "importedNames": [
+            "NonEntityCreateResult"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "NonEntityCreateResult",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/NonEntityCreateResult.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MarkupTagRegistry",
+            "packageName": "@flighthq/text-markup",
+            "source": "packages/text-markup/src/markupTagRegistry.ts"
+          },
+          "importedNames": [
+            "TextFormat",
+            "TextFormatAlign",
+            "TextFormatListMarker"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "TextFormat",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TextFormat.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "MarkupTagRegistry",
+        "packageName": "@flighthq/text-markup",
+        "source": "packages/text-markup/src/markupTagRegistry.ts"
       },
       "steps": []
     },

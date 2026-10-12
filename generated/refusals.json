@@ -8331,7 +8331,7 @@
       "code": "dependency-refused",
       "module": "packages/text-markup/src/contract.ts",
       "package": "@flighthq/text-markup",
-      "reason": "dependency ./markupTagRegistry was refused for @flighthq/text-markup/packages/text-markup/src/markupTagRegistry.ts",
+      "reason": "dependency ./textMarkup.ts was refused for @flighthq/text-markup/packages/text-markup/src/textMarkup.ts",
       "stage": "dependency"
     },
     {
@@ -8345,24 +8345,8 @@
       "code": "dependency-refused",
       "module": "packages/text-markup/src/index.ts",
       "package": "@flighthq/text-markup",
-      "reason": "dependency ./contract was refused for @flighthq/text-markup/packages/text-markup/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/text-markup/packages/text-markup/src/contract.ts",
       "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/text-markup/src/markupNamedColors.ts",
-      "package": "@flighthq/text-markup",
-      "reason": "dependency ./markupTagRegistry was refused for @flighthq/text-markup/packages/text-markup/src/markupTagRegistry.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 112,
-      "module": "packages/text-markup/src/markupTagRegistry.ts",
-      "package": "@flighthq/text-markup",
-      "reason": "cpp emission failed for @flighthq/text-markup/packages/text-markup/src/markupTagRegistry.ts: Object.assign requires one closed callable-object target and an exact compatible object literal source",
-      "stage": "emission"
     },
     {
       "code": "unsupported-ir",

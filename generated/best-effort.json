@@ -37334,8 +37334,6 @@
       "path": "flight/text_markup/contract.hpp",
       "refusedDependencies": [
         "@flighthq/text-markup/packages/text-markup/src/enableTextMarkupGuards.ts",
-        "@flighthq/text-markup/packages/text-markup/src/markupNamedColors.ts",
-        "@flighthq/text-markup/packages/text-markup/src/markupTagRegistry.ts",
         "@flighthq/text-markup/packages/text-markup/src/textMarkup.ts"
       ],
       "status": "dependency-incomplete"
@@ -37390,40 +37388,13 @@
         "source": "packages/text-markup/src/markupNamedColors.ts"
       },
       "path": "flight/text_markup/markup_named_colors.hpp",
-      "refusedDependencies": [
-        "@flighthq/text-markup/packages/text-markup/src/markupTagRegistry.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/text-markup/packages/text-markup/src/contract.ts",
         "@flighthq/text-markup/packages/text-markup/src/markupNamedColors.ts",
         "@flighthq/text-markup/packages/text-markup/src/textMarkup.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:054a80d80ce787ae96a4e0b5895b50fcf17b251791c29bd2bb70f7ab1c5e08c8",
-        "sha256:19814245584e8cd5d05994e0916c3ee78edd5302aa74dc3602eb065585a31858",
-        "sha256:2890c731d2979c6074f413c830fded40916404b8412055b6a102185e4fa15b27",
-        "sha256:29f8e9e2c162875d240e1846fa94bfe8bc37f5bc8292278885bc82177b727a11",
-        "sha256:2bf9c9954ae51269967f1b0fcc2bf72ead368c0efbb256e1ff42f8f725223935",
-        "sha256:332c019fee25f5e29a31d265f7239d75e20250b693cc759ee5d9c67bcbfb6c82",
-        "sha256:34588f5650fa8a1df2057420ef7b2036bc4410cabcfda30ee6380981b9620251",
-        "sha256:4647c9dbc92e96299c5e692d36152ba4237a766b62e90644480c03f851451bbc",
-        "sha256:47b4766acec8eaf80648b4f2da18d52c8a91a4b2cb78aaaf3353932e1bf380d9",
-        "sha256:776afce8a281358061e3641017178bbc353951f650720d865cd2eee10c5329d1",
-        "sha256:a3f123bbe1519a1134439ec34a13354f7af196c0907a9d3e1c0fc8f533dc1939",
-        "sha256:a79d40572df4de7445818fc2198861ffa36a52113d813f481507375a2911eba1",
-        "sha256:a97154fa5495c825c5750949e62e75cb21ddcb4fba388d38a8a7aca33a2b93ce",
-        "sha256:ac004be06eab1823aaed0969fd6d5a5b8c1706c9cf654a85ea41bc63346268d3",
-        "sha256:ac1d947a167abba5f70def5b670239883cd80b1956fb138db894b4002a810df5",
-        "sha256:b807ebfe68dae2f2404a86facd95e36761f96cf556c9d953db4d0c430fbe906c",
-        "sha256:cca2076365e5e605849034171f7fa08919ee0d48d53fb05e326a8dfa6912b157",
-        "sha256:d5bddaa22f92e543718c096d87388c0294c247c39a3204abb43122660582695d",
-        "sha256:e6e6db4bd1441d17c977eafbae74f3b52fb2dc052824ff6b1c35ae20646a31ec",
-        "sha256:ea2edfdc738937435c4311f11becd726eec8c1448941f9cbdbc843cc2d26fdf4",
-        "sha256:ea90d0cb9a5452a7c572f4a7855878e426542fd3fb56e371ff2bc5955aef08be"
       ],
       "module": {
         "name": "MarkupTagRegistry",
@@ -37431,7 +37402,7 @@
         "source": "packages/text-markup/src/markupTagRegistry.ts"
       },
       "path": "flight/text_markup/markup_tag_registry.hpp",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "classification": "compiler-restriction",
