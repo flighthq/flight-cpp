@@ -119,3 +119,14 @@ different name (`Emitter<() => void>` into `Readonly<Signal<T>>`) is the reprodu
 correctly declines to conflate the owners, and emission writes `Signal<T>` rather than refusing. That is
 a separate change — refusing an undetermined type parameter at emission instead of emitting it — and no
 SDK module reaches it today: `hasSignalSlots` is called with a `Signal` in both of its callers.
+
+**The residual is shared, the causes are not.** Two other SDK sites reach this same emission step, where
+an undetermined parameter is written out by name, through deduction gaps the readonly-view patch does not
+cover:
+- [an inferred `any` argument](node-any-generic-traits-leak.md) (`@flighthq/command`);
+- [an argument that reaches the parameter only through interface heritage](heritage-argument-generic-deduction.md)
+  (`@flighthq/movieclip`).
+
+Each keeps its own request because each needs a different deduction fix, and the controls in
+[node-any-generic-traits-leak](node-any-generic-traits-leak.md#related-leaks-and-how-they-differ) separate
+them. The residual change above would turn both into refusals. It would not make either compile.

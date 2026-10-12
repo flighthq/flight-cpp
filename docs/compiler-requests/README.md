@@ -286,3 +286,5 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   sibling of the inferred-`any` leak: movieclip's spritesheet source converts to `NodeOf<Traits>` with no `any` involved.
 - [A wider owner passed as a writable structural out parameter must keep its identity](writable-structural-out-of-a-wider-owner.md) —
   `@flighthq/geometry`'s aabb writers cannot take a `createAabb` result; scene3d's culling and bounds scratches depend on it (masked). No workaround is carried.
+- [Type-argument deduction must follow interface heritage](heritage-argument-generic-deduction.md) —
+  `@flighthq/movieclip`'s spritesheet source adds and invalidates a `Sprite` under a `Node2D`; the third leaked-`Traits` cause, cross-linked with the `any` and readonly-view requests. No workaround is carried.
