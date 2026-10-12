@@ -69,9 +69,15 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   a bound capability's `keys()` result is read as `result->reason` on a `std::variant`, so
   `@flighthq/preferences` refuses at emission and its header compiles nowhere; carried by the
   hand-written `preferences-storage-outcome-dispatch` override, which declares its own JSON boundary.
-- [`Object.assign` lowers only for a `Record` target](object-assign-onto-structural-record.md) —
-  assigning into a closed structural record (or an allocated entity) is refused in every form tried,
-  so `@flighthq/notification` refuses at emission; supplied by hand, with the lifecycle gap declared.
+- [`Object.assign` does not lower onto an ordinary structural target](object-assign-onto-structural-record.md) —
+  `Record` and complete callable-object construction lower, but an ordinary closed interface or entity
+  target does not; blocks Scene3D materialization and notification subscription construction.
+- [Typed-array static `from` needs a flight-cpp binding](typed-array-static-from-binding.md) —
+  five direct refusals reach the missing ambient member, including `scene3d-formats/gltfSkins.ts`; that
+  length-only array-like source also needs lowering beyond the represented-range runtime operation.
+- [An `undefined` logical-OR fallback loses the present value domain](logical-or-undefined-fallback-evidence.md) —
+  seven P-3D2 name/group sites refuse on `string || undefined`, while the same pinned fixtures with
+  `null` or a concrete string fallback emit.
 - [An entity intersection arm and the value that fills it are sibling C++ carriers](entity-intersection-arm-sibling-carriers.md) —
   `@flighthq/tray` refuses at emission and none of its four headers compile; carried by the source patch
   `tray-create-result-and-runtime-owner`, which names the create-result arms once and narrows the
