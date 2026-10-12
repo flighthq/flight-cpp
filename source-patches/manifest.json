@@ -2779,6 +2779,22 @@
       "unblocks": "`@flighthq/power`'s `_idlePollingIntervalMs` poll loop, which stores the interval handle in a local; it is the same family as compiler-host-timer-return-type-handle, in the position that patch does not cover.",
       "expires": "when upstream declares a local initialized from a bound host call as the binding's result carrier.",
       "appliedOn": "2026-10-12"
+    },
+    {
+      "id": "tray-create-result-and-runtime-owner",
+      "dependency": "flight",
+      "patch": "tray-create-result-and-runtime-owner.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/types/src/Tray.ts plus packages/tray/src/tray.ts",
+      "package": "@flighthq/tray",
+      "answers": "refusal",
+      "refusal": "the create-result union names its failure arm as an inline `Entity & Exclude<...>` while tray.ts builds that value from a second inline intersection, so the arm and the value are sibling C++ structs and the value cannot enter its own arm; the tray runtime is allocated as an EntityRuntime and asserted to a source-local TrayRuntime, which the emitter cannot follow between two unrelated owners",
+      "rewrite": "Names the create-result members once in types/Tray.ts (`TrayCreateSuccessResult`, `TrayCreateFailedResult`, `TrayCreateProviderFailureResult`) and uses those exact declarations in the union and at every value site in tray.ts; declares `TrayRuntime`/`TrayReleaseRuntime` beside `TrayIcon` in types/Tray.ts and narrows the entity's runtime slot to it; constructs the complete runtime owner directly instead of allocating and asserting; and reads the narrowed slot without a cast.",
+      "equivalence": "The union's member set is unchanged: success, `tray-create-failed`, and the three remaining capability failures, each with the same declared fields. Naming them adds no member and widens none. The narrowed entity slot says what the module already asserted on every read -- that a tray's runtime is a `TrayRuntime` -- and it is the shape @flighthq/types already gives Node, where the runtime sits beside the entity and the slot is narrowed there. The runtime literal carries the same fields with the same values the prior allocate-then-assign produced, including `binding: null`; initialization, state transitions, animation timing, release bookkeeping and identity are unchanged, and no object is copied, cast at runtime or replaced.",
+      "whyNotUpstreamFirst": "The declaration and the value that fills it are in two packages of the pinned Flight checkout, and the pinned compiler cannot join an intersection arm to a value that re-spells it. Naming the arm once is a target-neutral correction of the declared contract, and the narrowed runtime slot is the same contract Node already publishes.",
+      "unblocks": "@flighthq/tray: ten refused functions across `cpp-intersection-member-shapeless`, `cpp-uninitialized-variable-missing-type-evidence` and `cpp-reference-assertion-without-heritage`, and the four tray headers that fail to compile on the erased runtime accessor.",
+      "expires": "when the compiler joins an intersection arm to the value that fills it and can read an entity's runtime slot through an owner it does not declare, or Flight names the arm and narrows the slot upstream.",
+      "appliedOn": "2026-10-12"
     }
   ]
 }

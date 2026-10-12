@@ -89,8 +89,25 @@ Only the first refusal is reported per module, so the set is a floor.
 
 ## Carrying workaround
 
-None. No patch and no override is carried for `@flighthq/tray` today; `pkg:tier -- tray` reports it
-`partial` with 3 of 4 modules emitted and all four headers attempted and failing, which is the honest
-reading rather than a promotion. The shape of a remedy is visible from the two precedents — a `flight`
-source patch that names the failure arm once in `types/Tray.ts` and uses that name at the value site,
-plus the node-style exact runtime accessor — but it spans two packages and has not been authored.
+[`tray-create-result-and-runtime-owner.patch`](../../source-patches/tray-create-result-and-runtime-owner.patch)
+names the create-result members once in `types/Tray.ts` (`TrayCreateSuccessResult`,
+`TrayCreateFailedResult`, `TrayCreateProviderFailureResult`), uses those declarations in the union and at
+every value site in `tray.ts`, declares `TrayRuntime`/`TrayReleaseRuntime` beside `TrayIcon` and narrows
+the entity's runtime slot to it — the shape `@flighthq/types` already gives Node — constructs the
+complete runtime owner instead of allocating and asserting one, and reads the narrowed slot without a
+cast. It applies and reverses cleanly against `a627849`.
+
+**It advances the refusal without clearing it.** Measured in a scratch inventory (nothing committed):
+the module-level refusal moves from the sibling-owner error above to
+
+```
+cpp emission failed for @flighthq/tray/packages/tray/src/tray.ts: narrowed member structural switch case
+must identify one C++ variant alternative
+```
+
+which is emitted from `tray.ts:85`, `'error' in result ? result.error : undefined` — a member-presence
+test whose narrowed shape matches three of the four arms, so it does not identify one C++ alternative.
+That is a second, independent defect in the same module; the remainder of the chain is not yet walked.
+`@flighthq/tray` is therefore still `partial` with 3 of 4 modules emitted and no header compiling, and
+`pkg:generate -- tray` must not be run against the committed inventory until the `types` row is refreshed
+on top of this patch.

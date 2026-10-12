@@ -1,0 +1,220 @@
+diff --git a/packages/tray/src/tray.ts b/packages/tray/src/tray.ts
+--- a/packages/tray/src/tray.ts
++++ b/packages/tray/src/tray.ts
+@@ -1,4 +1,4 @@
+-import { allocateEntity, createEntityRuntime, finishEntity } from '@flighthq/entity/contract';
++import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
+ import { connectSignal, disconnectSignal } from '@flighthq/signals/contract';
+ import type {
+   Entity,
+@@ -27,13 +27,16 @@
+   TrayBalloonOptions,
+   TrayBalloonRemoveResult,
+   TrayBoundsResult,
+-  TrayCreateResult,
+   TrayCreateCapabilityResult,
++  TrayCreateFailedResult,
++  TrayCreateProviderFailureResult,
++  TrayCreateResult,
++  TrayCreateSuccessResult,
++  TrayDestroyCapabilityResult,
+   TrayDestroyResult,
+   TrayDoubleClickPolicyUpdateResult,
+   TrayDropEvent,
+   TrayEventAttachResult,
+-  TrayEventRelease,
+   TrayIcon,
+   TrayIconOptions,
+   TrayIconSource,
+@@ -44,6 +47,8 @@
+   TrayPopupMenuResult,
+   TrayPressedImageUpdateResult,
+   TrayReleaseResult,
++  TrayReleaseRuntime,
++  TrayRuntime,
+   TrayTemplateImageUpdateResult,
+   TrayTitleReadResult,
+   TrayTitleUpdateResult,
+@@ -53,18 +58,12 @@
+ } from '@flighthq/types/contract';
+ import { EntityRuntimeKey } from '@flighthq/types/contract';
+ 
+-interface TrayRuntime extends ReturnType<typeof createEntityRuntime> {
+-  animationGeneration: number;
+-  animationTimer: ReturnType<typeof setInterval> | null;
+-  animationWriteTail: Promise<void>;
+-  destroyPromise: Promise<TrayDestroyResult> | null;
+-  lifecycle: Readonly<HostTrayLifecycleCapability>;
+-  releases: Set<TrayReleaseRuntime>;
+-  state: 'active' | 'destroying' | 'partially-destroyed' | 'destroyed';
+-}
+-
+-interface TrayReleaseRuntime extends TrayEventRelease {
+-  released: boolean;
++// The create-result initializers write `error` and the outcome they were handed. Their destination is the
++// union's own arm; this names the writer view they already took, so neither side is an inline
++// intersection the emitter can only emit as a sibling struct.
++interface TrayCreateFailureWriter extends Entity {
++  error?: unknown;
++  outcome: string;
+ }
+ 
+ export async function createTrayIcon(
+@@ -76,26 +75,31 @@
+   try {
+     result = await hostTrayLifecycle.create(tray, options);
+   } catch (error) {
+-    const out = allocateEntity<Entity & { error?: unknown; outcome: 'tray-create-failed' }>();
++    const out = allocateEntity<TrayCreateFailedResult>();
+     initializeTrayCreateFailedResult(out, error, 'tray-create-failed');
+     return finishEntity(out);
+   }
+   if (result.outcome !== 'created') {
+-    const out = allocateEntity<TrayCreateResult>();
++    const out = allocateEntity<Entity & TrayCreateProviderFailureResult>();
+     initializeTrayCreateProviderFailureResult(out, 'error' in result ? result.error : undefined, result.outcome);
+     return finishEntity(out);
+   }
+ 
+-  const runtime = createEntityRuntime() as TrayRuntime;
+-  runtime.animationGeneration = 0;
+-  runtime.animationTimer = null;
+-  runtime.animationWriteTail = Promise.resolve();
+-  runtime.destroyPromise = null;
+-  runtime.lifecycle = hostTrayLifecycle;
+-  runtime.releases = new Set();
+-  runtime.state = 'active';
++  // The complete runtime owner is constructed here rather than allocated as an `EntityRuntime` and
++  // asserted to this shape: the two are separate emitted structs, and only the exact owner belongs in the
++  // narrowed slot.
++  const runtime: TrayRuntime = {
++    binding: null,
++    animationGeneration: 0,
++    animationTimer: null,
++    animationWriteTail: Promise.resolve(),
++    destroyPromise: null,
++    lifecycle: hostTrayLifecycle,
++    releases: new Set(),
++    state: 'active',
++  };
+   tray[EntityRuntimeKey] = runtime;
+-  const out = allocateEntity<Entity & { outcome: 'created'; tray: TrayIcon }>();
++  const out = allocateEntity<TrayCreateSuccessResult<TrayIcon>>();
+   initializeTrayCreateSuccessResult(out, 'created', tray);
+   return finishEntity(out);
+ }
+@@ -129,7 +133,7 @@
+   runtime.state = 'destroying';
+   stopTrayAnimationRuntime(runtime);
+   for (const release of [...runtime.releases]) await release.release();
+-  let result;
++  let result: TrayDestroyCapabilityResult;
+   try {
+     result = await runtime.lifecycle.destroy(tray);
+   } catch (error) {
+@@ -162,7 +166,7 @@
+ }
+ 
+ export function initializeTrayCreateFailedResult(
+-  out: EntityConstruction<Entity & { error?: unknown; outcome: 'tray-create-failed' }>,
++  out: EntityConstruction<TrayCreateFailedResult>,
+   error: unknown,
+   outcome: 'tray-create-failed',
+ ): void {
+@@ -171,7 +175,7 @@
+ }
+ 
+ export function initializeTrayCreateProviderFailureResult(
+-  out: EntityConstruction<Entity & { error?: unknown; outcome: string }>,
++  out: EntityConstruction<TrayCreateFailureWriter>,
+   error: unknown,
+   outcome: Exclude<TrayCreateCapabilityResult, { readonly outcome: 'created' }>['outcome'],
+ ): void {
+@@ -180,7 +184,7 @@
+ }
+ 
+ export function initializeTrayCreateSuccessResult<Tray extends TrayIcon>(
+-  out: EntityConstruction<Entity & { outcome: 'created'; tray: Tray }>,
++  out: EntityConstruction<TrayCreateSuccessResult<Tray>>,
+   outcome: 'created',
+   tray: Tray,
+ ): void {
+@@ -412,7 +416,7 @@
+ let _animationGuard: ((tray: TrayIcon, frameCount: number, intervalMs: number) => void) | null = null;
+ 
+ function getTrayRuntime(tray: Readonly<TrayIcon>): TrayRuntime | null {
+-  return (tray[EntityRuntimeKey] as TrayRuntime | undefined) ?? null;
++  return tray[EntityRuntimeKey] ?? null;
+ }
+ 
+ function getActiveTrayRuntime(tray: Readonly<TrayIcon>): TrayRuntime | null {
+diff --git a/packages/types/src/Tray.ts b/packages/types/src/Tray.ts
+--- a/packages/types/src/Tray.ts
++++ b/packages/types/src/Tray.ts
+@@ -1,4 +1,4 @@
+-import type { Entity } from './Entity.ts';
++import type { Entity, EntityRuntime, EntityRuntimeKey } from './Entity.ts';
+ import type { MenuItemTemplate } from './Menu.ts';
+ import type { RectangleLike } from './Rectangle.ts';
+ import type { Signal } from './Signal.ts';
+@@ -31,7 +31,28 @@
+ }
+ 
+ // Stable public identity. Provider-local numeric/string keys stay inside the native adapter's map.
+-export interface TrayIcon extends Entity {}
++//
++// The entity slot holds this package's runtime. Naming the runtime beside the entity and narrowing the
++// slot to it is what lets the emitted accessor read the exact owner: the erased `EntityRuntime` slot is
++// a C++ owner no cast can follow, while a narrowed slot is declared as the runtime itself. This is the
++// shape @flighthq/types gives Node, where `NodeRuntime` is declared beside `Node`.
++export interface TrayIcon extends Entity {
++  [EntityRuntimeKey]: TrayRuntime | undefined;
++}
++
++export interface TrayReleaseRuntime extends TrayEventRelease {
++  released: boolean;
++}
++
++export interface TrayRuntime extends EntityRuntime {
++  animationGeneration: number;
++  animationTimer: ReturnType<typeof setInterval> | null;
++  animationWriteTail: Promise<void>;
++  destroyPromise: Promise<TrayDestroyResult> | null;
++  lifecycle: Readonly<HostTrayLifecycleCapability>;
++  releases: Set<TrayReleaseRuntime>;
++  state: 'active' | 'destroying' | 'partially-destroyed' | 'destroyed';
++}
+ 
+ export interface TrayInteractionEvent {
+   altKey: boolean;
+@@ -62,9 +83,28 @@
+   | { readonly error?: unknown; readonly outcome: 'invalid-icon' }
+   | { readonly error?: unknown; readonly outcome: 'tray-create-failed' };
+ 
++// The create-result members are named once, so the union arm and the value that fills it are the same
++// declared owner. An intersection spelled inline in the union and again at the value site emits as two
++// sibling C++ structs, and the value then cannot enter its own arm.
++export interface TrayCreateSuccessResult<Tray extends TrayIcon = TrayIcon> extends Entity {
++  readonly outcome: 'created';
++  readonly tray: Tray;
++}
++
++export interface TrayCreateFailedResult extends Entity {
++  readonly error?: unknown;
++  readonly outcome: 'tray-create-failed';
++}
++
++export type TrayCreateProviderFailureResult =
++  | (Entity & { readonly outcome: 'cancelled' })
++  | (Entity & { readonly error?: unknown; readonly outcome: 'runtime-api-unavailable' })
++  | (Entity & { readonly error?: unknown; readonly outcome: 'invalid-icon' });
++
+ export type TrayCreateResult<Tray extends TrayIcon = TrayIcon> =
+-  | (Entity & { readonly outcome: 'created'; readonly tray: Tray })
+-  | (Entity & Exclude<TrayCreateCapabilityResult, { readonly outcome: 'created' }>);
++  | TrayCreateSuccessResult<Tray>
++  | TrayCreateFailedResult
++  | TrayCreateProviderFailureResult;
+ 
+ export interface TrayDestroyFailure {
+   readonly error?: unknown;
