@@ -38,10 +38,9 @@ async closures require C++ coroutine lowering
 ## Expected behavior
 
 Each closure is a coroutine with exactly the body the source wrote: the async method becomes a callable
-returning `flight::Task<std::optional<flight::String>>` (or the emitted carrier for its declared result),
-and the async callback handed to a promise combinator becomes the same `Task`-returning callable. The
-statement-level lowering the module-level `async function` already gets is what these need; nothing about
-the body differs.
+returning the same `flight::Task<…>` carrier the module-level `async function` already gets for that
+declared result, and the async callback handed to a promise combinator becomes that same `Task`-returning
+callable. The statement-level lowering exists; nothing about these bodies differs from it.
 
 ## Affected modules
 
