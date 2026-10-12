@@ -3,19 +3,24 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: variable (binding) -- source line 12
+//   missing: variable (binding) -- source line 8
+//   missing: variable (binding) -- source line 9
+//   missing: variable (binding) -- source line 11
 //   missing: function checkForAppUpdate -- source line 14
 #include <coroutine>
-#include <flight/erased_ref.hpp>
 #include <flight/error.hpp>
 #include <flight/presence.hpp>
 #include <flight/structural_ref.hpp>
+#include <flight/weak_map.hpp>
 #include <optional>
-#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
+
+namespace flight::types { struct AppUpdateInstallOutcome; }
+namespace flight::types { struct DownloadedUpdate; }
+namespace flight::types { struct HostUpdaterCommandCapability; }
 
 #include <flight/types/updater.hpp>
 
@@ -23,23 +28,21 @@ namespace flight::updater {
 
 using flight::types::AppUpdateCheckOutcome;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_EC0850ECB1763718
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_EC0850ECB1763718
-struct reason_ec0850ecb1763718 : public flight::ReferenceEnabled {
-  flight::String reason;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_EC0850ECB1763718
 
-inline flight::Ref<AppUpdateCheckOutcome> check_in_progress = flight::structural_ref_cast<flight::Ref<AppUpdateCheckOutcome>>(flight::make_ref<reason_ec0850ecb1763718>(reason_ec0850ecb1763718{.reason = flight::String("check-in-progress")}));
+// NOT GENERATED: variable (binding) -- source line 8
+//
+// The source it stood for:
+//   const CHECK_IN_PROGRESS = Object.freeze({ reason: 'check-in-progress' }) as AppUpdateCheckOutcome;
+// cpp emission failed for @flighthq/updater/packages/updater/src/updater.ts: structural-row projection requires
+// a represented object-reference target
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_C51E5FD18AB11865
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_C51E5FD18AB11865
-struct reason_c51e5fd18ab11865 : public flight::ReferenceEnabled {
-  flight::String reason;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_C51E5FD18AB11865
 
-inline flight::Ref<AppUpdateCheckOutcome> not_available = flight::structural_ref_cast<flight::Ref<AppUpdateCheckOutcome>>(flight::make_ref<reason_c51e5fd18ab11865>(reason_c51e5fd18ab11865{.reason = flight::String("not-available")}));
+// NOT GENERATED: variable (binding) -- source line 9
+//
+// The source it stood for:
+//   const NOT_AVAILABLE = Object.freeze({ reason: 'not-available' }) as AppUpdateCheckOutcome;
+// cpp emission failed for @flighthq/updater/packages/updater/src/updater.ts: structural-row projection requires
+// a represented object-reference target
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_21A7169B3EFF3D17
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_21A7169B3EFF3D17
@@ -50,70 +53,32 @@ struct reason_21a7169b3eff3d17 : public flight::ReferenceEnabled {
 
 inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_21a7169b3eff3d17>>>> operation_failed = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_21a7169b3eff3d17>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<reason_21a7169b3eff3d17>>>>(flight::make_ref<reason_21a7169b3eff3d17>(reason_21a7169b3eff3d17{.reason = flight::String("operation-failed")})));
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_5D202CF6C17C5B52
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_5D202CF6C17C5B52
-struct reason_5d202cf6c17c5b52 : public flight::ReferenceEnabled {
-  flight::String reason;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_5D202CF6C17C5B52
 
-inline flight::Ref<AppUpdateInstallOutcome> install_ok = flight::structural_ref_cast<flight::Ref<AppUpdateInstallOutcome>>(flight::make_ref<reason_5d202cf6c17c5b52>(reason_5d202cf6c17c5b52{.reason = flight::String("ok")}));
-
-
-// NOT GENERATED: variable (binding) -- source line 12
-// refusal: cpp-weak-map-value-representation-unproven [source-portability]
+// NOT GENERATED: variable (binding) -- source line 11
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
-//   const _downloadOwners = new WeakMap<DownloadedUpdate, HostUpdaterCommandCapability>();
-//   
-// cpp emission failed for @flighthq/updater/packages/updater/src/updater.ts: flight-cpp WeakMap value requires a
-// proven C++ representation
+//   const INSTALL_OK = Object.freeze({ reason: 'ok' }) as AppUpdateInstallOutcome;
+// cpp emission failed for @flighthq/updater/packages/updater/src/updater.ts: a structural assertion from the
+// readonly row Readonly<object> to the writable row AppUpdateInstallOutcome claims mutation the source refused:
+// a readonly row never becomes writable, because the boundary the value came through said its subject must not
+// be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the
+// readonly row where the value is only read, or declare the source -- its parameter, slot, or accessor result --
+// as the writable type where that object may really be mutated. Choosing between those two repairs is the
+// question this assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME
+// OWNER that the mutating paths must write needs a mutable-source accessor returning the full writable owner
+// from the typed runtime slot, with the readonly accessor kept for reads, because the capability has to exist on
+// the storage and accessor that establish those cells; a NODE that the read paths only traverse and never mutate
+// needs the two authorities separated instead, with a readonly view on every read path and a separate mutable
+// entry point for the paths that really mutate, because laundering a writable node out of a readonly boundary
+// grants mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained
+// row carries; neither adds cells to a row that does not declare them.
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_BINDING_UID_06E64A362B012722
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_BINDING_UID_06E64A362B012722
-struct binding_uid_06e64a362b012722 : public flight::ReferenceEnabled {
-  std::optional<flight::ErasedRef> binding;
-  std::optional<flight::String> uid;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_BINDING_UID_06E64A362B012722
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_DOWNLOAD_SIZE_BYTES_IS_MANDATORY_MINIMUM_OS_VERSION_NOTES_RELEASE_DATE_SHA512_VERSION_96DDB2B7F4E8E02B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_DOWNLOAD_SIZE_BYTES_IS_MANDATORY_MINIMUM_OS_VERSION_NOTES_RELEASE_DATE_SHA512_VERSION_96DDB2B7F4E8E02B
-struct download_size_bytes_is_mandatory_minimum_os_version_notes_release_date_sha512_version_96ddb2b7f4e8e02b : public flight::ReferenceEnabled {
-  std::optional<double> download_size_bytes;
-  std::optional<bool> is_mandatory;
-  std::optional<flight::String> minimum_os_version;
-  std::optional<flight::String> notes;
-  std::optional<flight::String> release_date;
-  std::optional<flight::String> sha512;
-  std::optional<flight::String> version;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_DOWNLOAD_SIZE_BYTES_IS_MANDATORY_MINIMUM_OS_VERSION_NOTES_RELEASE_DATE_SHA512_VERSION_96DDB2B7F4E8E02B
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_ENTITY_RUNTIME_KEY_INFO_EB74CDBE2EC6E2AA
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_ENTITY_RUNTIME_KEY_INFO_EB74CDBE2EC6E2AA
-struct entity_runtime_key_info_eb74cdbe2ec6e2aa : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<binding_uid_06e64a362b012722>> entity_runtime_key;
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<download_size_bytes_is_mandatory_minimum_os_version_notes_release_date_sha512_version_96ddb2b7f4e8e02b>>>> info;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_ENTITY_RUNTIME_KEY_INFO_EB74CDBE2EC6E2AA
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_UPDATE_B289886A950156DE
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_UPDATE_B289886A950156DE
-struct reason_update_b289886a950156de : public flight::ReferenceEnabled {
-  flight::String reason;
-  flight::Ref<entity_runtime_key_info_eb74cdbe2ec6e2aa> update;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_UPDATE_B289886A950156DE
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_01523507F7B21613
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_01523507F7B21613
-using reason_01523507f7b21613 = flight::types::reason_01523507f7b21613;
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_UPDATER_REASON_01523507F7B21613
+inline flight::WeakMap<flight::Ref<flight::types::DownloadedUpdate>, flight::Ref<flight::types::HostUpdaterCommandCapability>> download_owners = flight::WeakMap<flight::Ref<flight::types::DownloadedUpdate>, flight::Ref<flight::types::HostUpdaterCommandCapability>>();
 
 
 // NOT GENERATED: function checkForAppUpdate -- source line 14
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-contextual-union-inequivalent [target-runtime]
 //
 // The source it stood for:
 //   export async function checkForAppUpdate(
@@ -143,18 +108,28 @@ using reason_01523507f7b21613 = flight::types::reason_01523507f7b21613;
 //     }
 //   }
 //   
-// cpp emission failed for @flighthq/updater/packages/updater/src/updater.ts: contextual union value type
-// flight::Ref<AppUpdateCheckOutcome> is not a represented runtime domain
+// cpp emission failed for @flighthq/updater/packages/updater/src/updater.ts: contextual C++ union conversion
+// requires equivalent source union evidence: target multiVariant carriers
+// [flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_update_b289886a950156de>>>>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_01523507f7b21613>>>>] from await
+// source multiVariant carriers
+// [flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_update_457a6ef5d21e9081>>>>,
+// flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_01523507f7b21613>>>>]. The
+// alternatives match uniquely, but no checked target-runtime conversion exists between their C++ carriers. Keep
+// both sides on the same declared union alias; for a Map or WeakMap lookup followed by a rebind, construct its
+// declared value owner and ensure every rebound member already has that owner member's carrier -- a Readonly
+// structural view does not become a mutable nominal Ref. Otherwise add an identity-preserving runtime conversion
+// contract.
 
-inline flight::Task<flight::Ref<AppUpdateInstallOutcome>> install_downloaded_update(flight::Ref<HostUpdaterCommandCapability> host_updater_command, flight::Ref<DownloadedUpdate> update) {
-  std::optional<flight::Ref<HostUpdaterCommandCapability>> origin = download_owners.get(update);
+inline flight::Task<flight::Ref<flight::types::AppUpdateInstallOutcome>> install_downloaded_update(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostUpdaterCommandCapability>>>> host_updater_command, flight::Ref<flight::types::DownloadedUpdate> update) {
+  auto origin = download_owners.get(update);
   if (!origin.has_value()) {
     throw flight::TypeError(flight::String("Downloaded update did not originate from a completed check"));
   }
   try {
-    flight::Ref<AppUpdateInstallOutcome> outcome;
-    if ((host_updater_command == origin.value())) {
-      (outcome = co_await host_updater_command->install(update));
+    flight::Ref<flight::types::AppUpdateInstallOutcome> outcome;
+    if ((host_updater_command == flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostUpdaterCommandCapability>>>>(origin.value()))) {
+      (outcome = co_await flight::row_get<flight::RowKey<"install">>(host_updater_command)(update));
     }
     else {
       (outcome = co_await origin.value()->install(update));
@@ -178,8 +153,8 @@ inline void assert_sync_void(T value) {
   (void)value;
 }
 
-inline void destroy_updater(flight::Ref<HostUpdaterCommandCapability> host_updater_command) {
-  assert_sync_void<flight::Undefined>((host_updater_command->destroy(), flight::undefined));
+inline void destroy_updater(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostUpdaterCommandCapability>>>> host_updater_command) {
+  assert_sync_void<flight::Undefined>((flight::row_get<flight::RowKey<"destroy">>(host_updater_command)(), flight::undefined));
 }
 
 } // namespace flight::updater

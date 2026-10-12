@@ -122,6 +122,11 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   the runtime aggregate and per-arm carriers already exist, but the compiler-owned `Promise` table
   omits the member; Scene3D's two discard-only calls need the binding, while assets also needs checked
   `status`/`reason` lowering.
+- [One frozen constant serving two outcome unions needs one carrier per union](shared-frozen-constant-across-two-outcome-unions.md) —
+  `@flighthq/updater`'s `OPERATION_FAILED` is returned from both a variant-valued check function and a
+  nominal install outcome; the emitter gives it the first union's readonly row, so the retained install
+  body cannot compile while the banner says everything else did; carried for updater by the override
+  `updater-complete-module`.
 - [A readonly structural row cannot yet enter `unknown`](structural-row-erasure-to-unknown.md) —
   P-3D2 calls the `unknown`-accepting `isMesh` predicate with `Readonly<Node3D>`; exact references can
   enter `Any`, but a row needs an identity- and native-owner-preserving structural alternative.

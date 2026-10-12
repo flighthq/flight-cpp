@@ -87,3 +87,26 @@ function itself, whose refusal is the profile-mapping defect in
 [`image-source-union-domain-discriminator.md`](image-source-union-domain-discriminator.md) — supplying
 the callers would change nothing while that stands. `@flighthq/video` is `partial` with the three failing
 headers reported.
+
+## Third measured site: `@flighthq/updater`
+
+The same outcome from a refused *binding* rather than a refused function. `packages/updater/src/updater.ts`
+refuses its three frozen outcome constants and `checkForAppUpdate`, and retains `install_downloaded_update` and
+`destroy_updater`. The retained install body names a constant the module omitted:
+
+```cpp
+    if ((outcome->reason != flight::String("ok"))) { co_return operation_failed; }
+    download_owners.erase(update);
+    co_return install_ok;
+```
+
+`install_ok` (source line 11) is declared nowhere in the header -- its own `NOT GENERATED` marker sits above it
+-- and `operation_failed` is declared as the *check* union's carrier, which this function's declared result
+(`flight::Ref<AppUpdateInstallOutcome>`) cannot hold, so the body fails twice: at a name that never existed
+(this request's subject) and at a carrier of the wrong union
+([`shared-frozen-constant-across-two-outcome-unions.md`](shared-frozen-constant-across-two-outcome-unions.md)).
+
+Measured on the regenerated slice, emission alone, no override: `flight/updater/updater.hpp` gives 5 errors --
+`138: no matching member function for call to 'return_value'`, `141: use of undeclared identifier 'install_ok'`,
+`144:` the same `return_value` failure -- and all three of the package's headers report the same 5, because
+`contract.hpp` and `_internal_index.hpp` both re-export the module.

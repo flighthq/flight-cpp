@@ -65,3 +65,51 @@ exist — the shape filed as
 `overrides/include/flight/shortcut/shortcut_explicit_dependency.hpp` supplies the three constants with the
 projection the emitted attach constants already use; `@flighthq/shortcut` compiles 4/4 headers on that
 basis.
+
+## Third measured site: `@flighthq/updater`
+
+The same rule, and the sharpest form of the same inconsistency: four sibling constants of one file are the
+same kind of frozen object literal, and the emitter treats them three different ways.
+
+`packages/updater/src/updater.ts` lines 8-11:
+
+```ts
+const CHECK_IN_PROGRESS = Object.freeze({ reason: 'check-in-progress' }) as AppUpdateCheckOutcome;
+const NOT_AVAILABLE = Object.freeze({ reason: 'not-available' }) as AppUpdateCheckOutcome;
+const OPERATION_FAILED: Readonly<{ reason: 'operation-failed' }> = Object.freeze({ reason: 'operation-failed' });
+const INSTALL_OK = Object.freeze({ reason: 'ok' }) as AppUpdateInstallOutcome;
+```
+
+Lines 8 and 9 are refused with exactly this rule:
+
+```
+cpp emission failed for @flighthq/updater/packages/updater/src/updater.ts: structural-row projection
+requires a represented object-reference target
+```
+
+Line 11 is refused under a different rule
+([`readonly-mesh-to-writable-node-authority.md`](readonly-mesh-to-writable-node-authority.md)). **Line 10 is
+emitted** -- the one whose type is a declared readonly row rather than an `as` assertion to a union -- and what
+the emitter emits for it is a module-local anonymous struct plus its readonly view:
+
+```cpp
+struct reason_21a7169b3eff3d17 : public flight::ReferenceEnabled { flight::String reason; };
+inline flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<reason_21a7169b3eff3d17>>>>
+    operation_failed = flight::structural_ref_cast<...>(...);
+```
+
+So the projection these constants need exists and is applied to the sibling spelling. What it does not do is
+land on the *union's* arm: `reason_21a7169b3eff3d17` is a second, module-local spelling of the shape
+`flight::types` already declares as `reason_01523507f7b21613`, and the emitted union cannot hold it
+(`is_constructible_v<AppUpdateCheckOutcome, StructuralRef<RowReadonly<RowOf<Ref<reason_21a7169b3eff3d17>>>>>`
+is false; measured). The derived structural-alias repair does not fold it either: the slice committed before
+this one (binding profile set `0a2183634245`) *did* alias this module's copy of that shape
+(`using reason_01523507f7b21613 = flight::types::reason_01523507f7b21613;`), and the slice regenerated under
+`070fadeb2a07` does not.
+
+The three constants even change places between the two slices: under `0a2183634245` lines 8 and 9 were emitted
+as `flight::Ref<AppUpdateCheckOutcome>` erased references and `_downloadOwners` (line 12) was refused; under
+`070fadeb2a07` lines 8 and 9 are refused and the WeakMap is emitted. Neither slice is self-consistent.
+
+Carrying workaround: `@flighthq/updater`'s override supplies the two refused constants as the union's own
+reason-only arm, built from the `flight::types` struct that arm is declared with.

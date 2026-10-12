@@ -823,6 +823,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("inputValues") && requires { object.input_values; }) return (object.input_values);
   else if constexpr (Key::name.view() == std::string_view("inputs") && requires { object.inputs; }) return (object.inputs);
   else if constexpr (Key::name.view() == std::string_view("insertSpatialObject") && requires { object.insert_spatial_object; }) return (object.insert_spatial_object);
+  else if constexpr (Key::name.view() == std::string_view("install") && requires { object.install; }) return (object.install);
   else if constexpr (Key::name.view() == std::string_view("instanceColors") && requires { object.instance_colors; }) return (object.instance_colors);
   else if constexpr (Key::name.view() == std::string_view("instanceCount") && requires { object.instance_count; }) return (object.instance_count);
   else if constexpr (Key::name.view() == std::string_view("instanceMatrices") && requires { object.instance_matrices; }) return (object.instance_matrices);
@@ -2952,6 +2953,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("inputValues") && requires(Object& object) { object.input_values; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().input_values)>>{};
   else if constexpr (Key::name.view() == std::string_view("inputs") && requires(Object& object) { object.inputs; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inputs)>>{};
   else if constexpr (Key::name.view() == std::string_view("insertSpatialObject") && requires(Object& object) { object.insert_spatial_object; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().insert_spatial_object)>>{};
+  else if constexpr (Key::name.view() == std::string_view("install") && requires(Object& object) { object.install; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().install)>>{};
   else if constexpr (Key::name.view() == std::string_view("instanceColors") && requires(Object& object) { object.instance_colors; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().instance_colors)>>{};
   else if constexpr (Key::name.view() == std::string_view("instanceCount") && requires(Object& object) { object.instance_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().instance_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("instanceMatrices") && requires(Object& object) { object.instance_matrices; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().instance_matrices)>>{};
@@ -5084,6 +5086,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->input_values; }) owner.bind_named("inputValues", [object]() -> decltype(auto) { return (object->input_values); });
   if constexpr (requires { object->inputs; }) owner.bind_named("inputs", [object]() -> decltype(auto) { return (object->inputs); });
   if constexpr (requires { object->insert_spatial_object; }) owner.bind_named("insertSpatialObject", [object]() -> decltype(auto) { return (object->insert_spatial_object); });
+  if constexpr (requires { object->install; }) owner.bind_named("install", [object]() -> decltype(auto) { return (object->install); });
   if constexpr (requires { object->instance_colors; }) owner.bind_named("instanceColors", [object]() -> decltype(auto) { return (object->instance_colors); });
   if constexpr (requires { object->instance_count; }) owner.bind_named("instanceCount", [object]() -> decltype(auto) { return (object->instance_count); });
   if constexpr (requires { object->instance_matrices; }) owner.bind_named("instanceMatrices", [object]() -> decltype(auto) { return (object->instance_matrices); });
@@ -7249,6 +7252,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(input_values)
   FLIGHT_SDK_ROW_WIDENS(inputs)
   FLIGHT_SDK_ROW_WIDENS(insert_spatial_object)
+  FLIGHT_SDK_ROW_WIDENS(install)
   FLIGHT_SDK_ROW_WIDENS(instance_colors)
   FLIGHT_SDK_ROW_WIDENS(instance_count)
   FLIGHT_SDK_ROW_WIDENS(instance_matrices)

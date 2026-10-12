@@ -6041,8 +6041,7 @@
       "flight/swf/swf_sound_handler.hpp",
       "flight/swf/swf_static_text_handler.hpp",
       "flight/swf/swf_video_handler.hpp",
-      "flight/tilemap_formats/tiled_tmx_format.hpp",
-      "flight/updater/updater.hpp"
+      "flight/tilemap_formats/tiled_tmx_format.hpp"
     ],
     "structs": [
       "apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539",
@@ -6079,7 +6078,6 @@
       "permission_reason_2a03a8a4faab9e18",
       "points_kind_35a8f5f2a3a8bd66",
       "points_kind_9b00ebdad27cdb4e",
-      "reason_01523507f7b21613",
       "reason_3cff4e0108d25bfd",
       "reason_43a745d20647bfb6",
       "reason_5a15b37101877c7d",
@@ -8471,7 +8469,7 @@
       "sourceModules": 1029
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/updater",
       "cppNamespace": "flight::updater",
       "emittedModules": 2,

@@ -1,180 +1,340 @@
+// Focused behavior tests for @flighthq/updater.
+//
+// The package is `partial` at a627849 in the sense that its one implementation module -- updater.ts --
+// is emitted as a PARTIAL: the emitter refuses its three frozen outcome constants and the union-valued
+// checkForAppUpdate, and the module is supplied by overrides/include/flight/updater/updater.hpp (the
+// emission verbatim plus those refusals). The other two modules emit whole. This test drives the
+// supplied surface and the emitter's own install and destroy bodies, and every case is either ported
+// from the module's own upstream suite (packages/updater/src/updater.test.ts) or pinned to the source's
+// stated semantics:
+//
+//   * OUTCOME ARMS: the three check outcomes the source returns as module-level frozen constants are
+//     single objects here too -- two checks that return the same reason hand back the same arm -- while
+//     the `downloaded` arm is a FRESH wrapper holding the SAME update the provider handed back, because
+//     the source builds that one with Object.freeze({...}) per call. A reason that is none of the four
+//     listed, and a provider that rejects, are both operation-failed (the source's `default:` arm and
+//     its catch).
+//   * HOST IDENTITY: destroyUpdater destroys only the capability it was given; a downloaded handle is
+//     routed to its recorded origin, not to the capability the caller later passes; and a second
+//     provider whose check returns an update another provider already owns is refused rather than
+//     silently stealing the handle.
+//   * LIFECYCLE / ATTEMPT-ALL: the owner record is written once per completed download, survives a
+//     failed install (so the handle can be retried, including through a replacement capability), and is
+//     consumed only after an install that reports ok -- after which the handle no longer resolves.
+//   * EXCEPTION SHAPE: an update that did not originate from a completed check rejects with TypeError,
+//     and the source's own message is the one carried.
+//
+// Every fixture below constructs the union's declared carriers directly (the flight/types structs the
+// two alternatives are declared with) rather than through the module's own builders, so an arm this
+// test hands to the module is genuinely the declared shape and not an artefact of the module's reader.
+#include <flight/executor.hpp>
 #include <flight/updater/updater.hpp>
 
+#include <functional>
 #include <iostream>
-#include <stdexcept>
+#include <memory>
+#include <optional>
+#include <string>
 #include <utility>
+#include <variant>
+#include <vector>
 
 namespace {
 
+int failures = 0;
+
 bool check(bool condition, const char* message) {
-  if (!condition) std::cerr << message << '\n';
+  if (!condition) {
+    std::cerr << "FAIL: " << message << '\n';
+    ++failures;
+  }
   return condition;
 }
 
-flight::Ref<flight::types::DownloadedUpdate> make_update(flight::String version) {
-  using namespace flight::types;
-  const auto info = flight::make_ref<UpdateInfo>(UpdateInfo{
-      .download_size_bytes = std::nullopt,
-      .is_mandatory = std::nullopt,
-      .minimum_os_version = std::nullopt,
-      .notes = std::nullopt,
-      .release_date = std::nullopt,
-      .sha512 = std::nullopt,
-      .version = std::move(version),
-  });
-  return flight::make_ref<DownloadedUpdate>(DownloadedUpdate{
-      .entity_runtime_key = std::nullopt,
-      .info = flight::StructuralRef<flight::RowReadonly<
-          flight::RowOf<flight::Ref<UpdateInfo>>>>(info),
-  });
+using flight::String;
+using Capability = flight::types::HostUpdaterCommandCapability;
+using CheckOutcome = flight::types::AppUpdateCheckOutcome;
+using InstallOutcome = flight::types::AppUpdateInstallOutcome;
+using Update = flight::types::DownloadedUpdate;
+
+// The two carriers AppUpdateCheckOutcome is declared with: alternative 0 is the update-bearing arm and
+// alternative 1 the reason-only one.
+using ReasonArm = flight::StructuralRef<
+    flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::reason_01523507f7b21613>>>>;
+using UpdateArm = flight::StructuralRef<
+    flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::reason_update_457a6ef5d21e9081>>>>;
+
+String reason_of(const CheckOutcome& outcome) {
+  return std::visit([](const auto& arm) { return arm->reason; }, outcome);
+}
+
+// The identity of the object an arm holds, so a test can say whether two outcomes are the same object
+// or two objects that merely carry equal fields.
+const void* arm_identity(const CheckOutcome& outcome) {
+  return std::visit([](const auto& arm) { return static_cast<const void*>(arm.shared_owner().get()); },
+                    outcome);
+}
+
+std::optional<flight::Ref<Update>> update_of(const CheckOutcome& outcome) {
+  return std::visit(
+      [](const auto& arm) -> std::optional<flight::Ref<Update>> {
+        if constexpr (requires { arm->update; }) {
+          return arm->update;
+        } else {
+          return std::nullopt;
+        }
+      },
+      outcome);
+}
+
+flight::Ref<Update> downloaded_update() {
+  auto update = flight::make_ref<Update>();
+  update->info =
+      flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::UpdateInfo>>>>(
+          flight::make_ref<flight::types::UpdateInfo>());
+  return update;
+}
+
+CheckOutcome reason_outcome(const char* reason) {
+  return CheckOutcome{ReasonArm(flight::make_ref<flight::types::reason_01523507f7b21613>(
+      flight::types::reason_01523507f7b21613{.reason = String(reason)}))};
+}
+
+CheckOutcome downloaded_outcome(flight::Ref<Update> update) {
+  return CheckOutcome{UpdateArm(flight::make_ref<flight::types::reason_update_457a6ef5d21e9081>(
+      flight::types::reason_update_457a6ef5d21e9081{
+          .reason = String("downloaded"), .update = std::move(update)}))};
+}
+
+// A host updater command whose three operations count their calls and answer from the test's own
+// fixture. `install` answers from a queue of outcomes so a retry can be made to succeed after a failure.
+struct Backend {
+  std::shared_ptr<Capability> command = std::make_shared<Capability>();
+  int checks = 0;
+  int destroys = 0;
+  std::vector<flight::Ref<Update>> installs;
+  std::function<CheckOutcome()> on_check = [] { return reason_outcome("not-available"); };
+  std::function<flight::Task<CheckOutcome>()> check_task;
+  std::vector<bool> install_ok = {true};
+  std::size_t install_call = 0;
+};
+
+flight::Ref<Capability> backend(std::shared_ptr<Backend> state) {
+  auto command = flight::make_ref<Capability>();
+  command->check = [state]() {
+    ++state->checks;
+    if (state->check_task) return state->check_task();
+    return flight::Task<CheckOutcome>::resolve(state->on_check());
+  };
+  command->destroy = [state]() { ++state->destroys; };
+  command->install = [state](flight::Ref<Update> update) {
+    state->installs.push_back(update);
+    const bool ok = state->install_ok[std::min(state->install_call, state->install_ok.size() - 1)];
+    ++state->install_call;
+    auto outcome = flight::make_ref<InstallOutcome>();
+    outcome->reason = String(ok ? "ok" : "operation-failed");
+    return flight::Task<flight::Ref<InstallOutcome>>::resolve(outcome);
+  };
+  state->command = command;
+  return command;
 }
 
 }  // namespace
 
 int main() {
-  using flight::String;
-  using namespace flight::types;
+  const auto executor = std::make_shared<flight::QueueExecutor>();
+  const flight::ExecutorScope scope(executor);
 
-  int check_calls = 0;
-  int destroy_calls = 0;
-  int install_calls = 0;
-  auto next_check = flight::updater::not_available;
-  auto next_install = flight::make_ref<AppUpdateInstallOutcome>(
-      AppUpdateInstallOutcome{.reason = String("ok")});
-  bool reject_check = false;
-  bool reject_install = false;
-  flight::Ref<DownloadedUpdate> installed_update;
-  const auto origin = flight::make_ref<HostUpdaterCommandCapability>(
-      HostUpdaterCommandCapability{
-          .check = [&]() {
-            ++check_calls;
-            if (reject_check) {
-              return flight::Task<AppUpdateCheckOutcome>::reject(
-                  std::runtime_error("private native detail"));
-            }
-            return flight::Task<AppUpdateCheckOutcome>::resolve(next_check);
-          },
-          .destroy = [&]() { ++destroy_calls; },
-          .install = [&](flight::Ref<DownloadedUpdate> update) {
-            ++install_calls;
-            installed_update = std::move(update);
-            if (reject_install) {
-              return flight::Task<flight::Ref<AppUpdateInstallOutcome>>::reject(
-                  std::runtime_error("private install detail"));
-            }
-            return flight::Task<flight::Ref<AppUpdateInstallOutcome>>::resolve(
-                next_install);
-          },
-      });
+  // A check awaits exactly one provider call, and a reason the source returns as a module constant comes
+  // back as the module's own object rather than as a copy.
+  {
+    auto state = std::make_shared<Backend>();
+    state->on_check = [] { return reason_outcome("not-available"); };
+    const auto host = backend(state);
 
-  const auto first_not_available =
-      flight::updater::check_for_app_update(origin).get();
-  const auto second_not_available =
-      flight::updater::check_for_app_update(origin).get();
-  if (!check(flight::updater::check_reason(first_not_available) ==
-                 String("not-available") &&
-                 check_calls == 2,
-             "check did not await exactly one provider operation") ||
-      !check(std::get<flight::updater::CheckReasonRow>(first_not_available) ==
-                 std::get<flight::updater::CheckReasonRow>(second_not_available),
-             "check sentinel identity was not stable")) {
-    return 1;
+    const auto outcome = flight::updater::check_for_app_update(host).get();
+    check(reason_of(outcome) == String("not-available"), "the provider's reason is carried through");
+    check(outcome.index() == 1, "as the union's reason-only alternative");
+    check(state->checks == 1, "after exactly one provider check");
+    check(arm_identity(outcome) == arm_identity(flight::updater::not_available),
+          "and the outcome IS the module's not-available constant, not a copy of it");
   }
 
-  reject_check = true;
-  const auto rejected_check = flight::updater::check_for_app_update(origin).get();
-  reject_check = false;
-  next_check = flight::updater::make_check_reason(String("unexpected"));
-  const auto unknown_check = flight::updater::check_for_app_update(origin).get();
-  if (!check(flight::updater::check_reason(rejected_check) ==
-                 String("operation-failed") &&
-                 flight::updater::check_reason(unknown_check) ==
-                     String("operation-failed"),
-             "provider rejection or unknown reason leaked through check")) {
-    return 1;
+  // Two checks that answer the same reason hand back the same object, which is what a frozen module
+  // constant means; and a reason the source does not list is operation-failed, as is a rejecting
+  // provider.
+  {
+    auto state = std::make_shared<Backend>();
+    state->on_check = [] { return reason_outcome("check-in-progress"); };
+    const auto host = backend(state);
+
+    const auto first = flight::updater::check_for_app_update(host).get();
+    const auto second = flight::updater::check_for_app_update(host).get();
+    check(arm_identity(first) == arm_identity(second),
+          "the same reason is the same object across two checks");
+    check(arm_identity(first) == arm_identity(flight::updater::check_in_progress),
+          "and it is the module's check-in-progress constant");
+
+    auto unlisted = std::make_shared<Backend>();
+    unlisted->on_check = [] { return reason_outcome("something-else"); };
+    const auto unknown = flight::updater::check_for_app_update(backend(unlisted)).get();
+    check(reason_of(unknown) == String("operation-failed"),
+          "a reason the source does not list is operation-failed");
+    check(arm_identity(unknown) == arm_identity(flight::updater::operation_failed),
+          "carried as the module's operation-failed constant");
+
+    auto rejecting = std::make_shared<Backend>();
+    rejecting->check_task = [] {
+      return flight::Task<CheckOutcome>::reject(
+          flight::Error(String("native detail must not leak through a portable outcome")));
+    };
+    const auto failed = flight::updater::check_for_app_update(backend(rejecting)).get();
+    check(reason_of(failed) == String("operation-failed"), "a rejecting provider is operation-failed");
+    check(arm_identity(failed) == arm_identity(flight::updater::operation_failed),
+          "with no native detail invented for it");
   }
 
-  const auto update = make_update(String("1.2.3"));
-  next_check = flight::updater::downloaded_outcome(update);
-  const auto downloaded = flight::updater::check_for_app_update(origin).get();
-  if (!check(flight::updater::check_reason(downloaded) == String("downloaded") &&
-                 flight::updater::downloaded_update(downloaded) == update,
-             "downloaded check did not retain the update identity")) {
-    return 1;
+  // The downloaded arm is a FRESH wrapper around the SAME update: the source builds one per call with
+  // Object.freeze({reason:'downloaded', update}), where update is the provider's own reference.
+  {
+    auto state = std::make_shared<Backend>();
+    const auto update = downloaded_update();
+    // The provider hands back THE SAME arm object every time, so "the module built a fresh wrapper" is
+    // distinguishable from "the module passed the provider's arm through".
+    const auto provided = downloaded_outcome(update);
+    state->on_check = [provided] { return provided; };
+    const auto host = backend(state);
+
+    const auto first = flight::updater::check_for_app_update(host).get();
+    const auto second = flight::updater::check_for_app_update(host).get();
+    check(first.index() == 0 && reason_of(first) == String("downloaded"),
+          "a downloaded check reports the update arm");
+    check(arm_identity(first) != arm_identity(second),
+          "each downloaded check builds its own wrapper");
+    check(arm_identity(first) != arm_identity(provided),
+          "and the wrapper is not the provider's own arm object");
+    check(update_of(first).has_value() && update_of(second).has_value() &&
+              update_of(first).value() == update && update_of(second).value() == update,
+          "both wrappers retain the exact update reference the provider handed back");
   }
 
-  int replacement_installs = 0;
-  const auto replacement = flight::make_ref<HostUpdaterCommandCapability>(
-      HostUpdaterCommandCapability{
-          .check = []() {
-            return flight::Task<AppUpdateCheckOutcome>::resolve(
-                flight::updater::not_available);
-          },
-          .destroy = []() {},
-          .install = [&](flight::Ref<DownloadedUpdate>) {
-            ++replacement_installs;
-            return flight::Task<flight::Ref<AppUpdateInstallOutcome>>::resolve(
-                flight::make_ref<AppUpdateInstallOutcome>(
-                    AppUpdateInstallOutcome{.reason = String("ok")}));
-          },
-      });
-  const auto installed =
-      flight::updater::install_downloaded_update(replacement, update).get();
-  if (!check(installed->reason == String("ok") && install_calls == 1 &&
-                 replacement_installs == 0 && installed_update == update,
-             "provider replacement observed or rerouted the downloaded handle")) {
-    return 1;
+  // destroyUpdater destroys only the capability it was given.
+  {
+    auto selected_state = std::make_shared<Backend>();
+    auto other_state = std::make_shared<Backend>();
+    const auto selected = backend(selected_state);
+    const auto other = backend(other_state);
+
+    flight::updater::destroy_updater(selected);
+    check(selected_state->destroys == 1, "the supplied provider is destroyed");
+    check(other_state->destroys == 0, "and a capability that was not supplied is not");
+    check(selected_state->checks == 0, "destroying does not check");
   }
 
-  bool rejected_unowned = false;
-  try {
-    static_cast<void>(
-        flight::updater::install_downloaded_update(origin, update).get());
-  } catch (const flight::TypeError&) {
-    rejected_unowned = true;
-  }
-  if (!check(rejected_unowned, "consumed or foreign update did not reject")) return 1;
+  // A downloaded handle installs through the provider that completed the check, even when the caller
+  // passes a replacement capability -- and never through the replacement.
+  {
+    auto origin_state = std::make_shared<Backend>();
+    auto replacement_state = std::make_shared<Backend>();
+    const auto origin = backend(origin_state);
+    const auto replacement = backend(replacement_state);
+    const auto update = downloaded_update();
+    origin_state->on_check = [update] { return downloaded_outcome(update); };
 
-  const auto retry_update = make_update(String("2.0.0"));
-  next_check = flight::updater::downloaded_outcome(retry_update);
-  static_cast<void>(flight::updater::check_for_app_update(origin).get());
-  reject_install = true;
-  const auto failed_install =
-      flight::updater::install_downloaded_update(origin, retry_update).get();
-  reject_install = false;
-  const auto retried_install =
-      flight::updater::install_downloaded_update(origin, retry_update).get();
-  if (!check(failed_install->reason == String("operation-failed") &&
-                 retried_install->reason == String("ok"),
-             "install failure leaked detail or consumed retry ownership")) {
-    return 1;
-  }
+    const auto checked = flight::updater::check_for_app_update(origin).get();
+    const auto handle = update_of(checked);
+    check(handle.has_value(), "the check produced a downloadable handle");
 
-  const auto conflict_update = make_update(String("3.0.0"));
-  next_check = flight::updater::downloaded_outcome(conflict_update);
-  static_cast<void>(flight::updater::check_for_app_update(origin).get());
-  const auto conflict_provider = flight::make_ref<HostUpdaterCommandCapability>(
-      HostUpdaterCommandCapability{
-          .check = [conflict_update]() {
-            return flight::Task<AppUpdateCheckOutcome>::resolve(
-                flight::updater::downloaded_outcome(conflict_update));
-          },
-          .destroy = []() {},
-          .install = [](flight::Ref<DownloadedUpdate>) {
-            return flight::Task<flight::Ref<AppUpdateInstallOutcome>>::resolve(
-                flight::updater::install_ok);
-          },
-      });
-  const auto conflict =
-      flight::updater::check_for_app_update(conflict_provider).get();
-  if (!check(flight::updater::check_reason(conflict) ==
-                 String("operation-failed"),
-             "a second provider stole an owned downloaded handle")) {
-    return 1;
+    const auto outcome =
+        flight::updater::install_downloaded_update(replacement, handle.value()).get();
+    check(outcome->reason == String("ok"), "the install reports ok");
+    check(outcome == flight::updater::install_ok, "as the module's own install_ok constant");
+    check(origin_state->installs.size() == 1 && origin_state->installs.front() == update,
+          "the originating provider was asked to install the exact handle");
+    check(replacement_state->installs.empty(), "and the replacement provider never saw it");
   }
 
-  flight::updater::destroy_updater(origin);
-  if (!check(destroy_calls == 1, "destroy was not delegated synchronously")) return 1;
+  // An update that did not originate from a completed check rejects with the source's own TypeError.
+  {
+    auto state = std::make_shared<Backend>();
+    const auto host = backend(state);
 
-  return 0;
+    bool threw = false;
+    String message;
+    try {
+      static_cast<void>(
+          flight::updater::install_downloaded_update(host, downloaded_update()).get());
+    } catch (const flight::TypeError& error) {
+      threw = true;
+      message = error.what();
+    }
+    check(threw, "an unowned handle rejects with TypeError, not with an outcome");
+    check(message ==
+              String("Downloaded update did not originate from a completed check"),
+          "carrying the source's own message");
+    check(state->installs.empty(), "and no provider was asked to install it");
+  }
+
+  // The owner record survives a failed install, so the handle can be tried again -- including through a
+  // replacement capability -- and is consumed only by an install that reports ok.
+  {
+    auto origin_state = std::make_shared<Backend>();
+    auto replacement_state = std::make_shared<Backend>();
+    const auto origin = backend(origin_state);
+    const auto replacement = backend(replacement_state);
+    const auto update = downloaded_update();
+    origin_state->on_check = [update] { return downloaded_outcome(update); };
+    origin_state->install_ok = {false, true};
+
+    const auto handle = update_of(flight::updater::check_for_app_update(origin).get()).value();
+
+    const auto first = flight::updater::install_downloaded_update(replacement, handle).get();
+    check(first == flight::updater::install_operation_failed,
+          "a failed install reports operation-failed as the install-side constant");
+    check(origin_state->installs.size() == 1, "through the originating provider");
+
+    const auto second = flight::updater::install_downloaded_update(replacement, handle).get();
+    check(second == flight::updater::install_ok,
+          "the handle still resolves its origin after a failure, so a retry succeeds");
+    check(origin_state->installs.size() == 2 && replacement_state->installs.empty(),
+          "and it is still routed to the origin alone");
+
+    bool consumed = false;
+    try {
+      static_cast<void>(flight::updater::install_downloaded_update(origin, handle).get());
+    } catch (const flight::TypeError&) {
+      consumed = true;
+    }
+    check(consumed, "after a successful install the handle is consumed and no longer resolves");
+  }
+
+  // A second provider whose check returns an update another provider already owns is refused, and the
+  // recorded owner is unchanged; the provider that owns it may re-check it.
+  {
+    auto owner_state = std::make_shared<Backend>();
+    auto other_state = std::make_shared<Backend>();
+    const auto owner = backend(owner_state);
+    const auto other = backend(other_state);
+    const auto update = downloaded_update();
+    owner_state->on_check = [update] { return downloaded_outcome(update); };
+    other_state->on_check = [update] { return downloaded_outcome(update); };
+
+    check(reason_of(flight::updater::check_for_app_update(owner).get()) == String("downloaded"),
+          "the first provider owns the update");
+
+    const auto refused = flight::updater::check_for_app_update(other).get();
+    check(reason_of(refused) == String("operation-failed"),
+          "a different provider's check of the same update is refused");
+    check(arm_identity(refused) == arm_identity(flight::updater::operation_failed),
+          "with the module's operation-failed constant");
+
+    const auto handle = update_of(flight::updater::check_for_app_update(owner).get()).value();
+    const auto outcome = flight::updater::install_downloaded_update(other, handle).get();
+    check(outcome == flight::updater::install_ok && owner_state->installs.size() == 1 &&
+              other_state->installs.empty(),
+          "so the handle still installs through the provider that owns it, not the refused one");
+  }
+
+  if (failures == 0) std::cout << "generated updater: all checks passed\n";
+  return failures == 0 ? 0 : 1;
 }

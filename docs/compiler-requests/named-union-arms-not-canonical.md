@@ -143,3 +143,27 @@ is about asserting one owner out of a union.
 None. `@flighthq/midi` is `partial`; the refused `midiPort` module in the same package is
 [`captured-referent-mutation.md`](captured-referent-mutation.md), so a hand supply of `midiSubscription`
 would not move the package's own tier and would reproduce a union carrier the profile should express.
+
+## Second measured site: `@flighthq/updater`
+
+Same rule, different mechanism -- and this site locates the defect in the emitter's alias tracking rather than
+in the source's spelling. `packages/updater/src/updater.ts` `checkForAppUpdate` takes the capability's
+`check()` result and returns `Promise<AppUpdateCheckOutcome>`: **both sides name the same imported alias**, which
+is what the refusal asks for ("Keep both sides on the same declared union alias"). The sides still disagree on
+one arm:
+
+```
+target multiVariant carriers [ ...Ref<reason_update_b289886a950156de>, ...Ref<reason_01523507f7b21613>]
+from await source multiVariant carriers [ ...Ref<reason_update_457a6ef5d21e9081>, ...Ref<reason_01523507f7b21613>]
+```
+
+The reason-only arm matches on both sides (`reason_01523507f7b21613`, the `flight::types` declaration). The
+update-bearing arm does not: the source side names `reason_update_457a6ef5d21e9081`, which IS the arm
+`generated/include/flight/types/updater.hpp` declares for `AppUpdateCheckOutcome`, and the target side names
+`reason_update_b289886a950156de`, an anonymous duplicate of the same shape. In the regenerated slice that
+second name is **defined nowhere in the tree** -- it appears only inside this diagnostic. The slice committed
+before this one did emit it (as a module-local `struct reason_update_b289886a950156de`), so the current slice
+names a target carrier it never writes.
+
+Carrying workaround: `@flighthq/updater`'s override supplies `check_for_app_update` over the emitted union
+alias, so both sides are the declared carriers by construction rather than by conversion.

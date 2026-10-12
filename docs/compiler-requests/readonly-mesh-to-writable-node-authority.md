@@ -97,3 +97,29 @@ The committed inventory records this as the module's direct refusal. The read-on
 the writable assertion safe, and the second assertion to `MeshRuntime` is a separate owner question
 that has not been reached by this reduction. No source rewrite, compiler patch, or generated repair is
 carried while Scene3D remains render-gated.
+
+## Second measured site: `@flighthq/updater`
+
+Same rule, same pin, another package -- and here the refusal is exactly right while the faithful lowering is a
+construction rather than a cast. `packages/updater/src/updater.ts` line 11:
+
+```ts
+const INSTALL_OK = Object.freeze({ reason: 'ok' }) as AppUpdateInstallOutcome;
+```
+
+```
+cpp-structural-assertion-writable-capability-unproven [source-portability]: a structural assertion from the
+readonly row Readonly<object> to the writable row AppUpdateInstallOutcome claims mutation the source refused
+```
+
+`AppUpdateInstallOutcome` is emitted as a nominal `ReferenceEnabled` struct with a mutable `reason` cell, so
+asserting a frozen literal to it does claim write authority the source withheld. By this request's own
+distinction -- ask the value's role, not its spelling -- the answer here is the second repair: the constant *is*
+an outcome the module owns and hands out, so it is declared as that carrier and constructed directly
+(`flight::make_ref<AppUpdateInstallOutcome>(AppUpdateInstallOutcome{.reason = ...})`), which is what
+`@flighthq/updater`'s override does.
+
+Worth recording against this rule: the slice committed before this one lowered the same line by *casting* into
+the nominal (`structural_ref_cast<flight::Ref<AppUpdateInstallOutcome>>(make_ref<reason_5d202cf6c17c5b52>(...))`),
+so the stricter reading is the newer behaviour -- and a frozen literal is not what a writable nominal's own
+construction should be built out of.
