@@ -95,6 +95,20 @@ void test_set_net_guard() {
   static_cast<void>(flight::net::send_net_request(host, request("HEAD", "v", NetBody{String("x")})).get());
   check(reasons == std::vector<std::string>({"body-on-get-or-head", "negative-timeout"}),
         "setNetGuard installs and removes the core request notice hook");
+
+  // Not an upstream case: upstream sends its HEAD request only after removing the guard, so the HEAD arm of
+  // the body check is otherwise unexercised. The expected notices are what upstream's own net.ts (a627849,
+  // run under node with the same guard and requests) emits: a body on HEAD is reported whatever the
+  // method's case, while HEAD without a body and a zero timeout are not.
+  reasons.clear();
+  flight::net::set_net_guard(NetGuard([&](NoticeView notice) { reasons.push_back(std::string(flight::row_get<flight::RowKey<"reason">>(notice).to_utf8())); }));
+  static_cast<void>(flight::net::send_net_request(host, request("HEAD", "h", NetBody{String("x")})).get());
+  static_cast<void>(flight::net::send_net_request(host, request("head", "h2", NetBody{String("x")})).get());
+  static_cast<void>(flight::net::send_net_request(host, request("HEAD", "h3")).get());
+  static_cast<void>(flight::net::send_net_request(host, request("POST", "p", NetBody{String("x")}, 0.0)).get());
+  flight::net::set_net_guard(std::nullopt);
+  check(reasons == std::vector<std::string>({"body-on-get-or-head", "body-on-get-or-head"}),
+        "setNetGuard reports a body on HEAD in either case, and nothing for a bodiless HEAD or a zero timeout");
 }
 
 void test_net_form() {
