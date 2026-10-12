@@ -387,6 +387,8 @@ function compileHeader(header) {
       [
         ...extraFlags,
         '-std=c++20',
+        // The same floating-point profile as Flight::Cpp and .bazelrc, so the gate compiles what ships.
+        '-ffp-contract=off',
         diagnosticLimit,
         // Every override shadows, whatever the scope: a package's headers include its dependencies'.
         ...(allOverrides.length > 0 ? [`-I${overrideInclude}`] : []),

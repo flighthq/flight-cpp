@@ -46,6 +46,16 @@ for (const platform of ['linux', 'macos', 'freebsd', 'openbsd']) {
   );
 }
 requireText(bazelConfiguration, 'build:windows --cxxopt=/std:c++20', 'Windows C++20 configuration');
+// Floating-point contraction is off on every compile path, because JavaScript never fuses a multiply into
+// an add: the Flight::Cpp interface for each CMake frontend, each Bazel platform, and the header gate.
+requireText(cmakeGraph, 'target_compile_options(flight_cpp INTERFACE -ffp-contract=off)', 'CMake GNU-frontend contraction profile');
+requireText(cmakeGraph, 'target_compile_options(flight_cpp INTERFACE /clang:-ffp-contract=off)', 'CMake clang-cl contraction profile');
+requireText(cmakeGraph, 'target_compile_options(flight_cpp INTERFACE /fp:precise)', 'CMake MSVC contraction profile');
+for (const platform of ['linux', 'macos', 'freebsd', 'openbsd']) {
+  requireText(bazelConfiguration, `build:${platform} --copt=-ffp-contract=off`, `${platform} contraction profile`);
+}
+requireText(bazelConfiguration, 'build:windows --copt=/fp:precise', 'Windows contraction profile');
+requireText(readCpp('scripts/sdkHeaderCompile.mjs'), "'-ffp-contract=off'", 'header-gate contraction profile');
 for (const directory of ['.dependencies', 'build', 'out']) {
   if (!bazelIgnore.split(/\r?\n/u).includes(directory)) {
     failures.push(`.bazelignore does not exclude ${directory}`);

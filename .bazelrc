@@ -10,6 +10,14 @@ build:freebsd --cxxopt=-std=c++20
 build:openbsd --cxxopt=-std=c++20
 build:windows --cxxopt=/std:c++20
 
+# Floating-point contraction stays off, matching the Flight::Cpp CMake interface: JavaScript never fuses a
+# multiply into an add. See docs/floating-point-contraction.md.
+build:linux --copt=-ffp-contract=off
+build:macos --copt=-ffp-contract=off
+build:freebsd --copt=-ffp-contract=off
+build:openbsd --copt=-ffp-contract=off
+build:windows --copt=/fp:precise
+
 test --test_env=LC_ALL=C
 test --test_env=TZ=UTC
 test --test_output=errors

@@ -30,6 +30,14 @@ cc_test(
     deps = ["//:cpp"],
 )
 
+# Takes its floating-point profile from .bazelrc, so it fails on a platform config that drops it.
+cc_test(
+    name = "floating_point_contraction_test",
+    srcs = ["floating_point_contraction_test.cpp"],
+    size = "small",
+    deps = ["//:cpp"],
+)
+
 cc_test(
     name = "runtime_conformance_test",
     srcs = ["runtime_conformance_test.cpp"],

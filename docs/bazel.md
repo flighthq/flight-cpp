@@ -64,7 +64,10 @@ bazel test --noenable_platform_specific_config //:tests \
 ```
 
 Disabling the automatic host configuration prevents a host compiler flag from leaking into a cross or remote action;
-the selected toolchain must then declare C++20 itself. The target graph remains independent of the compiler and
+the selected toolchain must then declare C++20 itself, and floating-point contraction off
+(`-ffp-contract=off`, or `/fp:precise` on Visual C++), which the host configurations in `.bazelrc` otherwise
+supply. A copt on a header-only library does not reach its dependents, so a consuming repository sets the same
+flag in its own configuration; see [floating-point-contraction.md](floating-point-contraction.md). The target graph remains independent of the compiler and
 platform labels. Put personal defaults in the ignored `.bazelrc.local`; checked-in cross/remote automation should
 pass platform and toolchain labels explicitly.
 

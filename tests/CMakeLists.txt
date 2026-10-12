@@ -26,6 +26,13 @@ flight_cpp_set_project_warnings(flight_cpp_intl_type_tests)
 
 add_test(NAME flight_cpp.intl_types COMMAND flight_cpp_intl_type_tests)
 
+# Inherits the floating-point profile from Flight::Cpp alone, so it fails if that profile is dropped.
+add_executable(flight_cpp_floating_point_contraction_tests floating_point_contraction_test.cpp)
+target_link_libraries(flight_cpp_floating_point_contraction_tests PRIVATE Flight::Cpp)
+flight_cpp_set_project_warnings(flight_cpp_floating_point_contraction_tests)
+
+add_test(NAME flight_cpp.floating_point_contraction COMMAND flight_cpp_floating_point_contraction_tests)
+
 add_executable(flight_cpp_generated_runtime_tests generated_runtime_test.cpp)
 target_link_libraries(flight_cpp_generated_runtime_tests PRIVATE Flight::Cpp)
 flight_cpp_set_project_warnings(flight_cpp_generated_runtime_tests)

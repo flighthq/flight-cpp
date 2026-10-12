@@ -37,6 +37,20 @@ add_library(flight_cpp INTERFACE)
 add_library(Flight::Cpp ALIAS flight_cpp)
 set_target_properties(flight_cpp PROPERTIES EXPORT_NAME Cpp)
 target_compile_features(flight_cpp INTERFACE cxx_std_20)
+# JavaScript rounds every arithmetic operation separately, and a fused multiply-add rounds once, so a
+# contracted `a * b - c * d` can differ from the TypeScript it was emitted from and take a different
+# branch on an exact comparison. Keep contraction off for everything built against the runtime: Clang
+# contracts by default on FMA targets and GCC's GNU dialects contract across statements. MSVC's
+# /fp:precise has not contracted since Visual Studio 2022 17.0. See docs/floating-point-contraction.md.
+if(MSVC)
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    target_compile_options(flight_cpp INTERFACE /clang:-ffp-contract=off)
+  else()
+    target_compile_options(flight_cpp INTERFACE /fp:precise)
+  endif()
+else()
+  target_compile_options(flight_cpp INTERFACE -ffp-contract=off)
+endif()
 target_include_directories(
   flight_cpp
   INTERFACE
