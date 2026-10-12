@@ -9149,10 +9149,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 70,
+      "line": 69,
       "module": "packages/tray/src/tray.ts",
       "package": "@flighthq/tray",
-      "reason": "cpp emission failed for @flighthq/types/packages/types/src/Tray.ts: contextual union value type flight::Ref<entity_runtime_key_error_outcome_84d7b91e76b58a2a> has a distinct intersection owner from its matching union arm over nominal base Entity. The source intersection and destination arm are sibling C++ object carriers; converting between them would require sibling retyping or copying the object. Name one shared declared arm type in the union contract and use that same arm declaration in both the union and value storage",
+      "reason": "cpp emission failed for @flighthq/tray/packages/tray/src/tray.ts: narrowed member structural switch case must identify one C++ variant alternative",
       "stage": "emission"
     },
     {

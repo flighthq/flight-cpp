@@ -226,7 +226,6 @@
         "flight/signals/slot.hpp",
         "flight/signals/throttle.hpp",
         "flight/spritesheet/spritesheet_player.hpp",
-        "flight/tray/tray.hpp",
         "flight/types/animation_player.hpp",
         "flight/types/app.hpp",
         "flight/types/app_loop.hpp",
@@ -1878,9 +1877,7 @@
       "id": "textshaper-entity-runtime-key-member"
     },
     {
-      "files": [
-        "flight/tray/tray.hpp"
-      ],
+      "files": [],
       "id": "tray-entity-runtime-key-member"
     },
     {
@@ -2307,8 +2304,7 @@
     },
     {
       "files": [
-        "flight/tray/enable_tray_guards.hpp",
-        "flight/tray/tray.hpp"
+        "flight/tray/enable_tray_guards.hpp"
       ],
       "id": "tray-unqualified-types-names"
     },
@@ -5959,6 +5955,13 @@
       "id": "compiler-host-timer-local-storage-carrier",
       "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
       "package": "@flighthq/power"
+    },
+    {
+      "dependency": "flight",
+      "digest": "80cdd5e92ad925691bdef339a15c208d7e889a5761ad43c62b9cb07f1071e556",
+      "id": "tray-create-result-and-runtime-owner",
+      "module": "packages/types/src/Tray.ts plus packages/tray/src/tray.ts",
+      "package": "@flighthq/tray"
     }
   ],
   "duplicateStructuralStructAliases": {

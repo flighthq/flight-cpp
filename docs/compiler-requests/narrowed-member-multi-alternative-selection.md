@@ -51,6 +51,13 @@ by exact equality, target type, member name, discriminant, and object representa
 `matches.length !== 1`. A member test over a subtype slice of a union is exactly the case where that
 count is greater than one.
 
+Two details from the emitted placeholder worth recording, both measured after the `types` refresh
+(`0dc94418`) landed: the refusal carries **no rule code** — the placeholder records it as
+`refusal: unruled [compiler-restriction]`, because the `emissionError` at that site passes no rule —
+and the module is now refused **wholesale**: the placeholder says "no part of it was generated", where
+the earlier refusal still produced a best-effort partial with ten marked omissions. So the per-function
+refusals that were observable before cannot be re-measured until this one clears.
+
 ## Why a source rewrite is not carried
 
 The obvious rewrite — `result.outcome === 'cancelled' ? undefined : result.error` — is not faithful,
