@@ -523,6 +523,38 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_math_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_math COMMAND flight_cpp_generated_math_tests)
 
+add_executable(flight_cpp_generated_geometry_matrix34_tests generated_geometry_matrix34_test.cpp)
+target_include_directories(
+  flight_cpp_generated_geometry_matrix34_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_geometry_matrix34_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_geometry_matrix34 COMMAND flight_cpp_generated_geometry_matrix34_tests)
+
+add_executable(flight_cpp_generated_geometry_planar_tests generated_geometry_planar_test.cpp)
+target_include_directories(
+  flight_cpp_generated_geometry_planar_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_geometry_planar_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_geometry_planar COMMAND flight_cpp_generated_geometry_planar_tests)
+
+add_executable(flight_cpp_generated_geometry_vectors_tests generated_geometry_vectors_test.cpp)
+target_include_directories(
+  flight_cpp_generated_geometry_vectors_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_geometry_vectors_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_geometry_vectors COMMAND flight_cpp_generated_geometry_vectors_tests)
+
+add_executable(flight_cpp_generated_geometry_volumes_tests generated_geometry_volumes_test.cpp)
+target_include_directories(
+  flight_cpp_generated_geometry_volumes_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_geometry_volumes_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_geometry_volumes COMMAND flight_cpp_generated_geometry_volumes_tests)
+
 add_executable(flight_cpp_generated_socket_statechart_tests generated_socket_statechart_test.cpp)
 target_include_directories(
   flight_cpp_generated_socket_statechart_tests
@@ -603,6 +635,10 @@ flight_cpp_package_test_labels(flight_cpp.generated_abc abc)
 flight_cpp_package_test_labels(flight_cpp.generated_xml xml)
 flight_cpp_package_test_labels(flight_cpp.generated_command command)
 flight_cpp_package_test_labels(flight_cpp.generated_math math)
+flight_cpp_package_test_labels(flight_cpp.generated_geometry_matrix34 geometry)
+flight_cpp_package_test_labels(flight_cpp.generated_geometry_planar geometry)
+flight_cpp_package_test_labels(flight_cpp.generated_geometry_vectors geometry)
+flight_cpp_package_test_labels(flight_cpp.generated_geometry_volumes geometry log)
 flight_cpp_package_test_labels(flight_cpp.generated_socket_statechart socket statechart)
 flight_cpp_package_test_labels(flight_cpp.generated_assets assets)
 flight_cpp_package_test_labels(flight_cpp.generated_importdiagnostics importdiagnostics)

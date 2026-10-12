@@ -191,6 +191,34 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_geometry_matrix34_test",
+    srcs = ["generated_geometry_matrix34_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_geometry_planar_test",
+    srcs = ["generated_geometry_planar_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_geometry_vectors_test",
+    srcs = ["generated_geometry_vectors_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_geometry_volumes_test",
+    srcs = ["generated_geometry_volumes_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_image_test_helper_test",
     srcs = ["generated_image_test_helper_test.cpp"],
     size = "small",
@@ -490,6 +518,10 @@ test_suite(
         ":generated_dialog_test",
         ":generated_encoding_test",
         ":generated_filesystem_test",
+        ":generated_geometry_matrix34_test",
+        ":generated_geometry_planar_test",
+        ":generated_geometry_vectors_test",
+        ":generated_geometry_volumes_test",
         ":generated_image_test_helper_test",
         ":generated_importdiagnostics_test",
         ":generated_ipc_test",
