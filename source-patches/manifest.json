@@ -2203,7 +2203,7 @@
       "id": "render-proxy-destroy-helper-owner",
       "dependency": "flight",
       "patch": "render-proxy-destroy-helper-owner.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/render/src/renderState.ts and packages/types/src/RenderState.ts",
       "package": "@flighthq/render",
       "answers": "diagnostic",
@@ -2214,12 +2214,7 @@
       "whyNotUpstreamFirst": "This target-neutral ownership placement is needed now because the pinned C++ emitter emits type-module function bodies inline and cannot defer one until a cyclic nominal definition becomes complete.",
       "unblocks": "Allows the common render-state header used by every real Scene3D GL pipeline to compile through proxy teardown without inventing an alternate renderer or proxy representation.",
       "expires": "when Flight keeps the teardown body in its render implementation owner upstream or flight-compiler can schedule inline type-module bodies after cyclic nominal definitions become complete.",
-      "appliedOn": "2026-10-09",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "GL",
-        "reason": "context drift: the patched code still exists (0/5 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "appliedOn": "2026-10-11"
     },
     {
       "id": "compiler-flattened-optional-chain-union-storage",

@@ -9,7 +9,7 @@ diff --git a/packages/render/src/renderState.ts b/packages/render/src/renderStat
    readRenderStateRuntimeOwner,
    writeRenderStateRuntimeOwner,
  } from '@flighthq/types/contract';
-@@ -139,6 +138,8 @@ function disposeRenderProxyForShutdown(state: RenderState, source: Renderable):
+@@ -139,6 +138,8 @@ function disposeRenderProxyForShutdown(state: RenderState, source: NodeAny): void {
    const runtime = getRenderStateRuntime(state);
    const proxy = runtime.renderProxyMap.get(source);
 -  invokeRenderProxyDestroyData(proxy, state);
@@ -22,7 +22,7 @@ diff --git a/packages/render/src/renderState.ts b/packages/render/src/renderStat
 diff --git a/packages/types/src/RenderState.ts b/packages/types/src/RenderState.ts
 --- a/packages/types/src/RenderState.ts
 +++ b/packages/types/src/RenderState.ts
-@@ -124,12 +124,6 @@ export function createRenderProxyWeakMap(): WeakMap<Renderable, RenderProxy> {
+@@ -124,12 +124,6 @@ export function createRenderProxyWeakMap(): WeakMap<NodeAny, RenderProxy> {
    return new WeakMap();
  }
  
@@ -32,6 +32,6 @@ diff --git a/packages/types/src/RenderState.ts b/packages/types/src/RenderState.
 -  }
 -}
 -
- export function readRenderStateRuntimeOwner(owner: RenderState): RenderStateRuntime {
+ export function readRenderStateRuntimeOwner(owner: Readonly<RenderState>): RenderStateRuntime {
    return owner[EntityRuntimeKey]!;
  }
