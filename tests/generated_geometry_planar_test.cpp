@@ -41,19 +41,12 @@
 //   - quaternion: "setQuaternionLookRotation writes the same values whether out aliases an input or not"
 //     (a Quaternion passed as the readonly Vector3 forward/up).
 //
-// Known native defect, ported faithfully but reported through known_defect() instead of asserted:
-// - quaternion: "setQuaternionLookRotation preserves an asymmetric {non-z-aligned, z-aligned} forward
-//   direction when up is parallel".
-//   - Cause: with up === forward, JavaScript computes the cross product uy*fz - uz*fy as exactly 0, so
-//     rLen === 0 selects the roll fallback (generated/include/flight/geometry/quaternion.hpp:451-455).
-//     This build lets clang contract that expression into a fused multiply-add (zig targets the native
-//     CPU, which has FMA, and nothing in the repository passes -ffp-contract=off). The result is the
-//     rounding residue, -4.53e-18 instead of 0, so the fallback is skipped and the noise is normalised
-//     into the right vector.
-//   - Effect for forward (2/7, 3/7, 6/7): +Z rotates to (0.5116, 0.3016, 0.7977) instead of
-//     (0.2857, 0.4286, 0.8571).
-//   - Evidence: the same translation unit compiled under `#pragma clang fp contract(off)` matches
-//     JavaScript exactly.
+// Floating-point profile: "setQuaternionLookRotation preserves an asymmetric {non-z-aligned, z-aligned}
+// forward direction when up is parallel" depends on JavaScript computing the cross product uy*fz - uz*fy
+// as exactly 0 when up === forward, which selects the roll fallback
+// (generated/include/flight/geometry/quaternion.hpp). That holds natively only with floating-point
+// contraction off, which Flight::Cpp and .bazelrc apply; a build that fuses it into a multiply-add leaves
+// a -4.53e-18 residue and rotates +Z away from forward. See docs/floating-point-contraction.md.
 
 namespace {
 
@@ -91,15 +84,6 @@ bool throws_range_error(Call call) {
     return false;
   }
   return false;
-}
-
-// A faithful upstream check that fails because of a known native defect listed at the top of this file.
-// It is reported on every run but does not fail the test; it says so once the defect is fixed.
-void known_defect(bool condition, const std::string& message) {
-  if (condition)
-    std::cerr << "NOTE: known-defect case now passes, promote it to check(): " << message << '\n';
-  else
-    std::cerr << "KNOWN DEFECT (not asserted): " << message << '\n';
 }
 
 const double pi = M_PI;
@@ -1810,8 +1794,7 @@ void test_quaternion_matrix_and_vectors() {
   for (const auto& [name, raw] : std::vector<std::pair<std::string, flight::Ref<types::Vector3>>>{{"non-z-aligned", v3(2, 3, 6)}, {"z-aligned", v3(1, 2, 20)}}) {
     const double length = std::sqrt(raw->x * raw->x + raw->y * raw->y + raw->z * raw->z);
     const auto forward = v3(raw->x / length, raw->y / length, raw->z / length);
-    // KNOWN NATIVE DEFECT, not asserted (see the exclusions at the top): floating-point contraction.
-    known_defect(rotates_z_onto(forward, forward), "setQuaternionLookRotation preserves an asymmetric " + name + " forward direction when up is parallel");
+    check(rotates_z_onto(forward, forward), "setQuaternionLookRotation preserves an asymmetric " + name + " forward direction when up is parallel");
   }
   {
     const auto q = geo::create_quaternion(1, 2, 3, 4);
