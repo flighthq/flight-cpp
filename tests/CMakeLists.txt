@@ -323,6 +323,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_velocity_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_velocity COMMAND flight_cpp_generated_velocity_tests)
 
+add_executable(flight_cpp_generated_motionpath_tests generated_motionpath_test.cpp)
+target_include_directories(
+  flight_cpp_generated_motionpath_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_motionpath_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_motionpath COMMAND flight_cpp_generated_motionpath_tests)
+
 add_executable(flight_cpp_generated_lifecycle_tests generated_lifecycle_test.cpp)
 target_include_directories(
   flight_cpp_generated_lifecycle_tests
@@ -436,6 +444,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_lifecycle lifecycle signals)
 flight_cpp_package_test_labels(flight_cpp.generated_spring spring)
 flight_cpp_package_test_labels(flight_cpp.generated_timeline signals timeline)
 flight_cpp_package_test_labels(flight_cpp.generated_velocity geometry velocity)
+flight_cpp_package_test_labels(flight_cpp.generated_motionpath geometry motionpath path)
 flight_cpp_package_test_labels(flight_cpp.generated_signals_throttle signals)
 flight_cpp_package_test_labels(flight_cpp.generated_useragent useragent)
 flight_cpp_package_test_labels(flight_cpp.generated_dialog app dialog filesystem geometry node render signals)
