@@ -36484,8 +36484,6 @@
         "@flighthq/swf/packages/swf/src/swfScriptTagFamily.ts",
         "@flighthq/swf/packages/swf/src/swfShape.ts",
         "@flighthq/swf/packages/swf/src/swfShapeTagFamily.ts",
-        "@flighthq/swf/packages/swf/src/swfSoundHandler.ts",
-        "@flighthq/swf/packages/swf/src/swfSoundTagFamily.ts",
         "@flighthq/swf/packages/swf/src/swfStaticTextHandler.ts",
         "@flighthq/swf/packages/swf/src/swfTagCensus.ts",
         "@flighthq/swf/packages/swf/src/swfTagStreamTestHelper.ts",
@@ -36562,8 +36560,6 @@
         "@flighthq/swf/packages/swf/src/swfScriptTagFamily.ts",
         "@flighthq/swf/packages/swf/src/swfShape.ts",
         "@flighthq/swf/packages/swf/src/swfShapeTagFamily.ts",
-        "@flighthq/swf/packages/swf/src/swfSoundHandler.ts",
-        "@flighthq/swf/packages/swf/src/swfSoundTagFamily.ts",
         "@flighthq/swf/packages/swf/src/swfStaticTextHandler.ts",
         "@flighthq/swf/packages/swf/src/swfText.ts",
         "@flighthq/swf/packages/swf/src/swfTextTagFamily.ts",
@@ -36609,7 +36605,6 @@
         "@flighthq/swf/packages/swf/src/swfPlacementTagFamily.ts",
         "@flighthq/swf/packages/swf/src/swfScriptTagFamily.ts",
         "@flighthq/swf/packages/swf/src/swfShapeTagFamily.ts",
-        "@flighthq/swf/packages/swf/src/swfSoundTagFamily.ts",
         "@flighthq/swf/packages/swf/src/swfTextTagFamily.ts",
         "@flighthq/swf/packages/swf/src/swfVideoTagFamily.ts"
       ],
@@ -37452,10 +37447,7 @@
         "source": "packages/swf/src/swfSoundHandler.ts"
       },
       "path": "flight/swf/swf_sound_handler.hpp",
-      "refusedDependencies": [
-        "@flighthq/audio/packages/audio/src/audioResourceReference.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -37469,10 +37461,7 @@
         "source": "packages/swf/src/swfSoundTagFamily.ts"
       },
       "path": "flight/swf/swf_sound_tag_family.hpp",
-      "refusedDependencies": [
-        "@flighthq/swf/packages/swf/src/swfSoundHandler.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "consumers": [

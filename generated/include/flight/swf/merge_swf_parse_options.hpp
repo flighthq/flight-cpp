@@ -9,11 +9,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct HostDecompressDeflateCapability; }
+namespace flight::types { struct HostDecompressLzmaCapability; }
+namespace flight::types { struct SwfParseOptions; }
+namespace flight::types { struct SwfTagHandler; }
+
 namespace flight::swf {
 
 
 // NOT GENERATED: function mergeSwfParseOptions -- source line 21
-// refusal: cpp-partial-shape-unresolvable [source-portability]
+// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
 //
 // The source it stood for:
 //   export function mergeSwfParseOptions(...options: readonly Readonly<Partial<SwfParseOptions>>[]): SwfParseOptions {
@@ -31,7 +36,9 @@ namespace flight::swf {
 //     return merged;
 //   }
 //   
-// cpp emission failed for @flighthq/swf/packages/swf/src/mergeSwfParseOptions.ts: Partial<T> requires a
-// statically resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/swf/packages/swf/src/mergeSwfParseOptions.ts: narrowed C++ union projection
+// requires proven present payload: the narrowing still admits absence, so nothing proved the payload present and
+// reading the value alternative here would unpack storage that may still be holding the sentinel the test left
+// reachable. Test both at once with `x != null`, or narrow the value into a present local the same way
 
 } // namespace flight::swf

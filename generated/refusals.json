@@ -8342,20 +8342,6 @@
     },
     {
       "code": "dependency-refused",
-      "module": "packages/swf/src/swfSoundHandler.ts",
-      "package": "@flighthq/swf",
-      "reason": "dependency @flighthq/audio/contract was refused for @flighthq/audio/packages/audio/src/audioResourceReference.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/swf/src/swfSoundTagFamily.ts",
-      "package": "@flighthq/swf",
-      "reason": "dependency ./swfSoundHandler.ts was refused for @flighthq/swf/packages/swf/src/swfSoundHandler.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
       "module": "packages/swf/src/swfStaticTextHandler.ts",
       "package": "@flighthq/swf",
       "reason": "dependency ./swfText.ts was refused for @flighthq/swf/packages/swf/src/swfText.ts",

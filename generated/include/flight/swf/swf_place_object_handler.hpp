@@ -4,8 +4,6 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function readLegacyPlaceObject -- source line 60
-//   missing: function readPlaceObject2 -- source line 23
-#include <flight/boolean.hpp>
 #include <functional>
 #include <optional>
 #include <variant>
@@ -14,6 +12,16 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Adjustment; }
+namespace flight::types { struct Effect; }
+namespace flight::types { struct SwfTagHandler; }
+namespace flight::types { struct SwfTagMatrix; }
+namespace flight::types { struct SwfTagParseState; }
+namespace flight::types { struct SwfTagPlacement; }
+namespace flight::types { struct SwfTagReader; }
+namespace flight::types { struct SwfTagTimelineState; }
+
+#include <flight/types/contract.hpp>
 #include <flight/swf/swf_appearance.hpp>
 #include <flight/swf/swf_primitive.hpp>
 
@@ -29,7 +37,6 @@ inline const double tag_remove_object_2 = 28.0;
 
 
 // NOT GENERATED: function readLegacyPlaceObject -- source line 60
-// refusal: cpp-dual-sentinel-coalesce-projection-unproven [compiler-restriction]
 //
 // The source it stood for:
 //   function readLegacyPlaceObject(body: SwfTagReader, placements: Map<number, SwfTagPlacement>): void {
@@ -56,71 +63,45 @@ inline const double tag_remove_object_2 = 28.0;
 //     });
 //   }
 //   
-// cpp emission failed for @flighthq/swf/packages/swf/src/swfPlaceObjectHandler.ts: dual-sentinel nullish
-// coalescing requires presence projection lowering: the operand carries both null and undefined, so the coalesce
-// has to be projected into a destination the emitter can name. Declare the expression result -- a local
-// annotation, a parameter type, or a return type -- and the projection lowers; left as the source wrote it there
-// is no destination to project into
+// cpp emission failed for @flighthq/swf/packages/swf/src/swfPlaceObjectHandler.ts: dual-sentinel optional
+// property result requires one represented member value domain
 
-inline void read_legacy_remove_object(flight::Ref<SwfTagReader> body, flight::Map<double, flight::Ref<SwfTagPlacement>> placements) {
+inline void read_legacy_remove_object(flight::Ref<flight::types::SwfTagReader> body, flight::Map<double, flight::Ref<flight::types::SwfTagPlacement>> placements) {
   const double character_id = body->read_uint16();
   const double depth = body->read_uint16();
-  if (!flight::to_boolean(body->valid)) {
+  if (!body->valid) {
     return;
   }
-  std::optional<flight::Ref<SwfTagPlacement>> existing = placements.get(depth);
+  auto existing = placements.get(depth);
   if ((([&]() -> std::optional<double> { auto optional_chain_receiver = existing; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->character_id; }()) == character_id)) {
     placements.erase(depth);
   }
 }
 
-inline const double morph_ratio_one = 65535.0;
+inline const double morph_ratio_one_flight_value_variable__u00004d__u00004f__u000052__u000050__u000048__u00005f__u000052__u000041__u000054__u000049__u00004f__u00005f__u00004f__u00004e__u000045__flight_private_9b3e23242b55e3b8 = 65535.0;
 
+inline void read_place_object2(flight::Ref<flight::types::SwfTagReader> body, flight::Map<double, flight::Ref<flight::types::SwfTagPlacement>> placements) {
+  const double flags = body->read_uint8();
+  const double depth = body->read_uint16();
+  auto existing = placements.get(depth);
+  const bool is_move = (flight::bitwise_and(flags, 1.0) != 0.0);
+  auto inherited = (is_move ? std::optional{existing} : std::nullopt);
+  const bool has_character = (flight::bitwise_and(flags, 2.0) != 0.0);
+  const std::optional<flight::String> direct_linkage = ([&]() -> std::optional<flight::String> { auto nullish_coalesce_left_2 = ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto optional_chain_receiver = inherited; if (!optional_chain_receiver.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto optional_chain_projected = optional_chain_receiver.value()->direct_linkage; if (!optional_chain_projected.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, optional_chain_projected.value()}; }()); }()); if (const auto* alternative = std::get_if<flight::String>(&nullish_coalesce_left_2)) return std::optional<flight::String>{*alternative}; return std::nullopt; }());
+  const double character_id = (has_character ? body->read_uint16() : ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = inherited; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->character_id; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  auto matrix = ((flight::bitwise_and(flags, 4.0) != 0.0) ? flight::swf::read_swf_matrix(body) : ([&]() -> flight::Ref<flight::types::SwfTagMatrix> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Ref<flight::types::SwfTagMatrix>> { auto optional_chain_receiver = inherited; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->matrix; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::swf::identity_matrix; }()));
+  auto color_transform = ((flight::bitwise_and(flags, 8.0) != 0.0) ? flight::swf::read_swf_color_transform(body, std::nullopt) : flight::make_ref<SwfColorTransform>(SwfColorTransform{.alpha = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = inherited; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->alpha; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }()), .color_adjustments = ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>> { auto nullish_coalesce_left_3 = ([&]() -> std::variant<flight::Array<flight::Ref<flight::types::Adjustment>>, flight::Null, flight::Undefined> { auto optional_chain_receiver = inherited; if (!optional_chain_receiver.has_value()) return std::variant<flight::Array<flight::Ref<flight::types::Adjustment>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return ([&]() -> std::variant<flight::Array<flight::Ref<flight::types::Adjustment>>, flight::Null, flight::Undefined> { auto optional_chain_projected_2 = optional_chain_receiver.value()->color_transform_adjustments; if (!optional_chain_projected_2.has_value()) return std::variant<flight::Array<flight::Ref<flight::types::Adjustment>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Array<flight::Ref<flight::types::Adjustment>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<flight::Ref<flight::types::Adjustment>>>, optional_chain_projected_2.value()}; }()); }()); if (const auto* alternative = std::get_if<flight::Array<flight::Ref<flight::types::Adjustment>>>(&nullish_coalesce_left_3)) return std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>>{*alternative}; return std::nullopt; }())}));
+  const double ratio = ((flight::bitwise_and(flags, 16.0) != 0.0) ? (body->read_uint16() / morph_ratio_one_flight_value_variable__u00004d__u00004f__u000052__u000050__u000048__u00005f__u000052__u000041__u000054__u000049__u00004f__u00005f__u00004f__u00004e__u000045__flight_private_9b3e23242b55e3b8) : ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = inherited; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->ratio; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  const std::optional<flight::String> name = ((flight::bitwise_and(flags, 32.0) != 0.0) ? std::optional<flight::String>{body->read_string()} : ([&]() -> std::optional<flight::String> { auto nullish_coalesce_left_4 = ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto optional_chain_receiver = inherited; if (!optional_chain_receiver.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto optional_chain_projected_3 = optional_chain_receiver.value()->name; if (!optional_chain_projected_3.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, optional_chain_projected_3.value()}; }()); }()); if (const auto* alternative = std::get_if<flight::String>(&nullish_coalesce_left_4)) return std::optional<flight::String>{*alternative}; return std::nullopt; }()));
+  const double clip_depth = ((flight::bitwise_and(flags, 64.0) != 0.0) ? body->read_uint16() : ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = inherited; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->clip_depth; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }()));
+  if (((!body->valid || (is_move && !existing.has_value())) || ((character_id == 0.0) && !direct_linkage.has_value()))) {
+    return;
+  }
+  placements.set(depth, flight::make_ref<flight::types::SwfTagPlacement>(flight::types::SwfTagPlacement{.advanced_blend_mode = ([&]() -> std::optional<flight::String> { auto nullish_coalesce_left_5 = ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto optional_chain_receiver = inherited; if (!optional_chain_receiver.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; return ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto optional_chain_projected_4 = optional_chain_receiver.value()->advanced_blend_mode; if (!optional_chain_projected_4.has_value()) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, optional_chain_projected_4.value()}; }()); }()); if (const auto* alternative = std::get_if<flight::String>(&nullish_coalesce_left_5)) return std::optional<flight::String>{*alternative}; return std::nullopt; }()), .alpha = color_transform->alpha, .blend_mode = ([&]() -> flight::String { auto nullish_coalesce_left = ([&]() -> std::optional<flight::String> { auto optional_chain_receiver = inherited; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->blend_mode; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::types::blend_mode->normal; }()), .character_id = character_id, .clip_depth = clip_depth, .color_adjustments = color_transform->color_adjustments, .color_transform_adjustments = color_transform->color_adjustments, .depth = depth, .direct_linkage = direct_linkage, .effects = ([&]() -> flight::Array<flight::Ref<flight::types::Effect>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::Effect>>> { auto optional_chain_receiver = inherited; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->effects; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::swf::empty_effects; }()), .filter_adjustments = ([&]() -> flight::Array<flight::Ref<flight::types::Adjustment>> { auto nullish_coalesce_left = ([&]() -> std::optional<flight::Array<flight::Ref<flight::types::Adjustment>>> { auto optional_chain_receiver = inherited; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->filter_adjustments; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::swf::empty_adjustments; }()), .matrix = matrix, .name = name, .ratio = ratio}));
+}
 
-// NOT GENERATED: function readPlaceObject2 -- source line 23
-//
-// The source it stood for:
-//   function readPlaceObject2(body: SwfTagReader, placements: Map<number, SwfTagPlacement>): void {
-//     const flags = body.readUint8();
-//     const depth = body.readUint16();
-//     const existing = placements.get(depth);
-//     const isMove = (flags & 0x01) !== 0;
-//     const inherited = isMove ? existing : undefined;
-//     const hasCharacter = (flags & 0x02) !== 0;
-//     const directLinkage = inherited?.directLinkage ?? null;
-//     const characterId = hasCharacter ? body.readUint16() : (inherited?.characterId ?? 0);
-//     const matrix = (flags & 0x04) !== 0 ? readSwfMatrix(body) : (inherited?.matrix ?? IDENTITY_MATRIX);
-//     const colorTransform =
-//       (flags & 0x08) !== 0
-//         ? readSwfColorTransform(body)
-//         : { alpha: inherited?.alpha ?? 1, colorAdjustments: inherited?.colorTransformAdjustments ?? null };
-//     const ratio = (flags & 0x10) !== 0 ? body.readUint16() / MORPH_RATIO_ONE : (inherited?.ratio ?? 0);
-//     const name = (flags & 0x20) !== 0 ? body.readString() : (inherited?.name ?? null);
-//     const clipDepth = (flags & 0x40) !== 0 ? body.readUint16() : (inherited?.clipDepth ?? 0);
-//   
-//     if (!body.valid || (isMove && existing === undefined) || (characterId === 0 && directLinkage === null)) return;
-//     placements.set(depth, {
-//       advancedBlendMode: inherited?.advancedBlendMode ?? null,
-//       alpha: colorTransform.alpha,
-//       blendMode: inherited?.blendMode ?? BlendMode.Normal,
-//       characterId,
-//       clipDepth,
-//       colorAdjustments: colorTransform.colorAdjustments,
-//       colorTransformAdjustments: colorTransform.colorAdjustments,
-//       depth,
-//       directLinkage,
-//       effects: inherited?.effects ?? EMPTY_EFFECTS,
-//       filterAdjustments: inherited?.filterAdjustments ?? EMPTY_ADJUSTMENTS,
-//       matrix,
-//       name,
-//       ratio,
-//     });
-//   }
-//   
-// cpp emission failed for @flighthq/swf/packages/swf/src/swfPlaceObjectHandler.ts: dual-sentinel optional
-// property result requires one represented member value domain
-
-inline flight::Ref<SwfTagHandler> swf_place_object_handler = flight::make_ref<SwfTagHandler>(SwfTagHandler{.tags = flight::Array{tag_place_object, tag_remove_object, tag_place_object_2, tag_remove_object_2}, .parse = [](flight::Ref<SwfTagReader> body, double tag, flight::Ref<SwfTagParseState> state, flight::Ref<SwfTagTimelineState> timeline) {
+inline flight::Ref<flight::types::SwfTagHandler> swf_place_object_handler = flight::make_ref<flight::types::SwfTagHandler>(flight::types::SwfTagHandler{.tags = flight::Array<double>{tag_place_object, tag_remove_object, tag_place_object_2, tag_remove_object_2}, .parse = [](flight::Ref<flight::types::SwfTagReader> body, double tag, flight::Ref<flight::types::SwfTagParseState> state, flight::Ref<flight::types::SwfTagTimelineState> timeline, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> ignored_callback_argument) {
+  (void)ignored_callback_argument;
   if ((tag == tag_place_object)) {
     read_legacy_place_object(body, timeline->placements);
   }

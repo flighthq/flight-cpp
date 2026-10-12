@@ -3,9 +3,8 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function readSwfLegacyImageDefinition -- source line 57
-#include <flight/boolean.hpp>
-#include <functional>
+//   missing: variable (binding) -- source line 30
+#include <flight/structural_ref.hpp>
 #include <optional>
 #include <tuple>
 #include <variant>
@@ -16,13 +15,31 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/swf_tag_parse_state.hpp>
 
+namespace flight::types { struct EmbeddedImageResourceReference; }
+namespace flight::types { struct ExternalImageResourceReference; }
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct Sprite; }
+namespace flight::types { struct SwfJpegAlphaPayload; }
+namespace flight::types { struct SwfTagHandler; }
+namespace flight::types { struct SwfTagHandlerInstantiation; }
+namespace flight::types { struct SwfTagHandlerResources; }
+namespace flight::types { struct SwfTagParseResult; }
+namespace flight::types { struct SwfTagParseState; }
+namespace flight::types { struct SwfTagReader; }
+namespace flight::types { struct SwfTagRectangle; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+
 namespace flight::swf {
 struct SwfImageResourceSet;
 } // namespace flight::swf
 
+#include <flight/image/image_resource_reference.hpp>
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/swf/swf_image_mime_type.hpp>
-#include <flight/swf/swf_image_texture.hpp>
-#include <flight/swf/swf_node.hpp>
 #include <flight/swf/swf_primitive.hpp>
 
 namespace flight::swf {
@@ -42,45 +59,45 @@ inline const double tag_jpeg_tables = 8.0;
 using bytes_mime_type_0f132ce875cdb3fc = flight::types::bytes_mime_type_0f132ce875cdb3fc;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_0F132CE875CDB3FC
 
-inline flight::Array<flight::Ref<SwfJpegAlphaPayload>> create_swf_jpeg_alpha_payloads(flight::Ref<SwfTagParseResult> parsed, flight::Map<double, flight::Ref<EmbeddedImageResourceReference>> references) {
-  flight::Array<flight::Ref<SwfJpegAlphaPayload>> payloads = flight::Array<flight::Ref<SwfJpegAlphaPayload>>{};
-  for (auto array_pattern_value : parsed->jpeg_alpha_payloads) {
+inline flight::Array<flight::Ref<flight::types::SwfJpegAlphaPayload>> create_swf_jpeg_alpha_payloads(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>> parsed, flight::Map<double, flight::Ref<flight::types::EmbeddedImageResourceReference>> references) {
+  flight::Array<flight::Ref<flight::types::SwfJpegAlphaPayload>> payloads = flight::Array<flight::Ref<flight::types::SwfJpegAlphaPayload>>{};
+  for (auto array_pattern_value : flight::row_get<flight::RowKey<"jpegAlphaPayloads">>(parsed)) {
     const double character_id = std::get<0>(array_pattern_value);
     auto source = std::get<1>(array_pattern_value);
-    std::optional<flight::Ref<EmbeddedImageResourceReference>> reference = references.get(character_id);
+    std::optional<flight::Ref<flight::types::EmbeddedImageResourceReference>> reference = references.get(character_id);
     if (!reference.has_value()) {
-      auto image = parsed->images.get(character_id);
+      auto image = flight::row_get<flight::RowKey<"images">>(parsed).get(character_id);
       if (!image.has_value()) {
         continue;
       }
-      (reference = std::optional<flight::Ref<EmbeddedImageResourceReference>>{create_embedded_image_resource_reference(image.value()->bytes, std::optional<flight::String>{image.value()->mime_type})});
+      (reference = std::optional<flight::Ref<flight::types::EmbeddedImageResourceReference>>{flight::image::create_embedded_image_resource_reference(image.value()->bytes, std::optional<flight::String>{image.value()->mime_type}, std::nullopt)});
       references.set(character_id, reference.value());
     }
-    payloads.push(flight::make_ref<SwfJpegAlphaPayload>(SwfJpegAlphaPayload{.reference = reference.value()}));
+    payloads.push(flight::make_ref<flight::types::SwfJpegAlphaPayload>(flight::types::SwfJpegAlphaPayload{.reference = reference.value()}));
   }
   return payloads;
 }
 
 struct SwfImageResourceSet : public flight::ReferenceEnabled {
-  flight::Map<double, flight::Ref<EmbeddedImageResourceReference>> references;
-  flight::Array<flight::Ref<ImageResourceReference>> resources;
+  flight::Map<double, flight::Ref<flight::types::EmbeddedImageResourceReference>> references;
+  flight::Array<flight::types::ImageResourceReference> resources;
 };
 
-inline flight::Ref<SwfImageResourceSet> create_swf_image_resources(flight::Ref<SwfTagParseResult> parsed) {
-  auto references = flight::Map<double, flight::Ref<EmbeddedImageResourceReference>>();
-  flight::Array<flight::Ref<ImageResourceReference>> resources = flight::Array<flight::Ref<ImageResourceReference>>{};
-  for (auto array_pattern_value : parsed->image_textures) {
+inline flight::Ref<SwfImageResourceSet> create_swf_image_resources(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>> parsed) {
+  auto references = flight::Map<double, flight::Ref<flight::types::EmbeddedImageResourceReference>>();
+  flight::Array<flight::types::ImageResourceReference> resources = flight::Array<flight::types::ImageResourceReference>{};
+  for (auto array_pattern_value : flight::row_get<flight::RowKey<"imageTextures">>(parsed)) {
     const double character_id = std::get<0>(array_pattern_value);
-    flight::Map<flight::String, flight::Ref<Texture2D>> variants = std::get<1>(array_pattern_value);
-    auto image = parsed->images.get(character_id);
+    flight::Map<flight::String, flight::Ref<flight::types::Texture2D>> variants = std::get<1>(array_pattern_value);
+    auto image = flight::row_get<flight::RowKey<"images">>(parsed).get(character_id);
     if (!image.has_value()) {
       continue;
     }
-    const flight::String alpha_type = ((image.value()->mime_type == swf_lossless_alpha_mime_type) ? flight::String("premultiplied") : ((image.value()->mime_type == swf_lossless_mime_type) ? flight::String("opaque") : flight::String("straight")));
-    flight::Ref<EmbeddedImageResourceReference> reference = create_embedded_image_resource_reference(image.value()->bytes, std::optional<flight::String>{image.value()->mime_type}, alpha_type);
-    (reference->textures = ([&]() { flight::Array<flight::Ref<Texture2D>> array_spread_result; { auto&& array_spread_collection = variants; for (const auto& [array_spread_key, array_spread_mapped_value] : array_spread_collection) { static_cast<void>(array_spread_key); array_spread_result.push(array_spread_mapped_value); } } return array_spread_result; }()));
+    const flight::String alpha_type = ((image.value()->mime_type == flight::swf::swf_lossless_alpha_mime_type) ? flight::String("premultiplied") : ((image.value()->mime_type == flight::swf::swf_lossless_mime_type) ? flight::String("opaque") : flight::String("straight")));
+    auto reference = flight::image::create_embedded_image_resource_reference(image.value()->bytes, std::optional<flight::String>{image.value()->mime_type}, alpha_type);
+    (reference->textures = std::optional<flight::Array<flight::types::Texture>>{([&]() { flight::Array<flight::types::Texture> array_spread_result; { auto&& array_spread_collection = variants; for (const auto& [array_spread_key, array_spread_mapped_value] : array_spread_collection) { static_cast<void>(array_spread_key); array_spread_result.push(array_spread_mapped_value); } } return array_spread_result; }())});
     references.set(character_id, reference);
-    resources.push(reference);
+    resources.push(std::variant<flight::Ref<flight::types::EmbeddedImageResourceReference>, flight::Ref<flight::types::ExternalImageResourceReference>>{std::in_place_type<flight::Ref<flight::types::EmbeddedImageResourceReference>>, reference});
   }
   return flight::make_ref<SwfImageResourceSet>(SwfImageResourceSet{.references = references, .resources = resources});
 }
@@ -129,18 +146,18 @@ inline const flight::String png_mime_type = flight::String("image/png");
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BOUNDS_MIME_TYPE_4AA56420FC4E30EC
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BOUNDS_MIME_TYPE_4AA56420FC4E30EC
 struct bounds_mime_type_4aa56420fc4e30ec : public flight::ReferenceEnabled {
-  flight::Ref<SwfTagRectangle> bounds;
+  flight::Ref<flight::types::SwfTagRectangle> bounds;
   flight::String mime_type;
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BOUNDS_MIME_TYPE_4AA56420FC4E30EC
 
 inline std::optional<flight::Ref<bounds_mime_type_4aa56420fc4e30ec>> read_swf_embedded_image(flight::Uint8Array source, double start, double end) {
-  if ((((((((((((((((end - start) >= 24.0) && (source.get_index(start) == 137.0)) && (source.get_index((start + 1.0)) == 80.0)) && (source.get_index((start + 2.0)) == 78.0)) && (source.get_index((start + 3.0)) == 71.0)) && (source.get_index((start + 4.0)) == 13.0)) && (source.get_index((start + 5.0)) == 10.0)) && (source.get_index((start + 6.0)) == 26.0)) && (source.get_index((start + 7.0)) == 10.0)) && (read_big_endian_uint32(source, (start + 8.0)) == 13.0)) && (source.get_index((start + 12.0)) == 73.0)) && (source.get_index((start + 13.0)) == 72.0)) && (source.get_index((start + 14.0)) == 68.0)) && (source.get_index((start + 15.0)) == 82.0))) {
-    std::optional<flight::Ref<SwfTagRectangle>> bounds = resolve_swf_dimension_bounds(read_big_endian_uint32(source, (start + 16.0)), read_big_endian_uint32(source, (start + 20.0)));
+  if ((((((((((((((((end - start) >= 24.0) && (source.get_index(start) == 137.0)) && (source.get_index((start + 1.0)) == 80.0)) && (source.get_index((start + 2.0)) == 78.0)) && (source.get_index((start + 3.0)) == 71.0)) && (source.get_index((start + 4.0)) == 13.0)) && (source.get_index((start + 5.0)) == 10.0)) && (source.get_index((start + 6.0)) == 26.0)) && (source.get_index((start + 7.0)) == 10.0)) && (flight::swf::read_big_endian_uint32(source, (start + 8.0)) == 13.0)) && (source.get_index((start + 12.0)) == 73.0)) && (source.get_index((start + 13.0)) == 72.0)) && (source.get_index((start + 14.0)) == 68.0)) && (source.get_index((start + 15.0)) == 82.0))) {
+    auto bounds = flight::swf::resolve_swf_dimension_bounds(flight::swf::read_big_endian_uint32(source, (start + 16.0)), flight::swf::read_big_endian_uint32(source, (start + 20.0)));
     return (!bounds.has_value() ? std::nullopt : std::optional<flight::Ref<bounds_mime_type_4aa56420fc4e30ec>>{flight::make_ref<bounds_mime_type_4aa56420fc4e30ec>(bounds_mime_type_4aa56420fc4e30ec{.bounds = bounds.value(), .mime_type = png_mime_type})});
   }
   if (((((((((end - start) >= 10.0) && (source.get_index(start) == 71.0)) && (source.get_index((start + 1.0)) == 73.0)) && (source.get_index((start + 2.0)) == 70.0)) && (source.get_index((start + 3.0)) == 56.0)) && ((source.get_index((start + 4.0)) == 55.0) || (source.get_index((start + 4.0)) == 57.0))) && (source.get_index((start + 5.0)) == 97.0))) {
-    std::optional<flight::Ref<SwfTagRectangle>> bounds_2 = resolve_swf_dimension_bounds((source.get_index((start + 6.0)) + (source.get_index((start + 7.0)) * 256.0)), (source.get_index((start + 8.0)) + (source.get_index((start + 9.0)) * 256.0)));
+    auto bounds_2 = flight::swf::resolve_swf_dimension_bounds((source.get_index((start + 6.0)) + (source.get_index((start + 7.0)) * 256.0)), (source.get_index((start + 8.0)) + (source.get_index((start + 9.0)) * 256.0)));
     return (!bounds_2.has_value() ? std::nullopt : std::optional<flight::Ref<bounds_mime_type_4aa56420fc4e30ec>>{flight::make_ref<bounds_mime_type_4aa56420fc4e30ec>(bounds_mime_type_4aa56420fc4e30ec{.bounds = bounds_2.value(), .mime_type = gif_mime_type})});
   }
   if (((((end - start) < 4.0) || (source.get_index(start) != 255.0)) || (source.get_index((start + 1.0)) != jpeg_start_of_image))) {
@@ -173,7 +190,7 @@ inline std::optional<flight::Ref<bounds_mime_type_4aa56420fc4e30ec>> read_swf_em
     if (((pos + 2.0) > end)) {
       return std::nullopt;
     }
-    const double length = read_big_endian_uint16(source, pos);
+    const double length = flight::swf::read_big_endian_uint16(source, pos);
     if (((length < 2.0) || ((pos + length) > end))) {
       return std::nullopt;
     }
@@ -181,7 +198,7 @@ inline std::optional<flight::Ref<bounds_mime_type_4aa56420fc4e30ec>> read_swf_em
       if ((length < 7.0)) {
         return std::nullopt;
       }
-      std::optional<flight::Ref<SwfTagRectangle>> bounds_3 = resolve_swf_dimension_bounds(read_big_endian_uint16(source, (pos + 5.0)), read_big_endian_uint16(source, (pos + 3.0)));
+      auto bounds_3 = flight::swf::resolve_swf_dimension_bounds(flight::swf::read_big_endian_uint16(source, (pos + 5.0)), flight::swf::read_big_endian_uint16(source, (pos + 3.0)));
       return (!bounds_3.has_value() ? std::nullopt : std::optional<flight::Ref<bounds_mime_type_4aa56420fc4e30ec>>{flight::make_ref<bounds_mime_type_4aa56420fc4e30ec>(bounds_mime_type_4aa56420fc4e30ec{.bounds = bounds_3.value(), .mime_type = jpeg_mime_type})});
     }
     (pos += length);
@@ -189,81 +206,37 @@ inline std::optional<flight::Ref<bounds_mime_type_4aa56420fc4e30ec>> read_swf_em
   return std::nullopt;
 }
 
+inline void read_swf_legacy_image_definition(flight::Ref<flight::types::SwfTagReader> body, flight::Ref<flight::types::SwfTagParseState> state) {
+  const double character_id = body->read_uint16();
+  if (((!body->valid || (character_id == 0.0)) || state->defined_characters.has(character_id))) {
+    return;
+  }
+  std::optional<flight::Uint8Array> tables = state->jpeg_tables;
+  if (!tables.has_value()) {
+    flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("swf.jpeg-tables-missing"), flight::String("readSwfLegacyImageDefinition"), {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.bitmap.define-bits-jpeg-tables")}}, {flight::String("characterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, character_id}}});
+    return;
+  }
+  const double tables_end = ((((static_cast<double>(tables.value().size()) >= 2.0) && (tables.value().get_index((static_cast<double>(tables.value().size()) - 2.0)) == 255.0)) && (tables.value().get_index((static_cast<double>(tables.value().size()) - 1.0)) == jpeg_end_of_image)) ? (static_cast<double>(tables.value().size()) - 2.0) : static_cast<double>(tables.value().size()));
+  const double image_start = (((body->source.get_index(body->pos) == 255.0) && (body->source.get_index((body->pos + 1.0)) == jpeg_start_of_image)) ? (body->pos + 2.0) : body->pos);
+  flight::Uint8Array spliced = flight::Uint8Array((tables_end + (body->end - image_start)));
+  spliced.set(tables.value().subarray(0.0, tables_end));
+  spliced.set(body->source.subarray(image_start, body->end), tables_end);
+  auto image = read_swf_embedded_image(spliced, 0.0, static_cast<double>(spliced.size()));
+  if (!image.has_value()) {
+    flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("swf.jpeg-tables-unsplittable"), flight::String("readSwfLegacyImageDefinition"), {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.bitmap.define-bits-jpeg-tables")}}, {flight::String("characterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, character_id}}});
+    return;
+  }
+  state->defined_characters.add(character_id);
+  state->character_bounds.set(character_id, image.value()->bounds);
+  state->images.set(character_id, flight::make_ref<bytes_mime_type_0f132ce875cdb3fc>(bytes_mime_type_0f132ce875cdb3fc{.bytes = spliced, .mime_type = image.value()->mime_type}));
+}
 
-// NOT GENERATED: function readSwfLegacyImageDefinition -- source line 57
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   function readSwfLegacyImageDefinition(body: SwfTagReader, state: SwfTagParseState): void {
-//     const characterId = body.readUint16();
-//     if (!body.valid || characterId === 0 || state.definedCharacters.has(characterId)) return;
-//     const tables = state.jpegTables;
-//     if (tables === null) {
-//       reportImportDiagnostic(
-//         state.diagnostics,
-//         ImportDiagnosticSeverity.Drop,
-//         'swf.jpeg-tables-missing',
-//         'readSwfLegacyImageDefinition',
-//         {
-//           capability: 'swf.bitmap.define-bits-jpeg-tables',
-//           characterId,
-//         },
-//       );
-//       return;
-//     }
-//   
-//     const tablesEnd =
-//       tables.length >= 2 && tables[tables.length - 2] === 0xff && tables[tables.length - 1] === JPEG_END_OF_IMAGE
-//         ? tables.length - 2
-//         : tables.length;
-//     const imageStart =
-//       body.source[body.pos] === 0xff && body.source[body.pos + 1] === JPEG_START_OF_IMAGE ? body.pos + 2 : body.pos;
-//     const spliced = new Uint8Array(tablesEnd + (body.end - imageStart));
-//     spliced.set(tables.subarray(0, tablesEnd));
-//     spliced.set(body.source.subarray(imageStart, body.end), tablesEnd);
-//   
-//     const image = readSwfEmbeddedImage(spliced, 0, spliced.length);
-//     if (image === null) {
-//       reportImportDiagnostic(
-//         state.diagnostics,
-//         ImportDiagnosticSeverity.Drop,
-//         'swf.jpeg-tables-unsplittable',
-//         'readSwfLegacyImageDefinition',
-//         {
-//           capability: 'swf.bitmap.define-bits-jpeg-tables',
-//           characterId,
-//         },
-//       );
-//       return;
-//     }
-//     state.definedCharacters.add(characterId);
-//     state.characterBounds.set(characterId, image.bounds);
-//     state.images.set(characterId, { bytes: spliced, mimeType: image.mimeType });
-//   }
-//   
-// cpp emission failed for @flighthq/swf/packages/swf/src/swfJpegBitmapHandler.ts: contextual optionalSingle
-// construction requires expression type evidence
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_54BB0D6B87E110D7
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_54BB0D6B87E110D7
+using character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7 = flight::types::character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_54BB0D6B87E110D7
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_5A9127763A7259BA
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_5A9127763A7259BA
-struct bytes_mime_type_5a9127763a7259ba : public flight::ReferenceEnabled {
-  flight::Uint8Array bytes;
-  flight::String mime_type;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_5A9127763A7259BA
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_EA088579BB350715
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_EA088579BB350715
-struct character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_ea088579bb350715 : public flight::ReferenceEnabled {
-  double character_id;
-  flight::Uint8Array compressed_alpha_bytes;
-  std::optional<double> deblocking_parameter_raw;
-  double height;
-  double width;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_EA088579BB350715
-
-inline void read_swf_embedded_image_definition(flight::Ref<SwfTagReader> body, flight::Ref<SwfTagParseState> state, double code) {
+inline void read_swf_embedded_image_definition(flight::Ref<flight::types::SwfTagReader> body, flight::Ref<flight::types::SwfTagParseState> state, double code) {
   const double character_id = body->read_uint16();
   std::optional<double> deblocking_parameter_raw = std::nullopt;
   double image_start = body->pos;
@@ -279,7 +252,7 @@ inline void read_swf_embedded_image_definition(flight::Ref<SwfTagReader> body, f
     (image_start = body->pos);
     (image_end = (alpha_offset_base + alpha_data_offset));
   }
-  if (((((!flight::to_boolean(body->valid) || (character_id == 0.0)) || (image_end < image_start)) || (image_end > body->end)) || state->defined_characters.has(character_id))) {
+  if (((((!body->valid || (character_id == 0.0)) || (image_end < image_start)) || (image_end > body->end)) || state->defined_characters.has(character_id))) {
     return;
   }
   auto image = read_swf_embedded_image(body->source, image_start, image_end);
@@ -288,40 +261,60 @@ inline void read_swf_embedded_image_definition(flight::Ref<SwfTagReader> body, f
   }
   state->defined_characters.add(character_id);
   state->character_bounds.set(character_id, image.value()->bounds);
-  state->images.set(character_id, flight::make_ref<bytes_mime_type_5a9127763a7259ba>(bytes_mime_type_5a9127763a7259ba{.bytes = strip_swf_jpeg_stream_boundary(body->source, image_start, image_end, image.value()->mime_type), .mime_type = image.value()->mime_type}));
+  state->images.set(character_id, flight::make_ref<bytes_mime_type_0f132ce875cdb3fc>(bytes_mime_type_0f132ce875cdb3fc{.bytes = strip_swf_jpeg_stream_boundary(body->source, image_start, image_end, image.value()->mime_type), .mime_type = image.value()->mime_type}));
   if (has_alpha_payload) {
     flight::Uint8Array compressed_alpha_bytes = body->source.subarray(image_end, body->end);
-    state->jpeg_alpha_payloads.set(character_id, flight::make_ref<character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_ea088579bb350715>(character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_ea088579bb350715{.character_id = character_id, .compressed_alpha_bytes = compressed_alpha_bytes, .deblocking_parameter_raw = deblocking_parameter_raw, .height = image.value()->bounds->height, .width = image.value()->bounds->width}));
+    state->jpeg_alpha_payloads.set(character_id, flight::make_ref<character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7>(character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7{.character_id = character_id, .compressed_alpha_bytes = compressed_alpha_bytes, .deblocking_parameter_raw = deblocking_parameter_raw, .height = image.value()->bounds->height, .width = image.value()->bounds->width}));
     if ((static_cast<double>(compressed_alpha_bytes.size()) > 0.0)) {
-      report_import_diagnostic(state->diagnostics, import_diagnostic_severity.skip, flight::String("swf.jpeg-alpha-stream"), flight::String("readSwfEmbeddedImageDefinition"), {{flight::String("capability"), ((code == tag_define_bits_jpeg_3) ? std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.bitmap.define-bits-jpeg-3")} : std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.bitmap.define-bits-jpeg-4")})}, {flight::String("characterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, character_id}}, {flight::String("discardedBytes"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(compressed_alpha_bytes.size())}}});
+      flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.jpeg-alpha-stream"), flight::String("readSwfEmbeddedImageDefinition"), {{flight::String("capability"), ((code == tag_define_bits_jpeg_3) ? std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.bitmap.define-bits-jpeg-3")} : std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.bitmap.define-bits-jpeg-4")})}, {flight::String("characterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, character_id}}, {flight::String("discardedBytes"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(compressed_alpha_bytes.size())}}});
     }
   }
   return;
 }
 
-inline flight::Ref<SwfTagHandler> swf_jpeg_bitmap_handler = flight::make_ref<SwfTagHandler>(SwfTagHandler{.instantiate = flight::make_ref<SwfTagHandlerInstantiation>(SwfTagHandlerInstantiation{.create_placement_node = [](flight::Ref<SwfTagParseResult> parsed, double character_id, std::optional<flight::Ref<SwfTagRectangle>> bounds) -> std::optional<flight::Ref<Sprite>> {
-  if (!parsed->images.has(character_id)) {
-    return std::nullopt;
-  }
-  return std::optional<flight::Ref<Sprite>>{create_swf_textured_sprite(acquire_swf_image_texture(parsed, character_id, false, true), bounds)};
-}, .create_resources = [](flight::Ref<SwfTagParseResult> parsed, flight::Ref<SwfTagHandlerResources> out) {
-  auto images = create_swf_image_resources(parsed);
-  ([&]() { auto&& array_push_receiver = out->images; const auto array_push_arguments = ([&]() { flight::Array<flight::Ref<ImageResourceReference>> array_spread_result_2; for (const auto& array_spread_item_2 : images->resources) { array_spread_result_2.push(array_spread_item_2); } return array_spread_result_2; }()); for (const auto& array_push_item : array_push_arguments) { array_push_receiver.push(array_push_item); } return static_cast<double>(array_push_receiver.size()); }());
-  ([&]() { auto&& array_push_receiver_2 = out->jpeg_alpha_payloads; const auto array_push_arguments_2 = ([&]() { flight::Array<flight::Ref<SwfJpegAlphaPayload>> array_spread_result_3; for (const auto& array_spread_item_3 : create_swf_jpeg_alpha_payloads(parsed, images->references)) { array_spread_result_3.push(array_spread_item_3); } return array_spread_result_3; }()); for (const auto& array_push_item_2 : array_push_arguments_2) { array_push_receiver_2.push(array_push_item_2); } return static_cast<double>(array_push_receiver_2.size()); }());
-}, .has_placement_content = [](flight::Ref<SwfTagParseResult> parsed, double character_id) {
-  return parsed->images.has(character_id);
-}}), .tags = flight::Array{tag_define_bits, tag_define_bits_jpeg_2, tag_define_bits_jpeg_3, tag_define_bits_jpeg_4, tag_jpeg_tables}, .parse = [](flight::Ref<SwfTagReader> body, double tag, flight::Ref<SwfTagParseState> state) {
-  if ((tag == tag_jpeg_tables)) {
-    (state->jpeg_tables = body->source.subarray(body->pos, body->end));
-    return true;
-  }
-  if ((tag == tag_define_bits)) {
-    read_swf_legacy_image_definition(body, state);
-  }
-  else {
-    read_swf_embedded_image_definition(body, state, tag);
-  }
-  return true;
-}});
+
+// NOT GENERATED: variable (binding) -- source line 30
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+//
+// The source it stood for:
+//   export const swfJpegBitmapHandler: SwfTagHandler = {
+//     instantiate: {
+//       createPlacementNode(parsed, characterId, bounds) {
+//         if (!parsed.images.has(characterId)) return null;
+//         return createSwfTexturedSprite(acquireSwfImageTexture(parsed, characterId, false, true), bounds);
+//       },
+//       createResources(parsed, out) {
+//         const images = createSwfImageResources(parsed);
+//         out.images.push(...images.resources);
+//         out.jpegAlphaPayloads.push(...createSwfJpegAlphaPayloads(parsed, images.references));
+//       },
+//       hasPlacementContent(parsed, characterId) {
+//         return parsed.images.has(characterId);
+//       },
+//     },
+//     tags: [TAG_DEFINE_BITS, TAG_DEFINE_BITS_JPEG_2, TAG_DEFINE_BITS_JPEG_3, TAG_DEFINE_BITS_JPEG_4, TAG_JPEG_TABLES],
+//     parse(body, tag, state) {
+//       if (tag === TAG_JPEG_TABLES) {
+//         state.jpegTables = body.source.subarray(body.pos, body.end);
+//         return true;
+//       }
+//       if (tag === TAG_DEFINE_BITS) readSwfLegacyImageDefinition(body, state);
+//       else readSwfEmbeddedImageDefinition(body, state, tag);
+//       return true;
+//     },
+//   };
+//   
+// cpp emission failed for @flighthq/swf/packages/swf/src/swfJpegBitmapHandler.ts: contextual union callable
+// value type
+// std::function<std::optional<flight::Ref<flight::types::Sprite>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>,
+// double,
+// std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>)>
+// agrees with no alternative's signature: the destination holds
+// [std::function<std::optional<flight::types::Node2D>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>,
+// double,
+// std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>,
+// std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>)>]. A callable is a represented
+// domain, so the obstacle is that the destination's signature cannot call this one. Declare the value's
+// parameters so the destination's signature supplies them, and its result as one the destination holds
 
 } // namespace flight::swf

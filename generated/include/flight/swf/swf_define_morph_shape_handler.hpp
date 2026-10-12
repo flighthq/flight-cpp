@@ -5,19 +5,23 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function readSwfMorphShapeBody -- source line 42
 //   missing: variable (binding) -- source line 21
-#include <flight/any.hpp>
-#include <functional>
-#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/swf/swf_bounded_definition.hpp>
-#include <flight/swf/swf_image_texture.hpp>
-#include <flight/swf/swf_morph_shape.hpp>
-#include <flight/swf/swf_node.hpp>
-#include <flight/swf/swf_reader.hpp>
+namespace flight::swf { struct SwfReader; }
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct MorphShape; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct SwfTagHandler; }
+namespace flight::types { struct SwfTagHandlerInstantiation; }
+namespace flight::types { struct SwfTagParseResult; }
+namespace flight::types { struct SwfTagParseState; }
+namespace flight::types { struct SwfTagReader; }
+namespace flight::types { struct SwfTagRectangle; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::swf {
 
@@ -60,7 +64,8 @@ inline const double tag_define_morph_shape_2 = 84.0;
 //   }
 //   
 // cpp emission failed for @flighthq/swf/packages/swf/src/swfDefineMorphShapeHandler.ts: contextual union value
-// type std::function<flight::Ref<Texture2D>(double, bool, bool)> is not a represented runtime domain
+// type std::function<flight::Ref<flight::types::Texture2D>(double, bool, bool)> is not a represented runtime
+// domain
 
 inline double resolve_swf_morph_shape_version(double code) {
   if ((code == tag_define_morph_shape)) {
@@ -71,7 +76,7 @@ inline double resolve_swf_morph_shape_version(double code) {
 
 
 // NOT GENERATED: variable (binding) -- source line 21
-// refusal: cpp-intersection-member-shapeless [source-portability]
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   export const swfDefineMorphShapeHandler: SwfTagHandler = {
@@ -95,8 +100,18 @@ inline double resolve_swf_morph_shape_version(double code) {
 //     },
 //   };
 //   
-// cpp emission failed for @flighthq/swf/packages/swf/src/swfDefineMorphShapeHandler.ts: intersection types
-// require C++ multiple-inheritance lowering: no shape for Node (argument Node2DTraits has no shape either),
-// Node2DTraits. Declare the object shape the code reads rather than intersecting a conjunct that has none
+// cpp emission failed for @flighthq/swf/packages/swf/src/swfDefineMorphShapeHandler.ts: contextual union
+// callable value type
+// std::function<std::optional<flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>,
+// flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>,
+// double,
+// std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>)>
+// agrees with no alternative's signature: the destination holds
+// [std::function<std::optional<flight::types::Node2D>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>,
+// double,
+// std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>,
+// std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>)>]. A callable is a represented
+// domain, so the obstacle is that the destination's signature cannot call this one. Declare the value's
+// parameters so the destination's signature supplies them, and its result as one the destination holds
 
 } // namespace flight::swf

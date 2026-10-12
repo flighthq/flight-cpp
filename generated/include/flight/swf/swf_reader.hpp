@@ -23,6 +23,8 @@ struct SwfReader : public flight::ReferenceEnabled {
   flight::Uint8Array source;
   double end;
   SwfReader(flight::Uint8Array source, double start, double end) {
+    this->source = source;
+    this->end = end;
     (this->pos = start);
   }
   void align_to_byte() {

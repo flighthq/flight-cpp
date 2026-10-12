@@ -6,6 +6,8 @@
 //   missing: function createSwfFileBytes -- source line 19
 #include <cmath>
 #include <cstdint>
+#include <flight/map.hpp>
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
 #include <random>
@@ -16,10 +18,18 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/swf_tag_parse_state.hpp>
 
+namespace flight::types { struct AudioResource; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct SwfTagHandler; }
+namespace flight::types { struct SwfTagParseState; }
+namespace flight::types { struct TimelineAudioCue; }
+namespace flight::types { template <typename Traits> struct Node; }
+
 namespace flight::swf {
 struct SwfBitWriter;
 } // namespace flight::swf
 
+#include <flight/types/contract.hpp>
 #include <flight/swf/expand_swf_tag_handler_dispatch.hpp>
 #include <flight/swf/swf_all_tag_handlers.hpp>
 
@@ -47,46 +57,58 @@ inline double count_swf_signed_bits(flight::Array<double> values) {
 using bytes_named_a0691cdc21805510 = flight::types::bytes_named_a0691cdc21805510;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_NAMED_A0691CDC21805510
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_SCRIPT_299DA739AC4E96A5
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_SCRIPT_299DA739AC4E96A5
-struct character_id_script_299da739ac4e96a5 : public flight::ReferenceEnabled {
-  double character_id;
-  flight::Ref<FrameScript> script;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_SCRIPT_299DA739AC4E96A5
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_0F132CE875CDB3FC
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_0F132CE875CDB3FC
+using bytes_mime_type_0f132ce875cdb3fc = flight::types::bytes_mime_type_0f132ce875cdb3fc;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_0F132CE875CDB3FC
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_54BB0D6B87E110D7
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_54BB0D6B87E110D7
+using character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7 = flight::types::character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_54BB0D6B87E110D7
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_END_START_B3D703E568B779F1
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_END_START_B3D703E568B779F1
+using end_start_b3d703e568b779f1 = flight::types::end_start_b3d703e568b779f1;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_END_START_B3D703E568B779F1
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_SCRIPT_7FE7DF2E7341FC1A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_SCRIPT_7FE7DF2E7341FC1A
+using character_id_script_7fe7df2e7341fc1a = flight::types::character_id_script_7fe7df2e7341fc1a;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_SCRIPT_7FE7DF2E7341FC1A
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_END_SOURCE_START_VERSION_3182D1468E182B72
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_END_SOURCE_START_VERSION_3182D1468E182B72
 using character_id_end_source_start_version_3182d1468e182b72 = flight::types::character_id_end_source_start_version_3182d1468e182b72;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_END_SOURCE_START_VERSION_3182D1468E182B72
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CLASS_NAME_CUE_ABE331B250C7124E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CLASS_NAME_CUE_ABE331B250C7124E
-struct class_name_cue_abe331b250c7124e : public flight::ReferenceEnabled {
-  flight::String class_name;
-  flight::Ref<TimelineAudioCue> cue;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CLASS_NAME_CUE_ABE331B250C7124E
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CLASS_NAME_CUE_CA53EE8B35497D37
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CLASS_NAME_CUE_CA53EE8B35497D37
+using class_name_cue_ca53ee8b35497d37 = flight::types::class_name_cue_ca53ee8b35497d37;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CLASS_NAME_CUE_CA53EE8B35497D37
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_CUE_1499DDB52CEEB541
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_CUE_1499DDB52CEEB541
-struct character_id_cue_1499ddb52ceeb541 : public flight::ReferenceEnabled {
-  double character_id;
-  flight::Ref<TimelineAudioCue> cue;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_CUE_1499DDB52CEEB541
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_CUE_1789E18AD131005E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_CUE_1789E18AD131005E
+using character_id_cue_1789e18ad131005e = flight::types::character_id_cue_1789e18ad131005e;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_CUE_1789E18AD131005E
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_RESOURCE_D5046B4F0CB5460B
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_RESOURCE_D5046B4F0CB5460B
-struct bytes_mime_type_resource_d5046b4f0cb5460b : public flight::ReferenceEnabled {
-  flight::Uint8Array bytes;
-  flight::String mime_type;
-  flight::Ref<AudioResource> resource;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_RESOURCE_D5046B4F0CB5460B
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_SAMPLE_RATE_5485CAC285DC53EE
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_SAMPLE_RATE_5485CAC285DC53EE
+using bytes_mime_type_sample_rate_5485cac285dc53ee = flight::types::bytes_mime_type_sample_rate_5485cac285dc53ee;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_SAMPLE_RATE_5485CAC285DC53EE
 
-inline flight::Ref<SwfTagParseState> create_swf_test_parse_state(std::optional<flight::Ref<SwfTagHandlerDispatch>> dispatch = std::nullopt) {
-  return flight::make_ref<SwfTagParseState>(SwfTagParseState{.abc_blobs = flight::Array<flight::Ref<bytes_named_a0691cdc21805510>>{}, .background_color = nullptr, .character_bounds = flight::Map(), .defined_characters = flight::Set(), .diagnostics = std::nullopt, .dispatch = (dispatch.has_value() ? dispatch.value() : expand_swf_tag_handler_dispatch(swf_all_tag_handlers)), .edit_texts = flight::Map(), .font_code_points = flight::Map(), .font_names = flight::Map(), .font_outline_sources = flight::Map(), .images = flight::Map(), .image_textures = flight::Map(), .jpeg_alpha_payloads = flight::Map(), .jpeg_tables = nullptr, .linkages = flight::Map(), .morph_bounds = flight::Map(), .morph_shapes = flight::Map(), .pending_init_actions = flight::Array<flight::Ref<character_id_script_299da739ac4e96a5>>{}, .pending_texts = flight::Array<flight::Ref<character_id_end_source_start_version_3182d1468e182b72>>{}, .remaining_frame_entries = 1000000.0, .scaling_grids = flight::Map(), .shapes = flight::Map(), .sound_cues_awaiting_class = flight::Array<flight::Ref<class_name_cue_abe331b250c7124e>>{}, .sound_cues_awaiting_rate = flight::Array<flight::Ref<character_id_cue_1499ddb52ceeb541>>{}, .sound_resources = flight::Map(), .sounds = flight::Map(), .sprites = flight::Map(), .stream_sounds = flight::Array<flight::Ref<bytes_mime_type_resource_d5046b4f0cb5460b>>{}, .video_textures = flight::Map(), .videos = flight::Map()});
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_RESOURCE_0C07297B9C0324FF
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_RESOURCE_0C07297B9C0324FF
+using bytes_mime_type_resource_0c07297b9c0324ff = flight::types::bytes_mime_type_resource_0c07297b9c0324ff;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_RESOURCE_0C07297B9C0324FF
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CODEC_ID_DEBLOCKING_FRAME_COUNT_HEIGHT_SMOOTHING_WIDTH_E646285BB518325F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CODEC_ID_DEBLOCKING_FRAME_COUNT_HEIGHT_SMOOTHING_WIDTH_E646285BB518325F
+using codec_id_deblocking_frame_count_height_smoothing_width_e646285bb518325f = flight::types::codec_id_deblocking_frame_count_height_smoothing_width_e646285bb518325f;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CODEC_ID_DEBLOCKING_FRAME_COUNT_HEIGHT_SMOOTHING_WIDTH_E646285BB518325F
+
+inline flight::Ref<flight::types::SwfTagParseState> create_swf_test_parse_state(std::optional<flight::types::SwfTagHandlerDispatch> dispatch = std::nullopt) {
+  return ([&]() { auto object_member_abc_blobs = flight::Array<flight::Ref<bytes_named_a0691cdc21805510>>{}; auto object_member_background_color = std::nullopt; auto object_member_character_bounds = flight::Map<double, flight::Ref<flight::types::SwfTagRectangle>>(); auto object_member_defined_characters = flight::Set<double>(); auto object_member_diagnostics = std::nullopt; auto object_member_dispatch = (dispatch.has_value() ? dispatch.value() : flight::swf::expand_swf_tag_handler_dispatch(flight::swf::swf_all_tag_handlers)); auto object_member_edit_texts = flight::Map<double, std::function<flight::Ref<flight::types::RichText>(std::function<flight::String(double)>)>>(); auto object_member_font_code_points = flight::Map<double, flight::Array<double>>(); auto object_member_font_names = flight::Map<double, flight::String>(); auto object_member_font_outline_sources = flight::Map<double, flight::Ref<flight::types::GlyphOutlineSource>>(); auto object_member_images = flight::Map<double, flight::Ref<bytes_mime_type_0f132ce875cdb3fc>>(); auto object_member_image_textures = flight::Map<double, flight::Map<flight::String, flight::Ref<flight::types::Texture2D>>>(); auto object_member_jpeg_alpha_payloads = flight::Map<double, flight::Ref<character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7>>(); auto object_member_jpeg_tables = std::nullopt; auto object_member_linkages = flight::Map<double, flight::String>(); auto object_member_morph_bounds = flight::Map<double, flight::Ref<end_start_b3d703e568b779f1>>(); auto object_member_morph_shapes = flight::Map<double, std::function<std::optional<flight::Ref<flight::types::MorphShape>>()>>(); auto object_member_pending_init_actions = flight::Array<flight::Ref<character_id_script_7fe7df2e7341fc1a>>{}; auto object_member_pending_texts = flight::Array<flight::Ref<character_id_end_source_start_version_3182d1468e182b72>>{}; auto object_member_remaining_frame_entries = 1000000.0; auto object_member_scaling_grids = flight::Map<double, flight::Ref<flight::types::SwfTagRectangle>>(); auto object_member_shapes = flight::Map<double, flight::Ref<flight::types::Shape>>(); auto object_member_sound_cues_awaiting_class = flight::Array<flight::Ref<class_name_cue_ca53ee8b35497d37>>{}; auto object_member_sound_cues_awaiting_rate = flight::Array<flight::Ref<character_id_cue_1789e18ad131005e>>{}; auto object_member_sound_resources = flight::Map<double, flight::Ref<flight::types::AudioResource>>(); auto object_member_sounds = flight::Map<double, flight::Ref<bytes_mime_type_sample_rate_5485cac285dc53ee>>(); auto object_member_sprites = flight::Map<double, flight::Ref<flight::types::SwfTimeline>>(); auto object_member_stream_sounds = flight::Array<flight::Ref<bytes_mime_type_resource_0c07297b9c0324ff>>{}; auto object_member_video_textures = flight::Map<double, flight::Ref<flight::types::Texture2D>>(); auto object_member_videos = flight::Map<double, flight::Ref<codec_id_deblocking_frame_count_height_smoothing_width_e646285bb518325f>>(); return flight::make_ref<flight::types::SwfTagParseState>(flight::types::SwfTagParseState{.abc_blobs = object_member_abc_blobs, .background_color = object_member_background_color, .character_bounds = object_member_character_bounds, .defined_characters = object_member_defined_characters, .dispatch = object_member_dispatch, .diagnostics = object_member_diagnostics, .edit_texts = object_member_edit_texts, .font_code_points = object_member_font_code_points, .font_names = object_member_font_names, .font_outline_sources = object_member_font_outline_sources, .images = object_member_images, .image_textures = object_member_image_textures, .jpeg_alpha_payloads = object_member_jpeg_alpha_payloads, .jpeg_tables = object_member_jpeg_tables, .linkages = object_member_linkages, .morph_bounds = object_member_morph_bounds, .morph_shapes = object_member_morph_shapes, .pending_init_actions = object_member_pending_init_actions, .pending_texts = object_member_pending_texts, .remaining_frame_entries = object_member_remaining_frame_entries, .scaling_grids = object_member_scaling_grids, .shapes = object_member_shapes, .sound_cues_awaiting_class = object_member_sound_cues_awaiting_class, .sound_cues_awaiting_rate = object_member_sound_cues_awaiting_rate, .sound_resources = object_member_sound_resources, .sounds = object_member_sounds, .sprites = object_member_sprites, .stream_sounds = object_member_stream_sounds, .video_textures = object_member_video_textures, .videos = object_member_videos}); }());
 }
 
 inline flight::Uint8Array join_swf_bytes(flight::Array<flight::Uint8Array> parts) {
@@ -143,7 +165,7 @@ inline flight::Uint8Array create_swf_rectangle_record(double x_min, double x_max
   return writer->to_bytes();
 }
 
-inline const double swf_prefix_length = 8.0;
+inline const double swf_prefix_length_flight_value_variable__u000053__u000057__u000046__u00005f__u000050__u000052__u000045__u000046__u000049__u000058__u00005f__u00004c__u000045__u00004e__u000047__u000054__u000048__flight_private_a607232e71225cb2 = 8.0;
 
 inline flight::Uint8Array swf_uint16_bytes(double value) {
   return flight::Uint8Array(flight::Array{flight::bitwise_and(value, 255.0), flight::bitwise_and(flight::signed_right_shift(value, 8.0), 255.0)});
@@ -186,12 +208,12 @@ inline flight::Uint8Array create_swf_tag_record(double code, std::optional<fligh
   return ((short_length == 63.0) ? join_swf_bytes(flight::Array<flight::Uint8Array>{header, swf_uint32_bytes(static_cast<double>(body.value().size())), body.value()}) : join_swf_bytes(flight::Array<flight::Uint8Array>{header, body.value()}));
 }
 
-inline const double fixed_16_one = 65536.0;
+inline const double fixed_16_one_flight_value_variable__u000046__u000049__u000058__u000045__u000044__u00005f_16_u00005f__u00004f__u00004e__u000045__flight_private_a607232e71225cb2 = 65536.0;
 
 inline flight::Uint8Array create_swf_matrix_record(double a, double b, double c, double d, double tx, double ty) {
   flight::Ref<SwfBitWriter> writer = flight::make_ref<SwfBitWriter>();
-  flight::Array<double> scales = flight::Array<double>{flight::round((a * fixed_16_one)), flight::round((d * fixed_16_one))};
-  flight::Array<double> rotates = flight::Array<double>{flight::round((b * fixed_16_one)), flight::round((c * fixed_16_one))};
+  flight::Array<double> scales = flight::Array<double>{flight::round((a * fixed_16_one_flight_value_variable__u000046__u000049__u000058__u000045__u000044__u00005f_16_u00005f__u00004f__u00004e__u000045__flight_private_a607232e71225cb2)), flight::round((d * fixed_16_one_flight_value_variable__u000046__u000049__u000058__u000045__u000044__u00005f_16_u00005f__u00004f__u00004e__u000045__flight_private_a607232e71225cb2))};
+  flight::Array<double> rotates = flight::Array<double>{flight::round((b * fixed_16_one_flight_value_variable__u000046__u000049__u000058__u000045__u000044__u00005f_16_u00005f__u00004f__u00004e__u000045__flight_private_a607232e71225cb2)), flight::round((c * fixed_16_one_flight_value_variable__u000046__u000049__u000058__u000045__u000044__u00005f_16_u00005f__u00004f__u00004e__u000045__flight_private_a607232e71225cb2))};
   const double scale_bits = count_swf_signed_bits(scales);
   const double rotate_bits = count_swf_signed_bits(rotates);
   const double translate_bits = count_swf_signed_bits(flight::Array<double>{tx, ty});

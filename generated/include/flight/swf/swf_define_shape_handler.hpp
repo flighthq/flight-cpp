@@ -4,24 +4,41 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function readSwfShapeBody -- source line 63
-//   missing: function createSwfScale9ShapeNode -- source line 107
 //   missing: variable (binding) -- source line 30
 #include <flight/any.hpp>
-#include <flight/boolean.hpp>
-#include <flight/map.hpp>
-#include <functional>
+#include <flight/structural_ref.hpp>
 #include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/swf/swf_bounded_definition.hpp>
-#include <flight/swf/swf_image_texture.hpp>
+namespace flight::swf { struct SwfReader; }
+namespace flight::types { struct Adjustment; }
+namespace flight::types { struct Effect; }
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Rectangle; }
+namespace flight::types { struct Scale9Shape; }
+namespace flight::types { struct Shape; }
+namespace flight::types { struct SwfTagHandler; }
+namespace flight::types { struct SwfTagHandlerInstantiation; }
+namespace flight::types { struct SwfTagMatrix; }
+namespace flight::types { struct SwfTagParseResult; }
+namespace flight::types { struct SwfTagParseState; }
+namespace flight::types { struct SwfTagPlacement; }
+namespace flight::types { struct SwfTagReader; }
+namespace flight::types { struct SwfTagRectangle; }
+namespace flight::types { struct SwfTimeline; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct TimelineCue; }
+namespace flight::types { struct TimelineLabel; }
+namespace flight::types { template <typename Traits> struct Node; }
+
+#include <flight/shape/scale9_shape.hpp>
+#include <flight/shape/shape.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/swf/swf_node.hpp>
-#include <flight/swf/swf_primitive.hpp>
-#include <flight/swf/swf_reader.hpp>
-#include <flight/swf/swf_shape.hpp>
 
 namespace flight::swf {
 
@@ -69,7 +86,7 @@ inline const double tag_define_shape_4 = 83.0;
 //   }
 //   
 // cpp emission failed for @flighthq/swf/packages/swf/src/swfDefineShapeHandler.ts: contextual union value type
-// std::function<flight::Ref<Texture2D>(double, bool, bool)> is not a represented runtime domain
+// std::function<flight::Ref<flight::types::Texture2D>(double, bool, bool)> is not a represented runtime domain
 
 inline double resolve_swf_shape_version(double code) {
   if ((code == tag_define_shape)) {
@@ -84,93 +101,44 @@ inline double resolve_swf_shape_version(double code) {
   return ((code == tag_define_shape_4) ? 4.0 : 0.0);
 }
 
-inline flight::Ref<Shape> create_swf_shape_node(flight::Ref<Shape> template_, std::optional<flight::Ref<SwfTagRectangle>> bounds) {
-  flight::Ref<Shape> target = create_shape(std::nullopt);
-  copy_shape_commands(target, template_);
-  apply_swf_authored_bounds(target, bounds);
+inline flight::Ref<flight::types::Shape> create_swf_shape_node(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Shape>>>> template_, std::optional<flight::Ref<flight::types::SwfTagRectangle>> bounds) {
+  auto target = flight::shape::create_shape(std::nullopt);
+  flight::shape::copy_shape_commands(target, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Shape>>>>>(template_));
+  flight::swf::apply_swf_authored_bounds(flight::structural_ref_cast<flight::types::Node2D>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Shape>>>>(target)), ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>> { auto contextual_union_source = bounds; if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>(contextual_union_source.value()))}; }()));
   return target;
 }
 
-
-// NOT GENERATED: function createSwfScale9ShapeNode -- source line 107
-//
-// The source it stood for:
-//   function createSwfScale9ShapeNode(
-//     sprite: Readonly<SwfTimeline>,
-//     grid: Readonly<SwfTagRectangle>,
-//     parsed: Readonly<SwfTagParseResult>,
-//     bounds: SwfTagRectangle | null,
-//   ): Scale9Shape | null {
-//     if (sprite.frames.length !== 1 || sprite.actions.size > 0) return null;
-//     const placements = [...sprite.frames[0].values()];
-//     if (placements.length !== 1) return null;
-//     const inner = placements[0];
-//     if (inner.name !== null || inner.clipDepth > 0 || inner.alpha !== 1) return null;
-//     const { a, b, c, d, tx, ty } = inner.matrix;
-//     if (a !== 1 || b !== 0 || c !== 0 || d !== 1 || tx !== 0 || ty !== 0) return null;
-//     const shape = parsed.shapes.get(inner.characterId);
-//     if (shape === undefined) return null;
-//   
-//     const target = createScale9Shape({ height: grid.height, width: grid.width, x: grid.x, y: grid.y });
-//     copyShapeCommands(target, shape);
-//     applySwfAuthoredBounds(target, bounds);
-//     return target;
-//   }
-//   
-// cpp emission failed for @flighthq/swf/packages/swf/src/swfDefineShapeHandler.ts: array spread requires
-// contextual or iterable element type evidence
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_HEIGHT_WIDTH_X_Y_06099478698611DC
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_HEIGHT_WIDTH_X_Y_06099478698611DC
-struct height_width_x_y_06099478698611dc : public flight::ReferenceEnabled {
-  double height;
-  double width;
-  double x;
-  double y;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_HEIGHT_WIDTH_X_Y_06099478698611DC
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_A_B_C_D_TX_TY_D975CBA1D9C9E6B5
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_A_B_C_D_TX_TY_D975CBA1D9C9E6B5
-struct a_b_c_d_tx_ty_d975cba1d9c9e6b5 : public flight::ReferenceEnabled {
-  double a;
-  double b;
-  double c;
-  double d;
-  double tx;
-  double ty;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_A_B_C_D_TX_TY_D975CBA1D9C9E6B5
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_ADVANCED_BLEND_MODE_ALPHA_BLEND_MODE_CHARACTER_ID_CLIP_DEPTH_COLOR_ADJUSTMENTS_COLOR_TRANSFORM_ADJUSTMENTS_DEPTH_DIRECT_LINKAGE_EFFECTS_FILTER_ADJUSTMENTS_MATRIX_NAME_RATIO_7A4B518E20E492EA
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_ADVANCED_BLEND_MODE_ALPHA_BLEND_MODE_CHARACTER_ID_CLIP_DEPTH_COLOR_ADJUSTMENTS_COLOR_TRANSFORM_ADJUSTMENTS_DEPTH_DIRECT_LINKAGE_EFFECTS_FILTER_ADJUSTMENTS_MATRIX_NAME_RATIO_7A4B518E20E492EA
-struct advanced_blend_mode_alpha_blend_mode_character_id_clip_depth_color_adjustments_color_transform_adjustments_depth_direct_linkage_effects_filter_adjustments_matrix_name_ratio_7a4b518e20e492ea : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<AdvancedBlendMode>> advanced_blend_mode;
-  double alpha;
-  flight::Ref<BlendMode> blend_mode;
-  double character_id;
-  double clip_depth;
-  std::optional<flight::Array<flight::Ref<Adjustment>>> color_adjustments;
-  std::optional<flight::Array<flight::Ref<Adjustment>>> color_transform_adjustments;
-  double depth;
-  std::optional<flight::String> direct_linkage;
-  flight::Array<flight::Ref<Effect>> effects;
-  flight::Array<flight::Ref<Adjustment>> filter_adjustments;
-  flight::Ref<a_b_c_d_tx_ty_d975cba1d9c9e6b5> matrix;
-  std::optional<flight::String> name;
-  double ratio;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_ADVANCED_BLEND_MODE_ALPHA_BLEND_MODE_CHARACTER_ID_CLIP_DEPTH_COLOR_ADJUSTMENTS_COLOR_TRANSFORM_ADJUSTMENTS_DEPTH_DIRECT_LINKAGE_EFFECTS_FILTER_ADJUSTMENTS_MATRIX_NAME_RATIO_7A4B518E20E492EA
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_ACTIONS_CUES_FRAMES_LABELS_6838293703A6A1EB
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_ACTIONS_CUES_FRAMES_LABELS_6838293703A6A1EB
-struct actions_cues_frames_labels_6838293703a6a1eb : public flight::ReferenceEnabled {
-  flight::Map<double, flight::Ref<FrameScript>> actions;
-  flight::Array<flight::Ref<TimelineCue>> cues;
-  flight::Array<flight::Map<double, flight::Ref<advanced_blend_mode_alpha_blend_mode_character_id_clip_depth_color_adjustments_color_transform_adjustments_depth_direct_linkage_effects_filter_adjustments_matrix_name_ratio_7a4b518e20e492ea>>> frames;
-  flight::Array<flight::Ref<TimelineLabel>> labels;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_ACTIONS_CUES_FRAMES_LABELS_6838293703A6A1EB
+inline std::optional<flight::Ref<flight::types::Scale9Shape>> create_swf_scale9_shape_node(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTimeline>>>> sprite, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>> grid, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>> parsed, std::optional<flight::Ref<flight::types::SwfTagRectangle>> bounds) {
+  if (((static_cast<double>(flight::row_get<flight::RowKey<"frames">>(sprite).size()) != 1.0) || (static_cast<double>(flight::row_get<flight::RowKey<"actions">>(sprite).size()) > 0.0))) {
+    return std::nullopt;
+  }
+  flight::Array<flight::Any> placements = ([&]() { flight::Array<flight::Ref<flight::types::SwfTagPlacement>> array_spread_result; { auto&& array_spread_collection = flight::row_get<flight::RowKey<"frames">>(sprite).element(0.0); for (const auto& [array_spread_key, array_spread_mapped_value] : array_spread_collection) { static_cast<void>(array_spread_key); array_spread_result.push(array_spread_mapped_value); } } return array_spread_result; }());
+  if ((static_cast<double>(placements.size()) != 1.0)) {
+    return std::nullopt;
+  }
+  flight::Ref<flight::types::SwfTagPlacement> inner = placements.element(0.0);
+  if (((inner->name.has_value() || (inner->clip_depth > 0.0)) || (inner->alpha != 1.0))) {
+    return std::nullopt;
+  }
+  auto object_pattern_value = inner->matrix;
+  const double a = object_pattern_value->a;
+  const double b = object_pattern_value->b;
+  const double c = object_pattern_value->c;
+  const double d = object_pattern_value->d;
+  const double tx = object_pattern_value->tx;
+  const double ty = object_pattern_value->ty;
+  if (((((((a != 1.0) || (b != 0.0)) || (c != 0.0)) || (d != 1.0)) || (tx != 0.0)) || (ty != 0.0))) {
+    return std::nullopt;
+  }
+  auto shape = flight::row_get<flight::RowKey<"shapes">>(parsed).get(inner->character_id);
+  if (!shape.has_value()) {
+    return std::nullopt;
+  }
+  auto target = flight::shape::create_scale9_shape(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::types::RectangleLike>>>(flight::row_field<flight::RowKey<"height">>(flight::row_get<flight::RowKey<"height">>(grid)), flight::row_field<flight::RowKey<"width">>(flight::row_get<flight::RowKey<"width">>(grid)), flight::row_field<flight::RowKey<"x">>(flight::row_get<flight::RowKey<"x">>(grid)), flight::row_field<flight::RowKey<"y">>(flight::row_get<flight::RowKey<"y">>(grid)))), std::nullopt);
+  flight::shape::copy_shape_commands(target, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Shape>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Shape>>>>(shape.value())));
+  flight::swf::apply_swf_authored_bounds(flight::structural_ref_cast<flight::types::Node2D>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Scale9Shape>>>>(target)), ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>> { auto contextual_union_source_2 = bounds; if (!contextual_union_source_2.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>{flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>(contextual_union_source_2.value()))}; }()));
+  return std::optional<flight::Ref<flight::types::Scale9Shape>>{target};
+}
 
 
 // NOT GENERATED: variable (binding) -- source line 30
@@ -210,7 +178,18 @@ struct actions_cues_frames_labels_6838293703a6a1eb : public flight::ReferenceEna
 //     },
 //   };
 //   
-// cpp emission failed for @flighthq/swf/packages/swf/src/swfDefineShapeHandler.ts: contextual union value type
-// flight::Ref<Scale9Shape> is not a represented runtime domain
+// cpp emission failed for @flighthq/swf/packages/swf/src/swfDefineShapeHandler.ts: contextual union callable
+// value type
+// std::function<std::optional<flight::Ref<flight::types::Shape>>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>,
+// double,
+// std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>,
+// std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>)> agrees with no alternative's
+// signature: the destination holds
+// [std::function<std::optional<flight::types::Node2D>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>,
+// double,
+// std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>,
+// std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>)>]. A callable is a represented
+// domain, so the obstacle is that the destination's signature cannot call this one. Declare the value's
+// parameters so the destination's signature supplies them, and its result as one the destination holds
 
 } // namespace flight::swf

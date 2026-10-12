@@ -6,10 +6,9 @@
 //   missing: function readSwfFontGlyphOutlineSource -- source line 89
 #include <cmath>
 #include <cstdint>
-#include <flight/any.hpp>
 #include <flight/boolean.hpp>
 #include <flight/map.hpp>
-#include <functional>
+#include <flight/structural_ref.hpp>
 #include <limits>
 #include <optional>
 #include <random>
@@ -19,17 +18,39 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::swf { struct SwfReader; }
+namespace flight::types { struct GlyphOutlineMetrics; }
+namespace flight::types { struct GlyphOutlineSource; }
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct Path; }
+namespace flight::types { struct Rectangle; }
+namespace flight::types { struct Shape; }
+namespace flight::types { struct ShapeData; }
+namespace flight::types { struct ShapeFillRegion; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+
+#include <flight/path/get_path_bounds.hpp>
+#include <flight/path/path.hpp>
+#include <flight/path/transform_path.hpp>
+#include <flight/shape/shape.hpp>
+#include <flight/shape/shape_commands.hpp>
+#include <flight/shape/shape_fill.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/swf/swf_reader.hpp>
 #include <flight/swf/swf_shape.hpp>
 
 namespace flight::swf {
 
-inline double read_swf_signed_uint16(flight::Ref<swf_reader> reader) {
+inline double read_swf_signed_uint16(flight::Ref<flight::swf::SwfReader> reader) {
   const double value = reader->read_uint16();
   return ((value >= 32768.0) ? (value - 65536.0) : value);
 }
 
-inline void skip_swf_rectangle(flight::Ref<swf_reader> reader) {
+inline void skip_swf_rectangle(flight::Ref<flight::swf::SwfReader> reader) {
   const double bits = reader->read_unsigned_bits(5.0);
   {
     double index = 0.0;
@@ -41,11 +62,11 @@ inline void skip_swf_rectangle(flight::Ref<swf_reader> reader) {
   reader->align_to_byte();
 }
 
-inline std::optional<flight::Array<std::optional<flight::Ref<Shape>>>> read_swf_font_glyph_shapes(flight::Ref<swf_reader> reader, std::optional<flight::Array<double>> offsets, double table_start) {
+inline std::optional<flight::Array<std::optional<flight::Ref<flight::types::Shape>>>> read_swf_font_glyph_shapes(flight::Ref<flight::swf::SwfReader> reader, std::optional<flight::Array<double>> offsets, double table_start) {
   if ((!offsets.has_value() || (static_cast<double>(offsets.value().size()) < 2.0))) {
-    return (!offsets.has_value() ? std::nullopt : std::optional<flight::Array<std::optional<flight::Ref<Shape>>>>{flight::Array<std::optional<flight::Ref<Shape>>>{}});
+    return (!offsets.has_value() ? std::nullopt : std::optional<flight::Array<std::optional<flight::Ref<flight::types::Shape>>>>{flight::Array<std::optional<flight::Ref<flight::types::Shape>>>{}});
   }
-  flight::Array<std::optional<flight::Ref<Shape>>> glyphs = flight::Array<std::optional<flight::Ref<Shape>>>{};
+  flight::Array<std::optional<flight::Ref<flight::types::Shape>>> glyphs = flight::Array<std::optional<flight::Ref<flight::types::Shape>>>{};
   {
     double i = 0.0;
     while (((i + 1.0) < static_cast<double>(offsets.value().size()))) {
@@ -55,15 +76,15 @@ inline std::optional<flight::Array<std::optional<flight::Ref<Shape>>>> read_swf_
         if ((((start < table_start) || (end > reader->end)) || (end < start))) {
           return std::nullopt;
         }
-        glyphs.push(create_swf_glyph_shape(flight::make_ref<swf_reader>(reader->source, start, end)));
+        glyphs.push(flight::swf::create_swf_glyph_shape(flight::make_ref<flight::swf::SwfReader>(reader->source, start, end)));
       }
       (i += 1.0);
     }
   }
-  return std::optional<flight::Array<std::optional<flight::Ref<Shape>>>>{glyphs};
+  return std::optional<flight::Array<std::optional<flight::Ref<flight::types::Shape>>>>{glyphs};
 }
 
-inline std::optional<flight::Array<double>> read_swf_font_offsets(flight::Ref<swf_reader> reader, double glyph_count, bool has_wide_offsets) {
+inline std::optional<flight::Array<double>> read_swf_font_offsets(flight::Ref<flight::swf::SwfReader> reader, double glyph_count, bool has_wide_offsets) {
   flight::Array<double> offsets = flight::Array<double>{};
   {
     double i = 0.0;
@@ -72,10 +93,10 @@ inline std::optional<flight::Array<double>> read_swf_font_offsets(flight::Ref<sw
       (i += 1.0);
     }
   }
-  return (flight::to_boolean(reader->valid) ? std::optional<flight::Array<double>>{offsets} : std::nullopt);
+  return (reader->valid ? std::optional<flight::Array<double>>{offsets} : std::nullopt);
 }
 
-inline double read_swf_text_offset(flight::Ref<swf_reader> reader) {
+inline double read_swf_text_offset(flight::Ref<flight::swf::SwfReader> reader) {
   const double value = reader->read_uint16();
   return ((value >= 32768.0) ? (value - 65536.0) : value);
 }
@@ -102,13 +123,13 @@ struct advances_metrics_1c5170fa659cd526 : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_ADVANCES_METRICS_1C5170FA659CD526
 
-inline flight::Ref<advances_metrics_1c5170fa659cd526> derive_swf_glyph_outline_data(flight::Array<std::optional<flight::Ref<Path>>> outlines, double units_per_em) {
+inline flight::Ref<advances_metrics_1c5170fa659cd526> derive_swf_glyph_outline_data(flight::Array<std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>> outlines, double units_per_em) {
   flight::Array<double> advances = flight::Array<double>{};
   double min_y = std::numeric_limits<double>::infinity();
   double max_y = -std::numeric_limits<double>::infinity();
   for (auto outline : outlines) {
-    flight::Ref<RectangleLike> bounds = flight::make_ref<RectangleLike>(RectangleLike{.height = 0.0, .width = 0.0, .x = 0.0, .y = 0.0});
-    if ((!outline.has_value() || !get_path_bounds(outline.value(), bounds))) {
+    flight::Ref<flight::types::Rectangle> bounds = flight::make_ref<flight::types::Rectangle>(flight::types::Rectangle{.height = 0.0, .width = 0.0, .x = 0.0, .y = 0.0});
+    if ((!outline.has_value() || !flight::path::get_path_bounds(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(outline.value()), bounds))) {
       advances.push(0.0);
       continue;
     }
@@ -126,32 +147,20 @@ inline const double font_flag_wide_codes = 4.0;
 
 inline const double font_flag_wide_offsets = 8.0;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_A_B_C_D_TX_TY_D975CBA1D9C9E6B5
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_A_B_C_D_TX_TY_D975CBA1D9C9E6B5
-struct a_b_c_d_tx_ty_d975cba1d9c9e6b5 : public flight::ReferenceEnabled {
-  double a;
-  double b;
-  double c;
-  double d;
-  double tx;
-  double ty;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_A_B_C_D_TX_TY_D975CBA1D9C9E6B5
+inline flight::Ref<flight::types::Matrix> font_shape_to_design_units = flight::make_ref<flight::types::Matrix>(flight::types::Matrix{.a = 20.0, .b = 0.0, .c = 0.0, .d = 20.0, .tx = 0.0, .ty = 0.0});
 
-inline flight::Ref<a_b_c_d_tx_ty_d975cba1d9c9e6b5> font_shape_to_design_units = flight::make_ref<a_b_c_d_tx_ty_d975cba1d9c9e6b5>(a_b_c_d_tx_ty_d975cba1d9c9e6b5{.a = 20.0, .b = 0.0, .c = 0.0, .d = 20.0, .tx = 0.0, .ty = 0.0});
-
-inline std::optional<flight::Ref<Path>> create_swf_glyph_outline_path(std::optional<flight::Ref<Shape>> glyph) {
+inline std::optional<flight::Ref<flight::types::Path>> create_swf_glyph_outline_path(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Shape>>>>> glyph) {
   if (!glyph.has_value()) {
     return std::nullopt;
   }
-  std::optional<flight::Array<flight::Ref<ShapeFillRegion>>> regions = get_shape_fill_regions(glyph.value()->data.commands);
+  std::optional<flight::Array<flight::Ref<flight::types::ShapeFillRegion>>> regions = flight::shape::get_shape_fill_regions(glyph.value()->data->commands);
   if (!regions.has_value()) {
     return std::nullopt;
   }
-  flight::Ref<Path> outline = create_path(flight::String("nonZero"));
+  auto outline = flight::path::create_path(flight::String("nonZero"));
   for (auto region : regions.value()) {
-    flight::Ref<Path> restored = create_path(region->path.winding);
-    transform_path(region->path, font_shape_to_design_units, restored);
+    auto restored = flight::path::create_path(region->path->winding);
+    flight::path::transform_path(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Path>>>>(region->path)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::MatrixLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Matrix>>>>(font_shape_to_design_units)), restored);
     for (auto command : restored->commands) {
       outline->commands.push(command);
     }
@@ -159,14 +168,14 @@ inline std::optional<flight::Ref<Path>> create_swf_glyph_outline_path(std::optio
       outline->data.push(value);
     }
   }
-  return std::optional<flight::Ref<Path>>{outline};
+  return std::optional<flight::Ref<flight::types::Path>>{outline};
 }
 
 inline const double max_font_glyphs = 65535.0;
 
-inline std::optional<flight::Array<double>> read_swf_legacy_font_offsets(flight::Ref<swf_reader> reader, double table_start) {
+inline std::optional<flight::Array<double>> read_swf_legacy_font_offsets(flight::Ref<flight::swf::SwfReader> reader, double table_start) {
   const double first = reader->read_uint16();
-  if ((((!flight::to_boolean(reader->valid) || (first < 2.0)) || (std::fmod(first, 2.0) != 0.0)) || ((first / 2.0) > max_font_glyphs))) {
+  if ((((!reader->valid || (first < 2.0)) || (std::fmod(first, 2.0) != 0.0)) || ((first / 2.0) > max_font_glyphs))) {
     return std::nullopt;
   }
   flight::Array<double> offsets = flight::Array<double>{first};
@@ -181,7 +190,7 @@ inline std::optional<flight::Array<double>> read_swf_legacy_font_offsets(flight:
   return (flight::to_boolean(reader->valid) ? std::optional<flight::Array<double>>{offsets} : std::nullopt);
 }
 
-inline std::optional<flight::Array<std::optional<flight::Ref<Shape>>>> read_swf_font_glyphs(flight::Ref<swf_reader> reader, double version) {
+inline std::optional<flight::Array<std::optional<flight::Ref<flight::types::Shape>>>> read_swf_font_glyphs(flight::Ref<flight::swf::SwfReader> reader, double version) {
   reader->read_uint16();
   if ((version == 1.0)) {
     const double table_start = reader->pos;
@@ -199,7 +208,7 @@ inline std::optional<flight::Array<std::optional<flight::Ref<Shape>>>> read_swf_
     }
   }
   const double glyph_count = reader->read_uint16();
-  if ((!flight::to_boolean(reader->valid) || (glyph_count > max_font_glyphs))) {
+  if ((!reader->valid || (glyph_count > max_font_glyphs))) {
     return std::nullopt;
   }
   const double table_start_2 = reader->pos;
@@ -218,41 +227,41 @@ inline const double text_has_y_offset = 2.0;
 
 inline const double text_record_type = 128.0;
 
-inline const double twips_per_pixel = 20.0;
+inline const double twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_9101c7a55315c791 = 20.0;
 
-inline void append_swf_glyph_outline(flight::Ref<Shape> target, flight::Ref<Path> glyph, double color, double scale, double offset_x, double offset_y) {
-  append_shape_begin_fill(target, color, 1.0);
+inline void append_swf_glyph_outline(flight::Ref<flight::types::Shape> target, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>> glyph, double color, double scale, double offset_x, double offset_y) {
+  flight::shape::append_shape_begin_fill(target, color, 1.0);
   double data_index = 0.0;
-  for (auto command : glyph->commands) {
-    if ((command == path_command.move_to)) {
-      append_shape_move_to(target, (((glyph->data.element(data_index) * scale) / twips_per_pixel) + offset_x), (((glyph->data.element((data_index + 1.0)) * scale) / twips_per_pixel) + offset_y));
+  for (auto command : flight::row_get<flight::RowKey<"commands">>(glyph)) {
+    if ((command == flight::types::path_command->move_to)) {
+      flight::shape::append_shape_move_to(target, (((flight::row_get<flight::RowKey<"data">>(glyph).element(data_index) * scale) / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_9101c7a55315c791) + offset_x), (((flight::row_get<flight::RowKey<"data">>(glyph).element((data_index + 1.0)) * scale) / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_9101c7a55315c791) + offset_y));
       (data_index += 2.0);
     }
     else {
-      if ((command == path_command.line_to)) {
-        append_shape_line_to(target, (((glyph->data.element(data_index) * scale) / twips_per_pixel) + offset_x), (((glyph->data.element((data_index + 1.0)) * scale) / twips_per_pixel) + offset_y));
+      if ((command == flight::types::path_command->line_to)) {
+        flight::shape::append_shape_line_to(target, (((flight::row_get<flight::RowKey<"data">>(glyph).element(data_index) * scale) / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_9101c7a55315c791) + offset_x), (((flight::row_get<flight::RowKey<"data">>(glyph).element((data_index + 1.0)) * scale) / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_9101c7a55315c791) + offset_y));
         (data_index += 2.0);
       }
       else {
-        if ((command == path_command.quadratic_curve_to)) {
-          append_shape_quadratic_curve_to(target, (((glyph->data.element(data_index) * scale) / twips_per_pixel) + offset_x), (((glyph->data.element((data_index + 1.0)) * scale) / twips_per_pixel) + offset_y), (((glyph->data.element((data_index + 2.0)) * scale) / twips_per_pixel) + offset_x), (((glyph->data.element((data_index + 3.0)) * scale) / twips_per_pixel) + offset_y));
+        if ((command == flight::types::path_command->quadratic_curve_to)) {
+          flight::shape::append_shape_quadratic_curve_to(target, (((flight::row_get<flight::RowKey<"data">>(glyph).element(data_index) * scale) / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_9101c7a55315c791) + offset_x), (((flight::row_get<flight::RowKey<"data">>(glyph).element((data_index + 1.0)) * scale) / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_9101c7a55315c791) + offset_y), (((flight::row_get<flight::RowKey<"data">>(glyph).element((data_index + 2.0)) * scale) / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_9101c7a55315c791) + offset_x), (((flight::row_get<flight::RowKey<"data">>(glyph).element((data_index + 3.0)) * scale) / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_9101c7a55315c791) + offset_y));
           (data_index += 4.0);
         }
       }
     }
   }
-  append_shape_end_fill(target);
+  flight::shape::append_shape_end_fill(target);
 }
 
-inline std::optional<flight::Ref<Shape>> create_swf_text_shape(flight::Ref<swf_reader> reader, double version, flight::Map<double, flight::Ref<GlyphOutlineSource>> fonts) {
+inline std::optional<flight::Ref<flight::types::Shape>> create_swf_text_shape(flight::Ref<flight::swf::SwfReader> reader, double version, flight::Map<double, flight::Ref<flight::types::GlyphOutlineSource>> fonts) {
   const double glyph_bits = reader->read_uint8();
   const double advance_bits = reader->read_uint8();
-  if (!flight::to_boolean(reader->valid)) {
+  if (!reader->valid) {
     return std::nullopt;
   }
-  flight::Ref<Shape> shape = create_shape(std::nullopt);
-  flight::Ref<Path> glyph_outline = create_path();
-  std::optional<flight::Ref<GlyphOutlineSource>> font = std::nullopt;
+  auto shape = flight::shape::create_shape(std::nullopt);
+  auto glyph_outline = flight::path::create_path(std::nullopt);
+  std::optional<flight::Ref<flight::types::GlyphOutlineSource>> font = std::nullopt;
   double units_per_em = default_font_units_per_em;
   double color = 255.0;
   double height = 0.0;
@@ -267,7 +276,7 @@ inline std::optional<flight::Ref<Shape>> create_swf_text_shape(flight::Ref<swf_r
           return std::nullopt;
         }
         if ((flags == 0.0)) {
-          return std::optional<flight::Ref<Shape>>{shape};
+          return std::optional<flight::Ref<flight::types::Shape>>{shape};
         }
         if ((flight::bitwise_and(flags, text_record_type) == 0.0)) {
           return std::nullopt;
@@ -275,7 +284,7 @@ inline std::optional<flight::Ref<Shape>> create_swf_text_shape(flight::Ref<swf_r
         if ((flight::bitwise_and(flags, text_has_font) != 0.0)) {
           const double font_id = reader->read_uint16();
           (font = fonts.get(font_id));
-          (units_per_em = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = ([&]() -> std::optional<flight::Ref<GlyphOutlineMetrics>> { auto optional_chain_receiver = font; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->get_glyph_outline_metrics(); }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->units_per_em; }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return default_font_units_per_em; }()));
+          (units_per_em = ([&]() -> double { auto nullish_coalesce_left = ([&]() -> std::optional<double> { auto optional_chain_receiver = ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlyphOutlineMetrics>>>>> { auto optional_chain_receiver = font; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->get_glyph_outline_metrics(); }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return flight::row_get<flight::RowKey<"unitsPerEm">>(optional_chain_receiver.value()); }()); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return default_font_units_per_em; }()));
         }
         if ((flight::bitwise_and(flags, text_has_color) != 0.0)) {
           const double red = reader->read_uint8();
@@ -309,7 +318,7 @@ inline std::optional<flight::Ref<Shape>> create_swf_text_shape(flight::Ref<swf_r
               }
               if ((font.has_value() && (scale > 0.0))) {
                 if (font.value()->get_glyph_outline(glyph_outline, index)) {
-                  append_swf_glyph_outline(shape, glyph_outline, color, scale, (x / twips_per_pixel), (y / twips_per_pixel));
+                  append_swf_glyph_outline(shape, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Path>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Path>>>>(glyph_outline)), color, scale, (x / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_9101c7a55315c791), (y / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_9101c7a55315c791));
                 }
               }
               (x += advance);
@@ -326,7 +335,7 @@ inline std::optional<flight::Ref<Shape>> create_swf_text_shape(flight::Ref<swf_r
 }
 
 inline double resolve_swf_font_units_per_em(double version) {
-  return ((version == 3.0) ? (default_font_units_per_em * twips_per_pixel) : default_font_units_per_em);
+  return ((version == 3.0) ? (default_font_units_per_em * twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_9101c7a55315c791) : default_font_units_per_em);
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_ADVANCES_CODEPOINT_TO_GLYPH_INDEX_METRICS_2BEF61E7142C639B
@@ -347,7 +356,7 @@ struct advances_codepoint_to_glyph_index_metrics_02d9af4d003139c9 : public fligh
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_ADVANCES_CODEPOINT_TO_GLYPH_INDEX_METRICS_02D9AF4D003139C9
 
-inline std::optional<std::variant<flight::Ref<advances_codepoint_to_glyph_index_metrics_02d9af4d003139c9>, flight::Ref<advances_codepoint_to_glyph_index_metrics_2bef61e7142c639b>>> read_swf_font_metadata(flight::Ref<swf_reader> reader, double version, double expected_glyph_count) {
+inline std::optional<std::variant<flight::Ref<advances_codepoint_to_glyph_index_metrics_02d9af4d003139c9>, flight::Ref<advances_codepoint_to_glyph_index_metrics_2bef61e7142c639b>>> read_swf_font_metadata(flight::Ref<flight::swf::SwfReader> reader, double version, double expected_glyph_count) {
   reader->read_uint16();
   const double flags = reader->read_uint8();
   const bool has_layout = (flight::bitwise_and(flags, font_flag_has_layout) != 0.0);
@@ -363,7 +372,7 @@ inline std::optional<std::variant<flight::Ref<advances_codepoint_to_glyph_index_
     }
   }
   const double glyph_count = reader->read_uint16();
-  if ((!flight::to_boolean(reader->valid) || (glyph_count != expected_glyph_count))) {
+  if ((!reader->valid || (glyph_count != expected_glyph_count))) {
     return std::nullopt;
   }
   const double table_start = reader->pos;

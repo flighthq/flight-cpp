@@ -3,20 +3,12 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function resolveSwfPlacementMask -- source line 638
-//   missing: function createSwfHandlerPlacementNode -- source line 752
-//   missing: function resolveSwfCharacterBounds -- source line 779
-//   missing: function collectSwfNodeAppearances -- source line 467
 //   missing: function createSwfTimelineSource -- source line 507
 //   missing: function createSwfMaskClipRegion -- source line 693
 //   missing: function resolveSwfMaskClip -- source line 670
-//   missing: function buildSwfFrameEntries -- source line 604
 //   missing: function populateSwfTimelineNode -- source line 390
-//   missing: function createSwfSymbolNode -- source line 735
-//   missing: function uncompressSwfSource -- source line 868
-//   missing: function readSwfFile -- source line 299
-#include <flight/boolean.hpp>
 #include <flight/map.hpp>
+#include <flight/sequence_view.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
 #include <optional>
@@ -27,8 +19,56 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/screen.hpp>
 #include <flight/types/swf_tag_parse_state.hpp>
+
+namespace flight::swf { struct SwfReader; }
+namespace flight::types { struct Adjustment; }
+namespace flight::types { struct AudioResource; }
+namespace flight::types { struct ClipRegion; }
+namespace flight::types { struct Effect; }
+namespace flight::types { struct EmbeddedAudioResourceReference; }
+namespace flight::types { struct EmbeddedImageResourceReference; }
+namespace flight::types { struct ExternalAudioResourceReference; }
+namespace flight::types { struct ExternalImageResourceReference; }
+namespace flight::types { struct GlyphOutlineSource; }
+namespace flight::types { struct HostDecompressDeflateCapability; }
+namespace flight::types { struct HostDecompressLzmaCapability; }
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct Matrix; }
+namespace flight::types { struct MorphShape; }
+namespace flight::types { struct MovieClip; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Path; }
+namespace flight::types { struct Scene2DDocument; }
+namespace flight::types { struct Scene2DDocumentImportContext; }
+namespace flight::types { struct Scene2DDocumentImporterRegistry; }
+namespace flight::types { struct Scene2DSlotReference; }
+namespace flight::types { struct Shape; }
+namespace flight::types { struct ShapeData; }
+namespace flight::types { struct ShapeFillRegion; }
+namespace flight::types { struct SwfDocumentImport; }
+namespace flight::types { struct SwfJpegAlphaPayload; }
+namespace flight::types { struct SwfNodeAppearance; }
+namespace flight::types { struct SwfParseOptions; }
+namespace flight::types { struct SwfTagHandler; }
+namespace flight::types { struct SwfTagHandlerInstantiation; }
+namespace flight::types { struct SwfTagHandlerResources; }
+namespace flight::types { struct SwfTagMatrix; }
+namespace flight::types { struct SwfTagParseResult; }
+namespace flight::types { struct SwfTagParseState; }
+namespace flight::types { struct SwfTagPlacement; }
+namespace flight::types { struct SwfTagRectangle; }
+namespace flight::types { struct SwfTimeline; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { struct TimelineAudioCue; }
+namespace flight::types { struct TimelineCue; }
+namespace flight::types { struct TimelineLabel; }
+namespace flight::types { struct TimelineSource; }
+namespace flight::types { template <typename Traits> struct Node; }
+namespace flight::types { template <typename Traits> struct NodeOrderList; }
 
 namespace flight::swf {
 struct SwfFrameEntry;
@@ -36,6 +76,11 @@ struct SwfInstantiationState;
 struct SwfFile;
 } // namespace flight::swf
 
+#include <flight/entity/entity.hpp>
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+#include <flight/scene2d_resources/scene2_ddocument.hpp>
+#include <flight/scene2d_resources/scene2_ddocument_importer_registry.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/swf/expand_swf_tag_handler_dispatch.hpp>
 #include <flight/swf/swf_node.hpp>
 #include <flight/swf/swf_primitive.hpp>
@@ -44,26 +89,26 @@ struct SwfFile;
 
 namespace flight::swf {
 
-inline void assign_timeline_source_fields(flight::Ref<EntityConstruction<flight::Ref<TimelineSource>>> out, std::function<void(flight::Ref<Node2D>, double)> construct_frame, flight::Array<flight::Ref<TimelineCue>> cues, std::optional<double> frame_rate, flight::Array<flight::Ref<TimelineLabel>> labels, double total_frames) {
-  (out->construct_frame = construct_frame);
-  (out->cues = cues);
-  (out->frame_rate = frame_rate);
-  (out->labels = labels);
-  (out->total_frames = total_frames);
+inline void assign_timeline_source_fields(flight::types::EntityConstruction<flight::Ref<flight::types::TimelineSource>> out, std::function<void(flight::types::Node2D, double)> construct_frame, flight::Array<flight::Ref<flight::types::TimelineCue>> cues, std::optional<double> frame_rate, flight::Array<flight::Ref<flight::types::TimelineLabel>> labels, double total_frames) {
+  flight::row_set<flight::RowKey<"constructFrame">>(out, construct_frame);
+  flight::row_set<flight::RowKey<"cues">>(out, cues);
+  flight::row_set<flight::RowKey<"frameRate">>(out, frame_rate);
+  flight::row_set<flight::RowKey<"labels">>(out, labels);
+  flight::row_set<flight::RowKey<"totalFrames">>(out, total_frames);
 }
 
 struct SwfFrameEntry : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<ClipRegion>> clip;
-  flight::Ref<SwfTagPlacement> placement;
+  std::optional<flight::Ref<flight::types::ClipRegion>> clip;
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagPlacement>>>> placement;
 };
 
 struct SwfInstantiationState : public flight::ReferenceEnabled {
   flight::Set<double> active_symbols;
-  flight::Array<flight::Ref<SwfNodeAppearance>> appearances;
-  std::optional<flight::Array<flight::Ref<ImportDiagnostic>>> diagnostics;
-  flight::Array<flight::Ref<SwfTagHandler>> handlers;
+  flight::Array<flight::Ref<flight::types::SwfNodeAppearance>> appearances;
+  std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics;
+  flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagHandler>>>>> handlers;
   std::optional<double> frame_rate;
-  flight::Map<double, std::optional<flight::Ref<SwfTagRectangle>>> resolved_bounds;
+  flight::Map<double, std::optional<flight::Ref<flight::types::SwfTagRectangle>>> resolved_bounds;
   flight::Set<double> resolving_bounds;
 };
 
@@ -72,148 +117,126 @@ struct SwfInstantiationState : public flight::ReferenceEnabled {
 using bytes_named_a0691cdc21805510 = flight::types::bytes_named_a0691cdc21805510;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_NAMED_A0691CDC21805510
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_SCRIPT_453AFF65D4A6A3A9
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_SCRIPT_453AFF65D4A6A3A9
-struct character_id_script_453aff65d4a6a3a9 : public flight::ReferenceEnabled {
-  double character_id;
-  flight::Ref<FrameScript> script;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_SCRIPT_453AFF65D4A6A3A9
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_0F132CE875CDB3FC
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_0F132CE875CDB3FC
+using bytes_mime_type_0f132ce875cdb3fc = flight::types::bytes_mime_type_0f132ce875cdb3fc;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_0F132CE875CDB3FC
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_54BB0D6B87E110D7
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_54BB0D6B87E110D7
+using character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7 = flight::types::character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_COMPRESSED_ALPHA_BYTES_DEBLOCKING_PARAMETER_RAW_HEIGHT_WIDTH_54BB0D6B87E110D7
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_END_START_B3D703E568B779F1
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_END_START_B3D703E568B779F1
+using end_start_b3d703e568b779f1 = flight::types::end_start_b3d703e568b779f1;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_END_START_B3D703E568B779F1
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_SCRIPT_7FE7DF2E7341FC1A
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_SCRIPT_7FE7DF2E7341FC1A
+using character_id_script_7fe7df2e7341fc1a = flight::types::character_id_script_7fe7df2e7341fc1a;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_SCRIPT_7FE7DF2E7341FC1A
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_END_SOURCE_START_VERSION_3182D1468E182B72
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_END_SOURCE_START_VERSION_3182D1468E182B72
 using character_id_end_source_start_version_3182d1468e182b72 = flight::types::character_id_end_source_start_version_3182d1468e182b72;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_END_SOURCE_START_VERSION_3182D1468E182B72
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CLASS_NAME_CUE_3133B048407336A4
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CLASS_NAME_CUE_3133B048407336A4
-struct class_name_cue_3133b048407336a4 : public flight::ReferenceEnabled {
-  flight::String class_name;
-  flight::Ref<TimelineAudioCue> cue;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CLASS_NAME_CUE_3133B048407336A4
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CLASS_NAME_CUE_CA53EE8B35497D37
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CLASS_NAME_CUE_CA53EE8B35497D37
+using class_name_cue_ca53ee8b35497d37 = flight::types::class_name_cue_ca53ee8b35497d37;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CLASS_NAME_CUE_CA53EE8B35497D37
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_CUE_D5BFBF25BE02C4B9
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_CUE_D5BFBF25BE02C4B9
-struct character_id_cue_d5bfbf25be02c4b9 : public flight::ReferenceEnabled {
-  double character_id;
-  flight::Ref<TimelineAudioCue> cue;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_CUE_D5BFBF25BE02C4B9
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_CUE_1789E18AD131005E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_CUE_1789E18AD131005E
+using character_id_cue_1789e18ad131005e = flight::types::character_id_cue_1789e18ad131005e;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CHARACTER_ID_CUE_1789E18AD131005E
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_RESOURCE_1E520F7F36B67D43
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_RESOURCE_1E520F7F36B67D43
-struct bytes_mime_type_resource_1e520f7f36b67d43 : public flight::ReferenceEnabled {
-  flight::Uint8Array bytes;
-  flight::String mime_type;
-  flight::Ref<AudioResource> resource;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_RESOURCE_1E520F7F36B67D43
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_SAMPLE_RATE_5485CAC285DC53EE
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_SAMPLE_RATE_5485CAC285DC53EE
+using bytes_mime_type_sample_rate_5485cac285dc53ee = flight::types::bytes_mime_type_sample_rate_5485cac285dc53ee;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_SAMPLE_RATE_5485CAC285DC53EE
 
-inline flight::Ref<SwfTagParseState> create_swf_tag_parse_state(flight::Ref<SwfTagHandlerDispatch> dispatch, std::optional<flight::Array<flight::Ref<ImportDiagnostic>>> diagnostics) {
-  return flight::make_ref<SwfTagParseState>(SwfTagParseState{.abc_blobs = flight::Array<flight::Ref<bytes_named_a0691cdc21805510>>{}, .background_color = nullptr, .character_bounds = flight::Map(), .defined_characters = flight::Set(), .diagnostics = diagnostics, .dispatch = dispatch, .edit_texts = flight::Map(), .font_code_points = flight::Map(), .font_names = flight::Map(), .font_outline_sources = flight::Map(), .images = flight::Map(), .image_textures = flight::Map(), .jpeg_alpha_payloads = flight::Map(), .jpeg_tables = nullptr, .linkages = flight::Map(), .morph_bounds = flight::Map(), .morph_shapes = flight::Map(), .pending_init_actions = flight::Array<flight::Ref<character_id_script_453aff65d4a6a3a9>>{}, .pending_texts = flight::Array<flight::Ref<character_id_end_source_start_version_3182d1468e182b72>>{}, .remaining_frame_entries = max_timeline_frame_entries, .scaling_grids = flight::Map(), .shapes = flight::Map(), .sound_cues_awaiting_class = flight::Array<flight::Ref<class_name_cue_3133b048407336a4>>{}, .sound_cues_awaiting_rate = flight::Array<flight::Ref<character_id_cue_d5bfbf25be02c4b9>>{}, .sound_resources = flight::Map(), .sounds = flight::Map(), .sprites = flight::Map(), .stream_sounds = flight::Array<flight::Ref<bytes_mime_type_resource_1e520f7f36b67d43>>{}, .video_textures = flight::Map(), .videos = flight::Map()});
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_RESOURCE_0C07297B9C0324FF
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_RESOURCE_0C07297B9C0324FF
+using bytes_mime_type_resource_0c07297b9c0324ff = flight::types::bytes_mime_type_resource_0c07297b9c0324ff;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_BYTES_MIME_TYPE_RESOURCE_0C07297B9C0324FF
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CODEC_ID_DEBLOCKING_FRAME_COUNT_HEIGHT_SMOOTHING_WIDTH_E646285BB518325F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CODEC_ID_DEBLOCKING_FRAME_COUNT_HEIGHT_SMOOTHING_WIDTH_E646285BB518325F
+using codec_id_deblocking_frame_count_height_smoothing_width_e646285bb518325f = flight::types::codec_id_deblocking_frame_count_height_smoothing_width_e646285bb518325f;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_CODEC_ID_DEBLOCKING_FRAME_COUNT_HEIGHT_SMOOTHING_WIDTH_E646285BB518325F
+
+inline flight::Ref<flight::types::SwfTagParseState> create_swf_tag_parse_state(flight::types::SwfTagHandlerDispatch dispatch, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics) {
+  return ([&]() { auto object_member_abc_blobs = flight::Array<flight::Ref<bytes_named_a0691cdc21805510>>{}; auto object_member_background_color = std::nullopt; auto object_member_character_bounds = flight::Map<double, flight::Ref<flight::types::SwfTagRectangle>>(); auto object_member_defined_characters = flight::Set<double>(); auto object_member_diagnostics = diagnostics; auto object_member_dispatch = dispatch; auto object_member_edit_texts = flight::Map<double, std::function<flight::Ref<flight::types::RichText>(std::function<flight::String(double)>)>>(); auto object_member_font_code_points = flight::Map<double, flight::Array<double>>(); auto object_member_font_names = flight::Map<double, flight::String>(); auto object_member_font_outline_sources = flight::Map<double, flight::Ref<flight::types::GlyphOutlineSource>>(); auto object_member_images = flight::Map<double, flight::Ref<bytes_mime_type_0f132ce875cdb3fc>>(); auto object_member_image_textures = flight::Map<double, flight::Map<flight::String, flight::Ref<flight::types::Texture2D>>>(); auto object_member_jpeg_alpha_payloads = flight::Map<double, flight::Ref<character_id_compressed_alpha_bytes_deblocking_parameter_raw_height_width_54bb0d6b87e110d7>>(); auto object_member_jpeg_tables = std::nullopt; auto object_member_linkages = flight::Map<double, flight::String>(); auto object_member_morph_bounds = flight::Map<double, flight::Ref<end_start_b3d703e568b779f1>>(); auto object_member_morph_shapes = flight::Map<double, std::function<std::optional<flight::Ref<flight::types::MorphShape>>()>>(); auto object_member_pending_init_actions = flight::Array<flight::Ref<character_id_script_7fe7df2e7341fc1a>>{}; auto object_member_pending_texts = flight::Array<flight::Ref<character_id_end_source_start_version_3182d1468e182b72>>{}; auto object_member_remaining_frame_entries = flight::swf::max_timeline_frame_entries; auto object_member_scaling_grids = flight::Map<double, flight::Ref<flight::types::SwfTagRectangle>>(); auto object_member_shapes = flight::Map<double, flight::Ref<flight::types::Shape>>(); auto object_member_sound_cues_awaiting_class = flight::Array<flight::Ref<class_name_cue_ca53ee8b35497d37>>{}; auto object_member_sound_cues_awaiting_rate = flight::Array<flight::Ref<character_id_cue_1789e18ad131005e>>{}; auto object_member_sound_resources = flight::Map<double, flight::Ref<flight::types::AudioResource>>(); auto object_member_sounds = flight::Map<double, flight::Ref<bytes_mime_type_sample_rate_5485cac285dc53ee>>(); auto object_member_sprites = flight::Map<double, flight::Ref<flight::types::SwfTimeline>>(); auto object_member_stream_sounds = flight::Array<flight::Ref<bytes_mime_type_resource_0c07297b9c0324ff>>{}; auto object_member_video_textures = flight::Map<double, flight::Ref<flight::types::Texture2D>>(); auto object_member_videos = flight::Map<double, flight::Ref<codec_id_deblocking_frame_count_height_smoothing_width_e646285bb518325f>>(); return flight::make_ref<flight::types::SwfTagParseState>(flight::types::SwfTagParseState{.abc_blobs = object_member_abc_blobs, .background_color = object_member_background_color, .character_bounds = object_member_character_bounds, .defined_characters = object_member_defined_characters, .dispatch = object_member_dispatch, .diagnostics = object_member_diagnostics, .edit_texts = object_member_edit_texts, .font_code_points = object_member_font_code_points, .font_names = object_member_font_names, .font_outline_sources = object_member_font_outline_sources, .images = object_member_images, .image_textures = object_member_image_textures, .jpeg_alpha_payloads = object_member_jpeg_alpha_payloads, .jpeg_tables = object_member_jpeg_tables, .linkages = object_member_linkages, .morph_bounds = object_member_morph_bounds, .morph_shapes = object_member_morph_shapes, .pending_init_actions = object_member_pending_init_actions, .pending_texts = object_member_pending_texts, .remaining_frame_entries = object_member_remaining_frame_entries, .scaling_grids = object_member_scaling_grids, .shapes = object_member_shapes, .sound_cues_awaiting_class = object_member_sound_cues_awaiting_class, .sound_cues_awaiting_rate = object_member_sound_cues_awaiting_rate, .sound_resources = object_member_sound_resources, .sounds = object_member_sounds, .sprites = object_member_sprites, .stream_sounds = object_member_stream_sounds, .video_textures = object_member_video_textures, .videos = object_member_videos}); }());
 }
 
-inline std::optional<flight::Ref<SwfTagParseResult>> read_swf_tags(flight::Ref<swf_reader> reader, flight::Ref<SwfParseOptions> options, std::optional<flight::Array<flight::Ref<ImportDiagnostic>>> diagnostics) {
-  flight::Ref<SwfTagParseState> state = create_swf_tag_parse_state(expand_swf_tag_handler_dispatch(options->tags), diagnostics);
-  std::optional<flight::Ref<SwfTimeline>> timeline = read_swf_timeline(reader, state);
+inline std::optional<flight::Ref<flight::types::SwfTagParseResult>> read_swf_tags(flight::Ref<flight::swf::SwfReader> reader, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics) {
+  auto state = create_swf_tag_parse_state(flight::swf::expand_swf_tag_handler_dispatch(flight::row_get<flight::RowKey<"tags">>(options)), diagnostics);
+  auto timeline = flight::swf::read_swf_timeline(reader, state);
   if (!timeline.has_value()) {
     return std::nullopt;
   }
-  for (auto handler : options->tags) {
+  for (auto handler : flight::row_get<flight::RowKey<"tags">>(options)) {
     ([&]() { auto optional_chain_receiver = handler->resolve; if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(state, timeline.value()); }());
   }
-  return flight::make_ref<SwfTagParseResult>(SwfTagParseResult{.timeline = timeline.value()});
+  return flight::make_ref<flight::types::SwfTagParseResult>(flight::types::SwfTagParseResult{.timeline = timeline.value()});
 }
 
 struct SwfFile : public flight::ReferenceEnabled {
   double frame_rate;
-  flight::Ref<SwfTagParseResult> parsed;
-  flight::Ref<SwfTagRectangle> stage_bounds;
+  flight::Ref<flight::types::SwfTagParseResult> parsed;
+  flight::Ref<flight::types::SwfTagRectangle> stage_bounds;
 };
 
-
-// NOT GENERATED: function resolveSwfPlacementMask -- source line 638
-// refusal: cpp-contextual-union-missing-expression-type:multiVariant [compiler-restriction]
-//
-// The source it stood for:
-//   function resolveSwfPlacementMask(
-//     ordered: readonly Readonly<SwfTagPlacement>[],
-//     placement: Readonly<SwfTagPlacement>,
-//     diagnostics: ImportDiagnostic[] | undefined,
-//   ): Readonly<SwfTagPlacement> | null {
-//     let mask: Readonly<SwfTagPlacement> | null = null;
-//     let covering = 0;
-//     for (const candidate of ordered) {
-//       if (candidate.clipDepth <= 0 || candidate.depth >= placement.depth) continue;
-//       if (placement.depth > candidate.clipDepth) continue;
-//       covering++;
-//       if (mask === null || candidate.depth > mask.depth) mask = candidate;
-//     }
-//     // Two masks over one instance means the outer one is not applied at all, so the instance shows more
-//     // than the file said it should. Skip rather than Recover: a node carries one clip, so this is a
-//     // vocabulary gap in the clip subject rather than geometry this decoder failed to read.
-//     if (covering > 1) {
-//       reportImportDiagnostic(
-//         diagnostics,
-//         ImportDiagnosticSeverity.Skip,
-//         'swf.nested-mask-collapsed',
-//         'resolveSwfPlacementMask',
-//         {
-//           capability: 'swf.placement.clip-depth',
-//           covering,
-//           depth: placement.depth,
-//         },
-//       );
-//     }
-//     return mask;
-//   }
-//   
-// cpp emission failed for @flighthq/swf/packages/swf/src/swfDocument.ts: contextual multiVariant construction
-// requires expression type evidence
-
-inline double compare_swf_placement_depth(flight::Ref<SwfTagPlacement> a, flight::Ref<SwfTagPlacement> b) {
-  return (a->depth - b->depth);
+inline std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagPlacement>>>>> resolve_swf_placement_mask(flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagPlacement>>>>> ordered, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagPlacement>>>> placement, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics) {
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagPlacement>>>>> mask = std::nullopt;
+  double covering = 0.0;
+  for (auto candidate : ordered) {
+    if (((flight::row_get<flight::RowKey<"clipDepth">>(candidate) <= 0.0) || (flight::row_get<flight::RowKey<"depth">>(candidate) >= flight::row_get<flight::RowKey<"depth">>(placement)))) {
+      continue;
+    }
+    if ((flight::row_get<flight::RowKey<"depth">>(placement) > flight::row_get<flight::RowKey<"clipDepth">>(candidate))) {
+      continue;
+    }
+    covering++;
+    if ((!mask.has_value() || (flight::row_get<flight::RowKey<"depth">>(candidate) > flight::row_get<flight::RowKey<"depth">>(mask.value())))) {
+      (mask = std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagPlacement>>>>>{candidate});
+    }
+  }
+  if ((covering > 1.0)) {
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.nested-mask-collapsed"), flight::String("resolveSwfPlacementMask"), {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.placement.clip-depth")}}, {flight::String("covering"), std::variant<bool, double, flight::String>{std::in_place_type<double>, covering}}, {flight::String("depth"), std::variant<bool, double, flight::String>{std::in_place_type<double>, flight::row_get<flight::RowKey<"depth">>(placement)}}});
+  }
+  return mask;
 }
 
+inline double compare_swf_placement_depth(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagPlacement>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagPlacement>>>> b) {
+  return (flight::row_get<flight::RowKey<"depth">>(a) - flight::row_get<flight::RowKey<"depth">>(b));
+}
 
-// NOT GENERATED: function createSwfHandlerPlacementNode -- source line 752
-// refusal: cpp-intersection-member-shapeless [source-portability]
-//
-// The source it stood for:
-//   function createSwfHandlerPlacementNode(
-//     handlers: readonly Readonly<SwfTagHandler>[],
-//     parsed: Readonly<SwfTagParseResult>,
-//     characterId: number,
-//     bounds: SwfTagRectangle | null,
-//     diagnostics: ImportDiagnostic[] | undefined,
-//   ): Node2D | null {
-//     for (const handler of handlers) {
-//       const node = handler.instantiate?.createPlacementNode?.(parsed, characterId, bounds, diagnostics);
-//       if (node !== undefined && node !== null) return node;
-//     }
-//     return null;
-//   }
-//   
-//   // Whether any named handler defined visual content for the character. Asked before a node is built,
-//   // so a placement that earns none allocates nothing.
-// cpp emission failed for @flighthq/swf/packages/swf/src/swfDocument.ts: intersection types require C++
-// multiple-inheritance lowering: no shape for Node (argument Node2DTraits has no shape either), Node2DTraits.
-// Declare the object shape the code reads rather than intersecting a conjunct that has none
-
-inline bool has_swf_handler_placement_content(flight::Array<flight::Ref<SwfTagHandler>> handlers, flight::Ref<SwfTagParseResult> parsed, double character_id) {
+inline std::optional<flight::types::Node2D> create_swf_handler_placement_node(flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagHandler>>>>> handlers, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>> parsed, double character_id, std::optional<flight::Ref<flight::types::SwfTagRectangle>> bounds, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics) {
   for (auto handler : handlers) {
-    if ((([&]() -> std::optional<bool> { auto optional_chain_receiver = ([&]() -> std::optional<std::function<bool(flight::Ref<SwfTagParseResult>, double)>> { auto optional_chain_receiver = handler->instantiate; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->has_placement_content; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(parsed, character_id); }()) == true)) {
+    std::variant<flight::types::Node2D, flight::Null, flight::Undefined> node = ([&]() -> std::optional<flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>> { auto optional_chain_receiver = ([&]() -> std::optional<std::function<std::optional<flight::types::Node2D>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>, double, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>>)>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"instantiate">>(handler); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->create_placement_node; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(parsed, character_id, bounds, diagnostics); }());
+    if ((!(std::holds_alternative<flight::Undefined>(node)) && !(std::holds_alternative<flight::Null>(node)))) {
+      return std::optional<flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>>{std::get<0>(node)};
+    }
+  }
+  return std::nullopt;
+}
+
+inline bool has_swf_handler_placement_content(flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagHandler>>>>> handlers, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>> parsed, double character_id) {
+  for (auto handler : handlers) {
+    if ((([&]() -> std::optional<bool> { auto optional_chain_receiver = ([&]() -> std::optional<std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>, double)>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"instantiate">>(handler); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->has_placement_content; }()); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()(parsed, character_id); }()) == true)) {
       return true;
     }
   }
   return false;
 }
 
-inline void initialize_swf_document_import(flight::Ref<EntityConstruction<flight::Ref<SwfDocumentImport>>> out, flight::Array<flight::Ref<SwfNodeAppearance>> appearances, flight::Ref<Scene2DDocument> document, flight::Array<flight::Ref<SwfJpegAlphaPayload>> jpeg_alpha_payloads) {
-  (out->appearances = appearances);
-  (out->document = document);
-  (out->jpeg_alpha_payloads = jpeg_alpha_payloads);
+inline void initialize_swf_document_import(flight::types::EntityConstruction<flight::Ref<flight::types::SwfDocumentImport>> out, flight::Array<flight::Ref<flight::types::SwfNodeAppearance>> appearances, flight::Ref<flight::types::Scene2DDocument> document, flight::Array<flight::Ref<flight::types::SwfJpegAlphaPayload>> jpeg_alpha_payloads) {
+  flight::row_set<flight::RowKey<"appearances">>(out, appearances);
+  flight::row_set<flight::RowKey<"document">>(out, document);
+  flight::row_set<flight::RowKey<"jpegAlphaPayloads">>(out, jpeg_alpha_payloads);
 }
 
 inline const double cws_signature = 67.0;
@@ -222,80 +245,43 @@ inline const double fws_signature = 70.0;
 
 inline const double max_sprite_nesting = 256.0;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_HEIGHT_WIDTH_X_Y_06099478698611DC
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_HEIGHT_WIDTH_X_Y_06099478698611DC
-struct height_width_x_y_06099478698611dc : public flight::ReferenceEnabled {
-  double height;
-  double width;
-  double x;
-  double y;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_HEIGHT_WIDTH_X_Y_06099478698611DC
-
-
-// NOT GENERATED: function resolveSwfCharacterBounds -- source line 779
-// refusal: cpp-contextual-union-value-type-unrepresented [source-portability]
-//
-// The source it stood for:
-//   function resolveSwfCharacterBounds(
-//     parsed: Readonly<SwfTagParseResult>,
-//     characterId: number,
-//     state: SwfInstantiationState,
-//     depth: number,
-//   ): SwfTagRectangle | null {
-//     const direct = parsed.characterBounds.get(characterId);
-//     if (direct !== undefined) return direct;
-//     if (state.resolvedBounds.has(characterId)) return state.resolvedBounds.get(characterId) ?? null;
-//     const sprite = parsed.sprites.get(characterId);
-//     if (sprite === undefined || depth > MAX_SPRITE_NESTING || state.resolvingBounds.has(characterId)) return null;
-//   
-//     state.resolvingBounds.add(characterId);
-//     // A symbol's authored extent covers everything it can show, so this unions every frame's placements
-//     // rather than only the first frame's: the node's local bounds do not change as its playhead moves.
-//     let bounds: SwfTagRectangle | null = null;
-//     let missingChildren = 0;
-//     for (const frame of sprite.frames) {
-//       for (const placement of frame.values()) {
-//         const childBounds = resolveSwfCharacterBounds(parsed, placement.characterId, state, depth + 1);
-//         if (childBounds === null) {
-//           // Two different things reach here and only one is a loss. A sprite that resolved to an empty
-//           // union has no extent to contribute and is correct; a character with neither authored bounds nor
-//           // a sprite body was never imported at all, and the union it should have widened is short.
-//           if (!parsed.characterBounds.has(placement.characterId) && !parsed.sprites.has(placement.characterId)) {
-//             missingChildren++;
-//           }
-//           continue;
-//         }
-//         const transformed = transformSwfRectangle(childBounds, placement.matrix);
-//         bounds = bounds === null ? transformed : mergeSwfRectangles(bounds, transformed);
-//       }
-//     }
-//     state.resolvingBounds.delete(characterId);
-//     if (missingChildren > 0) {
-//       // A count rather than a flag: the box survives and is simply smaller than the sprite's contents, and
-//       // a count is the only thing that separates a full union from a short one.
-//       reportImportDiagnostic(
-//         state.diagnostics,
-//         ImportDiagnosticSeverity.Drop,
-//         'swf.sprite-bounds-short',
-//         'resolveSwfCharacterBounds',
-//         { capability: 'swf.timeline.define-sprite', characterId, missingChildren },
-//       );
-//     }
-//     state.resolvedBounds.set(characterId, bounds);
-//     return bounds;
-//   }
-//   
-//   // ── Tag handlers ──────────────────────────────────────────────────────────────
-//   // Each handler matches the SwfTagHandler signature and delegates to the internal helpers above.
-//   // Exported through the contract lane so callers can assemble custom registries.
-//   
-// cpp emission failed for @flighthq/swf/packages/swf/src/swfDocument.ts: contextual union value type
-// flight::Ref<height_width_x_y_06099478698611dc> is not a represented runtime domain: the value leaves a member
-// the destination requires optional or absent, or gives it an incompatible type, so it is not the shape an
-// alternative declares. This expression refers to an existing owner. Keep the value in the declared destination
-// arm from the point it is created, or explicitly rebuild the declared result in source where changing identity
-// is intended. The compiler will not retype, copy, or materialize the existing object into a sibling owner.
+inline std::optional<flight::Ref<flight::types::SwfTagRectangle>> resolve_swf_character_bounds(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>> parsed, double character_id, flight::Ref<SwfInstantiationState> state, double depth) {
+  auto direct = flight::row_get<flight::RowKey<"characterBounds">>(parsed).get(character_id);
+  if (direct.has_value()) {
+    return std::optional<flight::Ref<flight::types::SwfTagRectangle>>{direct.value()};
+  }
+  if (state->resolved_bounds.has(character_id)) {
+    return ([&]() -> std::optional<flight::Ref<flight::types::SwfTagRectangle>> { auto nullish_coalesce_left = state->resolved_bounds.get(character_id); if (const auto* alternative = std::get_if<flight::Ref<flight::types::SwfTagRectangle>>(&nullish_coalesce_left)) return std::optional<flight::Ref<flight::types::SwfTagRectangle>>{*alternative}; return std::nullopt; }());
+  }
+  auto sprite = flight::row_get<flight::RowKey<"sprites">>(parsed).get(character_id);
+  if (((!sprite.has_value() || (depth > max_sprite_nesting)) || state->resolving_bounds.has(character_id))) {
+    return std::nullopt;
+  }
+  state->resolving_bounds.add(character_id);
+  std::optional<flight::Ref<flight::types::SwfTagRectangle>> bounds = std::nullopt;
+  double missing_children = 0.0;
+  for (auto frame : sprite.value()->frames) {
+    for (const auto& [for_of_key, for_of_value] : frame) {
+      static_cast<void>(for_of_key);
+      auto placement = for_of_value;
+      auto child_bounds = resolve_swf_character_bounds(parsed, placement->character_id, state, (depth + 1.0));
+      if (!child_bounds.has_value()) {
+        if ((!flight::row_get<flight::RowKey<"characterBounds">>(parsed).has(placement->character_id) && !flight::row_get<flight::RowKey<"sprites">>(parsed).has(placement->character_id))) {
+          missing_children++;
+        }
+        continue;
+      }
+      auto transformed = flight::swf::transform_swf_rectangle(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>(child_bounds.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagMatrix>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SwfTagMatrix>>>>(placement->matrix)));
+      (bounds = (!bounds.has_value() ? std::optional<flight::Ref<flight::types::SwfTagRectangle>>{transformed} : std::optional<flight::Ref<flight::types::SwfTagRectangle>>{flight::swf::merge_swf_rectangles(bounds.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SwfTagRectangle>>>>(transformed)))}));
+    }
+  }
+  state->resolving_bounds.erase(character_id);
+  if ((missing_children > 0.0)) {
+    flight::importdiagnostics::report_import_diagnostic(state->diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("swf.sprite-bounds-short"), flight::String("resolveSwfCharacterBounds"), {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.timeline.define-sprite")}}, {flight::String("characterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, character_id}}, {flight::String("missingChildren"), std::variant<bool, double, flight::String>{std::in_place_type<double>, missing_children}}});
+  }
+  state->resolved_bounds.set(character_id, bounds);
+  return bounds;
+}
 
 inline const double min_swf_length = 12.0;
 
@@ -303,57 +289,34 @@ inline const double s_signature = 83.0;
 
 inline const double swf_instance_key_scale = 65536.0;
 
-inline double create_swf_instance_key(flight::Ref<SwfTagPlacement> placement) {
-  return ((placement->depth * swf_instance_key_scale) + placement->character_id);
+inline double create_swf_instance_key(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagPlacement>>>> placement) {
+  return ((flight::row_get<flight::RowKey<"depth">>(placement) * swf_instance_key_scale) + flight::row_get<flight::RowKey<"characterId">>(placement));
 }
 
-
-// NOT GENERATED: function collectSwfNodeAppearances -- source line 467
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   function collectSwfNodeAppearances(
-//     frames: readonly (readonly Readonly<SwfFrameEntry>[])[],
-//     nodes: ReadonlyMap<number, Node2D>,
-//     out: SwfNodeAppearance[],
-//     diagnostics?: ImportDiagnostic[],
-//   ): void {
-//     for (let frame = 0; frame < frames.length; frame++) {
-//       for (const entry of frames[frame]) {
-//         const { advancedBlendMode, effects } = entry.placement;
-//         if (advancedBlendMode === null && effects.length === 0) continue;
-//         const node = nodes.get(createSwfInstanceKey(entry.placement));
-//         if (node === undefined) {
-//           // The appearance report is the only carrier for these two channels, so a placement whose node was
-//           // never allocated loses them outright. Reaching here means the placement declared one or both,
-//           // which is why the earlier `continue` is not a loss and this one is. A masking placement cannot
-//           // reach here despite also earning no node: masks are excluded from frame entries upstream.
-//           reportImportDiagnostic(
-//             diagnostics,
-//             ImportDiagnosticSeverity.Drop,
-//             'swf.appearance-without-node',
-//             'collectSwfNodeAppearances',
-//             {
-//               capability: advancedBlendMode !== null ? 'swf.placement.blend-mode' : 'swf.placement.filter-list',
-//               frame: frame + 1,
-//             },
-//           );
-//           continue;
-//         }
-//         out.push({ advancedBlendMode, effects: [...effects], frame: frame + 1, node });
-//       }
-//     }
-//   }
-//   
-//   // Exposes a parsed SWF timeline as the TimelineSource a MovieClip plays. The node set was allocated by
-//   // createSwfTimelineNode before this source exists, so constructFrame allocates nothing: it attaches the
-//   // frame's instances in depth order, detaches the ones that frame does not place, and writes each placement
-//   // matrix. A detached instance keeps its node, so a slot reference target stays valid while its instance is
-//   // off-frame and a loop back to frame 1 restores the same nodes rather than replacing them. The node set
-//   // belongs to one placed instance of the symbol, so this source belongs to that instance too rather than
-//   // being shared across every instance of it.
-// cpp emission failed for @flighthq/swf/packages/swf/src/swfDocument.ts: contextual optionalSingle construction
-// requires expression type evidence
+inline void collect_swf_node_appearances(flight::Array<flight::Array<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<SwfFrameEntry>>>>>> frames, flight::Map<double, flight::types::Node2D> nodes, flight::Array<flight::Ref<flight::types::SwfNodeAppearance>> out, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
+  {
+    double frame = 0.0;
+    while ((frame < static_cast<double>(frames.size()))) {
+      {
+        for (auto entry : frames.element(frame)) {
+          flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagPlacement>>>> object_pattern_value = flight::row_get<flight::RowKey<"placement">>(entry);
+          std::optional<flight::String> advanced_blend_mode = flight::row_get<flight::RowKey<"advancedBlendMode">>(object_pattern_value);
+          flight::Array<flight::Ref<flight::types::Effect>> effects = flight::row_get<flight::RowKey<"effects">>(object_pattern_value);
+          if ((!advanced_blend_mode.has_value() && (static_cast<double>(effects.size()) == 0.0))) {
+            continue;
+          }
+          std::optional<flight::types::Node2D> node = nodes.get(create_swf_instance_key(flight::row_get<flight::RowKey<"placement">>(entry)));
+          if (!node.has_value()) {
+            flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("swf.appearance-without-node"), flight::String("collectSwfNodeAppearances"), {{flight::String("capability"), (advanced_blend_mode.has_value() ? std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.placement.blend-mode")} : std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.placement.filter-list")})}, {flight::String("frame"), std::variant<bool, double, flight::String>{std::in_place_type<double>, (frame + 1.0)}}});
+            continue;
+          }
+          out.push(flight::make_ref<flight::types::SwfNodeAppearance>(flight::types::SwfNodeAppearance{.advanced_blend_mode = advanced_blend_mode, .effects = ([&]() { flight::Array<flight::Ref<flight::types::Effect>> array_spread_result; for (const auto& array_spread_item : effects) { array_spread_result.push(array_spread_item); } return array_spread_result; }()), .frame = (frame + 1.0), .node = node.value()}));
+        }
+      }
+      (frame += 1.0);
+    }
+  }
+}
 
 
 // NOT GENERATED: function createSwfTimelineSource -- source line 507
@@ -468,14 +431,9 @@ inline const double swf_lzma_prefix_length = 17.0;
 
 inline const flight::String swf_mime_type = flight::String("application/x-shockwave-flash");
 
-inline const double swf_prefix_length = 8.0;
+inline const double swf_prefix_length_flight_value_variable__u000053__u000057__u000046__u00005f__u000050__u000052__u000045__u000046__u000049__u000058__u00005f__u00004c__u000045__u00004e__u000047__u000054__u000048__flight_private_28f0ed3fa1fd51ab = 8.0;
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_X_Y_8365950BD60F783F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_X_Y_8365950BD60F783F
-using x_y_8365950bd60f783f = flight::types::x_y_8365950bd60f783f;
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_X_Y_8365950BD60F783F
-
-inline flight::Ref<x_y_8365950bd60f783f> mask_point = flight::make_ref<x_y_8365950bd60f783f>(x_y_8365950bd60f783f{.x = 0.0, .y = 0.0});
+inline flight::Ref<flight::types::Vector2> mask_point = flight::make_ref<flight::types::Vector2>(flight::types::Vector2{.x = 0.0, .y = 0.0});
 
 
 // NOT GENERATED: function createSwfMaskClipRegion -- source line 693
@@ -547,93 +505,25 @@ inline flight::Ref<x_y_8365950bd60f783f> mask_point = flight::make_ref<x_y_83659
 // the value alternative here would unpack storage that may still be holding the sentinel the test left
 // reachable. Test both at once with `x != null`, or narrow the value into a present local the same way
 
-
-// NOT GENERATED: function buildSwfFrameEntries -- source line 604
-// refusal: cpp-contextual-union-missing-expression-type:multiVariant [compiler-restriction]
-//
-// The source it stood for:
-//   function buildSwfFrameEntries(
-//     ordered: readonly Readonly<SwfTagPlacement>[],
-//     parsed: Readonly<SwfTagParseResult>,
-//     clips: Map<Readonly<SwfTagPlacement>, Map<Readonly<SwfTagPlacement>, ClipRegion | null>>,
-//     diagnostics: ImportDiagnostic[] | undefined,
-//   ): SwfFrameEntry[] {
-//     const entries: SwfFrameEntry[] = [];
-//     for (const placement of ordered) {
-//       if (placement.clipDepth > 0) continue;
-//       const mask = resolveSwfPlacementMask(ordered, placement, diagnostics);
-//       const clip = mask === null ? null : resolveSwfMaskClip(mask, placement, parsed, clips);
-//       // A mask that resolves to no region leaves its covered instance UNCLIPPED, which is a visible
-//       // difference and not a no-op: the mask character had no decoded geometry, so imposing nothing was
-//       // the honest choice over imposing a wrong clip. Recover rather than Drop — the instance still draws.
-//       if (mask !== null && clip === null) {
-//         reportImportDiagnostic(
-//           diagnostics,
-//           ImportDiagnosticSeverity.Recover,
-//           'swf.mask-without-geometry',
-//           'buildSwfFrameEntries',
-//           {
-//             capability: 'swf.placement.clip-depth',
-//             depth: placement.depth,
-//             maskCharacterId: mask.characterId,
-//           },
-//         );
-//       }
-//       entries.push({ clip, placement });
-//     }
-//     return entries;
-//   }
-//   
-//   // The innermost mask covering a depth. Flight carries one clip per node, so where masks nest, the
-//   // deepest one wins rather than intersecting them.
-// cpp emission failed for @flighthq/swf/packages/swf/src/swfDocument.ts: contextual multiVariant construction
-// requires expression type evidence
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_A_B_C_D_TX_TY_D975CBA1D9C9E6B5
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_A_B_C_D_TX_TY_D975CBA1D9C9E6B5
-struct a_b_c_d_tx_ty_d975cba1d9c9e6b5 : public flight::ReferenceEnabled {
-  double a;
-  double b;
-  double c;
-  double d;
-  double tx;
-  double ty;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_A_B_C_D_TX_TY_D975CBA1D9C9E6B5
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_ADVANCED_BLEND_MODE_ALPHA_BLEND_MODE_CHARACTER_ID_CLIP_DEPTH_COLOR_ADJUSTMENTS_COLOR_TRANSFORM_ADJUSTMENTS_DEPTH_DIRECT_LINKAGE_EFFECTS_FILTER_ADJUSTMENTS_MATRIX_NAME_RATIO_3282FE3B5ED55127
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_ADVANCED_BLEND_MODE_ALPHA_BLEND_MODE_CHARACTER_ID_CLIP_DEPTH_COLOR_ADJUSTMENTS_COLOR_TRANSFORM_ADJUSTMENTS_DEPTH_DIRECT_LINKAGE_EFFECTS_FILTER_ADJUSTMENTS_MATRIX_NAME_RATIO_3282FE3B5ED55127
-struct advanced_blend_mode_alpha_blend_mode_character_id_clip_depth_color_adjustments_color_transform_adjustments_depth_direct_linkage_effects_filter_adjustments_matrix_name_ratio_3282fe3b5ed55127 : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<AdvancedBlendMode>> advanced_blend_mode;
-  double alpha;
-  flight::Ref<BlendMode> blend_mode;
-  double character_id;
-  double clip_depth;
-  std::optional<flight::Array<flight::Ref<Adjustment>>> color_adjustments;
-  std::optional<flight::Array<flight::Ref<Adjustment>>> color_transform_adjustments;
-  double depth;
-  std::optional<flight::String> direct_linkage;
-  flight::Array<flight::Ref<Effect>> effects;
-  flight::Array<flight::Ref<Adjustment>> filter_adjustments;
-  flight::Ref<a_b_c_d_tx_ty_d975cba1d9c9e6b5> matrix;
-  std::optional<flight::String> name;
-  double ratio;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_ADVANCED_BLEND_MODE_ALPHA_BLEND_MODE_CHARACTER_ID_CLIP_DEPTH_COLOR_ADJUSTMENTS_COLOR_TRANSFORM_ADJUSTMENTS_DEPTH_DIRECT_LINKAGE_EFFECTS_FILTER_ADJUSTMENTS_MATRIX_NAME_RATIO_3282FE3B5ED55127
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_ACTIONS_CUES_FRAMES_LABELS_0BF89BEF6131D133
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_ACTIONS_CUES_FRAMES_LABELS_0BF89BEF6131D133
-struct actions_cues_frames_labels_0bf89bef6131d133 : public flight::ReferenceEnabled {
-  flight::Map<double, flight::Ref<FrameScript>> actions;
-  flight::Array<flight::Ref<TimelineCue>> cues;
-  flight::Array<flight::Map<double, flight::Ref<advanced_blend_mode_alpha_blend_mode_character_id_clip_depth_color_adjustments_color_transform_adjustments_depth_direct_linkage_effects_filter_adjustments_matrix_name_ratio_3282fe3b5ed55127>>> frames;
-  flight::Array<flight::Ref<TimelineLabel>> labels;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SWF_ACTIONS_CUES_FRAMES_LABELS_0BF89BEF6131D133
+inline flight::Array<flight::Ref<SwfFrameEntry>> build_swf_frame_entries(flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagPlacement>>>>> ordered, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>> parsed, flight::Map<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagPlacement>>>>, flight::Map<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagPlacement>>>>, std::optional<flight::Ref<flight::types::ClipRegion>>>> clips, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics) {
+  flight::Array<flight::Ref<SwfFrameEntry>> entries = flight::Array<flight::Ref<SwfFrameEntry>>{};
+  for (auto placement : ordered) {
+    if ((flight::row_get<flight::RowKey<"clipDepth">>(placement) > 0.0)) {
+      continue;
+    }
+    std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagPlacement>>>>> mask = resolve_swf_placement_mask(ordered, placement, diagnostics);
+    auto clip = (!mask.has_value() ? std::nullopt : resolve_swf_mask_clip(mask.value(), placement, parsed, clips));
+    if ((mask.has_value() && !clip.has_value())) {
+      flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->recover, flight::String("swf.mask-without-geometry"), flight::String("buildSwfFrameEntries"), {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.placement.clip-depth")}}, {flight::String("depth"), std::variant<bool, double, flight::String>{std::in_place_type<double>, flight::row_get<flight::RowKey<"depth">>(placement)}}, {flight::String("maskCharacterId"), std::variant<bool, double, flight::String>{std::in_place_type<double>, flight::row_get<flight::RowKey<"characterId">>(mask.value())}}});
+    }
+    entries.push(flight::make_ref<SwfFrameEntry>(SwfFrameEntry{.clip = clip, .placement = placement}));
+  }
+  return entries;
+}
 
 
 // NOT GENERATED: function populateSwfTimelineNode -- source line 390
-// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
+// refusal: cpp-contextual-union-value-type-unrepresented [source-portability]
 //
 // The source it stood for:
 //   function populateSwfTimelineNode(
@@ -714,70 +604,55 @@ struct actions_cues_frames_labels_0bf89bef6131d133 : public flight::ReferenceEna
 //   // One entry per (instance, frame) that carries either, so a filter that changes across frames reads as
 //   // the per-frame data it is. Frames are 1-based, matching gotoAndStopMovieClip.
 // cpp emission failed for @flighthq/swf/packages/swf/src/swfDocument.ts: contextual union value type
-// flight::Ref<MovieClip> is not a represented runtime domain
+// flight::Ref<flight::types::MovieClip> is not a represented runtime domain: the value leaves a member the
+// destination requires optional or absent, or gives it an incompatible type, so it is not the shape an
+// alternative declares. The call has already selected a result owner from its arguments; the destination cannot
+// retroactively replace that generic or anonymous owner. Constrain the call with the declared destination type
+// where its type arguments are chosen, or change the called API to return the exact declared arm. The compiler
+// will not cast, copy, or materialize the call result into another owner.
 
-inline std::optional<flight::Ref<MovieClip>> create_swf_timeline_node(flight::Ref<SwfTimeline> timeline, std::optional<flight::Ref<SwfTagRectangle>> bounds, flight::Ref<SwfTagParseResult> parsed, flight::Array<flight::Ref<Scene2DSlotReference>> slots, flight::Ref<SwfInstantiationState> state, double depth) {
-  flight::Ref<MovieClip> clip = create_swf_movie_clip(bounds);
-  return (populate_swf_timeline_node(clip, timeline, parsed, slots, state, depth) ? std::optional<flight::Ref<MovieClip>>{clip} : std::nullopt);
+inline std::optional<flight::Ref<flight::types::MovieClip>> create_swf_timeline_node(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTimeline>>>> timeline, std::optional<flight::Ref<flight::types::SwfTagRectangle>> bounds, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>> parsed, flight::Array<flight::Ref<flight::types::Scene2DSlotReference>> slots, flight::Ref<SwfInstantiationState> state, double depth) {
+  auto clip = flight::swf::create_swf_movie_clip(bounds);
+  return (populate_swf_timeline_node(clip, timeline, parsed, slots, state, depth) ? std::optional<flight::Ref<flight::types::MovieClip>>{clip} : std::nullopt);
 }
 
-inline std::optional<flight::Ref<SwfDocumentImport>> instantiate_swf_file(flight::Ref<SwfFile> file, flight::Ref<SwfParseOptions> options, std::optional<flight::Array<flight::Ref<ImportDiagnostic>>> diagnostics) {
+inline std::optional<flight::Ref<flight::types::SwfDocumentImport>> instantiate_swf_file(flight::Ref<SwfFile> file, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics) {
   auto object_pattern_value = file;
   const double frame_rate = object_pattern_value->frame_rate;
-  flight::Ref<SwfTagParseResult> parsed = object_pattern_value->parsed;
-  flight::Ref<SwfTagRectangle> stage_bounds = object_pattern_value->stage_bounds;
-  flight::Array<flight::Ref<Scene2DSlotReference>> slots = flight::Array<flight::Ref<Scene2DSlotReference>>{};
-  flight::Ref<SwfInstantiationState> instantiation = ([&]() { auto object_member_active_symbols = flight::Set<double>(); auto object_member_appearances = flight::Array<flight::Ref<SwfNodeAppearance>>{}; auto object_member_diagnostics = diagnostics; auto object_member_handlers = options->tags; auto object_member_frame_rate = ((frame_rate > 0.0) ? std::optional<double>{frame_rate} : std::nullopt); auto object_member_resolving_bounds = flight::Set<double>(); auto object_member_resolved_bounds = flight::Map<double, std::optional<flight::Ref<SwfTagRectangle>>>(); return flight::make_ref<SwfInstantiationState>(SwfInstantiationState{.active_symbols = object_member_active_symbols, .appearances = object_member_appearances, .diagnostics = object_member_diagnostics, .handlers = object_member_handlers, .frame_rate = object_member_frame_rate, .resolved_bounds = object_member_resolved_bounds, .resolving_bounds = object_member_resolving_bounds}); }());
-  std::optional<flight::Ref<MovieClip>> root = create_swf_timeline_node(parsed->timeline, std::optional<flight::Ref<SwfTagRectangle>>{stage_bounds}, parsed, slots, instantiation, 0.0);
+  auto parsed = object_pattern_value->parsed;
+  auto stage_bounds = object_pattern_value->stage_bounds;
+  flight::Array<flight::Ref<flight::types::Scene2DSlotReference>> slots = flight::Array<flight::Ref<flight::types::Scene2DSlotReference>>{};
+  flight::Ref<SwfInstantiationState> instantiation = ([&]() { auto object_member_active_symbols = flight::Set<double>(); auto object_member_appearances = flight::Array<flight::Ref<flight::types::SwfNodeAppearance>>{}; auto object_member_diagnostics_2 = diagnostics; auto object_member_handlers = flight::row_get<flight::RowKey<"tags">>(options); auto object_member_frame_rate = ((frame_rate > 0.0) ? std::optional<double>{frame_rate} : std::nullopt); auto object_member_resolving_bounds = flight::Set<double>(); auto object_member_resolved_bounds = flight::Map<double, std::optional<flight::Ref<flight::types::SwfTagRectangle>>>(); return flight::make_ref<SwfInstantiationState>(SwfInstantiationState{.active_symbols = object_member_active_symbols, .appearances = object_member_appearances, .diagnostics = object_member_diagnostics_2, .handlers = object_member_handlers, .frame_rate = object_member_frame_rate, .resolved_bounds = object_member_resolved_bounds, .resolving_bounds = object_member_resolving_bounds}); }());
+  auto root = create_swf_timeline_node(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTimeline>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SwfTimeline>>>>(parsed->timeline)), std::optional<flight::Ref<flight::types::SwfTagRectangle>>{stage_bounds}, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>(parsed)), slots, instantiation, 0.0);
   if (!root.has_value()) {
-    report_import_diagnostic(diagnostics, import_diagnostic_severity.reject, flight::String("swf.timeline-instantiation-failed"), flight::String("createScene2DImportFromSwf"), std::nullopt);
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("swf.timeline-instantiation-failed"), flight::String("createScene2DImportFromSwf"), std::nullopt);
     return std::nullopt;
   }
-  flight::Ref<SwfTagHandlerResources> resources = flight::make_ref<SwfTagHandlerResources>(SwfTagHandlerResources{.audio = flight::Array<flight::Ref<AudioResourceReference>>{}, .images = flight::Array<flight::Ref<ImageResourceReference>>{}, .jpeg_alpha_payloads = flight::Array<flight::Ref<SwfJpegAlphaPayload>>{}});
+  auto resources = flight::make_ref<flight::types::SwfTagHandlerResources>(flight::types::SwfTagHandlerResources{.audio = flight::Array<flight::types::AudioResourceReference>{}, .images = flight::Array<flight::types::ImageResourceReference>{}, .jpeg_alpha_payloads = flight::Array<flight::Ref<flight::types::SwfJpegAlphaPayload>>{}});
   for (auto handler : instantiation->handlers) {
-    ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void(flight::Ref<SwfTagParseResult>, flight::Ref<SwfTagHandlerResources>)>> { auto optional_chain_receiver = handler->instantiate; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->create_resources; }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(parsed, resources); }());
+    ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>, flight::Ref<flight::types::SwfTagHandlerResources>)>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"instantiate">>(handler); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->create_resources; }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(parsed, resources); }());
   }
-  flight::Ref<EntityConstruction<flight::Ref<SwfDocumentImport>>> out = allocate_entity<flight::Ref<SwfDocumentImport>>();
-  initialize_swf_document_import(out, instantiation->appearances, create_scene2_ddocument(root.value(), slots, std::optional<flight::String>{flight::String("swf")}, parsed->background_color, resources->images, resources->audio), resources->jpeg_alpha_payloads);
-  return std::optional<flight::Ref<SwfDocumentImport>>{finish_entity(out)};
+  flight::types::EntityConstruction<flight::Ref<flight::types::SwfDocumentImport>> out = flight::entity::allocate_entity<flight::Ref<flight::types::SwfDocumentImport>>();
+  initialize_swf_document_import(out, instantiation->appearances, flight::scene2d_resources::create_scene2_ddocument(flight::structural_ref_cast<flight::types::Node2D>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MovieClip>>>>(root.value())), slots, std::optional<flight::String>{flight::String("swf")}, parsed->background_color, resources->images, resources->audio), resources->jpeg_alpha_payloads);
+  return std::optional<flight::Ref<flight::types::SwfDocumentImport>>{flight::entity::finish_entity<flight::Ref<flight::types::SwfDocumentImport>>(out)};
 }
 
-
-// NOT GENERATED: function createSwfSymbolNode -- source line 735
-// refusal: cpp-contextual-union-inequivalent [source-portability]
-//
-// The source it stood for:
-//   function createSwfSymbolNode(
-//     parsed: Readonly<SwfTagParseResult>,
-//     characterId: number,
-//     slots: Scene2DSlotReference[],
-//     state: SwfInstantiationState,
-//   ): Node2D | null {
-//     const bounds = resolveSwfCharacterBounds(parsed, characterId, state, 0);
-//     const claimed = createSwfHandlerPlacementNode(state.handlers, parsed, characterId, bounds, state.diagnostics);
-//     if (claimed !== null) return claimed;
-//     const sprite = parsed.sprites.get(characterId);
-//     return sprite === undefined ? null : createSwfTimelineNode(sprite, bounds, parsed, slots, state, 0);
-//   }
-//   
-//   // Asks each named handler, in the caller's own array order, what a placed character becomes. A character
-//   // id is defined exactly once — a second definition under the same id is refused at the tag — so at most
-//   // one handler ever answers, and the order only decides which is asked first. Null means nothing this
-//   // build named defined the character, which is the caller's cue to fall back to a bare container.
-// cpp emission failed for @flighthq/swf/packages/swf/src/swfDocument.ts: contextual C++ union conversion
-// requires equivalent source union evidence: target optionalSingle carriers [flight::Ref<Node2D>] from call
-// source optionalSingle carriers [flight::Ref<MovieClip>]. Narrow or convert the source expression so each of
-// its alternatives names exactly one destination union alternative. The carrier lists show which alternatives
-// lack an exact carrier; preserve the declared collection or member union alias before flow expansion. For a Map
-// or WeakMap lookup followed by a rebind, ensure every rebound member already has the declared value owner
-// member's carrier -- a Readonly structural view does not become a mutable nominal Ref.
+inline std::optional<flight::types::Node2D> create_swf_symbol_node(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>> parsed, double character_id, flight::Array<flight::Ref<flight::types::Scene2DSlotReference>> slots, flight::Ref<SwfInstantiationState> state) {
+  auto bounds = resolve_swf_character_bounds(parsed, character_id, state, 0.0);
+  std::optional<flight::types::Node2D> claimed = create_swf_handler_placement_node(state->handlers, parsed, character_id, bounds, state->diagnostics);
+  if (claimed.has_value()) {
+    return std::optional<flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>>{claimed.value()};
+  }
+  auto sprite = flight::row_get<flight::RowKey<"sprites">>(parsed).get(character_id);
+  return (!sprite.has_value() ? std::nullopt : ([&]() -> std::optional<flight::types::Node2D> { auto contextual_union_source = create_swf_timeline_node(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTimeline>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SwfTimeline>>>>(sprite.value())), bounds, parsed, slots, state, 0.0); if (!contextual_union_source.has_value()) return std::nullopt; return std::optional<flight::StructuralRef<flight::RowMerge<flight::RowOf<std::shared_ptr<flight::types::Node<flight::Ref<flight::types::Node2DTraits>>>>, flight::RowOf<flight::Ref<flight::types::Node2DTraits>>>>>{flight::structural_ref_cast<flight::types::Node2D>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::MovieClip>>>>(contextual_union_source.value()))}; }()));
+}
 
 inline const double w_signature = 87.0;
 
 inline const double zws_signature = 90.0;
 
-inline bool matches_swf_document(flight::Uint8Array source, flight::Ref<Scene2DDocumentImportContext> context) {
-  if ((context->mime_type == swf_mime_type)) {
+inline bool matches_swf_document(flight::Uint8Array source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2DDocumentImportContext>>>> context) {
+  if ((flight::row_get<flight::RowKey<"mimeType">>(context) == swf_mime_type)) {
     return true;
   }
   if ((((static_cast<double>(source.size()) < 3.0) || (source.get_index(1.0) != w_signature)) || (source.get_index(2.0) != s_signature))) {
@@ -786,194 +661,89 @@ inline bool matches_swf_document(flight::Uint8Array source, flight::Ref<Scene2DD
   return (((source.get_index(0.0) == fws_signature) || (source.get_index(0.0) == cws_signature)) || (source.get_index(0.0) == zws_signature));
 }
 
-
-// NOT GENERATED: function uncompressSwfSource -- source line 868
-// refusal: cpp-contextual-union-inequivalent [source-portability]
-//
-// The source it stood for:
-//   export function uncompressSwfSource(
-//     source: Uint8Array,
-//     deflate: Readonly<HostDecompressDeflateCapability> | null,
-//     lzma: Readonly<HostDecompressLzmaCapability> | null,
-//     diagnostics?: ImportDiagnostic[],
-//   ): Uint8Array | null {
-//     if (source.length < SWF_PREFIX_LENGTH || source[1] !== W_SIGNATURE || source[2] !== S_SIGNATURE) {
-//       reportImportDiagnostic(
-//         diagnostics,
-//         ImportDiagnosticSeverity.Reject,
-//         'swf.invalid-signature',
-//         'uncompressSwfSource',
-//         {
-//           length: source.length,
-//         },
-//       );
-//       return null;
-//     }
-//     const signature = source[0];
-//     if (signature === FWS_SIGNATURE) return source;
-//   
-//     const compression =
-//       signature === CWS_SIGNATURE ? Compression.Deflate : signature === ZWS_SIGNATURE ? Compression.Lzma : null;
-//     if (compression === null) {
-//       reportImportDiagnostic(
-//         diagnostics,
-//         ImportDiagnosticSeverity.Reject,
-//         'swf.unknown-container',
-//         'uncompressSwfSource',
-//         {
-//           signature,
-//         },
-//       );
-//       return null;
-//     }
-//     // A slot the file selects but the host does not fill is simply absent. Absent stays explicit — null,
-//     // not a stub that fails later — and needs no diagnostic of its own: the host's own group is the
-//     // caller-visible record of what it can decompress.
-//     // The container's own signature chose the algorithm; the caller supplied each provider directly, so
-//     // this only picks between them. A provider the caller did not supply stays null, and null is the
-//     // honest answer rather than a stub that fails later.
-//     const slot = compression === Compression.Deflate ? deflate : lzma;
-//     if (slot === null) return null;
-//   
-//     const header = new SwfReader(source, 0, SWF_PREFIX_LENGTH);
-//     header.readUint32();
-//     const fileLength = header.readUint32();
-//     if (fileLength < MIN_SWF_LENGTH) {
-//       reportImportDiagnostic(
-//         diagnostics,
-//         ImportDiagnosticSeverity.Reject,
-//         'swf.declared-length-too-small',
-//         'uncompressSwfSource',
-//         {
-//           fileLength,
-//         },
-//       );
-//       return null;
-//     }
-//   
-//     // LZMA puts a compressed length and the 5 property bytes between the header and its stream; zlib starts
-//     // its stream immediately. Either way the decompressor receives the stream itself.
-//     const bodyLength = fileLength - SWF_PREFIX_LENGTH;
-//     const streamStart = compression === Compression.Lzma ? SWF_LZMA_PREFIX_LENGTH : SWF_PREFIX_LENGTH;
-//     if (streamStart > source.length) {
-//       reportImportDiagnostic(
-//         diagnostics,
-//         ImportDiagnosticSeverity.Reject,
-//         'swf.truncated-container',
-//         'uncompressSwfSource',
-//         {
-//           length: source.length,
-//           streamStart,
-//         },
-//       );
-//       return null;
-//     }
-//     const framing = compression === Compression.Deflate ? CompressionFraming.Rfc1950 : CompressionFraming.Raw;
-//     const body = slot.decompress(source.subarray(streamStart), bodyLength, framing);
-//     if (body === null || body.length < bodyLength) {
-//       reportImportDiagnostic(
-//         diagnostics,
-//         ImportDiagnosticSeverity.Reject,
-//         'swf.decompression-failed',
-//         'uncompressSwfSource',
-//         {
-//           compression,
-//           expected: bodyLength,
-//           received: body === null ? -1 : body.length,
-//         },
-//       );
-//       return null;
-//     }
-//   
-//     const uncompressed = new Uint8Array(SWF_PREFIX_LENGTH + bodyLength);
-//     uncompressed.set(source.subarray(0, SWF_PREFIX_LENGTH));
-//     uncompressed[0] = FWS_SIGNATURE;
-//     uncompressed.set(body.subarray(0, bodyLength), SWF_PREFIX_LENGTH);
-//     return uncompressed;
-//   }
-//   
-// cpp emission failed for @flighthq/swf/packages/swf/src/swfDocument.ts: contextual C++ union conversion
-// requires equivalent source union evidence: target optionalSingle carriers
-// [flight::Ref<HostDecompressDeflateCapability>] from identifier source optionalSingle carriers
-// [flight::Ref<HostDecompressLzmaCapability>]. Narrow or convert the source expression so each of its
-// alternatives names exactly one destination union alternative. The carrier lists show which alternatives lack
-// an exact carrier; preserve the declared collection or member union alias before flow expansion. For a Map or
-// WeakMap lookup followed by a rebind, ensure every rebound member already has the declared value owner member's
-// carrier -- a Readonly structural view does not become a mutable nominal Ref.
-
-
-// NOT GENERATED: function readSwfFile -- source line 299
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   function readSwfFile(
-//     source: Uint8Array,
-//     options: Readonly<SwfParseOptions>,
-//     diagnostics: ImportDiagnostic[] | undefined,
-//   ): SwfFile | null {
-//     const uncompressed = uncompressSwfSource(source, options.deflate ?? null, options.lzma ?? null, diagnostics);
-//     if (uncompressed === null) return null;
-//   
-//     // Every rejection below loses the WHOLE document, and each has a distinct cause. Without a report per
-//     // cause the caller receives one null from `createScene2DFromSwf` and cannot tell an unregistered
-//     // decompressor — which IS reported, upstream — from a truncated header, which was not.
-//     const header = new SwfReader(uncompressed, 0, uncompressed.length);
-//     const signature = header.readUint8();
-//     if (signature !== FWS_SIGNATURE || header.readUint8() !== W_SIGNATURE || header.readUint8() !== S_SIGNATURE) {
-//       // Distinct from the container's `swf.invalid-signature`: that one reads the ORIGINAL bytes, this one
-//       // reads the decompressed body, whose header the decompressor rewrote. NOTHING CAN REACH THIS TODAY —
-//       // an FWS container is returned unchanged and every compressed path writes `FWS_SIGNATURE` into byte 0,
-//       // while bytes 1 and 2 were validated before either. The report stays because unreachable-by-
-//       // construction is a property of today's two container paths, not of the format: a third path, or a
-//       // decompressor that stops rewriting the header, makes it reachable, and silence would return with it.
-//       reportImportDiagnostic(
-//         diagnostics,
-//         ImportDiagnosticSeverity.Reject,
-//         'swf.uncompressed-signature-invalid',
-//         'readSwfFile',
-//       );
-//       return null;
-//     }
-//   
-//     const version = header.readUint8();
-//     const fileLength = header.readUint32();
-//     if (!header.valid || version === 0 || fileLength < MIN_SWF_LENGTH || fileLength > uncompressed.length) {
-//       reportImportDiagnostic(diagnostics, ImportDiagnosticSeverity.Reject, 'swf.header-fields-invalid', 'readSwfFile', {
-//         declaredLength: fileLength,
-//         available: uncompressed.length,
-//         version,
-//       });
-//       return null;
-//     }
-//   
-//     const body = new SwfReader(uncompressed, SWF_PREFIX_LENGTH, fileLength);
-//     const stageBounds = readSwfRectangle(body);
-//     if (stageBounds === null) {
-//       reportImportDiagnostic(diagnostics, ImportDiagnosticSeverity.Reject, 'swf.stage-bounds-unreadable', 'readSwfFile');
-//       return null;
-//     }
-//     // Header FrameRate is 8.8 fixed and governs every timeline in the file; the authored FrameCount that
-//     // follows it is advisory, so the real root frame count comes from the ShowFrame tags themselves.
-//     const frameRate = body.readUint16() / FIXED_8_8_ONE;
-//     body.readUint16();
-//     if (!body.valid) {
-//       reportImportDiagnostic(diagnostics, ImportDiagnosticSeverity.Reject, 'swf.header-truncated', 'readSwfFile');
-//       return null;
-//     }
-//   
-//     const parsed = readSwfTags(body, options, diagnostics);
-//     return parsed === null ? null : { frameRate, parsed, stageBounds };
-//   }
-//   
-// cpp emission failed for @flighthq/swf/packages/swf/src/swfDocument.ts: contextual optionalSingle construction
-// requires expression type evidence
-
-inline std::optional<flight::Map<double, flight::Ref<GlyphOutlineSource>>> create_glyph_outline_sources_from_swf(flight::Uint8Array source, flight::Ref<SwfParseOptions> options, std::optional<flight::Array<flight::Ref<ImportDiagnostic>>> diagnostics = std::nullopt) {
-  auto file = read_swf_file(source, options, diagnostics);
-  return (!file.has_value() ? std::nullopt : std::optional<flight::Map<double, flight::Ref<GlyphOutlineSource>>>{flight::Map<double, flight::Ref<GlyphOutlineSource>>(file.value()->parsed->font_outline_sources)});
+inline std::optional<flight::Uint8Array> uncompress_swf_source(flight::Uint8Array source, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDecompressDeflateCapability>>>>> deflate, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDecompressLzmaCapability>>>>> lzma, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
+  if ((((static_cast<double>(source.size()) < swf_prefix_length_flight_value_variable__u000053__u000057__u000046__u00005f__u000050__u000052__u000045__u000046__u000049__u000058__u00005f__u00004c__u000045__u00004e__u000047__u000054__u000048__flight_private_28f0ed3fa1fd51ab) || (source.get_index(1.0) != w_signature)) || (source.get_index(2.0) != s_signature))) {
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("swf.invalid-signature"), flight::String("uncompressSwfSource"), {{flight::String("length"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(source.size())}}});
+    return std::nullopt;
+  }
+  const double signature = source.get_index(0.0);
+  if ((signature == fws_signature)) {
+    return std::optional<flight::Uint8Array>{source};
+  }
+  const std::optional<flight::String> compression_2 = ((signature == cws_signature) ? std::optional<flight::String>{flight::types::compression->deflate} : ((signature == zws_signature) ? std::optional<flight::String>{flight::types::compression->lzma} : std::nullopt));
+  if (!compression_2.has_value()) {
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("swf.unknown-container"), flight::String("uncompressSwfSource"), {{flight::String("signature"), std::variant<bool, double, flight::String>{std::in_place_type<double>, signature}}});
+    return std::nullopt;
+  }
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDecompressDeflateCapability>>>>> slot = ((compression_2.value() == flight::types::compression->deflate) ? deflate : std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDecompressDeflateCapability>>>>>(lzma));
+  if (!slot.has_value()) {
+    return std::nullopt;
+  }
+  flight::Ref<flight::swf::SwfReader> header = flight::make_ref<flight::swf::SwfReader>(source, 0.0, swf_prefix_length_flight_value_variable__u000053__u000057__u000046__u00005f__u000050__u000052__u000045__u000046__u000049__u000058__u00005f__u00004c__u000045__u00004e__u000047__u000054__u000048__flight_private_28f0ed3fa1fd51ab);
+  header->read_uint32();
+  const double file_length = header->read_uint32();
+  if ((file_length < min_swf_length)) {
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("swf.declared-length-too-small"), flight::String("uncompressSwfSource"), {{flight::String("fileLength"), std::variant<bool, double, flight::String>{std::in_place_type<double>, file_length}}});
+    return std::nullopt;
+  }
+  const double body_length = (file_length - swf_prefix_length_flight_value_variable__u000053__u000057__u000046__u00005f__u000050__u000052__u000045__u000046__u000049__u000058__u00005f__u00004c__u000045__u00004e__u000047__u000054__u000048__flight_private_28f0ed3fa1fd51ab);
+  const double stream_start = ((compression_2.value() == flight::types::compression->lzma) ? swf_lzma_prefix_length : swf_prefix_length_flight_value_variable__u000053__u000057__u000046__u00005f__u000050__u000052__u000045__u000046__u000049__u000058__u00005f__u00004c__u000045__u00004e__u000047__u000054__u000048__flight_private_28f0ed3fa1fd51ab);
+  if ((stream_start > static_cast<double>(source.size()))) {
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("swf.truncated-container"), flight::String("uncompressSwfSource"), {{flight::String("length"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(source.size())}}, {flight::String("streamStart"), std::variant<bool, double, flight::String>{std::in_place_type<double>, stream_start}}});
+    return std::nullopt;
+  }
+  const flight::String framing = ((compression_2.value() == flight::types::compression->deflate) ? flight::types::compression_framing->rfc1950 : flight::types::compression_framing->raw);
+  std::optional<flight::Uint8Array> body = slot.value()->decompress(source.subarray(stream_start), body_length, framing);
+  if ((!body.has_value() || (static_cast<double>(body.value().size()) < body_length))) {
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("swf.decompression-failed"), flight::String("uncompressSwfSource"), {{flight::String("compression"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, compression_2.value()}}, {flight::String("expected"), std::variant<bool, double, flight::String>{std::in_place_type<double>, body_length}}, {flight::String("received"), (!body.has_value() ? std::variant<bool, double, flight::String>{std::in_place_type<double>, -1.0} : std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(body.value().size())})}});
+    return std::nullopt;
+  }
+  flight::Uint8Array uncompressed = flight::Uint8Array((swf_prefix_length_flight_value_variable__u000053__u000057__u000046__u00005f__u000050__u000052__u000045__u000046__u000049__u000058__u00005f__u00004c__u000045__u00004e__u000047__u000054__u000048__flight_private_28f0ed3fa1fd51ab + body_length));
+  uncompressed.set(source.subarray(0.0, swf_prefix_length_flight_value_variable__u000053__u000057__u000046__u00005f__u000050__u000052__u000045__u000046__u000049__u000058__u00005f__u00004c__u000045__u00004e__u000047__u000054__u000048__flight_private_28f0ed3fa1fd51ab));
+  ([&]() { auto&& typed_array = uncompressed; const auto typed_index = 0.0; const auto typed_value = fws_signature; return typed_array.set_index(typed_index, typed_value); }());
+  uncompressed.set(body.value().subarray(0.0, body_length), swf_prefix_length_flight_value_variable__u000053__u000057__u000046__u00005f__u000050__u000052__u000045__u000046__u000049__u000058__u00005f__u00004c__u000045__u00004e__u000047__u000054__u000048__flight_private_28f0ed3fa1fd51ab);
+  return std::optional<flight::Uint8Array>{uncompressed};
 }
 
-inline std::optional<flight::Ref<SwfDocumentImport>> create_scene2_dimport_from_swf(flight::Uint8Array source, flight::Ref<SwfParseOptions> options, std::optional<flight::Array<flight::Ref<ImportDiagnostic>>> diagnostics = std::nullopt) {
+inline std::optional<flight::Ref<SwfFile>> read_swf_file(flight::Uint8Array source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics) {
+  std::optional<flight::Uint8Array> uncompressed = uncompress_swf_source(source, ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDecompressDeflateCapability>>>>> { auto nullish_coalesce_left_3 = flight::row_get<flight::RowKey<"deflate">>(options); if (const auto* alternative = std::get_if<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDecompressDeflateCapability>>>>>(&nullish_coalesce_left_3)) return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDecompressDeflateCapability>>>>>{*alternative}; return std::nullopt; }()), ([&]() -> std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDecompressLzmaCapability>>>>> { auto nullish_coalesce_left_4 = flight::row_get<flight::RowKey<"lzma">>(options); if (const auto* alternative = std::get_if<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDecompressLzmaCapability>>>>>(&nullish_coalesce_left_4)) return std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostDecompressLzmaCapability>>>>>{*alternative}; return std::nullopt; }()), diagnostics);
+  if (!uncompressed.has_value()) {
+    return std::nullopt;
+  }
+  flight::Ref<flight::swf::SwfReader> header = flight::make_ref<flight::swf::SwfReader>(uncompressed.value(), 0.0, static_cast<double>(uncompressed.value().size()));
+  const double signature = header->read_uint8();
+  if ((((signature != fws_signature) || (header->read_uint8() != w_signature)) || (header->read_uint8() != s_signature))) {
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("swf.uncompressed-signature-invalid"), flight::String("readSwfFile"), std::nullopt);
+    return std::nullopt;
+  }
+  const double version = header->read_uint8();
+  const double file_length = header->read_uint32();
+  if ((((!header->valid || (version == 0.0)) || (file_length < min_swf_length)) || (file_length > static_cast<double>(uncompressed.value().size())))) {
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("swf.header-fields-invalid"), flight::String("readSwfFile"), {{flight::String("declaredLength"), std::variant<bool, double, flight::String>{std::in_place_type<double>, file_length}}, {flight::String("available"), std::variant<bool, double, flight::String>{std::in_place_type<double>, static_cast<double>(uncompressed.value().size())}}, {flight::String("version"), std::variant<bool, double, flight::String>{std::in_place_type<double>, version}}});
+    return std::nullopt;
+  }
+  flight::Ref<flight::swf::SwfReader> body = flight::make_ref<flight::swf::SwfReader>(uncompressed.value(), swf_prefix_length_flight_value_variable__u000053__u000057__u000046__u00005f__u000050__u000052__u000045__u000046__u000049__u000058__u00005f__u00004c__u000045__u00004e__u000047__u000054__u000048__flight_private_28f0ed3fa1fd51ab, file_length);
+  auto stage_bounds = flight::swf::read_swf_rectangle(body);
+  if (!stage_bounds.has_value()) {
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("swf.stage-bounds-unreadable"), flight::String("readSwfFile"), std::nullopt);
+    return std::nullopt;
+  }
+  const double frame_rate = (body->read_uint16() / flight::swf::fixed_8_8_one);
+  body->read_uint16();
+  if (!body->valid) {
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("swf.header-truncated"), flight::String("readSwfFile"), std::nullopt);
+    return std::nullopt;
+  }
+  auto parsed = read_swf_tags(body, options, diagnostics);
+  return (!parsed.has_value() ? std::nullopt : std::optional<flight::Ref<SwfFile>>{flight::make_ref<SwfFile>(SwfFile{.frame_rate = frame_rate, .parsed = parsed.value(), .stage_bounds = stage_bounds.value()})});
+}
+
+inline std::optional<flight::Map<double, flight::Ref<flight::types::GlyphOutlineSource>>> create_glyph_outline_sources_from_swf(flight::Uint8Array source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
+  auto file = read_swf_file(source, options, diagnostics);
+  return (!file.has_value() ? std::nullopt : std::optional<flight::Map<double, flight::Ref<flight::types::GlyphOutlineSource>>>{flight::Map<double, flight::Ref<flight::types::GlyphOutlineSource>>(file.value()->parsed->font_outline_sources)});
+}
+
+inline std::optional<flight::Ref<flight::types::SwfDocumentImport>> create_scene2_dimport_from_swf(flight::Uint8Array source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
   auto file = read_swf_file(source, options, diagnostics);
   if (!file.has_value()) {
     return std::nullopt;
@@ -981,18 +751,18 @@ inline std::optional<flight::Ref<SwfDocumentImport>> create_scene2_dimport_from_
   return instantiate_swf_file(file.value(), options, diagnostics);
 }
 
-inline std::optional<flight::Ref<Scene2DDocument>> create_scene2_dfrom_swf(flight::Uint8Array source, flight::Ref<SwfParseOptions> options, std::optional<flight::Array<flight::Ref<ImportDiagnostic>>> diagnostics = std::nullopt) {
-  return ([&]() -> std::optional<flight::Ref<Scene2DDocument>> { auto optional_chain_receiver = create_scene2_dimport_from_swf(source, options, diagnostics); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->document; }());
+inline std::optional<flight::Ref<flight::types::Scene2DDocument>> create_scene2_dfrom_swf(flight::Uint8Array source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
+  return ([&]() -> std::optional<flight::Ref<flight::types::Scene2DDocument>> { auto optional_chain_receiver = create_scene2_dimport_from_swf(source, options, diagnostics); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->document; }());
 }
 
-inline std::optional<flight::Ref<Scene2DDocument>> create_scene2_dsymbol_from_swf(flight::Uint8Array source, flight::String linkage_name, flight::Ref<SwfParseOptions> options, std::optional<flight::Array<flight::Ref<ImportDiagnostic>>> diagnostics = std::nullopt) {
+inline std::optional<flight::Ref<flight::types::Scene2DDocument>> create_scene2_dsymbol_from_swf(flight::Uint8Array source, flight::String linkage_name, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {
   auto file = read_swf_file(source, options, diagnostics);
   if (!file.has_value()) {
     return std::nullopt;
   }
   auto object_pattern_value = file.value();
   const double frame_rate = object_pattern_value->frame_rate;
-  flight::Ref<SwfTagParseResult> parsed = object_pattern_value->parsed;
+  auto parsed = object_pattern_value->parsed;
   double character_id = -1.0;
   for (auto array_pattern_value : parsed->linkages) {
     const double id = std::get<0>(array_pattern_value);
@@ -1002,29 +772,29 @@ inline std::optional<flight::Ref<Scene2DDocument>> create_scene2_dsymbol_from_sw
     }
   }
   if ((character_id < 0.0)) {
-    report_import_diagnostic(diagnostics, import_diagnostic_severity.reject, flight::String("swf.unknown-linkage-name"), flight::String("createScene2DSymbolFromSwf"), {{flight::String("linkageName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, linkage_name}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->reject, flight::String("swf.unknown-linkage-name"), flight::String("createScene2DSymbolFromSwf"), {{flight::String("linkageName"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, linkage_name}}});
     return std::nullopt;
   }
-  flight::Array<flight::Ref<Scene2DSlotReference>> slots = flight::Array<flight::Ref<Scene2DSlotReference>>{};
-  flight::Ref<SwfInstantiationState> instantiation = ([&]() { auto object_member_active_symbols_2 = flight::Set<double>(); auto object_member_appearances_2 = flight::Array<flight::Ref<SwfNodeAppearance>>{}; auto object_member_diagnostics_2 = diagnostics; auto object_member_handlers_2 = options->tags; auto object_member_frame_rate_2 = ((frame_rate > 0.0) ? std::optional<double>{frame_rate} : std::nullopt); auto object_member_resolving_bounds_2 = flight::Set<double>(); auto object_member_resolved_bounds_2 = flight::Map<double, std::optional<flight::Ref<SwfTagRectangle>>>(); return flight::make_ref<SwfInstantiationState>(SwfInstantiationState{.active_symbols = object_member_active_symbols_2, .appearances = object_member_appearances_2, .diagnostics = object_member_diagnostics_2, .handlers = object_member_handlers_2, .frame_rate = object_member_frame_rate_2, .resolved_bounds = object_member_resolved_bounds_2, .resolving_bounds = object_member_resolving_bounds_2}); }());
-  std::optional<flight::Ref<Node2D>> root = create_swf_symbol_node(parsed, character_id, slots, instantiation);
+  flight::Array<flight::Ref<flight::types::Scene2DSlotReference>> slots = flight::Array<flight::Ref<flight::types::Scene2DSlotReference>>{};
+  flight::Ref<SwfInstantiationState> instantiation = ([&]() { auto object_member_active_symbols_2 = flight::Set<double>(); auto object_member_appearances_2 = flight::Array<flight::Ref<flight::types::SwfNodeAppearance>>{}; auto object_member_diagnostics_3 = diagnostics; auto object_member_handlers_2 = flight::row_get<flight::RowKey<"tags">>(options); auto object_member_frame_rate_2 = ((frame_rate > 0.0) ? std::optional<double>{frame_rate} : std::nullopt); auto object_member_resolving_bounds_2 = flight::Set<double>(); auto object_member_resolved_bounds_2 = flight::Map<double, std::optional<flight::Ref<flight::types::SwfTagRectangle>>>(); return flight::make_ref<SwfInstantiationState>(SwfInstantiationState{.active_symbols = object_member_active_symbols_2, .appearances = object_member_appearances_2, .diagnostics = object_member_diagnostics_3, .handlers = object_member_handlers_2, .frame_rate = object_member_frame_rate_2, .resolved_bounds = object_member_resolved_bounds_2, .resolving_bounds = object_member_resolving_bounds_2}); }());
+  std::optional<flight::types::Node2D> root = create_swf_symbol_node(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>(parsed)), character_id, slots, instantiation);
   if (!root.has_value()) {
     return std::nullopt;
   }
-  flight::Ref<SwfTagHandlerResources> resources = flight::make_ref<SwfTagHandlerResources>(SwfTagHandlerResources{.audio = flight::Array<flight::Ref<AudioResourceReference>>{}, .images = flight::Array<flight::Ref<ImageResourceReference>>{}, .jpeg_alpha_payloads = flight::Array<flight::Ref<SwfJpegAlphaPayload>>{}});
+  auto resources = flight::make_ref<flight::types::SwfTagHandlerResources>(flight::types::SwfTagHandlerResources{.audio = flight::Array<flight::types::AudioResourceReference>{}, .images = flight::Array<flight::types::ImageResourceReference>{}, .jpeg_alpha_payloads = flight::Array<flight::Ref<flight::types::SwfJpegAlphaPayload>>{}});
   for (auto handler : instantiation->handlers) {
-    ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void(flight::Ref<SwfTagParseResult>, flight::Ref<SwfTagHandlerResources>)>> { auto optional_chain_receiver = handler->instantiate; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->create_resources; }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(parsed, resources); }());
+    ([&]() { auto optional_chain_receiver = ([&]() -> std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfTagParseResult>>>>, flight::Ref<flight::types::SwfTagHandlerResources>)>> { auto optional_chain_receiver = flight::row_get<flight::RowKey<"instantiate">>(handler); if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value()->create_resources; }()); if (!optional_chain_receiver.has_value()) return; optional_chain_receiver.value()(parsed, resources); }());
   }
-  return std::optional<flight::Ref<Scene2DDocument>>{create_scene2_ddocument(root.value(), slots, std::optional<flight::String>{flight::String("swf")}, std::nullopt, resources->images, resources->audio)};
+  return std::optional<flight::Ref<flight::types::Scene2DDocument>>{flight::scene2d_resources::create_scene2_ddocument(root.value(), slots, std::optional<flight::String>{flight::String("swf")}, std::nullopt, resources->images, resources->audio)};
 }
 
-inline flight::Array<flight::String> read_swf_exported_symbol_names(flight::Uint8Array source, flight::Ref<SwfParseOptions> options) {
+inline flight::Array<flight::String> read_swf_exported_symbol_names(flight::Uint8Array source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options) {
   auto file = read_swf_file(source, options, std::nullopt);
-  return (!file.has_value() ? flight::Array<flight::String>{} : ([&]() { flight::Array<flight::String> array_spread_result_2; for (const auto& array_spread_item_2 : file.value()->parsed->linkages.values()) { array_spread_result_2.push(array_spread_item_2); } return array_spread_result_2; }()));
+  return (!file.has_value() ? flight::Array<flight::String>{} : ([&]() { flight::Array<flight::String> array_spread_result_3; { auto&& array_spread_collection_2 = file.value()->parsed->linkages; for (const auto& [array_spread_key_2, array_spread_mapped_value_2] : array_spread_collection_2) { static_cast<void>(array_spread_key_2); array_spread_result_3.push(array_spread_mapped_value_2); } } return array_spread_result_3; }()));
 }
 
-inline void register_swf_scene2_ddocument_importer(flight::Ref<Scene2DDocumentImporterRegistry> importers, flight::Ref<SwfParseOptions> options) {
-  register_scene2_ddocument_importer(importers, flight::String("swf"), matches_swf_document, [=](flight::Uint8Array source) -> std::optional<flight::Ref<Scene2DDocument>> { return create_scene2_dfrom_swf(source, options, std::nullopt); });
+inline void register_swf_scene2_ddocument_importer(flight::Ref<flight::types::Scene2DDocumentImporterRegistry> importers, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SwfParseOptions>>>> options) {
+  flight::scene2d_resources::register_scene2_ddocument_importer(importers, flight::String("swf"), matches_swf_document, [=](flight::Uint8Array source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene2DDocumentImportContext>>>> ignored_callback_argument) -> std::optional<flight::Ref<flight::types::Scene2DDocument>> { (void)ignored_callback_argument; return create_scene2_dfrom_swf(source, options, std::nullopt); });
 }
 
 } // namespace flight::swf

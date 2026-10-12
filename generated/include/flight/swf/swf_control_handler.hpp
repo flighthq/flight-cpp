@@ -4,8 +4,6 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function readSwfButtonDefinition -- source line 128
-//   missing: variable (binding) -- source line 32
-#include <flight/any.hpp>
 #include <flight/boolean.hpp>
 #include <functional>
 #include <optional>
@@ -15,9 +13,25 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/swf/swf_appearance.hpp>
+namespace flight::swf { struct SwfReader; }
+namespace flight::types { struct Adjustment; }
+namespace flight::types { struct ImportDiagnostic; }
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct SwfTagHandler; }
+namespace flight::types { struct SwfTagMatrix; }
+namespace flight::types { struct SwfTagParseState; }
+namespace flight::types { struct SwfTagPlacement; }
+namespace flight::types { struct SwfTagReader; }
+namespace flight::types { struct SwfTagRectangle; }
+namespace flight::types { struct SwfTagTimelineState; }
+namespace flight::types { struct SwfTimeline; }
+namespace flight::types { struct TimelineCue; }
+namespace flight::types { struct TimelineLabel; }
+namespace flight::types { template <typename Traits> struct Node; }
+
+#include <flight/importdiagnostics/import_diagnostic_collector.hpp>
+#include <flight/types/contract.hpp>
 #include <flight/swf/swf_primitive.hpp>
-#include <flight/swf/swf_reader.hpp>
 #include <flight/swf/swf_timeline_parse.hpp>
 
 namespace flight::swf {
@@ -38,26 +52,26 @@ inline const double tag_set_background_color = 9.0;
 
 inline const double tag_symbol_class = 76.0;
 
-inline void read_swf_background_color(flight::Ref<SwfTagReader> body, flight::Ref<SwfTagParseState> state) {
+inline void read_swf_background_color(flight::Ref<flight::types::SwfTagReader> body, flight::Ref<flight::types::SwfTagParseState> state) {
   const double red = body->read_uint8();
   const double green = body->read_uint8();
   const double blue = body->read_uint8();
-  if (!flight::to_boolean(body->valid)) {
+  if (!body->valid) {
     return;
   }
-  (state->background_color = ((((red * 16777216.0) + (green * 65536.0)) + (blue * 256.0)) + 255.0));
+  (state->background_color = std::optional<double>{((((red * 16777216.0) + (green * 65536.0)) + (blue * 256.0)) + 255.0)});
 }
 
-inline void read_swf_scaling_grid(flight::Ref<SwfTagReader> body, flight::Ref<SwfTagParseState> state) {
+inline void read_swf_scaling_grid(flight::Ref<flight::types::SwfTagReader> body, flight::Ref<flight::types::SwfTagParseState> state) {
   const double character_id = body->read_uint16();
-  std::optional<flight::Ref<SwfTagRectangle>> splitter = read_swf_rectangle(body);
-  if (((!flight::to_boolean(body->valid) || (character_id == 0.0)) || !splitter.has_value())) {
+  auto splitter = flight::swf::read_swf_rectangle(body);
+  if (((!body->valid || (character_id == 0.0)) || !splitter.has_value())) {
     return;
   }
   state->scaling_grids.set(character_id, splitter.value());
 }
 
-inline void read_swf_scene_and_frame_label_data(flight::Ref<SwfTagReader> body, flight::Array<flight::Ref<TimelineLabel>> labels, std::optional<flight::Array<flight::Ref<ImportDiagnostic>>> diagnostics) {
+inline void read_swf_scene_and_frame_label_data(flight::Ref<flight::types::SwfTagReader> body, flight::Array<flight::Ref<flight::types::TimelineLabel>> labels, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics) {
   const double scene_count = body->read_encoded_uint32();
   {
     double i = 0.0;
@@ -70,7 +84,7 @@ inline void read_swf_scene_and_frame_label_data(flight::Ref<SwfTagReader> body, 
     }
   }
   if ((scene_count > 0.0)) {
-    report_import_diagnostic(diagnostics, import_diagnostic_severity.skip, flight::String("swf.scene-names"), flight::String("readSwfSceneAndFrameLabelData"), {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.timeline.define-scene-and-frame-label-data")}}, {flight::String("sceneCount"), std::variant<bool, double, flight::String>{std::in_place_type<double>, scene_count}}});
+    flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->skip, flight::String("swf.scene-names"), flight::String("readSwfSceneAndFrameLabelData"), {{flight::String("capability"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, flight::String("swf.timeline.define-scene-and-frame-label-data")}}, {flight::String("sceneCount"), std::variant<bool, double, flight::String>{std::in_place_type<double>, scene_count}}});
   }
   const double label_count = body->read_encoded_uint32();
   {
@@ -80,7 +94,7 @@ inline void read_swf_scene_and_frame_label_data(flight::Ref<SwfTagReader> body, 
         const double frame = body->read_encoded_uint32();
         const flight::String name = body->read_string();
         if (flight::to_boolean(body->valid)) {
-          add_swf_timeline_label(labels, (frame + 1.0), name);
+          flight::swf::add_swf_timeline_label(labels, (frame + 1.0), name);
         }
       }
       (i_2 += 1.0);
@@ -88,7 +102,7 @@ inline void read_swf_scene_and_frame_label_data(flight::Ref<SwfTagReader> body, 
   }
 }
 
-inline void read_swf_linkages(flight::Ref<SwfTagReader> body, flight::Map<double, flight::String> linkages) {
+inline void read_swf_linkages(flight::Ref<flight::types::SwfTagReader> body, flight::Map<double, flight::String> linkages) {
   const double count = body->read_uint16();
   {
     double i = 0.0;
@@ -115,7 +129,6 @@ inline const double max_button_records = 10000.0;
 
 
 // NOT GENERATED: function readSwfButtonDefinition -- source line 128
-// refusal: cpp-dual-sentinel-coalesce-projection-unproven [compiler-restriction]
 //
 // The source it stood for:
 //   function readSwfButtonDefinition(body: SwfTagReader, state: SwfTagParseState, version: number): void {
@@ -181,42 +194,38 @@ inline const double max_button_records = 10000.0;
 //     state.sprites.set(buttonId, { actions: new Map<number, FrameScript>(), cues: [], frames: [placements], labels: [] });
 //   }
 //   
-// cpp emission failed for @flighthq/swf/packages/swf/src/swfControlHandler.ts: dual-sentinel nullish coalescing
-// requires presence projection lowering: the operand carries both null and undefined, so the coalesce has to be
-// projected into a destination the emitter can name. Declare the expression result -- a local annotation, a
-// parameter type, or a return type -- and the projection lowers; left as the source wrote it there is no
-// destination to project into
+// cpp emission failed for @flighthq/swf/packages/swf/src/swfControlHandler.ts: dual-sentinel optional property
+// result requires one represented member value domain
 
-
-// NOT GENERATED: variable (binding) -- source line 32
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export const swfControlHandler: SwfTagHandler = {
-//     tags: [
-//       TAG_SET_BACKGROUND_COLOR,
-//       TAG_FRAME_LABEL,
-//       TAG_DEFINE_SCENE_AND_FRAME_LABEL_DATA,
-//       TAG_DEFINE_SCALING_GRID,
-//       TAG_EXPORT_ASSETS,
-//       TAG_SYMBOL_CLASS,
-//       TAG_DEFINE_BUTTON,
-//       TAG_DEFINE_BUTTON_2,
-//     ],
-//     parse(body, tag, state, timeline) {
-//       if (tag === TAG_SET_BACKGROUND_COLOR) readSwfBackgroundColor(body, state);
-//       else if (tag === TAG_FRAME_LABEL)
-//         addSwfTimelineLabel(timeline.labels, timeline.frames.length + 1, body.readString());
-//       else if (tag === TAG_DEFINE_SCENE_AND_FRAME_LABEL_DATA) {
-//         readSwfSceneAndFrameLabelData(body, timeline.labels, state.diagnostics);
-//       } else if (tag === TAG_DEFINE_SCALING_GRID) readSwfScalingGrid(body, state);
-//       else if (tag === TAG_EXPORT_ASSETS || tag === TAG_SYMBOL_CLASS) readSwfLinkages(body, state.linkages);
-//       else readSwfButtonDefinition(body, state, tag === TAG_DEFINE_BUTTON_2 ? 2 : 1);
-//       return true;
-//     },
-//   };
-//   
-// cpp emission failed for @flighthq/swf/packages/swf/src/swfControlHandler.ts: contextual optionalSingle
-// construction requires expression type evidence
+inline flight::Ref<flight::types::SwfTagHandler> swf_control_handler = flight::make_ref<flight::types::SwfTagHandler>(flight::types::SwfTagHandler{.tags = flight::Array<double>{tag_set_background_color, tag_frame_label, tag_define_scene_and_frame_label_data, tag_define_scaling_grid, tag_export_assets, tag_symbol_class, tag_define_button, tag_define_button_2}, .parse = [](flight::Ref<flight::types::SwfTagReader> body, double tag, flight::Ref<flight::types::SwfTagParseState> state, flight::Ref<flight::types::SwfTagTimelineState> timeline, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> ignored_callback_argument) {
+  (void)ignored_callback_argument;
+  if ((tag == tag_set_background_color)) {
+    read_swf_background_color(body, state);
+  }
+  else {
+    if ((tag == tag_frame_label)) {
+      flight::swf::add_swf_timeline_label(timeline->labels, (static_cast<double>(timeline->frames.size()) + 1.0), body->read_string());
+    }
+    else {
+      if ((tag == tag_define_scene_and_frame_label_data)) {
+        read_swf_scene_and_frame_label_data(body, timeline->labels, state->diagnostics);
+      }
+      else {
+        if ((tag == tag_define_scaling_grid)) {
+          read_swf_scaling_grid(body, state);
+        }
+        else {
+          if (((tag == tag_export_assets) || (tag == tag_symbol_class))) {
+            read_swf_linkages(body, state->linkages);
+          }
+          else {
+            read_swf_button_definition(body, state, ((tag == tag_define_button_2) ? 2.0 : 1.0));
+          }
+        }
+      }
+    }
+  }
+  return true;
+}});
 
 } // namespace flight::swf

@@ -3941,6 +3941,16 @@
       "source": "packages/swf/src/swfShapeTestHelper.ts"
     },
     {
+      "name": "SwfSoundHandler",
+      "packageName": "@flighthq/swf",
+      "source": "packages/swf/src/swfSoundHandler.ts"
+    },
+    {
+      "name": "SwfSoundTagFamily",
+      "packageName": "@flighthq/swf",
+      "source": "packages/swf/src/swfSoundTagFamily.ts"
+    },
+    {
       "name": "SwfSpriteHandler",
       "packageName": "@flighthq/swf",
       "source": "packages/swf/src/swfSpriteHandler.ts"
@@ -27574,6 +27584,26 @@
           "name": "SwfShapeTestHelper",
           "packageName": "@flighthq/swf",
           "source": "packages/swf/src/swfShapeTestHelper.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SwfSoundHandler",
+          "packageName": "@flighthq/swf",
+          "source": "packages/swf/src/swfSoundHandler.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "SwfSoundTagFamily",
+          "packageName": "@flighthq/swf",
+          "source": "packages/swf/src/swfSoundTagFamily.ts"
         }
       ]
     },
@@ -327237,6 +327267,1630 @@
           ],
           "completion": "abrupt-stops-module-evaluation",
           "declaration": "class",
+          "path": [
+            "declarations",
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:33f9f774a6f1068fe871e1e34674923c4c02b8e694e392858f85350e1c165807",
+            "line": 1,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",9]",
+            "kind": "import",
+            "name": "createAudioResource",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createAudioResource",
+            "kind": "dependency",
+            "module": {
+              "name": "AudioResource",
+              "packageName": "@flighthq/audio",
+              "source": "packages/audio/src/audioResource.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 31,
+            "fingerprint": "sha256:ae7883197f06368c56238f03f4330d84decfd0c83bc243baa287186d40ffb0b6",
+            "line": 1,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",30]",
+            "kind": "import",
+            "name": "createEmbeddedAudioResourceReference",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createEmbeddedAudioResourceReference",
+            "kind": "dependency",
+            "module": {
+              "name": "AudioResourceReference",
+              "packageName": "@flighthq/audio",
+              "source": "packages/audio/src/audioResourceReference.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
+            "line": 2,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",111]",
+            "kind": "import",
+            "name": "allocateEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "allocateEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 26,
+            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
+            "line": 2,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",127]",
+            "kind": "import",
+            "name": "finishEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "finishEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ccdcca3573966df731afc28dd8f60c480f924d7d3672e3719cfe7834c97af20f",
+            "line": 3,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",185]",
+            "kind": "import",
+            "name": "reportImportDiagnostic",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "reportImportDiagnostic",
+            "kind": "dependency",
+            "module": {
+              "name": "ImportDiagnosticCollector",
+              "packageName": "@flighthq/importdiagnostics",
+              "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:4ed29d9b9c788211ee983240067a7fabe2c29c3555a536a2250a5c90c9f8e21b",
+            "line": 18,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",566]",
+            "kind": "import",
+            "name": "ImportDiagnosticSeverity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "ImportDiagnosticSeverity",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 36,
+            "fingerprint": "sha256:3ceaeb5b79e16e6af2aa16885014c0310e0cf587f9b27d7a50745f58d440b1c7",
+            "line": 18,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",592]",
+            "kind": "import",
+            "name": "TimelineAudioCueKind",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "TimelineAudioCueKind",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 58,
+            "fingerprint": "sha256:1e185809f85f1aeea2f6ddbe30958e84a9d3d893d9b32e3a05296c2c55b9a208",
+            "line": 18,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",614]",
+            "kind": "import",
+            "name": "TimelineStreamAudioCueKind",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "TimelineStreamAudioCueKind",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:d959ba620f7c6c44eeec1685d673c0a620c1c30c4cf2670d7975f07147b2647a",
+            "line": 24,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",990]",
+            "kind": "variable",
+            "name": "TAG_DEFINE_SOUND",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:526da5aa9538ddf8bbca47bcade8ff8786475e3b0de621c27bdd3199cb21b710",
+            "line": 25,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",1019]",
+            "kind": "variable",
+            "name": "TAG_SOUND_STREAM_BLOCK",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:0f023c84886bb4ea7c7a6eddbbcdfe212a34799286292efc03dc0797552c536c",
+            "line": 26,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",1054]",
+            "kind": "variable",
+            "name": "TAG_SOUND_STREAM_HEAD",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 2
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:0e1d3d66cac44da4f4c0e4d36b9415714d162d7ed1aafa6ccd52e927b5fcb0a3",
+            "line": 27,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",1088]",
+            "kind": "variable",
+            "name": "TAG_SOUND_STREAM_HEAD_2",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 3
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:2778104e96d2a2d141d932d24c7bac421a18250332762d34185e1ba014d6e1fd",
+            "line": 28,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",1124]",
+            "kind": "variable",
+            "name": "TAG_START_SOUND",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 4
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:49b3ee9b849c240f0d6cd8ee19fc8d3e219be8631097d88f4128547af92131ae",
+            "line": 29,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",1152]",
+            "kind": "variable",
+            "name": "TAG_START_SOUND_2",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 5
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:470d67d8f14b5cd73e5adee3a20ab818a408a5acc3b4880afa6faaad4d776d04",
+            "line": 31,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",1190]",
+            "kind": "variable",
+            "name": "swfSoundHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 6
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:20faac0e345ad423b1cf29b199e67eeaf62a9801f72164e1daf066f3adfa6b23",
+            "line": 68,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",2437]",
+            "kind": "function",
+            "name": "initializeTimelineAudioCue",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:272f847e8e6a14a9a712366da60d73228c3d27de0a29c8955ec3eccc708865a1",
+            "line": 91,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",2992]",
+            "kind": "function",
+            "name": "initializeTimelineStreamAudioCue",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:f6aff9f83a9eccf95392518f6571cc13d6981e3a25a6fc184839a3a704273e3f",
+            "line": 105,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",3511]",
+            "kind": "function",
+            "name": "readSwfSoundStreamHead",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:158b4642499431b487c8df2c9bc7ec73aafcbd558ced3e2d761206903103d7a1",
+            "line": 116,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",4081]",
+            "kind": "function",
+            "name": "appendSwfStreamSoundCue",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:a85d8bef7130e8433c65a0dbf949001f58710ee78c2f31fac3ae30f784bc187a",
+            "line": 150,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",5470]",
+            "kind": "function",
+            "name": "readSwfStartSound",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:75340ec90a33ba903a5448e2077b5d96b1ce515f3b957f4206c4b7c5f27f1f00",
+            "line": 163,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",6306]",
+            "kind": "function",
+            "name": "readSwfStartSound2",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:0cfd098288564b883ed9bdde002f7a26e2c982476dd01daeda45ccb20920ad9d",
+            "line": 175,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",7005]",
+            "kind": "function",
+            "name": "readSwfSoundInfo",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:24b60c11c750b63932950ba11ef80123c16e64caee4afe563b686133b1bda52e",
+            "line": 209,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",8465]",
+            "kind": "function",
+            "name": "createSwfAudioCue",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:920037e294fbc0898ed529f487336a211f63dbd780d60bdb2afe4f6cde6bd548",
+            "line": 228,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",9266]",
+            "kind": "function",
+            "name": "resolveSwfSoundClassCues",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:b27a5bfe018f8ec747fd4b0f1e7737cafca0a93169a8d293d58588015a4f0054",
+            "line": 246,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",10368]",
+            "kind": "function",
+            "name": "convertSwfSoundCueTimes",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e4c774c86d53553e64952500626b199d4aac6f67b889470f309b9e8b482ade79",
+            "line": 259,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",11090]",
+            "kind": "function",
+            "name": "acquireSwfSoundResource",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:9b2249e7163a0e775146ef35114be6a14143d9551e902becdb8f852234a938e8",
+            "line": 274,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",12049]",
+            "kind": "function",
+            "name": "readSwfSoundDefinition",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e58af16c7522ce2eda76fb4da5137753f2cadc90bcacf60bead09f13141399ab",
+            "line": 297,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",13342]",
+            "kind": "function",
+            "name": "createSwfSoundMimeType",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:b78b796ef8f0b50e4baaa612cec4226c2258191b534cc58d1dc3ce4f2c80d165",
+            "line": 308,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",13949]",
+            "kind": "function",
+            "name": "resolveSwfSoundSampleRate",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:1ed5bc10789f6041f4b586b43a198f1f949d79271cc3ea742dd7e50c551a85bc",
+            "line": 318,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",14605]",
+            "kind": "function",
+            "name": "createSwfAudioResources",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:151cdf8b4505b6fcca180881f5b7ec60a16b620411fe2bd052a31564f1c14542",
+            "line": 349,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",15983]",
+            "kind": "variable",
+            "name": "SOUND_ENVELOPE_LEVEL_ONE",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 7
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:81f9a36ab57068d71c24a4214ec53544e432c86d80a6f648d3e21584594e990f",
+            "line": 351,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16024]",
+            "kind": "variable",
+            "name": "SOUND_ENVELOPE_RATE",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 8
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:3c61847a3c466efdc772f0847c7fc2013dee83dfafefc458fbd38c8f84e892f6",
+            "line": 353,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16060]",
+            "kind": "variable",
+            "name": "SOUND_INFO_HAS_ENVELOPE",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 9
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:119955974201ef205e73e515c494bcd61518e44bbaa9c638e1863b1f21a6e2b7",
+            "line": 355,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16099]",
+            "kind": "variable",
+            "name": "SOUND_INFO_HAS_IN_POINT",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 10
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:333a3339cfc58582af0aa86b95eb42ea6b5ce70adf0e07df8fd5748c345f2159",
+            "line": 357,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16138]",
+            "kind": "variable",
+            "name": "SOUND_INFO_HAS_LOOPS",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 11
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:814040c0992d871bf55477f5f29f4d1e0767e7377e4fddb0cfa449787c424691",
+            "line": 359,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16174]",
+            "kind": "variable",
+            "name": "SOUND_INFO_HAS_OUT_POINT",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 12
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:b740a87ed9ad06787ae5a4f4337a13ce20e21aa0f0b7fc6a4cf2e2667806acab",
+            "line": 361,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16214]",
+            "kind": "variable",
+            "name": "SOUND_INFO_SYNC_NO_MULTIPLE",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 13
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:d7198130b441f640462b16ccce2f3b22c4efd3856eb28e8a4436646487d7668a",
+            "line": 363,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16257]",
+            "kind": "variable",
+            "name": "SOUND_INFO_SYNC_STOP",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 14
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:e28c432244eeee103dc1d4229097fd2db972e981bc643bc9ecdd8a5da702950b",
+            "line": 365,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16293]",
+            "kind": "variable",
+            "name": "SOUND_FORMAT_MP3",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 15
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:38b6cdd6f9816c98e9064a15603aec6fef871679e43a27ba667cceb794f871cd",
+            "line": 367,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16322]",
+            "kind": "variable",
+            "name": "SOUND_FORMAT_NELLYMOSER_16K",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 16
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:d091f6555e1c7f4cf8034080c4563c695d5b5592e1fed96cfae057d047b89180",
+            "line": 369,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16362]",
+            "kind": "variable",
+            "name": "SOUND_FORMAT_NELLYMOSER_8K",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 17
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:a8680b8a3b5db6bcdbcec437f8eb69d95d8e26f23f8b40abe21a2c69dd65ddb1",
+            "line": 371,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16401]",
+            "kind": "variable",
+            "name": "SWF_SOUND_MIME_ESSENCES",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 18
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:b67e940d3367401927b050a9dbccbb92c2311a7b4020126a0127a5b1f338fbc8",
+            "line": 381,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16723]",
+            "kind": "variable",
+            "name": "SWF_SOUND_RATES",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 19
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:1fee288e16686149a758bf3b72f2792121984a4a05d95a7ab0d0c1eda6dc1adc",
+            "line": 383,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16799]",
+            "kind": "function",
+            "name": "appendSwfStreamSoundChunk",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SwfSoundHandler",
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts"
+          },
+          "importedNames": [
+            "createAudioResource"
+          ],
+          "specifier": "@flighthq/audio/contract",
+          "target": {
+            "name": "AudioResource",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResource.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SwfSoundHandler",
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts"
+          },
+          "importedNames": [
+            "createEmbeddedAudioResourceReference"
+          ],
+          "specifier": "@flighthq/audio/contract",
+          "target": {
+            "name": "AudioResourceReference",
+            "packageName": "@flighthq/audio",
+            "source": "packages/audio/src/audioResourceReference.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SwfSoundHandler",
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts"
+          },
+          "specifier": "@flighthq/entity/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/entity",
+            "source": "packages/entity/src/entity.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SwfSoundHandler",
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts"
+          },
+          "specifier": "@flighthq/importdiagnostics/contract",
+          "target": {
+            "name": "ImportDiagnosticCollector",
+            "packageName": "@flighthq/importdiagnostics",
+            "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SwfSoundHandler",
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "SwfSoundHandler",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfSoundHandler.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:d959ba620f7c6c44eeec1685d673c0a620c1c30c4cf2670d7975f07147b2647a",
+              "line": 24,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",990]",
+              "kind": "variable",
+              "name": "TAG_DEFINE_SOUND",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            0
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:526da5aa9538ddf8bbca47bcade8ff8786475e3b0de621c27bdd3199cb21b710",
+              "line": 25,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",1019]",
+              "kind": "variable",
+              "name": "TAG_SOUND_STREAM_BLOCK",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            1
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:0f023c84886bb4ea7c7a6eddbbcdfe212a34799286292efc03dc0797552c536c",
+              "line": 26,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",1054]",
+              "kind": "variable",
+              "name": "TAG_SOUND_STREAM_HEAD",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            2
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:0e1d3d66cac44da4f4c0e4d36b9415714d162d7ed1aafa6ccd52e927b5fcb0a3",
+              "line": 27,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",1088]",
+              "kind": "variable",
+              "name": "TAG_SOUND_STREAM_HEAD_2",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            3
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:2778104e96d2a2d141d932d24c7bac421a18250332762d34185e1ba014d6e1fd",
+              "line": 28,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",1124]",
+              "kind": "variable",
+              "name": "TAG_START_SOUND",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            4
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:49b3ee9b849c240f0d6cd8ee19fc8d3e219be8631097d88f4128547af92131ae",
+              "line": 29,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",1152]",
+              "kind": "variable",
+              "name": "TAG_START_SOUND_2",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            5
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:470d67d8f14b5cd73e5adee3a20ab818a408a5acc3b4880afa6faaad4d776d04",
+              "line": 31,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",1190]",
+              "kind": "variable",
+              "name": "swfSoundHandler",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            6
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:151cdf8b4505b6fcca180881f5b7ec60a16b620411fe2bd052a31564f1c14542",
+              "line": 349,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",15983]",
+              "kind": "variable",
+              "name": "SOUND_ENVELOPE_LEVEL_ONE",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            23
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:81f9a36ab57068d71c24a4214ec53544e432c86d80a6f648d3e21584594e990f",
+              "line": 351,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16024]",
+              "kind": "variable",
+              "name": "SOUND_ENVELOPE_RATE",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            24
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:3c61847a3c466efdc772f0847c7fc2013dee83dfafefc458fbd38c8f84e892f6",
+              "line": 353,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16060]",
+              "kind": "variable",
+              "name": "SOUND_INFO_HAS_ENVELOPE",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            25
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:119955974201ef205e73e515c494bcd61518e44bbaa9c638e1863b1f21a6e2b7",
+              "line": 355,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16099]",
+              "kind": "variable",
+              "name": "SOUND_INFO_HAS_IN_POINT",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            26
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:333a3339cfc58582af0aa86b95eb42ea6b5ce70adf0e07df8fd5748c345f2159",
+              "line": 357,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16138]",
+              "kind": "variable",
+              "name": "SOUND_INFO_HAS_LOOPS",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            27
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:814040c0992d871bf55477f5f29f4d1e0767e7377e4fddb0cfa449787c424691",
+              "line": 359,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16174]",
+              "kind": "variable",
+              "name": "SOUND_INFO_HAS_OUT_POINT",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            28
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:b740a87ed9ad06787ae5a4f4337a13ce20e21aa0f0b7fc6a4cf2e2667806acab",
+              "line": 361,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16214]",
+              "kind": "variable",
+              "name": "SOUND_INFO_SYNC_NO_MULTIPLE",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            29
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:d7198130b441f640462b16ccce2f3b22c4efd3856eb28e8a4436646487d7668a",
+              "line": 363,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16257]",
+              "kind": "variable",
+              "name": "SOUND_INFO_SYNC_STOP",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            30
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:e28c432244eeee103dc1d4229097fd2db972e981bc643bc9ecdd8a5da702950b",
+              "line": 365,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16293]",
+              "kind": "variable",
+              "name": "SOUND_FORMAT_MP3",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            31
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:38b6cdd6f9816c98e9064a15603aec6fef871679e43a27ba667cceb794f871cd",
+              "line": 367,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16322]",
+              "kind": "variable",
+              "name": "SOUND_FORMAT_NELLYMOSER_16K",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            32
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:d091f6555e1c7f4cf8034080c4563c695d5b5592e1fed96cfae057d047b89180",
+              "line": 369,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16362]",
+              "kind": "variable",
+              "name": "SOUND_FORMAT_NELLYMOSER_8K",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            33
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:a8680b8a3b5db6bcdbcec437f8eb69d95d8e26f23f8b40abe21a2c69dd65ddb1",
+              "line": 371,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16401]",
+              "kind": "variable",
+              "name": "SWF_SOUND_MIME_ESSENCES",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            34
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:b67e940d3367401927b050a9dbccbb92c2311a7b4020126a0127a5b1f338fbc8",
+              "line": 381,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundHandler.ts\",16723]",
+              "kind": "variable",
+              "name": "SWF_SOUND_RATES",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            35
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:470d67d8f14b5cd73e5adee3a20ab818a408a5acc3b4880afa6faaad4d776d04",
+            "line": 3,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundTagFamily.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundTagFamily.ts\",73]",
+            "kind": "import",
+            "name": "swfSoundHandler",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "swfSoundHandler",
+            "kind": "dependency",
+            "module": {
+              "name": "SwfSoundHandler",
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundHandler.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:d9f0a39d50495043b8ad7aa7005a5acb523ff0fc040e5a852cb39c1bb5bee2db",
+            "line": 5,
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundTagFamily.ts",
+            "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundTagFamily.ts\",134]",
+            "kind": "variable",
+            "name": "swfSoundTagFamily",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SwfSoundTagFamily",
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundTagFamily.ts"
+          },
+          "specifier": "./swfSoundHandler.ts",
+          "target": {
+            "name": "SwfSoundHandler",
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundHandler.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SwfSoundTagFamily",
+            "packageName": "@flighthq/swf",
+            "source": "packages/swf/src/swfSoundTagFamily.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "SwfTagHandler",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/SwfTagHandler.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "SwfSoundTagFamily",
+        "packageName": "@flighthq/swf",
+        "source": "packages/swf/src/swfSoundTagFamily.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:d9f0a39d50495043b8ad7aa7005a5acb523ff0fc040e5a852cb39c1bb5bee2db",
+              "line": 5,
+              "packageName": "@flighthq/swf",
+              "source": "packages/swf/src/swfSoundTagFamily.ts",
+              "id": "binding:[\"@flighthq/swf\",\"packages/swf/src/swfSoundTagFamily.ts\",134]",
+              "kind": "variable",
+              "name": "swfSoundTagFamily",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
           "path": [
             "declarations",
             0
