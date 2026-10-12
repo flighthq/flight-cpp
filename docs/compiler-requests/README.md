@@ -292,3 +292,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `@flighthq/geometry`'s aabb writers cannot take a `createAabb` result; scene3d's culling and bounds scratches depend on it (masked). No workaround is carried.
 - [Type-argument deduction must follow interface heritage](heritage-argument-generic-deduction.md) —
   `@flighthq/movieclip`'s spritesheet source adds and invalidates a `Sprite` under a `Node2D`; the third leaked-`Traits` cause, cross-linked with the `any` and readonly-view requests. No workaround is carried.
+- [A null test on an element of a nullable-element array tests the wrong optional layer](nullable-array-element-null-test.md) —
+  silent miscompilation: `slots[i] !== null` emits `get(i).has_value()`, so signals' tombstoned slots count as live and are never compacted. No workaround is carried.
+- [A local typed by a constrained type parameter is stored as the constraint](constrained-type-parameter-local-storage.md) —
+  `@flighthq/signals`' `emitSignalSafe` cannot be instantiated for any signal; the header passes the gate only because the template is never instantiated there. No workaround is carried.
