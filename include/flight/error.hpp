@@ -4,11 +4,17 @@
 #include <stdexcept>
 #include <utility>
 
+#include <flight/reference.hpp>
 #include <flight/string.hpp>
 
 namespace flight {
 
-class Error : public std::runtime_error {
+// `ReferenceEnabled` because a source-language error is an OBJECT: `catch` hands out the value that
+// was thrown, `e === caught` is identity, and a `RangeError` read through an `Error` binding must
+// still be the RangeError. Without the marker `flight::Ref<Error>` is the value shape, so every
+// reference to an Error would be a copy -- and a copy slices the subclass, which is precisely the
+// wrong answer `name` has to give. Marking it makes `Ref<Error>` a shared reference to the object.
+class Error : public std::runtime_error, public ReferenceEnabled {
  public:
   explicit Error(String message = String())
       : std::runtime_error(message.to_utf8()), message_(std::move(message)) {}
@@ -21,7 +27,14 @@ class Error : public std::runtime_error {
   explicit Error(const std::exception& caught) : Error(String(caught.what())) {}
 
   [[nodiscard]] const String& message() const noexcept { return message_; }
-  [[nodiscard]] static String name() { return String("Error"); }
+
+  // `name` is a DYNAMIC source property, and the emitted read is `value.name` through an Error-typed
+  // value that may hold a subclass: `catch` hands back whatever was thrown, and `e instanceof Error`
+  // is true for a RangeError. A static accessor would answer the name of the class the reference was
+  // declared as, so reading `name` off a RangeError held as an `Error&` -- which is every catch site
+  // and every Error-typed storage slot -- would say "Error". The answer has to come from the object,
+  // so this is an instance accessor and it is virtual; the subclasses below override it.
+  [[nodiscard]] virtual String name() const { return String("Error"); }
 
  private:
   String message_;
@@ -31,14 +44,14 @@ class RangeError final : public Error {
  public:
   explicit RangeError(String message = String()) : Error(std::move(message)) {}
 
-  [[nodiscard]] static String name() { return String("RangeError"); }
+  [[nodiscard]] String name() const override { return String("RangeError"); }
 };
 
 class TypeError final : public Error {
  public:
   explicit TypeError(String message = String()) : Error(std::move(message)) {}
 
-  [[nodiscard]] static String name() { return String("TypeError"); }
+  [[nodiscard]] String name() const override { return String("TypeError"); }
 };
 
 } // namespace flight

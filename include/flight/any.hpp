@@ -97,14 +97,43 @@ struct AnyRowOwnerFactory {
   [[nodiscard]] static std::shared_ptr<void> make(const std::shared_ptr<void>&) { return nullptr; }
 };
 
+// Whether an erased object is a `flight::Error` or a subclass of one, decided where the concrete type
+// is still known. `sizeof` in the `requires` expression is the completeness test: generated code boxes
+// references to types that are only forward-declared at the boxing site, and asking `is_base_of` about
+// an incomplete type is undefined. An incomplete type therefore answers `false`, which is the safe
+// direction -- it records no thunk, and the only types whose answer matters here (`Error`,
+// `RangeError`, `TypeError`) are defined in `flight/error.hpp` and always complete.
+template <typename Object>
+inline constexpr bool any_error_subclass = requires { sizeof(Object); } && std::is_base_of_v<Error, Object>;
+
+template <typename Object>
+struct AnyErrorAccessor {
+  [[nodiscard]] static Error* make(const std::shared_ptr<void>& object) {
+    if constexpr (any_error_subclass<Object>) {
+      // The object the reference points at was constructed as `Object`, so this upcast names the
+      // `Error` subobject the source-language assertion is asking about. No second identity, no copy.
+      return static_cast<Error*>(static_cast<Object*>(object.get()));
+    } else {
+      static_cast<void>(object);
+      return nullptr;
+    }
+  }
+};
+
 // An object reference with its concrete type retained, so a value that went in as `Ref<Widget>`
 // comes back as `Ref<Widget>` and never as a reinterpreted `Ref<void>`.
 struct AnyObject final {
   using RowOwnerFactory = std::shared_ptr<void> (*)(const std::shared_ptr<void>&);
+  using ErrorAccessor = Error* (*)(const std::shared_ptr<void>&);
 
   std::shared_ptr<void> object;
   std::type_index type{typeid(void)};
   RowOwnerFactory row_owner{nullptr};
+  // The one relationship the erased type cannot express. `type` is exact, so it can answer "is this
+  // a RangeError" and cannot answer "is this an Error", and an upward conversion is the question a
+  // `catch` and an `instanceof Error` both ask. The thunk is recorded where the concrete type is
+  // still known -- at boxing -- exactly as `row_owner` is, and is null for every other object.
+  ErrorAccessor as_error{nullptr};
 
   // Identity only, as before. Two references to one object are one value whatever either of them
   // knows how to do with it.
@@ -173,7 +202,8 @@ class Any final {
     Any result;
     result.value_ = detail::AnyObject{std::static_pointer_cast<void>(std::move(reference)),
                                       std::type_index(typeid(Object)),
-                                      &detail::AnyRowOwnerFactory<Object>::make};
+                                      &detail::AnyRowOwnerFactory<Object>::make,
+                                      &detail::AnyErrorAccessor<Object>::make};
     return result;
   }
 
@@ -313,6 +343,24 @@ class Any final {
     const auto* stored = std::get_if<detail::AnyObject>(&value_);
     if (!stored || stored->type != std::type_index(typeid(Object))) return {};
     return std::static_pointer_cast<Object>(stored->object);
+  }
+
+  // The checked Error view. Unlike `object_if`, this one accepts subclasses, because `instanceof
+  // Error` and `catch` are questions about the object rather than about the class the reference was
+  // declared as: a `RangeError` boxed as `Ref<RangeError>` IS an Error here, and an exact-type lookup
+  // would answer that it is not. The reference is the very object that went in -- same identity, no
+  // copy, no second Error minted -- and the object outlives the view exactly as it outlives the Any.
+  //
+  // An empty result covers both failures the caller must tell apart from success: this value holds
+  // something that is not an Error (including nothing at all), or it holds an object whose type was
+  // incomplete where it was boxed. It never invents an Error, and it performs no lookup at runtime
+  // beyond the thunk boxing already decided.
+  [[nodiscard]] Ref<Error> error_if() const noexcept {
+    const auto* stored = std::get_if<detail::AnyObject>(&value_);
+    if (!stored || !stored->object || stored->as_error == nullptr) return {};
+    Error* error = stored->as_error(stored->object);
+    if (error == nullptr) return {};
+    return Ref<Error>(stored->object, error);
   }
 
   // Recovers a host value or a callable at the exact type it was stored as.
@@ -601,6 +649,15 @@ template <typename Value>
     // Object identity is preserved: this hands back the very reference the `Any` holds, not a copy.
     auto reference = value.template object_if<typename Stored::element_type>();
     if (reference) return reference;
+    // `Error` is the one erased type read *as a base*: every catch site and every Error-typed slot
+    // asks whether this value is an Error, and an exact-type answer would refuse the subclasses the
+    // language says are Errors. The exception is confined to `Error` rather than granted to every
+    // base, because a general base conversion is the reinterpretation the erased carrier exists to
+    // prevent -- `Ref<Widget>` still comes back only at `Widget`.
+    if constexpr (std::same_as<typename Stored::element_type, Error>) {
+      auto error = value.error_if();
+      if (error) return error;
+    }
     return std::nullopt;
   } else if constexpr (is_flight_array<Stored>::value) {
     if (const auto* array = value.template external_if<Stored>()) return *array;

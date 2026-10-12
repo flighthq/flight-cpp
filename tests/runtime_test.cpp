@@ -1046,7 +1046,7 @@ void test_error() {
   const flight::Error error(flight::String("expected"));
   check(error.message() == flight::String("expected") && std::string(error.what()) == "expected",
         "error preserves its semantic and native messages");
-  check(flight::Error::name() == flight::String("Error"), "error exposes its source-language name");
+  check(error.name() == flight::String("Error"), "error exposes its source-language name");
 
   bool caught_range_error = false;
   try {
@@ -1054,12 +1054,12 @@ void test_error() {
   } catch (const flight::Error& caught) {
     caught_range_error = caught.message() == flight::String("outside");
   }
-  check(caught_range_error && flight::RangeError::name() == flight::String("RangeError"),
+  check(caught_range_error,
         "RangeError accepts semantic strings and retains the Error exception base");
 
   const flight::TypeError type_error("wrong type");
   check(type_error.message() == flight::String("wrong type") &&
-            flight::TypeError::name() == flight::String("TypeError"),
+            type_error.name() == flight::String("TypeError"),
         "TypeError preserves its source-language name and message");
 
   const flight::DOMException dom_error("bad dimensions", "IndexSizeError");
@@ -1067,6 +1067,63 @@ void test_error() {
             dom_error.name == flight::String("IndexSizeError") && dom_error.code == 1.0 &&
             std::string(dom_error.what()) == "bad dimensions",
         "DOMException exposes its Web IDL name, message, and legacy code");
+}
+
+// `name` is read through an Error-typed value that may hold a subclass -- every catch site and every
+// Error-typed storage slot -- so the answer has to come from the object. A static accessor would slice
+// the name to the declared class, which is the defect the compiler's refusal names.
+void test_error_name_is_dynamic() {
+  const flight::RangeError range_error("outside");
+  const flight::TypeError type_error("wrong type");
+
+  const flight::Error& base_of_range = range_error;
+  const flight::Error& base_of_type = type_error;
+  check(base_of_range.name() == flight::String("RangeError") &&
+            base_of_type.name() == flight::String("TypeError"),
+        "an Error-typed value answers the subclass name it was constructed with");
+
+  const flight::Error& base_of_base = flight::Error(flight::String("plain"));
+  check(base_of_base.name() == flight::String("Error"),
+        "a plain Error answers the base source-language name");
+}
+
+// The checked view from an erased value to Error: it accepts subclasses, keeps the identity of the
+// object that was boxed, and answers absence -- rather than an invented Error -- for everything else.
+void test_erased_error_view() {
+  const auto range_error = flight::make_ref<flight::RangeError>(flight::String("outside"));
+  const flight::Any erased_range = flight::Any::object(range_error);
+  const auto viewed = erased_range.error_if();
+  check(viewed && viewed.get() == range_error.get() && viewed->name() == flight::String("RangeError") &&
+            viewed->message() == flight::String("outside"),
+        "an erased RangeError is an Error to the checked view, with the same identity");
+
+  const auto plain_error = flight::make_ref<flight::Error>(flight::String("expected"));
+  const auto viewed_plain = flight::Any::object(plain_error).error_if();
+  check(viewed_plain && viewed_plain->name() == flight::String("Error"),
+        "an erased plain Error answers the base name through the checked view");
+
+  const auto typed = flight::detail::any_to<flight::Ref<flight::Error>>(erased_range);
+  check(typed && (*typed)->name() == flight::String("RangeError"),
+        "the checked read of an erased Error accepts the subclasses the language calls Errors");
+
+  // Everything that is not an Error answers absence. A DOMException is the interesting one: it is a
+  // runtime exception type that is not an Error, and the source language agrees.
+  const flight::Any erased_string(flight::String("not an error"));
+  const flight::Any erased_number(1.0);
+  const flight::Any absent;
+  const flight::Any erased_dom = flight::Any::object(std::make_shared<flight::DOMException>(
+      flight::String("bad dimensions"), flight::String("IndexSizeError")));
+  check(!erased_string.error_if() && !erased_number.error_if() && !absent.error_if() &&
+            !erased_dom.error_if(),
+        "a non-Error value, an absent value, and a DOMException all answer no Error");
+
+  // A non-Error object is still recoverable at its own exact type: the Error view adds a question, it
+  // does not replace the exact-type one.
+  struct PlainObject final : public flight::ReferenceEnabled {};
+  const auto plain = flight::make_ref<PlainObject>();
+  check(!flight::Any::object(plain).error_if() &&
+            flight::Any::object(plain).object_if<PlainObject>().get() == plain.get(),
+        "the Error view refuses a plain object that the exact-type view still recovers");
 }
 
 // A rasterizer that records the resolved commands it is handed, which is what lets the portable
@@ -3734,6 +3791,8 @@ int main() {
   test_contract();
   test_date();
   test_error();
+  test_error_name_is_dynamic();
+  test_erased_error_view();
   test_host();
   test_reference_projection();
   test_number_to_fixed();
