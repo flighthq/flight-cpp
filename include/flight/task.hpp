@@ -673,6 +673,35 @@ class Task {
     return output;
   }
 
+  // JavaScript's two-argument `then(onFulfilled, onRejected)`. It settles in the same single hop as the
+  // one-argument form, and `on_rejected` sees only THIS task's rejection: a throw from `on_fulfilled`
+  // rejects the result without reaching it. That is what makes it different from
+  // `then(f).catch_error(r)`, which would also hand `on_fulfilled`'s own failure to `r` and add a hop.
+  template <typename Fulfilled, typename Rejected>
+    requires(!std::is_void_v<Value> && std::copy_constructible<std::remove_cvref_t<Fulfilled>> &&
+             std::copy_constructible<std::remove_cvref_t<Rejected>>)
+  [[nodiscard]] auto then(Fulfilled on_fulfilled, Rejected on_rejected) const
+      -> Task<detail::TaskResultValue<std::invoke_result_t<Fulfilled&, Value>>> {
+    using Output = detail::TaskResultValue<std::invoke_result_t<Fulfilled&, Value>>;
+    static_assert(std::same_as<detail::TaskResultValue<std::invoke_result_t<Rejected&, const Rejection&>>, Output>,
+                  "both reactions of a two-argument then must settle to one value type");
+    auto output = Task<Output>::pending(executor_);
+    auto source = *this;
+    state_->subscribe([source, output_state = output.state_, executor = executor_,
+                       on_fulfilled = std::move(on_fulfilled), on_rejected = std::move(on_rejected)]() mutable {
+      post(executor, [source, output_state, on_fulfilled = std::move(on_fulfilled),
+                      on_rejected = std::move(on_rejected)]() mutable {
+        if (source.status() == TaskStatus::rejected) {
+          const auto rejection = source.state_->rejection();
+          settle_invocation<Output>(output_state, [&] { return std::invoke(on_rejected, rejection); });
+          return;
+        }
+        settle_invocation<Output>(output_state, [&] { return std::invoke(on_fulfilled, source.state_->result()); });
+      });
+    });
+    return output;
+  }
+
   template <typename Function>
     requires(std::is_void_v<Value> && std::copy_constructible<std::remove_cvref_t<Function>>)
   [[nodiscard]] auto then(Function function) const

@@ -3635,6 +3635,31 @@ void test_task() {
   check(!continuation_called, "task continuations are queued rather than invoked inline");
   check(continued.get() == 22 && continuation_called, "then assimilates a returned task");
 
+  // Two-argument then: one hop, and on_rejected sees only the source's own rejection.
+  const auto both_fulfilled = source.then([](int value) { return value * 2; },
+                                          [](const flight::Rejection&) { return -1; });
+  check(both_fulfilled.get() == 42, "two-argument then runs on_fulfilled for a fulfilled source");
+  const auto passed_on = value_rejection.then([](int value) { return FlightTask<int>::ready(value); },
+                                              [](const flight::Rejection& reason) { return FlightTask<int>::reject(reason); });
+  const auto passed_on_settlement = passed_on.settle();
+  check(passed_on_settlement.status == flight::TaskStatus::rejected &&
+            passed_on_settlement.rejection->as<std::string>() == "reason",
+        "a rejection returned unchanged by on_rejected keeps the source's exact reason");
+  bool rejected_reaction_ran = false;
+  const auto fulfilled_throw = source.then([](int) -> int { throw std::runtime_error("from on_fulfilled"); },
+                                           [&](const flight::Rejection&) { rejected_reaction_ran = true; return 0; });
+  const auto fulfilled_throw_settlement = fulfilled_throw.settle();
+  check(fulfilled_throw_settlement.status == flight::TaskStatus::rejected && !rejected_reaction_ran,
+        "a throw from on_fulfilled rejects the result without reaching on_rejected");
+  std::vector<std::string> reaction_order;
+  const auto two_argument = source.then([&](int value) { reaction_order.push_back("two"); return value; },
+                                        [&](const flight::Rejection&) { return 0; });
+  const auto one_argument = source.then([&](int value) { reaction_order.push_back("one"); return value; });
+  static_cast<void>(one_argument.get());
+  static_cast<void>(two_argument.get());
+  check(reaction_order == std::vector<std::string>({"two", "one"}),
+        "two-argument then settles in the same single hop as one-argument then");
+
   bool cleanup_called = false;
   const auto finalized = continued.finally([&] {
     cleanup_called = true;
