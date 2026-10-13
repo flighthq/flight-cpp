@@ -302,15 +302,19 @@ inline std::optional<flight::Ref<MeshGeometry>> merge_mesh_geometries(
   const double floats_per_vertex = layout->stride / 4.0;
   double total_vertex_floats = 0.0;
   double total_index_count = 0.0;
+  bool all_indexed = true;
   for (const auto& geometry : geometries) {
     const double vertex_count = floats_per_vertex > 0.0
                                     ? std::floor(static_cast<double>(geometry->vertices.size()) /
                                                  floats_per_vertex)
                                     : 0.0;
     total_vertex_floats += vertex_count * floats_per_vertex;
-    total_index_count += geometry->indices.has_value()
-                             ? detail::index_count(geometry)
-                             : vertex_count;
+    if (geometry->indices.has_value()) {
+      total_index_count += detail::index_count(geometry);
+    } else {
+      all_indexed = false;
+      total_index_count += vertex_count;
+    }
   }
 
   flight::Float32Array merged_vertices(total_vertex_floats);
@@ -353,13 +357,16 @@ inline std::optional<flight::Ref<MeshGeometry>> merge_mesh_geometries(
     subsets.push(flight::make_ref<MeshSubset>(MeshSubset{
         .index_count = total_index_count, .index_offset = 0.0}));
   }
-  auto index_variant = needs_uint32
-                           ? std::variant<flight::Uint16Array, flight::Uint32Array,
-                                          flight::Null, flight::Undefined>{
-                                 std::in_place_type<flight::Uint32Array>, indices32}
-                           : std::variant<flight::Uint16Array, flight::Uint32Array,
-                                          flight::Null, flight::Undefined>{
-                                 std::in_place_type<flight::Uint16Array>, indices16};
+  std::variant<flight::Uint16Array, flight::Uint32Array,
+               flight::Null, flight::Undefined>
+      index_variant{std::in_place_type<flight::Undefined>, flight::undefined};
+  if (all_indexed || total_index_count > 0.0) {
+    index_variant = needs_uint32
+                        ? decltype(index_variant){
+                              std::in_place_type<flight::Uint32Array>, indices32}
+                        : decltype(index_variant){
+                              std::in_place_type<flight::Uint16Array>, indices16};
+  }
   auto merged = create_mesh_geometry_from_fields(
       std::move(index_variant), layout, std::optional{subsets},
       std::optional<PrimitiveTopology>{topology}, std::move(merged_vertices));

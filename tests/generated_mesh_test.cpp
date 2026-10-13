@@ -77,6 +77,12 @@ bool inject_flat_split_remap_mutation = false;
 bool inject_refresh_invalidation_mutation = false;
 bool inject_wireframe_edge_mutation = false;
 bool inject_index_promotion_mutation = false;
+bool inject_attribute_defaults_mutation = false;
+bool inject_attribute_count_mutation = false;
+bool inject_attribute_ownership_mutation = false;
+bool inject_metadata_groups_mutation = false;
+bool inject_operation_order_mutation = false;
+bool inject_operation_rollback_mutation = false;
 
 void check(bool condition, const char* message) {
   if (condition) return;
@@ -660,6 +666,322 @@ void construction_defaults_metadata_and_absence_matrix() {
   if (inject_omitted_metadata_mutation) metadata = false;
   check(metadata,
         "construction distinguishes omitted, null, present-empty, narrow, promoted, and Uint32 index inputs; retains authored vertex/layout/subset owners and defaults; floors partial records; and metadata cloning preserves only the upstream shared index/layout identities while isolating subsets, bounds, vertices, version, and runtime including absent metadata");
+}
+
+void attribute_construction_defaults_and_missing_matrix() {
+  const flight::Array<double> positions{
+      0.0, 0.0, 0.0,
+      1.0, 0.0, 0.0,
+      0.0, 1.0, 0.0,
+  };
+  auto missing_options =
+      flight::make_ref<types::MeshGeometryFromAttributesOptions>();
+  missing_options->positions = positions;
+  const auto missing =
+      mesh::create_mesh_geometry_from_attributes(missing_options);
+  bool defaults = missing->layout == mesh::canonical_mesh_geometry_layout &&
+                  !missing->indices.has_value() &&
+                  missing->topology == flight::String("triangle-list") &&
+                  missing->subsets.size() == 1 &&
+                  missing->subsets.element(0.0)->index_count == 3.0 &&
+                  missing->version == 2.0 && missing->bounds.has_value() &&
+                  missing->bounds.value()->min->x == 0.0 &&
+                  missing->bounds.value()->min->y == 0.0 &&
+                  missing->bounds.value()->max->x == 1.0 &&
+                  missing->bounds.value()->max->y == 1.0 &&
+                  has_pristine_mesh_runtime(
+                      missing->entity_runtime_key.value(), 2.0);
+  for (double vertex = 0.0; vertex < 3.0; vertex += 1.0) {
+    const double base = vertex * 12.0;
+    defaults = defaults && missing->vertices.get_index(base + 3.0) == 0.0 &&
+               missing->vertices.get_index(base + 4.0) == 0.0 &&
+               missing->vertices.get_index(base + 5.0) == 1.0 &&
+               missing->vertices.get_index(base + 6.0) == 0.0 &&
+               missing->vertices.get_index(base + 7.0) == 1.0 &&
+               missing->vertices.get_index(base + 8.0) == 0.0 &&
+               missing->vertices.get_index(base + 9.0) == 1.0 &&
+               missing->vertices.get_index(base + 10.0) == 0.0 &&
+               missing->vertices.get_index(base + 11.0) == 0.0;
+  }
+
+  auto null_options =
+      flight::make_ref<types::MeshGeometryFromAttributesOptions>();
+  null_options->positions = positions;
+  null_options->normals = flight::null;
+  null_options->uvs = flight::null;
+  const auto explicit_null =
+      mesh::create_mesh_geometry_from_attributes(null_options);
+  defaults = defaults && explicit_null->version == 2.0 &&
+             !explicit_null->indices.has_value() &&
+             explicit_null->vertices.get_index(5.0) == 1.0 &&
+             explicit_null->vertices.get_index(7.0) == 1.0 &&
+             explicit_null->vertices.get_index(10.0) == 0.0;
+
+  auto normals_only_options =
+      flight::make_ref<types::MeshGeometryFromAttributesOptions>();
+  normals_only_options->positions = positions;
+  normals_only_options->normals = flight::Array<double>{
+      0.0, 0.0, -1.0,
+      0.0, 0.0, -1.0,
+      0.0, 0.0, -1.0,
+  };
+  const auto normals_only =
+      mesh::create_mesh_geometry_from_attributes(normals_only_options);
+  defaults = defaults && normals_only->version == 1.0 &&
+             normals_only->vertices.get_index(5.0) == -1.0 &&
+             normals_only->vertices.get_index(6.0) == 0.0 &&
+             normals_only->vertices.get_index(7.0) == -1.0 &&
+             normals_only->vertices.get_index(8.0) == 0.0 &&
+             normals_only->vertices.get_index(9.0) == 1.0 &&
+             normals_only->vertices.get_index(10.0) == 0.0 &&
+             normals_only->vertices.get_index(11.0) == 0.0;
+
+  auto uvs_only_options =
+      flight::make_ref<types::MeshGeometryFromAttributesOptions>();
+  uvs_only_options->indices = flight::Array<double>{0.0, 1.0, 2.0};
+  uvs_only_options->positions = positions;
+  uvs_only_options->uvs = flight::Array<double>{
+      0.0, 0.0,
+      1.0, 0.0,
+      0.0, 1.0,
+  };
+  const auto uvs_only =
+      mesh::create_mesh_geometry_from_attributes(uvs_only_options);
+  defaults = defaults && uvs_only->indices.has_value() &&
+             std::holds_alternative<flight::Uint16Array>(
+                 uvs_only->indices.value()) &&
+             uvs_only->version == 2.0 &&
+             uvs_only->vertices.get_index(5.0) == 1.0 &&
+             uvs_only->vertices.get_index(6.0) == 1.0 &&
+             uvs_only->vertices.get_index(7.0) == 0.0 &&
+             uvs_only->vertices.get_index(8.0) == 0.0 &&
+             uvs_only->vertices.get_index(9.0) == 1.0;
+
+  auto empty_options =
+      flight::make_ref<types::MeshGeometryFromAttributesOptions>();
+  empty_options->positions = flight::Array<double>{};
+  const auto empty = mesh::create_mesh_geometry_from_attributes(empty_options);
+  defaults = defaults && empty->vertices.empty() &&
+             !empty->indices.has_value() && empty->version == 2.0 &&
+             empty->subsets.size() == 1 &&
+             empty->subsets.element(0.0)->index_count == 0.0 &&
+             empty->bounds.has_value() &&
+             empty->bounds.value()->min->x ==
+                 std::numeric_limits<double>::infinity() &&
+             empty->bounds.value()->max->x ==
+                 -std::numeric_limits<double>::infinity() &&
+             has_pristine_mesh_runtime(
+                 empty->entity_runtime_key.value(), 2.0) &&
+             mesh::validate_mesh_geometry(empty);
+  if (inject_attribute_defaults_mutation) defaults = false;
+  check(defaults,
+        "attribute construction installs the canonical topology/layout/subset, derives only missing normals, always derives tangents, zero-fills missing UVs, distinguishes supplied normals and UV gradients, computes bounds/cache versions, and produces a valid explicit empty geometry");
+}
+
+void attribute_construction_count_and_layout_validation() {
+  const flight::Array<double> positions{
+      0.0, 0.0, 0.0,
+      1.0, 0.0, 0.0,
+      0.0, 1.0, 0.0,
+  };
+  const flight::Array<double> short_normals{
+      0.0, 0.0, 1.0,
+      0.0, 0.0, 1.0,
+      0.0, 0.0,
+  };
+  auto short_normal_options =
+      flight::make_ref<types::MeshGeometryFromAttributesOptions>();
+  short_normal_options->positions = positions;
+  short_normal_options->normals = short_normals;
+  bool counts = throws_std_range_error([&] {
+                  static_cast<void>(mesh::create_mesh_geometry_from_attributes(
+                      short_normal_options));
+                }) &&
+                short_normal_options->positions.identity() ==
+                    positions.identity() &&
+                std::get<flight::Array<double>>(
+                    short_normal_options->normals).identity() ==
+                    short_normals.identity() &&
+                short_normals.element(7.0) == 0.0;
+
+  const flight::Array<double> short_uvs{0.0, 0.0, 1.0, 0.0, 0.0};
+  auto short_uv_options =
+      flight::make_ref<types::MeshGeometryFromAttributesOptions>();
+  short_uv_options->positions = positions;
+  short_uv_options->uvs = short_uvs;
+  counts = counts && throws_std_range_error([&] {
+             static_cast<void>(mesh::create_mesh_geometry_from_attributes(
+                 short_uv_options));
+           }) &&
+           std::get<flight::Array<double>>(short_uv_options->uvs).identity() ==
+               short_uvs.identity() &&
+           short_uvs.element(4.0) == 0.0;
+
+  const flight::Array<double> partial_positions{
+      0.0, 0.0, 0.0,
+      1.0, 0.0, 0.0,
+      0.0, 1.0,
+  };
+  auto partial_options =
+      flight::make_ref<types::MeshGeometryFromAttributesOptions>();
+  partial_options->positions = partial_positions;
+  counts = counts && throws_std_range_error([&] {
+             static_cast<void>(mesh::create_mesh_geometry_from_attributes(
+                 partial_options));
+           }) &&
+           partial_options->positions.identity() == partial_positions.identity();
+
+  const flight::Array<double> long_normals{
+      0.0, 0.0, 1.0,
+      0.0, 0.0, 1.0,
+      0.0, 0.0, 1.0,
+      91.0, 92.0, 93.0,
+  };
+  const flight::Array<double> long_uvs{
+      0.0, 0.0,
+      1.0, 0.0,
+      0.0, 1.0,
+      94.0, 95.0,
+  };
+  auto long_options =
+      flight::make_ref<types::MeshGeometryFromAttributesOptions>();
+  long_options->indices =
+      flight::Array<double>{0.0, 1.0, 2.0, 0.0};
+  long_options->normals = long_normals;
+  long_options->positions = positions;
+  long_options->uvs = long_uvs;
+  const auto long_geometry =
+      mesh::create_mesh_geometry_from_attributes(long_options);
+  counts = counts && mesh::get_mesh_geometry_vertex_count(long_geometry) == 3.0 &&
+           mesh::get_mesh_geometry_index_count(long_geometry) == 4.0 &&
+           long_geometry->vertices.size() == 36 &&
+           long_geometry->vertices.get_index(29.0) == 1.0 &&
+           long_geometry->vertices.get_index(34.0) == 0.0 &&
+           long_geometry->vertices.get_index(35.0) == 1.0 &&
+           long_normals.element(9.0) == 91.0 &&
+           long_uvs.element(6.0) == 94.0 &&
+           !mesh::validate_mesh_geometry(long_geometry);
+
+  const auto reference = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("position", "float32x3", 0.0),
+          vertex_attribute("normal", "float32x3", 12.0)},
+      24.0);
+  const auto equal = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("position", "float32x3", 0.0),
+          vertex_attribute("normal", "float32x3", 12.0)},
+      24.0);
+  const auto fewer = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("position", "float32x3", 0.0)},
+      24.0);
+  const auto different_semantic = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("position", "float32x3", 0.0),
+          vertex_attribute("uv0", "float32x3", 12.0)},
+      24.0);
+  const auto different_format = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("position", "float32x3", 0.0),
+          vertex_attribute("normal", "float32x2", 12.0)},
+      24.0);
+  const auto different_offset = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("position", "float32x3", 0.0),
+          vertex_attribute("normal", "float32x3", 8.0)},
+      24.0);
+  const auto different_order = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("normal", "float32x3", 12.0),
+          vertex_attribute("position", "float32x3", 0.0)},
+      24.0);
+  const auto different_stride = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("position", "float32x3", 0.0),
+          vertex_attribute("normal", "float32x3", 12.0)},
+      28.0);
+  counts = counts && mesh::layouts_match(reference, equal) &&
+           reference != equal && !mesh::layouts_match(reference, fewer) &&
+           !mesh::layouts_match(reference, different_semantic) &&
+           !mesh::layouts_match(reference, different_format) &&
+           !mesh::layouts_match(reference, different_offset) &&
+           !mesh::layouts_match(reference, different_order) &&
+           !mesh::layouts_match(reference, different_stride);
+  if (inject_attribute_count_mutation) counts = false;
+  check(counts,
+        "attribute construction rejects short normal, UV, and partial-position domains before exposing output while ignoring complete trailing attribute records; geometry validation catches incomplete primitive counts, and merge compatibility requires exact attribute count, semantic, format, byte offset, order, and stride");
+}
+
+void attribute_construction_input_output_ownership() {
+  flight::Array<double> positions{
+      0.0, 0.0, 0.0,
+      1.0, 0.0, 0.0,
+      0.0, 1.0, 0.0,
+  };
+  flight::Array<double> normals{
+      0.0, 0.0, 1.0,
+      0.0, 0.0, 1.0,
+      0.0, 0.0, 1.0,
+  };
+  flight::Array<double> uvs{
+      0.0, 0.0,
+      1.0, 0.0,
+      0.0, 1.0,
+  };
+  flight::Uint32Array indices{2, 0, 1};
+  const void* positions_owner = positions.identity();
+  const void* normals_owner = normals.identity();
+  const void* uvs_owner = uvs.identity();
+  const auto indices_owner = indices.buffer;
+  auto options = flight::make_ref<types::MeshGeometryFromAttributesOptions>();
+  options->indices = indices;
+  options->normals = normals;
+  options->positions = positions;
+  options->uvs = uvs;
+  const auto geometry = mesh::create_mesh_geometry_from_attributes(options);
+  const auto geometry_vertex_owner = geometry->vertices.buffer;
+  const void* geometry_index_owner = index_buffer_identity(geometry);
+  bool ownership = options->positions.identity() == positions_owner &&
+                   std::get<flight::Array<double>>(options->normals).identity() ==
+                       normals_owner &&
+                   std::get<flight::Array<double>>(options->uvs).identity() ==
+                       uvs_owner &&
+                   std::get<flight::Uint32Array>(options->indices).buffer ==
+                       indices_owner &&
+                   geometry->layout == mesh::canonical_mesh_geometry_layout &&
+                   geometry->indices.has_value() &&
+                   std::holds_alternative<flight::Uint16Array>(
+                       geometry->indices.value()) &&
+                   geometry_index_owner != indices.buffer.identity() &&
+                   index_at(geometry, 0.0) == 2.0 &&
+                   index_at(geometry, 1.0) == 0.0 &&
+                   index_at(geometry, 2.0) == 1.0 &&
+                   geometry->version == 1.0 &&
+                   geometry->vertices.get_index(0.0) == 0.0 &&
+                   geometry->vertices.get_index(5.0) == 1.0 &&
+                   geometry->vertices.get_index(10.0) == 0.0;
+
+  positions.element(0.0) = 99.0;
+  normals.element(2.0) = -7.0;
+  uvs.element(0.0) = 0.75;
+  indices.set_index(0.0, 0.0);
+  ownership = ownership && geometry->vertices.buffer == geometry_vertex_owner &&
+              index_buffer_identity(geometry) == geometry_index_owner &&
+              geometry->vertices.get_index(0.0) == 0.0 &&
+              geometry->vertices.get_index(5.0) == 1.0 &&
+              geometry->vertices.get_index(10.0) == 0.0 &&
+              index_at(geometry, 0.0) == 2.0;
+
+  geometry->vertices.set_index(1.0, 111.0);
+  std::get<flight::Uint16Array>(geometry->indices.value())
+      .set_index(1.0, 2.0);
+  ownership = ownership && positions.element(1.0) == 0.0 &&
+              indices.get_index(1.0) == 0.0 &&
+              normals.element(2.0) == -7.0 && uvs.element(0.0) == 0.75;
+  if (inject_attribute_ownership_mutation) ownership = false;
+  check(ownership,
+        "attribute construction reads every caller-owned array without replacing it, owns fresh interleaved vertex and narrowed index storage, retains the shared canonical layout, and isolates subsequent mutations in both directions");
 }
 
 void clone_aliasing_width_and_runtime_matrix() {
@@ -1962,6 +2284,394 @@ void merge_order_rebase_and_owner_isolation() {
   if (inject_merge_aliasing_mutation) merged_ok = false;
   check(merged_ok,
         "merge concatenates exact records and element order, rebases every source subset, recomputes union bounds, isolates all mutable owners, accepts empty geometry, and refuses empty/mismatched requests without mutation");
+}
+
+void merge_metadata_groups_and_empty_semantics() {
+  const auto first_layout = position_layout();
+  flight::Float32Array first_vertices{
+      0.0F, 0.0F, 0.0F,
+      1.0F, 0.0F, 0.0F,
+      2.0F, 0.0F, 0.0F,
+  };
+  flight::Uint16Array first_indices{2, 0, 0, 1};
+  auto first_options = flight::make_ref<types::MeshGeometryOptions>();
+  first_options->indices = flight::SequenceView<double>(first_indices);
+  first_options->layout = first_layout;
+  first_options->subsets =
+      flight::Array<flight::Ref<types::MeshSubset>>{
+          mesh_subset(2.0, 0.0), mesh_subset(2.0, 2.0)};
+  first_options->topology = flight::String("line-list");
+  first_options->vertices = first_vertices;
+  const auto first = mesh::create_mesh_geometry(first_options);
+  mesh::ensure_mesh_geometry_bounds(first);
+  first->version = 7.0;
+
+  auto empty_options = flight::make_ref<types::MeshGeometryOptions>();
+  empty_options->layout = position_layout();
+  empty_options->topology = flight::String("line-list");
+  empty_options->vertices = flight::Float32Array(0.0);
+  const auto empty = mesh::create_mesh_geometry(empty_options);
+
+  auto third_options = flight::make_ref<types::MeshGeometryOptions>();
+  third_options->layout = position_layout();
+  third_options->topology = flight::String("line-list");
+  third_options->vertices = flight::Float32Array{
+      0.0F, 0.0F, 0.0F,
+      11.0F, 0.0F, 0.0F,
+  };
+  const auto third = mesh::create_mesh_geometry(third_options);
+  const auto first_vertex_owner = first->vertices.buffer;
+  const void* first_index_owner = index_buffer_identity(first);
+  const auto first_subset_owner = first->subsets.identity();
+  const auto empty_vertex_owner = empty->vertices.buffer;
+  const auto third_vertex_owner = third->vertices.buffer;
+  const auto merged_optional = mesh::merge_mesh_geometries(
+      flight::Array<flight::Ref<types::MeshGeometry>>{first, empty, third});
+  bool groups = merged_optional.has_value();
+  const auto merged = merged_optional.value();
+  const double expected_indices[] = {2.0, 0.0, 0.0, 1.0, 3.0, 4.0};
+  groups = groups && merged->layout == first_layout &&
+           merged->topology == flight::String("line-list") &&
+           mesh::get_mesh_geometry_vertex_count(merged) == 5.0 &&
+           mesh::get_mesh_geometry_index_count(merged) == 6.0 &&
+           std::holds_alternative<flight::Uint16Array>(
+               merged->indices.value()) &&
+           merged->subsets.size() == 4 &&
+           merged->subsets.element(0.0)->index_count == 2.0 &&
+           merged->subsets.element(0.0)->index_offset == 0.0 &&
+           merged->subsets.element(1.0)->index_count == 2.0 &&
+           merged->subsets.element(1.0)->index_offset == 2.0 &&
+           merged->subsets.element(2.0)->index_count == 0.0 &&
+           merged->subsets.element(2.0)->index_offset == 4.0 &&
+           merged->subsets.element(3.0)->index_count == 2.0 &&
+           merged->subsets.element(3.0)->index_offset == 4.0 &&
+           merged->subsets.identity() != first->subsets.identity() &&
+           merged->subsets.element(0.0) != first->subsets.element(0.0) &&
+           merged->version == 0.0 && merged->bounds.has_value() &&
+           merged->bounds.value()->min->x == 0.0 &&
+           merged->bounds.value()->max->x == 11.0 &&
+           has_pristine_mesh_runtime(
+               merged->entity_runtime_key.value(), 0.0);
+  for (double index = 0.0; index < 6.0; index += 1.0) {
+    groups = groups && index_at(merged, index) ==
+                           expected_indices[static_cast<std::size_t>(index)];
+  }
+  const auto position_groups =
+      mesh::compute_mesh_geometry_position_groups(merged);
+  const double expected_groups[] = {0.0, 1.0, 2.0, 0.0, 4.0};
+  for (double vertex = 0.0; vertex < 5.0; vertex += 1.0) {
+    groups = groups && position_groups.get_index(vertex) ==
+                           expected_groups[static_cast<std::size_t>(vertex)];
+  }
+  groups = groups && first->vertices.buffer == first_vertex_owner &&
+           index_buffer_identity(first) == first_index_owner &&
+           first->subsets.identity() == first_subset_owner &&
+           first->version == 7.0 && empty->vertices.buffer == empty_vertex_owner &&
+           third->vertices.buffer == third_vertex_owner;
+
+  const auto ungrouped_first = mesh::clone_mesh_geometry(first);
+  const auto ungrouped_third = mesh::clone_mesh_geometry(third);
+  ungrouped_first->subsets = {};
+  ungrouped_third->subsets = {};
+  const auto fallback_optional = mesh::merge_mesh_geometries(
+      flight::Array<flight::Ref<types::MeshGeometry>>{
+          ungrouped_first, ungrouped_third});
+  groups = groups && fallback_optional.has_value() &&
+           fallback_optional.value()->subsets.size() == 1 &&
+           fallback_optional.value()->subsets.element(0.0)->index_count == 6.0 &&
+           fallback_optional.value()->subsets.element(0.0)->index_offset == 0.0;
+
+  const auto merged_empty_optional = mesh::merge_mesh_geometries(
+      flight::Array<flight::Ref<types::MeshGeometry>>{empty});
+  groups = groups && merged_empty_optional.has_value() &&
+           !merged_empty_optional.value()->indices.has_value() &&
+           merged_empty_optional.value()->subsets.size() == 1 &&
+           merged_empty_optional.value()->subsets.element(0.0)->index_count ==
+               0.0 &&
+           !mesh::ensure_mesh_geometry_bounds(
+                merged_empty_optional.value()).has_value();
+
+  flight::Uint32Array empty_indices(0.0);
+  auto indexed_empty_options = flight::make_ref<types::MeshGeometryOptions>();
+  indexed_empty_options->indices =
+      flight::SequenceView<double>(empty_indices);
+  indexed_empty_options->layout = position_layout();
+  indexed_empty_options->topology = flight::String("line-list");
+  indexed_empty_options->vertices = flight::Float32Array(0.0);
+  const auto indexed_empty =
+      mesh::create_mesh_geometry(indexed_empty_options);
+  const auto merged_indexed_empty = mesh::merge_mesh_geometries(
+      flight::Array<flight::Ref<types::MeshGeometry>>{indexed_empty});
+  groups = groups && merged_indexed_empty.has_value() &&
+           merged_indexed_empty.value()->indices.has_value() &&
+           std::holds_alternative<flight::Uint16Array>(
+               merged_indexed_empty.value()->indices.value()) &&
+           std::get<flight::Uint16Array>(
+               merged_indexed_empty.value()->indices.value()).empty();
+  if (inject_metadata_groups_mutation) groups = false;
+  check(groups,
+        "merge preserves topology, first-layout identity, exact position groups, every source subset as an ordered rebased material group (including empty groups), fresh runtime/bounds ownership, and fallback grouping; empty nonindexed input stays nonindexed while indexed-empty input remains explicitly indexed");
+}
+
+void operation_order_across_topologies_and_sources() {
+  const auto layout = position_layout();
+  flight::Float32Array strip_vertices(15.0);
+  flight::Uint16Array strip_indices{4, 2, 0, 3, 1};
+  auto indexed_options = flight::make_ref<types::MeshGeometryOptions>();
+  indexed_options->indices = flight::SequenceView<double>(strip_indices);
+  indexed_options->layout = layout;
+  indexed_options->topology = flight::String("triangle-strip");
+  indexed_options->vertices = strip_vertices;
+  const auto indexed = mesh::create_mesh_geometry(indexed_options);
+  auto triangle = flight::make_ref<types::MeshTriangleVertexIndices>();
+  const double expected_indexed[][3] = {
+      {4.0, 2.0, 0.0},
+      {0.0, 2.0, 3.0},
+      {0.0, 3.0, 1.0},
+  };
+  bool ordered = mesh::get_mesh_geometry_triangle_count(indexed) == 3.0;
+  for (double face = 0.0; face < 3.0; face += 1.0) {
+    ordered = ordered && mesh::get_mesh_geometry_triangle_vertex_indices(
+                             triangle, indexed, face) &&
+              triangle->i0 == expected_indexed[static_cast<std::size_t>(face)][0] &&
+              triangle->i1 == expected_indexed[static_cast<std::size_t>(face)][1] &&
+              triangle->i2 == expected_indexed[static_cast<std::size_t>(face)][2];
+  }
+
+  auto sequential_options = flight::make_ref<types::MeshGeometryOptions>();
+  sequential_options->layout = position_layout();
+  sequential_options->topology = flight::String("triangle-strip");
+  sequential_options->vertices = flight::Float32Array(15.0);
+  const auto sequential = mesh::create_mesh_geometry(sequential_options);
+  const double expected_sequential[][3] = {
+      {0.0, 1.0, 2.0},
+      {2.0, 1.0, 3.0},
+      {2.0, 3.0, 4.0},
+  };
+  for (double face = 0.0; face < 3.0; face += 1.0) {
+    ordered = ordered && mesh::get_mesh_geometry_triangle_vertex_indices(
+                             triangle, sequential, face) &&
+              triangle->i0 ==
+                  expected_sequential[static_cast<std::size_t>(face)][0] &&
+              triangle->i1 ==
+                  expected_sequential[static_cast<std::size_t>(face)][1] &&
+              triangle->i2 ==
+                  expected_sequential[static_cast<std::size_t>(face)][2];
+  }
+
+  const auto subsets = indexed_geometry();
+  flight::Array<flight::Ref<types::MeshSubset>> authored{
+      mesh_subset(6.0, 0.0), mesh_subset(3.0, 3.0)};
+  mesh::set_mesh_geometry_subsets(subsets, authored);
+  const auto appended = mesh_subset(3.0, 0.0);
+  mesh::add_mesh_geometry_subset(subsets, appended);
+  ordered = ordered && subsets->subsets.size() == 3 &&
+            subsets->subsets.element(0.0)->index_count == 6.0 &&
+            subsets->subsets.element(1.0)->index_offset == 3.0 &&
+            subsets->subsets.element(2.0)->index_offset == 0.0 &&
+            mesh::get_mesh_geometry_triangle_subset_index(subsets, 1.0) == 0.0;
+  mesh::set_mesh_geometry_subsets(
+      subsets, flight::Array<flight::Ref<types::MeshSubset>>{
+                   mesh_subset(3.0, 3.0), mesh_subset(6.0, 0.0)});
+  ordered = ordered && subsets->subsets.element(0.0)->index_offset == 3.0 &&
+            subsets->subsets.element(1.0)->index_offset == 0.0 &&
+            mesh::get_mesh_geometry_triangle_subset_index(subsets, 0.0) == 1.0 &&
+            mesh::get_mesh_geometry_triangle_subset_index(subsets, 1.0) == 0.0;
+
+  auto point = [&](float x) {
+    auto options = flight::make_ref<types::MeshGeometryOptions>();
+    options->layout = position_layout();
+    options->topology = flight::String("point-list");
+    options->vertices = flight::Float32Array{x, 0.0F, 0.0F};
+    return mesh::create_mesh_geometry(options);
+  };
+  const auto thirty = point(30.0F);
+  const auto ten = point(10.0F);
+  const auto twenty = point(20.0F);
+  const auto merged = mesh::merge_mesh_geometries(
+      flight::Array<flight::Ref<types::MeshGeometry>>{
+          thirty, ten, twenty});
+  ordered = ordered && merged.has_value() &&
+            merged.value()->vertices.get_index(0.0) == 30.0 &&
+            merged.value()->vertices.get_index(3.0) == 10.0 &&
+            merged.value()->vertices.get_index(6.0) == 20.0 &&
+            index_at(merged.value(), 0.0) == 0.0 &&
+            index_at(merged.value(), 1.0) == 1.0 &&
+            index_at(merged.value(), 2.0) == 2.0 &&
+            merged.value()->subsets.size() == 3 &&
+            merged.value()->subsets.element(0.0)->index_offset == 0.0 &&
+            merged.value()->subsets.element(1.0)->index_offset == 1.0 &&
+            merged.value()->subsets.element(2.0)->index_offset == 2.0 &&
+            thirty->vertices.get_index(0.0) == 30.0 &&
+            ten->vertices.get_index(0.0) == 10.0 &&
+            twenty->vertices.get_index(0.0) == 20.0;
+  if (inject_operation_order_mutation) ordered = false;
+  check(ordered,
+        "operation order is exact across indexed and sequential strip winding, subset replacement/append declaration order and first-owner overlap, and arbitrary merge source order with matching element and material-group order");
+}
+
+void operation_failure_atomicity_and_rollback() {
+  struct Snapshot {
+    flight::Ref<types::MeshGeometry> geometry;
+    flight::ArrayBufferLike vertex_owner;
+    const void* index_owner;
+    const void* subset_owner;
+    flight::Ref<types::VertexAttributeLayout> layout;
+    std::optional<flight::Ref<types::Aabb>> bounds;
+    std::optional<flight::Ref<types::MeshGeometryRuntime>> runtime;
+    flight::String topology;
+    double version;
+    std::vector<double> vertices;
+    std::vector<double> indices;
+    std::vector<flight::Ref<types::MeshSubset>> subset_refs;
+    std::vector<std::pair<double, double>> subset_values;
+  };
+  auto capture = [](const flight::Ref<types::MeshGeometry>& geometry) {
+    Snapshot result{
+        .geometry = geometry,
+        .vertex_owner = geometry->vertices.buffer,
+        .index_owner = index_buffer_identity(geometry),
+        .subset_owner = geometry->subsets.identity(),
+        .layout = geometry->layout,
+        .bounds = geometry->bounds,
+        .runtime = geometry->entity_runtime_key,
+        .topology = geometry->topology,
+        .version = geometry->version,
+    };
+    for (double index = 0.0;
+         index < static_cast<double>(geometry->vertices.size());
+         index += 1.0) {
+      result.vertices.push_back(geometry->vertices.get_index(index));
+    }
+    if (geometry->indices.has_value()) {
+      const double count = std::visit(
+          [](const auto& values) { return static_cast<double>(values.size()); },
+          geometry->indices.value());
+      for (double index = 0.0; index < count; index += 1.0) {
+        result.indices.push_back(index_at(geometry, index));
+      }
+    }
+    for (const auto& subset : geometry->subsets) {
+      result.subset_refs.push_back(subset);
+      result.subset_values.emplace_back(
+          subset->index_count, subset->index_offset);
+    }
+    return result;
+  };
+  auto unchanged = [](const Snapshot& before) {
+    const auto& geometry = before.geometry;
+    bool same = geometry->vertices.buffer == before.vertex_owner &&
+                index_buffer_identity(geometry) == before.index_owner &&
+                geometry->subsets.identity() == before.subset_owner &&
+                geometry->layout == before.layout &&
+                geometry->bounds == before.bounds &&
+                geometry->entity_runtime_key == before.runtime &&
+                geometry->topology == before.topology &&
+                geometry->version == before.version &&
+                geometry->vertices.size() == before.vertices.size() &&
+                geometry->subsets.size() == before.subset_refs.size();
+    for (double index = 0.0;
+         index < static_cast<double>(before.vertices.size());
+         index += 1.0) {
+      same = same && geometry->vertices.get_index(index) ==
+                         before.vertices[static_cast<std::size_t>(index)];
+    }
+    if (geometry->indices.has_value()) {
+      const double count = std::visit(
+          [](const auto& values) { return static_cast<double>(values.size()); },
+          geometry->indices.value());
+      same = same && count == static_cast<double>(before.indices.size());
+      for (double index = 0.0; index < count; index += 1.0) {
+        same = same && index_at(geometry, index) ==
+                           before.indices[static_cast<std::size_t>(index)];
+      }
+    } else {
+      same = same && before.indices.empty();
+    }
+    for (std::size_t index = 0; index < before.subset_refs.size(); ++index) {
+      same = same && geometry->subsets[index] == before.subset_refs[index] &&
+             geometry->subsets[index]->index_count ==
+                 before.subset_values[index].first &&
+             geometry->subsets[index]->index_offset ==
+                 before.subset_values[index].second;
+    }
+    return same;
+  };
+
+  const auto first = indexed_geometry();
+  const auto second = mesh::clone_mesh_geometry(first);
+  const auto mismatched = geometry_from(
+      position_layout(16.0), flight::Float32Array(12.0));
+  mesh::ensure_mesh_geometry_bounds(first);
+  mesh::ensure_mesh_geometry_bounds(second);
+  mesh::ensure_mesh_geometry_bounds(mismatched);
+  first->version = 3.0;
+  second->version = 4.0;
+  mismatched->version = 5.0;
+  const auto first_before = capture(first);
+  const auto second_before = capture(second);
+  const auto mismatch_before = capture(mismatched);
+  bool rollback = !mesh::merge_mesh_geometries(
+                       flight::Array<flight::Ref<types::MeshGeometry>>{
+                           first, second, mismatched}).has_value() &&
+                  unchanged(first_before) && unchanged(second_before) &&
+                  unchanged(mismatch_before);
+
+  const auto topology_mismatch = mesh::clone_mesh_geometry(second);
+  topology_mismatch->topology = flight::String("line-list");
+  const auto topology_before = capture(topology_mismatch);
+  rollback = rollback &&
+             !mesh::merge_mesh_geometries(
+                  flight::Array<flight::Ref<types::MeshGeometry>>{
+                      first, second, topology_mismatch}).has_value() &&
+             unchanged(first_before) && unchanged(second_before) &&
+             unchanged(topology_before);
+
+  flight::Array<double> positions{
+      0.0, 0.0, 0.0,
+      1.0, 0.0, 0.0,
+      0.0, 1.0, 0.0,
+  };
+  flight::Array<double> normals{
+      0.0, 0.0, 1.0,
+      0.0, 0.0, 1.0,
+      0.0, 0.0, 1.0,
+  };
+  flight::Array<double> short_uvs{0.0, 0.0, 1.0, 0.0, 0.0};
+  flight::Uint16Array indices{0, 1, 2};
+  auto options = flight::make_ref<types::MeshGeometryFromAttributesOptions>();
+  options->indices = indices;
+  options->normals = normals;
+  options->positions = positions;
+  options->uvs = short_uvs;
+  const void* position_owner = positions.identity();
+  const void* normal_owner = normals.identity();
+  const void* uv_owner = short_uvs.identity();
+  const auto input_index_owner = indices.buffer;
+  rollback = rollback && throws_std_range_error([&] {
+               static_cast<void>(mesh::create_mesh_geometry_from_attributes(
+                   options));
+             }) &&
+             options->positions.identity() == position_owner &&
+             std::get<flight::Array<double>>(options->normals).identity() ==
+                 normal_owner &&
+             std::get<flight::Array<double>>(options->uvs).identity() ==
+                 uv_owner &&
+             std::get<flight::Uint16Array>(options->indices).buffer ==
+                 input_index_owner &&
+             positions.element(8.0) == 0.0 && normals.element(8.0) == 1.0 &&
+             short_uvs.element(4.0) == 0.0 && indices.get_index(2.0) == 2.0;
+
+  auto triangle = flight::make_ref<types::MeshTriangleVertexIndices>(
+      types::MeshTriangleVertexIndices{.i0 = 71.0, .i1 = 72.0, .i2 = 73.0});
+  rollback = rollback &&
+             !mesh::get_mesh_geometry_triangle_vertex_indices(
+                  triangle, first, 99.0) &&
+             triangle->i0 == 71.0 && triangle->i1 == 72.0 &&
+             triangle->i2 == 73.0 && unchanged(first_before);
+  if (inject_operation_rollback_mutation) rollback = false;
+  check(rollback,
+        "late layout or topology merge rejection rolls every earlier source back byte-for-byte with all owners and metadata intact, short attribute construction exposes no partial result or input write, and invalid triangle queries preserve their caller-owned output");
 }
 
 bool validation_result_without_mutation(
@@ -4593,9 +5303,24 @@ int main(int argc, char** argv) {
       mutation == flight::String("--mutate-wireframe-edges");
   inject_index_promotion_mutation =
       mutation == flight::String("--mutate-index-promotion");
+  inject_attribute_defaults_mutation =
+      mutation == flight::String("--mutate-attribute-defaults");
+  inject_attribute_count_mutation =
+      mutation == flight::String("--mutate-attribute-counts");
+  inject_attribute_ownership_mutation =
+      mutation == flight::String("--mutate-attribute-ownership");
+  inject_metadata_groups_mutation =
+      mutation == flight::String("--mutate-metadata-groups");
+  inject_operation_order_mutation =
+      mutation == flight::String("--mutate-operation-order");
+  inject_operation_rollback_mutation =
+      mutation == flight::String("--mutate-operation-rollback");
 
   construction_clone_and_owner_identity();
   construction_defaults_metadata_and_absence_matrix();
+  attribute_construction_defaults_and_missing_matrix();
+  attribute_construction_count_and_layout_validation();
+  attribute_construction_input_output_ownership();
   clone_aliasing_width_and_runtime_matrix();
   bounds_cache_and_position_mutation();
   runtime_lifecycle_ordering_and_idempotence();
@@ -4612,6 +5337,9 @@ int main(int argc, char** argv) {
   weld_remap_order_and_index_width();
   subset_boundaries_replacement_and_rebase();
   merge_order_rebase_and_owner_isolation();
+  merge_metadata_groups_and_empty_semantics();
+  operation_order_across_topologies_and_sources();
+  operation_failure_atomicity_and_rollback();
   validation_branch_order_and_nonmutation();
   packed_channel_order_and_ownership();
   packed_stride_offset_and_invalid_layout();

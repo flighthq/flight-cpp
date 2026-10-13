@@ -37,6 +37,9 @@ header compilation or the existing Scene3D smoke test as behavioral coverage:
 | --- | --- |
 | Geometry ownership and identity | Construction retains the caller's layout and vertex buffer, copies and narrows the authored index view, installs an exact runtime owner, and creates the default subset. Clone retains layout identity while independently owning geometry, runtime, vertices, indices, subset array/elements, and bounds; clone mutation cannot reach the source. Version invalidation wraps as unsigned 32-bit state. |
 | Construction defaults and metadata absence | Omitted and explicit-null indices produce non-indexed geometry, while a present empty typed array remains an indexed zero-element value. Construction distinguishes `Uint16`/`Uint32`, promotes only above 65,535 vertices, floors partial records, returns zero vertices for zero stride, retains authored vertex/layout/subset owners, and supplies exact topology/subset/runtime defaults without mutating any input. Metadata-only cloning preserves the upstream shared live index and layout owners while deep-copying subsets and bounds, allocating an empty vertex stream and fresh runtime, resetting version, and preserving absent bounds/indices exactly. |
+| Attribute construction defaults | Positions-only, explicit-null normal/UV, supplied-normal-only, and supplied-UV-only inputs distinguish derived from retained channels. Missing normals are generated, tangents are always derived, missing UVs are zero-filled, bounds/cache versions and canonical layout/topology/subset metadata are exact, and explicit empty input remains valid with absent indices and an invalid-empty AABB. |
+| Attribute count and layout validation | Short normal, UV, and partial-position inputs reject before exposing output; complete trailing attribute records are ignored without mutation, while an incomplete primitive index tail remains representable but invalid. Merge compatibility requires exact attribute count, semantic, format, byte offset, declaration order, and stride even across distinct equal layout owners. |
+| Attribute input/output ownership | Attribute construction reads and retains every caller-owned position, normal, UV, and typed-index input without replacement or mutation, then allocates fresh canonical interleaved storage and a freshly narrowed index owner. Later input and output mutations are isolated in both directions. |
 | Full-clone aliasing matrix | Full clones retain topology/layout and exact values, index width, and present-empty state while allocating independent vertex, index, subset-array/element, AABB/vector, and runtime owners. Runtime binding, UID, attribute-view, upload, morph/skin, and blended-weight slots are deliberately not inherited, and mutating every cloned CPU carrier cannot reach the source. |
 | Runtime lifecycle ordering | GL and WebGPU upload teardown clears each slot to true absence independently in either order and is idempotent when repeated. It leaves CPU buffers, descriptors, version/bounds cache, binding, UID, morph/skin owners, and blended weights untouched. |
 | Runtime reset and missing-owner paths | Morph and skin bind poses retain their exact installed owners, clear independently, and tolerate repeated reset. Runtime lookup falls back to the identity-keyed owner after the public runtime cell is cleared; a manually constructed geometry with neither runtime route answers absent and every setter/teardown call is a non-mutating no-op. |
@@ -51,6 +54,9 @@ header compilation or the existing Scene3D smoke test as behavioral coverage:
 | Weld equivalence and remapping | Welding compares every byte of the complete packed record: bit-exact duplicates collapse, an adjacent Float32 bit pattern does not, and equal positions with different packed attributes remain separate. Unique records retain first-source order, authored elements remap in exact order, invalid indices return an independent unchanged clone, and empty input stays empty. Sequential indexing switches from `Uint16Array` to `Uint32Array` only above 65,535 vertices. |
 | Subset ownership and boundaries | Add and set replace the subset array and deep-copy every range without changing buffers or version. Triangle-list and strip lookup require all three elements inside one range, overlapping ranges choose the first declaration, gaps remain unowned, unsupported topologies return sentinels, and list/strip triangle counts follow their distinct formulas. |
 | Merge order, rebasing, and isolation | Indexed and sequential sources concatenate in source order with exact vertex rebasing. Every source subset is independently cloned and rebased over the merged element stream, bounds are the exact union, and vertices, indices, subset arrays/elements, bounds, and runtime state are independently owned. Empty geometry remains valid; an empty request plus layout/topology mismatches return absence without touching inputs. |
+| Merge metadata, groups, and empty presence | Three mixed indexed/sequential line sources preserve topology, first-layout identity, exact position groups, and every ordered material group including a zero-count group. Missing source groups receive one full-range fallback, bounds/runtime are fresh, sources remain byte-for-byte owned, an all-empty non-indexed merge keeps indices absent, and an all-empty indexed merge keeps a present empty typed array. |
+| Cross-operation ordering | Indexed and sequential strips preserve alternating winding over five elements. Subset set/add retains declaration order and first-declared ownership for overlap; reordered replacement changes ownership accordingly. Arbitrarily ordered point sources preserve matching vertex, synthesized-index, and material-group order through merge. |
+| Operation failure atomicity | A three-source merge that fails only at the final layout or topology check leaves every earlier and rejecting source's buffers, indices, subsets, layout, bounds/runtime, topology, version, values, and owners unchanged. Short attribute construction exposes no partial result or input write, and invalid triangle lookup preserves both source and caller-owned output. |
 | Validation branch matrix | The native oracle reaches the documented stride, alignment, index-range, every-float-channel, integer-packed-channel, subset integer/sign/bounds, subset primitive-shape, and whole-stream topology branches in their public order. Empty streams and valid point/list/strip shapes pass; truncated shapes fail. Every successful or failed call preserves all bytes, indices, ranges, owners, bounds/runtime identities, topology, and version. |
 | Transform components and failures | A mixed-axis affine matrix pins column-major point and translation order under both distinct-output and in-place aliasing. The upstream-exposed non-uniform diagonal case distinguishes inverse-scale/inverse-transpose normal handling from plain-matrix tangent handling, preserving a unit perpendicular frame. Singular and below-threshold matrices reject without changing output owners, channels, bounds, or version; a determinant just above the threshold succeeds, and zero direction vectors stay zero. |
 | Mirrored winding and handedness | A negative general-matrix determinant reverses every indexed triangle in place and negates every tangent handedness. Negative scale swaps complete second/third records for each non-indexed triangle, retaining attached UVs; strips deliberately retain element order while still flipping handedness. Positive determinants preserve both order and handedness, and no operation replaces the index or vertex owner. |
@@ -77,7 +83,7 @@ header compilation or the existing Scene3D smoke test as behavioral coverage:
 | Builder parameter guards | Every count-bearing builder floors fractional counts, clamps below-minimum counts, and throws `RangeError` for NaN and infinity on each count parameter. Zero-height cone/truncated-cylinder cases contain no dead triangles; a zero-height cylinder and collapsed/negative box or quad dimensions retain finite canonical records. Custom polyhedron seed positions are observably projected to the requested radius. |
 | Failures | Negative and past-end triangle queries leave the caller's output unchanged. Negative and past-end position writes leave bytes and version unchanged. Invalid weld indices return a deep clone, merge mismatch returns absence, validation rejection is non-mutating, singular transforms preserve the entire destination, and incompatible morph scratch rejects atomically. Unknown formats and invalid component windows throw or no-op according to their return domain; missing, misformatted, misaligned, and out-of-record attributes reject without changing output, bytes, owners, or version. |
 
-Forty-two independent modes (`--mutate-owner-identity`, `--mutate-bounds`,
+Forty-eight independent modes (`--mutate-owner-identity`, `--mutate-bounds`,
 `--mutate-index-order`, `--mutate-failure`, `--mutate-channel-order`,
 `--mutate-stride-offset`, `--mutate-normalization`, `--mutate-group-bounds`,
 `--mutate-builder-topology`, `--mutate-builder-seams`, `--mutate-builder-bounds`,
@@ -95,7 +101,10 @@ Forty-two independent modes (`--mutate-owner-identity`, `--mutate-bounds`,
 `--mutate-lifecycle-ordering`, `--mutate-reset-disposal`, and
 `--mutate-cache-invalidation`, plus `--mutate-sphere-math`,
 `--mutate-flat-split-remap`, `--mutate-refresh-invalidation`,
-`--mutate-wireframe-edges`, and `--mutate-index-promotion`) suppress one family oracle
+`--mutate-wireframe-edges`, `--mutate-index-promotion`,
+`--mutate-attribute-defaults`, `--mutate-attribute-counts`,
+`--mutate-attribute-ownership`, `--mutate-metadata-groups`,
+`--mutate-operation-order`, and `--mutate-operation-rollback`) suppress one family oracle
 each. Normal execution must pass; every
 mutation execution must fail its named assertion.
 
@@ -111,16 +120,17 @@ passed but cannot build/run `flight_cpp.generated_scene3d` because
 ## Honest residual
 
 This is a focused P-3D2 slice, not a claim that all 213 upstream cases are ported. Construction,
-clone, metadata, runtime lifecycle, bounding spheres, flat normals, bounds refresh, and the principal
-index-operation domains are now covered systematically. Ranked by remaining observable breadth, the
-largest executable families are: (1) attribute-driven construction permutations, especially mixed
-optional attributes, caller-provided storage, and custom-layout default filling; (2) residual
-merge/subset/triangle-operation combinations across point, line, list, and strip topologies; and (3)
-residual builder, transform, UV, morph/deformation, and bind-pose combinations beyond the
-representative edge matrices above. The package currently has no refusal-ledger row. This slice found
-no compiler or production-header gap and required no compiler request or semantic patch. The emitted
-metadata clone already retains the live index owner, so the earlier discovered copy and engaged-null
-upload slots remain documented as implementation mistakes in the existing declared runtime-owner
-override, whose manifest records the corrected shared/deep boundaries and true-absence teardown. The
+clone, metadata, runtime lifecycle, compute, builders, transforms, UVs, morph/deformation, attribute
+construction, merge/subset ordering, and the principal index-operation domains are now covered
+systematically. No material portable behavior family remains uncovered on the current emitted public
+surface; remaining executable cases are lower-risk permutations of the asserted channel, topology,
+parameter, and source-count matrices. The package currently has no refusal-ledger row. This slice
+found no compiler or TypeScript-source gap and required no compiler request or semantic source patch.
+It did expose an implementation mistake in the existing operations override: a merge containing only
+empty non-indexed input manufactured a present empty index array instead of preserving absence. The
+override now follows the already-correct source distinction while retaining a present empty array when
+every empty input is indexed, and its manifest records that equivalence. The emitted metadata clone
+already retains the live index owner, so the earlier discovered copy and engaged-null upload slots
+remain documented as implementation mistakes in the existing declared runtime-owner override. The
 assisted-tier compiler debt remains explicit in the three existing source patches, one emission repair,
 and six declared overrides rather than being recast as native parity.
