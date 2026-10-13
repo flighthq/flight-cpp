@@ -6,6 +6,7 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/boolean.hpp>
+#include <flight/structural_ref.hpp>
 #include <functional>
 #include <limits>
 #include <optional>
@@ -14,30 +15,29 @@
 #include <tuple>
 #include <flight/runtime.hpp>
 
-#include <flight/entity/entity.hpp>
-#include <flight/types/path_boolean_contour.hpp>
-#include <flight/types/path_boolean_fill_rule.hpp>
-#include <flight/types/path_boolean_kernel.hpp>
-#include <flight/types/path_boolean_operation.hpp>
-
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct Entity; }
+namespace flight::types { struct PathBooleanKernel; }
+
 namespace flight::path_boolean {
-
-using flight::entity::allocate_entity;
-using flight::entity::finish_entity;
-using flight::types::EntityConstruction;
-using flight::types::PathBooleanContour;
-using flight::types::PathBooleanFillRule;
-using flight::types::PathBooleanKernel;
-using flight::types::PathBooleanOperation;
-
 struct SweepEvent;
 struct ArrangementSegment;
 struct UniqueSegment;
 struct DirectedGraph;
 struct EventHeap;
+} // namespace flight::path_boolean
+
+#include <flight/entity/entity.hpp>
+#include <flight/types/entity.hpp>
+#include <flight/types/path_boolean_contour.hpp>
+#include <flight/types/path_boolean_fill_rule.hpp>
+#include <flight/types/path_boolean_kernel.hpp>
+#include <flight/types/path_boolean_operation.hpp>
+#include <flight/types/shape_command.hpp>
+
+namespace flight::path_boolean {
 
 struct SweepEvent : public flight::ReferenceEnabled {
   double x;
@@ -256,7 +256,7 @@ inline double winding_at(flight::Array<flight::Ref<UniqueSegment>> unique, doubl
   return winding;
 }
 
-inline bool combine(flight::Ref<PathBooleanOperation> operation, bool in_subject, bool in_clip) {
+inline bool combine(flight::types::PathBooleanOperation operation, bool in_subject, bool in_clip) {
   {
     auto switch_value = operation;
     if (switch_value == flight::String("union")) {
@@ -275,7 +275,7 @@ inline bool combine(flight::Ref<PathBooleanOperation> operation, bool in_subject
   throw std::logic_error("Flight function completed without a value");
 }
 
-inline bool is_inside(double winding, flight::Ref<PathBooleanFillRule> fill_rule) {
+inline bool is_inside(double winding, flight::types::PathBooleanFillRule fill_rule) {
   {
     auto switch_value_2 = fill_rule;
     if (switch_value_2 == flight::String("evenOdd")) {
@@ -294,7 +294,7 @@ inline bool is_inside(double winding, flight::Ref<PathBooleanFillRule> fill_rule
   throw std::logic_error("Flight function completed without a value");
 }
 
-inline flight::Array<flight::Array<double>> classify_segments(flight::Array<flight::Ref<UniqueSegment>> unique, flight::Ref<PathBooleanOperation> operation, flight::Ref<PathBooleanFillRule> fill_rule) {
+inline flight::Array<flight::Array<double>> classify_segments(flight::Array<flight::Ref<UniqueSegment>> unique, flight::types::PathBooleanOperation operation, flight::types::PathBooleanFillRule fill_rule) {
   flight::Array<flight::Array<double>> kept = flight::Array<flight::Array<double>>{};
   for (auto seg : unique) {
     const double mx = ((seg->ax + seg->bx) / 2.0);
@@ -359,12 +359,12 @@ inline bool point_strictly_inside(double lx, double ly, double rx, double ry, do
   return ((dot > 0.0) && (dot < len_sq));
 }
 
-inline double compute_vertex_snap(flight::Array<flight::Ref<PathBooleanContour>> subject, flight::Array<flight::Ref<PathBooleanContour>> clip) {
+inline double compute_vertex_snap(flight::Array<flight::types::PathBooleanContour> subject, flight::Array<flight::types::PathBooleanContour> clip) {
   double min_x = std::numeric_limits<double>::infinity();
   double min_y = std::numeric_limits<double>::infinity();
   double max_x = -std::numeric_limits<double>::infinity();
   double max_y = -std::numeric_limits<double>::infinity();
-  for (auto contours : flight::Array<flight::Array<flight::Ref<PathBooleanContour>>>{subject, clip}) {
+  for (auto contours : flight::Array<flight::Array<flight::types::PathBooleanContour>>{subject, clip}) {
     for (auto contour : contours) {
       {
         double i = 0.0;
@@ -541,8 +541,8 @@ struct DirectedGraph : public flight::ReferenceEnabled {
     outgoing.element(from).push(edge);
   }
 
-  flight::Array<flight::Ref<PathBooleanContour>> trace_rings() {
-    flight::Array<flight::Ref<PathBooleanContour>> rings;
+  flight::Array<flight::types::PathBooleanContour> trace_rings() {
+    flight::Array<flight::types::PathBooleanContour> rings;
     for (double start = 0.0; start < static_cast<double>(edge_from.size()); start += 1.0) {
       if (used.element(start)) continue;
       const auto ring = walk(start);
@@ -605,7 +605,7 @@ struct DirectedGraph : public flight::ReferenceEnabled {
   }
 };
 
-inline flight::Array<flight::Ref<PathBooleanContour>> trace_rings(flight::Array<flight::Array<double>> edges) {
+inline flight::Array<flight::types::PathBooleanContour> trace_rings(flight::Array<flight::Array<double>> edges) {
   flight::Ref<DirectedGraph> graph = flight::make_ref<DirectedGraph>();
   for (auto e : edges) {
     graph->add_edge(e.element(0.0), e.element(1.0), e.element(2.0), e.element(3.0));
@@ -702,7 +702,7 @@ inline void add_edge(double ax, double ay, double bx, double by, bool is_subject
   heap->push(b);
 }
 
-inline void fill_queue(flight::Array<flight::Ref<PathBooleanContour>> contours, bool is_subject, flight::Ref<EventHeap> heap) {
+inline void fill_queue(flight::Array<flight::types::PathBooleanContour> contours, bool is_subject, flight::Ref<EventHeap> heap) {
   for (auto contour : contours) {
     double count = flight::signed_right_shift(static_cast<double>(contour.size()), 1.0);
     if ((count < 2.0)) {
@@ -781,7 +781,7 @@ inline void possible_intersection(flight::Ref<SweepEvent> le1, flight::Ref<Sweep
   divide_if_interior(le2, le1_other->x, le1_other->y, heap);
 }
 
-inline flight::Array<flight::Ref<ArrangementSegment>> build_arrangement(flight::Array<flight::Ref<PathBooleanContour>> subject, flight::Array<flight::Ref<PathBooleanContour>> clip) {
+inline flight::Array<flight::Ref<ArrangementSegment>> build_arrangement(flight::Array<flight::types::PathBooleanContour> subject, flight::Array<flight::types::PathBooleanContour> clip) {
   flight::Ref<EventHeap> heap = flight::make_ref<EventHeap>();
   fill_queue(subject, true, heap);
   fill_queue(clip, false, heap);
@@ -817,33 +817,33 @@ inline flight::Array<flight::Ref<ArrangementSegment>> build_arrangement(flight::
   return segments;
 }
 
-inline flight::Array<flight::Ref<PathBooleanContour>> compute_martinez_boolean(flight::Array<flight::Ref<PathBooleanContour>> subject, flight::Array<flight::Ref<PathBooleanContour>> clip, flight::Ref<PathBooleanOperation> operation, flight::Ref<PathBooleanFillRule> fill_rule) {
+inline flight::Array<flight::types::PathBooleanContour> compute_martinez_boolean(flight::Array<flight::types::PathBooleanContour> subject, flight::Array<flight::types::PathBooleanContour> clip, flight::types::PathBooleanOperation operation, flight::types::PathBooleanFillRule fill_rule) {
   (next_event_id = 0.0);
   (vertex_snap = compute_vertex_snap(subject, clip));
   flight::Array<flight::Ref<ArrangementSegment>> segments = build_arrangement(subject, clip);
   if ((static_cast<double>(segments.size()) == 0.0)) {
-    return flight::Array<flight::Ref<PathBooleanContour>>{};
+    return flight::Array<flight::types::PathBooleanContour>{};
   }
   flight::Array<flight::Ref<UniqueSegment>> unique = merge_coincident_segments(segments);
   flight::Array<flight::Array<double>> kept = classify_segments(unique, operation, fill_rule);
   if ((static_cast<double>(kept.size()) == 0.0)) {
-    return flight::Array<flight::Ref<PathBooleanContour>>{};
+    return flight::Array<flight::types::PathBooleanContour>{};
   }
   return trace_rings(kept);
 }
 
-inline void initialize_martinez_path_boolean_kernel(flight::Ref<EntityConstruction<flight::Ref<PathBooleanKernel>>> out) {
-  (out->compute_path_boolean = [=](flight::Array<flight::Ref<PathBooleanContour>> subject, flight::Array<flight::Ref<PathBooleanContour>> clip, flight::Ref<PathBooleanOperation> operation, flight::Ref<PathBooleanFillRule> fill_rule) {
+inline void initialize_martinez_path_boolean_kernel(flight::types::EntityConstruction<flight::Ref<flight::types::PathBooleanKernel>> out) {
+  flight::row_set<flight::RowKey<"computePathBoolean">>(out, [=](flight::Array<flight::types::PathBooleanContour> subject, flight::Array<flight::types::PathBooleanContour> clip, flight::types::PathBooleanOperation operation, flight::types::PathBooleanFillRule fill_rule) {
   return compute_martinez_boolean(subject, clip, operation, fill_rule);
 });
 }
 
-inline flight::Ref<PathBooleanKernel> create_martinez_path_boolean_kernel() {
-  flight::Ref<EntityConstruction<flight::Ref<PathBooleanKernel>>> out = allocate_entity<flight::Ref<PathBooleanKernel>>();
+inline flight::Ref<flight::types::PathBooleanKernel> create_martinez_path_boolean_kernel() {
+  flight::types::EntityConstruction<flight::Ref<flight::types::PathBooleanKernel>> out = flight::entity::allocate_entity<flight::Ref<flight::types::PathBooleanKernel>>();
   initialize_martinez_path_boolean_kernel(out);
-  return finish_entity(out);
+  return flight::entity::finish_entity<flight::Ref<flight::types::PathBooleanKernel>>(out);
 }
 
-inline flight::Ref<PathBooleanKernel> martinez_path_boolean_kernel = create_martinez_path_boolean_kernel();
+inline flight::Ref<flight::types::PathBooleanKernel> martinez_path_boolean_kernel = create_martinez_path_boolean_kernel();
 
 } // namespace flight::path_boolean

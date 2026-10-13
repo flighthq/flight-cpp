@@ -1520,9 +1520,7 @@
       "id": "notification-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/path_boolean/martinez_kernel.hpp"
-      ],
+      "files": [],
       "id": "path-boolean-unqualified-entity-names"
     },
     {
