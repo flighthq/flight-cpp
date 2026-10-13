@@ -59,3 +59,20 @@ Emission repairs `adjustments-color-matrix-interface-heritage` and `adjustments-
 respell the two structs with their declared heritage, removing only the duplicated member declarations.
 Every field keeps its name, type and declaration order. They expire when the emitter retains
 declared interface heritage.
+
+## Same defect in Surface runtime storage
+
+At flight `a627849` and flight-compiler `2b687ea`, `SurfaceRuntime extends EntityRuntime` is emitted as
+another independent flattened struct. The `@flighthq/surface` allocator must retain that exact runtime
+through the entity's `EntityRuntime` slot and return it from `getSurfaceRuntime`; without real heritage,
+the current-pin override's previously valid recovery fails during scoped compilation:
+
+```
+static_cast from 'flight::types::EntityRuntime *' to 'flight::types::SurfaceRuntime *',
+which are not related by inheritance, is not allowed
+```
+
+Copying the `binding` and `uid` prefix into a second object, or storing `handle` in side storage, would
+break the source's single runtime identity and live-cell semantics. This site therefore needs the same
+declared-interface heritage rule: one owner with the inherited `EntityRuntime` cells and the additional
+`handle` cell. The surface package carries that exact shape locally until generated type heritage does.

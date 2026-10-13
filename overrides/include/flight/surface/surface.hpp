@@ -1,4 +1,4 @@
-// Derived from @flighthq/surface/packages/surface/src/surface.ts.
+// Derived from @flighthq/surface/packages/surface/src/surface.ts at a627849.
 #pragma once
 
 #include <memory>
@@ -21,6 +21,13 @@ namespace flight::surface {
 using ReadonlySurface = flight::StructuralRef<flight::RowReadonly<
     flight::RowOf<flight::Ref<flight::types::Surface>>>>;
 
+// SurfaceRuntime extends EntityRuntime in the source. The generated types flatten that heritage into
+// unrelated structs, so keep the package-private runtime owner here with its actual base relation: one
+// allocation, one binding/uid pair, and the additional handle cell the surface module owns.
+struct SurfaceRuntimeOwner final : public flight::types::EntityRuntime {
+  flight::types::NativeSurfaceHandle handle;
+};
+
 template <typename Schema>
 inline ReadonlySurface readonly_surface_view(
     const flight::StructuralRef<Schema>& surface) {
@@ -31,7 +38,7 @@ template <typename Type>
 inline flight::types::EntityConstruction<Type> allocate_surface(
     flight::types::NativeSurfaceHandle handle) {
   auto surface = flight::entity::allocate_entity<Type>();
-  auto runtime = flight::make_ref<flight::types::SurfaceRuntime>();
+  auto runtime = flight::make_ref<SurfaceRuntimeOwner>();
   runtime->binding = std::nullopt;
   runtime->uid = std::nullopt;
   runtime->handle = std::move(handle);
@@ -43,12 +50,12 @@ inline flight::types::EntityConstruction<Type> allocate_surface(
   return surface;
 }
 
-inline flight::Ref<flight::types::SurfaceRuntime> get_surface_runtime(
+inline flight::Ref<SurfaceRuntimeOwner> get_surface_runtime(
     ReadonlySurface surface) {
   const auto runtime = flight::row_get<
       std::optional<flight::Ref<flight::types::EntityRuntime>>>(
       surface, flight::types::entity_runtime_key);
-  return std::static_pointer_cast<flight::types::SurfaceRuntime>(runtime.value());
+  return std::static_pointer_cast<SurfaceRuntimeOwner>(runtime.value());
 }
 
 inline flight::types::NativeSurfaceHandle get_surface_handle(

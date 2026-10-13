@@ -8261,28 +8261,28 @@
       "code": "dependency-refused",
       "module": "packages/surface/src/canvasSurface.ts",
       "package": "@flighthq/surface",
-      "reason": "dependency ./surface was refused for @flighthq/surface/packages/surface/src/surface.ts",
+      "reason": "dependency ./surface.ts was refused for @flighthq/surface/packages/surface/src/surface.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/surface/src/contract.ts",
       "package": "@flighthq/surface",
-      "reason": "dependency ./canvasSurface was refused for @flighthq/surface/packages/surface/src/canvasSurface.ts",
+      "reason": "dependency ./canvasSurface.ts was refused for @flighthq/surface/packages/surface/src/canvasSurface.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/surface/src/glSurface.ts",
       "package": "@flighthq/surface",
-      "reason": "dependency ./surface was refused for @flighthq/surface/packages/surface/src/surface.ts",
+      "reason": "dependency ./surface.ts was refused for @flighthq/surface/packages/surface/src/surface.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/surface/src/index.ts",
       "package": "@flighthq/surface",
-      "reason": "dependency ./contract was refused for @flighthq/surface/packages/surface/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/surface/packages/surface/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -8298,7 +8298,7 @@
       "code": "dependency-refused",
       "module": "packages/surface/src/wgpuSurface.ts",
       "package": "@flighthq/surface",
-      "reason": "dependency ./surface was refused for @flighthq/surface/packages/surface/src/surface.ts",
+      "reason": "dependency ./surface.ts was refused for @flighthq/surface/packages/surface/src/surface.ts",
       "stage": "dependency"
     },
     {
