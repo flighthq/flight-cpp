@@ -22572,6 +22572,9 @@
       "refusedDependencies": [
         "@flighthq/scene-document/packages/scene-document/src/flightDocumentResourceDependencies.ts",
         "@flighthq/scene-document/packages/scene-document/src/flightDocumentText.ts",
+        "@flighthq/scene-document/packages/scene-document/src/sceneDocumentInteractiveStateBindings.ts",
+        "@flighthq/scene-document/packages/scene-document/src/sceneDocumentLayoutBindings.ts",
+        "@flighthq/scene-document/packages/scene-document/src/sceneDocumentMaterializationSelection.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentRefusal.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene2DMaterialization.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene3DMaterialization.ts"
@@ -22585,7 +22588,7 @@
         "@flighthq/scene-document/packages/scene-document/src/index.ts"
       ],
       "declarationFingerprints": [
-        "sha256:f6e96ddca78b64787e1d0d0e19d1187631f93ac3295860cf228fc124d68cd7b2"
+        "sha256:676cd237fe581950109eef20a118f0b3dc9f2f0e96353a8237004d784af94a30"
       ],
       "module": {
         "name": "FlightDocumentResourceDependencies",
@@ -22714,6 +22717,10 @@
       "refusedDependencies": [
         "@flighthq/scene-document/packages/scene-document/src/flightDocumentResourceDependencies.ts",
         "@flighthq/scene-document/packages/scene-document/src/flightDocumentText.ts",
+        "@flighthq/scene-document/packages/scene-document/src/sceneDocumentInteractiveStateBindings.ts",
+        "@flighthq/scene-document/packages/scene-document/src/sceneDocumentLayoutBindings.ts",
+        "@flighthq/scene-document/packages/scene-document/src/sceneDocumentMaterializationSelection.ts",
+        "@flighthq/scene-document/packages/scene-document/src/sceneDocumentRefusal.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene2DMaterialization.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene3DMaterialization.ts"
       ],
@@ -22722,17 +22729,19 @@
     {
       "classification": "compiler-restriction",
       "consumers": [
+        "@flighthq/scene-document/packages/scene-document/src/contract.ts",
+        "@flighthq/scene-document/packages/scene-document/src/index.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene2DMaterialization.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene3DMaterialization.ts"
       ],
       "declarationFingerprints": [
-        "sha256:07b8abfa5c9733c257b311b9e354b3e6a7adf1318965fdd331d1c88fd9c0f24f",
         "sha256:3c4e0607abddc23b94ef43b97e7618bc30dac7baea1f4ce57afc525b36632b25",
         "sha256:3ff18dcbe032dc827d919c16fc89fa1eaefe04516e98e352320c10291fbf0598",
         "sha256:6145a21015eed5f2befada868c77342834eaf64d778f1c5d5d7f222b027b63c1",
         "sha256:762caf92e42904e79bb57aa406a508a35cf964970fdf80e897c565dbc710e726",
-        "sha256:7c8cbd32cc2332cb065322c239cc007b067891f9f0c5f2b05b03a71a24846840",
+        "sha256:7a720a410ce6023e6febd0cc0ef8e5d533fc8137d33679f038f9d9d04a0cf431",
         "sha256:7cecbb645c5ad71da14808a18a4566bda46828a7977bd0cf46ae5b54524adcd3",
+        "sha256:7f38936f19276674fa8b20a690b475f64fe8b2c62ce8dc1b47b27d041d941370",
         "sha256:9b3ee75eda130195ed0d4bbbadbb06c4c700f5acfe0f1b527184e9f80cf37c17",
         "sha256:c3ee54036f2a4bb70b82bedbb283157c55c0ef62f8cc17f10c85f82989be547d",
         "sha256:c6ea1212c535b1f1bea84580fbba5063b29fa0f01c0e3ef3d37b8d5703b8f145",
@@ -22749,6 +22758,8 @@
     {
       "classification": "compiler-restriction",
       "consumers": [
+        "@flighthq/scene-document/packages/scene-document/src/contract.ts",
+        "@flighthq/scene-document/packages/scene-document/src/index.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene2DMaterialization.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene3DMaterialization.ts"
       ],
@@ -22782,6 +22793,8 @@
     {
       "classification": "source-portability",
       "consumers": [
+        "@flighthq/scene-document/packages/scene-document/src/contract.ts",
+        "@flighthq/scene-document/packages/scene-document/src/index.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene2DMaterialization.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene3DMaterialization.ts"
       ],
@@ -22804,25 +22817,26 @@
       "consumers": [
         "@flighthq/scene-document/packages/scene-document/src/contract.ts",
         "@flighthq/scene-document/packages/scene-document/src/flightDocumentText.ts",
+        "@flighthq/scene-document/packages/scene-document/src/index.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentLayoutBindings.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentMaterializationSelection.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene2DMaterialization.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentScene3DMaterialization.ts"
       ],
       "declarationFingerprints": [
+        "sha256:1995f9917c192625520267fcfc694b492afed9fd9f3795c5fec3d3e5a1b79748",
         "sha256:26d9b468eb79c1911282aa739cbff4fe21e09978be159f418d626a0c357f51ad",
-        "sha256:4232c5d04eff3f272e03c4b85cfa5b428c12a69a07b756e2b0fe164874974f0c",
-        "sha256:6dc0be6dd149d8cd98fcd82821b36d3b4b8490f518f1fd2464a2cf768608a243",
-        "sha256:770bf9cfec117d1b601337e68cda1c0f4474f0207cc3da0012cf4ce3de8e4fce",
-        "sha256:7933830a6a1e3b9120877a06c9ba1a958f299b067dba93548849863bf5936624",
+        "sha256:495b8f0ed263f0a007338caae8b8b9fad78a795921898a0b52b9e0f2a58c03a6",
         "sha256:85470e5048bbf7d45244e02187e24eae8dbd2e29efcc2f96f802a3c86ba96930",
+        "sha256:903b6c0944e6879782352b570a3935d21d4d4d5d1b110e77222e2ed303ccb249",
         "sha256:9682d0f6880e1335bdfd904cf93ad02f97fe743aaccfd2a56aa42160f7782a49",
+        "sha256:a65ab79fc84522adb28c745d08fa70c1c1de41a0cdebd0b056088063a036a77b",
         "sha256:aca8130d2f1ddbc25d6f19ba5c498419ea5a34bc0246186d82ca619dc3bd5699",
         "sha256:b0704425654e13a1ebd24dc74b24002fcdf274508941f89791d2bee534feda23",
         "sha256:c0450f461a0799a4a6b0cde081aa22ddb41e04bc58a7858f09d6325271077028",
         "sha256:c2e047f917f58f7bc09800e6001e1286faf2e517637d637aff979b0481b1eda4",
-        "sha256:c8553ae6603fef2eb7369809d9db93a6dc6fd618bb582e199b0e191133d23692",
         "sha256:cfeac0175126dc6f591d5d712bd751af8eb5f6b757b09bd3e35fbdb032d83c3a",
+        "sha256:ea37e1ff3e43891fa3953ef7f49db241456d89881de022f5585bc0d1779fcb68",
         "sha256:f69cf6d46d7871e108c0b4928b7812722177ca20379a80f5ededa6016563cdd5",
         "sha256:fd03540ea35a37cbb1161a311f1c9992850a66d22c4295f27020098153a90f9a"
       ],
@@ -22842,18 +22856,18 @@
         "@flighthq/scene-document/packages/scene-document/src/index.ts"
       ],
       "declarationFingerprints": [
-        "sha256:0f4c8f861ee8ee29c55a4df3ff3ab6a7a9bad2d9fb16df2c2e1f73f27cbb8bb1",
-        "sha256:1d64d72520f67eac7d4862c6fbaa2af91ea9904649d3ed6252e82a32f95958ab",
         "sha256:2f777c84caa58b91083418b8ffff583fa17ace8358c0137fc2e679832f31a617",
+        "sha256:41a6413625b3c815d2296df6820f3d6aeb84edb02c9180152014139aaf7adfd9",
         "sha256:544b9034fd2edcffdca4be7035e654ec0268014e23232f879dee3295bb3de58b",
         "sha256:5cb2b8c332fe3368760e76c10ceb79a47259ded2310aa048fa082475b85cbfec",
         "sha256:6b99d1ddc21ddcff139a7a48ab033fdba49883ab1af7d5d8027e00a210607b9f",
-        "sha256:8100aea282f1700d80009d9b17dca100f00f52090f3b9e28ee110f393998d3da",
+        "sha256:82f9b39297f8bdf7c2be6e4468f6fda1699833b817d267b34ba99e1af3ed168a",
         "sha256:8a2d2fbd24ff43c63887d4f3816cc7e5889f1c1b96af2d4c34fbe194ea0a4843",
-        "sha256:922a93d4276452800c4c28ba4ee0efbd6e6c10ccbc9b77fc2fb48fd86b5308a8",
         "sha256:9d6f44a61a7b65a577c940d5751a1c3a7ff30e7c67ff507fe1d6e9eee9515cf9",
-        "sha256:a39515cc5fc1548b3a76a2d405b096464be08828d6549a4d256477e364effddd",
+        "sha256:b39719c96479a7c8df2a3cb852a2b99f8647799c93b336bd367dbe31e0ec7389",
+        "sha256:b7251f20dcb10fc31cdb541c9c983591422780c9ed9580f33c99db9ac493c06f",
         "sha256:d0bd5da57a85c17c3fe22d62ea949ad06ae112efd26b5a89d6202db4def05204",
+        "sha256:d9a9a05aede0e51a9e5fd0c361d4b8fa086084731fedb7bde29063d05f67482d",
         "sha256:dbbebc0ee12bf58e268854fe45a3764e881a4948f283e5c96eed947a0f7a2d69",
         "sha256:eaa1948c8cd52f970431dd5c58cf5c2453916fa94204c028026395986f002edb",
         "sha256:f4132f3e83fc68222d3adfba1a29b39e689194426629229df7748f8ae5491542"
@@ -22874,25 +22888,25 @@
         "@flighthq/scene-document/packages/scene-document/src/index.ts"
       ],
       "declarationFingerprints": [
+        "sha256:18177e4999cd99d56d3400aaef50674d237b59dc5f875e87c57589c02d1ca3cf",
         "sha256:1a4385adec3ecc8e5d15acd038cd3c1988685d2c38fc473f6a6654a01fb28399",
         "sha256:1b16e81cb59cc21ff6a2c9925631c3a01c3b2d8ff9fd129a900cb43bba78b9ef",
-        "sha256:6b14faafe820ca5b648ba3216a6caeb2fa9a90471e33281d67a782308c009185",
+        "sha256:5368a334ce0acaa6c12dcfa6c23947401bb10646c1e8e18081b7c60a53c577e6",
         "sha256:784be71c1f0424bdbceaa8febd01301af5b5f83ed2d06541377344406e1871fc",
-        "sha256:8826095be596819a930acbbf73a73f8e95c4f0ba33fbc4344b0f97403d2a7d98",
-        "sha256:922a93d4276452800c4c28ba4ee0efbd6e6c10ccbc9b77fc2fb48fd86b5308a8",
         "sha256:96a9b6cb8c5e5b71a27127a984e0b78dd5862a6421101b9fe7778537deb34692",
-        "sha256:a39515cc5fc1548b3a76a2d405b096464be08828d6549a4d256477e364effddd",
         "sha256:b21c31630fec8285642566230adfbb7dadde52041511bc133ce2aa7588a037dd",
+        "sha256:b39719c96479a7c8df2a3cb852a2b99f8647799c93b336bd367dbe31e0ec7389",
         "sha256:b595411e6d45b871d75ec46816077a63a33d2d285479c8315f1a8d8549d13d55",
         "sha256:c916e4771e56bee4fd368e914bb8ff20f4ef796f81675e0f8ef0400089484e54",
         "sha256:ceec8d9155fbacebc1883da6adf2c48ee008170b43fe5305d318d6b379df65e5",
         "sha256:d68e2ece6b2de7e6a3a9c38b47120f6ae4c48aedbf1f8a77497ce3df5eb31a44",
+        "sha256:d9106f9a02e12dbc7c45c138f8e66694d52f5161c6c59401b719d6d8583e36b1",
+        "sha256:d9a9a05aede0e51a9e5fd0c361d4b8fa086084731fedb7bde29063d05f67482d",
         "sha256:deddce8575b4211b94a7359d98a7d37bc474ffb2c39d7f544401dfccc47f81d2",
         "sha256:e355cdfa427bae9ce3afa5b4d339e4808f3ed343f1413d25d90c30bfc642fadb",
         "sha256:eaa1948c8cd52f970431dd5c58cf5c2453916fa94204c028026395986f002edb",
         "sha256:efcef63dfc223f685c8c5465648a6be0d0e0c646a244f28318d9f838fd96cb4a",
         "sha256:f6049af56189d4d948d41a95b27b23db5f5450aea03c68298cf9eab80eb26451",
-        "sha256:fa9413736f8344905cd6a41c6879b2694a433427fdce2ac44e9d282fb3bae1fe",
         "sha256:faf9bd35bc40b126f8558d5989cdea96be9db1b9bd470d48c3e1b368cff89adf"
       ],
       "module": {
@@ -22906,7 +22920,9 @@
     },
     {
       "consumers": [
-        "@flighthq/scene-document/packages/scene-document/src/flightDocumentText.ts"
+        "@flighthq/scene-document/packages/scene-document/src/contract.ts",
+        "@flighthq/scene-document/packages/scene-document/src/flightDocumentText.ts",
+        "@flighthq/scene-document/packages/scene-document/src/index.ts"
       ],
       "module": {
         "name": "SceneDocumentYamlSubset",
