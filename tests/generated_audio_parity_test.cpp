@@ -1322,6 +1322,39 @@ int main() {
                             .get();
     check(chosen->buffer.has_value(), "urls: the first playable source loads");
     check(net.requests == 1, "urls: only the selected source is requested");
+
+    // The decode arm at the LOADER level: the platform can play nothing, so the source is selected and
+    // loaded only because a caller-supplied decoder takes it.
+    MockNet custom_net;
+    custom_net.respond = [] {
+      return std::optional<flight::Ref<flight::types::NetResponse>>{
+          net_response(200.0, true, "audio/vnd.acme.custom", flight::ArrayBuffer(8.0))};
+    };
+    const auto custom_host = mock_net(custom_net);
+    const auto refuses = flight::make_ref<flight::types::HostAudioCodecCapability>();
+    refuses->can_play_type = [](flight::String) { return false; };
+    const auto custom_capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+    custom_capabilities->mp3 = decoding_slot(buffer, nullptr);
+    auto custom_registry = flight::types::AudioDecoderRegistry{};
+    custom_registry.set(flight::String("audio/vnd.acme.custom"),
+                        flight::types::AudioDecoder(
+                            [&buffer](flight::Uint8Array, flight::String, flight::AbortSignal) {
+                              return flight::Task<std::optional<flight::Ref<flight::types::AudioResource>>>::resolve(
+                                  flight::audio::create_audio_resource(buffer));
+                            }));
+    flight::Array<flight::Ref<flight::types::AudioResourceUrl>> only_custom{
+        [&] {
+          const auto entry = flight::make_ref<flight::types::AudioResourceUrl>();
+          entry->url = flight::String("sound.custom");
+          entry->type = flight::String("audio/vnd.acme.custom");
+          return entry;
+        }()};
+    const auto by_decoder = flight::audio::load_audio_resource_from_urls(
+                                custom_host, refuses, custom_capabilities, only_custom, controller.signal,
+                                custom_registry)
+                                .get();
+    check(by_decoder->buffer.has_value(),
+          "urls: a caller-supplied decoder loads a format the platform cannot play");
   }
 
   // ---- (end of audioResourceFrom) ----------------------------------------------------------------
