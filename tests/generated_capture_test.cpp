@@ -1,5 +1,8 @@
 // Native port of all 30 test declarations in packages/capture/src/*.test.ts at Flight a627849,
 // plus capture lifecycle, bitmap dimension/RGBA-byte-layout, result identity, and failure evidence.
+// Mutation check (2026-10-13): sort removal, shared baseline storage, provenance aliasing, grid
+// mismatch fallthrough, strict parity/regression boundaries, swapped field routing, and malformed
+// JSON acceptance all failed the intended assertions.
 #include <flight/capture/contract.hpp>
 
 #include <cmath>
