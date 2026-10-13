@@ -18,6 +18,7 @@
 #include <flight/audio/audio_format.hpp>
 #include <flight/abort.hpp>
 #include <flight/audio/audio_resource.hpp>
+#include <flight/audio/audio_resource_from.hpp>
 #include <flight/audio/audio_resource_reference.hpp>
 #include <flight/audio/decode_audio_resource_bytes.hpp>
 #include <flight/types/host_audio_codec.hpp>
@@ -884,6 +885,170 @@ int main() {
           "reference: a lookup over an empty document still reads as nothing");
   }
 
-  // ---- audioResourceFrom.test.ts
+  // ---- audioResourceFrom.test.ts -----------------------------------------------------------------
+  //
+  // Supplied by the hand-written override audio_resource_from.hpp. The existing
+  // tests/generated_audio_test.cpp already covers createAudioResourceFromSamples's two blank cases,
+  // so those are not repeated here; the samples-copy path and the selection rules are.
+
+  {
+    // Building from samples COPIES them, so the caller's arrays stay independent of the buffer's.
+    flight::Float32Array left{0.0, 0.5, 0.25};
+    flight::Float32Array right{0.75, -0.5, 0.25};
+    flight::Array<flight::Float32Array> channels{left, right};
+    const auto resource = flight::audio::create_audio_resource_from_samples(channels, 48000.0);
+    check(resource->buffer.has_value(), "samples: a non-empty channel list builds a buffer");
+    check_close(resource->buffer.value().number_of_channels, 2.0,
+                "samples: the channel count is the list length");
+    check_close(resource->buffer.value().length, 3.0, "samples: the frame count is the channel length");
+    check_close(resource->buffer.value().sample_rate, 48000.0, "samples: the requested rate is kept");
+
+    const auto copied = resource->buffer.value().get_channel_data(1.0);
+    check_close(copied[0], 0.75, "samples: the second channel's first sample round-trips");
+    check_close(copied[1], -0.5, "samples: a negative sample round-trips");
+    check_close(copied[2], 0.25, "samples: the last sample round-trips");
+
+    // Mutating the caller's array after the fact must NOT reach the buffer -- that is what "copies"
+    // means, and it is the difference between this and borrowing.
+    right[0] = 100.0;
+    check_close(resource->buffer.value().get_channel_data(1.0)[0], 0.75,
+                "samples: the buffer copied the samples rather than borrowing the caller's arrays");
+  }
+
+  {
+    // SELECTION. The gate is canPlayType OR a caller-supplied decoder -- and a host decode slot is
+    // deliberately NOT an arm, because a platform-backed host declares all seven slots whatever its
+    // element can play, so letting them vote would leave canPlayType with no veto.
+    const auto codec = flight::make_ref<flight::types::HostAudioCodecCapability>();
+    codec->can_play_type = [](flight::String type) { return type == flight::String("audio/ogg"); };
+    const auto source = [](const char* url, std::optional<flight::String> type) {
+      const auto entry = flight::make_ref<flight::types::AudioResourceUrl>();
+      entry->url = flight::String(url);
+      entry->type = type;
+      return entry;
+    };
+
+    flight::Array<flight::Ref<flight::types::AudioResourceUrl>> sources{source("a.mp3", std::nullopt),
+                                                                       source("b.ogg", std::nullopt)};
+    const auto picked = flight::audio::select_audio_resource_url(codec, sources, std::nullopt);
+    check(picked.has_value() && picked.value() == flight::String("b.ogg"),
+          "select: the first source whose INFERRED type is playable wins");
+
+    flight::Array<flight::Ref<flight::types::AudioResourceUrl>> typed{source("stream", flight::String("audio/ogg"))};
+    const auto explicit_type = flight::audio::select_audio_resource_url(codec, typed, std::nullopt);
+    check(explicit_type.has_value() && explicit_type.value() == flight::String("stream"),
+          "select: an explicit type is honoured over the URL extension");
+
+    flight::Array<flight::Ref<flight::types::AudioResourceUrl>> unplayable{source("a.mp3", std::nullopt),
+                                                                          source("b.wav", std::nullopt)};
+    check(!flight::audio::select_audio_resource_url(codec, unplayable, std::nullopt).has_value(),
+          "select: nothing playable selects nothing");
+
+    // The decode arm alone: canPlayType says no to everything, so the source is accepted only because
+    // something can decode it.
+    const auto refuses = flight::make_ref<flight::types::HostAudioCodecCapability>();
+    refuses->can_play_type = [](flight::String) { return false; };
+    auto registry = flight::types::AudioDecoderRegistry{};
+    registry.set(flight::String("audio/vnd.acme.custom"),
+                 flight::types::AudioDecoder(
+                     [](flight::Uint8Array, flight::String, flight::AbortSignal) {
+                       return flight::Task<std::optional<flight::Ref<flight::types::AudioResource>>>::resolve(
+                           flight::audio::create_audio_resource(std::nullopt));
+                     }));
+    flight::Array<flight::Ref<flight::types::AudioResourceUrl>> custom{
+        source("sound.custom", flight::String("audio/vnd.acme.custom"))};
+    const auto by_decoder = flight::audio::select_audio_resource_url(refuses, custom, registry);
+    check(by_decoder.has_value() && by_decoder.value() == flight::String("sound.custom"),
+          "select: a caller-supplied decoder can carry a source the platform cannot play");
+
+    // ...but a HOST DECODE SLOT is not a selection arm even though the format is standard.
+    flight::Array<flight::Ref<flight::types::AudioResourceUrl>> ogg{source("sound.ogg", flight::String("audio/ogg"))};
+    check(!flight::audio::select_audio_resource_url(refuses, ogg, std::nullopt).has_value(),
+          "select: a host decode slot alone does not make a source playable");
+  }
+
+  {
+    // LOADING FROM BYTES rejects rather than resolving null -- the loader's contract differs from the
+    // raw decode path it is built on, and that difference is the point of the loader.
+    const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+    const auto slot = flight::make_ref<flight::types::HostAudioDecodeFormatCapability>();
+    const auto buffer = mock_buffer();
+    slot->decode = [&buffer](flight::Uint8Array, flight::AbortSignal) {
+      return flight::Task<std::optional<flight::AudioBuffer>>::resolve(
+          std::optional<flight::AudioBuffer>{buffer});
+    };
+    capabilities->mp3 = slot;
+
+    flight::Uint8Array caller_bytes{1, 2, 3};
+    flight::AbortController controller;
+    const auto loaded = flight::audio::load_audio_resource_from_bytes(
+                            capabilities, caller_bytes, flight::String("audio/mpeg"), controller.signal)
+                            .get();
+    check(loaded->buffer.has_value() && loaded->buffer.value().length == buffer.length,
+          "loadBytes: bytes decode into a resource");
+    check(caller_bytes.length() == 3 && caller_bytes[0] == 1,
+          "loadBytes: the loader does not detach the caller's bytes");
+
+    // A caller-supplied decoder is preferred when the MIME type is known.
+    const auto caller_buffer = mock_buffer(300.0);
+    auto registry = flight::types::AudioDecoderRegistry{};
+    registry.set(flight::String("audio/mpeg"),
+                 flight::types::AudioDecoder(
+                     [&caller_buffer](flight::Uint8Array, flight::String, flight::AbortSignal) {
+                       return flight::Task<std::optional<flight::Ref<flight::types::AudioResource>>>::resolve(
+                           flight::audio::create_audio_resource(caller_buffer));
+                     }));
+    const auto preferred = flight::audio::load_audio_resource_from_bytes(
+                               capabilities, caller_bytes, flight::String("audio/mpeg"),
+                               controller.signal, registry)
+                               .get();
+    check(preferred->buffer.value().length == caller_buffer.length,
+          "loadBytes: a caller-supplied decoder is preferred when the type is known");
+
+    // An expected miss REJECTS here, where the raw decode path would have resolved null.
+    auto missing = flight::types::AudioDecoderRegistry{};
+    missing.set(flight::String("audio/mpeg"),
+                flight::types::AudioDecoder(
+                    [](flight::Uint8Array, flight::String, flight::AbortSignal) {
+                      return flight::Task<std::optional<flight::Ref<flight::types::AudioResource>>>::resolve(
+                          std::nullopt);
+                    }));
+    bool miss_rejected = false;
+    try {
+      static_cast<void>(flight::audio::load_audio_resource_from_bytes(
+                            capabilities, caller_bytes, flight::String("audio/mpeg"), controller.signal,
+                            missing)
+                            .get());
+    } catch (...) {
+      miss_rejected = true;
+    }
+    check(miss_rejected, "loadBytes: a caller decoder's expected miss rejects rather than resolving null");
+
+    // An abort that is already set rejects before the decode is attempted.
+    int decodes = 0;
+    const auto counting = flight::make_ref<flight::types::HostAudioDecodeFormatCapability>();
+    counting->decode = [&decodes, &buffer](flight::Uint8Array, flight::AbortSignal) {
+      ++decodes;
+      return flight::Task<std::optional<flight::AudioBuffer>>::resolve(std::optional<flight::AudioBuffer>{buffer});
+    };
+    const auto counting_capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+    counting_capabilities->mp3 = counting;
+    flight::AbortController aborted;
+    aborted.abort();
+    bool pre_abort_rejected = false;
+    try {
+      static_cast<void>(flight::audio::load_audio_resource_from_bytes(
+                            counting_capabilities, caller_bytes, flight::String("audio/mpeg"), aborted.signal)
+                            .get());
+    } catch (...) {
+      pre_abort_rejected = true;
+    }
+    check(pre_abort_rejected, "loadBytes: an already-aborted signal rejects");
+    check(decodes == 0, "loadBytes: an already-aborted signal never reaches the decoder");
+  }
+
+  // ---- (end) -------------------------------------------------------------------------------------
+
+
   return failures == 0 ? 0 : 1;
 }
