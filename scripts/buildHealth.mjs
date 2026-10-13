@@ -258,7 +258,8 @@ function filesUnder(directory, include) {
     const status = lstatSync(filename);
     if (status.isSymbolicLink()) continue;
     if (status.isDirectory()) {
-      if (entry === 'build' || entry === 'out' || entry.startsWith('bazel-')) continue;
+      // Git's object store is never build input, and walking it fails on a damaged loose object.
+      if (entry === '.git' || entry === 'build' || entry === 'out' || entry.startsWith('bazel-')) continue;
       files.push(...filesUnder(filename, include));
     } else if (include(entry)) files.push(filename);
   }
