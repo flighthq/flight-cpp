@@ -1,0 +1,265 @@
+diff --git a/packages/compiler-orchestration/src/compilerPackageCompilation.ts b/packages/compiler-orchestration/src/compilerPackageCompilation.ts
+index 017eced..51e9a1e 100644
+--- a/packages/compiler-orchestration/src/compilerPackageCompilation.ts
++++ b/packages/compiler-orchestration/src/compilerPackageCompilation.ts
+@@ -67,18 +67,21 @@ export function compileTypeScriptPackageGraph<BackendOptions>(
+   const lowered = lowerTypeScriptSources(
+     options.sources.map(({ packageRoot: _packageRoot, ...source }) => source),
+     semanticResolution,
+-    options.observeProgress
+-      ? {
+-          observeProgress(progress) {
+-            observeCompilerPackageCompilationProgress(options.observeProgress, {
+-              ...progress,
+-              module: cloneCompilerPackageGraphIdentity(progress.module),
+-              phase: 'module-lowering',
+-              schema: 'flight-compiler-package-compilation-progress/1',
+-            });
+-          },
+-        }
+-      : {},
++    {
++      ...(options.observeProgress
++        ? {
++            observeProgress(progress) {
++              observeCompilerPackageCompilationProgress(options.observeProgress, {
++                ...progress,
++                module: cloneCompilerPackageGraphIdentity(progress.module),
++                phase: 'module-lowering',
++                schema: 'flight-compiler-package-compilation-progress/1',
++              });
++            },
++          }
++        : {}),
++      ...(options.profileTypeNames === undefined ? {} : { profileTypeNames: options.profileTypeNames }),
++    },
+   );
+   observeCompilerPackageCompilationProgress(options.observeProgress, {
+     moduleCount: lowered.length,
+diff --git a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+index 7bfb587..d5e4b70 100644
+--- a/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
++++ b/packages/compiler-semantic/src/typeScriptSemanticLowering.ts
+@@ -105,6 +105,8 @@ import {
+ 
+ interface LoweringContext {
+   analysisModuleOptions: ReadonlyMap<string, Readonly<LowerTypeScriptSourceOptions>>;
++  /** Type-space names the loaded binding profiles provide, as explicit compiler input. */
++  profileTypeNames: ReadonlySet<string>;
+   bindingTypes: Map<ts.Symbol, IrType>;
+   bindings: Map<ts.Symbol, IrBindingIdentity>;
+   checker: ts.TypeChecker;
+@@ -188,7 +190,11 @@ export function lowerTypeScriptSources(
+   const analysisModuleOptions = new Map(
+     sources.map(({ packageName, sourceFile, upstreamDirectory }) => [
+       sourceFile.fileName,
+-      { packageName, upstreamDirectory },
++      {
++        packageName,
++        upstreamDirectory,
++        ...(options.profileTypeNames === undefined ? {} : { profileTypeNames: options.profileTypeNames }),
++      },
+     ]),
+   );
+   return sources.map((source, index) => {
+@@ -201,9 +207,12 @@ export function lowerTypeScriptSources(
+         state: 'started',
+       });
+     }
++    // The module input carries what the caller said about the module; the per-module options carry what
++    // the LOWERING was told about every module in the run (the profile's declared type names). The
++    // context reads one object, so the two are merged here rather than in each of them.
+     const result = lowerTypeScriptSourceWithAnalysis(
+       analysis.sourceFiles[index]!,
+-      source,
++      { ...source, ...(analysisModuleOptions.get(source.sourceFile.fileName) ?? {}) },
+       analysis.checker,
+       analysisModuleOptions,
+       analysis.symbolReferenceStatements,
+@@ -256,6 +265,7 @@ function lowerTypeScriptSourceWithAnalysis(
+     moduleSourceFile: sourceFile,
+     options,
+     origins: new WeakMap(),
++    profileTypeNames: new Set(options.profileTypeNames ?? []),
+     returnTargetTypes: [],
+     returnTypes: [],
+     sourceFile,
+@@ -998,7 +1008,8 @@ function lowerExpression(
+     }
+     const constructionShape = targetShape?.kind === 'array' ? targetShape : contextualShape;
+     const constructionType =
+-      constructionShape?.kind === 'array' && isIrExpressionValueTypeEvidence(constructionShape)
++      constructionShape?.kind === 'array' &&
++      isIrExpressionValueTypeEvidence(constructionShape, context.profileTypeNames)
+         ? constructionShape
+         : undefined;
+     return {
+@@ -1090,7 +1101,10 @@ function lowerExpression(
+         ? getTypeScriptCheckerTypeEvidence(context.checker.getTypeAtLocation(node), context, 0, true, node)
+         : undefined;
+     const candidateType = declaredCandidateType ?? initializerCandidateType;
+-    const type = candidateType && isIrExpressionValueTypeEvidence(candidateType) ? candidateType : undefined;
++    const type =
++      candidateType && isIrExpressionValueTypeEvidence(candidateType, context.profileTypeNames)
++        ? candidateType
++        : undefined;
+     const resolved =
+       getIrResolvedMemberReceiver(receiver) ??
+       getIrResolvedMemberReceiver(receiverShape) ??
+@@ -1296,29 +1310,41 @@ function lowerExpression(
+ // introduce generic binders, while arbitrary library ambient names can be checker-local parameters;
+ // replaying either at every property access would manufacture duplicate declarations or runtime ABI
+ // requirements. Calls and declared storage continue to carry their full authoritative types.
+-function isIrExpressionValueTypeEvidence(type: Readonly<IrType>): boolean {
++function isIrExpressionValueTypeEvidence(
++  type: Readonly<IrType>,
++  profileTypeNames: ReadonlySet<string> = new Set(),
++): boolean {
+   switch (type.kind) {
+     case 'array':
+-      return isIrExpressionValueTypeEvidence(type.element);
++      return isIrExpressionValueTypeEvidence(type.element, profileTypeNames);
+     case 'intersection':
+     case 'union':
+-      return type.types.every(isIrExpressionValueTypeEvidence);
++      return type.types.every((member) => isIrExpressionValueTypeEvidence(member, profileTypeNames));
+     case 'tuple':
+-      return type.elements.every((element) => isIrExpressionValueTypeEvidence(element.type));
++      return type.elements.every((element) => isIrExpressionValueTypeEvidence(element.type, profileTypeNames));
+     case 'named':
+       return (
+-        (type.reference.kind === 'binding' || getIrResolvedMemberReceiver(type) !== undefined) &&
+-        type.typeArguments.every(isIrExpressionValueTypeEvidence)
++        // A name the loaded binding profiles provide is a declared type for this run: the emitter can
++        // spell its carrier and the target's binding check refuses it if no profile binds it, so the
++        // analysis may keep it. Everything else is evidence only where the compiler knows the receiver.
++        (type.reference.kind === 'binding' ||
++          type.reference.kind === 'ambient' && profileTypeNames.has(type.reference.name) ||
++          getIrResolvedMemberReceiver(type) !== undefined) &&
++        type.typeArguments.every((argument) => isIrExpressionValueTypeEvidence(argument, profileTypeNames))
+       );
+     case 'function':
+       return (
+         type.typeParameters.length === 0 &&
+-        type.parameters.every((parameter) => isIrExpressionValueTypeEvidence(parameter.type)) &&
+-        isIrExpressionValueTypeEvidence(type.returns)
++        type.parameters.every((parameter) =>
++          isIrExpressionValueTypeEvidence(parameter.type, profileTypeNames),
++        ) &&
++        isIrExpressionValueTypeEvidence(type.returns, profileTypeNames)
+       );
+     case 'object':
+       return type.properties.every(
+-        (property) => property.computedKey?.kind !== 'ambient' && isIrExpressionValueTypeEvidence(property.type),
++        (property) =>
++          property.computedKey?.kind !== 'ambient' &&
++          isIrExpressionValueTypeEvidence(property.type, profileTypeNames),
+       );
+     case 'literal':
+     case 'never':
+@@ -8361,14 +8387,53 @@ function getTypeScriptPropertyNarrowedType(
+   context: LoweringContext,
+ ): { narrowedType?: IrType } {
+   const declared = getTypeScriptExpressionDeclaredType(node, context);
+-  if (!declared) return {};
+-  const narrowedType = getTypeScriptCheckerFlowNarrowedTypeEvidence(
+-    declared,
+-    context.checker.getTypeAtLocation(node),
+-    node,
+-    context,
++  const flow = context.checker.getTypeAtLocation(node);
++  const fromDeclaration = declared
++    ? getTypeScriptCheckerFlowNarrowedTypeEvidence(declared, flow, node, context)
++    : undefined;
++  if (fromDeclaration) return { narrowedType: fromDeclaration };
++  // The checker does not keep every declared union whole, so its `declared` type is the wrong place to
++  // learn what a guard selected. A union spelled with `unknown` in it IS `unknown` to the checker, and a
++  // member the checker cannot resolve collapses the union around it -- in both cases there is no union to
++  // compare against while the WRITTEN alternatives are exactly the ones the carrier stores. Fall back to
++  // those, so a guard proves what it proved rather than where it happened to be written.
++  return getTypeScriptWrittenUnionNarrowedType(node, flow, context);
++}
++
++
++// The narrowing a written union supports, read from the alternatives the declaration states.
++//
++// Only a real selection counts: the flow must have kept FEWER alternatives than the declaration, so a
++// guard that merely removed absence stays on the presence lane rather than being restated as a variant
++// choice, and exactly one declared alternative may answer the flow's name -- a flow that still names
++// several of them selected nothing, and one that names none selected nothing this rule can name.
++function getTypeScriptWrittenUnionNarrowedType(
++  node: ts.PropertyAccessExpression,
++  flow: ts.Type,
++  context: LoweringContext,
++): { narrowedType?: IrType } {
++  const written = getTypeScriptExpressionBindingTypeEvidence(node, context);
++  const union = written?.kind === 'union' ? written : undefined;
++  if (!union) return {};
++  const present = union.types.filter((member) => member.kind !== 'null' && member.kind !== 'undefined');
++  const memberName = (member: Readonly<IrType>): string | undefined => {
++    if (member.kind === 'primitive') return member.name;
++    if (member.kind === 'named' && member.reference.kind === 'ambient') return member.reference.name;
++    return undefined;
++  };
++  const declaredNames = present.map(memberName).filter((value): value is string => value !== undefined);
++  if (declaredNames.length === 0) return {};
++  const flowMembers = flow.isUnion() ? flow.types : [flow];
++  const flowNames = flowMembers.map(
++    (member) => getTypeScriptNamedTypeMemberName(member) ?? getTypeScriptPrimitiveTypeName(member),
+   );
+-  return narrowedType ? { narrowedType } : {};
++  if (flowNames.some((value) => value === undefined)) return {};
++  if (flowNames.length >= declaredNames.length) return {};
++  const matched = present.filter((member) => {
++    const name = memberName(member);
++    return name !== undefined && flowNames.includes(name);
++  });
++  return matched.length === 1 ? { narrowedType: matched[0]! } : {};
+ }
+ 
+ // The deliberately small compiler ambient surface can leave the project checker with `any` for a
+diff --git a/packages/compiler-types/src/compilerPackageCompilationContract.ts b/packages/compiler-types/src/compilerPackageCompilationContract.ts
+index dd1e9bf..705878b 100644
+--- a/packages/compiler-types/src/compilerPackageCompilationContract.ts
++++ b/packages/compiler-types/src/compilerPackageCompilationContract.ts
+@@ -79,6 +79,12 @@ export interface CompileTypeScriptPackageGraphOptions<BackendOptions> {
+   /** Synchronous, opt-in progress for diagnosing a long-running package-graph compilation. */
+   readonly observeProgress?: ((progress: Readonly<CompilerPackageCompilationProgress>) => void) | undefined;
+   readonly patches?: readonly SemanticPatch[] | undefined;
++  /**
++   * Type-space names the target profile provides through the binding profiles this run loaded, forwarded to
++   * the analysis as declared types. Input, never a list the compiler keeps: a name absent here is not a type
++   * the analysis may assume, so a union naming it keeps no evidence and the read behind it refuses.
++   */
++  readonly profileTypeNames?: readonly string[] | undefined;
+   readonly sourceParser?: Readonly<CompilerEmittedSourceParser> | undefined;
+   readonly sources: readonly TypeScriptPackageGraphSource[];
+   readonly targetCompilationSmoke?: Readonly<CompilerTargetCompilationSmoke> | undefined;
+diff --git a/packages/compiler-types/src/compilerTypeScriptContract.ts b/packages/compiler-types/src/compilerTypeScriptContract.ts
+index fa4a64a..0e0bfbd 100644
+--- a/packages/compiler-types/src/compilerTypeScriptContract.ts
++++ b/packages/compiler-types/src/compilerTypeScriptContract.ts
+@@ -7,11 +7,23 @@ import type { CompilerModuleIdentity } from './compilerSourceIdentity.js';
+ export interface LowerTypeScriptSourceOptions {
+   readonly packageName: string;
+   readonly upstreamDirectory: string;
++  /**
++   * Type-space names the target profile provides through the binding profiles this run actually loaded.
++   *
++   * A profile's external binding names a carrier the emitter can spell, but the analysis is given the
++   * target's own ambient surface, which does not declare it. A union naming such a type therefore loses
++   * that alternative -- and with it the evidence every guard on the union reads. These names are input,
++   * never a list the compiler keeps: a name absent here is not a type the analysis may assume, so a union
++   * naming it keeps no evidence and the read behind it refuses.
++   */
++  readonly profileTypeNames?: readonly string[] | undefined;
+ }
+ 
+ export interface LowerTypeScriptSourcesOptions {
+   /** Synchronous source boundaries for diagnosing a long-running project lowering. */
+   readonly observeProgress?: ((progress: Readonly<TypeScriptModuleLoweringProgress>) => void) | undefined;
++  /** The same input as `LowerTypeScriptSourceOptions.profileTypeNames`, for a multi-module lowering. */
++  readonly profileTypeNames?: readonly string[] | undefined;
+ }
+ 
+ export interface RuntimeExportDecision {

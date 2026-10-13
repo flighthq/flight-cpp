@@ -74,20 +74,17 @@ verbatim. That is a different operator with a different lowering; this is `insta
 
 ## Carried by a compiler patch
 
-`source-patches/compiler-runtime-instanceof-lowering.patch` lowers the test onto the carrier the operand
-already has and refuses by rule wherever that carrier cannot answer, so the source operator never reaches
-the emitted C++. Its controls are `cppRuntimeInstanceOf.test.ts`, and the patch's own manifest entry
-records the mutations that give them teeth.
+`source-patches/compiler-runtime-instanceof-lowering.patch` lowers the guard onto `flight::union_kind_if`
+and the projection it proves onto that function's throwing twin, so the source operator never reaches the
+emitted C++ and the two answers cannot disagree. The question itself lives in the runtime
+(`flight/optional_variant.hpp`), so the same walk over a carrier's alternatives answers a `std::optional`,
+a `std::variant` and a bare erased value, and its arms are pinned in `tests/union_kind_test.cpp`. The
+emitter's side is pinned in `cppRuntimeInstanceOf.test.ts`.
 
-The lowering does not by itself make the two measured modules compile, and that residue is a **second,
-separate defect** rather than a gap in this one. `NetResponseBody` is `string | unknown | ArrayBuffer |
-Blob | null`, and for a read of that declared type the semantic layer produces neither the union evidence
-the guard needs nor the narrowing the guarded read needs. `typeof o.body === 'string'` on the same
-property refuses for the same reason ("typeof requires closed runtime type evidence"), so the defect is
-not about `instanceof` at all. It is measured and filed as
-[`property-union-evidence-lost.md`](property-union-evidence-lost.md), with the row that still has to be
-run before anyone can name its cause exactly.
-
-What the patch does fix at these sites is the reason the file did not parse: `load.hpp` and
-`audio_resource_from.hpp` now contain a C++ kind test where the keyword was. What they still need is the
-projection the defect above withholds.
+The lowering does not by itself make the two measured modules compile, and that residue is a second,
+separate defect rather than a gap in this one: `NetResponseBody` is `string | unknown | ArrayBuffer | Blob
+| null`, and for a read of that declared type the analysis produced neither the union evidence the guard
+needs nor the narrowing the guarded read needs. `typeof o.body === 'string'` on the same property refused
+for the same reason, so the defect was never about `instanceof`. It is fixed by
+`source-patches/compiler-profile-type-name-evidence.patch` and recorded in
+[`property-union-evidence-lost.md`](property-union-evidence-lost.md).

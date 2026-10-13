@@ -362,6 +362,7 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
       upstreamDirectory: flightDependency.directory,
     })),
   );
+  process.stderr.write(`DEBUG profiles=${profiles.length} names=${profileTypeNames(profiles).length} sample=${profileTypeNames(profiles).slice(0,3).join('|')}\n`);
   const compilation = compileTypeScriptPackageGraph({
     backend: createCppCompilerBackend(),
     ...(bestEffort ? { bestEffort: true } : {}),
@@ -385,6 +386,7 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
       })),
       schema: 'flight-compiler-package-graph/1',
     },
+    profileTypeNames: profileTypeNames(profiles),
     ...(emitPathPrefixes.length > 0 ? { emitPathPrefixes } : {}),
     moduleResolution: createCompilerModuleResolutionPlan(inventory),
     ...(traceProgress
@@ -478,6 +480,10 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
       profile: profile.profile,
       schema: profile.schema,
     })),
+    // The names the analysis was given, beside the profiles they came from: the manifest says which
+    // profiles were loaded AND what the analysis was allowed to treat as a declared type, so a later run
+    // can tell a union that kept its alternatives from one that lost them.
+    profileTypeNames: profileTypeNames(profiles),
     namespaceMapping: {
       desiredRoot: 'flight',
       status: 'applied',
@@ -588,6 +594,22 @@ function mergeBindingProfiles(profiles) {
     bindings: profiles.flatMap((profile) => profile.bindings),
     schema: 'flight-cpp-external-bindings/1',
   };
+}
+
+// The type-space names the loaded binding profiles provide, as the explicit input the analysis needs to keep
+// a union that names one. Derived from the profiles this run loaded and from nothing else -- it is not a
+// list the compiler or this script keeps -- so a name no loaded profile binds stays out of the analysis,
+// the union naming it keeps no evidence, and the read behind it refuses.
+function profileTypeNames(profiles) {
+  const names = new Set();
+  for (const profile of profiles) {
+    for (const binding of profile.bindings ?? []) {
+      if (binding?.space === 'type' && typeof binding.sourceName === 'string' && binding.sourceName.length > 0) {
+        names.add(binding.sourceName);
+      }
+    }
+  }
+  return [...names].sort(compareText);
 }
 
 function writeSdkBuildMetadata(outputRoot, files) {

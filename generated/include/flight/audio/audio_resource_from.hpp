@@ -9,9 +9,9 @@
 #include <flight/blob.hpp>
 #include <flight/boolean.hpp>
 #include <flight/map.hpp>
+#include <flight/optional_variant.hpp>
 #include <flight/structural_ref.hpp>
 #include <optional>
-#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -100,7 +100,7 @@ inline flight::Task<flight::Ref<flight::types::AudioResource>> load_audio_resour
   if (!response->ok) {
     throw flight::Error(flight::String("Failed to load audio: ") + flight::to_string(url) + flight::String(" (") + flight::to_string(response->status) + flight::String(" ") + flight::to_string(response->status_text) + flight::String(")"));
   }
-  if (!([&]() { const auto& kind_test_value = response->body; return ((kind_test_value.has_value() && kind_test_value.value().index() == 0) || (kind_test_value.has_value() && kind_test_value.value().index() == 3 && std::get<3>(kind_test_value.value()).external_if<flight::ArrayBuffer>() != nullptr)); }())) {
+  if (!(flight::union_kind_if<flight::ArrayBuffer>(response->body) != nullptr)) {
     throw flight::Error(flight::String("Failed to load audio: ") + flight::to_string(url) + flight::String(" (invalid body)"));
   }
   co_return co_await load_audio_resource_from_bytes(audio_decode, flight::Uint8Array(response->body), ([&]() -> flight::String { auto nullish_coalesce_left = response->headers.get(flight::String("content-type")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return mime_type; }()), signal, decoders);

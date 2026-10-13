@@ -53,6 +53,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-readonly-union-view-conversion.patch`](../../source-patches/compiler-readonly-union-view-conversion.patch) | [Nominal union to readonly-view union](compiler-readonly-union-view-conversion.md) |
 | [`compiler-readonly-view-argument-substitution.patch`](../../source-patches/compiler-readonly-view-argument-substitution.patch) | [A callee's type parameter must not survive into an emitted structural row](compiler-generic-signal-row-projection.md) |
 | [`compiler-runtime-instanceof-lowering.patch`](../../source-patches/compiler-runtime-instanceof-lowering.patch) | [TypeScript `instanceof` is emitted verbatim as C++ text](instanceof-lowered-verbatim.md) |
+| [`compiler-profile-type-name-evidence.patch`](../../source-patches/compiler-profile-type-name-evidence.patch) | [A property union loses the guard's evidence](property-union-evidence-lost.md) |
 | [`compiler-scoped-emission-semantic-context.patch`](../../source-patches/compiler-scoped-emission-semantic-context.patch) | [Scoped emission must retain semantic context](compiler-scoped-emission-semantic-context.md) |
 | [`compiler-sdk-lane-local-reexports.patch`](../../source-patches/compiler-sdk-lane-local-reexports.patch) | [SDK-local re-exports in an SDK export lane](compiler-sdk-lane-local-reexports.md) |
 | [`compiler-structural-row-weak-keys.patch`](../../source-patches/compiler-structural-row-weak-keys.patch) | [Structural rows as WeakMap keys](compiler-structural-row-weak-keys.md) |
@@ -186,10 +187,6 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `@flighthq/video` refuses because six element domains map to `flight::host_sdl::ImageSource`, whose
   runtime carrier **already carries `ImageSourceKind`** for exactly this; the binding schema simply has
   no field to declare it. Same profile family as `render-wgpu`'s image-source refusals.
-- [A property union loses the guard's evidence: a host-bound alternative, and an `unknown` segment](property-union-evidence-lost.md) —
-  two independent axes, each measured against a control that varies one thing; `@flighthq/loader` cannot
-  compile `load.hpp` and `@flighthq/audio` needs its override for the projection. No workaround is carried
-  for the loader.
 - [A lambda whose fallback is absence is declared to return the present type](logical-or-lambda-return-type.md) —
   `blob.type || undefined` becomes a `String`-returning lambda with `return std::nullopt`; the audio
   override has hand-fixed this shape since the pin before last.

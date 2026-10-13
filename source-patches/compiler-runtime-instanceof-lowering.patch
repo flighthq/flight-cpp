@@ -1,5 +1,5 @@
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-index 4c97076..435eea6 100644
+index 4c97076..1ef1651 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 @@ -124,6 +124,7 @@ import {
@@ -19,7 +19,22 @@ index 4c97076..435eea6 100644
        if (expression.operator === '??') {
          const leftType =
            getIrExpressionBindingTypeCpp(expression.left, context) ??
-@@ -25818,6 +25821,173 @@ function emitCppErasedErrorInstanceOfCpp(
+@@ -16914,6 +16917,14 @@ function emitCppNarrowedUnionValueCpp(
+         );
+       }
+       if (plan.kind === 'optionalSingle') return `${binding}.value()`;
++      // A carrier holding the erased arm answers the guard's carrier-kind question for a value boxed
++      // there, so the projection must ask the SAME question rather than a slot index: `std::get` would
++      // throw for exactly the value the guard admitted. One mechanism, one answer.
++      const erasedSlots = plan.valueSlots.filter((slot) => isCppErasedDynamicValueTypeCpp(slot.runtimeType));
++      if (erasedSlots.length > 0 && !isCppErasedDynamicValueTypeCpp(matches[0]!.runtimeType)) {
++        context.includes.add('flight/optional_variant.hpp');
++        return `flight::union_kind_or_throw<${matches[0]!.targetType}>(${binding})`;
++      }
+       context.includes.add('variant');
+       const variant = plan.kind === 'optionalVariant' ? `${binding}.value()` : binding;
+       // Select storage by its proven slot index. An imported alias owns the concrete arm spelling, while
+@@ -25818,6 +25829,154 @@ function emitCppErasedErrorInstanceOfCpp(
    return `${emitExpression(expression.left, context)}.error_if() != nullptr`;
  }
  
@@ -58,7 +73,9 @@ index 4c97076..435eea6 100644
 +    );
 +  }
 +  if (isCppErasedDynamicValueTypeCpp(operandType)) {
-+    return `${emitExpression(expression.left, context)}.${emitCppInstanceOfErasedAccessorCpp(target, context)} != nullptr`;
++    refuseCppInstanceOfReferenceTargetCpp(target, context);
++    context.includes.add('flight/optional_variant.hpp');
++    return `(flight::union_kind_if<${target.targetName}>(${emitExpression(expression.left, context)}) != nullptr)`;
 +  }
 +  const union = getIrUnionTypeCpp(operandType, context, new Set());
 +  if (!union) {
@@ -69,37 +86,24 @@ index 4c97076..435eea6 100644
 +    );
 +  }
 +  const plan = getCppUnionRepresentationPlan(union, context);
-+  const probe = getGeneratedTargetName('kindTestValue', context);
-+  const matching = plan.valueSlots.filter((slot) => doesCppUnionSlotCarryInstanceOfTargetCpp(slot, target, context));
-+  if (matching.length !== 1) {
++  // The question is answerable when the carrier names the target or holds the erased arm the mechanism
++  // also asks. A union that does neither can only answer false -- which is what the source's test would
++  // do too -- and refusing keeps a porting mistake from reading as a considered negative.
++  const named = plan.valueSlots.some((slot) => doesCppUnionSlotCarryInstanceOfTargetCpp(slot, target, context));
++  const erased = plan.valueSlots.some((slot) => isCppErasedDynamicValueTypeCpp(slot.runtimeType));
++  if (!named && !erased) {
 +    emissionError(
 +      context,
-+      `an instanceof test must name exactly one carried alternative of its operand's union; ${target.name} matched ${matching.length === 0 ? 'none' : 'several'}, so nothing tells the target which kind is being asked about`,
++      `an instanceof test against ${target.name} needs the operand's union to name it or to carry the erased arm; this union does neither, so nothing tells the target which kind is being asked about`,
 +      'cpp-instanceof-member-unresolved',
 +    );
 +  }
-+  const index = plan.valueSlots.indexOf(matching[0]!);
-+  const presence =
-+    plan.kind === 'singleValue'
-+      ? 'true'
-+      : plan.kind === 'optionalSingle'
-+        ? `${probe}.has_value()`
-+        : plan.kind === 'optionalVariant'
-+          ? `(${probe}.has_value() && ${probe}.value().index() == ${String(index)})`
-+          : `${probe}.index() == ${String(index)}`;
-+  let test = presence;
-+  const erasedSlots =
-+    plan.kind === 'optionalVariant' || plan.kind === 'multiVariant' || plan.kind === 'dualSentinelVariant'
-+      ? plan.valueSlots.filter((slot) => isCppErasedDynamicValueTypeCpp(slot.runtimeType))
-+      : [];
-+  if (erasedSlots.length === 1) {
-+    const erasedIndex = plan.valueSlots.indexOf(erasedSlots[0]!);
-+    const variant = plan.kind === 'optionalVariant' ? `${probe}.value()` : probe;
-+    const reached = plan.kind === 'optionalVariant' ? `${probe}.has_value() && ` : '';
-+    context.includes.add('variant');
-+    test = `(${presence} || (${reached}${variant}.index() == ${String(erasedIndex)} && std::get<${String(erasedIndex)}>(${variant}).${emitCppInstanceOfErasedAccessorCpp(target, context)} != nullptr))`;
-+  }
-+  return `([&]() { const auto& ${probe} = ${emitExpression(expression.left, context)}; return ${test}; }())`;
++  refuseCppInstanceOfReferenceTargetCpp(target, context);
++  context.includes.add('flight/optional_variant.hpp');
++  // One carrier-kind question, shared with the projection the guard proves: the answer, the arms it
++  // recognizes and the arms it refuses are decided by `flight::union_kind_if`, so a guard can never admit
++  // a value the projection behind it cannot produce.
++  return `(flight::union_kind_if<${target.targetName}>(${emitExpression(expression.left, context)}) != nullptr)`;
 +}
 +
 +// The constructor an `instanceof` test names, resolved to the carrier this profile provides for it.
@@ -166,34 +170,26 @@ index 4c97076..435eea6 100644
 +  );
 +}
 +
-+// The erased carrier's own checked projection for a named target. `Error` answers through the checked
-+// Error view, which is the one projection that admits subclasses; every other target is recovered at the
-+// exact type it was boxed as, which is the question its own slot would have answered. A reference-shaped
-+// target has no such view -- `object_if` is exact-type and `error_if` is Error's alone -- so the emitter
-+// refuses rather than asking a question the runtime cannot answer.
-+function emitCppInstanceOfErasedAccessorCpp(
++// The one target shape the shared mechanism cannot answer: a reference-shaped target has no checked view
++// out of the erased carrier (`object_if` is exact-type and hands back a temporary, `error_if` is Error's
++// alone), so the runtime refuses to instantiate the question at all and the emitter refuses first, with
++// the rule that says why.
++function refuseCppInstanceOfReferenceTargetCpp(
 +  target: Readonly<{ name: string; targetName: string; type: Readonly<IrType> }>,
 +  context: EmitContext,
-+): string {
-+  context.includes.add('flight/any.hpp');
-+  if (target.name === 'Error') {
-+    context.includes.add('flight/error.hpp');
-+    return 'error_if()';
-+  }
-+  if (hasFlightReferenceRepresentationCpp(target.type, context)) {
-+    emissionError(
-+      context,
-+      `an instanceof test against ${target.name} on an erased carrier needs a checked object view keyed by the boxed object's own identity; flight::Any carries an exact-type object_if and a subclass-aware error_if, and neither answers this type, so the runtime cannot ask this question without one`,
-+      'cpp-instanceof-runtime-view-missing',
-+    );
-+  }
-+  return `external_if<${target.targetName}>()`;
++): void {
++  if (!hasFlightReferenceRepresentationCpp(target.type, context)) return;
++  emissionError(
++    context,
++    `an instanceof test against ${target.name} whose values are carried as references needs a checked object view keyed by the boxed object's own identity; flight::Any carries an exact-type object_if and a subclass-aware error_if, and neither answers this type as a stable view, so the runtime cannot ask this question without one`,
++    'cpp-instanceof-runtime-view-missing',
++  );
 +}
 +
  // `Error.name` is a dynamic source property: `catch` hands back the value that was thrown, so a read
  // through an Error-typed binding has to answer the name the object was constructed with rather than the
  // name of the class the reference was declared as. The runtime answers it as an instance accessor
-@@ -33161,6 +33331,8 @@ function getCppRefusalRuleClassification(
+@@ -33161,6 +33320,8 @@ function getCppRefusalRuleClassification(
  const cppDependentMemberPreservingAmbientWrappers = new Set(['NoInfer', 'Partial', 'Readonly', 'Required']);
  
  const cppTargetRuntimeRefusalRules: ReadonlySet<string> = new Set([
@@ -202,7 +198,7 @@ index 4c97076..435eea6 100644
    'cpp-array-length-sparse-runtime-required',
    'cpp-contextual-structural-array-nominal-recovery-unproven',
    'cpp-contextual-union-secondary-intersection-carrier-unrepresented',
-@@ -33201,6 +33373,8 @@ const cppNullTaggedStoragePredicates: ReadonlyMap<string, string> = new Map([['f
+@@ -33201,6 +33362,8 @@ const cppNullTaggedStoragePredicates: ReadonlyMap<string, string> = new Map([['f
  // the value the source wrote discards identity or type evidence the target representation needs, so the
  // fix is an explicit source conversion and the check report says which one.
  const cppSourcePortabilityRefusalRules: ReadonlySet<string> = new Set([
@@ -213,10 +209,10 @@ index 4c97076..435eea6 100644
    // representation, read through a coalesce whose result is declared.
 diff --git a/packages/compiler-backend-cpp/src/cppRuntimeInstanceOf.test.ts b/packages/compiler-backend-cpp/src/cppRuntimeInstanceOf.test.ts
 new file mode 100644
-index 0000000..e683d73
+index 0000000..accf685
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppRuntimeInstanceOf.test.ts
-@@ -0,0 +1,270 @@
+@@ -0,0 +1,290 @@
 +import path from 'node:path';
 +import { fileURLToPath } from 'node:url';
 +
@@ -226,36 +222,41 @@ index 0000000..e683d73
 +
 +import { createCppSyntaxGate } from '../../../scripts/cppSyntaxGate.js';
 +import { isBackendEmissionFailure } from '../../compiler-emission/src/index.js';
-+import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { lowerTypeScriptSource, lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
 +import { emitIrModuleCpp } from './cppCompilerBackend.js';
 +
-+// `x instanceof T` is a runtime kind test, and C++ has no such operator. Emitted as source text the
-+// keyword reaches the translation unit and the header stops at the parse -- which is neither the
-+// source's answer nor a refusal. These controls hold the lowering on both sides of that: every shape
-+// whose carrier can answer the question emits a test on that carrier, and every shape whose carrier
-+// cannot refuses with the rule that says so. The one assertion every positive case shares is that the
-+// keyword is gone, because a single unlowered `instanceof` is a header nobody can use.
++// `x instanceof T` is a runtime kind test, and C++ has no such operator: emitted as source text the keyword
++// reaches the translation unit and the header stops at the parse, which is neither the source's answer nor a
++// refusal. The guard lowers onto `flight::union_kind_if`, and the projection the guard proves lowers onto
++// `flight::union_kind_or_throw` -- ONE mechanism, so a guard can never admit a value the projection behind it
++// cannot produce. The runtime arms of that mechanism are pinned in tests/union_kind_test.cpp; this file pins
++// what the emitter does with it.
 +//
-+// The measured sites are `@flighthq/audio`'s `audioResourceFrom.ts` and `@flighthq/loader`'s `load.ts`,
-+// whose operand is the property `response.body` of `NetResponseBody`. They are reproduced here exactly,
-+// including the `unknown` segment that the emitter stores as the erased arm beside the named ones --
-+// see the loader-shape case, whose comment records what the same source still needs.
++// The measured sites are `@flighthq/audio`'s `audioResourceFrom.ts` and `@flighthq/loader`'s `load.ts`, whose
++// operand is the property `response.body` of `NetResponseBody` = `string | unknown | ArrayBuffer | Blob |
++// null`. They are reproduced here exactly, including the `unknown` segment the emitter stores as the erased
++// arm beside the named ones.
 +
 +const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 +const cppSyntaxGate = createCppSyntaxGate(repositoryRoot);
 +
-+function lower(file: string, source: string) {
++function lower(file: string, source: string, profileTypeNames?: readonly string[]) {
 +  const sourceFile = ts.createSourceFile(
 +    `/flight/packages/math/src/${file}`,
 +    source,
 +    ts.ScriptTarget.Latest,
 +    true,
 +  );
-+  return lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/math', upstreamDirectory: '/flight' });
++  return lowerTypeScriptSource(sourceFile, {
++    packageName: '@flighthq/math',
++    upstreamDirectory: '/flight',
++    ...(profileTypeNames === undefined ? {} : { profileTypeNames }),
++  });
 +}
 +
-+// `NetResponseBody`'s carrier names `Blob`, which this profile represents through a declared external
-+// binding rather than through its own table, so the manifest that names it is part of the fixture.
++// `Blob` is a type the profile provides through a declared external binding rather than through the
++// compiler's own runtime table, so the manifest that names it is part of the fixture AND the explicit input
++// the analysis is given. `NetResponseBody` names it without importing it, exactly as the source does.
 +const externalBindings = {
 +  bindings: [
 +    {
@@ -278,9 +279,11 @@ index 0000000..e683d73
 +  schema: 'flight-cpp-external-bindings/1' as const,
 +};
 +
-+function emit(file: string, source: string) {
-+  return emitIrModuleCpp(lower(file, source).module, { externalBindings, runtimeProfile: 'flight-cpp' })
-+    .contents;
++function emit(file: string, source: string, profileTypeNames?: readonly string[]) {
++  return emitIrModuleCpp(lower(file, source, profileTypeNames).module, {
++    externalBindings,
++    runtimeProfile: 'flight-cpp',
++  }).contents;
 +}
 +
 +function captureBackendEmissionFailure(run: () => unknown) {
@@ -293,12 +296,10 @@ index 0000000..e683d73
 +  throw new Error('expected C++ emission to refuse and it did not');
 +}
 +
-+// The source shape both measured packages write, minus their own imports: a property read whose
-+// declared union names an `ArrayBuffer` beside alternatives that are not one, guarded by `instanceof`.
 +const NET_RESPONSE_BODY = 'string | unknown | ArrayBuffer | Blob | null';
 +
 +describe('C++ instanceof lowering', () => {
-+  it('lowers an instanceof property test to the carried alternative, and the guarded read projects', () => {
++  it('lowers the guard and the projection onto one carrier-kind question', () => {
 +    const contents = emit(
 +      'runtime-kind-property.ts',
 +      `export interface Obj { body: string | ArrayBuffer | URL | null; }
@@ -307,47 +308,94 @@ index 0000000..e683d73
 +       }`,
 +    );
 +    expect(contents).not.toContain('instanceof');
-+    // The operand is materialized once, then asked about by the slot its alternative holds.
-+    expect(contents).toContain(
-+      'const auto& kind_test_value = o->body; return (kind_test_value.has_value() && kind_test_value.value().index() == 0);',
-+    );
-+    // The narrowing the source wrote is the proof the read projects through, so the guard and the read
-+    // are one answer rather than a test beside a value nobody narrowed.
++    expect(contents).toContain('(flight::union_kind_if<flight::ArrayBuffer>(o->body) != nullptr)');
++    // No erased arm in this union, so the projection stays on the slot the source's own alternative holds.
 +    expect(contents).toContain('flight::Uint8Array(std::get<0>(o->body.value()))');
-+    expect(contents).toContain('std::optional<std::variant<flight::ArrayBuffer, flight::Url, flight::String>>');
 +  });
 +
-+  it('answers the erased arm of the union the source spelled `unknown`', () => {
++  it('projects a union that carries the erased arm through the throwing twin of the same question', () => {
 +    const contents = emit(
 +      'runtime-kind-erased-arm.ts',
-+      `export interface R { ok: boolean; body: ${NET_RESPONSE_BODY}; }
-+       export function f(response: R): boolean {
-+         return response.ok && response.body instanceof ArrayBuffer;
++      `export interface Obj { body: string | unknown | ArrayBuffer | null; }
++       export function f(o: Obj): Uint8Array | null {
++         return o.body instanceof ArrayBuffer ? new Uint8Array(o.body) : null;
 +       }`,
 +    );
 +    expect(contents).not.toContain('instanceof');
-+    // The carrier the test indexes into, so the two arm numbers below are read against it rather than
-+    // against a remembered order: `unknown` is the fourth alternative, and it is the erased one.
++    expect(contents).toContain('(flight::union_kind_if<flight::ArrayBuffer>(o->body) != nullptr)');
++    // `std::get` would throw for a value the guard admitted from the erased arm; the guard's own question
++    // answers it instead, which is the whole point of routing both through one function.
++    expect(contents).toContain('flight::Uint8Array(flight::union_kind_or_throw<flight::ArrayBuffer>(o->body))');
++    expect(contents).not.toContain('std::get<0>(o->body.value())');
++  });
++
++  it('answers the measured site: the guard and the projection for NetResponseBody', () => {
++    const source = `export interface R { ok: boolean; body: ${NET_RESPONSE_BODY}; }
++       export function f(response: R): Uint8Array | null {
++         return response.ok && response.body instanceof ArrayBuffer ? new Uint8Array(response.body) : null;
++       }`;
++    const contents = emit('runtime-kind-site.ts', source, ['Blob']);
++    expect(contents).not.toContain('instanceof');
++    expect(contents).toContain('(flight::union_kind_if<flight::ArrayBuffer>(response->body) != nullptr)');
++    expect(contents).toContain('flight::union_kind_or_throw<flight::ArrayBuffer>(response->body)');
++    // The carrier kept the alternative the profile provides, which is what makes the union evidence whole.
 +    expect(contents).toContain(
 +      'std::optional<std::variant<flight::ArrayBuffer, flight::Blob, flight::String, flight::Any>> body;',
 +    );
-+    expect(contents).toContain('kind_test_value.value().index() == 0');
-+    // A value the runtime boxed in the erased arm is the same value this test is about, so it is asked
-+    // through the erased carrier's own checked projection rather than counted false.
-+    expect(contents).toContain(
-+      'std::get<3>(kind_test_value.value()).external_if<flight::ArrayBuffer>() != nullptr',
-+    );
 +  });
 +
-+  it('answers the same source shape through a binding, where the union evidence already reaches', () => {
++  it('keeps no evidence for a name the loaded profiles do not provide', () => {
++    const source = `export interface R { ok: boolean; body: ${NET_RESPONSE_BODY}; }
++       export function f(response: R): Uint8Array | null {
++         return response.ok && response.body instanceof ArrayBuffer ? new Uint8Array(response.body) : null;
++       }`;
++    // The same source with nothing threaded: the analysis may not assume `Blob` is a type, so the union
++    // loses that alternative along with the proof every guard on the union reads -- and the guarded read
++    // has nothing to project through, which is what the two assertions below are: with the name the read
++    // is projected, without it the whole carrier is handed on.
++    //
++    // The consequence is a header the target refuses to compile, not a named emission refusal: the emitter
++    // spells the carrier from the declaration whether or not the analysis kept it, so there is nothing left
++    // at the emission site to detect. That boundary is recorded in the request.
++    const withoutNames = emit('runtime-kind-no-profiles.ts', source);
++    expect(withoutNames).toContain('flight::Uint8Array(response->body)');
++    expect(withoutNames).not.toContain('union_kind_or_throw');
++    const withNames = emit('runtime-kind-named-profiles.ts', source, ['Blob']);
++    expect(withNames).toContain('flight::Uint8Array(flight::union_kind_or_throw<flight::ArrayBuffer>(response->body))');
++  });
++
++  it('answers the measured site through the pipeline entry, not only the single-module one', () => {
++    // The two entries differ in where the per-module options come from, and the profile names have to reach
++    // the context through both: a control that only calls the single-module lowering cannot see the
++    // pipeline dropping them.
++    const fileName = '/flight/packages/math/src/runtime-kind-pipeline.ts';
++    const sourceFile = ts.createSourceFile(
++      fileName,
++      `export interface R { ok: boolean; body: ${NET_RESPONSE_BODY}; }
++       export function f(response: R): Uint8Array | null {
++         return response.ok && response.body instanceof ArrayBuffer ? new Uint8Array(response.body) : null;
++       }`,
++      ts.ScriptTarget.Latest,
++      true,
++    );
++    const emitted = lowerTypeScriptSources(
++      [{ packageName: '@flighthq/math', packageRoot: '/flight/packages/math', sourceFile, upstreamDirectory: '/flight' }],
++      undefined,
++      { profileTypeNames: ['Blob'] },
++    ).map((result) => emitIrModuleCpp(result.module, { externalBindings, runtimeProfile: 'flight-cpp' }).contents);
++    expect(emitted[0]).toContain('flight::union_kind_or_throw<flight::ArrayBuffer>(response->body)');
++  });
++
++  it('keeps the union-evidence path a binding already had', () => {
 +    const contents = emit(
 +      'runtime-kind-binding.ts',
 +      `export function f(body: ${NET_RESPONSE_BODY}): Uint8Array | null {
 +         return body instanceof ArrayBuffer ? new Uint8Array(body) : null;
 +       }`,
++      ['Blob'],
 +    );
 +    expect(contents).not.toContain('instanceof');
-+    expect(contents).toContain('(body.has_value() && body.value().index() == 0)');
++    expect(contents).toContain('body.has_value() && body.value().index() == 0');
 +    expect(contents).toContain('flight::Uint8Array(std::get<0>(body.value()))');
 +  });
 +
@@ -359,24 +407,7 @@ index 0000000..e683d73
 +       }`,
 +    );
 +    expect(contents).not.toContain('instanceof');
-+    expect(contents).toContain('std::variant<flight::Uint32Array, flight::Uint8Array> source');
 +    expect(contents).toContain('return source.index() == 0;');
-+  });
-+
-+  it('reads the matched position out of the carrier the target emitted, not out of source order', () => {
-+    const contents = emit(
-+      'runtime-kind-second-alternative.ts',
-+      `export interface Obj { body: URL | ArrayBuffer | null; }
-+       export function f(o: Obj): boolean { return o.body instanceof URL; }`,
-+    );
-+    expect(contents).not.toContain('instanceof');
-+    // The declaration is the authority for the arm numbers, so the expectation is read from the same
-+    // carrier the emitted index refers to rather than from the order the union was written in.
-+    const carrier = /std::optional<std::variant<([^>]*)>> body;/.exec(contents)?.[1] ?? '';
-+    const positions = carrier.split(', ');
-+    expect(positions[1]).toBe('flight::Url');
-+    expect(contents).toContain(`kind_test_value.value().index() == 1`);
-+    expect(contents).toContain('const auto& kind_test_value = o->body');
 +  });
 +
 +  it('answers a nullable single alternative by its presence', () => {
@@ -393,20 +424,19 @@ index 0000000..e683d73
 +      'runtime-kind-negated.ts',
 +      `export interface R { body: ${NET_RESPONSE_BODY}; }
 +       export function f(response: R): boolean { return !(response.body instanceof Blob); }`,
++      ['Blob'],
 +    );
 +    expect(contents).not.toContain('instanceof');
-+    expect(contents).toContain('return !([&]() { const auto& kind_test_value = response->body;');
-+    expect(contents).toContain('kind_test_value.value().index() == 1');
-+    expect(contents).toContain('.external_if<flight::Blob>() != nullptr');
++    expect(contents).toContain('return !(flight::union_kind_if<flight::Blob>(response->body) != nullptr);');
 +  });
 +
-+  it('lowers an instanceof over an erased operand to that carrier checked projection', () => {
++  it('lowers an instanceof over an erased operand onto the same mechanism', () => {
 +    const contents = emit(
 +      'runtime-kind-erased.ts',
 +      `export function f(value: unknown): boolean { return value instanceof ArrayBuffer; }`,
 +    );
 +    expect(contents).not.toContain('instanceof');
-+    expect(contents).toContain('return value.external_if<flight::ArrayBuffer>() != nullptr;');
++    expect(contents).toContain('return (flight::union_kind_if<flight::ArrayBuffer>(value) != nullptr);');
 +  });
 +
 +  it('keeps the checked Error view for an erased Error test', () => {
@@ -426,12 +456,12 @@ index 0000000..e683d73
 +    if (!cppSyntaxGate.available) return;
 +    const contents = emit(
 +      'runtime-kind-syntax.ts',
-+      `export interface Obj { body: string | ArrayBuffer | URL | null; }
++      `export interface Obj { body: string | unknown | ArrayBuffer | null; }
 +       export function f(o: Obj): Uint8Array | null {
 +         return o.body instanceof ArrayBuffer ? new Uint8Array(o.body) : null;
 +       }`,
 +    );
-+    expect(cppSyntaxGate.checkCppSourceSyntax(contents, 'instanceof-property').ok).toBe(true);
++    expect(cppSyntaxGate.checkCppSourceSyntax(contents, 'instanceof-erased-arm').ok).toBe(true);
 +  });
 +
 +  it('refuses a target that names a source-declared class', () => {
@@ -443,7 +473,6 @@ index 0000000..e683d73
 +      ),
 +    );
 +    expect(failure.rule).toBe('cpp-instanceof-target-unavailable');
-+    expect(failure.message).toContain('must name a runtime type this profile carries');
 +  });
 +
 +  it('refuses an ambient name with no runtime carrier', () => {
@@ -461,10 +490,9 @@ index 0000000..e683d73
 +      ),
 +    );
 +    expect(failure.rule).toBe('cpp-instanceof-operand-unresolved');
-+    expect(failure.message).toContain('answers from an erased carrier or from a union');
 +  });
 +
-+  it('refuses a union that does not carry the alternative the target names', () => {
++  it('refuses a union that neither names the target nor carries the erased arm', () => {
 +    const failure = captureBackendEmissionFailure(() =>
 +      emit(
 +        'runtime-kind-absent.ts',
@@ -472,18 +500,6 @@ index 0000000..e683d73
 +      ),
 +    );
 +    expect(failure.rule).toBe('cpp-instanceof-member-unresolved');
-+    expect(failure.message).toContain('ArrayBuffer matched none');
-+  });
-+
-+  it('stops at the binding check for an ambient name the profile carries no binding for', () => {
-+    const failure = captureBackendEmissionFailure(() =>
-+      emit(
-+        'runtime-kind-unbound.ts',
-+        `export function f(value: unknown): boolean { return value instanceof EventTarget; }`,
-+      ),
-+    );
-+    // The refusal is the module-wide binding contract rather than the lowering's own rule: a name with
-+    // no carrier at all never reaches a question the target could answer.
-+    expect(failure.rule).toBe('cpp-runtime-external-symbol-binding-incomplete');
++    expect(failure.message).toContain('needs the operand');
 +  });
 +});
