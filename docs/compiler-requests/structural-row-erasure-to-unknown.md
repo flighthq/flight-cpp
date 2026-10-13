@@ -83,3 +83,11 @@ The current full inventory has two other direct examples of the same carrier gap
 Those sites ask different questions after erasure, so clearing this construction rule is not a claim
 that their later computed access, predicate, or logging paths all emit. No source rewrite, compiler
 patch, or generated repair is carried for the Scene3D site.
+
+For textureatlas this is the only refused body in `enableTextureAtlasGuards.ts`, but it is not safe
+to "repair" by dropping the `atlas` field from the warning data or copying the visible atlas members.
+The upstream warning includes the original atlas object alongside `message`, `regionId`, and
+`status`; the existing `Any::object` carrier requires an exact nominal `Ref`, while the callback is
+allowed to receive any `Readonly<TextureAtlas>` structural owner. Until `Any` can retain that row
+owner, the built-in enabling path must remain explicitly partial rather than claim a complete guard
+whose observable log payload differs.

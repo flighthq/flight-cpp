@@ -345,6 +345,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [An argument is passed without constructing its declared parameter type](compiler-union-and-literal-argument-construction.md)
   — a union argument to an overloaded call, and an object literal into an `std::optional` parameter;
   recorded so they are not confused with intl's own refusals.
+- [Contextual object literals for overloaded calls need an owned options carrier](contextual-object-literal-owner-materialization.md)
+  — textureatlas passes a discriminated 2D options literal to `createTexture`, but the emitted call
+  materializes none of the owned option carriers accepted by the native overload set.
 - [`typeof` on a recursively union-typed value lowers to a constant comparison](compiler-typeof-narrowing-on-recursive-union.md)
   — `@flighthq/tokens`; the existing tokens-string-narrowing-binding patch no longer helps at a627849
   because it reaches the same fold.

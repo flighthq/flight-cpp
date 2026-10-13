@@ -38,8 +38,17 @@ unconditionally returning true, or treating a blob URL as the blob's bytes chang
 `createImageResourceFromBitmap` and `loadImageResourceFromUrl` declarations because external-symbol
 planning stops the module before per-function emission.
 
+`@flighthq/textureatlas` `textureAtlasFrom.ts` inherits that refusal after its own local texture
+options mismatch is removed: its four load helpers call the absent image declarations. URL loading
+itself and the base64 data-URL wrapper can delegate directly to the represented
+`HostImageCapability.loadImageFromUrl` callable. Blob and byte loading cannot be reconstructed
+faithfully in textureatlas, because their source contract requires object-URL creation, revocation
+in `finally`, and the same asynchronous settlement described above.
+
 ## Carrying workaround
 
-None. Rewriting only this package around an SDL-specific URL implementation would invert the host
-boundary, while an override has no declared runtime operation with which to reproduce URL resolution or
-blob-URL creation and revocation. The module remains a request-backed refusal.
+None for the refused image module as a whole. Rewriting it around an SDL-specific URL implementation
+would invert the host boundary, while an override has no declared runtime operation with which to
+reproduce URL resolution or blob-URL creation and revocation. A dependent package may faithfully
+delegate its URL and base64 entry points to the already represented host capability, but blob and
+byte entry points remain request-backed omissions until this binding exists.

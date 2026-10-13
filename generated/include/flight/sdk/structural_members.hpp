@@ -996,6 +996,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("linkages") && requires { object.linkages; }) return (object.linkages);
   else if constexpr (Key::name.view() == std::string_view("list") && requires { object.list; }) return (object.list);
   else if constexpr (Key::name.view() == std::string_view("loadFontFaces") && requires { object.load_font_faces; }) return (object.load_font_faces);
+  else if constexpr (Key::name.view() == std::string_view("loadImageFromUrl") && requires { object.load_image_from_url; }) return (object.load_image_from_url);
   else if constexpr (Key::name.view() == std::string_view("loaded") && requires { object.loaded; }) return (object.loaded);
   else if constexpr (Key::name.view() == std::string_view("locAlphaCutoff") && requires { object.loc_alpha_cutoff; }) return (object.loc_alpha_cutoff);
   else if constexpr (Key::name.view() == std::string_view("locAlphaIsCoverage") && requires { object.loc_alpha_is_coverage; }) return (object.loc_alpha_is_coverage);
@@ -3218,6 +3219,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("linkages") && requires(Object& object) { object.linkages; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().linkages)>>{};
   else if constexpr (Key::name.view() == std::string_view("list") && requires(Object& object) { object.list; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().list)>>{};
   else if constexpr (Key::name.view() == std::string_view("loadFontFaces") && requires(Object& object) { object.load_font_faces; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().load_font_faces)>>{};
+  else if constexpr (Key::name.view() == std::string_view("loadImageFromUrl") && requires(Object& object) { object.load_image_from_url; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().load_image_from_url)>>{};
   else if constexpr (Key::name.view() == std::string_view("loaded") && requires(Object& object) { object.loaded; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().loaded)>>{};
   else if constexpr (Key::name.view() == std::string_view("locAlphaCutoff") && requires(Object& object) { object.loc_alpha_cutoff; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().loc_alpha_cutoff)>>{};
   else if constexpr (Key::name.view() == std::string_view("locAlphaIsCoverage") && requires(Object& object) { object.loc_alpha_is_coverage; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().loc_alpha_is_coverage)>>{};
@@ -5443,6 +5445,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->linkages; }) owner.bind_named("linkages", [object]() -> decltype(auto) { return (object->linkages); });
   if constexpr (requires { object->list; }) owner.bind_named("list", [object]() -> decltype(auto) { return (object->list); });
   if constexpr (requires { object->load_font_faces; }) owner.bind_named("loadFontFaces", [object]() -> decltype(auto) { return (object->load_font_faces); });
+  if constexpr (requires { object->load_image_from_url; }) owner.bind_named("loadImageFromUrl", [object]() -> decltype(auto) { return (object->load_image_from_url); });
   if constexpr (requires { object->loaded; }) owner.bind_named("loaded", [object]() -> decltype(auto) { return (object->loaded); });
   if constexpr (requires { object->loc_alpha_cutoff; }) owner.bind_named("locAlphaCutoff", [object]() -> decltype(auto) { return (object->loc_alpha_cutoff); });
   if constexpr (requires { object->loc_alpha_is_coverage; }) owner.bind_named("locAlphaIsCoverage", [object]() -> decltype(auto) { return (object->loc_alpha_is_coverage); });
@@ -7701,6 +7704,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(linkages)
   FLIGHT_SDK_ROW_WIDENS(list)
   FLIGHT_SDK_ROW_WIDENS(load_font_faces)
+  FLIGHT_SDK_ROW_WIDENS(load_image_from_url)
   FLIGHT_SDK_ROW_WIDENS(loaded)
   FLIGHT_SDK_ROW_WIDENS(loc_alpha_cutoff)
   FLIGHT_SDK_ROW_WIDENS(loc_alpha_is_coverage)
