@@ -63,6 +63,13 @@ return get_number_format(locale, std::optional<IntlNumberFormatOptions>{options}
 `_internal_index.hpp`. The literal shape is not intl-specific: any emitted module that passes a spread
 object literal into an optional-parameter call has it.
 
+The P-2D4 `@flighthq/textureatlas` pass measured a third site in
+`createTextureAtlasFromImageResource`. TypeScript selects the 2D `createTexture` overload from
+`{ dimension: '2d', source: resource }`; the emitted C++ forwards that braced literal to the full
+overload set, where it converts to none of the exact options owners or the options variant. The
+owner-local override explicitly constructs the generated 2D options owner and calls that exact
+overload.
+
 ## Carrying workaround
 
 None for the general case. Shape 2 has a precedent workaround elsewhere in the repository — a source

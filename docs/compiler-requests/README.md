@@ -301,6 +301,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `static_cast<T>(x)`, which an erased carrier cannot serve and which the runtime refuses to coerce.
 - [Readonly structural owners must enter their exact nominal union arm](readonly-structural-owner-to-nominal-union.md) —
   a retained concrete owner is not recovered when its readonly row enters `TextureLike`.
+- [An assertion from a nominal union must recover its exact owner alternative](asserted-exact-owner-from-nominal-union.md) —
+  TextureAtlas clones an exact 2D page through the declared `Texture` union, but the emitter refuses
+  to select the union's existing `Ref<Texture2D>` alternative.
 - [Strict identity must compare a readonly structural view with its nominal owner](readonly-structural-nominal-identity-comparison.md) —
   spritesheet emits `optional<StructuralRef<...>> == optional<Ref<...>>` without a refusal; the carried
   source local preserves the common readonly carrier and the same object identity.

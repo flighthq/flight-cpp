@@ -35,6 +35,13 @@ must not enter that arm. No object copy, materialized replacement, or side stora
 `cloneCubeTexture` in `@flighthq/texture` is the package-level refusal recorded for
 `packages/texture/src/cubeTexture.ts`.
 
+At the same pin, `@flighthq/textureatlas` reaches the same boundary in the private
+`setTextureAtlasRegionTextureWindow`: its `page: Readonly<Texture2D>` is passed to
+`getTextureWidth` and `getTextureHeight`, whose parameter is `TextureLike`. The emitter refuses the
+helper rather than selecting the exact `Texture2D` arm. The owner-local override calls those helpers
+with an explicitly constructed `TextureLike` arm from the already-exact page owner; it does not copy
+or recover writable authority from an unrelated row.
+
 ## Carrying workaround
 
 There is no semantics-preserving source workaround in this repository. The dimension-specific clone
