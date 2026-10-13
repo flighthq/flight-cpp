@@ -1,0 +1,122 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 793e581..c05ef26 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -5440,6 +5440,17 @@ function emitExpression(
+                 readonly: false,
+               }
+             : undefined;
++        // `new Set(collection.values())` -- and keys() -- passes an iterator that is never null or undefined. Lowering it against the constructor's `Iterable<T> | null | undefined` parameter asks for a
++        // contextual optional construction the iterator call has no evidence for, so it is lowered as itself and
++        // reaches the range constructor, which reads every value in order into new storage.
++        if (
++          index === 0 &&
++          getCppRuntimeProfile(context.options) === 'flight-cpp' &&
++          ambientConstructorName === 'Set' &&
++          isCppCollectionIteratorCallCpp(argument, context)
++        ) {
++          return emitExpression(argument, context);
++        }
+         return (
+           mapEntries ??
+           emitExpression(
+@@ -28913,6 +28924,26 @@ function isCppSetCopySourceCpp(argument: Readonly<IrExpression>, context: EmitCo
+   return collection?.reference.name === 'Set' || collection?.reference.name === 'ReadonlySet';
+ }
+ 
++// Whether an expression is `collection.values()` or `.keys()` on a Set, Map or Array receiver: an iterator call
++// whose result is never null or undefined. entries() is left out: flight::Set has no entries(), and a Set built
++// from entries holds a fresh [key, value] array per element, which is a different construction.
++function isCppCollectionIteratorCallCpp(expression: Readonly<IrExpression>, context: EmitContext): boolean {
++  if (expression.kind !== 'call' || expression.optional || expression.arguments.length !== 0) return false;
++  const callee = expression.callee;
++  if (callee.kind !== 'property' || callee.optional) return false;
++  if (callee.name !== 'values' && callee.name !== 'keys') return false;
++  const receiverType = getIrExpressionBindingTypeCpp(callee.object, context) ?? getIrExpressionTypeEvidenceCpp(callee.object, context);
++  if (!receiverType) return false;
++  if (receiverType.kind === 'array') return true;
++  const collection = getIrAmbientCollectionTypeCpp(receiverType, context, new Set());
++  return (
++    collection?.reference.name === 'Set' ||
++    collection?.reference.name === 'ReadonlySet' ||
++    collection?.reference.name === 'Map' ||
++    collection?.reference.name === 'ReadonlyMap'
++  );
++}
++
+ function getIrExpressionBindingTypeCpp(
+   expression: Readonly<IrExpression>,
+   context: EmitContext,
+diff --git a/packages/compiler-backend-cpp/src/cppNewSetIterator.test.ts b/packages/compiler-backend-cpp/src/cppNewSetIterator.test.ts
+new file mode 100644
+index 0000000..1fe1419
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppNewSetIterator.test.ts
+@@ -0,0 +1,67 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/x/src/x.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/x', upstreamDirectory: '/flight' });
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++function returned(source: string): string {
++  const body = emit(source).split('\n').find((line) => line.trim().startsWith('return '));
++  return body?.trim() ?? '';
++}
++
++describe('new Set(collection.values())', () => {
++  it('passes a values() or keys() iterator to the range constructor', () => {
++    expect(returned('export function f(set: Set<string>): Set<string> { return new Set(set.values()); }')).toBe(
++      'return flight::Set<flight::String>(set.values());',
++    );
++    expect(returned('export function f(set: ReadonlySet<string>): Set<string> { return new Set(set.keys()); }')).toBe(
++      'return flight::Set<flight::String>(set.keys());',
++    );
++    expect(returned('export function f(map: Map<string, number>): Set<string> { return new Set(map.keys()); }')).toBe(
++      'return flight::Set<flight::String>(map.keys());',
++    );
++    expect(returned('export function f(map: ReadonlyMap<string, number>): Set<number> { return new Set(map.values()); }')).toBe(
++      'return flight::Set<double>(map.values());',
++    );
++    expect(returned('export function f(values: string[]): Set<string> { return new Set(values.values()); }')).toBe(
++      'return flight::Set<flight::String>(values.values());',
++    );
++  });
++
++  it('lowers explicitly typed and generic constructors the same way', () => {
++    expect(returned('export function f(set: Set<string>): Set<string> { return new Set<string>(set.values()); }')).toBe(
++      'return flight::Set<flight::String>(set.values());',
++    );
++    expect(returned('export function f<T>(set: ReadonlySet<T>): Set<T> { return new Set(set.values()); }')).toBe(
++      'return flight::Set<T>(set.values());',
++    );
++  });
++
++  it('keeps entries() and a stored iterator refused', () => {
++    expect(() => emit('export function f(set: Set<string>): Set<[string, string]> { return new Set(set.entries()); }')).toThrow(
++      /contextual optionalSingle construction requires expression type evidence/u,
++    );
++    expect(() => emit('export function f(set: Set<string>): Set<string> { const it = set.values(); return new Set(it); }')).toThrow(
++      /flight::Any is not a represented runtime domain/u,
++    );
++  });
++
++  it('leaves the other constructor forms as they were', () => {
++    expect(returned('export function f(values: string[]): Set<string> { return new Set(values); }')).toBe(
++      'return flight::Set<flight::String>(values);',
++    );
++    expect(returned("export function f(): Set<string> { return new Set(['a', 'b']); }")).toBe(
++      'return flight::Set<flight::String>(flight::Array<flight::String>{flight::String("a"), flight::String("b")});',
++    );
++    expect(returned('export function f(): Set<string> { return new Set<string>(); }')).toBe('return flight::Set<flight::String>();');
++    expect(returned('export function f(set: ReadonlySet<string>): Set<string> { return new Set(set); }')).toBe(
++      'return flight::Set<flight::String>(set).clone();',
++    );
++  });
++});

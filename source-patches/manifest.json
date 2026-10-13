@@ -3747,6 +3747,23 @@
       "unblocks": "Correct `new Set(existingSet)` copies. At flight a627849 the one SDK site is @flighthq/scene3d-formats objRequirements.ts, fixed when its owner next regenerates; this change does not move it.",
       "expires": "when upstream lowers `new Set(existingSet)` to an independent copy (docs/compiler-requests/new-set-copy-lowered-to-alias.md).",
       "appliedOn": "2026-10-13"
+    },
+    {
+      "id": "compiler-new-set-from-iterator",
+      "dependency": "flight-compiler",
+      "patch": "compiler-new-set-from-iterator.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "contextual optionalSingle construction requires expression type evidence (cpp-contextual-union-missing-expression-type:optionalSingle), raised for `new Set(collection.values())` and `new Set(collection.keys())`: the argument was lowered against the Set constructor's `Iterable<T> | null | undefined` parameter, and an iterator call carries no evidence for that union construction.",
+      "rewrite": "In `new` expression argument emission, the single argument of a flight-cpp `new Set(...)` that is a non-optional, argument-free `values()` or `keys()` call on a Set, ReadonlySet, Map, ReadonlyMap or Array receiver is emitted as itself, with no contextual expected type, and reaches Set's range constructor. entries() and stored iterators are not matched and stay refused.",
+      "equivalence": "values() and keys() on those receivers return an iterator, never null or undefined, so the optional union the parameter type allows is never taken and constructing it adds nothing. Set's range constructor reads every value in iteration order into new storage, which is what `new Set(iterable)` does: values de-duplicate in first-seen order and the result is independent of the source.",
+      "verification": "New cppNewSetIterator.test.ts: 4 pass. The two iterator groups (values()/keys() on Set, ReadonlySet, Map, ReadonlyMap and Array; explicitly typed and generic constructors) fail without the rewrite. The boundary group (entries() and a stored iterator stay refused) and the control group (values array, literal, empty, and the Set copy that compiler-new-set-copy clones) pass both ways. compiler-backend-cpp suite at -j2 on top of compiler-new-set-copy: the same 47 pre-existing cppCompilerBackend.test.ts failures as the baseline, no new failure. Native: the emitted header, compiled and run, matches node 22 for new Set(set.values()) (independent of the source, insertion order kept), set.keys(), map.keys(), map.values() (de-duplicated in first-seen order) and array.values(), and live iteration still visits a value added during iteration.",
+      "whyNotUpstreamFirst": "It removes a refusal for a common construction, with a narrow and checkable condition; upstream receives docs/compiler-requests/new-set-from-collection-iterator.md.",
+      "unblocks": "new Set(x.values()) / new Set(x.keys()) on Set, Map and Array receivers. No SDK site at flight a627849 is refused on this today, so the change is preventive; scene2d-formats riveRequirements.ts already emits its map.keys() form.",
+      "expires": "when upstream lowers a never-null iterator argument to the Set constructor without a contextual optional construction (docs/compiler-requests/new-set-from-collection-iterator.md).",
+      "appliedOn": "2026-10-13"
     }
   ]
 }
