@@ -12,7 +12,7 @@ equality, ordering, exceptions, settlement, then format breadth.
 
 | Package | Focused native evidence | Highest remaining audited gap |
 | --- | --- | --- |
-| `texture` | Construction covers absent defaults and exact source/resource identity. Sampler, 2D, and dedicated cube equality cover null/undefined, same-owner, value-state, and distinct source/face identity. Copy/initialize evidence distinguishes construction-row identity, cloned mutable sampling state, shared source owners, preserved destination owners, self-alias safety, and fresh array/cube list storage; every legitimate dimension mismatch and both non-2D source setters reject before mutation. Source/readiness/size coverage includes first-source selection, all-absent forms, 2D replacement/version transitions, CPU/GPU kinds, width/height/view derivation for all four forms, non-positive dimensions, and voxel depth/data identity. UV coverage exercises forward/inverse and video matrices, exact transform order, flips, cardinal and singular edges, setter/reset identity, recomputation, presence, pixel rectangles, and output aliasing. Video coverage includes host-provider routing, omitted and absent domains, readiness gates, shared revision transitions, clone/copy ownership, replacement/clear, and idempotent destruction. Color-space coverage proves the complete decode/sample-format/upload-premultiply matrix, defaults, transition order, idempotence, and erased invalid/absence domains. | Sampler clone/copy ownership, all-field propagation, self-alias safety, and named preset breadth is now the highest-ranked executable residual. Cube face mutation/completeness/size and render-texture construction remain behind declared compiler refusals. |
+| `texture` | Construction covers absent defaults and exact source/resource identity. Sampler, 2D, and dedicated cube equality cover null/undefined, same-owner, value-state, and distinct source/face identity. Copy/initialize evidence distinguishes construction-row identity, cloned mutable sampling state, shared source owners, preserved destination owners, self-alias safety, and fresh array/cube list storage; every legitimate dimension mismatch and both non-2D source setters reject before mutation. Sampler coverage additionally proves exact defaults and partial initialization, all-field clone/copy, distinct owners, bidirectional mutation isolation, self-copy, and every named preset. Source/readiness/size coverage includes first-source selection, all-absent forms, 2D replacement/version transitions, CPU/GPU kinds, width/height/view derivation for all four forms, non-positive dimensions, and voxel depth/data identity. UV coverage exercises forward/inverse and video matrices, exact transform order, flips, cardinal and singular edges, setter/reset identity, recomputation, presence, pixel rectangles, and output aliasing. Video coverage includes host-provider routing, omitted and absent domains, readiness gates, shared revision transitions, clone/copy ownership, replacement/clear, and idempotent destruction. Color-space coverage proves the complete decode/sample-format/upload-premultiply matrix, defaults, transition order, idempotence, and erased invalid/absence domains. | No material executable behavior remains uncovered at this pin. Dedicated cube construction/clone and face mutation/completeness/size, plus render-texture construction, remain behind their documented compiler refusals; further executable cases are low-risk permutations. |
 | `texture-formats` | The byte-exact test covers all nine upstream modules: bounded/endian reads, detection and explanations, level layout, selection, and ATF/Basis/DDS/KTX2 parsing and rejection. Two restored source mutations prove mip-count and normalized image-order assertions. | No high-priority semantic gap was found. More malformed-header combinations would add breadth rather than a missing behavior family. |
 | `shading` | The focused test covers all modifier constructors, shared option identity, stable stack ordering, validation, registry isolation/replacement, built-in registration, and define keys. | Remaining cases are repeated option and invalid-value permutations; no uncovered absence, identity, equality, or ordering family was found. |
 | `materials` | `materials-native-inventory.md` records constructor/default, owner identity, equality, ordering, validation, conversion, guard lifecycle, and eight mutation oracles across all 22 suites. | Lower-priority detail remains in color-scale/bias helper permutations, whole-object Phong conversion precedence, forwarded optional-map permutations, and exact diagnostic text. |
@@ -128,12 +128,25 @@ erasure and take the no-decode, linear-format, upload-premultiply branch. Ten mu
 guard the four rows, default, both coupling directions, transition order, invalid fallthrough, and
 absence-domain assertion.
 
+The sampler follow-on proves all six fields through direct construction initialization, exact
+defaults, and a partial override whose four omitted fields default independently. Clone propagates
+every field into a distinct owner and mutations remain isolated in both directions. Copy propagates
+the same six fields without swapping filters or wraps, retains the existing destination owner,
+leaves source and destination independently mutable, and is stable when both arguments alias. The
+anisotropic, clamp-linear, pixel-art, and tiling presets each match their exact six-field contract;
+every invocation owns isolated state, so later mutations cannot leak across preset instances.
+Fifteen mutations independently guard defaults, omission, initializer propagation, clone/copy field
+coverage, owner aliasing, bidirectional isolation, self-copy, each preset, and preset isolation.
+
 ## Next useful work
 
-The next executable texture slice is sampler clone/copy and named preset coverage: independent owner
-identity, all six sampling fields, distinct-output and self-alias copy, construction initialization,
-and anisotropic, clamp-linear, pixel-art, and tiling presets. `getCubeTextureFaceSize`,
-`isCubeTextureComplete`, and `setCubeTextureFace` cannot join a cube slice until their recorded
-compiler restrictions are resolved; `createRenderTexture` likewise remains at its reference-heritage
-boundary. Image settlement is more valuable globally, but is not independent at this pin: it requires
-the existing browser URL/location and erased-owner compiler requests to land first.
+No further material executable texture behavior was found at this pin. The dedicated
+`cloneCubeTexture` and `createCubeTexture` entry points remain at their recorded flattened-interface
+refinement/heritage boundary even though their generic concrete-owner behavior is covered;
+`getCubeTextureFaceSize`, `isCubeTextureComplete`, and `setCubeTextureFace` remain behind their
+recorded optional-variant, presence-storage, and dynamic-tuple restrictions. `createRenderTexture`
+likewise remains at its reference-heritage boundary. Image settlement is more valuable globally,
+but is not independent at this pin: it requires the existing browser URL/location and erased-owner
+compiler requests to land first. Additional sampler/texture cases would be low-risk value
+permutations rather than a missing absence, identity, equality, ordering, exception, or settlement
+family.

@@ -1125,8 +1125,238 @@ int main(int argc, char** argv) {
 
   using SamplerView = flight::StructuralRef<
       flight::RowReadonly<flight::RowOf<types::SamplerLike>>>;
+  using SamplerOptionsView = flight::StructuralRef<flight::RowReadonly<
+      flight::RowPartial<flight::RowOf<types::SamplerLike>>>>;
   using OptionalSampler =
       std::variant<SamplerView, flight::Null, flight::Undefined>;
+  const auto sampler_matches = [](const flight::Ref<types::Sampler>& actual,
+                                  double anisotropy,
+                                  const char* mag_filter,
+                                  const char* min_filter,
+                                  bool mipmaps,
+                                  const char* wrap_u,
+                                  const char* wrap_v) {
+    return actual->anisotropy == anisotropy &&
+           actual->mag_filter == flight::String(mag_filter) &&
+           actual->min_filter == flight::String(min_filter) &&
+           actual->mipmaps == mipmaps &&
+           actual->wrap_u == flight::String(wrap_u) &&
+           actual->wrap_v == flight::String(wrap_v);
+  };
+
+  const auto default_sampler = texture::create_sampler(std::nullopt);
+  bool sampler_defaults =
+      sampler_matches(default_sampler, 1.0, "linear", "linear-mipmap-linear",
+                      true, "clamp-to-edge", "clamp-to-edge");
+  if (mutation == "--mutate-sampler-defaults") sampler_defaults = false;
+  check(sampler_defaults,
+        "createSampler writes the exact six-field default sampling state");
+
+  const SamplerOptionsView partial_sampler_options =
+      flight::make_structural_ref<flight::RowReadonly<
+          flight::RowPartial<flight::RowOf<types::SamplerLike>>>>(
+          flight::row_field<flight::RowKey<"anisotropy">>(
+              std::optional<double>{16.0}),
+          flight::row_field<flight::RowKey<"wrapU">>(
+              std::optional<flight::String>{flight::String("repeat")}));
+  const auto partial_sampler = texture::create_sampler(
+      std::optional<SamplerOptionsView>{partial_sampler_options});
+  bool sampler_omitted_defaults =
+      sampler_matches(partial_sampler, 16.0, "linear",
+                      "linear-mipmap-linear", true, "repeat",
+                      "clamp-to-edge");
+  if (mutation == "--mutate-sampler-omitted-field") {
+    sampler_omitted_defaults = false;
+  }
+  check(sampler_omitted_defaults,
+        "createSampler overrides supplied fields and defaults every omitted field independently");
+
+  const SamplerOptionsView all_sampler_options =
+      flight::make_structural_ref<flight::RowReadonly<
+          flight::RowPartial<flight::RowOf<types::SamplerLike>>>>(
+          flight::row_field<flight::RowKey<"anisotropy">>(
+              std::optional<double>{8.0}),
+          flight::row_field<flight::RowKey<"magFilter">>(
+              std::optional<flight::String>{flight::String("nearest")}),
+          flight::row_field<flight::RowKey<"minFilter">>(
+              std::optional<flight::String>{
+                  flight::String("nearest-mipmap-nearest")}),
+          flight::row_field<flight::RowKey<"mipmaps">>(
+              std::optional<bool>{false}),
+          flight::row_field<flight::RowKey<"wrapU">>(
+              std::optional<flight::String>{flight::String("repeat")}),
+          flight::row_field<flight::RowKey<"wrapV">>(
+              std::optional<flight::String>{
+                  flight::String("mirror-repeat")}));
+  auto sampler_construction =
+      flight::entity::allocate_entity<flight::Ref<types::Sampler>>();
+  const auto sampler_construction_owner = sampler_construction.shared_owner();
+  texture::initialize_sampler(
+      sampler_construction,
+      std::optional<SamplerOptionsView>{all_sampler_options});
+  const auto initialized_sampler =
+      flight::entity::finish_entity<flight::Ref<types::Sampler>>(
+          sampler_construction);
+  const SamplerView initialized_sampler_view(initialized_sampler);
+  bool sampler_initializer =
+      initialized_sampler_view.shared_owner() == sampler_construction_owner &&
+      sampler_matches(initialized_sampler, 8.0, "nearest",
+                      "nearest-mipmap-nearest", false, "repeat",
+                      "mirror-repeat");
+  if (mutation == "--mutate-sampler-initializer") {
+    sampler_initializer = false;
+  }
+  check(sampler_initializer,
+        "initializeSampler writes all six fields through the retained construction owner");
+
+  const auto sampler_source = texture::create_sampler(
+      std::optional<SamplerOptionsView>{all_sampler_options});
+  const auto sampler_clone =
+      texture::clone_sampler(SamplerView(sampler_source));
+  bool sampler_clone_fields =
+      sampler_matches(sampler_clone, 8.0, "nearest",
+                      "nearest-mipmap-nearest", false, "repeat",
+                      "mirror-repeat");
+  if (mutation == "--mutate-sampler-clone-omitted-field") {
+    sampler_clone_fields = false;
+  }
+  check(sampler_clone_fields,
+        "cloneSampler propagates all six sampling fields without omission");
+  bool sampler_clone_owner = sampler_clone != sampler_source;
+  if (mutation == "--mutate-sampler-clone-alias") {
+    sampler_clone_owner = false;
+  }
+  check(sampler_clone_owner,
+        "cloneSampler allocates an independent sampler owner");
+  sampler_clone->anisotropy = 2.0;
+  sampler_clone->wrap_v = flight::String("clamp-to-edge");
+  sampler_source->mag_filter = flight::String("linear");
+  bool sampler_clone_independence =
+      sampler_source->anisotropy == 8.0 &&
+      sampler_source->wrap_v == flight::String("mirror-repeat") &&
+      sampler_clone->mag_filter == flight::String("nearest");
+  if (mutation == "--mutate-sampler-clone-independence") {
+    sampler_clone_independence = false;
+  }
+  check(sampler_clone_independence,
+        "cloneSampler mutations cannot leak in either direction");
+  sampler_source->mag_filter = flight::String("nearest");
+
+  const auto sampler_copy_out = texture::create_sampler(std::nullopt);
+  const auto sampler_copy_owner = sampler_copy_out;
+  texture::copy_sampler(sampler_copy_out, SamplerView(sampler_source));
+  bool sampler_copy_fields =
+      sampler_matches(sampler_copy_out, 8.0, "nearest",
+                      "nearest-mipmap-nearest", false, "repeat",
+                      "mirror-repeat");
+  if (mutation == "--mutate-sampler-copy-swapped-field") {
+    sampler_copy_fields = false;
+  }
+  check(sampler_copy_fields,
+        "copySampler propagates all six fields without swapping either wrap or filter");
+  bool sampler_copy_owner_stable =
+      sampler_copy_out == sampler_copy_owner &&
+      sampler_copy_out != sampler_source;
+  if (mutation == "--mutate-sampler-copy-alias") {
+    sampler_copy_owner_stable = false;
+  }
+  check(sampler_copy_owner_stable,
+        "copySampler writes through the existing independent destination owner");
+  sampler_copy_out->wrap_u = flight::String("clamp-to-edge");
+  sampler_source->min_filter = flight::String("linear");
+  bool sampler_copy_independence =
+      sampler_source->wrap_u == flight::String("repeat") &&
+      sampler_copy_out->min_filter ==
+          flight::String("nearest-mipmap-nearest");
+  if (mutation == "--mutate-sampler-copy-independence") {
+    sampler_copy_independence = false;
+  }
+  check(sampler_copy_independence,
+        "copySampler leaves source and destination independently mutable");
+  sampler_source->min_filter = flight::String("nearest-mipmap-nearest");
+
+  const auto self_copy_before = std::tuple{
+      sampler_source->anisotropy, sampler_source->mag_filter,
+      sampler_source->min_filter, sampler_source->mipmaps,
+      sampler_source->wrap_u, sampler_source->wrap_v};
+  texture::copy_sampler(sampler_source, SamplerView(sampler_source));
+  bool sampler_self_copy =
+      self_copy_before ==
+      std::tuple{sampler_source->anisotropy, sampler_source->mag_filter,
+                 sampler_source->min_filter, sampler_source->mipmaps,
+                 sampler_source->wrap_u, sampler_source->wrap_v};
+  if (mutation == "--mutate-sampler-self-copy") sampler_self_copy = false;
+  check(sampler_self_copy,
+        "copySampler is stable when source and destination are the same owner");
+
+  const auto anisotropic_sampler =
+      texture::create_anisotropic_sampler(16.0);
+  bool anisotropic_preset =
+      sampler_matches(anisotropic_sampler, 16.0, "linear",
+                      "linear-mipmap-linear", true, "clamp-to-edge",
+                      "clamp-to-edge");
+  if (mutation == "--mutate-sampler-preset-anisotropic") {
+    anisotropic_preset = false;
+  }
+  check(anisotropic_preset,
+        "createAnisotropicSampler changes only the supplied anisotropy level");
+
+  const auto clamp_sampler = texture::create_clamp_linear_sampler();
+  bool clamp_preset =
+      sampler_matches(clamp_sampler, 1.0, "linear", "linear-mipmap-linear",
+                      true, "clamp-to-edge", "clamp-to-edge");
+  if (mutation == "--mutate-sampler-preset-clamp") clamp_preset = false;
+  check(clamp_preset,
+        "createClampLinearSampler produces the exact default sampling state");
+
+  const auto pixel_sampler = texture::create_pixel_art_sampler();
+  bool pixel_preset =
+      sampler_matches(pixel_sampler, 1.0, "nearest", "nearest", false,
+                      "clamp-to-edge", "clamp-to-edge");
+  if (mutation == "--mutate-sampler-preset-pixel") pixel_preset = false;
+  check(pixel_preset,
+        "createPixelArtSampler selects nearest filters, no mipmaps, and clamp wrapping");
+
+  const auto tiling_sampler = texture::create_tiling_sampler();
+  bool tiling_preset =
+      sampler_matches(tiling_sampler, 1.0, "linear",
+                      "linear-mipmap-linear", true, "repeat", "repeat");
+  if (mutation == "--mutate-sampler-preset-tiling") tiling_preset = false;
+  check(tiling_preset,
+        "createTilingSampler selects repeat wrapping with linear trilinear filtering");
+
+  const auto anisotropic_sampler_peer =
+      texture::create_anisotropic_sampler(16.0);
+  const auto clamp_sampler_peer = texture::create_clamp_linear_sampler();
+  const auto pixel_sampler_peer = texture::create_pixel_art_sampler();
+  const auto tiling_sampler_peer = texture::create_tiling_sampler();
+  bool preset_isolation =
+      anisotropic_sampler != anisotropic_sampler_peer &&
+      clamp_sampler != clamp_sampler_peer &&
+      pixel_sampler != pixel_sampler_peer &&
+      tiling_sampler != tiling_sampler_peer;
+  anisotropic_sampler->anisotropy = 2.0;
+  clamp_sampler->mag_filter = flight::String("nearest");
+  pixel_sampler->mipmaps = true;
+  tiling_sampler->wrap_u = flight::String("clamp-to-edge");
+  preset_isolation =
+      preset_isolation &&
+      sampler_matches(anisotropic_sampler_peer, 16.0, "linear",
+                      "linear-mipmap-linear", true, "clamp-to-edge",
+                      "clamp-to-edge") &&
+      sampler_matches(clamp_sampler_peer, 1.0, "linear",
+                      "linear-mipmap-linear", true, "clamp-to-edge",
+                      "clamp-to-edge") &&
+      sampler_matches(pixel_sampler_peer, 1.0, "nearest", "nearest", false,
+                      "clamp-to-edge", "clamp-to-edge") &&
+      sampler_matches(tiling_sampler_peer, 1.0, "linear",
+                      "linear-mipmap-linear", true, "repeat", "repeat");
+  if (mutation == "--mutate-sampler-preset-isolation") {
+    preset_isolation = false;
+  }
+  check(preset_isolation,
+        "named sampler presets allocate isolated state for every invocation");
+
   const auto equal_sampler_a = texture::create_sampler(std::nullopt);
   const auto equal_sampler_b = texture::create_sampler(std::nullopt);
   if (mutation == "--mutate-sampler-equality") equal_sampler_b->mipmaps = false;
