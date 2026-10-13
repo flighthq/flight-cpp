@@ -376,6 +376,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [An indexed fallback must keep the statically present element carrier](array-index-nullish-fallback-present-carrier.md)
   — scene-document's YAML-subset parser returns an optional index-miss wrapper from a lambda whose
   declared result is the present token reference.
+- [A structural subtype argument must retain an identity-preserving view](structural-subtype-reference-argument-owner.md)
+  — scene-document's token owner cannot enter the smaller readonly position parameter whose fields it
+  already carries.
 - [Callables as arms of a contextual union](callable-arm-in-contextual-union.md) — four swf tag handlers.
 - [Narrowing must prove the payload present](narrowed-union-presence-proof.md) — swf parse-option merge;
   font format inference (supplied by override).
