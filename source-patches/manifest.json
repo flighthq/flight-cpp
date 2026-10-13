@@ -3851,6 +3851,23 @@
       "appliedOn": "2026-10-13"
     },
     {
+      "id": "bitmap-clone-typed-array-slice",
+      "dependency": "flight",
+      "patch": "bitmap-clone-typed-array-slice.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/bitmap/src/bitmap.ts",
+      "package": "@flighthq/bitmap",
+      "answers": "diagnostic",
+      "refusal": "silent semantic mismatch: JavaScript new Uint8ClampedArray(source.data) allocates and copies, but the emitted C++ TypedArray wrapper copy shares the source backing identity, so cloneBitmap mutations change the source pixel buffer",
+      "rewrite": "Copies the full typed array with source.data.slice(), whose emitted runtime operation allocates a fresh backing buffer, instead of invoking the typed-array constructor on the existing typed array.",
+      "equivalence": "For a plain Uint8ClampedArray covering its complete view, new Uint8ClampedArray(source.data) and source.data.slice() both allocate a new compact Uint8ClampedArray of the same length and element values with no shared storage. Bitmap.data is exactly that plain full typed array; neither spelling changes order, clamping, metadata, or exception behavior.",
+      "verification": "At a627849 bitmap regenerates 44/44 with zero refusals and compiles 44/44. The registered generated_bitmap native test asserts distinct source/clone data identities and proves a clone byte write leaves the source unchanged; the unpatched generated header fails both assertions.",
+      "whyNotUpstreamFirst": "The source constructor spelling is valid and directly states a fresh typed-array allocation; the backend currently cannot distinguish that operation from the C++ carrier copy used to preserve ordinary JavaScript reference identity (docs/compiler-requests/typed-array-constructor-must-copy.md).",
+      "unblocks": "Restores cloneBitmap deep-copy semantics without changing the shared identity behavior of assignments, parameters, subarray views, or ordinary C++ wrapper copies.",
+      "expires": "when new TypedArray(existingTypedArray) lowers to a fresh element copy rather than a C++ wrapper copy.",
+      "appliedOn": "2026-10-13"
+    },
+    {
       "id": "physics2d-bounds-parameter-named-owner",
       "dependency": "flight",
       "patch": "physics2d-bounds-parameter-named-owner.patch",

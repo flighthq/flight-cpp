@@ -51839,7 +51839,7 @@
             "line": 29,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmap.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmap.ts\",1122]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmap.ts\",1107]",
             "kind": "function",
             "name": "convertBitmapAlphaType",
             "scope": "module",
@@ -51860,7 +51860,7 @@
             "line": 60,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmap.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmap.ts\",2088]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmap.ts\",2073]",
             "kind": "function",
             "name": "createBitmap",
             "scope": "module",
@@ -51876,12 +51876,12 @@
         {
           "access": "available-after-instantiation",
           "binding": {
-            "column": 17,
+            "column": 10,
             "fingerprint": "sha256:363fea2db4bf1612c4069b4d48c396b07f7812ee789b9088495355352bcd3a6f",
             "line": 66,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmap.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmap.ts\",2295]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmap.ts\",2273]",
             "kind": "function",
             "name": "initializeBitmap",
             "scope": "module",
@@ -51899,10 +51899,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:699225d17e88abcd6d3b2f9197eccfe502997a57fcbeb545fb89d7744d24d7f5",
-            "line": 95,
+            "line": 90,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmap.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmap.ts\",3003]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmap.ts\",2970]",
             "kind": "function",
             "name": "invalidateBitmap",
             "scope": "module",
@@ -52129,7 +52129,7 @@
             "line": 29,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapAffine.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAffine.ts\",857]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAffine.ts\",860]",
             "kind": "function",
             "name": "transformBitmap",
             "scope": "module",
@@ -52150,7 +52150,7 @@
             "line": 67,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapAffine.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAffine.ts\",2252]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAffine.ts\",2255]",
             "kind": "function",
             "name": "sampleBitmap",
             "scope": "module",
@@ -52171,7 +52171,7 @@
             "line": 106,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapAffine.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAffine.ts\",3279]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAffine.ts\",3282]",
             "kind": "function",
             "name": "sampleBilinear",
             "scope": "module",
@@ -52192,7 +52192,7 @@
             "line": 139,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapAffine.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAffine.ts\",4478]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAffine.ts\",4481]",
             "kind": "function",
             "name": "sampleBicubic",
             "scope": "module",
@@ -52213,7 +52213,7 @@
             "line": 177,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapAffine.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAffine.ts\",5516]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAffine.ts\",5519]",
             "kind": "function",
             "name": "resolveEdge",
             "scope": "module",
@@ -52234,7 +52234,7 @@
             "line": 195,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapAffine.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAffine.ts\",6018]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAffine.ts\",6021]",
             "kind": "function",
             "name": "catmullRomWeight",
             "scope": "module",
@@ -52255,7 +52255,7 @@
             "line": 202,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapAffine.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAffine.ts\",6226]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAffine.ts\",6229]",
             "kind": "function",
             "name": "writeTransparent",
             "scope": "module",
@@ -52277,7 +52277,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapAffine.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -52447,7 +52447,7 @@
             "line": 13,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapAlpha.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAlpha.ts\",475]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAlpha.ts\",478]",
             "kind": "function",
             "name": "copyBitmapAlpha",
             "scope": "module",
@@ -52468,7 +52468,7 @@
             "line": 43,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapAlpha.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAlpha.ts\",1670]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAlpha.ts\",1673]",
             "kind": "function",
             "name": "multiplyBitmapAlpha",
             "scope": "module",
@@ -52489,7 +52489,7 @@
             "line": 67,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapAlpha.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAlpha.ts\",2483]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapAlpha.ts\",2486]",
             "kind": "function",
             "name": "setBitmapAlpha",
             "scope": "module",
@@ -52511,7 +52511,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapAlpha.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -52673,7 +52673,7 @@
             "line": 26,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapBevel.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBevel.ts\",1201]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBevel.ts\",1204]",
             "kind": "function",
             "name": "bevelBitmap",
             "scope": "module",
@@ -52694,7 +52694,7 @@
             "line": 80,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapBevel.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBevel.ts\",3135]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBevel.ts\",3138]",
             "kind": "function",
             "name": "blurField",
             "scope": "module",
@@ -52715,7 +52715,7 @@
             "line": 111,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapBevel.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBevel.ts\",3871]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBevel.ts\",3874]",
             "kind": "function",
             "name": "readSourceAlpha",
             "scope": "module",
@@ -52736,7 +52736,7 @@
             "line": 119,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapBevel.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBevel.ts\",4264]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBevel.ts\",4267]",
             "kind": "function",
             "name": "sampleField",
             "scope": "module",
@@ -52758,7 +52758,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapBevel.ts"
           },
-          "specifier": "./bitmapBlur",
+          "specifier": "./bitmapBlur.ts",
           "target": {
             "name": "BitmapBlur",
             "packageName": "@flighthq/bitmap",
@@ -52963,7 +52963,7 @@
             "line": 10,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapBlur.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBlur.ts\",349]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBlur.ts\",352]",
             "kind": "function",
             "name": "blurBitmapPixelsHorizontal",
             "scope": "module",
@@ -52984,7 +52984,7 @@
             "line": 66,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapBlur.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBlur.ts\",1885]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBlur.ts\",1888]",
             "kind": "function",
             "name": "blurBitmapPixelsHorizontalWeighted",
             "scope": "module",
@@ -53005,7 +53005,7 @@
             "line": 103,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapBlur.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBlur.ts\",2963]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBlur.ts\",2966]",
             "kind": "function",
             "name": "blurBitmapPixelsVertical",
             "scope": "module",
@@ -53026,7 +53026,7 @@
             "line": 158,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapBlur.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBlur.ts\",4464]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBlur.ts\",4467]",
             "kind": "function",
             "name": "blurBitmapPixelsVerticalWeighted",
             "scope": "module",
@@ -53047,7 +53047,7 @@
             "line": 201,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapBlur.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBlur.ts\",5828]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBlur.ts\",5831]",
             "kind": "function",
             "name": "boxBlurBitmap",
             "scope": "module",
@@ -53068,7 +53068,7 @@
             "line": 241,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapBlur.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBlur.ts\",6912]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBlur.ts\",6915]",
             "kind": "function",
             "name": "computeGaussianKernel",
             "scope": "module",
@@ -53089,7 +53089,7 @@
             "line": 274,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapBlur.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBlur.ts\",8023]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapBlur.ts\",8026]",
             "kind": "function",
             "name": "gaussianBlurBitmap",
             "scope": "module",
@@ -53111,7 +53111,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapBlur.ts"
           },
-          "specifier": "./bitmapComposite",
+          "specifier": "./bitmapComposite.ts",
           "target": {
             "name": "BitmapComposite",
             "packageName": "@flighthq/bitmap",
@@ -53301,7 +53301,7 @@
             "line": 7,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapChannel.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapChannel.ts\",295]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapChannel.ts\",298]",
             "kind": "function",
             "name": "initializeBitmap",
             "scope": "module",
@@ -53322,7 +53322,7 @@
             "line": 37,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapChannel.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapChannel.ts\",1149]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapChannel.ts\",1152]",
             "kind": "function",
             "name": "mergeBitmapChannels",
             "scope": "module",
@@ -53343,7 +53343,7 @@
             "line": 108,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapChannel.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapChannel.ts\",3260]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapChannel.ts\",3263]",
             "kind": "function",
             "name": "splitBitmapChannels",
             "scope": "module",
@@ -53364,7 +53364,7 @@
             "line": 149,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapChannel.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapChannel.ts\",4439]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapChannel.ts\",4442]",
             "kind": "function",
             "name": "makeBitmap",
             "scope": "module",
@@ -53386,7 +53386,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapChannel.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -54037,7 +54037,7 @@
             "line": 18,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapCompare.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapCompare.ts\",676]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapCompare.ts\",679]",
             "kind": "function",
             "name": "compareBitmap",
             "scope": "module",
@@ -54058,7 +54058,7 @@
             "line": 53,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapCompare.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapCompare.ts\",2211]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapCompare.ts\",2214]",
             "kind": "function",
             "name": "getBitmapMismatch",
             "scope": "module",
@@ -54080,7 +54080,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapCompare.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -54242,7 +54242,7 @@
             "line": 17,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapComposite.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",898]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",901]",
             "kind": "function",
             "name": "compositeBitmapPixels",
             "scope": "module",
@@ -54263,7 +54263,7 @@
             "line": 47,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapComposite.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",1734]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",1737]",
             "kind": "function",
             "name": "compositeBitmapRegion",
             "scope": "module",
@@ -54284,7 +54284,7 @@
             "line": 86,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapComposite.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",3115]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",3118]",
             "kind": "function",
             "name": "extractBitmapPixels",
             "scope": "module",
@@ -54305,7 +54305,7 @@
             "line": 113,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapComposite.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",4305]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",4308]",
             "kind": "function",
             "name": "extractBitmapPixels32",
             "scope": "module",
@@ -54326,7 +54326,7 @@
             "line": 136,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapComposite.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",5166]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",5169]",
             "kind": "function",
             "name": "writeBitmapPixels",
             "scope": "module",
@@ -54347,7 +54347,7 @@
             "line": 160,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapComposite.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",6167]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",6170]",
             "kind": "function",
             "name": "writeBitmapPixels32",
             "scope": "module",
@@ -54368,7 +54368,7 @@
             "line": 183,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapComposite.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",7339]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",7342]",
             "kind": "function",
             "name": "porterDuffFactors",
             "scope": "module",
@@ -54389,7 +54389,7 @@
             "line": 213,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapComposite.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",8421]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",8424]",
             "kind": "function",
             "name": "blendChannel",
             "scope": "module",
@@ -54410,7 +54410,7 @@
             "line": 251,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapComposite.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",9993]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",9996]",
             "kind": "function",
             "name": "softLightChannel",
             "scope": "module",
@@ -54431,7 +54431,7 @@
             "line": 259,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapComposite.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",10272]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapComposite.ts\",10275]",
             "kind": "function",
             "name": "compositePixelInto",
             "scope": "module",
@@ -54453,7 +54453,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapComposite.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -54814,7 +54814,7 @@
             "line": 14,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapCopy.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapCopy.ts\",585]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapCopy.ts\",591]",
             "kind": "function",
             "name": "copyBitmapChannel",
             "scope": "module",
@@ -54835,7 +54835,7 @@
             "line": 48,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapCopy.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapCopy.ts\",1939]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapCopy.ts\",1945]",
             "kind": "function",
             "name": "copyBitmapPixels",
             "scope": "module",
@@ -54857,7 +54857,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapCopy.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -54871,7 +54871,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapCopy.ts"
           },
-          "specifier": "./bitmapImageChannel",
+          "specifier": "./bitmapImageChannel.ts",
           "target": {
             "name": "BitmapImageChannel",
             "packageName": "@flighthq/bitmap",
@@ -55160,7 +55160,7 @@
             "line": 15,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapCrop.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapCrop.ts\",645]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapCrop.ts\",648]",
             "kind": "function",
             "name": "cropBitmap",
             "scope": "module",
@@ -55181,7 +55181,7 @@
             "line": 56,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapCrop.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapCrop.ts\",2186]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapCrop.ts\",2189]",
             "kind": "function",
             "name": "extendBitmap",
             "scope": "module",
@@ -55202,7 +55202,7 @@
             "line": 115,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapCrop.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapCrop.ts\",4042]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapCrop.ts\",4045]",
             "kind": "function",
             "name": "trimBitmap",
             "scope": "module",
@@ -55223,7 +55223,7 @@
             "line": 142,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapCrop.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapCrop.ts\",4841]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapCrop.ts\",4844]",
             "kind": "function",
             "name": "resolveEdge",
             "scope": "module",
@@ -55245,7 +55245,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapCrop.ts"
           },
-          "specifier": "./bitmapChannel",
+          "specifier": "./bitmapChannel.ts",
           "target": {
             "name": "BitmapChannel",
             "packageName": "@flighthq/bitmap",
@@ -55773,7 +55773,7 @@
             "line": 23,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapDissolve.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapDissolve.ts\",1139]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapDissolve.ts\",1142]",
             "kind": "function",
             "name": "dissolveBitmapPixels",
             "scope": "module",
@@ -55794,7 +55794,7 @@
             "line": 102,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapDissolve.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapDissolve.ts\",3675]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapDissolve.ts\",3678]",
             "kind": "function",
             "name": "permutePixelIndex",
             "scope": "module",
@@ -55816,7 +55816,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapDissolve.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -56155,7 +56155,7 @@
             "line": 5,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapFill.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFill.ts\",121]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFill.ts\",124]",
             "kind": "variable",
             "name": "_floodFillVisited",
             "scope": "module",
@@ -56176,7 +56176,7 @@
             "line": 11,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapFill.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFill.ts\",324]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFill.ts\",327]",
             "kind": "function",
             "name": "fillBitmapRectangle",
             "scope": "module",
@@ -56197,7 +56197,7 @@
             "line": 36,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapFill.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFill.ts\",1184]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFill.ts\",1187]",
             "kind": "function",
             "name": "floodFillBitmap",
             "scope": "module",
@@ -56219,7 +56219,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapFill.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -56327,7 +56327,7 @@
               "line": 5,
               "packageName": "@flighthq/bitmap",
               "source": "packages/bitmap/src/bitmapFill.ts",
-              "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFill.ts\",121]",
+              "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFill.ts\",124]",
               "kind": "variable",
               "name": "_floodFillVisited",
               "scope": "module",
@@ -56779,7 +56779,7 @@
             "line": 11,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapFlip.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFlip.ts\",440]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFlip.ts\",443]",
             "kind": "function",
             "name": "flipBitmapHorizontal",
             "scope": "module",
@@ -56800,7 +56800,7 @@
             "line": 40,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapFlip.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFlip.ts\",1582]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFlip.ts\",1585]",
             "kind": "function",
             "name": "flipBitmapVertical",
             "scope": "module",
@@ -56821,7 +56821,7 @@
             "line": 65,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapFlip.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFlip.ts\",2585]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFlip.ts\",2588]",
             "kind": "function",
             "name": "copyMirrored",
             "scope": "module",
@@ -56842,7 +56842,7 @@
             "line": 95,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapFlip.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFlip.ts\",3511]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFlip.ts\",3514]",
             "kind": "function",
             "name": "isSameRegion",
             "scope": "module",
@@ -56863,7 +56863,7 @@
             "line": 99,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapFlip.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFlip.ts\",3711]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFlip.ts\",3714]",
             "kind": "function",
             "name": "swapPixels",
             "scope": "module",
@@ -56885,7 +56885,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapFlip.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -60405,7 +60405,7 @@
             "line": 5,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapFrom.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFrom.ts\",202]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFrom.ts\",205]",
             "kind": "function",
             "name": "captureBitmapFromImageResource",
             "scope": "module",
@@ -60426,7 +60426,7 @@
             "line": 12,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapFrom.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFrom.ts\",479]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapFrom.ts\",482]",
             "kind": "function",
             "name": "createBitmapFromImageSource",
             "scope": "module",
@@ -60448,7 +60448,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapFrom.ts"
           },
-          "specifier": "./bitmapReadbackResolver",
+          "specifier": "./bitmapReadbackResolver.ts",
           "target": {
             "name": "BitmapReadbackResolver",
             "packageName": "@flighthq/bitmap",
@@ -60670,7 +60670,7 @@
             "line": 12,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapGradient.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradient.ts\",563]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradient.ts\",566]",
             "kind": "function",
             "name": "buildBitmapGradientRamp",
             "scope": "module",
@@ -60691,7 +60691,7 @@
             "line": 70,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapGradient.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradient.ts\",2552]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradient.ts\",2555]",
             "kind": "function",
             "name": "gradientBevelBitmap",
             "scope": "module",
@@ -60712,7 +60712,7 @@
             "line": 129,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapGradient.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradient.ts\",4763]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradient.ts\",4766]",
             "kind": "function",
             "name": "gradientGlowBitmap",
             "scope": "module",
@@ -60733,7 +60733,7 @@
             "line": 163,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapGradient.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradient.ts\",5727]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradient.ts\",5730]",
             "kind": "function",
             "name": "blurAlphaField",
             "scope": "module",
@@ -60754,7 +60754,7 @@
             "line": 194,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapGradient.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradient.ts\",6468]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradient.ts\",6471]",
             "kind": "function",
             "name": "lerp",
             "scope": "module",
@@ -60775,7 +60775,7 @@
             "line": 198,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapGradient.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradient.ts\",6565]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradient.ts\",6568]",
             "kind": "function",
             "name": "readSourceAlpha",
             "scope": "module",
@@ -60796,7 +60796,7 @@
             "line": 205,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapGradient.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradient.ts\",6878]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradient.ts\",6881]",
             "kind": "function",
             "name": "sampleField",
             "scope": "module",
@@ -60818,7 +60818,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapGradient.ts"
           },
-          "specifier": "./bitmapBlur",
+          "specifier": "./bitmapBlur.ts",
           "target": {
             "name": "BitmapBlur",
             "packageName": "@flighthq/bitmap",
@@ -61030,7 +61030,7 @@
             "line": 18,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapGradientFill.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradientFill.ts\",733]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradientFill.ts\",736]",
             "kind": "function",
             "name": "fillBitmapLinearGradient",
             "scope": "module",
@@ -61051,7 +61051,7 @@
             "line": 71,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapGradientFill.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradientFill.ts\",2554]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradientFill.ts\",2557]",
             "kind": "function",
             "name": "fillBitmapRadialGradient",
             "scope": "module",
@@ -61072,7 +61072,7 @@
             "line": 118,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapGradientFill.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradientFill.ts\",4177]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapGradientFill.ts\",4180]",
             "kind": "function",
             "name": "spreadIndex",
             "scope": "module",
@@ -61094,7 +61094,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapGradientFill.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -61257,7 +61257,7 @@
             "line": 4,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapHistogram.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapHistogram.ts\",134]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapHistogram.ts\",137]",
             "kind": "import",
             "name": "applyBitmapPaletteMap",
             "scope": "module",
@@ -61283,7 +61283,7 @@
             "line": 15,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapHistogram.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapHistogram.ts\",623]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapHistogram.ts\",629]",
             "kind": "function",
             "name": "equalizeBitmapHistogram",
             "scope": "module",
@@ -61304,7 +61304,7 @@
             "line": 37,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapHistogram.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapHistogram.ts\",1368]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapHistogram.ts\",1374]",
             "kind": "function",
             "name": "getBitmapHistogram",
             "scope": "module",
@@ -61325,7 +61325,7 @@
             "line": 60,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapHistogram.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapHistogram.ts\",2169]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapHistogram.ts\",2175]",
             "kind": "function",
             "name": "buildEqualizeMap",
             "scope": "module",
@@ -61347,7 +61347,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapHistogram.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -61361,7 +61361,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapHistogram.ts"
           },
-          "specifier": "./bitmapPaletteMap",
+          "specifier": "./bitmapPaletteMap.ts",
           "target": {
             "name": "BitmapPaletteMap",
             "packageName": "@flighthq/bitmap",
@@ -62085,7 +62085,7 @@
             "line": 14,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapNoise.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",596]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",599]",
             "kind": "function",
             "name": "fillBitmapNoise",
             "scope": "module",
@@ -62106,7 +62106,7 @@
             "line": 74,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapNoise.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",3141]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",3144]",
             "kind": "function",
             "name": "fillBitmapPerlinNoise",
             "scope": "module",
@@ -62127,7 +62127,7 @@
             "line": 138,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapNoise.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",5607]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",5610]",
             "kind": "function",
             "name": "fillBitmapTurbulence",
             "scope": "module",
@@ -62148,7 +62148,7 @@
             "line": 194,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapNoise.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",7636]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",7639]",
             "kind": "variable",
             "name": "BITMAP_NOISE_CHANNEL_A",
             "scope": "module",
@@ -62169,7 +62169,7 @@
             "line": 195,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapNoise.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",7679]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",7682]",
             "kind": "variable",
             "name": "BITMAP_NOISE_CHANNEL_B",
             "scope": "module",
@@ -62190,7 +62190,7 @@
             "line": 196,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapNoise.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",7722]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",7725]",
             "kind": "variable",
             "name": "BITMAP_NOISE_CHANNEL_G",
             "scope": "module",
@@ -62211,7 +62211,7 @@
             "line": 197,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapNoise.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",7765]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",7768]",
             "kind": "variable",
             "name": "BITMAP_NOISE_CHANNEL_R",
             "scope": "module",
@@ -62232,7 +62232,7 @@
             "line": 201,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapNoise.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",7937]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",7940]",
             "kind": "function",
             "name": "fractalValueNoise",
             "scope": "module",
@@ -62253,7 +62253,7 @@
             "line": 216,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapNoise.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",8448]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",8451]",
             "kind": "function",
             "name": "hashLattice",
             "scope": "module",
@@ -62274,7 +62274,7 @@
             "line": 223,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapNoise.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",8793]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",8796]",
             "kind": "function",
             "name": "nextRandomState",
             "scope": "module",
@@ -62295,7 +62295,7 @@
             "line": 231,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapNoise.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",9066]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",9069]",
             "kind": "function",
             "name": "smoothStep",
             "scope": "module",
@@ -62316,7 +62316,7 @@
             "line": 236,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapNoise.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",9235]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",9238]",
             "kind": "function",
             "name": "stitchedCoord",
             "scope": "module",
@@ -62337,7 +62337,7 @@
             "line": 243,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapNoise.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",9541]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",9544]",
             "kind": "function",
             "name": "turbulenceNoise",
             "scope": "module",
@@ -62358,7 +62358,7 @@
             "line": 258,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapNoise.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",10063]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",10066]",
             "kind": "function",
             "name": "valueNoise",
             "scope": "module",
@@ -62380,7 +62380,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapNoise.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -62488,7 +62488,7 @@
               "line": 194,
               "packageName": "@flighthq/bitmap",
               "source": "packages/bitmap/src/bitmapNoise.ts",
-              "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",7636]",
+              "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",7639]",
               "kind": "variable",
               "name": "BITMAP_NOISE_CHANNEL_A",
               "scope": "module",
@@ -62511,7 +62511,7 @@
               "line": 195,
               "packageName": "@flighthq/bitmap",
               "source": "packages/bitmap/src/bitmapNoise.ts",
-              "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",7679]",
+              "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",7682]",
               "kind": "variable",
               "name": "BITMAP_NOISE_CHANNEL_B",
               "scope": "module",
@@ -62534,7 +62534,7 @@
               "line": 196,
               "packageName": "@flighthq/bitmap",
               "source": "packages/bitmap/src/bitmapNoise.ts",
-              "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",7722]",
+              "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",7725]",
               "kind": "variable",
               "name": "BITMAP_NOISE_CHANNEL_G",
               "scope": "module",
@@ -62557,7 +62557,7 @@
               "line": 197,
               "packageName": "@flighthq/bitmap",
               "source": "packages/bitmap/src/bitmapNoise.ts",
-              "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",7765]",
+              "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapNoise.ts\",7768]",
               "kind": "variable",
               "name": "BITMAP_NOISE_CHANNEL_R",
               "scope": "module",
@@ -62609,7 +62609,7 @@
             "line": 19,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapPaletteMap.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPaletteMap.ts\",876]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPaletteMap.ts\",879]",
             "kind": "function",
             "name": "applyBitmapPaletteMap",
             "scope": "module",
@@ -62631,7 +62631,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapPaletteMap.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -62767,7 +62767,7 @@
             "line": 7,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapPixel.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",251]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",257]",
             "kind": "variable",
             "name": "LUMA_R",
             "scope": "module",
@@ -62788,7 +62788,7 @@
             "line": 8,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapPixel.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",274]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",280]",
             "kind": "variable",
             "name": "LUMA_G",
             "scope": "module",
@@ -62809,7 +62809,7 @@
             "line": 9,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapPixel.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",297]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",303]",
             "kind": "variable",
             "name": "LUMA_B",
             "scope": "module",
@@ -62830,7 +62830,7 @@
             "line": 11,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapPixel.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",331]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",337]",
             "kind": "function",
             "name": "getBitmapPixel",
             "scope": "module",
@@ -62851,7 +62851,7 @@
             "line": 16,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapPixel.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",582]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",588]",
             "kind": "function",
             "name": "getBitmapPixelChannel",
             "scope": "module",
@@ -62872,7 +62872,7 @@
             "line": 20,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapPixel.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",764]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",770]",
             "kind": "function",
             "name": "getBitmapPixelLuminance",
             "scope": "module",
@@ -62893,7 +62893,7 @@
             "line": 25,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapPixel.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",1011]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",1017]",
             "kind": "function",
             "name": "getBitmapPixelRgb",
             "scope": "module",
@@ -62914,7 +62914,7 @@
             "line": 30,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapPixel.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",1236]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",1242]",
             "kind": "function",
             "name": "setBitmapPixel",
             "scope": "module",
@@ -62935,7 +62935,7 @@
             "line": 39,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapPixel.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",1546]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",1552]",
             "kind": "function",
             "name": "setBitmapPixelRgb",
             "scope": "module",
@@ -62957,7 +62957,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapPixel.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -62971,7 +62971,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapPixel.ts"
           },
-          "specifier": "./bitmapImageChannel",
+          "specifier": "./bitmapImageChannel.ts",
           "target": {
             "name": "BitmapImageChannel",
             "packageName": "@flighthq/bitmap",
@@ -63062,7 +63062,7 @@
               "line": 7,
               "packageName": "@flighthq/bitmap",
               "source": "packages/bitmap/src/bitmapPixel.ts",
-              "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",251]",
+              "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",257]",
               "kind": "variable",
               "name": "LUMA_R",
               "scope": "module",
@@ -63085,7 +63085,7 @@
               "line": 8,
               "packageName": "@flighthq/bitmap",
               "source": "packages/bitmap/src/bitmapPixel.ts",
-              "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",274]",
+              "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",280]",
               "kind": "variable",
               "name": "LUMA_G",
               "scope": "module",
@@ -63108,7 +63108,7 @@
               "line": 9,
               "packageName": "@flighthq/bitmap",
               "source": "packages/bitmap/src/bitmapPixel.ts",
-              "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",297]",
+              "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapPixel.ts\",303]",
               "kind": "variable",
               "name": "LUMA_B",
               "scope": "module",
@@ -63726,7 +63726,7 @@
             "line": 19,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapResize.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapResize.ts\",793]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapResize.ts\",796]",
             "kind": "function",
             "name": "resizeBitmap",
             "scope": "module",
@@ -63747,7 +63747,7 @@
             "line": 167,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapResize.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapResize.ts\",6364]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapResize.ts\",6367]",
             "kind": "function",
             "name": "catmullRomWeight",
             "scope": "module",
@@ -63768,7 +63768,7 @@
             "line": 174,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapResize.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapResize.ts\",6572]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapResize.ts\",6575]",
             "kind": "function",
             "name": "resolveResizeEdge",
             "scope": "module",
@@ -63790,7 +63790,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapResize.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -64026,7 +64026,7 @@
             "line": 4,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapRotate.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapRotate.ts\",151]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapRotate.ts\",154]",
             "kind": "import",
             "name": "transformBitmap",
             "scope": "module",
@@ -64052,7 +64052,7 @@
             "line": 15,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapRotate.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapRotate.ts\",584]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapRotate.ts\",590]",
             "kind": "function",
             "name": "rotateBitmap",
             "scope": "module",
@@ -64073,7 +64073,7 @@
             "line": 39,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapRotate.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapRotate.ts\",1551]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapRotate.ts\",1557]",
             "kind": "function",
             "name": "rotateBitmap180",
             "scope": "module",
@@ -64094,7 +64094,7 @@
             "line": 80,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapRotate.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapRotate.ts\",3240]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapRotate.ts\",3246]",
             "kind": "function",
             "name": "rotateBitmapClockwise",
             "scope": "module",
@@ -64115,7 +64115,7 @@
             "line": 108,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapRotate.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapRotate.ts\",4304]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapRotate.ts\",4310]",
             "kind": "function",
             "name": "rotateBitmapCounterClockwise",
             "scope": "module",
@@ -64136,7 +64136,7 @@
             "line": 130,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapRotate.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapRotate.ts\",5119]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapRotate.ts\",5125]",
             "kind": "function",
             "name": "copyPixel",
             "scope": "module",
@@ -64157,7 +64157,7 @@
             "line": 137,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapRotate.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapRotate.ts\",5359]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapRotate.ts\",5365]",
             "kind": "function",
             "name": "inBounds",
             "scope": "module",
@@ -64178,7 +64178,7 @@
             "line": 141,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapRotate.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapRotate.ts\",5498]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapRotate.ts\",5504]",
             "kind": "function",
             "name": "isSameRegion",
             "scope": "module",
@@ -64199,7 +64199,7 @@
             "line": 145,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapRotate.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapRotate.ts\",5698]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapRotate.ts\",5704]",
             "kind": "function",
             "name": "swapPixels",
             "scope": "module",
@@ -64221,7 +64221,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapRotate.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -64235,7 +64235,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapRotate.ts"
           },
-          "specifier": "./bitmapAffine",
+          "specifier": "./bitmapAffine.ts",
           "target": {
             "name": "BitmapAffine",
             "packageName": "@flighthq/bitmap",
@@ -64431,7 +64431,7 @@
             "line": 33,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapShadow.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapShadow.ts\",1136]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapShadow.ts\",1139]",
             "kind": "function",
             "name": "dropShadowBitmap",
             "scope": "module",
@@ -64452,7 +64452,7 @@
             "line": 60,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapShadow.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapShadow.ts\",2169]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapShadow.ts\",2172]",
             "kind": "function",
             "name": "glowBitmap",
             "scope": "module",
@@ -64473,7 +64473,7 @@
             "line": 87,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapShadow.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapShadow.ts\",3287]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapShadow.ts\",3290]",
             "kind": "function",
             "name": "innerGlowBitmap",
             "scope": "module",
@@ -64494,7 +64494,7 @@
             "line": 112,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapShadow.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapShadow.ts\",4356]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapShadow.ts\",4359]",
             "kind": "function",
             "name": "innerShadowBitmap",
             "scope": "module",
@@ -64515,7 +64515,7 @@
             "line": 129,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapShadow.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapShadow.ts\",4696]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapShadow.ts\",4699]",
             "kind": "function",
             "name": "applyBlurPasses",
             "scope": "module",
@@ -64536,7 +64536,7 @@
             "line": 163,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapShadow.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapShadow.ts\",5497]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapShadow.ts\",5500]",
             "kind": "function",
             "name": "applyInnerEffect",
             "scope": "module",
@@ -64557,7 +64557,7 @@
             "line": 212,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapShadow.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapShadow.ts\",7240]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapShadow.ts\",7243]",
             "kind": "function",
             "name": "readSourceAlpha",
             "scope": "module",
@@ -64578,7 +64578,7 @@
             "line": 220,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapShadow.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapShadow.ts\",7605]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapShadow.ts\",7608]",
             "kind": "function",
             "name": "tintBitmapAlphaMask",
             "scope": "module",
@@ -64600,7 +64600,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapShadow.ts"
           },
-          "specifier": "./bitmapBlur",
+          "specifier": "./bitmapBlur.ts",
           "target": {
             "name": "BitmapBlur",
             "packageName": "@flighthq/bitmap",
@@ -64831,7 +64831,7 @@
             "line": 18,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapSharpen.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapSharpen.ts\",767]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapSharpen.ts\",770]",
             "kind": "function",
             "name": "sharpenBitmap",
             "scope": "module",
@@ -64853,7 +64853,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapSharpen.ts"
           },
-          "specifier": "./bitmapBlur",
+          "specifier": "./bitmapBlur.ts",
           "target": {
             "name": "BitmapBlur",
             "packageName": "@flighthq/bitmap",
@@ -65184,7 +65184,7 @@
             "line": 17,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapTone.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapTone.ts\",666]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapTone.ts\",669]",
             "kind": "function",
             "name": "applyBitmapCurve",
             "scope": "module",
@@ -65205,7 +65205,7 @@
             "line": 65,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapTone.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapTone.ts\",2659]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapTone.ts\",2662]",
             "kind": "function",
             "name": "applyBitmapLevels",
             "scope": "module",
@@ -65227,7 +65227,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapTone.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -65363,7 +65363,7 @@
             "line": 5,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapTransform.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapTransform.ts\",161]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapTransform.ts\",164]",
             "kind": "variable",
             "name": "_scrollScratch",
             "scope": "module",
@@ -65384,7 +65384,7 @@
             "line": 13,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapTransform.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapTransform.ts\",554]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapTransform.ts\",557]",
             "kind": "function",
             "name": "applyBitmapColorScaleBias",
             "scope": "module",
@@ -65405,7 +65405,7 @@
             "line": 55,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapTransform.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapTransform.ts\",2551]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapTransform.ts\",2554]",
             "kind": "function",
             "name": "applyBitmapThreshold",
             "scope": "module",
@@ -65426,7 +65426,7 @@
             "line": 110,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapTransform.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapTransform.ts\",4640]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapTransform.ts\",4643]",
             "kind": "function",
             "name": "mergeBitmap",
             "scope": "module",
@@ -65447,7 +65447,7 @@
             "line": 146,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapTransform.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapTransform.ts\",6026]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapTransform.ts\",6029]",
             "kind": "function",
             "name": "scrollBitmap",
             "scope": "module",
@@ -65468,7 +65468,7 @@
             "line": 168,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapTransform.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapTransform.ts\",6834]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapTransform.ts\",6837]",
             "kind": "function",
             "name": "compare",
             "scope": "module",
@@ -65490,7 +65490,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapTransform.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -65651,7 +65651,7 @@
               "line": 5,
               "packageName": "@flighthq/bitmap",
               "source": "packages/bitmap/src/bitmapTransform.ts",
-              "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapTransform.ts\",161]",
+              "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapTransform.ts\",164]",
               "kind": "variable",
               "name": "_scrollScratch",
               "scope": "module",
@@ -65703,7 +65703,7 @@
             "line": 33,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapWarp.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",1080]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",1083]",
             "kind": "function",
             "name": "warpBitmap",
             "scope": "module",
@@ -65724,7 +65724,7 @@
             "line": 104,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapWarp.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",3334]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",3337]",
             "kind": "function",
             "name": "warpBitmapQuad",
             "scope": "module",
@@ -65745,7 +65745,7 @@
             "line": 128,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapWarp.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",4337]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",4340]",
             "kind": "function",
             "name": "warpSampleBitmap",
             "scope": "module",
@@ -65766,7 +65766,7 @@
             "line": 170,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapWarp.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",5426]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",5429]",
             "kind": "function",
             "name": "warpSampleBilinear",
             "scope": "module",
@@ -65787,7 +65787,7 @@
             "line": 203,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapWarp.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",6645]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",6648]",
             "kind": "function",
             "name": "warpSampleBicubic",
             "scope": "module",
@@ -65808,7 +65808,7 @@
             "line": 237,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapWarp.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",7562]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",7565]",
             "kind": "function",
             "name": "warpResolveEdge",
             "scope": "module",
@@ -65829,7 +65829,7 @@
             "line": 254,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapWarp.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",8045]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",8048]",
             "kind": "function",
             "name": "catmullRomWeight",
             "scope": "module",
@@ -65850,7 +65850,7 @@
             "line": 266,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapWarp.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",8439]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",8442]",
             "kind": "function",
             "name": "computeHomography",
             "scope": "module",
@@ -65871,7 +65871,7 @@
             "line": 295,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapWarp.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",9543]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",9546]",
             "kind": "function",
             "name": "solveLinear8",
             "scope": "module",
@@ -65892,7 +65892,7 @@
             "line": 336,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapWarp.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",10782]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/bitmapWarp.ts\",10785]",
             "kind": "function",
             "name": "invertMatrix3x3",
             "scope": "module",
@@ -65914,7 +65914,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/bitmapWarp.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -97077,7 +97077,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmap",
+          "specifier": "./bitmap.ts",
           "target": {
             "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
@@ -97091,7 +97091,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapAffine",
+          "specifier": "./bitmapAffine.ts",
           "target": {
             "name": "BitmapAffine",
             "packageName": "@flighthq/bitmap",
@@ -97105,7 +97105,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapAlpha",
+          "specifier": "./bitmapAlpha.ts",
           "target": {
             "name": "BitmapAlpha",
             "packageName": "@flighthq/bitmap",
@@ -97119,7 +97119,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapBevel",
+          "specifier": "./bitmapBevel.ts",
           "target": {
             "name": "BitmapBevel",
             "packageName": "@flighthq/bitmap",
@@ -97133,7 +97133,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapBlur",
+          "specifier": "./bitmapBlur.ts",
           "target": {
             "name": "BitmapBlur",
             "packageName": "@flighthq/bitmap",
@@ -97147,7 +97147,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapChannel",
+          "specifier": "./bitmapChannel.ts",
           "target": {
             "name": "BitmapChannel",
             "packageName": "@flighthq/bitmap",
@@ -97161,7 +97161,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapColorMatrix",
+          "specifier": "./bitmapColorMatrix.ts",
           "target": {
             "name": "BitmapColorMatrix",
             "packageName": "@flighthq/bitmap",
@@ -97175,7 +97175,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapCompare",
+          "specifier": "./bitmapCompare.ts",
           "target": {
             "name": "BitmapCompare",
             "packageName": "@flighthq/bitmap",
@@ -97189,7 +97189,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapComposite",
+          "specifier": "./bitmapComposite.ts",
           "target": {
             "name": "BitmapComposite",
             "packageName": "@flighthq/bitmap",
@@ -97203,7 +97203,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapConvolution",
+          "specifier": "./bitmapConvolution.ts",
           "target": {
             "name": "BitmapConvolution",
             "packageName": "@flighthq/bitmap",
@@ -97217,7 +97217,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapCopy",
+          "specifier": "./bitmapCopy.ts",
           "target": {
             "name": "BitmapCopy",
             "packageName": "@flighthq/bitmap",
@@ -97231,7 +97231,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapCoverage",
+          "specifier": "./bitmapCoverage.ts",
           "target": {
             "name": "BitmapCoverage",
             "packageName": "@flighthq/bitmap",
@@ -97245,7 +97245,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapCrop",
+          "specifier": "./bitmapCrop.ts",
           "target": {
             "name": "BitmapCrop",
             "packageName": "@flighthq/bitmap",
@@ -97259,7 +97259,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapDisplacement",
+          "specifier": "./bitmapDisplacement.ts",
           "target": {
             "name": "BitmapDisplacement",
             "packageName": "@flighthq/bitmap",
@@ -97273,7 +97273,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapDissolve",
+          "specifier": "./bitmapDissolve.ts",
           "target": {
             "name": "BitmapDissolve",
             "packageName": "@flighthq/bitmap",
@@ -97287,7 +97287,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapEncode",
+          "specifier": "./bitmapEncode.ts",
           "target": {
             "name": "BitmapEncode",
             "packageName": "@flighthq/bitmap",
@@ -97301,7 +97301,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapFill",
+          "specifier": "./bitmapFill.ts",
           "target": {
             "name": "BitmapFill",
             "packageName": "@flighthq/bitmap",
@@ -97315,7 +97315,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapFingerprint",
+          "specifier": "./bitmapFingerprint.ts",
           "target": {
             "name": "BitmapFingerprint",
             "packageName": "@flighthq/bitmap",
@@ -97329,7 +97329,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapFlip",
+          "specifier": "./bitmapFlip.ts",
           "target": {
             "name": "BitmapFlip",
             "packageName": "@flighthq/bitmap",
@@ -97343,7 +97343,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapFormat",
+          "specifier": "./bitmapFormat.ts",
           "target": {
             "name": "BitmapFormat",
             "packageName": "@flighthq/bitmap",
@@ -97357,7 +97357,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapFrom",
+          "specifier": "./bitmapFrom.ts",
           "target": {
             "name": "BitmapFrom",
             "packageName": "@flighthq/bitmap",
@@ -97371,7 +97371,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapGradient",
+          "specifier": "./bitmapGradient.ts",
           "target": {
             "name": "BitmapGradient",
             "packageName": "@flighthq/bitmap",
@@ -97385,7 +97385,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapGradientFill",
+          "specifier": "./bitmapGradientFill.ts",
           "target": {
             "name": "BitmapGradientFill",
             "packageName": "@flighthq/bitmap",
@@ -97399,7 +97399,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapHistogram",
+          "specifier": "./bitmapHistogram.ts",
           "target": {
             "name": "BitmapHistogram",
             "packageName": "@flighthq/bitmap",
@@ -97413,7 +97413,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapImageChannel",
+          "specifier": "./bitmapImageChannel.ts",
           "target": {
             "name": "BitmapImageChannel",
             "packageName": "@flighthq/bitmap",
@@ -97427,7 +97427,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapMedian",
+          "specifier": "./bitmapMedian.ts",
           "target": {
             "name": "BitmapMedian",
             "packageName": "@flighthq/bitmap",
@@ -97441,7 +97441,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapMorphological",
+          "specifier": "./bitmapMorphological.ts",
           "target": {
             "name": "BitmapMorphological",
             "packageName": "@flighthq/bitmap",
@@ -97455,7 +97455,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapNoise",
+          "specifier": "./bitmapNoise.ts",
           "target": {
             "name": "BitmapNoise",
             "packageName": "@flighthq/bitmap",
@@ -97469,7 +97469,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapPaletteMap",
+          "specifier": "./bitmapPaletteMap.ts",
           "target": {
             "name": "BitmapPaletteMap",
             "packageName": "@flighthq/bitmap",
@@ -97483,7 +97483,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapPixel",
+          "specifier": "./bitmapPixel.ts",
           "target": {
             "name": "BitmapPixel",
             "packageName": "@flighthq/bitmap",
@@ -97497,7 +97497,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapPixelate",
+          "specifier": "./bitmapPixelate.ts",
           "target": {
             "name": "BitmapPixelate",
             "packageName": "@flighthq/bitmap",
@@ -97511,7 +97511,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapQuery",
+          "specifier": "./bitmapQuery.ts",
           "target": {
             "name": "BitmapQuery",
             "packageName": "@flighthq/bitmap",
@@ -97525,7 +97525,21 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapRegion",
+          "specifier": "./bitmapReadbackResolver.ts",
+          "target": {
+            "name": "BitmapReadbackResolver",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapReadbackResolver.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/contract.ts"
+          },
+          "specifier": "./bitmapRegion.ts",
           "target": {
             "name": "BitmapRegion",
             "packageName": "@flighthq/bitmap",
@@ -97539,7 +97553,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapResize",
+          "specifier": "./bitmapResize.ts",
           "target": {
             "name": "BitmapResize",
             "packageName": "@flighthq/bitmap",
@@ -97553,7 +97567,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapRotate",
+          "specifier": "./bitmapRotate.ts",
           "target": {
             "name": "BitmapRotate",
             "packageName": "@flighthq/bitmap",
@@ -97567,7 +97581,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapShadow",
+          "specifier": "./bitmapShadow.ts",
           "target": {
             "name": "BitmapShadow",
             "packageName": "@flighthq/bitmap",
@@ -97581,7 +97595,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapSharpen",
+          "specifier": "./bitmapSharpen.ts",
           "target": {
             "name": "BitmapSharpen",
             "packageName": "@flighthq/bitmap",
@@ -97595,7 +97609,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapTone",
+          "specifier": "./bitmapTone.ts",
           "target": {
             "name": "BitmapTone",
             "packageName": "@flighthq/bitmap",
@@ -97609,7 +97623,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapTransform",
+          "specifier": "./bitmapTransform.ts",
           "target": {
             "name": "BitmapTransform",
             "packageName": "@flighthq/bitmap",
@@ -97623,7 +97637,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./bitmapWarp",
+          "specifier": "./bitmapWarp.ts",
           "target": {
             "name": "BitmapWarp",
             "packageName": "@flighthq/bitmap",
@@ -97637,7 +97651,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/contract.ts"
           },
-          "specifier": "./explainBitmapReadback",
+          "specifier": "./explainBitmapReadback.ts",
           "target": {
             "name": "ExplainBitmapReadback",
             "packageName": "@flighthq/bitmap",
@@ -132404,7 +132418,7 @@
             "line": 9,
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/explainBitmapReadback.ts",
-            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/explainBitmapReadback.ts\",213]",
+            "id": "binding:[\"@flighthq/bitmap\",\"packages/bitmap/src/explainBitmapReadback.ts\",216]",
             "kind": "function",
             "name": "explainBitmapReadback",
             "scope": "module",
@@ -132426,7 +132440,7 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/explainBitmapReadback.ts"
           },
-          "specifier": "./bitmapReadbackResolver",
+          "specifier": "./bitmapReadbackResolver.ts",
           "target": {
             "name": "BitmapReadbackResolver",
             "packageName": "@flighthq/bitmap",
@@ -166052,11 +166066,571 @@
             "packageName": "@flighthq/bitmap",
             "source": "packages/bitmap/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./bitmap.ts",
           "target": {
-            "name": "Contract",
+            "name": "Bitmap",
             "packageName": "@flighthq/bitmap",
-            "source": "packages/bitmap/src/contract.ts"
+            "source": "packages/bitmap/src/bitmap.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapAffine.ts",
+          "target": {
+            "name": "BitmapAffine",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapAffine.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapAlpha.ts",
+          "target": {
+            "name": "BitmapAlpha",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapAlpha.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapBevel.ts",
+          "target": {
+            "name": "BitmapBevel",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapBevel.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapBlur.ts",
+          "target": {
+            "name": "BitmapBlur",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapBlur.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapChannel.ts",
+          "target": {
+            "name": "BitmapChannel",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapChannel.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapColorMatrix.ts",
+          "target": {
+            "name": "BitmapColorMatrix",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapColorMatrix.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapCompare.ts",
+          "target": {
+            "name": "BitmapCompare",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapCompare.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapComposite.ts",
+          "target": {
+            "name": "BitmapComposite",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapComposite.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapConvolution.ts",
+          "target": {
+            "name": "BitmapConvolution",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapConvolution.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapCopy.ts",
+          "target": {
+            "name": "BitmapCopy",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapCopy.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapCoverage.ts",
+          "target": {
+            "name": "BitmapCoverage",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapCoverage.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapCrop.ts",
+          "target": {
+            "name": "BitmapCrop",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapCrop.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapDisplacement.ts",
+          "target": {
+            "name": "BitmapDisplacement",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapDisplacement.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapDissolve.ts",
+          "target": {
+            "name": "BitmapDissolve",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapDissolve.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapEncode.ts",
+          "target": {
+            "name": "BitmapEncode",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapEncode.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapFill.ts",
+          "target": {
+            "name": "BitmapFill",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapFill.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapFingerprint.ts",
+          "target": {
+            "name": "BitmapFingerprint",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapFingerprint.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapFlip.ts",
+          "target": {
+            "name": "BitmapFlip",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapFlip.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapFormat.ts",
+          "target": {
+            "name": "BitmapFormat",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapFormat.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapFrom.ts",
+          "target": {
+            "name": "BitmapFrom",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapFrom.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapGradient.ts",
+          "target": {
+            "name": "BitmapGradient",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapGradient.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapGradientFill.ts",
+          "target": {
+            "name": "BitmapGradientFill",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapGradientFill.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapHistogram.ts",
+          "target": {
+            "name": "BitmapHistogram",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapHistogram.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapImageChannel.ts",
+          "target": {
+            "name": "BitmapImageChannel",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapImageChannel.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapMedian.ts",
+          "target": {
+            "name": "BitmapMedian",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapMedian.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapMorphological.ts",
+          "target": {
+            "name": "BitmapMorphological",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapMorphological.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapNoise.ts",
+          "target": {
+            "name": "BitmapNoise",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapNoise.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapPaletteMap.ts",
+          "target": {
+            "name": "BitmapPaletteMap",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapPaletteMap.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapPixel.ts",
+          "target": {
+            "name": "BitmapPixel",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapPixel.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapPixelate.ts",
+          "target": {
+            "name": "BitmapPixelate",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapPixelate.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapQuery.ts",
+          "target": {
+            "name": "BitmapQuery",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapQuery.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapRegion.ts",
+          "target": {
+            "name": "BitmapRegion",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapRegion.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapResize.ts",
+          "target": {
+            "name": "BitmapResize",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapResize.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapRotate.ts",
+          "target": {
+            "name": "BitmapRotate",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapRotate.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapShadow.ts",
+          "target": {
+            "name": "BitmapShadow",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapShadow.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapSharpen.ts",
+          "target": {
+            "name": "BitmapSharpen",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapSharpen.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapTone.ts",
+          "target": {
+            "name": "BitmapTone",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapTone.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapTransform.ts",
+          "target": {
+            "name": "BitmapTransform",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapTransform.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./bitmapWarp.ts",
+          "target": {
+            "name": "BitmapWarp",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/bitmapWarp.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/index.ts"
+          },
+          "specifier": "./explainBitmapReadback.ts",
+          "target": {
+            "name": "ExplainBitmapReadback",
+            "packageName": "@flighthq/bitmap",
+            "source": "packages/bitmap/src/explainBitmapReadback.ts"
           }
         }
       ],

@@ -1,0 +1,12 @@
+diff --git a/packages/bitmap/src/bitmap.ts b/packages/bitmap/src/bitmap.ts
+--- a/packages/bitmap/src/bitmap.ts
++++ b/packages/bitmap/src/bitmap.ts
+@@ -5,7 +5,7 @@ export function cloneBitmap(source: Readonly<Bitmap>): Bitmap {
+   const out = allocateEntity<Bitmap>();
+   out.alphaType = source.alphaType;
+   out.gamut = source.gamut;
+-  out.data = new Uint8ClampedArray(source.data);
++  out.data = source.data.slice();
+   out.format = source.format;
+   out.height = source.height;
+   out.kind = source.kind;
