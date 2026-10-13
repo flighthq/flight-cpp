@@ -27,6 +27,7 @@ const KINDS = new Set(['insert-forward-declaration', 'insert-using-declaration',
   'flatten-nested-optional-array-read',
   'declare-refused-effect-padding-resolvers',
   'declare-refused-effect-runners',
+  'declare-refused-function',
 ]);
 // How `flight::Ref<Symbol<...>>` expands for one named template. `shared-pointer` for a struct that
 // derives from flight::ReferenceEnabled, `value` for anything else (an alias to a StructuralRef or a
@@ -72,6 +73,7 @@ const REQUIRED_FIELDS = {
   'flatten-nested-optional-array-read': [...SHARED_FIELDS, 'sourceDeclaration'],
   'declare-refused-effect-padding-resolvers': [...SHARED_FIELDS, 'sourceDeclaration'],
   'declare-refused-effect-runners': [...SHARED_FIELDS, 'sourceDeclaration'],
+  'declare-refused-function': [...SHARED_FIELDS, 'symbol', 'refusedFunction', 'declaration', 'sourceDeclaration'],
 };
 
 export function loadEmissionRepairs(root) {
@@ -110,6 +112,17 @@ export function loadEmissionRepairs(root) {
     }
     if (!KINDS.has(repair.kind)) {
       throw new Error(`Emission repair ${repair.id} has unknown kind ${repair.kind}`);
+    }
+    // A refused function may be DECLARED so the emitted code that calls it compiles, never defined: a body
+    // here would be a hand-written implementation smuggled in as a repair. A declaration with a body, or one
+    // that does not name its symbol, is refused at load.
+    if (repair.kind === 'declare-refused-function') {
+      const declaration = repair.declaration.trim();
+      if (declaration.includes('{') || !declaration.endsWith(');') || !new RegExp(`\\b${repair.symbol}\\s*\\(`, 'u').test(declaration)) {
+        throw new Error(
+          `Emission repair ${repair.id} must declare ${repair.symbol} as a single function declaration with no body.`,
+        );
+      }
     }
     // One name or a list, never both and never neither. This defect -- a name owned by another package's
     // namespace, written unqualified -- produces names by the DOZEN per package: 26 in @flighthq/texture
@@ -230,7 +243,43 @@ const HANDLERS = {
   'flatten-nested-optional-array-read': flattenNestedOptionalArrayRead,
   'declare-refused-effect-padding-resolvers': declareRefusedEffectPaddingResolvers,
   'declare-refused-effect-runners': declareRefusedEffectRunners,
+  'declare-refused-function': declareRefusedFunction,
 };
+
+// A function the emitter refused but its own emitted code still calls -- cloneParticleEmitter2D calls the refused
+// createParticleEmitter2D -- leaves a header that does not compile for a reason unrelated to the caller. This
+// repair inserts the refused function's DECLARATION only: the caller then compiles, and any call of it fails to
+// link, loudly, instead of the whole header failing. It never supplies behavior. It applies only where all
+// three witnesses agree: the header carries the exact NOT GENERATED marker for the refused source function,
+// emitted code outside comments calls the C++ symbol, and nothing in the header defines it. The declaration
+// goes immediately before the first emitted function that calls it, so every type its signature names --
+// including an anonymous parameter struct the emitter declared for the call -- is already in scope.
+function declareRefusedFunction(contents, repair) {
+  const { symbol, refusedFunction, declaration } = repair;
+  if (!contents.includes(`// NOT GENERATED: function ${refusedFunction} `)) return undefined;
+  if (contents.includes(declaration)) return undefined;
+  const call = new RegExp(`\\b${symbol}\\s*\\(`, 'u');
+  const lines = contents.split('\n');
+  const code = (line) => !line.trimStart().startsWith('//');
+  // A definition (or an earlier declaration) of the symbol: a function line whose name, the text before its
+  // first parenthesis, ends with the symbol.
+  const defines = (line) => /^(?:inline|template)\b/u.test(line) && new RegExp(`\\b${symbol}$`, 'u').test(line.split('(')[0].trimEnd());
+  if (lines.some(defines)) return undefined;
+  let first = -1;
+  for (let i = 0; i < lines.length; i++) {
+    if (code(lines[i]) && call.test(lines[i])) {
+      first = i;
+      break;
+    }
+  }
+  if (first < 0) return undefined;
+  let start = first;
+  while (start > 0 && !/^(?:inline|template)\b/u.test(lines[start])) start--;
+  if (!/^(?:inline|template)\b/u.test(lines[start])) return undefined;
+  if (start > 0 && /^template\b/u.test(lines[start - 1])) start--;
+  lines.splice(start, 0, declaration.trim(), '');
+  return lines.join('\n');
+}
 
 // Canvas and WGPU effect modules retain their public registration function after the emitter refuses
 // the default runner binding at a concrete RenderEffect downcast. The registration is valid partial

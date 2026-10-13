@@ -46,6 +46,15 @@ it safe, and generation reports a patch whose module is still refused for the re
 
 `repairs/emission-repairs.json` inserts a C++ declaration the emitter omitted. It may only add text with
 no behavior — a forward declaration — and `sdk:check` fails when a repair matches no generated header.
+`declare-refused-function` is that rule applied to a refused function that emitted code still calls. It
+applies only where three witnesses agree:
+- the exact NOT GENERATED marker is present;
+- emitted code calls the symbol;
+- nothing defines the symbol.
+
+It inserts a declaration, never a body; a body is rejected at load. Its signature must be the emitter's own,
+taken from the parameter carrier the retained call constructs. The caller then compiles, and any call of
+the refused function fails to link, so the function stays visibly unusable rather than substituted.
 
 `deferred-packages.json` lets a package's headers fail the compile gate without failing the build. The
 headers are still emitted, still compiled and always reported, and a deferral is refused when a

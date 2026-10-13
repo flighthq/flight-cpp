@@ -1,7 +1,17 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { aliasDuplicateStructuralStructs, equivalentStructuralBody } from './emissionRepairs.mjs';
+import { spawnSync } from 'node:child_process';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+
+import {
+  aliasDuplicateStructuralStructs,
+  applyEmissionRepairs,
+  equivalentStructuralBody,
+  loadEmissionRepairs,
+} from './emissionRepairs.mjs';
 
 // Run with `npm run pkg:test`.
 
@@ -115,4 +125,94 @@ test('a struct whose members carry braced default initializers is still indexed 
   const result = aliasDuplicateStructuralStructs(files, graph([['owner', []], ['caller', ['owner']]]));
   assert.deepEqual(result.structs, ['a_b_0123456789abcdef']);
   assert.doesNotMatch(files[1].contents, /flight::undefined\}/u);
+});
+
+// --- declare-refused-function ----------------------------------------------------------------------------------
+// A refused source function whose emitted caller survived: the header calls make_thing, refused as makeThing.
+
+const refusedHeader = (marker = 'makeThing', caller = true, defines = false) =>
+  `#pragma once\nnamespace flight::pkg {\n\n// NOT GENERATED: function ${marker} -- source line 3\n// refusal: example\n\n` +
+  (defines ? 'inline int make_thing(int value) {\n  return value;\n}\n\n' : '') +
+  'inline int other() {\n  return 1;\n}\n\n' +
+  (caller ? 'inline int use_thing() {\n  return make_thing(2) + 1;\n}\n' : '') +
+  '\n} // namespace flight::pkg\n';
+const refusedRepair = {
+  appliesTo: 'flight/pkg/',
+  declaration: 'int make_thing(int value);',
+  defect: 'example',
+  diagnostic: 'example',
+  expectedWhen: 'always',
+  expires: 'example',
+  id: 'pkg-declare-make-thing',
+  kind: 'declare-refused-function',
+  refusedFunction: 'makeThing',
+  sourceDeclaration: 'example',
+  symbol: 'make_thing',
+};
+
+test('a refused function its emitted caller still calls is declared before that caller, and only declared', () => {
+  const files = [{ contents: refusedHeader(), path: 'flight/pkg/thing.hpp' }];
+  const applied = applyEmissionRepairs([refusedRepair], files);
+  assert.deepEqual(applied[0].files, ['flight/pkg/thing.hpp']);
+  const text = files[0].contents;
+  assert.ok(text.indexOf('int make_thing(int value);') < text.indexOf('inline int use_thing()'));
+  assert.ok(text.indexOf('inline int other()') < text.indexOf('int make_thing(int value);'));
+  assert.doesNotMatch(text, /make_thing\(int value\)\s*\{/u);
+  // Idempotent: a second pass finds the declaration and changes nothing.
+  assert.deepEqual(applyEmissionRepairs([refusedRepair], files)[0].files, []);
+});
+
+test('unrelated refusals, a header with no caller, and a defined symbol are left untouched', () => {
+  for (const contents of [refusedHeader('makeOther'), refusedHeader('makeThing', false), refusedHeader('makeThing', true, true)]) {
+    const files = [{ contents, path: 'flight/pkg/thing.hpp' }];
+    assert.deepEqual(applyEmissionRepairs([refusedRepair], files)[0].files, []);
+    assert.equal(files[0].contents, contents);
+  }
+});
+
+test('a declare-refused-function repair with a body is refused at load', () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'flight-repairs-'));
+  try {
+    const write = (declaration) =>
+      writeFileSync(
+        path.join(root, 'repairs', 'emission-repairs.json'),
+        JSON.stringify({ repairs: [{ ...refusedRepair, declaration }], schema: 'flight-cpp-emission-repairs/1' }),
+      );
+    spawnSync('mkdir', ['-p', path.join(root, 'repairs')]);
+    write('int make_thing(int value);');
+    assert.equal(loadEmissionRepairs(root).length, 1);
+    write('inline int make_thing(int value) { return value; }');
+    assert.throws(() => loadEmissionRepairs(root), /no body/u);
+  } finally {
+    rmSync(root, { force: true, recursive: true });
+  }
+});
+
+// With a C++ compiler available (CXX, else c++), prove the claim end to end: the repaired header compiles and
+// links while nothing calls the refused function, and a program that does call it fails to LINK -- never compiles
+// a silent substitute. Without a compiler the proof is reported as skipped, not passed.
+test('the repaired caller compiles and links, and a call of the refused function cannot link', (t) => {
+  const cxx = process.env.CXX ?? 'c++';
+  if (spawnSync(cxx, ['--version'], { encoding: 'utf8' }).status !== 0) {
+    t.skip(`no C++ compiler (${cxx}) to prove compile and link behaviour`);
+    return;
+  }
+  const files = [{ contents: refusedHeader(), path: 'flight/pkg/thing.hpp' }];
+  applyEmissionRepairs([refusedRepair], files);
+  const dir = mkdtempSync(path.join(tmpdir(), 'flight-refused-'));
+  try {
+    writeFileSync(path.join(dir, 'thing.hpp'), files[0].contents);
+    writeFileSync(path.join(dir, 'unused.cpp'), '#include "thing.hpp"\nint main() { return flight::pkg::other() - 1; }\n');
+    writeFileSync(path.join(dir, 'called.cpp'), '#include "thing.hpp"\nint main() { return flight::pkg::use_thing(); }\n');
+    const build = (name) => spawnSync(cxx, ['-std=c++20', path.join(dir, `${name}.cpp`), '-o', path.join(dir, name)], { encoding: 'utf8' });
+    const unused = build('unused');
+    assert.equal(unused.status, 0, unused.stderr);
+    const syntax = spawnSync(cxx, ['-std=c++20', '-c', path.join(dir, 'called.cpp'), '-o', path.join(dir, 'called.o')], { encoding: 'utf8' });
+    assert.equal(syntax.status, 0, `the caller must compile: ${syntax.stderr}`);
+    const called = build('called');
+    assert.notEqual(called.status, 0, 'a call of the refused function must not link');
+    assert.match(called.stderr + called.stdout, /make_thing/u);
+  } finally {
+    rmSync(dir, { force: true, recursive: true });
+  }
 });
