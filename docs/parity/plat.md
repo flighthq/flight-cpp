@@ -92,7 +92,7 @@ upstream package map, which groups packages differently and would put, for insta
 | --- | ---: | ---: | ---: | --- | --- | --- |
 | `@flighthq/app` | 6 | 5 | 201 | dedicated | none | 4 / 2 |
 | `@flighthq/host` | 6 | 4 | 141 | dedicated | none | 6 / 0 |
-| `@flighthq/platform` | 3 | 1 | 37 | none | none | 3 / 0 |
+| `@flighthq/platform` | 3 | 1 | 37 | dedicated | none | 3 / 0 |
 | `@flighthq/lifecycle` | 3 | 2 | 44 | dedicated | none | 2 / 1 |
 | `@flighthq/input` | 3 | 2 | 66 | dedicated | none | 3 / 0 |
 | `@flighthq/keyboard` | 3 | 1 | 23 | dedicated | none | 3 / 0 |
@@ -136,7 +136,7 @@ are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
 17 of 39 packages are reached by at least one local CTest executable.
-15 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`.
+16 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`.
 
 ## `@flighthq/app`
 
@@ -361,7 +361,33 @@ Upstream carries per-package records at `flight/agents/packages/platform/`: `sta
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_platform` — `tests/generated_platform_test.cpp` (dedicated), NEW. The package had no local
+  test of any kind. It is a pure version comparator plus a host-explicit identity read, and both halves have corners
+  the upstream suite states and this file pins: the empty version sorts BELOW any other rather than being an error,
+  segments compare numerically so `10` beats `9` and `2.10` beats `2.9`, missing trailing segments are zero so
+  `10.0` equals `10.0.0`, and a segment that is not a number counts as zero -- which is why `abc` sits above `-1`
+  instead of tying with it. The identity record's fourteen defaults are each asserted, and the initializer is checked
+  against the factory by building a record through `initializePlatformInfo` directly and comparing all fourteen
+  fields, rather than only asserting that the function exists as upstream does. `getPlatformInfo` is asserted to fill
+  the caller's object and return THAT object, while the scalar conveniences read through one module-level scratch and
+  leave a caller's object untouched. The predicates are pinned where they are subtle: `native` is a runtime test true
+  for every host shell and deliberately FALSE for both `web` and `unknown`, and the version floor is false for an
+  unknown version -- including against an empty floor, which the comparison alone would call equal, so the guard is
+  what is under test there. Nine mutations against the emitted module, all nine with teeth: the comparison direction
+  inverted 6 failures, a missing segment made `-1` 2, the non-numeric segment left unmapped 1, the empty-version
+  guard dropped 1, `native` widened to a bare `not web` 1, the desktop predicate testing the wrong kind 2, the
+  pointer-width sentinel changed to zero 1, `getPlatformInfo` returning a copy 5, and the kind read reading the name
+  5. Two others are equivalent by construction and are recorded rather than counted, both measured: dropping the
+  comparator's `a === b` short-circuit changes nothing because two identical strings parse identically segment by
+  segment and the loop returns 0 anyway, and dropping the empty-string split special case changes nothing either,
+  because `''` against `''` is caught by that short-circuit and `''` against anything else yields one empty segment
+  that parses to NaN and is mapped to 0 -- the same value a missing segment contributes.
+
+The upstream suite's final block asserts an ABSENCE -- that the module exports no ambient-state API
+(`setPlatformBackend`, `getPlatformBackend` and five more). There is no export list to inspect in C++, so that case is
+covered by its behavioural content instead: the only influence on a read is the provider passed in, asserted by
+answering two different providers in turn and asking the first again. That is a translation of the case, and the test
+says so rather than claiming the same assertion.
 
 ### Local generation status
 
