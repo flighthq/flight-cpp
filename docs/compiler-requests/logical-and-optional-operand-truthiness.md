@@ -56,6 +56,10 @@ its JavaScript truthiness (`std::optional<T>` for every `T`, `std::optional<doub
 
 Other modules have not been audited for the shape; any `x && y.optionalFlag` is affected.
 
+`@flighthq/log` `log.ts` `createTextLogFormatter` at a627849: `if (options.indentGroups && _groupDepth > 0)` emits
+`flight::to_boolean((options.value()->indent_groups && (group_depth > 0.0)))`, so `indentGroups: false` would indent
+while a group is open. The log override tests each operand for its value; `generated_log_core_test` asserts it.
+
 ## Carrying workaround
 
 `flow-optional-overlay-flags-explicit`, a package-local source patch, spells both tests `=== true`. That is the

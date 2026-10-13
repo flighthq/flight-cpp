@@ -60,3 +60,26 @@ functions whose bodies are the source algorithm. No generated log slice is hande
 strength of this inventory.
 
 Each numbered row is a separate upstream request. None of them is filed as a patch here yet.
+
+## Status at a627849, re-derived
+
+The a627849 emission generates every function in `log.ts` except `_writeConsoleCaptureEntry` (the console
+refusal above); at 7e2fc7d, 22 declarations were missing. It still does not compile on its own: with this
+repository's type overrides it reports 47 errors, every one an instance of the rows above. Row 8 is worse than a
+compile failure: the emitted `_mergeSpanFields` and `_mergeContextFields` read `return {.msg = data};` for string data
+and `return {};` for record data, so even if it compiled, every spread field would be dropped.
+
+The re-derived `log-module-qualification-and-operators` override now supplies, from the source and the a627849 bodies:
+`_mergeSpanFields`, `_mergeContextFields`, `initializeLogEntity`, `logWith` and the five level `*With` functions,
+`createChildLogContext`, `createBufferedLogSink`, `disposeLogSink`, `createRateLimitedLogSink`, `createTextLogFormatter`,
+`serializeLogError`, `_operationFailureMessage`, `beginLogGroup`, `endLogGroup` and `enableLogSignals`. Row 2 was
+answered in the runtime -- `flight::to_string(const Any&)` -- rather than per call site, and JSON serialization of a
+`flight::Record` (which wrote `{}`) was fixed in `flight/json.hpp`, both with tests.
+
+`createTextLogFormatter` also carries an instance of
+[logical-and-optional-operand-truthiness](logical-and-optional-operand-truthiness.md): `options.indentGroups &&
+_groupDepth > 0` emitted as a presence test.
+
+Still stubbed: `createJsonLogFormatter`, `_applySerializers`, `_redactPath`, `createFileLogSink`, `destroyFileLogSink`.
+Refused by decision: `createConsoleCaptureSink`, `createConsoleLogSink`.
+
