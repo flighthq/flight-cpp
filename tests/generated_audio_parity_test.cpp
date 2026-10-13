@@ -1208,12 +1208,14 @@ int main() {
           "url: a successful arraybuffer response decodes into a resource");
     check(decodes == 1, "url: the response body reaches the decoder");
 
-    // An error response is REJECTED with its status rather than decoded -- decoding a 404 body would
-    // turn an error into a silent resource.
+    // An error response is REJECTED with its status rather than decoded. Deliberately given a VALID
+    // arraybuffer body and a valid content-type: with a null body the separate invalid-body guard would
+    // reject it too, and this assertion could then pass without the status check existing at all --
+    // which is exactly what a mutation proved before this body was added.
     MockNet failing;
     failing.respond = [] {
       return std::optional<flight::Ref<flight::types::NetResponse>>{
-          net_response(404.0, false, nullptr, std::nullopt)};
+          net_response(404.0, false, "audio/mpeg", flight::ArrayBuffer(8.0))};
     };
     const auto failing_net = mock_net(failing);
     int error_decodes = 0;
