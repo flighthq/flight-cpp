@@ -278,6 +278,9 @@ class Any final {
   }
 
   [[nodiscard]] bool is_undefined() const noexcept { return kind() == AnyKind::undefined; }
+  // `Array.isArray(value)`: whether this holds an array. An array is an object to `typeof` and to kind(),
+  // so this is the one question that tells it apart from a plain object.
+  [[nodiscard]] bool is_array() const noexcept { return std::holds_alternative<detail::AnyArray>(value_); }
   [[nodiscard]] bool is_null() const noexcept { return kind() == AnyKind::null; }
 
   // `== null` in TypeScript: the one test that admits both absent values and nothing else.

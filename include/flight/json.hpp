@@ -195,6 +195,15 @@ void append_json_row(std::string& output, const Owner& owner, std::size_t indent
 template <typename Erased>
 void append_json_erased(std::string& output, const Erased& value, std::size_t indentation, std::size_t depth);
 
+template <typename Type>
+concept json_complete_type = requires { sizeof(Type); };
+
+template <typename Range>
+inline constexpr bool json_bool_range = false;
+template <typename Range>
+  requires requires { typename Range::value_type; }
+inline constexpr bool json_bool_range<Range> = std::same_as<typename Range::value_type, bool>;
+
 template <typename Range>
 void append_json_array(std::string& output, const Range& values, std::size_t indentation, std::size_t depth) {
   output.push_back('[');
@@ -205,7 +214,12 @@ void append_json_array(std::string& output, const Range& values, std::size_t ind
       output.push_back('\n');
       append_json_indent(output, depth + 1, indentation);
     }
-    append_json_value(output, value, indentation, depth + 1);
+    // A container of bool yields a proxy reference, not a bool; the element's own value is what is written.
+    if constexpr (json_bool_range<Range>) {
+      append_json_value(output, static_cast<bool>(value), indentation, depth + 1);
+    } else {
+      append_json_value(output, value, indentation, depth + 1);
+    }
     first = false;
   }
   if (!first && indentation > 0) {
@@ -345,7 +359,20 @@ void append_json_row(std::string& output, const Owner& owner, std::size_t indent
 // append_json_row does, but a function reached any other way stringifies as null, and these three have
 // no JSON form of their own. An `object` has one, and this does not yet produce it: the erased row owner
 // an Any carries is a `shared_ptr<void>`, so its keys cannot be read back without the concrete type.
-// That case keeps the long-standing `{}` rather than inventing something.
+// That case keeps the long-standing `{}` rather than inventing something. An array is the exception: an Any
+// holding one keeps its concrete element type, so an array of dynamic values, numbers, strings or booleans is
+// written as the JSON array JavaScript writes; an array of any other element type keeps `{}` with the rest.
+template <typename Erased, typename Element>
+bool append_json_erased_array(std::string& output, const Erased& value, std::size_t indentation, std::size_t depth) {
+  if constexpr (json_complete_type<Array<Element>>) {
+    if (const auto* array = value.template external_if<Array<Element>>()) {
+      append_json_value(output, *array, indentation, depth);
+      return true;
+    }
+  }
+  return false;
+}
+
 template <typename Erased>
 void append_json_erased(std::string& output, const Erased& value, std::size_t indentation, std::size_t depth) {
   switch (value.kind()) {
@@ -358,7 +385,17 @@ void append_json_erased(std::string& output, const Erased& value, std::size_t in
     case std::remove_cvref_t<decltype(value.kind())>::string:
       append_json_string(output, value.as_string());
       return;
-    case std::remove_cvref_t<decltype(value.kind())>::object: output.append("{}"); return;
+    case std::remove_cvref_t<decltype(value.kind())>::object:
+      if constexpr (requires { value.is_array(); }) {
+        if (value.is_array() && (append_json_erased_array<Erased, Erased>(output, value, indentation, depth) ||
+                                 append_json_erased_array<Erased, double>(output, value, indentation, depth) ||
+                                 append_json_erased_array<Erased, String>(output, value, indentation, depth) ||
+                                 append_json_erased_array<Erased, bool>(output, value, indentation, depth))) {
+          return;
+        }
+      }
+      output.append("{}");
+      return;
     default: output.append("null"); return;
   }
 }

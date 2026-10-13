@@ -37,6 +37,8 @@ with 42 clang errors in 20 functions. None of them involve console. They reduce 
 | 13 | `enable_log_signals` | `optional<Ref<LogSignals>>` construction, the Signal handler type, and an initializer list in `?:`. |
 | 14 | module state | `Record<LogLevel, String>`: an enum key is not a `PropertyKey` domain. |
 | 15 | sink registry | `Array<LogSink>::index_of` selects a deleted `==` on `std::function`. The `types-log-sink-reference-parameter` override addresses this. |
+| 16 | `destroy_file_log_sink_state` | `flush.reason === 'operation-failed'` is lowered as a variant-alternative test, `flush.index() == 1 \|\| destroy.index() == 0`: it compiles, but it classifies an outcome by its shape, so any message-bearing outcome counts as a failure whatever its reason. |
+| 17 | `destroy_file_log_sink` | `return { ...outcome, reason: 'already-destroyed' }` is emitted as `{.reason = "already-destroyed"}`: the spread is dropped, so a repeat call loses the first teardown's `flush` and `destroy`. It compiles. |
 
 The `log-module-qualification-and-operators` override makes the package compile. It does so with 12
 throwing stubs:
@@ -80,6 +82,12 @@ answered in the runtime -- `flight::to_string(const Any&)` -- rather than per ca
 [logical-and-optional-operand-truthiness](logical-and-optional-operand-truthiness.md): `options.indentGroups &&
 _groupDepth > 0` emitted as a presence test.
 
-Still stubbed: `createJsonLogFormatter`, `_applySerializers`, `_redactPath`, `createFileLogSink`, `destroyFileLogSink`.
-Refused by decision: `createConsoleCaptureSink`, `createConsoleLogSink`.
+The override then supplied the rest of the non-console module: `_applySerializers` and `_redactPath` (rows 6 and 7),
+`createJsonLogFormatter` (row 9), `createFileLogSink` (row 10), `_destroyFileLogSinkState` (rows 5 and 16) and
+`destroyFileLogSink` (row 17). Rows 16 and 17 are the dangerous kind: both compile, so a future emission that compiles
+can still be wrong here. In the runtime, `Json::stringify` now writes an array carried in an `Any` (of dynamic values,
+numbers, strings or booleans) as a JSON array instead of `{}`, and an `Array<bool>`'s elements as booleans instead of
+`{}`, both with tests.
+
+Refused by decision, and the only part of the module not supplied: `createConsoleCaptureSink` and `createConsoleLogSink`.
 

@@ -55,19 +55,6 @@ using flight::types::LogSignals;
 using flight::types::LogTimer;
 using flight::types::LogData;
 
-// STUB SUPPORT for this override. Three functions below were never generated, and their return types
-// differ per call site, so there is no single signature to declare. This stands in for the value: it
-// converts to anything and throws when it does, which names the gap at the moment it would have mattered
-// rather than letting a wrong value travel.
-struct NotImplementedInThisProfile final {
-  const char* subject;
-  template <typename Wanted>
-  [[noreturn]] operator Wanted() const {
-    throw flight::Error(flight::String("flight::log::") + flight::String(subject) +
-                        flight::String(" was not generated for this profile"));
-  }
-};
-
 // OVERRIDE: initializeLogEntity, which the emission spells as a cast of an anonymous object literal to the entity
 // type it is building -- a different C++ type, so no conversion exists (log-native-compile-defects.md, row 12).
 // The source marks the object it is given as an entity (its runtime cell present and undefined) and returns that
@@ -79,9 +66,6 @@ template <typename Pointer>
   return entity;
 }
 
-[[nodiscard]] inline NotImplementedInThisProfile create_json_log_formatter() {
-  return NotImplementedInThisProfile{"create_json_log_formatter"};
-}
 
 // emit_signal belongs to @flighthq/signals and is written here unqualified.
 using flight::signals::emit_signal;
@@ -369,58 +353,78 @@ inline flight::String operation_failure_message(flight::Any error) {
   return view != nullptr ? view->message() : flight::to_string(error);
 }
 
-// NOT GENERATED: function _destroyFileLogSinkState -- source line 678
-//
-// The source it stood for:
-//   async function _destroyFileLogSinkState(state: FileLogSinkState): Promise<FileLogSinkDestroyOutcome> {
-//     const transport = state.transport!;
-//     let flush: LogTransportFlushOutcome;
-//     let destroy: LogTransportDestroyOutcome;
-//   
-//     try {
-//       flush = await transport.flush();
-//     } catch (error) {
-//       flush = { message: _operationFailureMessage(error), reason: 'operation-failed' };
-//     }
-//   
-//     try {
-//       destroy = await transport.destroy();
-//     } catch (error) {
-//       destroy = { message: _operationFailureMessage(error), reason: 'operation-failed' };
-//     }
-//   
-//     state.transport = null;
-//     state.status = 'destroyed';
-//     return {
-//       destroy,
-//       flush,
-//       reason:
-//         flush.reason === 'operation-failed' || destroy.reason === 'operation-failed' ? 'operation-failed' : 'destroyed',
-//     };
-//   }
-//   
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: union member test requires a C++ variant
-// binding
 
-inline flight::Task<flight::Ref<FileLogSinkDestroyOutcome>> destroy_file_log_sink(flight::Ref<FileLogSink> handle) {
-  // STUBBED in this override. The emitter produced a body for this function that is not valid C++,
-  // and recovering what it meant requires re-deriving the expression from the TypeScript. Throwing
-  // names the gap at the one moment it could matter instead of logging nothing and looking fine.
-  throw flight::Error(flight::String("flight::log::destroy_file_log_sink is not implemented in this profile: the emitter produced invalid C++ for it"));
+// destroyFileLogSink is supplied after createFileLogSink, below.
+
+// OVERRIDE: _applySerializers. The emission writes TypeScript's `in` as C++ text and reads `__kind` through a
+// named view of the whole value (log-native-compile-defects.md, rows 6 and 7). The source walks the record's own
+// entries in order and, for a value that is a non-null object with a string `__kind` that names a registered
+// serializer, stores that serializer's record in its place; everything else is copied as it is. An erased object
+// is reached the two ways one can be: a struct through its named row, a Record through the external carrier.
+// With no serializers registered the input is returned as given.
+inline std::optional<flight::String> log_object_kind(const flight::Any& value) {
+  if (value.is_null() || value.type_of() != flight::String("object")) {
+    return std::nullopt;
+  }
+  if (const auto* record = value.external_if<flight::Record<flight::String, flight::Any>>()) {
+    const auto kind = record->get(flight::String("__kind"));
+    if (kind.has_value() && kind->kind() == flight::AnyKind::string) return kind->as_string();
+    return std::nullopt;
+  }
+  const auto named = flight::named_properties(value);
+  if (!named.has(flight::String("__kind"))) {
+    return std::nullopt;
+  }
+  const auto kind = named.get(flight::String("__kind"));
+  if (kind.kind() == flight::AnyKind::string) return kind.as_string();
+  return std::nullopt;
 }
 
 inline flight::Record<flight::String, flight::Any> apply_serializers(flight::Record<flight::String, flight::Any> data) {
-  // STUBBED in this override. The emitter produced a body for this function that is not valid C++,
-  // and recovering what it meant requires re-deriving the expression from the TypeScript. Throwing
-  // names the gap at the one moment it could matter instead of logging nothing and looking fine.
-  throw flight::Error(flight::String("flight::log::apply_serializers is not implemented in this profile: the emitter produced invalid C++ for it"));
+  if (serializers.size() == 0) {
+    return data;
+  }
+  flight::Record<flight::String, flight::Any> result;
+  for (const auto& [key, value] : data) {
+    const auto kind = log_object_kind(value);
+    const auto fn = kind.has_value() ? serializers.get(kind.value()) : std::nullopt;
+    result.set(key, fn.has_value() ? flight::Any::external(fn.value()(value)) : value);
+  }
+  return result;
+}
+
+// OVERRIDE: _redactPath. The emission writes `in` as text and assigns a named view where the source assigns a
+// spread copy (log-native-compile-defects.md, rows 6 and 7). The source: a missing key ends the walk; the last
+// segment is replaced by '[REDACTED]'; an intermediate segment that is a non-null, non-array object is first
+// replaced by a shallow copy -- `{ ...next }` -- and the walk continues into the copy, so the caller's nested
+// objects are never written. A copy of a struct is its own enumerable members, a copy of a Record its entries;
+// either is a fresh Record, carried in the Any as the runtime carries one.
+inline flight::Record<flight::String, flight::Any> log_shallow_copy(const flight::Any& value) {
+  flight::Record<flight::String, flight::Any> copy;
+  if (const auto* record = value.external_if<flight::Record<flight::String, flight::Any>>()) {
+    flight::object_assign(copy, *record);
+    return copy;
+  }
+  const auto named = flight::named_properties(value);
+  for (const auto& key : named.keys()) copy.set(key, named.get(key));
+  return copy;
 }
 
 inline void redact_path(flight::Record<flight::String, flight::Any> obj, flight::Array<flight::String> parts, double idx) {
-  // STUBBED in this override. The emitter produced a body for this function that is not valid C++,
-  // and recovering what it meant requires re-deriving the expression from the TypeScript. Throwing
-  // names the gap at the one moment it could matter instead of logging nothing and looking fine.
-  throw flight::Error(flight::String("flight::log::redact_path is not implemented in this profile: the emitter produced invalid C++ for it"));
+  const flight::String key = parts.element(idx);
+  if (!obj.has(key)) {
+    return;
+  }
+  if (idx == static_cast<double>(parts.size()) - 1.0) {
+    obj.set(key, flight::Any(flight::String("[REDACTED]")));
+    return;
+  }
+  const flight::Any next = obj.get(key).value();
+  if (!next.is_null() && next.type_of() == flight::String("object") && !next.is_array()) {
+    flight::Record<flight::String, flight::Any> copy = log_shallow_copy(next);
+    obj.set(key, flight::Any::external(copy));
+    redact_path(copy, parts, idx + 1.0);
+  }
 }
 
 inline flight::Record<flight::String, flight::Any> apply_redaction(flight::Record<flight::String, flight::Any> data) {
@@ -725,29 +729,34 @@ inline double timestamp() {
 }
 
 
-// NOT GENERATED: function createJsonLogFormatter -- source line 195
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function createJsonLogFormatter(): LogFormatter {
-//     return (entry: Readonly<LogEntry>): string => {
-//       const { level, channel, data } = entry;
-//       const serialized = _applySerializers(typeof data === 'string' ? { msg: data } : (data as Record<string, unknown>));
-//       const redacted = _redactionPaths.length > 0 ? _applyRedaction(serialized) : serialized;
-//       return JSON.stringify({
-//         __flight: true,
-//         t: _timestamp(),
-//         level: _levelNames[level],
-//         channel,
-//         data: redacted,
-//       });
-//     };
-//   }
-//   
-//   // Creates a bound logging context with a channel and optional base fields. Pass the context to
-//   // logWith / logErrorWith / etc. to have the channel and fields merged into every entry.
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: contextual optionalSingle construction requires
-// expression type evidence
+// OVERRIDE: createJsonLogFormatter. The emission builds the envelope as a designated initializer with no type and
+// a braced string-data record (log-native-compile-defects.md). The source's envelope is an object literal, so it
+// is a Record here with the literal's key order: __flight, t, level, channel, data. A level outside the name table
+// and an absent channel are undefined, which JSON.stringify omits -- they are not written as null. String data
+// becomes { msg }; record data is serialized, then redacted when any path is registered, and nested as a record.
+inline flight::Ref<LogFormatter> create_json_log_formatter() {
+  return [](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<LogEntry>>>> entry) -> flight::String {
+    const flight::types::LogLevel level_2 = flight::row_get<flight::RowKey<"level">>(entry);
+    const std::optional<flight::String> channel = flight::row_get<flight::RowKey<"channel">>(entry);
+    const LogData data = flight::row_get<flight::RowKey<"data">>(entry);
+    flight::Record<flight::String, flight::Any> source;
+    if (data.index() == 1) {
+      source.set(flight::String("msg"), flight::Any(std::get<1>(data)));
+    } else {
+      source = std::get<0>(data);
+    }
+    const flight::Record<flight::String, flight::Any> serialized = apply_serializers(source);
+    const flight::Record<flight::String, flight::Any> redacted = redaction_paths.size() > 0 ? apply_redaction(serialized) : serialized;
+    const auto name = level_names.get(static_cast<double>(level_2));
+    flight::Record<flight::String, flight::Any> envelope;
+    envelope.set(flight::String("__flight"), flight::Any(true));
+    envelope.set(flight::String("t"), flight::Any(timestamp()));
+    envelope.set(flight::String("level"), name.has_value() ? flight::Any(name.value()) : flight::Any());
+    envelope.set(flight::String("channel"), channel.has_value() ? flight::Any(channel.value()) : flight::Any());
+    envelope.set(flight::String("data"), flight::Any::external(redacted));
+    return flight::Json::stringify(envelope);
+  };
+}
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_FORMATTER_C3F72D72FEB278C6
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_FORMATTER_C3F72D72FEB278C6
@@ -756,10 +765,101 @@ struct formatter_c3f72d72feb278c6 : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_FORMATTER_C3F72D72FEB278C6
 
+// OVERRIDE: createFileLogSink. The emitted sink reads `handle` before the declaration that names it
+// (log-native-compile-defects.md). The source's sink looks its state up by the handle on every call; the state a
+// handle maps to is set once, here, and never replaced, so the sink holds that state directly. It still writes
+// only while the state is active and still has its transport, one formatted line plus '\n' per entry, and the
+// transport's write outcome is the transport's own contract, ignored here as the source ignores it.
 inline flight::Ref<FileLogSink> create_file_log_sink(flight::Ref<LogTransport> transport, std::optional<flight::Ref<formatter_c3f72d72feb278c6>> options = std::nullopt) {
-  // STUBBED: the emitted body reads a `handle` that is never declared in its scope -- the declaration
-  // belonged to a part of this module the emitter did not generate.
-  throw flight::Error(flight::String("flight::log::create_file_log_sink is not implemented in this profile: the emitter produced invalid C++ for it"));
+  const auto opts = options.value_or(flight::make_ref<formatter_c3f72d72feb278c6>(formatter_c3f72d72feb278c6{}));
+  const flight::Ref<LogFormatter> formatter = opts->formatter.has_value() ? opts->formatter.value() : create_json_log_formatter();
+  const auto state = flight::make_ref<FileLogSinkState>(FileLogSinkState{.destroy_promise = std::nullopt, .status = flight::String("active"), .transport = std::optional<flight::Ref<LogTransport>>{transport}});
+  LogSink sink = [state, formatter](flight::Ref<LogEntry> entry) {
+    if (state->status != flight::String("active") || !state->transport.has_value()) {
+      return;
+    }
+    static_cast<void>(state->transport.value()->write(formatter(entry) + flight::String("\n")));
+  };
+  const auto handle = initialize_log_entity(flight::make_ref<FileLogSink>(FileLogSink{.sink = sink}));
+  file_log_sink_states.set(handle, state);
+  return handle;
+}
+
+// _operationFailureMessage over what a C++ await can throw: an Error is its message, a rejection carries the
+// rejected value, and String() of that value is the message. A rejection of a C++ type outside JavaScript's value
+// space has no String() and keeps the runtime's own description.
+inline flight::String log_caught_failure_message() {
+  try {
+    throw;
+  } catch (const flight::Error& error) {
+    return error.message();
+  } catch (const flight::UnhandledRejection& rejection) {
+    const auto& reason = rejection.rejection();
+    if (reason.is<flight::Any>()) return operation_failure_message(reason.as<flight::Any>());
+    if (reason.is<flight::String>()) return reason.as<flight::String>();
+    if (reason.is<double>()) return flight::number_to_string(reason.as<double>());
+    if (reason.is<bool>()) return flight::String(reason.as<bool>() ? "true" : "false");
+    return flight::String(rejection.what());
+  } catch (const std::exception& error) {
+    return flight::String(error.what());
+  }
+}
+
+template <typename Outcome>
+inline flight::String log_outcome_reason(const Outcome& outcome) {
+  return std::visit([](const auto& value) { return value->reason; }, outcome);
+}
+
+// OVERRIDE: _destroyFileLogSinkState, which the emission writes against an undeclared `error_2` and whose result
+// classifies an outcome by its variant ALTERNATIVE (log-native-compile-defects.md). The source flushes, then
+// destroys, each failure becoming { reason: 'operation-failed', message }; drops the transport; marks the state
+// destroyed; and reports operation-failed when either outcome's REASON is operation-failed -- read by reason here.
+inline flight::Task<flight::Ref<FileLogSinkDestroyOutcome>> destroy_file_log_sink_state(flight::Ref<FileLogSinkState> state) {
+  const auto transport = state->transport.value();
+  std::optional<flight::types::LogTransportFlushOutcome> flush;
+  std::optional<flight::types::LogTransportDestroyOutcome> destroy;
+  std::optional<flight::String> flush_failure;
+  try {
+    flush = co_await transport->flush();
+  } catch (...) {
+    flush_failure = log_caught_failure_message();
+  }
+  if (flush_failure.has_value()) {
+    flush = flight::types::LogTransportFlushOutcome{flight::make_ref<flight::types::reason_message_d46086b32265b61f>(flight::types::reason_message_d46086b32265b61f{.reason = flight::String("operation-failed"), .message = flush_failure.value()})};
+  }
+  std::optional<flight::String> destroy_failure;
+  try {
+    destroy = co_await transport->destroy();
+  } catch (...) {
+    destroy_failure = log_caught_failure_message();
+  }
+  if (destroy_failure.has_value()) {
+    destroy = flight::types::LogTransportDestroyOutcome{flight::make_ref<flight::types::reason_message_d46086b32265b61f>(flight::types::reason_message_d46086b32265b61f{.reason = flight::String("operation-failed"), .message = destroy_failure.value()})};
+  }
+  state->transport = std::nullopt;
+  state->status = flight::String("destroyed");
+  const bool failed = log_outcome_reason(flush.value()) == flight::String("operation-failed") || log_outcome_reason(destroy.value()) == flight::String("operation-failed");
+  co_return flight::make_ref<FileLogSinkDestroyOutcome>(FileLogSinkDestroyOutcome{.reason = failed ? flight::String("operation-failed") : flight::String("destroyed"), .flush = flush.value(), .destroy = destroy.value()});
+}
+
+// OVERRIDE: destroyFileLogSink. Emitted at a627849 but its repeat-call branch returns { reason } alone, dropping
+// the `...outcome` spread (log-native-compile-defects.md). The source: an unknown handle throws; a repeat call
+// awaits the first teardown and returns that outcome's flush and destroy under reason 'already-destroyed', as a
+// new object; the first call marks the state destroying, removes the sink so no further entry reaches it, and
+// every caller shares the one teardown task.
+inline flight::Task<flight::Ref<FileLogSinkDestroyOutcome>> destroy_file_log_sink(flight::Ref<FileLogSink> handle) {
+  auto state = file_log_sink_states.get(handle);
+  if (!state.has_value()) {
+    throw flight::Error(flight::String("destroyFileLogSink received an unknown handle"));
+  }
+  if (state.value()->status != flight::String("active")) {
+    const auto outcome = co_await state.value()->destroy_promise.value();
+    co_return flight::make_ref<FileLogSinkDestroyOutcome>(FileLogSinkDestroyOutcome{.reason = flight::String("already-destroyed"), .flush = outcome->flush, .destroy = outcome->destroy});
+  }
+  state.value()->status = flight::String("destroying");
+  remove_log_sink(handle->sink);
+  state.value()->destroy_promise = destroy_file_log_sink_state(state.value());
+  co_return co_await state.value()->destroy_promise.value();
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_INDENT_GROUPS_LEVEL_PREFIX_TIMESTAMP_85EF46F909E535F5

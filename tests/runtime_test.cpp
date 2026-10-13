@@ -1902,6 +1902,10 @@ void test_any_domain() {
         "an object reference comes back at the type it went in as");
   check(object.object_if<TestEntity>() == nullptr,
         "an object reference refuses to be read as a type it does not hold");
+  check(flight::Any(flight::Array<double>{1.0}).is_array() &&
+            flight::Any(flight::Array<double>{1.0}).type_of() == flight::String("object") &&
+            !object.is_array() && !flight::Any(1.0).is_array(),
+        "Array.isArray tells an array from a plain object, which typeof cannot");
   check(flight::Any::object(flight::Ref<TestReference>()).is_null(),
         "an object binding holding nothing erases to null rather than to an object");
 
@@ -2677,6 +2681,14 @@ void test_new_runtime_services() {
   const auto json = flight::Json::stringify(flight::Array<double>{1.0, 2.0}, nullptr, 2.0);
   check(json == flight::String("[\n  1,\n  2\n]"),
         "JSON stringification covers semantic arrays and bounded indentation");
+  flight::Record<flight::String, flight::Any> arrays;
+  arrays.set(flight::String("any"), flight::Any(flight::Array<flight::Any>{flight::Any(flight::String("s")), flight::Any(1.0), flight::Any(flight::null)}));
+  arrays.set(flight::String("num"), flight::Any(flight::Array<double>{1.0, 2.5}));
+  arrays.set(flight::String("str"), flight::Any(flight::Array<flight::String>{flight::String("a")}));
+  arrays.set(flight::String("bool"), flight::Any(flight::Array<bool>{false}));
+  arrays.set(flight::String("empty"), flight::Any(flight::Array<flight::Any>{}));
+  check(flight::Json::stringify(arrays) == flight::String("{\"any\":[\"s\",1,null],\"num\":[1,2.5],\"str\":[\"a\"],\"bool\":[false],\"empty\":[]}"),
+        "an array carried in an Any serializes as the JSON array it is");
   const auto parsed_json = flight::Json::parse(
       R"({"name":"Flight","enabled":true,"values":[null,-1.5e2,"\ud83d\ude00"]})");
   const auto parsed_name = parsed_json.as_object().get("name");

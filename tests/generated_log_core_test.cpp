@@ -1,17 +1,21 @@
 // The @flighthq/log core at a627849 -- the a627849 emission carried by the log-module-qualification-and-operators
 // override, with merge_span_fields, _mergeContextFields, initializeLogEntity, the log*With family,
-// createChildLogContext, the buffered and rate-limited sinks, createTextLogFormatter, serializeLogError, log
-// groups and signals supplied -- exercised natively. Ported from packages/log/src/log.test.ts:
+// createChildLogContext, the buffered, rate-limited and file sinks, the text and JSON formatters, serializers,
+// redaction, serializeLogError, log groups and signals supplied -- exercised natively. Ported from packages/log/src/log.test.ts:
 // - every level function's entry shape, the lazy provider and its gate, log_once and log_assert;
 // - span merge precedence: newer spans over older, data over spans, string data as { msg, ...fields };
 // - contexts and child contexts, and the log*With composition of context over span over data;
-// - the memory, buffered and rate-limited sinks, groups and signals; the text formatter; serializeLogError.
+// - the memory, buffered and rate-limited sinks, groups and signals; the text formatter; serializeLogError;
+// - the JSON envelope, serializers and redaction; the file sink and its flush-then-destroy teardown.
 //
 // Additions the source's semantics imply but upstream does not assert, each marked: one entry object reaches every
 // sink; merged keys keep JavaScript's spread order; a field present with the value undefined overrides and stays
 // present, distinct from a missing one; a span or context field named msg wins over string data; data is returned
 // as the same record when nothing merges; a child context's null channel clears where an absent one inherits;
-// `indentGroups: false` does not indent; serializeLogError keeps a subclass's name.
+// `indentGroups: false` does not indent; serializeLogError keeps a subclass's name; an absent channel or unknown
+// level is omitted from the JSON envelope; a teardown is failed by an outcome's reason, not its shape; a thrown Error
+// and a rejected value become operation-failed messages; a repeat destroy shares the first teardown and spreads its
+// outcomes; a destroyed handle releases its transport.
 //
 // Not natively evidenced, and why: upstream's "extracts ... stack" case -- native errors carry no stack, so a
 // serialized error has none (the "omits the stack" case is asserted); the buffered sink's "works without an
@@ -608,6 +612,267 @@ void groups_and_signals() {
 
 }  // namespace
 
+// The JSON envelope without its clock reading: `"t":<number>,` is removed so the rest compares exactly.
+std::string without_t(const String& line) {
+  std::string out = line.to_utf8();
+  const auto at = out.find("\"t\":");
+  if (at == std::string::npos) return out;
+  const auto end = out.find(',', at);
+  return end == std::string::npos ? out : out.erase(at, end - at + 1);
+}
+
+Any nested(Fields fields) { return Any::external(std::move(fields)); }
+
+void json_formatter() {
+  const auto entry = [](LogLevel level, std::optional<String> ch, flight::types::LogData data) {
+    return flight::make_ref<LogEntry>(LogEntry{.level = level, .channel = ch, .data = std::move(data)});
+  };
+  const auto data = [](Fields f) { return flight::types::LogData{std::in_place_index<0>, std::move(f)}; };
+  reset();
+  auto fmt = lg::create_json_log_formatter();
+  {
+    const String line = fmt(entry(LogLevel::Info, String("test"), flight::types::LogData{std::in_place_index<1>, String("msg")}));
+    check(without_t(line) == R"({"__flight":true,"level":"info","channel":"test","data":{"msg":"msg"}})",
+          "produces a __flight JSON envelope, in the literal's key order");
+    check(line.to_utf8().find("\"t\":") == 17, "the envelope carries the timestamp as t, after __flight");
+  }
+  // Addition: an absent channel and an unknown level are undefined, and JSON.stringify omits them.
+  check(without_t(fmt(entry(static_cast<LogLevel>(99), std::nullopt, data(Fields{{String("a"), Any(1.0)}})))) ==
+            R"({"__flight":true,"data":{"a":1}})",
+        "an absent channel and an unknown level are omitted, not written as null");
+
+  reset();
+  lg::register_log_serializer(String("acme.Widget"), [](Any value) {
+    const auto* source = value.external_if<Fields>();
+    Fields out;
+    out.set(String("serialized"), Any(true));
+    out.set(String("id"), source != nullptr ? source->get(String("id")).value_or(Any()) : Any());
+    return out;
+  });
+  check(without_t(fmt(entry(LogLevel::Info, std::nullopt,
+                            data(Fields{{String("widget"), nested(Fields{{String("__kind"), Any(String("acme.Widget"))}, {String("id"), Any(42.0)}})}})))) ==
+            R"({"__flight":true,"level":"info","data":{"widget":{"serialized":true,"id":42}}})",
+        "applies registered serializers to values with matching __kind");
+  {
+    lg::register_log_serializer(String("acme.Known"), [](Any) { return Fields{{String("serialized"), Any(true)}}; });
+    Fields input{{String("missingKind"), nested(Fields{{String("value"), Any(1.0)}})},
+                 {String("nullValue"), Any(nullptr)},
+                 {String("numericKind"), nested(Fields{{String("__kind"), Any(7.0)}, {String("value"), Any(2.0)}})},
+                 {String("primitive"), Any(3.0)},
+                 {String("kindString"), Any(String("acme.Known"))},
+                 {String("unknownKind"), nested(Fields{{String("__kind"), Any(String("acme.Unknown"))}, {String("value"), Any(4.0)}})}};
+    check(without_t(fmt(entry(LogLevel::Info, std::nullopt, data(input)))) ==
+              R"({"__flight":true,"level":"info","data":{"missingKind":{"value":1},"nullValue":null,"numericKind":{"__kind":7,"value":2},"primitive":3,"kindString":"acme.Known","unknownKind":{"__kind":"acme.Unknown","value":4}}})",
+          "preserves values that do not match a registered serializer, in order");
+  }
+  lg::clear_log_serializers();
+  check(without_t(fmt(entry(LogLevel::Info, std::nullopt, data(Fields{{String("obj"), nested(Fields{{String("__kind"), Any(String("acme.Widget"))}})}})))) ==
+            R"({"__flight":true,"level":"info","data":{"obj":{"__kind":"acme.Widget"}}})",
+        "clearLogSerializers removes every registration");
+
+  reset();
+  lg::set_log_redaction_paths(flight::Array<String>{String("credentials.token"), String("password")});
+  {
+    Fields credentials{{String("token"), Any(String("secret"))}, {String("user"), Any(String("alice"))}};
+    Fields original{{String("credentials"), nested(credentials)}, {String("password"), Any(String("pw"))}};
+    check(without_t(fmt(entry(LogLevel::Info, std::nullopt, data(original)))) ==
+              R"({"__flight":true,"level":"info","data":{"credentials":{"token":"[REDACTED]","user":"alice"},"password":"[REDACTED]"}})",
+          "applies redaction paths to top-level and nested fields");
+    check(str(original, "password") == "pw" && str(credentials, "token") == "secret" &&
+              original.get(String("credentials"))->external_if<Fields>() != nullptr &&
+              str(*original.get(String("credentials"))->external_if<Fields>(), "token") == "secret",
+          "redaction does not mutate the caller's record or its nested records (alias-safe)");
+  }
+  lg::set_log_redaction_paths(flight::Array<String>{String("missing.secret"), String("nullValue.secret"), String("primitive.secret"), String("items.secret")});
+  {
+    Fields input{{String("items"), Any(flight::Array<Any>{Any(String("secret"))})}, {String("nullValue"), Any(nullptr)}, {String("primitive"), Any(7.0)}};
+    std::string line;
+    try {
+      line = without_t(fmt(entry(LogLevel::Info, std::nullopt, data(input))));
+    } catch (const std::exception&) {
+      line = "<threw>";
+    }
+    check(line == R"({"__flight":true,"level":"info","data":{"items":["secret"],"nullValue":null,"primitive":7}})",
+          "leaves absent and non-record path segments unchanged");
+  }
+  lg::clear_log_redaction_paths();
+  check(without_t(fmt(entry(LogLevel::Info, std::nullopt, data(Fields{{String("token"), Any(String("secret"))}})))) ==
+            R"({"__flight":true,"level":"info","data":{"token":"secret"}})",
+        "clearLogRedactionPaths stops redaction");
+}
+
+// upstream's createTestLogTransport: every operation is recorded and overridable.
+struct TestTransport {
+  std::vector<std::string> lines;
+  std::vector<std::string> events;
+  flight::types::LogTransportWriteOutcome write_outcome{flight::make_ref<flight::types::reason_43a745d20647bfb6>(flight::types::reason_43a745d20647bfb6{.reason = String("accepted")})};
+  std::function<flight::Task<flight::types::LogTransportFlushOutcome>()> flush;
+  std::function<flight::Task<flight::types::LogTransportDestroyOutcome>()> destroy;
+};
+
+using FlushOutcome = flight::types::LogTransportFlushOutcome;
+using DestroyOutcome = flight::types::LogTransportDestroyOutcome;
+using Plain = flight::types::reason_43a745d20647bfb6;
+using Failed = flight::types::reason_message_d46086b32265b61f;
+using Drained = flight::types::reason_delivery_3724413a85240c26;
+
+Ref<flight::types::LogTransport> transport_of(TestTransport& t) {
+  auto* p = &t;
+  if (!t.flush) t.flush = [p] { p->events.push_back("flush"); return flight::Task<FlushOutcome>::resolve(FlushOutcome{flight::make_ref<Drained>(Drained{.reason = String("drained"), .delivery = String("operating-system")})}); };
+  if (!t.destroy) t.destroy = [p] { p->events.push_back("destroy"); return flight::Task<DestroyOutcome>::resolve(DestroyOutcome{flight::make_ref<Plain>(Plain{.reason = String("destroyed")})}); };
+  return flight::make_ref<flight::types::LogTransport>(flight::types::LogTransport{
+      .write = [p](String line) { p->lines.push_back(line.to_utf8()); return p->write_outcome; },
+      .flush = [p] { return p->flush(); },
+      .destroy = [p] { return p->destroy(); }});
+}
+
+template <typename Outcome>
+std::string reason_of(const Outcome& outcome) {
+  return std::visit([](const auto& v) { return v->reason.to_utf8(); }, outcome);
+}
+
+std::string message_of(const FlushOutcome& outcome) {
+  const auto* failed = std::get_if<Ref<Failed>>(&outcome);
+  return failed != nullptr ? (*failed)->message.to_utf8() : std::string("<none>");
+}
+std::string message_of_destroy(const DestroyOutcome& outcome) {
+  const auto* failed = std::get_if<Ref<Failed>>(&outcome);
+  return failed != nullptr ? (*failed)->message.to_utf8() : std::string("<none>");
+}
+
+void file_sink() {
+  const auto executor = std::make_shared<flight::QueueExecutor>();
+  const flight::ExecutorScope scope(executor);
+  using FormatterOptions = lg::formatter_c3f72d72feb278c6;
+  reset();
+  for (const char* admission : {"accepted", "backpressure", "operation-failed", "destroyed"}) {
+    TestTransport t;
+    t.write_outcome = flight::types::LogTransportWriteOutcome{flight::make_ref<Plain>(Plain{.reason = String(admission)})};
+    auto handle = lg::create_file_log_sink(transport_of(t));
+    lg::add_log_sink(handle->sink);
+    lg::log(LogLevel::Info, text("file-entry"));
+    check(t.lines.size() == 1 && without_t(String(t.lines[0].c_str())) == std::string(R"({"__flight":true,"level":"info","data":{"msg":"file-entry"}})") + "\n",
+          std::string("offers one complete JSON line when admission reports ") + admission);
+    lg::clear_log_sinks();
+  }
+  {
+    TestTransport t;
+    auto handle = lg::create_file_log_sink(transport_of(t));
+    check(!handle->entity_runtime_key.has_value(), "creates an Entity handle with an undefined runtime key");
+  }
+  {
+    TestTransport t;
+    auto handle = lg::create_file_log_sink(transport_of(t), flight::make_ref<FormatterOptions>(FormatterOptions{.formatter = [](auto) { return String("custom"); }}));
+    lg::add_log_sink(handle->sink);
+    lg::log(LogLevel::Info, text("x"));
+    check(t.lines == std::vector<std::string>{"custom\n"}, "accepts a custom formatter");
+    lg::clear_log_sinks();
+  }
+  {
+    TestTransport a, b;
+    auto first = lg::create_file_log_sink(transport_of(a), flight::make_ref<FormatterOptions>(FormatterOptions{.formatter = [](auto) { return String("first"); }}));
+    auto second = lg::create_file_log_sink(transport_of(b), flight::make_ref<FormatterOptions>(FormatterOptions{.formatter = [](auto) { return String("second"); }}));
+    const auto e = flight::make_ref<LogEntry>(LogEntry{.level = LogLevel::Info, .channel = std::nullopt, .data = flight::types::LogData{std::in_place_index<1>, String("entry")}});
+    first->sink(e);
+    second->sink(e);
+    check(a.lines == std::vector<std::string>{"first\n"} && b.lines == std::vector<std::string>{"second\n"}, "pins each handle to its injected transport");
+  }
+
+  // destroyFileLogSink: flush is awaited before destroy, and both outcomes are reported.
+  {
+    TestTransport t;
+    std::optional<flight::Task<FlushOutcome>::Resolver> finish;
+    auto pending = flight::Task<FlushOutcome>::create([&finish](auto resolve) { finish.emplace(resolve); });
+    t.flush = [&t, pending] { t.events.push_back("flush-start"); return pending; };
+    auto handle = lg::create_file_log_sink(transport_of(t));
+    lg::add_log_sink(handle->sink);
+    auto closing = lg::destroy_file_log_sink(handle);
+    executor->run_until_idle();
+    check(t.events == std::vector<std::string>{"flush-start"} && !closing.is_ready(), "destroy waits for flush to settle");
+    lg::log(LogLevel::Info, text("late"));
+    handle->sink(flight::make_ref<LogEntry>(LogEntry{.level = LogLevel::Info, .channel = std::nullopt, .data = flight::types::LogData{std::in_place_index<1>, String("direct")}}));
+    check(t.lines.empty(), "a destroying sink is removed and writes nothing, even when called directly");
+    const FlushOutcome drained{flight::make_ref<Drained>(Drained{.reason = String("drained"), .delivery = String("operating-system")})};
+    (*finish)(drained);
+    const auto outcome = closing.get();
+    check(t.events == std::vector<std::string>{"flush-start", "destroy"}, "destroy runs after flush");
+    check(outcome->reason == String("destroyed") && reason_of(outcome->flush) == "drained" && reason_of(outcome->destroy) == "destroyed" &&
+              std::get_if<Ref<Drained>>(&outcome->flush) != nullptr && std::get<Ref<Drained>>(outcome->flush) == std::get<Ref<Drained>>(drained),
+          "the outcome carries the transport's own flush and destroy outcomes");
+
+    // Addition: a repeat call shares the first teardown and spreads its outcomes under already-destroyed.
+    std::optional<Ref<flight::types::FileLogSinkDestroyOutcome>> again;
+    try {
+      again = lg::destroy_file_log_sink(handle).get();
+    } catch (const std::exception&) {
+    }
+    const auto same = [](const auto& left, const auto& right) {
+      return left.index() == right.index() && std::visit([&right](const auto& l) { return std::get_if<std::remove_cvref_t<decltype(l)>>(&right) != nullptr && *std::get_if<std::remove_cvref_t<decltype(l)>>(&right) == l; }, left);
+    };
+    check(again.has_value() && (*again)->reason == String("already-destroyed") && *again != outcome &&
+              same((*again)->flush, outcome->flush) && same((*again)->destroy, outcome->destroy),
+          "a repeat destroy returns a new outcome with the first teardown's flush and destroy");
+    check(t.events.size() == 2, "a repeat destroy does not flush or destroy the transport again");
+    check(!lg::remove_log_sink(handle->sink), "destroy unregisters the sink, so a later removal finds nothing");
+  }
+  {
+    TestTransport t;
+    t.flush = [&t] { t.events.push_back("flush"); return flight::Task<FlushOutcome>::resolve(FlushOutcome{flight::make_ref<Failed>(Failed{.reason = String("operation-failed"), .message = String("disk full")})}); };
+    auto outcome = lg::destroy_file_log_sink(lg::create_file_log_sink(transport_of(t))).get();
+    check(outcome->reason == String("operation-failed") && message_of(outcome->flush) == "disk full" && reason_of(outcome->destroy) == "destroyed" &&
+              t.events == std::vector<std::string>{"flush", "destroy"},
+          "attempts destroy and preserves both outcomes when flush reports failure");
+  }
+  // Addition: a destroy that reports a message-bearing outcome is classified by its reason, not its shape.
+  {
+    TestTransport t;
+    t.destroy = [] { return flight::Task<DestroyOutcome>::resolve(DestroyOutcome{flight::make_ref<Failed>(Failed{.reason = String("closed"), .message = String("ok")})}); };
+    auto outcome = lg::destroy_file_log_sink(lg::create_file_log_sink(transport_of(t))).get();
+    check(outcome->reason == String("destroyed"), "only an operation-failed reason fails the teardown");
+  }
+  {
+    TestTransport t;
+    t.flush = []() -> flight::Task<FlushOutcome> { throw flight::Error(String("flush threw")); };
+    t.destroy = [] { return flight::Task<DestroyOutcome>::reject(Any(String("destroy rejected"))); };
+    auto outcome = lg::destroy_file_log_sink(lg::create_file_log_sink(transport_of(t))).get();
+    check(outcome->reason == String("operation-failed") && reason_of(outcome->flush) == "operation-failed" && message_of(outcome->flush) == "flush threw" &&
+              reason_of(outcome->destroy) == "operation-failed" && message_of_destroy(outcome->destroy) == "destroy rejected",
+          "a thrown Error and a rejected value both become operation-failed with String(reason) as the message");
+  }
+  {
+    TestTransport a, b;
+    auto first = lg::create_file_log_sink(transport_of(a));
+    auto second = lg::create_file_log_sink(transport_of(b));
+    lg::add_log_sink(first->sink);
+    lg::add_log_sink(second->sink);
+    static_cast<void>(lg::destroy_file_log_sink(first).get());
+    lg::log(LogLevel::Info, text("after"));
+    check(a.lines.empty() && b.lines.size() == 1, "keeps a successor destination live when an older handle is destroyed");
+    lg::clear_log_sinks();
+  }
+  // Addition: a destroyed handle no longer holds its transport (the source sets it to null).
+  {
+    TestTransport t;
+    auto token = std::make_shared<int>(0);
+    auto transport = transport_of(t);
+    transport->write = [token](String) { return flight::types::LogTransportWriteOutcome{flight::make_ref<Plain>(Plain{.reason = String("accepted")})}; };
+    auto handle = lg::create_file_log_sink(transport);
+    transport = flight::make_ref<flight::types::LogTransport>(flight::types::LogTransport{});
+    const auto held = token.use_count();
+    static_cast<void>(lg::destroy_file_log_sink(handle).get());
+    check(held == 2 && token.use_count() == 1, "a destroyed handle releases its transport");
+  }
+  {
+    bool threw = false;
+    try {
+      static_cast<void>(lg::destroy_file_log_sink(flight::make_ref<flight::types::FileLogSink>(flight::types::FileLogSink{})).get());
+    } catch (const flight::Error& error) {
+      threw = error.message() == String("destroyFileLogSink received an unknown handle");
+    }
+    check(threw, "an unknown handle throws");
+  }
+}
+
 int main() {
   level_functions();
   spans();
@@ -618,5 +883,7 @@ int main() {
   text_formatter();
   serialize_errors();
   groups_and_signals();
+  json_formatter();
+  file_sink();
   return failures == 0 ? 0 : 1;
 }
