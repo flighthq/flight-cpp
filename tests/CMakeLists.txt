@@ -268,6 +268,17 @@ add_test(
   COMMAND flight_cpp_generated_image_test_helper_tests
 )
 
+add_executable(flight_cpp_generated_image_tests generated_image_test.cpp)
+target_include_directories(
+  flight_cpp_generated_image_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_image_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(NAME flight_cpp.generated_image COMMAND flight_cpp_generated_image_tests)
+
 add_executable(flight_cpp_generated_statusbar_tests generated_statusbar_test.cpp)
 target_include_directories(
   flight_cpp_generated_statusbar_tests
@@ -766,6 +777,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_scene3d materials mesh node 
 flight_cpp_package_test_labels(flight_cpp.generated_interaction interaction)
 flight_cpp_package_test_labels(flight_cpp.generated_intl_cache intl)
 flight_cpp_package_test_labels(flight_cpp.generated_image_test_helper image)
+flight_cpp_package_test_labels(flight_cpp.generated_image image)
 flight_cpp_package_test_labels(flight_cpp.generated_statusbar statusbar)
 flight_cpp_package_test_labels(flight_cpp.generated_audio audio)
 flight_cpp_package_test_labels(flight_cpp.generated_input input)
