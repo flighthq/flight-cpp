@@ -338,6 +338,104 @@ int main() {
           "and the provider's answer is what comes back");
   }
 
+  // EACH OPERATION'S OWN OUTCOME DOMAIN. The blocks above always use the outcome string
+  // "cancelled", which proves the provider's result round-trips but not that the operation keeps ITS
+  // domain: every result union here shares the same cancelled arm, so a single value cannot distinguish
+  // them. The upstream fixtures give each entry point a failure outcome of its own, and these assert
+  // exactly those strings -- a module that collapsed or remapped them would pass the blocks above and
+  // fail here.
+  {
+    using Selected = flight::types::handle_outcome_194a6af8011a3c94;
+
+    // Every failure outcome the three fixtures name, one per operation that has one.
+    struct Case {
+      const char* outcome;
+      const char* message;
+    };
+
+    {
+      // directory open -- the directory-specific runtime-unavailable outcome.
+      auto host = flight::make_ref<flight::types::HostDirectoryOpenDialogCapability>();
+      host->open = [](auto) {
+        return flight::Task<flight::types::DirectoryOpenDialogResult>::resolve(
+            flight::types::DirectoryOpenDialogResult{
+                std::in_place_type<flight::Ref<Cancelled>>, cancelled("runtime-unavailable")});
+      };
+      check(std::get<flight::Ref<Cancelled>>(flight::dialog::show_open_directory_dialog(host).get())->outcome ==
+                String("runtime-unavailable"),
+            "the directory dialog keeps its runtime-unavailable outcome");
+    }
+
+    {
+      // file open -- the file-open-specific security outcome.
+      auto host = flight::make_ref<flight::types::HostFileOpenDialogCapability>();
+      host->open = [](auto) {
+        return flight::Task<flight::types::FileOpenDialogResult>::resolve(
+            flight::types::FileOpenDialogResult{std::in_place_type<flight::Ref<Cancelled>>,
+                                                cancelled("security-denied")});
+      };
+      check(std::get<flight::Ref<Cancelled>>(flight::dialog::show_open_file_dialog(host, {}).get())->outcome ==
+                String("security-denied"),
+            "the file-open dialog keeps its security-denied outcome");
+    }
+
+    {
+      // file save -- the file-save-specific failure outcome, and the SELECTED arm carrying the handle.
+      auto host = flight::make_ref<flight::types::HostFileSaveDialogCapability>();
+      host->save = [](auto) {
+        return flight::Task<flight::types::FileSaveDialogResult>::resolve(
+            flight::types::FileSaveDialogResult{std::in_place_type<flight::Ref<Cancelled>>,
+                                                cancelled("file-save-failed")});
+      };
+      check(std::get<flight::Ref<Cancelled>>(flight::dialog::show_save_file_dialog(host, {}).get())->outcome ==
+                String("file-save-failed"),
+            "the file-save dialog keeps its file-save-failed outcome");
+
+      // The success arm is a DIFFERENT alternative, not a differently-spelled cancellation: it carries
+      // the handle the caller asked for. Building it here pins that the two arms stay distinguishable.
+      const auto handle = flight::dialog::create_file_dialog_handle(
+          String("save-file"), String("out.txt"), std::optional<flight::String>{String("/tmp/out.txt")});
+      const auto selected = flight::make_ref<Selected>(Selected{.handle = handle, .outcome = String("selected")});
+      auto selected_host = flight::make_ref<flight::types::HostFileSaveDialogCapability>();
+      selected_host->save = [selected](auto) {
+        return flight::Task<flight::types::FileSaveDialogResult>::resolve(
+            flight::types::FileSaveDialogResult{std::in_place_type<flight::Ref<Selected>>, selected});
+      };
+      const auto selected_result = flight::dialog::show_save_file_dialog(selected_host, {}).get();
+      check(selected_result.index() == 0 &&
+                std::get<flight::Ref<Selected>>(selected_result)->outcome == String("selected"),
+            "a selected save is the handle arm, not a cancellation");
+      check(std::get<flight::Ref<Selected>>(selected_result)->handle->name == String("out.txt"),
+            "and the selected arm carries the handle the provider chose");
+    }
+
+    {
+      // image open -- the image-open-specific failure outcome.
+      auto host = flight::make_ref<flight::types::HostImageOpenDialogCapability>();
+      host->open = [](auto) {
+        return flight::Task<flight::types::ImageOpenDialogResult>::resolve(
+            flight::types::ImageOpenDialogResult{std::in_place_type<flight::Ref<Cancelled>>,
+                                                 cancelled("image-open-failed")});
+      };
+      check(std::get<flight::Ref<Cancelled>>(flight::dialog::show_open_image_dialog(host).get())->outcome ==
+                String("image-open-failed"),
+            "the image dialog keeps its image-open-failed outcome");
+    }
+
+    {
+      // photo capture -- the photo-capture-specific failure outcome.
+      auto host = flight::make_ref<flight::types::HostPhotoCaptureDialogCapability>();
+      host->capture = [](auto) {
+        return flight::Task<flight::types::PhotoCaptureDialogResult>::resolve(
+            flight::types::PhotoCaptureDialogResult{std::in_place_type<flight::Ref<Cancelled>>,
+                                                    cancelled("photo-capture-failed")});
+      };
+      check(std::get<flight::Ref<Cancelled>>(flight::dialog::show_capture_photo_dialog(host).get())->outcome ==
+                String("photo-capture-failed"),
+            "the photo capture dialog keeps its photo-capture-failed outcome");
+    }
+  }
+
   if (failures == 0) std::cout << "generated dialog modules: all checks passed\n";
   return failures == 0 ? 0 : 1;
 }
