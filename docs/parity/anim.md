@@ -895,9 +895,12 @@ an area-less shape or unrecognised kind zeroes the entry rather than faulting). 
 
 Not covered, and not faked: everything that needs a `Physics2DWorld` -- the step, broadphase, solver, joints, queries,
 stepping assertions and the joint-suppression index -- because `world.hpp` is one of 16 of the package's 26 headers
-that do not compile. Its blocker is single: a bounds literal is emitted as a module-local anonymous owner and passed
-where the named `flight::types::SpatialAabb2D` is declared, which takes 14 headers down together, filed in
-`docs/compiler-requests/contextual-object-return-nominal-owner.md` with the physics2d sites. No workaround is carried.
+that do not compile. Its blocker is single: a bounds value is emitted as a module-local anonymous owner while the
+caller holds the named `flight::types::SpatialAabb2D`, which takes 14 headers down together, filed in
+`docs/compiler-requests/contextual-object-return-nominal-owner.md` with the physics2d sites. That file now also records
+why the general emitter fix is unavailable rather than pending: the declaration is an inline anonymous shape with no
+name in the source, and this checkout emits TWO named owners with those exact four fields (`CollisionAabb2D` and
+`SpatialAabb2D`), so a structural rule has a tie to break on something other than structure. No workaround is carried.
 
 ### Local generation status
 

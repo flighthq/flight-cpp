@@ -62,3 +62,39 @@ blocked headers are `world`, `step`, `solver`, `joints`, `joint_factories`, `joi
 `explain_physics2djoints` and the package's two barrels. No workaround is carried: patching every one of those sites in
 the pinned source would be a rewrite of the package's query surface, which is exactly what this request exists to
 avoid.
+
+## Why no general fix selects a named owner at the physics2d site
+
+Attempted at `2b687ea` and stopped, by measurement rather than by preference. The required lowering above assumes the
+declaration site HAS a named contextual owner to select. At the physics2d site it does not, and the substitution cannot
+be made structurally:
+
+1. **The declaration is an inline anonymous shape.** `writePhysics2DColliderBounds(collider, out)` declares
+   `out: { minX: number; minY: number; maxX: number; maxY: number }` -- an object type written in place, with no name in
+   the source at all. The emitter's anonymous owner is therefore the correct reading of THAT declaration, and the
+   mismatch appears at the call boundary, where the caller holds `flight::types::SpatialAabb2D` (from the broadphase
+   scratch) and the parameter wants the local owner.
+2. **A structural rule has to break a tie between two NAMED owners.** This checkout emits three owners whose fields are
+   exactly `{min_x, min_y, max_x, max_y}`: `flight::types::CollisionAabb2D`, `flight::types::SpatialAabb2D`, and the
+   physics2d anonymous struct. So "use the declared named owner with this shape" has two named answers before it has
+   one, and any rule that picks between them is doing so on something other than the fields -- which is package
+   knowledge by another name.
+3. **Converting between them is exactly what this repository forbids.** The two are unrelated owners with no emitted
+   heritage path, so the conversion would be a native pointer cast between distinct types, a materialized replacement
+   owner, or side storage -- the three things the emitter's own refusal text rules out, and the same reasoning that
+   closed `flattened-interface-refinement-identity`. Similar fields are not a heritage relationship just because the
+   shapes coincide.
+
+The two narrow changes that ARE safe, for the repository to choose between rather than for this file to assume:
+
+- **A source patch naming the type** at the declaration (`out: SpatialAabb2D`, an annotation that erases in JavaScript
+  and changes no field, no order and no aliasing; the callers already pass `SpatialAabb2D`). That is the workaround this
+  file's own header already carries for the spritesheet-formats site, and it is the smallest change that makes the two
+  sides one type. It recovers the 14 headers if the parameter is the only blocker among them, which the compile
+  inventory says is likely but does not prove.
+- **Making the emitter refuse instead of emitting invalid C++.** That is the honest half of the existing bug -- this
+  file's first paragraph says the observed C++ carries no diagnostic -- but it recovers nothing, so it is a loudness
+  fix rather than the fix.
+
+Neither is taken here. The instruction for this pass was to attempt the general emitter fix and stop with a design
+blocker if it could not be made safely, and that is what this section is.
