@@ -191,6 +191,40 @@ accessor aborts, which is how the fix is now covered.
 **A member with no row key, again.** `HostAppLoopCapability` declares `now`, and the generated row-member table has no
 key that reaches it, so a capability row cannot carry one. Nothing in the module needs it -- the time arrives as the
 frame callback's own argument -- and the table is deliberately not broadened for it. The test's row builder says so.
+- `flight_cpp.generated_app_window` — `tests/generated_app_window_test.cpp` (dedicated), NEW, and the second half of
+  this arc. `appWindow.test.ts` is 90 cases over roughly sixty functions, and most of them are one-line delegations;
+  what the file covers is the part that is not a delegation, plus a representative sample of the delegations so the
+  routing shape is pinned. The terminal-close rule: `closeWindow` closes and announces onClose, a SECOND close answers
+  true without reaching the host again, a host's own terminal notification is guarded the same way, and a successful
+  re-attach clears the terminal state so the window can be closed again -- which is also what makes a native callback
+  racing an explicit close converge on ONE close. Close is pinned to the host that ATTACHED the window, so closing
+  through a different host closes through the origin and the other host sees no calls. `requestWindowClose` reports
+  whether a listener vetoed. The events carry change-guards: `onMove` fires only when the position actually moved,
+  `showWindow` does nothing to an already-visible window, `setWindowFullscreen` does nothing when the value is
+  unchanged, and `restoreWindow` returns early unless the window is minimized or maximized. And the two pieces of
+  arithmetic -- a uniform devicePixelRatio scale with the stale translation cleared, and bounds filled into the
+  caller's own object and returned by identity. Eleven mutations against the override that supplies the module, ten
+  with teeth: the close terminal guard dropped 1 failure, the notify guard dropped 2, the re-attach's terminal clear
+  dropped 1, the attach's backend pin dropped 2, the close request not emitted 2, the show guard dropped 3, the
+  restore guard dropped 2, the transform scale not applied 1, bounds returning a fresh object 1, and the move guard
+  dropped 2. The eleventh is equivalent by construction and is recorded rather than counted: dropping
+  `notifyWindowClosed`'s `window_backends.erase(win)` changes nothing on any reachable path, because every reader of
+  that map consults the terminal set first and returns early, and the only way to clear the terminal set is a
+  successful attach, which re-sets the backend in the same step.
+
+  Coverage boundary, stated rather than implied: functions whose host parameter is a MERGED row (`RowMerge` of a
+  capability row and a required companion row -- `centerWindow`, `setWindowOpacity`, `setWindowResizable`,
+  `setWindowIcon`, `setWindowMenuBarVisible`, `flashWindowFrame`, and the `attachWindowResize`/`DropFile`/
+  `Fullscreen`/`Orientation`/`RenderContext`/`RenderState` families) are NOT covered, because constructing a merged
+  row is a separate exercise from calling the function and nothing here invents one. app core (`app.ts`, 42 cases) and
+  appHost (3) are also uncovered, per the parcel.
+
+**Four more members with no row key.** The same table gap the appLoop unit recorded for `HostAppLoopCapability.now`
+applies to `HostWindowLifecycleCapability.close` and the `subscribeClose`/`subscribeMove`/`subscribeVisibility`
+members of three other capabilities: no key reaches any of them, so a capability row assembled from `row_field`
+cells cannot carry one, and a row mixing them with keyed fields does not compile. The module reads those four
+through the capability REFERENCE rather than by key, which is why passing a `Ref` works; the test says so where the
+hosts are built. Recorded, not broadened -- the table is not touched.
 
 ### Local generation status
 
