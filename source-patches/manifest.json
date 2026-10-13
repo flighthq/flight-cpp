@@ -3781,6 +3781,22 @@
       "unblocks": "@flighthq/textlayout computeTextLayout word wrap when the first segment already exceeds the wrap width (upstream textLayout.test.ts 'wraps at word boundary when line exceeds width'), once the textlayout owner regenerates. A single-line source scan found no other SDK `x ?? (cond ? y : null|undefined)` site.",
       "expires": "when upstream keeps a conditional fallback's literal null or undefined arm in a nullish coalesce's result (docs/compiler-requests/nullish-coalesce-null-into-optional-is-never-absent.md).",
       "appliedOn": "2026-10-13"
+    },
+    {
+      "id": "physics2d-bounds-parameter-named-owner",
+      "dependency": "flight",
+      "patch": "physics2d-bounds-parameter-named-owner.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/physics2d/src/colliderTransform.ts",
+      "package": "@flighthq/physics2d",
+      "answers": "diagnostic",
+      "refusal": "no viable conversion from 'Ref<flight::types::SpatialAabb2D>' to 'Ref<min_x_min_y_max_x_max_y_deb9806a4ba4981e>' -- the bounds parameter of writePhysics2DColliderBounds is declared as an inline anonymous object shape, so the emitter gives it a package-local anonymous owner while every caller holds flight::types::SpatialAabb2D; fourteen headers fail on that one conversion.",
+      "rewrite": "Names the parameter's type instead of writing it inline: `out: SpatialAabb2D`, with SpatialAabb2D added to the existing type-import list. The two spellings have identical fields and the field writes inside the function are unchanged.",
+      "equivalence": "A TypeScript-only annotation that erases in JavaScript: no emitted call differs, no field is renamed, no field order changes, and no aliasing changes -- the function writes min_x, min_y, max_x and max_y into the caller's own object exactly as before, and the object it writes into is the caller's, by reference, before and after. It matches the type every measured caller already holds, which is the point: broadphase and world_queries both pass a scratch object whose `bounds` member IS a SpatialAabb2D, so this annotation makes the declaration state what the call sites already meant rather than changing what either side does.",
+      "whyNotUpstreamFirst": "The general emitter fix was attempted and refused on measurement: the declaration has no named owner to select (the source writes the shape inline), and this checkout emits two NAMED owners with those exact four fields, so a structural rule must break a tie on something other than structure. Recorded in docs/compiler-requests/contextual-object-return-nominal-owner.md with the reasoning. Upstream has no newer commit than the pin.",
+      "unblocks": "Nothing yet, measured after the patch: the module regenerates with the parameter named `flight::Ref<flight::types::SpatialAabb2D>` (1 header changed) and the package still compiles 10 of 26 headers with the IDENTICAL 16 failures. The parameter was not the only declaration emitting the anonymous owner -- three more inline bounds shapes do (broadphase.ts's scratch `bounds` and `bodyBounds`, worldQueries.ts's `colliderBounds`), and the same field list means they share the same anonymous type, so the mismatches simply moved to those sites. Recorded in docs/compiler-requests/contextual-object-return-nominal-owner.md.",
+      "expires": "when the emitter selects the declared named owner for a contextual object shape, at which point the inline spelling lowers and this patch has nothing left to rewrite.",
+      "appliedOn": "2026-10-13"
     }
   ]
 }

@@ -88156,10 +88156,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:6207fdfd85f02ee0055a1df9234988babaf502f7df25713bd89f105824b79cd2",
-            "line": 19,
+            "line": 20,
             "packageName": "@flighthq/physics2d",
             "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",649]",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",666]",
             "kind": "function",
             "name": "createPhysics2DColliderWorldShape",
             "scope": "module",
@@ -88177,10 +88177,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:4b0690efcd1d872ccf0b456d9bdb1f41f709bc910b4e769707738e933ce3cb25",
-            "line": 62,
+            "line": 63,
             "packageName": "@flighthq/physics2d",
             "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",2346]",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",2363]",
             "kind": "function",
             "name": "initializeCollisionCapsule2D",
             "scope": "module",
@@ -88198,10 +88198,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:2bb5ae961a82b79da87ac1abbd856f9bcc7fd2bd2832d6cc193dc176791612a1",
-            "line": 79,
+            "line": 80,
             "packageName": "@flighthq/physics2d",
             "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",2678]",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",2695]",
             "kind": "function",
             "name": "initializeCollisionCircle2D",
             "scope": "module",
@@ -88219,10 +88219,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:3ba72241879e03ed8df17729e72f3bf019367e2f282be44376f0cdbfc460b263",
-            "line": 92,
+            "line": 93,
             "packageName": "@flighthq/physics2d",
             "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",2942]",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",2959]",
             "kind": "function",
             "name": "initializeCollisionObb2D",
             "scope": "module",
@@ -88240,10 +88240,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:8594fdfcb466e20817498338801998e30f3359f7c978a9ce83b5d85f17c940b4",
-            "line": 109,
+            "line": 110,
             "packageName": "@flighthq/physics2d",
             "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",3276]",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",3293]",
             "kind": "function",
             "name": "initializeCollisionPoint2D",
             "scope": "module",
@@ -88261,10 +88261,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:0217183e67860fa45bd3427543c9ab615ac06f0cd4c0c519449ade6841021bdb",
-            "line": 120,
+            "line": 121,
             "packageName": "@flighthq/physics2d",
             "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",3495]",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",3512]",
             "kind": "function",
             "name": "initializeCollisionPolygon2D",
             "scope": "module",
@@ -88282,10 +88282,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:4d129e11373fcb27260ad9e904d8f73ffe27467f30fefb553f14a252a507ddce",
-            "line": 129,
+            "line": 130,
             "packageName": "@flighthq/physics2d",
             "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",3713]",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",3730]",
             "kind": "function",
             "name": "initializeCollisionSegment2D",
             "scope": "module",
@@ -88303,10 +88303,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:90dfa22a1c4b2ff67c0df4a35d34d2a3ff9e2d0d2ecb911a13bd7b3b68edf1a0",
-            "line": 152,
+            "line": 153,
             "packageName": "@flighthq/physics2d",
             "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",4647]",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",4664]",
             "kind": "function",
             "name": "updatePhysics2DColliderWorldShape",
             "scope": "module",
@@ -88324,10 +88324,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:3915965148823481bd38293b931c04605060861c659c54e8f0051335b7a6d4c7",
-            "line": 230,
+            "line": 231,
             "packageName": "@flighthq/physics2d",
             "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",7816]",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",7833]",
             "kind": "function",
             "name": "writePhysics2DColliderBounds",
             "scope": "module",
@@ -88417,6 +88417,23 @@
             "name": "Physics2D",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/Physics2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ColliderTransform",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/colliderTransform.ts"
+          },
+          "importedNames": [
+            "SpatialAabb2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Spatial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Spatial.ts"
           }
         }
       ],

@@ -1,0 +1,21 @@
+diff --git a/packages/physics2d/src/colliderTransform.ts b/packages/physics2d/src/colliderTransform.ts
+index b914e99e..82451bd7 100644
+--- a/packages/physics2d/src/colliderTransform.ts
++++ b/packages/physics2d/src/colliderTransform.ts
+@@ -11,6 +11,7 @@ import type {
+   EntityConstruction,
+   Physics2DCollider,
+   RigidBody2D,
++  SpatialAabb2D,
+ } from '@flighthq/types/contract';
+ 
+ // Allocates the world-space shape a collider needs for `local`, choosing the kind the transform can
+@@ -229,7 +230,7 @@ export function updatePhysics2DColliderWorldShape(collider: Physics2DCollider, b
+ // grows without limit as the body spins.
+ export function writePhysics2DColliderBounds(
+   collider: Readonly<Physics2DCollider>,
+-  out: { minX: number; minY: number; maxX: number; maxY: number },
++  out: SpatialAabb2D,
+ ): void {
+   const shape = collider.world;
+   switch (shape.kind) {

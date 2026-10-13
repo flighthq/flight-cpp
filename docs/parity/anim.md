@@ -900,7 +900,12 @@ caller holds the named `flight::types::SpatialAabb2D`, which takes 14 headers do
 `docs/compiler-requests/contextual-object-return-nominal-owner.md` with the physics2d sites. That file now also records
 why the general emitter fix is unavailable rather than pending: the declaration is an inline anonymous shape with no
 name in the source, and this checkout emits TWO named owners with those exact four fields (`CollisionAabb2D` and
-`SpatialAabb2D`), so a structural rule has a tie to break on something other than structure. No workaround is carried.
+`SpatialAabb2D`), so a structural rule has a tie to break on something other than structure. A source patch naming that one parameter was approved, applied and MEASURED: the parameter is now
+`flight::Ref<flight::types::SpatialAabb2D>` and exactly one header changed, but the package still compiles 10 of 26 with
+the identical 16 failures -- three further inline bounds shapes (broadphase's scratch `bounds` and `bodyBounds`,
+worldQueries' `colliderBounds`) emit the same anonymous type because their fields are the same. So the complete fix is a
+known set of four one-line annotations rather than one; the pass that measured this stopped there deliberately, and the
+count is recorded in the request.
 
 ### Local generation status
 

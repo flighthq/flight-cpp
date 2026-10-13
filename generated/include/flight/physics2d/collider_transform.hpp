@@ -24,11 +24,13 @@ namespace flight::types { struct Physics2DCollider; }
 namespace flight::types { struct Physics2DCollisionFilter; }
 namespace flight::types { struct Physics2DMaterial; }
 namespace flight::types { struct RigidBody2D; }
+namespace flight::types { struct SpatialAabb2D; }
 
 #include <flight/entity/entity.hpp>
 #include <flight/types/collision.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/physics2_d.hpp>
+#include <flight/types/spatial.hpp>
 
 namespace flight::physics2d {
 
@@ -471,17 +473,7 @@ inline void update_physics2_dcollider_world_shape(flight::Ref<flight::types::Phy
   }
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS2D_MIN_X_MIN_Y_MAX_X_MAX_Y_DEB9806A4BA4981E
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS2D_MIN_X_MIN_Y_MAX_X_MAX_Y_DEB9806A4BA4981E
-struct min_x_min_y_max_x_max_y_deb9806a4ba4981e : public flight::ReferenceEnabled {
-  double min_x;
-  double min_y;
-  double max_x;
-  double max_y;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PHYSICS2D_MIN_X_MIN_Y_MAX_X_MAX_Y_DEB9806A4BA4981E
-
-inline void write_physics2_dcollider_bounds(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>> collider, flight::Ref<min_x_min_y_max_x_max_y_deb9806a4ba4981e> out) {
+inline void write_physics2_dcollider_bounds(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>> collider, flight::Ref<flight::types::SpatialAabb2D> out) {
   flight::types::CollisionBuiltInShape2D shape = flight::row_get<flight::RowKey<"world">>(collider);
   {
     double switch_fallthrough_state = -1.0;

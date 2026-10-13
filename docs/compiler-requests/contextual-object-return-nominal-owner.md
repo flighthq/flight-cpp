@@ -98,3 +98,21 @@ The two narrow changes that ARE safe, for the repository to choose between rathe
 
 Neither is taken here. The instruction for this pass was to attempt the general emitter fix and stop with a design
 blocker if it could not be made safely, and that is what this section is.
+
+### What the approved annotation actually measured
+
+The source patch was approved, applied, and measured rather than assumed -- and it does **not** recover the headers. The
+patch takes effect: `write_physics2_dcollider_bounds`'s parameter is now `flight::Ref<flight::types::SpatialAabb2D>`, and
+exactly one header changes. The package still compiles **10 of 26 headers, with the identical 16 failures and the
+identical diagnostic**. The parameter was not the only declaration emitting that anonymous owner. Three more inline
+bounds shapes do, and because they carry the same four fields the emitter gives them the same anonymous type, so the
+mismatches simply moved to their sites:
+
+- `broadphase.ts`'s scratch `bounds` and `bodyBounds` in `createPhysics2DBroadphaseScratch`
+- `worldQueries.ts`'s scratch `colliderBounds` in `createPhysics2DQueryScratch`
+
+Naming all four is a known and bounded set of one-line annotations, and it is the obvious next step -- but each is a
+separate site in a separate file, which is exactly the "stacking" this pass was told to stop short of. The stopping
+instruction was to measure the annotation's effect and stop if it exposed a different blocker. It did, and its exact
+shape is now on the record rather than in someone's memory: **the same defect at four declarations, one per inline
+bounds shape**, with the emitter unchanged.
