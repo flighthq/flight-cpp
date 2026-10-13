@@ -713,6 +713,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_input_binding_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_input_binding COMMAND flight_cpp_generated_input_binding_tests)
 
+add_executable(flight_cpp_generated_keyboard_tests generated_keyboard_test.cpp)
+target_include_directories(
+  flight_cpp_generated_keyboard_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_keyboard_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_keyboard COMMAND flight_cpp_generated_keyboard_tests)
+
 add_executable(flight_cpp_generated_skeleton2d_tests generated_skeleton2d_test.cpp)
 target_include_directories(
   flight_cpp_generated_skeleton2d_tests
@@ -1176,6 +1184,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_spatial spatial)
 flight_cpp_package_test_labels(flight_cpp.generated_input_manager input)
 flight_cpp_package_test_labels(flight_cpp.generated_input_state input)
 flight_cpp_package_test_labels(flight_cpp.generated_input_binding input)
+flight_cpp_package_test_labels(flight_cpp.generated_keyboard keyboard signals)
 flight_cpp_package_test_labels(flight_cpp.generated_skeleton2d geometry skeleton2d)
 flight_cpp_package_test_labels(flight_cpp.generated_spine_binary_reader skeleton2d-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_signals_throttle signals)

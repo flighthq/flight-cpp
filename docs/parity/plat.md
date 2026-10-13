@@ -95,7 +95,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/platform` | 3 | 1 | 37 | none | none | 3 / 0 |
 | `@flighthq/lifecycle` | 3 | 2 | 44 | dedicated | none | 2 / 1 |
 | `@flighthq/input` | 3 | 2 | 66 | dedicated | none | 3 / 0 |
-| `@flighthq/keyboard` | 3 | 1 | 23 | none | none | 3 / 0 |
+| `@flighthq/keyboard` | 3 | 1 | 23 | dedicated | none | 3 / 0 |
 | `@flighthq/interaction` | 19 | 17 | 212 | dedicated | none | 8 / 11 |
 | `@flighthq/gui` | 20 | 18 | 115 | none | none | 16 / 4 |
 | `@flighthq/layout` | 8 | 7 | 73 | none | none | 5 / 3 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-13 of 39 packages are reached by at least one local CTest executable.
-11 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`.
+14 of 39 packages are reached by at least one local CTest executable.
+12 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`.
 
 ## `@flighthq/app`
 
@@ -532,9 +532,36 @@ On-screen (soft) keyboard visibility, height, and show/hide/resize signals over 
 
 Upstream carries per-package records at `flight/agents/packages/keyboard/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
 
+### Scope
+
+This package is the **soft (on-screen) keyboard** facade, not the hardware keyboard. It exposes visibility, height and
+the show/hide/resize signals over a swappable host backend, and nothing else: there is no key code, no key-to-name
+mapping, no modifier state, no repeat or chord handling and no composition in it, and its `index.ts` exports none.
+Those concepts live in `@flighthq/input` (key data, `KeyCode`, modifier flags) and `@flighthq/shortcut` (chords), and
+are covered from those packages. A coverage request written in hardware-keyboard vocabulary therefore names the wrong
+axis for this package; the axes below are the ones it actually declares.
+
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_keyboard` — `tests/generated_keyboard_test.cpp` (dedicated), added by the unit that took this
+  package. It ports all 23 upstream cases and extends them where the emitted module has structure the upstream suite
+  only samples: the six delegating setters (show/hide plus accessory bar, resize mode, scroll assist and style) are
+  each asserted to reach their own host entry point and to hand their argument through by value, with a backend's
+  `operation-failed` and `operation-unavailable` results reaching the caller unchanged and a rejected backend task
+  staying a rejection rather than becoming a value; `getSoftKeyboardInfo` is asserted to write the caller's object and
+  return **that very object** (reference identity, not a copy) while the two scratch-backed convenience reads leave a
+  caller's object untouched; and the attach state machine is pinned as a table, including the two arms upstream does
+  not test — a reported change that does not move the height fires nothing, and the baseline is the height captured
+  at **attach** rather than at the first change, so a keyboard that is already visible resizes rather than shows, with
+  a hide resetting that baseline so a later rise is a fresh show. Attach re-subscribing (releasing what it replaced,
+  exactly once) and a refused acquisition registering nothing are asserted too. Seven mutations against the generated
+  module, six with teeth: dropping the show arm's edge test 6 failures, making the visible test inclusive 5, keeping a
+  cleared registration 2, not replacing on re-attach 1, returning a copy from `getSoftKeyboardInfo` 3, and dropping
+  the style setter's argument 1. The seventh is equivalent by construction and is recorded as such rather than counted
+  as a kill: replacing the literal `"ok"` in attach's result test with the named constant `soft_keyboard_attach_ok_kind`
+  compares the same string, so it changes nothing.
+
+No other local test, example, or benchmark includes a header of this package.
 
 ### Local generation status
 
