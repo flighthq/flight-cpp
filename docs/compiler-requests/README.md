@@ -118,6 +118,10 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [Optional index/member flow must preserve the present payload](optional-index-member-present-flow.md) —
   an indexed string member call refuses for arrays and emits an invalid pre-unwrap for Records, while
   direct optional members, guarded locals, and indexed object-property reads provide passing controls.
+- [A plain indexed array element must remain present for its member call](indexed-array-member-call-present-element.md) —
+  `@flighthq/texture-formats` populates one inner array per format slot, then a plain
+  `perSlotLevels[slot].push(...)` is refused after the emitter turns the element into optional storage;
+  carried by the complete `texture-formats-parse-atf-nested-levels` override.
 - [A corpus-context structural row construction loses an exact Record spread](corpus-context-structural-row-record-spread.md) —
   `threeDsParse.ts` is a committed P-3D2 refusal, but its closest minimal form reaches an adjacent
   Record-spread rule and the split-module form emits; the page records the non-reproduction without
