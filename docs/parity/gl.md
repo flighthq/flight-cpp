@@ -281,7 +281,11 @@ attachment/composition concepts, not these construction and math suites.
 deterministic formatting/parsing, malformed-input refusal, copy-on-write semantics; fingerprint
 distance, grid mismatch and parse failure; and parity/regression tolerance boundaries.
 
-**Existing native CTest coverage:** none package-focused.
+**Existing native CTest coverage:** `generated_capture_test.cpp` ports all 30 upstream test
+declarations (17 baseline, 13 comparison) with exact serialized text, distances, tolerance
+boundaries, failure sentinels, independent storage, and provenance-copy assertions. It additionally
+checks the acquire/write/format/parse/read lifecycle, grid dimensions, row-major RGBA-to-RGB byte
+layout, alpha exclusion, parsed-byte ordering, and fresh capture-result identities.
 
 ### `snapshot` — 5 modules
 

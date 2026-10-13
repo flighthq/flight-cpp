@@ -74,6 +74,10 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `@flighthq/adjustments` reads `Partial<ColorMatrixAdjustment>.colorMatrix` as an optional array,
   but the emitted predicate tests the optional carrier and always returns false; carried by the
   optional-aware `flight::is_array` runtime binding.
+- [An imported `Record` alias loses its emitted runtime representation](imported-record-alias-loses-runtime-representation.md) —
+  `@flighthq/capture`'s `CaptureBaseline` has an exact generated `flight::Record` carrier in the
+  types package, but the consumer module classifies it as ambient and refuses all seven baseline
+  operations; carried by `capture-baseline-imported-record-alias`.
 - [A typed readonly callback needs to retain its derived owner](readonly-callback-derived-owner-recovery.md) —
   Scene2D's Sprite bounds hook loses both the exact Sprite node and its SpriteRuntime slot after the
   generic Node2D callback boundary; carried by the source patch `scene2d-sprite-exact-runtime-runner`.

@@ -800,6 +800,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_adjustments_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_adjustments COMMAND flight_cpp_generated_adjustments_tests)
 
+add_executable(flight_cpp_generated_capture_tests generated_capture_test.cpp)
+target_include_directories(
+  flight_cpp_generated_capture_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_capture_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_capture COMMAND flight_cpp_generated_capture_tests)
+
 # Per-package labels: `ctest -L '^pkg:<package>$'` runs exactly the semantic tests that include that
 # SDK package's generated headers, and `npm run pkg:compile -- <package> --ctest` builds and runs them.
 # A label is the unscoped npm name (`pkg:scene2d-canvas`, not the C++ directory), and every package a
@@ -893,6 +901,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_importdiagnostics importdiag
 flight_cpp_package_test_labels(flight_cpp.generated_surface surface)
 flight_cpp_package_test_labels(flight_cpp.generated_color color)
 flight_cpp_package_test_labels(flight_cpp.generated_adjustments adjustments)
+flight_cpp_package_test_labels(flight_cpp.generated_capture capture)
 flight_cpp_package_test_labels(flight_cpp.upstream_math_geometry_parity geometry math)
 
 add_executable(flight_cpp_c_api_tests c_api_test.c)
