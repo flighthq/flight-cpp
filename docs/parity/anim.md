@@ -555,6 +555,14 @@ palette ignore its slot-index bound -- changes nothing the test observes, and th
 no case in the file drives a skin entry whose `slot_index` is out of range, so the guard on that path is unexercised.
 Naming it here so the next pass can close it rather than rediscover it.
 
+Compiled in that same unit, package-scoped at `-j2`, which the row had no record of either: **16 of the package's 25
+headers compile and 9 fail**. The failures are two families, both owned elsewhere. Three are the registry row's
+staleness -- `deformAnimationTarget2D`, `skeleton2dAnimationTarget` and `skeleton2dDrawOrderTarget` stop on
+`no member named 'KeyedTable' in namespace 'flight::types'`, which the frozen registry row will settle -- and the rest
+are the closed decision's own consequence: `ik_constraint2_d.hpp`, `path_constraint2_d.hpp` and
+`transform_constraint2_d.hpp` call `solve_skeleton2dikconstraint` and its siblings, which live in the refused
+constraint modules that family blocks. No patch or stub was carried for either.
+
 ### Local generation status
 
 19 of 25 modules emitted, 6 refused; 10 refusing modules (6 of them refusal roots). Read from the committed generated tree, not from the pin above.
