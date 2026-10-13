@@ -14,7 +14,11 @@
 // encoding.
 
 #include <flight/textbidi/bidi_class_kernel.hpp>
+#include <flight/textbidi/enable_text_bidi_guards.hpp>
 #include <flight/textbidi/get_bidi_runs.hpp>
+#include <flight/textbidi/text_bidi_guards.hpp>
+#include <flight/log/log.hpp>
+#include <flight/types/log.hpp>
 #include <flight/textbidi/reorder_bidi_line.hpp>
 #include <flight/textbidi/resolve_bidi_levels.hpp>
 #include <flight/types/bidi.hpp>
@@ -425,6 +429,71 @@ int main() {
       check(first == std::vector<double>({1, 0}) && second == std::vector<double>({0}),
             "reorder: one out array can be reused across calls and truncates");
     }
+  }
+
+  // ---- textBidiGuards.test.ts -----------------------------------------------------------------
+
+  // No guard installed means the miss report is silent and cannot throw: the compact fallback is not
+  // an error, it is the documented answer for a codepoint outside the table.
+  {
+    flight::textbidi::set_text_bidi_guard(std::nullopt);
+    bool threw = false;
+    try {
+      flight::textbidi::report_text_bidi_compact_table_miss(0x4E2D);
+    } catch (...) {
+      threw = true;
+    }
+    check(!threw, "guards: reporting a compact-table miss with no guard is silent");
+  }
+
+  // Installing a guard REPLACES the previous one rather than adding to it, so only the live callback
+  // observes the report.
+  {
+    std::vector<double> first;
+    std::vector<double> second;
+    flight::textbidi::set_text_bidi_guard(
+        std::function<void(double)>([&first](double codepoint) { first.push_back(codepoint); }));
+    flight::textbidi::set_text_bidi_guard(
+        std::function<void(double)>([&second](double codepoint) { second.push_back(codepoint); }));
+    flight::textbidi::report_text_bidi_compact_table_miss(0x4E2D);
+    check(first.empty() && second == std::vector<double>({0x4E2D}),
+          "guards: installing a guard replaces the active callback");
+    flight::textbidi::set_text_bidi_guard(std::nullopt);
+  }
+
+  // ---- enableTextBidiGuards.test.ts -----------------------------------------------------------
+
+  // BLOCKED, and recorded rather than worked around: the upstream tests for enableTextBidiGuards
+  // assert on LOG ENTRIES -- a miss is reported once, the report names BidiClassKernel, and covered
+  // text or a caller-supplied kernel produce nothing. That path cannot be exercised in this profile:
+  // overrides/include/flight/log/log.hpp defines merge_span_fields as NotImplementedInThisProfile, and
+  // log_once/log_assert build every structured entry through it, so emitting one throws
+  // ("flight::log::merge_span_fields was not generated for this profile"). That is the log package's
+  // deliberate fail-loud boundary, not a textbidi defect, and it is the log lane's to close.
+  //
+  // What CAN be verified here is the wiring the guards are built on, without the log: enable installs
+  // a guard callback and disable removes it, and the guard is what reports the miss. The reporting
+  // semantics themselves are pinned by the textBidiGuards cases above.
+  {
+    flight::textbidi::disable_text_bidi_guards();
+    check(!flight::textbidi::guard.has_value(), "guards: guards start disabled");
+
+    flight::textbidi::enable_text_bidi_guards();
+    check(flight::textbidi::guard.has_value(),
+          "guards: enabling installs a miss-report callback");
+
+    // The installed callback is reachable exactly as the compact table reaches it -- through
+    // report_text_bidi_compact_table_miss -- which is the seam the log assertions would observe.
+    bool reported = false;
+    const auto previous = flight::textbidi::guard;
+    flight::textbidi::set_text_bidi_guard(
+        std::function<void(double)>([&reported](double) { reported = true; }));
+    flight::textbidi::report_text_bidi_compact_table_miss(0x4E2D);
+    check(reported, "guards: an installed callback receives the compact-table miss");
+    flight::textbidi::set_text_bidi_guard(previous);
+
+    flight::textbidi::disable_text_bidi_guards();
+    check(!flight::textbidi::guard.has_value(), "guards: disabling removes the callback");
   }
 
   return failures == 0 ? 0 : 1;
