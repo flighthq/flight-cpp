@@ -270,60 +270,7 @@ inline std::optional<flight::String> spine_blend_mode(flight::String mode) {
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLES_FORMATS_ALPHA_END_ALPHA_START_BLEND_MODE_COLOR_END_B_COLOR_END_G_COLOR_END_R_COLOR_END_VARIANCE_B_COLOR_END_VARIANCE_G_COLOR_END_VARIANCE_R_COLOR_START_B_COLOR_START_G_COLOR_START_R_COLOR_START_VARIANCE_B_COLOR_START_VARIANCE_G_COLOR_START_VARIANCE_R_DIRECTION_X_DIRECTION_Y_DIRECTION_Z_GRAVITY_X_GRAVITY_Y_GRAVITY_Z_EMITTER_CONE_ANGLE_EMITTER_DEPTH_EMITTER_HEIGHT_EMITTER_RADIUS_EMITTER_SHAPE_EMITTER_WIDTH_BURST_COUNT_BURST_INTERVAL_DURATION_LOOP_FRAME_COUNT_FRAME_RATE_LIFETIME_MAX_LIFETIME_MIN_MAX_PARTICLES_REGION_ID_MAX_REGION_ID_MIN_SCALE_END_SCALE_MAX_SCALE_MIN_SPEED_MAX_SPEED_MIN_SPAWN_RATE_SPREAD_ROTATION_SPEED_MAX_ROTATION_SPEED_MIN_VELOCITY_INHERITANCE_ALPHA_CURVE_COLOR_CURVE_SCALE_CURVE_WORLD_SPACE_009102F54C361689
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLES_FORMATS_ALPHA_END_ALPHA_START_BLEND_MODE_COLOR_END_B_COLOR_END_G_COLOR_END_R_COLOR_END_VARIANCE_B_COLOR_END_VARIANCE_G_COLOR_END_VARIANCE_R_COLOR_START_B_COLOR_START_G_COLOR_START_R_COLOR_START_VARIANCE_B_COLOR_START_VARIANCE_G_COLOR_START_VARIANCE_R_DIRECTION_X_DIRECTION_Y_DIRECTION_Z_GRAVITY_X_GRAVITY_Y_GRAVITY_Z_EMITTER_CONE_ANGLE_EMITTER_DEPTH_EMITTER_HEIGHT_EMITTER_RADIUS_EMITTER_SHAPE_EMITTER_WIDTH_BURST_COUNT_BURST_INTERVAL_DURATION_LOOP_FRAME_COUNT_FRAME_RATE_LIFETIME_MAX_LIFETIME_MIN_MAX_PARTICLES_REGION_ID_MAX_REGION_ID_MIN_SCALE_END_SCALE_MAX_SCALE_MIN_SPEED_MAX_SPEED_MIN_SPAWN_RATE_SPREAD_ROTATION_SPEED_MAX_ROTATION_SPEED_MIN_VELOCITY_INHERITANCE_ALPHA_CURVE_COLOR_CURVE_SCALE_CURVE_WORLD_SPACE_009102F54C361689
-struct alpha_end_alpha_start_blend_mode_color_end_b_color_end_g_color_end_r_color_end_variance_b_color_end_variance_g_color_end_variance_r_color_start_b_color_start_g_color_start_r_color_start_variance_b_color_start_variance_g_color_start_variance_r_direction_x_direction_y_direction_z_gravity_x_gravity_y_gravity_z_emitter_cone_angle_emitter_depth_emitter_height_emitter_radius_emitter_shape_emitter_width_burst_count_burst_interval_duration_loop_frame_count_frame_rate_lifetime_max_lifetime_min_max_particles_region_id_max_region_id_min_scale_end_scale_max_scale_min_speed_max_speed_min_spawn_rate_spread_rotation_speed_max_rotation_speed_min_velocity_inheritance_alpha_curve_color_curve_scale_curve_world_space_009102f54c361689 : public flight::ReferenceEnabled {
-  std::optional<double> alpha_end;
-  std::optional<double> alpha_start;
-  std::variant<flight::String, flight::Null, flight::Undefined> blend_mode = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::optional<double> color_end_b;
-  std::optional<double> color_end_g;
-  std::optional<double> color_end_r;
-  std::optional<double> color_end_variance_b;
-  std::optional<double> color_end_variance_g;
-  std::optional<double> color_end_variance_r;
-  std::optional<double> color_start_b;
-  std::optional<double> color_start_g;
-  std::optional<double> color_start_r;
-  std::optional<double> color_start_variance_b;
-  std::optional<double> color_start_variance_g;
-  std::optional<double> color_start_variance_r;
-  std::optional<double> direction_x;
-  std::optional<double> direction_y;
-  std::optional<double> direction_z;
-  std::optional<double> gravity_x;
-  std::optional<double> gravity_y;
-  std::optional<double> gravity_z;
-  std::optional<double> emitter_cone_angle;
-  std::optional<double> emitter_depth;
-  std::optional<double> emitter_height;
-  std::optional<double> emitter_radius;
-  std::optional<flight::types::ParticleEmitterShape> emitter_shape;
-  std::optional<double> emitter_width;
-  std::optional<double> burst_count;
-  std::optional<double> burst_interval;
-  std::optional<double> duration;
-  std::optional<bool> loop;
-  std::optional<double> frame_count;
-  std::optional<double> frame_rate;
-  std::optional<double> lifetime_max;
-  std::optional<double> lifetime_min;
-  std::optional<double> max_particles;
-  std::optional<double> region_id_max;
-  std::optional<double> region_id_min;
-  std::optional<double> scale_end;
-  std::optional<double> scale_max;
-  std::optional<double> scale_min;
-  std::optional<double> speed_max;
-  std::optional<double> speed_min;
-  std::optional<double> spawn_rate;
-  std::optional<double> spread;
-  std::optional<double> rotation_speed_max;
-  std::optional<double> rotation_speed_min;
-  std::optional<double> velocity_inheritance;
-  std::variant<flight::Array<double>, flight::Null, flight::Undefined> alpha_curve = std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::Array<double>, flight::Null, flight::Undefined> color_curve = std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::Array<double>, flight::Null, flight::Undefined> scale_curve = std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::optional<bool> world_space;
-};
+using alpha_end_alpha_start_blend_mode_color_end_b_color_end_g_color_end_r_color_end_variance_b_color_end_variance_g_color_end_variance_r_color_start_b_color_start_g_color_start_r_color_start_variance_b_color_start_variance_g_color_start_variance_r_direction_x_direction_y_direction_z_gravity_x_gravity_y_gravity_z_emitter_cone_angle_emitter_depth_emitter_height_emitter_radius_emitter_shape_emitter_width_burst_count_burst_interval_duration_loop_frame_count_frame_rate_lifetime_max_lifetime_min_max_particles_region_id_max_region_id_min_scale_end_scale_max_scale_min_speed_max_speed_min_spawn_rate_spread_rotation_speed_max_rotation_speed_min_velocity_inheritance_alpha_curve_color_curve_scale_curve_world_space_009102f54c361689 = flight::particles::alpha_end_alpha_start_blend_mode_color_end_b_color_end_g_color_end_r_color_end_variance_b_color_end_variance_g_color_end_variance_r_color_start_b_color_start_g_color_start_r_color_start_variance_b_color_start_variance_g_color_start_variance_r_direction_x_direction_y_direction_z_gravity_x_gravity_y_gravity_z_emitter_cone_angle_emitter_depth_emitter_height_emitter_radius_emitter_shape_emitter_width_burst_count_burst_interval_duration_loop_frame_count_frame_rate_lifetime_max_lifetime_min_max_particles_region_id_max_region_id_min_scale_end_scale_max_scale_min_speed_max_speed_min_spawn_rate_spread_rotation_speed_max_rotation_speed_min_velocity_inheritance_alpha_curve_color_curve_scale_curve_world_space_009102f54c361689;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_PARTICLES_FORMATS_ALPHA_END_ALPHA_START_BLEND_MODE_COLOR_END_B_COLOR_END_G_COLOR_END_R_COLOR_END_VARIANCE_B_COLOR_END_VARIANCE_G_COLOR_END_VARIANCE_R_COLOR_START_B_COLOR_START_G_COLOR_START_R_COLOR_START_VARIANCE_B_COLOR_START_VARIANCE_G_COLOR_START_VARIANCE_R_DIRECTION_X_DIRECTION_Y_DIRECTION_Z_GRAVITY_X_GRAVITY_Y_GRAVITY_Z_EMITTER_CONE_ANGLE_EMITTER_DEPTH_EMITTER_HEIGHT_EMITTER_RADIUS_EMITTER_SHAPE_EMITTER_WIDTH_BURST_COUNT_BURST_INTERVAL_DURATION_LOOP_FRAME_COUNT_FRAME_RATE_LIFETIME_MAX_LIFETIME_MIN_MAX_PARTICLES_REGION_ID_MAX_REGION_ID_MIN_SCALE_END_SCALE_MAX_SCALE_MIN_SPEED_MAX_SPEED_MIN_SPAWN_RATE_SPREAD_ROTATION_SPEED_MAX_ROTATION_SPEED_MIN_VELOCITY_INHERITANCE_ALPHA_CURVE_COLOR_CURVE_SCALE_CURVE_WORLD_SPACE_009102F54C361689
 
 inline flight::Ref<flight::types::ParticleEmitterConfig> raw_to_config_flight_value_function_raw_u000054_o_u000043_onfig_flight_private_a2a8b7aa96bf6e0e(flight::Record<flight::String, flight::Any> raw) {

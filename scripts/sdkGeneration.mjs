@@ -408,7 +408,16 @@ async function generateSdk(outputRoot, flightDependency, compilerDependency, com
   const appliedRepairs = applyEmissionRepairs(repairs, compilation.compilation.files);
   // Needs the whole file set rather than one file at a time, because it has to find the canonical
   // definition before it can alias a duplicate to it.
-  const aliasedStructs = aliasDuplicateStructuralStructs(compilation.compilation.files);
+  // The declared package graph, by C++ directory, lets a struct no flight::types copy holds be aliased to the
+  // package that declares it as a parameter, along a dependency edge that already exists.
+  const directoryOf = (name) => cppPackageName(name);
+  const packageGraph = new Map(
+    packageDescriptors.map((package_) => [
+      directoryOf(package_.name),
+      { dependencies: new Set(package_.dependencies.map(directoryOf)), namespace: package_.target.namespace },
+    ]),
+  );
+  const aliasedStructs = aliasDuplicateStructuralStructs(compilation.compilation.files, packageGraph);
   // Package-local quoted includes search the generated sibling directory before the override include
   // root. Canonical installed paths preserve the same dependency while allowing an override to shadow
   // nested includes exactly as it shadows a consumer's top-level include.

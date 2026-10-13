@@ -90,9 +90,23 @@ hoisting the canonical header's include to file scope. Two constraints make it s
 checked rather than assumed: the bodies must be **byte-identical**, not merely hash-alike -- apart from
 qualification, because the canonical copy writes its siblings unqualified inside `namespace flight::types`,
 so a copy emitted elsewhere that names them as `flight::types::X` and names nothing unqualified is the same
-declaration -- and `flight::types` is the only canonical home, because every package already depends on it. An alias
+declaration -- and `flight::types` is the first canonical home, because every package already depends on it. An alias
 introduces no operation and no storage, so it stays within the rule that a repair may only add text
 with no behavior of its own.
+
+When no `flight::types` copy exists, a duplicate may still be aliased, but only along a declared dependency
+edge, and only when nothing is ambiguous. This is the anonymous parameter shape one package declares and
+another re-emits to call it: `createParticleEmitterConfig(config?: Partial<ParticleEmitterConfig>)` in
+`flight::particles`, re-declared by every particles-formats parser
+(`docs/compiler-requests/cross-package-anonymous-object-owner.md`). All five guards must hold:
+- every copy is byte-identical;
+- no `flight::types` copy exists;
+- exactly one duplicating package declares a function taking the struct as a parameter (the owner);
+- the owner is a declared dependency of every other duplicating package;
+- the owner's defining header is hoisted to file scope, as the `flight::types` one is.
+
+A second owner, a copy that differs, or a duplicating package that does not depend on the owner rejects the
+struct. The repair never picks by order or by name.
 
 It needs no declaration and no expiry entry: it is computed from the tree, so when the emitter stops
 duplicating these it finds nothing and changes nothing. What it did is recorded in

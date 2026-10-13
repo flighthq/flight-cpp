@@ -110,3 +110,13 @@ caller declaration no longer exists. Two companion exact-owner respellings remov
 intermediate readonly `MeshGeometry` row at those same calls because the canonical mesh completion
 accepts the exact retained owner. `structural_ref_cast<Ref<MeshGeometry>>` recovers the shared object
 already held by the row; it neither materializes nor copies geometry.
+
+## Dependency-edge alias (carried)
+
+`aliasDuplicateStructuralStructs` in `scripts/emissionRepairs.mjs` aliases a duplicated anonymous parameter
+shape to the package that declares it, but only along a declared dependency edge and only when nothing is
+ambiguous (see AGENTS.md, "The duplicate structural struct alias"). Its first case is
+`@flighthq/particles`' `createParticleEmitterConfig(config?: Partial<ParticleEmitterConfig>)`. The libgdx,
+Pixi, Starling PEX and Spine parsers in `@flighthq/particles-formats` each re-declare that partial-input
+struct, and none converted to the owner's copy. The repair is computed from the tree, so it expires
+when the emitter canonicalizes the owner itself.

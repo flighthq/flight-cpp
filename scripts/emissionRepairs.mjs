@@ -1407,10 +1407,24 @@ function portable(filename) {
 // The precondition is strict and checked, not assumed: the bodies must be BYTE-IDENTICAL. Two shapes
 // that merely hash alike would be a different claim entirely, and this repair does not make it.
 //
-// Only `flight::types` is used as the canonical home, because it is the package every other one already
-// depends on; aliasing toward any other package could introduce an include it does not have.
+// `flight::types` is the canonical home whenever it holds a copy, because it is the package every other one
+// already depends on. When it holds none, a copy elsewhere can still be canonical, but only along a declared
+// dependency edge and only when nothing is ambiguous. The struct is then an anonymous parameter shape one
+// package declares and another package constructs to call it, as with `createParticleEmitterConfig(config?:
+// Partial<ParticleEmitterConfig>)` re-declared by every particles-formats parser that calls it. All of these
+// must hold, or the struct is left alone:
+//   1. every copy is byte-identical to every other;
+//   2. no flight::types copy exists;
+//   3. exactly one duplicating package declares a function that takes the struct as a parameter -- the owner;
+//   4. the owner is a declared dependency of every other duplicating package, so the include the alias needs
+//      follows an edge that already exists;
+//   5. the owner's defining header is hoisted to file scope, exactly as the flight::types header is.
+// Choosing by order or by name would be a guess, so a second owner, or a duplicating package that does not
+// depend on the owner, rejects the struct. See docs/compiler-requests/cross-package-anonymous-object-owner.md.
 
-const STRUCT_DEFINITION = /^(#ifndef (FLIGHT_COMPILER_ANONYMOUS__[A-Z0-9_]+)\n#define \2\n)(struct ([a-z0-9_]+_[0-9a-f]{16}) : public flight::ReferenceEnabled \{\n(?:[^}]*?)\n\};\n)(#endif \/\/ \2\n)/gmu;
+// A member may carry a braced default initializer (`= std::variant<...>{std::in_place_type<...>, ...}`), so the
+// body runs to the struct's own closing `};` line -- the one directly followed by its guard's `#endif`.
+const STRUCT_DEFINITION = /^(#ifndef (FLIGHT_COMPILER_ANONYMOUS__[A-Z0-9_]+)\n#define \2\n)(struct ([a-z0-9_]+_[0-9a-f]{16}) : public flight::ReferenceEnabled \{\n(?:[\s\S]*?)\n\};\n)(#endif \/\/ \2\n)/gmu;
 
 // Indexes every anonymous structural struct definition by name, recording the body text per package.
 function indexStructuralDefinitions(files) {
@@ -1442,32 +1456,79 @@ export function equivalentStructuralBody(copy, canonical) {
   return copy.replaceAll('flight::types::', '') === canonical;
 }
 
-// Rewrites each non-canonical copy of a duplicated struct into an alias to the flight::types one.
-// Returns the files touched, for the manifest and for the expiry report.
-export function aliasDuplicateStructuralStructs(files) {
+// The packages whose headers declare a function taking `name` as a parameter: a definition line beginning
+// `inline` whose text after the first `(` names the struct, and that is not a variable initializer.
+function parameterOwners(files, name, packages) {
+  const mention = new RegExp(`\\b${name}\\b`, 'u');
+  const owners = new Set();
+  for (const file of files) {
+    const package_ = packageOf(file.path);
+    if (package_ === undefined || !packages.has(package_)) continue;
+    const contents = typeof file.contents === 'string' ? file.contents : String(file.contents);
+    for (const line of contents.split('\n')) {
+      if (!line.startsWith('inline ')) continue;
+      const open = line.indexOf('(');
+      if (open < 0 || line.slice(0, open).includes(' = ')) continue;
+      if (mention.test(line.slice(open))) {
+        owners.add(package_);
+        break;
+      }
+    }
+  }
+  return owners;
+}
+
+// The dependency-edge canonical copy of a struct no flight::types copy holds, or undefined when any guard fails.
+function dependencyCanonical(files, name, byPackage, packageGraph) {
+  const copies = [...byPackage];
+  if (!copies.every(([, copy]) => copy.body === copies[0][1].body)) return undefined;
+  const owners = parameterOwners(files, name, new Set(byPackage.keys()));
+  if (owners.size !== 1) return undefined;
+  const [owner] = owners;
+  const ownerNode = packageGraph.get(owner);
+  if (ownerNode === undefined) return undefined;
+  for (const [package_] of copies) {
+    if (package_ === owner) continue;
+    const node = packageGraph.get(package_);
+    if (node === undefined || !node.dependencies.has(owner)) return undefined;
+  }
+  return { ...byPackage.get(owner), namespace: ownerNode.namespace, owner };
+}
+
+// Rewrites each non-canonical copy of a duplicated struct into an alias to its canonical copy: the flight::types
+// one, or, given `packageGraph` (C++ package directory -> { namespace, dependencies: Set of directories }), the
+// dependency-edge owner described above. Returns the files touched and the structs aliased, for the manifest and
+// for the expiry report.
+export function aliasDuplicateStructuralStructs(files, packageGraph) {
   const index = indexStructuralDefinitions(files);
   const canonical = new Map();
   for (const [name, byPackage] of index) {
     if (byPackage.size < 2) continue;
     const types = byPackage.get('types');
-    if (types === undefined) continue;
+    if (types === undefined) {
+      if (packageGraph === undefined) continue;
+      const owned = dependencyCanonical(files, name, byPackage, packageGraph);
+      if (owned !== undefined) canonical.set(name, owned);
+      continue;
+    }
     // Every other copy must be the same declaration as the canonical one, or this struct is left alone
     // entirely -- a partial alias would be worse than none. See equivalentStructuralBody.
     if (![...byPackage].every(([, copy]) => equivalentStructuralBody(copy.body, types.body))) continue;
-    canonical.set(name, types);
+    canonical.set(name, { ...types, namespace: 'flight::types', owner: 'types' });
   }
   if (canonical.size === 0) return { files: [], structs: [] };
   const touched = [];
   const aliased = new Set();
   for (const file of files) {
     const package_ = packageOf(file.path);
-    if (package_ === undefined || package_ === 'types') continue;
+    if (package_ === undefined) continue;
     const contents = typeof file.contents === 'string' ? file.contents : String(file.contents);
     let changed = false;
     const needed = new Set();
     const repaired = contents.replaceAll(STRUCT_DEFINITION, (whole, open, _guard, body, name, close) => {
       const target = canonical.get(name);
-      if (target === undefined || !equivalentStructuralBody(body, target.body)) return whole;
+      if (target === undefined || target.owner === package_) return whole;
+      if (target.owner === 'types' ? !equivalentStructuralBody(body, target.body) : body !== target.body) return whole;
       changed = true;
       aliased.add(name);
       // The include CANNOT go here. These guard blocks sit inside the package's `namespace flight::x`,
@@ -1475,7 +1536,7 @@ export function aliasDuplicateStructuralStructs(files) {
       // included header resolve as flight::x::flight::… and nothing compiles. The include is collected
       // and hoisted to file scope below; only the alias stays here.
       needed.add(target.path);
-      return `${open}using ${name} = flight::types::${name};\n${close}`;
+      return `${open}using ${name} = ${target.namespace}::${name};\n${close}`;
     });
     if (!changed) continue;
     const hoisted = hoistIncludes(repaired, needed);
