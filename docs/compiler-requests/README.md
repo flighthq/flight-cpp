@@ -430,3 +430,5 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   silent miscompilation: `flight::Map(map)` selects the sharing copy constructor, so registry's `withKindMapEntry`, `withoutKindMapEntry` and `concatKindMap` mutated their input. Carried by the `compiler-new-map-copy` patch (which retired the registry repairs); seven other packages carry candidate sites that change on their next regeneration.
 - [A `null` written through a generic receiver must produce the member's absent state, not an engaged null](generic-receiver-null-write-engages-optional.md) —
   silent miscompilation and a crash: `initializeRenderStateRuntime<Runtime, …>` writes `registry_miss = nullptr`, so `createRenderState()` then `destroyRenderState()` dereferences null. Carried by the `compiler-generic-receiver-null-write` patch; two `render-state-generic-null-clip-hooks-*` repairs remain for the mapped-type receiver.
+- [`new Set(existingSet)` must copy, not alias](new-set-copy-lowered-to-alias.md) —
+  silent miscompilation, the Set twin of the Map request: `flight::Set<T>(set)` selects the sharing copy constructor. One SDK site (`scene3d-formats` `objRequirements.ts`).
