@@ -936,6 +936,24 @@ flight_cpp_package_test_labels(flight_cpp.generated_capture capture)
 flight_cpp_package_test_labels(flight_cpp.generated_snapshot snapshot log)
 flight_cpp_package_test_labels(flight_cpp.upstream_math_geometry_parity geometry math)
 
+# Behavioural parity for @flighthq/textbidi, driven by the upstream Vitest fixtures. It links the SDK
+# preview because a BidiClassKernel is a generated entity and resolveBidiLevels is supplied by the
+# textbidi override, so this asserts the hand-written resolver rather than the runtime alone.
+add_executable(flight_cpp_generated_textbidi_parity_tests generated_textbidi_parity_test.cpp)
+target_include_directories(
+  flight_cpp_generated_textbidi_parity_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_textbidi_parity_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(
+  NAME flight_cpp.generated_textbidi_parity
+  COMMAND flight_cpp_generated_textbidi_parity_tests
+)
+flight_cpp_package_test_labels(flight_cpp.generated_textbidi_parity textbidi)
+
 add_executable(flight_cpp_c_api_tests c_api_test.c)
 target_link_libraries(flight_cpp_c_api_tests PRIVATE Flight::C)
 flight_cpp_set_project_warnings(flight_cpp_c_api_tests)
