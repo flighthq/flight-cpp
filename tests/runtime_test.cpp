@@ -242,6 +242,17 @@ void test_array_get_optional_index() {
         "index zero is a real index, not confused with absence");
 }
 
+void test_array_is_array_optional_payload() {
+  const std::optional<flight::Array<double>> present(flight::Array<double>{1.0});
+  const std::optional<flight::Array<double>> absent;
+  const std::optional<double> present_number(1.0);
+  check(flight::is_array(present),
+        "Array.isArray sees through an optional carrier to a present Array payload");
+  check(!flight::is_array(absent), "Array.isArray reports false for an absent optional payload");
+  check(!flight::is_array(present_number),
+        "Array.isArray still reports false for a present non-array payload");
+}
+
 void test_null_from_nullptr() {
   std::variant<flight::String, flight::Null, flight::Undefined> value = nullptr;
   check(std::holds_alternative<flight::Null>(value), "nullptr selects the Null alternative");
@@ -3927,6 +3938,7 @@ static void test_self_reference() {
 int main() {
   test_array();
   test_array_get_optional_index();
+  test_array_is_array_optional_payload();
   test_null_from_nullptr();
   test_structural_ref_from_variant();
   test_array_of();

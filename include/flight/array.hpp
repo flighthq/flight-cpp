@@ -678,6 +678,13 @@ template <typename Value>
   return false;
 }
 
+// A property read through Partial<T> carries its JavaScript absence as std::optional. Array.isArray
+// observes the present value, not that carrier: undefined is not an array, while a present Array is.
+template <typename Value>
+[[nodiscard]] constexpr bool is_array(const std::optional<Value>& value) noexcept {
+  return value.has_value() && is_array(*value);
+}
+
 template <typename Range>
   requires requires(const Range& values) {
     std::begin(values);
