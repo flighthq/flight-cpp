@@ -903,9 +903,12 @@ name in the source, and this checkout emits TWO named owners with those exact fo
 `SpatialAabb2D`), so a structural rule has a tie to break on something other than structure. A source patch naming that one parameter was approved, applied and MEASURED: the parameter is now
 `flight::Ref<flight::types::SpatialAabb2D>` and exactly one header changed, but the package still compiles 10 of 26 with
 the identical 16 failures -- three further inline bounds shapes (broadphase's scratch `bounds` and `bodyBounds`,
-worldQueries' `colliderBounds`) emit the same anonymous type because their fields are the same. So the complete fix is a
-known set of four one-line annotations rather than one; the pass that measured this stopped there deliberately, and the
-count is recorded in the request.
+worldQueries' `colliderBounds`) emit the same anonymous type because their fields are the same. The next pass then found that the remaining three sites have
+nothing to annotate -- their interfaces already declare `SpatialAabb2D` -- and that the failures come from a STALE
+COMMITTED OVERRIDE (`overrides/include/flight/physics2d/collider_transform.hpp`) shadowing the corrected generated
+header, whose `derivedFrom` no longer matches the file it was derived from. That is the drift `overrides:check`
+reports; re-deriving or dropping it is the documented step, and `world.hpp` has a second blocker of its own, so the
+recovery is to be measured rather than assumed. The full chain is in the request.
 
 ### Local generation status
 

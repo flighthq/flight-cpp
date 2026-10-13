@@ -116,3 +116,25 @@ separate site in a separate file, which is exactly the "stacking" this pass was 
 instruction was to measure the annotation's effect and stop if it exposed a different blocker. It did, and its exact
 shape is now on the record rather than in someone's memory: **the same defect at four declarations, one per inline
 bounds shape**, with the emitter unchanged.
+
+### The remaining three sites have nothing to annotate -- the blocker is a stale override
+
+Approved as one bounded pass and re-checked before touching the pinned source. The three sites are already correct:
+`interface Physics2DBroadphaseScratch { bounds: SpatialAabb2D; bodyBounds: SpatialAabb2D }` and
+`interface Physics2DQueryScratch { ... colliderBounds: SpatialAabb2D ... }` both name the type the emitter was
+suspected of losing. There is no inline shape left to annotate, so this route has no fourth line to add and the pass
+stopped rather than inventing one.
+
+What the failures actually come from is not the generated tree at all. `-H` on `#include <flight/physics2d/world.hpp>`
+shows the compile reading `overrides/include/flight/physics2d/collider_transform.hpp` -- a committed hand-written
+override that SHADOWS the generated file. Its parameter is still
+`flight::Ref<min_x_min_y_max_x_max_y_deb9806a4ba4981e>`, so every one of those 14 headers fails against the override's
+signature while the generated header underneath it already says `flight::Ref<flight::types::SpatialAabb2D>`. The
+override's manifest entry says `status: complete`, `remaining: "None in this module."`, and pins `derivedFrom:
+e23ff644...` -- and the current generated file no longer hashes to it, which is exactly the drift `overrides:check`
+exists to report. Re-deriving or dropping that override is a documented mechanical step in this repository, not a
+compiler change and not a fifth annotation.
+
+Two further facts, so the recovery is not over-promised: `world.hpp` has at least one blocker of its own
+(`world.hpp:418`, a `StructuralRowWritable<...>` to `const std::shared_ptr<RigidBody2D>` conversion), so even with the
+override re-derived the package will not be 26 of 26. Whatever does recover is to be measured, not assumed.
