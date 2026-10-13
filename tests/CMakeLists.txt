@@ -91,6 +91,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_registry_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_registry COMMAND flight_cpp_generated_registry_tests)
 
+add_executable(flight_cpp_generated_requirement_tests generated_requirement_test.cpp)
+target_include_directories(
+  flight_cpp_generated_requirement_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_requirement_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_requirement COMMAND flight_cpp_generated_requirement_tests)
+
 add_executable(flight_cpp_generated_animation_tests generated_animation_test.cpp)
 target_include_directories(
   flight_cpp_generated_animation_tests
@@ -842,6 +850,7 @@ endfunction()
 flight_cpp_package_test_labels(flight_cpp.structural_row types)
 flight_cpp_package_test_labels(flight_cpp.generated_collision collision)
 flight_cpp_package_test_labels(flight_cpp.generated_registry registry)
+flight_cpp_package_test_labels(flight_cpp.generated_requirement requirement)
 flight_cpp_package_test_labels(flight_cpp.generated_animation animation)
 flight_cpp_package_test_labels(flight_cpp.generated_animation_player animation signals)
 flight_cpp_package_test_labels(flight_cpp.generated_animation_blend animation)

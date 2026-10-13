@@ -1,0 +1,148 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index d7fd139..874fed7 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -2131,7 +2131,7 @@ function emitStringEnumCpp(declaration: Readonly<IrEnumDeclaration>, context: Em
+     '};',
+     ...declaration.members.map(
+       (member) =>
+-        `inline const ${name} ${name}::${safeCppTypeName(member.name)}{${stringType}(${JSON.stringify(member.value)})};`,
++        `inline const ${name} ${name}::${safeCppTypeName(member.name)}{${emitCppStringLiteralCpp(member.value, stringType, context)}};`,
+     ),
+   ];
+ }
+@@ -6308,7 +6308,7 @@ function emitExpression(
+       const parts = expression.parts.map((part) =>
+         typeof part === 'string'
+           ? flightRuntime
+-            ? `flight::String(${JSON.stringify(part)})`
++            ? emitCppStringLiteralCpp(part, 'flight::String', context)
+             : `std::string(${JSON.stringify(part)})`
+           : flightRuntime
+             ? emitCppExplicitStringConversionCpp(part, context)
+@@ -31981,8 +31981,28 @@ function emitLiteral(value: boolean | null | number | string, context: EmitConte
+     const text = String(value);
+     return /[.eE]/u.test(text) ? text : `${text}.0`;
+   }
++  return getCppRuntimeProfile(context.options) === 'flight-cpp'
++    ? emitCppStringLiteralCpp(value, 'flight::String', context)
++    : JSON.stringify(value);
++}
++
++// A C++ narrow string literal carries its own length, but `flight::String`'s `const char*` constructor
++// measures its argument with `strlen`. A source string containing U+0000 is therefore truncated at it
++// silently -- the emitted text compiles and the program reads a different string than the source
++// declared, which for a key built by joining two fields means two distinct keys become one. A value that
++// contains U+0000 is built from the literal's own extent instead; `sizeof` measures the array including
++// its terminator, so the constructor receives every byte the literal holds. Every other value keeps the
++// plain form, byte for byte, so nothing else in the emitted tree changes. This is the third site that
++// builds a Flight string from a source literal, and the one the measured defect goes through: a composite
++// map key is written as a template literal, whose text chunks were built with JSON.stringify directly.
++function emitCppStringLiteralCpp(value: string | number, stringType: string, context: EmitContext): string {
+   const literal = JSON.stringify(value);
+-  return getCppRuntimeProfile(context.options) === 'flight-cpp' ? `flight::String(${literal})` : literal;
++  // An enum declaration's members carry the shared IR union, so a non-string value is possible in the type
++  // even where a string enum is the only thing that reaches it; it keeps the plain form.
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || typeof value !== 'string' || !value.includes('\u0000')) {
++    return `${stringType}(${literal})`;
++  }
++  return `${stringType}(std::string_view(${literal}, sizeof(${literal}) - 1))`;
+ }
+ 
+ function emitUndefinedWithExpectedTypeCpp(expectedType: Readonly<IrType> | undefined, context: EmitContext): string {
+diff --git a/packages/compiler-backend-cpp/src/cppStringLiteralEmission.test.ts b/packages/compiler-backend-cpp/src/cppStringLiteralEmission.test.ts
+new file mode 100644
+index 0000000..8fcb9cc
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppStringLiteralEmission.test.ts
+@@ -0,0 +1,90 @@
++import { describe, expect, it } from 'vitest';
++
++import ts from 'typescript';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++// A C++ narrow string literal carries its own length, but `flight::String`'s `const char*` constructor
++// measures its argument with `strlen`, so a source string containing U+0000 used to be emitted truncated at
++// it -- `flight::String("a\u0000b")` reads as `"a"`. The emitted text compiled, which is why nothing caught
++// it: the program simply held a shorter string than the source declared. The measured site is
++// `@flighthq/requirement`'s `requirementIdentity`, which joins a facet and a key with U+0000; with the join
++// truncated, two distinct requirement pairs collapse to one key and the set silently loses a fact (the
++// native behavioral test tests/generated_requirement_test.cpp asserts the pairs stay distinct).
++//
++// The fix states the extent rather than measuring it: the literal is handed to the constructor with
++// `sizeof(literal) - 1` bytes, which is the array's own length without its terminator. Three emission paths
++// build a Flight string from a source literal and all three go through it now; the remaining cases pin that
++// every value WITHOUT a NUL is emitted exactly as it was, so this changes no existing output.
++function emit(source: string) {
++  const sourceFile = ts.createSourceFile('/flight/packages/math/src/literal.ts', source, ts.ScriptTarget.Latest, true);
++  return emitIrModuleCpp(
++    lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/math', upstreamDirectory: '/flight' }).module,
++    { runtimeProfile: 'flight-cpp' },
++  ).contents;
++}
++
++const lengthCarrying = (literal: string) =>
++  `flight::String(std::string_view(${literal}, sizeof(${literal}) - 1))`;
++
++describe('a source string literal containing U+0000', () => {
++  it('is emitted from the literal\'s own extent', () => {
++    const contents = emit(`export function separator(): string { return '\\u0000'; }`);
++    expect(contents).toContain(`return ${lengthCarrying('"\\u0000"')};`);
++    expect(contents).not.toContain('flight::String("\\u0000")');
++  });
++
++  it('keeps the text on either side of the NUL', () => {
++    const contents = emit(`export function joined(): string { return 'a\\u0000b'; }`);
++    expect(contents).toContain(`return ${lengthCarrying('"a\\u0000b"')};`);
++  });
++
++  it('carries through a template-literal chunk, which is how a joined key is written', () => {
++    // The measured shape: upstream joins two fields with U+0000 to build one map key. The chunk between the
++    // interpolations is a literal of the template expression, not of a plain string.
++    const contents = emit(
++      'export function joinedKey(facet: string, key: string): string { return `${facet}\\u0000${key}`; }',
++    );
++    expect(contents).toContain(`${lengthCarrying('"\\u0000"')}`);
++    expect(contents).not.toContain('flight::String("\\u0000")');
++  });
++
++  it('carries through an object-literal member value', () => {
++    const contents = emit(
++      `export const names = { zero: 'a\\u0000b' } as const;
++       export function pick(): string { return names.zero; }`,
++    );
++    expect(contents).toContain(`.zero = ${lengthCarrying('"a\\u0000b"')}`);
++  });
++
++  it('carries through a string-enum member value', () => {
++    const contents = emit(
++      `export enum Kind { Zero = 'a\\u0000b' }
++       export function kind(): Kind { return Kind.Zero; }`,
++    );
++    expect(contents).toContain(`Kind::Zero{${lengthCarrying('"a\\u0000b"')}};`);
++  });
++});
++
++describe('a source string literal without U+0000', () => {
++  it('keeps the plain form', () => {
++    const contents = emit(`export function plain(): string { return 'ab'; }`);
++    expect(contents).toContain('flight::String("ab")');
++    expect(contents).not.toContain('string_view');
++  });
++
++  it('keeps it for the empty string', () => {
++    const contents = emit(`export function empty(): string { return ''; }`);
++    expect(contents).toContain('flight::String("")');
++    expect(contents).not.toContain('string_view');
++  });
++
++  it('keeps it for another control character, which strlen does not truncate', () => {
++    // U+0001 is one byte and is not the terminator, so the plain form already reads the whole value; the
++    // rule is exactly "contains U+0000", not "contains a control character".
++    const contents = emit(`export function control(): string { return 'a\\u0001b'; }`);
++    expect(contents).toContain('flight::String("a\\u0001b")');
++    expect(contents).not.toContain('string_view');
++  });
++});

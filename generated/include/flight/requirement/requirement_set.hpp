@@ -27,7 +27,7 @@ inline flight::Array<flight::types::RequirementFacet> intersect_sorted(flight::A
 }
 
 inline flight::String requirement_identity(flight::types::RequirementFacet facet, flight::String key) {
-  return flight::String("") + flight::to_string(facet) + flight::String("\u0000") + flight::to_string(key) + flight::String("");
+  return flight::String("") + flight::to_string(facet) + flight::String(std::string_view("\u0000", sizeof("\u0000") - 1)) + flight::to_string(key) + flight::String("");
 }
 
 inline flight::Array<flight::Ref<flight::types::Requirement>> distinct_sorted_requirements(flight::SequenceView<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Requirement>>>>> requirements) {

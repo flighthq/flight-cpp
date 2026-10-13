@@ -3409,5 +3409,23 @@
       "appliedOn": "2026-10-13",
       "whyNotUpstreamFirst": "The wrapper is the one this backend already emits for a callable slot inside a union; this reaches it from a plain callable position and adds the rest-parameter collection. Upstream has no newer commit than the pin."
     }
+,
+{
+      "id": "compiler-nul-string-literal",
+      "dependency": "flight-compiler",
+      "patch": "compiler-nul-string-literal.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "A source string containing U+0000 was emitted as `flight::String(\"...\")`, and the runtime's `const char*` constructor measures its argument with `strlen`, so the value was silently truncated at the NUL: the emitted C++ compiled, and the program held a shorter string than the source declared. Measured on @flighthq/requirement's `requirementIdentity`, which joins a facet and a key with U+0000 -- with the join truncated to a bare concatenation, `('scene.a','bc')` and `('scene.ab','c')` became one identity, so `createRequirementSet` and `diffRequirementSets` silently dropped a distinct requirement. Nine committed headers carry such a literal at this pin (requirement, requirement_catalog, requirement_codegen, collision_support2_d, collision_support3_d, registry_catalog, registry_codegen, scene3d_formats/collada_material, textshaper/text_shaper_cache).",
+      "rewrite": "`emitLiteral` and the string-enum constant emitter -- the two sites that build a Flight string from a source literal -- now go through one `emitCppStringLiteralCpp`, which emits the plain `flight::String(\"...\")` for every value that does not contain U+0000 and, for one that does, `flight::String(std::string_view(\"...\", sizeof(\"...\") - 1))`: the literal is handed over with the array's own length, which `sizeof` measures including the terminator.",
+      "equivalence": "The bytes are the source's own and the constructor is the same one, so the string is the value the source declared rather than its prefix -- the change is confined to values the previous emission got wrong. `sizeof(literal) - 1` is the array's extent, so no count is computed beside the text and the two cannot drift; a literal containing an escape for a quote or a backslash still measures correctly because `sizeof` counts the already-decoded characters. Every value WITHOUT U+0000 takes the branch that emits byte-identical text to before, so no other header changes, including the eight committed ones that carry a literal of their own. Nothing else about the constructor changes: `String(std::string_view)` is the overload `String(const char*)` already delegated to, so the UTF-8 decoding, the empty-string result for an empty literal, and value identity are the same.",
+      "verification": "New cppStringLiteralEmission.test.ts, 7 controls: the NUL alone, text on either side of it, an object-literal member value, and a string-enum member value (all four length-carrying); plus a plain value, the empty string, and a DIFFERENT control character (U+0001, which `strlen` does not truncate), all three byte-identical to the previous emission. Mutations with teeth: the U+0000 rule disabled fails the 4 positive controls, and the rule widened to every value fails the 3 negative ones. The defect itself was found by a native behavioral test rather than by any gate: tests/generated_requirement_test.cpp's identity case failed against the truncated join, which is why the fix is verified against that test as well as the compiler's own.",
+      "unblocks": "@flighthq/requirement's `requirementIdentity` distinguishes the pairs the source says it does, so the package's dedup, diff and merge answer as TypeScript does. The other eight committed headers carry the same literal and stay truncated until their packages are regenerated; a scoped regeneration of any of them will now emit the length-carrying form.",
+      "expires": "when upstream emits a source string literal through a form that carries its extent, so the length is no longer inferred by the constructor.",
+      "appliedOn": "2026-10-13",
+      "whyNotUpstreamFirst": "The runtime cannot answer this: a `const char*` cannot report a length its caller never passed, and the emitter is the only place that still knows the literal's extent. Upstream has no newer commit than the pin."
+    }
   ]
 }
