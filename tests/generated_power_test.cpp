@@ -568,6 +568,110 @@ int main() {
           "and it does not strand the teardowns after it in the same entity");
   }
 
+  // --- Cases added by the mutation battery, which found three holes --------------------------------
+  //
+  // A 17-mutation battery run against this file killed 11 and SURVIVED three, and each survivor is a
+  // genuine hole rather than an equivalence: dropping `subscriptions.erase(power)` from detachPower,
+  // emptying the emission inside emitSignalWhenPresent, and dropping one signal slot from
+  // initializePower all went unnoticed. Each block below closes one, and says which.
+  {
+    const auto by_constructor = power::create_power();
+    check(!by_constructor->on_change.has_value() && !by_constructor->on_charging.has_value() &&
+              !by_constructor->on_discharging.has_value() && !by_constructor->on_idle_state_change.has_value() &&
+              !by_constructor->on_lock_screen.has_value() && !by_constructor->on_resume.has_value() &&
+              !by_constructor->on_suspend.has_value() && !by_constructor->on_thermal_state_change.has_value() &&
+              !by_constructor->on_unlock_screen.has_value(),
+          "initializePower clears all NINE signal slots, so a fresh entity has no live listener on any of them");
+  }
+
+  {
+    // getPowerBatteryHealth and getPowerStatus: caller-owned out, filled and returned by identity.
+    const auto battery_provider = flight::make_ref<HostPowerBatteryHealthCapability>();
+    battery_provider->get_battery_health = [](Ref<PowerBatteryHealth> out) {
+      out->health_state = String("Good");
+      out->cycle_count = 412;
+      out->voltage = 3.87;
+      return out;
+    };
+    const auto battery_out = power::make_power_battery_health();
+    const auto battery_returned = power::get_power_battery_health(view(battery_provider).value(), battery_out);
+    check(battery_returned.get() == battery_out.get(),
+          "getPowerBatteryHealth returns the caller's own object, not a copy");
+    check(battery_out->health_state == String("Good") && battery_out->cycle_count == 412 &&
+              battery_out->voltage == 3.87,
+          "and the provider's values land on it, replacing the -1 sentinels it was asked to fill");
+
+    const auto status_provider = flight::make_ref<HostPowerStatusCapability>();
+    status_provider->get_status = [](Ref<PowerStatus> out) {
+      out->battery_level = 0.42;
+      out->is_charging = true;
+      out->is_on_battery = false;
+      out->thermal_state = String("Nominal");
+      return out;
+    };
+    const auto status_out = power::make_power_status();
+    const auto status_returned = power::get_power_status(view(status_provider).value(), status_out);
+    check(status_returned.get() == status_out.get(), "getPowerStatus returns the caller's own object too");
+    check(status_out->battery_level == 0.42 && status_out->is_charging && !status_out->is_on_battery &&
+              status_out->thermal_state == String("Nominal"),
+          "with the provider's values, so no field keeps the sentinel it started at");
+  }
+
+  {
+    // The lock stream: the emission really reaches a listener, and detaching FORGETS the registration.
+    const auto session_lock = flight::make_ref<HostPowerSessionLockCapability>();
+    int lock_teardowns = 0;
+    std::function<void()> lock_listener;
+    session_lock->subscribe_lock = [&](std::function<void()> listener) {
+      lock_listener = std::move(listener);
+      return std::function<void()>{[&lock_teardowns]() { ++lock_teardowns; }};
+    };
+    // attachPower subscribes BOTH session-lock streams when the provider is present, so the unlock one
+    // has to answer too -- an unwired std::function here is a bad_function_call, not a no-op.
+    session_lock->subscribe_unlock = [](std::function<void()>) { return std::function<void()>{[]() {}}; };
+    const auto entity = power::create_power();
+    power::enable_power_signals(entity);
+    int locked = 0;
+    connect(entity->on_lock_screen.value(), [&locked]() { ++locked; });
+
+    power::attach_power(std::nullopt, std::nullopt, view(session_lock), std::nullopt, std::nullopt, std::nullopt,
+                        entity);
+    check(static_cast<bool>(lock_listener), "attaching hands the lock provider a listener to call");
+    if (lock_listener) lock_listener();
+    check(locked == 1, "and calling it reaches the onLockScreen signal, which is the emission the store carries");
+
+    power::detach_power(entity);
+    check(lock_teardowns == 1, "detaching runs the teardown the provider answered with");
+    power::detach_power(entity);
+    check(lock_teardowns == 1,
+          "and a SECOND detach runs nothing, because the registration was forgotten rather than replayed");
+  }
+
+  {
+    // The FIRST teardown failure is the one the caller sees, and that needs TWO failing teardowns to
+    // show: with a single thrower the first and the last failure are the same object, so the existing
+    // detach case cannot tell "kept the first" from "kept the last". Both lock streams fail here, with
+    // distinguishable messages, and the caller must see the one that ran FIRST.
+    const auto session_lock = flight::make_ref<HostPowerSessionLockCapability>();
+    session_lock->subscribe_lock = [](std::function<void()>) {
+      return std::function<void()>{[]() { throw flight::Error(String("the lock failed first")); }};
+    };
+    session_lock->subscribe_unlock = [](std::function<void()>) {
+      return std::function<void()>{[]() { throw flight::Error(String("the unlock failed second")); }};
+    };
+    const auto entity = power::create_power();
+    power::attach_power(std::nullopt, std::nullopt, view(session_lock), std::nullopt, std::nullopt, std::nullopt,
+                        entity);
+    String kept;
+    try {
+      power::detach_power(entity);
+    } catch (const std::exception& error) {
+      kept = String(error.what());
+    }
+    check(kept == String("the lock failed first"),
+          "detach rethrows the FIRST teardown failure when a later one also throws, not the last");
+  }
+
   if (failures == 0) std::cout << "generated power: all checks passed\n";
   return failures == 0 ? 0 : 1;
 }

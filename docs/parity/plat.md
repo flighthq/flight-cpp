@@ -111,7 +111,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/haptics` | 3 | 1 | 19 | dedicated | none | 3 / 0 |
 | `@flighthq/device` | 3 | 1 | 12 | dedicated | none | 3 / 0 |
 | `@flighthq/screen` | 3 | 1 | 46 | none | none | 3 / 0 |
-| `@flighthq/power` | 3 | 1 | 31 | none | none | 2 / 1 |
+| `@flighthq/power` | 3 | 1 | 31 | dedicated | assisted | 3 / 0 |
 | `@flighthq/clipboard` | 3 | 1 | 31 | none | none | 3 / 0 |
 | `@flighthq/dialog` | 5 | 3 | 23 | dedicated | none | 4 / 1 |
 | `@flighthq/menu` | 4 | 2 | 58 | none | none | 3 / 1 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-24 of 39 packages are reached by at least one local CTest executable.
-23 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`, `sensors`, `geolocation`, `haptics`, `device`.
+25 of 39 packages are reached by at least one local CTest executable.
+24 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`, `sensors`, `geolocation`, `haptics`, `device`, `power`.
 
 ## `@flighthq/app`
 
@@ -1384,11 +1384,42 @@ Upstream carries per-package records at `flight/agents/packages/power/`: `status
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_power` — `tests/generated_power_test.cpp` (dedicated), PRE-EXISTING (the roll-up row above read
+  "none" until this unit corrected it). The test was written for this repository before this unit and is not one I
+  added; it is a large suite covering the entity lifecycle, the host slots, the keep-awake acquire/release/destroy
+  path, add/remove, and the two failure paths (record-and-rethrow, and the `catch (...)` breadth that lets a handler
+  reifying a non-class caught value hand the ORIGINAL value back). It runs green at this pin.
+
+  This unit added the MUTATION BATTERY the file had none of — seventeen mutations against the emitted module — and
+  it found three holes plus two anchors that needed disambiguating. The holes are closed here by ADDING to the
+  existing file rather than rewriting it:
+
+  * `detachPower` forgetting the registration was unasserted, so removing `subscriptions.erase(power)` survived.
+    Now asserted: a second detach runs nothing rather than replaying the teardowns.
+  * `emitSignalWhenPresent` was unasserted, so emptying its emission survived. Now asserted through the session-lock
+    stream: the listener the provider is handed reaches the `onLockScreen` signal.
+  * `getPowerBatteryHealth` and `getPowerStatus` appeared NOWHERE in the file, and `initializePower` only through
+    `createPower`. Both reads are now asserted for the caller-owned out object being filled and returned by
+    IDENTITY, and all nine signal slots are asserted clear on a fresh entity.
+  * The detach failure-retention case had only ONE throwing teardown, where the first and last failure are the same
+    object, so "kept the first" and "kept the last" were indistinguishable. A second case with two throwing lock
+    streams distinguishes them.
+
+  With those closed: sixteen of the seventeen mutations are killed — the default idle polling interval, the interval
+  clamp removed and its floor changed, five battery-health and power-status sentinels, detach forgetting its
+  registration, detach skipping its teardowns, detach keeping the LAST failure, detach never rethrowing, the
+  keep-awake active probe negated, the signal emission removed, and one constructor flag — and the seventeenth is
+  reported as an EQUIVALENCE rather than a kill: dropping a single `row_set` from `initializePower` is unobservable,
+  because the only construction it is ever handed comes from `allocate_entity` with every signal slot already
+  `nullopt`, so clearing one is indistinguishable from not touching it. It would differ only for a caller that
+  re-initialized an entity already carrying a signal, which no emitted call site does.
 
 ### Local generation status
 
-2 of 3 modules emitted, 1 refused; 3 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
+3 of 3 modules emitted, 0 refused. The tier is ASSISTED rather than ready: the module needs three carried source
+patches to compile (the record-and-rethrow in `catch`, the recorded-slot carrier, and the catch-handler breadth),
+all of which are in `source-patches/` and named in the test's own header. Read from the committed generated tree,
+not from the pin above.
 
 ### Web-only exclusions
 
