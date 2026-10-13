@@ -177,6 +177,11 @@ int main() {
     };
     auto signal = flight::mediasession::create_media_session_action_signal(String("pause"));
     flight::mediasession::attach_media_session_action(capability, signal);
+    // A listener is connected first, because the clearing below is only observable against a signal that
+    // WAS live: with nothing connected the signal carries no data either way, and the assertion would hold
+    // whether or not dispose cleared anything. That is what this pair of checks is for.
+    flight::signals::connect_signal<std::function<void(DetailsRow)>>(signal->on_action, [](DetailsRow) {});
+    check(signal->on_action->data.has_value(), "the signal is live before dispose");
 
     bool threw = false;
     std::string message;

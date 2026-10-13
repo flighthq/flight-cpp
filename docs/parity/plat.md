@@ -102,7 +102,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/accessibility` | 3 | 1 | 6 | dedicated | none | 3 / 0 |
 | `@flighthq/audio` | 8 | 6 | 109 | none | none | 5 / 3 |
 | `@flighthq/media` | 7 | 5 | 127 | none | none | 5 / 2 |
-| `@flighthq/mediasession` | 3 | 1 | 19 | none | none | 3 / 0 |
+| `@flighthq/mediasession` | 3 | 1 | 19 | dedicated | none | 3 / 0 |
 | `@flighthq/video` | 5 | 3 | 79 | none | none | 4 / 1 |
 | `@flighthq/webcam` | 2 | 1 | 1 | none | none | 2 / 0 |
 | `@flighthq/midi` | 7 | 5 | 40 | none | none | 5 / 2 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-17 of 39 packages are reached by at least one local CTest executable.
-16 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`.
+18 of 39 packages are reached by at least one local CTest executable.
+17 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`.
 
 ## `@flighthq/app`
 
@@ -911,7 +911,33 @@ Upstream carries per-package records at `flight/agents/packages/mediasession/`: 
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_mediasession` — `tests/generated_mediasession_test.cpp` (dedicated), PRE-EXISTING (the roll-up
+  row above read "none" until this unit corrected it). It already ports all 19 upstream cases across the ten emitted
+  functions and calls every one of them: attach (forwards the provider's action and details, a null subscription is a
+  truthful refusal, reattaching releases the prior origin), detach (released exactly once; a throwing unsubscribe
+  keeps its entry so a later detach retries the SAME origin, and the entry is released only after a successful one),
+  dispose (clears the signal even when the detach throws, propagating the original), destroy (distinct providers once
+  each in insertion order, an aliased subject through both slots destroyed once, the sibling still attempted after
+  one throws with the FIRST failure rethrown whatever kind it is), playback state (an out-of-union value is a
+  TypeError before the provider is consulted), position state (duration, position and playback-rate classification
+  answered locally with the provider untouched, and a negative playback rate valid where zero is not), and the
+  metadata/clear commands forwarding with the provider's own outcome.
+
+  This unit added the MUTATION battery the package had none of, ten mutations against the emitted module, and one of
+  them found a real hole. Eight bite: a zero duration accepted 4 failures, a position past the duration accepted 3, a
+  negative playback rate rejected 3, the `playing` state rejected 4, the detach keeping its subscription entry 1, the
+  last destroy error winning instead of the first 1, and destroy stopping at the first failure 5. One is detected by
+  CRASH rather than by a failed check: removing the null-subscription guard makes `attach` store `.value()` of an
+  empty optional, which aborts. One is equivalent by construction and is recorded rather than counted: collapsing
+  `to_string(to_string(state))` to a single `to_string` changes nothing, because `to_string` is idempotent on a
+  string.
+
+  The tenth mutation found a VACUOUS assertion, which is fixed here. `disposeAct...`'s "the signal was cleared" check
+  ran against a signal nothing had ever been CONNECTED to, so it carried no data either way and held whether or not
+  dispose cleared anything -- deleting `clearSignal` from dispose was undetected. The block now connects a listener,
+  asserts the signal is live before dispose, and only then asserts it is cleared, so the clearing is the thing under
+  test; the mutation that removes it now fails the check. This is the same weakness found in `@flighthq/shortcut`'s
+  dispose block and fixed the same way.
 
 ### Local generation status
 
