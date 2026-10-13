@@ -1232,6 +1232,28 @@ int main() {
     check(http_rejected, "url: an error response rejects with its status");
     check(error_decodes == 0, "url: an error response body is never decoded");
 
+    // A 200 with no body is its own rejection: a successful status does not make an absent body
+    // decodable, and the guard for it is separate from the status guard.
+    MockNet bodiless;
+    bodiless.respond = [] {
+      return std::optional<flight::Ref<flight::types::NetResponse>>{
+          net_response(200.0, true, "audio/mpeg", std::nullopt)};
+    };
+    const auto bodiless_net = mock_net(bodiless);
+    int bodiless_decodes = 0;
+    const auto bodiless_capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+    bodiless_capabilities->mp3 = decoding_slot(buffer, &bodiless_decodes);
+    bool body_rejected = false;
+    try {
+      static_cast<void>(flight::audio::load_audio_resource_from_url(
+                            bodiless_net, bodiless_capabilities, flight::String("sound.mp3"), controller.signal)
+                            .get());
+    } catch (...) {
+      body_rejected = true;
+    }
+    check(body_rejected, "url: a successful response with no body is rejected");
+    check(bodiless_decodes == 0, "url: a response with no body is never decoded");
+
     // Cancellation while the decode is in flight.
     MockNet mid;
     mid.respond = [&buffer] {
