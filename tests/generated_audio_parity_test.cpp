@@ -19,6 +19,9 @@
 #include <flight/abort.hpp>
 #include <flight/audio/audio_resource.hpp>
 #include <flight/audio/audio_resource_from.hpp>
+#include <flight/array_buffer.hpp>
+#include <flight/blob.hpp>
+#include <flight/types/net.hpp>
 #include <flight/audio/audio_resource_reference.hpp>
 #include <flight/audio/decode_audio_resource_bytes.hpp>
 #include <flight/types/host_audio_codec.hpp>
@@ -96,6 +99,59 @@ NamedSlots named_slots() {
 bool slot_is(const std::optional<flight::Ref<flight::types::HostAudioDecodeFormatCapability>>& got,
              const flight::Ref<flight::types::HostAudioDecodeFormatCapability>& want) {
   return got.has_value() && got.value() == want;
+}
+
+
+// The host net seam, supplied by the fixture exactly as the upstream fixtures supply theirs: a real
+// HostNetCapability whose sendNetRequest resolves the response the test described. No production
+// backend is invented -- an unresolved request is simply never returned.
+struct MockNet {
+  int requests = 0;
+  flight::String last_method;
+  flight::String last_url;
+  flight::String last_response_type;
+  std::function<std::optional<flight::Ref<flight::types::NetResponse>>()> respond;
+};
+
+flight::Ref<flight::types::HostNetCapability> mock_net(MockNet& state) {
+  const auto net = flight::make_ref<flight::types::HostNetCapability>();
+  net->send_net_request = [&state](flight::StructuralRef<
+                                       flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NetRequest>>>>,
+                                   auto) {
+    state.requests += 1;
+    return flight::Task<flight::Ref<flight::types::NetResponse>>::resolve(
+        state.respond ? state.respond().value_or(nullptr) : nullptr);
+  };
+  return net;
+}
+
+// A NetResponse carrying an arraybuffer body and a content-type header.
+flight::Ref<flight::types::NetResponse> net_response(double status, bool ok, const char* content_type,
+                                                     std::optional<flight::ArrayBuffer> body) {
+  const auto response = flight::make_ref<flight::types::NetResponse>();
+  response->status = status;
+  response->ok = ok;
+  response->status_text = ok ? flight::String("OK") : flight::String("Not Found");
+  response->headers = flight::Record<flight::String, flight::String>{};
+  if (content_type != nullptr) response->headers.set(flight::String("content-type"), flight::String(content_type));
+  if (body.has_value()) {
+    response->body = flight::types::NetResponseBody{
+        std::variant<flight::ArrayBuffer, flight::Blob, flight::String, flight::Any>{
+            std::in_place_type<flight::ArrayBuffer>, body.value()}};
+  }
+  response->url = flight::String("sound.mp3");
+  return response;
+}
+
+// A decode slot that counts its calls and answers with one buffer.
+flight::Ref<flight::types::HostAudioDecodeFormatCapability> decoding_slot(
+    std::optional<flight::AudioBuffer> buffer, int* calls = nullptr) {
+  const auto slot = flight::make_ref<flight::types::HostAudioDecodeFormatCapability>();
+  slot->decode = [buffer, calls](flight::Uint8Array, flight::AbortSignal) {
+    if (calls != nullptr) *calls += 1;
+    return flight::Task<std::optional<flight::AudioBuffer>>::resolve(buffer);
+  };
+  return slot;
 }
 
 }  // namespace
@@ -1047,7 +1103,189 @@ int main() {
     check(decodes == 0, "loadBytes: an already-aborted signal never reaches the decoder");
   }
 
-  // ---- (end) -------------------------------------------------------------------------------------
+  // ---- audioResourceFrom.test.ts: the four loaders ----------------------------------------------
+
+  {
+    // BASE64. The loader decodes the text to bytes and hands them to the same bytes path, so the slot
+    // sees real decoded bytes rather than the base64 text.
+    int decodes = 0;
+    const auto buffer = mock_buffer();
+    const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+    capabilities->mp3 = decoding_slot(buffer, &decodes);
+    flight::AbortController controller;
+    const auto decoded = flight::audio::load_audio_resource_from_base64(
+                              capabilities, flight::String("YWJj"), flight::String("audio/mpeg"),
+                              controller.signal)
+                              .get();
+    check(decoded->buffer.has_value() && decoded->buffer.value().length == buffer.length,
+          "base64: encoded bytes decode into a resource");
+    check(decodes == 1, "base64: the decoder is called once");
+
+    // An abort that lands while the decode is in flight rejects rather than resolving a result.
+    flight::AbortController mid;
+    const auto aborting = flight::make_ref<flight::types::HostAudioDecodeFormatCapability>();
+    aborting->decode = [&mid, &buffer](flight::Uint8Array, flight::AbortSignal) {
+      mid.abort();
+      return flight::Task<std::optional<flight::AudioBuffer>>::resolve(std::optional<flight::AudioBuffer>{buffer});
+    };
+    const auto aborting_capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+    aborting_capabilities->mp3 = aborting;
+    bool rejected = false;
+    try {
+      static_cast<void>(flight::audio::load_audio_resource_from_base64(
+                            aborting_capabilities, flight::String("YWJj"), flight::String("audio/mpeg"),
+                            mid.signal)
+                            .get());
+    } catch (...) {
+      rejected = true;
+    }
+    check(rejected, "base64: an abort landing while the decode is in flight rejects");
+  }
+
+  {
+    // BLOB. A real flight::Blob is built from parts with a declared type, which is what the loader
+    // reads; its bytes go through the same decode path.
+    int decodes = 0;
+    const auto buffer = mock_buffer();
+    const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+    capabilities->wav = decoding_slot(buffer, &decodes);
+    flight::Blob blob(std::vector<flight::Uint8Array>{flight::Uint8Array{1, 2, 3, 4}},
+                      flight::BlobOptions{.type = flight::String("audio/wav")});
+    flight::AbortController controller;
+    const auto decoded =
+        flight::audio::load_audio_resource_from_blob(capabilities, blob, controller.signal).get();
+    check(decoded->buffer.has_value() && decoded->buffer.value().length == buffer.length,
+          "blob: a blob's bytes decode into a resource");
+    check(decodes == 1, "blob: the declared blob type selects the slot");
+
+    flight::AbortController mid;
+    const auto aborting = flight::make_ref<flight::types::HostAudioDecodeFormatCapability>();
+    aborting->decode = [&mid, &buffer](flight::Uint8Array, flight::AbortSignal) {
+      mid.abort();
+      return flight::Task<std::optional<flight::AudioBuffer>>::resolve(std::optional<flight::AudioBuffer>{buffer});
+    };
+    const auto aborting_capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+    aborting_capabilities->wav = aborting;
+    bool rejected = false;
+    try {
+      static_cast<void>(
+          flight::audio::load_audio_resource_from_blob(aborting_capabilities, blob, mid.signal).get());
+    } catch (...) {
+      rejected = true;
+    }
+    check(rejected, "blob: an abort landing while the decode is in flight rejects");
+  }
+
+  {
+    // URL. The request goes through the host net seam with the exact shape the loader promises, and the
+    // decoded body is what comes back.
+    int decodes = 0;
+    const auto buffer = mock_buffer();
+    MockNet net;
+    net.respond = [&buffer] {
+      return std::optional<flight::Ref<flight::types::NetResponse>>{
+          net_response(200.0, true, "audio/mpeg", flight::ArrayBuffer(8.0))};
+    };
+    const auto host_net = mock_net(net);
+    const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+    capabilities->mp3 = decoding_slot(buffer, &decodes);
+    flight::AbortController controller;
+    const auto decoded = flight::audio::load_audio_resource_from_url(
+                              host_net, capabilities, flight::String("sound.mp3"), controller.signal)
+                              .get();
+    check(net.requests == 1, "url: loading goes through the host net seam exactly once");
+    check(decoded->buffer.has_value() && decoded->buffer.value().length == buffer.length,
+          "url: a successful arraybuffer response decodes into a resource");
+    check(decodes == 1, "url: the response body reaches the decoder");
+
+    // An error response is REJECTED with its status rather than decoded -- decoding a 404 body would
+    // turn an error into a silent resource.
+    MockNet failing;
+    failing.respond = [] {
+      return std::optional<flight::Ref<flight::types::NetResponse>>{
+          net_response(404.0, false, nullptr, std::nullopt)};
+    };
+    const auto failing_net = mock_net(failing);
+    int error_decodes = 0;
+    const auto error_capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+    error_capabilities->mp3 = decoding_slot(buffer, &error_decodes);
+    bool http_rejected = false;
+    try {
+      static_cast<void>(flight::audio::load_audio_resource_from_url(
+                            failing_net, error_capabilities, flight::String("missing.mp3"), controller.signal)
+                            .get());
+    } catch (...) {
+      http_rejected = true;
+    }
+    check(http_rejected, "url: an error response rejects with its status");
+    check(error_decodes == 0, "url: an error response body is never decoded");
+
+    // Cancellation while the decode is in flight.
+    MockNet mid;
+    mid.respond = [&buffer] {
+      return std::optional<flight::Ref<flight::types::NetResponse>>{
+          net_response(200.0, true, "audio/mpeg", flight::ArrayBuffer(8.0))};
+    };
+    const auto mid_net = mock_net(mid);
+    flight::AbortController mid_controller;
+    const auto aborting = flight::make_ref<flight::types::HostAudioDecodeFormatCapability>();
+    aborting->decode = [&mid_controller, &buffer](flight::Uint8Array, flight::AbortSignal) {
+      mid_controller.abort();
+      return flight::Task<std::optional<flight::AudioBuffer>>::resolve(std::optional<flight::AudioBuffer>{buffer});
+    };
+    const auto mid_capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+    mid_capabilities->mp3 = aborting;
+    bool mid_rejected = false;
+    try {
+      static_cast<void>(flight::audio::load_audio_resource_from_url(
+                            mid_net, mid_capabilities, flight::String("sound.mp3"), mid_controller.signal)
+                            .get());
+    } catch (...) {
+      mid_rejected = true;
+    }
+    check(mid_rejected, "url: an abort landing while the decode is in flight rejects");
+  }
+
+  {
+    // URLS. Selection first, then the same url path -- so an empty source list resolves the null-buffer
+    // resource rather than throwing, and only the SELECTED url is requested.
+    const auto codec = flight::make_ref<flight::types::HostAudioCodecCapability>();
+    codec->can_play_type = [](flight::String type) { return type == flight::String("audio/ogg"); };
+    const auto buffer = mock_buffer();
+
+    MockNet empty_net;
+    const auto host_net = mock_net(empty_net);
+    const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+    capabilities->ogg = decoding_slot(buffer, nullptr);
+    flight::AbortController controller;
+    const auto none = flight::audio::load_audio_resource_from_urls(
+                          host_net, codec, capabilities,
+                          flight::Array<flight::Ref<flight::types::AudioResourceUrl>>{}, controller.signal)
+                          .get();
+    check(!none->buffer.has_value(), "urls: an empty source list resolves the null-buffer resource");
+    check(empty_net.requests == 0, "urls: an empty source list requests nothing");
+
+    MockNet net;
+    net.respond = [&buffer] {
+      return std::optional<flight::Ref<flight::types::NetResponse>>{
+          net_response(200.0, true, "audio/ogg", flight::ArrayBuffer(8.0))};
+    };
+    const auto selecting_net = mock_net(net);
+    net.last_url = flight::String("");
+    const auto source = [](const char* url) {
+      const auto entry = flight::make_ref<flight::types::AudioResourceUrl>();
+      entry->url = flight::String(url);
+      return entry;
+    };
+    flight::Array<flight::Ref<flight::types::AudioResourceUrl>> sources{source("sound.mp3"), source("sound.ogg")};
+    const auto chosen = flight::audio::load_audio_resource_from_urls(selecting_net, codec, capabilities,
+                                                                    sources, controller.signal)
+                            .get();
+    check(chosen->buffer.has_value(), "urls: the first playable source loads");
+    check(net.requests == 1, "urls: only the selected source is requested");
+  }
+
+  // ---- (end of audioResourceFrom) ----------------------------------------------------------------
 
 
   return failures == 0 ? 0 : 1;
