@@ -8040,7 +8040,7 @@
       "code": "dependency-refused",
       "module": "packages/snapshot/src/contract.ts",
       "package": "@flighthq/snapshot",
-      "reason": "dependency ./captureSnapshot was refused for @flighthq/snapshot/packages/snapshot/src/captureSnapshot.ts",
+      "reason": "dependency ./captureSnapshot.ts was refused for @flighthq/snapshot/packages/snapshot/src/captureSnapshot.ts",
       "stage": "dependency"
     },
     {
@@ -8065,7 +8065,7 @@
       "code": "dependency-refused",
       "module": "packages/snapshot/src/index.ts",
       "package": "@flighthq/snapshot",
-      "reason": "dependency ./contract was refused for @flighthq/snapshot/packages/snapshot/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/snapshot/packages/snapshot/src/contract.ts",
       "stage": "dependency"
     },
     {
