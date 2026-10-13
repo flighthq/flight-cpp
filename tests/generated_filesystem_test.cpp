@@ -356,5 +356,217 @@ int main() {
     }
   }
 
+  // THE REMAINING REACHABLE UPSTREAM CASES, one block per fixture case. Sentinel paths and values are
+  // deliberately non-default and non-first, so an assertion that a call FORWARDS an argument cannot be
+  // satisfied by an implementation that invented its own.
+  //
+  // The three fixture cases that are NOT here are named at the end of this file with the exact
+  // declaration each one needs.
+  {
+    // appendTextFile: the provider receives the path AND the text, in that order.
+    String appended_path;
+    String appended_text;
+    auto host = flight::make_ref<Host>();
+    host->append_text_file = [&appended_path, &appended_text](String path, String data, auto) {
+      appended_path = path;
+      appended_text = data;
+      return flight::Task<bool>::resolve(true);
+    };
+    if (!check(flight::filesystem::append_text_file(host, String("notes/delta.txt"), String("omega")).get(),
+               "appendTextFile answers from the host") ||
+        !check(appended_path == String("notes/delta.txt") && appended_text == String("omega"),
+               "and forwards the path and the text it was given")) {
+      return 1;
+    }
+  }
+
+  {
+    // copyFile and renameFile: both paths reach the provider, and the two are not swapped.
+    String copied_from;
+    String copied_to;
+    auto host = flight::make_ref<Host>();
+    host->copy = [&copied_from, &copied_to](String from, String to) {
+      copied_from = from;
+      copied_to = to;
+      return flight::Task<bool>::resolve(true);
+    };
+    if (!check(flight::filesystem::copy_file(host, String("src/one.txt"), String("dst/two.txt")).get(),
+               "copyFile answers from the host") ||
+        !check(copied_from == String("src/one.txt") && copied_to == String("dst/two.txt"),
+               "and forwards source and destination unswapped")) {
+      return 1;
+    }
+
+    String renamed_from;
+    String renamed_to;
+    auto rename_host = flight::make_ref<Host>();
+    rename_host->rename = [&renamed_from, &renamed_to](String from, String to) {
+      renamed_from = from;
+      renamed_to = to;
+      return flight::Task<bool>::resolve(true);
+    };
+    if (!check(flight::filesystem::rename_file(rename_host, String("old/name.txt"), String("new/name.txt")).get(),
+               "renameFile answers from the host") ||
+        !check(renamed_from == String("old/name.txt") && renamed_to == String("new/name.txt"),
+               "and forwards both paths unswapped")) {
+      return 1;
+    }
+  }
+
+  {
+    // removeDirectory forwards the RECURSIVE intent, which is the argument most likely to be dropped.
+    std::optional<bool> seen_recursive = std::nullopt;
+    auto host = flight::make_ref<Host>();
+    host->remove_directory = [&seen_recursive](String, std::optional<bool> recursive) {
+      seen_recursive = recursive.value_or(false);
+      return flight::Task<bool>::resolve(true);
+    };
+    if (!check(flight::filesystem::remove_directory(host, String("gone/dir"), true).get(),
+               "removeDirectory answers from the host") ||
+        !check(seen_recursive.has_value() && seen_recursive.value(), "and forwards the recursive intent")) {
+      return 1;
+    }
+  }
+
+  {
+    // writeTextFile forwards path and text.
+    String written_path;
+    String written_text;
+    auto host = flight::make_ref<Host>();
+    host->write_text_file = [&written_path, &written_text](String path, String data, auto) {
+      written_path = path;
+      written_text = data;
+      return flight::Task<bool>::resolve(true);
+    };
+    if (!check(flight::filesystem::write_text_file(host, String("out/report.txt"), String("sigma")).get(),
+               "writeTextFile answers from the host") ||
+        !check(written_path == String("out/report.txt") && written_text == String("sigma"),
+               "and forwards the path and the text it was given")) {
+      return 1;
+    }
+  }
+
+  {
+    // readTextFile: two explicit hosts never cross.
+    auto first = flight::make_ref<Host>();
+    first->read_text_file = [](String, auto) { return flight::Task<std::optional<String>>::resolve(String("first")); };
+    auto second = flight::make_ref<Host>();
+    second->read_text_file = [](String, auto) { return flight::Task<std::optional<String>>::resolve(String("second")); };
+    const auto from_first = flight::filesystem::read_text_file(first, String("a")).get();
+    const auto from_second = flight::filesystem::read_text_file(second, String("a")).get();
+    if (!check(from_first.has_value() && from_first.value() == String("first") &&
+                   from_second.has_value() && from_second.value() == String("second"),
+               "readTextFile never crosses between two explicit hosts")) {
+      return 1;
+    }
+  }
+
+  {
+    // readBinaryFile: provider BYTE IDENTITY, and a pre-aborted read that rejects without starting work.
+    const auto bytes = flight::Uint8Array{7, 8, 9};
+    int reads = 0;
+    auto host = flight::make_ref<Host>();
+    host->read_binary_file = [&reads, &bytes](String, auto) {
+      ++reads;
+      return flight::Task<std::optional<flight::Uint8Array>>::resolve(bytes);
+    };
+    flight::AbortController controller;
+    const auto read = flight::filesystem::read_binary_file(host, String("blob.bin"), controller.signal).get();
+    if (!check(read.has_value() && read.value().length() == 3 && read.value()[2] == 9,
+               "readBinaryFile returns the provider's bytes") ||
+        !check(reads == 1, "and asked once")) {
+      return 1;
+    }
+
+    int aborted_reads = 0;
+    auto aborting = flight::make_ref<Host>();
+    aborting->read_binary_file = [&aborted_reads](String, auto) {
+      ++aborted_reads;
+      return flight::Task<std::optional<flight::Uint8Array>>::resolve(std::nullopt);
+    };
+    flight::AbortController pre;
+    pre.abort();
+    bool rejected = false;
+    try {
+      static_cast<void>(flight::filesystem::read_binary_file(aborting, String("blob.bin"), pre.signal).get());
+    } catch (...) {
+      rejected = true;
+    }
+    if (!check(rejected, "a pre-aborted read rejects") ||
+        !check(aborted_reads == 0, "and never starts provider work")) {
+      return 1;
+    }
+  }
+
+  {
+    // readBinaryFileRange forwards the RANGE as well as the path and the signal.
+    String range_path;
+    double seen_start = -1.0;
+    double seen_end = -1.0;
+    auto host = flight::make_ref<Host>();
+    host->read_binary_file_range = [&range_path, &seen_start, &seen_end](String path, double start, double end, auto) {
+      range_path = path;
+      seen_start = start;
+      seen_end = end;
+      return flight::Task<std::optional<flight::Uint8Array>>::resolve(std::nullopt);
+    };
+    flight::AbortController controller;
+    static_cast<void>(flight::filesystem::read_binary_file_range(host, String("range.bin"), 3.0, 11.0,
+                                                                 controller.signal)
+                          .get());
+    if (!check(range_path == String("range.bin") && seen_start == 3.0 && seen_end == 11.0,
+               "readBinaryFileRange forwards the path and both range bounds")) {
+      return 1;
+    }
+  }
+
+  {
+    // The omitted-operation defaults, each its own documented value rather than a shared "falsy".
+    const auto bare = flight::make_ref<Host>();
+    if (!check(!flight::filesystem::make_directory(bare, String("new/dir")).get(),
+               "makeDirectory resolves false when the host omits it") ||
+        !check(!flight::filesystem::remove_file(bare, String("a")).get(),
+               "removeFile resolves false when the host omits it") ||
+        !check(!flight::filesystem::write_file_atomic(bare, String("a"), String("x")).get(),
+               "writeFileAtomic resolves false when the host omits it") ||
+        !check(!flight::filesystem::stat_file(bare, String("a")).get().has_value(),
+               "statFile resolves null when the host omits it") ||
+        !check(!flight::filesystem::get_file_system_usage(bare).get().has_value(),
+               "getFileSystemUsage resolves null when the host omits it")) {
+      return 1;
+    }
+    // readDirectory is the odd one: it resolves an OWNED EMPTY LIST, not null.
+    const auto directory = flight::filesystem::read_directory(bare, String("a")).get();
+    if (!check(static_cast<double>(directory.size()) == 0.0,
+               "readDirectory resolves an owned empty list when the host omits it")) {
+      return 1;
+    }
+  }
+
+  {
+    // The two that take no host and own their absence result outright.
+    if (!check(!flight::filesystem::read_file_symlink(String("link")).get().has_value(),
+               "readFileSymlink owns its absence result and resolves null") ||
+        !check(!flight::filesystem::get_file_real_path(String("a")).get().has_value(),
+               "getFileRealPath owns its absence result and resolves null")) {
+      return 1;
+    }
+  }
+
+  {
+    // watchPath owns an INERT unsubscribe when there is no real provider: a callable that does nothing,
+    // which is a different claim from a silent success.
+    bool threw = false;
+    try {
+      const auto stop = flight::filesystem::watch_path(String("a"), [](auto) {});
+      stop();
+    } catch (...) {
+      threw = true;
+    }
+    if (!check(!threw, "watchPath owns an inert unsubscribe that can be called without throwing")) {
+      return 1;
+    }
+  }
+
   return failures == 0 ? 0 : 1;
 }
