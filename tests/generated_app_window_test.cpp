@@ -521,6 +521,94 @@ void test_the_setters_forward_their_arguments() {
   check(win->always_on_top, "and the z-order setter its flag");
 }
 
+// --- The remaining plain-row surface ---------------------------------------------------------------------------
+//
+// These six are the window functions whose host parameter is a SINGLE capability row -- the ones the first pass
+// left unsampled. The merged-row families remain uncovered, and the reason is measured rather than assumed: a
+// `RowMerge` over two capabilities cannot be built from the runtime types available to a caller here. Writing one
+// cell by cell fails to compile (the write site resolves the merged schema's members to void: "structural row
+// schema does not contain the requested property"), and PROJECTING an existing capability row into the merged
+// schema compiles but throws `std::bad_cast` at run time. The emitter's own two idioms do not apply either: the
+// allocate-as-merged form (node.hpp) needs that same write path, and the cast-a-wider-row form (command.hpp) needs
+// one existing row carrying BOTH halves, which no type here provides -- the merged member `center` lives on a
+// companion type that nothing wider combines with the geometry row. So the merged families are left uncovered
+// rather than covered with an invented row, and the table is not broadened to reach them.
+
+void test_open_applies_the_options_to_the_window_and_delegates() {
+  Host host;
+  const auto win = app::create_app_window();
+  const auto options = flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<types::WindowOptions>>>>(
+      flight::row_field<flight::RowKey<"title">>(std::optional<flight::String>{flight::String("Game")}),
+      flight::row_field<flight::RowKey<"width">>(std::optional<double>{640.0}),
+      flight::row_field<flight::RowKey<"height">>(std::optional<double>{480.0}),
+      flight::row_field<flight::RowKey<"alwaysOnTop">>(std::optional<bool>{true}));
+
+  check(app::open_window(host.lifecycle_capability, host.geometry_capability, win, options),
+        "opening returns the host's own answer");
+  check(utf8(win->title) == "Game", "the options' title landed on the window");
+  check_close(win->width, 640.0, "as did its width");
+  check_close(win->height, 480.0, "and its height");
+  check(win->always_on_top, "and its always-on-top flag");
+  check(host.calls == std::vector<std::string>({"open"}), "while the host was asked to open");
+}
+
+void test_the_size_constraint_setters_record_and_delegate() {
+  Host host;
+  const auto win = app::create_app_window();
+  const auto constraints = flight::make_ref<types::HostWindowSizeConstraintsCapability>();
+  constraints->set_minimum_size = [&host](flight::Ref<Window>, double w, double h) {
+    host.calls.push_back("setMinimumSize:" + std::to_string(static_cast<long>(w)) + "," + std::to_string(static_cast<long>(h)));
+  };
+  constraints->set_maximum_size = [&host](flight::Ref<Window>, double w, double h) {
+    host.calls.push_back("setMaximumSize:" + std::to_string(static_cast<long>(w)) + "," + std::to_string(static_cast<long>(h)));
+  };
+
+  app::set_window_minimum_size(constraints, win, 320.0, 240.0);
+  app::set_window_maximum_size(constraints, win, 1920.0, 1080.0);
+
+  check_close(win->min_width, 320.0, "the minimum width landed on the window");
+  check_close(win->min_height, 240.0, "and its minimum height");
+  check_close(win->max_width, 1920.0, "the maximum width too, replacing the unbounded sentinel");
+  check_close(win->max_height, 1080.0, "and its maximum height");
+  check(host.calls == std::vector<std::string>({"setMinimumSize:320,240", "setMaximumSize:1920,1080"}),
+        "each having been delegated to the constraints capability");
+}
+
+void test_content_protection_and_attention_delegate() {
+  Host host;
+  const auto win = app::create_app_window();
+  const auto protection = flight::make_ref<types::HostWindowContentProtectionCapability>();
+  protection->set_content_protection = [&host](flight::Ref<Window>, bool enabled) {
+    host.calls.push_back(std::string("setContentProtection:") + (enabled ? "true" : "false"));
+  };
+  const auto attention = flight::make_ref<types::HostWindowAttentionCapability>();
+  attention->request_attention = [&host](flight::Ref<Window>, bool value) {
+    host.calls.push_back(std::string("requestAttention:") + (value ? "true" : "false"));
+  };
+
+  app::set_window_content_protection(protection, win, true);
+  app::request_window_attention(attention, win, false);
+
+  check(host.calls == std::vector<std::string>({"setContentProtection:true", "requestAttention:false"}),
+        "each reaching its own capability with its argument");
+}
+
+void test_naming_a_parent_passes_null_through_as_null() {
+  Host host;
+  const auto win = app::create_app_window();
+  std::optional<flight::Ref<Window>> seen = flight::Ref<Window>();
+  bool called = false;
+  const auto hierarchy = flight::make_ref<types::HostWindowHierarchyCapability>();
+  hierarchy->set_parent = [&seen, &called](flight::Ref<Window>, std::optional<flight::Ref<Window>> parent) {
+    seen = parent;
+    called = true;
+  };
+
+  app::set_window_parent(hierarchy, win, std::nullopt);
+  check(called, "the hierarchy capability was asked");
+  check(!seen.has_value(), "and told the window has no parent, rather than being passed a placeholder");
+}
+
 // --- The two pieces of arithmetic -----------------------------------------------------------------------------
 
 void test_the_device_transform_is_a_uniform_scale_with_no_translation() {
@@ -607,6 +695,11 @@ int main() {
   test_the_fullscreen_setter_guards_on_the_current_value();
   test_restoring_a_window_that_is_neither_minimized_nor_maximized_does_nothing();
   test_the_setters_forward_their_arguments();
+
+  test_open_applies_the_options_to_the_window_and_delegates();
+  test_the_size_constraint_setters_record_and_delegate();
+  test_content_protection_and_attention_delegate();
+  test_naming_a_parent_passes_null_through_as_null();
 
   test_the_device_transform_is_a_uniform_scale_with_no_translation();
   test_bounds_are_read_into_the_callers_object();

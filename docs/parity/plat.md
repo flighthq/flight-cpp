@@ -212,12 +212,37 @@ frame callback's own argument -- and the table is deliberately not broadened for
   that map consults the terminal set first and returns early, and the only way to clear the terminal set is a
   successful attach, which re-sets the backend in the same step.
 
-  Coverage boundary, stated rather than implied: functions whose host parameter is a MERGED row (`RowMerge` of a
-  capability row and a required companion row -- `centerWindow`, `setWindowOpacity`, `setWindowResizable`,
-  `setWindowIcon`, `setWindowMenuBarVisible`, `flashWindowFrame`, and the `attachWindowResize`/`DropFile`/
-  `Fullscreen`/`Orientation`/`RenderContext`/`RenderState` families) are NOT covered, because constructing a merged
-  row is a separate exercise from calling the function and nothing here invents one. app core (`app.ts`, 42 cases) and
-  appHost (3) are also uncovered, per the parcel.
+  The second pass added the six window functions whose host parameter is a SINGLE capability row and which the first
+  pass had left unsampled: `openWindow` (which applies the options to the entity, each field only when the option is
+  present, and then delegates), `setWindowMinimumSize` and `setWindowMaximumSize` (which record the constraint on the
+  window and delegate), `setWindowContentProtection`, `requestWindowAttention`, and `setWindowParent` (which passes
+  an absent parent THROUGH as absent rather than substituting a placeholder). Seven more mutations, all seven with
+  teeth: the open width option dropped 1 failure, the always-on-top option dropped 1, the minimum constraint not
+  recorded 2, the maximum not recorded 3, the parent substituted with a placeholder 1, attention inverted 1, and
+  content protection inverted 1.
+
+  Coverage boundary, now MEASURED rather than assumed: the families whose host parameter is a MERGED row
+  (`RowMerge` of a capability row and a required companion row -- `centerWindow`, `setWindowOpacity`,
+  `setWindowResizable`, `setWindowIcon`, `setWindowMenuBarVisible`, `setWindowSkipTaskbar`, `flashWindowFrame`, and
+  the `attachWindowResize`/`DropFile`/`Fullscreen`/`Orientation`/`RenderContext`/`RenderState` families) are NOT
+  covered, because a merged row over these capabilities cannot be built from the runtime types available to a caller
+  here. Both construction paths were tried and both fail, in different ways:
+
+  - Writing one cell by cell does not compile. `flight::row_set` on a row allocated as the merged schema resolves
+    that schema's members to `void` -- "structural row schema does not contain the requested property" -- even
+    though the schema itself declares them: `flight::detail::schema_member_t` finds `getBounds` and `center` on the
+    merged schema, so the lookup is sound and the WRITE site is what cannot reach it.
+  - Projecting an existing capability row into the merged schema compiles and then throws `std::bad_cast` at run
+    time, which is the cast refusing to hand over a member the source row's schema does not name.
+
+  The emitter's own two merged-row idioms do not help either: the allocate-as-merged form (`node.hpp`) needs that
+  same write path, and the cast-a-wider-row form (`command.hpp`) needs ONE existing row carrying BOTH halves --
+  `NodeAny` there genuinely contains all the merged members, while here the merged member `center` lives on a
+  companion type that nothing wider combines with the geometry row. So the merged families are left uncovered rather
+  than covered through an invented row, the signatures are not weakened, and `structuralMemberTable` is not
+  broadened to reach them.
+
+  app core (`app.ts`, 42 cases) and appHost (3) are also uncovered, per the parcel.
 
 **Four more members with no row key.** The same table gap the appLoop unit recorded for `HostAppLoopCapability.now`
 applies to `HostWindowLifecycleCapability.close` and the `subscribeClose`/`subscribeMove`/`subscribeVisibility`
