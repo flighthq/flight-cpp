@@ -251,6 +251,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   the SDL/GL oracle intentionally carries the failing probe.
 - [Guarded readonly optional rows must stay readonly across helper calls](guarded-readonly-optional-helper-call.md) —
   a proven-present readonly row is currently reconstructed through an invalid writable view.
+- [A readonly interface assertion should project from the retained owner](readonly-interface-assertion-retained-owner.md) —
+  five `@flighthq/shading` built-in definitions are refused even though their signature callbacks
+  only need checked readonly partial views of the retained modifier owner.
 - [Animation track: number-carrier discrimination and optional-easing
   lowering](animation-track-number-carrier-and-optional-easing.md) — `animationTrack.ts` emits a
   PARTIAL header missing five declarations, and its eight dependents are refused with it.
