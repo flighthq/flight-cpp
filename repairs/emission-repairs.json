@@ -1913,10 +1913,6 @@
           "name": "RenderCacheAdapter"
         },
         {
-          "include": "flight/types/render_effect_padding.hpp",
-          "name": "RenderEffectPadding"
-        },
-        {
           "include": "flight/types/render_proxy.hpp",
           "name": "RenderProxy"
         },
@@ -1955,14 +1951,6 @@
         {
           "include": "flight/types/render_state.hpp",
           "name": "RenderStateRuntime"
-        },
-        {
-          "include": "flight/types/renderable.hpp",
-          "name": "Renderable"
-        },
-        {
-          "include": "flight/types/renderer.hpp",
-          "name": "Renderer"
         },
         {
           "include": "flight/types/scene3_dlight_block.hpp",
@@ -5101,18 +5089,6 @@
           "name": "CanvasRenderStateRuntime"
         },
         {
-          "include": "flight/types/canvas_render_surface.hpp",
-          "name": "CanvasRenderSurface"
-        },
-        {
-          "include": "flight/types/canvas_render_surface.hpp",
-          "name": "CanvasRenderSurfaceCreator"
-        },
-        {
-          "include": "flight/types/canvas_render_surface.hpp",
-          "name": "CanvasRenderSurfaceOptions"
-        },
-        {
           "include": "flight/types/canvas_shape_registry.hpp",
           "name": "CanvasShapeCommand"
         },
@@ -5183,10 +5159,6 @@
         {
           "include": "flight/types/render_cache_refresh_options.hpp",
           "name": "RenderCacheRefreshOptions"
-        },
-        {
-          "include": "flight/types/render_effect_padding.hpp",
-          "name": "RenderEffectPadding"
         },
         {
           "include": "flight/types/render_proxy2_d.hpp",
@@ -12754,33 +12726,19 @@
       "expires": "when member access through RenderProxy2D.transform2D uses pointer syntax; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "render-proxy-initialize-forward-declaration",
-      "kind": "insert-forward-declaration",
-      "appliesTo": "flight/render/render_proxy.hpp",
-      "symbol": "initialize_render_proxy",
-      "includes": [
-        "flight/types/entity.hpp",
-        "flight/types/renderable.hpp"
-      ],
-      "declaration": "namespace flight::types { struct RenderProxy; struct RenderState; } namespace flight::render { inline void initialize_render_proxy(flight::Ref<flight::types::EntityConstruction<flight::Ref<flight::types::RenderProxy>>> out, flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source); }",
-      "sourceDeclaration": "packages/render/src/renderProxy.ts -- export function initializeRenderProxy(out: EntityConstruction<RenderProxy>, state: RenderState, source: Renderable): void",
-      "diagnostic": "initialize_render_proxy was not declared in this scope",
-      "defect": "The emitter refuses initializeRenderProxy at a dual-sentinel coalesce but retains createRenderProxy, which calls that exact declared initialization boundary.",
-      "expectedWhen": "always",
-      "expires": "when refused declarations referenced by retained exported functions receive declarations automatically; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "render-proxy-update-2d-forward-declaration",
       "kind": "insert-forward-declaration",
       "appliesTo": "flight/render/render_proxy.hpp",
       "symbol": "update_render_proxy2_d",
-      "include": "flight/types/renderable.hpp",
-      "declaration": "namespace flight::types { struct RenderProxy2D; struct RenderState; } namespace flight::render { inline void update_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source, flight::Ref<flight::types::RenderProxy2D> data, std::optional<flight::Ref<flight::types::RenderProxy2D>> parent_data = std::nullopt); }",
-      "sourceDeclaration": "packages/render/src/renderProxy.ts -- export function updateRenderProxy2D(state: RenderState, source: Renderable, data: RenderProxy2D, parentData: RenderProxy2D | undefined): void",
+      "declaration": "namespace flight::types { struct RenderProxy2D; struct RenderState; } namespace flight::render { inline void update_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::types::NodeAny source, flight::Ref<flight::types::RenderProxy2D> data, std::optional<flight::Ref<flight::types::RenderProxy2D>> parent_data); }",
+      "sourceDeclaration": "packages/render/src/renderProxy.ts -- export function updateRenderProxy2D(state: RenderState, source: NodeAny, data: RenderProxy2D, parentData: RenderProxy2D | undefined): void",
       "diagnostic": "update_render_proxy2_d was not declared in this scope",
-      "defect": "The emitter refuses updateRenderProxy2D at an unsafe reference assertion but retains prepareScene2DRender, which passes that exact declared visitor to walkNode.",
+      "defect": "The emitter refuses updateRenderProxy2D (cpp-reference-assertion-without-heritage, its `source as Node` read) but retains prepareScene2DRender, which passes that exact declared visitor to walkNode.",
       "expectedWhen": "always",
-      "expires": "when refused declarations referenced by retained exported functions receive declarations automatically; sdk:check fails if this repair matches no header."
+      "expires": "when refused declarations referenced by retained exported functions receive declarations automatically; sdk:check fails if this repair matches no header.",
+      "includes": [
+        "flight/types/node.hpp"
+      ]
     },
     {
       "id": "render-proxy-walk-node-forward-declaration",
@@ -12788,26 +12746,13 @@
       "appliesTo": "flight/render/render_proxy.hpp",
       "symbol": "walk_node",
       "includes": [
-        "flight/types/renderable.hpp",
+        "flight/types/node2_d.hpp",
         "flight/types/render_proxy_visitor.hpp"
       ],
-      "declaration": "namespace flight::types { struct RenderState; } namespace flight::render { inline bool walk_node(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> root, flight::types::RenderProxyVisitor visit); }",
-      "sourceDeclaration": "packages/render/src/renderProxy.ts -- export function walkNode(state: RenderState, root: Renderable, visit: RenderProxyVisitor): boolean",
+      "declaration": "namespace flight::types { struct RenderState; } namespace flight::render { inline bool walk_node(flight::Ref<flight::types::RenderState> state, flight::types::Node2D root, flight::types::RenderProxyVisitor visit); }",
+      "sourceDeclaration": "packages/render/src/renderProxy.ts -- export function walkNode(state: RenderState, root: Node2D, visit: RenderProxyVisitor): boolean",
       "diagnostic": "walk_node was not declared in this scope",
-      "defect": "The emitter refuses walkNode at a contextual optional construction but retains prepareScene2DRender, which calls that exact declared traversal boundary.",
-      "expectedWhen": "always",
-      "expires": "when refused declarations referenced by retained exported functions receive declarations automatically; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "render-proxy-dispose-forward-declaration",
-      "kind": "insert-forward-declaration",
-      "appliesTo": "flight/render/render_proxy.hpp",
-      "symbol": "dispose_render_proxy",
-      "include": "flight/types/renderable.hpp",
-      "declaration": "namespace flight::types { struct RenderState; } namespace flight::render { inline void dispose_render_proxy(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source); }",
-      "sourceDeclaration": "packages/render/src/renderProxy.ts -- export function disposeRenderProxy(state: RenderState, source: Renderable): void",
-      "diagnostic": "dispose_render_proxy was not declared in this scope",
-      "defect": "The emitter refuses disposeRenderProxy at a WeakMap boundary but retains disposeScene2DRender, which passes that exact declared visitor to walkRenderSubtree.",
+      "defect": "The emitter refuses walkNode (cpp-structural-assertion-owner-unproven) but retains prepareScene2DRender, which calls that exact declared traversal boundary.",
       "expectedWhen": "always",
       "expires": "when refused declarations referenced by retained exported functions receive declarations automatically; sdk:check fails if this repair matches no header."
     },
@@ -12816,66 +12761,29 @@
       "kind": "insert-forward-declaration",
       "appliesTo": "flight/render/render_proxy.hpp",
       "symbol": "walk_render_subtree",
-      "include": "flight/types/renderable.hpp",
-      "declaration": "namespace flight::types { struct RenderState; } namespace flight::render { inline void walk_render_subtree(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> root, std::function<void(flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::Renderable>)> visit); }",
-      "sourceDeclaration": "packages/render/src/renderProxy.ts -- function walkRenderSubtree(state: RenderState, root: Renderable, visit: (state: RenderState, node: Renderable) => void): void",
+      "declaration": "namespace flight::types { struct RenderState; } namespace flight::render { inline void walk_render_subtree(flight::Ref<flight::types::RenderState> state, flight::types::NodeAny root, std::function<void(flight::Ref<flight::types::RenderState>, flight::types::NodeAny)> visit); }",
+      "sourceDeclaration": "packages/render/src/renderProxy.ts -- function walkRenderSubtree(state: RenderState, root: NodeAny, visit: (state: RenderState, node: NodeAny) => void): void",
       "diagnostic": "walk_render_subtree was not declared in this scope",
-      "defect": "The emitter refuses the private teardown traversal at a contextual optional construction but retains disposeScene2DRender, which calls that exact declared boundary.",
+      "defect": "The emitter refuses the private teardown traversal walkRenderSubtree (cpp-reference-assertion-without-heritage, its `current as Node` read) but retains disposeScene2DRender, which calls that exact declared boundary.",
       "expectedWhen": "always",
-      "expires": "when refused declarations referenced by retained exported functions receive declarations automatically; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "render-proxy-update-renderer-forward-declaration",
-      "kind": "insert-forward-declaration",
-      "appliesTo": "flight/render/render_proxy.hpp",
-      "symbol": "update_render_proxy_renderer",
-      "requiredText": "// NOT GENERATED: function updateRenderProxyRenderer -- source line 213",
-      "declaration": "namespace flight::types { struct RenderProxy; struct RenderState; } namespace flight::render { inline void update_render_proxy_renderer(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::RenderProxy> node); }",
-      "sourceDeclaration": "packages/render/src/renderProxy.ts -- export function updateRenderProxyRenderer(state: RenderState, node: RenderProxy): void",
-      "diagnostic": "update_render_proxy_renderer was not declared in this scope",
-      "defect": "The emitter refuses updateRenderProxyRenderer at an unsafe reference assertion but retains updateRenderProxy2D, which calls that exact declared renderer-selection boundary.",
-      "expectedWhen": "always",
-      "expires": "when refused declarations referenced by retained functions receive declarations automatically; sdk:check fails if this repair matches no header."
+      "expires": "when refused declarations referenced by retained exported functions receive declarations automatically; sdk:check fails if this repair matches no header.",
+      "includes": [
+        "flight/types/node.hpp"
+      ]
     },
     {
       "id": "render-proxy-get-or-create-2d-declaration",
       "kind": "insert-using-declaration",
       "appliesTo": "flight/render/render_proxy.hpp",
       "symbol": "get_or_create_render_proxy2_d",
-      "requiredText": "// NOT GENERATED: function getOrCreateRenderProxy2D -- source line 79",
-      "include": "flight/types/renderable.hpp",
-      "declaration": "inline flight::Ref<flight::types::RenderProxy2D> get_or_create_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Renderable> source);",
-      "sourceDeclaration": "packages/render/src/renderProxy.ts -- export function getOrCreateRenderProxy2D(state: RenderState, source: Renderable): RenderProxy2D",
+      "requiredText": "// NOT GENERATED: function getOrCreateRenderProxy2D -- source line 73",
+      "include": "flight/types/node2_d.hpp",
+      "declaration": "inline flight::Ref<flight::types::RenderProxy2D> get_or_create_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::types::Node2D source);",
+      "sourceDeclaration": "packages/render/src/renderProxy.ts -- export function getOrCreateRenderProxy2D(state: RenderState, source: Node2D): RenderProxy2D",
       "diagnostic": "get_or_create_render_proxy2_d was not declared in this scope",
-      "defect": "The emitter refuses the exported render-proxy cache accessor at an unsafe reference assertion while cross-package CSS-filter bindings retain calls to that exact declared boundary.",
+      "defect": "The emitter refuses the exported render-proxy cache accessor getOrCreateRenderProxy2D (cpp-type-assertion-unidentified) while the canvas CSS-filter, GL shader and WGPU shader bindings retain calls to that exact declared boundary.",
       "expectedWhen": "always",
       "expires": "when refused exported declarations referenced across packages receive declarations automatically; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "render-proxy-get-or-create-node2d-declaration",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/render/render_proxy.hpp",
-      "symbol": "get_or_create_render_proxy2_d",
-      "include": "flight/types/node2_d.hpp",
-      "declaration": "inline flight::Ref<flight::types::RenderProxy2D> get_or_create_render_proxy2_d(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Node2D> source);",
-      "sourceDeclaration": "packages/types/src/Node2D.ts declares Node2D as a Node specialization and packages/scene2d-canvas/src/canvasCSSFilterBinding.ts passes Node2D to getOrCreateRenderProxy2D's Renderable parameter",
-      "diagnostic": "Node2D's structural reference cannot convert to the emitted Renderable variant parameter",
-      "defect": "The emitter loses the source structural subtype relationship between Node2D and Renderable, so the imported call needs the same declared boundary projected onto the closed Node2D carrier used by the caller.",
-      "expectedWhen": "always",
-      "expires": "when Node2D-to-Renderable structural subtyping is represented by the runtime carrier; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "render-proxy-prepare-node2d-declaration",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/render/render_proxy.hpp",
-      "symbol": "prepare_scene2_drender",
-      "include": "flight/types/node2_d.hpp",
-      "declaration": "inline bool prepare_scene2_drender(flight::Ref<flight::types::RenderState> state, flight::Ref<flight::types::Node2D> source);",
-      "sourceDeclaration": "packages/types/src/Node2D.ts declares Node2D as a Node specialization and packages/scene2d-canvas/src/canvasCache.ts passes Node2D to prepareScene2DRender's Renderable parameter",
-      "diagnostic": "Node2D's structural reference cannot convert to prepare_scene2_drender's emitted Renderable variant parameter",
-      "defect": "The emitter loses the source structural subtype relationship between Node2D and Renderable, so the imported call needs the same declared boundary projected onto the closed Node2D carrier used by the caller.",
-      "expectedWhen": "always",
-      "expires": "when Node2D-to-Renderable structural subtyping is represented by the runtime carrier; sdk:check fails if this repair matches no header."
     },
     {
       "id": "scene2d-canvas-render-proxy-accessor",
