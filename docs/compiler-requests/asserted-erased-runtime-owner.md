@@ -71,6 +71,23 @@ viewport state. The refusal is honest: the flattened C++ owners have no checked 
 The package override therefore keeps the exact `GizmoRuntime<NodeType>` owner in a weak,
 state-identity-keyed table instead of casting the erased slot or materializing a replacement.
 
+### Fourth measured site: `@flighthq/selection`
+
+At flight `a627849`, each Selection constructor stores its exact runtime behind `EntityRuntimeKey`, and
+each matching accessor asserts that erased slot back to the concrete owner. After the existing
+`selection-runtime-type-evidence` patch supplies the object-literal types, current generation records
+`cpp-structural-assertion-owner-unproven` for:
+
+- `getLassoSelectionRuntime`: `EntityRuntime` to `LassoSelectionRuntime`;
+- `getMarqueeSelectionRuntime`: `EntityRuntime` to `MarqueeSelectionRuntime`;
+- `getSelectionStateRuntime<NodeType>`: `EntityRuntime` to `SelectionStateRuntime<NodeType>`.
+
+The accessors are omitted rather than reinterpreted. Consequently the package-only compile attempts all
+six current-pin headers but lasso, marquee, contract, and index fail on undeclared runtime accessors.
+`selection_state.hpp` compiles only while its dependent templates are uninstantiated: its constructor and
+runtime accessor are both absent, so this is not a usable partial state surface. A side table would become
+a second owner registry and cannot be introduced as a compiler repair; Selection carries no workaround.
+
 ## Carrying workaround
 
 The app override above and the gizmo state override supply their modules by hand at this pin.

@@ -70,6 +70,22 @@ independent flattened owners. The gizmo override keeps the concrete owner in an 
 table and gives the public state an ordinary entity marker; it expires with an owner-preserving
 heritage carrier.
 
+### Current-pin `@flighthq/selection`
+
+At the same flight/compiler pins, the `selection-runtime-type-evidence` source patch makes the three
+runtime object literals' declared owners explicit. That exposes the same faithful widening boundary at
+all three assignments to `EntityRuntimeKey`:
+
+- `LassoSelectionRuntime` to `EntityRuntime` in `lassoSelection.ts:28`;
+- `MarqueeSelectionRuntime` to `EntityRuntime` in `marqueeSelection.ts:20`;
+- `SelectionStateRuntime<NodeType>` to `EntityRuntime` in `selectionState.ts:35`.
+
+All three refuse as `cpp-contextual-union-interface-heritage-carrier-unrepresented`. The package-only
+current-pin run therefore emits 3/6 modules. Its six headers were all attempted independently at `-j2`:
+2 compile without template instantiation, while lasso, marquee, contract, and index fail through the
+missing runtime accessors. The tier remains `partial` with all three refused modules unsupplied. Copying
+or materializing a base owner would lose the exact runtime identity, so Selection carries no workaround.
+
 ## Carrying workaround
 
 Emission repairs `adjustments-color-matrix-interface-heritage` and `adjustments-tint-interface-heritage`
