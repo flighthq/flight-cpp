@@ -1337,6 +1337,7 @@ function(flight_cpp_package_test_labels test)
 endfunction()
 
 flight_cpp_package_test_labels(flight_cpp.structural_row types)
+flight_cpp_package_test_labels(flight_cpp.merged_row app entity types)
 flight_cpp_package_test_labels(flight_cpp.generated_collision collision)
 flight_cpp_package_test_labels(flight_cpp.generated_collision_shapes collision)
 flight_cpp_package_test_labels(flight_cpp.generated_registry registry)
