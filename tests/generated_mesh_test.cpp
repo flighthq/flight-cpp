@@ -1,3 +1,4 @@
+#include <flight/geometry/matrix4.hpp>
 #include <flight/mesh/mesh_geometry.hpp>
 #include <flight/mesh/mesh_geometry_attributes.hpp>
 #include <flight/mesh/mesh_geometry_builders.hpp>
@@ -6,6 +7,8 @@
 #include <flight/mesh/mesh_geometry_layout.hpp>
 #include <flight/mesh/mesh_geometry_operations.hpp>
 #include <flight/mesh/mesh_geometry_subset.hpp>
+#include <flight/mesh/mesh_geometry_transforms.hpp>
+#include <flight/mesh/mesh_geometry_uvs.hpp>
 
 #include <algorithm>
 #include <array>
@@ -21,6 +24,7 @@
 
 namespace {
 
+namespace geometry = flight::geometry;
 namespace mesh = flight::mesh;
 namespace types = flight::types;
 
@@ -42,6 +46,10 @@ bool inject_index_remap_mutation = false;
 bool inject_subset_boundary_mutation = false;
 bool inject_merge_aliasing_mutation = false;
 bool inject_validation_branch_mutation = false;
+bool inject_transform_component_mutation = false;
+bool inject_mirrored_transform_mutation = false;
+bool inject_transform_bounds_mutation = false;
+bool inject_uv_axes_mutation = false;
 
 void check(bool condition, const char* message) {
   if (condition) return;
@@ -91,6 +99,21 @@ flight::Ref<types::MeshGeometry> geometry_from(
   options->layout = layout;
   options->vertices = vertices;
   return mesh::create_mesh_geometry(options);
+}
+
+flight::Ref<types::MeshGeometry> canonical_frame_vertex(
+    double px, double py, double pz, double nx, double ny, double nz,
+    double tx, double ty, double tz, double tw, double u = 0.0,
+    double v = 0.0) {
+  flight::Float32Array vertices{
+      static_cast<float>(px), static_cast<float>(py),
+      static_cast<float>(pz), static_cast<float>(nx),
+      static_cast<float>(ny), static_cast<float>(nz),
+      static_cast<float>(tx), static_cast<float>(ty),
+      static_cast<float>(tz), static_cast<float>(tw),
+      static_cast<float>(u), static_cast<float>(v),
+  };
+  return geometry_from(mesh::canonical_mesh_geometry_layout, vertices);
 }
 
 flight::Ref<types::MeshGeometry> canonical_triangle(bool flipped_v = false) {
@@ -1306,6 +1329,484 @@ void layout_conversion_ownership_and_round_trip() {
         "layout conversion maps by semantic, preserves declared ownership contracts, zero-fills new components, and round-trips packed encodings");
 }
 
+void transform_component_order_aliasing_and_failures() {
+  const double diagonal = std::sqrt(0.5);
+  const auto source = canonical_frame_vertex(
+      1.0, 2.0, 3.0, diagonal, diagonal, 0.0, diagonal, -diagonal,
+      0.0, 1.0, 0.25, 0.75);
+  const auto out = canonical_frame_vertex(
+      0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, -1.0);
+  const auto out_vertex_owner = out->vertices.buffer;
+  const auto out_bounds = mesh::ensure_mesh_geometry_bounds(out);
+  const double out_version = out->version;
+  const double source_version = source->version;
+  const auto source_vertex_owner = source->vertices.buffer;
+  std::array<double, 12> source_values{};
+  for (double index = 0.0; index < 12.0; index += 1.0) {
+    source_values[static_cast<std::size_t>(index)] =
+        source->vertices.get_index(index);
+  }
+
+  const auto matrix = geometry::create_matrix4();
+  geometry::set_matrix4(
+      matrix,
+      2.0, 1.0, 0.0, 0.0,
+      -1.0, 3.0, 0.0, 0.0,
+      0.0, 0.0, 4.0, 0.0,
+      5.0, 6.0, 7.0, 1.0);
+  bool components = mesh::transform_mesh_geometry_into(out, source, matrix) &&
+                    out->vertices.buffer == out_vertex_owner &&
+                    out->version == out_version + 1.0 &&
+                    near(out->vertices.get_index(0.0), 5.0) &&
+                    near(out->vertices.get_index(1.0), 13.0) &&
+                    near(out->vertices.get_index(2.0), 19.0) &&
+                    out->vertices.get_index(9.0) == 1.0 &&
+                    out->vertices.get_index(10.0) == 0.25 &&
+                    out->vertices.get_index(11.0) == 0.75 &&
+                    out_bounds.has_value() && out->bounds == out_bounds &&
+                    near(out_bounds.value()->min->x, 5.0) &&
+                    near(out_bounds.value()->min->y, 13.0) &&
+                    near(out_bounds.value()->min->z, 19.0) &&
+                    near(out_bounds.value()->max->x, 5.0) &&
+                    near(out_bounds.value()->max->y, 13.0) &&
+                    near(out_bounds.value()->max->z, 19.0);
+  for (double index = 0.0; index < 12.0; index += 1.0) {
+    components = components && source->vertices.get_index(index) ==
+                                   source_values[static_cast<std::size_t>(index)];
+  }
+  components = components && source->vertices.buffer == source_vertex_owner &&
+               source->version == source_version;
+
+  const auto alias = canonical_frame_vertex(
+      1.0, 2.0, 3.0, diagonal, diagonal, 0.0, diagonal, -diagonal,
+      0.0, 1.0, 0.25, 0.75);
+  const double alias_version = alias->version;
+  components = components && mesh::transform_mesh_geometry(alias, matrix) &&
+               alias->version == alias_version + 1.0 &&
+               near(alias->vertices.get_index(0.0), 5.0) &&
+               near(alias->vertices.get_index(1.0), 13.0) &&
+               near(alias->vertices.get_index(2.0), 19.0);
+
+  const auto matrix_scaled = canonical_frame_vertex(
+      1.0, 2.0, 3.0, diagonal, diagonal, 0.0, diagonal, -diagonal,
+      0.0, 1.0);
+  const auto diagonal_matrix = geometry::create_matrix4();
+  diagonal_matrix->m.set_index(0.0, 2.0);
+  components = components &&
+               mesh::transform_mesh_geometry(matrix_scaled, diagonal_matrix) &&
+               matrix_scaled->vertices.get_index(0.0) == 2.0 &&
+               matrix_scaled->vertices.get_index(1.0) == 2.0 &&
+               matrix_scaled->vertices.get_index(2.0) == 3.0 &&
+               near(matrix_scaled->vertices.get_index(3.0),
+                    1.0 / std::sqrt(5.0)) &&
+               near(matrix_scaled->vertices.get_index(4.0),
+                    2.0 / std::sqrt(5.0)) &&
+               near(matrix_scaled->vertices.get_index(6.0),
+                    2.0 / std::sqrt(5.0)) &&
+               near(matrix_scaled->vertices.get_index(7.0),
+                    -1.0 / std::sqrt(5.0)) &&
+               near(matrix_scaled->vertices.get_index(3.0) *
+                            matrix_scaled->vertices.get_index(6.0) +
+                        matrix_scaled->vertices.get_index(4.0) *
+                            matrix_scaled->vertices.get_index(7.0),
+                    0.0);
+
+  const auto scaled = canonical_frame_vertex(
+      1.0, 2.0, 3.0, diagonal, diagonal, 0.0, diagonal, -diagonal,
+      0.0, 1.0);
+  const double scaled_version = scaled->version;
+  mesh::scale_mesh_geometry(scaled, 2.0, 1.0, 1.0);
+  components = components && scaled->version == scaled_version + 1.0 &&
+               scaled->vertices.get_index(0.0) == 2.0 &&
+               scaled->vertices.get_index(1.0) == 2.0 &&
+               scaled->vertices.get_index(2.0) == 3.0 &&
+               near(scaled->vertices.get_index(3.0), 1.0 / std::sqrt(5.0)) &&
+               near(scaled->vertices.get_index(4.0), 2.0 / std::sqrt(5.0)) &&
+               near(scaled->vertices.get_index(6.0), 2.0 / std::sqrt(5.0)) &&
+               near(scaled->vertices.get_index(7.0), -1.0 / std::sqrt(5.0)) &&
+               near(scaled->vertices.get_index(3.0) *
+                            scaled->vertices.get_index(6.0) +
+                        scaled->vertices.get_index(4.0) *
+                            scaled->vertices.get_index(7.0),
+                    0.0);
+
+  const auto failure_source = canonical_frame_vertex(
+      1.0, 2.0, 3.0, diagonal, diagonal, 0.0, diagonal, -diagonal,
+      0.0, 1.0);
+  const auto failure_out = canonical_frame_vertex(
+      -4.0, 5.0, -6.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, -1.0,
+      0.4, 0.6);
+  const auto failure_bounds = mesh::ensure_mesh_geometry_bounds(failure_out);
+  const auto failure_owner = failure_out->vertices.buffer;
+  const double failure_version = failure_out->version;
+  std::array<double, 12> failure_values{};
+  for (double index = 0.0; index < 12.0; index += 1.0) {
+    failure_values[static_cast<std::size_t>(index)] =
+        failure_out->vertices.get_index(index);
+  }
+  const auto singular = geometry::create_matrix4();
+  singular->m.fill(0.0);
+  components = components &&
+               !mesh::transform_mesh_geometry_into(
+                   failure_out, failure_source, singular) &&
+               failure_out->vertices.buffer == failure_owner &&
+               failure_out->version == failure_version &&
+               failure_out->bounds == failure_bounds;
+  for (double index = 0.0; index < 12.0; index += 1.0) {
+    components = components && failure_out->vertices.get_index(index) ==
+                                   failure_values[static_cast<std::size_t>(index)];
+  }
+
+  const auto nearly_singular = geometry::create_matrix4();
+  nearly_singular->m.set_index(0.0, 1.0e-12);
+  components = components &&
+               !mesh::transform_mesh_geometry(failure_source, nearly_singular);
+  const double failure_source_version = failure_source->version;
+  const auto barely_invertible = geometry::create_matrix4();
+  barely_invertible->m.set_index(0.0, 2.0e-10);
+  components = components &&
+               mesh::transform_mesh_geometry(failure_source, barely_invertible) &&
+               failure_source->version == failure_source_version + 1.0 &&
+               std::isfinite(failure_source->vertices.get_index(0.0));
+
+  const auto zero_frame = canonical_frame_vertex(
+      1.0, 2.0, 3.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0);
+  const auto identity = geometry::create_matrix4();
+  components = components && mesh::transform_mesh_geometry(zero_frame, identity) &&
+               zero_frame->vertices.get_index(3.0) == 0.0 &&
+               zero_frame->vertices.get_index(4.0) == 0.0 &&
+               zero_frame->vertices.get_index(5.0) == 0.0 &&
+               zero_frame->vertices.get_index(6.0) == 0.0 &&
+               zero_frame->vertices.get_index(7.0) == 0.0 &&
+               zero_frame->vertices.get_index(8.0) == 0.0 &&
+               zero_frame->vertices.get_index(9.0) == -1.0;
+  if (inject_transform_component_mutation) components = false;
+  check(components,
+        "matrix transforms use column-major point order, inverse-transpose normals, plain-matrix tangents, alias-safe locals, retained output owners, and non-mutating singular rejection at the declared threshold");
+}
+
+void mirrored_transform_winding_and_handedness() {
+  auto indexed_triangle_list = [] {
+    flight::Float32Array vertices(48.0);
+    for (double vertex = 0.0; vertex < 4.0; vertex += 1.0) {
+      const double base = vertex * 12.0;
+      vertices.set_index(base, vertex + 1.0);
+      vertices.set_index(base + 7.0, 1.0);
+      vertices.set_index(base + 9.0, 1.0);
+      vertices.set_index(base + 10.0, 10.0 + vertex);
+    }
+    flight::Uint16Array indices{0, 1, 2, 2, 1, 3};
+    auto options = flight::make_ref<types::MeshGeometryOptions>();
+    options->indices = flight::SequenceView<double>(indices);
+    options->layout = mesh::canonical_mesh_geometry_layout;
+    options->vertices = vertices;
+    return mesh::create_mesh_geometry(options);
+  };
+
+  const auto indexed = indexed_triangle_list();
+  const void* indexed_owner = index_buffer_identity(indexed);
+  const double indexed_version = indexed->version;
+  const auto mirror = geometry::create_matrix4();
+  mirror->m.set_index(0.0, -1.0);
+  bool mirrored = mesh::transform_mesh_geometry(indexed, mirror) &&
+                  indexed->version == indexed_version + 1.0 &&
+                  index_buffer_identity(indexed) == indexed_owner;
+  const double mirrored_indices[] = {0.0, 2.0, 1.0, 2.0, 3.0, 1.0};
+  for (double index = 0.0; index < 6.0; index += 1.0) {
+    mirrored = mirrored && index_at(indexed, index) ==
+                               mirrored_indices[static_cast<std::size_t>(index)];
+  }
+  for (double vertex = 0.0; vertex < 4.0; vertex += 1.0) {
+    mirrored = mirrored &&
+               indexed->vertices.get_index(vertex * 12.0) == -(vertex + 1.0) &&
+               indexed->vertices.get_index(vertex * 12.0 + 9.0) == -1.0;
+  }
+
+  flight::Float32Array sequential_vertices(72.0);
+  for (double vertex = 0.0; vertex < 6.0; vertex += 1.0) {
+    const double base = vertex * 12.0;
+    sequential_vertices.set_index(base, vertex + 1.0);
+    sequential_vertices.set_index(base + 7.0, 1.0);
+    sequential_vertices.set_index(base + 9.0, 1.0);
+    sequential_vertices.set_index(base + 10.0, 10.0 + vertex);
+  }
+  const auto sequential = geometry_from(
+      mesh::canonical_mesh_geometry_layout, sequential_vertices);
+  const auto sequential_owner = sequential->vertices.buffer;
+  const double sequential_version = sequential->version;
+  mesh::scale_mesh_geometry(sequential, -1.0, 1.0, 1.0);
+  const double expected_x[] = {-1.0, -3.0, -2.0, -4.0, -6.0, -5.0};
+  const double expected_u[] = {10.0, 12.0, 11.0, 13.0, 15.0, 14.0};
+  mirrored = mirrored && !sequential->indices.has_value() &&
+             sequential->vertices.buffer == sequential_owner &&
+             sequential->version == sequential_version + 1.0;
+  for (double vertex = 0.0; vertex < 6.0; vertex += 1.0) {
+    const double base = vertex * 12.0;
+    mirrored = mirrored && sequential->vertices.get_index(base) ==
+                               expected_x[static_cast<std::size_t>(vertex)] &&
+               sequential->vertices.get_index(base + 9.0) == -1.0 &&
+               sequential->vertices.get_index(base + 10.0) ==
+                   expected_u[static_cast<std::size_t>(vertex)];
+  }
+
+  const auto strip = indexed_triangle_list();
+  strip->topology = flight::String("triangle-strip");
+  strip->indices = flight::Uint16Array{0, 1, 2, 3};
+  const void* strip_owner = index_buffer_identity(strip);
+  mesh::scale_mesh_geometry(strip, -1.0, 1.0, 1.0);
+  for (double index = 0.0; index < 4.0; index += 1.0) {
+    mirrored = mirrored && index_at(strip, index) == index &&
+               strip->vertices.get_index(index * 12.0 + 9.0) == -1.0;
+  }
+  mirrored = mirrored && index_buffer_identity(strip) == strip_owner;
+
+  const auto positive = indexed_triangle_list();
+  const void* positive_owner = index_buffer_identity(positive);
+  mesh::scale_mesh_geometry(positive, 2.0, 3.0, 4.0);
+  const double authored_indices[] = {0.0, 1.0, 2.0, 2.0, 1.0, 3.0};
+  for (double index = 0.0; index < 6.0; index += 1.0) {
+    mirrored = mirrored && index_at(positive, index) ==
+                               authored_indices[static_cast<std::size_t>(index)];
+  }
+  for (double vertex = 0.0; vertex < 4.0; vertex += 1.0) {
+    mirrored = mirrored &&
+               positive->vertices.get_index(vertex * 12.0 + 9.0) == 1.0;
+  }
+  mirrored = mirrored && index_buffer_identity(positive) == positive_owner;
+  if (inject_mirrored_transform_mutation) mirrored = false;
+  check(mirrored,
+        "negative determinants reverse each indexed triangle or swap complete non-indexed records and negate handedness, while strips retain element order and positive determinants retain both winding and handedness");
+}
+
+void transform_bounds_center_and_cache_invalidation() {
+  flight::Float32Array vertices(24.0);
+  const double positions[][3] = {{0.0, -2.0, 1.0}, {4.0, 2.0, 5.0}};
+  for (double vertex = 0.0; vertex < 2.0; vertex += 1.0) {
+    const double base = vertex * 12.0;
+    const auto index = static_cast<std::size_t>(vertex);
+    vertices.set_index(base, positions[index][0]);
+    vertices.set_index(base + 1.0, positions[index][1]);
+    vertices.set_index(base + 2.0, positions[index][2]);
+    vertices.set_index(base + 3.0, 1.0);
+    vertices.set_index(base + 7.0, 1.0);
+    vertices.set_index(base + 9.0, 1.0);
+    vertices.set_index(base + 10.0, 0.25 + vertex);
+    vertices.set_index(base + 11.0, 0.75 - vertex);
+  }
+  const auto transformed = geometry_from(
+      mesh::canonical_mesh_geometry_layout, vertices);
+  const auto bounds = mesh::ensure_mesh_geometry_bounds(transformed);
+  const auto runtime = transformed->entity_runtime_key.value();
+  const double original_stamp = runtime->bounds_version;
+  const double original_version = transformed->version;
+  mesh::translate_mesh_geometry(transformed, 5.0, -1.0, 2.0);
+  bool cache = bounds.has_value() && transformed->bounds == bounds &&
+               transformed->version == original_version + 1.0 &&
+               runtime->bounds_version == original_stamp &&
+               near(bounds.value()->min->x, 5.0) &&
+               near(bounds.value()->min->y, -3.0) &&
+               near(bounds.value()->min->z, 3.0) &&
+               near(bounds.value()->max->x, 9.0) &&
+               near(bounds.value()->max->y, 1.0) &&
+               near(bounds.value()->max->z, 7.0);
+  for (double vertex = 0.0; vertex < 2.0; vertex += 1.0) {
+    const double base = vertex * 12.0;
+    cache = cache && transformed->vertices.get_index(base + 3.0) == 1.0 &&
+            transformed->vertices.get_index(base + 4.0) == 0.0 &&
+            transformed->vertices.get_index(base + 7.0) == 1.0 &&
+            transformed->vertices.get_index(base + 9.0) == 1.0 &&
+            transformed->vertices.get_index(base + 10.0) == 0.25 + vertex &&
+            transformed->vertices.get_index(base + 11.0) == 0.75 - vertex;
+  }
+  cache = cache && mesh::ensure_mesh_geometry_bounds(transformed) == bounds &&
+          runtime->bounds_version == transformed->version;
+
+  const double translated_version = transformed->version;
+  const double translated_stamp = runtime->bounds_version;
+  mesh::scale_mesh_geometry(transformed, 2.0, 3.0, 4.0);
+  cache = cache && transformed->bounds == bounds &&
+          transformed->version == translated_version + 1.0 &&
+          runtime->bounds_version == translated_stamp &&
+          near(bounds.value()->min->x, 10.0) &&
+          near(bounds.value()->min->y, -9.0) &&
+          near(bounds.value()->min->z, 12.0) &&
+          near(bounds.value()->max->x, 18.0) &&
+          near(bounds.value()->max->y, 3.0) &&
+          near(bounds.value()->max->z, 28.0) &&
+          mesh::ensure_mesh_geometry_bounds(transformed) == bounds &&
+          runtime->bounds_version == transformed->version;
+
+  flight::Float32Array center_vertices(24.0);
+  center_vertices.set_index(12.0, 4.0);
+  center_vertices.set_index(13.0, 2.0);
+  center_vertices.set_index(14.0, -2.0);
+  const auto centered = geometry_from(
+      mesh::canonical_mesh_geometry_layout, center_vertices);
+  const auto centered_owner = centered->vertices.buffer;
+  const double centered_version = centered->version;
+  mesh::center_mesh_geometry(centered);
+  cache = cache && centered->vertices.buffer == centered_owner &&
+          centered->version == centered_version + 1.0 &&
+          centered->bounds.has_value() &&
+          centered->vertices.get_index(0.0) == -2.0 &&
+          centered->vertices.get_index(1.0) == -1.0 &&
+          centered->vertices.get_index(2.0) == 1.0 &&
+          centered->vertices.get_index(12.0) == 2.0 &&
+          centered->vertices.get_index(13.0) == 1.0 &&
+          centered->vertices.get_index(14.0) == -1.0 &&
+          centered->bounds.value()->min->x == -2.0 &&
+          centered->bounds.value()->min->y == -1.0 &&
+          centered->bounds.value()->min->z == -1.0 &&
+          centered->bounds.value()->max->x == 2.0 &&
+          centered->bounds.value()->max->y == 1.0 &&
+          centered->bounds.value()->max->z == 1.0 &&
+          centered->entity_runtime_key.value()->bounds_version !=
+              centered->version;
+  const auto centered_bounds = mesh::ensure_mesh_geometry_bounds(centered);
+  const double no_op_version = centered->version;
+  std::array<double, 24> centered_values{};
+  for (double index = 0.0; index < 24.0; index += 1.0) {
+    centered_values[static_cast<std::size_t>(index)] =
+        centered->vertices.get_index(index);
+  }
+  mesh::center_mesh_geometry(centered);
+  cache = cache && centered->version == no_op_version &&
+          centered->bounds == centered_bounds;
+  for (double index = 0.0; index < 24.0; index += 1.0) {
+    cache = cache && centered->vertices.get_index(index) ==
+                         centered_values[static_cast<std::size_t>(index)];
+  }
+
+  const auto no_position_layout = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("uv0", "float32x2", 0.0)},
+      8.0);
+  const auto no_position = geometry_from(
+      no_position_layout, flight::Float32Array{0.25F, 0.75F});
+  const auto no_position_owner = no_position->vertices.buffer;
+  const double no_position_version = no_position->version;
+  mesh::translate_mesh_geometry(no_position, 5.0, 6.0, 7.0);
+  cache = cache && no_position->vertices.buffer == no_position_owner &&
+          no_position->version == no_position_version &&
+          no_position->vertices.get_index(0.0) == 0.25 &&
+          no_position->vertices.get_index(1.0) == 0.75;
+  if (inject_transform_bounds_mutation) cache = false;
+  check(cache,
+        "translate and scale update cached bounds in place while center constructs missing bounds; each leaves cache stamps stale until ensure, preserves non-position channels, and makes centered or position-less calls exact no-ops");
+}
+
+void uv_axes_order_ownership_and_noops() {
+  const auto layout = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("uv0", "float32x2", 16.0),
+          vertex_attribute("position", "float32x3", 0.0)},
+      32.0);
+  flight::Float32Array vertices{
+      1.0F, 2.0F, 3.0F, 99.0F, 0.25F, 0.75F, 98.0F, 97.0F,
+      -4.0F, 5.0F, -6.0F, 88.0F, -0.5F, 2.0F, 87.0F, 86.0F,
+  };
+  const auto reverse_vertices = vertices.slice();
+  const auto geometry = geometry_from(layout, vertices);
+  const auto vertex_owner = geometry->vertices.buffer;
+  const auto bounds = mesh::ensure_mesh_geometry_bounds(geometry);
+  const auto runtime = geometry->entity_runtime_key.value();
+  const double bounds_stamp = runtime->bounds_version;
+  const double version = geometry->version;
+  mesh::offset_mesh_geometry_uvs(geometry, 0.1, -0.2);
+  mesh::scale_mesh_geometry_uvs(geometry, -2.0, 0.5);
+  bool uvs = geometry->layout == layout &&
+             geometry->vertices.buffer == vertex_owner &&
+             geometry->version == version + 2.0 &&
+             near(geometry->vertices.get_index(4.0), -0.7) &&
+             near(geometry->vertices.get_index(5.0), 0.275) &&
+             near(geometry->vertices.get_index(12.0), 0.8) &&
+             near(geometry->vertices.get_index(13.0), 0.9) &&
+             geometry->vertices.get_index(0.0) == 1.0 &&
+             geometry->vertices.get_index(1.0) == 2.0 &&
+             geometry->vertices.get_index(2.0) == 3.0 &&
+             geometry->vertices.get_index(3.0) == 99.0 &&
+             geometry->vertices.get_index(6.0) == 98.0 &&
+             geometry->vertices.get_index(7.0) == 97.0 &&
+             geometry->vertices.get_index(8.0) == -4.0 &&
+             geometry->vertices.get_index(9.0) == 5.0 &&
+             geometry->vertices.get_index(10.0) == -6.0 &&
+             geometry->vertices.get_index(11.0) == 88.0 &&
+             geometry->vertices.get_index(14.0) == 87.0 &&
+             geometry->vertices.get_index(15.0) == 86.0 &&
+             geometry->bounds == bounds &&
+             runtime->bounds_version == bounds_stamp &&
+             bounds.value()->min->x == -4.0 &&
+             bounds.value()->max->x == 1.0 &&
+             mesh::ensure_mesh_geometry_bounds(geometry) == bounds &&
+             runtime->bounds_version == geometry->version;
+
+  const auto reverse_order = geometry_from(layout, reverse_vertices);
+  mesh::scale_mesh_geometry_uvs(reverse_order, -2.0, 0.5);
+  mesh::offset_mesh_geometry_uvs(reverse_order, 0.1, -0.2);
+  uvs = uvs && near(reverse_order->vertices.get_index(4.0), -0.4) &&
+        near(reverse_order->vertices.get_index(5.0), 0.175) &&
+        near(reverse_order->vertices.get_index(12.0), 1.1) &&
+        near(reverse_order->vertices.get_index(13.0), 0.8);
+
+  flight::Float32Array tangent_vertices(36.0);
+  for (double vertex = 0.0; vertex < 3.0; vertex += 1.0) {
+    const double base = vertex * 12.0;
+    tangent_vertices.set_index(base + 6.0, 0.25 + vertex);
+    tangent_vertices.set_index(base + 7.0, 0.5 + vertex);
+    tangent_vertices.set_index(base + 8.0, 0.75 + vertex);
+    tangent_vertices.set_index(base + 9.0, vertex == 1.0 ? -1.0 : 1.0);
+    tangent_vertices.set_index(base + 10.0, 0.2 + vertex);
+    tangent_vertices.set_index(base + 11.0, 0.4 + vertex);
+  }
+  flight::Uint16Array authored_indices{0, 1, 2};
+  auto tangent_options = flight::make_ref<types::MeshGeometryOptions>();
+  tangent_options->indices = flight::SequenceView<double>(authored_indices);
+  tangent_options->layout = mesh::canonical_mesh_geometry_layout;
+  tangent_options->vertices = tangent_vertices;
+  const auto tangent_geometry = mesh::create_mesh_geometry(tangent_options);
+  std::array<double, 12> tangent_values{};
+  for (double vertex = 0.0; vertex < 3.0; vertex += 1.0) {
+    for (double component = 0.0; component < 4.0; component += 1.0) {
+      tangent_values[static_cast<std::size_t>(vertex * 4.0 + component)] =
+          tangent_geometry->vertices.get_index(vertex * 12.0 + 6.0 + component);
+    }
+  }
+  const void* tangent_index_owner = index_buffer_identity(tangent_geometry);
+  mesh::scale_mesh_geometry_uvs(tangent_geometry, -1.0, 1.0);
+  for (double vertex = 0.0; vertex < 3.0; vertex += 1.0) {
+    uvs = uvs && index_at(tangent_geometry, vertex) == vertex;
+    for (double component = 0.0; component < 4.0; component += 1.0) {
+      uvs = uvs &&
+            tangent_geometry->vertices.get_index(
+                vertex * 12.0 + 6.0 + component) ==
+                tangent_values[static_cast<std::size_t>(
+                    vertex * 4.0 + component)];
+    }
+  }
+  uvs = uvs && index_buffer_identity(tangent_geometry) == tangent_index_owner;
+
+  const auto no_uv = geometry_from(
+      position_layout(), flight::Float32Array{1.0F, 2.0F, 3.0F});
+  const auto no_uv_owner = no_uv->vertices.buffer;
+  const double no_uv_version = no_uv->version;
+  mesh::offset_mesh_geometry_uvs(no_uv, 5.0, 6.0);
+  mesh::scale_mesh_geometry_uvs(no_uv, 7.0, 8.0);
+  const auto empty = geometry_from(
+      mesh::canonical_mesh_geometry_layout, flight::Float32Array(0.0));
+  const double empty_version = empty->version;
+  mesh::offset_mesh_geometry_uvs(empty, 1.0, 2.0);
+  mesh::scale_mesh_geometry_uvs(empty, 3.0, 4.0);
+  uvs = uvs && no_uv->vertices.buffer == no_uv_owner &&
+        no_uv->version == no_uv_version &&
+        no_uv->vertices.get_index(0.0) == 1.0 &&
+        no_uv->vertices.get_index(1.0) == 2.0 &&
+        no_uv->vertices.get_index(2.0) == 3.0 &&
+        empty->version == empty_version && empty->vertices.empty();
+  if (inject_uv_axes_mutation) uvs = false;
+  check(uvs,
+        "UV offset and scale resolve uv0 by semantic, preserve u/v axes and call order in a custom stride, retain every non-UV owner and channel, invalidate only the generic version cache, and no-op for absent or empty UV streams");
+}
+
 void primitive_builder_topology_order_ownership_and_bounds() {
   const flight::Array<flight::Array<double>> triangle_vertices{
       flight::Array<double>{0.0, 1.0, 0.0},
@@ -1974,6 +2475,14 @@ int main(int argc, char** argv) {
       mutation == flight::String("--mutate-merge-aliasing");
   inject_validation_branch_mutation =
       mutation == flight::String("--mutate-validation-branches");
+  inject_transform_component_mutation =
+      mutation == flight::String("--mutate-transform-components");
+  inject_mirrored_transform_mutation =
+      mutation == flight::String("--mutate-mirrored-transform");
+  inject_transform_bounds_mutation =
+      mutation == flight::String("--mutate-transform-bounds");
+  inject_uv_axes_mutation =
+      mutation == flight::String("--mutate-uv-axes-order");
 
   construction_clone_and_owner_identity();
   bounds_cache_and_position_mutation();
@@ -1989,6 +2498,10 @@ int main(int argc, char** argv) {
   packed_normalization_and_writes();
   normals_tangents_and_group_boundaries();
   layout_conversion_ownership_and_round_trip();
+  transform_component_order_aliasing_and_failures();
+  mirrored_transform_winding_and_handedness();
+  transform_bounds_center_and_cache_invalidation();
+  uv_axes_order_ownership_and_noops();
   primitive_builder_topology_order_ownership_and_bounds();
   primitive_builder_seam_behavior();
   primitive_builder_parameter_guards_and_degeneracy();
