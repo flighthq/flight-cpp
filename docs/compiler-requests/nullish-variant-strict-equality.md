@@ -58,3 +58,7 @@ Value&)`, found by argument-dependent lookup through `flight::Null`, with direct
   no patch.
 - `skeleton2d-bone-name-present-comparison` is no longer needed for its compile error. It stays until skeleton2d
   is next regenerated without it, which is outside this change.
+- `skeleton2d-formats-entry-name-present-comparison` (`spineParseHelpers.ts` `indexOfBone`, `indexOfSpineSlot`) is
+  retired. `@flighthq/skeleton2d-formats` regenerated without it at a627849 emits the raw `=== name` as `== name`
+  on the three-state carrier, and those lines compile; the header's remaining errors are the parsed-JSON reads
+  ([parsed-json-object-shape-reads](parsed-json-object-shape-reads.md)).

@@ -6027,13 +6027,6 @@
     },
     {
       "dependency": "flight",
-      "digest": "d091e3d7635e5eecc08e0074caecacc288ff64f1a9584aeda32f46b0cea80845",
-      "id": "skeleton2d-formats-entry-name-present-comparison",
-      "module": "packages/skeleton2d-formats/src/spineParseHelpers.ts",
-      "package": "@flighthq/skeleton2d-formats"
-    },
-    {
-      "dependency": "flight",
       "digest": "1a7b9858b19bbed224484100ea52940ff9c63e3bd14f4d0f732b4f72c222fd3f",
       "id": "skeleton2d-formats-census-byte-reader-parameters",
       "module": "packages/skeleton2d-formats/src/spineBinarySectionCounts.ts",

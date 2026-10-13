@@ -49,8 +49,7 @@ inline double index_of_bone(flight::Array<flight::Ref<flight::types::Bone2D>> bo
     double i = 0.0;
     while ((i < static_cast<double>(bones.size()))) {
       {
-        const std::variant<flight::String, flight::Null, flight::Undefined> entry_name = ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto optional_property = bones.element(i)->name; if (std::holds_alternative<flight::Undefined>(optional_property)) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property)) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, std::get<flight::String>(optional_property)}; }());
-        if (((!(std::holds_alternative<flight::Null>(entry_name)) && !(std::holds_alternative<flight::Undefined>(entry_name))) && (std::get<0>(entry_name) == name))) {
+        if ((([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto optional_property = bones.element(i)->name; if (std::holds_alternative<flight::Undefined>(optional_property)) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property)) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, std::get<flight::String>(optional_property)}; }()) == name)) {
           return i;
         }
       }
@@ -65,8 +64,7 @@ inline double index_of_spine_slot(flight::Array<flight::Ref<flight::types::Slot2
     double i = 0.0;
     while ((i < static_cast<double>(slots.size()))) {
       {
-        const std::variant<flight::String, flight::Null, flight::Undefined> entry_name = ([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto optional_property_2 = slots.element(i)->name; if (std::holds_alternative<flight::Undefined>(optional_property_2)) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_2)) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, std::get<flight::String>(optional_property_2)}; }());
-        if (((!(std::holds_alternative<flight::Null>(entry_name)) && !(std::holds_alternative<flight::Undefined>(entry_name))) && (std::get<0>(entry_name) == name))) {
+        if ((([&]() -> std::variant<flight::String, flight::Null, flight::Undefined> { auto optional_property_2 = slots.element(i)->name; if (std::holds_alternative<flight::Undefined>(optional_property_2)) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_2)) return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::String>, std::get<flight::String>(optional_property_2)}; }()) == name)) {
           return i;
         }
       }
