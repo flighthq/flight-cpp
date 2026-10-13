@@ -1,6 +1,7 @@
 #include <flight/texture/video_texture.hpp>
 
 #include <iostream>
+#include <string>
 #include <variant>
 
 namespace {
@@ -15,9 +16,10 @@ void check(bool condition, const char* message) {
 
 }  // namespace
 
-int main() {
+int main(int argc, char** argv) {
   namespace texture = flight::texture;
   namespace types = flight::types;
+  const std::string mutation = argc > 1 ? argv[1] : "";
 
   const auto defaults = texture::create_texture();
   check(defaults->dimension == flight::String("2d"), "the default constructor selects 2D");
@@ -134,6 +136,85 @@ int main() {
   check(clone->color_space == flight::String("linear") && clone->version == 9.0,
         "clone preserves common scalar state");
 
+  using SamplerView = flight::StructuralRef<
+      flight::RowReadonly<flight::RowOf<types::SamplerLike>>>;
+  using OptionalSampler =
+      std::variant<SamplerView, flight::Null, flight::Undefined>;
+  const auto equal_sampler_a = texture::create_sampler(std::nullopt);
+  const auto equal_sampler_b = texture::create_sampler(std::nullopt);
+  if (mutation == "--mutate-sampler-equality") equal_sampler_b->mipmaps = false;
+  const OptionalSampler equal_sampler_a_view{
+      std::in_place_type<SamplerView>, equal_sampler_a};
+  const OptionalSampler equal_sampler_b_view{
+      std::in_place_type<SamplerView>, equal_sampler_b};
+  check(texture::equals_sampler(equal_sampler_a_view, equal_sampler_b_view),
+        "sampler equality compares identical state by value");
+  equal_sampler_b->mipmaps = equal_sampler_a->mipmaps;
+  check(texture::equals_sampler(equal_sampler_a_view, equal_sampler_a_view),
+        "sampler equality accepts the same owner");
+  equal_sampler_b->wrap_u = flight::String("repeat");
+  check(!texture::equals_sampler(equal_sampler_a_view, equal_sampler_b_view),
+        "sampler equality rejects any differing field");
+  const OptionalSampler absent_sampler{std::in_place_type<flight::Null>};
+  const OptionalSampler undefined_sampler{std::in_place_type<flight::Undefined>};
+  check(!texture::equals_sampler(equal_sampler_a_view, absent_sampler) &&
+            !texture::equals_sampler(absent_sampler, equal_sampler_a_view) &&
+            !texture::equals_sampler(undefined_sampler, undefined_sampler),
+        "sampler equality rejects absent operands");
+
+  const auto equality_options = flight::make_ref<types::CreateTexture2DOptions>();
+  equality_options->color_space = flight::String("linear");
+  equality_options->source = decltype(types::CreateTexture2DOptions::source){
+      std::in_place_type<flight::Ref<types::TextureSource>>, source};
+  equality_options->uv_rotation = 0.5;
+  const auto equal_texture_a = texture::create_texture2_d(equality_options);
+  const auto equal_texture_b = texture::create_texture2_d(equality_options);
+  if (mutation == "--mutate-texture-equality") equal_texture_b->uv_rotation = 0.0;
+  check(texture::equals_texture(equal_texture_a, equal_texture_b),
+        "texture equality compares identical state and shared source identity by value");
+  equal_texture_b->uv_rotation = equal_texture_a->uv_rotation;
+  check(texture::equals_texture(equal_texture_a, equal_texture_a),
+        "texture equality accepts the same owner");
+
+  const auto other_source = flight::make_ref<types::TextureSource>();
+  other_source->kind = source->kind;
+  other_source->width = source->width;
+  other_source->height = source->height;
+  equal_texture_b->source = types::TextureSourceValue{
+      std::in_place_type<flight::Ref<types::TextureSource>>, other_source};
+  check(!texture::equals_texture(equal_texture_a, equal_texture_b),
+        "texture equality preserves source identity rather than comparing source fields");
+  equal_texture_b->source = equal_texture_a->source;
+
+  equal_texture_b->color_space = flight::String("srgb");
+  check(!texture::equals_texture(equal_texture_a, equal_texture_b),
+        "texture equality rejects a different color space");
+  equal_texture_b->color_space = equal_texture_a->color_space;
+  equal_texture_b->uv_rotation = 0.0;
+  check(!texture::equals_texture(equal_texture_a, equal_texture_b),
+        "texture equality rejects a different UV rotation");
+  equal_texture_b->uv_rotation = equal_texture_a->uv_rotation;
+  equal_texture_b->uv_offset->x = 0.25;
+  check(!texture::equals_texture(equal_texture_a, equal_texture_b),
+        "texture equality rejects a different UV offset");
+  equal_texture_b->uv_offset->x = equal_texture_a->uv_offset->x;
+  equal_texture_b->uv_scale->y = 2.0;
+  check(!texture::equals_texture(equal_texture_a, equal_texture_b),
+        "texture equality rejects a different UV scale");
+  equal_texture_b->uv_scale->y = equal_texture_a->uv_scale->y;
+  equal_texture_b->sampler->mipmaps = false;
+  check(!texture::equals_texture(equal_texture_a, equal_texture_b),
+        "texture equality includes sampler state");
+
+  const texture::OptionalTexture absent_texture{
+      std::in_place_type<flight::Null>};
+  const texture::OptionalTexture undefined_texture{
+      std::in_place_type<flight::Undefined>};
+  check(!texture::equals_texture(equal_texture_a, absent_texture) &&
+            !texture::equals_texture(absent_texture, equal_texture_a) &&
+            !texture::equals_texture(undefined_texture, undefined_texture),
+        "texture equality rejects absent operands");
+
   const auto host_video = flight::make_ref<types::HostVideoCapability>();
   host_video->get_width = [](types::HostImageSource source) { return source.video_width(); };
   host_video->get_height = [](types::HostImageSource source) { return source.video_height(); };
@@ -171,6 +252,8 @@ int main() {
   check(!video->source.has_value() && video->version == texture::initial_video_version,
         "video destruction detaches only the borrowed image source");
 
-  if (failures == 0) std::cout << "texture construction and cloning match Flight\n";
+  if (failures == 0) {
+    std::cout << "texture construction, cloning, and equality match Flight\n";
+  }
   return failures == 0 ? 0 : 1;
 }
