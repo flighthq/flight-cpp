@@ -55,6 +55,13 @@ header fails at lines 236 and 238; `contract.hpp` and `_internal_index.hpp` re-e
 The `tilemap-runtime-and-nested-reference-boundaries` override carries both initializers without the
 invalid intermediate variant.
 
+`@flighthq/quadbatch/packages/quadbatch/src/quadBatch.ts` has the same defect at Flight `a627849`
+and flight-compiler `2b687ea`. `initializeQuadBatchData` reads `data?.atlas ?? null` and
+`data?.materialData ?? null` from `Readonly<Partial<QuadBatchData>>`. The emitted lambdas promise
+`variant<Value, Null, Undefined>` but return `row_get`'s `optional<Value>` directly. Clang reports the
+two invalid conversions at generated `quad_batch.hpp:397` and `:400`. The four non-nullable members
+in the same initializer lower correctly, which isolates this to the nullable partial-row projection.
+
 ## Carrying workaround
 
 The `materials-custom-shader-records-partial-row-absence` emission repair is anchored to

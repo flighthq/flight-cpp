@@ -80,6 +80,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [A typed readonly callback needs to retain its derived owner](readonly-callback-derived-owner-recovery.md) —
   Scene2D's Sprite bounds hook loses both the exact Sprite node and its SpriteRuntime slot after the
   generic Node2D callback boundary; carried by the source patch `scene2d-sprite-exact-runtime-runner`.
+- [Quadbatch needs one retained owner across specialized construction boundaries](quadbatch-owner-and-contextual-construction.md) —
+  flattened Node2D/runtime/signal owners and contextual factories omit ten declarations; the native
+  adapter preserves batch, runtime, buffer-view, atlas, material and signal identities explicitly.
 - [Variadic console calls with non-string arguments](console-variadic-arguments.md) —
   needs a declared console-formatting contract; blocks log.ts `_writeConsoleCaptureEntry`.
 - [An object literal passed through an optional call must build the parameter's reference owner](optional-call-object-literal-into-reference-owner.md) —

@@ -167,3 +167,21 @@ The header gate reports 2/6 passing even though `selection_state.hpp` is not usa
 are templates, so their missing `get_selection_state_runtime` name is deferred until instantiation. The
 completion supplies the refused constructors and accessors together; this request remains the record that
 a raw partial emission must either omit its dependent callers or declare their callee.
+
+## Seventh measured site: `@flighthq/quadbatch`
+
+At Flight `a627849` / flight-compiler `2b687ea`, `getQuadBatchSignals` is omitted after its readonly
+`QuadBatch` row cannot be refined to the writable computed-symbol attachment owner
+`QuadBatchWithSignals`. Three otherwise retained declarations call the absent function:
+
+```text
+generated/include/flight/quadbatch/quad_batch.hpp:689: use of undeclared identifier 'get_quad_batch_signals'
+generated/include/flight/quadbatch/quad_batch.hpp:726: use of undeclared identifier 'get_quad_batch_signals'
+generated/include/flight/quadbatch/quad_batch.hpp:840: use of undeclared identifier 'get_quad_batch_signals'
+```
+
+The callers are `clearQuadBatch`, `removeQuadBatchInstance`, and `appendQuadBatchInstance`. Directly
+including the generated module, while retaining dependency overrides, produces exactly those three
+name failures in addition to the separate partial-row carrier failures. The quadbatch override supplies
+the omitted signal accessor and keeps the three retained callers, so this site expires when omission
+propagation or an emitted placeholder makes the unoverridden partial module compile.

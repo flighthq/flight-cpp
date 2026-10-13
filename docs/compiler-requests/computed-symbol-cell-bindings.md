@@ -36,6 +36,12 @@ The spelling is illustrative; the contract is identity-based binding to the reta
 `Scene3DResourceResolverRuntime` reads and any future computed key created with a unique `Symbol(...)`
 rather than `Symbol.for(...)`.
 
+At Flight `a627849`, quadbatch's private `quadBatchSignalsSlot` is another measured site. Generation
+records the cell in the widening proof and warns that the runtime cannot read it. `enableQuadBatchSignals`
+and `getQuadBatchSignals` then cannot preserve the source's attachment on the `QuadBatch` owner. The
+package-local native adapter uses a weak-keyed attachment table so enabling is identity-stable and does
+not retain dead batches; that workaround expires when the emitted owner binds the computed cell itself.
+
 ## Carrying workaround
 
 There is no compiler patch. [`sdkGeneration.mjs`](../../scripts/sdkGeneration.mjs) records every
