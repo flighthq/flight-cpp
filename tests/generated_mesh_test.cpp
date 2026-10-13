@@ -1,16 +1,22 @@
 #include <flight/mesh/mesh_geometry.hpp>
 #include <flight/mesh/mesh_geometry_attributes.hpp>
+#include <flight/mesh/mesh_geometry_builders.hpp>
 #include <flight/mesh/mesh_geometry_compute.hpp>
 #include <flight/mesh/mesh_geometry_index.hpp>
 #include <flight/mesh/mesh_geometry_layout.hpp>
 #include <flight/mesh/mesh_geometry_operations.hpp>
 
+#include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstddef>
+#include <functional>
 #include <iostream>
+#include <limits>
 #include <optional>
 #include <utility>
 #include <variant>
+#include <vector>
 
 namespace {
 
@@ -26,6 +32,10 @@ bool inject_channel_order_mutation = false;
 bool inject_stride_offset_mutation = false;
 bool inject_normalization_mutation = false;
 bool inject_group_bounds_mutation = false;
+bool inject_builder_topology_mutation = false;
+bool inject_builder_seam_mutation = false;
+bool inject_builder_bounds_mutation = false;
+bool inject_builder_guard_mutation = false;
 
 void check(bool condition, const char* message) {
   if (condition) return;
@@ -191,6 +201,129 @@ double variant_index_at(
     double index) {
   return std::visit(
       [index](const auto& values) { return values.get_index(index); }, indices);
+}
+
+const void* index_buffer_identity(
+    const flight::Ref<types::MeshGeometry>& geometry) {
+  if (!geometry->indices.has_value()) return nullptr;
+  return std::visit(
+      [](const auto& values) { return values.buffer.identity(); },
+      geometry->indices.value());
+}
+
+bool has_finite_unit_frames(
+    const flight::Ref<types::MeshGeometry>& geometry) {
+  const double count = mesh::get_mesh_geometry_vertex_count(geometry);
+  for (double vertex = 0.0; vertex < count; vertex += 1.0) {
+    const double base = vertex * 12.0;
+    for (double component = 0.0; component < 12.0; component += 1.0) {
+      if (!std::isfinite(geometry->vertices.get_index(base + component))) {
+        return false;
+      }
+    }
+    const double nx = geometry->vertices.get_index(base + 3.0);
+    const double ny = geometry->vertices.get_index(base + 4.0);
+    const double nz = geometry->vertices.get_index(base + 5.0);
+    const double tx = geometry->vertices.get_index(base + 6.0);
+    const double ty = geometry->vertices.get_index(base + 7.0);
+    const double tz = geometry->vertices.get_index(base + 8.0);
+    const double tw = geometry->vertices.get_index(base + 9.0);
+    if (!near(std::hypot(nx, ny, nz), 1.0, 1.0e-4) ||
+        !near(std::hypot(tx, ty, tz), 1.0, 1.0e-4) ||
+        !near(nx * tx + ny * ty + nz * tz, 0.0, 1.0e-4) ||
+        std::abs(tw) != 1.0) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool has_tight_cached_bounds(
+    const flight::Ref<types::MeshGeometry>& geometry) {
+  if (!geometry->bounds.has_value() ||
+      !geometry->entity_runtime_key.has_value()) {
+    return false;
+  }
+  double min_x = std::numeric_limits<double>::infinity();
+  double min_y = std::numeric_limits<double>::infinity();
+  double min_z = std::numeric_limits<double>::infinity();
+  double max_x = -std::numeric_limits<double>::infinity();
+  double max_y = -std::numeric_limits<double>::infinity();
+  double max_z = -std::numeric_limits<double>::infinity();
+  const double count = mesh::get_mesh_geometry_vertex_count(geometry);
+  for (double vertex = 0.0; vertex < count; vertex += 1.0) {
+    const double base = vertex * 12.0;
+    const double x = geometry->vertices.get_index(base);
+    const double y = geometry->vertices.get_index(base + 1.0);
+    const double z = geometry->vertices.get_index(base + 2.0);
+    min_x = std::min(min_x, x);
+    min_y = std::min(min_y, y);
+    min_z = std::min(min_z, z);
+    max_x = std::max(max_x, x);
+    max_y = std::max(max_y, y);
+    max_z = std::max(max_z, z);
+  }
+  const auto bounds = geometry->bounds.value();
+  return bounds->min->x == min_x && bounds->min->y == min_y &&
+         bounds->min->z == min_z && bounds->max->x == max_x &&
+         bounds->max->y == max_y && bounds->max->z == max_z &&
+         geometry->entity_runtime_key.value()->bounds_version ==
+             geometry->version;
+}
+
+bool winding_matches_normals(
+    const flight::Ref<types::MeshGeometry>& geometry) {
+  auto corner = flight::make_ref<types::MeshTriangleVertexIndices>();
+  bool saw_area = false;
+  const double triangles = mesh::get_mesh_geometry_triangle_count(geometry);
+  for (double triangle = 0.0; triangle < triangles; triangle += 1.0) {
+    if (!mesh::get_mesh_geometry_triangle_vertex_indices(
+            corner, geometry, triangle)) {
+      return false;
+    }
+    const double indices[] = {corner->i0, corner->i1, corner->i2};
+    double position[3][3]{};
+    double average_normal[3]{};
+    for (std::size_t slot = 0; slot < 3; ++slot) {
+      const double base = indices[slot] * 12.0;
+      for (std::size_t component = 0; component < 3; ++component) {
+        position[slot][component] =
+            geometry->vertices.get_index(base + component);
+        average_normal[component] +=
+            geometry->vertices.get_index(base + 3.0 + component);
+      }
+    }
+    const double e1x = position[1][0] - position[0][0];
+    const double e1y = position[1][1] - position[0][1];
+    const double e1z = position[1][2] - position[0][2];
+    const double e2x = position[2][0] - position[0][0];
+    const double e2y = position[2][1] - position[0][1];
+    const double e2z = position[2][2] - position[0][2];
+    const double face_x = e1y * e2z - e1z * e2y;
+    const double face_y = e1z * e2x - e1x * e2z;
+    const double face_z = e1x * e2y - e1y * e2x;
+    const double area = std::hypot(face_x, face_y, face_z);
+    if (area <= 1.0e-10) continue;
+    saw_area = true;
+    if (face_x * average_normal[0] + face_y * average_normal[1] +
+            face_z * average_normal[2] <=
+        0.0) {
+      return false;
+    }
+  }
+  return saw_area;
+}
+
+template <typename Build>
+bool throws_range_error(Build&& build) {
+  try {
+    build();
+  } catch (const flight::RangeError&) {
+    return true;
+  } catch (...) {
+    return false;
+  }
+  return false;
 }
 
 void construction_clone_and_owner_identity() {
@@ -657,6 +790,637 @@ void layout_conversion_ownership_and_round_trip() {
         "layout conversion maps by semantic, preserves declared ownership contracts, zero-fills new components, and round-trips packed encodings");
 }
 
+void primitive_builder_topology_order_ownership_and_bounds() {
+  const flight::Array<flight::Array<double>> triangle_vertices{
+      flight::Array<double>{0.0, 1.0, 0.0},
+      flight::Array<double>{-1.0, -1.0, 0.0},
+      flight::Array<double>{1.0, -1.0, 0.0},
+  };
+  const flight::Array<flight::Array<double>> triangle_faces{
+      flight::Array<double>{0.0, 1.0, 2.0}};
+  struct Expectation {
+    std::function<flight::Ref<types::MeshGeometry>()> build;
+    double vertex_count;
+    double index_count;
+    std::array<double, 6> first_indices;
+  };
+  const std::vector<Expectation> expectations{
+      {[] { return mesh::create_box_mesh_geometry(2.0, 4.0, 6.0); },
+       24.0, 36.0, {0.0, 1.0, 3.0, 0.0, 3.0, 2.0}},
+      {[] { return mesh::create_capsule_mesh_geometry(0.5, 1.0, 8.0, 4.0); },
+       90.0, 432.0, {0.0, 1.0, 9.0, 1.0, 10.0, 9.0}},
+      {[] { return mesh::create_circle_mesh_geometry(0.5, 8.0); },
+       10.0, 24.0, {0.0, 2.0, 1.0, 0.0, 3.0, 2.0}},
+      {[] { return mesh::create_cone_mesh_geometry(0.5, 2.0, 8.0, true); },
+       28.0, 48.0, {0.0, 9.0, 1.0, 1.0, 10.0, 2.0}},
+      {[] {
+         return mesh::create_cylinder_mesh_geometry(
+             0.5, 0.5, 2.0, 8.0, true);
+       },
+       38.0, 96.0, {0.0, 9.0, 1.0, 1.0, 9.0, 10.0}},
+      {[] { return mesh::create_dodecahedron_mesh_geometry(0.5, 0.0); },
+       108.0, 108.0, {0.0, 1.0, 2.0, 3.0, 4.0, 5.0}},
+      {[] { return mesh::create_icosahedron_mesh_geometry(0.5, 0.0); },
+       60.0, 60.0, {0.0, 1.0, 2.0, 3.0, 4.0, 5.0}},
+      {[] { return mesh::create_icosphere_mesh_geometry(1.0, 1.0); },
+       240.0, 240.0, {0.0, 1.0, 2.0, 3.0, 4.0, 5.0}},
+      {[] { return mesh::create_octahedron_mesh_geometry(0.5, 0.0); },
+       24.0, 24.0, {0.0, 1.0, 2.0, 3.0, 4.0, 5.0}},
+      {[] { return mesh::create_plane_mesh_geometry(2.0, 2.0, 2.0, 2.0); },
+       9.0, 24.0, {0.0, 3.0, 1.0, 1.0, 3.0, 4.0}},
+      {[triangle_vertices, triangle_faces] {
+         return mesh::create_polyhedron_mesh_geometry(
+             triangle_vertices, triangle_faces, 2.0, 1.0);
+       },
+       12.0, 12.0, {0.0, 1.0, 2.0, 3.0, 4.0, 5.0}},
+      {[] { return mesh::create_quad_mesh_geometry(2.0, 4.0); },
+       4.0, 6.0, {0.0, 1.0, 2.0, 2.0, 1.0, 3.0}},
+      {[] { return mesh::create_ring_mesh_geometry(0.25, 0.5, 8.0); },
+       18.0, 48.0, {0.0, 2.0, 1.0, 1.0, 2.0, 3.0}},
+      {[] { return mesh::create_sphere_mesh_geometry(1.0, 8.0, 4.0); },
+       45.0, 192.0, {0.0, 9.0, 1.0, 1.0, 9.0, 10.0}},
+      {[] { return mesh::create_tetrahedron_mesh_geometry(0.5, 0.0); },
+       12.0, 12.0, {0.0, 1.0, 2.0, 3.0, 4.0, 5.0}},
+      {[] {
+         return mesh::create_torus_knot_mesh_geometry(
+             0.5, 0.15, 8.0, 4.0, 2.0, 3.0);
+       },
+       45.0, 192.0, {0.0, 1.0, 5.0, 1.0, 6.0, 5.0}},
+      {[] { return mesh::create_torus_mesh_geometry(0.5, 0.2, 4.0, 8.0); },
+       45.0, 192.0, {0.0, 1.0, 9.0, 1.0, 10.0, 9.0}},
+  };
+
+  bool topology_and_order = true;
+  bool bounds = true;
+  bool ownership = true;
+  std::size_t expectation_index = 0;
+  for (const auto& expectation : expectations) {
+    const auto geometry = expectation.build();
+    const auto peer = expectation.build();
+    std::vector<double> expected_order;
+    auto append_grid = [&](double rows, double columns, double row_stride,
+                           bool forward) {
+      for (double row = 0.0; row < rows; row += 1.0) {
+        for (double column = 0.0; column < columns; column += 1.0) {
+          const double a = row * row_stride + column;
+          const double b = a + 1.0;
+          const double c = a + row_stride;
+          const double d = c + 1.0;
+          if (forward) {
+            expected_order.insert(
+                expected_order.end(), {a, b, c, b, d, c});
+          } else {
+            expected_order.insert(
+                expected_order.end(), {a, c, b, b, c, d});
+          }
+        }
+      }
+    };
+    switch (expectation_index) {
+      case 0:
+        for (double face = 0.0; face < 6.0; face += 1.0) {
+          const double start = face * 4.0;
+          expected_order.insert(
+              expected_order.end(),
+              {start, start + 1.0, start + 3.0,
+               start, start + 3.0, start + 2.0});
+        }
+        break;
+      case 1:
+        append_grid(9.0, 8.0, 9.0, true);
+        break;
+      case 2:
+        for (double segment = 0.0; segment < 8.0; segment += 1.0) {
+          expected_order.insert(
+              expected_order.end(),
+              {0.0, segment + 2.0, segment + 1.0});
+        }
+        break;
+      case 3:
+        for (double segment = 0.0; segment < 8.0; segment += 1.0) {
+          expected_order.insert(
+              expected_order.end(),
+              {segment, segment + 9.0, segment + 1.0});
+        }
+        for (double segment = 0.0; segment < 8.0; segment += 1.0) {
+          expected_order.insert(
+              expected_order.end(),
+              {18.0, segment + 19.0, segment + 20.0});
+        }
+        break;
+      case 4:
+        append_grid(1.0, 8.0, 9.0, false);
+        for (double segment = 0.0; segment < 8.0; segment += 1.0) {
+          expected_order.insert(
+              expected_order.end(),
+              {18.0, segment + 19.0, segment + 20.0});
+        }
+        for (double segment = 0.0; segment < 8.0; segment += 1.0) {
+          expected_order.insert(
+              expected_order.end(),
+              {28.0, segment + 30.0, segment + 29.0});
+        }
+        break;
+      case 5:
+      case 6:
+      case 7:
+      case 8:
+      case 10:
+      case 14:
+        for (double index = 0.0; index < expectation.index_count; index += 1.0) {
+          expected_order.push_back(index);
+        }
+        break;
+      case 9:
+        append_grid(2.0, 2.0, 3.0, false);
+        break;
+      case 11:
+        expected_order = {0.0, 1.0, 2.0, 2.0, 1.0, 3.0};
+        break;
+      case 12:
+        for (double segment = 0.0; segment < 8.0; segment += 1.0) {
+          const double inner0 = segment * 2.0;
+          const double outer0 = inner0 + 1.0;
+          const double inner1 = inner0 + 2.0;
+          const double outer1 = inner0 + 3.0;
+          expected_order.insert(
+              expected_order.end(),
+              {inner0, inner1, outer0, outer0, inner1, outer1});
+        }
+        break;
+      case 13:
+        append_grid(4.0, 8.0, 9.0, false);
+        break;
+      case 15:
+        append_grid(8.0, 4.0, 5.0, true);
+        break;
+      case 16:
+        append_grid(4.0, 8.0, 9.0, true);
+        break;
+      default:
+        break;
+    }
+    const bool case_frames = has_finite_unit_frames(geometry);
+    // Custom polyhedra preserve caller-authored face order, and the torus-knot
+    // Frenet frame is not a radial outward normal contract. Their exact index
+    // order and unit frames are asserted without imposing the radial test.
+    const bool case_winding = expectation_index == 10 || expectation_index == 15 ||
+                              winding_matches_normals(geometry);
+    bool case_topology =
+        geometry->topology == flight::String("triangle-list") &&
+        mesh::get_mesh_geometry_vertex_count(geometry) ==
+            expectation.vertex_count &&
+        mesh::get_mesh_geometry_index_count(geometry) ==
+            expectation.index_count &&
+        geometry->indices.has_value() &&
+        std::holds_alternative<flight::Uint32Array>(geometry->indices.value()) &&
+        mesh::validate_mesh_geometry(geometry) &&
+        case_winding && case_frames;
+    case_topology = case_topology &&
+                    expected_order.size() ==
+                        static_cast<std::size_t>(expectation.index_count);
+    for (double index = 0.0;
+         index < static_cast<double>(expected_order.size());
+         index += 1.0) {
+      case_topology =
+          case_topology &&
+          index_at(geometry, index) ==
+              expected_order[static_cast<std::size_t>(index)];
+    }
+    if (!case_topology) {
+      std::cerr << "builder expectation " << expectation_index
+                << " observed vertices="
+                << mesh::get_mesh_geometry_vertex_count(geometry)
+                << " indices=" << mesh::get_mesh_geometry_index_count(geometry)
+                << " winding=" << case_winding
+                << " frames=" << case_frames
+                << '\n';
+    }
+    topology_and_order = topology_and_order && case_topology;
+    bounds = bounds && has_tight_cached_bounds(geometry);
+    ownership =
+        ownership && geometry != peer && geometry->layout == peer->layout &&
+        geometry->layout == mesh::canonical_vertex_layout &&
+        geometry->vertices.buffer != peer->vertices.buffer &&
+        index_buffer_identity(geometry) != index_buffer_identity(peer) &&
+        geometry->bounds.has_value() && peer->bounds.has_value() &&
+        geometry->bounds.value() != peer->bounds.value() &&
+        geometry->subsets.identity() != peer->subsets.identity() &&
+        geometry->subsets.element(0.0) != peer->subsets.element(0.0) &&
+        geometry->entity_runtime_key.has_value() &&
+        peer->entity_runtime_key.has_value() &&
+        geometry->entity_runtime_key.value() !=
+            peer->entity_runtime_key.value();
+    const double peer_position = peer->vertices.get_index(0.0);
+    const double peer_index = index_at(peer, 0.0);
+    geometry->vertices.set_index(0.0, peer_position + 17.0);
+    std::visit(
+        [](auto& indices) { indices.set_index(0.0, 17.0); },
+        geometry->indices.value());
+    ownership = ownership && peer->vertices.get_index(0.0) == peer_position &&
+                index_at(peer, 0.0) == peer_index;
+    ++expectation_index;
+  }
+
+  const auto box = mesh::create_box_mesh_geometry(2.0, 4.0, 6.0);
+  const auto capsule =
+      mesh::create_capsule_mesh_geometry(0.5, 1.0, 8.0, 4.0);
+  const auto plane = mesh::create_plane_mesh_geometry(2.0, 2.0, 2.0, 2.0);
+  const auto torus = mesh::create_torus_mesh_geometry(0.5, 0.2, 4.0, 8.0);
+  bounds =
+      bounds && box->bounds.value()->min->x == -1.0 &&
+      box->bounds.value()->max->y == 2.0 &&
+      box->bounds.value()->max->z == 3.0 &&
+      near(capsule->bounds.value()->min->y, -1.0) &&
+      near(capsule->bounds.value()->max->y, 1.0) &&
+      plane->bounds.value()->min->x == -1.0 &&
+      plane->bounds.value()->max->z == 1.0 &&
+      near(torus->bounds.value()->max->x, 0.7, 1.0e-5) &&
+      near(torus->bounds.value()->max->z, 0.2, 1.0e-5);
+
+  if (inject_builder_topology_mutation) topology_and_order = false;
+  if (inject_builder_bounds_mutation) bounds = false;
+  check(topology_and_order,
+        "all seventeen primitive builders preserve exact triangle topology, counts, authored index prefixes, canonical frames and applicable outward winding");
+  check(bounds,
+        "every primitive builder installs a tight version-stamped bound with exact representative extents");
+  check(ownership,
+        "repeated primitive builds share only the immutable canonical layout and isolate mutable vertices, indices, subsets, bounds and runtime");
+}
+
+void primitive_builder_seam_behavior() {
+  auto same_position_and_normal = [](
+                                      const flight::Ref<types::MeshGeometry>& geometry,
+                                      double left, double right) {
+    for (double component = 0.0; component < 6.0; component += 1.0) {
+      if (!near(
+              geometry->vertices.get_index(left * 12.0 + component),
+              geometry->vertices.get_index(right * 12.0 + component),
+              1.0e-5)) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  bool seams = true;
+  const auto box = mesh::create_box_mesh_geometry(2.0, 4.0, 6.0);
+  seams =
+      seams && same_position_and_normal(box, 0.0, 0.0) &&
+      near(box->vertices.get_index(0.0), box->vertices.get_index(17.0 * 12.0)) &&
+      near(box->vertices.get_index(1.0), box->vertices.get_index(17.0 * 12.0 + 1.0)) &&
+      near(box->vertices.get_index(2.0), box->vertices.get_index(17.0 * 12.0 + 2.0)) &&
+      box->vertices.get_index(3.0) == 1.0 &&
+      box->vertices.get_index(17.0 * 12.0 + 5.0) == 1.0;
+
+  const auto capsule =
+      mesh::create_capsule_mesh_geometry(0.5, 1.0, 8.0, 4.0);
+  for (double ring = 0.0; ring < 10.0; ring += 1.0) {
+    const double first = ring * 9.0;
+    const double last = first + 8.0;
+    seams = seams && same_position_and_normal(capsule, first, last) &&
+            capsule->vertices.get_index(first * 12.0 + 10.0) == 0.0 &&
+            capsule->vertices.get_index(last * 12.0 + 10.0) == 1.0;
+  }
+  const double top_equator = 4.0 * 9.0 * 12.0;
+  const double bottom_equator = 5.0 * 9.0 * 12.0;
+  seams = seams && near(capsule->vertices.get_index(top_equator), 0.5) &&
+          near(capsule->vertices.get_index(top_equator + 1.0), 0.5) &&
+          near(capsule->vertices.get_index(top_equator + 4.0), 0.0) &&
+          near(capsule->vertices.get_index(top_equator + 11.0), 4.0 / 9.0) &&
+          near(capsule->vertices.get_index(bottom_equator), 0.5) &&
+          near(capsule->vertices.get_index(bottom_equator + 1.0), -0.5) &&
+          near(capsule->vertices.get_index(bottom_equator + 4.0), 0.0) &&
+          near(capsule->vertices.get_index(bottom_equator + 11.0), 5.0 / 9.0);
+
+  const auto circle = mesh::create_circle_mesh_geometry(0.5, 8.0);
+  seams = seams && same_position_and_normal(circle, 1.0, 9.0) &&
+          near(circle->vertices.get_index(1.0 * 12.0 + 10.0),
+               circle->vertices.get_index(9.0 * 12.0 + 10.0)) &&
+          near(circle->vertices.get_index(1.0 * 12.0 + 11.0),
+               circle->vertices.get_index(9.0 * 12.0 + 11.0));
+
+  const auto cone = mesh::create_cone_mesh_geometry(0.5, 2.0, 8.0, true);
+  for (double apex = 9.0; apex <= 17.0; apex += 1.0) {
+    seams = seams && near(cone->vertices.get_index(apex * 12.0), 0.0) &&
+            near(cone->vertices.get_index(apex * 12.0 + 1.0), 1.0) &&
+            near(cone->vertices.get_index(apex * 12.0 + 2.0), 0.0);
+  }
+  seams = seams && cone->vertices.get_index(9.0 * 12.0 + 10.0) == 0.0 &&
+          cone->vertices.get_index(17.0 * 12.0 + 10.0) == 1.0;
+
+  const auto cylinder =
+      mesh::create_cylinder_mesh_geometry(0.5, 0.5, 2.0, 8.0, true);
+  seams = seams && same_position_and_normal(cylinder, 0.0, 8.0) &&
+          same_position_and_normal(cylinder, 9.0, 17.0) &&
+          cylinder->vertices.get_index(10.0) == 0.0 &&
+          cylinder->vertices.get_index(8.0 * 12.0 + 10.0) == 1.0;
+
+  const auto ring = mesh::create_ring_mesh_geometry(0.25, 0.5, 8.0);
+  seams = seams && same_position_and_normal(ring, 0.0, 16.0) &&
+          same_position_and_normal(ring, 1.0, 17.0) &&
+          ring->vertices.get_index(11.0) == 0.0 &&
+          ring->vertices.get_index(16.0 * 12.0 + 11.0) == 1.0;
+
+  const auto sphere = mesh::create_sphere_mesh_geometry(1.0, 8.0, 4.0);
+  for (double row = 0.0; row < 5.0; row += 1.0) {
+    const double first = row * 9.0;
+    const double last = first + 8.0;
+    seams = seams && same_position_and_normal(sphere, first, last) &&
+            sphere->vertices.get_index(first * 12.0 + 10.0) == 0.0 &&
+            sphere->vertices.get_index(last * 12.0 + 10.0) == 1.0;
+  }
+
+  const auto torus = mesh::create_torus_mesh_geometry(0.5, 0.2, 4.0, 8.0);
+  for (double row = 0.0; row < 5.0; row += 1.0) {
+    const double first = row * 9.0;
+    const double last = first + 8.0;
+    seams = seams && same_position_and_normal(torus, first, last) &&
+            torus->vertices.get_index(first * 12.0 + 10.0) == 0.0 &&
+            torus->vertices.get_index(last * 12.0 + 10.0) == 1.0;
+  }
+  for (double column = 0.0; column < 9.0; column += 1.0) {
+    seams = seams && same_position_and_normal(torus, column, 36.0 + column) &&
+            torus->vertices.get_index(column * 12.0 + 11.0) == 0.0 &&
+            torus->vertices.get_index((36.0 + column) * 12.0 + 11.0) == 1.0;
+  }
+
+  const auto knot = mesh::create_torus_knot_mesh_geometry(
+      0.5, 0.15, 8.0, 4.0, 2.0, 3.0);
+  for (double row = 0.0; row < 9.0; row += 1.0) {
+    const double first = row * 5.0;
+    const double last = first + 4.0;
+    seams = seams && same_position_and_normal(knot, first, last) &&
+            knot->vertices.get_index(first * 12.0 + 11.0) == 0.0 &&
+            knot->vertices.get_index(last * 12.0 + 11.0) == 1.0;
+  }
+
+  const std::vector<flight::Ref<types::MeshGeometry>> spherical{
+      mesh::create_dodecahedron_mesh_geometry(),
+      mesh::create_icosahedron_mesh_geometry(),
+      mesh::create_icosphere_mesh_geometry(),
+      mesh::create_octahedron_mesh_geometry(),
+      mesh::create_tetrahedron_mesh_geometry(),
+  };
+  bool lifted_seam = false;
+  bool saw_pole = false;
+  for (const auto& geometry : spherical) {
+    auto corner = flight::make_ref<types::MeshTriangleVertexIndices>();
+    const double triangles = mesh::get_mesh_geometry_triangle_count(geometry);
+    for (double triangle = 0.0; triangle < triangles; triangle += 1.0) {
+      seams = seams && mesh::get_mesh_geometry_triangle_vertex_indices(
+                           corner, geometry, triangle);
+      const double indices[] = {corner->i0, corner->i1, corner->i2};
+      double us[3]{};
+      double horizontal[3]{};
+      for (std::size_t slot = 0; slot < 3; ++slot) {
+        const double base = indices[slot] * 12.0;
+        us[slot] = geometry->vertices.get_index(base + 10.0);
+        horizontal[slot] = std::hypot(
+            geometry->vertices.get_index(base),
+            geometry->vertices.get_index(base + 2.0));
+        lifted_seam = lifted_seam || us[slot] > 1.0;
+      }
+      const double minimum = std::min({us[0], us[1], us[2]});
+      const double maximum = std::max({us[0], us[1], us[2]});
+      seams = seams && !(minimum < 0.1 && maximum > 0.9);
+      for (std::size_t pole = 0; pole < 3; ++pole) {
+        if (horizontal[pole] > 1.0e-6) continue;
+        saw_pole = true;
+        const std::size_t first = (pole + 1) % 3;
+        const std::size_t second = (pole + 2) % 3;
+        seams = seams && us[pole] >= std::min(us[first], us[second]) &&
+                us[pole] <= std::max(us[first], us[second]);
+      }
+      if (maximum - minimum > 0.5) {
+        seams = seams && horizontal[0] > 1.0e-6 &&
+                horizontal[1] > 1.0e-6 && horizontal[2] > 1.0e-6;
+      }
+    }
+  }
+  seams = seams && lifted_seam && saw_pole;
+  if (inject_builder_seam_mutation) seams = false;
+  check(seams,
+        "periodic builders duplicate closure records with distinct UV endpoints while cones and spherical faces retain their authored seam splits");
+}
+
+void primitive_builder_parameter_guards_and_degeneracy() {
+  const flight::Array<flight::Array<double>> triangle_vertices{
+      flight::Array<double>{0.0, 1.0, 0.0},
+      flight::Array<double>{-1.0, -1.0, 0.0},
+      flight::Array<double>{1.0, -1.0, 0.0},
+  };
+  const flight::Array<flight::Array<double>> triangle_faces{
+      flight::Array<double>{0.0, 1.0, 2.0}};
+  struct CountGuard {
+    std::function<flight::Ref<types::MeshGeometry>()> fractional;
+    std::function<flight::Ref<types::MeshGeometry>()> floored;
+    std::function<flight::Ref<types::MeshGeometry>()> below_minimum;
+    std::function<flight::Ref<types::MeshGeometry>()> minimum;
+  };
+  const std::vector<CountGuard> count_guards{
+      {[] { return mesh::create_capsule_mesh_geometry(0.5, 1.0, 3.5, 1.5); },
+       [] { return mesh::create_capsule_mesh_geometry(0.5, 1.0, 3.0, 1.0); },
+       [] { return mesh::create_capsule_mesh_geometry(0.5, 1.0, -9.0, -9.0); },
+       [] { return mesh::create_capsule_mesh_geometry(0.5, 1.0, 3.0, 1.0); }},
+      {[] { return mesh::create_circle_mesh_geometry(0.5, 3.5); },
+       [] { return mesh::create_circle_mesh_geometry(0.5, 3.0); },
+       [] { return mesh::create_circle_mesh_geometry(0.5, -9.0); },
+       [] { return mesh::create_circle_mesh_geometry(0.5, 3.0); }},
+      {[] { return mesh::create_cone_mesh_geometry(0.5, 1.0, 3.5); },
+       [] { return mesh::create_cone_mesh_geometry(0.5, 1.0, 3.0); },
+       [] { return mesh::create_cone_mesh_geometry(0.5, 1.0, -9.0); },
+       [] { return mesh::create_cone_mesh_geometry(0.5, 1.0, 3.0); }},
+      {[] {
+         return mesh::create_cylinder_mesh_geometry(0.5, 0.5, 1.0, 3.5);
+       },
+       [] { return mesh::create_cylinder_mesh_geometry(0.5, 0.5, 1.0, 3.0); },
+       [] { return mesh::create_cylinder_mesh_geometry(0.5, 0.5, 1.0, -9.0); },
+       [] { return mesh::create_cylinder_mesh_geometry(0.5, 0.5, 1.0, 3.0); }},
+      {[] { return mesh::create_dodecahedron_mesh_geometry(0.5, 1.5); },
+       [] { return mesh::create_dodecahedron_mesh_geometry(0.5, 1.0); },
+       [] { return mesh::create_dodecahedron_mesh_geometry(0.5, -9.0); },
+       [] { return mesh::create_dodecahedron_mesh_geometry(0.5, 0.0); }},
+      {[] { return mesh::create_icosahedron_mesh_geometry(0.5, 1.5); },
+       [] { return mesh::create_icosahedron_mesh_geometry(0.5, 1.0); },
+       [] { return mesh::create_icosahedron_mesh_geometry(0.5, -9.0); },
+       [] { return mesh::create_icosahedron_mesh_geometry(0.5, 0.0); }},
+      {[] { return mesh::create_icosphere_mesh_geometry(0.5, 1.5); },
+       [] { return mesh::create_icosphere_mesh_geometry(0.5, 1.0); },
+       [] { return mesh::create_icosphere_mesh_geometry(0.5, -9.0); },
+       [] { return mesh::create_icosphere_mesh_geometry(0.5, 0.0); }},
+      {[] { return mesh::create_octahedron_mesh_geometry(0.5, 1.5); },
+       [] { return mesh::create_octahedron_mesh_geometry(0.5, 1.0); },
+       [] { return mesh::create_octahedron_mesh_geometry(0.5, -9.0); },
+       [] { return mesh::create_octahedron_mesh_geometry(0.5, 0.0); }},
+      {[] { return mesh::create_plane_mesh_geometry(1.0, 1.0, 1.5, 1.5); },
+       [] { return mesh::create_plane_mesh_geometry(1.0, 1.0, 1.0, 1.0); },
+       [] { return mesh::create_plane_mesh_geometry(1.0, 1.0, -9.0, -9.0); },
+       [] { return mesh::create_plane_mesh_geometry(1.0, 1.0, 1.0, 1.0); }},
+      {[triangle_vertices, triangle_faces] {
+         return mesh::create_polyhedron_mesh_geometry(
+             triangle_vertices, triangle_faces, 0.5, 1.5);
+       },
+       [triangle_vertices, triangle_faces] {
+         return mesh::create_polyhedron_mesh_geometry(
+             triangle_vertices, triangle_faces, 0.5, 1.0);
+       },
+       [triangle_vertices, triangle_faces] {
+         return mesh::create_polyhedron_mesh_geometry(
+             triangle_vertices, triangle_faces, 0.5, -9.0);
+       },
+       [triangle_vertices, triangle_faces] {
+         return mesh::create_polyhedron_mesh_geometry(
+             triangle_vertices, triangle_faces, 0.5, 0.0);
+       }},
+      {[] { return mesh::create_ring_mesh_geometry(0.25, 0.5, 3.5); },
+       [] { return mesh::create_ring_mesh_geometry(0.25, 0.5, 3.0); },
+       [] { return mesh::create_ring_mesh_geometry(0.25, 0.5, -9.0); },
+       [] { return mesh::create_ring_mesh_geometry(0.25, 0.5, 3.0); }},
+      {[] { return mesh::create_sphere_mesh_geometry(0.5, 3.5, 2.5); },
+       [] { return mesh::create_sphere_mesh_geometry(0.5, 3.0, 2.0); },
+       [] { return mesh::create_sphere_mesh_geometry(0.5, -9.0, -9.0); },
+       [] { return mesh::create_sphere_mesh_geometry(0.5, 3.0, 2.0); }},
+      {[] { return mesh::create_tetrahedron_mesh_geometry(0.5, 1.5); },
+       [] { return mesh::create_tetrahedron_mesh_geometry(0.5, 1.0); },
+       [] { return mesh::create_tetrahedron_mesh_geometry(0.5, -9.0); },
+       [] { return mesh::create_tetrahedron_mesh_geometry(0.5, 0.0); }},
+      {[] {
+         return mesh::create_torus_knot_mesh_geometry(
+             0.5, 0.15, 3.5, 3.5);
+       },
+       [] { return mesh::create_torus_knot_mesh_geometry(0.5, 0.15, 3.0, 3.0); },
+       [] { return mesh::create_torus_knot_mesh_geometry(0.5, 0.15, -9.0, -9.0); },
+       [] { return mesh::create_torus_knot_mesh_geometry(0.5, 0.15, 3.0, 3.0); }},
+      {[] { return mesh::create_torus_mesh_geometry(0.5, 0.2, 3.5, 3.5); },
+       [] { return mesh::create_torus_mesh_geometry(0.5, 0.2, 3.0, 3.0); },
+       [] { return mesh::create_torus_mesh_geometry(0.5, 0.2, -9.0, -9.0); },
+       [] { return mesh::create_torus_mesh_geometry(0.5, 0.2, 3.0, 3.0); }},
+  };
+
+  bool guards = true;
+  for (const auto& guard : count_guards) {
+    const auto fractional = guard.fractional();
+    const auto floored = guard.floored();
+    const auto below = guard.below_minimum();
+    const auto minimum = guard.minimum();
+    guards =
+        guards && mesh::validate_mesh_geometry(fractional) &&
+        mesh::get_mesh_geometry_vertex_count(fractional) ==
+            mesh::get_mesh_geometry_vertex_count(floored) &&
+        mesh::get_mesh_geometry_index_count(fractional) ==
+            mesh::get_mesh_geometry_index_count(floored) &&
+        mesh::get_mesh_geometry_vertex_count(below) ==
+            mesh::get_mesh_geometry_vertex_count(minimum) &&
+        mesh::get_mesh_geometry_index_count(below) ==
+            mesh::get_mesh_geometry_index_count(minimum);
+  }
+
+  const std::vector<std::function<void(double)>> invalid_counts{
+      [](double value) { mesh::create_capsule_mesh_geometry(0.5, 1.0, value, 1.0); },
+      [](double value) { mesh::create_capsule_mesh_geometry(0.5, 1.0, 3.0, value); },
+      [](double value) { mesh::create_circle_mesh_geometry(0.5, value); },
+      [](double value) { mesh::create_cone_mesh_geometry(0.5, 1.0, value); },
+      [](double value) { mesh::create_cylinder_mesh_geometry(0.5, 0.5, 1.0, value); },
+      [](double value) { mesh::create_dodecahedron_mesh_geometry(0.5, value); },
+      [](double value) { mesh::create_icosahedron_mesh_geometry(0.5, value); },
+      [](double value) { mesh::create_icosphere_mesh_geometry(0.5, value); },
+      [](double value) { mesh::create_octahedron_mesh_geometry(0.5, value); },
+      [](double value) { mesh::create_plane_mesh_geometry(1.0, 1.0, value, 1.0); },
+      [](double value) { mesh::create_plane_mesh_geometry(1.0, 1.0, 1.0, value); },
+      [triangle_vertices, triangle_faces](double value) {
+        mesh::create_polyhedron_mesh_geometry(
+            triangle_vertices, triangle_faces, 0.5, value);
+      },
+      [](double value) { mesh::create_ring_mesh_geometry(0.25, 0.5, value); },
+      [](double value) { mesh::create_sphere_mesh_geometry(0.5, value, 2.0); },
+      [](double value) { mesh::create_sphere_mesh_geometry(0.5, 3.0, value); },
+      [](double value) { mesh::create_tetrahedron_mesh_geometry(0.5, value); },
+      [](double value) { mesh::create_torus_knot_mesh_geometry(0.5, 0.15, value, 3.0); },
+      [](double value) { mesh::create_torus_knot_mesh_geometry(0.5, 0.15, 3.0, value); },
+      [](double value) { mesh::create_torus_mesh_geometry(0.5, 0.2, value, 3.0); },
+      [](double value) { mesh::create_torus_mesh_geometry(0.5, 0.2, 3.0, value); },
+  };
+  for (const auto& invalid : invalid_counts) {
+    guards = guards && throws_range_error([&] {
+      invalid(std::numeric_limits<double>::quiet_NaN());
+    });
+    guards = guards && throws_range_error([&] {
+      invalid(std::numeric_limits<double>::infinity());
+    });
+  }
+
+  auto no_zero_area = [](const flight::Ref<types::MeshGeometry>& geometry) {
+    auto corner = flight::make_ref<types::MeshTriangleVertexIndices>();
+    const double triangles = mesh::get_mesh_geometry_triangle_count(geometry);
+    if (triangles == 0.0) return false;
+    for (double triangle = 0.0; triangle < triangles; triangle += 1.0) {
+      if (!mesh::get_mesh_geometry_triangle_vertex_indices(
+              corner, geometry, triangle)) {
+        return false;
+      }
+      const double p0 = corner->i0 * 12.0;
+      const double p1 = corner->i1 * 12.0;
+      const double p2 = corner->i2 * 12.0;
+      const double e1x = geometry->vertices.get_index(p1) -
+                         geometry->vertices.get_index(p0);
+      const double e1y = geometry->vertices.get_index(p1 + 1.0) -
+                         geometry->vertices.get_index(p0 + 1.0);
+      const double e1z = geometry->vertices.get_index(p1 + 2.0) -
+                         geometry->vertices.get_index(p0 + 2.0);
+      const double e2x = geometry->vertices.get_index(p2) -
+                         geometry->vertices.get_index(p0);
+      const double e2y = geometry->vertices.get_index(p2 + 1.0) -
+                         geometry->vertices.get_index(p0 + 1.0);
+      const double e2z = geometry->vertices.get_index(p2 + 2.0) -
+                         geometry->vertices.get_index(p0 + 2.0);
+      if (std::hypot(
+              e1y * e2z - e1z * e2y,
+              e1z * e2x - e1x * e2z,
+              e1x * e2y - e1y * e2x) <=
+          1.0e-12) {
+        return false;
+      }
+    }
+    return true;
+  };
+  const auto zero_height_cone =
+      mesh::create_cone_mesh_geometry(0.5, 0.0, 8.0);
+  const auto pointed_cylinder =
+      mesh::create_cylinder_mesh_geometry(0.5, 0.0, 1.0, 8.0);
+  const auto zero_height_cylinder =
+      mesh::create_cylinder_mesh_geometry(0.5, 0.5, 0.0, 8.0);
+  const auto zero_box = mesh::create_box_mesh_geometry(0.0, -2.0, 4.0);
+  const auto zero_quad = mesh::create_quad_mesh_geometry(-2.0, 0.0);
+  guards =
+      guards && no_zero_area(zero_height_cone) &&
+      no_zero_area(pointed_cylinder) &&
+      has_finite_unit_frames(zero_height_cylinder) &&
+      mesh::validate_mesh_geometry(zero_height_cylinder) &&
+      has_finite_unit_frames(zero_box) && has_tight_cached_bounds(zero_box) &&
+      has_finite_unit_frames(zero_quad) && has_tight_cached_bounds(zero_quad);
+
+  const auto projected = mesh::create_polyhedron_mesh_geometry(
+      triangle_vertices, triangle_faces, 2.0, 0.0);
+  guards = guards && near(projected->vertices.get_index(0.0), 0.0) &&
+           near(projected->vertices.get_index(1.0), 2.0) &&
+           near(projected->vertices.get_index(2.0), 0.0);
+  for (double vertex = 0.0;
+       vertex < mesh::get_mesh_geometry_vertex_count(projected);
+       vertex += 1.0) {
+    const double base = vertex * 12.0;
+    guards = guards &&
+             near(std::hypot(
+                      projected->vertices.get_index(base),
+                      projected->vertices.get_index(base + 1.0),
+                      projected->vertices.get_index(base + 2.0)),
+                  2.0);
+  }
+  if (inject_builder_guard_mutation) guards = false;
+  check(guards,
+        "builder counts floor and clamp at declared minima, reject every non-finite segment input, preserve custom seeds, and handle collapsed dimensions without invalid records");
+}
+
 } // namespace
 
 int main(int argc, char** argv) {
@@ -676,6 +1440,14 @@ int main(int argc, char** argv) {
       mutation == flight::String("--mutate-normalization");
   inject_group_bounds_mutation =
       mutation == flight::String("--mutate-group-bounds");
+  inject_builder_topology_mutation =
+      mutation == flight::String("--mutate-builder-topology");
+  inject_builder_seam_mutation =
+      mutation == flight::String("--mutate-builder-seams");
+  inject_builder_bounds_mutation =
+      mutation == flight::String("--mutate-builder-bounds");
+  inject_builder_guard_mutation =
+      mutation == flight::String("--mutate-builder-guards");
 
   construction_clone_and_owner_identity();
   bounds_cache_and_position_mutation();
@@ -686,5 +1458,8 @@ int main(int argc, char** argv) {
   packed_normalization_and_writes();
   normals_tangents_and_group_boundaries();
   layout_conversion_ownership_and_round_trip();
+  primitive_builder_topology_order_ownership_and_bounds();
+  primitive_builder_seam_behavior();
+  primitive_builder_parameter_guards_and_degeneracy();
   return failures;
 }
