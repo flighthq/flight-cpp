@@ -58,6 +58,12 @@ The other 16 pass arrays or `MapIterator`s and are not affected:
 
 Tool and host packages (`tool-*`, `host-*`, `vite-plugin-*`) are outside the SDK and were not checked.
 
-## Workaround carried
+## Carried compiler patch
 
-None at filing. The fix is the compiler patch below; no per-site repair is carried.
+[`compiler-new-set-copy.patch`](../../source-patches/compiler-new-set-copy.patch) spells a flight-cpp
+`new Set(argument)` whose single argument is itself a `Set` or `ReadonlySet` as `flight::Set<T>(argument).clone()`,
+exactly as `compiler-new-map-copy` does for Map. Values arrays, literals and empty construction are emitted as
+before. The values-iterator form (`new Set(set.values())`) was already refused by an unrelated rule
+(`contextual optionalSingle construction requires expression type evidence`) and still is. Fixtures are in
+`cppNewSetCopy.test.ts`. No repair was carried, so none is retired. The `scene3d-formats` site changes when its
+owner next regenerates.

@@ -1,0 +1,90 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index dfab358..793e581 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -5575,6 +5575,16 @@ function emitExpression(
+       ) {
+         return `${typeName}${typeArguments}(${args[0]}).clone()`;
+       }
++      // `new Set(existingSet)` is the same construction for a Set: a NEW set with the same values in the same
++      // order. flight::Set's copy constructor shares storage exactly as Map's does, so a Set argument is cloned.
++      if (
++        getCppRuntimeProfile(context.options) === 'flight-cpp' &&
++        ambientConstructorName === 'Set' &&
++        expression.arguments.length === 1 &&
++        isCppSetCopySourceCpp(expression.arguments[0]!, context)
++      ) {
++        return `${typeName}${typeArguments}(${args[0]}).clone()`;
++      }
+       return `${typeName}${typeArguments}(${args.join(', ')})`;
+     }
+     case 'object': {
+@@ -28895,6 +28905,14 @@ function isCppMapCopySourceCpp(argument: Readonly<IrExpression>, context: EmitCo
+   return collection?.reference.name === 'Map' || collection?.reference.name === 'ReadonlyMap';
+ }
+ 
++// Whether a `new Set(argument)` argument is itself a Set: a ReadonlySet or Set value, whose values the new set
++// must copy rather than share.
++function isCppSetCopySourceCpp(argument: Readonly<IrExpression>, context: EmitContext): boolean {
++  const type = getIrExpressionBindingTypeCpp(argument, context) ?? getIrExpressionTypeEvidenceCpp(argument, context);
++  const collection = type ? getIrAmbientCollectionTypeCpp(type, context, new Set()) : undefined;
++  return collection?.reference.name === 'Set' || collection?.reference.name === 'ReadonlySet';
++}
++
+ function getIrExpressionBindingTypeCpp(
+   expression: Readonly<IrExpression>,
+   context: EmitContext,
+diff --git a/packages/compiler-backend-cpp/src/cppNewSetCopy.test.ts b/packages/compiler-backend-cpp/src/cppNewSetCopy.test.ts
+new file mode 100644
+index 0000000..f8c5933
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppNewSetCopy.test.ts
+@@ -0,0 +1,48 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/x/src/x.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/x', upstreamDirectory: '/flight' });
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++function returned(contents: string, name: string): string {
++  const lines = contents.split('\n');
++  const start = lines.findIndex((line) => line.includes(` ${name}(`));
++  const body = lines.slice(start + 1).find((line) => line.trim().startsWith('return '));
++  return body?.trim() ?? '';
++}
++
++describe('new Set(existingSet)', () => {
++  const contents = emit(`
++export function copyReadonly(set: ReadonlySet<string>): Set<string> { return new Set(set); }
++export function copyTyped(set: Set<string>): Set<string> { return new Set<string>(set); }
++export function copyField(holder: { s: Set<string> }): Set<string> { return new Set(holder.s); }
++export function fromArray(values: string[]): Set<string> { return new Set(values); }
++export function fromLiteral(): Set<string> { return new Set(['a', 'b']); }
++export function empty(): Set<string> { return new Set<string>(); }
++`);
++
++  it('copies a Set argument into new storage instead of sharing the caller set', () => {
++    expect(returned(contents, 'copy_readonly')).toBe('return flight::Set<flight::String>(set).clone();');
++    expect(returned(contents, 'copy_typed')).toBe('return flight::Set<flight::String>(set).clone();');
++    expect(returned(contents, 'copy_field')).toBe('return flight::Set<flight::String>(holder->s).clone();');
++  });
++
++  it('leaves the constructor forms that already build a new set as they were', () => {
++    expect(returned(contents, 'from_array')).toBe('return flight::Set<flight::String>(values);');
++    expect(returned(contents, 'from_literal')).toBe(
++      'return flight::Set<flight::String>(flight::Array<flight::String>{flight::String("a"), flight::String("b")});',
++    );
++    expect(returned(contents, 'empty')).toBe('return flight::Set<flight::String>();');
++  });
++
++  it('does not reach a Map argument, which its own lowering already copies', () => {
++    const map = emit('export function copyMap(map: ReadonlyMap<string, number>): Map<string, number> { return new Map(map); }');
++    expect(returned(map, 'copy_map')).toBe('return flight::Map<flight::String, double>(map).clone();');
++  });
++});

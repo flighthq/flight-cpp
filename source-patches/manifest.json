@@ -3730,6 +3730,23 @@
       "unblocks": "@flighthq/registry registryTable.ts without emission repairs. The other packages that copy a Map with `new Map(map)` are fixed when their owners next regenerate them; this change does not move them.",
       "expires": "when upstream lowers `new Map(existingMap)` to an independent copy (docs/compiler-requests/new-map-copy-lowered-to-alias.md).",
       "appliedOn": "2026-10-13"
+    },
+    {
+      "id": "compiler-new-set-copy",
+      "dependency": "flight-compiler",
+      "patch": "compiler-new-set-copy.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "not a refusal: a silent miscompile. `new Set(existingSet)` lowered to `flight::Set<T>(existingSet)`, and when the argument already has the constructed type C++ selects Set's storage-sharing copy constructor over its explicit range constructor, so the new set was the caller's set and every add or delete through it mutated the source.",
+      "rewrite": "In `new` expression emission, a flight-cpp `new Set(argument)` whose single argument is itself a Set or ReadonlySet is spelled `flight::Set<T>(argument).clone()`, as compiler-new-map-copy does for Map. Set::clone() copies the values in insertion order into new storage. Every other Set constructor form (values array, literal, empty) is emitted exactly as before; the values-iterator form was already refused and is unchanged.",
+      "equivalence": "`new Set(set)` creates a new Set holding set's values in set's iteration order; clone() of the constructed Set is exactly that. When the argument has another element type the range constructor has already copied and clone() copies the fresh set again, which is unobservable. The source set is never written, and Set's live iteration over its own storage is unchanged.",
+      "verification": "New cppNewSetCopy.test.ts: 3 pass. The Set-argument case (ReadonlySet, explicitly typed Set, property-read Set) fails without the rewrite; the constructor-form control (values array, literal, empty) and the Map control pass both ways. Native: the emitted header, compiled and run, aliased before the rewrite (writes to the copy reached the original) and keeps the original intact afterwards, with insertion order, new Set(array) uniqueness and live iteration all matching node. compiler-backend-cpp suite at -j2 on top of compiler-new-map-copy: the same 47 pre-existing cppCompilerBackend.test.ts failures as the baseline, no new failure. All 47 compiler patches apply in manifest order onto the pinned checkout.",
+      "whyNotUpstreamFirst": "It is the Set twin of the Map silent miscompile; upstream receives docs/compiler-requests/new-set-copy-lowered-to-alias.md with the reproduction.",
+      "unblocks": "Correct `new Set(existingSet)` copies. At flight a627849 the one SDK site is @flighthq/scene3d-formats objRequirements.ts, fixed when its owner next regenerates; this change does not move it.",
+      "expires": "when upstream lowers `new Set(existingSet)` to an independent copy (docs/compiler-requests/new-set-copy-lowered-to-alias.md).",
+      "appliedOn": "2026-10-13"
     }
   ]
 }
