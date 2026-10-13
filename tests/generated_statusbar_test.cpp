@@ -165,5 +165,55 @@ int main() {
     return 1;
   }
 
+  // THE THREE ENTRY POINTS THIS SUITE NEVER CALLED, and each carries a semantic of its own rather than
+  // being a duplicate of one above. Their absence is why a whole function could regress unnoticed.
+  //
+  // getStatusBarHeight reads through the module's OWN scratch snapshot (the emitted body is
+  // `host.getInfo(scratch_info)->height`), so the answer must come from the host it was PASSED and must
+  // be re-read each call, not cached from the first.
+  source_height = 20.0;
+  if (!check(flight::statusbar::get_status_bar_height(info_provider) == 20.0,
+             "getStatusBarHeight reads the height from the passed host")) {
+    return 1;
+  }
+  source_height = 37.0;
+  if (!check(flight::statusbar::get_status_bar_height(info_provider) == 37.0,
+             "and re-reads it rather than caching the first answer")) {
+    return 1;
+  }
+
+  // getStatusBarInfo fills and RETURNS THE CALLER'S OWN object -- a fresh one would satisfy a field
+  // check while breaking every caller that holds the object it passed in. The stale style proves the
+  // host's answer OVERWROTE what was there rather than being merged into it.
+  {
+    const auto out = flight::statusbar::create_status_bar_info();
+    out->style = String("stale");
+    source_style = String("dark");
+    if (!check(flight::statusbar::get_status_bar_info(info_provider, out) == out,
+               "getStatusBarInfo returns the caller's own object") ||
+        !check(out->style == String("dark"),
+               "and the caller's object carries what the passed host reported")) {
+      return 1;
+    }
+  }
+
+  // disposeStatusBar releases the subscription. It is attached HERE first, so the case is
+  // self-contained whatever the attach path above left behind, and the SECOND dispose then proves the
+  // release is by identity rather than by count.
+  {
+    flight::statusbar::attach_status_bar(change_provider, info_provider, bar);
+    const int attached = unsubscribes;
+    flight::statusbar::dispose_status_bar(bar);
+    if (!check(unsubscribes == attached + 1,
+               "disposeStatusBar releases the attached subscription")) {
+      return 1;
+    }
+    flight::statusbar::dispose_status_bar(bar);
+    if (!check(unsubscribes == attached + 1,
+               "and a second dispose releases nothing, because the subscription is already gone")) {
+      return 1;
+    }
+  }
+
   return 0;
 }
