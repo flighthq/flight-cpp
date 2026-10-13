@@ -2813,6 +2813,22 @@
       "remaining": "None in pointerSelectionPolicy.ts at this pin.",
       "expires": "when nullable generic narrowing unwraps the present payload at calls.",
       "authoredOn": "2026-10-13"
+    },
+    {
+      "id": "gizmo-complete-state",
+      "path": "flight/gizmo/gizmo_state.hpp",
+      "package": "@flighthq/gizmo",
+      "status": "complete",
+      "supplies": "packages/gizmo/src/gizmoState.ts",
+      "derivedFrom": "527aaf20ae70c00b63bc31136471c9c21dc13a19795feb75f97eac242f9d3608",
+      "reason": "The emitter refuses GizmoRuntime recovery and the dependent create/dispose boundaries after flattening EntityRuntime heritage. Instantiation also exposes an undeclared Traits child cast, readonly-to-writable camera and feature projections, an optional active-node callback argument, exact Shape hit-area gaps, merged-node invalidation failures, and erased capturing-lambda identity at listener cleanup.",
+      "change": "Preserves the emitted transform, snapping, projection, ordering and layout algorithms while supplying one inherited runtime allocation, exact checked recovery, construction and reverse-order disposal; local node, shape-command, hit-area and signal helpers use the already-generated runtime cells without shadowing dependency modules.",
+      "equivalence": "One state retains one runtime and stable signal owners; twelve named handles retain source insertion order and screen-space layout; pointer identity brackets translate, rotate and scale commands; world/local axes, pivots, snapping, degree normalization, outline painting, mode cancellation, listener cleanup and idempotent detachment follow the a627849 source branches.",
+      "whyNotAPatchOrRepair": "A declaration repair cannot supply refused behavior or replace invalid emitted expressions. A source patch cannot create C++ interface heritage, recover erased owners, or encode the runtime's identity-bearing callable carrier without leaking target-specific representation into valid TypeScript.",
+      "unblocks": "The complete gizmo state module and both package aggregate headers, with scoped native coverage for state, handle, interaction, transform and lifecycle semantics.",
+      "remaining": "None in gizmoState.ts at this pin.",
+      "expires": "when declared interface heritage, exact runtime recovery, present generic narrowing, readonly structural propagation, hierarchy arguments and callback identity all lower faithfully.",
+      "authoredOn": "2026-10-13"
     }
   ]
 }

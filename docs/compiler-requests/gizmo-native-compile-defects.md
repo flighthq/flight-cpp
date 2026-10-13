@@ -38,6 +38,23 @@ commands so compilation could continue into the gizmo emission. Nothing from tha
    `NodeAny` and the merged `Node2D` view. The TypeScript source accepts `Shape` through the declared
    Node hierarchy; the C++ boundary has lost that structural acceptance (`gizmo_state.hpp:706` and
    the repeated handle sites).
+4. Instantiating the state templates shows that projection calls reconstruct writable
+   `StructuralRef<RowWritable<RowOf<Ref<Camera2D>>>>` from the runtime's declared readonly camera
+   view, and likewise reconstruct a writable `GizmoNode2DFeatures<NodeType>` row, before casting each
+   back to readonly. The structural runtime correctly refuses those capability escalations. The
+   emitted calls should pass the existing readonly views directly (the features site is
+   `gizmo_state.hpp:181`; the first camera site is `gizmo_state.hpp:574` and the outline sites repeat
+   it).
+5. `startGizmoTransform` retains the active node as `std::optional<NodeType>` and the local-space
+   branch passes that optional itself to `get_world_rotation`, whose generated callback requires a
+   readonly row over `NodeType`. The source narrows `active !== null`, so the emitted branch must pass
+   `active.value()` (`gizmo_state.hpp:513`).
+6. `connectGizmoHandle` stores three capturing lambdas directly in `std::function` and later asks
+   `disconnectSignal` to compare copies by JavaScript function identity. The runtime deliberately
+   rejects that guess with `callable identity is unavailable after std::function erasure`, so
+   disposal cannot remove the five registered listeners. The emitter must retain each closure in an
+   identity-bearing `flight::Function` target before it crosses the generated `std::function` ABI
+   (`gizmo_state.hpp:646-675`).
 
 ## Acceptance
 
