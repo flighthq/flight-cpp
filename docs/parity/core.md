@@ -82,7 +82,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/abc` | 4 | 2 | 17 | dedicated | none | 4 / 0 |
 | `@flighthq/net` | 5 | 3 | 15 | dedicated | none | 5 / 0 |
 | `@flighthq/socket` | 5 | 4 | 42 | dedicated | none | 5 / 0 |
-| `@flighthq/loader` | 4 | 2 | 91 | none | none | 3 / 1 |
+| `@flighthq/loader` | 4 | 2 | 91 | dedicated | none | 3 / 1 |
 | `@flighthq/assets` | 5 | 3 | 33 | dedicated | none | 4 / 1 |
 | `@flighthq/registry` | 3 | 1 | 12 | dedicated | none | 3 / 0 |
 | `@flighthq/registry-catalog` | 4 | 1 | 15 | none | none | 4 / 0 |
@@ -579,7 +579,27 @@ Upstream carries per-package records at `flight/agents/packages/loader/`: `statu
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+`flight_cpp.generated_loader` (dedicated) -- `tests/generated_loader_test.cpp`, against `flight/loader/load.hpp`, the
+one loader header that compiles at this pin. `load.ts` is the only module that emits (3 of 4; `resourceLoader.ts` is
+refused and `contract.ts` and `index.ts` behind it, so `resource_loader.hpp` declares `initialize_resource_loader` and
+cannot compile), so this covers that module and nothing else: the payload and its domain (bytes as a `Uint8Array` over
+the response buffer, text as a string, and absence as null), the request each call sends (one GET of the url, with
+`arraybuffer` or `text` as its response type), the options passed on (none when the caller gave none, the caller's
+signal when only that was given, and no progress slot when none was engaged), the progress mapping's payload and order
+(a `NetProgress` re-emitted as a `LoadProgress` carrying the url being loaded and the event's own loaded/total/phase),
+and the failure domain of both functions: a non-ok response, a body of the wrong kind and a rejected request all answer
+null without propagating.
+
+EXCLUDED by the recorded refusal, and not covered by anything here: the whole of `resourceLoader.test.ts` -- 26
+describe blocks and 89 cases -- namely `bandwidth throttle (maxBytesPerSecond)`, `byte progress`, `bytes progress`,
+`cancelResourceLoad`, `createResourceLoader`, `disposeResourceLoader`, `enableResourceLoaderItemSignals`,
+`error policy`, `getResourceLoadBytes`, `getResourceLoadCounts`, `getResourceLoadItemStatus`,
+`getResourceLoadProgress`, `initializeResourceLoader`, `pauseResourceLoad`, `pool allocation (PendingEntry pool)`,
+`queueResourceLoad`, `reset while loading`, `resetResourceLoader`, `resumeResourceLoad`, `retries`,
+`setResourceLoaderConcurrency`, `setResourceLoadPriority`, `startResourceLoad`, `timeout`, `weight-aware progress`
+and `weighted progress across outcomes`. Those are the flattened-interface-refinement-identity decision, which is closed
+as an honest refusal: no override or stand-in is added for them, and the row's 91 upstream cases are 2 ported and 89
+excluded.
 
 ### Local generation status
 
