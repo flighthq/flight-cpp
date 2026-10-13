@@ -255,6 +255,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_path_boolean_test",
+    srcs = ["generated_path_boolean_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_connectivity_test",
     srcs = ["generated_connectivity_test.cpp"],
     size = "small",
@@ -881,6 +888,7 @@ test_suite(
         ":generated_preferences_test",
         ":generated_power_test",
         ":generated_permissions_test",
+        ":generated_path_boolean_test",
         ":generated_registry_test",
         ":generated_render_state_test",
         ":generated_requirement_test",

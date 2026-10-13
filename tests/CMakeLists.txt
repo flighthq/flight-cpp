@@ -793,6 +793,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_compression_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_compression COMMAND flight_cpp_generated_compression_tests)
 
+add_executable(flight_cpp_generated_path_boolean_tests generated_path_boolean_test.cpp)
+target_include_directories(
+  flight_cpp_generated_path_boolean_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_path_boolean_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_path_boolean COMMAND flight_cpp_generated_path_boolean_tests)
+
 add_executable(flight_cpp_generated_abc_tests generated_abc_test.cpp)
 target_include_directories(
   flight_cpp_generated_abc_tests
@@ -992,6 +1000,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_socket signals socket)
 flight_cpp_package_test_labels(flight_cpp.generated_encoding encoding)
 flight_cpp_package_test_labels(flight_cpp.generated_binpack binpack)
 flight_cpp_package_test_labels(flight_cpp.generated_compression compression)
+flight_cpp_package_test_labels(flight_cpp.generated_path_boolean path-boolean)
 flight_cpp_package_test_labels(flight_cpp.generated_abc abc)
 flight_cpp_package_test_labels(flight_cpp.generated_xml xml)
 flight_cpp_package_test_labels(flight_cpp.generated_command command)
