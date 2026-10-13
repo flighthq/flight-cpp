@@ -268,5 +268,91 @@ int main() {
   }
 
   if (failures == 0) std::cout << "generated filesystem: all checks passed\n";
+  // THE PATH-NAME HELPERS, which this suite never called -- three pure functions whose absence from
+  // the list above is why nothing would notice them changing.
+  {
+    if (!check(flight::filesystem::get_file_base_name(String("a/b.txt")) == String("b.txt"),
+               "getFileBaseName returns the final path segment") ||
+        !check(flight::filesystem::get_file_directory_name(String("a/b.txt")) == String("a"),
+               "getFileDirectoryName returns every segment before the last") ||
+        !check(flight::filesystem::get_file_extension_name(String("a/b.txt")) == String(".txt"),
+               "getFileExtensionName returns the final extension")) {
+      return 1;
+    }
+  }
+
+  // THE EXISTENCE PREDICATES, one per QUESTION. Each asks its OWN host operation, so a host that can
+  // answer one cannot answer the other -- which is the file-versus-directory distinction the package
+  // exists to keep. A host that omits the operation resolves FALSE rather than guessing: the absence of
+  // a capability is not a "no", it is an absence, and the package documents false for it.
+  {
+    int file_asks = 0;
+    int directory_asks = 0;
+    auto file_only = flight::make_ref<Host>();
+    file_only->file_exists = [&file_asks](String) {
+      ++file_asks;
+      return flight::Task<bool>::resolve(true);
+    };
+    file_only->directory_exists = std::nullopt;
+
+    if (!check(flight::filesystem::file_exists(file_only, String("/a")).get(),
+               "fileExists answers from the host's own operation") ||
+        !check(file_asks == 1, "and it asked exactly once")) {
+      return 1;
+    }
+    // The SAME host, asked the other question, must not fall through to fileExists.
+    if (!check(!flight::filesystem::directory_exists(file_only, String("/a")).get(),
+               "directoryExists on a host with no directory operation resolves false, not the file answer") ||
+        !check(file_asks == 1, "and it did not consult the file operation")) {
+      return 1;
+    }
+
+    auto directory_only = flight::make_ref<Host>();
+    directory_only->directory_exists = [&directory_asks](String) {
+      ++directory_asks;
+      return flight::Task<bool>::resolve(true);
+    };
+    directory_only->file_exists = std::nullopt;
+    if (!check(flight::filesystem::directory_exists(directory_only, String("/a")).get(),
+               "directoryExists answers from the host's own operation") ||
+        !check(!flight::filesystem::file_exists(directory_only, String("/a")).get(),
+               "and fileExists on that host resolves false rather than borrowing the directory answer")) {
+      return 1;
+    }
+  }
+
+  // canAccessFile takes a MODE as well as a path, and an omitted operation is a documented false.
+  {
+    String seen_path;
+    String seen_mode;
+    auto host = flight::make_ref<Host>();
+    host->can_access_file = [&seen_path, &seen_mode](String path, String mode) {
+      seen_path = path;
+      seen_mode = mode;
+      return flight::Task<bool>::resolve(true);
+    };
+    if (!check(flight::filesystem::can_access_file(host, String("/a"), String("readable")).get(),
+               "canAccessFile answers from the host's operation") ||
+        !check(seen_path == String("/a") && seen_mode == String("readable"),
+               "and forwards both the path and the mode")) {
+      return 1;
+    }
+
+    const auto without = flight::make_ref<Host>();
+    if (!check(!flight::filesystem::can_access_file(without, String("/a"), String("readable")).get(),
+               "an omitted access operation resolves false rather than a silent true")) {
+      return 1;
+    }
+  }
+
+  // createFileSymlink takes no host at all: it OWNS its documented absence result, so it must answer
+  // false rather than requiring a provider that does not exist on this profile.
+  {
+    if (!check(!flight::filesystem::create_file_symlink(String("a"), String("b")).get(),
+               "createFileSymlink owns its absence result and answers false")) {
+      return 1;
+    }
+  }
+
   return failures == 0 ? 0 : 1;
 }
