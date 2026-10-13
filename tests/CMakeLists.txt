@@ -1377,6 +1377,26 @@ add_test(
   COMMAND flight_cpp_generated_media_parity_tests
 )
 flight_cpp_package_test_labels(flight_cpp.generated_media_parity media)
+
+# Behavioural parity for @flighthq/audio over the modules whose surface is reachable without a host
+# (audioResource, audioDecodeSlot, audioFormat). Host seams are supplied by the fixture, never faked.
+add_executable(
+  flight_cpp_generated_audio_parity_tests
+  generated_audio_parity_test.cpp
+)
+target_include_directories(
+  flight_cpp_generated_audio_parity_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_audio_parity_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(
+  NAME flight_cpp.generated_audio_parity
+  COMMAND flight_cpp_generated_audio_parity_tests
+)
+flight_cpp_package_test_labels(flight_cpp.generated_audio_parity audio)
 flight_cpp_package_test_labels(flight_cpp.generated_net net)
 flight_cpp_package_test_labels(flight_cpp.generated_socket signals socket)
 flight_cpp_package_test_labels(flight_cpp.generated_encoding encoding)
