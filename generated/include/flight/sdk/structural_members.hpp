@@ -696,6 +696,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("getThermalState") && requires { object.get_thermal_state; }) return (object.get_thermal_state);
   else if constexpr (Key::name.view() == std::string_view("getVersion") && requires { object.get_version; }) return (object.get_version);
   else if constexpr (Key::name.view() == std::string_view("getWidth") && requires { object.get_width; }) return (object.get_width);
+  else if constexpr (Key::name.view() == std::string_view("getWorldBoundsRectangle") && requires { object.get_world_bounds_rectangle; }) return (object.get_world_bounds_rectangle);
   else if constexpr (Key::name.view() == std::string_view("getWorldStatus") && requires { object.get_world_status; }) return (object.get_world_status);
   else if constexpr (Key::name.view() == std::string_view("ghosts") && requires { object.ghosts; }) return (object.ghosts);
   else if constexpr (Key::name.view() == std::string_view("gid") && requires { object.gid; }) return (object.gid);
@@ -2912,6 +2913,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("getThermalState") && requires(Object& object) { object.get_thermal_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_thermal_state)>>{};
   else if constexpr (Key::name.view() == std::string_view("getVersion") && requires(Object& object) { object.get_version; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_version)>>{};
   else if constexpr (Key::name.view() == std::string_view("getWidth") && requires(Object& object) { object.get_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_width)>>{};
+  else if constexpr (Key::name.view() == std::string_view("getWorldBoundsRectangle") && requires(Object& object) { object.get_world_bounds_rectangle; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_world_bounds_rectangle)>>{};
   else if constexpr (Key::name.view() == std::string_view("getWorldStatus") && requires(Object& object) { object.get_world_status; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_world_status)>>{};
   else if constexpr (Key::name.view() == std::string_view("ghosts") && requires(Object& object) { object.ghosts; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ghosts)>>{};
   else if constexpr (Key::name.view() == std::string_view("gid") && requires(Object& object) { object.gid; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gid)>>{};
@@ -5131,6 +5133,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->get_thermal_state; }) owner.bind_named("getThermalState", [object]() -> decltype(auto) { return (object->get_thermal_state); });
   if constexpr (requires { object->get_version; }) owner.bind_named("getVersion", [object]() -> decltype(auto) { return (object->get_version); });
   if constexpr (requires { object->get_width; }) owner.bind_named("getWidth", [object]() -> decltype(auto) { return (object->get_width); });
+  if constexpr (requires { object->get_world_bounds_rectangle; }) owner.bind_named("getWorldBoundsRectangle", [object]() -> decltype(auto) { return (object->get_world_bounds_rectangle); });
   if constexpr (requires { object->get_world_status; }) owner.bind_named("getWorldStatus", [object]() -> decltype(auto) { return (object->get_world_status); });
   if constexpr (requires { object->ghosts; }) owner.bind_named("ghosts", [object]() -> decltype(auto) { return (object->ghosts); });
   if constexpr (requires { object->gid; }) owner.bind_named("gid", [object]() -> decltype(auto) { return (object->gid); });
@@ -7383,6 +7386,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(get_thermal_state)
   FLIGHT_SDK_ROW_WIDENS(get_version)
   FLIGHT_SDK_ROW_WIDENS(get_width)
+  FLIGHT_SDK_ROW_WIDENS(get_world_bounds_rectangle)
   FLIGHT_SDK_ROW_WIDENS(get_world_status)
   FLIGHT_SDK_ROW_WIDENS(ghosts)
   FLIGHT_SDK_ROW_WIDENS(gid)
