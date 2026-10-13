@@ -9,19 +9,25 @@
 // The layout engine itself (textLayout.test.ts, 57 cases) needs a measure provider and is a later unit;
 // this file deliberately covers the two modules whose whole surface is reachable without one.
 
+#include <flight/textlayout/rich_text_content.hpp>
 #include <flight/textlayout/text_bounds.hpp>
 #include <flight/textlayout/text_format.hpp>
 #include <flight/textlayout/text_format_range.hpp>
 #include <flight/textlayout/text_layout.hpp>
+#include <flight/textlayout/text_layout_group.hpp>
 #include <flight/textlayout/text_layout_measure.hpp>
 #include <flight/textlayout/text_layout_runtime.hpp>
 #include <flight/textlayout/text_line_breaks.hpp>
+#include <flight/textlayout/text_metrics.hpp>
 #include <flight/types/rectangle.hpp>
+#include <flight/types/rich_text.hpp>
+#include <flight/types/rich_text_content.hpp>
 #include <flight/types/text_bounds_spec.hpp>
 #include <flight/types/text_format.hpp>
 #include <flight/types/text_format_range.hpp>
 #include <flight/types/text_label.hpp>
 #include <flight/types/text_layout.hpp>
+#include <flight/types/text_metrics.hpp>
 #include <flight/types/text_shaper.hpp>
 
 #include <algorithm>
@@ -894,6 +900,225 @@ int main() {
 
   // The layout gutter is a positive constant that textBounds shares rather than re-declares.
   check(flight::textlayout::text_layout_gutter > 0.0, "layout: the layout gutter is positive");
+
+  // ---- textFormatRange.test.ts -------------------------------------------------------------------
+
+  {
+    // The range carries the format BY REFERENCE -- identity, not a copy that happens to compare equal.
+    const auto format = size_format(16.0);
+    format->bold = true;
+    const auto range = flight::textlayout::create_text_format_range(format, 0.0, 10.0);
+    check(range->start == 0.0 && range->end == 10.0, "formatRange: the span is stored");
+    check(range->format == format, "formatRange: the format is retained by identity");
+  }
+
+  // ---- textLayoutGroup.test.ts -------------------------------------------------------------------
+
+  {
+    // A freshly built group is zeroed and carries only its format and span.
+    const auto format = size_format(16.0);
+    const auto group = flight::textlayout::create_text_layout_group(format, 0.0, 5.0);
+    check_close(group->ascent, 0.0, "group: ascent starts at zero");
+    check_close(group->descent, 0.0, "group: descent starts at zero");
+    check_close(group->height, 0.0, "group: height starts at zero");
+    check_close(group->leading, 0.0, "group: leading starts at zero");
+    check_close(group->line_index, 0.0, "group: lineIndex starts at zero");
+    check_close(group->offset_x, 0.0, "group: offsetX starts at zero");
+    check_close(group->offset_y, 0.0, "group: offsetY starts at zero");
+    check_close(group->width, 0.0, "group: width starts at zero");
+    check(static_cast<double>(group->positions.size()) == 0.0, "group: positions start empty");
+
+    const auto span = flight::textlayout::create_text_layout_group(size_format(24.0), 3.0, 10.0);
+    check(span->start_index == 3.0 && span->end_index == 10.0,
+          "group: the provided span is stored verbatim");
+    check(span->format == span->format,
+          "group: the provided format is the one the group holds");
+    check(flight::textlayout::create_text_layout_group(size_format(16.0), 0.0, 1.0) !=
+              flight::textlayout::create_text_layout_group(size_format(16.0), 0.0, 1.0),
+          "group: each call builds a distinct object");
+  }
+
+  // ---- textMetrics.test.ts -----------------------------------------------------------------------
+
+  {
+    const auto metrics = flight::textlayout::create_text_metrics();
+    check_close(metrics->height, 0.0, "metrics: a fresh object has zero height");
+    check_close(metrics->num_lines, 0.0, "metrics: a fresh object has zero lines");
+    check_close(metrics->width, 0.0, "metrics: a fresh object has zero width");
+
+    // The measured size is the layout's extent CEILED to whole pixels -- fractional glyph extents are
+    // rounded out, not truncated, so a 12.2px run reports 13 and a 8.7px one reports 9.
+    auto layout = flight::make_ref<flight::types::TextLayoutResult>();
+    layout->num_lines = 2.0;
+    layout->text_height = 8.7;
+    layout->text_width = 12.2;
+    flight::textlayout::get_text_metrics(metrics, layout);
+    check_close(metrics->width, 13.0, "metrics: the width is the layout width, ceilinged");
+    check_close(metrics->height, 9.0, "metrics: the height is the layout height, ceilinged");
+    check_close(metrics->num_lines, 2.0, "metrics: the line count is taken as-is");
+  }
+
+  // ---- richTextContent.test.ts -------------------------------------------------------------------
+  //
+  // richTextContent is supplied by a hand-written override, so everything below pins OUR code rather
+  // than the emitter's output. It is the richest hand-written surface in this package: entity
+  // construction, format merging, entity decoding, whitespace condensing, maxChars clipping, password
+  // masking, and the range-splitting that re-serializes the formatted runs.
+
+  const auto rich_data = [](const char* text) {
+    auto data = flight::make_ref<flight::types::RichTextData>();
+    data->auto_size = flight::String("none");
+    data->background = false;
+    data->background_color = static_cast<double>(0xffffffu);
+    data->border = false;
+    data->border_color = 0.0;
+    data->condense_white = false;
+    data->default_text_format = flight::make_ref<flight::types::TextFormat>();
+    data->height = 100.0;
+    data->max_chars = -1.0;
+    data->mouse_wheel_enabled = true;
+    data->multiline = true;
+    data->scroll_h = 0.0;
+    data->scroll_v = 1.0;
+    data->selectable = true;
+    data->text = flight::String(text);
+    data->text_color = static_cast<double>(0x000000ffu);
+    data->text_format = flight::make_ref<flight::types::TextFormat>();
+    data->text_format_ranges = flight::Array<flight::Ref<flight::types::TextFormatRange>>{};
+    data->word_wrap = false;
+    return data;
+  };
+  const auto with_password = [](const char* value) {
+    return std::optional<std::optional<flight::String>>{
+        std::optional<flight::String>{flight::String(value)}};
+  };
+
+  {
+    const auto content = flight::textlayout::create_rich_text_content();
+    check(content->text == flight::String(""), "richContent: a fresh content has no text");
+    check(static_cast<double>(content->format_ranges.size()) == 0.0,
+          "richContent: a fresh content has no format ranges");
+  }
+
+  {
+    // Plain text under the base format: one range spanning it all, carrying the base colour.
+    const auto content = flight::textlayout::create_rich_text_content();
+    auto data = rich_data("hello");
+    data->text_color = static_cast<double>(0x336699ffu);
+    flight::textlayout::compute_rich_text_content(content, data);
+    check(content->text == flight::String("hello"), "richContent: plain text is copied through");
+    check(static_cast<double>(content->format_ranges.size()) == 1.0,
+          "richContent: plain text produces a single format range");
+    check(content->format_ranges.element(0.0)->format->color ==
+              std::optional<double>{static_cast<double>(0x336699ffu)},
+          "richContent: the range carries the field's base colour");
+    check(content->format_ranges.element(0.0)->start == 0.0 &&
+              content->format_ranges.element(0.0)->end == 5.0,
+          "richContent: the base range spans the whole text");
+  }
+
+  {
+    const auto content = flight::textlayout::create_rich_text_content();
+    auto data = rich_data("A&amp;B");
+    flight::textlayout::compute_rich_text_content(content, data);
+    check(content->text == flight::String("A&B"), "richContent: named entities are decoded");
+  }
+
+  {
+    // condenseWhite collapses each whitespace run to one space AND trims the leading space of the
+    // first chunk; the trailing space survives, which is why the upstream expectation ends in "B ".
+    const auto content = flight::textlayout::create_rich_text_content();
+    auto data = rich_data("  A \n\t B  ");
+    data->condense_white = true;
+    flight::textlayout::compute_rich_text_content(content, data);
+    check(content->text == flight::String("A B "),
+          "richContent: condenseWhite collapses runs and trims the leading space only");
+  }
+
+  {
+    // maxChars clips the text AND the range ends with it, so a caller clamping the string cannot
+    // leave a range pointing past the end.
+    const auto content = flight::textlayout::create_rich_text_content();
+    auto data = rich_data("Hello world");
+    data->max_chars = 7.0;
+    flight::textlayout::compute_rich_text_content(content, data);
+    check(content->text == flight::String("Hello w"), "richContent: maxChars clips the text");
+    check(content->format_ranges.element(static_cast<double>(content->format_ranges.size()) - 1.0)
+                  ->end == 7.0,
+          "richContent: the last range ends where the clipped text does");
+  }
+
+  {
+    const auto masked = flight::textlayout::create_rich_text_content();
+    flight::textlayout::compute_rich_text_content(masked, rich_data("secret"), with_password("*"));
+    check(masked->text == flight::String("******"),
+          "richContent: every character is replaced by the password character");
+
+    // An EMPTY password character is not "no masking" -- it selects the bullet mask.
+    const auto bulleted = flight::textlayout::create_rich_text_content();
+    flight::textlayout::compute_rich_text_content(bulleted, rich_data("ab"), with_password(""));
+    check(bulleted->text == flight::String(u"••"),
+          "richContent: an empty password character falls back to the bullet mask");
+  }
+
+  {
+    // Serialized ranges are laid over the plain text and re-serialized into contiguous runs: the
+    // override splits the base range and leaves the untouched head and tail in place.
+    const auto content = flight::textlayout::create_rich_text_content();
+    auto data = rich_data("hello");
+    auto italic = flight::make_ref<flight::types::TextFormat>();
+    italic->italic = true;
+    data->text_format_ranges = flight::Array<flight::Ref<flight::types::TextFormatRange>>{
+        flight::textlayout::create_text_format_range(italic, 1.0, 4.0)};
+    flight::textlayout::compute_rich_text_content(content, data);
+
+    check(static_cast<double>(content->format_ranges.size()) == 3.0,
+          "richContent: an override range splits the base range into three");
+    const auto& head = content->format_ranges.element(0.0);
+    const auto& middle = content->format_ranges.element(1.0);
+    const auto& tail = content->format_ranges.element(2.0);
+    check(head->start == 0.0 && head->end == 1.0 && !head->format->italic.has_value(),
+          "richContent: the span before the override keeps the base format");
+    check(middle->start == 1.0 && middle->end == 4.0 && middle->format->italic == std::optional<bool>{true},
+          "richContent: the overridden span carries the merged format");
+    check(tail->start == 4.0 && tail->end == 5.0 && !tail->format->italic.has_value(),
+          "richContent: the span after the override keeps the base format");
+  }
+
+  {
+    // The override MERGES onto the base rather than replacing it: an unset field on the override
+    // keeps the base's value.
+    const auto content = flight::textlayout::create_rich_text_content();
+    auto data = rich_data("hello");
+    data->text_color = static_cast<double>(0x000000ffu);
+    auto red = flight::make_ref<flight::types::TextFormat>();
+    red->color = static_cast<double>(0xff0000ffu);
+    data->text_format_ranges = flight::Array<flight::Ref<flight::types::TextFormatRange>>{
+        flight::textlayout::create_text_format_range(red, 1.0, 4.0)};
+    flight::textlayout::compute_rich_text_content(content, data);
+    check(content->format_ranges.element(1.0)->format->color ==
+              std::optional<double>{static_cast<double>(0xff0000ffu)},
+          "richContent: a serialized range merges its colour over the base format");
+  }
+
+  {
+    // The runtime side is one retained, reusable content value -- the same identity contract the
+    // layout result has.
+    const auto runtime = flight::make_ref<flight::types::RichTextRuntime>();
+    const auto attached = flight::textlayout::get_rich_text_content(runtime);
+    check(attached != nullptr, "richContent: content is attached to runtime state");
+    check(runtime->rich_text_content.has_value() && runtime->rich_text_content.value() == attached,
+          "richContent: the runtime holds the content it just produced");
+    check(flight::textlayout::get_rich_text_content(runtime) == attached,
+          "richContent: an existing content value is reused, by identity");
+
+    flight::textlayout::clear_rich_text_content(runtime);
+    check(!runtime->rich_text_content.has_value(), "richContent: clearing detaches the content");
+
+    const auto reattached = flight::textlayout::get_rich_text_content(runtime);
+    check(reattached != nullptr && reattached != attached,
+          "richContent: after a clear a fresh content value is attached");
+  }
 
   return failures == 0 ? 0 : 1;
 }
