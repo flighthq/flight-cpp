@@ -331,15 +331,17 @@ int main() {
       seen_mode = mode;
       return flight::Task<bool>::resolve(true);
     };
-    if (!check(flight::filesystem::can_access_file(host, String("/a"), String("readable")).get(),
+    // The mode is deliberately NOT "readable": a mutation hardcoding that value would otherwise be
+    // indistinguishable from a faithful forward, which is exactly what it was until this was changed.
+    if (!check(flight::filesystem::can_access_file(host, String("/a"), String("writable")).get(),
                "canAccessFile answers from the host's operation") ||
-        !check(seen_path == String("/a") && seen_mode == String("readable"),
-               "and forwards both the path and the mode")) {
+        !check(seen_path == String("/a") && seen_mode == String("writable"),
+               "and forwards both the path and the mode it was given")) {
       return 1;
     }
 
     const auto without = flight::make_ref<Host>();
-    if (!check(!flight::filesystem::can_access_file(without, String("/a"), String("readable")).get(),
+    if (!check(!flight::filesystem::can_access_file(without, String("/a"), String("writable")).get(),
                "an omitted access operation resolves false rather than a silent true")) {
       return 1;
     }
