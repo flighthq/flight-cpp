@@ -379,6 +379,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [A structural subtype argument must retain an identity-preserving view](structural-subtype-reference-argument-owner.md)
   — scene-document's token owner cannot enter the smaller readonly position parameter whose fields it
   already carries.
+- [Reassigning a narrowed union must replace the whole variant](narrowed-union-reassignment-must-replace-variant.md)
+  — scene-document assigns a fresh number-or-failure result after narrowing the same local to number,
+  but the emitter writes the entire variant into its `double` alternative.
 - [Callables as arms of a contextual union](callable-arm-in-contextual-union.md) — four swf tag handlers.
 - [Narrowing must prove the payload present](narrowed-union-presence-proof.md) — swf parse-option merge;
   font format inference (supplied by override).
