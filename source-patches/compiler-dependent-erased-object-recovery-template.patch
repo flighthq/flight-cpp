@@ -1,0 +1,39 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -14587,6 +14587,22 @@ describe('the flight-cpp backend', () => {
+     expect(direct).not.toContain('.value().value()');
+   });
+ 
++  it('disambiguates checked erased-object recovery in a dependent function', () => {
++    const contents = emitIrModuleCpp(
++      lower(
++        'dependentErasedObjectRecovery.ts',
++        `interface Payload { readonly id: string }
++         interface Box { readonly value: unknown }
++         export function recover<Type extends Box>(box: Type): Payload {
++           return box.value as Payload;
++         }`,
++      ).module,
++      { runtimeProfile: 'flight-cpp' },
++    ).contents;
++
++    expect(contents).toContain('erased_value.template object_if<Payload>()');
++  });
++
+   // Red before the fix, green after, and the only thing that can say so is the compiler: both shapes below
+   // were handed to g++ as failing output and are handed to it as passing output now.
+   it.skipIf(!cppSyntaxGate.available)('compiles the open-lookup recovery through its carrier', () => {
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -24503,7 +24503,10 @@ function getCppErasedValueAssertionCpp(
+         ? `${emitExpression(expression, context)}.value()`
+         : emitExpression(expression, context);
+-    return `([&]() -> ${emitType(target, context)} { const auto& ${erased} = ${erasedValue}; auto ${recovered} = ${erased}.object_if<${referenceElement}>(); if (!${recovered}) throw std::logic_error("erased value does not hold the asserted object type"); return ${recovered}; }())`;
++    const objectIf =
++      context.anonymousStructTypeParameters.length > 0 ? 'template object_if' : 'object_if';
++    return `([&]() -> ${emitType(target, context)} { const auto& ${erased} = ${erasedValue}; auto ${recovered} = ${erased}.${objectIf}<${referenceElement}>(); if (!${recovered}) throw std::logic_error("erased value does not hold the asserted object type"); return ${recovered}; }())`;
+   }
+   // A union target is several alternatives, so the assertion is the same checked selection the contextual
+   // lane builds: each alternative asks the runtime for the kind it needs. Without this the assertion fell

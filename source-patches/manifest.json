@@ -4,6 +4,23 @@
   "note": "Patches applied to a pinned sibling checkout before generation, so a module the compiler refuses to lower today can still ship. A patch here may only rewrite an expression into an equivalent the compiler does lower. It may NEVER change observable behavior -- absence, reference identity, equality, ordering, exception shape, task settlement -- because the generated header is then tested against the patched source, so a behavioral patch is a lie our own tests would certify. Each patch states the equivalence that makes it safe and the refusal it answers. The patch is applied after the pin integrity check and reverted when generation ends, so the checkout is only ever dirty inside one run. `baseCommit` pins the patch to the revision it was written against: a pin move that breaks the patch fails loudly instead of silently applying to different code.",
   "patches": [
     {
+      "id": "compiler-dependent-erased-object-recovery-template",
+      "dependency": "flight-compiler",
+      "patch": "compiler-dependent-erased-object-recovery-template.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/materials",
+      "answers": "diagnostic",
+      "refusal": "an object_if<T>() recovery from an erased value inside a generic function is emitted without C++'s template disambiguator, so instantiating materials copyMaterialFields<T> fails even though every package header compiles in isolation without instantiation",
+      "rewrite": "Emits `.template object_if<T>()` for checked erased-object recovery while a dependent type parameter is active and leaves the existing spelling byte-identical elsewhere; adds a focused backend fixture for the generic assertion shape.",
+      "equivalence": "The template keyword is a C++ parsing disambiguator only. The same Any value performs the same exact-type lookup, returns the same shared owner, and throws on the same mismatch; no cast, alternative selection, copy, or source behavior changes.",
+      "verification": "The backend fixture requires the dependent spelling. Materials-only regeneration emits generic clone/copy owners, all 24 headers compile at -j2, and the native materials test instantiates Standard-PBR clone/copy including the asserted standard-block branch.",
+      "whyNotUpstreamFirst": "This is a backend syntax defect at the pinned compiler revision and the one-token target spelling is fully determined; the request and focused reproduction accompany the carried patch.",
+      "unblocks": "@flighthq/materials generic concrete-owner clone/copy instantiation and any later dependent checked object assertion using the same lowering.",
+      "expires": "when upstream emits a template-disambiguated checked object recovery in dependent contexts.",
+      "appliedOn": "2026-10-13"
+    },
+    {
       "id": "compiler-error-name-and-erased-error-reads",
       "dependency": "flight-compiler",
       "patch": "compiler-error-name-and-erased-error-reads.patch",
