@@ -418,11 +418,26 @@ Upstream carries per-package records at `flight/agents/packages/input/`: `status
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_input` — `tests/generated_input_test.cpp` (dedicated). PRE-EXISTING and untouched: it pins the
+  key-repeat timer's contract — the callback runs immediately on press, again after the delay, then every interval
+  until stop(), and a new start cancels what the previous one left behind — driven by pumping a queue rather than by
+  waiting.
+- `flight_cpp.generated_input_manager` — `tests/generated_input_manager_test.cpp` (dedicated), added by the unit that
+  audited this package for the half the timer test does not reach: the axis and radial stick dead zones, ported from
+  `inputManager.test.ts`'s own cases for them. The axis maps a value inside `[-deadZone, deadZone]` to 0 and rescales
+  the rest linearly onto `[-1, 1]` with full deflection still exactly 1 and a zero zone passing the raw value through;
+  the stick compares the RADIAL magnitude rather than either axis, preserves direction, rescales onto `[0, 1]`, and is
+  asserted alias-safe by passing the output object's own fields back in as the inputs. Six mutations against the
+  override that supplies the module: five with teeth (zero-zone pass-through 2 failures, axis rescale 3, per-axis stick
+  magnitude 1, stick scale 3, output-instead-of-input 5) and one observationally equivalent -- making the axis boundary
+  exclusive changes nothing, because the rescale is continuous and both spellings answer 0 exactly at the zone's edge.
+
+NOT covered, and not claimed: the manager's event/state transitions, pointer and touch ingress, focus and capture,
+multiple devices, and frame boundaries — 63 upstream cases this unit did not port.
 
 ### Local generation status
 
-2 of 3 modules emitted, 1 refused; 3 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
+3 of 3 modules emitted, 0 refused; 0 refusing modules. (The row read 2 of 3 with one refusal before this audit; the package is fully emitted at the current pin.) Read from the committed generated tree, not from the pin above.
  Hand-written overrides shadow generated headers here: `input-manager-refused-state-and-timer-boundaries`.
 
 ### Web-only exclusions
