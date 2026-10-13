@@ -387,3 +387,5 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   silent until instantiation: every `@flighthq/node` world-matrix query fails, which blocks velocity's transform baseline natively. No workaround.
 - [An optional boolean operand of `&&` must be tested for its value, not its presence](logical-and-optional-operand-truthiness.md) —
   silent miscompilation: `a && b.flag` with `flag?: boolean` treats an explicit `false` as true; flow's overlay walks ticked and drew through `updateBelow: false` / `renderBelow: false`. Carried by the `flow-optional-overlay-flags-explicit` patch.
+- [`Object.values` of a const object table must enumerate its members](object-values-of-const-table-unbound-keys.md) —
+  silent miscompilation: the values come from a dynamic view whose keys the member table never binds, so the array is empty; statechart rejected every conditional transition as an invalid comparison. Carried by the `statechart-comparison-closed-set` patch.
