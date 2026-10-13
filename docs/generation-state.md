@@ -5993,3 +5993,41 @@ Consequences:
    described as missing because generation cannot reach them.
 3. Long runs should use `--progress`. A timeout without a final phase/module event is no longer accepted
    as evidence of a compiler loop.
+
+## P-CO2/T-CORE base-truth audit, 2026-10-13
+
+Read-only, from committed artifacts only: for each package on the queue's P-CO2 CORE row, what the committed
+inventory says it emits, and whether a focused native test is already registered for it in `tests/CMakeLists.txt`.
+No package was regenerated and no test was written for this audit.
+
+| package | generated | registered native test |
+| --- | --- | --- |
+| net | 5 of 5, 0 refused | `flight_cpp.generated_net` |
+| socket | 5 of 5, 0 refused | `flight_cpp.generated_socket`, `flight_cpp.generated_socket_statechart` |
+| loader | 3 of 4, 1 refused | `flight_cpp.generated_loader` |
+| assets | 4 of 5, 1 refused | `flight_cpp.generated_assets` |
+| registry | 3 of 3, 0 refused | `flight_cpp.generated_registry` |
+| registry-catalog | 4 of 4, 0 refused | none |
+| registry-codegen | 3 of 3, 0 refused | none |
+| log | 2 of 3, 1 refused | `flight_cpp.generated_log`, `flight_cpp.generated_log_levels_and_sinks` |
+| debug | 3 of 4, 1 refused | none |
+| requirements (`@flighthq/requirement`) | 4 of 4, 0 refused | `flight_cpp.generated_requirement`, `flight_cpp.generated_requirement_codegen` |
+| importdiagnostics | 4 of 4, 0 refused | `flight_cpp.generated_importdiagnostics` |
+
+Two things this audit found, both about the record rather than the code.
+
+**The queue row did not distinguish landed work from remaining work.** Eight of these eleven packages already had a
+registered native test when the row was read, several of them authored directly by the user (`9297ac31` for movieclip,
+`7b0385aa` for importdiagnostics) rather than by a builder. Two dispatches were made against rows whose work had
+landed, and in both cases the only thing that stopped a second implementation from being committed over the first was
+a gate -- the package-label check in `scripts/packageScope.test.mjs`, which compares each registered test's labels
+against the headers it includes. A queue row that names a package is not evidence that the package is unaddressed;
+`git log -- <path>` on the test that would carry the work is what settles it.
+
+**Three rows have no test, and each for a reason that is not missing work.** `registry-catalog` and
+`registry-codegen` are in no other package's dependencies and not in `@flighthq/sdk`'s, so no package-scoped run can
+regenerate them at all -- their committed output is whole-SDK residue and no test can be scoped to them.
+`debug`'s headers cannot compile: `flight/render/render_state.hpp` includes `flight/types/renderer.hpp`, which the
+current types row does not emit, so the package is reachable only after the render row migrates. All three `none`
+cells in `docs/parity/core.md` are accurate as written; the row-level audit found no stale coverage claim there, and
+the CORE inventory's coverage column was corrected earlier the same day for the rows that were wrong.
