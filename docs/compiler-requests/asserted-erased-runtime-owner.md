@@ -84,14 +84,15 @@ the declared interface heritage, stores the same derived object in the base slot
 ## Fourth measured site: `@flighthq/gizmo`
 
 At the same Flight/compiler pins, `getGizmoRuntime<NodeType>` is refused under
-`cpp-structural-assertion-owner-unproven` at `gizmoState.ts:481`. The source stores a
+`cpp-structural-assertion-owner-unproven` at `gizmoState.ts:492`. The source stores a
 `GizmoRuntime<NodeType>` in `GizmoState<NodeType>`'s inherited `EntityRuntime` slot during
 construction and later recovers it through an assertion. The asserted owner adds the complete gizmo
 state: bounds and scratch geometry, camera and selection references, handle/outline nodes, signals,
-snap and pivot settings, active drag state, and lifecycle cleanup storage. The emitter flattens
+viewport dimensions, snap and pivot settings, active drag state, and lifecycle cleanup storage. The emitter flattens
 `GizmoRuntime extends EntityRuntime`, so the generated owners have neither declared heritage nor a
-checked recovery path and the accessor is omitted. Every public state operation retained in the
-partial header calls that missing accessor.
+checked recovery path and the accessor is omitted. `createGizmoState` and `disposeGizmoState` are
+then refused as callers of that omitted declaration, while every retained public state operation
+also calls it.
 
 The native completion must keep one derived runtime allocation, store it through the declared base
 slot, and recover that same identity along real C++ heritage. It must not copy the runtime or maintain
