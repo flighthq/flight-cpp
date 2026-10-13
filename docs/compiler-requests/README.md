@@ -127,6 +127,16 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   functions with throws, so log parity is not honest.
 - [A binding initialized from a non-null-asserted collection get is present](non-null-asserted-collection-get-binding.md) —
   carried for log by the source patch `log-buffered-sink-state-explicit-guard`.
+- [A non-null assertion must not turn an absent property into `optional::value()`](non-null-asserted-optional-property-return.md) —
+  `@flighthq/entity`'s `getEntityRuntime` throws `std::bad_optional_access` for a fresh entity even
+  though the asserted property read returns `undefined` in JavaScript; native callers currently
+  guard the present-value path with `hasEntityRuntime`.
+- [Finishing a structural construction bag must preserve object identity](structural-construction-finish-identity.md) —
+  `@flighthq/entity`'s anonymous allocation row is materialized as a second nominal owner at
+  `finishEntity`, while the source assertion returns the same object.
+- [A Proxy returned as its nominal target must retain its traps](proxy-return-loses-nominal-traps.md) —
+  `createGuardedEntityRuntime` constructs a structural write proxy and then loses it while recovering
+  the original nominal pointer, so direct binding writes cannot reach the reporter.
 - [Emit declared interface heritage so derived references widen to their base](interface-heritage-widening.md) —
   carried by the emission repairs `adjustments-color-matrix-interface-heritage` and `adjustments-tint-interface-heritage`,
   and by selection's runtime-type completion headers.

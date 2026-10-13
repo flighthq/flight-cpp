@@ -110,6 +110,11 @@ class RowCell {
 
   // Erased write. False means the value is not of this cell's type and nothing was written.
   virtual bool assign_any(const Any& value) = 0;
+
+  // Clears an optional cell without naming its payload type at the call site. Generated writes of
+  // `undefined` arrive as `std::nullopt_t`, while the row owns (for example)
+  // `std::optional<Ref<EntityRuntime>>`; only the erased cell knows that complete storage type.
+  virtual bool assign_absent() = 0;
 };
 
 template <typename Value>
@@ -134,6 +139,15 @@ class TypedRowCell : public RowCell {
       if (!typed) return false;
       set(std::move(*typed));
       return true;
+    }
+  }
+
+  bool assign_absent() final {
+    if constexpr (detail::is_std_optional<Value>::value) {
+      set(std::nullopt);
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -1300,6 +1314,10 @@ void row_set(const StructuralRef<Schema>& target, const Symbol& key, Value&& val
   if (!target.shared_owner()) throw std::bad_weak_ptr();
   target.shared_owner()->before_write(key);
   using Stored = std::remove_cvref_t<Value>;
+  if constexpr (std::same_as<Stored, std::nullopt_t>) {
+    const auto cell = target.shared_owner()->symbol_cell(key);
+    if (cell && cell->assign_absent()) return;
+  }
   if (auto* cell = target.shared_owner()->template symbol_value_if<Stored>(key)) {
     *cell = std::forward<Value>(value);
     return;

@@ -248,6 +248,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_entity_test",
+    srcs = ["generated_entity_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_command_test",
     srcs = ["generated_command_test.cpp"],
     size = "small",
