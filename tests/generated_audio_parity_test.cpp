@@ -1109,10 +1109,18 @@ int main() {
     // BASE64. The loader decodes the text to bytes and hands them to the same bytes path, so the slot
     // sees real decoded bytes rather than the base64 text.
     int decodes = 0;
+    std::size_t seen_bytes = 0;
     const auto buffer = mock_buffer();
     const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
-    capabilities->mp3 = decoding_slot(buffer, &decodes);
+    const auto base64_slot = flight::make_ref<flight::types::HostAudioDecodeFormatCapability>();
+    base64_slot->decode = [&decodes, &seen_bytes, &buffer](flight::Uint8Array bytes, flight::AbortSignal) {
+      ++decodes;
+      seen_bytes = bytes.length();
+      return flight::Task<std::optional<flight::AudioBuffer>>::resolve(std::optional<flight::AudioBuffer>{buffer});
+    };
+    capabilities->mp3 = base64_slot;
     flight::AbortController controller;
+    // "YWJj" is btoa('abc'): three bytes, not the four characters of the encoded text.
     const auto decoded = flight::audio::load_audio_resource_from_base64(
                               capabilities, flight::String("YWJj"), flight::String("audio/mpeg"),
                               controller.signal)
@@ -1120,6 +1128,8 @@ int main() {
     check(decoded->buffer.has_value() && decoded->buffer.value().length == buffer.length,
           "base64: encoded bytes decode into a resource");
     check(decodes == 1, "base64: the decoder is called once");
+    check(seen_bytes == 3,
+          "base64: the decoder receives the DECODED bytes, not the encoded text");
 
     // An abort that lands while the decode is in flight rejects rather than resolving a result.
     flight::AbortController mid;
