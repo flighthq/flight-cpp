@@ -952,7 +952,7 @@ add_test(
   NAME flight_cpp.generated_textbidi_parity
   COMMAND flight_cpp_generated_textbidi_parity_tests
 )
-flight_cpp_package_test_labels(flight_cpp.generated_textbidi_parity textbidi)
+flight_cpp_package_test_labels(flight_cpp.generated_textbidi_parity textbidi types)
 
 add_executable(flight_cpp_c_api_tests c_api_test.c)
 target_link_libraries(flight_cpp_c_api_tests PRIVATE Flight::C)
