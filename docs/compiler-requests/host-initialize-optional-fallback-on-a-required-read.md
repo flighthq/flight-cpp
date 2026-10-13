@@ -11,20 +11,38 @@ lowers it as if the read were optional:
 
 ```cpp
 flight::row_set<flight::RowKey<"audio">>(out, static_cast<flight::Ref<flight::types::HostAudioCapabilities>>(
-    flight::row_get<flight::RowKey<"audio">>(capabilities).value_or(flight::make_ref<HostAudioCapabilities>())));
+    flight::row_get<flight::RowKey<"audio">>(capabilities).value_or(
+        flight::make_ref<anonymous_bbb5ab6ffe89be03<Capabilities>>(anonymous_bbb5ab6ffe89be03<Capabilities>{}))));
 ```
 
-`row_get` on that schema yields a `Ref<HostAudioCapabilities>` -- a `std::shared_ptr` -- which has no `value_or`. The
-result is a compile error, one per group:
+There are **two** independent defects in that one expression, and the first masks the second.
+
+**(1) `value_or` on a non-optional.** `row_get` on that schema yields a `Ref<HostAudioCapabilities>` -- a
+`std::shared_ptr` -- which has no `value_or`. Measured: 19 identical errors before the compiler stops, one per group,
+all of the shape
 
 ```
 error: no member named 'value_or' in 'std::shared_ptr<flight::types::HostAudioCapabilities>'
 ```
 
+**(2) The fallback arm's type.** The `?? {}` fallback mints an anonymous struct -- `anonymous_bbb5ab6ffe89be03<Capabilities>`,
+declared by the emitter for this module as an EMPTY struct (`: public flight::ReferenceEnabled {}`) with no members at
+all. The surrounding `as Host['audio']` becomes a `static_cast` to `Ref<HostAudioCapabilities>`, and that conversion
+does not exist. Measured on its own, with (1) taken out of the way:
+
+```
+error: no matching conversion for static_cast from 'Ref<flight::host::anonymous_bbb5ab6ffe89be03<flight::types::Host>>'
+       (aka 'std::shared_ptr<anonymous_bbb5ab6ffe89be03<flight::types::Host>>')
+       to 'flight::Ref<flight::types::HostAudioCapabilities>' (aka 'std::shared_ptr<flight::types::HostAudioCapabilities>')
+```
+
+So fixing only the `value_or` is not enough to make the module compile; the fallback has to name the group's own
+declared type.
+
 So `initializeHost` and `createHost` do not compile for ANY instantiation, and `@flighthq/host`'s six `host.test.ts`
 cases have no callable surface to port to. Measured by instantiating `createHost<flight::types::Host>()` and
-`createHost()`: the first fails on the `.value_or` errors above, the second cannot deduce its `Capabilities` template
-parameter because every parameter is defaulted.
+`createHost()`: the first fails on the errors above, the second cannot deduce its `Capabilities` template parameter
+because every parameter is defaulted.
 
 ## Minimal TypeScript
 
@@ -37,14 +55,29 @@ export function initialize(out: Host, capabilities: Partial<Host>): void {
 
 ## Expected
 
-Either the fallback is dropped, because the read cannot be absent:
+Either lowering works, and the choice turns on whether the read can be absent:
+
+**(a) A present group.** Install the caller's own group -- the same `Ref`, not a copy:
 
 ```cpp
 flight::row_set<flight::RowKey<"audio">>(out, flight::row_get<flight::RowKey<"audio">>(capabilities));
 ```
 
-or the read is made genuinely optional first (a partial row read) so `value_or` is the right operation. What is not
-correct is a `value_or` on a value that cannot be nullish.
+**(b) An omitted group.** The source says `capabilities.audio ?? {}` on a `Partial<Host>`, so the read CAN be absent
+and the `??` is not dead code: the omitted case must install a **fresh empty group of the group's declared
+capability type** -- a `Ref<HostAudioCapabilities>` whose slots are all unset -- and must not install an absent group,
+because the `as` cast asserts one exists.
+
+That means, if the read is made a genuine partial read returning `std::optional<Ref<HostAudioCapabilities>>`, the
+`value_or` is the right operation and only its argument is wrong:
+
+```cpp
+flight::row_set<flight::RowKey<"audio">>(out, flight::row_get<flight::RowKey<"audio">>(capabilities)
+    .value_or(flight::make_ref<flight::types::HostAudioCapabilities>()));
+```
+
+What is not correct is a `value_or` on a value that cannot be nullish, or a fallback whose type is not the group's
+declared capability type.
 
 ## Affected modules
 
