@@ -63,6 +63,7 @@ package from compiling.
 
 ## Carrying workaround
 
-The package source can erase only the private readonly projections at the parser storage boundary,
-leaving the same arrays, elements, order, and runtime objects in place. This is type-only in emitted
-JavaScript and should expire when indexed readonly-array reads retain the nominal element carrier.
+The package source can explicitly name the existing element type on only the parser's private local
+reads, leaving the same arrays, elements, order, and runtime objects in place. Those annotations are
+erased from JavaScript and should expire when indexed readonly-array reads retain the nominal element
+carrier.

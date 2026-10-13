@@ -373,6 +373,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   timeline frames; font-formats CFF charstrings (supplied by override).
 - [A readonly nominal array element must keep its exact owner when indexed](readonly-nominal-array-index-owner.md)
   — scene-document's YAML-subset parser stores `Line[]` but reads an unrelated anonymous row.
+- [An indexed fallback must keep the statically present element carrier](array-index-nullish-fallback-present-carrier.md)
+  — scene-document's YAML-subset parser returns an optional index-miss wrapper from a lambda whose
+  declared result is the present token reference.
 - [Callables as arms of a contextual union](callable-arm-in-contextual-union.md) — four swf tag handlers.
 - [Narrowing must prove the payload present](narrowed-union-presence-proof.md) — swf parse-option merge;
   font format inference (supplied by override).
