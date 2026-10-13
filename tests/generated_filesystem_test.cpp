@@ -568,5 +568,96 @@ int main() {
     }
   }
 
+  {
+    // readDialogHandleBinaryFile with NO native path: the handle's RETAINED operations are the authority,
+    // and the signal the caller passed is the very one they receive -- not a wrapper or a fresh signal.
+    const auto retained = flight::Uint8Array{21, 34, 55};
+    std::optional<flight::AbortSignal> observed;
+    const auto operations = flight::make_ref<flight::types::FileDialogHandleOperations>(
+        flight::types::FileDialogHandleOperations{
+            .read_binary = [&observed, &retained](std::optional<flight::AbortSignal> signal) {
+              observed = signal;
+              return flight::Task<std::optional<flight::Uint8Array>>::resolve(
+                  std::optional<flight::Uint8Array>{retained});
+            },
+        });
+    const auto handle = flight::dialog::create_file_dialog_handle(
+        String("File"), String("picked.bin"), std::nullopt,
+        std::optional<std::optional<flight::Ref<flight::types::FileDialogHandleOperations>>>{operations});
+    flight::AbortController controller;
+    const auto signal = controller.signal;
+    const auto read =
+        flight::filesystem::read_dialog_handle_binary_file(flight::make_ref<Host>(), handle, signal).get();
+    if (!check(read.has_value() && read.value().length() == 3 && read.value()[0] == 21 &&
+                   read.value()[2] == 55,
+               "readDialogHandleBinaryFile reads through the handle's retained operations") ||
+        !check(observed.has_value() && observed.value() == signal,
+               "and those operations observe the caller's own signal, not a substitute")) {
+      return 1;
+    }
+  }
+
+  {
+    // readDialogHandleTextFile: a handle WITH a native path delegates to the PASSED host, and that host
+    // reads the handle's path -- never the handle's display name.
+    auto host = flight::make_ref<Host>();
+    String seen_path;
+    host->read_text_file = [&seen_path](String path, auto) {
+      seen_path = path;
+      return flight::Task<std::optional<String>>::resolve(std::optional<String>{String("tau")});
+    };
+    const auto handle = flight::dialog::create_file_dialog_handle(
+        String("File"), String("picked.txt"), std::optional<String>{String("/wave/delta.txt")});
+    const auto read = flight::filesystem::read_dialog_handle_text_file(host, handle).get();
+    if (!check(read.has_value() && read.value() == String("tau"),
+               "readDialogHandleTextFile reads through the passed host on a native path") ||
+        !check(seen_path == String("/wave/delta.txt"),
+               "and that host is given the handle's path, not its name")) {
+      return 1;
+    }
+  }
+
+  {
+    // writeDialogHandleBinaryFile: a handle with neither a path nor operations has no authority at all,
+    // and reports false rather than a silent success.
+    const auto handle = flight::dialog::create_file_dialog_handle(
+        String("File"), String("picked.bin"), std::nullopt);
+    if (!check(!flight::filesystem::write_dialog_handle_binary_file(flight::make_ref<Host>(), handle,
+                                                                    flight::Uint8Array{1})
+                    .get(),
+               "writeDialogHandleBinaryFile returns false for an authority-free handle")) {
+      return 1;
+    }
+  }
+
+  {
+    // writeDialogHandleTextFile: a native path forwards path, data AND signal to the passed host, and the
+    // host's own verdict is what settles the task.
+    auto host = flight::make_ref<Host>();
+    String seen_path;
+    String seen_data;
+    std::optional<flight::AbortSignal> seen_signal;
+    host->write_text_file = [&](String path, String data, std::optional<flight::AbortSignal> signal) {
+      seen_path = path;
+      seen_data = data;
+      seen_signal = signal;
+      return flight::Task<bool>::resolve(path == String("/wave/epsilon.txt") &&
+                                         data == String("upsilon"));
+    };
+    flight::AbortController controller;
+    const auto handle = flight::dialog::create_file_dialog_handle(
+        String("File"), String("picked.txt"), std::optional<String>{String("/wave/epsilon.txt")});
+    const auto written = flight::filesystem::write_dialog_handle_text_file(host, handle, String("upsilon"),
+                                                                          controller.signal)
+                             .get();
+    if (!check(written, "writeDialogHandleTextFile settles to the host's own verdict") ||
+        !check(seen_path == String("/wave/epsilon.txt") && seen_data == String("upsilon"),
+               "and forwards the handle's path with the caller's data, unswapped") ||
+        !check(seen_signal.has_value() && seen_signal.value() == controller.signal,
+               "and hands the host the caller's own signal")) {
+      return 1;
+    }
+  }
+
   return failures == 0 ? 0 : 1;
 }
