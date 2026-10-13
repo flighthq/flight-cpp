@@ -1,7 +1,25 @@
 diff --git a/packages/scene-document/src/sceneDocumentYamlSubset.ts b/packages/scene-document/src/sceneDocumentYamlSubset.ts
 --- a/packages/scene-document/src/sceneDocumentYamlSubset.ts
 +++ b/packages/scene-document/src/sceneDocumentYamlSubset.ts
-@@ -760,8 +760,9 @@ class SceneDocumentYamlSubsetParser {
+@@ -737,14 +737,15 @@ class SceneDocumentYamlSubsetParser {
+ 
+     const mapping: SceneDocumentYamlSubsetMapping = Object.create(null);
+     const mappingIndent = sequenceIndent + 2;
+-    let count: number | typeof PARSE_FAILURE = this.addMappingEntry(
++    const initialCount = this.addMappingEntry(
+       mapping,
+       0,
+       line.tokens.slice(1),
+       colonIndex - 1,
+       mappingIndent,
+       depth,
+     );
+-    if (count === PARSE_FAILURE) return PARSE_FAILURE;
++    if (initialCount === PARSE_FAILURE) return PARSE_FAILURE;
++    let count: number = initialCount;
+ 
+     while (this.index < this.lines.length) {
+@@ -760,8 +761,9 @@ class SceneDocumentYamlSubsetParser {
        const nextColon = findSceneDocumentYamlSubsetTopLevelColon(nextLine.tokens, 0);
        if (nextColon < 0) return this.refuse('flight-document.syntax.expected-mapping-entry', nextFirst);
        this.index++;

@@ -50,7 +50,9 @@ and every header including it from compiling.
 
 ## Carrying workaround
 
-The package source explicitly names `SceneDocumentYamlSubsetToken` on the existing `colon` local.
-The annotation erases from JavaScript; it preserves the same token identity, fallback evaluation,
-diagnostics, and parser state, and should expire when inferred indexed locals keep their declared
-source carrier through a nullish fallback.
+The package source reads the colon through its bounds-checked `tokenAt` helper and proves it present
+before the existing nullish selection. The caller has already obtained that index from the same token
+array's top-level-colon scan, so the added absent exit is unreachable for every parser input. The
+reachable path preserves token identity, fallback evaluation, diagnostics, and parser state. The
+rewrite should expire when inferred indexed locals keep their declared source carrier through a
+nullish fallback.

@@ -49,7 +49,8 @@ header including it from compiling.
 
 ## Carrying workaround
 
-The package binds the later call to a fresh result, returns on its failure arm, and only then assigns
-the proven number to `count`. The parser already returned immediately after the original assignment
-when that result was failure, so the local's intermediate failure value was unobservable; call count,
-order, mapping mutation, diagnostics, and the numeric update are unchanged.
+The package binds the first call to `initialCount`, returns on its failure arm, and then initializes a
+separate numeric `count`. Each later call is bound to `nextCount`, checked, and only its proven number
+is assigned to `count`. The parser already returned immediately whenever either result was failure, so
+no failure value was observably stored between operations; call count, order, mapping mutation,
+diagnostics, and every numeric update are unchanged.
