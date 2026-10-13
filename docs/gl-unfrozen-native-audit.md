@@ -12,7 +12,7 @@ equality, ordering, exceptions, settlement, then format breadth.
 
 | Package | Focused native evidence | Highest remaining audited gap |
 | --- | --- | --- |
-| `texture` | Construction covers absent defaults and exact source/resource identity. Sampler/2D equality covers null/undefined, same-owner, value-state, and distinct-source identity. Copy/initialize evidence distinguishes construction-row identity, cloned mutable sampling state, shared source owners, preserved destination owners, self-alias safety, and fresh array/cube list storage; every legitimate dimension mismatch and both non-2D source setters reject before mutation. Source/readiness/size coverage includes first-source selection, all-absent forms, 2D replacement/version transitions, CPU/GPU kinds, width/height/view derivation for all four forms, non-positive dimensions, and voxel depth/data identity. UV coverage exercises forward/inverse and video matrices, exact transform order, flips, cardinal and singular edges, setter/reset identity, recomputation, presence, pixel rectangles, and output aliasing. Video coverage now includes host-provider routing, omitted and absent domains, readiness gates, shared revision transitions, clone/copy ownership, replacement/clear, and idempotent destruction. | Dedicated cube equality is the highest-ranked executable residual because it preserves face-source identity and absent operands; sampler presets/copy and the texture-color-space truth table follow. Cube face mutation/completeness/size and render-texture construction remain behind declared compiler refusals. |
+| `texture` | Construction covers absent defaults and exact source/resource identity. Sampler, 2D, and dedicated cube equality cover null/undefined, same-owner, value-state, and distinct source/face identity. Copy/initialize evidence distinguishes construction-row identity, cloned mutable sampling state, shared source owners, preserved destination owners, self-alias safety, and fresh array/cube list storage; every legitimate dimension mismatch and both non-2D source setters reject before mutation. Source/readiness/size coverage includes first-source selection, all-absent forms, 2D replacement/version transitions, CPU/GPU kinds, width/height/view derivation for all four forms, non-positive dimensions, and voxel depth/data identity. UV coverage exercises forward/inverse and video matrices, exact transform order, flips, cardinal and singular edges, setter/reset identity, recomputation, presence, pixel rectangles, and output aliasing. Video coverage includes host-provider routing, omitted and absent domains, readiness gates, shared revision transitions, clone/copy ownership, replacement/clear, and idempotent destruction. | The texture-color-space truth table is now the highest-ranked material executable residual because it couples sample decoding to upload premultiplication. Sampler clone/copy and preset breadth follows. Cube face mutation/completeness/size and render-texture construction remain behind declared compiler refusals. |
 | `texture-formats` | The byte-exact test covers all nine upstream modules: bounded/endian reads, detection and explanations, level layout, selection, and ATF/Basis/DDS/KTX2 parsing and rejection. Two restored source mutations prove mip-count and normalized image-order assertions. | No high-priority semantic gap was found. More malformed-header combinations would add breadth rather than a missing behavior family. |
 | `shading` | The focused test covers all modifier constructors, shared option identity, stable stack ordering, validation, registry isolation/replacement, built-in registration, and define keys. | Remaining cases are repeated option and invalid-value permutations; no uncovered absence, identity, equality, or ordering family was found. |
 | `materials` | `materials-native-inventory.md` records constructor/default, owner identity, equality, ordering, validation, conversion, guard lifecycle, and eight mutation oracles across all 22 suites. | Lower-priority detail remains in color-scale/bias helper permutations, whole-object Phong conversion precedence, forwarded optional-map permutations, and exact diagnostic text. |
@@ -111,12 +111,19 @@ borrowed resource, and leaves width, height, readiness, and advance on stable se
 focused mutations independently suppress initializer, routing, omitted/absent, readiness, advance,
 clone, copy, reset, replacement, clear, and destruction oracles.
 
+Dedicated cube equality is exercised through the package API rather than inferred from generic 2D
+equality. Two independently constructed cubes compare equal when all six slots retain the same face
+owners and their common value state matches; the same owner also compares equal. A different face
+owner with identical kind and dimensions is unequal, as are color-space and sampler changes. Null
+and undefined operands are false in either position, including undefined against itself. Four new
+mutation modes independently guard positive content, face identity, common value state, and absence.
+
 ## Next useful work
 
-The next executable texture slice is dedicated cube equality over generic cube construction:
-same-face identity, different-but-equal-looking face owners, value state, and null/undefined
-operands. Sampler preset/copy behavior ranks after that, followed by the texture-color-space truth
-table. `getCubeTextureFaceSize`, `isCubeTextureComplete`, and `setCubeTextureFace` cannot join the
+The next material executable texture slice is the four-pair texture-color-space truth table. Its
+value is the coupled invariant: only sRGB content sampled into a linear working space decodes, and
+upload premultiplication must be its exact inverse. Sampler clone/copy and named preset breadth ranks
+after that. `getCubeTextureFaceSize`, `isCubeTextureComplete`, and `setCubeTextureFace` cannot join a
 cube slice until their recorded compiler restrictions are resolved; `createRenderTexture` likewise
 remains at its reference-heritage boundary. Image settlement is more valuable globally, but is not
 independent at this pin: it requires the existing browser URL/location and erased-owner compiler

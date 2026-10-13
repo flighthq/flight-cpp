@@ -1,3 +1,4 @@
+#include <flight/texture/cube_texture.hpp>
 #include <flight/texture/video_texture.hpp>
 #include <flight/texture/voxel_grid.hpp>
 #include <flight/types/render_target.hpp>
@@ -1196,6 +1197,100 @@ int main(int argc, char** argv) {
             !texture::equals_texture(absent_texture, equal_texture_a) &&
             !texture::equals_texture(undefined_texture, undefined_texture),
         "texture equality rejects absent operands");
+
+  const auto cube_equality_face = flight::make_ref<types::TextureSource>();
+  cube_equality_face->kind = types::image_texture_source_kind;
+  cube_equality_face->width = 64.0;
+  cube_equality_face->height = 64.0;
+  const types::TextureSourceCubeFaces cube_equality_faces{
+      types::TextureSourceValue{
+          std::in_place_type<flight::Ref<types::TextureSource>>,
+          cube_equality_face},
+      types::TextureSourceValue{
+          std::in_place_type<flight::Ref<types::TextureSource>>,
+          cube_equality_face},
+      types::TextureSourceValue{
+          std::in_place_type<flight::Ref<types::TextureSource>>,
+          cube_equality_face},
+      types::TextureSourceValue{
+          std::in_place_type<flight::Ref<types::TextureSource>>,
+          cube_equality_face},
+      types::TextureSourceValue{
+          std::in_place_type<flight::Ref<types::TextureSource>>,
+          cube_equality_face},
+      types::TextureSourceValue{
+          std::in_place_type<flight::Ref<types::TextureSource>>,
+          cube_equality_face}};
+  const auto cube_equality_options_a =
+      flight::make_ref<texture::CreateTextureCubeVariantOptions>();
+  cube_equality_options_a->dimension = flight::String("cube");
+  cube_equality_options_a->color_space = flight::String("linear");
+  cube_equality_options_a->sources = cube_equality_faces;
+  const auto cube_equality_options_b =
+      flight::make_ref<texture::CreateTextureCubeVariantOptions>();
+  cube_equality_options_b->dimension = flight::String("cube");
+  cube_equality_options_b->color_space = flight::String("linear");
+  cube_equality_options_b->sources = cube_equality_faces;
+  const auto equal_cube_a = texture::create_texture(cube_equality_options_a);
+  const auto equal_cube_b = texture::create_texture(cube_equality_options_b);
+  using OptionalCubeTexture =
+      std::variant<flight::Ref<types::CubeTexture>, flight::Null,
+                   flight::Undefined>;
+  const OptionalCubeTexture equal_cube_a_view{
+      std::in_place_type<flight::Ref<types::CubeTexture>>, equal_cube_a};
+  const OptionalCubeTexture equal_cube_b_view{
+      std::in_place_type<flight::Ref<types::CubeTexture>>, equal_cube_b};
+  bool equal_cube_content =
+      texture::equals_cube_texture(equal_cube_a_view, equal_cube_b_view) &&
+      texture::equals_cube_texture(equal_cube_a_view, equal_cube_a_view);
+  if (mutation == "--mutate-cube-equality-content") {
+    equal_cube_content = false;
+  }
+  check(equal_cube_content,
+        "cube equality accepts equal value state with the same six face owners");
+
+  const auto distinct_cube_face = flight::make_ref<types::TextureSource>();
+  distinct_cube_face->kind = cube_equality_face->kind;
+  distinct_cube_face->width = cube_equality_face->width;
+  distinct_cube_face->height = cube_equality_face->height;
+  equal_cube_b->sources[0] = types::TextureSourceValue{
+      std::in_place_type<flight::Ref<types::TextureSource>>,
+      distinct_cube_face};
+  bool cube_face_identity =
+      !texture::equals_cube_texture(equal_cube_a_view, equal_cube_b_view);
+  if (mutation == "--mutate-cube-equality-face-identity") {
+    cube_face_identity = false;
+  }
+  check(cube_face_identity,
+        "cube equality compares face owners rather than equal-looking face fields");
+  equal_cube_b->sources[0] = equal_cube_a->sources.get(0.0).value();
+
+  equal_cube_b->color_space = flight::String("srgb");
+  bool cube_value_state =
+      !texture::equals_cube_texture(equal_cube_a_view, equal_cube_b_view);
+  equal_cube_b->color_space = equal_cube_a->color_space;
+  equal_cube_b->sampler->mipmaps = false;
+  cube_value_state =
+      cube_value_state &&
+      !texture::equals_cube_texture(equal_cube_a_view, equal_cube_b_view);
+  if (mutation == "--mutate-cube-equality-value-state") {
+    cube_value_state = false;
+  }
+  check(cube_value_state,
+        "cube equality includes common color-space and sampler value state");
+
+  const OptionalCubeTexture absent_cube{std::in_place_type<flight::Null>};
+  const OptionalCubeTexture undefined_cube{
+      std::in_place_type<flight::Undefined>};
+  bool cube_absence =
+      !texture::equals_cube_texture(equal_cube_a_view, absent_cube) &&
+      !texture::equals_cube_texture(absent_cube, equal_cube_a_view) &&
+      !texture::equals_cube_texture(equal_cube_a_view, undefined_cube) &&
+      !texture::equals_cube_texture(undefined_cube, equal_cube_a_view) &&
+      !texture::equals_cube_texture(undefined_cube, undefined_cube);
+  if (mutation == "--mutate-cube-equality-absence") cube_absence = false;
+  check(cube_absence,
+        "cube equality rejects null and undefined operands in either position");
 
   const auto host_video = flight::make_ref<types::HostVideoCapability>();
   host_video->get_width = [](types::HostImageSource source) { return source.video_width(); };
