@@ -42,6 +42,7 @@ the call and passes the local:
   entry-point sites (`spineBinaryParse.ts`, `spineBinaryVersioned.ts`).
 
 Still failing on it at `a627849`, uncarried: `@flighthq/skeleton2d-formats` `dragonBonesParse.ts`,
-`spineBinaryDrawOrderTimelineHandler.ts`, `spineBinarySkinsHandler.ts` and `spineBinarySlotsHandler.ts` (the
+`spineBinaryDrawOrderTimelineHandler.ts`, `spineBinarySkinsHandler.ts`, `spineBinarySlotsHandler.ts`, and the
+string-valued `{ version }` detail in `spineBinaryVersioned.ts`, which the number-locals patch does not touch (the
 first diagnostic of each header; the package has 41 object-literal detail calls across 21 modules, so more sit
 behind other blockers).
