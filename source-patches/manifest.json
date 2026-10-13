@@ -479,6 +479,22 @@
       }
     },
     {
+      "id": "scene-document-yaml-nominal-line-owners",
+      "dependency": "flight",
+      "patch": "scene-document-yaml-nominal-line-owners.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/scene-document/src/sceneDocumentYamlSubset.ts",
+      "package": "@flighthq/scene-document",
+      "answers": "diagnostic",
+      "refusal": "indexed reads from the parser's readonly SceneDocumentYamlSubsetLine array are emitted as unrelated anonymous indent/tokens owners, so native compilation rejects the reference conversion",
+      "rewrite": "Names SceneDocumentYamlSubsetLine explicitly on each local that retains an indexed parser-line read, including the same possibly-undefined locals the source already guards.",
+      "equivalence": "TypeScript annotations are erased and do not allocate, copy, reorder, or mutate anything. Every local retains the exact same line object from the exact same array index; the existing undefined guards, parser state changes, token reads, diagnostics, and results are unchanged.",
+      "whyNotUpstreamFirst": "The source already declares the exact nominal element type on the parser field. The emitter alone replaces inferred indexed reads with anonymous structural owners, as recorded in docs/compiler-requests/readonly-nominal-array-index-owner.md.",
+      "unblocks": "Keeps the YAML-subset parser's generated line locals on their stored nominal owner so scene_document_yaml_subset.hpp can compile and receive direct behavioral coverage.",
+      "expires": "when indexed readonly-array reads retain the declared nominal element carrier, or Flight adopts the explicit local annotations.",
+      "appliedOn": "2026-10-13"
+    },
+    {
       "id": "optional-null-storage-evidence",
       "dependency": "flight",
       "patch": "optional-null-storage-evidence.patch",

@@ -1,0 +1,83 @@
+diff --git a/packages/scene-document/src/sceneDocumentYamlSubset.ts b/packages/scene-document/src/sceneDocumentYamlSubset.ts
+--- a/packages/scene-document/src/sceneDocumentYamlSubset.ts
++++ b/packages/scene-document/src/sceneDocumentYamlSubset.ts
+@@ -434,7 +434,7 @@ class SceneDocumentYamlSubsetParser {
+ 
+   public parse(): SceneDocumentYamlSubsetResult {
+     if (this.lines.length === 0) return { ok: true, value: null };
+-    const first = this.lines[0];
++    const first: SceneDocumentYamlSubsetLine = this.lines[0];
+     if (first.indent !== 0) {
+       return this.createRefusal('flight-document.syntax.root-indentation', first.tokens[0]);
+     }
+@@ -476,7 +476,7 @@ class SceneDocumentYamlSubsetParser {
+ 
+     let value: SceneDocumentYamlSubsetParseValue;
+     if (colonIndex + 1 === tokens.length) {
+-      const next = this.lines[this.index];
++      const next: SceneDocumentYamlSubsetLine | undefined = this.lines[this.index];
+       if (next !== undefined && next.indent > indent) value = this.parseBlock(next.indent, depth + 1);
+       else value = this.parseNull(colon);
+     } else {
+@@ -522,7 +522,7 @@ class SceneDocumentYamlSubsetParser {
+   }
+ 
+   private parseBlock(indent: number, depth: number): SceneDocumentYamlSubsetParseValue {
+-    const line = this.lines[this.index];
++    const line: SceneDocumentYamlSubsetLine | undefined = this.lines[this.index];
+     const first = line?.tokens[0];
+     if (line === undefined || first === undefined) return PARSE_FAILURE;
+     if (line.indent !== indent) return this.refuse('flight-document.syntax.unexpected-indentation', first);
+@@ -534,7 +534,7 @@ class SceneDocumentYamlSubsetParser {
+     this.index++;
+     const value = this.parseInline(line.tokens, 0, depth);
+     if (value === PARSE_FAILURE) return PARSE_FAILURE;
+-    const next = this.lines[this.index];
++    const next: SceneDocumentYamlSubsetLine | undefined = this.lines[this.index];
+     if (next !== undefined && next.indent > indent) {
+       return this.refuse('flight-document.syntax.unexpected-indentation', next.tokens[0]);
+     }
+@@ -548,7 +548,7 @@ class SceneDocumentYamlSubsetParser {
+     const mapping: SceneDocumentYamlSubsetMapping = Object.create(null);
+     let count = 0;
+     while (this.index < this.lines.length) {
+-      const line = this.lines[this.index];
++      const line: SceneDocumentYamlSubsetLine = this.lines[this.index];
+       const firstToken = line.tokens[0];
+       if (line.indent < indent) break;
+       if (line.indent > indent) {
+@@ -574,6 +574,6 @@ class SceneDocumentYamlSubsetParser {
+     const sequence: SceneDocumentYamlSubsetValue[] = [];
+     while (this.index < this.lines.length) {
+-      const line = this.lines[this.index];
++      const line: SceneDocumentYamlSubsetLine = this.lines[this.index];
+       const item = line.tokens[0];
+       if (line.indent < indent) break;
+       if (line.indent > indent) return this.refuse('flight-document.syntax.unexpected-indentation', item);
+@@ -591,7 +591,7 @@ class SceneDocumentYamlSubsetParser {
+       this.index++;
+       let value: SceneDocumentYamlSubsetParseValue;
+       if (line.tokens.length === 1) {
+-        const next = this.lines[this.index];
++        const next: SceneDocumentYamlSubsetLine | undefined = this.lines[this.index];
+         value =
+           next !== undefined && next.indent > indent ? this.parseBlock(next.indent, depth + 1) : this.parseNull(item);
+       } else {
+@@ -604,7 +604,7 @@ class SceneDocumentYamlSubsetParser {
+       if (value === PARSE_FAILURE) return PARSE_FAILURE;
+       sequence.push(value);
+ 
+-      const next = this.lines[this.index];
++      const next: SceneDocumentYamlSubsetLine | undefined = this.lines[this.index];
+       if (next !== undefined && next.indent > indent) {
+         return this.refuse('flight-document.syntax.unexpected-indentation', next.tokens[0]);
+       }
+@@ -747,7 +747,7 @@ class SceneDocumentYamlSubsetParser {
+     if (count === PARSE_FAILURE) return PARSE_FAILURE;
+ 
+     while (this.index < this.lines.length) {
+-      const nextLine = this.lines[this.index];
++      const nextLine: SceneDocumentYamlSubsetLine = this.lines[this.index];
+       const nextFirst = nextLine.tokens[0];
+       if (nextLine.indent <= sequenceIndent) break;
+       if (nextLine.indent !== mappingIndent) {
