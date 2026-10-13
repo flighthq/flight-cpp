@@ -74,16 +74,16 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/math` | 17 | 15 | 325 | dedicated | none | 17 / 0 |
 | `@flighthq/geometry` | 30 | 28 | 1198 | dedicated | none | 30 / 0 |
 | `@flighthq/types` | 1026 | 47 | 160 | incidental | none | 1001 / 0 |
-| `@flighthq/signals` | 10 | 8 | 86 | incidental | none | 8 / 2 |
-| `@flighthq/command` | 8 | 6 | 64 | none | none | 6 / 2 |
-| `@flighthq/encoding` | 3 | 1 | 8 | none | none | 3 / 0 |
-| `@flighthq/compression` | 7 | 5 | 91 | none | none | 6 / 0 |
-| `@flighthq/xml` | 4 | 2 | 50 | none | none | 4 / 0 |
-| `@flighthq/abc` | 4 | 2 | 17 | none | none | 4 / 0 |
-| `@flighthq/net` | 5 | 3 | 15 | none | none | 5 / 0 |
+| `@flighthq/signals` | 10 | 8 | 86 | dedicated | none | 8 / 2 |
+| `@flighthq/command` | 8 | 6 | 64 | dedicated | none | 6 / 2 |
+| `@flighthq/encoding` | 3 | 1 | 8 | dedicated | none | 3 / 0 |
+| `@flighthq/compression` | 7 | 5 | 91 | dedicated | none | 6 / 0 |
+| `@flighthq/xml` | 4 | 2 | 50 | dedicated | none | 4 / 0 |
+| `@flighthq/abc` | 4 | 2 | 17 | dedicated | none | 4 / 0 |
+| `@flighthq/net` | 5 | 3 | 15 | dedicated | none | 5 / 0 |
 | `@flighthq/socket` | 5 | 4 | 42 | dedicated | none | 5 / 0 |
 | `@flighthq/loader` | 4 | 2 | 91 | none | none | 3 / 1 |
-| `@flighthq/assets` | 5 | 3 | 33 | none | none | 4 / 1 |
+| `@flighthq/assets` | 5 | 3 | 33 | dedicated | none | 4 / 1 |
 | `@flighthq/registry` | 3 | 1 | 12 | dedicated | none | 3 / 0 |
 | `@flighthq/registry-catalog` | 4 | 1 | 15 | none | none | 4 / 0 |
 | `@flighthq/registry-codegen` | 3 | 1 | 12 | none | none | 3 / 0 |
@@ -304,8 +304,18 @@ Upstream carries per-package records at `flight/agents/packages/signals/`: `stat
 
 ### Existing CTest coverage
 
-- `flight_cpp.generated_dialog` — `tests/generated_dialog_test.cpp` (incidental: includes the package as part of a larger closure)
-- `flight_cpp.generated_lifecycle` — `tests/generated_lifecycle_test.cpp` (incidental: includes the package as part of a larger closure)
+- `flight_cpp.generated_signals` (dedicated) — `tests/generated_signals_test.cpp`, the native port of the `signal`,
+  `internal`, `slot`, `emitter`, `safe` and `scope` cases at the pin: creation and its initial data and no-op emit,
+  a null emit doing nothing, `clearSignal` removing every slot, connect with insertion order, typed arguments,
+  scope membership, and `callable_identity_equal` on the `flight::Function` carrier — a bare lambda has no identity,
+  so disconnect refuses it rather than guessing.
+- `flight_cpp.generated_signals_throttle` (dedicated) — `tests/generated_signals_throttle_test.cpp`:
+  `connectSignalAtFrameRate` as emitted (accumulating and keeping the remainder, cleanup disconnecting), and the
+  debounced and throttled connects the package's one override supplies (leading-only, re-arm after the window,
+  trailing with the most recent arguments, cleanup clearing the pending timer).
+- Incidental: `generated_clipboard`, `generated_clock`, `generated_dialog`, `generated_lifecycle`,
+  `generated_movieclip`, `generated_socket`, `generated_spritesheet`, `generated_timeline` — each includes the
+  package as part of a larger closure.
 
 ### Local generation status
 
@@ -337,7 +347,14 @@ Upstream carries per-package records at `flight/agents/packages/command/`: `stat
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+`flight_cpp.generated_command` (dedicated) -- `tests/generated_command_test.cpp`, the native port of the callable
+cases of `command.test.ts` and `commandHistorySignals.test.ts` at the pin, against the `command.hpp` override and the
+generated `command_history_signals.hpp`. Covers reading the current value, the before/after capture of an executed
+command, and the history-signal connections. Gaps, as the test states them: `command_binding.hpp` and every header
+including it stop in the registry row, which is still at 7e2fc7d -- its override names `flight::types::KeyedTable`,
+which the a627849 types row no longer declares -- so the binding, history, transaction and explain-dispatch cases have
+no callable surface; the two `NodeChildCommand` cases need a parent with attached children, which the node row cannot
+supply without fabricating graph state.
 
 ### Local generation status
 
@@ -364,7 +381,10 @@ Upstream carries per-package records at `flight/agents/packages/encoding/`: `sta
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+`flight_cpp.generated_encoding` (dedicated) -- `tests/generated_encoding_test.cpp`, all eight cases of `utf8.test.ts`
+at the pin, against the generated headers with no override. Covers two-, three- and four-byte sequences, the invalid
+and truncated forms, and inputs that need exact UTF-16 code units (lone surrogates, NUL) built from `std::u16string`
+so the input is the code-unit sequence the JavaScript string holds. No gap: every upstream case is ported.
 
 ### Local generation status
 
@@ -395,7 +415,15 @@ Upstream carries per-package records at `flight/agents/packages/compression/`: `
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+`flight_cpp.generated_compression` (dedicated) -- `tests/generated_compression_test.cpp`, the native port of
+`deflateFormat`, `compress`, `deflate`, `lzma` and `lzmaCompress` cases at the pin, against the generated headers
+with no override; the compressed fixtures are the upstream ones, embedded as base64, so Node's zlib and Python's lzma
+are independent oracles. Covers Adler-32 (initial value, the RFC 1950 checksum, order sensitivity, 32-bit
+wraparound), the LENGTH and DISTANCE code tables and the distance alphabet's tiling, empty-input and deflate/LZMA
+round trips. Not ported, as the test states: the two cases asserting a slot's `decompress` is the SAME function object
+as the bare function, which `std::function` cannot express -- their behavioural twins are ported. The deflate cases
+additionally depend on source-patches/compiler-constructor-parameter-property-assignment.patch; without it
+`InflateState`'s parameter properties are never assigned and decompression returns null.
 
 ### Local generation status
 
@@ -423,7 +451,10 @@ Upstream carries per-package records at `flight/agents/packages/xml/`: `status.m
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+`flight_cpp.generated_xml` (dedicated) -- `tests/generated_xml_test.cpp`, every case of `xmlParse.test.ts` and
+`xmlQuery.test.ts` at the pin, against the generated headers with no override. Covers attribute parsing with double
+and single quotes, entity decoding (`&amp;`, `&lt;`, `&gt;`, `&quot;`, `&apos;`) and numeric character references,
+and the query surface. No gap: every upstream case is ported.
 
 ### Local generation status
 
@@ -451,7 +482,11 @@ Upstream carries per-package records at `flight/agents/packages/abc/`: `status.m
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+`flight_cpp.generated_abc` (dedicated) -- `tests/generated_abc_test.cpp`, all seventeen cases of `abcFile.test.ts`
+and `abcInstruction.test.ts` at the pin, against the generated headers with no override; `build_abc` mirrors the
+upstream `buildAbc()` byte for byte, so the reader is driven by a fixture the test builds itself. The reader depends
+on source-patches/compiler-constructor-parameter-property-assignment.patch: without it `AbcReader`'s `source`
+parameter property is never assigned and every read sees an empty buffer.
 
 ### Local generation status
 
@@ -480,7 +515,12 @@ Upstream carries per-package records at `flight/agents/packages/net/`: `status.m
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+`flight_cpp.generated_net` (dedicated) -- `tests/generated_net_test.cpp`, the callable cases of `net.test.ts`,
+`netForm.test.ts` and `enableNetGuards.test.ts` at the pin. Covers request and response construction, the form
+encoding path, and the guard notice surface. Not ported, as the test states: `enableNetGuards`' three warning cases,
+because a warning reaches `log_once` -> `log` -> `merge_span_fields`, a stub in this profile's log override, so it
+throws instead of logging, and the 'R3 boundary' case, which reflects over the module's runtime export object and has
+no native counterpart.
 
 ### Local generation status
 
@@ -568,7 +608,10 @@ Upstream carries per-package records at `flight/agents/packages/assets/`: `statu
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+`flight_cpp.generated_assets` (dedicated) -- `tests/generated_assets_test.cpp`, against the generated
+`asset_library.hpp` and the hand-written `acquireAsset` the assets-reject-task-template-parameter override supplies,
+so the two are exercised together. Covers an unknown id rejecting, an id with no loader for its type rejecting with
+the loader's failure, and the reference count holding at two across two acquires.
 
 ### Local generation status
 
