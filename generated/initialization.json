@@ -101317,7 +101317,7 @@
             "packageName": "@flighthq/binpack",
             "source": "packages/binpack/src/contract.ts"
           },
-          "specifier": "./explainUnpackedRectangles",
+          "specifier": "./explainUnpackedRectangles.ts",
           "target": {
             "name": "ExplainUnpackedRectangles",
             "packageName": "@flighthq/binpack",
@@ -101331,7 +101331,7 @@
             "packageName": "@flighthq/binpack",
             "source": "packages/binpack/src/contract.ts"
           },
-          "specifier": "./packRectangles",
+          "specifier": "./packRectangles.ts",
           "target": {
             "name": "PackRectangles",
             "packageName": "@flighthq/binpack",
@@ -140439,7 +140439,7 @@
             "line": 20,
             "packageName": "@flighthq/binpack",
             "source": "packages/binpack/src/explainUnpackedRectangles.ts",
-            "id": "binding:[\"@flighthq/binpack\",\"packages/binpack/src/explainUnpackedRectangles.ts\",957]",
+            "id": "binding:[\"@flighthq/binpack\",\"packages/binpack/src/explainUnpackedRectangles.ts\",960]",
             "kind": "function",
             "name": "explainUnpackedRectangles",
             "scope": "module",
@@ -140460,7 +140460,7 @@
             "line": 61,
             "packageName": "@flighthq/binpack",
             "source": "packages/binpack/src/explainUnpackedRectangles.ts",
-            "id": "binding:[\"@flighthq/binpack\",\"packages/binpack/src/explainUnpackedRectangles.ts\",3104]",
+            "id": "binding:[\"@flighthq/binpack\",\"packages/binpack/src/explainUnpackedRectangles.ts\",3107]",
             "kind": "function",
             "name": "getUnpackedReason",
             "scope": "module",
@@ -140481,7 +140481,7 @@
             "line": 76,
             "packageName": "@flighthq/binpack",
             "source": "packages/binpack/src/explainUnpackedRectangles.ts",
-            "id": "binding:[\"@flighthq/binpack\",\"packages/binpack/src/explainUnpackedRectangles.ts\",3710]",
+            "id": "binding:[\"@flighthq/binpack\",\"packages/binpack/src/explainUnpackedRectangles.ts\",3713]",
             "kind": "function",
             "name": "fitsWithin",
             "scope": "module",
@@ -140503,7 +140503,7 @@
             "packageName": "@flighthq/binpack",
             "source": "packages/binpack/src/explainUnpackedRectangles.ts"
           },
-          "specifier": "./packRectangles",
+          "specifier": "./packRectangles.ts",
           "target": {
             "name": "PackRectangles",
             "packageName": "@flighthq/binpack",
@@ -172323,7 +172323,7 @@
             "packageName": "@flighthq/binpack",
             "source": "packages/binpack/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/binpack",

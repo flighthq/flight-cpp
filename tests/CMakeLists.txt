@@ -572,6 +572,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_encoding_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_encoding COMMAND flight_cpp_generated_encoding_tests)
 
+add_executable(flight_cpp_generated_binpack_tests generated_binpack_test.cpp)
+target_include_directories(
+  flight_cpp_generated_binpack_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_binpack_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_binpack COMMAND flight_cpp_generated_binpack_tests)
+
 add_executable(flight_cpp_generated_compression_tests generated_compression_test.cpp)
 target_include_directories(
   flight_cpp_generated_compression_tests
@@ -726,6 +734,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_textshaper_cache textshaper)
 flight_cpp_package_test_labels(flight_cpp.generated_net net)
 flight_cpp_package_test_labels(flight_cpp.generated_socket signals socket)
 flight_cpp_package_test_labels(flight_cpp.generated_encoding encoding)
+flight_cpp_package_test_labels(flight_cpp.generated_binpack binpack)
 flight_cpp_package_test_labels(flight_cpp.generated_compression compression)
 flight_cpp_package_test_labels(flight_cpp.generated_abc abc)
 flight_cpp_package_test_labels(flight_cpp.generated_xml xml)

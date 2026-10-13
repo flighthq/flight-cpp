@@ -249,6 +249,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_binpack_test",
+    srcs = ["generated_binpack_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_geometry_matrix34_test",
     srcs = ["generated_geometry_matrix34_test.cpp"],
     size = "small",
