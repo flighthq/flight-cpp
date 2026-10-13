@@ -1,5 +1,6 @@
 #include <flight/texture/video_texture.hpp>
 
+#include <array>
 #include <iostream>
 #include <string>
 #include <variant>
@@ -136,6 +137,245 @@ int main(int argc, char** argv) {
   check(clone->color_space == flight::String("linear") && clone->version == 9.0,
         "clone preserves common scalar state");
 
+  const auto initialize_sampler = texture::create_sampler(std::nullopt);
+  initialize_sampler->anisotropy = 8.0;
+  const auto initialize_offset = flight::geometry::create_vector2(2.0, 3.0);
+  const auto initialize_scale = flight::geometry::create_vector2(4.0, 5.0);
+  const auto initialize_options = flight::make_ref<types::CreateTexture2DOptions>();
+  initialize_options->color_space = flight::String("linear");
+  initialize_options->flip_x = true;
+  initialize_options->sampler = initialize_sampler;
+  initialize_options->source = decltype(types::CreateTexture2DOptions::source){
+      std::in_place_type<flight::Ref<types::TextureSource>>, source};
+  initialize_options->uv_offset = initialize_offset;
+  initialize_options->uv_rotation = 0.75;
+  initialize_options->uv_scale = initialize_scale;
+  initialize_options->version = 13.0;
+  auto construction =
+      flight::entity::allocate_entity<flight::Ref<types::Texture2D>>();
+  const auto construction_owner = construction.shared_owner();
+  texture::initialize_texture2_d(
+      construction,
+      std::optional<flight::Ref<types::CreateTexture2DOptions>>{initialize_options});
+  const auto initialized =
+      flight::entity::finish_entity<flight::Ref<types::Texture2D>>(construction);
+  using WritableTexture2DView = flight::StructuralRef<
+      flight::RowWritable<flight::RowOf<flight::Ref<types::Texture2D>>>>;
+  const WritableTexture2DView initialized_view(initialized);
+  bool initializer_kept_view = initialized_view.shared_owner() == construction_owner;
+  if (mutation == "--mutate-initialize-view") initializer_kept_view = false;
+  if (mutation == "--mutate-initialize-copy") {
+    initialized->uv_offset = initialize_offset;
+  }
+  check(initializer_kept_view,
+        "initializeTexture2D writes through the allocation view retained by finishEntity");
+  check(initialized->dimension == flight::String("2d") &&
+            initialized->color_space == flight::String("linear") && initialized->flip_x &&
+            initialized->uv_rotation == 0.75 && initialized->version == 13.0,
+        "initializeTexture2D writes every scalar into the construction owner");
+  check(initialized->sampler != initialize_sampler &&
+            initialized->sampler->anisotropy == 8.0 &&
+            initialized->uv_offset != initialize_offset && initialized->uv_offset->x == 2.0 &&
+            initialized->uv_scale != initialize_scale && initialized->uv_scale->y == 5.0,
+        "initializeTexture2D owns cloned sampler and UV state");
+  check(initialized->source.has_value() &&
+            std::get<flight::Ref<types::TextureSource>>(initialized->source.value()) == source,
+        "initializeTexture2D retains the supplied source owner as a shared identity");
+
+  const auto copy_options = flight::make_ref<types::CreateTexture2DOptions>();
+  copy_options->color_space = flight::String("linear");
+  copy_options->flip_x = true;
+  copy_options->sampler = sampler;
+  copy_options->source = decltype(types::CreateTexture2DOptions::source){
+      std::in_place_type<flight::Ref<types::TextureSource>>, source};
+  copy_options->uv_offset = offset;
+  copy_options->uv_rotation = 1.0;
+  copy_options->uv_scale = scale;
+  copy_options->version = 21.0;
+  const auto copy_source = texture::create_texture2_d(copy_options);
+  const auto copy_out = texture::create_texture();
+  const auto copy_out_sampler = copy_out->sampler;
+  const auto copy_out_offset = copy_out->uv_offset;
+  const auto copy_out_scale = copy_out->uv_scale;
+  types::TextureLike copy_source_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, copy_source};
+  types::TextureLike copy_out_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, copy_out};
+  texture::copy_texture(copy_out_view, copy_source_view);
+  if (mutation == "--mutate-copy-owner") copy_out->uv_offset = copy_source->uv_offset;
+  check(copy_out->sampler == copy_out_sampler && copy_out->uv_offset == copy_out_offset &&
+            copy_out->uv_scale == copy_out_scale && copy_out->sampler != copy_source->sampler &&
+            copy_out->uv_offset != copy_source->uv_offset &&
+            copy_out->uv_scale != copy_source->uv_scale,
+        "copyTexture preserves destination sampling owners without aliasing source state");
+  check(copy_out->color_space == flight::String("linear") && copy_out->flip_x &&
+            copy_out->uv_rotation == 1.0 && copy_out->uv_scale->x == 0.5 &&
+            copy_out->version == 21.0 && copy_out->source == copy_source->source,
+        "copyTexture writes every common field and shares only the source owner");
+  copy_source->uv_offset->x = 0.9;
+  check(copy_out->uv_offset->x == 0.25,
+        "source sampling mutation does not leak into the owning destination copy");
+
+  const auto alias_options = flight::make_ref<types::CreateTexture2DOptions>();
+  alias_options->color_space = flight::String("linear");
+  alias_options->source = decltype(types::CreateTexture2DOptions::source){
+      std::in_place_type<flight::Ref<types::TextureSource>>, source};
+  alias_options->uv_rotation = 2.0;
+  alias_options->uv_scale = flight::geometry::create_vector2(7.0, 8.0);
+  const auto alias_texture = texture::create_texture2_d(alias_options);
+  const auto alias_sampler = alias_texture->sampler;
+  const auto alias_offset = alias_texture->uv_offset;
+  const auto alias_scale = alias_texture->uv_scale;
+  types::TextureLike alias_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, alias_texture};
+  texture::copy_texture(alias_view, alias_view);
+  if (mutation == "--mutate-alias-copy") alias_texture->uv_scale->x = 0.0;
+  check(alias_texture->sampler == alias_sampler && alias_texture->uv_offset == alias_offset &&
+            alias_texture->uv_scale == alias_scale &&
+            alias_texture->color_space == flight::String("linear") &&
+            alias_texture->uv_rotation == 2.0 && alias_texture->uv_scale->x == 7.0 &&
+            alias_texture->source.has_value() &&
+            std::get<flight::Ref<types::TextureSource>>(alias_texture->source.value()) == source,
+        "copyTexture is safe when destination and source are the same owner");
+
+  const auto copy_array_source_options =
+      flight::make_ref<texture::CreateTexture2DArrayVariantOptions>();
+  copy_array_source_options->dimension = flight::String("2d-array");
+  copy_array_source_options->sources =
+      flight::Array<std::optional<types::TextureSourceValue>>{
+          types::TextureSourceValue{
+              std::in_place_type<flight::Ref<types::TextureSource>>, source}};
+  const auto copy_array_source = texture::create_texture(copy_array_source_options);
+  const auto copy_array_out_options =
+      flight::make_ref<texture::CreateTexture2DArrayVariantOptions>();
+  copy_array_out_options->dimension = flight::String("2d-array");
+  const auto copy_array_out = texture::create_texture(copy_array_out_options);
+  types::TextureLike copy_array_source_view{
+      std::in_place_type<flight::Ref<types::Texture2DArray>>, copy_array_source};
+  types::TextureLike copy_array_out_view{
+      std::in_place_type<flight::Ref<types::Texture2DArray>>, copy_array_out};
+  texture::copy_texture(copy_array_out_view, copy_array_source_view);
+  if (mutation == "--mutate-copy-list") {
+    copy_array_out->sources = copy_array_source->sources;
+  }
+  check(copy_array_out->sources.size() == 1 &&
+            copy_array_out->sources.get(0.0).has_value() &&
+            copy_array_out->sources.get(0.0).value().has_value() &&
+            std::get<flight::Ref<types::TextureSource>>(
+                copy_array_out->sources.get(0.0).value().value()) == source,
+        "copyTexture retains exact owners in copied source lists");
+  copy_array_out->sources[0] = std::nullopt;
+  check(copy_array_source->sources.get(0.0).has_value() &&
+            copy_array_source->sources.get(0.0).value().has_value(),
+        "copyTexture gives array textures fresh list storage");
+
+  const auto copy_voxel = flight::make_ref<types::VoxelGrid>();
+  const auto copy_three_d_source_options =
+      flight::make_ref<texture::CreateTexture3DVariantOptions>();
+  copy_three_d_source_options->dimension = flight::String("3d");
+  copy_three_d_source_options->source =
+      decltype(texture::CreateTexture3DVariantOptions::source){
+          std::in_place_type<flight::Ref<types::VoxelGrid>>, copy_voxel};
+  const auto copy_three_d_source = texture::create_texture(copy_three_d_source_options);
+  const auto copy_three_d_out_options =
+      flight::make_ref<texture::CreateTexture3DVariantOptions>();
+  copy_three_d_out_options->dimension = flight::String("3d");
+  const auto copy_three_d_out = texture::create_texture(copy_three_d_out_options);
+  types::TextureLike copy_three_d_source_view{
+      std::in_place_type<flight::Ref<types::Texture3D>>, copy_three_d_source};
+  types::TextureLike copy_three_d_out_view{
+      std::in_place_type<flight::Ref<types::Texture3D>>, copy_three_d_out};
+  texture::copy_texture(copy_three_d_out_view, copy_three_d_source_view);
+  check(copy_three_d_out->source.has_value() && copy_three_d_out->source.value() == copy_voxel,
+        "copyTexture shares the exact voxel source owner for 3D textures");
+
+  const auto copy_cube_source_options =
+      flight::make_ref<texture::CreateTextureCubeVariantOptions>();
+  copy_cube_source_options->dimension = flight::String("cube");
+  copy_cube_source_options->sources = types::TextureSourceCubeFaces{
+      types::TextureSourceValue{
+          std::in_place_type<flight::Ref<types::TextureSource>>, source},
+      std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt};
+  const auto copy_cube_source = texture::create_texture(copy_cube_source_options);
+  const auto copy_cube_out_options =
+      flight::make_ref<texture::CreateTextureCubeVariantOptions>();
+  copy_cube_out_options->dimension = flight::String("cube");
+  const auto copy_cube_out = texture::create_texture(copy_cube_out_options);
+  types::TextureLike copy_cube_source_view{
+      std::in_place_type<flight::Ref<types::TextureCube>>, copy_cube_source};
+  types::TextureLike copy_cube_out_view{
+      std::in_place_type<flight::Ref<types::TextureCube>>, copy_cube_out};
+  texture::copy_texture(copy_cube_out_view, copy_cube_source_view);
+  copy_cube_out->sources[0] = std::nullopt;
+  check(copy_cube_source->sources.get(0.0).has_value() &&
+            copy_cube_source->sources.get(0.0).value().has_value(),
+        "copyTexture gives cube textures fresh face-list storage");
+
+  const std::array<types::TextureLike, 4> dimension_textures{
+      copy_out_view, copy_array_source_view, copy_three_d_source_view,
+      copy_cube_source_view};
+  const std::array<const char*, 4> dimension_mutations{
+      "--mutate-dimension-2d", "--mutate-dimension-2d-array",
+      "--mutate-dimension-3d", "--mutate-dimension-cube"};
+  const std::array<const char*, 4> dimension_messages{
+      "copyTexture rejects every mismatched dimension for a 2D destination",
+      "copyTexture rejects every mismatched dimension for a 2D-array destination",
+      "copyTexture rejects every mismatched dimension for a 3D destination",
+      "copyTexture rejects every mismatched dimension for a cube destination"};
+  for (std::size_t out_index = 0; out_index < dimension_textures.size(); ++out_index) {
+    const auto before_color = std::visit(
+        [](const auto& value) { return value->color_space; }, dimension_textures[out_index]);
+    const auto before_sampler = std::visit(
+        [](const auto& value) { return value->sampler; }, dimension_textures[out_index]);
+    bool rejected_all = true;
+    for (std::size_t source_index = 0; source_index < dimension_textures.size();
+         ++source_index) {
+      if (source_index == out_index) continue;
+      bool rejected = false;
+      try {
+        texture::copy_texture(dimension_textures[out_index],
+                              dimension_textures[source_index]);
+      } catch (const flight::Error& error) {
+        rejected = error.message() ==
+                   flight::String("copyTexture requires matching dimensions");
+      }
+      if (mutation == dimension_mutations[out_index] &&
+          source_index == ((out_index + 1) % dimension_textures.size())) {
+        rejected = false;
+      }
+      rejected_all = rejected_all && rejected;
+    }
+    check(rejected_all, dimension_messages[out_index]);
+    check(std::visit([](const auto& value) { return value->color_space; },
+                     dimension_textures[out_index]) == before_color &&
+              std::visit([](const auto& value) { return value->sampler; },
+                         dimension_textures[out_index]) == before_sampler,
+          "dimension rejection occurs before destination mutation");
+  }
+
+  const auto rejected_source = flight::make_ref<types::TextureSource>();
+  const std::optional<types::TextureSourceValue> replacement_source{
+      types::TextureSourceValue{
+          std::in_place_type<flight::Ref<types::TextureSource>>, rejected_source}};
+  bool set_source_rejected_all = true;
+  for (std::size_t index = 1; index < dimension_textures.size(); ++index) {
+    const auto before_version = std::visit(
+        [](const auto& value) { return value->version; }, dimension_textures[index]);
+    bool rejected = false;
+    try {
+      texture::set_texture_source(dimension_textures[index], replacement_source);
+    } catch (const flight::Error& error) {
+      rejected = error.message() ==
+                 flight::String("setTextureSource requires a Texture2D");
+    }
+    if (mutation == "--mutate-set-source-dimension" && index == 1) rejected = false;
+    set_source_rejected_all = set_source_rejected_all && rejected &&
+                              std::visit([](const auto& value) { return value->version; },
+                                         dimension_textures[index]) == before_version;
+  }
+  check(set_source_rejected_all,
+        "setTextureSource rejects every non-2D dimension before mutation");
+
   using SamplerView = flight::StructuralRef<
       flight::RowReadonly<flight::RowOf<types::SamplerLike>>>;
   using OptionalSampler =
@@ -231,6 +471,24 @@ int main(int argc, char** argv) {
   const auto video = texture::create_video_texture(host_video, video_source, video_options);
   types::TextureLike video_union{
       std::in_place_type<flight::Ref<types::Texture2D>>, video};
+  bool set_video_source_rejected_all = true;
+  for (std::size_t index = 1; index < dimension_textures.size(); ++index) {
+    const auto before_version = std::visit(
+        [](const auto& value) { return value->version; }, dimension_textures[index]);
+    bool rejected = false;
+    try {
+      texture::set_video_texture_source(host_video, dimension_textures[index], video_source);
+    } catch (const flight::Error& error) {
+      rejected = error.message() ==
+                 flight::String("setVideoTextureSource requires a Texture2D");
+    }
+    if (mutation == "--mutate-set-video-source-dimension" && index == 1) rejected = false;
+    set_video_source_rejected_all = set_video_source_rejected_all && rejected &&
+                                    std::visit([](const auto& value) { return value->version; },
+                                               dimension_textures[index]) == before_version;
+  }
+  check(set_video_source_rejected_all,
+        "setVideoTextureSource rejects every non-2D dimension before mutation");
   const auto video_image = texture::get_video_image(video_union);
   check(video->flip_x && video->uv_rotation == 0.5,
         "video construction retains supplied 2D sampling options");
@@ -253,7 +511,7 @@ int main(int argc, char** argv) {
         "video destruction detaches only the borrowed image source");
 
   if (failures == 0) {
-    std::cout << "texture construction, cloning, and equality match Flight\n";
+    std::cout << "texture construction, cloning, copy, and equality match Flight\n";
   }
   return failures == 0 ? 0 : 1;
 }

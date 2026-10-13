@@ -12,7 +12,7 @@ equality, ordering, exceptions, settlement, then format breadth.
 
 | Package | Focused native evidence | Highest remaining audited gap |
 | --- | --- | --- |
-| `texture` | Construction covers absent defaults and exact source/resource identity; clone and video lifecycle cover shared versus copied owners. The focused test now also ports sampler and 2D texture equality, including null/undefined, same-owner, value-state, and distinct-source-identity cases. | Copy/initialize, source/readiness/size queries, and UV matrix/mutation behavior remain. Cube and render-texture behavior also reaches declared compiler refusals, so it is not an independent test-only slice. |
+| `texture` | Construction covers absent defaults and exact source/resource identity; clone and video lifecycle cover shared versus copied owners. Sampler/2D equality covers null/undefined, same-owner, value-state, and distinct-source identity. Copy/initialize evidence distinguishes construction-row identity, cloned mutable sampling state, shared source owners, preserved destination owners, self-alias safety, and fresh array/cube list storage; every legitimate dimension mismatch and both non-2D source setters reject before mutation. | Source/readiness/size queries and UV matrix/mutation behavior remain. Cube and render-texture helper behavior also reaches declared compiler refusals, so it is not an independent test-only slice. |
 | `texture-formats` | The byte-exact test covers all nine upstream modules: bounded/endian reads, detection and explanations, level layout, selection, and ATF/Basis/DDS/KTX2 parsing and rejection. Two restored source mutations prove mip-count and normalized image-order assertions. | No high-priority semantic gap was found. More malformed-header combinations would add breadth rather than a missing behavior family. |
 | `shading` | The focused test covers all modifier constructors, shared option identity, stable stack ordering, validation, registry isolation/replacement, built-in registration, and define keys. | Remaining cases are repeated option and invalid-value permutations; no uncovered absence, identity, equality, or ordering family was found. |
 | `materials` | `materials-native-inventory.md` records constructor/default, owner identity, equality, ordering, validation, conversion, guard lifecycle, and eight mutation oracles across all 22 suites. | Lower-priority detail remains in color-scale/bias helper permutations, whole-object Phong conversion precedence, forwarded optional-map permutations, and exact diagnostic text. |
@@ -35,8 +35,25 @@ operand directions. `--mutate-sampler-equality` and `--mutate-texture-equality` 
 invalidate the corresponding positive oracle; the baseline must pass and both mutation runs must
 fail.
 
+The copy/initialize follow-on exercises `initializeTexture2D` through its real
+`EntityConstruction<Texture2D>` view and proves that `finishEntity` retains that row owner while
+sampler and UV inputs are cloned. `copyTexture` covers the four dimension-specific content paths:
+2D and 3D keep source identity, 2D-array and cube allocate fresh list storage, destination sampler
+and UV owners survive, and copying an owner onto itself is safe. All twelve ordered mismatched pairs
+among 2D, 2D-array, 3D, and cube reject with the exact error before changing destination state.
+`setTextureSource` and `setVideoTextureSource` likewise reject all three non-2D dimensions before
+changing their versions.
+
+Nine independent mutations cover initializer view/copy ownership, destination owner preservation,
+self-alias safety, list isolation, and the four destination-dimension guards. Two more mutations
+independently suppress the ordinary and video source-setter dimension oracles. The per-arm dimension
+checks after `copyTexture`'s leading equality guard are not independently reachable for a coherent
+TypeScript discriminated union: once the two public dimensions compare equal, the selected source
+arm necessarily has that same dimension. The native test therefore covers the complete legitimate
+4-by-4 mismatch domain and does not manufacture an inconsistent C++ variant/discriminator pair.
+
 ## Next useful work
 
-The next independent semantic slice is texture copy/initialize alias safety and dimension-mismatch
-exception behavior. Image settlement is more valuable globally, but is not independent at this pin:
+The next independent texture slice is source/readiness/size behavior, followed by UV matrices and
+mutation helpers. Image settlement is more valuable globally, but is not independent at this pin:
 it requires the existing browser URL/location and erased-owner compiler requests to land first.
