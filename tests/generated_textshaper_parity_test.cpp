@@ -24,7 +24,9 @@
 #include <flight/textshaper/text_shaper_cluster.hpp>
 #include <flight/textshaper/text_shaper_itemize.hpp>
 #include <flight/textshaper/text_shaper_pool.hpp>
+#include <flight/textshaper/text_shaper_cache.hpp>
 #include <flight/textshaper/text_shaper_run.hpp>
+#include <flight/textshaper/text_shaper_signals.hpp>
 #include <flight/types/font_metrics.hpp>
 #include <flight/types/glyph_extents.hpp>
 #include <flight/types/shaped_run.hpp>
@@ -92,6 +94,12 @@ using ReleaseGuard = std::function<void(
 // 'سلام' written as escapes so the fixture does not depend on the source file's encoding.
 flight::String arabic_salam() { return flight::String(u"\u0633\u0644\u0627\u0645"); }
 
+
+flight::Ref<flight::types::TextFormat> sized_format(double size) {
+  const auto format = flight::make_ref<flight::types::TextFormat>();
+  format->size = size;
+  return format;
+}
 
 // The upstream run fixture: two glyphs, the first of which every backend below claims to know.
 flight::Ref<flight::types::ShapedRun> full_backend_shape() {
@@ -805,6 +813,134 @@ int main() {
                 captured->second == flight::String("Arab"),
             "run: shaping-into forwards the options to the host");
     }
+  }
+
+
+  // ---- textShaperSignals.test.ts -----------------------------------------------------------------
+  //
+  // The module owns ONE process-global signals entity, and the whole contract is its lifecycle:
+  // absent until enabled, then the SAME entity on every further call, then absent again after a
+  // dispose. Identity is the assertion, not merely non-nullness.
+
+  {
+    // Start from a known state; the global is shared with whatever ran before.
+    flight::textshaper::dispose_text_shaper_signals();
+    check(!flight::textshaper::get_text_shaper_signals().has_value(),
+          "signals: there are none before they are enabled");
+
+    // Disposing when nothing is enabled is a no-op, not an error.
+    bool threw = false;
+    try {
+      flight::textshaper::dispose_text_shaper_signals();
+    } catch (...) {
+      threw = true;
+    }
+    check(!threw, "signals: disposing when none are enabled is silently a no-op");
+
+    const auto enabled = flight::textshaper::enable_text_shaper_signals();
+    check(enabled != nullptr, "signals: enabling produces a signals entity");
+    check(enabled->on_backend_changed != nullptr,
+          "signals: the entity carries its onBackendChanged signal");
+
+    // Idempotent BY IDENTITY: a second enable hands back the same entity rather than a fresh one, so
+    // subscribers registered against the first are not silently orphaned.
+    const auto again = flight::textshaper::enable_text_shaper_signals();
+    check(again == enabled, "signals: enabling twice returns the same entity");
+
+    check(flight::textshaper::get_text_shaper_signals().has_value() &&
+              flight::textshaper::get_text_shaper_signals().value() == enabled,
+          "signals: the active entity is the one that was enabled");
+
+    flight::textshaper::dispose_text_shaper_signals();
+    check(!flight::textshaper::get_text_shaper_signals().has_value(),
+          "signals: disposing clears the active entity");
+
+    // Re-enabling after a dispose builds a NEW entity -- the disposed one is gone, not retained.
+    const auto reenabled = flight::textshaper::enable_text_shaper_signals();
+    check(reenabled != nullptr && reenabled != enabled,
+          "signals: re-enabling after a dispose builds a fresh entity");
+    flight::textshaper::dispose_text_shaper_signals();
+    check(!flight::textshaper::get_text_shaper_signals().has_value(),
+          "signals: the module is left with no active entity");
+  }
+
+
+  // ---- textShaperCache.test.ts -------------------------------------------------------------------
+  //
+  // The package's own cache suite already exists (tests/generated_textshaper_cache_test.cpp covers a
+  // hit's identity and host isolation). Its remaining upstream cases are covered here so the whole
+  // fixture is pinned in one place: clearing vs disposing, key distinctions, and the rule that a
+  // backend which cannot shape does not poison the cache.
+  //
+  // NOTE: this module is supplied by the hand-written override textshaper-cache-identity-and-keying,
+  // which SHADOWS generated/include/flight/textshaper/text_shaper_cache.hpp -- so these assertions
+  // pin the override, and a mutation aimed at the generated file changes nothing. (That is not a
+  // hypothesis: it was found by a mutation that survived.) The keys, the per-host ids, the
+  // clear/dispose split and the not-caching-null rule are all the override's.
+
+  {
+    // A backend that counts how often it is actually asked to shape.
+    int calls = 0;
+    const auto counting = flight::make_ref<flight::types::HostTextShaperCapability>();
+    counting->measure_text = [](flight::String text, flight::Ref<flight::types::TextFormat>) {
+      return static_cast<double>(text.length());
+    };
+    counting->shape_run = [&calls](flight::String, auto, auto) {
+      ++calls;
+      return full_backend_shape();
+    };
+    const auto advances_only = advances_only_backend();
+    const auto format = a_format();
+
+    const auto cache = flight::textshaper::create_text_shaper_cache();
+    check(flight::textshaper::create_text_shaper_cache() != cache,
+          "cache: each call allocates a distinct cache");
+
+    // Repeated identical calls shape ONCE and hand back the SAME run.
+    const auto first = flight::textshaper::shape_text_run_cached(counting, cache, flight::String("hi"), format);
+    const auto hit = flight::textshaper::shape_text_run_cached(counting, cache, flight::String("hi"), format);
+    check(first.has_value() && hit.has_value() && hit.value() == first.value() && calls == 1,
+          "cache: an identical call is a hit that returns the same run");
+
+    flight::textshaper::shape_text_run_cached(counting, cache, flight::String("other"), format);
+    check(calls == 2, "cache: different text is a miss");
+    flight::textshaper::shape_text_run_cached(counting, cache, flight::String("hi"), sized_format(20.0));
+    check(calls == 3, "cache: a different format size is a miss");
+
+    auto options = flight::make_ref<flight::types::ShapeRunOptions>();
+    options->direction = flight::String("RightToLeft");
+    flight::textshaper::shape_text_run_cached(counting, cache, flight::String("hi"), format, options);
+    check(calls == 4, "cache: a different options direction is a miss");
+
+    // A host that cannot shape yields nothing and CACHES nothing, so a later capable host still runs.
+    check(!flight::textshaper::shape_text_run_cached(advances_only, cache, flight::String("hi"), format)
+               .has_value(),
+          "cache: an advances-only host shapes nothing");
+    const auto after_failure =
+        flight::textshaper::shape_text_run_cached(counting, cache, flight::String("hi"), format);
+    check(after_failure.has_value() && calls == 4,
+          "cache: a failed shape is not cached, so a capable host still hits the earlier entry");
+
+    // clear() empties the entries but leaves the cache USABLE.
+    flight::textshaper::clear_text_shaper_cache(cache);
+    const auto after_clear =
+        flight::textshaper::shape_text_run_cached(counting, cache, flight::String("hi"), format);
+    check(after_clear.has_value() && calls == 5, "cache: clearing forces the next call to shape again");
+
+    // dispose() ends the cache's life: it answers nothing and does NOT reach the backend again.
+    flight::textshaper::dispose_text_shaper_cache(cache);
+    const auto after_dispose =
+        flight::textshaper::shape_text_run_cached(counting, cache, flight::String("hi"), format);
+    check(!after_dispose.has_value(), "cache: a disposed cache shapes nothing");
+    check(calls == 5, "cache: a disposed cache does not reach the backend");
+
+    bool threw = false;
+    try {
+      flight::textshaper::dispose_text_shaper_cache(cache);
+    } catch (...) {
+      threw = true;
+    }
+    check(!threw, "cache: disposing twice is a no-op");
   }
 
   return failures == 0 ? 0 : 1;

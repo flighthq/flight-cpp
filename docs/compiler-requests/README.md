@@ -439,3 +439,5 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   a refusal (`contextual optionalSingle construction requires expression type evidence`) for `values()`/`keys()` iterator arguments; preventive, no SDK site is refused today. `entries()` and stored iterators stay refused.
 - [A nullish-coalesce fallback of `null` is wrapped into an *engaged* optional, so its truthiness test dereferences null](nullish-coalesce-null-into-optional-is-never-absent.md) —
   silent miscompilation: `@flighthq/textlayout`'s wrapping path panics on the first-segment overrun that upstream's own fixture exercises. No workaround is carried.
+- [A structural view of an entity-allocated carrier is invisible when the carrier derives from the row's subject](structural-view-of-a-derived-carrier-is-invisible.md) —
+  silent miscompilation: `@flighthq/textshaper` cannot recover the derived run carrier through its structural row view. No workaround is carried.
