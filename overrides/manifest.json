@@ -467,6 +467,22 @@
       "authoredOn": "2026-10-04"
     },
     {
+      "id": "particles-signals-missing-slot-reads-null",
+      "path": "flight/particles/particle_emitter_signals.hpp",
+      "package": "@flighthq/particles",
+      "status": "complete",
+      "supplies": "packages/particles/src/particleEmitterSignals.ts",
+      "remaining": "None in the supplied module at this pin.",
+      "derivedFrom": "a9766e19d93694d004bca0ac92ed9cfd12fd0e17f4ce55a571f14ddae485408e",
+      "reason": "The a627849 emission of getParticleEmitterSignals lowers `(state as Record<symbol, ParticleEmitterSignals | undefined>)[signalsSlot] ?? null` as `.get(signalsSlot).value()`. It compiles, but throws std::bad_optional_access for any state whose signals were never enabled -- the exact case the `?? null` exists for (docs/compiler-requests/record-missing-key-nullish-coalesce.md). updateParticleEmitter2D and updateParticleEmitter3D call it on every update, so once they emit every emitter without signals would throw.",
+      "change": "Carries the generated module verbatim except getParticleEmitterSignals, whose body tests both absences -- no slot written, and a slot holding undefined -- and returns null for either, the same two-layer test the emitted enableParticleEmitterSignals uses for its `??=`.",
+      "equivalence": "Returns the attached ParticleEmitterSignals object itself (the one enableParticleEmitterSignals created, by reference) when present, and null otherwise; it never creates or writes the slot. createParticleEmitterSignals, initializeParticleEmitterSignals and enableParticleEmitterSignals are the emitted code.",
+      "whyNotAPatchOrRepair": "Measured, no equivalent source spelling lowers correctly at 2b687ea: `const v = s[slot]; return v === undefined ? null : v` is refused (contextual union value type), Partial<Record<symbol, T>> is refused (open member set), and a typed local followed by `v ?? null` again drops the coalesce and does not compile. A repair cannot change a body.",
+      "unblocks": "getParticleEmitterSignals answers null before enablement, as upstream's \"returns null when signals have not been enabled\" asserts, instead of throwing.",
+      "expires": "when the emitter lowers `record[key] ?? fallback` over an element type that admits undefined by testing both the missing key and the undefined value.",
+      "authoredOn": "2026-10-13"
+    },
+    {
       "id": "particles-validate-particle-emitter-config",
       "path": "flight/particles/validate_particle_emitter_config.hpp",
       "package": "@flighthq/particles",
