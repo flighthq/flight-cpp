@@ -696,6 +696,8 @@ using CreateTexture2DArrayVariantOptions =
     flight::types::color_space_version_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_sources_dimension_resource_b96956d30cc649c7;
 using CreateTextureCubeVariantOptions =
     flight::types::color_space_version_sampler_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_sources_dimension_resource_8f80a98cd173b278;
+using CreateTexture2DOptionsRow = flight::StructuralRef<flight::RowReadonly<
+    flight::RowOf<flight::Ref<flight::types::CreateTexture2DOptions>>>>;
 
 template <typename Options>
 inline flight::Ref<color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_2af05f464e1f33ea>
@@ -719,6 +721,44 @@ create_common_texture_fields_from(const std::optional<std::shared_ptr<Options>>&
           .uv_rotation = uv_rotation,
           .uv_scale = uv_scale,
           .version = version});
+}
+
+inline flight::Ref<color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_2af05f464e1f33ea>
+create_common_texture_fields_from(const std::optional<CreateTexture2DOptionsRow>& opts) {
+  const auto color_space = opts
+      ? flight::row_get<flight::RowKey<"colorSpace">>(*opts)
+      : std::optional<flight::String>{};
+  const auto flip_x = opts
+      ? flight::row_get<flight::RowKey<"flipX">>(*opts)
+      : std::optional<bool>{};
+  const auto flip_y = opts
+      ? flight::row_get<flight::RowKey<"flipY">>(*opts)
+      : std::optional<bool>{};
+  const auto sampler = opts
+      ? flight::row_get<flight::RowKey<"sampler">>(*opts)
+      : std::optional<flight::Ref<Sampler>>{};
+  const auto uv_offset = opts
+      ? flight::row_get<flight::RowKey<"uvOffset">>(*opts)
+      : std::optional<flight::Ref<Vector2>>{};
+  const auto uv_rotation = opts
+      ? flight::row_get<flight::RowKey<"uvRotation">>(*opts)
+      : std::optional<double>{};
+  const auto uv_scale = opts
+      ? flight::row_get<flight::RowKey<"uvScale">>(*opts)
+      : std::optional<flight::Ref<Vector2>>{};
+  const auto version = opts
+      ? flight::row_get<flight::RowKey<"version">>(*opts)
+      : std::optional<double>{};
+  return flight::make_ref<color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_2af05f464e1f33ea>(
+      color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_2af05f464e1f33ea{
+          .color_space = color_space.value_or(flight::String("srgb")),
+          .flip_x = flip_x.value_or(false),
+          .flip_y = flip_y.value_or(false),
+          .sampler = sampler ? clone_sampler(*sampler) : create_sampler(std::nullopt),
+          .uv_offset = uv_offset ? clone_vector2(*uv_offset) : create_vector2(0.0, 0.0),
+          .uv_rotation = uv_rotation.value_or(0.0),
+          .uv_scale = uv_scale ? clone_vector2(*uv_scale) : create_vector2(1.0, 1.0),
+          .version = flight::unsigned_right_shift(version.value_or(0.0), 0.0)});
 }
 
 template <typename Owner>
@@ -749,6 +789,19 @@ inline std::optional<TextureSourceValue> texture_source_option(
   }, opts->source);
 }
 
+inline std::optional<TextureSourceValue> texture_source_option(
+    const CreateTexture2DOptionsRow& opts) {
+  return std::visit([](const auto& source) -> std::optional<TextureSourceValue> {
+    using Source = std::decay_t<decltype(source)>;
+    if constexpr (std::same_as<Source, flight::Null> ||
+                  std::same_as<Source, flight::Undefined>) {
+      return std::nullopt;
+    } else {
+      return TextureSourceValue{std::in_place_type<Source>, source};
+    }
+  }, flight::row_get<flight::RowKey<"source">>(opts));
+}
+
 template <typename Options>
 inline std::optional<flight::Ref<VoxelGrid>> voxel_source_option(
     const std::shared_ptr<Options>& opts) {
@@ -777,7 +830,7 @@ inline flight::Ref<Texture2D> create_texture2_d_from_options(
 
 inline void initialize_texture2_d(
     flight::types::EntityConstruction<flight::Ref<Texture2D>> out,
-    std::optional<flight::Ref<flight::types::CreateTexture2DOptions>> opts = std::nullopt) {
+    std::optional<flight::Ref<flight::types::CreateTexture2DOptions>> opts) {
   const auto common = create_common_texture_fields_from(opts);
   const auto owner = out.shared_owner();
   owner->set_named_value("colorSpace", common->color_space);
@@ -793,14 +846,46 @@ inline void initialize_texture2_d(
       "source", opts ? texture_source_option(*opts) : std::optional<TextureSourceValue>{});
 }
 
-inline flight::Ref<Texture2D> create_texture2_d(
-    std::optional<flight::Ref<flight::types::CreateTexture2DOptions>> opts = std::nullopt) {
+inline void initialize_texture2_d(
+    flight::types::EntityConstruction<flight::Ref<Texture2D>> out,
+    std::optional<CreateTexture2DOptionsRow> opts = std::nullopt) {
+  const auto common = create_common_texture_fields_from(opts);
+  const auto owner = out.shared_owner();
+  owner->set_named_value("colorSpace", common->color_space);
+  owner->set_named_value("flipX", common->flip_x);
+  owner->set_named_value("flipY", common->flip_y);
+  owner->set_named_value("sampler", common->sampler);
+  owner->set_named_value("uvOffset", common->uv_offset);
+  owner->set_named_value("uvRotation", common->uv_rotation);
+  owner->set_named_value("uvScale", common->uv_scale);
+  owner->set_named_value("version", common->version);
+  owner->set_named_value("dimension", flight::String("2d"));
+  owner->set_named_value(
+      "source", opts ? texture_source_option(*opts) : std::optional<TextureSourceValue>{});
+}
+
+template <typename Options>
+  requires std::same_as<Options, flight::Ref<flight::types::CreateTexture2DOptions>>
+inline flight::Ref<Texture2D> create_texture2_d(std::optional<Options> opts) {
   auto construction = flight::entity::allocate_entity<flight::Ref<Texture2D>>();
   initialize_texture2_d(construction, opts);
   auto texture = flight::entity::finish_entity<flight::Ref<Texture2D>>(construction);
   if (opts) {
     Texture wrapped{std::in_place_type<flight::Ref<Texture2D>>, texture};
     attach_texture_to_flat_resource(wrapped, (*opts)->resource);
+  }
+  return texture;
+}
+
+inline flight::Ref<Texture2D> create_texture2_d(
+    std::optional<CreateTexture2DOptionsRow> opts = std::nullopt) {
+  auto construction = flight::entity::allocate_entity<flight::Ref<Texture2D>>();
+  initialize_texture2_d(construction, opts);
+  auto texture = flight::entity::finish_entity<flight::Ref<Texture2D>>(construction);
+  if (opts) {
+    Texture wrapped{std::in_place_type<flight::Ref<Texture2D>>, texture};
+    attach_texture_to_resource(
+        wrapped, flight::row_get<flight::RowKey<"resource">>(*opts));
   }
   return texture;
 }

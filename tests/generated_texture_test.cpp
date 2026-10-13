@@ -29,6 +29,18 @@ int main() {
         "the default UV scale is one");
   check(!defaults->source.has_value(), "the default 2D source is absent");
 
+  const auto structural_options = flight::make_structural_ref<flight::RowReadonly<
+      flight::RowOf<flight::Ref<types::CreateTexture2DOptions>>>>(
+      flight::row_field<flight::RowKey<"sampler">>(
+          std::optional<flight::Ref<types::Sampler>>{defaults->sampler}));
+  const auto structural = texture::create_texture2_d(structural_options);
+  check(structural->dimension == flight::String("2d"),
+        "the structural 2D constructor selects 2D");
+  check(structural->sampler != defaults->sampler,
+        "the structural 2D constructor clones supplied sampling state");
+  check(!structural->source.has_value(),
+        "the structural 2D constructor defaults an omitted source");
+
   const auto direct = flight::make_ref<types::Texture2D>();
   auto direct_row = flight::StructuralRef<
       flight::RowWritable<flight::RowOf<flight::Ref<types::Texture2D>>>>(direct);
