@@ -26,6 +26,7 @@ using Region = flight::Ref<flight::types::TextureAtlasRegion>;
 
 int failures = 0;
 bool inject_transform_layout_mutation = false;
+bool inject_last_removal_mutation = false;
 
 void check(bool condition, const char* message) {
   if (!condition) {
@@ -447,6 +448,36 @@ void removal_signals_and_failure_paths() {
   quadbatch::remove_quad_batch_instance(batch, 2);
   check(batch->data->instance_count == 2, "removeQuadBatchInstance no-ops outside the live range");
 
+  auto last = quadbatch::create_quad_batch();
+  quadbatch::append_quad_batch_instance(last, 5, 50, 50);
+  const auto last_ids_buffer = last->data->ids.buffer;
+  const auto last_transforms_buffer = last->data->transforms.buffer;
+  auto last_signals = quadbatch::enable_quad_batch_signals(last);
+  std::tuple<double, double> last_removed{-2, -2};
+  flight::signals::connect_signal(
+      last_signals->on_instance_removed,
+      std::function<void(double, double)>(
+          [&](double index, double swap) { last_removed = {index, swap}; }));
+  quadbatch::remove_quad_batch_instance(last, 0);
+  bool last_removal_transition =
+      last->data->instance_count == 0 &&
+      last->data->ids.buffer == last_ids_buffer &&
+      last->data->transforms.buffer == last_transforms_buffer &&
+      last_removed == std::tuple<double, double>{0, -1};
+  const double reused_index =
+      quadbatch::append_quad_batch_instance(last, 6, 60, 70);
+  last_removal_transition =
+      last_removal_transition && reused_index == 0 &&
+      last->data->instance_count == 1 &&
+      quadbatch::get_quad_batch_instance_id(readonly(last), 0) == 6 &&
+      last->data->transforms.get_index(0) == 60 &&
+      last->data->transforms.get_index(1) == 70 &&
+      last->data->ids.buffer == last_ids_buffer &&
+      last->data->transforms.buffer == last_transforms_buffer;
+  if (inject_last_removal_mutation) last_removal_transition = false;
+  check(last_removal_transition,
+        "removeQuadBatchInstance transitions the last slot to empty, emits no swap source, and reuses storage");
+
   auto signaled = quadbatch::create_quad_batch();
   check(!quadbatch::get_quad_batch_signals(readonly(signaled)).has_value(), "signals are absent before enable");
   auto signals = quadbatch::enable_quad_batch_signals(signaled);
@@ -540,6 +571,9 @@ void specialized_runtime_boundaries() {
 int main(int argc, char** argv) {
   inject_transform_layout_mutation =
       argc == 2 && flight::String(argv[1]) == flight::String("--mutate-layout");
+  inject_last_removal_mutation =
+      argc == 2 &&
+      flight::String(argv[1]) == flight::String("--mutate-last-removal");
   construction_and_initializers();
   append_capacity_and_byte_layout();
   clone_compaction_and_ordering();

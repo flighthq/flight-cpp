@@ -1063,6 +1063,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_color color)
 flight_cpp_package_test_labels(flight_cpp.generated_adjustments adjustments)
 flight_cpp_package_test_labels(flight_cpp.generated_capture capture)
 flight_cpp_package_test_labels(flight_cpp.generated_snapshot snapshot log)
+flight_cpp_package_test_labels(flight_cpp.generated_quadbatch quadbatch signals)
 flight_cpp_package_test_labels(flight_cpp.upstream_math_geometry_parity geometry math)
 
 # Behavioural parity for @flighthq/textbidi, driven by the upstream Vitest fixtures. It links the SDK

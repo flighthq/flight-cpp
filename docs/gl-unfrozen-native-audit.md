@@ -22,7 +22,7 @@ equality, ordering, exceptions, settlement, then format breadth.
 | `surface` | The focused test ports every case across all five suites, including exact handle/runtime identity, dimensions, option routing, acquisition/release order, rejection, and four restored mutations. | No material portable behavior gap was found. |
 | `capture` | All 30 upstream declarations plus lifecycle, byte layout, identity, malformed-input, parity, and regression boundaries are native, with seven restored mutations. | No material portable behavior gap was found. |
 | `snapshot` | All 55 declarations plus graph order, aliasing, freeze, equality, restore, interpolation, cycle, and `DataCloneError` behavior are native, with eight restored mutations. | No material portable behavior gap was found. |
-| `quadbatch` | `quadbatch-native-inventory.md` maps all 88 cases to exact native assertions and a layout mutation oracle. | Four generic node-bounds expectations remain at the documented flattened-owner boundary. The focused CTest is registered but is not yet discoverable through a `quadbatch` package label. |
+| `quadbatch` | `quadbatch-native-inventory.md` maps all 88 cases to exact native assertions and two mutation oracles. Dedicated one-item removal proves the empty transition, exact `-1` no-swap notification, retained buffers, and index-zero storage reuse. The focused CTest is discoverable through both `quadbatch` and direct-dependency `signals` labels. | Four generic node-bounds expectations remain at the documented flattened-owner boundary; no material executable behavior remains uncovered at this pin. |
 | `color` | All 89 declarations (94 concrete parameterized cases) plus exact bytes, identity, aliasing, transfer thresholds, clamping, and six restored mutations are native. | No material portable behavior gap was found. |
 | `adjustments` | All 137 declarations are grouped into exact native construction, resolution, order, matrix, LUT/cache, numeric, identity, clamp, alias, and exception assertions, with eight restored mutations. | No material portable behavior gap was found. |
 
@@ -138,9 +138,16 @@ every invocation owns isolated state, so later mutations cannot leak across pres
 Fifteen mutations independently guard defaults, omission, initializer propagation, clone/copy field
 coverage, owner aliasing, bidirectional isolation, self-copy, each preset, and preset isolation.
 
+The quadbatch follow-on restores the upstream last-instance removal case as a dedicated lifecycle
+oracle. Removing index zero from a one-item batch transitions its logical count to zero, emits
+`(0, -1)` because no source slot is swapped, retains the id and transform buffers, and reuses index
+zero with exact id/transform state on the next append. `--mutate-last-removal` independently proves
+that compound transition is observed. The CTest now carries both `quadbatch` and `signals` labels,
+matching the packages directly included by the executable.
+
 ## Next useful work
 
-No further material executable texture behavior was found at this pin. The dedicated
+No further material executable texture or quadbatch behavior was found at this pin. The dedicated
 `cloneCubeTexture` and `createCubeTexture` entry points remain at their recorded flattened-interface
 refinement/heritage boundary even though their generic concrete-owner behavior is covered;
 `getCubeTextureFaceSize`, `isCubeTextureComplete`, and `setCubeTextureFace` remain behind their

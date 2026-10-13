@@ -8,8 +8,8 @@ intermediate. It also pins the renderer-facing byte contract that the TypeScript
 
 | Evidence family | Native evidence |
 | --- | --- |
-| Construction and lifecycle | Default and supplied data, fresh batch identity, fresh clone runtime, data/runtime/signal initializers, weak signal attachment, idempotent enable, append/remove/clear delivery |
-| Batching and ordering | Sequential append indices, stable iteration, swap removal, stable sentinel compaction, overlapping-hit first-index order, no-op invalid ranges |
+| Construction and lifecycle | Default and supplied data, fresh batch identity, fresh clone runtime, data/runtime/signal initializers, weak signal attachment, idempotent enable, append/remove/clear delivery, last-instance transition to empty, retained storage and index-zero reuse after reappend |
+| Batching and ordering | Sequential append indices, stable iteration, swap removal with its source index, last-slot removal with the exact `-1` no-swap source, stable sentinel compaction, overlapping-hit first-index order, no-op invalid ranges |
 | Capacity | Automatic growth, explicit reserve, no allocation below/equal capacity, misaligned buffer minimum, shrinking logical counts, 300,000 untinted atlas instances |
 | Vertex/index byte layout | `Uint16Array` ids are exactly 2 bytes per capacity slot; vector2 transforms are 2 `Float32` values / 8 bytes per slot; matrix3x2 transforms and iterator views are 6 `Float32` values / 24 bytes per slot; buffer identity is retained on no-op reserve and clone buffers are independent |
 | Transform mutation | Indexed vector and matrix writes, contiguous range writes, exact identity-plus-translation expansion, translation-only collapse, unchanged-type buffer identity |
@@ -26,7 +26,8 @@ the flattened `MaterialData` / `TintMaterialData` siblings: the material slot an
 tested through `get_quad_batch_instance_tint`, but renderer-side base-to-derived recovery is not
 claimed.
 
-The test has a deliberate `--mutate-layout` mode that changes the first expanded matrix component
-from `1` to `2` after conversion. Normal execution must pass; mutation execution must fail the exact
-identity-plus-translation assertion. This guards the highest-value layout assertion against a
-vacuous port.
+The test has two deliberate mutation modes. `--mutate-layout` changes the first expanded matrix
+component from `1` to `2` after conversion, while `--mutate-last-removal` suppresses the dedicated
+one-item removal, notification, and storage-reuse oracle. Normal execution must pass; each mutation
+execution must fail its exact assertion. These modes guard the highest-value byte-layout and
+last-slot lifecycle assertions against a vacuous port.
