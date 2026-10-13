@@ -852,6 +852,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_textsegment_parity_test",
+    srcs = ["generated_textsegment_parity_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_video_test",
     srcs = ["generated_video_test.cpp"],
     size = "small",
@@ -979,6 +986,7 @@ test_suite(
         ":generated_surface_test",
         ":generated_textshaper_cache_test",
         ":generated_textbidi_parity_test",
+        ":generated_textsegment_parity_test",
         ":generated_texture_test",
         ":generated_texture_formats_test",
         ":generated_textureatlas_test",
