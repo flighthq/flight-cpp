@@ -88,7 +88,12 @@ bool is_text(const Ref<LogEntry>& entry, const char* value) {
   return t != nullptr && *t == String(value);
 }
 
-const Fields* fields_of(const Ref<LogEntry>& entry) { return std::get_if<Fields>(&entry->data); }
+// A failed expectation must fail its check, not crash the run: a non-record entry reads as an empty record.
+const Fields* fields_of(const Ref<LogEntry>& entry) {
+  static const Fields empty;
+  const auto* fields = std::get_if<Fields>(&entry->data);
+  return fields != nullptr ? fields : &empty;
+}
 
 std::vector<std::string> keys(const Fields& f) {
   std::vector<std::string> out;
@@ -96,8 +101,14 @@ std::vector<std::string> keys(const Fields& f) {
   return out;
 }
 
-double num(const Fields& f, const char* key) { return f.get(String(key)).value().as_number(); }
-std::string str(const Fields& f, const char* key) { return f.get(String(key)).value().as_string().to_utf8(); }
+double num(const Fields& f, const char* key) {
+  const auto value = f.get(String(key));
+  return value.has_value() && value->kind() == flight::AnyKind::number ? value->as_number() : -1e300;
+}
+std::string str(const Fields& f, const char* key) {
+  const auto value = f.get(String(key));
+  return value.has_value() && value->kind() == flight::AnyKind::string ? value->as_string().to_utf8() : std::string("<absent>");
+}
 
 void level_functions() {
   reset();
@@ -430,8 +441,10 @@ void buffered_sink() {
     auto handle = lg::create_buffered_log_sink(collector(forwarded), options(2, 0));
     lg::add_log_sink(handle->sink);
     lg::log(LogLevel::Info, text("a"));
+    const auto beforeSize = forwarded.size();
     lg::log(LogLevel::Info, text("b"));
-    check(forwarded.size() == 2 && is_text(forwarded[0], "a") && is_text(forwarded[1], "b"), "reaching size flushes, in order");
+    check(beforeSize == 0 && forwarded.size() == 2 && is_text(forwarded[0], "a") && is_text(forwarded[1], "b"),
+          "nothing is forwarded below size, and reaching size flushes everything, in order");
   }
   reset();
   {
@@ -543,7 +556,8 @@ void serialize_errors() {
     auto inner = flight::make_ref<flight::Error>(String("inner"));
     auto outer = flight::make_ref<flight::Error>(String("outer"), flight::ErrorOptions{.cause = Any::object(inner)});
     auto result = lg::serialize_log_error(Any::object(outer));
-    const auto* cause = result.get(String("cause")).value().external_if<Fields>();
+    const auto stored = result.get(String("cause"));
+    const auto* cause = stored.has_value() ? stored->external_if<Fields>() : nullptr;
     check(cause != nullptr && str(*cause, "message") == "inner" && keys(result) == std::vector<std::string>{"name", "message", "cause"},
           "the cause chain is serialized recursively");
   }
