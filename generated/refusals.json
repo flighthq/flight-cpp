@@ -7073,7 +7073,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-resources/src/awd2Load.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency ./sceneDocumentSource was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/sceneDocumentSource.ts",
+      "reason": "dependency ./sceneDocumentSource.ts was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/sceneDocumentSource.ts",
       "stage": "dependency"
     },
     {
@@ -7089,7 +7089,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-resources/src/contract.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency ./anisotropyPbrScene3DMaterialTextures was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/anisotropyPbrScene3DMaterialTextures.ts",
+      "reason": "dependency ./anisotropyPbrScene3DMaterialTextures.ts was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/anisotropyPbrScene3DMaterialTextures.ts",
       "stage": "dependency"
     },
     {
@@ -7105,7 +7105,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-resources/src/explainScene3DResourceCoverage.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency ./sceneMaterialTextureRegistry was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/sceneMaterialTextureRegistry.ts",
+      "reason": "dependency ./sceneMaterialTextureRegistry.ts was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/sceneMaterialTextureRegistry.ts",
       "stage": "dependency"
     },
     {
@@ -7120,11 +7120,18 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 36,
+      "line": 31,
       "module": "packages/scene3d-resources/src/gltfLoad.ts",
       "package": "@flighthq/scene3d-resources",
       "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoad.ts: contextual union value type flight::Record<flight::String, flight::Uint8Array> is not a represented runtime domain",
       "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-resources/src/gltfLoadImport.ts",
+      "package": "@flighthq/scene3d-resources",
+      "reason": "dependency ./gltfLoad.ts was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoad.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -7139,7 +7146,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-resources/src/index.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency ./contract was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -7164,21 +7171,21 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-resources/src/md2Load.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency ./sceneDocumentSource was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/sceneDocumentSource.ts",
+      "reason": "dependency ./sceneDocumentSource.ts was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/sceneDocumentSource.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene3d-resources/src/md5Load.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency ./sceneDocumentSource was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/sceneDocumentSource.ts",
+      "reason": "dependency ./sceneDocumentSource.ts was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/sceneDocumentSource.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene3d-resources/src/objLoad.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency ./sceneDocumentSource was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/sceneDocumentSource.ts",
+      "reason": "dependency ./sceneDocumentSource.ts was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/sceneDocumentSource.ts",
       "stage": "dependency"
     },
     {
@@ -7187,7 +7194,7 @@
       "line": 175,
       "module": "packages/scene3d-resources/src/resolveScene3DResources.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "cpp emission failed for @flighthq/types/packages/types/src/Texture.ts: contextual C++ union conversion requires equivalent source union evidence: target multiVariant carriers [flight::Ref<Texture2DArray>, flight::Ref<TextureCube>, flight::Ref<Texture2D>, flight::Ref<Texture3D>] from identifier source multiVariant carriers [flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_2a9cc27439313638>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_ee3724767d905a42>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_87b587096853cb6d>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_12cf2c1ced714fb0>]. Narrow or convert the source expression so each of its alternatives names exactly one destination union alternative. The carrier lists show which alternatives lack an exact carrier; preserve the declared collection or member union alias before flow expansion. For a Map or WeakMap lookup followed by a rebind, ensure every rebound member already has the declared value owner member's carrier -- a Readonly structural view does not become a mutable nominal Ref.",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/Texture.ts: contextual C++ union conversion requires equivalent source union evidence: target multiVariant carriers [flight::Ref<Texture2DArray>, flight::Ref<TextureCube>, flight::Ref<Texture2D>, flight::Ref<Texture3D>] from identifier source multiVariant carriers [flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_66420b7f1750f18b>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_source_e760b305d1b62f29>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_59617b72a39c219e>, flight::Ref<entity_runtime_key_flip_x_flip_y_uv_offset_uv_rotation_uv_scale_color_space_sampler_version_dimension_sources_c9e0a431dbc8cd75>]. Narrow or convert the source expression so each of its alternatives names exactly one destination union alternative. The carrier lists show which alternatives lack an exact carrier; preserve the declared collection or member union alias before flow expansion. For a Map or WeakMap lookup followed by a rebind, ensure every rebound member already has the declared value owner member's carrier -- a Readonly structural view does not become a mutable nominal Ref.",
       "stage": "emission"
     },
     {
@@ -7211,24 +7218,24 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 52,
+      "line": 45,
       "module": "packages/scene3d-resources/src/sceneMaterialTextureRegistry.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/sceneMaterialTextureRegistry.ts: the asserted row from flight::Ref<flight::types::Material> to flight::Ref<flight::types::ExtendedPbrMaterial> reads alphaCutoff, doubleSided, extensions and standard, which the source type does not declare, and alphaMode and blendMode, whose optionality or value representation is not representation-equivalent to the source type's cells, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as ExtendedPbrMaterial, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that carries alphaCutoff, alphaMode, blendMode, doubleSided, extensions and standard with the asserted optionality and value representation -- construct ExtendedPbrMaterial explicitly, then type the retaining slot and every accessor result as ExtendedPbrMaterial wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::Material>. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
+      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/sceneMaterialTextureRegistry.ts: the asserted row from flight::Ref<flight::types::Material> to flight::Ref<flight::types::ExtendedPbrMaterial> reads alphaCutoff, alphaMode, blendMode, doubleSided, extensions and standard, which the source type does not declare, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as ExtendedPbrMaterial, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that declares alphaCutoff, alphaMode, blendMode, doubleSided, extensions and standard -- construct ExtendedPbrMaterial explicitly, then type the retaining slot and every accessor result as ExtendedPbrMaterial wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::Material>. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
       "stage": "emission"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene3d-resources/src/sceneResourceRecovery.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency ./getScene3DResourceTextures was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/getScene3DResourceTextures.ts",
+      "reason": "dependency ./getScene3DResourceTextures.ts was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/getScene3DResourceTextures.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene3d-resources/src/sceneResourceResolver.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency ./imageResourceFetch was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/imageResourceFetch.ts",
+      "reason": "dependency ./imageResourceFetch.ts was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/imageResourceFetch.ts",
       "stage": "dependency"
     },
     {
@@ -7237,7 +7244,7 @@
       "line": 21,
       "module": "packages/scene3d-resources/src/shadedScene3DMaterialTextures.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/shadedScene3DMaterialTextures.ts: the asserted row from flight::Ref<flight::types::Material> to flight::Ref<flight::types::ShadedMaterial> reads alphaCutoff, diffuse, diffuseMap, doubleSided, modifiers, normalMap, normalScale, shininess, specular and specularMap, which the source type does not declare, and alphaMode and blendMode, whose optionality or value representation is not representation-equivalent to the source type's cells, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as ShadedMaterial, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that carries alphaCutoff, alphaMode, blendMode, diffuse, diffuseMap, doubleSided, modifiers, normalMap, normalScale, shininess, specular and specularMap with the asserted optionality and value representation -- construct ShadedMaterial explicitly, then type the retaining slot and every accessor result as ShadedMaterial wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::Material>. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
+      "reason": "cpp emission failed for @flighthq/scene3d-resources/packages/scene3d-resources/src/shadedScene3DMaterialTextures.ts: the asserted row from flight::Ref<flight::types::Material> to flight::Ref<flight::types::ShadedMaterial> reads alphaCutoff, alphaMode, blendMode, diffuse, diffuseMap, doubleSided, modifiers, normalMap, normalScale, shininess, specular and specularMap, which the source type does not declare, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as ShadedMaterial, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that declares alphaCutoff, alphaMode, blendMode, diffuse, diffuseMap, doubleSided, modifiers, normalMap, normalScale, shininess, specular and specularMap -- construct ShadedMaterial explicitly, then type the retaining slot and every accessor result as ShadedMaterial wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::Material>. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
       "stage": "emission"
     },
     {
@@ -7262,7 +7269,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-resources/src/threeDsLoad.ts",
       "package": "@flighthq/scene3d-resources",
-      "reason": "dependency ./sceneDocumentSource was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/sceneDocumentSource.ts",
+      "reason": "dependency ./sceneDocumentSource.ts was refused for @flighthq/scene3d-resources/packages/scene3d-resources/src/sceneDocumentSource.ts",
       "stage": "dependency"
     },
     {

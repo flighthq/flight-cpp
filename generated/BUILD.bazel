@@ -1598,6 +1598,7 @@ cc_library(
         "include/flight/scene3d_resources/explain_scene3_dresource_coverage.hpp",
         "include/flight/scene3d_resources/get_scene3_dresource_textures.hpp",
         "include/flight/scene3d_resources/gltf_load.hpp",
+        "include/flight/scene3d_resources/gltf_load_import.hpp",
         "include/flight/scene3d_resources/image_resource_fetch.hpp",
         "include/flight/scene3d_resources/iridescence_pbr_scene3_dmaterial_textures.hpp",
         "include/flight/scene3d_resources/load_scene3_dresources.hpp",

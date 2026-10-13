@@ -1592,6 +1592,7 @@ set(FLIGHT_SDK_GENERATED_HEADERS
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/scene3d_resources/explain_scene3_dresource_coverage.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/scene3d_resources/get_scene3_dresource_textures.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/scene3d_resources/gltf_load.hpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../include/flight/scene3d_resources/gltf_load_import.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/scene3d_resources/image_resource_fetch.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/scene3d_resources/iridescence_pbr_scene3_dmaterial_textures.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/scene3d_resources/load_scene3_dresources.hpp"

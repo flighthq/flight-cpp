@@ -32359,6 +32359,7 @@
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/explainScene3DResourceCoverage.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/getScene3DResourceTextures.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoad.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoadImport.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/imageResourceFetch.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/iridescencePbrScene3DMaterialTextures.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/loadScene3DResources.ts",
@@ -32441,13 +32442,14 @@
     {
       "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/scene3d-resources/packages/scene3d-resources/src/contract.ts"
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/contract.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoadImport.ts"
       ],
       "declarationFingerprints": [
-        "sha256:01175180be6fb9ff67b14ef2255dc094f50733fff32b8f04b8698aa39bff213b",
         "sha256:056de364e7d344dc7464f51a5f8699296da36e5daa94e8061ad4b4307ac95802",
-        "sha256:d9bf2aae7a0c2bef82a2ce095321d4ca43a2528b242f2ca2c58b07ddb178be4e",
-        "sha256:dd94dcd137ee8a9bce76e36c76ffbbc1098b790e2c3774b4c5ebab69890f5fb9"
+        "sha256:8ded6e1b6d468b112ad44d799e214cdedf7a185a683c97ae6a505d85d5758fc4",
+        "sha256:dd94dcd137ee8a9bce76e36c76ffbbc1098b790e2c3774b4c5ebab69890f5fb9",
+        "sha256:f9428da84bf4d73c3b5a4ece312114b5859a82fabcfe9bad5102266c21b4f8cd"
       ],
       "module": {
         "name": "GltfLoad",
@@ -32457,6 +32459,23 @@
       "path": "flight/scene3d_resources/gltf_load.hpp",
       "rule": "cpp-contextual-union-value-type-unrepresented",
       "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/contract.ts"
+      ],
+      "module": {
+        "name": "GltfLoadImport",
+        "packageName": "@flighthq/scene3d-resources",
+        "source": "packages/scene3d-resources/src/gltfLoadImport.ts"
+      },
+      "path": "flight/scene3d_resources/gltf_load_import.hpp",
+      "refusedDependencies": [
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfAnimationHandlers.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfSkinHandlers.ts",
+        "@flighthq/scene3d-resources/packages/scene3d-resources/src/gltfLoad.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "classification": "compiler-restriction",
@@ -32535,7 +32554,7 @@
       },
       "path": "flight/scene3d_resources/md2_load.hpp",
       "refusedDependencies": [
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Parse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md2Document.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneDocumentSource.ts"
       ],
       "status": "dependency-incomplete"
@@ -32551,7 +32570,7 @@
       },
       "path": "flight/scene3d_resources/md5_load.hpp",
       "refusedDependencies": [
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Parse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/md5Document.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneDocumentSource.ts"
       ],
       "status": "dependency-incomplete"
@@ -32567,7 +32586,7 @@
       },
       "path": "flight/scene3d_resources/obj_load.hpp",
       "refusedDependencies": [
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/objDocument.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneDocumentSource.ts"
       ],
       "status": "dependency-incomplete"
@@ -32584,7 +32603,7 @@
         "sha256:2b1fbffec19409145a8924d645f4ca17a60994a676b723acf277c100d864f0c4",
         "sha256:2d42d97b7ad52243b60269b6481f48551822d72f4fa1054d73bb6b69b05259c0",
         "sha256:488f654127b0c1d3bda6a3bb318ba6d6b94a7eedd6b5862b3ab57430c3445d3d",
-        "sha256:50eb088d222c3c4ef21de8a2ee4487c89871c5062658f470343b06da1fefd4ae",
+        "sha256:67b564f1bc4e6ce4b7d27f15f888fea4ce554e9a3747bce0f61cab124f15aeca",
         "sha256:6eab4dd1cae144c5ac568a399083d75aace577484fe1f59a6242f92908276a52",
         "sha256:88734f944429b415588543d68a2524a1104557aee7e78da2753438964532f90e",
         "sha256:8dc36a424c5891a68ad4435de2de976fd892931414cbef1136a4b10c2300bac1",
@@ -32668,9 +32687,8 @@
         "sha256:2b65784ae5dbdaeca85ac3594eccf5f6e2f9cf19656bcd183aca50943cdad5c6",
         "sha256:3e2c23f99f0b9d2e75b8792504a207f4c481aa3a01a97796b9849788fdacf04f",
         "sha256:427b300cb77dd66a5c612e3605f7d805834a81b02b33237c6f5c8c5f4087b279",
-        "sha256:43896f77410beaaaeeb338ef950098a88a01717dfea375a866b1fa9b2e6e987e",
         "sha256:549e27cede147e7b75c8d015b00e6450676ee143f3332fa2e2f070ef9e1fdf58",
-        "sha256:6a772f7a80e20ffe81b002c0c16782f0a99357025d3ea71277d33a3f99bf8bf7",
+        "sha256:6bccce4060714cca98a6e92de75d44e8a90327fd57a9c98b772b71e331ffaea4",
         "sha256:a2283437fe604d50bb3c6828041cc0f94d61b7a0efc574e6b87cf2f81358d76a",
         "sha256:b91ddefd68d3b74fb3ab9372cae520311e408b0667e866d9a7c94d03acf86329",
         "sha256:f055cdd9324afd53a04c20c981231ffa06d117a3571c0e402a620cc7a2802392",
@@ -32796,7 +32814,7 @@
       },
       "path": "flight/scene3d_resources/three_ds_load.hpp",
       "refusedDependencies": [
-        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsParse.ts",
+        "@flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsDocument.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneDocumentSource.ts"
       ],
       "status": "dependency-incomplete"
