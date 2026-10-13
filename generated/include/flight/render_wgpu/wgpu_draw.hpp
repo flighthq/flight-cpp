@@ -36,38 +36,36 @@
 //   function convertRgba8AlphaEncoding(data: Readonly<Uint8ClampedArray<ArrayBuffer>>, toPremultiplied: boolean): Uint8ClampedArray<ArrayBuffer> -- :519
 //   function uploadWgpuBitmapEntry(state: WgpuRenderState, image: Readonly<TextureSource>, generateMips: boolean, premultiply: boolean, colorSpace: TextureColorSpace): WgpuTextureEntry -- :540
 //   function uploadWgpuCompressedImageEntry(state: WgpuRenderState, image: Readonly<TextureSource>, _generateMips: boolean, _premultiply: boolean, colorSpace: TextureColorSpace): WgpuTextureEntry | null -- :582
-//   function uploadWgpuImageResourceEntry(state: WgpuRenderState, image: Readonly<TextureSource>, generateMips: boolean, premultiply: boolean, colorSpace: TextureColorSpace): WgpuTextureEntry | null -- :601
-//   type WgpuTextureSourceUpload = (state: WgpuRenderState, image: Readonly<TextureSource>, generateMips: boolean, premultiply: boolean, colorSpace: TextureColorSpace) => WgpuTextureEntry | null -- :644
-//   function wgpuMipLevelCount(width: number, height: number): number -- :652
+//   function uploadWgpuImageResourceEntry(state: WgpuRenderState, image: Readonly<TextureSource>, generateMips: boolean, premultiply: boolean, colorSpace: TextureColorSpace): WgpuTextureEntry | null -- :596
+//   type WgpuTextureSourceUpload = (state: WgpuRenderState, image: Readonly<TextureSource>, generateMips: boolean, premultiply: boolean, colorSpace: TextureColorSpace) => WgpuTextureEntry | null -- :639
+//   function wgpuMipLevelCount(width: number, height: number): number -- :647
 
 // Imported by this module, which the replacement likely needs:
 //   { allocateEntity, finishEntity } from '@flighthq/entity/contract'
 //   { getTextureSource } from '@flighthq/texture/contract'
 //   type { Bitmap, ColorScaleBias, CompressedImageResource, EntityConstruction, HasColorScaleBias, ImageResource, RenderProxy, RenderProxy2D, Texture, TextureColorSpace, TextureSource, WgpuRenderState, WgpuTextureEntry, WgpuTextureSourceTextureEntry, WgpuVideoTextureEntry } from '@flighthq/types/contract'
-//   { BlendMode, RegistryEntryState } from '@flighthq/types/contract'
-//   { isWgpuExternalImageSourceReady, tryCopyWgpuExternalImageToTexture } from './wgpuExternalImageSource'
-//   { retireWgpuTexture } from './wgpuFrame'
-//   { getWgpuRenderStateDeviceResources, getWgpuRenderStateRuntime, getWgpuSampler } from './wgpuRenderState'
-//   { getActiveWgpuPipeline, getWgpuPipeline, writeWgpuQuadUniforms } from './wgpuShader'
+//   { BlendMode } from '@flighthq/types/contract'
+//   { isWgpuExternalImageSourceReady, tryCopyWgpuExternalImageToTexture } from './wgpuExternalImageSource.ts'
+//   { retireWgpuTexture } from './wgpuFrame.ts'
+//   { getWgpuRenderStateDeviceResources, getWgpuRenderStateRuntime, getWgpuSampler } from './wgpuRenderState.ts'
+//   { getActiveWgpuPipeline, getWgpuPipeline, writeWgpuQuadUniforms } from './wgpuShader.ts'
 //   type { BlendMode } from '@flighthq/types/contract'
 //   type { WgpuRenderStateRuntime } from '@flighthq/types/contract'
 //   type { RenderState } from '@flighthq/types/contract'
-//   type { Renderable } from '@flighthq/types/contract'
+//   type { NodeAny } from '@flighthq/types/contract'
 //   type { RenderProxyAdapter } from '@flighthq/types/contract'
 //   type { Kind } from '@flighthq/types/contract'
 //   type { RenderRegistrySignals } from '@flighthq/types/contract'
-//   type { KeyedTable } from '@flighthq/types/contract'
 //   type { CanvasShapeCommand } from '@flighthq/types/contract'
-//   type { SlotTable } from '@flighthq/types/contract'
-//   type { RenderEffectPaddingResolver } from '@flighthq/types/contract'
-//   type { Renderer } from '@flighthq/types/contract'
+//   type { EffectPaddingResolver } from '@flighthq/types/contract'
+//   type { NodeRenderer } from '@flighthq/types/contract'
 //   type { Path } from '@flighthq/types/contract'
 //   type { StrokeStyle } from '@flighthq/types/contract'
 //   type { PathMesh } from '@flighthq/types/contract'
 //   type { WgpuDeviceRuntime } from '@flighthq/types/contract'
 //   type { Scene2DClipHooks } from '@flighthq/types/contract'
-//   type { ImageSurfaceCreator } from '@flighthq/types/contract'
-//   type { Matrix } from '@flighthq/types/contract'
+//   type { HostCanvasCapability } from '@flighthq/types/contract'
+//   type { HostImageCapability } from '@flighthq/types/contract'
 //   type { WgpuDeviceState } from '@flighthq/types/contract'
 //   type { WgpuRenderRegistries } from '@flighthq/types/contract'
 //   type { WgpuShapeMesh } from '@flighthq/types/contract'
@@ -76,10 +74,11 @@
 //   type { WgpuCompressedTextureUploader } from '@flighthq/types/contract'
 //   type { WgpuCustomMaterialShaderSource } from '@flighthq/types/contract'
 //   type { WgpuSkinningAdapter } from '@flighthq/types/contract'
-//   type { WgpuMaterialRenderer } from '@flighthq/types/contract'
 //   type { WgpuMeshMaterialRenderer } from '@flighthq/types/contract'
+//   type { WgpuQuadMaterialRenderer } from '@flighthq/types/contract'
 //   type { WgpuModifierSnippet } from '@flighthq/types/contract'
-//   type { WgpuRenderEffectRegistration } from '@flighthq/types/contract'
+//   type { WgpuEffectRegistration } from '@flighthq/types/contract'
+//   type { WgpuScene3DPass } from '@flighthq/types/contract'
 //   type { ShapeRasterizer } from '@flighthq/types/contract'
 //   type { WgpuTextureResolver } from '@flighthq/types/contract'
 //   type { WgpuVelocityWriter } from '@flighthq/types/contract'
@@ -127,9 +126,7 @@
 //   type { PixelFormat } from '@flighthq/types/contract'
 //   type { WgpuColorAdjustmentMaterialFeature } from '@flighthq/types/contract'
 //   type { WgpuColorAdjustmentMaterialFeatureGuard } from '@flighthq/types/contract'
-//   type { RegistryTableEntry } from '@flighthq/types/contract'
-//   type { BoundRegistryTableEntry } from '@flighthq/types/contract'
-//   type { TombstonedRegistryTableEntry } from '@flighthq/types/contract'
+//   type { TextureContainerFormat } from '@flighthq/types/contract'
 
 namespace flight::render_wgpu {
 

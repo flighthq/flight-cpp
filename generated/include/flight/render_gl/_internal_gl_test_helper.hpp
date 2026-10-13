@@ -6,14 +6,14 @@
 // refusal: cpp-runtime-external-symbol-binding-incomplete [target-runtime]
 //
 // cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glTestHelper.ts: runtime external symbol
-// binding plan is incomplete (missing: PropertyDescriptorMap[type], vi[value])
+// binding plan is incomplete (missing: PropertyDescriptorMap[type])
 // stopped at: packages/render-gl/src/glTestHelper.ts
 
 // Declared here, for the replacement to supply:
 //   function createGlState(options?: { ... }): { ... } -- :10
-//   function initializeGlBitmapShader(out: EntityConstruction<GlBitmapShader>, bind: (gl: GlContext, state: GlRenderState, renderProxy: RenderProxy2D) => void, locations: GlShaderLocations, program: WebGLProgram): void -- :76
-//   function makeGL(width?: number, height?: number): WebGL2RenderingContext -- :90
-//   function makeShaderLoc(): GlShaderLocations -- :100
+//   function initializeGlBitmapShader(out: EntityConstruction<GlBitmapShader>, bind: (gl: GlContext, state: GlRenderState, renderProxy: RenderProxy2D) => void, locations: GlShaderLocations, program: WebGLProgram): void -- :74
+//   function makeGL(width?: number, height?: number): WebGL2RenderingContext -- :88
+//   function makeShaderLoc(): GlShaderLocations -- :98
 
 // Imported by this module, which the replacement likely needs:
 //   { allocateEntity, finishEntity } from '@flighthq/entity/contract'
@@ -21,48 +21,54 @@
 //   type { EntityConstruction, GlBitmapShader, GlRenderState, GlRenderStateRuntime } from '@flighthq/types/contract'
 //   { EntityRuntimeKey } from '@flighthq/types/contract'
 //   type { GlShaderLocations } from '@flighthq/types/contract'
-//   { allocateEmptyGlRenderRegistries } from './glPipeline'
-//   { createGlContextState, createGlRenderStateRuntime } from './glRenderState'
+//   { vi } from 'vitest'
+//   { createGlContextState, createGlRenderStateRuntime } from './glRenderState.ts'
 //   type { GlContextState } from '@flighthq/types/contract'
 //   type { GlContext } from '@flighthq/types/contract'
-//   type { GlRenderRegistries } from '@flighthq/types/contract'
 //   type { RenderState } from '@flighthq/types/contract'
-//   type { Renderable } from '@flighthq/types/contract'
+//   type { NodeAny } from '@flighthq/types/contract'
 //   type { RenderProxy2D } from '@flighthq/types/contract'
 //   type { RenderProxyAdapter } from '@flighthq/types/contract'
 //   type { RenderProxy } from '@flighthq/types/contract'
 //   type { Kind } from '@flighthq/types/contract'
 //   type { RenderRegistrySignals } from '@flighthq/types/contract'
-//   type { KeyedTable } from '@flighthq/types/contract'
 //   type { CanvasShapeCommand } from '@flighthq/types/contract'
-//   type { SlotTable } from '@flighthq/types/contract'
-//   type { RenderEffectPaddingResolver } from '@flighthq/types/contract'
-//   type { Renderer } from '@flighthq/types/contract'
+//   type { EffectPaddingResolver } from '@flighthq/types/contract'
+//   type { NodeRenderer } from '@flighthq/types/contract'
 //   type { Path } from '@flighthq/types/contract'
 //   type { StrokeStyle } from '@flighthq/types/contract'
 //   type { PathMesh } from '@flighthq/types/contract'
 //   type { Scene2DClipHooks } from '@flighthq/types/contract'
-//   type { ImageSurfaceCreator } from '@flighthq/types/contract'
+//   type { HostCanvasCapability } from '@flighthq/types/contract'
+//   type { HostImageCapability } from '@flighthq/types/contract'
 //   type { BlendMode } from '@flighthq/types/contract'
-//   type { Matrix } from '@flighthq/types/contract'
 //   type { RenderStateRuntime } from '@flighthq/types/contract'
 //   type { Scene3DGraphSyncPolicy } from '@flighthq/types/contract'
 //   type { RenderStateInitialization } from '@flighthq/render/contract'
+//   type { GlRenderStateOptions } from '@flighthq/types/contract'
+//   type { ColorAdjustmentUnsupportedGuard } from '@flighthq/types/contract'
+//   type { RenderRootGuard } from '@flighthq/types/contract'
+//   type { StrokeTessellator } from '@flighthq/types/contract'
+//   type { GlBlendRealization } from '@flighthq/types/contract'
+//   type { GlColorAdjustmentMaterialFeature } from '@flighthq/types/contract'
+//   type { GlColorAdjustmentMaterialFeatureGuard } from '@flighthq/types/contract'
+//   type { GlCompressedTextureDecoder } from '@flighthq/types/contract'
+//   type { GlCompressedTextureUploader } from '@flighthq/types/contract'
+//   type { GlCustomMaterialShaderSource } from '@flighthq/types/contract'
+//   type { GlEffectRegistration } from '@flighthq/types/contract'
+//   type { GlMeshMaterialRenderer } from '@flighthq/types/contract'
+//   type { GlQuadMaterialRenderer } from '@flighthq/types/contract'
+//   type { GlModifierSnippet } from '@flighthq/types/contract'
+//   type { GlScene3DPass } from '@flighthq/types/contract'
+//   type { GlPbrExtensionRegistration } from '@flighthq/types/contract'
+//   type { ShapeRasterizer } from '@flighthq/types/contract'
+//   type { GlTextureResolver } from '@flighthq/types/contract'
+//   type { GlVelocityWriter } from '@flighthq/types/contract'
+//   type { GlRenderRegistries } from '@flighthq/types/contract'
 //   type { GlContextRuntime } from '@flighthq/types/contract'
 //   type { GlShapeMesh } from '@flighthq/types/contract'
 //   type { ColorScaleBias } from '@flighthq/types/contract'
 //   type { TintMaterialData } from '@flighthq/types/contract'
-//   type { GlCompressedTextureDecoder } from '@flighthq/types/contract'
-//   type { GlCompressedTextureUploader } from '@flighthq/types/contract'
-//   type { GlCustomMaterialShaderSource } from '@flighthq/types/contract'
-//   type { GlMaterialRenderer } from '@flighthq/types/contract'
-//   type { GlMeshMaterialRenderer } from '@flighthq/types/contract'
-//   type { GlModifierSnippet } from '@flighthq/types/contract'
-//   type { GlPbrExtensionRegistration } from '@flighthq/types/contract'
-//   type { GlRenderEffectRegistration } from '@flighthq/types/contract'
-//   type { ShapeRasterizer } from '@flighthq/types/contract'
-//   type { GlTextureResolver } from '@flighthq/types/contract'
-//   type { GlVelocityWriter } from '@flighthq/types/contract'
 //   type { Material } from '@flighthq/types/contract'
 //   type { SamplerLike } from '@flighthq/types/contract'
 //   type { GlRenderPass } from '@flighthq/types/contract'

@@ -11,70 +11,84 @@
 // stopped at: packages/render-wgpu/src/wgpuTestHelper.ts
 
 // Declared here, for the replacement to supply:
-//   function installWgpuConstants(): void -- :20
-//   function makeBindGroup(): GPUBindGroup -- :54
-//   function makeBindGroupLayout(): GPUBindGroupLayout -- :58
-//   function makeBuffer(descriptor: GPUBufferDescriptor): GPUBuffer -- :62
-//   function makeTexture(descriptor?: GPUTextureDescriptor): GPUTexture -- :70
-//   function makeRenderPassEncoder(): GPURenderPassEncoder -- :86
-//   function makeCommandEncoder(): GPUCommandEncoder -- :98
-//   function makePipeline(descriptor?: GPURenderPipelineDescriptor): GPURenderPipeline -- :109
-//   function makeShaderModule(): GPUShaderModule -- :113
-//   function makeSampler(): GPUSampler -- :117
-//   function makePipelineLayout(): GPUPipelineLayout -- :121
-//   function makeDevice(): GPUDevice -- :125
-//   function validateWriteBufferDestination(buffer: GPUBuffer, bufferOffset: number, data: unknown, dataOffset?: number, size?: number): void -- :169
-//   function getTypedArrayElementByteLength(data: ArrayBufferView): number -- :212
-//   function getWriteTextureBytesPerTexel(format: GPUTextureFormat): number | null -- :216
-//   function normalizeGpuExtent3D(size: GPUExtent3D): ... -- :229
-//   function validateWriteTextureSourceAllocation(destination: GPUTexelCopyTextureInfo, data: GPUAllowSharedBufferSource, dataLayout: GPUTexelCopyBufferLayout, size: GPUExtent3D): void -- :241
-//   function makeAdapter(): GPUAdapter -- :274
-//   function beginWgpuScreenRenderPassForTest(state: WgpuRenderState, clear?: Readonly<RenderTargetClear>, options?: Readonly<WgpuScreenRenderTargetOptions & { ... }>): WgpuRenderPass -- :286
-//   function createReadyImageElementForTest(width?: number, height?: number): HTMLImageElement -- :299
-//   function createWgpuRenderStateForTest(options?: WgpuRenderOptions): Promise<WgpuRenderState> -- :311
-//   function createWgpuScreenRenderTargetForTest(state: WgpuRenderState, options?: Readonly<WgpuScreenRenderTargetOptions & { ... }>, width?: number, height?: number): WgpuScreenRenderTarget -- :323
-//   const _testWgpuBackend: HostWgpuCapability -- :341
-//   const _testWgpuPipeline: WgpuRenderRegistries -- :342
-//   function installWgpuMock(): void -- :344
-//   const _mockCanvasContexts: WeakMap<HTMLCanvasElement, GPUCanvasContext> -- :386
+//   function installWgpuConstants(): void -- :19
+//   function makeBindGroup(): GPUBindGroup -- :53
+//   function makeBindGroupLayout(): GPUBindGroupLayout -- :57
+//   function makeBuffer(descriptor: GPUBufferDescriptor): GPUBuffer -- :61
+//   function makeTexture(descriptor?: GPUTextureDescriptor): GPUTexture -- :69
+//   function makeRenderPassEncoder(): GPURenderPassEncoder -- :85
+//   function makeCommandEncoder(): GPUCommandEncoder -- :97
+//   function makePipeline(descriptor?: GPURenderPipelineDescriptor): GPURenderPipeline -- :108
+//   function makeShaderModule(): GPUShaderModule -- :112
+//   function makeSampler(): GPUSampler -- :116
+//   function makePipelineLayout(): GPUPipelineLayout -- :120
+//   function makeDevice(): GPUDevice -- :124
+//   function validateWriteBufferDestination(buffer: GPUBuffer, bufferOffset: number, data: unknown, dataOffset?: number, size?: number): void -- :168
+//   function getTypedArrayElementByteLength(data: ArrayBufferView): number -- :211
+//   function getWriteTextureBytesPerTexel(format: GPUTextureFormat): number | null -- :215
+//   function normalizeGpuExtent3D(size: GPUExtent3D): ... -- :228
+//   function validateWriteTextureSourceAllocation(destination: GPUTexelCopyTextureInfo, data: GPUAllowSharedBufferSource, dataLayout: GPUTexelCopyBufferLayout, size: GPUExtent3D): void -- :240
+//   function makeAdapter(): GPUAdapter -- :273
+//   function beginWgpuScreenRenderPassForTest(state: WgpuRenderState, clear?: Readonly<RenderTargetClear>, options?: Readonly<WgpuScreenRenderTargetOptions & { ... }>): WgpuRenderPass -- :285
+//   function createReadyImageElementForTest(width?: number, height?: number): HTMLImageElement -- :298
+//   function createWgpuRenderStateForTest(options?: WgpuRenderStateOptions): Promise<WgpuRenderState> -- :310
+//   function createWgpuScreenRenderTargetForTest(state: WgpuRenderState, options?: Readonly<WgpuScreenRenderTargetOptions & { ... }>, width?: number, height?: number): WgpuScreenRenderTarget -- :322
+//   const _testWgpuBackend: HostWgpuCapability -- :340
+//   const _testWgpuPipeline: { ... } -- :341
+//   function installWgpuMock(): void -- :343
+//   const _mockCanvasContexts: WeakMap<HTMLCanvasElement, GPUCanvasContext> -- :385
 
 // Imported by this module, which the replacement likely needs:
-//   type { RenderTargetClear, WgpuRenderOptions, WgpuRenderPass, WgpuRenderState, WgpuScreenRenderTarget, WgpuScreenRenderTargetOptions } from '@flighthq/types/contract'
-//   { testWgpuHost, createTestWgpuSurface } from './wgpuHost'
-//   { allocateEmptyWgpuRenderRegistries } from './wgpuPipeline'
-//   { beginWgpuRenderPass } from './wgpuRenderPass'
-//   { createWgpuAcquisition, createWgpuRenderState } from './wgpuRenderState'
-//   { enableWgpuScreenRenderTargetAntialias } from './wgpuScreenAntialias'
-//   { createWgpuScreenRenderTarget } from './wgpuScreenRenderTarget'
+//   type { RenderTargetClear, WgpuRenderStateOptions, WgpuRenderPass, WgpuRenderState, WgpuScreenRenderTarget, WgpuScreenRenderTargetOptions } from '@flighthq/types/contract'
+//   { testWgpuHost, createTestWgpuSurface } from './wgpuHost.ts'
+//   { beginWgpuRenderPass } from './wgpuRenderPass.ts'
+//   { createWgpuAcquisition, createWgpuRenderState } from './wgpuRenderState.ts'
+//   { enableWgpuScreenRenderTargetAntialias } from './wgpuScreenAntialias.ts'
+//   { createWgpuScreenRenderTarget } from './wgpuScreenRenderTarget.ts'
 //   type { WgpuRenderTarget } from '@flighthq/types/contract'
-//   type { ImageSurfaceCreator } from '@flighthq/types/contract'
+//   type { Kind } from '@flighthq/types/contract'
+//   type { CanvasShapeCommand } from '@flighthq/types/contract'
+//   type { RenderState } from '@flighthq/types/contract'
+//   type { RenderProxy } from '@flighthq/types/contract'
+//   type { ColorAdjustmentUnsupportedGuard } from '@flighthq/types/contract'
+//   type { EffectPaddingResolver } from '@flighthq/types/contract'
+//   type { NodeRenderer } from '@flighthq/types/contract'
+//   type { RenderRootGuard } from '@flighthq/types/contract'
+//   type { StrokeTessellator } from '@flighthq/types/contract'
+//   type { HostCanvasCapability } from '@flighthq/types/contract'
+//   type { HostImageCapability } from '@flighthq/types/contract'
 //   type { Scene3DGraphSyncPolicy } from '@flighthq/types/contract'
+//   type { WgpuColorAdjustmentMaterialFeature } from '@flighthq/types/contract'
+//   type { WgpuColorAdjustmentMaterialFeatureGuard } from '@flighthq/types/contract'
+//   type { WgpuCompressedTextureDecoder } from '@flighthq/types/contract'
+//   type { WgpuCompressedTextureUploader } from '@flighthq/types/contract'
+//   type { WgpuCustomMaterialShaderSource } from '@flighthq/types/contract'
+//   type { WgpuEffectRegistration } from '@flighthq/types/contract'
+//   type { WgpuSkinningAdapter } from '@flighthq/types/contract'
+//   type { WgpuMeshMaterialRenderer } from '@flighthq/types/contract'
+//   type { WgpuQuadMaterialRenderer } from '@flighthq/types/contract'
+//   type { WgpuModifierSnippet } from '@flighthq/types/contract'
+//   type { WgpuScene3DPass } from '@flighthq/types/contract'
+//   type { ShapeRasterizer } from '@flighthq/types/contract'
+//   type { WgpuTextureResolver } from '@flighthq/types/contract'
+//   type { WgpuVelocityWriter } from '@flighthq/types/contract'
 //   type { Surface } from '@flighthq/types/contract'
 //   type { WgpuHostAcquisition } from '@flighthq/types/contract'
 //   type { HostWgpuCapability } from '@flighthq/types/contract'
 //   type { WgpuPresentationSurface } from '@flighthq/types/contract'
-//   type { WgpuRenderRegistries } from '@flighthq/types/contract'
-//   type { RenderState } from '@flighthq/types/contract'
-//   type { Renderable } from '@flighthq/types/contract'
+//   type { NodeAny } from '@flighthq/types/contract'
 //   type { RenderProxy2D } from '@flighthq/types/contract'
 //   type { RenderProxyAdapter } from '@flighthq/types/contract'
-//   type { RenderProxy } from '@flighthq/types/contract'
-//   type { Kind } from '@flighthq/types/contract'
 //   type { RenderRegistrySignals } from '@flighthq/types/contract'
-//   type { KeyedTable } from '@flighthq/types/contract'
-//   type { CanvasShapeCommand } from '@flighthq/types/contract'
-//   type { SlotTable } from '@flighthq/types/contract'
-//   type { RenderEffectPaddingResolver } from '@flighthq/types/contract'
-//   type { Renderer } from '@flighthq/types/contract'
 //   type { Path } from '@flighthq/types/contract'
 //   type { StrokeStyle } from '@flighthq/types/contract'
 //   type { PathMesh } from '@flighthq/types/contract'
 //   type { Scene2DClipHooks } from '@flighthq/types/contract'
 //   type { BlendMode } from '@flighthq/types/contract'
-//   type { Matrix } from '@flighthq/types/contract'
 //   type { WgpuDeviceState } from '@flighthq/types/contract'
 //   type { WgpuShapeMesh } from '@flighthq/types/contract'
 //   type { WgpuDeviceRuntime } from '@flighthq/types/contract'
+//   type { WgpuRenderRegistries } from '@flighthq/types/contract'
 //   type { TextureSource } from '@flighthq/types/contract'
 //   type { ImageResource } from '@flighthq/types/contract'
 //   type { ExternalTexture } from '@flighthq/types/contract'
@@ -83,23 +97,12 @@
 //   type { WgpuRenderTextureGuard } from '@flighthq/types/contract'
 //   type { WgpuBitmapShader } from '@flighthq/types/contract'
 //   type { Material } from '@flighthq/types/contract'
-//   type { WgpuMaterialRenderer } from '@flighthq/types/contract'
 //   type { SamplerLike } from '@flighthq/types/contract'
 //   type { ColorScaleBias } from '@flighthq/types/contract'
 //   type { TintMaterialData } from '@flighthq/types/contract'
 //   type { WgpuParticleResources } from '@flighthq/types/contract'
 //   type { WgpuQuadBatchResources } from '@flighthq/types/contract'
 //   type { WgpuRenderPassViewport } from '@flighthq/types/contract'
-//   type { WgpuCompressedTextureDecoder } from '@flighthq/types/contract'
-//   type { WgpuCompressedTextureUploader } from '@flighthq/types/contract'
-//   type { WgpuCustomMaterialShaderSource } from '@flighthq/types/contract'
-//   type { WgpuSkinningAdapter } from '@flighthq/types/contract'
-//   type { WgpuMeshMaterialRenderer } from '@flighthq/types/contract'
-//   type { WgpuModifierSnippet } from '@flighthq/types/contract'
-//   type { WgpuRenderEffectRegistration } from '@flighthq/types/contract'
-//   type { ShapeRasterizer } from '@flighthq/types/contract'
-//   type { WgpuTextureResolver } from '@flighthq/types/contract'
-//   type { WgpuVelocityWriter } from '@flighthq/types/contract'
 //   type { RenderTargetColorSpace } from '@flighthq/types/contract'
 
 namespace flight::render_wgpu {
