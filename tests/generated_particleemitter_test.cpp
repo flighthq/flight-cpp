@@ -1472,6 +1472,53 @@ void emit_particle_burst2_d() {
       check(near(emitter->data->alphas.get_index(0), 0x40 / 255.0), "burst2D variance: alpha * tint alpha");
     }
     {
+      // Addition: the default config has rotationSpeedMin == rotationSpeedMax == 0, so no rotation-speed draw:
+      // exactly lifetime, angle, speed, scale and region id (5 draws) per particle, and rotationSpeeds stays 0.
+      auto emitter = burst_emitter2d();
+      Sequence seq({0.5, 0.5, 0.5, 0.5, 0.5, 0.25, 0.25, 0.25, 0.25, 0.25});
+      auto state = particles::create_particle_emitter_state(seq.source());
+      check(pe::emit_particle_burst2_d(emitter, state, config(), 2, 0, 0) == 2 && seq.draws() == 10,
+            "burst2D default: exactly 5 draws per particle (no rotation-speed draw)");
+      check(state->rotation_speeds.get_index(0) == 0 && state->rotation_speeds.get_index(1) == 0,
+            "burst2D default: rotation speeds 0");
+      // Particle 1 draws 0.25 for lifetime (0.5 + 0.25 * 0.5), speed (50 + 0.25 * 50), angle -pi/2 + (0.25 - 0.5) * 2pi.
+      check(near(state->lifetimes.get_index(3), 0.625) && near(std::hypot(state->velocities.get_index(3), state->velocities.get_index(4)), 62.5, 1e-4) &&
+                near(t(emitter, 6), -pi / 2 - pi / 2),
+            "burst2D default: second particle consumed its own five draws in order");
+    }
+    {
+      // Addition: with color variance, colorBirth = (r0, g0, b0) and colorDeath = (r1, g1, b1) on all three lanes,
+      // each clamp01(base + (u - 0.5) * 2 * variance), drawn after scale in the order r0 g0 b0 r1 g1 b1.
+      auto emitter = burst_emitter2d();
+      Sequence seq({0.5, 0.5, 0.5, 0.5, 0.0, 0.5, 0.75, 0.25, 0.75, 0.0, 0.5});
+      auto state = particles::create_particle_emitter_state(seq.source());
+      auto c = config([](auto& c) {
+        c.color_start_r = 0.5;
+        c.color_start_g = 0.5;
+        c.color_start_b = 0.5;
+        c.color_start_variance_r = 0.25;
+        c.color_start_variance_g = 0.25;
+        c.color_start_variance_b = 0.25;
+        c.color_end_r = 0.2;
+        c.color_end_g = 0.4;
+        c.color_end_b = 0.6;
+        c.color_end_variance_r = 0.1;
+        c.color_end_variance_g = 0.1;
+        c.color_end_variance_b = 0.1;
+      });
+      pe::emit_particle_burst2_d(emitter, state, c, 1, 0, 0);
+      check(seq.draws() == 11, "burst2D variance lanes: 11 draws");
+      const auto& birth = state->color_birth;
+      const auto& death = state->color_death;
+      check(near(birth.get_index(0), 0.25) && near(birth.get_index(1), 0.5) && near(birth.get_index(2), 0.625),
+            "burst2D variance lanes: colorBirth R, G, B");
+      check(near(death.get_index(0), 0.15) && near(death.get_index(1), 0.45) && near(death.get_index(2), 0.5),
+            "burst2D variance lanes: colorDeath R, G, B");
+      check(near(emitter->data->colors.get_index(0), 0.25) && near(emitter->data->colors.get_index(1), 0.5) &&
+                near(emitter->data->colors.get_index(2), 0.625),
+            "burst2D variance lanes: data colors equal colorBirth");
+    }
+    {
       // Addition: count is floored, and a non-positive count spawns nothing without drawing.
       auto emitter = burst_emitter2d();
       auto state = particles::create_particle_emitter_state();
@@ -1666,6 +1713,55 @@ void emit_particle_burst3_d() {
       check(seq.draws() == 6, "burst3D cone: 6 draws");
       check(near(v.get_index(0), 0) && near(v.get_index(1), -10) && near(v.get_index(2), 0), "burst3D cone: velocity along -Y");
       check(near(t(emitter, 2), -pi / 2), "burst3D cone: rotation atan2(-10, 0)");
+    }
+    {
+      // Addition: a colorCurve of exactly 3 entries (one RGB key) is a curve: colors sample it, not colorStart.
+      auto emitter = emitter3d();
+      Sequence seq({0.5, 0.5, 0.5, 0.5, 0.5});
+      auto state = particles::create_particle_emitter_state(seq.source());
+      auto c = config([](auto& c) { c.color_curve = flight::Array<double>({0.2, 0.4, 0.6}); });
+      pe::emit_particle_burst3_d(emitter, state, c, 1, 0, 0, 0);
+      check(near(emitter->data->colors.get_index(0), 0.2) && near(emitter->data->colors.get_index(1), 0.4) &&
+                near(emitter->data->colors.get_index(2), 0.6),
+            "burst3D: 3-entry colorCurve is sampled");
+    }
+    {
+      // Addition: cone3d with emitterConeAngle exactly 0 takes the sphere path: (u, v) = (0.5, 0) gives the direction
+      // (sqrt(3)/2, 0, 1/2), not the cone axis (0, -1, 0).
+      auto emitter = emitter3d();
+      Sequence seq({0.5, 0.5, 0.75, 0.5, 0.5, 0.5});
+      auto state = particles::create_particle_emitter_state(seq.source());
+      auto c = config([](auto& c) { c.emitter_shape = String("cone3d"); c.emitter_cone_angle = 0; c.speed_min = 10; c.speed_max = 10; });
+      pe::emit_particle_burst3_d(emitter, state, c, 1, 0, 0, 0);
+      const auto& v = state->velocities;
+      check(seq.draws() == 6, "burst3D cone angle 0: 6 draws");
+      check(near(v.get_index(0), 5 * std::sqrt(3.0), 1e-4) && near(v.get_index(1), 0) && near(v.get_index(2), 5),
+            "burst3D cone angle 0: sphere direction");
+    }
+    {
+      // Addition: an empty scaleCurve is not a curve; the transform scale is spawnScale (2), not 2 * sample([]) = 0.
+      auto emitter = emitter3d();
+      Sequence seq({0.5, 0.5, 0.5, 0.5, 0.5});
+      auto state = particles::create_particle_emitter_state(seq.source());
+      auto c = config([](auto& c) { c.scale_min = 2; c.scale_max = 2; c.scale_curve = flight::Array<double>(); });
+      pe::emit_particle_burst3_d(emitter, state, c, 1, 0, 0, 0);
+      check(t(emitter, 3) == 2 && state->scales.get_index(0) == 2, "burst3D: empty scaleCurve leaves spawnScale");
+    }
+    {
+      // Addition: both sphere rejection loops reject a candidate exactly on the unit circle (u = 2*0 - 1 = -1,
+      // v = 0, s2 = 1). Draws: lifetime, speed, (0, 0.5) rejected, (0.75, 0.5) accepted; radius cbrt(0.125) * 4 = 2;
+      // position (0, 0.5) rejected, (0.75, 0.5) accepted -> offset (0.5 * sqrt(3) * 2, 0, 0.5 * 2); scale; id.
+      auto emitter = emitter3d();
+      Sequence seq({0.5, 0.5, 0.0, 0.5, 0.75, 0.5, 0.125, 0.0, 0.5, 0.75, 0.5, 0.5, 0.5});
+      auto state = particles::create_particle_emitter_state(seq.source());
+      auto c = config([](auto& c) { c.emitter_shape = String("sphere"); c.emitter_radius = 4; c.speed_min = 10; c.speed_max = 10; });
+      pe::emit_particle_burst3_d(emitter, state, c, 1, 10, 20, 30);
+      const auto& v = state->velocities;
+      check(seq.draws() == 13, "burst3D sphere on-circle: 13 draws (two rejections)");
+      check(near(v.get_index(0), 5 * std::sqrt(3.0), 1e-4) && near(v.get_index(1), 0) && near(v.get_index(2), 5),
+            "burst3D sphere on-circle: direction from the accepted candidate");
+      check(near(t(emitter, 0), 10 + std::sqrt(3.0), 1e-4) && near(t(emitter, 1), 20) && near(emitter->data->positions_z.get_index(0), 31),
+            "burst3D sphere on-circle: position offset from the accepted candidate");
     }
     {
       // Addition: deterministic under the upstream LCG.
