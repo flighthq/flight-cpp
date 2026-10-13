@@ -2852,6 +2852,23 @@
       "appliedOn": "2026-10-12"
     },
     {
+      "id": "particles-forces-case-early-exit-guards",
+      "dependency": "flight",
+      "patch": "particles-forces-case-early-exit-guards.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/particles/src/applyParticleForces.ts",
+      "package": "@flighthq/particles",
+      "answers": "diagnostic",
+      "refusal": "silent miscompilation, measured natively: accumulateForces' string switch lowers to an if/else chain inside the force loop, and the `if (dist <= 1e-6) break;` / `if (mag === 0) break;` early exits of AttractorForce and VortexForce are copied through as C++ `break`, which leaves the force loop instead of the case -- so a force outside its radius, or sitting on the particle, discards every later force for that particle (docs/compiler-requests/switch-case-break-exits-enclosing-loop.md)",
+      "rewrite": "Writes each case's two early exits as guards around the rest of the case -- `if (dist > 1e-6) { ... if (mag !== 0) { ... } }` -- leaving only the case's top-level `break`.",
+      "equivalence": "In the source each `break` ends the case with nothing after it executed; the guards enclose exactly the statements after each `break` and test the negated condition (`dist > 1e-6` for `dist <= 1e-6`, including NaN, which fails both; `mag !== 0` for `mag === 0`), so the same accumulations happen in the same order for every input, and the loop continues to the next force as the switch's `break` does.",
+      "verification": "Guarded pkg:generate of @flighthq/particles at a627849, then pkg:compile: 13/13 headers compile; the generated_particles CTest pins an out-of-radius attractor, a zero-distance attractor and a zero-distance vortex each followed by a wind force that still applies.",
+      "whyNotUpstreamFirst": "The defect is the emitter lowering a nested switch `break` as a loop `break` (docs/compiler-requests/switch-case-break-exits-enclosing-loop.md); the fix belongs in the compiler and is general. This keeps particle forces correct until it lands.",
+      "unblocks": "Correct accumulateForces for force lists where an attractor or vortex exits early; no header-count change.",
+      "expires": "when a `break` nested inside a lowered switch case ends only that case.",
+      "appliedOn": "2026-10-13"
+    },
+    {
       "id": "scene2d-canvas-text-label-base-cache",
       "dependency": "flight",
       "patch": "scene2d-canvas-text-label-base-cache.patch",

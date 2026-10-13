@@ -101,16 +101,14 @@ inline void accumulate_forces(flight::Array<flight::types::ParticleForce> forces
               const double dy = (std::get<1>(force)->y - py);
               const double dz = (fz - pz);
               const double dist = std::sqrt((((dx * dx) + (dy * dy)) + (dz * dz)));
-              if ((dist <= 0.000001)) {
-                break;
+              if ((dist > 0.000001)) {
+                const double mag = (std::get<1>(force)->strength * falloff_factor(std::get<1>(force)->falloff, dist, std::get<1>(force)->radius));
+                if ((mag != 0.0)) {
+                  (out.element(0.0) += ((dx / dist) * mag));
+                  (out.element(1.0) += ((dy / dist) * mag));
+                  (out.element(2.0) += ((dz / dist) * mag));
+                }
               }
-              const double mag = (std::get<1>(force)->strength * falloff_factor(std::get<1>(force)->falloff, dist, std::get<1>(force)->radius));
-              if ((mag == 0.0)) {
-                break;
-              }
-              (out.element(0.0) += ((dx / dist) * mag));
-              (out.element(1.0) += ((dy / dist) * mag));
-              (out.element(2.0) += ((dz / dist) * mag));
             }
           }
           else if (switch_value_2 == flight::String("VortexForce")) {
@@ -120,23 +118,21 @@ inline void accumulate_forces(flight::Array<flight::types::ParticleForce> forces
               const double dy_2 = (py - std::get<0>(force)->y);
               const double dz_2 = (pz - fz_2);
               const double dist_2 = std::sqrt((((dx_2 * dx_2) + (dy_2 * dy_2)) + (dz_2 * dz_2)));
-              if ((dist_2 <= 0.000001)) {
-                break;
+              if ((dist_2 > 0.000001)) {
+                const double mag_2 = (std::get<0>(force)->strength * falloff_factor(std::get<0>(force)->falloff, dist_2, std::get<0>(force)->radius));
+                if ((mag_2 != 0.0)) {
+                  const double ax = ([&]() -> double { auto nullish_coalesce_left = std::get<0>(force)->axis_x; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
+                  const double ay = ([&]() -> double { auto nullish_coalesce_left = std::get<0>(force)->axis_y; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
+                  const double az = ([&]() -> double { auto nullish_coalesce_left = std::get<0>(force)->axis_z; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
+                  const double inv_dist = (1.0 / dist_2);
+                  const double rx = (dx_2 * inv_dist);
+                  const double ry = (dy_2 * inv_dist);
+                  const double rz = (dz_2 * inv_dist);
+                  (out.element(0.0) += (((ay * rz) - (az * ry)) * mag_2));
+                  (out.element(1.0) += (((az * rx) - (ax * rz)) * mag_2));
+                  (out.element(2.0) += (((ax * ry) - (ay * rx)) * mag_2));
+                }
               }
-              const double mag_2 = (std::get<0>(force)->strength * falloff_factor(std::get<0>(force)->falloff, dist_2, std::get<0>(force)->radius));
-              if ((mag_2 == 0.0)) {
-                break;
-              }
-              const double ax = ([&]() -> double { auto nullish_coalesce_left = std::get<0>(force)->axis_x; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
-              const double ay = ([&]() -> double { auto nullish_coalesce_left = std::get<0>(force)->axis_y; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
-              const double az = ([&]() -> double { auto nullish_coalesce_left = std::get<0>(force)->axis_z; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1.0; }());
-              const double inv_dist = (1.0 / dist_2);
-              const double rx = (dx_2 * inv_dist);
-              const double ry = (dy_2 * inv_dist);
-              const double rz = (dz_2 * inv_dist);
-              (out.element(0.0) += (((ay * rz) - (az * ry)) * mag_2));
-              (out.element(1.0) += (((az * rx) - (ax * rz)) * mag_2));
-              (out.element(2.0) += (((ax * ry) - (ay * rx)) * mag_2));
             }
           }
           else if (switch_value_2 == flight::String("TurbulenceForce")) {
