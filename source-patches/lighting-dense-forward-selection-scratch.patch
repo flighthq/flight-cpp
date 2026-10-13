@@ -47,7 +47,25 @@ diff --git a/packages/lighting/src/sceneForwardLights.ts b/packages/lighting/src
    selectedIndices: Int32Array,
    selectedScores: Float64Array,
    selectedPriorities: Float64Array,
-@@ -114,11 +114,58 @@ function selectStrongestLights(
+@@ -100,12 +100,15 @@ function selectStrongestLights(
+ 
+     const nextCount = Math.min(selectedCount + 1, MAX_FORWARD_LIGHTS);
+     for (let i = nextCount - 1; i > insertAt; i--) {
+-      selectedLights[i] = selectedLights[i - 1];
++      const previousLight = selectedLights[i - 1];
++      if (i === selectedLights.length) selectedLights.push(previousLight);
++      else selectedLights[i] = previousLight;
+       selectedIndices[i] = selectedIndices[i - 1];
+       selectedScores[i] = selectedScores[i - 1];
+       selectedPriorities[i] = selectedPriorities[i - 1];
+     }
+-    selectedLights[insertAt] = light;
++    if (insertAt === selectedLights.length) selectedLights.push(light);
++    else selectedLights[insertAt] = light;
+     selectedIndices[insertAt] = inputIndex;
+     selectedScores[insertAt] = score;
+     selectedPriorities[insertAt] = priority;
+@@ -114,11 +117,61 @@ function selectStrongestLights(
    return selectedCount;
  }
  
@@ -84,12 +102,15 @@ diff --git a/packages/lighting/src/sceneForwardLights.ts b/packages/lighting/src
 +
 +    const nextCount = Math.min(selectedCount + 1, MAX_FORWARD_LIGHTS);
 +    for (let i = nextCount - 1; i > insertAt; i--) {
-+      selectedLights[i] = selectedLights[i - 1];
++      const previousLight = selectedLights[i - 1];
++      if (i === selectedLights.length) selectedLights.push(previousLight);
++      else selectedLights[i] = previousLight;
 +      selectedIndices[i] = selectedIndices[i - 1];
 +      selectedScores[i] = selectedScores[i - 1];
 +      selectedPriorities[i] = selectedPriorities[i - 1];
 +    }
-+    selectedLights[insertAt] = light;
++    if (insertAt === selectedLights.length) selectedLights.push(light);
++    else selectedLights[insertAt] = light;
 +    selectedIndices[insertAt] = inputIndex;
 +    selectedScores[insertAt] = score;
 +    selectedPriorities[insertAt] = priority;

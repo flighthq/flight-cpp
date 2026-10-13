@@ -85,7 +85,13 @@ inline double select_strongest_point_lights(std::optional<flight::Array<flight::
           double i = (next_count - 1.0);
           while ((i > insert_at)) {
             {
-              (selected_lights.element(i) = selected_lights.element((i - 1.0)));
+              flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PointLight>>>> previous_light = selected_lights.element((i - 1.0));
+              if ((i == static_cast<double>(selected_lights.size()))) {
+                selected_lights.push(previous_light);
+              }
+              else {
+                (selected_lights.element(i) = previous_light);
+              }
               ([&]() { auto&& typed_array = selected_indices; const auto typed_index = i; const auto typed_value = selected_indices.get_index((i - 1.0)); return typed_array.set_index(typed_index, typed_value); }());
               ([&]() { auto&& typed_array_2 = selected_scores; const auto typed_index_2 = i; const auto typed_value_2 = selected_scores.get_index((i - 1.0)); return typed_array_2.set_index(typed_index_2, typed_value_2); }());
               ([&]() { auto&& typed_array_3 = selected_priorities; const auto typed_index_3 = i; const auto typed_value_3 = selected_priorities.get_index((i - 1.0)); return typed_array_3.set_index(typed_index_3, typed_value_3); }());
@@ -93,7 +99,12 @@ inline double select_strongest_point_lights(std::optional<flight::Array<flight::
             (i -= 1.0);
           }
         }
-        (selected_lights.element(insert_at) = light);
+        if ((insert_at == static_cast<double>(selected_lights.size()))) {
+          selected_lights.push(light);
+        }
+        else {
+          (selected_lights.element(insert_at) = light);
+        }
         ([&]() { auto&& typed_array_4 = selected_indices; const auto typed_index_4 = insert_at; const auto typed_value_4 = input_index; return typed_array_4.set_index(typed_index_4, typed_value_4); }());
         ([&]() { auto&& typed_array_5 = selected_scores; const auto typed_index_5 = insert_at; const auto typed_value_5 = score; return typed_array_5.set_index(typed_index_5, typed_value_5); }());
         ([&]() { auto&& typed_array_6 = selected_priorities; const auto typed_index_6 = insert_at; const auto typed_value_6 = priority; return typed_array_6.set_index(typed_index_6, typed_value_6); }());
@@ -150,7 +161,13 @@ inline double select_strongest_spot_lights(std::optional<flight::Array<flight::S
           double i = (next_count - 1.0);
           while ((i > insert_at)) {
             {
-              (selected_lights.element(i) = selected_lights.element((i - 1.0)));
+              flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpotLight>>>> previous_light = selected_lights.element((i - 1.0));
+              if ((i == static_cast<double>(selected_lights.size()))) {
+                selected_lights.push(previous_light);
+              }
+              else {
+                (selected_lights.element(i) = previous_light);
+              }
               ([&]() { auto&& typed_array_7 = selected_indices; const auto typed_index_7 = i; const auto typed_value_7 = selected_indices.get_index((i - 1.0)); return typed_array_7.set_index(typed_index_7, typed_value_7); }());
               ([&]() { auto&& typed_array_8 = selected_scores; const auto typed_index_8 = i; const auto typed_value_8 = selected_scores.get_index((i - 1.0)); return typed_array_8.set_index(typed_index_8, typed_value_8); }());
               ([&]() { auto&& typed_array_9 = selected_priorities; const auto typed_index_9 = i; const auto typed_value_9 = selected_priorities.get_index((i - 1.0)); return typed_array_9.set_index(typed_index_9, typed_value_9); }());
@@ -158,7 +175,12 @@ inline double select_strongest_spot_lights(std::optional<flight::Array<flight::S
             (i -= 1.0);
           }
         }
-        (selected_lights.element(insert_at) = light);
+        if ((insert_at == static_cast<double>(selected_lights.size()))) {
+          selected_lights.push(light);
+        }
+        else {
+          (selected_lights.element(insert_at) = light);
+        }
         ([&]() { auto&& typed_array_10 = selected_indices; const auto typed_index_10 = insert_at; const auto typed_value_10 = input_index; return typed_array_10.set_index(typed_index_10, typed_value_10); }());
         ([&]() { auto&& typed_array_11 = selected_scores; const auto typed_index_11 = insert_at; const auto typed_value_11 = score; return typed_array_11.set_index(typed_index_11, typed_value_11); }());
         ([&]() { auto&& typed_array_12 = selected_priorities; const auto typed_index_12 = insert_at; const auto typed_value_12 = priority; return typed_array_12.set_index(typed_index_12, typed_value_12); }());

@@ -71,6 +71,10 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 
 ## Active requests without a compiler patch
 
+- [An indexed array write at length must grow the array](array-index-write-must-grow.md) —
+  lighting's exact-owner forward-selection scratch arrays begin empty and grow a dense live prefix,
+  but emitted `Array::element` writes throw at the first append; carried by explicit guarded pushes
+  in `lighting-dense-forward-selection-scratch`.
 - [A dynamic named read of a represented union must preserve its active arm](dynamic-named-read-of-represented-union.md) —
   `@flighthq/materials` clone/equality enumerates `Material.name`, but the dynamic row layer rejects
   its fully represented `String | null | undefined` carrier; carried by exact variant-arm `Any`

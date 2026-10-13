@@ -5611,7 +5611,7 @@
     },
     {
       "dependency": "flight",
-      "digest": "2f01b9ba3e38a63dbd0711b979c408ac2890ce38ebd6460f67478e4de89a3b22",
+      "digest": "d8dd36d56cb03a59e00b1e8ae93a408d34fe1f9beee4c6bbc3a14fe9adb1b041",
       "id": "lighting-dense-forward-selection-scratch",
       "module": "packages/lighting/src/sceneForwardLights.ts",
       "package": "@flighthq/lighting"
