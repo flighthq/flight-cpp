@@ -1,4 +1,5 @@
 #include <flight/texture/cube_texture.hpp>
+#include <flight/texture/texture_color_space.hpp>
 #include <flight/texture/video_texture.hpp>
 #include <flight/texture/voxel_grid.hpp>
 #include <flight/types/render_target.hpp>
@@ -7,6 +8,9 @@
 #include <cmath>
 #include <iostream>
 #include <string>
+#include <tuple>
+#include <type_traits>
+#include <utility>
 #include <variant>
 
 namespace {
@@ -1291,6 +1295,183 @@ int main(int argc, char** argv) {
   if (mutation == "--mutate-cube-equality-absence") cube_absence = false;
   check(cube_absence,
         "cube equality rejects null and undefined operands in either position");
+
+  struct ColorSpaceCase {
+    const char* source;
+    const char* working;
+    bool decode;
+    const char* sample;
+    bool premultiply;
+    const char* mutation;
+    const char* message;
+  };
+  const std::array<ColorSpaceCase, 4> color_space_cases{{
+      {"srgb", "linear", true, "srgb", false,
+       "--mutate-color-space-srgb-linear",
+       "sRGB content in linear working space decodes and defers premultiplication"},
+      {"srgb", "srgb", false, "linear", true,
+       "--mutate-color-space-srgb-srgb",
+       "sRGB content in sRGB working space remains byte-through and premultiplies on upload"},
+      {"linear", "linear", false, "linear", true,
+       "--mutate-color-space-linear-linear",
+       "linear content in linear working space remains byte-through and premultiplies on upload"},
+      {"linear", "srgb", false, "linear", true,
+       "--mutate-color-space-linear-srgb",
+       "linear content in sRGB working space is not silently encoded on sample"},
+  }};
+  const auto observe_color_space = [](flight::String source_space,
+                                      flight::String working_space) {
+    return std::tuple{
+        texture::should_decode_texture_on_sample(source_space, working_space),
+        texture::get_texture_sample_color_space(source_space, working_space),
+        texture::should_premultiply_texture_on_upload(source_space,
+                                                       working_space)};
+  };
+  for (const auto& color_case : color_space_cases) {
+    const auto observed = observe_color_space(
+        flight::String(color_case.source), flight::String(color_case.working));
+    bool row_matches =
+        observed == std::tuple{color_case.decode,
+                               flight::String(color_case.sample),
+                               color_case.premultiply};
+    if (mutation == color_case.mutation) row_matches = false;
+    check(row_matches, color_case.message);
+  }
+
+  const auto default_color_observation = observe_color_space(
+      defaults->color_space, flight::String("srgb"));
+  bool default_color_path =
+      defaults->color_space == flight::String("srgb") &&
+      default_color_observation ==
+          std::tuple{false, flight::String("linear"), true};
+  if (mutation == "--mutate-color-space-default") {
+    default_color_path = false;
+  }
+  check(default_color_path,
+        "the default sRGB texture and sRGB working path stays byte-through with upload premultiplication");
+
+  bool sample_space_coupling = true;
+  bool premultiply_coupling = true;
+  for (const auto& color_case : color_space_cases) {
+    const flight::String source_space(color_case.source);
+    const flight::String working_space(color_case.working);
+    const bool decode = texture::should_decode_texture_on_sample(
+        source_space, working_space);
+    sample_space_coupling =
+        sample_space_coupling &&
+        texture::get_texture_sample_color_space(source_space, working_space) ==
+            (decode ? flight::String("srgb") : flight::String("linear"));
+    premultiply_coupling =
+        premultiply_coupling &&
+        texture::should_premultiply_texture_on_upload(source_space,
+                                                       working_space) ==
+            !decode;
+  }
+  if (mutation == "--mutate-color-space-sample-coupling") {
+    sample_space_coupling = false;
+  }
+  if (mutation == "--mutate-color-space-premultiply-coupling") {
+    premultiply_coupling = false;
+  }
+  check(sample_space_coupling,
+        "sample format selects sRGB exactly when the shared predicate decodes");
+  check(premultiply_coupling,
+        "upload premultiplication is the exact inverse of the shared decode predicate");
+
+  flight::String transition_source("srgb");
+  flight::String transition_working("srgb");
+  const auto transition_default =
+      observe_color_space(transition_source, transition_working);
+  transition_working = flight::String("linear");
+  const auto working_first_decode =
+      observe_color_space(transition_source, transition_working);
+  transition_source = flight::String("linear");
+  const auto working_first_linear =
+      observe_color_space(transition_source, transition_working);
+  transition_working = flight::String("srgb");
+  const auto working_first_encoded =
+      observe_color_space(transition_source, transition_working);
+  transition_source = flight::String("srgb");
+  const auto working_first_restored =
+      observe_color_space(transition_source, transition_working);
+
+  transition_source = flight::String("linear");
+  const auto source_first_encoded =
+      observe_color_space(transition_source, transition_working);
+  transition_working = flight::String("linear");
+  const auto source_first_linear =
+      observe_color_space(transition_source, transition_working);
+  transition_source = flight::String("srgb");
+  const auto source_first_decode =
+      observe_color_space(transition_source, transition_working);
+  transition_working = flight::String("srgb");
+  const auto source_first_restored =
+      observe_color_space(transition_source, transition_working);
+  transition_source = flight::String("srgb");
+  transition_working = flight::String("srgb");
+  const auto repeated_restored =
+      observe_color_space(transition_source, transition_working);
+  bool transition_order =
+      working_first_decode == source_first_decode &&
+      working_first_linear == source_first_linear &&
+      working_first_encoded == source_first_encoded &&
+      working_first_restored == transition_default &&
+      source_first_restored == transition_default &&
+      repeated_restored == transition_default;
+  if (mutation == "--mutate-color-space-transition-order") {
+    transition_order = false;
+  }
+  check(transition_order,
+        "color-space decisions are order-independent, repeatable, and restore after either transition order");
+
+  const std::array<std::pair<flight::String, flight::String>, 5>
+      invalid_color_pairs{{
+          {flight::String("display-p3"), flight::String("linear")},
+          {flight::String("display-p3"), flight::String("srgb")},
+          {flight::String("srgb"), flight::String("display-p3")},
+          {flight::String("linear"), flight::String("display-p3")},
+          {flight::String(""), flight::String("")},
+      }};
+  bool invalid_color_fallthrough = true;
+  for (const auto& invalid_pair : invalid_color_pairs) {
+    invalid_color_fallthrough =
+        invalid_color_fallthrough &&
+        observe_color_space(invalid_pair.first, invalid_pair.second) ==
+            std::tuple{false, flight::String("linear"), true};
+  }
+  if (mutation == "--mutate-color-space-invalid") {
+    invalid_color_fallthrough = false;
+  }
+  check(invalid_color_fallthrough,
+        "erased invalid color-space strings take the conservative no-decode branch");
+
+  using ColorDecodeFunction =
+      bool (*)(types::TextureColorSpace, types::RenderTargetColorSpace);
+  using ColorSampleFunction =
+      types::TextureColorSpace (*)(types::TextureColorSpace,
+                                   types::RenderTargetColorSpace);
+  using ColorPremultiplyFunction =
+      bool (*)(types::TextureColorSpace, types::RenderTargetColorSpace);
+  constexpr bool color_space_absence_unrepresentable =
+      !std::is_invocable_v<ColorDecodeFunction, flight::Null,
+                           types::RenderTargetColorSpace> &&
+      !std::is_invocable_v<ColorDecodeFunction, types::TextureColorSpace,
+                           flight::Undefined> &&
+      !std::is_invocable_v<ColorSampleFunction, flight::Null,
+                           types::RenderTargetColorSpace> &&
+      !std::is_invocable_v<ColorSampleFunction, types::TextureColorSpace,
+                           flight::Undefined> &&
+      !std::is_invocable_v<ColorPremultiplyFunction, flight::Null,
+                           types::RenderTargetColorSpace> &&
+      !std::is_invocable_v<ColorPremultiplyFunction,
+                           types::TextureColorSpace,
+                           flight::Undefined>;
+  bool color_space_absence_domain = color_space_absence_unrepresentable;
+  if (mutation == "--mutate-color-space-absence-domain") {
+    color_space_absence_domain = false;
+  }
+  check(color_space_absence_domain,
+        "the emitted color-space surface admits erased strings but no null or undefined operands");
 
   const auto host_video = flight::make_ref<types::HostVideoCapability>();
   host_video->get_width = [](types::HostImageSource source) { return source.video_width(); };
