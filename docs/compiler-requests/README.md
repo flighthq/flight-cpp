@@ -426,3 +426,5 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `@flighthq/render`'s `initializeRenderState` (`canvasHost`, `imageHost`); one statement failed 227 renderer header compilations. Carried by the `render-state-nullable-structural-*-fallback` emission repairs.
 - [`new Map(existingMap)` must copy, not alias](new-map-copy-lowered-to-alias.md) —
   silent miscompilation: `flight::Map(map)` selects the sharing copy constructor, so registry's `withKindMapEntry`, `withoutKindMapEntry` and `concatKindMap` mutated their input. Carried by the `registry-new-map-copy-*` emission repairs; seven other packages carry candidate sites.
+- [A `null` written through a generic receiver must produce the member's absent state, not an engaged null](generic-receiver-null-write-engages-optional.md) —
+  silent miscompilation and a crash: `initializeRenderStateRuntime<Runtime, …>` writes `registry_miss = nullptr`, so `createRenderState()` then `destroyRenderState()` dereferences null. Carried by the `render-state-generic-null-*` emission repairs.

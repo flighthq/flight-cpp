@@ -76,13 +76,13 @@ struct RenderStateInitialization : public flight::ReferenceEnabled {
 
 template <typename Runtime, typename Registries>
 inline Runtime initialize_render_state_runtime(Runtime runtime, Registries registries) {
-  (runtime->binding = nullptr);
+  (runtime->binding = std::nullopt);
   (runtime->current_frame_id = 0.0);
-  (runtime->render_adapt_hook = nullptr);
+  (runtime->render_adapt_hook = std::nullopt);
   (runtime->render_proxy_adapter_map = flight::types::create_render_proxy_adapter_weak_map());
   (runtime->render_proxy_map = flight::types::create_render_proxy_weak_map());
   (runtime->render_proxy_sources = flight::Set<flight::types::NodeAny>());
-  (runtime->registry_miss = nullptr);
+  (runtime->registry_miss = std::nullopt);
   (runtime->registries = registries);
   (runtime->renderer_map_id = 0.0);
   (runtime->temp_stack = flight::Array<flight::types::NodeAny>{});
@@ -113,7 +113,7 @@ inline void initialize_render_state_fields(flight::types::EntityConstruction<Sta
   if (!obj.has_value()) {
     flight::row_set<flight::RowKey<"allowSmoothing">>(state, true);
     flight::row_set<flight::RowKey<"currentClipDepth">>(state, 0.0);
-    flight::row_set<flight::RowKey<"displayObjectClipHooks">>(state, nullptr);
+    flight::row_set<flight::RowKey<"displayObjectClipHooks">>(state, std::nullopt);
     flight::row_set<flight::RowKey<"pixelRatio">>(state, 1.0);
     flight::row_set<flight::RowKey<"canvasHost">>(state, nullptr);
     flight::row_set<flight::RowKey<"imageHost">>(state, nullptr);
@@ -128,7 +128,7 @@ inline void initialize_render_state_fields(flight::types::EntityConstruction<Sta
   const std::optional<double> current_clip_depth = obj.value()->current_clip_depth;
   flight::row_set<flight::RowKey<"currentClipDepth">>(state, (!current_clip_depth.has_value() ? 0.0 : current_clip_depth.value()));
   auto display_object_clip_hooks = ([&]() -> std::variant<flight::Ref<flight::types::Scene2DClipHooks>, flight::Null, flight::Undefined> { auto optional_property_2 = obj.value()->display_object_clip_hooks; if (std::holds_alternative<flight::Undefined>(optional_property_2)) return std::variant<flight::Ref<flight::types::Scene2DClipHooks>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined}; if (std::holds_alternative<flight::Null>(optional_property_2)) return std::variant<flight::Ref<flight::types::Scene2DClipHooks>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null}; return std::variant<flight::Ref<flight::types::Scene2DClipHooks>, flight::Null, flight::Undefined>{std::in_place_type<flight::Ref<flight::types::Scene2DClipHooks>>, std::get<flight::Ref<flight::types::Scene2DClipHooks>>(optional_property_2)}; }());
-  flight::row_set<flight::RowKey<"displayObjectClipHooks">>(state, ((std::holds_alternative<flight::Null>(display_object_clip_hooks) || std::holds_alternative<flight::Undefined>(display_object_clip_hooks)) ? nullptr : std::get<0>(display_object_clip_hooks)));
+  flight::row_set<flight::RowKey<"displayObjectClipHooks">>(state, ((std::holds_alternative<flight::Null>(display_object_clip_hooks) || std::holds_alternative<flight::Undefined>(display_object_clip_hooks)) ? std::nullopt : std::optional{std::get<0>(display_object_clip_hooks)}));
   const std::optional<double> pixel_ratio = obj.value()->pixel_ratio;
   flight::row_set<flight::RowKey<"pixelRatio">>(state, (!pixel_ratio.has_value() ? 1.0 : pixel_ratio.value()));
   std::variant<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostCanvasCapability>>>>, flight::Null, flight::Undefined> canvas_host = obj.value()->canvas_host;
