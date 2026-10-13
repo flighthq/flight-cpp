@@ -2074,14 +2074,14 @@
       "code": "dependency-refused",
       "module": "packages/flow/src/contract.ts",
       "package": "@flighthq/flow",
-      "reason": "dependency ./flowGuards was refused for @flighthq/flow/packages/flow/src/flowGuards.ts",
+      "reason": "dependency ./flowGuards.ts was refused for @flighthq/flow/packages/flow/src/flowGuards.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/flow/src/flow.ts",
       "package": "@flighthq/flow",
-      "reason": "dependency ./flowGuards was refused for @flighthq/flow/packages/flow/src/flowGuards.ts",
+      "reason": "dependency ./flowGuards.ts was refused for @flighthq/flow/packages/flow/src/flowGuards.ts",
       "stage": "dependency"
     },
     {
@@ -2095,7 +2095,7 @@
       "code": "dependency-refused",
       "module": "packages/flow/src/index.ts",
       "package": "@flighthq/flow",
-      "reason": "dependency ./flowGuards was refused for @flighthq/flow/packages/flow/src/flowGuards.ts",
+      "reason": "dependency ./flowGuards.ts was refused for @flighthq/flow/packages/flow/src/flowGuards.ts",
       "stage": "dependency"
     },
     {

@@ -1,0 +1,22 @@
+diff --git a/packages/flow/src/flow.ts b/packages/flow/src/flow.ts
+index 6d63c475..f4d627d6 100644
+--- a/packages/flow/src/flow.ts
++++ b/packages/flow/src/flow.ts
+@@ -46,7 +46,7 @@ export function getFlowStackVisibleStates(stack: Readonly<FlowStack>, out: FlowS
+     return;
+   }
+   let lowest = top;
+-  while (lowest > 0 && states[lowest].renderBelow) {
++  while (lowest > 0 && states[lowest].renderBelow === true) {
+     lowest--;
+   }
+   for (let i = lowest; i <= top; i++) {
+@@ -132,7 +132,7 @@ export function updateFlowStack(stack: Readonly<FlowStack>, deltaTime: number):
+     return;
+   }
+   states[index].onUpdate?.(deltaTime);
+-  while (index > 0 && states[index].updateBelow) {
++  while (index > 0 && states[index].updateBelow === true) {
+     index--;
+     states[index].onUpdate?.(deltaTime);
+   }

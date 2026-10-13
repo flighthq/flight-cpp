@@ -9848,9 +9848,7 @@
       "status": "dependency-incomplete"
     },
     {
-      "consumers": [
-        "@flighthq/flow/packages/flow/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/flow",
@@ -9865,7 +9863,8 @@
     },
     {
       "consumers": [
-        "@flighthq/flow/packages/flow/src/contract.ts"
+        "@flighthq/flow/packages/flow/src/contract.ts",
+        "@flighthq/flow/packages/flow/src/index.ts"
       ],
       "module": {
         "name": "Flow",
@@ -9904,7 +9903,7 @@
       },
       "path": "flight/flow/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/flow/packages/flow/src/contract.ts",
+        "@flighthq/flow/packages/flow/src/flow.ts",
         "@flighthq/flow/packages/flow/src/flowGuards.ts"
       ],
       "status": "dependency-incomplete"

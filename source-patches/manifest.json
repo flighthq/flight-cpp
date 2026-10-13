@@ -3374,6 +3374,23 @@
       "expires": "when the resolver's task type follows the declared domain by itself, at which point the explicit argument has nothing to add.",
       "appliedOn": "2026-10-13",
       "whyNotUpstreamFirst": "The explicit argument is the form the emitter already produces for a source-written `Promise.resolve<T>(x)`, so this is the same lowering applied where the source left the domain implicit. Upstream has no newer commit than the pin."
+    },
+    {
+      "id": "flow-optional-overlay-flags-explicit",
+      "dependency": "flight",
+      "patch": "flow-optional-overlay-flags-explicit.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/flow/src/flow.ts",
+      "package": "@flighthq/flow",
+      "answers": "diagnostic",
+      "refusal": "silent miscompilation, measured natively: `index > 0 && states[index].updateBelow` and `lowest > 0 && states[lowest].renderBelow` lower to to_boolean(bool && std::optional<bool>), where the optional operand converts by presence, so an explicit `false` flag reads as true (docs/compiler-requests/logical-and-optional-operand-truthiness.md)",
+      "rewrite": "Spells the two overlay tests `states[lowest].renderBelow === true` and `states[index].updateBelow === true`.",
+      "equivalence": "renderBelow and updateBelow are declared `?: boolean` (packages/types/src/Flow.ts), so each is true, false or undefined, and the source's truthiness test is true exactly when the flag is true. `=== true` is that predicate. It reads the flag once, as the original does, so both walks visit the same states in the same order and stop at the same state.",
+      "verification": "Guarded pkg:generate of @flighthq/flow at a627849, then pkg:compile: 4/4 flow headers compile; the generated_flow CTest checks explicit `false` overlay flags in both walks alongside the upstream ordering cases.",
+      "whyNotUpstreamFirst": "The defect is the emitter applying JavaScript truthiness to the C++ result of && instead of to each operand (docs/compiler-requests/logical-and-optional-operand-truthiness.md). The fix is general and belongs in the compiler; this keeps flow's two walks correct until it lands.",
+      "unblocks": "Correct updateFlowStack and getFlowStackVisibleStates for states that set an overlay flag to false; no header-count change.",
+      "expires": "when the emitter applies truthiness to each operand of && (and ||) rather than to the combined C++ expression.",
+      "appliedOn": "2026-10-13"
     }
   ]
 }
