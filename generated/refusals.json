@@ -7345,14 +7345,14 @@
       "code": "dependency-refused",
       "module": "packages/selection/src/contract.ts",
       "package": "@flighthq/selection",
-      "reason": "dependency ./lassoSelection was refused for @flighthq/selection/packages/selection/src/lassoSelection.ts",
+      "reason": "dependency ./lassoSelection.ts was refused for @flighthq/selection/packages/selection/src/lassoSelection.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/selection/src/index.ts",
       "package": "@flighthq/selection",
-      "reason": "dependency ./contract was refused for @flighthq/selection/packages/selection/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/selection/packages/selection/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -7377,7 +7377,7 @@
       "code": "dependency-refused",
       "module": "packages/selection/src/pointerSelectionPolicy.ts",
       "package": "@flighthq/selection",
-      "reason": "dependency ./selectionState was refused for @flighthq/selection/packages/selection/src/selectionState.ts",
+      "reason": "dependency ./selectionState.ts was refused for @flighthq/selection/packages/selection/src/selectionState.ts",
       "stage": "dependency"
     },
     {

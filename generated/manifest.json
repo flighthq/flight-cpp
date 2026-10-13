@@ -397,7 +397,6 @@
         "flight/scene3d_gl/gl_particle_emitter3_d.hpp",
         "flight/scene3d_gl/gl_shadow_map.hpp",
         "flight/scene3d_gl/render_gl_scene3_d.hpp",
-        "flight/selection/pointer_selection_policy.hpp",
         "flight/skeleton2d/skeleton2d_draw_order_target.hpp",
         "flight/skeleton3d/prepare_scene3_dskinning.hpp",
         "flight/swf/swf_define_morph_shape_handler.hpp",
@@ -1630,9 +1629,7 @@
       "id": "scene-document-unqualified-entity-names"
     },
     {
-      "files": [
-        "flight/selection/lasso_selection.hpp"
-      ],
+      "files": [],
       "id": "selection-unqualified-entity-names"
     },
     {
@@ -1838,11 +1835,7 @@
       "id": "scene2d-canvas-entity-runtime-key-member"
     },
     {
-      "files": [
-        "flight/selection/lasso_selection.hpp",
-        "flight/selection/marquee_selection.hpp",
-        "flight/selection/selection_state.hpp"
-      ],
+      "files": [],
       "id": "selection-entity-runtime-key-member"
     },
     {
@@ -2641,9 +2634,7 @@
       "id": "effects-wgpu-unqualified-types-names"
     },
     {
-      "files": [
-        "flight/selection/marquee_selection.hpp"
-      ],
+      "files": [],
       "id": "selection-unqualified-geometry-names"
     },
     {
@@ -2748,9 +2739,7 @@
       "id": "scene3d-create-signal-using-declaration"
     },
     {
-      "files": [
-        "flight/selection/selection_state.hpp"
-      ],
+      "files": [],
       "id": "selection-create-signal-using-declaration"
     },
     {
@@ -7996,14 +7985,14 @@
       "sourceModules": 3
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/selection",
       "cppNamespace": "flight::selection",
       "emittedModules": 3,
       "package": "@flighthq/selection",
       "refusedModules": 3,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 6
