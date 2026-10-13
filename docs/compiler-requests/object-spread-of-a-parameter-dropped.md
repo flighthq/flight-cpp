@@ -91,3 +91,29 @@ None. The package's own override would have to re-write the emitted body of a de
 believes it emitted, which is the kind of edit the override mechanism exists to make visible; it is not
 made here because the same file is already supplied for a different refusal and mixing the two would hide
 which one the copy is answering.
+
+## A second shape: spreads of literal and conditional operands (`@flighthq/assets`)
+
+The drop is not specific to parameters. Measured in a scratch compiler at `2b687ea` with all current
+compiler source patches:
+
+```ts
+export interface D { id: string; groups?: string[] }
+export function copy(d: Readonly<D>): D {
+  const groups = d.groups;
+  return { id: d.id, ...(groups === undefined ? {} : { groups: [...groups] }) };
+}
+```
+
+This emits `return flight::make_ref<D>(D{.id = flight::row_get<flight::RowKey<"id">>(d)});`, with no
+`groups` at all. A plain literal spread, `{ id: d.id, ...{ groups: ['x'] } }`, drops the same way. The
+control, an explicit conditional assignment (`if (groups !== undefined) out.groups = [...groups]`), emits
+correctly.
+
+`@flighthq/assets` `assetLibrary.ts` (a627849) `copyAssetDescriptor` uses exactly this spread, so every
+registered descriptor was stored without its groups and every group index stayed empty. Upstream's
+`getAssetGroupIds` and `registerAssetDescriptor` group cases fail natively against the generated form.
+
+The `assets-reject-task-template-parameter` override carries a corrected `copy_asset_descriptor`, and
+`tests/generated_assets_test.cpp` asserts it, including a deduplication case whose expected value is upstream's
+own `copyAssetDescriptor` run under node.

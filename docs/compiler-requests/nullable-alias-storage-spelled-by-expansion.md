@@ -36,3 +36,17 @@ it is the one error in debug's own code.
 ## Carrying workaround
 
 None yet. A `respell-reference-alias`-style emission repair could carry it once `debug.ts` emits.
+
+## A silent case: a nullable alias-typed parameter loses callable identity (`@flighthq/assets`)
+
+`setAssetAcquireGuard(library, guard: AssetAcquireGuard | null)` emits its parameter as
+`std::optional<std::function<…>>`, the expansion, while the runtime slot it assigns is the alias's
+identity-bearing `flight::Function`. The value is converted into a `std::function` and back, which mints
+a new function. This compiles, so nothing fails at build time. But
+`areAssetGuardsEnabled = library.runtime.acquireGuard === warnOnAssetAcquireFailure` can never be true, and
+upstream's "reports guard state per library" fails natively.
+
+The `assets-reject-task-template-parameter` override spells the parameter
+`std::optional<flight::types::AssetAcquireGuard>`, which is what this request asks the emitter to do.
+`tests/generated_assets_test.cpp` asserts the guard state. With the parameter reverted to the expansion,
+that case fails.

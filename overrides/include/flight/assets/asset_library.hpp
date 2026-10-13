@@ -308,7 +308,11 @@ inline flight::Ref<flight::types::AssetLibrary> create_asset_library() {
 // writable AssetLoaderAdapter row where initialization establishes those cells, rather than widening
 // Readonly<AssetLoaderAdapter<T>> at the use site.
 
-inline void set_asset_acquire_guard(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AssetLibrary>>>> library, std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AssetLibrary>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AssetLoadExplanation>>>>)>> guard) {
+// OVERRIDE: the emitter spells `guard: AssetAcquireGuard | null` by its std::function expansion
+// (docs/compiler-requests/nullable-alias-storage-spelled-by-expansion.md). Converting the runtime's
+// identity-bearing flight::Function through that std::function and back mints a new function, so
+// `acquireGuard === warnOnAssetAcquireFailure` could never hold. The parameter keeps the alias.
+inline void set_asset_acquire_guard(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AssetLibrary>>>> library, std::optional<flight::types::AssetAcquireGuard> guard) {
   (flight::row_get<flight::RowKey<"runtime">>(library)->acquire_guard = guard);
 }
 
@@ -349,8 +353,21 @@ inline void release_asset_group(flight::StructuralRef<flight::RowReadonly<flight
 }
 
 inline flight::Ref<flight::types::AssetDescriptor> copy_asset_descriptor(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AssetDescriptor>>>> descriptor) {
+  // OVERRIDE: the emitter drops the conditional spread `...(groups === undefined ? {} : { groups: [...new Set(groups)] })`
+  // (docs/compiler-requests/object-spread-of-a-parameter-dropped.md), so every stored descriptor lost its groups.
+  // The copy carries the deduplicated groups, in first-seen order as a Set iterates, exactly when the source has them.
   std::optional<flight::Array<flight::String>> groups = flight::row_get<flight::RowKey<"groups">>(descriptor);
-  return ([&]() { auto object_member_id = flight::row_get<flight::RowKey<"id">>(descriptor); auto object_member_type = flight::row_get<flight::RowKey<"type">>(descriptor); auto object_member_url = flight::row_get<flight::RowKey<"url">>(descriptor); return flight::make_ref<flight::types::AssetDescriptor>(flight::types::AssetDescriptor{.id = object_member_id, .url = object_member_url, .type = object_member_type}); }());
+  std::optional<flight::Array<flight::String>> copied;
+  if (groups.has_value()) {
+    flight::Array<flight::String> unique;
+    for (const auto& group : flight::Set<flight::String>(groups.value())) unique.push(group);
+    copied = unique;
+  }
+  return flight::make_ref<flight::types::AssetDescriptor>(flight::types::AssetDescriptor{
+      .id = flight::row_get<flight::RowKey<"id">>(descriptor),
+      .url = flight::row_get<flight::RowKey<"url">>(descriptor),
+      .type = flight::row_get<flight::RowKey<"type">>(descriptor),
+      .groups = copied});
 }
 
 inline bool is_equivalent_asset_descriptor(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AssetDescriptor>>>> a, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AssetDescriptor>>>> b) {
