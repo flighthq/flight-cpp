@@ -726,8 +726,10 @@ struct ArrayLikeLength {
 
 // Array.from over an array-like that is only a length. The length is ToLength(n) -- NaN and negatives
 // are 0, fractions truncate -- and a length Array cannot hold throws, as ArrayCreate does for Array.
+// The emitter passes Array.from's omitted thisArg as std::nullopt; only that absent form is accepted,
+// because a supplied thisArg would rebind `this` in the mapper and nothing here could honor it.
 template <typename Transform>
-[[nodiscard]] auto array_from(ArrayLikeLength source, Transform transform)
+[[nodiscard]] auto array_from(ArrayLikeLength source, Transform transform, std::nullopt_t = std::nullopt)
     -> Array<std::remove_cvref_t<decltype(detail::invoke_array_callback(
         transform, Undefined{}, std::size_t{}))>> {
   using Value = std::remove_cvref_t<decltype(detail::invoke_array_callback(

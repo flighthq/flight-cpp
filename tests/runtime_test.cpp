@@ -580,6 +580,8 @@ void test_array() {
             saw_undefined == std::vector<bool>{true, true, true},
         "Array.from({ length }) maps undefined elements with their indexes in order");
   const auto index_of = [](flight::Any, double index) { return index; };
+  check(flight::array_from({.length = 2.0}, index_of, std::nullopt).size() == 2,
+        "Array.from({ length }) accepts the omitted thisArg the emitter passes");
   check(flight::array_from({.length = 2.7}, index_of).size() == 2 &&
             flight::array_from({.length = -1.0}, index_of).empty() &&
             flight::array_from({.length = std::nan("")}, index_of).empty(),
