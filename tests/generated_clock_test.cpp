@@ -82,6 +82,14 @@ void hierarchy() {
   check(parent_is(child, parent) && children_are(parent, {child}), "addClockChild attaches and sets parent");
   clock::add_clock_child(parent, child);
   check(children_are(parent, {child}), "re-adding to the same parent is a no-op");
+  auto second = make();
+  clock::add_clock_child(parent, second);
+  clock::add_clock_child(parent, child);
+  check(children_are(parent, {child, second}), "re-adding keeps the child's place rather than moving it to the end");
+  clock::remove_clock_child(parent, second);
+  check(children_are(parent, {child}) && parent_is(child, parent) && !second->parent.has_value(),
+        "removing one child leaves its sibling in place");
+  clock::remove_clock_child(parent, child);
 
   auto a = make(), b = make(), moving = make();
   clock::add_clock_child(a, moving);
@@ -184,6 +192,13 @@ void queries() {
   auto b = child_of(a, 0.5);
   auto c = child_of(b, 3.0);
   check(clock::get_clock_effective_scale(view(c)) == 3, "effective scale multiplies through the ancestors");
+  // Upstream's chain has ancestors whose scales cancel (2 * 0.5 = 1), which cannot tell a product from the
+  // clock's own scale. Every value here is a power of two, so the products are exact.
+  auto x = make(4.0);
+  auto y = child_of(x, 2.0);
+  auto z = child_of(y, 0.5);
+  check(clock::get_clock_effective_scale(view(z)) == 4 && clock::get_clock_effective_scale(view(y)) == 8,
+        "effective scale is the whole chain's product, not the clock's own scale");
 
   check(!clock::is_clock_effectively_paused(view(make())), "a running root is not paused");
   check(clock::is_clock_effectively_paused(view(make(std::nullopt, true))), "a paused clock is paused");
