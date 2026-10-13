@@ -14,6 +14,7 @@
 // encoding.
 
 #include <flight/textbidi/bidi_class_kernel.hpp>
+#include <flight/textbidi/get_bidi_runs.hpp>
 #include <flight/textbidi/reorder_bidi_line.hpp>
 #include <flight/textbidi/resolve_bidi_levels.hpp>
 #include <flight/types/bidi.hpp>
@@ -93,6 +94,41 @@ void expect_levels(const std::u16string& text, const char* direction, const std:
   std::cerr << "]\n  got  [";
   for (const double value : got) std::cerr << value << ' ';
   std::cerr << "]\n";
+  ++failures;
+}
+
+struct Run {
+  double start;
+  double end;
+  double level;
+  flight::String direction;
+
+  bool operator==(const Run& other) const {
+    return start == other.start && end == other.end && level == other.level &&
+           direction == other.direction;
+  }
+};
+
+void expect_runs(const std::u16string& text, const char* direction, const std::vector<Run>& want,
+                 const char* message) {
+  const auto runs = flight::textbidi::get_bidi_runs(
+      as_row(flight::textbidi::compact_bidi_class_kernel), text16(text), flight::String(direction));
+  std::vector<Run> got;
+  for (double index = 0.0; index < static_cast<double>(runs.length()); index += 1.0) {
+    const auto& run = runs.element(index);
+    got.push_back(Run{run->start, run->end, run->level, run->direction});
+  }
+  bool same = got.size() == want.size();
+  for (std::size_t index = 0; same && index < got.size(); ++index) {
+    same = got[index].start == want[index].start && got[index].end == want[index].end &&
+           got[index].level == want[index].level && got[index].direction == want[index].direction;
+  }
+  if (same) return;
+  std::cerr << "FAIL: " << message << "\n  want ";
+  for (const auto& run : want) std::cerr << "(" << run.start << "," << run.end << "," << run.level << ") ";
+  std::cerr << "\n  got  ";
+  for (const auto& run : got) std::cerr << "(" << run.start << "," << run.end << "," << run.level << ") ";
+  std::cerr << "\n";
   ++failures;
 }
 
@@ -288,6 +324,107 @@ int main() {
           "explanation: a custom kernel claims no covered ranges");
     check(!explanation->fallback_class.has_value() && !explanation->table_valid.has_value(),
           "explanation: a custom kernel claims neither a fallback class nor a valid table");
+  }
+
+  // ---- getBidiRuns.test.ts --------------------------------------------------------------------
+
+  // Runs are the level array partitioned into maximal equal-level spans, each labelled by parity.
+  {
+    const auto runs_for = [](KernelRef kernel, const std::u16string& text, const char* direction) {
+      const auto runs = flight::textbidi::get_bidi_runs(as_row(kernel), text16(text),
+                                                       flight::String(direction));
+      std::vector<Run> out;
+      for (double index = 0.0; index < static_cast<double>(runs.length()); index += 1.0) {
+        const auto& run = runs.element(index);
+        out.push_back(Run{run->start, run->end, run->level, run->direction});
+      }
+      return out;
+    };
+    const auto rtl = constant_kernel("R");
+    const auto ltr = constant_kernel("L");
+    const std::vector<Run> want_rtl{{0, 3, 1, flight::String("rtl")}};
+    const std::vector<Run> want_ltr{{0, 3, 0, flight::String("ltr")}};
+    check(runs_for(rtl, u"abc", "ltr") == want_rtl,
+          "runs: a caller kernel that answers R yields one rtl run");
+    check(runs_for(ltr, u"abc", "ltr") == want_ltr,
+          "runs: a caller kernel that answers L yields one ltr run");
+    check(runs_for(rtl, u"abc", "ltr") == want_rtl,
+          "runs: interleaved callers with different kernels are isolated");
+  }
+
+  expect_runs(ARABIC + u" 123 " + ARABIC, "auto",
+              {{0, 6, 1, flight::String("rtl")}, {6, 9, 2, flight::String("ltr")}, {9, 15, 1, flight::String("rtl")}},
+              "runs: Arabic with embedded European numbers yields three level runs");
+  expect_runs(u"ab" + RLE + HEBREW + PDF + u"cd", "auto",
+              {{0, 3, 0, flight::String("ltr")}, {3, 7, 1, flight::String("rtl")}, {7, 10, 0, flight::String("ltr")}},
+              "runs: an RLE embedding in an LTR paragraph splits into ltr/rtl/ltr");
+  expect_runs(HEBREW + LRE + u"ab" + PDF + HEBREW, "auto",
+              {{0, 5, 1, flight::String("rtl")}, {5, 7, 2, flight::String("ltr")}, {7, 12, 1, flight::String("rtl")}},
+              "runs: an LRE embedding in an RTL paragraph splits into rtl/ltr/rtl");
+  expect_runs(ARABIC, "auto", {{0, 5, 1, flight::String("rtl")}}, "runs: pure RTL text is a single rtl run");
+  expect_runs(u"hello", "auto", {{0, 5, 0, flight::String("ltr")}}, "runs: pure LTR text is a single ltr run");
+  expect_runs(u"hello " + HEBREW + u" world", "auto",
+              {{0, 6, 0, flight::String("ltr")}, {6, 10, 1, flight::String("rtl")}, {10, 16, 0, flight::String("ltr")}},
+              "runs: mixed text splits into ltr / rtl / ltr with correct ranges");
+  check(levels_of(u"", "auto").empty() &&
+            flight::textbidi::get_bidi_runs(
+                as_row(flight::textbidi::compact_bidi_class_kernel), text16(u""),
+                flight::String("auto"))
+                    .length() == 0.0,
+        "runs: empty text yields no runs");
+
+  // ---- reorderBidiLine.test.ts ----------------------------------------------------------------
+
+  // The ordering half: level >= 2 reverses first, then level >= 1, which is what keeps a number run
+  // inside RTL text reading left-to-right while the text around it flips.
+  {
+    const auto reorder = [](const std::vector<double>& levels, double start, double end) {
+      const flight::Uint8Array buffer(
+          [&levels] {
+            std::vector<std::uint8_t> bytes;
+            for (const double level : levels) bytes.push_back(static_cast<std::uint8_t>(level));
+            return bytes;
+          }());
+      flight::Array<double> out;
+      flight::textbidi::reorder_bidi_line(buffer, start, end, out);
+      std::vector<double> got;
+      for (double index = 0.0; index < static_cast<double>(out.length()); index += 1.0) {
+        got.push_back(out.element(index));
+      }
+      return got;
+    };
+
+    check(reorder({1, 1, 1}, 0.0, 3.0) == std::vector<double>({2, 1, 0}),
+          "reorder: a pure-RTL run reverses to visual order");
+    check(reorder({0, 0, 0, 0}, 0.0, 4.0) == std::vector<double>({0, 1, 2, 3}),
+          "reorder: a pure-LTR line stays in logical order");
+    check(reorder({0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0}, 0.0, 16.0) ==
+              std::vector<double>({0, 1, 2, 3, 4, 5, 9, 8, 7, 6, 10, 11, 12, 13, 14, 15}),
+          "reorder: only the RTL run of a mixed line reverses");
+    check(reorder({1, 1, 1, 1, 1, 2, 2, 2}, 0.0, 8.0) ==
+              std::vector<double>({5, 6, 7, 4, 3, 2, 1, 0}),
+          "reorder: digits nested in RTL text keep their internal LTR order");
+    check(reorder({0, 1, 1, 1, 0}, 1.0, 4.0) == std::vector<double>({3, 2, 1}),
+          "reorder: a sub-range within a larger level buffer reorders on its own");
+
+    // The out array is reuse, not append: a shorter line must truncate it rather than leave a tail.
+    {
+      flight::Array<double> out;
+      flight::textbidi::reorder_bidi_line(
+          flight::Uint8Array(std::vector<std::uint8_t>{1, 1}), 0.0, 2.0, out);
+      std::vector<double> first;
+      for (double index = 0.0; index < static_cast<double>(out.length()); index += 1.0) {
+        first.push_back(out.element(index));
+      }
+      flight::textbidi::reorder_bidi_line(
+          flight::Uint8Array(std::vector<std::uint8_t>{0}), 0.0, 1.0, out);
+      std::vector<double> second;
+      for (double index = 0.0; index < static_cast<double>(out.length()); index += 1.0) {
+        second.push_back(out.element(index));
+      }
+      check(first == std::vector<double>({1, 0}) && second == std::vector<double>({0}),
+            "reorder: one out array can be reused across calls and truncates");
+    }
   }
 
   return failures == 0 ? 0 : 1;
