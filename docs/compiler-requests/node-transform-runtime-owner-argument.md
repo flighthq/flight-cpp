@@ -62,3 +62,35 @@ None. `@flighthq/node` is not part of the velocity unit that found it.
 `invalidateNodeLocalBounds<Node2DTraits>`, `getNodeWorldMatrix4<Node3DTraits>` and `getNodeLocalMatrix4<Node3DTraits>`.
 They fail here, in `node_transform2d.hpp:249` and `node_transform3d.hpp:113/122/199/218`. Through them the step and
 prewarm modules fail too.
+
+## Why there is no small source repair (measured 2026-10-13)
+
+The helper that fails, `getTransform2DRuntime(target: Transform2DRuntimeOwner<Traits>)`, comes from this repository's
+own `node-exact-runtime-helper-boundaries` patch. `Transform2DRuntimeOwner` is a nominal struct that no object
+ever is, so `structural_ref_cast` can never produce one from a node view. That differs from
+`getMutableNodeRuntime(source: Node<Traits>)`, whose callers recover the real `Node<Traits>` owner.
+
+Measured candidate: retype the helper on the real owner, `getTransform2DRuntime(target: Node<Traits>)`, returning
+`target[EntityRuntimeKey]! as NodeRuntime<Traits> & HasTransform2DRuntime` (and the same in 3D).
+- A scratch regeneration of the `@flighthq/node` closure refuses both modules: "a reference assertion from
+  flight::Ref<flight::types::NodeRuntime<Traits>> to the intersection NodeRuntime<Traits> & HasTransform2DRuntime
+  has no heritage to cast along".
+- That cascades to every node module, so `pkg:generate` rightly refused to move node.
+- The patch was reverted.
+
+The defect is the runtime representation, not the argument spelling:
+- The node's slot is typed `std::shared_ptr<NodeRuntime<Traits>>`, while the transform cells (`local_matrix`,
+  `world_matrix`, rotation) live only on the emitted intersection struct, which derives from `NodeRuntime<Traits>`.
+- Reading them needs a checked downcast of the stored runtime.
+- `flight::ReferenceEnabled` is an empty, non-polymorphic base, and emitted runtimes are aggregates, so a native
+  checked downcast (`dynamic_pointer_cast`) is not available.
+- The only checked recoveries that remain go through an erased typed owner.
+- The scene2d override's `create_node2_d_runtime()` also allocates the base `NodeRuntime`, so a native Node2D has
+  no transform-cell storage at all.
+
+Unblocking needs a runtime decision:
+- (a) a polymorphic or tagged runtime base, so the compiler can emit a checked downcast along the emitted heritage; or
+- (b) a node runtime slot typed with its capability intersections, allocated as the intersection struct by every
+  node constructor.
+
+Either is a runtime-ABI and construction change across node and scene2d/scene3d, not a node-local repair.
