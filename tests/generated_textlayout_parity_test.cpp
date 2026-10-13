@@ -10,6 +10,8 @@
 // this file deliberately covers the two modules whose whole surface is reachable without one.
 
 #include <flight/textlayout/rich_text_content.hpp>
+#include <flight/textlayout/rich_text_metrics.hpp>
+#include <flight/textlayout/rich_text_query.hpp>
 #include <flight/textlayout/text_bounds.hpp>
 #include <flight/textlayout/text_format.hpp>
 #include <flight/textlayout/text_format_range.hpp>
@@ -164,6 +166,65 @@ flight::String without_spaces(const flight::String& value) {
     if (value.char_code_at(index) != 0x20) out = out + value.char_at(index);
   }
   return out;
+}
+
+// ---- the query/metrics fixtures: a hand-built two-line layout -------------------------------------
+//
+// The upstream query suite builds its layout by hand rather than by laying text out, so the queries are
+// tested as algorithms over a result. That is the right level here too: it makes the assertions about
+// the QUERY rather than about the engine, and it lets a line carry a url, which no layout of plain text
+// would produce.
+
+flight::Ref<flight::types::TextLayoutGroup> make_group(double line_index, double start_index,
+                                                       double end_index, double offset_y, double width,
+                                                       std::optional<flight::String> url,
+                                                       const std::vector<double>& positions) {
+  auto format = flight::make_ref<flight::types::TextFormat>();
+  if (url.has_value()) format->url = url;
+  auto group = flight::textlayout::create_text_layout_group(format, start_index, end_index);
+  group->ascent = 10.0;
+  group->descent = 2.0;
+  group->height = 12.0;
+  group->leading = 0.0;
+  group->line_index = line_index;
+  group->offset_x = 0.0;
+  group->offset_y = offset_y;
+  flight::Array<double> built;
+  for (const double value : positions) built.push(value);
+  group->positions = built;
+  group->width = width;
+  return group;
+}
+
+// 'abc' on line 0 (indices 0-3), 'defg' on line 1 (indices 3-7), the second linked.
+flight::Ref<flight::types::TextLayoutResult> query_layout() {
+  auto layout = flight::make_ref<flight::types::TextLayoutResult>();
+  layout->groups = flight::Array<flight::Ref<flight::types::TextLayoutGroup>>{
+      make_group(0.0, 0.0, 3.0, 2.0, 30.0, std::nullopt, {10.0, 10.0, 10.0}),
+      make_group(1.0, 3.0, 7.0, 16.0, 40.0, flight::String("https://example.com"),
+                 {10.0, 10.0, 10.0, 10.0})};
+  layout->line_ascents = flight::Array<double>{10.0, 10.0};
+  layout->line_descents = flight::Array<double>{2.0, 2.0};
+  layout->line_heights = flight::Array<double>{14.0, 14.0};
+  layout->line_leadings = flight::Array<double>{0.0, 0.0};
+  layout->line_widths = flight::Array<double>{30.0, 40.0};
+  layout->num_lines = 2.0;
+  layout->text_height = 28.0;
+  layout->text_width = 40.0;
+  return layout;
+}
+
+flight::Ref<flight::types::TextLayoutResult> metrics_layout(const std::vector<double>& line_heights,
+                                                            double num_lines, double text_height,
+                                                            double text_width) {
+  auto layout = flight::make_ref<flight::types::TextLayoutResult>();
+  flight::Array<double> heights;
+  for (const double value : line_heights) heights.push(value);
+  layout->line_heights = heights;
+  layout->num_lines = num_lines;
+  layout->text_height = text_height;
+  layout->text_width = text_width;
+  return layout;
 }
 
 }  // namespace
@@ -1118,6 +1179,178 @@ int main() {
     const auto reattached = flight::textlayout::get_rich_text_content(runtime);
     check(reattached != nullptr && reattached != attached,
           "richContent: after a clear a fresh content value is attached");
+  }
+
+  // ---- richTextMetrics.test.ts -------------------------------------------------------------------
+
+  {
+    // A fresh data record with the fields the metrics read; the upstream helper's defaults.
+    const auto metrics_data = [](double height, double width, double scroll_v) {
+      auto data = flight::make_ref<flight::types::RichTextData>();
+      data->auto_size = flight::String("none");
+      data->height = height;
+      data->scroll_v = scroll_v;
+      data->width = width;
+      data->word_wrap = false;
+      return data;
+    };
+
+    // The scroll position is 1-based, and the bottom is the LAST VISIBLE line clamped to the total.
+    const auto four_lines = metrics_layout({10.0, 10.0, 10.0, 10.0}, 4.0, 20.0, 50.0);
+    check_close(flight::textlayout::compute_rich_text_bottom_scroll_v(metrics_data(34.0, 200.0, 2.0),
+                                                                      four_lines),
+                4.0, "richMetrics: the bottom is the last visible 1-based line");
+    check_close(flight::textlayout::compute_rich_text_bottom_scroll_v(
+                    metrics_data(80.0, 200.0, 2.0), metrics_layout({10.0, 10.0, 10.0}, 3.0, 20.0, 50.0)),
+                3.0, "richMetrics: the bottom clamps to the total line count");
+
+    check_close(flight::textlayout::compute_rich_text_line_count(metrics_layout({}, 3.0, 20.0, 50.0)), 3.0,
+                "richMetrics: the line count is the layout's");
+
+    // Horizontal overflow is measured against the field width MINUS the bounds gutters, so a field
+    // that is 54 wide shows 50 of content.
+    check_close(flight::textlayout::compute_rich_text_max_scroll_h(metrics_data(100.0, 54.0, 1.0),
+                                                                   metrics_layout({}, 1.0, 20.0, 80.0)),
+                30.0, "richMetrics: horizontal overflow is measured past the gutters");
+    check_close(flight::textlayout::compute_rich_text_max_scroll_h(metrics_data(100.0, 100.0, 1.0),
+                                                                   metrics_layout({}, 1.0, 20.0, 50.0)),
+                0.0, "richMetrics: text that fits horizontally does not scroll");
+
+    // The largest scrollV is the first one that brings the final line into view -- never below 1.
+    check_close(flight::textlayout::compute_rich_text_max_scroll_v(metrics_data(34.0, 200.0, 1.0),
+                                                                   four_lines),
+                2.0, "richMetrics: the max scroll is the first position showing the last line");
+    check_close(flight::textlayout::compute_rich_text_max_scroll_v(metrics_data(100.0, 200.0, 1.0),
+                                                                   metrics_layout({}, 1.0, 20.0, 50.0)),
+                1.0, "richMetrics: a single line never scrolls below one");
+
+    // Both content extents are ceilinged, matching the metrics object.
+    check_close(flight::textlayout::compute_rich_text_text_height(metrics_layout({}, 1.0, 12.2, 50.0)), 13.0,
+                "richMetrics: the content height is ceilinged");
+    check_close(flight::textlayout::compute_rich_text_text_width(metrics_layout({}, 1.0, 20.0, 21.1)), 22.0,
+                "richMetrics: the content width is ceilinged");
+
+    // The vertical offset sums the heights of the lines scrolled past, clamped to what exists.
+    check_close(flight::textlayout::get_rich_text_scroll_yoffset(flight::Array<double>{10.0, 12.0, 14.0}, 0.0),
+                0.0, "richMetrics: no scrolled-past lines means no offset");
+    check_close(flight::textlayout::get_rich_text_scroll_yoffset(flight::Array<double>{10.0, 12.0, 14.0}, 2.0),
+                22.0, "richMetrics: the offset is the sum of the heights above");
+    check_close(flight::textlayout::get_rich_text_scroll_yoffset(flight::Array<double>{10.0, 12.0}, 5.0),
+                22.0, "richMetrics: the offset clamps to the available lines");
+  }
+
+  // ---- richTextQuery.test.ts ---------------------------------------------------------------------
+
+  {
+    const auto layout = query_layout();
+
+    // Hit testing walks each group's stored advances, splitting at the HALFWAY point of a character.
+    check_close(flight::textlayout::compute_rich_text_char_index_at_point(layout, 25.0, 5.0), 2.0,
+                "richQuery: a point inside a group resolves to the character under it");
+    // A y past every line takes the closest line's END -- the caret lands after the last character.
+    check_close(flight::textlayout::compute_rich_text_char_index_at_point(layout, 5.0, 100.0), 7.0,
+                "richQuery: a point below the text resolves to the last line's end");
+    check_close(flight::textlayout::compute_rich_text_char_index_at_point(
+                    flight::make_ref<flight::types::TextLayoutResult>(), 1.0, 1.0),
+                0.0, "richQuery: a layout with no groups resolves to index zero");
+
+    const auto metrics = flight::textlayout::compute_rich_text_line_metrics(layout, 0.0);
+    check(metrics.has_value(), "richQuery: a line with groups has metrics");
+    check_close(metrics.value()->ascent, 10.0, "richQuery: the line ascent is the tallest ascent");
+    check_close(metrics.value()->descent, 2.0, "richQuery: the line descent is the tallest descent");
+    check_close(metrics.value()->width, 30.0, "richQuery: the line width spans its groups");
+    check_close(metrics.value()->height, 14.0, "richQuery: the line height comes from the layout");
+    check(!flight::textlayout::compute_rich_text_line_metrics(layout, 5.0).has_value(),
+          "richQuery: a line that does not exist has no metrics");
+
+    {
+      // The character box is the advance before it, at the group's own offset and height.
+      const auto box = flight::make_ref<flight::types::Rectangle>();
+      check(flight::textlayout::get_rich_text_char_boundaries(box, layout, 1.0),
+            "richQuery: a character inside a group has boundaries");
+      check_close(box->x, 10.0, "richQuery: the character box starts after the preceding advances");
+      check_close(box->y, 2.0, "richQuery: the character box sits at the group's offsetY");
+      check_close(box->width, 10.0, "richQuery: the character box is one advance wide");
+      check_close(box->height, 12.0, "richQuery: the character box takes the group's height");
+
+      const auto missing = flight::make_ref<flight::types::Rectangle>();
+      check(!flight::textlayout::get_rich_text_char_boundaries(missing, layout, 99.0),
+            "richQuery: an out-of-range character has no boundaries");
+    }
+
+    check_close(flight::textlayout::get_rich_text_first_char_in_paragraph(flight::String("hello\nworld"), 3.0),
+                0.0, "richQuery: a position in the first paragraph starts at zero");
+    check_close(flight::textlayout::get_rich_text_first_char_in_paragraph(flight::String("hello\nworld"), 8.0),
+                6.0, "richQuery: a later paragraph starts just after its newline");
+
+    check_close(flight::textlayout::get_rich_text_line_index_at_point(layout, 5.0), 0.0,
+                "richQuery: a y in the first line selects line zero");
+    check_close(flight::textlayout::get_rich_text_line_index_at_point(layout, 18.0), 1.0,
+                "richQuery: a y in the second line selects line one");
+
+    check_close(flight::textlayout::get_rich_text_line_index_of_char(layout, 1.0), 0.0,
+                "richQuery: a character on the first line reports line zero");
+    check_close(flight::textlayout::get_rich_text_line_index_of_char(layout, 5.0), 1.0,
+                "richQuery: a character on the second line reports line one");
+
+    check_close(flight::textlayout::get_rich_text_line_length(layout, 0.0), 3.0,
+                "richQuery: the first line is three characters long");
+    check_close(flight::textlayout::get_rich_text_line_length(layout, 1.0), 4.0,
+                "richQuery: the second line is four characters long");
+    check_close(flight::textlayout::get_rich_text_line_length(layout, 5.0), 0.0,
+                "richQuery: a line that does not exist has no length");
+
+    check_close(flight::textlayout::get_rich_text_line_offset(layout, 0.0), 0.0,
+                "richQuery: the first line starts at index zero");
+    check_close(flight::textlayout::get_rich_text_line_offset(layout, 1.0), 3.0,
+                "richQuery: the second line starts where the first ended");
+
+    check(flight::textlayout::get_rich_text_line_text(flight::String("abcdefg"), layout, 0.0) ==
+              flight::String("abc"),
+          "richQuery: the line text is the line's span from the source");
+    check(flight::textlayout::get_rich_text_line_text(flight::String("abcdefg"), layout, 1.0) ==
+              flight::String("defg"),
+          "richQuery: the second line's text is its own span");
+    check(flight::textlayout::get_rich_text_line_text(flight::String("abcdefg"), layout, 5.0) ==
+              flight::String(""),
+          "richQuery: a line that does not exist has no text");
+
+    // A hit only counts when the group carries a url AND the point is inside its box.
+    const auto link = flight::textlayout::get_rich_text_link_at_point(layout, 10.0, 18.0);
+    check(link.has_value() && link.value() == flight::String("https://example.com"),
+          "richQuery: a point inside a linked group returns its url");
+    check(!flight::textlayout::get_rich_text_link_at_point(layout, 10.0, 5.0).has_value(),
+          "richQuery: a point on an unlinked group returns no url");
+
+    check_close(flight::textlayout::get_rich_text_paragraph_length(flight::String("hello\nworld"), 3.0), 6.0,
+                "richQuery: a paragraph's length includes its newline");
+    check_close(flight::textlayout::get_rich_text_paragraph_length(flight::String("hello\nworld"), 8.0), 5.0,
+                "richQuery: the final paragraph runs to the end of the string");
+
+    {
+      // One rectangle per intersected group, so a selection spanning a line break yields two.
+      const auto rectangles = flight::Array<flight::Ref<flight::types::TextSelectionRectangle>>{};
+      flight::textlayout::get_rich_text_selection_rectangles(rectangles, 1.0, 5.0, layout);
+      check(static_cast<double>(rectangles.size()) == 2.0,
+            "richQuery: a selection across a line break yields a rectangle per group");
+      check_close(rectangles.element(0.0)->line_index, 0.0,
+                  "richQuery: the first rectangle is on the first line");
+      check_close(rectangles.element(1.0)->line_index, 1.0,
+                  "richQuery: the second rectangle is on the second line");
+
+      // A collapsed selection is not empty-but-present; it is nothing at all.
+      const auto collapsed = flight::Array<flight::Ref<flight::types::TextSelectionRectangle>>{};
+      flight::textlayout::get_rich_text_selection_rectangles(collapsed, 1.0, 1.0, layout);
+      check(static_cast<double>(collapsed.size()) == 0.0,
+            "richQuery: a collapsed selection yields no rectangles");
+
+      // The array is truncated on entry, so a reused buffer does not accumulate stale rectangles.
+      const auto reused = flight::Array<flight::Ref<flight::types::TextSelectionRectangle>>{};
+      flight::textlayout::get_rich_text_selection_rectangles(reused, 1.0, 5.0, layout);
+      flight::textlayout::get_rich_text_selection_rectangles(reused, 0.0, 1.0, layout);
+      check(static_cast<double>(reused.size()) == 1.0,
+            "richQuery: writing into an existing buffer truncates it first");
+    }
   }
 
   return failures == 0 ? 0 : 1;
