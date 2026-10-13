@@ -66,6 +66,21 @@ runtime behind the erased slot; today each one either narrows its declaration or
 
 The override above supplies the module by hand at this pin.
 
+## Third measured site: `@flighthq/selection`
+
+At Flight `a627849` / flight-compiler `2b687ea`, all three selection runtime accessors are refused after
+reading the entity's declared `Ref<EntityRuntime>` slot:
+
+- `getLassoSelectionRuntime` asks for `active` and `path`;
+- `getMarqueeSelectionRuntime` asks for `active`, `rectangle`, `startX`, and `startY`;
+- `getSelectionStateRuntime<NodeType>` asks for `activeNode`, `selectedNodeSet`, `selectedNodes`, and
+  `signals`.
+
+The source has stored the corresponding derived runtime in that slot immediately before every recovery,
+but the flattened C++ declarations have no heritage by which to prove it. The selection completion uses
+the declared interface heritage, stores the same derived object in the base slot, and recovers it with
+`std::static_pointer_cast`; there is no copied or parallel runtime identity.
+
 ## Related
 
 [`entity-intersection-arm-sibling-carriers.md`](entity-intersection-arm-sibling-carriers.md) — the tray

@@ -104,7 +104,13 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [A binding initialized from a non-null-asserted collection get is present](non-null-asserted-collection-get-binding.md) —
   carried for log by the source patch `log-buffered-sink-state-explicit-guard`.
 - [Emit declared interface heritage so derived references widen to their base](interface-heritage-widening.md) —
-  carried by the emission repairs `adjustments-color-matrix-interface-heritage` and `adjustments-tint-interface-heritage`.
+  carried by the emission repairs `adjustments-color-matrix-interface-heritage` and `adjustments-tint-interface-heritage`,
+  and by selection's runtime-type completion headers.
+- [A callback member that names a constrained type parameter is emitted with the constraint](constrained-generic-member-callback-domain.md) —
+  selection's generic active-change signal is fixed to `NodeAny`; its type completion retains `NodeType`.
+- [A nullable generic value narrowed present must be unwrapped at calls](narrowed-optional-template-argument.md) —
+  selection pointer-up passes `optional<NodeType>` to functions taking `NodeType`; the policy completion
+  projects the present value after the unchanged guard.
 - [Narrow an optional local in the else-branch of a negated truthiness test](negated-truthiness-else-narrowing.md) —
   carried by the source patch `node-bounds-rectangle-explicit-narrowing`.
 - [A reference-backed outcome variant is narrowed as if it were a record](reference-backed-outcome-variant-narrowing.md) —

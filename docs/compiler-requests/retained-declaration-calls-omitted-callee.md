@@ -149,3 +149,21 @@ generated/include/flight/tilemap/tilemap.hpp:498:18: error: use of undeclared id
 The direct header and both aggregators fail together. The refusal itself is the flattened-owner
 identity problem already carried by the package override; this measured site is specifically the
 additional compile defect in the three declarations the emitter claims it retained.
+
+## Sixth measured site: `@flighthq/selection`
+
+Current-pin selection emission omits each module's private runtime accessor but retains every public
+operation that calls it. Focused `-j2` compilation with clang 22 therefore reports only undeclared
+callees, not the underlying direct refusal:
+
+```
+flight/selection/lasso_selection.hpp:112: use of undeclared identifier 'get_lasso_selection_runtime'
+flight/selection/marquee_selection.hpp:98: use of undeclared identifier 'get_marquee_selection_runtime'
+flight/selection/contract.hpp:            the lasso failure through re-export
+flight/selection/_internal_index.hpp:     the lasso failure through re-export
+```
+
+The header gate reports 2/6 passing even though `selection_state.hpp` is not usable: its retained callers
+are templates, so their missing `get_selection_state_runtime` name is deferred until instantiation. The
+completion supplies the refused constructors and accessors together; this request remains the record that
+a raw partial emission must either omit its dependent callers or declare their callee.

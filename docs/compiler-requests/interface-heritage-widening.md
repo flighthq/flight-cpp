@@ -53,11 +53,23 @@ derived reference cannot enter `Array<optional<Ref<MaterialData>>>` without spli
 tilemap override preserves the single object through the runtime's structural owner attachment until
 declared C++ heritage makes the ordinary widening possible.
 
+The same missing heritage is the direct current-pin refusal in all three stateful
+`@flighthq/selection` modules. `LassoSelectionRuntime`, `MarqueeSelectionRuntime`, and
+`SelectionStateRuntime<NodeType>` each extend `EntityRuntime`, but their emitted structs independently
+inherit `flight::ReferenceEnabled` and duplicate `binding` and `uid`. Their constructors consequently
+cannot store the exact runtime object in the entity's `Ref<EntityRuntime>` slot. At Flight `a627849` /
+flight-compiler `2b687ea`, this refuses `createLassoSelection`, `createMarqueeSelection`, and
+`createSelectionState`; the three modules then remain partial even though their other operations emit.
+The selection completion headers preserve one object by spelling the declared C++ heritage and removing
+only the duplicated base fields.
+
 ## Carrying workaround
 
 Emission repairs `adjustments-color-matrix-interface-heritage` and `adjustments-tint-interface-heritage`
 respell the two structs with their declared heritage, removing only the duplicated member declarations.
-Every field keeps its name, type and declaration order. They expire when the emitter retains
+Selection carries the same declaration-only correction in its runtime-type overrides because scoped
+selection generation cannot rewrite its already-current `@flighthq/types` dependency row. Every field
+keeps its name, type and declaration order. They expire when the emitter retains
 declared interface heritage.
 
 ## Same defect in Surface runtime storage
