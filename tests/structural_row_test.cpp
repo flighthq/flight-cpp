@@ -16,6 +16,7 @@
 #include <memory>
 #include <optional>
 #include <stdexcept>
+#include <typeinfo>
 
 namespace {
 
@@ -317,9 +318,81 @@ static_assert(flight::detail::schema_required<flight::RowReadonly<flight::RowReq
 static_assert(flight::detail::schema_readonly<flight::RowReadonly<flight::RowRequired<SubjectRow>>>);
 static_assert(!flight::detail::schema_required<SubjectRow>);
 
+
+// A subject and an anonymous carrier that derives from it -- the shape createShapedRun allocates -- plus an
+// unrelated type with the same field. docs/compiler-requests/structural-view-of-a-derived-carrier-is-invisible.md
+struct TestRunBase : public flight::ReferenceEnabled {
+  double width = 0.0;
+};
+struct TestRunCarrier : public TestRunBase {
+  std::optional<double> extra;
+};
+struct TestRunUnrelated : public flight::ReferenceEnabled {
+  double width = 0.0;
+};
+
+void test_derived_carrier_view() {
+  using BaseView = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TestRunBase>>>>;
+  using CarrierView = flight::StructuralRef<flight::RowOf<flight::Ref<TestRunCarrier>>>;
+  using UnrelatedView = flight::StructuralRef<flight::RowOf<flight::Ref<TestRunUnrelated>>>;
+
+  auto carrier = flight::make_ref<TestRunCarrier>();
+  carrier->width = 42.0;
+  // The carrier enters structural storage as itself first, so its shared owner records the carrier type.
+  const CarrierView as_carrier(carrier);
+
+  const flight::Ref<TestRunBase> declared = carrier;
+  const BaseView from_declared(declared);
+  check(from_declared.shared_object().get() == carrier.get() && from_declared->width == 42.0,
+        "a base view built from the carrier held as its declared base type sees the carrier");
+  const BaseView from_derived(carrier);
+  check(from_derived.shared_object().get() == carrier.get(),
+        "a base view built from the derived pointer itself sees the carrier");
+
+  check(from_declared == as_carrier && from_declared.identity() == as_carrier.identity() &&
+            from_derived.identity() == as_carrier.identity(),
+        "every view of the carrier shares one row owner, so identity is the carrier's");
+  carrier->width = 7.0;
+  check(from_declared->width == 7.0, "a write to the carrier is visible through the base view, which is not a copy");
+
+  // Views whose pointer does not come from a typed pointer keep the exact-owner check.
+  check(!BaseView::from_owner(as_carrier.shared_owner()).shared_object(),
+        "a base view rebuilt from the carrier's owner does not cast across owners");
+  check(!UnrelatedView::from_owner(as_carrier.shared_owner()).shared_object(),
+        "an unrelated type never sees the carrier through its owner");
+  check(!from_declared.shared_exact_object<TestRunUnrelated>() &&
+            from_declared.shared_exact_object<TestRunCarrier>().get() == carrier.get(),
+        "exact recovery still names only the carrier's own type");
+  bool converted_back = false;
+  try {
+    converted_back = flight::structural_ref_cast<flight::Ref<TestRunBase>>(from_declared).get() == carrier.get();
+  } catch (const std::bad_cast&) {
+    converted_back = false;
+  }
+  check(converted_back, "a proven base view converts back to a reference to the very carrier");
+  check(!BaseView::from_owner(as_carrier.shared_owner()).shared_exact_object<TestRunBase>(),
+        "an owner-rebuilt base view still cannot recover a base reference across owners");
+
+  // A base view keeps the carrier alive, like the shared_ptr it was built from, and only while it lives.
+  std::weak_ptr<TestRunCarrier> watched;
+  std::optional<BaseView> lasting;
+  {
+    auto scoped = flight::make_ref<TestRunCarrier>();
+    scoped->width = 3.0;
+    const CarrierView first(scoped);
+    watched = scoped;
+    lasting.emplace(flight::Ref<TestRunBase>(scoped));
+  }
+  check(!watched.expired() && (*lasting)->width == 3.0,
+        "a base view is the carrier's last holder and keeps it alive");
+  lasting.reset();
+  check(watched.expired(), "the carrier is released when its last view goes");
+}
+
 } // namespace
 
 int main() {
+  test_derived_carrier_view();
   // A Partial<T> object literal is an option bag: its supplied field is present, its omitted field
   // is absent, and constructing it must not collide optional row storage with T's bare native
   // members. This is the exact shape used by generated material factory options.

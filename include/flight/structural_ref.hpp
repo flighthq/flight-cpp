@@ -1058,6 +1058,11 @@ class StructuralRef {
     if (flattened) {
       owner_ = detail::owner_for(flattened);
       object_ = std::static_pointer_cast<void>(flattened);
+      // `flatten_ref` only returns a pointer that C++ itself types as `object_type`: the same type, or a
+      // `static_pointer_cast` the compiler accepted because the source derives from it. So this view's own
+      // pointer is a subject object even when the shared owner was first created for a derived type -- an
+      // anonymous carrier like the one createShapedRun allocates -- and records that type instead.
+      subject_proven_ = true;
     }
   }
 
@@ -1166,6 +1171,10 @@ class StructuralRef {
   [[nodiscard]] std::shared_ptr<object_type> shared_object() const noexcept
     requires(!std::is_void_v<object_type>)
   {
+    // A view built from a typed pointer holds a pointer the compiler proved is an `object_type`. Every other
+    // view -- widened from another schema, or rebuilt from an owner -- holds a pointer of the owner's native
+    // type, and stays on the exact check below, so no cross-owner cast is ever made here.
+    if (subject_proven_ && object_) return std::static_pointer_cast<object_type>(object_);
     if (!owner_ || owner_->native_type() != typeid(object_type)) return {};
     if (object_) return std::static_pointer_cast<object_type>(object_);
     return std::static_pointer_cast<object_type>(owner_->native_object());
@@ -1179,6 +1188,11 @@ class StructuralRef {
   // observably instead of manufacturing a new object or reinterpreting the retained one.
   template <typename Object>
   [[nodiscard]] std::shared_ptr<Object> shared_exact_object() const noexcept {
+    // Asking a proven view for its own subject type is not a downcast: the pointer is already an `Object`.
+    // Any other request -- an assertion to a type the row does not name -- keeps the exact-owner check.
+    if constexpr (std::same_as<Object, object_type>) {
+      if (subject_proven_ && object_) return std::static_pointer_cast<Object>(object_);
+    }
     if (!owner_ || owner_->native_type() != typeid(Object)) return {};
     const auto native = object_ ? object_ : owner_->native_object();
     return std::static_pointer_cast<Object>(native);
@@ -1201,6 +1215,8 @@ class StructuralRef {
  private:
   std::shared_ptr<void> object_;
   std::shared_ptr<RowOwner> owner_;
+  // Whether `object_` came from the typed-pointer constructor, so the compiler proved it is an `object_type`.
+  bool subject_proven_ = false;
 };
 
 template <typename Key, typename Value>
