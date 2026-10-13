@@ -1,0 +1,240 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCallableArityAdaptation.test.ts b/packages/compiler-backend-cpp/src/cppCallableArityAdaptation.test.ts
+new file mode 100644
+index 0000000..7efdcaf
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppCallableArityAdaptation.test.ts
+@@ -0,0 +1,131 @@
++import { describe, expect, it } from 'vitest';
++
++import ts from 'typescript';
++
++import { isBackendEmissionFailure } from '../../compiler-emission/src/index.js';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++// TypeScript lets a callable with FEWER accepted parameters be stored where a wider callable is promised: the
++// extra arguments are passed and the source ignores them. `std::function` refuses the narrower signature, so
++// the emitter wraps such a source in an adapter that takes the target's whole parameter list and forwards
++// exactly what the source accepts.
++//
++// What the adapter must not change: the arguments the source does receive (the first ones, in order), the
++// callable it is (a bound or captured callable is captured by value, so its identity is preserved), the value
++// it returns (the adapter returns the source's result, so the return domain is the declared one), and an
++// exception it raises (the adapter does not catch).
++//
++// The measured site is `@flighthq/loader`'s `resourceLoader.ts`, where `_noopLoad` (one parameter) is stored
++// into `PendingEntry.wrappedLoad` (two), and its header does not compile without this.
++function emit(source: string) {
++  const sourceFile = ts.createSourceFile('/flight/packages/math/src/arity.ts', source, ts.ScriptTarget.Latest, true);
++  return emitIrModuleCpp(
++    lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/math', upstreamDirectory: '/flight' }).module,
++    { runtimeProfile: 'flight-cpp' },
++  ).contents;
++}
++
++function captureBackendEmissionFailure(run: () => unknown) {
++  try {
++    run();
++  } catch (error) {
++    if (isBackendEmissionFailure(error)) return error;
++    throw error;
++  }
++  throw new Error('expected C++ emission to refuse and it did not');
++}
++
++describe('a callable with fewer accepted parameters stored into a wider callable', () => {
++  it('adapts one parameter into the two the target promises', () => {
++    const contents = emit(`export type Wrapped = (a: number, b: string) => number;
++      function one(a: number): number { return a; }
++      export function use(): Wrapped { return one; }`);
++    // The wrapper takes the contextual signature and forwards only what the source accepts. A DECLARATION
++    // is a stateless function address, so it is invoked directly rather than captured.
++    expect(contents).toContain(
++      'return [](double contextual_callable_argument0, flight::String contextual_callable_argument1) -> double { return one(contextual_callable_argument0); };',
++    );
++  });
++
++  it('adapts a callable that accepts nothing at all', () => {
++    const contents = emit(`export type Wrapped = (a: number, b: string) => number;
++      function none(): number { return 7; }
++      export function use(): Wrapped { return none; }`);
++    expect(contents).toContain(
++      'return [](double contextual_callable_argument0, flight::String contextual_callable_argument1) -> double { return none(); };',
++    );
++  });
++
++  it('leaves an equal signature alone', () => {
++    const contents = emit(`export type Wrapped = (a: number, b: string) => number;
++      function two(a: number, b: string): number { return a; }
++      export function use(): Wrapped { return two; }`);
++    expect(contents).toContain('return two;');
++    expect(contents).not.toContain('contextual_callable_argument0');
++  });
++
++  it('adapts the field the loader stores, not only a returned value', () => {
++    const contents = emit(`export type Wrapped = (a: number, b: string) => number;
++      export interface Holder { wrapped: Wrapped; }
++      function one(a: number): number { return a; }
++      export function fill(holder: Holder): void { holder.wrapped = one; }`);
++    expect(contents).toContain(
++      '(holder->wrapped = [](double contextual_callable_argument0, flight::String contextual_callable_argument1) -> double { return one(contextual_callable_argument0); });',
++    );
++  });
++
++  it('keeps a captured callable, by value, with its identity', () => {
++    const contents = emit(`export type Wrapped = (a: number, b: string) => number;
++      export function use(): Wrapped { const local = (a: number): number => a; return local; }`);
++    // A produced callable is evaluated ONCE and retained by value, so the wrapper holds the callable the
++    // source named -- and the call it makes is to that stored callable, not to a fresh one per invocation.
++    expect(contents).toContain('return [contextual_callable = local](double contextual_callable_argument0');
++    expect(contents).toContain('return contextual_callable(contextual_callable_argument0);');
++  });
++
++  it('keeps a bound callable reached through its receiver', () => {
++    const contents = emit(`export type Wrapped = (a: number, b: string) => number;
++      export interface Target { one(a: number): number; }
++      export function use(target: Target): Wrapped { return target.one; }`);
++    expect(contents).toContain('return [contextual_callable = target->one](double contextual_callable_argument0');
++    expect(contents).toContain('return contextual_callable(contextual_callable_argument0);');
++  });
++
++  it('returns the source result through the adapter, whatever its domain', () => {
++    const contents = emit(`export type Wrapped = (a: number, b: string) => Promise<number>;
++      function one(a: number): Promise<number> { return Promise.resolve(a); }
++      export function use(): Wrapped { return one; }`);
++    expect(contents).toContain('-> flight::Task<double> { return one(contextual_callable_argument0); }');
++  });
++
++  it('supplies a source that declares MORE parameters, when the extras are optional', () => {
++    const contents = emit(`export type Narrow = (a: number) => number;
++      function withOptional(a: number, b?: string): number { return a; }
++      export function use(): Narrow { return withOptional; }`);
++    // The target promises one argument, so only one is forwarded and the source's optional parameter is
++    // supplied absence -- the same call the source language makes.
++    expect(contents).toContain(
++      'return [](double contextual_callable_argument0) -> double { return with_optional(contextual_callable_argument0, std::nullopt); };',
++    );
++  });
++
++  it('collects the arguments a rest-parameter source accepts', () => {
++    const contents = emit(`export type Wrapped = (a: number, b: number) => number;
++      function spread(...values: number[]): number { return values.length; }
++      export function use(): Wrapped { return spread; }`);
++    expect(contents).toContain(
++      'return spread(flight::Array<double>{contextual_callable_argument0, contextual_callable_argument1});',
++    );
++  });
++
++  it('refuses a source that requires more parameters than the target promises', () => {
++    const failure = captureBackendEmissionFailure(() =>
++      emit(`export type Narrow = (a: number) => number;
++        function two(a: number, b: string): number { return a; }
++        export function use(): Narrow { return two; }`),
++    );
++    expect(failure.rule).toBe('cpp-callable-arity-narrowing-unrepresented');
++    expect(failure.message).toContain('fewer arguments than it declares');
++  });
++});
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index fa58283..d7fd139 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -3545,6 +3545,8 @@ function emitExpression(
+     if (voidValueConversion) return voidValueConversion;
+     const erasedDynamicConversion = emitCppContextualErasedDynamicValueCpp(expression, expectedType, context);
+     if (erasedDynamicConversion) return erasedDynamicConversion;
++    const callableArityAdaptation = emitCppContextualCallableArityAdaptationCpp(expression, expectedType, context);
++    if (callableArityAdaptation) return callableArityAdaptation;
+     refuseCppContextualStructuralArrayNominalRecoveryCpp(expression, expectedType, context);
+     refuseCppContextualArrayElementUnionNarrowingCpp(expression, expectedType, context);
+     const optionalPropertyConversion = emitCppOptionalPropertyDualSentinelConversionCpp(
+@@ -19974,7 +19976,15 @@ function emitCppContextualCallableUnionValueCpp(
+     );
+     return `${type} ${parameterNames[index]!}`;
+   });
++  const sourceRestIndex = sourceType.parameters.findIndex((parameter) => parameter.rest);
+   const arguments_ = sourceType.parameters.map((parameter, index) => {
++    // A source whose last parameter is a rest collects every argument the target passes it into one array,
++    // which is the array the source language would have built from them.
++    if (parameter.rest && sourceRestIndex === sourceType.parameters.length - 1) {
++      const element = getIrArrayTypeCpp(parameter.type, context, new Set())?.element;
++      if (!element) return 'std::nullopt';
++      return `flight::Array<${emitType(element, context)}>{${parameterNames.slice(index).join(', ')}}`;
++    }
+     const targetParameter = target.parameters[index];
+     if (!targetParameter) return 'std::nullopt';
+     return (
+@@ -21989,6 +21999,73 @@ function isIrStringTypeEvidenceCpp(type: Readonly<IrType> | undefined): boolean
+ // both. Prefer a complete contextual substitution when every argument can retain its representation or
+ // is a fresh object constructible in that domain; otherwise retain the checker-inferred call result.
+ // An incomplete result is left to ordinary C++ deduction instead of manufacturing a runtime type.
++// A source callable whose parameter list is not the one the position declares, stored where that position's
++// callable is expected -- TypeScript passes the extra arguments and the source ignores them, while
++// `std::function` refuses the narrower signature.
++//
++// The adaptation itself is the one this file already performs for a callable slot inside a union
++// (`emitCppContextualCallableUnionValueCpp`): a wrapper taking the contextual parameter list, invoking the
++// source once and retaining it by value. This reaches that same lowering from the plain-callable position,
++// which had no path to it. The opposite direction -- a source REQUIRING more parameters than the target
++// promises -- is not an adaptation but a different callable, and is refused.
++// The callable a position declares, when it declares one directly: an alias resolved to a function type. A
++// union or optional carrier is deliberately NOT resolved here -- the emission for those wraps the callable,
++// and that wrapping is the union path's job.
++function getCppPlainCallableTypeCpp(
++  type: Readonly<IrType>,
++  context: EmitContext,
++): Readonly<Extract<IrType, { kind: 'function' }>> | undefined {
++  if (type.kind === 'function') return type;
++  if (type.kind === 'typeOf') {
++    const valueType = getCppTypeOfValueType(type, context);
++    return valueType ? getCppPlainCallableTypeCpp(valueType, context) : undefined;
++  }
++  if (type.kind !== 'named' || type.reference.kind !== 'binding') return undefined;
++  const alias = resolveCppTypeAliasTarget(type, context);
++  return alias ? getCppPlainCallableTypeCpp(alias, context) : undefined;
++}
++
++function emitCppContextualCallableArityAdaptationCpp(
++  expression: Readonly<IrExpression>,
++  expectedType: Readonly<IrType> | undefined,
++  context: EmitContext,
++): string | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || expectedType === undefined) return undefined;
++  // A function literal pads its own parameter list (emitExpression's own case) -- this is about a callable
++  // VALUE being stored, which is a different shape and must not be wrapped twice.
++  if (expression.kind === 'function') return undefined;
++  // A PLAIN callable position only: a union or optional carrier has its own path, which wraps the adapted
++  // callable in that carrier -- adapting here instead would drop the carrier the source declared.
++  const target = getCppPlainCallableTypeCpp(expectedType, context);
++  if (!target || target.typeParameters.length > 0 || target.parameters.some((parameter) => parameter.rest)) {
++    return undefined;
++  }
++  // A function DECLARATION's binding records no type of its own, so its own signature is the evidence --
++  // the same substitution the identifier evidence path makes where it needs one.
++  const declaration =
++    expression.kind === 'identifier' && expression.reference.kind === 'binding'
++      ? getCppFunctionDeclarationForBindingCpp(expression.reference.binding.id, context)
++      : undefined;
++  const sourceType =
++    getIrExpressionTypeEvidenceCpp(expression, context) ??
++    (declaration ? getIrFunctionDeclarationTypeCpp(declaration) : undefined);
++  if (sourceType?.kind !== 'function' || sourceType.typeParameters.length > 0) return undefined;
++  const restIndex = sourceType.parameters.findIndex((parameter) => parameter.rest);
++  if (restIndex !== -1 && restIndex !== sourceType.parameters.length - 1) return undefined;
++  // What the source REQUIRES is what the target has to be able to supply: a trailing optional parameter is
++  // one the source can be called without, so a target promising fewer arguments is still a faithful caller.
++  const requiredSourceParameters = sourceType.parameters.filter((parameter) => !parameter.optional).length;
++  if (requiredSourceParameters > target.parameters.length) {
++    emissionError(
++      context,
++      `a callable requiring ${String(requiredSourceParameters)} parameters cannot be stored where ${String(target.parameters.length)} are promised: it would be called with fewer arguments than it declares, and no adapter can supply them. Widen the source, or declare the target's callable with the parameters it needs`,
++      'cpp-callable-arity-narrowing-unrepresented',
++    );
++  }
++  if (sourceType.parameters.length === target.parameters.length) return undefined;
++  return emitCppContextualCallableUnionValueCpp(expression, sourceType, expectedType, context);
++}
++
+ function getCppContextualCallTypeArgumentsCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'call' }>>,
+   expectedType: Readonly<IrType> | undefined,

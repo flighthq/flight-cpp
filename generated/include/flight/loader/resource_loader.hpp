@@ -107,14 +107,14 @@ inline flight::Ref<PendingEntry> acquire_pending_entry() {
   if (entry.has_value()) {
     return entry.value();
   }
-  return flight::make_ref<PendingEntry>(PendingEntry{.abort_controller = flight::AbortController(), .bytes_hint = 0.0, .bytes_loaded = 0.0, .generation = 0.0, .group = std::nullopt, .key = flight::String(""), .on_bytes_progress = std::nullopt, .priority = 0.0, .reject = noop, .resolve = noop, .retries = 0.0, .started_at = 0.0, .timeout_ms = 0.0, .weight = 1.0, .wrapped_load = noop_load});
+  return flight::make_ref<PendingEntry>(PendingEntry{.abort_controller = flight::AbortController(), .bytes_hint = 0.0, .bytes_loaded = 0.0, .generation = 0.0, .group = std::nullopt, .key = flight::String(""), .on_bytes_progress = std::nullopt, .priority = 0.0, .reject = noop, .resolve = noop, .retries = 0.0, .started_at = 0.0, .timeout_ms = 0.0, .weight = 1.0, .wrapped_load = [](flight::AbortSignal contextual_callable_argument0, flight::types::ResourceLoadBytesReporter contextual_callable_argument1) -> flight::Task<flight::Any> { return noop_load(contextual_callable_argument0); }});
 }
 
 inline void release_pending_entry(flight::Ref<PendingEntry> entry) {
   (entry->on_bytes_progress = std::nullopt);
   (entry->reject = noop);
   (entry->resolve = noop);
-  (entry->wrapped_load = noop_load);
+  (entry->wrapped_load = [](flight::AbortSignal contextual_callable_argument0_2, flight::types::ResourceLoadBytesReporter contextual_callable_argument1_2) -> flight::Task<flight::Any> { return noop_load(contextual_callable_argument0_2); });
   (entry->abort_controller = flight::AbortController());
   pending_entry_pool.push(entry);
 }

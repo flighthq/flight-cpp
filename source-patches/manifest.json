@@ -3391,6 +3391,23 @@
       "unblocks": "Correct updateFlowStack and getFlowStackVisibleStates for states that set an overlay flag to false; no header-count change.",
       "expires": "when the emitter applies truthiness to each operand of && (and ||) rather than to the combined C++ expression.",
       "appliedOn": "2026-10-13"
+    },
+    {
+      "id": "compiler-callable-arity-adaptation",
+      "dependency": "flight-compiler",
+      "patch": "compiler-callable-arity-adaptation.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "A callable that accepts FEWER parameters than the callable it is stored into was stored as itself. TypeScript passes the extra arguments and the source ignores them; `std::function` requires one exact signature and refuses the narrower one. Measured on @flighthq/loader's resourceLoader.ts, where `_noopLoad` (one parameter) is stored into `PendingEntry.wrappedLoad` (two) -- the first compile error in that module once it stopped being a placeholder, and not the module's remaining refusal.",
+      "rewrite": "The position's own callable is what the source is adapted TO, and that adaptation already exists in this file for a callable slot inside a union; what was missing was a plain callable position reaching it. A new entry point resolves the position's declared callable -- through an alias, and deliberately NOT through a union or optional carrier, which has its own path that wraps the adapted callable -- and, where the source's parameter list differs from it, emits that same wrapper. A source REQUIRING more parameters than the target promises is refused rather than wrapped, because it would be called with fewer arguments than it declares. The wrapper also now collects the arguments a rest-parameter source accepts into the array the source language would have built for it.",
+      "equivalence": "The wrapper is the source's own call, with the parameters the source does not accept left out or supplied absence: a declaration is invoked directly (a stateless function address), and any other callable is evaluated ONCE where the callable is created and retained by value, so the callable the target holds is the one the source produced -- a copied `std::function` shares its own state -- and no produced expression is re-run per invocation. The arguments the source does receive are the first ones, in order, converted exactly as the position already converts them; a source-only optional parameter is supplied `std::nullopt` so its default applies; a rest parameter receives every remaining argument in one array; and the wrapper returns the source's result, so the return domain is the declared one and an exception the source raises propagates unchanged. An equal signature is left alone, and a source with more declared parameters whose extras are optional is adapted rather than refused.",
+      "verification": "New cppCallableArityAdaptation.test.ts, 10 controls: one parameter into two (the loader's shape), a callable accepting nothing, an equal signature left alone, the field assignment rather than a returned value, a captured closure and a bound callable (both retained by value, with the wrapper calling the stored callable), a promise return domain, a source with optional extras supplied absence, a rest parameter collected into an array, and the refusal for a source requiring more than promised. Mutations, all with teeth: the entry point disabled fails 6; the rest collection disabled fails 1; the required-parameter rule weakened fails 1. The plain-callable restriction is guarded by three EXISTING expectations that pin the union path's own wrapping and fail when the restriction is dropped. cppCompilerBackend.test.ts fails the identical 47 tests with and without the set.",
+      "unblocks": "@flighthq/loader's resourceLoader.ts `PendingEntry.wrappedLoad` compiles; the module's remaining blockers are callable-arity's neighbours and its refusal, flattened-interface-refinement-identity, which stays separate.",
+      "expires": "never by itself: C++ has no narrower-signature conversion, so the wrapper is the lowering rather than a workaround. It becomes unnecessary only if the emitter stops choosing `std::function` for such a position.",
+      "appliedOn": "2026-10-13",
+      "whyNotUpstreamFirst": "The wrapper is the one this backend already emits for a callable slot inside a union; this reaches it from a plain callable position and adds the rest-parameter collection. Upstream has no newer commit than the pin."
     }
   ]
 }

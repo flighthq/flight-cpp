@@ -38,15 +38,6 @@ struct PendingEntry : public flight::ReferenceEnabled {
 error: no viable conversion from 'flight::Task<flight::Any> (flight::AbortSignal)' to
        'std::function<flight::Task<flight::Any> (flight::AbortSignal, flight::types::ResourceLoadBytesReporter)>'
 ```
-
-## Expected behavior
-
-The narrower function is adapted at the point where the wider callable is stored: a lambda that takes the
-full parameter list and forwards only what the source passes, so the callable it becomes is the one the
-declaration states and every argument it ignores is ignored rather than invented. The adaptation must not
-change the call's settlement, its ordering, its rejection, or the value it resolves -- a callable that
-resolves is still the same callable, just written with the arity the target's storage needs.
-
 ## Affected
 
 `@flighthq/loader` `resourceLoader.ts`: `_noopLoad` (one parameter) stored into `PendingEntry.wrappedLoad` (two
@@ -54,7 +45,26 @@ parameters), in the pool's initialization and in `releasePendingEntry`. With the
 does not compile -- and it *did* compile as a placeholder, so the package's compile gate is held down by this
 until it is fixed.
 
-## Carrying workaround
+## Carried by a compiler patch
 
-None. The declaration refuses nothing, so there is nothing to defer; the header simply does not compile. A
-loader-local override would be a copy of the module rather than a lowering of it.
+`source-patches/compiler-callable-arity-adaptation.patch`. The adaptation itself already existed in the
+backend -- the wrapper it emits for a callable slot inside a union -- and what was missing was any plain
+callable position reaching it, plus one shape of its own:
+
+- a position declaring a callable directly (through an alias) now reaches that wrapper. A union or optional
+  carrier is deliberately excluded, because that path wraps the adapted callable in the carrier and adapting
+  earlier would drop it.
+- a source **requiring** more parameters than the target promises is refused
+  (`cpp-callable-arity-narrowing-unrepresented`) rather than wrapped: it would be called with fewer arguments
+  than it declares, and no adapter can supply them.
+- a source whose last parameter is a **rest** now receives every remaining argument in one array, which is
+  the array the source language would have built. Before this it received only the first.
+
+The wrapper's properties are the ones the union path already had: a declaration is invoked directly (a
+stateless function address), any other callable is evaluated **once** where the callable is created and
+retained by value, a parameter the source cannot receive is left out, a source-only optional parameter is
+supplied `std::nullopt` so its default applies, and an equal signature is not wrapped at all.
+
+Controls: `cppCallableArityAdaptation.test.ts`, 10 cases, with three mutations that bite (the entry point
+disabled 6 fails, the rest collection 1, the required-parameter rule 1) -- and the plain-callable restriction
+is guarded by three existing expectations that pin the union path's wrapping.
