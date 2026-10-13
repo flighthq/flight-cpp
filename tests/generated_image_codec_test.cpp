@@ -13,6 +13,12 @@
 // capability doubles so byte identity, decoded metadata, option forwarding, and missing-capability
 // failures are all observable without pretending that @flighthq/image's currently refused browser
 // and erased-value modules are available.
+//
+// MUTATION SENSITIVITY, measured 2026-10-12 from a clean committed baseline and then restored:
+//   * extending the AVIF compatible-brand loop through the declared box boundary fails the
+//     brand-outside-box assertion;
+//   * ignoring an explicit decode MIME type fails the explicit-MIME precedence assertions;
+//   * dropping encode options fails the exact quality-forwarding assertion.
 
 namespace {
 
