@@ -16,6 +16,7 @@
 
 #include <flight/array.hpp>
 #include <flight/attachment.hpp>
+#include <flight/erased_ref.hpp>
 #include <flight/string.hpp>
 #include <flight/symbol.hpp>
 
@@ -190,6 +191,14 @@ class Record {
 
   [[nodiscard]] const void* identity() const noexcept {
     return attachment_ ? static_cast<const void*>(attachment_.get()) : storage_.get();
+  }
+
+  // This record as an object key: an `ErasedRef` whose identity is `identity()`, so copies of one
+  // record -- which share their entries, as two bindings of one JavaScript object do -- give equal
+  // keys and two records never do. It recovers no type; it exists for `Map<object, ...>` membership.
+  [[nodiscard]] ErasedRef erased_ref() const {
+    if (attachment_) return ErasedRef(attachment_);
+    return ErasedRef(storage_);
   }
 
   [[nodiscard]] size_type size() const noexcept {

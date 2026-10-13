@@ -18,6 +18,7 @@
 
 #include <flight/array.hpp>
 #include <flight/equality.hpp>
+#include <flight/erased_ref.hpp>
 #include <flight/error.hpp>
 #include <flight/number.hpp>
 #include <flight/presence.hpp>
@@ -376,6 +377,21 @@ class Any final {
       return callable->held.value ? std::any_cast<External>(callable->held.value.get()) : nullptr;
     }
     return nullptr;
+  }
+
+  // The held object as an `ErasedRef`: the same reference -- one identity, no copy -- at the exact
+  // type it was boxed at, so `as<Object>()` recovers it exactly as `object_if<Object>()` would. This
+  // is what keying a `Map<object, ...>` by an erased value needs: two `Any`s holding one object give
+  // equal keys, and two distinct objects of one type give different ones.
+  //
+  // Empty for everything that is not an object reference, including `null`. An array or a function
+  // is an object in JavaScript too, but neither is held as a reference here, so there is no
+  // identity to hand over; a caller that needs one asks `is_nullish`/`kind` first rather than
+  // receiving a key that every such value would share.
+  [[nodiscard]] ErasedRef erased_ref() const noexcept {
+    const auto* stored = std::get_if<detail::AnyObject>(&value_);
+    if (stored == nullptr || !stored->object) return {};
+    return ErasedRef(stored->object, stored->type);
   }
 
   // The type a non-primitive went in as. `typeid(void)` for every primitive.

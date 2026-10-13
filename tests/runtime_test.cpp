@@ -842,6 +842,36 @@ void test_erased_ref() {
           "an erased reference owns its object for its own lifetime");
   }
   check(observer.expired(), "and releases it when the last erasure goes");
+
+  // An erased value used as a `Map<object, ...>` key: the object an `Any` holds, at the type it was
+  // boxed at, with the identity it already has.
+  const auto boxed = flight::Any::object(binding);
+  const auto from_any = boxed.erased_ref();
+  check(from_any == erased && from_any.as<TestReference>() == binding,
+        "an Any holding an object erases to that same object at its boxed type");
+  check(flight::Any::object(binding).erased_ref() == from_any,
+        "two Anys boxing one object give one key");
+  check(!(flight::Any::object(other).erased_ref() == from_any) &&
+            flight::Any::object(other).erased_ref().as<TestEntity>() == other,
+        "a different object gives a different key, recoverable at its own type only");
+  check(!flight::Any(5.0).erased_ref().has_value() && !flight::Any(flight::null).erased_ref().has_value() &&
+            !flight::Any().erased_ref().has_value() &&
+            !flight::Any::object(flight::Ref<TestReference>{}).erased_ref().has_value(),
+        "a primitive, null, undefined or a boxed null reference has no object to key by");
+
+  // A record is an object too, and its copies share entries as two bindings of one object do.
+  flight::Record<flight::String, double> record;
+  const auto record_copy = record;
+  flight::Record<flight::String, double> other_record;
+  check(record.erased_ref() == record_copy.erased_ref() && record.erased_ref().identity() == record.identity(),
+        "copies of one record are one key, with the record's own identity");
+  check(!(record.erased_ref() == other_record.erased_ref()), "two records are two keys");
+  flight::Map<flight::ErasedRef, double> keyed;
+  keyed.set(boxed.erased_ref(), 1.0);
+  keyed.set(record.erased_ref(), 2.0);
+  check(keyed.get(flight::ErasedRef(binding)).value_or(0) == 1.0 && keyed.get(record_copy.erased_ref()).value_or(0) == 2.0 &&
+            !keyed.has(other_record.erased_ref()),
+        "and a map keyed by them finds an entry through any binding of its object");
 }
 
 void test_blob() {

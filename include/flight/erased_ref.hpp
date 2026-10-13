@@ -28,6 +28,8 @@
 // object identity, nothing to keep entries alive, and nothing to go stale.
 namespace flight {
 
+class Any;
+
 class ErasedRef final {
  public:
   ErasedRef() = default;
@@ -77,6 +79,14 @@ class ErasedRef final {
   }
 
  private:
+  // An `Any` holding an object already carries the exact type it was boxed at, so it can hand over
+  // an erased reference without a cast; see `Any::erased_ref`. Nothing else may pair a pointer with
+  // a type, because nothing else knows the two agree.
+  friend class Any;
+
+  ErasedRef(std::shared_ptr<void> object, std::type_index type) noexcept
+      : object_(std::move(object)), type_(object_ ? type : std::type_index(typeid(void))) {}
+
   std::shared_ptr<void> object_;
   std::type_index type_{typeid(void)};
 };
