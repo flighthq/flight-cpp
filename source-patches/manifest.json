@@ -3929,6 +3929,23 @@
       "unblocks": "Nothing yet, measured after the patch: the module regenerates with the parameter named `flight::Ref<flight::types::SpatialAabb2D>` (1 header changed) and the package still compiles 10 of 26 headers with the IDENTICAL 16 failures. The parameter was not the only declaration emitting the anonymous owner -- three more inline bounds shapes do (broadphase.ts's scratch `bounds` and `bodyBounds`, worldQueries.ts's `colliderBounds`), and the same field list means they share the same anonymous type, so the mismatches simply moved to those sites. Recorded in docs/compiler-requests/contextual-object-return-nominal-owner.md.",
       "expires": "when the emitter selects the declared named owner for a contextual object shape, at which point the inline spelling lowers and this patch has nothing left to rewrite.",
       "appliedOn": "2026-10-13"
+    },
+    {
+      "id": "compiler-declared-present-reference-chain",
+      "dependency": "flight-compiler",
+      "patch": "compiler-declared-present-reference-chain.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "not a refusal: a run-time null dereference. An optional chain whose receiver the checker marks non-nullable (receiverNullish 'excluded') was lowered as a plain member read. @flighthq/host's hostQuery.ts reads every required Host capability group through `host.group?.slot ?? null` precisely so that a hand-built stand-in with a group missing answers null; the group is a flight::Ref, so the emitted `row_get<\"audio\">(host)->device` dereferenced a null pointer.",
+      "rewrite": "In emitOptionalPropertyExpressionCpp's excluded branch, a flight-cpp chain whose receiver is a nominal reference, whose member's storage is a single std::optional, and whose plain read would be exactly `receiver->member` is emitted as a lambda that binds the receiver once and returns std::nullopt when it is null, otherwise the same member read. Every other excluded chain keeps its plain read.",
+      "equivalence": "JavaScript's `?.` tests the receiver at run time whatever its declared type. The member's storage already represents the absent state, so a null receiver produces exactly the value `?.` produces for a missing group, and the result type is unchanged; a present receiver is read once and returns the same object. Required members under a missing group, value receivers, and structural or variant reads are deliberately not changed.",
+      "verification": "New cppDeclaredPresentReferenceChain.test.ts: 4 pass. The guarded case fails without the rewrite; the plain required read, a required member under a required group, and a value receiver pass both ways. compiler-backend-cpp suite at -j2 on top of compiler-nullish-conditional-absent-fallback: the same 47 pre-existing failures, none new. Scratch regeneration of @flighthq/host with and without the rewrite: across the closure only host_query.hpp changes, its 28 `row_get<key>(host)->member` slot reads each becoming the guarded form. Native: get_host_audio_device and get_host_clipboard_formats on a Host with no groups answer null (the unpatched build segfaults); a present group returns the very capability object; a present group without the slot answers null. The Host row was not regenerated or edited.",
+      "whyNotUpstreamFirst": "It is a run-time null dereference on the host query path that the header compile gate cannot see; upstream receives docs/compiler-requests/host-group-optional-chain-dropped.md.",
+      "unblocks": "@flighthq/host hostQuery.ts getHost* and hasHost* on a stand-in Host with missing groups, once the Host owner regenerates.",
+      "expires": "when upstream keeps the run-time receiver test of an optional chain through a nullable reference representation (docs/compiler-requests/host-group-optional-chain-dropped.md).",
+      "appliedOn": "2026-10-13"
     }
   ]
 }

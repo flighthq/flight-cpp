@@ -31,6 +31,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-new-set-copy.patch`](../../source-patches/compiler-new-set-copy.patch) | [`new Set(existingSet)` must copy, not alias](new-set-copy-lowered-to-alias.md) |
 | [`compiler-new-set-from-iterator.patch`](../../source-patches/compiler-new-set-from-iterator.patch) | [`new Set(collection.values())` must lower without a contextual optional construction](new-set-from-collection-iterator.md) |
 | [`compiler-nullish-conditional-absent-fallback.patch`](../../source-patches/compiler-nullish-conditional-absent-fallback.patch) | [A nullish-coalesce fallback of `null` is wrapped into an engaged optional](nullish-coalesce-null-into-optional-is-never-absent.md) |
+| [`compiler-declared-present-reference-chain.patch`](../../source-patches/compiler-declared-present-reference-chain.patch) | [An optional chain through a reference declared present must still test it](host-group-optional-chain-dropped.md) |
 | [`compiler-dependent-erased-object-recovery-template.patch`](../../source-patches/compiler-dependent-erased-object-recovery-template.patch) | [Dependent erased-object recovery needs a template disambiguator](dependent-erased-object-recovery-template.md) |
 | [`compiler-dependent-indexed-access-reference-carrier.patch`](../../source-patches/compiler-dependent-indexed-access-reference-carrier.patch) | [Dependent indexed access must read through the reference carrier](dependent-indexed-access-reference-carrier.md) |
 | [`compiler-contextual-imported-union-owner.patch`](../../source-patches/compiler-contextual-imported-union-owner.patch) | [Contextual construction of an imported union](compiler-contextual-imported-union-owner.md) |
@@ -458,6 +459,8 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   silent miscompilation, the Set twin of the Map request: `flight::Set<T>(set)` selects the sharing copy constructor. One SDK site (`scene3d-formats` `objRequirements.ts`).
 - [`new Set(collection.values())` must lower without a contextual optional construction](new-set-from-collection-iterator.md) —
   a refusal (`contextual optionalSingle construction requires expression type evidence`) for `values()`/`keys()` iterator arguments; preventive, no SDK site is refused today. `entries()` and stored iterators stay refused.
+- [An optional chain through a reference declared present must still test it](host-group-optional-chain-dropped.md) —
+  `@flighthq/host` `hostQuery.ts`: `host.group?.slot ?? null` dereferenced a missing group's null `Ref`. Carried by the `compiler-declared-present-reference-chain` patch.
 - [A nullish-coalesce fallback of `null` is wrapped into an *engaged* optional, so its truthiness test dereferences null](nullish-coalesce-null-into-optional-is-never-absent.md) —
   silent miscompilation: `@flighthq/textlayout`'s wrapping path panics on the first-segment overrun that upstream's own fixture exercises. No workaround is carried.
 - [A structural view of an entity-allocated carrier is invisible when the carrier derives from the row's subject](structural-view-of-a-derived-carrier-is-invisible.md) —

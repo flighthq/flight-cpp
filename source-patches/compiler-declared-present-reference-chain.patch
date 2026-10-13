@@ -1,0 +1,97 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 16252a4..1ab4504 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -29628,6 +29628,36 @@ function emitCppOptionalVariantCommonPropertyExpressionCpp(
+   return `([&]() -> std::optional<${evidence.payloadTargetType}> { auto optional_chain_receiver = ${receiver}; if (!optional_chain_receiver.has_value()) return std::nullopt; return std::visit([](const auto& value) { return ${projected}; }, optional_chain_receiver.value()); }())`;
+ }
+ 
++// `group?.member` where the checker excluded nullishness from `group` -- its declared type is a required
++// reference -- still tests the receiver at run time in JavaScript. Upstream relies on that deliberately:
++// `host.audio?.device ?? null` must answer null for a hand-built Host whose `audio` group is missing. The
++// receiver is a flight::Ref, so a missing group is a null pointer here, and dropping the `?.` dereferenced it.
++//
++// The test is kept only where its absence has somewhere to go: the member's own storage must already be a
++// single std::optional, so the chain's result type is unchanged. A required member under a missing group
++// would need its result widened to admit absence; that is a different change and is left as it was.
++function emitCppDeclaredPresentReferenceChainCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'property' }>>,
++  context: EmitContext,
++): string | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
++  const receiverType = getIrExpressionTypeEvidenceCpp(expression.object, context);
++  if (!receiverType || hasIrTypeAbsentMember(receiverType)) return undefined;
++  if (!hasFlightReferenceRepresentationCpp(receiverType, context)) return undefined;
++  const memberType = getIrObjectPropertyTypeCpp(receiverType, expression.name, context);
++  if (!memberType) return undefined;
++  const memberUnion = getIrUnionTypeCpp(memberType, context, new Set());
++  const memberPlan = memberUnion ? getCppUnionRepresentationPlan(memberUnion, context) : undefined;
++  if (memberPlan?.kind !== 'optionalSingle' || memberPlan.valueSlots.length !== 1) return undefined;
++  const receiver = emitExpression(expression.object, context);
++  const member = getCppProjectedMemberNameCpp(expression, context);
++  // Only the nominal pointer read is guarded: the access the chain would otherwise emit must be exactly
++  // `receiver->member`. A structural row read, a variant projection or any other spelling is left as it was.
++  if (emitExpression({ ...expression, optional: false }, context) !== `${receiver}->${member}`) return undefined;
++  context.includes.add('optional');
++  return `([&]() -> std::optional<${memberPlan.valueSlots[0]!.targetType}> { auto optional_chain_receiver = ${receiver}; if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->${member}; }())`;
++}
++
+ function emitOptionalPropertyExpressionCpp(
+   expression: Readonly<Extract<IrExpression, { kind: 'property' }>>,
+   context: EmitContext,
+@@ -29640,6 +29670,8 @@ function emitOptionalPropertyExpressionCpp(
+     getCppRuntimeProfile(context.options) === 'flight-cpp' &&
+     hasIndexedRuntimeReceiverCpp(expression.object, context);
+   if (semantics.receiverNullish === 'excluded' && !indexesRuntimeCollection) {
++    const guarded = emitCppDeclaredPresentReferenceChainCpp(expression, context);
++    if (guarded) return guarded;
+     return emitExpression({ ...expression, optional: false }, context);
+   }
+   const commonVariantProperty = emitCppOptionalVariantCommonPropertyExpressionCpp(expression, context);
+diff --git a/packages/compiler-backend-cpp/src/cppDeclaredPresentReferenceChain.test.ts b/packages/compiler-backend-cpp/src/cppDeclaredPresentReferenceChain.test.ts
+new file mode 100644
+index 0000000..f2b0f36
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppDeclaredPresentReferenceChain.test.ts
+@@ -0,0 +1,41 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function returned(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/x/src/x.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/x', upstreamDirectory: '/flight' });
++  const contents = emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++  return contents.split('\n').find((line) => line.trim().startsWith('return '))?.trim() ?? '';
++}
++
++// upstream hostQuery.ts's shape: a required group declared present, read through `?.` so that a hand-built
++// stand-in with the group missing answers null rather than a TypeError.
++const host =
++  'export interface Device { id: number }\n' +
++  'export interface Group { device?: Device; count: number }\n' +
++  'export interface Host { readonly audio: Group; readonly maybe?: Group }\n';
++
++describe('an optional chain through a reference declared present', () => {
++  it('keeps the run-time receiver test when the member already admits absence', () => {
++    expect(returned(`${host}export function f(host: Host): Device | null { return host.audio?.device ?? null; }`)).toBe(
++      'return ([&]() -> std::optional<flight::Ref<Device>> { auto optional_chain_receiver = host->audio; if (!optional_chain_receiver) return std::nullopt; return optional_chain_receiver->device; }());',
++    );
++  });
++
++  it('leaves a required read without ?. as a plain read', () => {
++    expect(returned(`${host}export function f(host: Host): Device | null { return host.audio.device ?? null; }`)).toBe(
++      'return host->audio->device;',
++    );
++  });
++
++  it('leaves a required member under a required group as it was, since its result has no absent state', () => {
++    expect(returned(`${host}export function f(host: Host): number { return host.audio?.count; }`)).toBe('return host->audio->count;');
++  });
++
++  it('leaves a value receiver declared present unguarded', () => {
++    expect(returned('export function f(text: string): number { return text?.length; }')).not.toContain('optional_chain_receiver');
++  });
++});
