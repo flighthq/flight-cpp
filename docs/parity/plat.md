@@ -109,7 +109,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/sensors` | 3 | 2 | 67 | dedicated | none | 3 / 0 |
 | `@flighthq/geolocation` | 4 | 2 | 13 | dedicated | none | 4 / 0 |
 | `@flighthq/haptics` | 3 | 1 | 19 | dedicated | none | 3 / 0 |
-| `@flighthq/device` | 3 | 1 | 12 | none | none | 3 / 0 |
+| `@flighthq/device` | 3 | 1 | 12 | dedicated | none | 3 / 0 |
 | `@flighthq/screen` | 3 | 1 | 46 | none | none | 3 / 0 |
 | `@flighthq/power` | 3 | 1 | 31 | none | none | 2 / 1 |
 | `@flighthq/clipboard` | 3 | 1 | 31 | none | none | 3 / 0 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-23 of 39 packages are reached by at least one local CTest executable.
-22 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`, `sensors`, `geolocation`, `haptics`.
+24 of 39 packages are reached by at least one local CTest executable.
+23 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`, `sensors`, `geolocation`, `haptics`, `device`.
 
 ## `@flighthq/app`
 
@@ -1295,7 +1295,42 @@ Upstream carries per-package records at `flight/agents/packages/device/`: `statu
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_device` — `tests/generated_device_test.cpp` (dedicated), NEW. The package emits at this pin
+  (3 of 3 modules, no override), and the roll-up row above read "none" before this unit. It is four descriptor
+  constructors plus five pass-through reads of a host device provider, each read taking a CALLER-OWNED out object,
+  filling it and returning that same object.
+
+  The sentinels are the substance, and they are deliberately of three different kinds, so "allocates a zeroed
+  snapshot" would be wrong for three of the four constructors. The capability flags start false; the display metrics
+  and the device-info numerics start at **-1**, the "not reported" sentinel, so a host that supplies only some of
+  them leaves the rest visibly unknown rather than reading as a real zero; the device info's strings start empty and
+  its `formFactor` starts at the declared `Unknown` rather than at the empty string; and the four safe-area edges
+  start at **0**, because a zero inset is a real and common measurement. The test asserts each constructor with its
+  own sentinel, and separately asserts that the -1 metrics sentinel and the 0 insets sentinel stay distinct -- a
+  descriptor that used -1 for insets would report a device with no notch as having a negative inset.
+
+  Every read is asserted twice over: that the provider's values land on the caller's object (all seven metrics, all
+  twenty-five device-info fields, both non-zero insets, the capability flags including one cleared) and that the
+  object RETURNED is the caller's own by identity, not a copy. The device id is the provider's string unchanged.
+  `refreshDeviceInfo` calls a provider that exposes `refresh` exactly once and is silent when one does not -- the
+  package's one optional chain, and its absence is not a failure.
+
+  Fifteen mutations, all fifteen killed: the keyboard flag not cleared, the color-depth and pixel-ratio sentinels,
+  the cpu-cores and total-memory sentinels, the form factor not defaulted to Unknown, isVirtual not starting false,
+  two inset edges not zeroed, all four reads returning a fresh object instead of the caller's, the id substituted,
+  and `refresh` never called. No equivalence was found on this surface and none is claimed.
+
+  One upstream case is an ABSENCE and is recorded rather than asserted: the suite requires the module to export no
+  ambient-state API (`setDeviceBackend`, `installDeviceHostBackend`, `resetDeviceBackendForTest`,
+  `createWebDeviceBackend`, `enableWebSafeAreaInsets`, `explainDeviceBackend`, `observeDeviceHostResult`,
+  `getDeviceBackend`). Measured: a C++ qualified lookup of a name a namespace does not declare is a hard error
+  rather than a substitution failure -- `requires { flight::device::set_device_backend; }` fails to compile with "no
+  member named 'set_device_backend' in namespace 'flight::device'" instead of evaluating false -- so the absence
+  cannot be checked in-process. The positive half is asserted (every export the module has is exercised, and those
+  ten operations plus the constructors are its whole surface) and the absence is stated in the test as the measured
+  compile error rather than dressed up as a runtime check.
+
+  No compiler request was filed for this package.
 
 ### Local generation status
 
