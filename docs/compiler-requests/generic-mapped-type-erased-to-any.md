@@ -73,3 +73,10 @@ A second, independent defect governs how that view then lowers: an assertion bec
 `static_cast`. See [a type assertion must not lower to an unchecked
 `static_cast`](assertion-lowered-to-unchecked-static-cast.md); representing this type without fixing
 that lowering still leaves the module uncompilable.
+
+The tween overrides take `NumericProps<T>` as the `flight::Any` the emitter erased it to and read its keys
+through the same keyed view as the target (see the companion request's tween workaround), so a property
+map is any object whose declared members are the keys to tween, or a boxed `Record<String, number>`.
+An object's optional members are declared keys, so a property map type with optional members tweens each
+of them -- toward `0` when absent, as JavaScript does for a key present with the value `undefined`. A
+representation of `NumericProps<T>` that kept the source's key set would make an absent key absent.

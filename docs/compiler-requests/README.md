@@ -351,3 +351,5 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `@flighthq/signals`' `emitSignalSafe` could not be instantiated for any signal. Carried by the `compiler-constrained-type-parameter-union-slot` patch.
 - [A forwarded parameter pack is consumed more than once](forwarded-parameter-pack-reused.md) —
   silent miscompilation: signal dispatch forwarded an rvalue argument into every slot, so slots after the first received moved-from values. Carried by the `compiler-dependent-callable-pack-reuse` patch.
+- [A `for...of` over a Map must iterate it live, because its body may delete from it](map-for-of-live-iteration.md) —
+  silent miscompilation: the loop lowers to a range-for over the map's storage, which a `delete` in the body invalidates; tween's `updateTweens` crashed on the pass after a target's last tween finished. Carried by the `tween-update-erased-target-writes` override.

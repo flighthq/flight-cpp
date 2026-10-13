@@ -31,7 +31,13 @@ against `T`, not against `Manager | T`.
   `flight::Ref<anonymous>` is not a represented runtime domain". Measured: calling `makeTween` and
   `addTweenToManager` directly (exactly createTween's manager branch) removes the refusal, but the empty
   `{}` target then fails as an anonymous struct, or as `auto target = {}` when bound as `object`. So no
-  patch is carried.
+  patch is carried; the `tween-timer-empty-object-target` override supplies it, passing a fresh member-less
+  object for each `{}` through the manager overload.
+- `createTween` itself (`tween.ts`), emitted but uncompilable: the brand test `isTweenManager(managerOrTarget)`
+  is handed the implementation's `std::variant<Ref<TweenManager>, T>` rather than the value it holds, and the
+  manager branch reads `propsOrOptions` without its optional layer. The
+  `tween-erased-target-and-overload-dispatch` override unwraps the variant to its value before the brand test
+  and reads each branch's alternative through its presence.
 - `createTexture` from `@flighthq/swf` (`swfImageTexture.ts`, `swfVideoHandler.ts`): carried by
   [`swf-image-texture-2d-constructor`](../../source-patches/swf-image-texture-2d-constructor.patch) for the
   image path. Both sites then meet the texture-lane override signature.

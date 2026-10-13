@@ -117,3 +117,15 @@ That is a cross-module registry of operations per generic owner, which is the "t
 but it does not make `connectSignalTracked`/`disconnectSignalScope` work. The `T`-dependent fields are
 exactly what scope teardown uses. So no partial view was carried, and no compiler patch, CTest or signals
 case changed.
+
+## Second site: `@flighthq/tween`
+
+`addTweenToManager<T>` pushes a `Tween<T>` into the manager's `Map<object, Tween<any>[]>`. Emitted, it is a
+template that instantiates only for `T = any`, so every typed caller (`createTween<T>`, `createColorTween`
+returning `Tween<ColorComponents>`, `createTweenTimer` returning `Tween<object>`) fails at instantiation --
+the header gate, which does not instantiate templates, does not see it.
+
+The tween overrides do not build a view. They use the one instantiation the manager can store, `Tween<any>`,
+for every tween, so there is only ever one object and its identity is never split: the handle the caller
+holds is the element of the manager's list. What is lost is the static `T` of the handle, not any runtime
+state -- every field the source reads is the same field. A typed `Tween<T>` handle still needs this request.

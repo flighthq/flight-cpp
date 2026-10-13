@@ -86,3 +86,10 @@ Two things about this site are worth recording against the request:
 
 The module is emitted with **no** PARTIAL banner: the header reads as complete while its own body cannot
 compile, and only the package's override keeps it out of the compile gate's way.
+
+## Carrying workaround: `@flighthq/tween`
+
+The tween overrides (`tween-internal-erased-numeric-record` and the three modules that write the target)
+replace each `static_cast<flight::Record<...>>` with the keyed view the assertion stands for: an object's
+own members through `flight::named_properties`, or a `Record<String, number>` the `Any` carries as an
+external, recovered with `external_if`. Both write the caller's object rather than a copy.

@@ -91,7 +91,9 @@ header compiles; `contract.ts`, `enableTrayGuards.ts` and `index.ts` are depende
 Also refused at a627849: `computeStaggerDelay` in `@flighthq/tween` (`tweenStagger.ts`), which narrows
 `from: 'center' | 'end' | 'start' | number` through `===` comparisons. Measured: testing
 `typeof from === 'number'` first (equivalent over the declared domain) is still refused at the same site,
-so no patch is carried.
+so no patch is carried. The `tween-stagger-origin-selection` override supplies it over the emitted
+`std::variant<double, flight::String>`: each literal test selects the string alternative holding that
+literal, and the final branch reads the numeric alternative.
 
 ## Carrying workaround
 

@@ -57,7 +57,11 @@ runtime capability to design deliberately), not an expression to rewrite.
 
 Also refused at a627849: `createColorTween` in `@flighthq/tween` (`colorTween.ts`). Its update closure
 writes `target[property]` on the caller's `Record<string, number>`; without a shared reference
-representation the write would land on a copy. No workaround is carried.
+representation the write would land on a copy. `flight::Record` already is that shared reference -- its
+copies share their entries -- so the `tween-color-tween-shared-record-target` override supplies the
+function with the closure capturing the record by value and writing the caller's own entries
+(`generated_tween_test`: "the caller's record reaches the target colour"). The refusal stands for the
+general case: a captured local of an unshared type still has no shared representation.
 
 ## Carrying workaround
 
