@@ -63,21 +63,7 @@ using flight::types::TextureAtlasRegion;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_HEIGHT_NAME_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_SOURCE_HEIGHT_SOURCE_WIDTH_WIDTH_X_Y_764BE38B43135437
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_HEIGHT_NAME_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_SOURCE_HEIGHT_SOURCE_WIDTH_WIDTH_X_Y_764BE38B43135437
-struct entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y_764be38b43135437 : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::optional<double> height;
-  std::optional<flight::String> name;
-  std::optional<double> offset_x;
-  std::optional<double> offset_y;
-  std::variant<double, flight::Null, flight::Undefined> pivot_x = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<double, flight::Null, flight::Undefined> pivot_y = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::optional<bool> rotated;
-  std::optional<double> source_height;
-  std::optional<double> source_width;
-  std::optional<double> width;
-  std::optional<double> x;
-  std::optional<double> y;
-};
+using entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y_764be38b43135437 = flight::spritesheet::entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y_764be38b43135437;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_HEIGHT_NAME_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_SOURCE_HEIGHT_SOURCE_WIDTH_WIDTH_X_Y_764BE38B43135437
 
 inline flight::Ref<flight::types::SpritesheetFrameData> frame_from_region_flight_value_function_frame_u000046_rom_u000052_egion_flight_private_c2e407fda53c1dd9(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextureAtlasRegion>>>> region) {
@@ -96,17 +82,7 @@ inline double meta_scale_flight_value_function_meta_u000053_cale_flight_private_
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_DIRECTION_FRAME_DURATION_FRAME_DURATIONS_FRAME_NAMES_REPEAT_COUNT_NAME_ORIGIN_X_ORIGIN_Y_295EF68241B6918E
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_DIRECTION_FRAME_DURATION_FRAME_DURATIONS_FRAME_NAMES_REPEAT_COUNT_NAME_ORIGIN_X_ORIGIN_Y_295EF68241B6918E
-struct entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_295ef68241b6918e : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::optional<flight::types::SpritesheetAnimationDirection> direction;
-  std::optional<double> frame_duration;
-  std::variant<flight::Array<double>, flight::Null, flight::Undefined> frame_durations = std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::optional<flight::Array<flight::String>> frame_names;
-  std::optional<double> repeat_count;
-  std::optional<flight::String> name;
-  std::optional<double> origin_x;
-  std::optional<double> origin_y;
-};
+using entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_295ef68241b6918e = flight::spritesheet::entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_295ef68241b6918e;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_DIRECTION_FRAME_DURATION_FRAME_DURATIONS_FRAME_NAMES_REPEAT_COUNT_NAME_ORIGIN_X_ORIGIN_Y_295EF68241B6918E
 
 inline flight::Ref<flight::types::SpritesheetAnimationData> animation_from_tag(flight::Ref<flight::types::AsepriteFrameTag> tag, flight::Array<flight::String> frame_names, flight::Map<flight::String, double> duration_map) {
@@ -114,7 +90,7 @@ inline flight::Ref<flight::types::SpritesheetAnimationData> animation_from_tag(f
   flight::Array<double> durations = tag_frame_names.map([=](flight::String n) { return ([&]() -> double { auto nullish_coalesce_left = duration_map.get(n); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 100.0; }()); });
   const double first_duration = ([&]() -> double { auto nullish_coalesce_left = durations.get(0.0); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 100.0; }());
   const bool uniform = durations.every([=](double d) { return (d == first_duration); });
-  return flight::spritesheet::create_spritesheet_animation_data(([&]() { auto object_member_direction = std::optional<flight::String>{tag->direction.value_or(flight::String("forward"))}; auto object_member_frame_duration = std::optional<double>{first_duration}; auto object_member_frame_durations = (uniform ? std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null} : std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<double>>, durations}); auto object_member_frame_names = std::optional<flight::Array<flight::String>>{tag_frame_names}; auto object_member_name = std::optional<flight::String>{tag->name}; auto object_member_repeat_count = std::optional<double>{-1.0}; return flight::make_ref<entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_295ef68241b6918e>(entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_295ef68241b6918e{.direction = object_member_direction, .frame_duration = object_member_frame_duration, .frame_durations = object_member_frame_durations, .frame_names = object_member_frame_names, .repeat_count = object_member_repeat_count, .name = object_member_name}); }()));
+  return flight::spritesheet::create_spritesheet_animation_data(([&]() { auto object_member_direction = std::optional<flight::String>{tag->direction}; auto object_member_frame_duration = std::optional<double>{first_duration}; auto object_member_frame_durations = (uniform ? std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>, flight::null} : std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Array<double>>, durations}); auto object_member_frame_names = std::optional<flight::Array<flight::String>>{tag_frame_names}; auto object_member_name = std::optional<flight::String>{tag->name}; auto object_member_repeat_count = std::optional<double>{-1.0}; return flight::make_ref<entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_295ef68241b6918e>(entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_295ef68241b6918e{.direction = object_member_direction, .frame_duration = object_member_frame_duration, .frame_durations = object_member_frame_durations, .frame_names = object_member_frame_names, .repeat_count = object_member_repeat_count, .name = object_member_name}); }()));
 }
 
 

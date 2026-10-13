@@ -99,6 +99,15 @@ The measured failure is `@flighthq/skeleton3d`'s `skinMeshGeometry.ts`. The rule
 cross-package function whose parameter is an anonymous object type and whose caller passes an
 independently inferred object literal of the same shape.
 
+The same failure is independently reachable at Flight `a62784923f3be814463286c9fb28edfe6ab15789`
+through `@flighthq/spritesheet-formats`. Its Cocos, libGDX, Starling, Aseprite and TexturePacker
+modules pass fresh option objects to `createSpritesheetFrameData`, `createSpritesheetAnimationData`
+and `createSpritesheetData` from `@flighthq/spritesheet`. The caller and callee declarations have the
+same structural suffixes and byte-identical fields, but the caller owners live in
+`flight::spritesheet_formats` and the parameters require the corresponding owners in
+`flight::spritesheet`. Clang consequently rejects those calls before any parser can run. This reach
+needs the same identity-preserving canonical-owner behavior as the four-component mesh example.
+
 ## Carrying workaround
 
 The emission repair `skeleton3d-mesh-attribute-four-component-owner` aliases only the caller's

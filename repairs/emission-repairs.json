@@ -13480,6 +13480,48 @@
       "expires": "when anonymous structural object values passed across package boundaries retain one owner or lower through an identity-preserving structural view; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "spritesheet-formats-frame-options-owner",
+      "kind": "alias-anonymous-struct-to-named",
+      "appliesTo": "flight/spritesheet_formats/",
+      "symbol": "entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y_764be38b43135437",
+      "replacement": "entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y_764be38b43135437",
+      "replacementNamespace": "flight::spritesheet",
+      "canonicalInclude": "flight/spritesheet/spritesheet_data.hpp",
+      "sourceDeclaration": "packages/spritesheet-formats parser modules pass fresh SpritesheetFrameData option objects directly to packages/spritesheet/src/spritesheetData.ts createSpritesheetFrameData, whose parameter declares the identical optional fields",
+      "diagnostic": "no viable conversion from Ref<flight::spritesheet_formats::entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y_764be38b43135437> to optional<Ref<flight::spritesheet::entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y_764be38b43135437>>",
+      "defect": "The emitter creates separate package-local nominal C++ owners for the same anonymous TypeScript options object at an imported call. The emitted definitions have byte-identical members and one structural suffix; aliasing the caller spelling to the callee owner changes no storage, value, call, identity, or control flow.",
+      "expectedWhen": "always",
+      "expires": "when anonymous structural options passed across package boundaries retain the callee owner or lower through an identity-preserving structural view; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "spritesheet-formats-animation-options-owner",
+      "kind": "alias-anonymous-struct-to-named",
+      "appliesTo": "flight/spritesheet_formats/",
+      "symbol": "entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_295ef68241b6918e",
+      "replacement": "entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_295ef68241b6918e",
+      "replacementNamespace": "flight::spritesheet",
+      "canonicalInclude": "flight/spritesheet/spritesheet_data.hpp",
+      "sourceDeclaration": "packages/spritesheet-formats parser modules pass fresh SpritesheetAnimationData option objects directly to packages/spritesheet/src/spritesheetData.ts createSpritesheetAnimationData, whose parameter declares the identical optional fields",
+      "diagnostic": "no viable conversion from Ref<flight::spritesheet_formats::entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_295ef68241b6918e> to optional<Ref<flight::spritesheet::entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_295ef68241b6918e>>",
+      "defect": "The emitter creates separate package-local nominal C++ owners for the same anonymous TypeScript options object at an imported call. The emitted definitions have byte-identical members and one structural suffix; aliasing the caller spelling to the callee owner changes no storage, value, call, identity, or control flow.",
+      "expectedWhen": "always",
+      "expires": "when anonymous structural options passed across package boundaries retain the callee owner or lower through an identity-preserving structural view; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "spritesheet-formats-data-options-owner",
+      "kind": "alias-anonymous-struct-to-named",
+      "appliesTo": "flight/spritesheet_formats/",
+      "symbol": "entity_runtime_key_animations_frames_image_file_image_height_image_width_scale_fca52e21c591e40d",
+      "replacement": "entity_runtime_key_animations_frames_image_file_image_height_image_width_scale_fca52e21c591e40d",
+      "replacementNamespace": "flight::spritesheet",
+      "canonicalInclude": "flight/spritesheet/spritesheet_data.hpp",
+      "sourceDeclaration": "packages/spritesheet-formats parser modules pass fresh SpritesheetData option objects directly to packages/spritesheet/src/spritesheetData.ts createSpritesheetData, whose parameter declares the identical optional fields",
+      "diagnostic": "no viable conversion from Ref<flight::spritesheet_formats::entity_runtime_key_animations_frames_image_file_image_height_image_width_scale_fca52e21c591e40d> to optional<Ref<flight::spritesheet::entity_runtime_key_animations_frames_image_file_image_height_image_width_scale_fca52e21c591e40d>>",
+      "defect": "The emitter creates separate package-local nominal C++ owners for the same anonymous TypeScript options object at an imported call. The emitted definitions have byte-identical members and one structural suffix; aliasing the caller spelling to the callee owner changes no storage, value, call, identity, or control flow.",
+      "expectedWhen": "always",
+      "expires": "when anonymous structural options passed across package boundaries retain the callee owner or lower through an identity-preserving structural view; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "skeleton3d-mesh-joints-exact-geometry-owner",
       "kind": "respell-reference-member-access",
       "appliesTo": "flight/skeleton3d/skin_mesh_geometry.hpp",

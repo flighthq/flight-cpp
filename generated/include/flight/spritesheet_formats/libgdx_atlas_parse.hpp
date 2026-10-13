@@ -208,21 +208,7 @@ inline flight::Ref<pages_regions_9bef0d4ea51a073a> parse_libgdx_atlas(flight::St
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_HEIGHT_NAME_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_SOURCE_HEIGHT_SOURCE_WIDTH_WIDTH_X_Y_764BE38B43135437
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_HEIGHT_NAME_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_SOURCE_HEIGHT_SOURCE_WIDTH_WIDTH_X_Y_764BE38B43135437
-struct entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y_764be38b43135437 : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::optional<double> height;
-  std::optional<flight::String> name;
-  std::optional<double> offset_x;
-  std::optional<double> offset_y;
-  std::variant<double, flight::Null, flight::Undefined> pivot_x = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<double, flight::Null, flight::Undefined> pivot_y = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::optional<bool> rotated;
-  std::optional<double> source_height;
-  std::optional<double> source_width;
-  std::optional<double> width;
-  std::optional<double> x;
-  std::optional<double> y;
-};
+using entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y_764be38b43135437 = flight::spritesheet::entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y_764be38b43135437;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_HEIGHT_NAME_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_SOURCE_HEIGHT_SOURCE_WIDTH_WIDTH_X_Y_764BE38B43135437
 
 inline flight::Ref<flight::types::SpritesheetFrameData> frame_from_region_flight_value_function_frame_u000046_rom_u000052_egion_flight_private_93b25a6939368fd5(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextureAtlasRegion>>>> region) {
@@ -242,17 +228,7 @@ struct name_index_43919709bdb41eed : public flight::ReferenceEnabled {
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_DIRECTION_FRAME_DURATION_FRAME_DURATIONS_FRAME_NAMES_REPEAT_COUNT_NAME_ORIGIN_X_ORIGIN_Y_295EF68241B6918E
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_DIRECTION_FRAME_DURATION_FRAME_DURATIONS_FRAME_NAMES_REPEAT_COUNT_NAME_ORIGIN_X_ORIGIN_Y_295EF68241B6918E
-struct entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_295ef68241b6918e : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::optional<flight::types::SpritesheetAnimationDirection> direction;
-  std::optional<double> frame_duration;
-  std::variant<flight::Array<double>, flight::Null, flight::Undefined> frame_durations = std::variant<flight::Array<double>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::optional<flight::Array<flight::String>> frame_names;
-  std::optional<double> repeat_count;
-  std::optional<flight::String> name;
-  std::optional<double> origin_x;
-  std::optional<double> origin_y;
-};
+using entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_295ef68241b6918e = flight::spritesheet::entity_runtime_key_direction_frame_duration_frame_durations_frame_names_repeat_count_name_origin_x_origin_y_295ef68241b6918e;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_DIRECTION_FRAME_DURATION_FRAME_DURATIONS_FRAME_NAMES_REPEAT_COUNT_NAME_ORIGIN_X_ORIGIN_Y_295EF68241B6918E
 
 inline flight::Array<flight::Ref<flight::types::SpritesheetAnimationData>> infer_animations_flight_value_function_infer_u000041_nimations_flight_private_93b25a6939368fd5(flight::Array<flight::String> frame_names, double frame_duration) {
@@ -290,15 +266,7 @@ inline flight::Array<flight::Ref<flight::types::SpritesheetAnimationData>> infer
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_ANIMATIONS_FRAMES_IMAGE_FILE_IMAGE_HEIGHT_IMAGE_WIDTH_SCALE_FCA52E21C591E40D
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_ANIMATIONS_FRAMES_IMAGE_FILE_IMAGE_HEIGHT_IMAGE_WIDTH_SCALE_FCA52E21C591E40D
-struct entity_runtime_key_animations_frames_image_file_image_height_image_width_scale_fca52e21c591e40d : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::optional<flight::Array<flight::Ref<flight::types::SpritesheetAnimationData>>> animations;
-  std::optional<flight::Array<flight::Ref<flight::types::SpritesheetFrameData>>> frames;
-  std::optional<flight::String> image_file;
-  std::optional<double> image_height;
-  std::optional<double> image_width;
-  std::optional<double> scale;
-};
+using entity_runtime_key_animations_frames_image_file_image_height_image_width_scale_fca52e21c591e40d = flight::spritesheet::entity_runtime_key_animations_frames_image_file_image_height_image_width_scale_fca52e21c591e40d;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_ANIMATIONS_FRAMES_IMAGE_FILE_IMAGE_HEIGHT_IMAGE_WIDTH_SCALE_FCA52E21C591E40D
 
 inline flight::Ref<flight::types::SpritesheetData> parse_libgdx_atlas_spritesheet(flight::String text, std::optional<flight::Ref<flight::types::LibgdxAtlasParseOptions>> options = std::nullopt, std::optional<flight::Array<flight::Ref<flight::types::ImportDiagnostic>>> diagnostics = std::nullopt) {

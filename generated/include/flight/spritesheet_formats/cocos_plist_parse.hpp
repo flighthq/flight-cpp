@@ -43,7 +43,7 @@ using flight::types::SpritesheetData;
 using flight::types::SpritesheetFrameData;
 
 inline flight::Array<double> parse_plist_pair(flight::String s) {
-  std::optional<flight::RegExpExecArray> m = s.match(flight::RegExp(flight::String("{?\\s*([-\\d.]+)\\s*,\\s*([-\\d.]+)\\s*}?"), flight::String("")));
+  std::optional<flight::RegExpExecArray> m = s.match(flight::RegExp(flight::String("\\{?\\s*([-\\d.]+)\\s*,\\s*([-\\d.]+)\\s*\\}?"), flight::String("")));
   return flight::Array<double>{flight::parse_float(([&]() -> std::optional<flight::String> { auto optional_chain_receiver = m; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().capture(1.0); }()).value_or(flight::String("0"))), flight::parse_float(([&]() -> std::optional<flight::String> { auto optional_chain_receiver = m; if (!optional_chain_receiver.has_value()) return std::nullopt; return optional_chain_receiver.value().capture(2.0); }()).value_or(flight::String("0")))};
 }
 
@@ -128,7 +128,8 @@ inline flight::Ref<flight::types::CocosPlistDocument> parse_cocos_plist_xml(flig
       const bool has_sprite_fields = fm.has(flight::String("spriteOffset"));
       const bool has_frame = (fm.has(flight::String("frame")) || fm.has(flight::String("textureRect")));
       if ((!has_frame && !has_sprite_fields)) {
-        flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("spritesheet.cocos-plist.unrecognized-frame"), flight::String("parseCocosPlistXml"), {{flight::String("frame"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, frame_name}}});
+        flight::Record<flight::String, std::variant<bool, double, flight::String>> detail = {{flight::String("frame"), std::variant<bool, double, flight::String>{std::in_place_type<flight::String>, frame_name}}};
+        flight::importdiagnostics::report_import_diagnostic(diagnostics, flight::types::import_diagnostic_severity->drop, flight::String("spritesheet.cocos-plist.unrecognized-frame"), flight::String("parseCocosPlistXml"), detail);
         continue;
       }
       const flight::String rect_str = get_text_value(([&]() -> std::optional<flight::Ref<flight::types::XmlElement>> { auto nullish_coalesce_left = fm.get(flight::String("frame")); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return fm.get(flight::String("textureRect")); }()));
@@ -154,21 +155,7 @@ inline flight::Ref<flight::types::CocosPlistDocument> parse_cocos_plist_xml(flig
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_HEIGHT_NAME_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_SOURCE_HEIGHT_SOURCE_WIDTH_WIDTH_X_Y_764BE38B43135437
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_HEIGHT_NAME_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_SOURCE_HEIGHT_SOURCE_WIDTH_WIDTH_X_Y_764BE38B43135437
-struct entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y_764be38b43135437 : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::optional<double> height;
-  std::optional<flight::String> name;
-  std::optional<double> offset_x;
-  std::optional<double> offset_y;
-  std::variant<double, flight::Null, flight::Undefined> pivot_x = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<double, flight::Null, flight::Undefined> pivot_y = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::optional<bool> rotated;
-  std::optional<double> source_height;
-  std::optional<double> source_width;
-  std::optional<double> width;
-  std::optional<double> x;
-  std::optional<double> y;
-};
+using entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y_764be38b43135437 = flight::spritesheet::entity_runtime_key_height_name_offset_x_offset_y_pivot_x_pivot_y_rotated_source_height_source_width_width_x_y_764be38b43135437;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_HEIGHT_NAME_OFFSET_X_OFFSET_Y_PIVOT_X_PIVOT_Y_ROTATED_SOURCE_HEIGHT_SOURCE_WIDTH_WIDTH_X_Y_764BE38B43135437
 
 inline flight::Ref<flight::types::SpritesheetFrameData> plist_frame_to_data(flight::String name, flight::Ref<flight::types::CocosPlistFrame> pf) {
@@ -186,15 +173,7 @@ inline flight::Ref<flight::types::SpritesheetFrameData> plist_frame_to_data(flig
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_ANIMATIONS_FRAMES_IMAGE_FILE_IMAGE_HEIGHT_IMAGE_WIDTH_SCALE_FCA52E21C591E40D
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_ANIMATIONS_FRAMES_IMAGE_FILE_IMAGE_HEIGHT_IMAGE_WIDTH_SCALE_FCA52E21C591E40D
-struct entity_runtime_key_animations_frames_image_file_image_height_image_width_scale_fca52e21c591e40d : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<flight::types::EntityRuntime>> entity_runtime_key;
-  std::optional<flight::Array<flight::Ref<flight::types::SpritesheetAnimationData>>> animations;
-  std::optional<flight::Array<flight::Ref<flight::types::SpritesheetFrameData>>> frames;
-  std::optional<flight::String> image_file;
-  std::optional<double> image_height;
-  std::optional<double> image_width;
-  std::optional<double> scale;
-};
+using entity_runtime_key_animations_frames_image_file_image_height_image_width_scale_fca52e21c591e40d = flight::spritesheet::entity_runtime_key_animations_frames_image_file_image_height_image_width_scale_fca52e21c591e40d;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SPRITESHEET_FORMATS_ENTITY_RUNTIME_KEY_ANIMATIONS_FRAMES_IMAGE_FILE_IMAGE_HEIGHT_IMAGE_WIDTH_SCALE_FCA52E21C591E40D
 
 inline flight::Ref<flight::types::SpritesheetData> document_to_data_flight_value_function_document_u000054_o_u000044_ata_flight_private_fc041b354913cff9(flight::Ref<flight::types::CocosPlistDocument> doc) {

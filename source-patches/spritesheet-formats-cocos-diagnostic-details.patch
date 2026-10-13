@@ -1,0 +1,18 @@
+diff --git a/packages/spritesheet-formats/src/cocosPlistParse.ts b/packages/spritesheet-formats/src/cocosPlistParse.ts
+--- a/packages/spritesheet-formats/src/cocosPlistParse.ts
++++ b/packages/spritesheet-formats/src/cocosPlistParse.ts
+@@ -91,12 +91,13 @@ function parseCocosPlistXml(xml: string, diagnostics: ImportDiagnostic[] | undef
+       const hasFrame = fm.has('frame') || fm.has('textureRect');
+ 
+       if (!hasFrame && !hasSpriteFields) {
++        const detail: Record<string, boolean | number | string> = { frame: frameName };
+         reportImportDiagnostic(
+           diagnostics,
+           ImportDiagnosticSeverity.Drop,
+           'spritesheet.cocos-plist.unrecognized-frame',
+           'parseCocosPlistXml',
+-          { frame: frameName },
++          detail,
+         );
+         continue;
+       }

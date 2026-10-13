@@ -1,0 +1,24 @@
+diff --git a/packages/spritesheet-formats/src/asepriteParse.ts b/packages/spritesheet-formats/src/asepriteParse.ts
+--- a/packages/spritesheet-formats/src/asepriteParse.ts
++++ b/packages/spritesheet-formats/src/asepriteParse.ts
+@@ -55,7 +55,7 @@ function animationFromTag(
+   const uniform = durations.every((d) => d === firstDuration);
+ 
+   return createSpritesheetAnimationData({
+-    direction: tag.direction ?? 'forward',
++    direction: tag.direction,
+     frameDuration: firstDuration,
+     frameDurations: uniform ? null : durations,
+     frameNames: tagFrameNames,
+diff --git a/packages/spritesheet-formats/src/texturePackerParse.ts b/packages/spritesheet-formats/src/texturePackerParse.ts
+--- a/packages/spritesheet-formats/src/texturePackerParse.ts
++++ b/packages/spritesheet-formats/src/texturePackerParse.ts
+@@ -41,7 +41,7 @@ function animationsFromFrameTags(tags: TexturePackerFrameTag[], frameNames: stri
+   return tags.map((tag) =>
+     createSpritesheetAnimationData({
+-      direction: tag.direction ?? 'forward',
++      direction: tag.direction,
+       frameDuration: 100,
+       frameNames: frameNames.slice(tag.from, tag.to + 1),
+       name: tag.name,
+       repeatCount: -1,
