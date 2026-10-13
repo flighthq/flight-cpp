@@ -62,6 +62,11 @@ absence, and the declared result carrier all have to survive the widening.
 a super-interface slot (`Image`/`TextureSource`/`Bitmap` appear across the resource and bitmap
 packages).
 
+`@flighthq/skeleton2d-formats` at `a627849`: `spineBinarySkinsHandler.ts` (line 116) refuses widening a
+`RegionAttachment2D` into the nullable `Attachment2D` slot it is stored in. It is the module's remaining
+blocker once its `Float32Array.from` site is carried by
+[`skeleton2d-formats-binary-influences-constructor`](../../source-patches/skeleton2d-formats-binary-influences-constructor.patch).
+
 ## Carrying workaround
 
 None. Two target-neutral spellings that the refusal itself suggests were tried and both still refuse

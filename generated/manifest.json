@@ -547,8 +547,7 @@
         "flight/scene3d_wgpu/wgpu_mesh_material_registry.hpp",
         "flight/scene3d_wgpu/wgpu_shaded_modifier_snippet.hpp",
         "flight/scene3d_wgpu/wgpu_shaded_prelude.hpp",
-        "flight/shape_formats/shape_command_schemas.hpp",
-        "flight/skeleton2d_formats/skeleton_detect.hpp"
+        "flight/shape_formats/shape_command_schemas.hpp"
       ],
       "id": "respell-reference-alias-keyedtable"
     },
@@ -921,7 +920,8 @@
         "flight/scene3d_resources/reveal_scene3_dresources_on_resolve.hpp",
         "flight/scene3d_wgpu/render_wgpu_scene3_d.hpp",
         "flight/scene3d_wgpu/wgpu_mesh_pipeline.hpp",
-        "flight/skeleton2d_formats/spine_binary_parse.hpp",
+        "flight/skeleton2d_formats/spine_binary_parse_helpers.hpp",
+        "flight/skeleton2d_formats/spine_binary_section_counts.hpp",
         "flight/swf/swf_bounded_definition.hpp",
         "flight/swf/swf_place_object3_handler.hpp",
         "flight/swf/swf_place_object_handler.hpp",
@@ -972,8 +972,8 @@
         "flight/render_wgpu/wgpu_compressed_texture.hpp",
         "flight/scene3d_formats/mtl_parse.hpp",
         "flight/scene3d_formats/three_ds_parse.hpp",
-        "flight/skeleton2d_formats/spine_binary_parse.hpp",
-        "flight/skeleton2d_formats/spine_parse.hpp",
+        "flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp",
+        "flight/skeleton2d_formats/spine_parse_helpers.hpp",
         "flight/textshaper/text_shaper_cluster.hpp"
       ],
       "id": "array-from-tuple-construction"
@@ -1362,25 +1362,52 @@
       "id": "scene3d-resources-unqualified-types-names"
     },
     {
-      "files": [
-        "flight/skeleton2d_formats/spine_binary_parse.hpp",
-        "flight/skeleton2d_formats/spine_parse.hpp"
-      ],
+      "files": [],
       "id": "skeleton2d-formats-unqualified-entity-names"
     },
     {
       "files": [
+        "flight/skeleton2d_formats/dragon_bones_animations_handler.hpp",
+        "flight/skeleton2d_formats/dragon_bones_bone_timeline_handler.hpp",
+        "flight/skeleton2d_formats/dragon_bones_bones_handler.hpp",
+        "flight/skeleton2d_formats/dragon_bones_full.hpp",
         "flight/skeleton2d_formats/dragon_bones_parse.hpp",
+        "flight/skeleton2d_formats/dragon_bones_parse_helpers.hpp",
+        "flight/skeleton2d_formats/dragon_bones_skins_handler.hpp",
+        "flight/skeleton2d_formats/dragon_bones_slot_timeline_handler.hpp",
+        "flight/skeleton2d_formats/dragon_bones_slots_handler.hpp",
+        "flight/skeleton2d_formats/dragon_bones_stub_handlers.hpp",
         "flight/skeleton2d_formats/skeleton_detect.hpp",
+        "flight/skeleton2d_formats/spine_binary_animations_handler.hpp",
+        "flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp",
+        "flight/skeleton2d_formats/spine_binary_bones_handler.hpp",
+        "flight/skeleton2d_formats/spine_binary_draw_order_timeline_handler.hpp",
         "flight/skeleton2d_formats/spine_binary_full.hpp",
         "flight/skeleton2d_formats/spine_binary_parse.hpp",
+        "flight/skeleton2d_formats/spine_binary_parse_helpers.hpp",
         "flight/skeleton2d_formats/spine_binary_reader.hpp",
         "flight/skeleton2d_formats/spine_binary_registry.hpp",
+        "flight/skeleton2d_formats/spine_binary_section_counts.hpp",
         "flight/skeleton2d_formats/spine_binary_section_handlers.hpp",
+        "flight/skeleton2d_formats/spine_binary_skins_handler.hpp",
+        "flight/skeleton2d_formats/spine_binary_slot_timeline_handler.hpp",
+        "flight/skeleton2d_formats/spine_binary_slots_handler.hpp",
+        "flight/skeleton2d_formats/spine_binary_stub_handlers.hpp",
+        "flight/skeleton2d_formats/spine_binary_stub_timeline_handlers.hpp",
         "flight/skeleton2d_formats/spine_binary_timeline_handlers.hpp",
         "flight/skeleton2d_formats/spine_binary_version.hpp",
         "flight/skeleton2d_formats/spine_binary_versioned.hpp",
-        "flight/skeleton2d_formats/spine_parse.hpp"
+        "flight/skeleton2d_formats/spine_json_animations_handler.hpp",
+        "flight/skeleton2d_formats/spine_json_bone_timeline_handler.hpp",
+        "flight/skeleton2d_formats/spine_json_bones_handler.hpp",
+        "flight/skeleton2d_formats/spine_json_draw_order_timeline_handler.hpp",
+        "flight/skeleton2d_formats/spine_json_full.hpp",
+        "flight/skeleton2d_formats/spine_json_skins_handler.hpp",
+        "flight/skeleton2d_formats/spine_json_slot_timeline_handler.hpp",
+        "flight/skeleton2d_formats/spine_json_slots_handler.hpp",
+        "flight/skeleton2d_formats/spine_json_stub_handlers.hpp",
+        "flight/skeleton2d_formats/spine_parse.hpp",
+        "flight/skeleton2d_formats/spine_parse_helpers.hpp"
       ],
       "id": "skeleton2d-formats-unqualified-types-names"
     },
@@ -3312,46 +3339,38 @@
       "id": "spritesheet-formats-unqualified-textureatlas-formats-names"
     },
     {
-      "files": [
-        "flight/skeleton2d_formats/dragon_bones_parse.hpp"
-      ],
+      "files": [],
       "id": "skeleton2d-formats-unqualified-animation-names"
     },
     {
       "files": [
-        "flight/skeleton2d_formats/dragon_bones_parse.hpp",
-        "flight/skeleton2d_formats/spine_binary_parse.hpp",
-        "flight/skeleton2d_formats/spine_parse.hpp"
+        "flight/skeleton2d_formats/dragon_bones_parse_helpers.hpp",
+        "flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp",
+        "flight/skeleton2d_formats/spine_parse_helpers.hpp"
       ],
       "id": "skeleton2d-formats-unqualified-easing-names"
     },
     {
-      "files": [
-        "flight/skeleton2d_formats/dragon_bones_parse.hpp",
-        "flight/skeleton2d_formats/spine_binary_parse.hpp",
-        "flight/skeleton2d_formats/spine_parse.hpp"
-      ],
+      "files": [],
       "id": "skeleton2d-formats-unqualified-importdiagnostics-names"
     },
     {
-      "files": [
-        "flight/skeleton2d_formats/skeleton_detect.hpp"
-      ],
+      "files": [],
       "id": "skeleton2d-formats-unqualified-registry-names"
     },
     {
       "files": [
         "flight/skeleton2d_formats/dragon_bones_parse.hpp",
+        "flight/skeleton2d_formats/dragon_bones_section_counts.hpp",
+        "flight/skeleton2d_formats/skeleton2d_json_analyzer.hpp",
         "flight/skeleton2d_formats/skeleton_detect.hpp",
-        "flight/skeleton2d_formats/spine_binary_parse.hpp",
+        "flight/skeleton2d_formats/spine_json_section_counts.hpp",
         "flight/skeleton2d_formats/spine_parse.hpp"
       ],
       "id": "skeleton2d-formats-unqualified-shortcut-names"
     },
     {
-      "files": [
-        "flight/skeleton2d_formats/dragon_bones_parse.hpp"
-      ],
+      "files": [],
       "id": "skeleton2d-formats-unqualified-skeleton2d-names"
     },
     {
@@ -5976,6 +5995,41 @@
       "id": "textureatlas-formats-indexed-lines",
       "module": "packages/textureatlas-formats/src/textureAtlasLibgdxParse.ts",
       "package": "@flighthq/textureatlas-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "740298fad36a994cce0e9cb8684ba55141285ee92cf46db0cd1000dd393bd40c",
+      "id": "skeleton2d-formats-diagnostic-detail-number-locals",
+      "module": "packages/skeleton2d-formats/src/spineBinaryParse.ts",
+      "package": "@flighthq/skeleton2d-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "ad1a693c823352807701ff91b636e45287a933c44b9f9dbdd42a89dd3992788f",
+      "id": "skeleton2d-formats-census-unknown-attachment-exit",
+      "module": "packages/skeleton2d-formats/src/spineBinarySectionCounts.ts",
+      "package": "@flighthq/skeleton2d-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "728a285175409320c9e9e30c084ca53e398ad3adef1e5fadf7a467a8dbdc9e8b",
+      "id": "skeleton2d-formats-binary-influences-constructor",
+      "module": "packages/skeleton2d-formats/src/spineBinarySkinsHandler.ts",
+      "package": "@flighthq/skeleton2d-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "d091e3d7635e5eecc08e0074caecacc288ff64f1a9584aeda32f46b0cea80845",
+      "id": "skeleton2d-formats-entry-name-present-comparison",
+      "module": "packages/skeleton2d-formats/src/spineParseHelpers.ts",
+      "package": "@flighthq/skeleton2d-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "1a7b9858b19bbed224484100ea52940ff9c63e3bd14f4d0f732b4f72c222fd3f",
+      "id": "skeleton2d-formats-census-byte-reader-parameters",
+      "module": "packages/skeleton2d-formats/src/spineBinarySectionCounts.ts",
+      "package": "@flighthq/skeleton2d-formats"
     }
   ],
   "duplicateStructuralStructAliases": {
@@ -6065,7 +6119,7 @@
       "flight/skeleton2d/ik_constraint2_d.hpp",
       "flight/skeleton2d/path_constraint2_d.hpp",
       "flight/skeleton2d/transform_constraint2_d.hpp",
-      "flight/skeleton2d_formats/spine_binary_parse.hpp",
+      "flight/skeleton2d_formats/spine_binary_bones_handler.hpp",
       "flight/swf/_internal_swf_tag_stream_test_helper.hpp",
       "flight/swf/swf_bounded_definition.hpp",
       "flight/swf/swf_document.hpp",
@@ -6494,10 +6548,6 @@
       "flight/shape/shape.hpp",
       "flight/shape/shape_bounds.hpp",
       "flight/shape_formats/shape_json.hpp",
-      "flight/skeleton2d_formats/skeleton_detect.hpp",
-      "flight/skeleton2d_formats/spine_binary_parse.hpp",
-      "flight/skeleton2d_formats/spine_binary_versioned.hpp",
-      "flight/skeleton2d_formats/spine_parse.hpp",
       "flight/snapshot/enable_snapshot_guards.hpp",
       "flight/spatial/format_spatial_indexing_notice.hpp",
       "flight/text/rich_text.hpp",
@@ -6519,7 +6569,7 @@
       "flight/tilemap_formats/tiled_xml_parse.hpp",
       "flight/tokens/substitute_flight_document_scene_tokens.hpp"
     ],
-    "includes": 894
+    "includes": 887
   },
   "packages": [
     {
@@ -8073,17 +8123,17 @@
       "sourceModules": 25
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/skeleton2d_formats",
       "cppNamespace": "flight::skeleton2d_formats",
-      "emittedModules": 10,
+      "emittedModules": 43,
       "package": "@flighthq/skeleton2d-formats",
-      "refusedModules": 5,
+      "refusedModules": 16,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
-      "sourceModules": 15
+      "sourceModules": 59
     },
     {
       "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
@@ -8565,8 +8615,8 @@
   },
   "summary": {
     "packages": 156,
-    "emittedModules": 2462,
-    "refusedModules": 571,
-    "sourceModules": 3033
+    "emittedModules": 2495,
+    "refusedModules": 582,
+    "sourceModules": 3077
   }
 }

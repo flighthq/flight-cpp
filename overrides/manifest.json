@@ -903,7 +903,7 @@
       "path": "flight/animation/animation_blend_tree.hpp",
       "package": "@flighthq/animation",
       "status": "complete",
-      "derivedFrom": "ede52dfc51d09caaf00d49ac32d6fd8dd9d3aebecccd398b5f20c820e0074858",
+      "derivedFrom": "ff0e49ffc9d46e1a90c3d2187e04c0cb5cc2a7abc6f8cd2599b88910989768b6",
       "reason": "The emitter static_casts Array<StructuralRef<RowReadonly<RowOf<Ref<AnimationBlendTreeChannelSource>>>>> to Array<Ref<AnimationBlendTreeChannelSource>> at the sources.push site, which has no valid C++ conversion. It also passes Array<Ref<AnimationBlendTreeChannel>> to row_set for a field typed as Array<StructuralRef<...>>, and passes variant<Array<double>,Float32Array> where SequenceView<double> is expected in add_animation_sample.",
       "expires": "when the emitter uses StructuralRef-compatible Array construction and correct row_set element types.",
       "change": "Replaced invalid static_cast<Array<Ref<T>>> with direct StructuralRef push at the sources site, converted Array<Ref<T>> to Array<StructuralRef<...>> before row_set, and extracted the first variant alternative for SequenceView in add_animation_sample.",

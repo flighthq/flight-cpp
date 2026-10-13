@@ -70,7 +70,7 @@ inline void advance_animation_layer_stack(flight::Ref<flight::types::AnimationLa
 
 inline bool set_animation_layer_weight(flight::Ref<flight::types::AnimationLayerStack> stack, double layer_index, double weight) {
   std::optional<flight::Ref<flight::types::AnimationLayer>> layer = stack->layers.get(layer_index);
-  if (!layer.has_value()) {
+  if (([&]() { const auto& presence_operand = layer; return !presence_operand.has_value(); }())) {
     return false;
   }
   (layer.value()->weight = weight);
@@ -221,7 +221,7 @@ inline void write_animation_layer_identity(std::variant<flight::Array<double>, f
 
 inline bool sample_animation_layer_stack_channel(std::variant<flight::Array<double>, flight::Float32Array> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationLayerStack>>>> stack, double channel_index) {
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationLayerStackChannel>>>>> entry = flight::row_get<flight::RowKey<"channels">>(stack).get(channel_index);
-  if (!entry.has_value()) {
+  if (([&]() { const auto& presence_operand = entry; return !presence_operand.has_value(); }())) {
     return false;
   }
   bool has_pose = false;

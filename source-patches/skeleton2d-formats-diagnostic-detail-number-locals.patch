@@ -1,0 +1,57 @@
+diff --git a/packages/skeleton2d-formats/src/spineBinaryParse.ts b/packages/skeleton2d-formats/src/spineBinaryParse.ts
+index 488c8ced..25cb0ebb 100644
+--- a/packages/skeleton2d-formats/src/spineBinaryParse.ts
++++ b/packages/skeleton2d-formats/src/spineBinaryParse.ts
+@@ -45,12 +45,14 @@ export function parseSpineSkeletonBinaryWithRegistry(
+   skipSpineBinaryBytes(reader, SPINE_BINARY_HASH_BYTES);
+   const version = readSpineBinaryString(reader);
+   if (isSpineBinaryReaderOverrun(reader) || version === null) {
++    const byteCount: number = bytes.byteLength;
++    const detail: Record<string, boolean | number | string> = { bytes: byteCount };
+     reportImportDiagnostic(
+       diagnostics,
+       ImportDiagnosticSeverity.Reject,
+       'spine.binary-header-unreadable',
+       'parseSpineSkeletonBinary',
+-      { bytes: bytes.byteLength },
++      detail,
+     );
+     return null;
+   }
+@@ -101,12 +103,15 @@ export function parseSpineSkeletonBinaryWithRegistry(
+   dispatchSpineBinarySection(context, SectionKind.Events, skipSpineBinaryEventsSection);
+   dispatchSpineBinarySection(context, SectionKind.Animations, skipSpineBinaryAnimationsSection);
+   if (isSpineBinaryReaderOverrun(reader)) {
++    const boneCount: number = context.bones.length;
++    const slotCount: number = context.slots.length;
++    const detail: Record<string, boolean | number | string> = { bones: boneCount, slots: slotCount };
+     reportImportDiagnostic(
+       diagnostics,
+       ImportDiagnosticSeverity.Drop,
+       'spine.binary-truncated',
+       'parseSpineSkeletonBinary',
+-      { bones: context.bones.length, slots: context.slots.length },
++      detail,
+     );
+   } else if (reader.offset < bytes.byteLength) {
+     reportImportDiagnostic(
+diff --git a/packages/skeleton2d-formats/src/spineBinaryVersioned.ts b/packages/skeleton2d-formats/src/spineBinaryVersioned.ts
+index ee1c1a9e..6437f7a5 100644
+--- a/packages/skeleton2d-formats/src/spineBinaryVersioned.ts
++++ b/packages/skeleton2d-formats/src/spineBinaryVersioned.ts
+@@ -32,12 +32,14 @@ export function parseSpineSkeletonBinaryVersioned(
+ ): Skeleton2DImport | null {
+   const version = getSpineBinaryVersion(bytes);
+   if (version === null) {
++    const byteCount: number = bytes.byteLength;
++    const detail: Record<string, boolean | number | string> = { bytes: byteCount };
+     reportImportDiagnostic(
+       diagnostics,
+       ImportDiagnosticSeverity.Reject,
+       'spine.binary-header-unreadable',
+       'parseSpineSkeletonBinaryVersioned',
+-      { bytes: bytes.byteLength },
++      detail,
+     );
+     return null;
+   }

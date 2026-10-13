@@ -73,7 +73,7 @@ inline flight::Ref<flight::types::AnimationBlendTreeInput> create_animation_blen
 
 inline bool set_animation_blend_tree_input_weight(flight::Ref<flight::types::AnimationBlendTree> tree, double input_index, double weight) {
   std::optional<flight::Ref<flight::types::AnimationBlendTreeInput>> input = tree->inputs.get(input_index);
-  if (!input.has_value()) {
+  if (([&]() { const auto& presence_operand = input; return !presence_operand.has_value(); }())) {
     return false;
   }
   (input.value()->weight = weight);
@@ -173,7 +173,7 @@ inline void write_animation_blend_tree_identity(std::variant<flight::Array<doubl
 
 inline bool sample_animation_blend_tree_channel(std::variant<flight::Array<double>, flight::Float32Array> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationBlendTree>>>> tree, double channel_index) {
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationBlendTreeChannel>>>>> entry = flight::row_get<flight::RowKey<"channels">>(tree).get(channel_index);
-  if (!entry.has_value()) {
+  if (([&]() { const auto& presence_operand = entry; return !presence_operand.has_value(); }())) {
     return false;
   }
   auto accumulator = entry.value()->accumulator;

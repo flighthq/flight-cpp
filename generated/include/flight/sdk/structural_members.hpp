@@ -2055,6 +2055,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("transparency") && requires { object.transparency; }) return (object.transparency);
   else if constexpr (Key::name.view() == std::string_view("trauma") && requires { object.trauma; }) return (object.trauma);
   else if constexpr (Key::name.view() == std::string_view("tray") && requires { object.tray; }) return (object.tray);
+  else if constexpr (Key::name.view() == std::string_view("triangles") && requires { object.triangles; }) return (object.triangles);
   else if constexpr (Key::name.view() == std::string_view("trimmed") && requires { object.trimmed; }) return (object.trimmed);
   else if constexpr (Key::name.view() == std::string_view("tweens") && requires { object.tweens; }) return (object.tweens);
   else if constexpr (Key::name.view() == std::string_view("tx") && requires { object.tx; }) return (object.tx);
@@ -2115,6 +2116,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("vertex") && requires { object.vertex; }) return (object.vertex);
   else if constexpr (Key::name.view() == std::string_view("vertexBuffer") && requires { object.vertex_buffer; }) return (object.vertex_buffer);
   else if constexpr (Key::name.view() == std::string_view("vertexColor") && requires { object.vertex_color; }) return (object.vertex_color);
+  else if constexpr (Key::name.view() == std::string_view("vertexCount") && requires { object.vertex_count; }) return (object.vertex_count);
   else if constexpr (Key::name.view() == std::string_view("verticalScrollBar") && requires { object.vertical_scroll_bar; }) return (object.vertical_scroll_bar);
   else if constexpr (Key::name.view() == std::string_view("vertices") && requires { object.vertices; }) return (object.vertices);
   else if constexpr (Key::name.view() == std::string_view("vibrate") && requires { object.vibrate; }) return (object.vibrate);
@@ -4236,6 +4238,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("transparency") && requires(Object& object) { object.transparency; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transparency)>>{};
   else if constexpr (Key::name.view() == std::string_view("trauma") && requires(Object& object) { object.trauma; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().trauma)>>{};
   else if constexpr (Key::name.view() == std::string_view("tray") && requires(Object& object) { object.tray; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tray)>>{};
+  else if constexpr (Key::name.view() == std::string_view("triangles") && requires(Object& object) { object.triangles; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().triangles)>>{};
   else if constexpr (Key::name.view() == std::string_view("trimmed") && requires(Object& object) { object.trimmed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().trimmed)>>{};
   else if constexpr (Key::name.view() == std::string_view("tweens") && requires(Object& object) { object.tweens; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tweens)>>{};
   else if constexpr (Key::name.view() == std::string_view("tx") && requires(Object& object) { object.tx; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tx)>>{};
@@ -4296,6 +4299,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("vertex") && requires(Object& object) { object.vertex; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().vertex)>>{};
   else if constexpr (Key::name.view() == std::string_view("vertexBuffer") && requires(Object& object) { object.vertex_buffer; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().vertex_buffer)>>{};
   else if constexpr (Key::name.view() == std::string_view("vertexColor") && requires(Object& object) { object.vertex_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().vertex_color)>>{};
+  else if constexpr (Key::name.view() == std::string_view("vertexCount") && requires(Object& object) { object.vertex_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().vertex_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("verticalScrollBar") && requires(Object& object) { object.vertical_scroll_bar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().vertical_scroll_bar)>>{};
   else if constexpr (Key::name.view() == std::string_view("vertices") && requires(Object& object) { object.vertices; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().vertices)>>{};
   else if constexpr (Key::name.view() == std::string_view("vibrate") && requires(Object& object) { object.vibrate; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().vibrate)>>{};
@@ -6420,6 +6424,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->transparency; }) owner.bind_named("transparency", [object]() -> decltype(auto) { return (object->transparency); });
   if constexpr (requires { object->trauma; }) owner.bind_named("trauma", [object]() -> decltype(auto) { return (object->trauma); });
   if constexpr (requires { object->tray; }) owner.bind_named("tray", [object]() -> decltype(auto) { return (object->tray); });
+  if constexpr (requires { object->triangles; }) owner.bind_named("triangles", [object]() -> decltype(auto) { return (object->triangles); });
   if constexpr (requires { object->trimmed; }) owner.bind_named("trimmed", [object]() -> decltype(auto) { return (object->trimmed); });
   if constexpr (requires { object->tweens; }) owner.bind_named("tweens", [object]() -> decltype(auto) { return (object->tweens); });
   if constexpr (requires { object->tx; }) owner.bind_named("tx", [object]() -> decltype(auto) { return (object->tx); });
@@ -6480,6 +6485,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->vertex; }) owner.bind_named("vertex", [object]() -> decltype(auto) { return (object->vertex); });
   if constexpr (requires { object->vertex_buffer; }) owner.bind_named("vertexBuffer", [object]() -> decltype(auto) { return (object->vertex_buffer); });
   if constexpr (requires { object->vertex_color; }) owner.bind_named("vertexColor", [object]() -> decltype(auto) { return (object->vertex_color); });
+  if constexpr (requires { object->vertex_count; }) owner.bind_named("vertexCount", [object]() -> decltype(auto) { return (object->vertex_count); });
   if constexpr (requires { object->vertical_scroll_bar; }) owner.bind_named("verticalScrollBar", [object]() -> decltype(auto) { return (object->vertical_scroll_bar); });
   if constexpr (requires { object->vertices; }) owner.bind_named("vertices", [object]() -> decltype(auto) { return (object->vertices); });
   if constexpr (requires { object->vibrate; }) owner.bind_named("vibrate", [object]() -> decltype(auto) { return (object->vibrate); });
@@ -8637,6 +8643,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(transparency)
   FLIGHT_SDK_ROW_WIDENS(trauma)
   FLIGHT_SDK_ROW_WIDENS(tray)
+  FLIGHT_SDK_ROW_WIDENS(triangles)
   FLIGHT_SDK_ROW_WIDENS(trimmed)
   FLIGHT_SDK_ROW_WIDENS(tweens)
   FLIGHT_SDK_ROW_WIDENS(tx)
@@ -8697,6 +8704,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(vertex)
   FLIGHT_SDK_ROW_WIDENS(vertex_buffer)
   FLIGHT_SDK_ROW_WIDENS(vertex_color)
+  FLIGHT_SDK_ROW_WIDENS(vertex_count)
   FLIGHT_SDK_ROW_WIDENS(vertical_scroll_bar)
   FLIGHT_SDK_ROW_WIDENS(vertices)
   FLIGHT_SDK_ROW_WIDENS(vibrate)

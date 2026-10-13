@@ -328,6 +328,14 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   skeleton2d's `createSkeleton2D`; carried by the `skeleton2d-create-two-state-slots-default` source patch.
 - [Strict equality between a nullable, optional value and a present value must not lower to a raw `==`](nullish-variant-strict-equality.md) —
   skeleton2d's `getSkeleton2DBoneIndexByName`; carried by the `skeleton2d-bone-name-present-comparison` source patch.
+- [Members of a `satisfies Record<string, T>` table must carry `T`, or the emitter must convert them](satisfies-record-member-carrier.md) —
+  `TransformMode2D` presets stored into `Bone2D.transformMode` emit as an unrelated anonymous struct; silent until C++ compile.
+- [Reading the elements of an erased array must use the runtime's exact array recovery](erased-array-element-reading.md) —
+  14 skeleton2d-formats JSON parser modules; the runtime's `AnyArray` and `external_if<Array<T>>` already exist.
+- [An object literal passed to an optional `Record` parameter must be constructed before the optional](object-literal-into-optional-record-argument.md) —
+  diagnostic details in five format packages; carried per package by detail-local source patches.
+- [Owning arrays, readonly-row arrays and number buffers need conversions where they meet](animation-readonly-row-array-carriers.md) —
+  animation blend tree and crossfade; carried by their two overrides.
 - [A null test on an element of a nullable-element array tests the wrong optional layer](nullable-array-element-null-test.md) —
   silent miscompilation: `slots[i] !== null` emitted `get(i).has_value()`, so signals' tombstoned slots counted as live and were never compacted. Carried by the `compiler-indexed-element-presence-test` patch.
 - [A local typed by a constrained type parameter is stored as the constraint](constrained-type-parameter-local-storage.md) —

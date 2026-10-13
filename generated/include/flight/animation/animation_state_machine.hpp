@@ -13,6 +13,7 @@
 #include <limits>
 #include <optional>
 #include <random>
+#include <type_traits>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -77,19 +78,19 @@ inline bool is_animation_state_machine_transitioning(flight::StructuralRef<fligh
 
 inline bool sample_animation_state_machine_channel(std::variant<flight::Array<double>, flight::Float32Array> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationStateMachine>>>> machine, double channel_index) {
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationStateMachineChannel>>>>> entry = flight::row_get<flight::RowKey<"channels">>(machine).get(channel_index);
-  if (!entry.has_value()) {
+  if (([&]() { const auto& presence_operand = entry; return !presence_operand.has_value(); }())) {
     return false;
   }
   const std::optional<double> to_state_index = flight::row_get<flight::RowKey<"transitionToStateIndex">>(machine);
   if (!to_state_index.has_value()) {
     const std::optional<double> current_channel_index = (entry.value()->state_channel_indices.get(flight::row_get<flight::RowKey<"currentStateIndex">>(machine))).value_or(std::nullopt);
-    return (current_channel_index.has_value() && flight::animation::sample_animation_blend_tree_channel(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationBlendTree>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AnimationBlendTree>>>>(flight::row_get<flight::RowKey<"states">>(machine).element(flight::row_get<flight::RowKey<"currentStateIndex">>(machine))->blend_tree)), current_channel_index.value()));
+    return (([&](const auto& presence_operand) { if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(presence_operand.value())>>::optional) { return !presence_operand.has_value() || presence_operand.value().has_value(); } else { return presence_operand.has_value(); } }(current_channel_index)) && flight::animation::sample_animation_blend_tree_channel(out, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationBlendTree>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AnimationBlendTree>>>>(flight::row_get<flight::RowKey<"states">>(machine).element(flight::row_get<flight::RowKey<"currentStateIndex">>(machine))->blend_tree)), current_channel_index.value()));
   }
   const double from_state_index = flight::row_get<flight::RowKey<"transitionFromStateIndex">>(machine).value();
   const std::optional<double> from_channel_index = (entry.value()->state_channel_indices.get(from_state_index)).value_or(std::nullopt);
   const std::optional<double> to_channel_index = (entry.value()->state_channel_indices.get(to_state_index.value())).value_or(std::nullopt);
-  const bool has_from = (from_channel_index.has_value() && flight::animation::sample_animation_blend_tree_channel(std::variant<flight::Array<double>, flight::Float32Array>{std::in_place_type<flight::Float32Array>, flight::row_get<flight::RowKey<"fromSample">>(machine)}, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationBlendTree>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AnimationBlendTree>>>>(flight::row_get<flight::RowKey<"states">>(machine).element(from_state_index)->blend_tree)), from_channel_index.value()));
-  const bool has_to = (to_channel_index.has_value() && flight::animation::sample_animation_blend_tree_channel(std::variant<flight::Array<double>, flight::Float32Array>{std::in_place_type<flight::Float32Array>, flight::row_get<flight::RowKey<"toSample">>(machine)}, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationBlendTree>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AnimationBlendTree>>>>(flight::row_get<flight::RowKey<"states">>(machine).element(to_state_index.value())->blend_tree)), to_channel_index.value()));
+  const bool has_from = (([&](const auto& presence_operand) { if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(presence_operand.value())>>::optional) { return !presence_operand.has_value() || presence_operand.value().has_value(); } else { return presence_operand.has_value(); } }(from_channel_index)) && flight::animation::sample_animation_blend_tree_channel(std::variant<flight::Array<double>, flight::Float32Array>{std::in_place_type<flight::Float32Array>, flight::row_get<flight::RowKey<"fromSample">>(machine)}, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationBlendTree>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AnimationBlendTree>>>>(flight::row_get<flight::RowKey<"states">>(machine).element(from_state_index)->blend_tree)), from_channel_index.value()));
+  const bool has_to = (([&](const auto& presence_operand) { if constexpr (flight::detail::optional_traits<std::remove_cvref_t<decltype(presence_operand.value())>>::optional) { return !presence_operand.has_value() || presence_operand.value().has_value(); } else { return presence_operand.has_value(); } }(to_channel_index)) && flight::animation::sample_animation_blend_tree_channel(std::variant<flight::Array<double>, flight::Float32Array>{std::in_place_type<flight::Float32Array>, flight::row_get<flight::RowKey<"toSample">>(machine)}, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AnimationBlendTree>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::AnimationBlendTree>>>>(flight::row_get<flight::RowKey<"states">>(machine).element(to_state_index.value())->blend_tree)), to_channel_index.value()));
   if ((!has_from && !has_to)) {
     return false;
   }

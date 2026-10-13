@@ -68,7 +68,12 @@ The committed refusal ledger has five direct instances of the missing static mem
 - `skeleton2d/slotDeform2D.ts` (`Float32Array.from`), now carried by the
   [`skeleton2d-slot-deform-offsets-slice`](../../source-patches/skeleton2d-slot-deform-offsets-slice.patch)
   source patch, which copies with the typed array's own `slice()`;
-- `skeleton2d-formats/spineBinaryParse.ts` (`Float32Array.from`);
+- `skeleton2d-formats/spineBinaryParse.ts` (`Float32Array.from`); at `a627849` the site is
+  `spineBinarySkinsHandler.ts`, carried by the
+  [`skeleton2d-formats-binary-influences-constructor`](../../source-patches/skeleton2d-formats-binary-influences-constructor.patch)
+  source patch (`new Float32Array(influences)` over a dense local `number[]`); the module then stops on
+  [interface heritage widening](compiler-interface-heritage-owner-widening.md); and `spineJsonSkinsHandler.ts`, whose
+  argument is an erased JSON array and is blocked first by [erased-array-element-reading](erased-array-element-reading.md);
 - `tilemap-formats/tiledLayerData.ts` (`Uint32Array.from`); and
 - `tilemap-formats/tiledXmlParse.ts` (`Uint32Array.from`).
 

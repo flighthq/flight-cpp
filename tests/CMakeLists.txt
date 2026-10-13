@@ -500,6 +500,46 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_skeleton2d_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_skeleton2d COMMAND flight_cpp_generated_skeleton2d_tests)
 
+add_executable(flight_cpp_generated_spine_binary_reader_tests generated_spine_binary_reader_test.cpp)
+target_include_directories(
+  flight_cpp_generated_spine_binary_reader_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_spine_binary_reader_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_spine_binary_reader COMMAND flight_cpp_generated_spine_binary_reader_tests)
+
+add_executable(flight_cpp_generated_animation_player_tests generated_animation_player_test.cpp)
+target_include_directories(
+  flight_cpp_generated_animation_player_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_animation_player_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_animation_player COMMAND flight_cpp_generated_animation_player_tests)
+
+add_executable(flight_cpp_generated_animation_blend_tests generated_animation_blend_test.cpp)
+target_include_directories(
+  flight_cpp_generated_animation_blend_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_animation_blend_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_animation_blend COMMAND flight_cpp_generated_animation_blend_tests)
+
+add_executable(flight_cpp_generated_animation_graph_tests generated_animation_graph_test.cpp)
+target_include_directories(
+  flight_cpp_generated_animation_graph_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_animation_graph_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_animation_graph COMMAND flight_cpp_generated_animation_graph_tests)
+
+add_executable(flight_cpp_generated_animation_layers_tests generated_animation_layers_test.cpp)
+target_include_directories(
+  flight_cpp_generated_animation_layers_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_animation_layers_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_animation_layers COMMAND flight_cpp_generated_animation_layers_tests)
+
 add_executable(flight_cpp_generated_lifecycle_tests generated_lifecycle_test.cpp)
 target_include_directories(
   flight_cpp_generated_lifecycle_tests
@@ -682,6 +722,10 @@ flight_cpp_package_test_labels(flight_cpp.structural_row types)
 flight_cpp_package_test_labels(flight_cpp.generated_collision collision)
 flight_cpp_package_test_labels(flight_cpp.generated_registry registry)
 flight_cpp_package_test_labels(flight_cpp.generated_animation animation)
+flight_cpp_package_test_labels(flight_cpp.generated_animation_player animation signals)
+flight_cpp_package_test_labels(flight_cpp.generated_animation_blend animation)
+flight_cpp_package_test_labels(flight_cpp.generated_animation_graph animation)
+flight_cpp_package_test_labels(flight_cpp.generated_animation_layers animation)
 flight_cpp_package_test_labels(flight_cpp.generated_log log)
 flight_cpp_package_test_labels(flight_cpp.generated_log_levels_and_sinks log)
 flight_cpp_package_test_labels(flight_cpp.generated_render_state types)
@@ -726,6 +770,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_clock clock signals)
 flight_cpp_package_test_labels(flight_cpp.generated_movieclip movieclip signals timeline)
 flight_cpp_package_test_labels(flight_cpp.generated_swf_reader swf)
 flight_cpp_package_test_labels(flight_cpp.generated_skeleton2d geometry skeleton2d)
+flight_cpp_package_test_labels(flight_cpp.generated_spine_binary_reader skeleton2d-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_signals_throttle signals)
 flight_cpp_package_test_labels(flight_cpp.generated_signals signals)
 flight_cpp_package_test_labels(flight_cpp.generated_useragent useragent)

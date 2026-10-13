@@ -1,0 +1,13 @@
+diff --git a/packages/skeleton2d-formats/src/spineBinarySkinsHandler.ts b/packages/skeleton2d-formats/src/spineBinarySkinsHandler.ts
+index 56767bca..77b4af23 100644
+--- a/packages/skeleton2d-formats/src/spineBinarySkinsHandler.ts
++++ b/packages/skeleton2d-formats/src/spineBinarySkinsHandler.ts
+@@ -268,7 +268,7 @@ function readSpineBinaryVertices(
+     }
+   }
+   return {
+-    skin: createSkin2D(influenceCounts, Float32Array.from(influences)),
++    skin: createSkin2D(influenceCounts, new Float32Array(influences)),
+     vertices: null,
+   };
+ }

@@ -17,8 +17,8 @@ set it was generated under:
 
 Exact profile paths and SHA-256 digests are recorded per set in `manifest.json`.
 
-The current compiler emitted 2462 of 3033 source modules from
-156 SDK packages and refused 571. Emitted headers live under
+The current compiler emitted 2495 of 3077 source modules from
+156 SDK packages and refused 582. Emitted headers live under
 `include/flight/<package>/`; every refusal and its owning module is recorded in `refusals.json`.
 
 This is a bring-up inventory. It is intentionally committed before it forms a completely compilable SDK closure.

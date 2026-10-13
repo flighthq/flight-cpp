@@ -72,6 +72,12 @@ into the contextual number arm. These are the exact shapes in
 `scene3d-formats/gltfAnimations.ts` (`firstActual: values.length`) and `md2Parse.ts`
 (`distinctIndices: outOfRangeNormals.size`).
 
+`@flighthq/skeleton2d-formats` at `a627849` refuses `spineBinaryParse.ts` and `spineBinaryVersioned.ts` on the same
+shape: `{ bytes: bytes.byteLength }` and `{ bones: context.bones.length, slots: context.slots.length }` details
+passed to `reportImportDiagnostic`. The
+[`skeleton2d-formats-diagnostic-detail-number-locals`](../../source-patches/skeleton2d-formats-diagnostic-detail-number-locals.patch)
+source patch binds each read to a `number` local first.
+
 The other two sites are corpus-context boundaries rather than smaller reproductions:
 
 - the AWD camera builder declares `let projection: Projection`, assigns only the imported

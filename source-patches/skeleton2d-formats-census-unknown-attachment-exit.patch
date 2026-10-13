@@ -1,0 +1,15 @@
+diff --git a/packages/skeleton2d-formats/src/spineBinarySectionCounts.ts b/packages/skeleton2d-formats/src/spineBinarySectionCounts.ts
+index b181b07d..405e90ef 100644
+--- a/packages/skeleton2d-formats/src/spineBinarySectionCounts.ts
++++ b/packages/skeleton2d-formats/src/spineBinarySectionCounts.ts
+@@ -180,6 +180,10 @@ function skipCensusAttachment(reader: { offset: number; view: DataView }, noness
+   readSpineBinaryVarint(reader);
+   const ordinal = readSpineBinaryByte(reader);
+   const type = ordinal < CENSUS_ATTACHMENT_TYPES.length ? CENSUS_ATTACHMENT_TYPES[ordinal] : null;
++  if (type === null) {
++    skipSpineBinaryBytes(reader, reader.view.byteLength + 1);
++    return;
++  }
+   if (type === 'region') {
+     readSpineBinaryVarint(reader);
+     skipSpineBinaryBytes(reader, 32);

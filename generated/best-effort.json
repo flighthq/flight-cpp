@@ -34768,9 +34768,7 @@
       "status": "refused-placeholder"
     },
     {
-      "consumers": [
-        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/skeleton2d-formats",
@@ -34778,14 +34776,43 @@
       },
       "path": "flight/skeleton2d_formats/contract.hpp",
       "refusedDependencies": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesAnimationsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesBoneTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesBonesHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesFull.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesHandlers.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParse.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesRequirements.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionCounts.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSkinsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSlotTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesTimelineHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeleton2dJsonAnalyzer.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeletonDetect.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryAnimationsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryBoneTimelineHandler.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryFull.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryHandlers.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryParse.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySectionHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySkinsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySlotTimelineHandler.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryTimelineHandlers.ts",
-        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryVersioned.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonAnimationsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonBoneTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonBonesHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonFull.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSectionHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSkinsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSlotTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonTimelineHandlers.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineParse.ts"
       ],
       "status": "dependency-incomplete"
@@ -34794,62 +34821,122 @@
       "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:06d24381a74cc89654aa158fe4bb84ae717db655fc0c3d181d843e5d81c0eaae",
+        "sha256:2da0fbd8421dec3d92005a4bb6e4a370a96ccdbfef66e52e563864677d807dec",
+        "sha256:8dc4a611eee74e6e738dad91eeb84babe0e1df615cadcb8e031e6c69a9f0df97",
+        "sha256:e0992ab28a603b9008b6365c3abd55fada561c00c40fcfae92f1c51494ed6540",
+        "sha256:f98f726f065e97072bafcc23d46540698e8874a07e36e13878c477e65a9101ac"
+      ],
+      "module": {
+        "name": "DragonBonesAnimationsHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesAnimationsHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/dragon_bones_animations_handler.hpp",
+      "rule": "cpp-presence-test-without-absence-storage",
+      "status": "refused-placeholder"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesTimelineHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:22b6c833a99afc8c54b6bf9a994c91eb2b1e27d987d3c9cc6de40149cc441cc0",
+        "sha256:24b0e1f8912f23fddf972831bc4467c3e0fd8eea4812f3cb095f38662d9ece3b",
+        "sha256:3e38a079f9a59026d9be480c5c08b7896cbdef5c69361e1d22a06f3ccef65582",
+        "sha256:9ef93ecdd09c7581855247b6e99a4332da85ee7ee34ce0203da78aa36dd15f88",
+        "sha256:d744f3faaf63af100e99966afd4cad1880a4d2bf6aa2867a9c6b9ed38c9099f8",
+        "sha256:df3ba803b19878c1e5df00bf4e14e5a73d51c4593c900e2ce47c01b8d6d893eb",
+        "sha256:e9d5ed0eb64fe2de26c03aa469cdae75cedd79d1526cbb1257c96f4b0fda4fdc"
+      ],
+      "module": {
+        "name": "DragonBonesBoneTimelineHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesBoneTimelineHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/dragon_bones_bone_timeline_handler.hpp",
+      "rule": "cpp-presence-test-without-absence-storage",
+      "status": "refused-placeholder"
+    },
+    {
+      "classification": "target-runtime",
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:1a569a3d4966113e24ed41a3f2dd9cdf1b33177650f9678f10974f145ed7e269",
+        "sha256:1c3303b98048a9513d447f3add499cc78f9c1f5b7ce7dd4c5bbfdb6c185bea10",
+        "sha256:7e336a9c1df589561e7a53454b3eb97ef7b33a090c039b5b63b89970e67c6b98",
+        "sha256:a82bec4bd2d613395ca194eeef16cbd3335844ebe36c577981017efd25f240c2",
+        "sha256:f6afcf9e0d1f7f730b72986343a1390122097b46b88fc09817265760789c50d8",
+        "sha256:fd5239bbaccdeaec9d11ca03b3af5db3b6b5e2e19998731d2429e968c4262330"
+      ],
+      "module": {
+        "name": "DragonBonesBonesHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesBonesHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/dragon_bones_bones_handler.hpp",
+      "rule": "cpp-erased-array-predicate-runtime-required",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeletonDetect.ts"
+      ],
+      "module": {
+        "name": "DragonBonesFull",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesFull.ts"
+      },
+      "path": "flight/skeleton2d_formats/dragon_bones_full.hpp",
+      "refusedDependencies": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParse.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesFull.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts"
+      ],
+      "module": {
+        "name": "DragonBonesHandlers",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesHandlers.ts"
+      },
+      "path": "flight/skeleton2d_formats/dragon_bones_handlers.hpp",
+      "refusedDependencies": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesTimelineHandlers.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesFull.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:03a399b4c2cc6d0cc5d63e34dbe82470bd6dd7a205532c2668c7b8df263bbef6",
-        "sha256:083b2a03fef36e32d99981a1b636c2ac53c3c488b918cc1a69135806f285baae",
-        "sha256:0de6532f5289a0ec978736c7d5436018642b58241038945c420ec81a614833ab",
         "sha256:1344ee191d95cec388a602913f3bee26d2f6cb909e34136e2a8387f0e8f576d4",
-        "sha256:18a6bf8decf05e285a73e58d4bab4fe26a55343e83ff8d56e619c17018530ff2",
-        "sha256:1a630710a379713c3236a4dd7f2f49de3ed55cc16bb219eeb02c8203b0acf947",
-        "sha256:1c3303b98048a9513d447f3add499cc78f9c1f5b7ce7dd4c5bbfdb6c185bea10",
-        "sha256:1e37a0c0be1cbef0ddd28a8ba671eee687d4de2a80a0d152fa06d12a4ec9807b",
-        "sha256:1f16f06492dd2428050cc2524a85b15e48283c6a4344575b3edd2eccbebc5476",
-        "sha256:202db22f343ce0faed053ebc9bfede8fc20ce83d0d25fbbbe1e42c732e963070",
-        "sha256:22b6c833a99afc8c54b6bf9a994c91eb2b1e27d987d3c9cc6de40149cc441cc0",
         "sha256:26edeb77dec0c278827667df824c0c25a756f0eeee11f693674f546f26102b06",
-        "sha256:292ad79fa2b66b4c4d752f77c8d92feebaa9019b70ce5bad2b10251359a72c91",
-        "sha256:2a63440cedb0fd22e69f7cdd89886e6de64b476a9e592f56c70e70454623c5bb",
-        "sha256:2da0fbd8421dec3d92005a4bb6e4a370a96ccdbfef66e52e563864677d807dec",
-        "sha256:3145c895470cd37bb48787c96bb1dbb88b7aa64923b27c3b6753906d1802f02a",
-        "sha256:3677d110f3eb8be55f6f1cb03d5b84fd64399340e88f4f0d24259b2257e41a0a",
-        "sha256:3ac25576808b0db668b9e50ce3346ab4023774f8897d759229276b0a8d85993b",
-        "sha256:3e38a079f9a59026d9be480c5c08b7896cbdef5c69361e1d22a06f3ccef65582",
-        "sha256:46382d44e0f4d2572eb519f1145005d3eb6ffd6daf3d78091c591554077e6f09",
-        "sha256:4737c741fa80c7de870ce9a12fddee607aa1454e38c68842fed2cd4854c610cc",
-        "sha256:4e772c93ecaba7d564f7ddb6a6f102028b8a99accfcd6cd5ce0ede316a005c92",
-        "sha256:550e048fc81eedd82274161be78ca1c219a8e64f25f169c538a3d40899cbefd0",
         "sha256:5be1220da579d82f32de5c9c689c89388576566abcc3a8749dec67c356bace6f",
-        "sha256:64b2655a84326f5966a0fd5e07e72aae0920c2ba567f54b2da91abe42c59acdf",
-        "sha256:77be5ddc95d4df614d4ea4f269983bedaf984c5cb522a711d9d2cadacb3a6984",
-        "sha256:7e336a9c1df589561e7a53454b3eb97ef7b33a090c039b5b63b89970e67c6b98",
         "sha256:87d42aaeabaaa7e78d89e317e6b3136de053072dbc300530ed7488830f422492",
-        "sha256:87ee9918e414825443bb458706ea4ec5a3d4b8b5b74a3272f718c8c97eaab566",
-        "sha256:8dc4a611eee74e6e738dad91eeb84babe0e1df615cadcb8e031e6c69a9f0df97",
-        "sha256:9225e81cf6fd88b51ddb1eac9d516118dc52f545fa00eca72f9f835241607689",
-        "sha256:9af1d164fbc7e8a7db8781e6fe16a3d7714b3b4a2869fc55afd1a6ccf3eb03f3",
-        "sha256:9daec69888ced62f6af86d94d588709ebc9b94a7b7b8314d2b7f219d0719aebe",
-        "sha256:9ef93ecdd09c7581855247b6e99a4332da85ee7ee34ce0203da78aa36dd15f88",
         "sha256:a4c3f37b6a9b3ff3680b0b80d34118cfd6ea045602daa9b2ab62db7abf18de49",
-        "sha256:a82bec4bd2d613395ca194eeef16cbd3335844ebe36c577981017efd25f240c2",
-        "sha256:ac0e20c3c5e5e1206d437813334470df0d9d05f5f94411182cd560e52a37c623",
-        "sha256:b0c17bf5082409941e2a9dc66fd66d580a8ececedea169bf1bd71092c0c2fa0b",
-        "sha256:b243047c5040ed0fc2210cc61ba424c107f0d9a6c005cfc13bc820b8179aae3f",
-        "sha256:b3babdd8c6d32eeaca8cea5dd122d60bc534afb1ea942d725230f0ccc13a65df",
-        "sha256:bb0112ec50277cb7e6349d0ed213754635e7128ad543ba3ac3204e66b7e3672e",
-        "sha256:c0156c4c9879873d90e728a09c18a6cdb1149ed44d73857673d26621052219fb",
-        "sha256:cc54dd5c5626495e2ae7a2c1e4419508bf974477a004f5af97a26de0f953644f",
-        "sha256:d744f3faaf63af100e99966afd4cad1880a4d2bf6aa2867a9c6b9ed38c9099f8",
-        "sha256:dcc55a7717d96015c6fe2452262c8a90ee27a1ada46cd4b9550effd57fede685",
-        "sha256:ddc735e57514ea0bf419fdb6e968e2c6fddece9c2d477ae9f973009972970efa",
-        "sha256:de4bc87ed92f4bafc53f6434d2078af60c079ace67459ec5a010aba9663ae59c",
-        "sha256:df3ba803b19878c1e5df00bf4e14e5a73d51c4593c900e2ce47c01b8d6d893eb",
-        "sha256:f1ec085015c023fa8f0bdd61c1a4ce9fbcfccca0429a12a6f46f8ecf36e04f56",
-        "sha256:f6a4eb49632764ce6758811fcb9c029571886ac52a4a4996104819809858d487",
-        "sha256:fd5239bbaccdeaec9d11ca03b3af5db3b6b5e2e19998731d2429e968c4262330",
-        "sha256:fd813f6a8e5ae702ebb5ce4c585cc022e9fe12a3c349bc2c078041cc1b18af7e",
-        "sha256:ff630c98049e11e13d41dd4bc950e0cc704441d42901a0a4da01827278d174d8"
+        "sha256:c388ff447cfd34cf229fb5dd2825405030d212e7dcb8980c034df81c40f0ecbd"
       ],
       "module": {
         "name": "DragonBonesParse",
@@ -34861,6 +34948,235 @@
       "status": "refused-placeholder"
     },
     {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesAnimationsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesBoneTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesBonesHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSkinsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSlotTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:1841e41875614cc69b413cb3c3b157c349146a634b14ae96f9c06d45aacf8167",
+        "sha256:34c0c701f8b8ae5c7c27bf4187dd65b76e424c41dce08f9c27b7cdf60c3abcb1",
+        "sha256:4e772c93ecaba7d564f7ddb6a6f102028b8a99accfcd6cd5ce0ede316a005c92",
+        "sha256:512ba79252bc33b0b0ffddda672c35feebd59daa62b44c4dea21273bd4f94edf",
+        "sha256:5953746c1c8ee9f2b01e508ce57e47e793949d6bb813ea5a5b426acc60673170",
+        "sha256:9586a5033cd69b678b5e6f9fba915ed4c02b0ca1f786eaba0680e5eb9f236fa4",
+        "sha256:9daec69888ced62f6af86d94d588709ebc9b94a7b7b8314d2b7f219d0719aebe",
+        "sha256:a8d7bf015a1f78b0ca2973e1ef56fb419963c4be796652c8b7c3cddecb1812b6",
+        "sha256:ea53d266f980a320f13b9a6873128d1a6e4107487e62c53153878a7751a823f1",
+        "sha256:f1ec085015c023fa8f0bdd61c1a4ce9fbcfccca0429a12a6f46f8ecf36e04f56",
+        "sha256:fd813f6a8e5ae702ebb5ce4c585cc022e9fe12a3c349bc2c078041cc1b18af7e"
+      ],
+      "module": {
+        "name": "DragonBonesParseHelpers",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts"
+      },
+      "path": "flight/skeleton2d_formats/dragon_bones_parse_helpers.hpp",
+      "rule": "cpp-presence-test-without-absence-storage",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesAnimationsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesFull.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesTimelineHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts"
+      ],
+      "module": {
+        "name": "DragonBonesRegistry",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesRegistry.ts"
+      },
+      "path": "flight/skeleton2d_formats/dragon_bones_registry.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts"
+      ],
+      "module": {
+        "name": "DragonBonesRequirements",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesRequirements.ts"
+      },
+      "path": "flight/skeleton2d_formats/dragon_bones_requirements.hpp",
+      "refusedDependencies": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionCounts.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesRequirements.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:455c7c8214ad8755ca52cafbd2aaab096a96dee3b4d11eb32506d6d2d715e04b",
+        "sha256:6aaf813ff4a498d473919209a7336903a971edc3e1e538fa8540ae486f9484d4",
+        "sha256:7b762a9bfcdd01d95f4f774a1827bae199ba49945b49198bbef9a816b704f46d",
+        "sha256:aec0f1c2dfe7c09a8dbcf7a97bc93f65f2e7e08055f98e1d01ec23bac1c27707",
+        "sha256:b0fc3c86d80c85b96e96812b8c26c92380db681f32588ef04d507b74eb018622"
+      ],
+      "module": {
+        "name": "DragonBonesSectionCounts",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesSectionCounts.ts"
+      },
+      "path": "flight/skeleton2d_formats/dragon_bones_section_counts.hpp",
+      "rule": "cpp-presence-test-without-absence-storage",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts"
+      ],
+      "module": {
+        "name": "DragonBonesSectionHandlers",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesSectionHandlers.ts"
+      },
+      "path": "flight/skeleton2d_formats/dragon_bones_section_handlers.hpp",
+      "refusedDependencies": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesAnimationsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesBonesHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSkinsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "target-runtime",
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:0de6532f5289a0ec978736c7d5436018642b58241038945c420ec81a614833ab",
+        "sha256:1a630710a379713c3236a4dd7f2f49de3ed55cc16bb219eeb02c8203b0acf947",
+        "sha256:202db22f343ce0faed053ebc9bfede8fc20ce83d0d25fbbbe1e42c732e963070",
+        "sha256:2a63440cedb0fd22e69f7cdd89886e6de64b476a9e592f56c70e70454623c5bb",
+        "sha256:3145c895470cd37bb48787c96bb1dbb88b7aa64923b27c3b6753906d1802f02a",
+        "sha256:3ac25576808b0db668b9e50ce3346ab4023774f8897d759229276b0a8d85993b",
+        "sha256:46382d44e0f4d2572eb519f1145005d3eb6ffd6daf3d78091c591554077e6f09",
+        "sha256:47022927fea22ceb53e3ddd360204030ab918faed2de0bcaa83bf66f8cf5c929",
+        "sha256:4737c741fa80c7de870ce9a12fddee607aa1454e38c68842fed2cd4854c610cc",
+        "sha256:550e048fc81eedd82274161be78ca1c219a8e64f25f169c538a3d40899cbefd0",
+        "sha256:66624a40625bb09f39d44352c9cfc8258033c45d9b6700b794583898a1dd1c84",
+        "sha256:87ee9918e414825443bb458706ea4ec5a3d4b8b5b74a3272f718c8c97eaab566",
+        "sha256:9225e81cf6fd88b51ddb1eac9d516118dc52f545fa00eca72f9f835241607689",
+        "sha256:ac0e20c3c5e5e1206d437813334470df0d9d05f5f94411182cd560e52a37c623",
+        "sha256:bb0112ec50277cb7e6349d0ed213754635e7128ad543ba3ac3204e66b7e3672e",
+        "sha256:cc54dd5c5626495e2ae7a2c1e4419508bf974477a004f5af97a26de0f953644f",
+        "sha256:ddc735e57514ea0bf419fdb6e968e2c6fddece9c2d477ae9f973009972970efa",
+        "sha256:de4bc87ed92f4bafc53f6434d2078af60c079ace67459ec5a010aba9663ae59c",
+        "sha256:f6a4eb49632764ce6758811fcb9c029571886ac52a4a4996104819809858d487"
+      ],
+      "module": {
+        "name": "DragonBonesSkinsHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesSkinsHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/dragon_bones_skins_handler.hpp",
+      "rule": "cpp-erased-array-assertion-runtime-required",
+      "status": "refused-placeholder"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesTimelineHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:292ad79fa2b66b4c4d752f77c8d92feebaa9019b70ce5bad2b10251359a72c91",
+        "sha256:64b2655a84326f5966a0fd5e07e72aae0920c2ba567f54b2da91abe42c59acdf",
+        "sha256:71e4d1f89c54010624b3725bfbb1aa3f3ae208f227d0cddc75d3481f4b2a5df1",
+        "sha256:9af1d164fbc7e8a7db8781e6fe16a3d7714b3b4a2869fc55afd1a6ccf3eb03f3",
+        "sha256:c0156c4c9879873d90e728a09c18a6cdb1149ed44d73857673d26621052219fb",
+        "sha256:da8cbd90997f26a75a480e80b3c245c28701aa1c015a96fa375da70440147975"
+      ],
+      "module": {
+        "name": "DragonBonesSlotTimelineHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesSlotTimelineHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/dragon_bones_slot_timeline_handler.hpp",
+      "rule": "cpp-presence-test-without-absence-storage",
+      "status": "refused-placeholder"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:083b2a03fef36e32d99981a1b636c2ac53c3c488b918cc1a69135806f285baae",
+        "sha256:18a6bf8decf05e285a73e58d4bab4fe26a55343e83ff8d56e619c17018530ff2",
+        "sha256:610254cecf1720fc63e64096fef8ab13860fe9979d50e26c8ec000920ff0aa0e",
+        "sha256:89d040c398fa93ad66667f721c47906ffe174bb569760497c2d7e26f554e2e26",
+        "sha256:dcc55a7717d96015c6fe2452262c8a90ee27a1ada46cd4b9550effd57fede685"
+      ],
+      "module": {
+        "name": "DragonBonesSlotsHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesSlotsHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/dragon_bones_slots_handler.hpp",
+      "rule": "cpp-presence-test-without-absence-storage",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesTimelineHandlers.ts"
+      ],
+      "module": {
+        "name": "DragonBonesStubHandlers",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts"
+      },
+      "path": "flight/skeleton2d_formats/dragon_bones_stub_handlers.hpp",
+      "refusedDependencies": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts"
+      ],
+      "module": {
+        "name": "DragonBonesTimelineHandlers",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/dragonBonesTimelineHandlers.ts"
+      },
+      "path": "flight/skeleton2d_formats/dragon_bones_timeline_handlers.hpp",
+      "refusedDependencies": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesBoneTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSlotTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesStubHandlers.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
       "consumers": [],
       "module": {
         "name": "Index",
@@ -34869,29 +35185,75 @@
       },
       "path": "flight/skeleton2d_formats/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts"
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesFull.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParse.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesParseHelpers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesRequirements.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionCounts.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesSectionHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesTimelineHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeleton2dJsonAnalyzer.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeletonDetect.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryAnimationsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryBoneTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryFull.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryParse.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySectionHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySkinsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySlotTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryTimelineHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonAnimationsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonBoneTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonBonesHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonFull.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSectionHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSkinsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSlotTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonTimelineHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineParse.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
-      "classification": "compiler-restriction",
+      "classification": "target-runtime",
       "consumers": [
-        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts"
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts"
       ],
       "declarationFingerprints": [
-        "sha256:02a66faf7f2c47016d8293bbe455c487064d3038b65e56c27a5d15e56fd3491b",
-        "sha256:0dd5f3975a1d049beb2df79e62bec03804420ededf476dff82bb26eb653b9b79",
-        "sha256:23c7cf3dbb6508648a83652d705c55ca42a4ae6f23bca828503d5723f3c5d16d",
-        "sha256:2e83993e4a34e803721704dd513beb7ad6a21c6f788ccae5f8c9675fc5b91f39",
-        "sha256:492d4558f9e9267b6a91b29c8382130d16a015a39f4e29714ea972aa7f17af38",
-        "sha256:51a4273013249b12dbd3893dce393d6948a12cd66831cb76b7edb48e704b4887",
-        "sha256:5676953a1473d8a506ff51d5b0f01cd6423aa88765e6ad6c5a040fb042b7c724",
-        "sha256:a53f6d6a68206258007d81b16d801b8ec740ab9c70f98081bb9e5602ae672ef0",
-        "sha256:ac24a4ed87e5df46635f2ed35f2cd693823631d60b331b56d3f744d8f2593c4b",
-        "sha256:c668f4a20cdb6ef1e5fb9285609994d95e6c92ef1b75ae741e0c9e0cce657146",
-        "sha256:d1749b8b60d02d0e80c2a7afed9b7676978c607626705d553d03d2d6675ea070",
-        "sha256:e75215a1fe231d21de6fe9a11f2f604eea43d67c2b4bcb468c9900a2cf85be1e",
-        "sha256:eb80159b1223558560ddaa4df9b2e082100cf8d2d0e8231d22a95905c4e2dbcf"
+        "sha256:02d10b3e8116a8033e8d170249c327a417123cc81acb7a9f4e89191920818ca5",
+        "sha256:17798b7e95a390d34acaa493dadb2e09d4c2de0dc573cf7162d2c506b0e0a6f5",
+        "sha256:1e21b4e5778e7df7ff72abe13a3e496c31ce02ef1d1e70574bc811bc1de14eb0",
+        "sha256:5493c57214fe8d1c10345ab7626ad87b2047b1e3f37097ef828b7ac26ecf57a6",
+        "sha256:5c11c1953dc81b13a3cb484ff3c1f09eb8511e269ee2d81b0e8b9e5a0bd83dfb",
+        "sha256:632892a6bbdccc8fe890b9ec7507145deb359a2d9a703511e8bcc01ab636ade4",
+        "sha256:65ae112da0368fc639b4469a582c3d91c6e12073c1cb8dece40876b6a48a2056",
+        "sha256:6fe7806c385d17046b4a8a0287a2283a42a34e571b1756084e4605d77d97cfef",
+        "sha256:91367b121ed01b3538762052aee6a6ac2b38f51229df65165100d4b87a0b5c4f",
+        "sha256:a10de70d03b5596dd2d9517526deaab955b7734f846a28085b6b6af04d8d27dd",
+        "sha256:aec0f1c2dfe7c09a8dbcf7a97bc93f65f2e7e08055f98e1d01ec23bac1c27707",
+        "sha256:f2bf37726da80445be37650eb94374e74a5d3b30f3aa9200735d9774a750b548",
+        "sha256:f3576ca00a7c986476a33d97071f4e722a8f706c698e29309690965bf1647383",
+        "sha256:fe823c8df8c4a90afa3bc56bbf550153f036aee80053a157050e6ba70798cdef"
+      ],
+      "module": {
+        "name": "Skeleton2dJsonAnalyzer",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/skeleton2dJsonAnalyzer.ts"
+      },
+      "path": "flight/skeleton2d_formats/skeleton2d_json_analyzer.hpp",
+      "rule": "cpp-erased-array-assertion-runtime-required",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts"
       ],
       "module": {
         "name": "SkeletonDetect",
@@ -34899,12 +35261,88 @@
         "source": "packages/skeleton2d-formats/src/skeletonDetect.ts"
       },
       "path": "flight/skeleton2d_formats/skeleton_detect.hpp",
-      "rule": "cpp-contextual-union-missing-expression-type:optionalSingle",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/registry/packages/registry/src/registryTable.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/dragonBonesFull.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonFull.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
-        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts"
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryParse.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySectionHandlers.ts"
+      ],
+      "module": {
+        "name": "SpineBinaryAnimationsHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineBinaryAnimationsHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_binary_animations_handler.hpp",
+      "refusedDependencies": [
+        "@flighthq/animation/packages/animation/src/animationClip.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryBoneTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySlotTimelineHandler.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryAnimationsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySlotTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryTimelineHandlers.ts"
+      ],
+      "module": {
+        "name": "SpineBinaryBoneTimelineHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineBinaryBoneTimelineHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_binary_bone_timeline_handler.hpp",
+      "refusedDependencies": [
+        "@flighthq/animation/packages/animation/src/animationClip.ts",
+        "@flighthq/animation/packages/animation/src/animationTrack.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryParse.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySectionHandlers.ts"
+      ],
+      "module": {
+        "name": "SpineBinaryBonesHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineBinaryBonesHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_binary_bones_handler.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryAnimationsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryTimelineHandlers.ts"
+      ],
+      "module": {
+        "name": "SpineBinaryDrawOrderTimelineHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineBinaryDrawOrderTimelineHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_binary_draw_order_timeline_handler.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts"
       ],
       "module": {
         "name": "SpineBinaryFull",
@@ -34921,6 +35359,7 @@
     {
       "consumers": [
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryFull.ts"
       ],
       "module": {
@@ -34936,125 +35375,10 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
-        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryFull.ts",
-        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySectionHandlers.ts",
-        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryTimelineHandlers.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:0427db0fefd4bfda5a922aeaef9fab02363a66c49fa17428b93e33bf72804909",
-        "sha256:061f53c46ef9f78a0c7ee7c6da7b0055ece30a8008ce31521a277ab8f7f5b6d1",
-        "sha256:08766117b35a360d253bf5b3221a9d0b24e895458506a160948bd4959e086cb3",
-        "sha256:08f7122c4f9b5f2b9fd0658fabf9e2ae4f66f9faf42d40fbbf5bf7860d415e08",
-        "sha256:0972654f0eb2f8c0c0f9a4bf43b02c70140c4555aede1b1ebccdaa4bd3cbe66f",
-        "sha256:0c89bc751996f34d6d00d38565a01d0c884927160711c0d137cfe80f9260bbf5",
-        "sha256:0f402141c5884791e10ccd322456fc331fcd15c1735a9b40b592b7553e327567",
-        "sha256:130b2f654ad7cb4fec68e2819bf278cbdf0bcbdc10f6906b8594135694d40edc",
-        "sha256:13a7a53c1156ae3f4344142970963f4dbfc4c1d0f0241cb89e7024af38a6cee9",
-        "sha256:14cdeaa020f6e3309508e946c401d79c97cc4ab0ad40bd88adb2c6c850fb950a",
-        "sha256:157fda5b98fa35fcbc47f5e7fb3d6a91cdae2a4d3e7030e81a69d04703bd3496",
-        "sha256:1922c2662ae5a28fc66b6b85746ea2b18676084edd14f5e4999d89712661740f",
-        "sha256:1ae28bb038a41488fc552e6d2bc9cccca15faae6d5cbf9a03da2e89c416cff3b",
-        "sha256:1db8bb34246619019d64202124a697e41ec752aae320b229bf9def31ae96be00",
-        "sha256:2500b369d9c18a0068ba6a9112d4f0875639abe4a1ff1786c9442f446d7ac8a6",
-        "sha256:2707b5d5f848278ca55fc34c458e3ed3bbabb5f43b1dbb6ce89332f35b3f42db",
-        "sha256:2be3c44e7ceb4c6faf484e051b46add1a4fc8e2d6649378fec182136ce09a734",
-        "sha256:2ec7abc3f29810c0d09899a1d8057877602f0f8af93892069469984f0fbf6bd9",
-        "sha256:2ef2b3e27cb644c073a9119c1ad0d9f7ce7ddc3eb28e4c9f0270cb151f64d1bc",
-        "sha256:2f717b54e23d8b7a97bbc4e70578ed3621aeb4efeb05e8c261ecf0b2812678a2",
-        "sha256:311957ed52839bc4fa0a4fb4429953ad0033fcdab2f82b107cfe230a7deea757",
-        "sha256:32f18a2e8dd774b9305dda4a34b484d3e7b22c12405ff9982dfc8df615b09ab4",
-        "sha256:33aa5419b7f19f5330d736be7cc26b7051bddbe4f2f1dc93ea5f1d8652d876bd",
-        "sha256:34f0d2775fcfa2db1b03b39e1e34d837b0aac0023eb9b28f0fe0e617a8a08a57",
-        "sha256:36aae98f18c6fa13044d0cb291a5914ecdd7bd7587faef9cae42df089fd39e75",
-        "sha256:37ac48f93257277ba1ecbf8343b06d6d4dd534538f31b167e50bc9ac39765f58",
-        "sha256:3a0a3aea8fde1a0305983a23a291668ba97603b4947e481d621778df1575bf06",
-        "sha256:3a448ad952c5cf8ff69f9989438d7aa7c1c053f753a4773dc715bcc95d9de494",
-        "sha256:46382d44e0f4d2572eb519f1145005d3eb6ffd6daf3d78091c591554077e6f09",
-        "sha256:46b674f80ccee86d1749c5f1add69fcb7f8883fd6ab92f07f4b8789a487610c6",
-        "sha256:482cef696c638955056fedfa328c932a7a2bbd850695563b45160ba439ca733a",
-        "sha256:4daeda8323bb33a19b9ebef6f7290fc5856a3fd6adee46915f6b1ef4b819be53",
-        "sha256:4e7d51413c0851c288e6cf0c3ee9e38d822dd59343bdb188d7743313c3385c07",
-        "sha256:531913d30c9dac052f9f478c6162f246e5b0485d615912deafcc4e8ab777989d",
-        "sha256:57bf9d68254ef6829b9b8149d315a1bf62527211b7ab7c647169d51c06a246b1",
-        "sha256:5b54b7a131e9a4738280be4493f326d874b30a116f4e92d6cae0afbc23699808",
-        "sha256:5c1f152c3d47d8c23f55cf5aa5e7608f21ce38e6081245a5f5670ce794ce7524",
-        "sha256:5c31b56ae8e9127e8bf81b9a4a19406877cc4fd3429b3144d52df1e01357d3b7",
-        "sha256:5fbef303fcfd246336706598852d5a3b6e95983dc33b6e41424fdf775f2b9e89",
-        "sha256:64e9f2bbbce08c3d6b352388d831f5a3f64e595c0f9580b9cc770528fec83c5e",
-        "sha256:6555886a9963e6b997b95749dc603b9e5703b37263f1ca0969d602d2952a7997",
-        "sha256:65f2321b8111d722a1bec4cecb357fa1310b7ed2f2be6e8c87e83fc346eb61dc",
-        "sha256:67034ed530e5e9fa8be67b4807acefbb7fe975f1a80bf88c167bbf77f46864a9",
-        "sha256:67205e4823647a934fdfb6db445c6d124ff11a785f67114988df90a82a88ecb0",
-        "sha256:6780180dadedb952b989228c6cad59e67c71680b537259c38b0dd2fefd7ba6ee",
-        "sha256:6b4514f5831a68a32a594760d0e5b835e7b6cda1b54f7bf22f99ef6bdbd24c68",
-        "sha256:6e29477a108670828c8176d493eb02e9feba23eeff22277b84a9ea8acefeb8a1",
-        "sha256:6f86b080bb7ad970398860e0f2128a3c6c555f91349b76973448b092e32a7680",
-        "sha256:755f2d62c329ee3b1b0e7a84a1e53300715654075355590eecb96c2d196e3aef",
-        "sha256:759cb257d7f580e820fd641202f97591bdd9ae139dad51b617c78a01dc2bb382",
-        "sha256:766b89295fb1b8017236a23ddbdcb81d6778a8bff89f63cd9cbcaeeebe2cef25",
-        "sha256:7e89b991193ace6d4e4b6f73946ba41c053abe5bf2bd20308ff13caf6e6addda",
-        "sha256:7eae1ba5fb9f5323496da30fce714356932684d0fd7a4033ffff59039af852ce",
-        "sha256:80f481187d320cc743db85dab12331356a956e4a5c4e3e912768106c7ab36458",
-        "sha256:8331b067370623c08f8970801b7d6464487414e960dd75d3a7683821da71abd8",
-        "sha256:8573bfd3469039c87d4c3d0ff1b2920631407554227934be51355726df9bef7a",
-        "sha256:86da4c3a4ae2e34f49f278bd380a6e3832df79549bb566b3b682da8f5967753e",
-        "sha256:8afcca46895cffaa7c9680d7d9ba3652f563a41c58d6e63674626f0efa2047cc",
-        "sha256:8b40388c80db8b5a9127fcf38c9e5fd3a216eb5c3936f04ff44d9dc7fb37b479",
-        "sha256:8d421e462e84596280b070d268dc361766031d620f7e22c9153564a437662f67",
-        "sha256:902d738a6e2f78178bd7b49b6301f2c8aa654a63ec0db177a7169f5a086a8fd0",
-        "sha256:906dd00af0b92de32776a0a270da07e9643c9321b2e43aa54a5669a72a116f51",
-        "sha256:910619c412b1bfce2a74703346ccb58cb51d1aef3b013c7e2e5a1f97fedae2b5",
-        "sha256:95f9183b5a19989b647dc060ba8b808c29f8fa3d809b9c0c1a8cb1766078bce0",
-        "sha256:979f7f9dc4cae91699ee56add224477dff4f6a30dddf588e2467a633dcb46e27",
-        "sha256:98aa2a10195a79bd9e5f393827ee51cbda367c600b1a044a1dbbc545a62e6f91",
-        "sha256:99b43419b58b2e4197bc16d2a6b475710ab706a819a9785093736a4c69c55359",
-        "sha256:9a7b5f4b4fc7cabedd899174a9f03285d4c87a77eae9e0147f6e2e1604fe4bb7",
-        "sha256:a02c8c2e699e94ad55142d0ac43b18be7f5eba55fc577b896c428d907bc0518d",
-        "sha256:a1f6121c0f721f9fffaa76cfe697212f7f276f50e31a579e7e6afeac9845e8fd",
-        "sha256:a46671fa87469b389e016d1517400b64f549945cc5a2aad64fc3da9ab57a3415",
-        "sha256:a7adf2cab583f5526507e455ba3522bb642ca184ef8a9a880e1ed008c1bda258",
-        "sha256:a7d2c05f9c89d63b227209db2ab2fa3f110cc39d625d4fab07ff1fabc3841489",
-        "sha256:a867a29f24a6e00d180953a3d836e4a81d4012e471f282361f75d80099b4650e",
-        "sha256:a9928db268e84c5582ca6675daf836a4c5ff0dd8b0d3b719f0344a1f77948279",
-        "sha256:aa17d25067b43230025abeaf3d5af61d286dca7e440edce8173608d632793701",
-        "sha256:b5e96a9308bad605fd63c6fe20e154de6f753564a60490b8db6698eabd4b869d",
-        "sha256:b6114ff2472891965a3f1e686a6188e9da0f5e150ec504f132221e443a3b906d",
-        "sha256:b6bf16cf791e8d473e35896d2995dc90667b5d1ca82d47327b809dd29de327a5",
-        "sha256:b7902b9b31f1e820919816f1a981b76d9a86b6a3510b9331f796d43baea1b7c2",
-        "sha256:ba8ae3283648c2b79dc1704addc3b572adf9d1efd2004d11388322d0de2b3e9c",
-        "sha256:bafd15ab2a551d0481e9d34c6faaa29d0944248d7a2b09e23934756018df2253",
-        "sha256:bbd2f7250045a40ff0d126cd80f72d09b77f589f814d462f201f06b9cd65b27c",
-        "sha256:c6687a50b14e849355e99bec09d74cc2a2170d78a343e425b086eb69096cdee0",
-        "sha256:c8b04155190f61aff775e9388df14f4503a7978cb4f865436a7cea7e8acfb6be",
-        "sha256:c994d71d156bf49bb51d406bff7d8031bffed4341683ad5d0ca6df23adf40536",
-        "sha256:ccbd6ad20464b8ff0307a59243aee41c747be9c845edab3d4da49e8908e91642",
-        "sha256:cce330631a46bc47c844055e9c6a5061591ca2c83cd5674f9fc7d570b0e87cba",
-        "sha256:ceeb512754595971a881fc654bca84b4ac81023bd69846b5da28d1f2ea55a484",
-        "sha256:d626b1d88f839f863a018d9d9200a0b020eca1fa5bb54e4bb9743a73b7b0a3f0",
-        "sha256:d6b445daf315f07c61bed475e44966f9faa758b3a7602afb15ea083005fc18fc",
-        "sha256:d8aa2e27d591a9655edc0ae415dca7b1ad57ebd820c08c647deabbc39423846b",
-        "sha256:da4601889d6aca506365170cc0df333ec90d9b7b83df34f6b95ce9fd0a0f2bbf",
-        "sha256:dcd211efd6a9067adf2bee3d046fc1df0a2e1bd205541e9fae2a00a0c66a80cc",
-        "sha256:e270cce6777b0b048d80ed73ad37c446f675dfd8705a387aa2783cc9090b6880",
-        "sha256:e33a635790b59d4e7d13987a5c67f09a1c6f05596acd7b3e8e9adba00317db7e",
-        "sha256:ebbd842b1628cac61d73397797d6aeb0698713db3f63245f8573769cf9d3f9a9",
-        "sha256:ebc651c8ffea65d931d3392866e2dedf236f09f520da26bb7b4ddf086e4abd23",
-        "sha256:ec021fdb5b08fccab01bdbd207f07a37f03f9bca24c45d9cdf0f1b21517893e9",
-        "sha256:ec7d8b15b80378a46bee2c1ccec59c94570938a3c7a12123525f79ba0b177ebb",
-        "sha256:ef87e3adc9c992f459a42a238b44663299bcace00116d56ff018d56c74dd1d9b",
-        "sha256:f2515ffd1d20f20e8584a6904b567382703ff1efb7443e76906b95271e2d5134",
-        "sha256:f406aa9df415876cce66d631e1afc7017562ed447d22ada9f5bbf7206359cc97",
-        "sha256:f42cafdcd51117ca30caf1ce2c3fbfd9b997f81c91d4522fe1adbad3872cc64c",
-        "sha256:f6a4eb49632764ce6758811fcb9c029571886ac52a4a4996104819809858d487",
-        "sha256:f6f3cede7ab4047440934d0909d85a446011dbf1656b2452dd52c2a0123a7dad",
-        "sha256:f9aa41c9b28b681280f507563e523783559efe0c3060408327cad90faf24ab89",
-        "sha256:fa3a2c6bde1e1eef5a76e73757f9ca43bc71ef4b5f4871bffab0f4157aaf2191",
-        "sha256:fa47888093c66b9ed00e7df4033bdcce12535f992ead0237f36d48642102c0ad",
-        "sha256:fc810d4a39eb444ce1e203e4c332b65c798424e7522c6ca212d588da2098b40b",
-        "sha256:fe4c6b3bcaa66d562379683762d5839f5ae3e32538db457c97ce550931fb52c0"
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryFull.ts"
       ],
       "module": {
         "name": "SpineBinaryParse",
@@ -35062,11 +35386,50 @@
         "source": "packages/skeleton2d-formats/src/spineBinaryParse.ts"
       },
       "path": "flight/skeleton2d_formats/spine_binary_parse.hpp",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryAnimationsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySkinsHandler.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryBoneTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryBonesHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryDrawOrderTimelineHandler.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryParse.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySkinsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySlotTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySlotsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryStubHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryStubTimelineHandlers.ts"
+      ],
+      "module": {
+        "name": "SpineBinaryParseHelpers",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineBinaryParseHelpers.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_binary_parse_helpers.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryAnimationsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryBoneTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryBonesHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryDrawOrderTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryParse.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryParseHelpers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySectionCounts.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySkinsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySlotTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySlotsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryStubHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryStubTimelineHandlers.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryVersion.ts"
       ],
       "module": {
@@ -35080,6 +35443,8 @@
     {
       "consumers": [
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryAnimationsHandler.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryFull.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryParse.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySectionHandlers.ts",
@@ -35096,6 +35461,34 @@
     {
       "consumers": [
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts"
+      ],
+      "module": {
+        "name": "SpineBinaryRequirements",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineBinaryRequirements.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_binary_requirements.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryRequirements.ts"
+      ],
+      "module": {
+        "name": "SpineBinarySectionCounts",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineBinarySectionCounts.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_binary_section_counts.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryHandlers.ts"
       ],
       "module": {
@@ -35105,13 +35498,115 @@
       },
       "path": "flight/skeleton2d_formats/spine_binary_section_handlers.hpp",
       "refusedDependencies": [
-        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryParse.ts"
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryAnimationsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySkinsHandler.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "target-runtime",
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryParse.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySectionHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:08766117b35a360d253bf5b3221a9d0b24e895458506a160948bd4959e086cb3",
+        "sha256:2500b369d9c18a0068ba6a9112d4f0875639abe4a1ff1786c9442f446d7ac8a6",
+        "sha256:3032e809a8133aa6bbe2c94559e09e02e5595ebb1e58a19624808c63c3444817",
+        "sha256:3a0a3aea8fde1a0305983a23a291668ba97603b4947e481d621778df1575bf06",
+        "sha256:46382d44e0f4d2572eb519f1145005d3eb6ffd6daf3d78091c591554077e6f09",
+        "sha256:4daeda8323bb33a19b9ebef6f7290fc5856a3fd6adee46915f6b1ef4b819be53",
+        "sha256:545d513c375a4fb76292874cfa80466b6395ade9afa39da6ca7fbe5aa313d9c6",
+        "sha256:7eae1ba5fb9f5323496da30fce714356932684d0fd7a4033ffff59039af852ce",
+        "sha256:ca5c784d42573e9e1afa1e5ea6620dfb507a6af8ad7145c4c64ba1e3f657eaef",
+        "sha256:da4601889d6aca506365170cc0df333ec90d9b7b83df34f6b95ce9fd0a0f2bbf",
+        "sha256:ec021fdb5b08fccab01bdbd207f07a37f03f9bca24c45d9cdf0f1b21517893e9",
+        "sha256:f2515ffd1d20f20e8584a6904b567382703ff1efb7443e76906b95271e2d5134",
+        "sha256:f6a4eb49632764ce6758811fcb9c029571886ac52a4a4996104819809858d487",
+        "sha256:fa47888093c66b9ed00e7df4033bdcce12535f992ead0237f36d48642102c0ad",
+        "sha256:fe4c6b3bcaa66d562379683762d5839f5ae3e32538db457c97ce550931fb52c0"
+      ],
+      "module": {
+        "name": "SpineBinarySkinsHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineBinarySkinsHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_binary_skins_handler.hpp",
+      "rule": "cpp-contextual-union-interface-heritage-carrier-unrepresented",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryAnimationsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryTimelineHandlers.ts"
+      ],
+      "module": {
+        "name": "SpineBinarySlotTimelineHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineBinarySlotTimelineHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_binary_slot_timeline_handler.hpp",
+      "refusedDependencies": [
+        "@flighthq/animation/packages/animation/src/animationClip.ts",
+        "@flighthq/animation/packages/animation/src/animationTrack.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryBoneTimelineHandler.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "consumers": [
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryParse.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySectionHandlers.ts"
+      ],
+      "module": {
+        "name": "SpineBinarySlotsHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineBinarySlotsHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_binary_slots_handler.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryParse.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySectionHandlers.ts"
+      ],
+      "module": {
+        "name": "SpineBinaryStubHandlers",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineBinaryStubHandlers.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_binary_stub_handlers.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryAnimationsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryTimelineHandlers.ts"
+      ],
+      "module": {
+        "name": "SpineBinaryStubTimelineHandlers",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineBinaryStubTimelineHandlers.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_binary_stub_timeline_handlers.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryHandlers.ts"
       ],
       "module": {
@@ -35121,13 +35616,16 @@
       },
       "path": "flight/skeleton2d_formats/spine_binary_timeline_handlers.hpp",
       "refusedDependencies": [
-        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryParse.ts"
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryBoneTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySlotTimelineHandler.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "consumers": [
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinarySectionCounts.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryVersioned.ts"
       ],
       "module": {
@@ -35139,15 +35637,9 @@
       "status": "emitted"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:095a880a2b5e164360f5361604126bca4a734eb84cfb28b09b223aa23cb03295",
-        "sha256:8f04159bbd07495069e4e3cd027259486e96ebd0a6887724de7de20b6a6d3eb9",
-        "sha256:93f3c1433369bc1c9022806aa51e044cc72ed4020f99f63da62dd781fb590cfd",
-        "sha256:e8eabcc514649ef161ed5fdb828979962d24cc8cf8abeb934786c185a791e551"
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts"
       ],
       "module": {
         "name": "SpineBinaryVersioned",
@@ -35155,12 +35647,13 @@
         "source": "packages/skeleton2d-formats/src/spineBinaryVersioned.ts"
       },
       "path": "flight/skeleton2d_formats/spine_binary_versioned.hpp",
-      "rule": "cpp-contextual-union-missing-expression-type:multiVariant",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [
-        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryParse.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineBinaryDrawOrderTimelineHandler.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineParse.ts"
       ],
       "module": {
@@ -35172,45 +35665,299 @@
       "status": "emitted"
     },
     {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSectionHandlers.ts"
+      ],
+      "module": {
+        "name": "SpineJsonAnimationsHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineJsonAnimationsHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_json_animations_handler.hpp",
+      "refusedDependencies": [
+        "@flighthq/animation/packages/animation/src/animationClip.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
       "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
-        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeletonDetect.ts"
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonTimelineHandlers.ts"
       ],
       "declarationFingerprints": [
-        "sha256:0a847c5a1f46200c56b5b60203b282c6d994830274b8a1ca1c2aa8f746f07fbf",
+        "sha256:46eb42a2ac065ec9e56ff0a41181294b39c71576f3769397dcf8bab364c32549",
+        "sha256:726bca1063a086030ce6bad0eb20eb3d0e69554e71effa433f2c5619f1f39941",
+        "sha256:9db26feb5e3ae1792557f5246abdfe0e120edfed9046de8477467c245c0a415d",
+        "sha256:ac93d6ddd2b17cbb404a7479c10b6c991daeecd17f993eac7e8d1c6e9970cff0"
+      ],
+      "module": {
+        "name": "SpineJsonBoneTimelineHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineJsonBoneTimelineHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_json_bone_timeline_handler.hpp",
+      "rule": "cpp-presence-test-without-absence-storage",
+      "status": "refused-placeholder"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSectionHandlers.ts"
+      ],
+      "declarationFingerprints": [
         "sha256:0fa1f40906cbe0d13f5e86f2fdf85cdfc292e38d8a498294467654420f100cc0",
         "sha256:1ea807b2f7378e76d46540d9e8b6d00210cc8bf18b48529e40c7299f0ff4a7f3",
-        "sha256:2aed47e2febf673dd135e0866fe2b37a199ec1bb9e35eccbd5626811f187a764",
-        "sha256:2c57291d5d9069b4dbac0d66ae4c162e1f518f2466e41e9b387b2d408feb9b5f",
-        "sha256:306bebd1c4f87ef983be813ad18f56c88457b5a4e5f66b50c34767184dec5010",
-        "sha256:4601324993b85747133160633378afa7de78d9ff33098d04c02ef09369024c60",
-        "sha256:46382d44e0f4d2572eb519f1145005d3eb6ffd6daf3d78091c591554077e6f09",
         "sha256:4832bbb94eb18ea709bc58d45b1ea3d5847e628c89018110fd070f28ef3f1efd",
-        "sha256:4990c45d95b1fb088670f44878e3cd684de1a23932628b6447c45b59b0c020d3",
-        "sha256:499a650636b3fc680ff29737b5a880fbe8c91bc8a7d7a8268c73cddad752bf4d",
-        "sha256:5be1220da579d82f32de5c9c689c89388576566abcc3a8749dec67c356bace6f",
+        "sha256:d1ba71807c9ccabdefaf721e69ba621359abbc1aebaf47e5c90ec186039d5f40",
+        "sha256:e4bbe8a8b679dfab9b9e9bdf24fef197781a15bcb3bdaa77c5a6fab151d1c5d0"
+      ],
+      "module": {
+        "name": "SpineJsonBonesHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineJsonBonesHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_json_bones_handler.hpp",
+      "rule": "cpp-presence-test-without-absence-storage",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonTimelineHandlers.ts"
+      ],
+      "module": {
+        "name": "SpineJsonDrawOrderTimelineHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_json_draw_order_timeline_handler.hpp",
+      "refusedDependencies": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineParse.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeletonDetect.ts"
+      ],
+      "module": {
+        "name": "SpineJsonFull",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineJsonFull.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_json_full.hpp",
+      "refusedDependencies": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineParse.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonFull.ts"
+      ],
+      "module": {
+        "name": "SpineJsonHandlers",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineJsonHandlers.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_json_handlers.hpp",
+      "refusedDependencies": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSectionHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonTimelineHandlers.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonAnimationsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonFull.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSectionHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonTimelineHandlers.ts"
+      ],
+      "module": {
+        "name": "SpineJsonRegistry",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineJsonRegistry.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_json_registry.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts"
+      ],
+      "module": {
+        "name": "SpineJsonRequirements",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineJsonRequirements.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_json_requirements.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonRequirements.ts"
+      ],
+      "module": {
+        "name": "SpineJsonSectionCounts",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineJsonSectionCounts.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_json_section_counts.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonHandlers.ts"
+      ],
+      "module": {
+        "name": "SpineJsonSectionHandlers",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineJsonSectionHandlers.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_json_section_handlers.hpp",
+      "refusedDependencies": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonAnimationsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonBonesHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSkinsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSectionHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:0153097e5936923972554929f07ab03e5cae60dafeea92e0a853c59ed15161fe",
+        "sha256:46382d44e0f4d2572eb519f1145005d3eb6ffd6daf3d78091c591554077e6f09",
         "sha256:62d2eb0da5a4ca63fc176ea070c5b86aac2aa6df5064c019a56cae93d6a294d9",
-        "sha256:64d64a4e854688ce9346a86a66f0bee33e639b05cb7c9dbd8b685738caa0b31a",
-        "sha256:6ebb1c98d5187689f8686f7a97e819771a704b44ba9662d74da3e5cf97c06b4f",
-        "sha256:7216d715284f827d3a1bb3c2ac082ffbb77e31f993fe6049fc303dc9c98e00fd",
-        "sha256:726bca1063a086030ce6bad0eb20eb3d0e69554e71effa433f2c5619f1f39941",
         "sha256:7afa5dee81b6b9c8c1900a3d153f528038bb340a43bdfa5d160d026830855d6a",
-        "sha256:85a19d2d2850123fb0c33abebab26d050f14f6d54ba8bc850c0fd9999abd3f1d",
         "sha256:87ee9918e414825443bb458706ea4ec5a3d4b8b5b74a3272f718c8c97eaab566",
-        "sha256:8b8d72abe19606a471feaf0415eaf8e3421fe3ebfb20b4a7f26a3fbe6f4fb238",
-        "sha256:931bbd34389eaf5b95d121c4146e8c92459e8f6dbe86ed86fbb6e72764c24ff4",
         "sha256:9ae102b59262b16628a32cdd8aee8342201f2baa464b2075a79fe5d458a42996",
         "sha256:a1c135536e512df1220417e32c30551ecc2667a2cf5b80a21b72b99b1d65e143",
         "sha256:a3830afd8d4bf86b996c44522a11adc189979c8c53440f8ddd4e082f4ad6f7e4",
-        "sha256:ac93d6ddd2b17cbb404a7479c10b6c991daeecd17f993eac7e8d1c6e9970cff0",
-        "sha256:acc9e2f9658f31fc864445cd7422b765465c3dd0a70ece7a5858c0f8def2b65f",
-        "sha256:b3b679c0e816709d908976f7c262015a06a7836cb07e099ace61cfd2305309b8",
-        "sha256:d14e618abf127fb307af9fd988ecc4b28a3ec68b81518cce00af3f609c1075db",
-        "sha256:d25c835f535edf536f3cb959201496c3af346e6150dca93e36d33770873f5f4f",
-        "sha256:d74be003d896dba55b76af6118c87e43d8d52dfa38615895d08f31e46cbdcda0",
         "sha256:de4bc87ed92f4bafc53f6434d2078af60c079ace67459ec5a010aba9663ae59c",
+        "sha256:e7a85bdc2d2da70bdda3f0238f1938329d6ded542cab40c9720f7ea56e777807",
         "sha256:f6a4eb49632764ce6758811fcb9c029571886ac52a4a4996104819809858d487"
+      ],
+      "module": {
+        "name": "SpineJsonSkinsHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineJsonSkinsHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_json_skins_handler.hpp",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonTimelineHandlers.ts"
+      ],
+      "module": {
+        "name": "SpineJsonSlotTimelineHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineJsonSlotTimelineHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_json_slot_timeline_handler.hpp",
+      "refusedDependencies": [
+        "@flighthq/animation/packages/animation/src/animationClip.ts",
+        "@flighthq/animation/packages/animation/src/animationTrack.ts",
+        "@flighthq/skeleton2d/packages/skeleton2d/src/skeleton2dAnimationTarget.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSectionHandlers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:0a847c5a1f46200c56b5b60203b282c6d994830274b8a1ca1c2aa8f746f07fbf",
+        "sha256:4f832b1222b5f8e2bf412ce1ad6cdf41b1e498fc950f5371dc79231027d59e95",
+        "sha256:6759cd3801d6f65651baef8fdf5e0d5644a6aa942791baa4d585075ae94ae107"
+      ],
+      "module": {
+        "name": "SpineJsonSlotsHandler",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_json_slots_handler.hpp",
+      "rule": "cpp-presence-test-without-absence-storage",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSectionHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonTimelineHandlers.ts"
+      ],
+      "module": {
+        "name": "SpineJsonStubHandlers",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineJsonStubHandlers.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_json_stub_handlers.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonHandlers.ts"
+      ],
+      "module": {
+        "name": "SpineJsonTimelineHandlers",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineJsonTimelineHandlers.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_json_timeline_handlers.hpp",
+      "refusedDependencies": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonBoneTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSlotTimelineHandler.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonDrawOrderTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonFull.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:017709efdf4a01070fb709a17014f33ffab0995ca73433c315d15fb94cb70332",
+        "sha256:5a38a66af80620282a26dbfddd462d7d70a87f76eda30abfe1043080454b408b",
+        "sha256:85a19d2d2850123fb0c33abebab26d050f14f6d54ba8bc850c0fd9999abd3f1d",
+        "sha256:d25c835f535edf536f3cb959201496c3af346e6150dca93e36d33770873f5f4f"
       ],
       "module": {
         "name": "SpineParse",
@@ -35220,6 +35967,26 @@
       "path": "flight/skeleton2d_formats/spine_parse.hpp",
       "rule": "cpp-presence-test-without-absence-storage",
       "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/contract.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/index.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonBoneTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonBonesHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSkinsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSlotTimelineHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonSlotsHandler.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineJsonStubHandlers.ts",
+        "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/spineParse.ts"
+      ],
+      "module": {
+        "name": "SpineParseHelpers",
+        "packageName": "@flighthq/skeleton2d-formats",
+        "source": "packages/skeleton2d-formats/src/spineParseHelpers.ts"
+      },
+      "path": "flight/skeleton2d_formats/spine_parse_helpers.hpp",
+      "status": "emitted"
     },
     {
       "consumers": [],
