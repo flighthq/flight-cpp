@@ -3184,7 +3184,7 @@
       "code": "dependency-refused",
       "module": "packages/particles-formats/src/contract.ts",
       "package": "@flighthq/particles-formats",
-      "reason": "dependency ./particleDesignerParse.ts was refused for @flighthq/particles-formats/packages/particles-formats/src/particleDesignerParse.ts",
+      "reason": "dependency ./registerBuiltInParticleFormats.ts was refused for @flighthq/particles-formats/packages/particles-formats/src/registerBuiltInParticleFormats.ts",
       "stage": "dependency"
     },
     {
@@ -3193,15 +3193,6 @@
       "package": "@flighthq/particles-formats",
       "reason": "dependency ./contract.ts was refused for @flighthq/particles-formats/packages/particles-formats/src/contract.ts",
       "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 15,
-      "module": "packages/particles-formats/src/particleDesignerParse.ts",
-      "package": "@flighthq/particles-formats",
-      "reason": "cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/particleDesignerParse.ts: imported type ParticleDesignerRawDict names an ambient type this runtime profile does not bind, so the target has no representation for it. Add the binding to the runtime contract, or declare the value with a type the target provides.",
-      "stage": "emission"
     },
     {
       "code": "unsupported-ir",
@@ -3219,24 +3210,6 @@
       "module": "packages/particles-formats/src/spineParse.ts",
       "package": "@flighthq/particles-formats",
       "reason": "cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/spineParse.ts: typeof follows an indexed read whose receiver is still flight::Any after source narrowing, but flight::Any has no array alternative or checked exact-array extraction for the guarded value. Keep the value in its exact array type before the erased boundary, or add the array carrier, predicate, and identity-preserving extraction to the runtime; the compiler will not reinterpret the erased value, cast it, or materialize a replacement array",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 82,
-      "module": "packages/particles-formats/src/spineSerialize.ts",
-      "package": "@flighthq/particles-formats",
-      "reason": "cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/spineSerialize.ts: narrowed C++ union projection requires proven present payload: the narrowing still admits absence, so nothing proved the payload present and reading the value alternative here would unpack storage that may still be holding the sentinel the test left reachable. Test both at once with `x != null`, or narrow the value into a present local the same way",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 66,
-      "module": "packages/particles-formats/src/starlingPexSerialize.ts",
-      "package": "@flighthq/particles-formats",
-      "reason": "cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/starlingPexSerialize.ts: narrowed C++ union projection requires proven present payload: the narrowing still admits absence, so nothing proved the payload present and reading the value alternative here would unpack storage that may still be holding the sentinel the test left reachable. Test both at once with `x != null`, or narrow the value into a present local the same way",
       "stage": "emission"
     },
     {

@@ -111,3 +111,32 @@ Two facts about this site worth recording against the request rather than agains
 - the emitter's fix direction is a source spelling that its own message supplies. Where the union really
   is `| null` only, taking that spelling is a semantics-preserving one-line source change; where an
   `undefined` arm exists it is not, and the three-state carrier this request asks for is the only fix.
+
+## A third site: equality with a literal (measured)
+
+The same refusal fires when a `T | null` value is compared with a string literal and nothing tests presence
+first. Equality with a present literal is itself the proof: `mode === 'add'` can only be true when `mode`
+holds a string. Measured at flight-compiler `2b687ea` with all 44 compiler source patches applied: both
+reductions below are refused with the message above. The guarded spellings emit, and the first compiles.
+
+```ts
+export type Mode = 'add' | 'normal' | 'multiply';
+export function toDocMode(mode: Mode | null): 'additive' | 'normal' | 'multiply' | null {
+  if (mode === 'add') return 'additive';      // refused
+  if (mode === 'multiply') return 'multiply';
+  if (mode === 'normal') return 'normal';
+  return null;
+}
+
+export function toPex(config: Readonly<{ blendMode: 'add' | 'normal' | null }>, existing: Partial<{ src: number; dst: number }>) {
+  const blendMode = config.blendMode;
+  const src = blendMode === 'add' ? 770 : (existing.src ?? 770);   // refused
+  const dst = blendMode === 'add' ? 1 : blendMode === 'normal' ? 771 : (existing.dst ?? 771);
+  return { src, dst };
+}
+```
+
+The emitter should lower `x === 'lit'` over a nullable carrier as "present and equal", which is what
+`x !== null && x === 'lit'` already emits. Affected: `@flighthq/particles-formats` `spineSerialize.ts`
+(`configToSpineBlendMode`) and `starlingPexSerialize.ts` (`configToDocument`). They are carried by the
+`particles-formats-spine-blend-mode-present` and `particles-formats-pex-blend-mode-present` source patches.

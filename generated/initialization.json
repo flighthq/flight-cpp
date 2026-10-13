@@ -2346,6 +2346,11 @@
       "source": "packages/particles-formats/src/parseParticleConfig.ts"
     },
     {
+      "name": "ParticleDesignerParse",
+      "packageName": "@flighthq/particles-formats",
+      "source": "packages/particles-formats/src/particleDesignerParse.ts"
+    },
+    {
       "name": "ParticleDesignerSerialize",
       "packageName": "@flighthq/particles-formats",
       "source": "packages/particles-formats/src/particleDesignerSerialize.ts"
@@ -2361,9 +2366,19 @@
       "source": "packages/particles-formats/src/pixiParse.ts"
     },
     {
+      "name": "SpineSerialize",
+      "packageName": "@flighthq/particles-formats",
+      "source": "packages/particles-formats/src/spineSerialize.ts"
+    },
+    {
       "name": "StarlingPexParse",
       "packageName": "@flighthq/particles-formats",
       "source": "packages/particles-formats/src/starlingPexParse.ts"
+    },
+    {
+      "name": "StarlingPexSerialize",
+      "packageName": "@flighthq/particles-formats",
+      "source": "packages/particles-formats/src/starlingPexSerialize.ts"
     },
     {
       "name": "UnitySerialize",
@@ -24651,6 +24666,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "ParticleDesignerParse",
+          "packageName": "@flighthq/particles-formats",
+          "source": "packages/particles-formats/src/particleDesignerParse.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "UpdateParticleObjects",
           "packageName": "@flighthq/particles",
           "source": "packages/particles/src/updateParticleObjects.ts"
@@ -24681,9 +24706,29 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "SpineSerialize",
+          "packageName": "@flighthq/particles-formats",
+          "source": "packages/particles-formats/src/spineSerialize.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "FormatRegistry",
           "packageName": "@flighthq/particles-formats",
           "source": "packages/particles-formats/src/formatRegistry.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "StarlingPexSerialize",
+          "packageName": "@flighthq/particles-formats",
+          "source": "packages/particles-formats/src/starlingPexSerialize.ts"
         }
       ]
     },
@@ -245016,6 +245061,367 @@
       "steps": []
     },
     {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ccdcca3573966df731afc28dd8f60c480f924d7d3672e3719cfe7834c97af20f",
+            "line": 1,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/particleDesignerParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerParse.ts\",9]",
+            "kind": "import",
+            "name": "reportImportDiagnostic",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "reportImportDiagnostic",
+            "kind": "dependency",
+            "module": {
+              "name": "ImportDiagnosticCollector",
+              "packageName": "@flighthq/importdiagnostics",
+              "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:9297ab84587f4b5413e65a55a7dacc75024a9110900c90c78222c62eaad5b8c3",
+            "line": 2,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/particleDesignerParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerParse.ts\",88]",
+            "kind": "import",
+            "name": "DEG_TO_RAD",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "DEG_TO_RAD",
+            "kind": "dependency",
+            "module": {
+              "name": "Constants",
+              "packageName": "@flighthq/math",
+              "source": "packages/math/src/constants.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e16302f414831e40aaf112b35484a5290110e093ad12cf81697523be95d413df",
+            "line": 3,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/particleDesignerParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerParse.ts\",142]",
+            "kind": "import",
+            "name": "createParticleEmitterConfig",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createParticleEmitterConfig",
+            "kind": "dependency",
+            "module": {
+              "name": "ParticleEmitterConfig",
+              "packageName": "@flighthq/particles",
+              "source": "packages/particles/src/particleEmitterConfig.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:4ed29d9b9c788211ee983240067a7fabe2c29c3555a536a2250a5c90c9f8e21b",
+            "line": 12,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/particleDesignerParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerParse.ts\",424]",
+            "kind": "import",
+            "name": "ImportDiagnosticSeverity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "ImportDiagnosticSeverity",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8bb46ec47c6e9c44440b4b68bc44dee64bfea4152fd54ea8973f313f09bc87f0",
+            "line": 17,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/particleDesignerParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerParse.ts\",645]",
+            "kind": "function",
+            "name": "parsePlistRawDict",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:07b7f1261f4d170fe6df3068324e3fadd338a1a47e37eb586edb823886296605",
+            "line": 55,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/particleDesignerParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerParse.ts\",2140]",
+            "kind": "function",
+            "name": "unescapeXml",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:66e248bfc71bb36ec4b2816d5bd3c9f1c02bf8c3bf5f54d7c78cd49959d7c824",
+            "line": 64,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/particleDesignerParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerParse.ts\",2337]",
+            "kind": "function",
+            "name": "num",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ca32eb31168c4fa53fc874a86260b27779bd551967f4c3593cb1e24b9ec7c52b",
+            "line": 70,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/particleDesignerParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerParse.ts\",2650]",
+            "kind": "function",
+            "name": "str",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8bac65403459bc16e6ceab22329bc8892cbe946ffa6bbf6635ecc4737114ce4b",
+            "line": 75,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/particleDesignerParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerParse.ts\",2789]",
+            "kind": "function",
+            "name": "rawDictToConfig",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:79f6dc47f01fd6d5ed763e9706a8f9c6319250ebb002a257264d13a8b45e71db",
+            "line": 138,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/particleDesignerParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerParse.ts\",5885]",
+            "kind": "function",
+            "name": "pdBlendMode",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:c5e53950df17b69f8a0cbff19a9ae9a8d47e65e5d2189c6e373a02bcbd47ef60",
+            "line": 150,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/particleDesignerParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerParse.ts\",6475]",
+            "kind": "function",
+            "name": "parseParticleDesignerPlist",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:cec899ef12ba953f7e969d4240ab01fb1a40f0160bf7877dc1328e2e04c68e21",
+            "line": 160,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/particleDesignerParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerParse.ts\",6947]",
+            "kind": "function",
+            "name": "collectParticleDesignerDiagnostics",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:a1b0310d6c64c1fa8d1e2dd5b61a8fbbd1dcdd8316257301576f10ef4d89c72a",
+            "line": 209,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/particleDesignerParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerParse.ts\",8834]",
+            "kind": "function",
+            "name": "parseParticleDesignerPlistDocument",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ParticleDesignerParse",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/particleDesignerParse.ts"
+          },
+          "specifier": "@flighthq/importdiagnostics/contract",
+          "target": {
+            "name": "ImportDiagnosticCollector",
+            "packageName": "@flighthq/importdiagnostics",
+            "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ParticleDesignerParse",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/particleDesignerParse.ts"
+          },
+          "specifier": "@flighthq/math/contract",
+          "target": {
+            "name": "Constants",
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/constants.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ParticleDesignerParse",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/particleDesignerParse.ts"
+          },
+          "specifier": "@flighthq/particles/contract",
+          "target": {
+            "name": "ParticleEmitterConfig",
+            "packageName": "@flighthq/particles",
+            "source": "packages/particles/src/particleEmitterConfig.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ParticleDesignerParse",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/particleDesignerParse.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "ParticleDesignerParse",
+        "packageName": "@flighthq/particles-formats",
+        "source": "packages/particles-formats/src/particleDesignerParse.ts"
+      },
+      "steps": []
+    },
+    {
       "bindings": [],
       "dependencies": [
         {
@@ -320612,6 +321018,326 @@
       "steps": []
     },
     {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:67a8b2b1d6111f2c0b9edfddc14a81dcf885f7e0fd13fd266d8259c03f3eeb33",
+            "line": 1,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineSerialize.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineSerialize.ts\",9]",
+            "kind": "import",
+            "name": "RAD_TO_DEG",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "RAD_TO_DEG",
+            "kind": "dependency",
+            "module": {
+              "name": "Constants",
+              "packageName": "@flighthq/math",
+              "source": "packages/math/src/constants.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:5c1f31e19fa57f8f5b3a3dce622e87f0806c2ddb9b485af94888605132b8ef52",
+            "line": 2,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineSerialize.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineSerialize.ts\",63]",
+            "kind": "import",
+            "name": "particleColorCurveToKeyframes",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "particleColorCurveToKeyframes",
+            "kind": "dependency",
+            "module": {
+              "name": "Curve",
+              "packageName": "@flighthq/particles",
+              "source": "packages/particles/src/curve.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 41,
+            "fingerprint": "sha256:41adc9611bdab64301427f66a6172f2d3e93ffee95cb3294a2b7572b2ddb7db0",
+            "line": 2,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineSerialize.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineSerialize.ts\",94]",
+            "kind": "import",
+            "name": "particleCurveToKeyframes",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "particleCurveToKeyframes",
+            "kind": "dependency",
+            "module": {
+              "name": "Curve",
+              "packageName": "@flighthq/particles",
+              "source": "packages/particles/src/curve.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e64a147f45c63be149e27ccc02c27272646b904376d1f770fbf4c6f8e41c658f",
+            "line": 12,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineSerialize.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineSerialize.ts\",358]",
+            "kind": "function",
+            "name": "rgbToHex",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:3353482e903c06e8cf0e67584aaadec225793c65868114053ff533a0f3f62c9f",
+            "line": 20,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineSerialize.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineSerialize.ts\",590]",
+            "kind": "function",
+            "name": "configToDocument",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:879089b2804b6492f173eced88973ec0e59b37dffef46c67eea1573092ccc144",
+            "line": 82,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineSerialize.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineSerialize.ts\",3581]",
+            "kind": "function",
+            "name": "configToSpineBlendMode",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:ccaeca80c843cb9e03bb0b2f1d726d32ab65524d80c26ff600274f98cf4df5b1",
+            "line": 95,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineSerialize.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineSerialize.ts\",4163]",
+            "kind": "function",
+            "name": "serializeSpineParticle",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:5df7badb6f7ca1cf2814824f2d0cc42262390199130d3f95e865c431c0cf28c5",
+            "line": 109,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineSerialize.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineSerialize.ts\",4717]",
+            "kind": "function",
+            "name": "serializeSpineParticleDocument",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:794236138323345b5ec5a40e40cb9f05ab77d63945096900b27f018decca6ea0",
+            "line": 118,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineSerialize.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/spineSerialize.ts\",5022]",
+            "kind": "function",
+            "name": "collectSpineSerializeWarnings",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SpineSerialize",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineSerialize.ts"
+          },
+          "specifier": "@flighthq/math/contract",
+          "target": {
+            "name": "Constants",
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/constants.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "SpineSerialize",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineSerialize.ts"
+          },
+          "specifier": "@flighthq/particles/contract",
+          "target": {
+            "name": "Curve",
+            "packageName": "@flighthq/particles",
+            "source": "packages/particles/src/curve.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SpineSerialize",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineSerialize.ts"
+          },
+          "importedNames": [
+            "ColorKeyframe",
+            "CurveKeyframe",
+            "ParticleCurve"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ParticleCurve",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ParticleCurve.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SpineSerialize",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineSerialize.ts"
+          },
+          "importedNames": [
+            "ParticleBlendMode",
+            "ParticleEmitterConfig",
+            "ParticleEmitterShape"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ParticleEmitterConfig",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ParticleEmitterConfig.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SpineSerialize",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineSerialize.ts"
+          },
+          "importedNames": [
+            "ParticleSerializeResult"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ParticleSerializeResult",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ParticleSerializeResult.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "SpineSerialize",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/spineSerialize.ts"
+          },
+          "importedNames": [
+            "SpineAlphaKeyframe",
+            "SpineBlendMode",
+            "SpineParticleDocument",
+            "SpineRangeValue",
+            "SpineTintKeyframe"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "SpineParticleSchema",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/SpineParticleSchema.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "SpineSerialize",
+        "packageName": "@flighthq/particles-formats",
+        "source": "packages/particles-formats/src/spineSerialize.ts"
+      },
+      "steps": []
+    },
+    {
       "bindings": [],
       "dependencies": [
         {
@@ -326258,6 +326984,298 @@
         "name": "SsrEffect",
         "packageName": "@flighthq/effects",
         "source": "packages/effects/src/ssrEffect.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:67a8b2b1d6111f2c0b9edfddc14a81dcf885f7e0fd13fd266d8259c03f3eeb33",
+            "line": 1,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/starlingPexSerialize.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexSerialize.ts\",9]",
+            "kind": "import",
+            "name": "RAD_TO_DEG",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "RAD_TO_DEG",
+            "kind": "dependency",
+            "module": {
+              "name": "Constants",
+              "packageName": "@flighthq/math",
+              "source": "packages/math/src/constants.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:a4f681a005caee14ae80040d2b82f1700abeda2d92df915201b0b8ea36a1ec78",
+            "line": 16,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/starlingPexSerialize.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexSerialize.ts\",536]",
+            "kind": "function",
+            "name": "serializeStarlingPex",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:90178dc0ae57d1fee4369621753409be6fe0748ebba3bc1de7728c5391510152",
+            "line": 29,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/starlingPexSerialize.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexSerialize.ts\",1046]",
+            "kind": "function",
+            "name": "serializeStarlingPexDocument",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:819ff081e248995103ca2eaa2b875fb7cb196311953f55244b1e27b24acfb636",
+            "line": 39,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/starlingPexSerialize.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexSerialize.ts\",1401]",
+            "kind": "function",
+            "name": "collectStarlingPexSerializeWarnings",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:537ab22157b2a52a54242569538c0a6474a7649c9191529dbf5f5bf8a2fe5ca1",
+            "line": 62,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/starlingPexSerialize.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexSerialize.ts\",2490]",
+            "kind": "function",
+            "name": "colorAttr",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:3353482e903c06e8cf0e67584aaadec225793c65868114053ff533a0f3f62c9f",
+            "line": 66,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/starlingPexSerialize.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexSerialize.ts\",2679]",
+            "kind": "function",
+            "name": "configToDocument",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8543344b51627057d4504280ab8436087b9f7d39587bcee39b6e827208bd674f",
+            "line": 156,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/starlingPexSerialize.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexSerialize.ts\",6856]",
+            "kind": "function",
+            "name": "documentToXml",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:f7224db4a172d0de4be3a4ed49cd677752abe7ac3435bf7dee4c8287717c301f",
+            "line": 205,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/starlingPexSerialize.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexSerialize.ts\",9312]",
+            "kind": "function",
+            "name": "escapeXml",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:60a4bc9e75c7ae090dfff6e133565feb7564c2c81a493cc87e37fee0773f6741",
+            "line": 209,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/starlingPexSerialize.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexSerialize.ts\",9434]",
+            "kind": "function",
+            "name": "numAttr",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "StarlingPexSerialize",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/starlingPexSerialize.ts"
+          },
+          "specifier": "@flighthq/math/contract",
+          "target": {
+            "name": "Constants",
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/constants.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "StarlingPexSerialize",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/starlingPexSerialize.ts"
+          },
+          "importedNames": [
+            "ParticleCurve"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ParticleCurve",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ParticleCurve.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "StarlingPexSerialize",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/starlingPexSerialize.ts"
+          },
+          "importedNames": [
+            "ParticleBlendMode",
+            "ParticleEmitterConfig",
+            "ParticleEmitterShape"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ParticleEmitterConfig",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ParticleEmitterConfig.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "StarlingPexSerialize",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/starlingPexSerialize.ts"
+          },
+          "importedNames": [
+            "ParticleSerializeResult"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ParticleSerializeResult",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ParticleSerializeResult.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "StarlingPexSerialize",
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/starlingPexSerialize.ts"
+          },
+          "importedNames": [
+            "StarlingPexColor",
+            "StarlingPexDocument",
+            "StarlingPexSerializeOptions"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "StarlingPexSchema",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/StarlingPexSchema.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "StarlingPexSerialize",
+        "packageName": "@flighthq/particles-formats",
+        "source": "packages/particles-formats/src/starlingPexSerialize.ts"
       },
       "steps": []
     },

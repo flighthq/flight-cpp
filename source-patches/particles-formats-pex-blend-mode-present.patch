@@ -1,0 +1,17 @@
+diff --git a/packages/particles-formats/src/starlingPexSerialize.ts b/packages/particles-formats/src/starlingPexSerialize.ts
+index 7069c65..2104442 100644
+--- a/packages/particles-formats/src/starlingPexSerialize.ts
++++ b/packages/particles-formats/src/starlingPexSerialize.ts
+@@ -87,8 +87,10 @@ function configToDocument(
+     vy = config.emitterHeight * 0.5;
+   }
+   const blendMode = config.blendMode;
+-  const src = blendMode === 'add' ? 770 : (existing.blendFuncSource ?? 770);
+-  const dst = blendMode === 'add' ? 1 : blendMode === 'normal' ? 771 : (existing.blendFuncDestination ?? 771);
++  const isAdd = blendMode !== null && blendMode === 'add';
++  const isNormal = blendMode !== null && blendMode === 'normal';
++  const src = isAdd ? 770 : (existing.blendFuncSource ?? 770);
++  const dst = isAdd ? 1 : isNormal ? 771 : (existing.blendFuncDestination ?? 771);
+   return {
+     maxParticles: config.maxParticles,
+     emitterType: existing.emitterType ?? 0,

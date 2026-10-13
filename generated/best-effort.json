@@ -16233,11 +16233,8 @@
       },
       "path": "flight/particles_formats/contract.hpp",
       "refusedDependencies": [
-        "@flighthq/particles-formats/packages/particles-formats/src/particleDesignerParse.ts",
         "@flighthq/particles-formats/packages/particles-formats/src/registerBuiltInParticleFormats.ts",
         "@flighthq/particles-formats/packages/particles-formats/src/spineParse.ts",
-        "@flighthq/particles-formats/packages/particles-formats/src/spineSerialize.ts",
-        "@flighthq/particles-formats/packages/particles-formats/src/starlingPexSerialize.ts",
         "@flighthq/particles-formats/packages/particles-formats/src/unityParse.ts"
       ],
       "status": "dependency-incomplete"
@@ -16322,21 +16319,9 @@
       "status": "emitted"
     },
     {
-      "classification": "target-runtime",
       "consumers": [
         "@flighthq/particles-formats/packages/particles-formats/src/contract.ts",
         "@flighthq/particles-formats/packages/particles-formats/src/registerBuiltInParticleFormats.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:00f137059a7d12921d4bf6736bf13b2d505ad287f7b572a6b11660189965b820",
-        "sha256:03d45a3cc984c3449cf1bc375877baf055841fc5cb59916ace784e8cc4295763",
-        "sha256:3d68deb1b72b82479457efb07b5a97509c8dbe11c9f72e7a5b9cec2c7b680d6e",
-        "sha256:5f7ba9a579c3c433fe20a12f88cf5cc6fc514dc7e27cb9b414a9282c858c663d",
-        "sha256:e87c57d6bde2f4137d378e7d9f191471de46b0791a5071c693e9993ee75d3433",
-        "sha256:e9b15f0920539fb57daef8d5f2e1f186f45c35ea4aded5e97300bd664256ab14",
-        "sha256:ea78ea7f5dce167eac30fe3bc6ccf613af5cf168a4f1bd5f1379ec6ae6ebc001",
-        "sha256:f6e9fd34f8f8eb51cf6945cf4a597dfd3a26e51187ec6ba22322b37cba07ba14",
-        "sha256:fe7a464fe7eb77882c9e388e3dbd10dcebb15539af6b3bd78c2e7d0090173ac9"
       ],
       "module": {
         "name": "ParticleDesignerParse",
@@ -16344,8 +16329,7 @@
         "source": "packages/particles-formats/src/particleDesignerParse.ts"
       },
       "path": "flight/particles_formats/particle_designer_parse.hpp",
-      "rule": "cpp-imported-type-unsupported:unsupportedAmbientReference",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -16460,18 +16444,9 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/particles-formats/packages/particles-formats/src/contract.ts",
         "@flighthq/particles-formats/packages/particles-formats/src/registerBuiltInParticleFormats.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:015a5053ece90af6833652ed456500f4854e9b4384458a9cf57e0dd3e2ce321f",
-        "sha256:1e4e60651ef698d249fb3a192e111c01d091540ebc7b191d40d5669821b42e91",
-        "sha256:2fbbb80f49a3772955801df418340cfa2b1d98bfba07b86ed627c6f5c9cb1c3a",
-        "sha256:64ea16942c80493575d3dd4cf63a7f988fb34ef68b1fb9f81dea359ec38973d3",
-        "sha256:bc468b6126958541e87e09cb275e456862147b92b81f7dce6047307626cebc88",
-        "sha256:f6ffa28efffec93b3e370ad72cd9f3e482cd5ae4d5f99c68eef66987b155a959"
       ],
       "module": {
         "name": "SpineSerialize",
@@ -16479,8 +16454,7 @@
         "source": "packages/particles-formats/src/spineSerialize.ts"
       },
       "path": "flight/particles_formats/spine_serialize.hpp",
-      "rule": "cpp-member-projection-without-present-storage",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -16496,20 +16470,9 @@
       "status": "emitted"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/particles-formats/packages/particles-formats/src/contract.ts",
         "@flighthq/particles-formats/packages/particles-formats/src/registerBuiltInParticleFormats.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:3dc202d18bd3a21059c27e6fa41b64e045c392b08ee5554992b2e6e967f93127",
-        "sha256:4b0efe918dbae67b7aff7b1e3a373f85d2405ae40975afbabee2a8005b717118",
-        "sha256:5b82396f95f81b7b72456634185f48ecd297bbd5d4339dcd8f3ca30208f4ebb8",
-        "sha256:ae0aa09e922aa4307c4fcf81e3a61c20869cb3e04fb13ce2af3f6dd3c01c3cd0",
-        "sha256:da6a5102bdcefd93482768ec2b750e8df23c70f0812a6bca5cb4336366624ef9",
-        "sha256:e7b6cc171649beddb6f7f5081739a90188d61c461daaac81d6f9102662fa210e",
-        "sha256:ec3b05f5fb1bb43d3add9efcda8328938bfe06dbde739ed6eacbb5a4cd8b5a28",
-        "sha256:fa9a853c643069e1987a9588cf3286cd501fcc6ef292520979212c15d3cdaaed"
       ],
       "module": {
         "name": "StarlingPexSerialize",
@@ -16517,8 +16480,7 @@
         "source": "packages/particles-formats/src/starlingPexSerialize.ts"
       },
       "path": "flight/particles_formats/starling_pex_serialize.hpp",
-      "rule": "cpp-member-projection-without-present-storage",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "classification": "target-runtime",

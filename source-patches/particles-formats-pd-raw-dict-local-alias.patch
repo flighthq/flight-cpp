@@ -1,0 +1,18 @@
+diff --git a/packages/particles-formats/src/particleDesignerParse.ts b/packages/particles-formats/src/particleDesignerParse.ts
+index 46023b7..a77da48 100644
+--- a/packages/particles-formats/src/particleDesignerParse.ts
++++ b/packages/particles-formats/src/particleDesignerParse.ts
+@@ -8,10 +8,12 @@ import type {
+   ParticleBlendMode,
+   ParticleEmitterConfig,
+   ParticleDesignerDocument,
+-  ParticleDesignerRawDict,
+ } from '@flighthq/types/contract';
+ import { ImportDiagnosticSeverity } from '@flighthq/types/contract';
+ 
++// The same declaration @flighthq/types exports as ParticleDesignerRawDict.
++type ParticleDesignerRawDict = Record<string, string | number | boolean>;
++
+ function parsePlistRawDict(xml: string): ParticleDesignerRawDict {
+   const result: ParticleDesignerRawDict = {};
+   const TAG_RE = /<(\/?)(\w+)([^>]*)>/g;
