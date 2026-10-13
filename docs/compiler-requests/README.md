@@ -69,6 +69,13 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 
 ## Active requests without a compiler patch
 
+- [A dynamic named read of a represented union must preserve its active arm](dynamic-named-read-of-represented-union.md) —
+  `@flighthq/materials` clone/equality enumerates `Material.name`, but the dynamic row layer rejects
+  its fully represented `String | null | undefined` carrier; carried by exact variant-arm `Any`
+  conversion in the runtime.
+- [Material clone and copy need the concrete generic owner](material-clone-needs-exact-generic-owner.md) —
+  base-owner allocation cannot receive a concrete material's dynamically enumerated fields; carried
+  by the materials exact-construction-owner source rewrite.
 - [`Array.isArray` must inspect an optional property's present payload](array-is-array-optional-property.md) —
   `@flighthq/adjustments` reads `Partial<ColorMatrixAdjustment>.colorMatrix` as an optional array,
   but the emitted predicate tests the optional carrier and always returns false; carried by the

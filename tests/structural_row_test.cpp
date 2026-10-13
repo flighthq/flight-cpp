@@ -278,6 +278,12 @@ struct TestUnrepresentedMember final : public flight::ReferenceEnabled {
   double height{};
 };
 
+// A source union whose alternatives all have exact erased language values. Material.name uses this
+// carrier, and cloneMaterial reaches it through the same dynamic named read/write path.
+struct TestRepresentedUnionMember final : public flight::ReferenceEnabled {
+  std::variant<flight::String, flight::Null, flight::Undefined> name;
+};
+
 // Asked as a template so the answer is a constraint rather than a hard error on a known type.
 template <typename View>
 concept writes_named_properties =
@@ -704,6 +710,23 @@ int main() {
     unrepresented_reported = reported.key() == "value";
   }
   check(unrepresented_reported, "reading it reports the property rather than inventing a value");
+
+  auto represented_union = flight::make_ref<TestRepresentedUnionMember>();
+  const auto represented_union_view = flight::named_properties(represented_union);
+  represented_union->name = flight::String("canopy");
+  check(represented_union_view.is_represented(flight::String("name")) &&
+            represented_union_view.get(flight::String("name")) ==
+                flight::Any(flight::String("canopy")),
+        "a dynamic read visits the active represented union arm");
+  check(represented_union_view.set(flight::String("name"), flight::Any(flight::null)) &&
+            std::holds_alternative<flight::Null>(represented_union->name),
+        "a dynamic write selects the exact null union arm");
+  check(represented_union_view.set(flight::String("name"), flight::Any()) &&
+            std::holds_alternative<flight::Undefined>(represented_union->name),
+        "a dynamic write preserves undefined separately from null");
+  check(!represented_union_view.set(flight::String("name"), flight::Any(1.0)) &&
+            std::holds_alternative<flight::Undefined>(represented_union->name),
+        "a dynamic write still refuses a value outside every union arm");
 
   // The same walk over a REAL generated type, so this is not only exercising hand-written fixtures:
   // AmbientLightOptions is emitted from AmbientLightOptions.ts, whose properties are declared

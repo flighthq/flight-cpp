@@ -590,6 +590,12 @@ template <typename Value>
 struct is_std_optional<std::optional<Value>> : std::true_type {};
 
 template <typename Value>
+struct is_std_variant : std::false_type {};
+
+template <typename... Values>
+struct is_std_variant<std::variant<Values...>> : std::true_type {};
+
+template <typename Value>
 struct is_shared_reference : std::false_type {};
 
 template <typename Value>
@@ -608,10 +614,11 @@ struct is_flight_array<Array<Value>> : std::true_type {};
 // primitive, an object reference, a callable, or an optional wrapping one of those -- an empty
 // optional reads as `undefined`, because that is what an absent TypeScript property is.
 //
-// Everything else returns nothing rather than an approximation. `flight::Array`, a structural row
-// and a variant are all objects in the source language, but none of them can be handed to `Any`
-// without inventing an identity or reinterpreting storage, and a dynamic read that quietly returned
-// the wrong object would be worse than one that reports it cannot answer.
+// A variant is represented exactly when its active arm is: it is source-language union storage, not
+// an object identity of its own. Everything else returns nothing rather than an approximation. A
+// structural row cannot be handed to `Any` without inventing an identity or reinterpreting storage,
+// and a dynamic read that quietly returned the wrong object would be worse than one that reports it
+// cannot answer.
 template <typename Value>
 [[nodiscard]] std::optional<Any> any_from(const Value& value) {
   using Stored = std::remove_cvref_t<Value>;
@@ -632,6 +639,9 @@ template <typename Value>
   } else if constexpr (is_std_optional<Stored>::value) {
     if (!value.has_value()) return Any(undefined);
     return any_from(*value);
+  } else if constexpr (is_std_variant<Stored>::value) {
+    return std::visit(
+        [](const auto& alternative) { return any_from(alternative); }, value);
   } else {
     return std::nullopt;
   }
@@ -652,6 +662,12 @@ template <typename Value>
   using Stored = std::remove_cvref_t<Value>;
   if constexpr (std::same_as<Stored, Any>) {
     return value;
+  } else if constexpr (std::same_as<Stored, Undefined>) {
+    if (value.kind() == AnyKind::undefined) return Undefined{};
+    return std::nullopt;
+  } else if constexpr (std::same_as<Stored, Null>) {
+    if (value.kind() == AnyKind::null) return Null{};
+    return std::nullopt;
   } else if constexpr (std::same_as<Stored, bool>) {
     if (value.kind() == AnyKind::boolean) return value.as_boolean();
     return std::nullopt;
@@ -688,6 +704,20 @@ template <typename Value>
     auto inner = any_to<typename Stored::value_type>(value);
     if (!inner) return std::nullopt;
     return Stored(std::move(*inner));
+  } else if constexpr (is_std_variant<Stored>::value) {
+    return [&]<std::size_t... Index>(std::index_sequence<Index...>) {
+      std::optional<Stored> recovered;
+      ([&] {
+        if (recovered.has_value()) return;
+        using Alternative = std::variant_alternative_t<Index, Stored>;
+        auto alternative = any_to<Alternative>(value);
+        if (alternative.has_value()) {
+          recovered.emplace(std::in_place_index<Index>,
+                            std::move(*alternative));
+        }
+      }(), ...);
+      return recovered;
+    }(std::make_index_sequence<std::variant_size_v<Stored>>{});
   } else {
     // Callables and everything else: refused rather than approximated, for the reason `any_from`
     // refuses them in the other direction.

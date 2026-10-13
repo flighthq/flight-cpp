@@ -8,6 +8,15 @@ diff --git a/packages/materials/src/material.ts b/packages/materials/src/materia
  
  // Structural shallow clone of any material entity. Scalar fields and kind are copied by
  // value; Texture/map handle references are shared (they are not owned by the material).
+@@ -59,7 +59,7 @@ export function initializeMaterial(material: EntityConstruction<Material>, kind:
+ // Internal helper — writes all own enumerable data fields from `src` onto `dst`. Skips
+ // the `kind` field (already set on `dst` at construction). Handles the `standard` sub-block
+ // by shallow-field copy; all other values are assigned.
+-function copyMaterialFields(dst: Material, src: Readonly<Material>, kind: Kind): void {
++function copyMaterialFields<T extends Material>(dst: T, src: Readonly<T>, kind: Kind): void {
+   const dstFields = dst as unknown as Record<string, unknown>;
+   const srcFields = src as unknown as Record<string, unknown>;
+   for (const key of Object.keys(srcFields)) {
 @@ -65,13 +65,33 @@ function copyMaterialFields(dst: Material, src: Readonly<Material>, kind: Kind):
    for (const key of Object.keys(srcFields)) {
      if (key === 'kind') continue;
