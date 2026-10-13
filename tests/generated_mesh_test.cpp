@@ -5,6 +5,7 @@
 #include <flight/mesh/mesh_geometry_index.hpp>
 #include <flight/mesh/mesh_geometry_layout.hpp>
 #include <flight/mesh/mesh_geometry_operations.hpp>
+#include <flight/mesh/mesh_geometry_subset.hpp>
 
 #include <algorithm>
 #include <array>
@@ -36,6 +37,11 @@ bool inject_builder_topology_mutation = false;
 bool inject_builder_seam_mutation = false;
 bool inject_builder_bounds_mutation = false;
 bool inject_builder_guard_mutation = false;
+bool inject_weld_equivalence_mutation = false;
+bool inject_index_remap_mutation = false;
+bool inject_subset_boundary_mutation = false;
+bool inject_merge_aliasing_mutation = false;
+bool inject_validation_branch_mutation = false;
 
 void check(bool condition, const char* message) {
   if (condition) return;
@@ -70,6 +76,12 @@ flight::Ref<types::VertexAttributeLayout> position_layout(double stride = 12.0) 
       flight::Array<flight::Ref<types::VertexAttribute>>{
           vertex_attribute("position", "float32x3", 0.0)},
       stride);
+}
+
+flight::Ref<types::MeshSubset> mesh_subset(
+    double index_count, double index_offset) {
+  return flight::make_ref<types::MeshSubset>(types::MeshSubset{
+      .index_count = index_count, .index_offset = index_offset});
 }
 
 flight::Ref<types::MeshGeometry> geometry_from(
@@ -503,6 +515,510 @@ void failure_paths_are_non_mutating() {
   if (inject_failure_mutation) failures_are_observed = false;
   check(failures_are_observed,
         "invalid triangle, attribute, index and layout inputs fail without mutating valid geometry");
+}
+
+void weld_equivalence_and_attribute_sensitivity() {
+  const auto layout = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("position", "float32x3", 0.0),
+          vertex_attribute("color0", "unorm8x4", 12.0)},
+      16.0);
+  flight::Float32Array vertices(20.0);
+  flight::DataView bytes(vertices.buffer);
+  auto set_record = [&](double vertex, float x, double red, double green) {
+    const double float_base = vertex * 4.0;
+    const double byte_base = vertex * 16.0;
+    vertices.set_index(float_base, x);
+    vertices.set_index(float_base + 1.0, 2.0);
+    vertices.set_index(float_base + 2.0, 3.0);
+    bytes.set_uint8(byte_base + 12.0, red);
+    bytes.set_uint8(byte_base + 13.0, green);
+    bytes.set_uint8(byte_base + 14.0, 0.0);
+    bytes.set_uint8(byte_base + 15.0, 255.0);
+  };
+  const float adjacent = std::nextafter(1.0F, 2.0F);
+  set_record(0.0, 1.0F, 255.0, 0.0);
+  set_record(1.0, 1.0F, 255.0, 0.0);
+  set_record(2.0, adjacent, 255.0, 0.0);
+  set_record(3.0, 1.0F, 0.0, 255.0);
+  set_record(4.0, adjacent, 255.0, 0.0);
+  auto options = flight::make_ref<types::MeshGeometryOptions>();
+  options->layout = layout;
+  options->topology = flight::String("line-strip");
+  options->vertices = vertices;
+  const auto source = mesh::create_mesh_geometry(options);
+  const auto welded = mesh::weld_mesh_geometry_vertices(source);
+
+  const double expected_indices[] = {0.0, 0.0, 1.0, 2.0, 1.0};
+  bool equivalent =
+      mesh::get_mesh_geometry_vertex_count(welded) == 3.0 &&
+      welded->indices.has_value() &&
+      std::holds_alternative<flight::Uint16Array>(welded->indices.value()) &&
+      welded->topology == flight::String("line-strip") &&
+      welded->vertices.buffer != source->vertices.buffer &&
+      source->vertices.buffer == vertices.buffer && !source->indices.has_value();
+  for (double index = 0.0; index < 5.0; index += 1.0) {
+    equivalent = equivalent && index_at(welded, index) ==
+                                   expected_indices[static_cast<std::size_t>(index)];
+  }
+  const flight::Uint8Array source_bytes(
+      source->vertices.buffer, static_cast<double>(source->vertices.byte_offset),
+      static_cast<double>(source->vertices.byte_length));
+  const flight::Uint8Array welded_bytes(
+      welded->vertices.buffer, static_cast<double>(welded->vertices.byte_offset),
+      static_cast<double>(welded->vertices.byte_length));
+  const double source_records[] = {0.0, 2.0, 3.0};
+  for (double unique = 0.0; unique < 3.0; unique += 1.0) {
+    for (double byte = 0.0; byte < 16.0; byte += 1.0) {
+      equivalent = equivalent &&
+                   welded_bytes.get_index(unique * 16.0 + byte) ==
+                       source_bytes.get_index(
+                           source_records[static_cast<std::size_t>(unique)] *
+                               16.0 +
+                           byte);
+    }
+  }
+  equivalent = equivalent &&
+               welded->vertices.get_index(4.0) == adjacent &&
+               welded_bytes.get_index(44.0) == 0.0 &&
+               welded_bytes.get_index(45.0) == 255.0;
+
+  const auto empty = geometry_from(layout, flight::Float32Array(0.0));
+  const auto welded_empty = mesh::weld_mesh_geometry_vertices(empty);
+  equivalent = equivalent &&
+               mesh::get_mesh_geometry_vertex_count(welded_empty) == 0.0 &&
+               welded_empty->indices.has_value() &&
+               std::visit([](const auto& values) { return values.empty(); },
+                          welded_empty->indices.value());
+  if (inject_weld_equivalence_mutation) equivalent = false;
+  check(equivalent,
+        "welding uses bit-exact complete records: exact duplicates collapse, adjacent float bits and differing attributes remain distinct, and empty input stays empty");
+}
+
+void weld_remap_order_and_index_width() {
+  flight::Float32Array vertices{
+      10.0F, 0.0F, 0.0F,
+      20.0F, 0.0F, 0.0F,
+      10.0F, 0.0F, 0.0F,
+      30.0F, 0.0F, 0.0F,
+      20.0F, 0.0F, 0.0F,
+  };
+  flight::Uint16Array authored{4, 2, 3, 0, 1, 4};
+  auto options = flight::make_ref<types::MeshGeometryOptions>();
+  options->indices = flight::SequenceView<double>(authored);
+  options->layout = position_layout();
+  options->subsets = flight::Array<flight::Ref<types::MeshSubset>>{
+      mesh_subset(3.0, 0.0), mesh_subset(3.0, 3.0)};
+  options->vertices = vertices;
+  const auto source = mesh::create_mesh_geometry(options);
+  const auto welded = mesh::weld_mesh_geometry_vertices(source);
+  const double expected_indices[] = {1.0, 0.0, 2.0, 0.0, 1.0, 1.0};
+  const double expected_vertices[] = {10.0, 20.0, 30.0};
+  bool remapped = mesh::get_mesh_geometry_vertex_count(welded) == 3.0 &&
+                  welded->indices.has_value() && welded->subsets.size() == 2 &&
+                  welded->subsets.element(0.0)->index_count == 3.0 &&
+                  welded->subsets.element(1.0)->index_offset == 3.0;
+  for (double index = 0.0; index < 6.0; index += 1.0) {
+    remapped = remapped && index_at(welded, index) ==
+                               expected_indices[static_cast<std::size_t>(index)];
+  }
+  for (double vertex = 0.0; vertex < 3.0; vertex += 1.0) {
+    remapped = remapped && welded->vertices.get_index(vertex * 3.0) ==
+                               expected_vertices[static_cast<std::size_t>(vertex)];
+  }
+
+  const auto invalid = mesh::clone_mesh_geometry(source);
+  std::get<flight::Uint16Array>(invalid->indices.value()).set_index(2.0, 99.0);
+  const auto rejected = mesh::weld_mesh_geometry_vertices(invalid);
+  remapped = remapped && rejected != invalid &&
+             rejected->vertices.buffer != invalid->vertices.buffer &&
+             index_buffer_identity(rejected) != index_buffer_identity(invalid) &&
+             index_at(rejected, 2.0) == 99.0 && index_at(invalid, 2.0) == 99.0 &&
+             rejected->subsets.identity() != invalid->subsets.identity();
+
+  constexpr double narrow_count = 65535.0;
+  constexpr double wide_count = 65536.0;
+  flight::Float32Array narrow_vertices(narrow_count * 3.0);
+  flight::Float32Array wide_vertices(wide_count * 3.0);
+  for (double vertex = 0.0; vertex < narrow_count; vertex += 1.0) {
+    narrow_vertices.set_index(vertex * 3.0, vertex);
+  }
+  for (double vertex = 0.0; vertex < wide_count; vertex += 1.0) {
+    wide_vertices.set_index(vertex * 3.0, vertex);
+  }
+  const auto narrow_source = geometry_from(position_layout(), narrow_vertices);
+  const auto wide_source = geometry_from(position_layout(), wide_vertices);
+  const auto narrow_indexed = mesh::index_mesh_geometry_vertices(narrow_source);
+  const auto wide_indexed = mesh::index_mesh_geometry_vertices(wide_source);
+  remapped =
+      remapped &&
+      std::holds_alternative<flight::Uint16Array>(narrow_indexed->indices.value()) &&
+      std::holds_alternative<flight::Uint32Array>(wide_indexed->indices.value()) &&
+      index_at(narrow_indexed, narrow_count - 1.0) == narrow_count - 1.0 &&
+      index_at(wide_indexed, wide_count - 1.0) == wide_count - 1.0 &&
+      !narrow_source->indices.has_value() && !wide_source->indices.has_value();
+  if (inject_index_remap_mutation) remapped = false;
+  check(remapped,
+        "welding retains first-record order and exact authored element order, rejects invalid remaps by deep clone, and sequential indexing switches width only above 65535 vertices");
+}
+
+void subset_boundaries_replacement_and_rebase() {
+  const auto geometry = indexed_geometry();
+  const double version = geometry->version;
+  const auto vertex_owner = geometry->vertices.buffer;
+  const void* index_owner = index_buffer_identity(geometry);
+  const auto original_subsets = geometry->subsets;
+  const auto appended = mesh_subset(3.0, 3.0);
+  mesh::add_mesh_geometry_subset(geometry, appended);
+  bool subsets = geometry->subsets.size() == 2 &&
+                 geometry->subsets.identity() != original_subsets.identity() &&
+                 geometry->subsets.element(0.0) != original_subsets.element(0.0) &&
+                 geometry->subsets.element(1.0) != appended &&
+                 geometry->subsets.element(1.0)->index_count == 3.0 &&
+                 geometry->version == version &&
+                 geometry->vertices.buffer == vertex_owner &&
+                 index_buffer_identity(geometry) == index_owner;
+  appended->index_offset = 99.0;
+  subsets = subsets && geometry->subsets.element(1.0)->index_offset == 3.0;
+
+  flight::Array<flight::Ref<types::MeshSubset>> replacement{
+      mesh_subset(3.0, 0.0), mesh_subset(3.0, 3.0)};
+  mesh::set_mesh_geometry_subsets(geometry, replacement);
+  subsets = subsets && geometry->subsets.identity() != replacement.identity() &&
+            geometry->subsets.element(0.0) != replacement.element(0.0) &&
+            mesh::get_mesh_geometry_subset_triangle_count(geometry, 0.0) == 1.0 &&
+            mesh::get_mesh_geometry_subset_triangle_count(geometry, 1.0) == 1.0 &&
+            mesh::get_mesh_geometry_subset_triangle_count(geometry, -1.0) == 0.0 &&
+            mesh::get_mesh_geometry_subset_triangle_count(geometry, 2.0) == 0.0 &&
+            mesh::get_mesh_geometry_triangle_subset_index(geometry, 0.0) == 0.0 &&
+            mesh::get_mesh_geometry_triangle_subset_index(geometry, 1.0) == 1.0 &&
+            mesh::get_mesh_geometry_triangle_subset_index(geometry, 2.0) == -1.0 &&
+            mesh::get_mesh_geometry_triangle_subset_index(geometry, -1.0) == -1.0;
+  replacement.element(0.0)->index_count = 99.0;
+  subsets = subsets && geometry->subsets.element(0.0)->index_count == 3.0;
+
+  mesh::set_mesh_geometry_subsets(
+      geometry, flight::Array<flight::Ref<types::MeshSubset>>{
+                    mesh_subset(6.0, 0.0), mesh_subset(3.0, 3.0)});
+  subsets = subsets &&
+            mesh::get_mesh_geometry_triangle_subset_index(geometry, 1.0) == 0.0;
+  mesh::set_mesh_geometry_subsets(
+      geometry, flight::Array<flight::Ref<types::MeshSubset>>{
+                    mesh_subset(2.0, 0.0), mesh_subset(3.0, 3.0)});
+  subsets = subsets &&
+            mesh::get_mesh_geometry_triangle_subset_index(geometry, 0.0) == -1.0 &&
+            mesh::get_mesh_geometry_triangle_subset_index(geometry, 1.0) == 1.0;
+
+  const auto strip = indexed_geometry();
+  strip->topology = flight::String("triangle-strip");
+  strip->indices = flight::Uint16Array{0, 1, 2, 3};
+  mesh::set_mesh_geometry_subsets(
+      strip, flight::Array<flight::Ref<types::MeshSubset>>{
+                 mesh_subset(3.0, 0.0), mesh_subset(3.0, 1.0)});
+  subsets = subsets &&
+            mesh::get_mesh_geometry_subset_triangle_count(strip, 0.0) == 1.0 &&
+            mesh::get_mesh_geometry_subset_triangle_count(strip, 1.0) == 1.0 &&
+            mesh::get_mesh_geometry_triangle_subset_index(strip, 0.0) == 0.0 &&
+            mesh::get_mesh_geometry_triangle_subset_index(strip, 1.0) == 1.0;
+  strip->topology = flight::String("line-list");
+  subsets = subsets &&
+            mesh::get_mesh_geometry_subset_triangle_count(strip, 0.0) == 0.0 &&
+            mesh::get_mesh_geometry_triangle_subset_index(strip, 0.0) == -1.0 &&
+            geometry->version == version &&
+            geometry->vertices.buffer == vertex_owner &&
+            index_buffer_identity(geometry) == index_owner;
+  if (inject_subset_boundary_mutation) subsets = false;
+  check(subsets,
+        "subset add/set deep-copy ranges without touching buffers or version, list and strip lookup require whole-triangle containment, overlap chooses the first declaration, and gaps stay unowned");
+}
+
+void merge_order_rebase_and_owner_isolation() {
+  const auto first = indexed_geometry();
+  first->subsets = flight::Array<flight::Ref<types::MeshSubset>>{
+      mesh_subset(3.0, 0.0), mesh_subset(3.0, 3.0)};
+  flight::Float32Array second_vertices{
+      10.0F, 0.0F, 0.0F,
+      11.0F, 0.0F, 0.0F,
+      10.0F, 1.0F, 0.0F,
+  };
+  auto second_options = flight::make_ref<types::MeshGeometryOptions>();
+  second_options->layout = first->layout;
+  second_options->vertices = second_vertices;
+  const auto second = mesh::create_mesh_geometry(second_options);
+  const auto first_bounds = mesh::ensure_mesh_geometry_bounds(first);
+  const auto second_bounds = mesh::ensure_mesh_geometry_bounds(second);
+  const auto merged_optional = mesh::merge_mesh_geometries(
+      flight::Array<flight::Ref<types::MeshGeometry>>{first, second});
+  bool merged_ok = merged_optional.has_value();
+  const auto merged = merged_optional.value();
+  const double expected_indices[] = {
+      2.0, 0.0, 1.0, 2.0, 1.0, 3.0, 4.0, 5.0, 6.0};
+  merged_ok = merged_ok && merged->layout == first->layout &&
+              merged->topology == flight::String("triangle-list") &&
+              mesh::get_mesh_geometry_vertex_count(merged) == 7.0 &&
+              mesh::get_mesh_geometry_index_count(merged) == 9.0 &&
+              merged->vertices.buffer != first->vertices.buffer &&
+              merged->vertices.buffer != second->vertices.buffer &&
+              index_buffer_identity(merged) != index_buffer_identity(first) &&
+              merged->entity_runtime_key.has_value() &&
+              merged->entity_runtime_key.value() !=
+                  first->entity_runtime_key.value() &&
+              merged->entity_runtime_key.value() !=
+                  second->entity_runtime_key.value() &&
+              merged->subsets.size() == 3 &&
+              merged->subsets.identity() != first->subsets.identity() &&
+              merged->subsets.identity() != second->subsets.identity() &&
+              merged->subsets.element(0.0) != first->subsets.element(0.0) &&
+              merged->subsets.element(2.0) != second->subsets.element(0.0) &&
+              merged->subsets.element(0.0)->index_offset == 0.0 &&
+              merged->subsets.element(1.0)->index_offset == 3.0 &&
+              merged->subsets.element(2.0)->index_offset == 6.0 &&
+              merged->subsets.element(0.0)->index_count == 3.0 &&
+              merged->subsets.element(1.0)->index_count == 3.0 &&
+              merged->subsets.element(2.0)->index_count == 3.0 &&
+              merged->bounds.has_value() &&
+              first_bounds.has_value() && second_bounds.has_value() &&
+              merged->bounds.value() != first_bounds.value() &&
+              merged->bounds.value() != second_bounds.value() &&
+              merged->bounds.value()->min->x == -2.0 &&
+              merged->bounds.value()->min->y == -5.0 &&
+              merged->bounds.value()->min->z == -7.0 &&
+              merged->bounds.value()->max->x == 11.0 &&
+              merged->bounds.value()->max->y == 2.0 &&
+              merged->bounds.value()->max->z == 6.0;
+  for (double index = 0.0; index < 9.0; index += 1.0) {
+    merged_ok = merged_ok && index_at(merged, index) ==
+                                 expected_indices[static_cast<std::size_t>(index)];
+  }
+  for (double value = 0.0;
+       value < static_cast<double>(first->vertices.size()); value += 1.0) {
+    merged_ok = merged_ok && merged->vertices.get_index(value) ==
+                                 first->vertices.get_index(value);
+  }
+  for (double value = 0.0;
+       value < static_cast<double>(second->vertices.size()); value += 1.0) {
+    merged_ok = merged_ok &&
+                merged->vertices.get_index(
+                    static_cast<double>(first->vertices.size()) + value) ==
+                    second->vertices.get_index(value);
+  }
+
+  const auto mismatched_layout = geometry_from(
+      position_layout(16.0), flight::Float32Array(12.0));
+  const auto mismatched_topology = mesh::clone_mesh_geometry(second);
+  mismatched_topology->topology = flight::String("line-list");
+  const auto first_vertex_owner = first->vertices.buffer;
+  const void* first_index_owner = index_buffer_identity(first);
+  const auto first_subset_owner = first->subsets.identity();
+  const auto first_subset = first->subsets.element(0.0);
+  const double first_version = first->version;
+  merged_ok =
+      merged_ok &&
+      !mesh::merge_mesh_geometries(
+           flight::Array<flight::Ref<types::MeshGeometry>>{}).has_value() &&
+      !mesh::merge_mesh_geometries(
+           flight::Array<flight::Ref<types::MeshGeometry>>{
+               first, mismatched_layout}).has_value() &&
+      !mesh::merge_mesh_geometries(
+           flight::Array<flight::Ref<types::MeshGeometry>>{
+               first, mismatched_topology}).has_value() &&
+      first->vertices.buffer == first_vertex_owner &&
+      index_buffer_identity(first) == first_index_owner &&
+      first->subsets.identity() == first_subset_owner &&
+      first->subsets.element(0.0) == first_subset &&
+      first->subsets.element(0.0)->index_count == 3.0 &&
+      first->version == first_version;
+
+  const auto empty = geometry_from(first->layout, flight::Float32Array(0.0));
+  const auto merged_empty = mesh::merge_mesh_geometries(
+      flight::Array<flight::Ref<types::MeshGeometry>>{empty});
+  merged_ok = merged_ok && merged_empty.has_value() &&
+              merged_empty.value() != empty &&
+              merged_empty.value()->vertices.buffer != empty->vertices.buffer &&
+              mesh::get_mesh_geometry_vertex_count(merged_empty.value()) == 0.0 &&
+              mesh::get_mesh_geometry_index_count(merged_empty.value()) == 0.0 &&
+              merged_empty.value()->subsets.size() == 1 &&
+              merged_empty.value()->subsets.element(0.0)->index_count == 0.0 &&
+              mesh::validate_mesh_geometry(merged_empty.value());
+
+  first->vertices.set_index(0.0, 90.0);
+  merged->vertices.set_index(12.0, 80.0);
+  std::visit([](auto& values) { values.set_index(0.0, 0.0); },
+             merged->indices.value());
+  first->subsets.element(0.0)->index_count = 6.0;
+  merged_ok = merged_ok && merged->vertices.get_index(0.0) == -2.0 &&
+              second->vertices.get_index(0.0) == 10.0 &&
+              index_at(first, 0.0) == 2.0 &&
+              merged->subsets.element(0.0)->index_count == 3.0;
+  if (inject_merge_aliasing_mutation) merged_ok = false;
+  check(merged_ok,
+        "merge concatenates exact records and element order, rebases every source subset, recomputes union bounds, isolates all mutable owners, accepts empty geometry, and refuses empty/mismatched requests without mutation");
+}
+
+bool validation_result_without_mutation(
+    const flight::Ref<types::MeshGeometry>& geometry, bool expected) {
+  const auto vertex_owner = geometry->vertices.buffer;
+  const void* indices_owner = index_buffer_identity(geometry);
+  const auto subsets_owner = geometry->subsets.identity();
+  const auto layout = geometry->layout;
+  const auto bounds = geometry->bounds;
+  const auto runtime = geometry->entity_runtime_key;
+  const auto topology = geometry->topology;
+  const double version = geometry->version;
+  std::vector<double> vertices;
+  for (double index = 0.0;
+       index < static_cast<double>(geometry->vertices.size()); index += 1.0) {
+    vertices.push_back(geometry->vertices.get_index(index));
+  }
+  std::vector<double> indices;
+  if (geometry->indices.has_value()) {
+    const double count = std::visit(
+        [](const auto& values) { return static_cast<double>(values.size()); },
+        geometry->indices.value());
+    for (double index = 0.0; index < count; index += 1.0) {
+      indices.push_back(index_at(geometry, index));
+    }
+  }
+  std::vector<flight::Ref<types::MeshSubset>> subset_refs;
+  std::vector<std::pair<double, double>> subset_values;
+  for (const auto& subset : geometry->subsets) {
+    subset_refs.push_back(subset);
+    subset_values.emplace_back(subset->index_count, subset->index_offset);
+  }
+
+  bool unchanged = mesh::validate_mesh_geometry(geometry) == expected &&
+                   geometry->vertices.buffer == vertex_owner &&
+                   index_buffer_identity(geometry) == indices_owner &&
+                   geometry->subsets.identity() == subsets_owner &&
+                   geometry->layout == layout && geometry->bounds == bounds &&
+                   geometry->entity_runtime_key == runtime &&
+                   geometry->topology == topology && geometry->version == version &&
+                   geometry->vertices.size() == vertices.size() &&
+                   geometry->subsets.size() == subset_refs.size();
+  for (double index = 0.0; index < static_cast<double>(vertices.size());
+       index += 1.0) {
+    const double before = vertices[static_cast<std::size_t>(index)];
+    const double after = geometry->vertices.get_index(index);
+    unchanged = unchanged &&
+                ((std::isnan(before) && std::isnan(after)) || before == after);
+  }
+  if (geometry->indices.has_value()) {
+    unchanged = unchanged &&
+                std::visit([](const auto& values) { return values.size(); },
+                           geometry->indices.value()) == indices.size();
+    for (double index = 0.0; index < static_cast<double>(indices.size());
+         index += 1.0) {
+      unchanged = unchanged && index_at(geometry, index) ==
+                                   indices[static_cast<std::size_t>(index)];
+    }
+  } else {
+    unchanged = unchanged && indices.empty();
+  }
+  for (std::size_t index = 0; index < subset_refs.size(); ++index) {
+    unchanged = unchanged && geometry->subsets[index] == subset_refs[index] &&
+                geometry->subsets[index]->index_count ==
+                    subset_values[index].first &&
+                geometry->subsets[index]->index_offset ==
+                    subset_values[index].second;
+  }
+  return unchanged;
+}
+
+flight::Ref<types::MeshGeometry> geometry_with_element_count(
+    const char* topology, std::size_t element_count) {
+  flight::Float32Array vertices(9.0);
+  flight::Uint16Array indices(static_cast<double>(element_count));
+  auto options = flight::make_ref<types::MeshGeometryOptions>();
+  options->indices = flight::SequenceView<double>(indices);
+  options->layout = position_layout();
+  options->topology = flight::String(topology);
+  options->vertices = vertices;
+  return mesh::create_mesh_geometry(options);
+}
+
+void validation_branch_order_and_nonmutation() {
+  bool branches = validation_result_without_mutation(canonical_triangle(), true);
+
+  const auto zero_stride = geometry_from(
+      position_layout(0.0), flight::Float32Array{0.0F, 0.0F, 0.0F});
+  const auto misaligned = geometry_from(
+      position_layout(), flight::Float32Array{0.0F, 0.0F, 0.0F, 1.0F});
+  const auto invalid_index = indexed_geometry();
+  std::get<flight::Uint16Array>(invalid_index->indices.value())
+      .set_index(0.0, 99.0);
+  branches = branches && validation_result_without_mutation(zero_stride, false) &&
+             validation_result_without_mutation(misaligned, false) &&
+             validation_result_without_mutation(invalid_index, false);
+
+  const double invalid_channels[] = {3.0, 6.0, 10.0};
+  for (double offset : invalid_channels) {
+    const auto nonfinite = canonical_triangle();
+    nonfinite->vertices.set_index(
+        offset, offset == 6.0 ? std::numeric_limits<double>::infinity()
+                              : std::numeric_limits<double>::quiet_NaN());
+    branches = branches && validation_result_without_mutation(nonfinite, false);
+  }
+
+  const auto packed_layout = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("color0", "unorm8x4", 0.0)},
+      4.0);
+  flight::Float32Array packed_vertices(1.0);
+  flight::DataView(packed_vertices.buffer)
+      .set_uint32(0.0, 2143289344.0, true);
+  auto packed_options = flight::make_ref<types::MeshGeometryOptions>();
+  packed_options->layout = packed_layout;
+  packed_options->topology = flight::String("point-list");
+  packed_options->vertices = packed_vertices;
+  branches = branches && validation_result_without_mutation(
+                             mesh::create_mesh_geometry(packed_options), true);
+
+  const auto fractional_subset = indexed_geometry();
+  fractional_subset->subsets = flight::Array<flight::Ref<types::MeshSubset>>{
+      mesh_subset(3.0, 0.5)};
+  const auto negative_subset = indexed_geometry();
+  negative_subset->subsets = flight::Array<flight::Ref<types::MeshSubset>>{
+      mesh_subset(-3.0, 0.0)};
+  const auto past_end_subset = indexed_geometry();
+  past_end_subset->subsets = flight::Array<flight::Ref<types::MeshSubset>>{
+      mesh_subset(6.0, 3.0)};
+  const auto partial_primitive_subset = indexed_geometry();
+  partial_primitive_subset->subsets =
+      flight::Array<flight::Ref<types::MeshSubset>>{mesh_subset(4.0, 0.0)};
+  branches =
+      branches && validation_result_without_mutation(fractional_subset, false) &&
+      validation_result_without_mutation(negative_subset, false) &&
+      validation_result_without_mutation(past_end_subset, false) &&
+      validation_result_without_mutation(partial_primitive_subset, false);
+
+  const auto incomplete_triangle_stream =
+      geometry_with_element_count("triangle-list", 4);
+  incomplete_triangle_stream->subsets = {};
+  branches = branches &&
+             validation_result_without_mutation(
+                 geometry_with_element_count("triangle-list", 0), true) &&
+             validation_result_without_mutation(
+                 geometry_with_element_count("triangle-list", 3), true) &&
+             validation_result_without_mutation(incomplete_triangle_stream, false) &&
+             validation_result_without_mutation(
+                 geometry_with_element_count("triangle-strip", 0), true) &&
+             validation_result_without_mutation(
+                 geometry_with_element_count("triangle-strip", 2), false) &&
+             validation_result_without_mutation(
+                 geometry_with_element_count("triangle-strip", 3), true) &&
+             validation_result_without_mutation(
+                 geometry_with_element_count("line-list", 2), true) &&
+             validation_result_without_mutation(
+                 geometry_with_element_count("line-list", 3), false) &&
+             validation_result_without_mutation(
+                 geometry_with_element_count("line-strip", 1), false) &&
+             validation_result_without_mutation(
+                 geometry_with_element_count("line-strip", 2), true) &&
+             validation_result_without_mutation(
+                 geometry_with_element_count("point-list", 1), true);
+  if (inject_validation_branch_mutation) branches = false;
+  check(branches,
+        "validation follows stride, index, float-channel, subset-range, and topology-shape branches in order while preserving every owner, byte, range, runtime and version on both success and failure");
 }
 
 void packed_channel_order_and_ownership() {
@@ -1448,11 +1964,26 @@ int main(int argc, char** argv) {
       mutation == flight::String("--mutate-builder-bounds");
   inject_builder_guard_mutation =
       mutation == flight::String("--mutate-builder-guards");
+  inject_weld_equivalence_mutation =
+      mutation == flight::String("--mutate-weld-equivalence");
+  inject_index_remap_mutation =
+      mutation == flight::String("--mutate-index-remap-order");
+  inject_subset_boundary_mutation =
+      mutation == flight::String("--mutate-subset-boundaries");
+  inject_merge_aliasing_mutation =
+      mutation == flight::String("--mutate-merge-aliasing");
+  inject_validation_branch_mutation =
+      mutation == flight::String("--mutate-validation-branches");
 
   construction_clone_and_owner_identity();
   bounds_cache_and_position_mutation();
   index_order_and_compaction();
   failure_paths_are_non_mutating();
+  weld_equivalence_and_attribute_sensitivity();
+  weld_remap_order_and_index_width();
+  subset_boundaries_replacement_and_rebase();
+  merge_order_rebase_and_owner_isolation();
+  validation_branch_order_and_nonmutation();
   packed_channel_order_and_ownership();
   packed_stride_offset_and_invalid_layout();
   packed_normalization_and_writes();

@@ -38,6 +38,10 @@ header compilation or the existing Scene3D smoke test as behavioral coverage:
 | Geometry ownership and identity | Construction retains the caller's layout and vertex buffer, copies and narrows the authored index view, installs an exact runtime owner, and creates the default subset. Clone retains layout identity while independently owning geometry, runtime, vertices, indices, subset array/elements, and bounds; clone mutation cannot reach the source. Version invalidation wraps as unsigned 32-bit state. |
 | Bounds and mutation | The first ensure computes the exact AABB and stamps the geometry version. An unchanged ensure returns the same bounds owner. A successful position write increments the version, after which ensure refreshes that same bounds owner to the new extrema and advances the runtime stamp. |
 | Indexing and order | Triangle-list decoding preserves both authored windings. Wireframe edge order is exact. Index expansion follows element order without mutating the source, and compaction assigns new vertices in first-reference order with the exact remapped indices. |
+| Weld equivalence and remapping | Welding compares every byte of the complete packed record: bit-exact duplicates collapse, an adjacent Float32 bit pattern does not, and equal positions with different packed attributes remain separate. Unique records retain first-source order, authored elements remap in exact order, invalid indices return an independent unchanged clone, and empty input stays empty. Sequential indexing switches from `Uint16Array` to `Uint32Array` only above 65,535 vertices. |
+| Subset ownership and boundaries | Add and set replace the subset array and deep-copy every range without changing buffers or version. Triangle-list and strip lookup require all three elements inside one range, overlapping ranges choose the first declaration, gaps remain unowned, unsupported topologies return sentinels, and list/strip triangle counts follow their distinct formulas. |
+| Merge order, rebasing, and isolation | Indexed and sequential sources concatenate in source order with exact vertex rebasing. Every source subset is independently cloned and rebased over the merged element stream, bounds are the exact union, and vertices, indices, subset arrays/elements, bounds, and runtime state are independently owned. Empty geometry remains valid; an empty request plus layout/topology mismatches return absence without touching inputs. |
+| Validation branch matrix | The native oracle reaches the documented stride, alignment, index-range, every-float-channel, integer-packed-channel, subset integer/sign/bounds, subset primitive-shape, and whole-stream topology branches in their public order. Empty streams and valid point/list/strip shapes pass; truncated shapes fail. Every successful or failed call preserves all bytes, indices, ranges, owners, bounds/runtime identities, topology, and version. |
 | Packed channel ownership and order | A non-zero-offset `Float32Array` view is retained exactly with its authored layout. Attribute declaration order deliberately differs from byte order; semantic lookup still reads `uv1`, `color0`, `joints0`, and `weights0` into exact x/y/z/w component order from the second interleaved record. |
 | Stride, offsets, and packed interpretation | Reads honor both the view's byte offset and the 32-byte vertex stride. Packed writes clamp and round `uint16x4`, clamp/round/normalize `unorm8x4`, preserve float UV interpretation, and increment the version exactly once per successful channel. Bytes outside the view remain untouched. |
 | Normals, tangents, and groups | Smooth normals and tangents update in place without replacing vertex or index owners, produce unit +Z/+X frames for canonical UVs, preserve exact version increments, and distinguish positive from negative handedness. Position groups choose the first bit-exact representative, never escape vertex bounds, reject an adjacent Float32 bit pattern, and area-weight grouped normals across a seam. |
@@ -46,13 +50,15 @@ header compilation or the existing Scene3D smoke test as behavioral coverage:
 | Builder bounds | Every builder's cached AABB is recomputed independently from every emitted position and must be byte-for-byte tight at the current version. Box, capsule, plane, and torus also pin semantic half-extents/radius extents. |
 | Primitive seams | Box corners retain face-specific records; capsule, circle, cylinder, ring, UV sphere, torus, and torus-knot closures retain duplicate positions/normals with their required UV endpoints. Cone apex vertices remain duplicated across segment U values. Spherical polyhedra and the icosphere use independent face records, lift crossing longitudes past 1, never leave a face split across 0/1, and place pole U between its face-mates. |
 | Builder parameter guards | Every count-bearing builder floors fractional counts, clamps below-minimum counts, and throws `RangeError` for NaN and infinity on each count parameter. Zero-height cone/truncated-cylinder cases contain no dead triangles; a zero-height cylinder and collapsed/negative box or quad dimensions retain finite canonical records. Custom polyhedron seed positions are observably projected to the requested radius. |
-| Failures | Negative and past-end triangle queries leave the caller's output unchanged. Negative and past-end position writes leave bytes and version unchanged. Out-of-range indices and zero-stride layouts fail validation while the original geometry remains valid. Packed attributes with negative offsets or records extending past stride reject reads and writes without changing output, bytes, or version. |
+| Failures | Negative and past-end triangle queries leave the caller's output unchanged. Negative and past-end position writes leave bytes and version unchanged. Invalid weld indices return a deep clone, merge mismatch returns absence, and every validation rejection is non-mutating. Packed attributes with negative offsets or records extending past stride reject reads and writes without changing output, bytes, or version. |
 
-Twelve independent modes (`--mutate-owner-identity`, `--mutate-bounds`,
+Seventeen independent modes (`--mutate-owner-identity`, `--mutate-bounds`,
 `--mutate-index-order`, `--mutate-failure`, `--mutate-channel-order`,
 `--mutate-stride-offset`, `--mutate-normalization`, `--mutate-group-bounds`,
 `--mutate-builder-topology`, `--mutate-builder-seams`, `--mutate-builder-bounds`, and
-`--mutate-builder-guards`) suppress one family oracle each. Normal execution must pass; every
+`--mutate-builder-guards`, `--mutate-weld-equivalence`, `--mutate-index-remap-order`,
+`--mutate-subset-boundaries`, `--mutate-merge-aliasing`, and
+`--mutate-validation-branches`) suppress one family oracle each. Normal execution must pass; every
 mutation execution must fail its named assertion.
 
 ## Verification boundary
@@ -67,10 +73,10 @@ passed but cannot build/run `flight_cpp.generated_scene3d` because
 ## Honest residual
 
 This is a focused P-3D2 slice, not a claim that all 213 upstream cases are ported. Ranked by remaining
-observable breadth, the largest executable families are now: (1) index welding, merge, subset, and the
-rest of validation/operation breadth; (2) mirrored transforms and UV transforms; (3)
-morph/deformation flows; and (4) the remaining vertex-format permutations and accessor rejection
-matrix. The package currently has no refusal-ledger row, and this slice required no new production
-patch or compiler request. Its assisted-tier compiler debt remains explicit in the three existing
-source patches, one emission repair, and six declared overrides rather than being recast as native
-parity.
+observable breadth, the largest executable families are now: (1) mirrored transforms and UV
+transforms; (2) morph/deformation flows; (3) the remaining vertex-format permutations and accessor
+rejection matrix; and (4) residual construction, compute, index, and operation permutations outside
+the focused ownership and boundary oracles above. The package currently has no refusal-ledger row,
+and this slice required no new production patch or compiler request. Its assisted-tier compiler debt
+remains explicit in the three existing source patches, one emission repair, and six declared
+overrides rather than being recast as native parity.
