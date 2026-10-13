@@ -33,6 +33,14 @@ return [=]() { disconnect_signal(source, handler); };
 `connectSignalAtFrameRate` in `@flighthq/signals` (`throttle.ts`). Any emitted function value that is
 compared by identity after `std::function` erasure has the same defect.
 
+A second instance is measured in `@flighthq/input`: `connectInputStateToInputManager` connects its ten handlers as
+bare lambdas and returns a disposer that disconnects them, so **calling the disposer throws**. Because the identity
+check inspects every stored slot and refuses on the first erased one, no slot on a manager's signal can be
+disconnected once a state has been connected to it — an identity-bearing `flight::Function` slot disconnects
+cleanly only while every other slot on that signal is also identity-bearing. That upstream case ("returns a
+disposer that stops tracking") therefore cannot hold at the current pin; it is pinned as a divergence by
+`tests/generated_input_state_test.cpp`.
+
 ## Carrying workaround
 
 Override [`signals-throttle-typed-argument-buffers`](../../overrides/manifest.json) declares every

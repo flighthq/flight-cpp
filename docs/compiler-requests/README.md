@@ -447,3 +447,5 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `@flighthq/host` accessors panic when an optional capability group is absent. No patch is carried.
 - [A nullish fallback on a required read lowers to `value_or` on a non-optional](host-initialize-optional-fallback-on-a-required-read.md) —
   `@flighthq/host`'s `createHost` and `initializeHost` do not compile. No patch is carried.
+- [An out-of-range indexed array read must widen to `null`](out-of-range-array-index-widened-to-null.md) —
+  `@flighthq/input` array indexing throws where TypeScript returns `null`; no workaround is carried.

@@ -94,7 +94,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/host` | 6 | 4 | 141 | dedicated | none | 6 / 0 |
 | `@flighthq/platform` | 3 | 1 | 37 | none | none | 3 / 0 |
 | `@flighthq/lifecycle` | 3 | 2 | 44 | dedicated | none | 2 / 1 |
-| `@flighthq/input` | 3 | 2 | 66 | none | none | 2 / 1 |
+| `@flighthq/input` | 3 | 2 | 66 | dedicated | none | 3 / 0 |
 | `@flighthq/keyboard` | 3 | 1 | 23 | none | none | 3 / 0 |
 | `@flighthq/interaction` | 19 | 17 | 212 | dedicated | none | 8 / 11 |
 | `@flighthq/gui` | 20 | 18 | 115 | none | none | 16 / 4 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-12 of 39 packages are reached by at least one local CTest executable.
-10 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`.
+13 of 39 packages are reached by at least one local CTest executable.
+11 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`.
 
 ## `@flighthq/app`
 
@@ -432,8 +432,51 @@ Upstream carries per-package records at `flight/agents/packages/input/`: `status
   magnitude 1, stick scale 3, output-instead-of-input 5) and one observationally equivalent -- making the axis boundary
   exclusive changes nothing, because the rescale is continuous and both spellings answer 0 exactly at the zone's edge.
 
-NOT covered, and not claimed: the manager's event/state transitions, pointer and touch ingress, focus and capture,
-multiple devices, and frame boundaries — 63 upstream cases this unit did not port.
+- `flight_cpp.generated_input_state` — `tests/generated_input_state_test.cpp` (dedicated), added by the unit that took
+  the 63 upstream event/state cases the two tests above leave. It drives the manager through the ingress sink it hands
+  a host (`getInputIngressSink`) and reads the results back through the state queries: held keys/pointer buttons/gamepad
+  buttons and axes; the up→down edge arming once per genuine transition, so a re-reported held key or gamepad button
+  does NOT re-arm the press edge; a press and a release inside one frame both surviving; `endInputStateFrame` clearing
+  the four edge sets while held state — a snapshot of the device, not of the frame — outlives the boundary; the payload
+  passing through unchanged (modifier flags, pointer coordinates and deltas); pointer buttons as a per-pointer bitmask
+  with a cancel clearing one pointer and not another; gamepad buttons and axes keyed by device so two pads never alias;
+  a disabled manager emitting nothing and resuming; the sink memoized per manager; and unknown pointers/gamepads reading
+  as absent rather than throwing. Seven mutations against the override that supplies the module, one per category the
+  work named: dropping the key-down repeat guard 1 failure, dropping the gamepad button-down repeat guard 1, ignoring
+  the pointer button index in the press bitmask 3, leaving the cancelled pointer's buttons in place 2, keying gamepad
+  buttons by button without the device 4, and dropping the pressed-key clear from `endInputStateFrame` 2. The seventh
+  is observationally equivalent and is recorded as such rather than counted as a kill: relaxing `onPointerUp`'s
+  `next === 0` to `next <= 0` changes nothing, because the mask is built by OR-ing non-negative powers of two and is
+  therefore never negative, so both spellings agree on every value the pointer path can produce.
+
+NOT covered, and not claimed: the six `attach*Input`/`detach*Input` families' release bookkeeping (the override's
+binding registry), `createInputKeyRepeatTimer`'s interaction with the manager, and the pointer move-relative, wheel and
+text ingress beyond reaching their subscribers — no case here asserts their bookkeeping.
+
+### Measured divergences from upstream
+
+Both are pinned by `tests/generated_input_state_test.cpp` rather than asserted as correct, so the gap is visible and
+the check flips when the fix lands.
+
+- **The disposer throws.** `connectInputStateToInputManager` returns a disposer that disconnects the ten handlers it
+  connected, but those handlers are bare lambdas erased into `std::function`, and `disconnectSignal` compares slots by
+  callable identity, which that erasure destroys — the runtime refuses to guess and throws rather than detaching some
+  other closure. Upstream's "returns a disposer that stops tracking" therefore cannot hold at this pin. This is the
+  already-filed `docs/compiler-requests/local-handler-callable-identity.md` (a newly measured instance, not a new
+  defect); the same check shows an identity-bearing `flight::Function` slot disconnects cleanly, so the missing piece
+  is the emitter's erasure, not a runtime operation. Note the blunt edge: because the check inspects every stored slot
+  and gives up on the first erased one, a manager's signal cannot be disconnected at all once a state is connected.
+- **An out-of-range gamepad index throws.** `getGamepadButtonName('standard', 99)` returns `null` upstream and throws
+  `std::range_error` here, because `table[i] ?? null` lowers to the bounds-checked `Array::element` rather than
+  `Array::get`. Filed as `docs/compiler-requests/out-of-range-array-index-widened-to-null.md`.
+
+### A row cannot carry a timestamp
+
+`InputKeyboardData`, `InputPointerData` and `InputGamepadConnectData` declare `timeStamp`/`mapping`, but the generated
+row-member table has no key reaching `time_stamp` or `mapping` (it maps the camelCase key `timestamp` to a field of
+that exact name, and no such field exists on these types). A structural row over those types therefore cannot carry a
+timestamp, so no assertion here observes one. This is a property of the generated table rather than of the module, and
+it is recorded rather than worked around.
 
 ### Local generation status
 
