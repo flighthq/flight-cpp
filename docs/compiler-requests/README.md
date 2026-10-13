@@ -111,6 +111,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [A nullable generic value narrowed present must be unwrapped at calls](narrowed-optional-template-argument.md) —
   selection pointer-up passes `optional<NodeType>` to functions taking `NodeType`; the policy completion
   projects the present value after the unchanged guard.
+- [Generic owners behind `Ref` must remain deducible at exported calls](reference-alias-template-deduction.md) —
+  selection-state exports cannot infer `NodeType` through the runtime's conditional `Ref` alias; the
+  completion retains explicit generic arguments internally and native callers currently do likewise.
 - [A constrained generic argument must adapt to a structural helper parameter](constrained-generic-structural-helper-call.md) —
   selection's lasso and marquee candidate loops cannot instantiate for their declared `BoundsNodeAny`
   bound until the completion projects that exact owner to its bounds runtime.
