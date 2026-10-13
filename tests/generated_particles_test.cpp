@@ -150,7 +150,15 @@ void particle_emitter_signals() {
   check(signals->on_particle_spawn != nullptr && signals->on_particle_death != nullptr && signals->on_emitter_complete != nullptr,
         "creates a signals group with all three signal slots");
   const auto state = p::create_particle_emitter_state();
-  check(!p::get_particle_emitter_signals(state).has_value(), "returns null from getParticleEmitterSignals before enablement");
+  const auto read = [](const Ref<flight::types::ParticleEmitterState>& s) -> std::optional<std::optional<Ref<flight::types::ParticleEmitterSignals>>> {
+    try {
+      return p::get_particle_emitter_signals(s);
+    } catch (const std::exception&) {
+      return std::nullopt;
+    }
+  };
+  const auto before = read(state);
+  check(before.has_value() && !before->has_value(), "returns null from getParticleEmitterSignals before enablement, without throwing");
   const auto a = p::enable_particle_emitter_signals(state);
   const auto b = p::enable_particle_emitter_signals(state);
   check(a == b, "enableParticleEmitterSignals returns the same object on repeated calls");
@@ -158,7 +166,8 @@ void particle_emitter_signals() {
   check(got.has_value() && *got == a, "getParticleEmitterSignals returns the enabled object after enablement");
   // Addition: signals are per state.
   const auto other = p::create_particle_emitter_state();
-  check(!p::get_particle_emitter_signals(other).has_value() && p::enable_particle_emitter_signals(other) != a,
+  const auto otherBefore = read(other);
+  check(otherBefore.has_value() && !otherBefore->has_value() && p::enable_particle_emitter_signals(other) != a,
         "another state has its own signals");
 }
 
@@ -508,6 +517,8 @@ void validate_and_normalize() {
   }
 }
 
+Ref<flight::types::ParticleObjectsUpdateOptions> emitter_at(double x, double y);
+
 // upstream's makeObject: a display object with the members the pool path writes.
 Ref<flight::types::ParticleObject> make_object() {
   return flight::make_ref<flight::types::ParticleObject>(flight::types::ParticleObject{
@@ -537,6 +548,11 @@ void step_objects() {
                            1);
   check(visible_count(objects) == 5, "stepParticleObjects spawns into dead slots with no forces or colliders");
 }
+
+// Addition: stepParticleObjects runs forces, then the update, then collisions, and passes its update options through.
+// Declared after the force and collider helpers it uses.
+void step_objects_in_order();
+
 
 using Keys = flight::Array<Ref<flight::types::CurveKeyframe>>;
 using ColorKeys = flight::Array<Ref<flight::types::ColorKeyframe>>;
@@ -940,6 +956,27 @@ Collider rect(double x, double y, double w, double h, const char* mode, std::opt
       .restitution = restitution, .friction = friction, .kind = String("RectangleCollider"), .x = x, .y = y, .width = w, .height = h, .mode = String(mode)})};
 }
 
+void step_objects_in_order() {
+  auto objects = make_objects(1);
+  auto state = p::create_particle_objects_state(1);
+  const auto c = config([](Input& i) {
+    i.spawn_rate = 1;
+    i.lifetime_min = 10;
+    i.lifetime_max = 10;
+    i.speed_min = 0;
+    i.speed_max = 0;
+  });
+  p::step_particle_objects(objects, state, c, 1);
+  const bool spawned = objects.element(0)->visible && objects.element(0)->y == 0;
+  const auto idle = config([](Input& i) { i.spawn_rate = 0; });
+  p::step_particle_objects(objects, state, idle, 1, Forces{wind(0, 1000)}, flight::Array<flight::types::ParticleCollider>{flight::types::ParticleCollider{
+      flight::make_ref<flight::types::PlaneCollider>(flight::types::PlaneCollider{.kind = String("PlaneCollider"), .nx = 0, .ny = -1, .distance = -500})}},
+                           emitter_at(3, 4));
+  // Wind raises velocity to 1000, the update moves y to 1000, and the floor returns it to 500 and stops it.
+  check(spawned && objects.element(0)->y == 500 && state->velocities.element(1) == 0, "step applies forces, then integrates, then collides");
+  check(state->prev_x == 3 && state->prev_y == 4, "step passes its update options to the update");
+}
+
 void collisions() {
   {
     auto a = place(5, 0, -10, 0);
@@ -1039,6 +1076,9 @@ void collisions() {
     auto b = place(120, 520, 80, 100);
     p::apply_particle_collisions(b.emitter, b.state, Colliders{plane(0, -1, -500), rect(0, 0, 100, 1000, "contain")});
     check(near(b.py(), 500) && near(b.px(), 50) && near(b.vx(), 0) && near(b.vy(), 0), "both colliders correct the same particle in order");
+    auto later = place(120, 520, 0, 100);
+    p::apply_particle_collisions(later.emitter, later.state, Colliders{rect(0, 0, 100, 2000, "contain"), plane(0, -1, -500)});
+    check(near(later.px(), 50) && near(later.py(), 500) && near(later.vy(), 0), "a plane after a hit collider is still resolved");
     auto c = place(0, 0, 5, 5);
     p::apply_particle_collisions(c.emitter, c.state, Colliders{circle(0, 0, 10, "exclude", 1), sphere(0, 0, 0, 10, "exclude", 1)});
     check(c.px() == 0 && c.py() == 0 && c.vx() == 5 && c.vy() == 5, "exclude at the exact center has no normal and leaves the particle");
@@ -1150,6 +1190,18 @@ void update_objects() {
     const bool spawned = objects.element(0)->visible;
     p::update_particle_objects(objects, state, c, 0.6);
     check(spawned && !objects.element(0)->visible && state->lifetimes.element(1) == 0, "kills objects when their lifetime expires");
+    // Addition: age reaching the lifetime exactly is death (>=).
+    auto exact = make_objects(1);
+    auto exactState = p::create_particle_objects_state(1);
+    const auto quiet = config([](Input& i) {
+      i.spawn_rate = 0;
+      i.burst_count = 1;
+      i.lifetime_min = 0.5;
+      i.lifetime_max = 0.5;
+    });
+    p::update_particle_objects(exact, exactState, quiet, 0.25);
+    p::update_particle_objects(exact, exactState, quiet, 0.5);
+    check(!exact.element(0)->visible, "a particle whose age reaches its lifetime exactly dies");
   }
   {
     auto objects = make_objects(1);
@@ -1436,6 +1488,20 @@ void update_objects() {
     check(live > 0 && visible_count(objects) == live, "a finite, non-looping emitter stops spawning after its duration");
     // Ten 0.1 s steps sum to 0.9999999999999999 < 1, so -- as in JavaScript -- an eleventh frame still emits.
     check(live == 11, "Addition: emission runs while the accumulated age is below the duration");
+    auto looping = p::create_particle_objects_state(2);
+    p::update_particle_objects(make_objects(2), looping, config([](Input& i) {
+                                 i.duration = 1;
+                                 i.loop = true;
+                               }),
+                               0.5);
+    auto endless = p::create_particle_objects_state(2);
+    p::update_particle_objects(make_objects(2), endless, config([](Input& i) {
+                                 i.duration = 0;
+                                 i.loop = false;
+                               }),
+                               0.5);
+    check(state->emitter_age > 3.9 && looping->emitter_age == 0 && endless->emitter_age == 0,
+          "Addition: emitterAge advances only for a finite, non-looping emitter");
   }
   {
     auto objects = make_objects(50);
@@ -1473,6 +1539,7 @@ void update_objects() {
       i.scale_max = 4;
       i.alpha_curve = curve({1, 0, 1});
       i.scale_curve = curve({1, 0.5, 0});
+      i.alpha_start = 0.3;
     });
     p::update_particle_objects(objects, state, c, 1);
     const double spawnAlpha = objects.element(0)->alpha, spawnScale = objects.element(0)->scale_x;
@@ -1606,5 +1673,6 @@ int main() {
   forces();
   collisions();
   update_objects();
+  step_objects_in_order();
   return failures == 0 ? 0 : 1;
 }
