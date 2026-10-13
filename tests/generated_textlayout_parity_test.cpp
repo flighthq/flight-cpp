@@ -12,10 +12,15 @@
 #include <flight/textlayout/text_bounds.hpp>
 #include <flight/textlayout/text_format.hpp>
 #include <flight/textlayout/text_layout.hpp>
+#include <flight/textlayout/text_layout_measure.hpp>
+#include <flight/textlayout/text_layout_runtime.hpp>
+#include <flight/textlayout/text_line_breaks.hpp>
 #include <flight/types/rectangle.hpp>
 #include <flight/types/text_bounds_spec.hpp>
 #include <flight/types/text_format.hpp>
+#include <flight/types/text_label.hpp>
 #include <flight/types/text_layout.hpp>
+#include <flight/types/text_shaper.hpp>
 
 #include <cmath>
 #include <iostream>
@@ -180,6 +185,142 @@ int main() {
   check(flight::textlayout::text_bounds_gutter == flight::textlayout::text_layout_gutter,
         "textBounds: the bounds gutter is the layout gutter (de-duplicated constant)");
   check(flight::textlayout::text_bounds_gutter > 0.0, "textBounds: the gutter is positive");
+
+  // ---- textLineBreaks.test.ts ------------------------------------------------------------------
+
+  {
+    // The binary search answers "first break at or after startIndex", and -1 means "there is none" --
+    // which is distinguishable from a break at zero only because -1 is not a valid index.
+    const auto breaks = flight::Array<double>{3.0, 7.0, 12.0};
+    check_close(flight::textlayout::get_text_line_break_index(breaks, 5.0), 7.0,
+                "lineBreaks: the index is the first break at or after the start");
+    check_close(flight::textlayout::get_text_line_break_index(flight::Array<double>{3.0, 7.0}, 0.0), 3.0,
+                "lineBreaks: an unset start finds the first break");
+    check_close(flight::textlayout::get_text_line_break_index(breaks, 7.0), 7.0,
+                "lineBreaks: an exact match is a match, not the next one");
+    check_close(flight::textlayout::get_text_line_break_index(flight::Array<double>{3.0, 7.0}, 10.0), -1.0,
+                "lineBreaks: past the last break there is none");
+    check_close(flight::textlayout::get_text_line_break_index(flight::Array<double>{}, 0.0), -1.0,
+                "lineBreaks: an empty break list has no break");
+
+    const auto single = flight::Array<double>{5.0};
+    check(flight::textlayout::get_text_line_break_index(single, 3.0) == 5.0 &&
+              flight::textlayout::get_text_line_break_index(single, 5.0) == 5.0 &&
+              flight::textlayout::get_text_line_break_index(single, 6.0) == -1.0,
+          "lineBreaks: a one-element list searches correctly on both sides");
+
+    // A hundred-element list, because the fixture is really about the BINARY SEARCH: a linear scan
+    // that happened to agree on small inputs is indistinguishable from a correct one until the
+    // search has to actually halve.
+    flight::Array<double> hundred;
+    for (int i = 0; i < 100; ++i) hundred.push(static_cast<double>(i) * 10.0);
+    check(flight::textlayout::get_text_line_break_index(hundred, 55.0) == 60.0 &&
+              flight::textlayout::get_text_line_break_index(hundred, 60.0) == 60.0 &&
+              flight::textlayout::get_text_line_break_index(hundred, 0.0) == 0.0 &&
+              flight::textlayout::get_text_line_break_index(hundred, 999.0) == -1.0,
+          "lineBreaks: a large sorted list finds the first break at or after the start");
+  }
+
+  {
+    // The break scan records the POSITION of each newline, and the array is one value that gets
+    // truncated rather than reallocated -- so a caller can reuse it, which is why the same `out` is
+    // passed seven times in the upstream fixture.
+    const auto out = flight::Array<double>{};
+    const auto scan = [&out](const char* text) {
+      flight::textlayout::get_text_line_breaks(out, flight::String(text));
+      return out.size();
+    };
+    scan("hello world");
+    check(static_cast<double>(out.size()) == 0.0, "lineBreaks: text without newlines yields no breaks");
+    scan("a\nb\nc");
+    check(static_cast<double>(out.size()) == 2.0 && out.element(0.0) == 1.0 && out.element(1.0) == 3.0,
+          "lineBreaks: LF positions are recorded");
+    scan("a\rb\rc");
+    check(static_cast<double>(out.size()) == 2.0 && out.element(0.0) == 1.0 && out.element(1) == 3.0,
+          "lineBreaks: CR positions are recorded");
+    scan("a\nb\rc");
+    check(static_cast<double>(out.size()) == 2.0 && out.element(0.0) == 1.0 && out.element(1) == 3.0,
+          "lineBreaks: with both, the earlier of CR and LF wins (LF first)");
+    scan("a\rb\nc");
+    check(static_cast<double>(out.size()) == 2.0 && out.element(0.0) == 1.0 && out.element(1) == 3.0,
+          "lineBreaks: with both, the earlier of CR and LF wins (CR first)");
+    scan("ab\n");
+    check(static_cast<double>(out.size()) == 1.0 && out.element(0.0) == 2.0,
+          "lineBreaks: a trailing newline is a break at the last index");
+    scan("");
+    check(static_cast<double>(out.size()) == 0.0, "lineBreaks: empty text yields no breaks");
+  }
+
+  // ---- textLayoutMeasure.test.ts ---------------------------------------------------------------
+
+  {
+    // No provider and no host shaper: the answer is absence, not a zero-measuring stub. This is the
+    // initial state, so it is asserted before anything else touches the seam.
+    check(!flight::textlayout::get_text_layout_measure_provider(std::nullopt).has_value(),
+          "measure: there is no provider before one is supplied");
+
+    const auto shaper = flight::make_ref<flight::types::HostTextShaperCapability>();
+    shaper->measure_text = [](flight::String text, flight::Ref<flight::types::TextFormat>) {
+      return static_cast<double>(text.length());
+    };
+    using ShaperSpec = flight::StructuralRef<
+        flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostTextShaperCapability>>>>;
+
+    const auto bound = flight::textlayout::get_text_layout_measure_provider(
+        std::optional<ShaperSpec>{ShaperSpec{shaper}});
+    check(bound.has_value(), "measure: a host text shaper yields a measure function");
+    check_close(bound.value()(flight::String("abc"), make_format(std::nullopt, std::nullopt)), 3.0,
+                "measure: the bound function delegates to the shaper's measureText");
+
+    // An explicitly installed provider wins over the host shaper. Upstream asserts this by function
+    // IDENTITY; a std::function has no identity to assert, so the observable is used instead -- the
+    // provider that answers is the installed one, not the shaper's.
+    flight::textlayout::set_text_layout_measure_provider(
+        std::optional<flight::types::TextMeasureFunction>{flight::types::TextMeasureFunction(
+            [](flight::String text, flight::Ref<flight::types::TextFormat>) {
+              return static_cast<double>(text.length()) * 10.0;
+            })});
+    const auto preferred = flight::textlayout::get_text_layout_measure_provider(
+        std::optional<ShaperSpec>{ShaperSpec{shaper}});
+    check(preferred.has_value() &&
+              preferred.value()(flight::String("abc"), make_format(std::nullopt, std::nullopt)) == 30.0,
+          "measure: an explicitly set provider takes precedence over the host text shaper");
+
+    // Clearing it falls back to the shaper again -- the state is a fallback chain, not a latch.
+    flight::textlayout::set_text_layout_measure_provider(std::nullopt);
+    check(!flight::textlayout::get_text_layout_measure_provider(std::nullopt).has_value(),
+          "measure: clearing the provider returns to absence");
+
+    const auto stored = flight::textlayout::get_text_layout_measure_provider(
+        std::optional<ShaperSpec>{ShaperSpec{shaper}});
+    check(stored.has_value() &&
+              stored.value()(flight::String("abcd"), make_format(std::nullopt, std::nullopt)) == 4.0,
+          "measure: clearing falls back to the host shaper rather than to nothing");
+    flight::textlayout::set_text_layout_measure_provider(std::nullopt);
+  }
+
+  // ---- textLayoutRuntime.test.ts ---------------------------------------------------------------
+
+  {
+    // Reference identity is the assertion here, not just non-nullness: a label's layout result is a
+    // value the renderer holds across frames, so re-fetching must return the SAME one rather than a
+    // fresh equal-looking one. The runtime is a generated entity, so it is built through make_ref.
+    const auto runtime = flight::make_ref<flight::types::TextLabelRuntime>();
+
+    const auto attached = flight::textlayout::get_text_layout_result(runtime);
+    check(attached != nullptr, "runtime: a layout result is attached to runtime state");
+    check(runtime->text_layout.has_value() && runtime->text_layout.value() == attached,
+          "runtime: the attached result is the one the runtime now holds");
+    check(flight::textlayout::get_text_layout_result(runtime) == attached,
+          "runtime: an existing layout result is reused, by identity");
+
+    flight::textlayout::clear_text_layout_result(runtime);
+    check(!runtime->text_layout.has_value(), "runtime: clearing detaches the layout result");
+
+    const auto reattached = flight::textlayout::get_text_layout_result(runtime);
+    check(reattached != nullptr && reattached != attached,
+          "runtime: after a clear a fresh result is attached, not the old one");
+  }
 
   return failures == 0 ? 0 : 1;
 }
