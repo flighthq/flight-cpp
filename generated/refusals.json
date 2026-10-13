@@ -3597,21 +3597,21 @@
       "code": "dependency-refused",
       "module": "packages/physics3d-abi/src/contract.ts",
       "package": "@flighthq/physics3d-abi",
-      "reason": "dependency ./physics3DAbiCommand was refused for @flighthq/physics3d-abi/packages/physics3d-abi/src/physics3DAbiCommand.ts",
+      "reason": "dependency ./physics3DAbiCommand.ts was refused for @flighthq/physics3d-abi/packages/physics3d-abi/src/physics3DAbiCommand.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics3d-abi/src/index.ts",
       "package": "@flighthq/physics3d-abi",
-      "reason": "dependency ./physics3DAbiCommand was refused for @flighthq/physics3d-abi/packages/physics3d-abi/src/physics3DAbiCommand.ts",
+      "reason": "dependency ./physics3DAbiCommand.ts was refused for @flighthq/physics3d-abi/packages/physics3d-abi/src/physics3DAbiCommand.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics3d-abi/src/physics3DAbi.ts",
       "package": "@flighthq/physics3d-abi",
-      "reason": "dependency ./referencePhysics3DAbi was refused for @flighthq/physics3d-abi/packages/physics3d-abi/src/referencePhysics3DAbi.ts",
+      "reason": "dependency ./referencePhysics3DAbi.ts was refused for @flighthq/physics3d-abi/packages/physics3d-abi/src/referencePhysics3DAbi.ts",
       "stage": "dependency"
     },
     {
