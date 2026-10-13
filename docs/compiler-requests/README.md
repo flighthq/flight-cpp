@@ -165,6 +165,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `@flighthq/texture-formats` populates one inner array per format slot, then a plain
   `perSlotLevels[slot].push(...)` is refused after the emitter turns the element into optional storage;
   carried by the complete `texture-formats-parse-atf-nested-levels` override.
+- [An indexed dense-array element keeps the presence established by lockstep append](indexed-dense-array-append-presence.md) —
+  `@flighthq/path-boolean` creates adjacency-list indices only after appending their dense element, but
+  the later `outgoing[from].push(edge)` loses that relational proof and withholds `DirectedGraph`.
 - [A corpus-context structural row construction loses an exact Record spread](corpus-context-structural-row-record-spread.md) —
   `threeDsParse.ts` is a committed P-3D2 refusal, but its closest minimal form reaches an adjacent
   Record-spread rule and the split-module form emits; the page records the non-reproduction without
