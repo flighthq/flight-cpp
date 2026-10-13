@@ -105,7 +105,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/mediasession` | 3 | 1 | 19 | dedicated | none | 3 / 0 |
 | `@flighthq/video` | 5 | 3 | 79 | none | none | 4 / 1 |
 | `@flighthq/webcam` | 2 | 1 | 1 | none | none | 2 / 0 |
-| `@flighthq/midi` | 7 | 5 | 40 | none | none | 5 / 2 |
+| `@flighthq/midi` | 7 | 5 | 40 | dedicated | none | 5 / 2 |
 | `@flighthq/sensors` | 3 | 2 | 67 | none | none | 3 / 0 |
 | `@flighthq/geolocation` | 4 | 2 | 13 | none | none | 4 / 0 |
 | `@flighthq/haptics` | 3 | 1 | 19 | none | none | 3 / 0 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-18 of 39 packages are reached by at least one local CTest executable.
-17 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`.
+19 of 39 packages are reached by at least one local CTest executable.
+18 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`.
 
 ## `@flighthq/app`
 
@@ -1024,9 +1024,36 @@ Explicit MIDI access, port resources, and lifecycle subscriptions
 
 Upstream carries per-package records at `flight/agents/packages/midi/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
 
+### What is coverable, and what "parity" can mean here
+
+Two of the package's seven modules are refused and neither is supplied by an override, so the package is tier
+PARTIAL:
+
+- `midiPort.ts` -- "captured referent mutation of state requires a shared C++ reference representation";
+- `midiSubscription.ts` -- "optional property call delete requires callable result evidence".
+
+`midiAccess.ts`, `contract.ts` and `index.ts` are refused by dependency on those two. Measured rather than read off
+the summary: the three partial headers written for the refused modules declare **nothing**. `midi_port.hpp` is 49
+lines of includes and a forward declaration with **zero functions**, and `midi_subscription.hpp` does not compile at
+all ("use of undeclared identifier"). `midi_permission.hpp` and `midi_resource.hpp` are the only two modules with a
+callable surface, and they compile. So the 27 upstream cases in `midiPort` (11) and `midiSubscription` (16) have no
+emitted surface to port to, and no test invents one.
+
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_midi` — `tests/generated_midi_test.cpp` (dedicated), PRE-EXISTING (the roll-up row above read
+  "none" until this unit corrected it). It covers the two modules that emit and compile whole, over the cases their
+  own upstream suites state: `getMidiPermission` answering a throwing capability with the `operation-failed` outcome
+  rather than rejecting, and otherwise returning the capability's OWN outcome object with its arm intact; a resource
+  state being absent until retained, then stored under its own access or port, carrying the operations it was
+  retained with and empty subscription sets, with a second retain storing a DIFFERENT state object. It states that
+  `midiPort` is refused and asserts nothing about it.
+
+  This unit added the MUTATION battery the package had none of, five mutations against the two covered modules, and
+  all five are detected: the permission catch narrowed so a failure is no longer caught (1 failing check AND an
+  abort, as the exception escapes the task), the reported failure reason changed 1, the access state never stored 4,
+  a freshly retained access state marked disposed 1, and an input port's kind written as output 1. No equivalence was
+  found on this surface and none is claimed.
 
 ### Local generation status
 
