@@ -424,3 +424,5 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   performance only: an uncached owner lookup over the `@flighthq/types/contract` barrel makes the registry migration group's generation take 3h40m. No workaround is carried.
 - [A `?? null` fallback written into nullable structural storage must produce that storage's absent state](nullish-null-fallback-into-nullable-structural-storage.md) —
   `@flighthq/render`'s `initializeRenderState` (`canvasHost`, `imageHost`); one statement failed 227 renderer header compilations. Carried by the `render-state-nullable-structural-*-fallback` emission repairs.
+- [`new Map(existingMap)` must copy, not alias](new-map-copy-lowered-to-alias.md) —
+  silent miscompilation: `flight::Map(map)` selects the sharing copy constructor, so registry's `withKindMapEntry`, `withoutKindMapEntry` and `concatKindMap` mutated their input. Carried by the `registry-new-map-copy-*` emission repairs; seven other packages carry candidate sites.

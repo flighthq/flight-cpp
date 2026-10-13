@@ -30,7 +30,7 @@ using flight::types::OrdinalTable;
 
 template <typename T>
 inline flight::Map<flight::String, T> concat_kind_map(flight::Map<flight::String, T> base, flight::Map<flight::String, T> overlay) {
-  auto entries = flight::Map(base);
+  auto entries = base.clone();
   for (auto array_pattern_value : overlay) {
     flight::String key = std::get<0>(array_pattern_value);
     T value = std::get<1>(array_pattern_value);
@@ -75,14 +75,14 @@ inline std::optional<T> get_ordinal_table_entry(flight::StructuralRef<flight::Ro
 
 template <typename T>
 inline flight::Map<flight::String, T> with_kind_map_entry(flight::Map<flight::String, T> map, flight::String key, T value) {
-  auto entries = flight::Map(map);
+  auto entries = map.clone();
   entries.set(key, value);
   return entries;
 }
 
 template <typename T>
 inline flight::Map<flight::String, T> without_kind_map_entry(flight::Map<flight::String, T> map, flight::String key) {
-  auto entries = flight::Map(map);
+  auto entries = map.clone();
   entries.erase(key);
   return entries;
 }
