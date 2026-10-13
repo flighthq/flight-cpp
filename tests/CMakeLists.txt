@@ -1100,6 +1100,28 @@ flight_cpp_package_test_labels(flight_cpp.generated_signals signals)
 flight_cpp_package_test_labels(flight_cpp.generated_useragent useragent)
 flight_cpp_package_test_labels(flight_cpp.generated_dialog app dialog filesystem geometry node render signals)
 flight_cpp_package_test_labels(flight_cpp.generated_textshaper_cache textshaper)
+
+# Behavioural parity for @flighthq/textshaper: the capability queries, the shaped-run pool (whose
+# acquire/release identity IS the contract), the cluster index map and the script/direction itemizer.
+# The pool's release-guard seam is tested here; its log-emitting half is blocked by log's
+# merge_span_fields boundary, recorded in-file rather than worked around.
+add_executable(
+  flight_cpp_generated_textshaper_parity_tests
+  generated_textshaper_parity_test.cpp
+)
+target_include_directories(
+  flight_cpp_generated_textshaper_parity_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_textshaper_parity_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(
+  NAME flight_cpp.generated_textshaper_parity
+  COMMAND flight_cpp_generated_textshaper_parity_tests
+)
+flight_cpp_package_test_labels(flight_cpp.generated_textshaper_parity textshaper)
 flight_cpp_package_test_labels(flight_cpp.generated_net net)
 flight_cpp_package_test_labels(flight_cpp.generated_socket signals socket)
 flight_cpp_package_test_labels(flight_cpp.generated_encoding encoding)
