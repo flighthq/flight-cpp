@@ -99324,7 +99324,7 @@
             "packageName": "@flighthq/path-formats",
             "source": "packages/path-formats/src/contract.ts"
           },
-          "specifier": "./svgPathData",
+          "specifier": "./svgPathData.ts",
           "target": {
             "name": "SvgPathData",
             "packageName": "@flighthq/path-formats",
@@ -167277,7 +167277,7 @@
             "packageName": "@flighthq/path-formats",
             "source": "packages/path-formats/src/index.ts"
           },
-          "specifier": "./contract",
+          "specifier": "./contract.ts",
           "target": {
             "name": "Contract",
             "packageName": "@flighthq/path-formats",
