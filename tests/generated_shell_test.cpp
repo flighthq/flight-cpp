@@ -289,6 +289,63 @@ int main() {
     check(without_options == process, "spawn without options still returns the provider's process");
   }
 
+  // --- Cases added by the mutation battery, which found four holes in this file --------------------
+  //
+  // A 15-mutation battery against the emitted module killed eleven and SURVIVED four, each a real hole rather
+  // than an equivalence:
+  //
+  //  * the URL's OWN scheme is never folded by any case above -- the policy there is UPPERCASE and the URL
+  //    lowercase, so only the allowed side's `toLower` is exercised. A URL whose scheme is uppercase was
+  //    therefore untested, and dropping the module's own `toLower()` on the URL went unnoticed.
+  //  * openShellPath, revealShellPath and readShortcutLink were asserted by OUTCOME only, and each lambda above
+  //    takes its path parameter UNNAMED, so dropping the argument entirely went unnoticed.
+  {
+    const auto lowercase_policy = policy_row(policy_of({"https"}));
+    check(flight::shell::is_shell_url_allowed(String("HTTPS://example.test"), lowercase_policy),
+          "an UPPERCASE url scheme matches a lowercase policy, so the url side is folded too");
+    check(flight::shell::is_shell_url_allowed(String("HtTpS://example.test"), lowercase_policy),
+          "and mixed case on either side still matches");
+  }
+
+  {
+    String seen_open;
+    auto open_host = flight::make_ref<flight::types::HostShellPathOpenCapability>();
+    open_host->open = [&seen_open](String path) {
+      seen_open = path;
+      auto failure = flight::make_ref<flight::types::message_reason_38ed09bf88f1d5eb>();
+      failure->reason = String("operation-failed");
+      failure->message = String("no handler for the path");
+      return flight::Task<PathOpenOutcome>::resolve(PathOpenOutcome{std::in_place_index<0>, failure});
+    };
+    flight::shell::open_shell_path(open_host, String("/tmp/open-me")).get();
+    check(seen_open == String("/tmp/open-me"), "openPath forwards the exact path it was given");
+
+    String seen_reveal;
+    auto reveal_host = flight::make_ref<flight::types::HostShellPathRevealCapability>();
+    reveal_host->reveal = [&seen_reveal](String path) {
+      seen_reveal = path;
+      return flight::Task<flight::Ref<RevealOutcome>>::resolve(
+          flight::make_ref<RevealOutcome>(RevealOutcome{.reason = String("ok")}));
+    };
+    flight::shell::reveal_shell_path(reveal_host, String("/tmp/reveal-me")).get();
+    check(seen_reveal == String("/tmp/reveal-me"), "revealPath forwards the exact path it was given");
+
+    String seen_read;
+    auto link_host = flight::make_ref<flight::types::HostShellShortcutLinkCapability>();
+    link_host->read = [&seen_read](String shortcut_path) {
+      seen_read = shortcut_path;
+      auto outcome = flight::make_ref<flight::types::link_reason_591377b92cfbfdf5>();
+      outcome->reason = String("ok");
+      auto link = flight::make_ref<ShortcutLink>();
+      outcome->link =
+          flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<ShortcutLink>>>>(link);
+      return flight::Task<ShortcutReadOutcome>::resolve(
+          ShortcutReadOutcome{std::in_place_index<0>, outcome});
+    };
+    flight::shell::read_shell_shortcut_link(link_host, String("/tmp/read-me")).get();
+    check(seen_read == String("/tmp/read-me"), "readShortcutLink forwards the exact path it was given");
+  }
+
   if (failures == 0) std::cout << "generated shell: all checks passed\n";
   return failures == 0 ? 0 : 1;
 }

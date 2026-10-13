@@ -120,7 +120,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/notification` | 3 | 1 | 38 | dedicated | partial | 2 / 1 |
 | `@flighthq/share` | 3 | 2 | 14 | dedicated | assisted | 2 / 1 |
 | `@flighthq/shortcut` | 4 | 2 | 27 | dedicated | none | 3 / 1 |
-| `@flighthq/shell` | 3 | 1 | 14 | none | none | 3 / 0 |
+| `@flighthq/shell` | 3 | 1 | 14 | dedicated | ready | 3 / 0 |
 | `@flighthq/ipc` | 3 | 1 | 12 | none | none | 3 / 0 |
 | `@flighthq/protocol` | 3 | 2 | 23 | none | none | 3 / 0 |
 | `@flighthq/permissions` | 3 | 5 | 31 | none | none | 3 / 0 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-26 of 39 packages are reached by at least one local CTest executable.
-25 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`, `sensors`, `geolocation`, `haptics`, `device`, `power`, `notification`.
+27 of 39 packages are reached by at least one local CTest executable.
+26 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`, `sensors`, `geolocation`, `haptics`, `device`, `power`, `notification`, `shell`.
 
 ## `@flighthq/app`
 
@@ -1775,7 +1775,32 @@ Upstream carries per-package records at `flight/agents/packages/shell/`: `status
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_shell` — `tests/generated_shell_test.cpp` (dedicated), PRE-EXISTING. It was written for this
+  repository before this unit and is not one I added; the roll-up row above read "none" until this unit corrected it,
+  along with the TIER column, which read "none" while the package is in fact READY (3 of 3 modules emitted, no
+  override). The test runs green at this pin.
+
+  This unit added the MUTATION BATTERY the file had none of. Sixteen mutations against the emitted module, fifteen
+  killed: the scheme's trailing colon not stripped, the ALLOWED scheme not folded, an unparseable URL allowed
+  instead of refused, membership tested with `every` instead of `some`, the blocked-scheme guard dropped, the
+  blocked reason misnamed, the trash call collapsing to no paths, spawn dropping its options and dropping its args,
+  the beep never called, the shortcut write dropping its operation, and the three path entry points dropping the path
+  they were given.
+
+  Four mutations SURVIVED the first run. Three were real holes -- `openShellPath`, `revealShellPath` and
+  `readShortcutLink` were asserted by OUTCOME only and each host lambda took its path parameter UNNAMED, so dropping
+  the argument went unnoticed -- and cases asserting that each forwards the EXACT path it was given were ADDED, after
+  which all three are killed.
+
+  The fourth is reported as an EQUIVALENCE rather than a hole, and it is provable rather than assumed: removing the
+  module's own `toLower()` from the URL's scheme changes nothing, because `flight::Url(url).protocol` is ALREADY
+  lowercased by the parser -- measured, `Url("HTTPS://example.test").protocol` is `"https:"` and
+  `Url("HtTpS://...")` the same, which is WHATWG scheme normalization. So the fold is redundant on that side, and
+  only the ALLOWED side's fold is load-bearing (which is why that one is killed). A case asserting end-to-end
+  case-insensitivity across both sides was still added, since the upstream suite asserts it, but it is not
+  what kills any mutation and is not claimed to be.
+
+  No compiler request was filed for this package.
 
 ### Local generation status
 
