@@ -336,6 +336,8 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   diagnostic details in five format packages; carried per package by detail-local source patches.
 - [Owning arrays, readonly-row arrays and number buffers need conversions where they meet](animation-readonly-row-array-carriers.md) —
   animation blend tree and crossfade; carried by their two overrides.
+- [A named function with fewer parameters must be adapted where a wider callable is expected](named-function-parameter-count-adapter.md) —
+  timeline's no-op constructFrame fallback; carried by the `timeline-noop-construct-frame-arity` source patch.
 - [A null test on an element of a nullable-element array tests the wrong optional layer](nullable-array-element-null-test.md) —
   silent miscompilation: `slots[i] !== null` emitted `get(i).has_value()`, so signals' tombstoned slots counted as live and were never compacted. Carried by the `compiler-indexed-element-presence-test` patch.
 - [A local typed by a constrained type parameter is stored as the constraint](constrained-type-parameter-local-storage.md) —
