@@ -80,7 +80,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/velocity` | 5 | 3 | 58 | none | none | 4 / 1 |
 | `@flighthq/motionpath` | 3 | 1 | 29 | dedicated | none | 3 / 0 |
 | `@flighthq/clock` | 4 | 2 | 37 | dedicated | none | 4 / 0 |
-| `@flighthq/movieclip` | 5 | 3 | 60 | none | none | 3 / 2 |
+| `@flighthq/movieclip` | 5 | 3 | 60 | dedicated | none | 4 / 1 |
 | `@flighthq/swf` | 58 | 51 | 441 | none | none | 16 / 3 |
 | `@flighthq/skeleton2d` | 25 | 22 | 220 | none | none | 17 / 8 |
 | `@flighthq/skeleton2d-formats` | 59 | 60 | 533 | none | none | 10 / 5 |
@@ -382,12 +382,25 @@ Upstream carries per-package records at `flight/agents/packages/movieclip/`: `st
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+`flight_cpp.generated_movieclip` (dedicated) -- `tests/generated_movieclip_test.cpp`, which exercises the package
+through its committed override `flight/movieclip/movie_clip.hpp` (status: partial) because no generated header of the
+package compiles: `contract.hpp`, `_internal_index.hpp`, `enable_movie_clip_guards.hpp` and
+`spritesheet_timeline_source.hpp` all stop on `use of undeclared identifier 'initialize_sprite_renderer_data'` from
+`@flighthq/scene2d`'s refused `sprite.ts`. The test covers the clip as a real timeline target (which the timeline
+package's own test cannot do): construction defaults and the MovieClip kind, the null-timeline no-ops and idle
+defaults, source binding with the timeline targeting the clip itself and realizing frame 1, timeline reuse, playback
+and seeking, labels, the frame-script registry and its firing, the constructFrame callback, and the signal group's
+idempotence, re-arming and disposal. Not covered, exactly as the override records: the `createMovieClip` options form
+and the two runtime accessors (`createMovieClipRuntime`, `getMovieClipRuntime`) -- 4 of the file's 50 upstream cases,
+excluded by the refusal below rather than by the test's scope.
 
 ### Local generation status
 
-3 of 5 modules emitted, 2 refused; 5 refusing modules (2 of them refusal roots). Read from the committed generated tree, not from the pin above.
- Hand-written overrides shadow generated headers here: `movieclip-timeline-node-construction`.
+4 of 5 modules emitted, 1 refused; 5 refusing modules (1 of them a refusal root). Read from the committed generated tree, not from the pin above. The root is `movieClip.ts` itself, on the closed
+flattened-interface decision (`Ref<Node2DRuntime>` asserted to `Ref<MovieClipRuntime>`); the other four are cascades --
+`contract.ts` and `index.ts` behind it, `enableMovieClipGuards.ts` behind `@flighthq/log`'s refused `log.ts`, and
+`spritesheetTimelineSource.ts` behind `@flighthq/scene2d`'s refused `sprite.ts`. Hand-written overrides shadow
+generated headers here: `movieclip-timeline-node-construction`, which is what the test above includes.
 
 ### Web-only exclusions
 

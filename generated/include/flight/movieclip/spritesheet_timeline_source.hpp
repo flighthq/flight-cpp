@@ -124,7 +124,7 @@ inline void initialize_spritesheet_timeline_source(flight::types::EntityConstruc
     bitmaps.set(target, bitmap.value());
   }
   std::optional<flight::Ref<flight::types::SpritesheetFrame>> sheet_frame = flight::row_get<flight::RowKey<"frames">>(spritesheet).get(frames.element((frame - 1.0)));
-  if (!sheet_frame.has_value()) {
+  if (([&]() { const auto& presence_operand = sheet_frame; return !presence_operand.has_value(); }())) {
     return;
   }
   auto region = flight::textureatlas::get_texture_atlas_region_by_id(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextureAtlas>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextureAtlas>>>>(atlas.value())), sheet_frame.value()->id);

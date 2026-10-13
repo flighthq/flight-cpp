@@ -108,3 +108,19 @@ No workaround is carried.
 
 Also blocks `swf_sound_handler.hpp` at a627849: `cues: TimelineCue[]` receives
 `TimelineStreamAudioCue`, which extends `TimelineCue` in TypeScript but not in the emitted C++ (3 sites).
+
+Also blocks `@flighthq/movieclip` at a627849, and it is the package's own root refusal: `movieClip.ts` fails on a
+reference assertion from `flight::Ref<flight::types::Node2DRuntime>` to `flight::Ref<flight::types::MovieClipRuntime>`.
+The pattern is the one this file already describes, at the package's runtime boundary rather than a texture -- a base
+runtime is asserted to the derived runtime that a `MovieClip` carries (`createMovieClipRuntime`'s
+`createNode2DRuntime() as MovieClipRuntime`, and every `clip[EntityRuntimeKey] as MovieClipRuntime` read) -- and the
+emitter, correctly, will not use a native pointer cast, materialize a replacement row, or invent side storage. Nothing
+in the module is supplied and no workaround is carried, which is why 4 of that package's 5 modules refuse: `contract.ts`
+and `index.ts` behind it, and the two remaining modules behind dependencies (below).
+
+Also blocks `@flighthq/scene2d` at a627849, where it is the larger cluster: five modules refuse on the same family --
+`displayObject.ts`, `sprite.ts`, `scene2d.ts`, `scale9Sprite.ts` and `htmlView.ts`, the first four on reference
+assertions between a base and a derived runtime or node type, the fifth on a structural assertion from a readonly row.
+Because `@flighthq/movieclip` reaches scene2d, this is also the dependency blocker behind that package's
+`spritesheetTimelineSource.ts`. The engine `@flighthq/movieclip` drives -- `@flighthq/timeline` -- is unaffected: all
+three of its modules emit.
