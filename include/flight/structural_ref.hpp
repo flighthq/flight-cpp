@@ -379,6 +379,9 @@ class RowOwner {
   std::unordered_map<const void*, SymbolCell> symbol_cells_;
 };
 
+template <typename Schema>
+class StructuralRef;
+
 namespace detail {
 
 template <typename>
@@ -407,6 +410,13 @@ template <typename... Rows>
 struct schema_source<RowMerge<Rows...>> {
   using type = void;
 };
+
+// A row OF a row is that row. TypeScript writes `EntityConstruction<Host & Capabilities>`, a mapped
+// type over an intersection, and the emitter spells the intersection as a `StructuralRef` over a
+// merge before wrapping it in `RowOf`. The members of `StructuralRef<S>` are exactly the members S
+// names, so every schema question about the outer row is answered by S.
+template <typename Schema>
+struct schema_source<RowOf<StructuralRef<Schema>>> : schema_source<Schema> {};
 
 template <typename Row>
 struct schema_source<RowPartial<Row>> : schema_source<Row> {};
@@ -902,6 +912,9 @@ struct schema_member<Key, RowOf<Type>> {
   using type = generated_row_member_t<Key, unwrap_ref_t<Type>>;
 };
 
+template <typename Key, typename Schema>
+struct schema_member<Key, RowOf<StructuralRef<Schema>>> : schema_member<Key, Schema> {};
+
 template <typename Key, typename Row>
 struct schema_member<Key, RowReadonly<Row>> : schema_member<Key, Row> {};
 
@@ -1004,6 +1017,121 @@ inline constexpr bool schema_required<RowReadonly<Row>> = schema_required<Row>;
 template <typename Row>
 inline constexpr bool schema_required<RowWritable<Row>> = schema_required<Row>;
 
+template <typename Schema>
+inline constexpr bool schema_partial<RowOf<StructuralRef<Schema>>> = schema_partial<Schema>;
+
+template <typename Schema>
+inline constexpr bool schema_readonly<RowOf<StructuralRef<Schema>>> = schema_readonly<Schema>;
+
+template <typename Schema>
+inline constexpr bool schema_required<RowOf<StructuralRef<Schema>>> = schema_required<Schema>;
+
+// The rows a merge is made of, seen through the wrappers that keep a merge a merge: readonly,
+// writable, and a row of a row. A partial or required merge is a different question and is not
+// unwrapped here, so it is never given a subject or a per-member storage rule.
+template <typename... Rows>
+struct row_list {};
+
+template <typename Schema>
+struct merge_rows {
+  using type = void;
+};
+
+template <typename... Rows>
+struct merge_rows<RowMerge<Rows...>> {
+  using type = row_list<Rows...>;
+};
+
+template <typename Row>
+struct merge_rows<RowReadonly<Row>> : merge_rows<Row> {};
+
+template <typename Row>
+struct merge_rows<RowWritable<Row>> : merge_rows<Row> {};
+
+template <typename Schema>
+struct merge_rows<RowOf<StructuralRef<Schema>>> : merge_rows<Schema> {};
+
+// A merged member the merge declares present although a constituent's subject stores it as an
+// optional: `HostWindowGeometryCapability & Required<Pick<..., 'center'>>` reads `center`, which the
+// capability declares `center?:`. The member's storage is the subject's, so it may be the bare value or
+// the optional, and the read must accept both and fail loudly on an empty optional -- which is the
+// required-row rule, applied to this one member rather than to the whole row.
+template <typename Key, typename Rows>
+struct merge_member_narrowed : std::false_type {};
+
+template <typename Key, typename... Rows>
+struct merge_member_narrowed<Key, row_list<Rows...>>
+    : std::bool_constant<
+          !std::is_void_v<typename merged_schema_member<Key, Rows...>::type> &&
+          !optional_traits<typename merged_schema_member<Key, Rows...>::type>::optional &&
+          (optional_traits<typename schema_member<Key, Rows>::type>::optional || ...)> {};
+
+template <typename Key, typename Schema>
+inline constexpr bool schema_member_required =
+    schema_required<Schema> ||
+    merge_member_narrowed<Key, typename merge_rows<Schema>::type>::value;
+
+// The one native subject a merge is a view of, or void.
+//
+// A merge has no subject of its own: `A & B` is a row over two. But an intersection the SDK builds
+// is usually one object seen twice -- `Host & Capabilities` with `Capabilities` a Host, or a
+// capability narrowed by `Required<Pick<Capability, 'center'>>` -- and that object is what a merged
+// row has to construct and view. A constituent's subject S is THE subject when every constituent
+// row is over S itself or over a subject the generated table proves S answers for, key by key at
+// the same type, with no computed cell declared differently. That is the widening rule rows already
+// convert by, so the merge asks nothing new of the table.
+//
+// It is void when no constituent qualifies (two unrelated subjects), when more than one distinct
+// subject qualifies (two shapes that each answer for the other), or when a constituent has no subject
+// at all. A void subject keeps the merge what it was before: schema-only, never minted as either.
+template <typename Candidate, typename Row>
+concept merge_row_answered_by =
+    !std::is_void_v<schema_object_t<Row>> &&
+    (std::same_as<schema_object_t<Row>, Candidate> ||
+     (generated_row_widening_proven_v<schema_object_t<Row>, Candidate> &&
+      computed_cells_agree<schema_object_t<Row>, Candidate>));
+
+template <typename Candidate, typename... Rows>
+inline constexpr bool merge_subject_qualifies =
+    !std::is_void_v<Candidate> && (merge_row_answered_by<Candidate, Rows> && ...);
+
+// A second, distinct qualifying subject makes the merge ambiguous. This marker survives the rest of the
+// search, so the answer can never fall back to whichever subject happened to be found first.
+struct ambiguous_merge_subject {};
+
+template <typename Found, typename Candidates, typename... Rows>
+struct merge_subject_search;
+
+template <typename Found, typename... Rows>
+struct merge_subject_search<Found, row_list<>, Rows...> {
+  using type = Found;
+};
+
+template <typename Found, typename Candidate, typename... Candidates, typename... Rows>
+struct merge_subject_search<Found, row_list<Candidate, Candidates...>, Rows...> {
+  static constexpr bool qualifies =
+      !std::same_as<Found, ambiguous_merge_subject> && merge_subject_qualifies<Candidate, Rows...>;
+  using next = std::conditional_t<
+      !qualifies || std::same_as<Found, Candidate>, Found,
+      std::conditional_t<std::is_void_v<Found>, Candidate, ambiguous_merge_subject>>;
+  using type = typename merge_subject_search<next, row_list<Candidates...>, Rows...>::type;
+};
+
+template <typename Rows>
+struct merge_subject {
+  using type = void;
+};
+
+template <typename... Rows>
+struct merge_subject<row_list<Rows...>> {
+  using found =
+      typename merge_subject_search<void, row_list<schema_object_t<Rows>...>, Rows...>::type;
+  using type = std::conditional_t<std::same_as<found, ambiguous_merge_subject>, void, found>;
+};
+
+template <typename Schema>
+using merge_subject_t = typename merge_subject<typename merge_rows<Schema>::type>::type;
+
 // When one row may be read as another.
 //
 // Three cases are allowed and everything else is rejected:
@@ -1063,6 +1191,23 @@ class StructuralRef {
       // pointer is a subject object even when the shared owner was first created for a derived type -- an
       // anonymous carrier like the one createShapedRun allocates -- and records that type instead.
       subject_proven_ = true;
+    }
+  }
+
+  // A merged row over the one object it is a view of. A merge has no `object_type` of its own, so the
+  // constructor above does not apply; when every constituent is answered by one native subject, a
+  // pointer to that subject is the object the merge describes, and the row keeps it and its one owner
+  // exactly as the single-subject row would. No subject (unrelated or ambiguous constituents) means no
+  // constructor, as before.
+  template <typename Type>
+    requires(std::is_void_v<object_type> && !std::is_void_v<detail::merge_subject_t<Schema>> &&
+             std::convertible_to<std::shared_ptr<Type>,
+                                 std::shared_ptr<detail::merge_subject_t<Schema>>>)
+  StructuralRef(std::shared_ptr<Type> object) {
+    std::shared_ptr<detail::merge_subject_t<Schema>> subject = std::move(object);
+    if (subject) {
+      owner_ = detail::owner_for(subject);
+      object_ = std::static_pointer_cast<void>(subject);
     }
   }
 
@@ -1244,7 +1389,7 @@ decltype(auto) row_get(const StructuralRef<Schema>& source) {
       return Value(*present);
     }
     return Value{};
-  } else if constexpr (detail::schema_required<Schema>) {
+  } else if constexpr (detail::schema_member_required<Key, Schema>) {
     // The member is read as its value. Storage may hold either the bare value or the optional the
     // subject declared, and an optional that holds nothing is the case this row exists to catch:
     // the reader is told, rather than handed an empty optional to invoke.
@@ -1286,7 +1431,7 @@ void row_set(const StructuralRef<Schema>& target, Value&& value) {
                 "structural row write has an incompatible value type");
   if (!target.shared_owner()) throw std::bad_weak_ptr();
   target.shared_owner()->before_named_write(Key::name.view());
-  if constexpr (detail::schema_required<Schema>) {
+  if constexpr (detail::schema_member_required<Key, Schema>) {
     // Writing through a required row keeps the subject's own storage shape: a member the subject
     // declared optional stays an optional, now engaged.
     if (auto* stored =
@@ -1378,7 +1523,7 @@ template <typename Schema>
 template <typename Key, typename Schema>
 [[nodiscard]] bool row_has(const StructuralRef<Schema>& source) {
   if (!source.shared_owner()) return false;
-  if constexpr (detail::schema_required<Schema>) {
+  if constexpr (detail::schema_member_required<Key, Schema>) {
     using Value = detail::schema_member_t<Key, Schema>;
     if (source.shared_owner()->template named_value_if<Value>(Key::name.view())) return true;
     const auto* stored =
@@ -1475,8 +1620,14 @@ template <typename Target, typename Schema>
   if constexpr (requires { typename Target::schema_type; }) {
     using To = typename Target::object_type;
     using From = typename StructuralRef<Schema>::object_type;
+    using Subject = detail::merge_subject_t<typename Target::schema_type>;
     if constexpr (detail::row_materializes_from<To, From>) {
       return Target(detail::materialize_row<To>(source));
+    } else if constexpr (std::is_void_v<To> && detail::row_materializes_from<Subject, From>) {
+      // An empty bag asserted as a merge with one subject becomes that subject, exactly as it would if
+      // asserted as the subject's own row: `{} as EntityConstruction<Host & Capabilities>` is one Host.
+      const auto materialized = detail::materialize_row<Subject>(source);
+      return Target::from_owner(materialized.shared_owner());
     } else {
       // This is the explicit assertion path emitted for a source `as Target`, not the implicit row
       // conversion above. TypeScript permits that assertion even when the two nominal carriers are

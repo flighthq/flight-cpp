@@ -51,6 +51,12 @@ target_link_libraries(flight_cpp_structural_row_tests PRIVATE Flight::Cpp Flight
 flight_cpp_set_project_warnings(flight_cpp_structural_row_tests)
 add_test(NAME flight_cpp.structural_row COMMAND flight_cpp_structural_row_tests)
 
+# Merged rows (`A & B`): construction, narrowed members and the subject rule, against the generated table.
+add_executable(flight_cpp_merged_row_tests merged_row_test.cpp)
+target_link_libraries(flight_cpp_merged_row_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+flight_cpp_set_project_warnings(flight_cpp_merged_row_tests)
+add_test(NAME flight_cpp.merged_row COMMAND flight_cpp_merged_row_tests)
+
 add_executable(flight_cpp_task_resolve_domain_tests task_resolve_domain_test.cpp)
 target_link_libraries(flight_cpp_task_resolve_domain_tests PRIVATE Flight::Cpp)
 flight_cpp_set_project_warnings(flight_cpp_task_resolve_domain_tests)

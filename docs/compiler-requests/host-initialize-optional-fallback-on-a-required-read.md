@@ -89,3 +89,11 @@ host-specific -- any emitted `maybeValue ?? fallback` where the read turns out t
 None. This repository carries no patch for it, does not edit the emitted module, and does not weaken the signature.
 `tests/generated_host_test.cpp` builds its hosts by hand -- group by group -- because the factory cannot be called,
 and says so at the top.
+
+## Runtime boundary
+
+The separate merged-row runtime gap that prevented `EntityConstruction<Host & Capabilities>` from resolving and
+storing its members is now fixed in `structural_ref.hpp`; see
+[merged-row-not-constructible.md](merged-row-not-constructible.md). With that runtime change and the carried
+fallback lowering, scratch-generated `createHost` instantiates and runs. The committed generated Host module remains
+unchanged until its owning package is regenerated.

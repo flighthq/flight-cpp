@@ -470,8 +470,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   silent miscompilation: `@flighthq/textshaper` cannot recover the derived run carrier through its structural row view. No workaround is carried.
 - [A named input carrier and a structurally identical anonymous output carrier cannot alias](named-input-and-anonymous-output-carriers-cannot-alias.md) —
   `@flighthq/screen` loses the aliasing half of all four `dipToScreen*`/`screenToDip*` conversions: the input is a row over the named `Vector2Like`/`RectangleLike` while the out is the anonymous `x_y` shape, so a single object cannot be passed as both. Measured as a hard compile error. No workaround is carried.
-- [A merged structural row can be read but not constructed](merged-row-not-constructible.md) —
-  `@flighthq/app`'s window API takes merged rows that callers cannot construct; no patch is carried.
+- [A merged row must be constructible and readable as the one object it describes](merged-row-not-constructible.md) —
+  `@flighthq/host` construction and `@flighthq/app` narrowed reads exposed a runtime gap. Resolved in
+  `structural_ref.hpp`; no compiler change is requested.
 - [An optional chain on a host capability group is lowered as an unconditional dereference](host-group-optional-chain-dropped.md) —
   `@flighthq/host` accessors panic when an optional capability group is absent. No patch is carried.
 - [A nullish fallback on a required read lowers to `value_or` on a non-optional](host-initialize-optional-fallback-on-a-required-read.md) —

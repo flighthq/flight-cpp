@@ -75,6 +75,16 @@ cc_test(
 )
 
 cc_test(
+    name = "merged_row_test",
+    srcs = ["merged_row_test.cpp"],
+    size = "small",
+    deps = [
+        "//:cpp",
+        "//:sdk_preview",
+    ],
+)
+
+cc_test(
     name = "task_resolve_domain_test",
     srcs = ["task_resolve_domain_test.cpp"],
     size = "small",
