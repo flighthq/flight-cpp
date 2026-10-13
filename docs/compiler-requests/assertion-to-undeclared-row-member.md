@@ -49,3 +49,22 @@ solver or accessor dispatched by the value's `kind` before it asserts the concre
 
 The checked owner recovery above serves all three; the readonly target only removes write capability. No
 workaround is carried.
+
+## Same downcast in physics2d (a627849)
+
+`@flighthq/physics2d` stores every joint as `Physics2DJoint` and dispatches by `kind` to a solver that asserts
+the concrete joint. The emitter flattens each joint interface into an independent owner, so no assertion can
+recover the derived members:
+- `joints.ts`: all nine solver objects (`physics2DDistanceJointSolver` through `physics2DGearJointSolver`, first
+  reported at line 141) are refused as missing bindings. Each asserts `joint` to its concrete type, as in
+  `Physics2DJoint` to `Physics2DGearJoint`.
+- `debugGeometry.ts` `writeJoint` (line 228): `Readonly<Physics2DJoint>` asserted to the writable
+  `Physics2DMouseJoint`.
+- `stepValidation.ts` `isPhysics2DJointValid` (line 185): `for (const key in joint)` over a joint whose derived
+  keys the flattened row does not carry. That is the same boundary, reported as missing closed key evidence.
+- `@flighthq/physics2d-abi` `encodeJointFlags` and `getJointKindValues`: the same assertions on the ABI side.
+
+Natively a world can hold `Physics2DJoint` rows, but no joint can be solved, drawn or validated by kind. The
+checked owner recovery above is the fix. The ABI's two functions are declared without bodies, so a call fails to
+link (overrides/manifest.json, physics2d-abi-variant-shape-encoding). The joint validator throws, as recorded in
+physics2d-step-validation-refusals. Nothing substitutes zeros or common-field-only behavior.

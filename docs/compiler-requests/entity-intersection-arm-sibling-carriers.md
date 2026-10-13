@@ -111,3 +111,21 @@ That is a second, independent defect in the same module; the remainder of the ch
 `@flighthq/tray` is therefore still `partial` with 3 of 4 modules emitted and no header compiling, and
 `pkg:generate -- tray` must not be run against the committed inventory until the `types` row is refreshed
 on top of this patch.
+
+## Same defect in physics2d (a627849)
+
+`@flighthq/physics2d` `colliderTransform.ts` `createPhysics2DColliderWorldShape` returns
+`CollisionBuiltInShape2D & Entity`, and allocates each arm as its own intersection, such as
+`allocateEntity<(CollisionCircle2D & { kind: 'circle' }) & Entity>()`. Two boundaries follow.
+- Inside the function, the allocated intersection and the return union's arm are sibling owners.
+  physics2d-collider-world-shape-construction carries this by constructing the declared arm directly, which is
+  the same allocation with no cast and no copy.
+- `world.ts` then stores the result in `Physics2DCollider.world`, declared as the plain
+  `CollisionBuiltInShape2D`. `createPhysics2DCollider` (line 177) and `invalidatePhysics2DCollider` (line 399) are
+  refused, because every `…_kind_entity_runtime_key_…` arm pairs uniquely with a plain arm only as a sibling.
+  A cast would retype the object, and a copy would split the collider's world shape from the entity the step
+  rewrites in place.
+
+No patch is carried for `world.ts`. The only source-level fix is to change `Physics2DCollider.world`'s declared
+type in `@flighthq/types`, which is a cross-package carrier change. So natively a collider cannot be created
+through `createPhysics2DCollider`, and `hydratePhysics2DWorld` is refused with it.
