@@ -3,6 +3,7 @@
 #include <flight/types/render_target.hpp>
 
 #include <array>
+#include <cmath>
 #include <iostream>
 #include <string>
 #include <variant>
@@ -23,6 +24,17 @@ int main(int argc, char** argv) {
   namespace texture = flight::texture;
   namespace types = flight::types;
   const std::string mutation = argc > 1 ? argv[1] : "";
+  const auto near = [](double actual, double expected) {
+    return std::abs(actual - expected) <= 1e-5;
+  };
+  const auto apply_uv_matrix = [](const flight::Ref<types::Matrix3>& matrix,
+                                  double u, double v) {
+    return std::array<double, 2>{
+        matrix->m.get_index(0.0) * u + matrix->m.get_index(3.0) * v +
+            matrix->m.get_index(6.0),
+        matrix->m.get_index(1.0) * u + matrix->m.get_index(4.0) * v +
+            matrix->m.get_index(7.0)};
+  };
 
   const auto defaults = texture::create_texture();
   check(defaults->dimension == flight::String("2d"), "the default constructor selects 2D");
@@ -710,6 +722,395 @@ int main(int argc, char** argv) {
   check(invalid_size_is_empty,
         "a present non-positive source stays ready while its derived view is empty");
 
+  const auto uv_texture = texture::create_texture();
+  uv_texture->version = 17.0;
+  types::TextureLike uv_texture_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, uv_texture};
+  const auto uv_matrix = flight::geometry::create_matrix3();
+  const auto uv_matrix_storage = uv_matrix->m;
+  texture::get_texture_uv_matrix(uv_matrix, uv_texture_view);
+  bool default_uv_matrix =
+      uv_matrix->m.get_index(0.0) == 1.0 &&
+      uv_matrix->m.get_index(1.0) == 0.0 &&
+      uv_matrix->m.get_index(2.0) == 0.0 &&
+      uv_matrix->m.get_index(3.0) == 0.0 &&
+      uv_matrix->m.get_index(4.0) == 1.0 &&
+      uv_matrix->m.get_index(5.0) == 0.0 &&
+      uv_matrix->m.get_index(6.0) == 0.0 &&
+      uv_matrix->m.get_index(7.0) == 0.0 &&
+      uv_matrix->m.get_index(8.0) == 1.0;
+  if (mutation == "--mutate-uv-default") default_uv_matrix = false;
+  check(default_uv_matrix,
+        "getTextureUvMatrix writes the column-major identity for default UV state");
+  const auto default_transformed_uv = flight::geometry::create_vector2();
+  texture::transform_texture_uv(
+      default_transformed_uv, uv_texture_view, 0.25, 0.75);
+  bool default_uv_transform = near(default_transformed_uv->x, 0.25) &&
+                              near(default_transformed_uv->y, 0.75);
+  if (mutation == "--mutate-uv-transform-default") {
+    default_uv_transform = false;
+  }
+  check(default_uv_transform,
+        "transformTextureUv leaves coordinates unchanged under identity state");
+
+  const auto uv_offset_owner = uv_texture->uv_offset;
+  const auto uv_scale_owner = uv_texture->uv_scale;
+  texture::set_texture_uv_scale(uv_texture_view, 2.0, 3.0);
+  texture::set_texture_uv_offset(uv_texture_view, 0.1, 0.2);
+  texture::set_texture_uv_rotation(uv_texture_view, flight::pi / 4.0);
+  bool uv_mutators_preserve_state =
+      uv_texture->uv_offset == uv_offset_owner &&
+      uv_texture->uv_scale == uv_scale_owner && uv_texture->version == 17.0 &&
+      near(uv_texture->uv_offset->x, 0.1) && near(uv_texture->uv_offset->y, 0.2) &&
+      near(uv_texture->uv_scale->x, 2.0) && near(uv_texture->uv_scale->y, 3.0) &&
+      near(uv_texture->uv_rotation, flight::pi / 4.0);
+  if (mutation == "--mutate-uv-mutator-identity") {
+    uv_mutators_preserve_state = false;
+  }
+  check(uv_mutators_preserve_state,
+        "UV mutators write existing vector owners without dirtying the content version");
+
+  texture::get_texture_uv_matrix(uv_matrix, uv_texture_view);
+  const double quarter_cos = std::cos(flight::pi / 4.0);
+  const double quarter_sin = std::sin(flight::pi / 4.0);
+  bool uv_scale_x_component =
+      near(uv_matrix->m.get_index(0.0), 2.0 * quarter_cos) &&
+      near(uv_matrix->m.get_index(1.0), 2.0 * quarter_sin);
+  if (mutation == "--mutate-uv-scale-x") uv_scale_x_component = false;
+  check(uv_scale_x_component,
+        "getTextureUvMatrix rotates the scaled U basis into its first column");
+  bool uv_scale_y_component =
+      near(uv_matrix->m.get_index(3.0), -3.0 * quarter_sin) &&
+      near(uv_matrix->m.get_index(4.0), 3.0 * quarter_cos);
+  if (mutation == "--mutate-uv-scale-y") uv_scale_y_component = false;
+  check(uv_scale_y_component,
+        "getTextureUvMatrix rotates the scaled V basis into its second column");
+  bool uv_rotation_component =
+      near(uv_matrix->m.get_index(1.0) / uv_matrix->m.get_index(0.0),
+           std::tan(flight::pi / 4.0)) &&
+      near(-uv_matrix->m.get_index(3.0) / uv_matrix->m.get_index(4.0),
+           std::tan(flight::pi / 4.0));
+  if (mutation == "--mutate-uv-rotation") uv_rotation_component = false;
+  check(uv_rotation_component,
+        "getTextureUvMatrix applies the requested rotation to both scaled axes");
+  bool uv_offset_component = near(uv_matrix->m.get_index(6.0), 0.1) &&
+                             near(uv_matrix->m.get_index(7.0), 0.2);
+  if (mutation == "--mutate-uv-offset") uv_offset_component = false;
+  check(uv_offset_component,
+        "getTextureUvMatrix places translation in the final column after rotation");
+  bool uv_matrix_recomputed =
+      uv_matrix->m == uv_matrix_storage &&
+      !near(uv_matrix->m.get_index(0.0), 1.0) && uv_texture->version == 17.0;
+  if (mutation == "--mutate-uv-recompute") uv_matrix_recomputed = false;
+  check(uv_matrix_recomputed,
+        "matrix derivation recomputes into the same output buffer without a dirty cache");
+
+  const auto transformed_uv = flight::geometry::create_vector2();
+  texture::transform_texture_uv(transformed_uv, uv_texture_view, 0.25, 0.5);
+  const double ordered_x =
+      2.0 * quarter_cos * 0.25 - 3.0 * quarter_sin * 0.5 + 0.1;
+  const double ordered_y =
+      2.0 * quarter_sin * 0.25 + 3.0 * quarter_cos * 0.5 + 0.2;
+  bool uv_transform_order = near(transformed_uv->x, ordered_x) &&
+                            near(transformed_uv->y, ordered_y);
+  if (mutation == "--mutate-uv-order") uv_transform_order = false;
+  check(uv_transform_order,
+        "transformTextureUv applies scale, then rotation, then translation");
+  const auto transformed_by_matrix = apply_uv_matrix(uv_matrix, 0.25, 0.5);
+  check(near(transformed_by_matrix[0], transformed_uv->x) &&
+            near(transformed_by_matrix[1], transformed_uv->y),
+        "the inline UV transform matches column-major matrix multiplication");
+
+  const auto flip_texture = texture::create_texture();
+  types::TextureLike flip_texture_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, flip_texture};
+  const auto flip_matrix = flight::geometry::create_matrix3();
+  texture::set_texture_flip(flip_texture_view, true, false);
+  texture::get_texture_uv_matrix(flip_matrix, flip_texture_view);
+  auto flipped_point = apply_uv_matrix(flip_matrix, 0.2, 0.3);
+  bool horizontal_flip = near(flipped_point[0], 0.8) &&
+                         near(flipped_point[1], 0.3);
+  if (mutation == "--mutate-uv-flip-x") horizontal_flip = false;
+  check(horizontal_flip, "horizontal UV flip maps u to one minus u");
+  texture::set_texture_flip(flip_texture_view, false, true);
+  texture::get_texture_uv_matrix(flip_matrix, flip_texture_view);
+  flipped_point = apply_uv_matrix(flip_matrix, 0.2, 0.3);
+  bool vertical_flip = near(flipped_point[0], 0.2) &&
+                       near(flipped_point[1], 0.7);
+  if (mutation == "--mutate-uv-flip-y") vertical_flip = false;
+  check(vertical_flip, "vertical UV flip maps v to one minus v");
+  check(flip_texture->version == 0.0,
+        "setTextureFlip mutates sampling state without changing content version");
+
+  texture::set_texture_flip(flip_texture_view, true, true);
+  texture::set_texture_uv_scale(flip_texture_view, 2.0, 3.0);
+  texture::set_texture_uv_rotation(flip_texture_view, 0.5);
+  texture::set_texture_uv_offset(flip_texture_view, 0.1, 0.2);
+  texture::get_texture_uv_matrix(flip_matrix, flip_texture_view);
+  const auto flip_inline = flight::geometry::create_vector2();
+  texture::transform_texture_uv(flip_inline, flip_texture_view, 0.35, 0.6);
+  const auto flip_by_matrix = apply_uv_matrix(flip_matrix, 0.35, 0.6);
+  const double flip_expected_x =
+      2.0 * std::cos(0.5) * (1.0 - 0.35) -
+      3.0 * std::sin(0.5) * (1.0 - 0.6) + 0.1;
+  const double flip_expected_y =
+      2.0 * std::sin(0.5) * (1.0 - 0.35) +
+      3.0 * std::cos(0.5) * (1.0 - 0.6) + 0.2;
+  bool composed_flip_order =
+      near(flip_inline->x, flip_expected_x) &&
+      near(flip_inline->y, flip_expected_y) &&
+      near(flip_by_matrix[0], flip_expected_x) &&
+      near(flip_by_matrix[1], flip_expected_y);
+  if (mutation == "--mutate-uv-flip-order") composed_flip_order = false;
+  check(composed_flip_order,
+        "flips precede non-uniform scale, rotation, and translation in both paths");
+
+  const auto cardinal_texture = texture::create_texture();
+  types::TextureLike cardinal_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, cardinal_texture};
+  texture::set_texture_uv_scale(cardinal_view, 2.0, 3.0);
+  texture::set_texture_uv_offset(cardinal_view, 0.25, 0.5);
+  const auto cardinal_matrix = flight::geometry::create_matrix3();
+  const std::array<double, 5> cardinal_rotations{
+      0.0, flight::pi / 2.0, -flight::pi / 2.0, flight::pi, -flight::pi};
+  const std::array<std::array<double, 4>, 5> cardinal_columns{{
+      {2.0, 0.0, 0.0, 3.0},
+      {0.0, 2.0, -3.0, 0.0},
+      {0.0, -2.0, 3.0, 0.0},
+      {-2.0, 0.0, 0.0, -3.0},
+      {-2.0, 0.0, 0.0, -3.0},
+  }};
+  bool cardinal_edges_exact = true;
+  for (std::size_t index = 0; index < cardinal_rotations.size(); ++index) {
+    texture::set_texture_uv_rotation(cardinal_view, cardinal_rotations[index]);
+    texture::get_texture_uv_matrix(cardinal_matrix, cardinal_view);
+    cardinal_edges_exact =
+        cardinal_edges_exact &&
+        cardinal_matrix->m.get_index(0.0) == cardinal_columns[index][0] &&
+        cardinal_matrix->m.get_index(1.0) == cardinal_columns[index][1] &&
+        cardinal_matrix->m.get_index(3.0) == cardinal_columns[index][2] &&
+        cardinal_matrix->m.get_index(4.0) == cardinal_columns[index][3] &&
+        cardinal_matrix->m.get_index(6.0) == 0.25 &&
+        cardinal_matrix->m.get_index(7.0) == 0.5;
+  }
+  texture::set_texture_uv_rotation(cardinal_view, 0.0);
+  texture::set_texture_uv_scale(cardinal_view, -2.0, -3.0);
+  texture::get_texture_uv_matrix(cardinal_matrix, cardinal_view);
+  cardinal_edges_exact = cardinal_edges_exact &&
+                         cardinal_matrix->m.get_index(0.0) == -2.0 &&
+                         cardinal_matrix->m.get_index(4.0) == -3.0;
+  if (mutation == "--mutate-uv-cardinal-edges") cardinal_edges_exact = false;
+  check(cardinal_edges_exact,
+        "cardinal rotations produce exact zero terms and negative scales retain sign");
+
+  const auto default_inverse = flight::geometry::create_matrix3();
+  const auto default_inverse_storage = default_inverse->m;
+  texture::get_texture_inverse_uv_matrix(
+      default_inverse,
+      types::TextureLike{std::in_place_type<flight::Ref<types::Texture2D>>,
+                         texture::create_texture()});
+  bool default_inverse_identity =
+      default_inverse->m == default_inverse_storage &&
+      default_inverse->m.get_index(0.0) == 1.0 &&
+      default_inverse->m.get_index(4.0) == 1.0 &&
+      default_inverse->m.get_index(8.0) == 1.0 &&
+      default_inverse->m.get_index(1.0) == 0.0 &&
+      default_inverse->m.get_index(3.0) == 0.0 &&
+      default_inverse->m.get_index(6.0) == 0.0 &&
+      default_inverse->m.get_index(7.0) == 0.0;
+  if (mutation == "--mutate-uv-inverse-default") {
+    default_inverse_identity = false;
+  }
+  check(default_inverse_identity,
+        "getTextureInverseUvMatrix writes identity into caller-owned default storage");
+
+  const auto expected_inverse = flight::geometry::create_matrix3();
+  flight::geometry::inverse_matrix3(expected_inverse, uv_matrix);
+  const auto derived_inverse = flight::geometry::create_matrix3();
+  const auto derived_inverse_storage = derived_inverse->m;
+  texture::get_texture_inverse_uv_matrix(derived_inverse, uv_texture_view);
+  bool inverse_matches_forward = derived_inverse->m == derived_inverse_storage;
+  for (double index = 0.0; index < 9.0; index += 1.0) {
+    inverse_matches_forward =
+        inverse_matches_forward &&
+        near(derived_inverse->m.get_index(index),
+             expected_inverse->m.get_index(index));
+  }
+  const auto round_trip_forward = apply_uv_matrix(uv_matrix, 0.3, 0.8);
+  const auto round_trip_inverse = apply_uv_matrix(
+      derived_inverse, round_trip_forward[0], round_trip_forward[1]);
+  inverse_matches_forward = inverse_matches_forward &&
+                            near(round_trip_inverse[0], 0.3) &&
+                            near(round_trip_inverse[1], 0.8);
+  if (mutation == "--mutate-uv-inverse") inverse_matches_forward = false;
+  check(inverse_matches_forward,
+        "inverse UV derivation matches in-place inversion and reverses the forward matrix");
+
+  const auto singular_texture = texture::create_texture();
+  types::TextureLike singular_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, singular_texture};
+  texture::set_texture_uv_scale(singular_view, 0.0, 1.0);
+  const auto singular_inverse = flight::geometry::create_matrix3();
+  texture::get_texture_inverse_uv_matrix(singular_inverse, singular_view);
+  bool singular_inverse_is_nan = true;
+  for (double index = 0.0; index < 9.0; index += 1.0) {
+    singular_inverse_is_nan = singular_inverse_is_nan &&
+                              std::isnan(singular_inverse->m.get_index(index));
+  }
+  if (mutation == "--mutate-uv-inverse-singular") {
+    singular_inverse_is_nan = false;
+  }
+  check(singular_inverse_is_nan,
+        "a zero-scale UV transform exposes the documented singular NaN inverse");
+
+  const auto presence_texture = texture::create_texture();
+  types::TextureLike presence_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, presence_texture};
+  bool uv_presence_detection =
+      !texture::has_texture_like_uv_transform(presence_view);
+  texture::set_texture_uv_scale(presence_view, 2.0, 1.0);
+  uv_presence_detection = uv_presence_detection &&
+                          texture::has_texture_like_uv_transform(presence_view);
+  texture::reset_texture_uv_transform(presence_view);
+  texture::set_texture_uv_offset(presence_view, 0.0, 0.5);
+  uv_presence_detection = uv_presence_detection &&
+                          texture::has_texture_like_uv_transform(presence_view);
+  texture::reset_texture_uv_transform(presence_view);
+  texture::set_texture_uv_rotation(presence_view, 0.5);
+  uv_presence_detection = uv_presence_detection &&
+                          texture::has_texture_like_uv_transform(presence_view);
+  texture::reset_texture_uv_transform(presence_view);
+  texture::set_texture_flip(presence_view, true, false);
+  uv_presence_detection = uv_presence_detection &&
+                          texture::has_texture_like_uv_transform(presence_view);
+  texture::set_texture_flip(presence_view, false, true);
+  uv_presence_detection = uv_presence_detection &&
+                          texture::has_texture_like_uv_transform(presence_view);
+  texture::reset_texture_uv_transform(presence_view);
+  uv_presence_detection = uv_presence_detection &&
+                          !texture::has_texture_like_uv_transform(presence_view);
+  if (mutation == "--mutate-uv-presence") uv_presence_detection = false;
+  check(uv_presence_detection,
+        "hasTextureUvTransform detects every component and reset restores identity");
+
+  const auto exact_uv_state = flight::make_ref<types::TextureUvTransform>();
+  exact_uv_state->uv_offset = flight::geometry::create_vector2();
+  exact_uv_state->uv_scale = flight::geometry::create_vector2(1.0, 1.0);
+  bool exact_uv_owner_detection =
+      !texture::has_texture_uv_transform(exact_uv_state);
+  exact_uv_state->flip_x = true;
+  exact_uv_owner_detection = exact_uv_owner_detection &&
+                             texture::has_texture_uv_transform(exact_uv_state);
+  if (mutation == "--mutate-uv-exact-owner") exact_uv_owner_detection = false;
+  check(exact_uv_owner_detection,
+        "the exact emitted TextureUvTransform owner retains its identity predicate");
+
+  const auto reset_options = flight::make_ref<types::CreateTexture2DOptions>();
+  reset_options->color_space = flight::String("linear");
+  reset_options->source = decltype(types::CreateTexture2DOptions::source){
+      std::in_place_type<flight::Ref<types::TextureSource>>, direct_source};
+  reset_options->flip_x = true;
+  reset_options->flip_y = true;
+  reset_options->uv_offset = flight::geometry::create_vector2(0.4, 0.6);
+  reset_options->uv_rotation = flight::pi;
+  reset_options->uv_scale = flight::geometry::create_vector2(5.0, 7.0);
+  reset_options->version = 9.0;
+  const auto reset_texture = texture::create_texture2_d(reset_options);
+  types::TextureLike reset_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, reset_texture};
+  const auto reset_offset_owner = reset_texture->uv_offset;
+  const auto reset_scale_owner = reset_texture->uv_scale;
+  const auto reset_sampler_owner = reset_texture->sampler;
+  const auto reset_source_owner = reset_texture->source;
+  texture::reset_texture_uv_transform(reset_view);
+  bool reset_values = !reset_texture->flip_x && !reset_texture->flip_y &&
+                      reset_texture->uv_offset->x == 0.0 &&
+                      reset_texture->uv_offset->y == 0.0 &&
+                      reset_texture->uv_rotation == 0.0 &&
+                      reset_texture->uv_scale->x == 1.0 &&
+                      reset_texture->uv_scale->y == 1.0 &&
+                      !texture::has_texture_like_uv_transform(reset_view);
+  if (mutation == "--mutate-uv-reset-values") reset_values = false;
+  check(reset_values, "resetTextureUvTransform restores every identity component");
+  bool reset_preserves_owners =
+      reset_texture->uv_offset == reset_offset_owner &&
+      reset_texture->uv_scale == reset_scale_owner &&
+      reset_texture->sampler == reset_sampler_owner &&
+      reset_texture->source == reset_source_owner &&
+      reset_texture->color_space == flight::String("linear") &&
+      reset_texture->version == 9.0;
+  if (mutation == "--mutate-uv-reset-identity") reset_preserves_owners = false;
+  check(reset_preserves_owners,
+        "UV reset preserves vector, sampler, source, color, and version identity");
+
+  const auto rect_source = flight::make_ref<types::TextureSource>();
+  rect_source->kind = types::image_texture_source_kind;
+  rect_source->width = 200.0;
+  rect_source->height = 100.0;
+  const auto rect_options = flight::make_ref<types::CreateTexture2DOptions>();
+  rect_options->source = decltype(types::CreateTexture2DOptions::source){
+      std::in_place_type<flight::Ref<types::TextureSource>>, rect_source};
+  rect_options->version = 6.0;
+  const auto rect_texture = texture::create_texture2_d(rect_options);
+  types::TextureLike rect_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, rect_texture};
+  const auto rect_offset_owner = rect_texture->uv_offset;
+  const auto rect_scale_owner = rect_texture->uv_scale;
+  texture::set_texture_uv_from_pixel_rect(rect_view, 20.0, 10.0, 50.0, 25.0);
+  bool normalized_rect = rect_texture->uv_offset == rect_offset_owner &&
+                         rect_texture->uv_scale == rect_scale_owner &&
+                         rect_texture->version == 6.0 &&
+                         near(rect_texture->uv_offset->x, 0.1) &&
+                         near(rect_texture->uv_offset->y, 0.1) &&
+                         near(rect_texture->uv_scale->x, 0.25) &&
+                         near(rect_texture->uv_scale->y, 0.25);
+  if (mutation == "--mutate-uv-pixel-rect") normalized_rect = false;
+  check(normalized_rect,
+        "pixel rectangles normalize in place without replacing UV owners or version");
+  texture::set_texture_uv_from_pixel_rect(
+      rect_view, -20.0, 110.0, -50.0, 200.0);
+  bool edge_rect = near(rect_texture->uv_offset->x, -0.1) &&
+                   near(rect_texture->uv_offset->y, 1.1) &&
+                   near(rect_texture->uv_scale->x, -0.25) &&
+                   near(rect_texture->uv_scale->y, 2.0);
+  if (mutation == "--mutate-uv-pixel-edge") edge_rect = false;
+  check(edge_rect,
+        "pixel rectangle normalization preserves negative and out-of-range edge values");
+  const auto absent_rect_texture = texture::create_texture();
+  types::TextureLike absent_rect_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, absent_rect_texture};
+  texture::set_texture_uv_from_pixel_rect(
+      absent_rect_view, 20.0, 10.0, 50.0, 25.0);
+  texture::set_texture_uv_from_pixel_rect(
+      invalid_texture_view, 20.0, 10.0, 50.0, 25.0);
+  bool invalid_rect_is_empty = absent_rect_texture->uv_offset->x == 0.0 &&
+                               absent_rect_texture->uv_offset->y == 0.0 &&
+                               absent_rect_texture->uv_scale->x == 0.0 &&
+                               absent_rect_texture->uv_scale->y == 0.0 &&
+                               invalid_texture->uv_offset->x == 0.0 &&
+                               invalid_texture->uv_offset->y == 0.0 &&
+                               invalid_texture->uv_scale->x == 0.0 &&
+                               invalid_texture->uv_scale->y == 0.0;
+  if (mutation == "--mutate-uv-pixel-invalid") invalid_rect_is_empty = false;
+  check(invalid_rect_is_empty,
+        "pixel rectangles become an empty window for non-positive source dimensions");
+
+  const auto transform_alias_texture = texture::create_texture();
+  types::TextureLike transform_alias_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, transform_alias_texture};
+  texture::set_texture_uv_scale(transform_alias_view, 2.0, 3.0);
+  texture::set_texture_uv_offset(transform_alias_view, 0.1, 0.2);
+  const auto transform_alias_owner = transform_alias_texture->uv_offset;
+  texture::transform_texture_uv(
+      transform_alias_owner, transform_alias_view, 0.5, 0.5);
+  bool transform_output_alias =
+      transform_alias_texture->uv_offset == transform_alias_owner &&
+      near(transform_alias_owner->x, 1.1) &&
+      near(transform_alias_owner->y, 1.7);
+  if (mutation == "--mutate-uv-transform-alias") transform_output_alias = false;
+  check(transform_output_alias,
+        "transformTextureUv safely writes through an output alias after reading scalar state");
+
   using SamplerView = flight::StructuralRef<
       flight::RowReadonly<flight::RowOf<types::SamplerLike>>>;
   using OptionalSampler =
@@ -833,6 +1234,34 @@ int main(int argc, char** argv) {
         "video dimensions come from the host capability");
   check(texture::is_video_texture_frame_ready(host_video, video_union),
         "a decoded non-empty host frame is ready");
+  const auto video_uv_options = flight::make_ref<types::CreateTexture2DOptions>();
+  video_uv_options->uv_offset = flight::geometry::create_vector2(5.0, 7.0);
+  video_uv_options->uv_scale = flight::geometry::create_vector2(2.0, 3.0);
+  const auto video_uv =
+      texture::create_video_texture(host_video, video_source, video_uv_options);
+  const types::TextureLike video_uv_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, video_uv};
+  const auto video_uv_matrix = flight::geometry::create_matrix3();
+  texture::get_video_texture_uv_matrix(video_uv_matrix, video_uv_view);
+  bool video_forward_uv = video_uv_matrix->m.get_index(0.0) == 2.0 &&
+                          video_uv_matrix->m.get_index(4.0) == 3.0 &&
+                          video_uv_matrix->m.get_index(6.0) == 5.0 &&
+                          video_uv_matrix->m.get_index(7.0) == 7.0 &&
+                          video_uv_matrix->m.get_index(8.0) == 1.0;
+  if (mutation == "--mutate-video-uv-forward") video_forward_uv = false;
+  check(video_forward_uv,
+        "video UV matrix delegates scale and offset in column-major order");
+  const auto video_inverse_uv_matrix = flight::geometry::create_matrix3();
+  texture::get_video_texture_inverse_uv_matrix(
+      video_inverse_uv_matrix, video_uv_view);
+  const auto video_mapped = apply_uv_matrix(video_uv_matrix, 0.25, 0.5);
+  const auto video_recovered = apply_uv_matrix(
+      video_inverse_uv_matrix, video_mapped[0], video_mapped[1]);
+  bool video_inverse_uv = near(video_recovered[0], 0.25) &&
+                          near(video_recovered[1], 0.5);
+  if (mutation == "--mutate-video-uv-inverse") video_inverse_uv = false;
+  check(video_inverse_uv,
+        "video inverse UV matrix reverses the delegated forward transform");
   check(texture::advance_video_texture(host_video, video_union) == 0.0 &&
             video->version == 0.0 && (*video_image)->version == 0.0,
         "the first video advance wraps the all-ones revision to zero");
@@ -843,9 +1272,10 @@ int main(int argc, char** argv) {
   texture::destroy_video_texture(video);
   check(!video->source.has_value() && video->version == texture::initial_video_version,
         "video destruction detaches only the borrowed image source");
+  texture::destroy_video_texture(video_uv);
 
   if (failures == 0) {
-    std::cout << "texture construction, source, size, copy, and equality match Flight\n";
+    std::cout << "texture construction, source, UV, copy, and equality match Flight\n";
   }
   return failures == 0 ? 0 : 1;
 }

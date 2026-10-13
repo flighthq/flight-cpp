@@ -12,7 +12,7 @@ equality, ordering, exceptions, settlement, then format breadth.
 
 | Package | Focused native evidence | Highest remaining audited gap |
 | --- | --- | --- |
-| `texture` | Construction covers absent defaults and exact source/resource identity; clone and video lifecycle cover shared versus copied owners. Sampler/2D equality covers null/undefined, same-owner, value-state, and distinct-source identity. Copy/initialize evidence distinguishes construction-row identity, cloned mutable sampling state, shared source owners, preserved destination owners, self-alias safety, and fresh array/cube list storage; every legitimate dimension mismatch and both non-2D source setters reject before mutation. Source/readiness/size coverage now includes first-source selection, all-absent forms, 2D replacement/version transitions, CPU/GPU kinds, width/height/view derivation for 2D, array, cube, and 3D, non-positive dimensions, and voxel depth/data identity. | UV matrix and mutation behavior remains. Cube-only and render-texture helpers still reach declared compiler refusals, so they are not independent test-only slices. |
+| `texture` | Construction covers absent defaults and exact source/resource identity; clone and video lifecycle cover shared versus copied owners. Sampler/2D equality covers null/undefined, same-owner, value-state, and distinct-source identity. Copy/initialize evidence distinguishes construction-row identity, cloned mutable sampling state, shared source owners, preserved destination owners, self-alias safety, and fresh array/cube list storage; every legitimate dimension mismatch and both non-2D source setters reject before mutation. Source/readiness/size coverage includes first-source selection, all-absent forms, 2D replacement/version transitions, CPU/GPU kinds, width/height/view derivation for all four forms, non-positive dimensions, and voxel depth/data identity. UV coverage now exercises forward/inverse and video matrices, exact transform order, flips, cardinal and singular edges, setter/reset identity, recomputation, presence, pixel rectangles, and output aliasing. | Executable breadth remains in sampler presets/copy, the texture-color-space truth table, detailed video provider/swap/destruction cases, and dedicated cube equality. Cube face mutation/completeness/size and render-texture construction remain behind declared compiler refusals. |
 | `texture-formats` | The byte-exact test covers all nine upstream modules: bounded/endian reads, detection and explanations, level layout, selection, and ATF/Basis/DDS/KTX2 parsing and rejection. Two restored source mutations prove mip-count and normalized image-order assertions. | No high-priority semantic gap was found. More malformed-header combinations would add breadth rather than a missing behavior family. |
 | `shading` | The focused test covers all modifier constructors, shared option identity, stable stack ordering, validation, registry isolation/replacement, built-in registration, and define keys. | Remaining cases are repeated option and invalid-value permutations; no uncovered absence, identity, equality, or ordering family was found. |
 | `materials` | `materials-native-inventory.md` records constructor/default, owner identity, equality, ordering, validation, conversion, guard lifecycle, and eight mutation oracles across all 22 suites. | Lower-priority detail remains in color-scale/bias helper permutations, whole-object Phong conversion precedence, forwarded optional-map permutations, and exact diagnostic text. |
@@ -73,8 +73,33 @@ dynamic tuple projection. `createRenderTexture` still stops at the declared
 `cpp-reference-assertion-without-heritage` boundary; using a real `RenderTarget` as a common texture
 source tests the emitted generic source queries without substituting for that missing constructor.
 
+The UV follow-on ports every assertion in the matrix, inverse, transform, transform-presence,
+reset, flip, setter, and pixel-rectangle sections of `texture.test.ts`, plus both video matrix
+wrappers. It checks the column-major KHR order (scale, rotate, translate), flip-before-transform
+composition, exact cardinal-angle zeros, negative scales, the documented singular NaN inverse, and
+forward/inverse round trips. Mutators preserve `uvOffset` and `uvScale` owners and do not increment
+the texture content version. There is no matrix cache or dirty field in the pinned source or emitted
+types: forward and inverse helpers recompute into the caller's existing `Matrix3` and `Float32Array`
+owner on every call, which the native test verifies by changing UV state between writes. Reset keeps
+source, sampler, UV-vector, color-space, and version identity; pixel windows preserve signed and
+out-of-range normalized values but become zero for unbound or non-positive dimensions; the inline
+transform is safe when its output aliases a UV vector because it captures scalar state before
+writing. Twenty-six UV-specific mutation modes independently suppress defaults, scale axes,
+rotation, translation, order, flips, cardinal edges, recomputation, inverse behavior, presence,
+reset, pixel windows, aliasing, and video wrapper oracles.
+
+One emitted ownership split is explicit rather than hidden: TypeScript lets a `TextureLike`
+structurally satisfy `TextureUvTransform`, while C++ emits independent owners. The exact-owner
+`hasTextureUvTransform(TextureUvTransform)` function remains available and tested; real texture
+callers use the override's `hasTextureLikeUvTransform(TextureLike)` visit, also tested. No cache,
+dirty-bit, structural cast, or replacement owner is invented to bridge that compiler boundary.
+
 ## Next useful work
 
-The next independent texture slice is UV matrices and mutation helpers. Image settlement is more
-valuable globally, but is not independent at this pin:
-it requires the existing browser URL/location and erased-owner compiler requests to land first.
+The remaining executable texture work is lower-level breadth: sampler preset/copy behavior,
+texture-color-space decisions, the rest of the video host/sentinel/swap lifecycle, and dedicated
+cube equality over generic cube construction. `getCubeTextureFaceSize`, `isCubeTextureComplete`,
+and `setCubeTextureFace` cannot join that slice until their recorded compiler restrictions are
+resolved; `createRenderTexture` likewise remains at its reference-heritage boundary. Image
+settlement is more valuable globally, but is not independent at this pin: it requires the existing
+browser URL/location and erased-owner compiler requests to land first.
