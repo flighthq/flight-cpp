@@ -75,12 +75,12 @@ class SnapshotValue final {
 
   [[nodiscard]] std::size_t size() const;
   [[nodiscard]] const SnapshotValue& array_at(std::size_t index) const;
-  [[nodiscard]] SnapshotValue& array_at(std::size_t index);
+  [[nodiscard]] SnapshotValue& array_at_mutable(std::size_t index);
   void array_push(SnapshotValue value);
   void array_resize(std::size_t size);
 
   [[nodiscard]] const SnapshotValue* object_get(const flight::String& key) const;
-  [[nodiscard]] SnapshotValue* object_get(const flight::String& key);
+  [[nodiscard]] SnapshotValue* object_get_mutable(const flight::String& key);
   void object_set(flight::String key, SnapshotValue value);
   [[nodiscard]] const std::vector<ObjectEntry>& object_entries() const;
 
@@ -193,7 +193,7 @@ inline const SnapshotValue& SnapshotValue::array_at(std::size_t index) const {
   return node_value()->array.at(index);
 }
 
-inline SnapshotValue& SnapshotValue::array_at(std::size_t index) {
+inline SnapshotValue& SnapshotValue::array_at_mutable(std::size_t index) {
   require_mutable(Kind::array);
   return node_value()->array.at(index);
 }
@@ -216,7 +216,7 @@ inline const SnapshotValue* SnapshotValue::object_get(const flight::String& key)
   return found == entries.end() ? nullptr : &found->second;
 }
 
-inline SnapshotValue* SnapshotValue::object_get(const flight::String& key) {
+inline SnapshotValue* SnapshotValue::object_get_mutable(const flight::String& key) {
   require_mutable(Kind::object);
   auto& entries = node_value()->object;
   const auto found = std::find_if(entries.begin(), entries.end(),

@@ -89,7 +89,7 @@ inline void interpolate_snapshots_into(
     for (std::size_t index = 0; index < b.size(); ++index) {
       const auto key = flight::String::from_number(static_cast<double>(index));
       const SnapshotValue* a_value = index < a.size() ? &a.array_at(index) : nullptr;
-      auto& output = out.array_at(index);
+      auto& output = out.array_at_mutable(index);
       interpolate_child(output, a_value, b.array_at(index), t, paths, prefix, key);
     }
     return;
@@ -98,10 +98,10 @@ inline void interpolate_snapshots_into(
   if (!b.is_object() || !out.is_object() || !a.is_object()) return;
   for (const auto& [key, b_value] : b.object_entries()) {
     const SnapshotValue* a_value = static_cast<const SnapshotValue&>(a).object_get(key);
-    auto* output = out.object_get(key);
+    auto* output = out.object_get_mutable(key);
     if (output == nullptr) {
       out.object_set(key, SnapshotValue());
-      output = out.object_get(key);
+      output = out.object_get_mutable(key);
     }
     interpolate_child(*output, a_value, b_value, t, paths, prefix, key);
   }

@@ -27,14 +27,25 @@ inline void disable_snapshot_guards() {
 namespace detail {
 
 inline void emit_snapshot_guard_warning(const flight::String& key, const flight::String& message) {
-  flight::log::log_once(
-      key,
-      flight::types::LogLevel::Warn,
-      flight::Record<flight::String, flight::Any>{
-          {flight::String("message"), flight::Any(message)},
-      },
-      std::optional<std::optional<flight::String>>{
-          std::optional<flight::String>{flight::String("snapshot")}});
+  // This is logOnce's exact record-data path, specialized here because @flighthq/log's general
+  // mergeSpanFields is refused at this pin. The key is consumed before the level gate, active span
+  // fields are accumulated oldest-first, and this warning's own data wins on collision.
+  if (flight::log::once_keys.has(key)) return;
+  flight::log::once_keys.add(key);
+  const auto channel = std::optional<flight::String>{flight::String("snapshot")};
+  if (!flight::log::passes_level_gate(flight::types::LogLevel::Warn, channel)) return;
+
+  flight::Record<flight::String, flight::Any> data;
+  for (const auto& span : flight::log::span_stack) {
+    for (const auto& [field, value] : span->fields) data.set(field, value);
+  }
+  data.set(flight::String("message"), flight::Any(message));
+  flight::log::emit_to_sinks(flight::make_ref<flight::types::LogEntry>(flight::types::LogEntry{
+      .level = flight::types::LogLevel::Warn,
+      .channel = channel,
+      .data = flight::types::LogData{
+          std::in_place_type<flight::Record<flight::String, flight::Any>>, std::move(data)},
+  }));
 }
 
 inline void visit_snapshot_source(

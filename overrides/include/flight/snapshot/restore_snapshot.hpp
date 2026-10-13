@@ -33,14 +33,14 @@ inline void restore_snapshot_into(SnapshotValue& target, const SnapshotValue& so
     if (!target.is_array()) return;
     target.array_resize(source.size());
     for (std::size_t index = 0; index < source.size(); ++index) {
-      restore_snapshot_value(target.array_at(index), source.array_at(index));
+      restore_snapshot_value(target.array_at_mutable(index), source.array_at(index));
     }
     return;
   }
 
   if (!source.is_object() || !target.is_object()) return;
   for (const auto& [key, source_value] : source.object_entries()) {
-    auto* target_value = target.object_get(key);
+    auto* target_value = target.object_get_mutable(key);
     if (target_value == nullptr) {
       target.object_set(key, clone_snapshot_graph(source_value, false));
       continue;
