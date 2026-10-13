@@ -12,6 +12,7 @@
 #include <flight/mesh/mesh_geometry_uvs.hpp>
 #include <flight/mesh/morph_mesh_geometry.hpp>
 #include <flight/mesh/update_mesh_morph.hpp>
+#include <flight/mesh/vertex_format.hpp>
 
 #include <algorithm>
 #include <array>
@@ -60,6 +61,11 @@ bool inject_morph_reset_mutation = false;
 bool inject_morph_aliasing_mutation = false;
 bool inject_morph_bounds_mutation = false;
 bool inject_morph_validation_mutation = false;
+bool inject_format_component_mutation = false;
+bool inject_accessor_offset_stride_mutation = false;
+bool inject_accessor_normalization_mutation = false;
+bool inject_accessor_bounds_mutation = false;
+bool inject_accessor_missing_default_mutation = false;
 
 void check(bool condition, const char* message) {
   if (condition) return;
@@ -392,6 +398,30 @@ bool throws_range_error(Build&& build) {
   try {
     build();
   } catch (const flight::RangeError&) {
+    return true;
+  } catch (...) {
+    return false;
+  }
+  return false;
+}
+
+template <typename Call>
+bool throws_std_range_error(Call&& call) {
+  try {
+    call();
+  } catch (const std::range_error&) {
+    return true;
+  } catch (...) {
+    return false;
+  }
+  return false;
+}
+
+template <typename Call>
+bool throws_logic_error(Call&& call) {
+  try {
+    call();
+  } catch (const std::logic_error&) {
     return true;
   } catch (...) {
     return false;
@@ -1206,6 +1236,544 @@ void packed_normalization_and_writes() {
   if (inject_normalization_mutation) normalized = false;
   check(normalized,
         "packed writes clamp and round integer channels, normalize only unorm storage, and version once per successful channel");
+}
+
+void vertex_format_component_table_and_storage_interpretation() {
+  struct FormatCase {
+    const char* format;
+    double byte_length;
+    double component_count;
+    std::array<double, 4> input;
+    std::array<double, 4> expected;
+  };
+  const std::array<FormatCase, 6> cases{{
+      {"float32x2", 8.0, 2.0, {1.25, -2.5, 77.0, 88.0},
+       {1.25, -2.5, 0.0, 0.0}},
+      {"float32x3", 12.0, 3.0, {1.25, -2.5, 3.75, 88.0},
+       {1.25, -2.5, 3.75, 0.0}},
+      {"float32x4", 16.0, 4.0, {1.25, -2.5, 3.75, -4.5},
+       {1.25, -2.5, 3.75, -4.5}},
+      {"uint16x4", 8.0, 4.0, {-1.0, 3.4, 70000.0, 9.5},
+       {0.0, 3.0, 65535.0, 10.0}},
+      {"uint8x4", 4.0, 4.0, {-1.0, 3.4, 300.0, 9.5},
+       {0.0, 3.0, 255.0, 10.0}},
+      {"unorm8x4", 4.0, 4.0, {-0.1, 0.5, 1.2, 0.25},
+       {0.0, 128.0 / 255.0, 1.0, 64.0 / 255.0}},
+  }};
+
+  bool table = true;
+  for (const auto& entry : cases) {
+    flight::Float32Array storage(8.0);
+    flight::DataView view(storage.buffer);
+    for (double byte = 0.0; byte < 32.0; byte += 1.0) {
+      view.set_uint8(byte, 165.0);
+    }
+    const double base = 3.0;
+    const flight::String format(entry.format);
+    table = table && mesh::get_vertex_format_byte_length(format) ==
+                         entry.byte_length &&
+            mesh::get_vertex_format_component_count(format) ==
+                entry.component_count;
+    for (double component = 0.0; component < entry.component_count;
+         component += 1.0) {
+      const auto index = static_cast<std::size_t>(component);
+      mesh::write_vertex_format_component(
+          view, base, format, component, entry.input[index]);
+      table = table &&
+              near(mesh::read_vertex_format_component(
+                       view, base, format, component),
+                   entry.expected[index]);
+    }
+    for (double byte = 0.0; byte < base; byte += 1.0) {
+      table = table && view.get_uint8(byte) == 165.0;
+    }
+    for (double byte = base + entry.byte_length; byte < 32.0;
+         byte += 1.0) {
+      table = table && view.get_uint8(byte) == 165.0;
+    }
+    if (format == flight::String("float32x2")) {
+      table = table && view.get_uint8(base) == 0.0 &&
+              view.get_uint8(base + 1.0) == 0.0 &&
+              view.get_uint8(base + 2.0) == 160.0 &&
+              view.get_uint8(base + 3.0) == 63.0;
+    } else if (format == flight::String("uint16x4")) {
+      const double expected_bytes[] = {0.0, 0.0, 3.0, 0.0,
+                                       255.0, 255.0, 10.0, 0.0};
+      for (double byte = 0.0; byte < 8.0; byte += 1.0) {
+        table = table && view.get_uint8(base + byte) ==
+                             expected_bytes[static_cast<std::size_t>(byte)];
+      }
+    } else if (format == flight::String("uint8x4")) {
+      table = table && view.get_uint8(base) == 0.0 &&
+              view.get_uint8(base + 1.0) == 3.0 &&
+              view.get_uint8(base + 2.0) == 255.0 &&
+              view.get_uint8(base + 3.0) == 10.0;
+    } else if (format == flight::String("unorm8x4")) {
+      table = table && view.get_uint8(base) == 0.0 &&
+              view.get_uint8(base + 1.0) == 128.0 &&
+              view.get_uint8(base + 2.0) == 255.0 &&
+              view.get_uint8(base + 3.0) == 64.0;
+    }
+  }
+  if (inject_format_component_mutation) table = false;
+  check(table,
+        "the complete six-format table reports exact byte/component counts and reads each component from its emitted little-endian float, clamped integer, or normalized representation without touching adjacent bytes");
+}
+
+void accessor_offset_stride_interleaving_and_format_round_trip() {
+  struct FormatRow {
+    const char* semantic;
+    const char* format;
+    double byte_offset;
+    double component_count;
+  };
+  const std::array<FormatRow, 6> rows{{
+      {"format-f2", "float32x2", 0.0, 2.0},
+      {"format-f3", "float32x3", 8.0, 3.0},
+      {"format-f4", "float32x4", 20.0, 4.0},
+      {"format-u16", "uint16x4", 37.0, 4.0},
+      {"format-u8", "uint8x4", 45.0, 4.0},
+      {"format-unorm", "unorm8x4", 49.0, 4.0},
+  }};
+  flight::Array<flight::Ref<types::VertexAttribute>> source_attributes;
+  const std::array<std::size_t, 6> source_order{{4, 1, 5, 0, 3, 2}};
+  for (const auto index : source_order) {
+    const auto& row = rows[index];
+    source_attributes.push(
+        vertex_attribute(row.semantic, row.format, row.byte_offset));
+  }
+  const auto source_layout =
+      vertex_layout(std::move(source_attributes), 56.0);
+  flight::Float32Array backing(36.0);
+  flight::DataView backing_view(backing.buffer);
+  backing_view.set_uint8(0.0, 173.0);
+  backing_view.set_uint8(140.0, 174.0);
+  flight::Float32Array vertices(backing.buffer, 8.0, 28.0);
+  flight::DataView source_view(
+      vertices.buffer, static_cast<double>(vertices.byte_offset),
+      static_cast<double>(vertices.byte_length));
+  for (double vertex = 0.0; vertex < 2.0; vertex += 1.0) {
+    for (std::size_t row_index = 0; row_index < rows.size(); ++row_index) {
+      const auto& row = rows[row_index];
+      for (double component = 0.0; component < row.component_count;
+           component += 1.0) {
+        double value = vertex * 100.0 +
+                       static_cast<double>(row_index) * 10.0 + component +
+                       0.25;
+        if (flight::String(row.format) == flight::String("unorm8x4")) {
+          value = (component + vertex + 1.0) / 8.0;
+        }
+        mesh::write_vertex_format_component(
+            source_view, vertex * 56.0 + row.byte_offset,
+            flight::String(row.format), component, value);
+      }
+    }
+  }
+  const auto source = geometry_from(source_layout, vertices);
+  flight::Array<flight::Ref<types::VertexAttribute>> target_attributes;
+  for (std::size_t reverse = rows.size(); reverse > 0; --reverse) {
+    const std::size_t row_index = reverse - 1;
+    target_attributes.push(vertex_attribute(
+        rows[row_index].semantic, "float32x4",
+        static_cast<double>(row_index) * 16.0));
+  }
+  const auto target_layout =
+      vertex_layout(std::move(target_attributes), 96.0);
+  const auto converted =
+      mesh::convert_mesh_geometry_layout(source, target_layout);
+  const auto round_trip =
+      mesh::convert_mesh_geometry_layout(converted, source_layout);
+  flight::DataView round_trip_view(round_trip->vertices.buffer);
+  bool interleaved = source->vertices.buffer == vertices.buffer &&
+                     source->vertices.byte_offset == 8 &&
+                     converted->layout == target_layout &&
+                     converted->vertices.buffer != source->vertices.buffer &&
+                     round_trip->layout == source_layout &&
+                     round_trip->vertices.buffer != converted->vertices.buffer &&
+                     backing_view.get_uint8(0.0) == 173.0 &&
+                     backing_view.get_uint8(140.0) == 174.0;
+  for (double vertex = 0.0; vertex < 2.0; vertex += 1.0) {
+    for (std::size_t row_index = 0; row_index < rows.size(); ++row_index) {
+      const auto& row = rows[row_index];
+      for (double component = 0.0; component < 4.0; component += 1.0) {
+        const double converted_value = converted->vertices.get_index(
+            vertex * 24.0 + static_cast<double>(row_index) * 4.0 +
+            component);
+        if (component < row.component_count) {
+          const double source_value = mesh::read_vertex_format_component(
+              source_view, vertex * 56.0 + row.byte_offset,
+              flight::String(row.format), component);
+          const double round_trip_value = mesh::read_vertex_format_component(
+              round_trip_view, vertex * 56.0 + row.byte_offset,
+              flight::String(row.format), component);
+          interleaved = interleaved && near(converted_value, source_value) &&
+                        near(round_trip_value, source_value);
+        } else {
+          interleaved = interleaved && converted_value == 0.0;
+        }
+      }
+    }
+  }
+  converted->vertices.set_index(0.0, -999.0);
+  interleaved = interleaved &&
+                near(mesh::read_vertex_format_component(
+                         source_view, rows[0].byte_offset,
+                         flight::String(rows[0].format), 0.0),
+                     0.25);
+  if (inject_accessor_offset_stride_mutation) interleaved = false;
+  check(interleaved,
+        "a systematic two-record interleaved layout resolves every format across non-zero view, stride, padding, declaration-order, and unaligned packed offsets, converts by semantic to float4, zero-fills missing components, and round-trips without aliasing the source");
+}
+
+void accessor_normalized_integer_and_float_matrix() {
+  struct AccessorCase {
+    const char* semantic;
+    const char* format;
+    std::array<double, 4> input;
+    std::array<double, 4> expected;
+  };
+  const std::array<double, 4> float_input{{1.25, -2.5, 3.75, -4.5}};
+  const std::array<double, 4> float_expected = float_input;
+  const std::array<double, 4> uint16_input{{-1.0, 3.4, 70000.0, 9.5}};
+  const std::array<double, 4> uint16_expected{{0.0, 3.0, 65535.0, 10.0}};
+  const std::array<double, 4> uint8_input{{-1.0, 3.4, 300.0, 9.5}};
+  const std::array<double, 4> uint8_expected{{0.0, 3.0, 255.0, 10.0}};
+  const std::array<double, 4> unorm_input{{-0.1, 0.5, 1.2, 0.25}};
+  const std::array<double, 4> unorm_expected{{
+      0.0, 128.0 / 255.0, 1.0, 64.0 / 255.0}};
+  const std::array<AccessorCase, 13> cases{{
+      {"color0", "float32x3", float_input,
+       {float_expected[0], float_expected[1], float_expected[2], 1.0}},
+      {"color0", "float32x4", float_input, float_expected},
+      {"color0", "uint16x4", uint16_input, uint16_expected},
+      {"color0", "uint8x4", uint8_input, uint8_expected},
+      {"color0", "unorm8x4", unorm_input, unorm_expected},
+      {"joints0", "float32x4", float_input, float_expected},
+      {"joints0", "uint16x4", uint16_input, uint16_expected},
+      {"joints0", "uint8x4", uint8_input, uint8_expected},
+      {"joints0", "unorm8x4", unorm_input, unorm_expected},
+      {"weights0", "float32x4", float_input, float_expected},
+      {"weights0", "uint16x4", uint16_input, uint16_expected},
+      {"weights0", "uint8x4", uint8_input, uint8_expected},
+      {"weights0", "unorm8x4", unorm_input, unorm_expected},
+  }};
+  auto write = [](const AccessorCase& entry,
+                  const flight::Ref<types::MeshGeometry>& geometry) {
+    if (flight::String(entry.semantic) == flight::String("color0")) {
+      return mesh::set_mesh_geometry_vertex_color0(
+          geometry, 0.0, entry.input[0], entry.input[1], entry.input[2],
+          entry.input[3]);
+    }
+    if (flight::String(entry.semantic) == flight::String("joints0")) {
+      return mesh::set_mesh_geometry_vertex_joints0(
+          geometry, 0.0, entry.input[0], entry.input[1], entry.input[2],
+          entry.input[3]);
+    }
+    return mesh::set_mesh_geometry_vertex_weights0(
+        geometry, 0.0, entry.input[0], entry.input[1], entry.input[2],
+        entry.input[3]);
+  };
+  auto read = [](const AccessorCase& entry,
+                 const flight::Ref<mesh::w_x_y_z_5137f2b28145ccce>& out,
+                 const flight::Ref<types::MeshGeometry>& geometry) {
+    if (flight::String(entry.semantic) == flight::String("color0")) {
+      return mesh::get_mesh_geometry_vertex_color0(out, geometry, 0.0);
+    }
+    if (flight::String(entry.semantic) == flight::String("joints0")) {
+      return mesh::get_mesh_geometry_vertex_joints0(out, geometry, 0.0);
+    }
+    return mesh::get_mesh_geometry_vertex_weights0(out, geometry, 0.0);
+  };
+
+  bool matrix = true;
+  for (const auto& entry : cases) {
+    const double byte_length =
+        mesh::get_vertex_format_byte_length(flight::String(entry.format));
+    const double stride = std::ceil((3.0 + byte_length + 3.0) / 4.0) * 4.0;
+    flight::Float32Array vertices(stride / 4.0);
+    flight::DataView view(vertices.buffer);
+    for (double byte = 0.0; byte < stride; byte += 1.0) {
+      view.set_uint8(byte, 204.0);
+    }
+    const auto layout = vertex_layout(
+        flight::Array<flight::Ref<types::VertexAttribute>>{vertex_attribute(
+            entry.semantic, entry.format, 3.0)},
+        stride);
+    const auto geometry = geometry_from(layout, vertices);
+    const auto vertex_owner = geometry->vertices.buffer;
+    const double version = geometry->version;
+    auto out = flight::make_ref<mesh::w_x_y_z_5137f2b28145ccce>();
+    matrix = matrix && write(entry, geometry) && read(entry, out, geometry) &&
+             geometry->vertices.buffer == vertex_owner &&
+             geometry->layout == layout && geometry->version == version + 1.0 &&
+             near(out->x, entry.expected[0]) &&
+             near(out->y, entry.expected[1]) &&
+             near(out->z, entry.expected[2]) &&
+             near(out->w, entry.expected[3]);
+    for (double byte = 0.0; byte < 3.0; byte += 1.0) {
+      matrix = matrix && view.get_uint8(byte) == 204.0;
+    }
+    for (double byte = 3.0 + byte_length; byte < stride; byte += 1.0) {
+      matrix = matrix && view.get_uint8(byte) == 204.0;
+    }
+  }
+
+  const auto uv_layout = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("uv1", "float32x2", 4.0)},
+      16.0);
+  const auto uv_geometry =
+      geometry_from(uv_layout, flight::Float32Array(4.0));
+  const auto uv_owner = uv_geometry->vertices.buffer;
+  const double uv_version = uv_geometry->version;
+  auto uv = flight::make_ref<mesh::x_y_8365950bd60f783f>();
+  matrix = matrix &&
+           mesh::set_mesh_geometry_vertex_uv1(
+               uv_geometry, 0.0, 1.25, -2.5) &&
+           mesh::get_mesh_geometry_vertex_uv1(uv, uv_geometry, 0.0) &&
+           uv_geometry->vertices.buffer == uv_owner &&
+           uv_geometry->version == uv_version + 1.0 &&
+           uv->x == 1.25 && uv->y == -2.5;
+  if (inject_accessor_normalization_mutation) matrix = false;
+  check(matrix,
+        "the systematic accessor matrix round-trips every four-component float, uint16, uint8, and unorm format across color, joints, and weights, applies float3 color alpha=1, preserves float2 UV values, clamps only integer domains, and retains layout and vertex ownership with one version bump");
+}
+
+void accessor_bounds_invalid_domains_and_failure_atomicity() {
+  const flight::String invalid_format("float16x4");
+  flight::Float32Array invalid_storage(4.0);
+  flight::DataView invalid_view(invalid_storage.buffer);
+  for (double byte = 0.0; byte < 16.0; byte += 1.0) {
+    invalid_view.set_uint8(byte, 90.0);
+  }
+  bool bounds = throws_logic_error([&] {
+                  static_cast<void>(
+                      mesh::get_vertex_format_byte_length(invalid_format));
+                }) &&
+                throws_logic_error([&] {
+                  static_cast<void>(
+                      mesh::get_vertex_format_component_count(invalid_format));
+                }) &&
+                throws_logic_error([&] {
+                  static_cast<void>(mesh::read_vertex_format_component(
+                      invalid_view, 0.0, invalid_format, 0.0));
+                });
+  mesh::write_vertex_format_component(
+      invalid_view, 0.0, invalid_format, 0.0, 123.0);
+  for (double byte = 0.0; byte < 16.0; byte += 1.0) {
+    bounds = bounds && invalid_view.get_uint8(byte) == 90.0;
+  }
+
+  flight::Float32Array exact_storage(1.0);
+  flight::DataView exact_view(exact_storage.buffer);
+  exact_view.set_uint32(0.0, 2863311530.0, true);
+  bounds = bounds &&
+           throws_std_range_error([&] {
+             mesh::write_vertex_format_component(
+                 exact_view, 0.0, flight::String("uint8x4"), 4.0, 7.0);
+           }) &&
+           exact_view.get_uint32(0.0, true) == 2863311530.0 &&
+           throws_std_range_error([&] {
+             static_cast<void>(mesh::read_vertex_format_component(
+                 exact_view, 0.0, flight::String("uint8x4"), -1.0));
+           }) &&
+           mesh::read_vertex_format_component(
+               exact_view, 0.0, flight::String("uint8x4"), 0.5) == 170.0 &&
+           exact_view.get_uint32(0.0, true) == 2863311530.0;
+  flight::Float32Array float2_storage(2.0);
+  flight::DataView float2_view(float2_storage.buffer);
+  bounds = bounds && throws_std_range_error([&] {
+             static_cast<void>(mesh::read_vertex_format_component(
+                 float2_view, 0.0, flight::String("float32x2"), 2.0));
+           });
+
+  const auto invalid_layout = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("color0", "float16x4", 0.0)},
+      8.0);
+  const auto invalid_geometry =
+      geometry_from(invalid_layout, flight::Float32Array(2.0));
+  const auto invalid_owner = invalid_geometry->vertices.buffer;
+  const double invalid_version = invalid_geometry->version;
+  auto four = flight::make_ref<mesh::w_x_y_z_5137f2b28145ccce>();
+  four->x = 1.0;
+  four->y = 2.0;
+  four->z = 3.0;
+  four->w = 4.0;
+  bounds = bounds &&
+           throws_logic_error([&] {
+             static_cast<void>(mesh::get_mesh_geometry_vertex_color0(
+                 four, invalid_geometry, 0.0));
+           }) &&
+           throws_logic_error([&] {
+             static_cast<void>(mesh::set_mesh_geometry_vertex_color0(
+                 invalid_geometry, 0.0, 5.0, 6.0, 7.0, 8.0));
+           }) &&
+           invalid_geometry->vertices.buffer == invalid_owner &&
+           invalid_geometry->vertices.get_index(0.0) == 0.0 &&
+           invalid_geometry->vertices.get_index(1.0) == 0.0 &&
+           invalid_geometry->version == invalid_version && four->x == 1.0 &&
+           four->y == 2.0 && four->z == 3.0 && four->w == 4.0;
+
+  const auto negative_layout = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("color0", "uint8x4", -1.0)},
+      4.0);
+  const auto spilling_layout = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("color0", "uint16x4", 2.0)},
+      8.0);
+  const auto zero_stride_layout = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("color0", "uint8x4", 0.0)},
+      0.0);
+  const auto negative =
+      geometry_from(negative_layout, flight::Float32Array(1.0));
+  const auto spilling =
+      geometry_from(spilling_layout, flight::Float32Array(2.0));
+  const auto zero_stride =
+      geometry_from(zero_stride_layout, flight::Float32Array(1.0));
+  const auto partial_layout = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("color0", "uint8x4", 0.0)},
+      8.0);
+  const auto partial =
+      geometry_from(partial_layout, flight::Float32Array(3.0));
+  const double partial_version = partial->version;
+  bounds = bounds &&
+           !mesh::get_mesh_geometry_vertex_color0(four, negative, 0.0) &&
+           !mesh::set_mesh_geometry_vertex_color0(
+               spilling, 0.0, 1.0, 2.0, 3.0, 4.0) &&
+           !mesh::get_mesh_geometry_vertex_color0(four, zero_stride, 0.0) &&
+           !mesh::get_mesh_geometry_vertex_color0(four, partial, -1.0) &&
+           !mesh::get_mesh_geometry_vertex_color0(four, partial, 1.0) &&
+           !mesh::set_mesh_geometry_vertex_color0(
+               partial, 1.0, 1.0, 2.0, 3.0, 4.0) &&
+           partial->version == partial_version;
+
+  const auto misaligned_layout = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("position", "float32x3", 2.0)},
+      16.0);
+  auto misaligned_options = flight::make_ref<types::MeshGeometryOptions>();
+  misaligned_options->layout = misaligned_layout;
+  misaligned_options->vertices = flight::Float32Array(12.0);
+  const auto misaligned = mesh::create_mesh_geometry(misaligned_options);
+  bounds = bounds && validation_result_without_mutation(misaligned, false);
+  if (inject_accessor_bounds_mutation) bounds = false;
+  check(bounds,
+        "unknown formats, negative and past-end component counts, fractional component coercion, negative/spilling offsets, zero stride, partial records, invalid vertex indices, and misaligned float attributes follow their declared domains without changing outputs, bytes, owners, versions, or validation inputs");
+}
+
+void accessor_missing_default_and_wrong_format_paths() {
+  const auto empty_layout = vertex_layout({}, 12.0);
+  const auto geometry =
+      geometry_from(empty_layout, flight::Float32Array{1.0F, 2.0F, 3.0F});
+  const auto vertex_owner = geometry->vertices.buffer;
+  const double version = geometry->version;
+  auto two = flight::make_ref<mesh::x_y_8365950bd60f783f>();
+  two->x = 11.0;
+  two->y = 12.0;
+  auto three = flight::make_ref<mesh::x_y_z_82615fd0df8619c4>();
+  three->x = 21.0;
+  three->y = 22.0;
+  three->z = 23.0;
+  auto four = flight::make_ref<mesh::w_x_y_z_5137f2b28145ccce>();
+  four->x = 31.0;
+  four->y = 32.0;
+  four->z = 33.0;
+  four->w = 34.0;
+  bool missing =
+      !mesh::get_mesh_geometry_vertex_position(three, geometry, 0.0) &&
+      !mesh::get_mesh_geometry_vertex_normal(three, geometry, 0.0) &&
+      !mesh::get_mesh_geometry_vertex_tangent(four, geometry, 0.0) &&
+      !mesh::get_mesh_geometry_vertex_uv0(two, geometry, 0.0) &&
+      !mesh::get_mesh_geometry_vertex_uv1(two, geometry, 0.0) &&
+      !mesh::get_mesh_geometry_vertex_color0(four, geometry, 0.0) &&
+      !mesh::get_mesh_geometry_vertex_joints0(four, geometry, 0.0) &&
+      !mesh::get_mesh_geometry_vertex_weights0(four, geometry, 0.0) &&
+      !mesh::set_mesh_geometry_vertex_position(
+          geometry, 0.0, 1.0, 2.0, 3.0) &&
+      !mesh::set_mesh_geometry_vertex_normal(
+          geometry, 0.0, 1.0, 2.0, 3.0) &&
+      !mesh::set_mesh_geometry_vertex_tangent(
+          geometry, 0.0, 1.0, 2.0, 3.0, 4.0) &&
+      !mesh::set_mesh_geometry_vertex_uv0(geometry, 0.0, 1.0, 2.0) &&
+      !mesh::set_mesh_geometry_vertex_uv1(geometry, 0.0, 1.0, 2.0) &&
+      !mesh::set_mesh_geometry_vertex_color0(
+          geometry, 0.0, 1.0, 2.0, 3.0, 4.0) &&
+      !mesh::set_mesh_geometry_vertex_joints0(
+          geometry, 0.0, 1.0, 2.0, 3.0, 4.0) &&
+      !mesh::set_mesh_geometry_vertex_weights0(
+          geometry, 0.0, 1.0, 2.0, 3.0, 4.0) &&
+      geometry->vertices.buffer == vertex_owner &&
+      geometry->version == version &&
+      geometry->vertices.get_index(0.0) == 1.0 &&
+      geometry->vertices.get_index(1.0) == 2.0 &&
+      geometry->vertices.get_index(2.0) == 3.0 &&
+      two->x == 11.0 && two->y == 12.0 && three->x == 21.0 &&
+      three->y == 22.0 && three->z == 23.0 && four->x == 31.0 &&
+      four->y == 32.0 && four->z == 33.0 && four->w == 34.0;
+
+  const auto color2_layout = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("color0", "float32x2", 0.0)},
+      8.0);
+  const auto joints3_layout = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("joints0", "float32x3", 0.0)},
+      12.0);
+  const auto uv3_layout = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("uv1", "float32x3", 0.0)},
+      12.0);
+  const auto color2 = geometry_from(color2_layout, flight::Float32Array(2.0));
+  const auto joints3 = geometry_from(joints3_layout, flight::Float32Array(3.0));
+  const auto uv3 = geometry_from(uv3_layout, flight::Float32Array(3.0));
+  const auto color2_owner = color2->vertices.buffer;
+  const auto joints3_owner = joints3->vertices.buffer;
+  const auto uv3_owner = uv3->vertices.buffer;
+  const double color2_version = color2->version;
+  const double joints3_version = joints3->version;
+  const double uv3_version = uv3->version;
+  missing = missing &&
+            !mesh::get_mesh_geometry_vertex_color0(four, color2, 0.0) &&
+            !mesh::set_mesh_geometry_vertex_color0(
+                color2, 0.0, 1.0, 2.0, 3.0, 4.0) &&
+            !mesh::get_mesh_geometry_vertex_joints0(four, joints3, 0.0) &&
+            !mesh::set_mesh_geometry_vertex_joints0(
+                joints3, 0.0, 1.0, 2.0, 3.0, 4.0) &&
+            !mesh::get_mesh_geometry_vertex_uv1(two, uv3, 0.0) &&
+            !mesh::set_mesh_geometry_vertex_uv1(uv3, 0.0, 1.0, 2.0) &&
+            color2->vertices.buffer == color2_owner &&
+            joints3->vertices.buffer == joints3_owner &&
+            uv3->vertices.buffer == uv3_owner &&
+            color2->vertices.get_index(0.0) == 0.0 &&
+            joints3->vertices.get_index(0.0) == 0.0 &&
+            uv3->vertices.get_index(0.0) == 0.0 &&
+            color2->version == color2_version &&
+            joints3->version == joints3_version &&
+            uv3->version == uv3_version;
+
+  const auto first = vertex_attribute("color0", "uint8x4", 0.0);
+  const auto second = vertex_attribute("color0", "float32x4", 4.0);
+  const auto duplicate_layout = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{first, second},
+      20.0);
+  missing = missing &&
+            mesh::get_vertex_attribute(
+                duplicate_layout, flight::String("color0")) ==
+                std::optional<flight::Ref<types::VertexAttribute>>{first} &&
+            !mesh::get_vertex_attribute(
+                 duplicate_layout, flight::String("normal"))
+                 .has_value() &&
+            mesh::get_vertex_attribute_float_offset(
+                duplicate_layout, flight::String("color0")) == -1.0 &&
+            mesh::get_vertex_attribute_float_offset(
+                duplicate_layout, flight::String("normal")) == -1.0;
+  if (inject_accessor_missing_default_mutation) missing = false;
+  check(missing,
+        "all eight accessor families leave output, bytes, owners, and version untouched when their semantic is missing; wrong component formats reject the same way, semantic lookup chooses the first declaration, absent lookup returns none, and packed or absent float offsets return -1");
 }
 
 void normals_tangents_and_group_boundaries() {
@@ -2977,6 +3545,16 @@ int main(int argc, char** argv) {
       mutation == flight::String("--mutate-morph-bounds");
   inject_morph_validation_mutation =
       mutation == flight::String("--mutate-morph-validation");
+  inject_format_component_mutation =
+      mutation == flight::String("--mutate-format-components");
+  inject_accessor_offset_stride_mutation =
+      mutation == flight::String("--mutate-accessor-offset-stride");
+  inject_accessor_normalization_mutation =
+      mutation == flight::String("--mutate-accessor-normalization");
+  inject_accessor_bounds_mutation =
+      mutation == flight::String("--mutate-accessor-bounds");
+  inject_accessor_missing_default_mutation =
+      mutation == flight::String("--mutate-accessor-missing-defaults");
 
   construction_clone_and_owner_identity();
   bounds_cache_and_position_mutation();
@@ -2990,6 +3568,11 @@ int main(int argc, char** argv) {
   packed_channel_order_and_ownership();
   packed_stride_offset_and_invalid_layout();
   packed_normalization_and_writes();
+  vertex_format_component_table_and_storage_interpretation();
+  accessor_offset_stride_interleaving_and_format_round_trip();
+  accessor_normalized_integer_and_float_matrix();
+  accessor_bounds_invalid_domains_and_failure_atomicity();
+  accessor_missing_default_and_wrong_format_paths();
   normals_tangents_and_group_boundaries();
   layout_conversion_ownership_and_round_trip();
   transform_component_order_aliasing_and_failures();

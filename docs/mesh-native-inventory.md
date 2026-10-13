@@ -54,15 +54,20 @@ header compilation or the existing Scene3D smoke test as behavioral coverage:
 | Morph compatibility and failure atomicity | Missing optional normal/tangent deltas validly preserve those base channels and all unrelated data. Sparse targets and target/weight count mismatches follow the documented bounded prefixes, while an undersized bind-pose scratch raises before changing geometry bytes/owner/version, bounds/cache state, targets, or weights. |
 | Packed channel ownership and order | A non-zero-offset `Float32Array` view is retained exactly with its authored layout. Attribute declaration order deliberately differs from byte order; semantic lookup still reads `uv1`, `color0`, `joints0`, and `weights0` into exact x/y/z/w component order from the second interleaved record. |
 | Stride, offsets, and packed interpretation | Reads honor both the view's byte offset and the 32-byte vertex stride. Packed writes clamp and round `uint16x4`, clamp/round/normalize `unorm8x4`, preserve float UV interpretation, and increment the version exactly once per successful channel. Bytes outside the view remain untouched. |
+| Complete vertex-format component table | All six emitted formats (`float32x2/x3/x4`, `uint16x4`, `uint8x4`, and `unorm8x4`) report exact byte/component counts. Every component is written and read at a deliberately unaligned DataView base, with raw little-endian float/uint16 bytes, integer clamp/round, normalized quantization, and untouched adjacent bytes pinned independently. |
+| Systematic interleaving and conversion | Two records carry all six formats at distinct offsets, including an unaligned packed `uint16x4`, inside a non-zero-offset view with padding and declaration order unrelated to byte order. Semantic conversion to six `float32x4` channels preserves every represented value, zero-fills only missing components, round-trips each source format, isolates output owners, and cannot mutate source or surrounding backing bytes. |
+| Accessor representation matrix | A shared table exercises `color0`, `joints0`, and `weights0` across every four-component representation (`float32x4`, `uint16x4`, `uint8x4`, `unorm8x4`), plus the permitted `float32x3` color default and `float32x2` UV path. Reads/writes preserve exact float values, clamp/round only integer storage, decode normalized storage, supply color alpha 1, retain owners/padding, and version once. |
+| Accessor bounds and invalid domains | Unknown format size/count/read calls throw while unknown void writes are exact no-ops. Negative and past-end components throw, fractional components follow DataView integer coercion, and exact-size views prevent partial writes. Unknown attribute formats, negative/spilling offsets, zero stride, partial records, invalid vertex indices, and misaligned float attributes follow their public throw-or-false/validation domains without mutating outputs, bytes, owners, or versions. |
+| Accessor missing/default paths | Every getter and setter for position, normal, tangent, UV0/UV1, color, joints, and weights rejects an absent semantic with outputs, bytes, owners, and version untouched. Wrong component formats reject the same way; duplicate semantic lookup returns the first declaration, missing lookup returns absence, and missing or packed float offsets return `-1`. |
 | Normals, tangents, and groups | Smooth normals and tangents update in place without replacing vertex or index owners, produce unit +Z/+X frames for canonical UVs, preserve exact version increments, and distinguish positive from negative handedness. Position groups choose the first bit-exact representative, never escape vertex bounds, reject an adjacent Float32 bit pattern, and area-weight grouped normals across a seam. |
 | Layout conversion | Conversion matches attributes by semantic rather than declaration order, installs the exact target layout and a fresh runtime/vertex/index owner while retaining subsets, zero-fills target-only components, preserves the source, and round-trips packed color/joint bytes through float storage. Canonical rigid/skinned strides and skin-channel offsets are asserted. |
 | Primitive topology, order, and ownership | All 17 emitted builders assert an exact vertex/index count and compare every authored index in order for representative parameters. Every result is a valid `triangle-list` with finite orthogonal unit normal/tangent frames and applicable outward winding. Repeated calls share only the canonical layout: vertices, indices, subsets/elements, bounds, and runtime owners are isolated, and mutating one call cannot reach another. |
 | Builder bounds | Every builder's cached AABB is recomputed independently from every emitted position and must be byte-for-byte tight at the current version. Box, capsule, plane, and torus also pin semantic half-extents/radius extents. |
 | Primitive seams | Box corners retain face-specific records; capsule, circle, cylinder, ring, UV sphere, torus, and torus-knot closures retain duplicate positions/normals with their required UV endpoints. Cone apex vertices remain duplicated across segment U values. Spherical polyhedra and the icosphere use independent face records, lift crossing longitudes past 1, never leave a face split across 0/1, and place pole U between its face-mates. |
 | Builder parameter guards | Every count-bearing builder floors fractional counts, clamps below-minimum counts, and throws `RangeError` for NaN and infinity on each count parameter. Zero-height cone/truncated-cylinder cases contain no dead triangles; a zero-height cylinder and collapsed/negative box or quad dimensions retain finite canonical records. Custom polyhedron seed positions are observably projected to the requested radius. |
-| Failures | Negative and past-end triangle queries leave the caller's output unchanged. Negative and past-end position writes leave bytes and version unchanged. Invalid weld indices return a deep clone, merge mismatch returns absence, validation rejection is non-mutating, singular transforms preserve the entire destination, and incompatible morph scratch rejects atomically. Packed attributes with negative offsets or records extending past stride reject reads and writes without changing output, bytes, or version. |
+| Failures | Negative and past-end triangle queries leave the caller's output unchanged. Negative and past-end position writes leave bytes and version unchanged. Invalid weld indices return a deep clone, merge mismatch returns absence, validation rejection is non-mutating, singular transforms preserve the entire destination, and incompatible morph scratch rejects atomically. Unknown formats and invalid component windows throw or no-op according to their return domain; missing, misformatted, misaligned, and out-of-record attributes reject without changing output, bytes, owners, or version. |
 
-Twenty-seven independent modes (`--mutate-owner-identity`, `--mutate-bounds`,
+Thirty-two independent modes (`--mutate-owner-identity`, `--mutate-bounds`,
 `--mutate-index-order`, `--mutate-failure`, `--mutate-channel-order`,
 `--mutate-stride-offset`, `--mutate-normalization`, `--mutate-group-bounds`,
 `--mutate-builder-topology`, `--mutate-builder-seams`, `--mutate-builder-bounds`,
@@ -73,7 +78,10 @@ Twenty-seven independent modes (`--mutate-owner-identity`, `--mutate-bounds`,
 `--mutate-uv-axes-order`, `--mutate-morph-target-order`,
 `--mutate-morph-weight-math`, `--mutate-morph-reset`,
 `--mutate-morph-aliasing`, `--mutate-morph-bounds`, and
-`--mutate-morph-validation`) suppress one family oracle each. Normal execution must pass; every
+`--mutate-morph-validation`, `--mutate-format-components`,
+`--mutate-accessor-offset-stride`, `--mutate-accessor-normalization`,
+`--mutate-accessor-bounds`, and `--mutate-accessor-missing-defaults`) suppress one family oracle
+each. Normal execution must pass; every
 mutation execution must fail its named assertion.
 
 ## Verification boundary
@@ -88,10 +96,11 @@ passed but cannot build/run `flight_cpp.generated_scene3d` because
 ## Honest residual
 
 This is a focused P-3D2 slice, not a claim that all 213 upstream cases are ported. Ranked by remaining
-observable breadth, the largest executable families are now: (1) the remaining vertex-format
-permutations and accessor rejection matrix; (2) residual construction, compute, index, and operation
-permutations outside the focused ownership and boundary oracles above; and (3) residual transform,
-UV, morph/deformation, and bind-pose combinations beyond the representative edge matrices above. The
+observable breadth, the largest executable families are now: (1) remaining construction, clone,
+metadata, and runtime-lifecycle permutations; (2) compute gaps such as bounding spheres, flat normals,
+and explicit refresh plus residual compaction/wireframe/index cases; (3) attribute-driven construction
+and residual merge/subset/operation permutations; and (4) residual builder, transform, UV,
+morph/deformation, and bind-pose combinations beyond the representative edge matrices above. The
 package currently has no refusal-ledger row, and this slice required no new production patch or
 compiler request. Its
 assisted-tier compiler debt remains explicit in the three existing source patches, one emission
