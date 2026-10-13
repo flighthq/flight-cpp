@@ -3408,9 +3408,8 @@
       "expires": "never by itself: C++ has no narrower-signature conversion, so the wrapper is the lowering rather than a workaround. It becomes unnecessary only if the emitter stops choosing `std::function` for such a position.",
       "appliedOn": "2026-10-13",
       "whyNotUpstreamFirst": "The wrapper is the one this backend already emits for a callable slot inside a union; this reaches it from a plain callable position and adds the rest-parameter collection. Upstream has no newer commit than the pin."
-    }
-,
-{
+    },
+    {
       "id": "compiler-nul-string-literal",
       "dependency": "flight-compiler",
       "patch": "compiler-nul-string-literal.patch",
@@ -3426,6 +3425,23 @@
       "expires": "when upstream emits a source string literal through a form that carries its extent, so the length is no longer inferred by the constructor.",
       "appliedOn": "2026-10-13",
       "whyNotUpstreamFirst": "The runtime cannot answer this: a `const char*` cannot report a length its caller never passed, and the emitter is the only place that still knows the literal's extent. Upstream has no newer commit than the pin."
+    },
+    {
+      "id": "statechart-comparison-closed-set",
+      "dependency": "flight",
+      "patch": "statechart-comparison-closed-set.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/statechart/src/statechart.ts",
+      "package": "@flighthq/statechart",
+      "answers": "diagnostic",
+      "refusal": "silent miscompilation, measured natively: `Object.values(StatechartComparison).includes(condition.comparison)` enumerates flight::named_properties(statechart_comparison), whose keys the generated member table never binds, so the array is empty and validateStatechart throws TypeError 'invalid comparison' for every chart with a condition (docs/compiler-requests/object-values-of-const-table-unbound-keys.md)",
+      "rewrite": "Spells the membership test as six explicit `!==` comparisons against StatechartComparison's members, in declaration order. Applies after statechart-single-transition-binding.",
+      "equivalence": "StatechartComparison is the closed `as const` table { Equal, GreaterThan, GreaterThanOrEqual, LessThan, LessThanOrEqual, NotEqual } (packages/types/src/Statechart.ts at a627849), each member's value equal to its key. Object.values(StatechartComparison).includes(x) is therefore true exactly when x equals one of those six strings, which is what the conjunction of `!==` negates. The comparison is read once into a local; the same TypeError is thrown with the same message, at the same point in validation order. A pin move that adds a member changes Types.ts, so the baseCommit check invalidates this patch rather than letting it go stale.",
+      "verification": "Guarded pkg:generate of @flighthq/statechart at a627849, then pkg:compile: 5/5 statechart headers compile; the generated_statechart CTest creates charts with all six comparisons and checks an unknown comparison is still a TypeError.",
+      "whyNotUpstreamFirst": "The emitter enumerates a const table through a dynamic named view the member table does not bind (docs/compiler-requests/object-values-of-const-table-unbound-keys.md). The cure is general -- enumerate the closed table's members statically -- and belongs in the compiler; this keeps statechart usable until it lands.",
+      "unblocks": "createStatechartInstance accepts charts with conditional transitions; no header-count change.",
+      "expires": "when the emitter enumerates a const object table's values from its members, or the member table binds const-table keys.",
+      "appliedOn": "2026-10-13"
     }
   ]
 }

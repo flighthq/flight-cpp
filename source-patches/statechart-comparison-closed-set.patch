@@ -1,0 +1,20 @@
+diff --git a/packages/statechart/src/statechart.ts b/packages/statechart/src/statechart.ts
+--- a/packages/statechart/src/statechart.ts
++++ b/packages/statechart/src/statechart.ts
+@@ -412,7 +412,15 @@
+               `Statechart region ${regionIndex} state ${stateIndex} transition ${transitionIndex} has an invalid input`,
+             );
+           }
+-          if (!Object.values(StatechartComparison).includes(condition.comparison)) {
++          const comparison = condition.comparison;
++          if (
++            comparison !== StatechartComparison.Equal &&
++            comparison !== StatechartComparison.GreaterThan &&
++            comparison !== StatechartComparison.GreaterThanOrEqual &&
++            comparison !== StatechartComparison.LessThan &&
++            comparison !== StatechartComparison.LessThanOrEqual &&
++            comparison !== StatechartComparison.NotEqual
++          ) {
+             throw new TypeError(
+               `Statechart region ${regionIndex} state ${stateIndex} transition ${transitionIndex} has an invalid comparison`,
+             );

@@ -8228,7 +8228,7 @@
       "code": "dependency-refused",
       "module": "packages/statechart/src/contract.ts",
       "package": "@flighthq/statechart",
-      "reason": "dependency ./enableStatechartGuards was refused for @flighthq/statechart/packages/statechart/src/enableStatechartGuards.ts",
+      "reason": "dependency ./enableStatechartGuards.ts was refused for @flighthq/statechart/packages/statechart/src/enableStatechartGuards.ts",
       "stage": "dependency"
     },
     {
@@ -8242,7 +8242,7 @@
       "code": "dependency-refused",
       "module": "packages/statechart/src/index.ts",
       "package": "@flighthq/statechart",
-      "reason": "dependency ./enableStatechartGuards was refused for @flighthq/statechart/packages/statechart/src/enableStatechartGuards.ts",
+      "reason": "dependency ./enableStatechartGuards.ts was refused for @flighthq/statechart/packages/statechart/src/enableStatechartGuards.ts",
       "stage": "dependency"
     },
     {

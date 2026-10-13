@@ -808,7 +808,7 @@
       "package": "@flighthq/statechart",
       "status": "complete",
       "supplies": "packages/statechart/src/enableStatechartGuards.ts",
-      "derivedFrom": "10125ef2b03a19c9bda43a291b16839165c81ccca6405c08b2ab4561a7c9608f",
+      "derivedFrom": "9d9c6ff18fac316c8dba4328d66b33b13d48cd40f377afd4c1fe1a542ef27edf",
       "reason": "The emitter types the object-keyed WeakMap as shared_ptr<void> but passes ErasedRef, emits JavaScript function equality on std::function, and constructs structured LogData as an anonymous designated aggregate.",
       "change": "Supplies complete per-instance guard installation and removal, exact callback identity detection, weak chart-owner identity numbering, optional transition lookup, and the source warning record.",
       "equivalence": "Guard detection is true only for the exact installed function pointer, external hook replacement remains observable, chart IDs key the retained structural row owner weakly and remain stable across instances sharing that same chart object, and warning keys, optional fallbacks, message, structured fields, level, and channel match the source.",
