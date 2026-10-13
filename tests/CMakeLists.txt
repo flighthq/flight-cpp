@@ -590,6 +590,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_timeline_target_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_timeline_target COMMAND flight_cpp_generated_timeline_target_tests)
 
+add_executable(flight_cpp_generated_tween_tests generated_tween_test.cpp)
+target_include_directories(
+  flight_cpp_generated_tween_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_tween_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_tween COMMAND flight_cpp_generated_tween_tests)
+
 add_executable(flight_cpp_generated_lifecycle_tests generated_lifecycle_test.cpp)
 target_include_directories(
   flight_cpp_generated_lifecycle_tests
@@ -818,6 +826,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_lifecycle lifecycle signals)
 flight_cpp_package_test_labels(flight_cpp.generated_spring spring)
 flight_cpp_package_test_labels(flight_cpp.generated_timeline signals timeline)
 flight_cpp_package_test_labels(flight_cpp.generated_timeline_target scene2d signals timeline)
+flight_cpp_package_test_labels(flight_cpp.generated_tween signals tween)
 flight_cpp_package_test_labels(flight_cpp.generated_velocity geometry velocity)
 flight_cpp_package_test_labels(flight_cpp.generated_motionpath geometry motionpath path)
 flight_cpp_package_test_labels(flight_cpp.generated_clock clock signals)
