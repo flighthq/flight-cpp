@@ -79,6 +79,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 
 ## Active requests without a compiler patch
 
+- [A generic union alias must not template an arm that does not use its type parameter](generic-alias-non-dependent-anonymous-arms.md) —
+  `@flighthq/tray` `createTrayIcon` (`cpp-contextual-union-inequivalent`): `TrayCreateResult<Tray>` re-emits the provider-failure arms as templated twins, so the value's own struct is no alternative of the declared return. No workaround carried: no identity-preserving conversion exists, and the emission fix renames 91 structs in 23 headers across 9 packages.
+
 - [An indexed array write at length must grow the array](array-index-write-must-grow.md) —
   lighting's exact-owner forward-selection scratch arrays begin empty and grow a dense live prefix,
   but emitted `Array::element` writes throw at the first append; carried by explicit guarded pushes

@@ -111,7 +111,11 @@ unmatched or ambiguous member remains a refusal.
 
 For Tray, `'error' in result` becomes an alternative test over the original variant, `cancelled` reaches
 the false arm, and each error arm retains its error object by identity. A scratch regeneration advances
-`createTrayIcon` to a separate contextual-union refusal; no Tray generated rows are committed here.
+`createTrayIcon` to `cpp-contextual-union-inequivalent`: the generic alias `TrayCreateResult<Tray>`
+re-emits provider-failure arms as templated twins, documented in
+[generic-alias-non-dependent-anonymous-arms.md](generic-alias-non-dependent-anonymous-arms.md).
+`startTrayIconAnimation` stops at a distinct contextual-union mismatch involving a nested variant with
+a duplicated alternative. No Tray generated rows are committed here.
 
 The patch does not change writes through multi-alternative narrowed bindings, optional-chain
 discriminant lowering, or member-presence tests under optional bindings. Those measured boundaries
