@@ -2068,6 +2068,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("transactionIndex") && requires { object.transaction_index; }) return (object.transaction_index);
   else if constexpr (Key::name.view() == std::string_view("transactionLabel") && requires { object.transaction_label; }) return (object.transaction_label);
   else if constexpr (Key::name.view() == std::string_view("transform") && requires { object.transform; }) return (object.transform);
+  else if constexpr (Key::name.view() == std::string_view("transformType") && requires { object.transform_type; }) return (object.transform_type);
   else if constexpr (Key::name.view() == std::string_view("transforms") && requires { object.transforms; }) return (object.transforms);
   else if constexpr (Key::name.view() == std::string_view("transition") && requires { object.transition; }) return (object.transition);
   else if constexpr (Key::name.view() == std::string_view("transitionCurve") && requires { object.transition_curve; }) return (object.transition_curve);
@@ -4283,6 +4284,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("transactionIndex") && requires(Object& object) { object.transaction_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transaction_index)>>{};
   else if constexpr (Key::name.view() == std::string_view("transactionLabel") && requires(Object& object) { object.transaction_label; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transaction_label)>>{};
   else if constexpr (Key::name.view() == std::string_view("transform") && requires(Object& object) { object.transform; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transform)>>{};
+  else if constexpr (Key::name.view() == std::string_view("transformType") && requires(Object& object) { object.transform_type; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transform_type)>>{};
   else if constexpr (Key::name.view() == std::string_view("transforms") && requires(Object& object) { object.transforms; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transforms)>>{};
   else if constexpr (Key::name.view() == std::string_view("transition") && requires(Object& object) { object.transition; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transition)>>{};
   else if constexpr (Key::name.view() == std::string_view("transitionCurve") && requires(Object& object) { object.transition_curve; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transition_curve)>>{};
@@ -6501,6 +6503,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->transaction_index; }) owner.bind_named("transactionIndex", [object]() -> decltype(auto) { return (object->transaction_index); });
   if constexpr (requires { object->transaction_label; }) owner.bind_named("transactionLabel", [object]() -> decltype(auto) { return (object->transaction_label); });
   if constexpr (requires { object->transform; }) owner.bind_named("transform", [object]() -> decltype(auto) { return (object->transform); });
+  if constexpr (requires { object->transform_type; }) owner.bind_named("transformType", [object]() -> decltype(auto) { return (object->transform_type); });
   if constexpr (requires { object->transforms; }) owner.bind_named("transforms", [object]() -> decltype(auto) { return (object->transforms); });
   if constexpr (requires { object->transition; }) owner.bind_named("transition", [object]() -> decltype(auto) { return (object->transition); });
   if constexpr (requires { object->transition_curve; }) owner.bind_named("transitionCurve", [object]() -> decltype(auto) { return (object->transition_curve); });
@@ -8752,6 +8755,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(transaction_index)
   FLIGHT_SDK_ROW_WIDENS(transaction_label)
   FLIGHT_SDK_ROW_WIDENS(transform)
+  FLIGHT_SDK_ROW_WIDENS(transform_type)
   FLIGHT_SDK_ROW_WIDENS(transforms)
   FLIGHT_SDK_ROW_WIDENS(transition)
   FLIGHT_SDK_ROW_WIDENS(transition_curve)
