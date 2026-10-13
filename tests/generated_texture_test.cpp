@@ -1,4 +1,6 @@
 #include <flight/texture/video_texture.hpp>
+#include <flight/texture/voxel_grid.hpp>
+#include <flight/types/render_target.hpp>
 
 #include <array>
 #include <iostream>
@@ -376,6 +378,338 @@ int main(int argc, char** argv) {
   check(set_source_rejected_all,
         "setTextureSource rejects every non-2D dimension before mutation");
 
+  const auto direct_source = flight::make_ref<types::TextureSource>();
+  direct_source->kind = types::image_texture_source_kind;
+  direct_source->width = 32.0;
+  direct_source->height = 64.0;
+  const types::TextureSourceValue direct_source_value{
+      std::in_place_type<flight::Ref<types::TextureSource>>, direct_source};
+  const std::optional<types::TextureSourceValue> bound_direct_source{direct_source_value};
+
+  const auto source_state_texture = texture::create_texture();
+  types::TextureLike source_state_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, source_state_texture};
+  texture::set_texture_source(source_state_view, bound_direct_source);
+  const auto selected_direct_source = texture::get_texture_source(source_state_view);
+  bool direct_source_identity =
+      selected_direct_source.has_value() &&
+      std::holds_alternative<flight::Ref<types::TextureSource>>(
+          selected_direct_source.value()) &&
+      std::get<flight::Ref<types::TextureSource>>(selected_direct_source.value()) ==
+          direct_source;
+  if (mutation == "--mutate-source-direct") direct_source_identity = false;
+  check(direct_source_identity,
+        "getTextureSource returns the exact direct 2D source owner");
+  bool bound_readiness = texture::has_texture_source(source_state_view) &&
+                         texture::is_texture_ready(source_state_view);
+  if (mutation == "--mutate-readiness") bound_readiness = false;
+  check(bound_readiness,
+        "a bound 2D source is present and ready through the shared source field");
+  auto direct_kind = texture::get_texture_source_kind(source_state_view);
+  if (mutation == "--mutate-source-kind") direct_kind = flight::String("mutated");
+  check(direct_kind == std::optional<flight::String>{types::image_texture_source_kind},
+        "getTextureSourceKind reads the active image-source key");
+  double direct_width = texture::get_texture_width(source_state_view);
+  if (mutation == "--mutate-width-2d") direct_width += 1.0;
+  check(direct_width == 32.0, "getTextureWidth derives the bound 2D image width");
+  double direct_height = texture::get_texture_height(source_state_view);
+  if (mutation == "--mutate-height-2d") direct_height += 1.0;
+  check(direct_height == 64.0, "getTextureHeight derives the bound 2D image height");
+  check(source_state_texture->version == 1.0,
+        "setTextureSource advances the version for the first binding");
+
+  texture::set_texture_source(source_state_view, bound_direct_source);
+  check(source_state_texture->version == 1.0,
+        "setTextureSource leaves the version unchanged for the same source owner");
+
+  const auto render_target = flight::make_ref<types::RenderTarget>();
+  render_target->kind = types::render_target_texture_source_kind;
+  render_target->width = 96.0;
+  render_target->height = 48.0;
+  const std::optional<types::TextureSourceValue> bound_render_target{
+      types::TextureSourceValue{
+          std::in_place_type<flight::Ref<types::RenderTarget>>, render_target}};
+  texture::set_texture_source(source_state_view, bound_render_target);
+  const auto selected_render_target = texture::get_texture_source(source_state_view);
+  bool replacement_identity =
+      selected_render_target.has_value() &&
+      std::holds_alternative<flight::Ref<types::RenderTarget>>(
+          selected_render_target.value()) &&
+      std::get<flight::Ref<types::RenderTarget>>(selected_render_target.value()) ==
+          render_target;
+  if (mutation == "--mutate-source-replacement") replacement_identity = false;
+  check(replacement_identity && source_state_texture->version == 2.0,
+        "setTextureSource replaces the owner in place and advances the version");
+  auto replacement_kind = texture::get_texture_source_kind(source_state_view);
+  if (mutation == "--mutate-replacement-kind") {
+    replacement_kind = types::image_texture_source_kind;
+  }
+  check(replacement_kind ==
+            std::optional<flight::String>{types::render_target_texture_source_kind},
+        "getTextureSourceKind distinguishes a render-target source");
+  double render_target_width = texture::get_texture_width(source_state_view);
+  double render_target_height = texture::get_texture_height(source_state_view);
+  if (mutation == "--mutate-render-target-width") render_target_width += 1.0;
+  if (mutation == "--mutate-render-target-height") render_target_height += 1.0;
+  check(render_target_width == 96.0,
+        "getTextureWidth derives the render-target source width");
+  check(render_target_height == 48.0,
+        "getTextureHeight derives the render-target source height");
+
+  texture::set_texture_source(source_state_view, std::nullopt);
+  bool cleared_source = !texture::get_texture_source(source_state_view).has_value() &&
+                        !texture::has_texture_source(source_state_view) &&
+                        !texture::is_texture_ready(source_state_view) &&
+                        source_state_texture->version == 3.0;
+  if (mutation == "--mutate-source-clear") cleared_source = false;
+  check(cleared_source,
+        "setTextureSource clears the owner and returns the texture to not-ready");
+
+  source_state_texture->version = 4294967295.0;
+  texture::set_texture_source(source_state_view, bound_direct_source);
+  bool source_version_wrapped = source_state_texture->version == 0.0;
+  if (mutation == "--mutate-source-version") source_version_wrapped = false;
+  check(source_version_wrapped, "setTextureSource wraps its content version as u32");
+
+  const auto array_primary = flight::make_ref<types::TextureSource>();
+  array_primary->kind = types::image_texture_source_kind;
+  array_primary->width = 40.0;
+  array_primary->height = 20.0;
+  const auto array_later = flight::make_ref<types::TextureSource>();
+  array_later->kind = types::image_texture_source_kind;
+  array_later->width = 90.0;
+  array_later->height = 80.0;
+  const auto source_array_options =
+      flight::make_ref<texture::CreateTexture2DArrayVariantOptions>();
+  source_array_options->dimension = flight::String("2d-array");
+  source_array_options->sources =
+      flight::Array<std::optional<types::TextureSourceValue>>{
+          std::nullopt,
+          types::TextureSourceValue{
+              std::in_place_type<flight::Ref<types::TextureSource>>, array_primary},
+          types::TextureSourceValue{
+              std::in_place_type<flight::Ref<types::TextureSource>>, array_later}};
+  const auto source_array = texture::create_texture(source_array_options);
+  types::TextureLike source_array_view{
+      std::in_place_type<flight::Ref<types::Texture2DArray>>, source_array};
+  const auto selected_array_source = texture::get_texture_source(source_array_view);
+  bool array_source_identity =
+      selected_array_source.has_value() &&
+      std::holds_alternative<flight::Ref<types::TextureSource>>(
+          selected_array_source.value()) &&
+      std::get<flight::Ref<types::TextureSource>>(selected_array_source.value()) ==
+          array_primary &&
+      texture::has_texture_source(source_array_view) &&
+      texture::is_texture_ready(source_array_view);
+  if (mutation == "--mutate-source-array") array_source_identity = false;
+  check(array_source_identity,
+        "layered textures select the first bound source after absent slots");
+  double array_width = texture::get_texture_width(source_array_view);
+  if (mutation == "--mutate-width-array") array_width += 1.0;
+  check(array_width == 40.0,
+        "getTextureWidth derives the first bound 2D-array source width");
+  double array_height = texture::get_texture_height(source_array_view);
+  if (mutation == "--mutate-height-array") array_height += 1.0;
+  check(array_height == 20.0,
+        "getTextureHeight derives the first bound 2D-array source height");
+
+  const auto cube_primary = flight::make_ref<types::TextureSource>();
+  cube_primary->kind = types::image_texture_source_kind;
+  cube_primary->width = 30.0;
+  cube_primary->height = 10.0;
+  const auto source_cube_options =
+      flight::make_ref<texture::CreateTextureCubeVariantOptions>();
+  source_cube_options->dimension = flight::String("cube");
+  source_cube_options->sources = types::TextureSourceCubeFaces{
+      std::nullopt, std::nullopt,
+      types::TextureSourceValue{
+          std::in_place_type<flight::Ref<types::TextureSource>>, cube_primary},
+      std::nullopt, std::nullopt, std::nullopt};
+  const auto source_cube = texture::create_texture(source_cube_options);
+  types::TextureLike source_cube_view{
+      std::in_place_type<flight::Ref<types::TextureCube>>, source_cube};
+  const auto selected_cube_source = texture::get_texture_source(source_cube_view);
+  bool cube_source_identity =
+      selected_cube_source.has_value() &&
+      std::holds_alternative<flight::Ref<types::TextureSource>>(
+          selected_cube_source.value()) &&
+      std::get<flight::Ref<types::TextureSource>>(selected_cube_source.value()) ==
+          cube_primary &&
+      texture::has_texture_source(source_cube_view) &&
+      texture::is_texture_ready(source_cube_view);
+  if (mutation == "--mutate-source-cube") cube_source_identity = false;
+  check(cube_source_identity,
+        "cube textures select the first bound face after absent faces");
+  double cube_width = texture::get_texture_width(source_cube_view);
+  if (mutation == "--mutate-width-cube") cube_width += 1.0;
+  check(cube_width == 30.0,
+        "getTextureWidth derives the first bound cube-face width");
+  double cube_height = texture::get_texture_height(source_cube_view);
+  if (mutation == "--mutate-height-cube") cube_height += 1.0;
+  check(cube_height == 10.0,
+        "getTextureHeight derives the first bound cube-face height");
+
+  const auto voxel_source = flight::make_ref<types::VoxelGrid>();
+  voxel_source->kind = types::voxel_grid_texture_source_kind;
+  voxel_source->width = 7.0;
+  voxel_source->height = 5.0;
+  voxel_source->depth = 3.0;
+  voxel_source->data = flight::Uint8Array(105);
+  voxel_source->format = flight::String("rgba8unorm");
+  const auto source_three_d_options =
+      flight::make_ref<texture::CreateTexture3DVariantOptions>();
+  source_three_d_options->dimension = flight::String("3d");
+  source_three_d_options->source =
+      decltype(texture::CreateTexture3DVariantOptions::source){
+          std::in_place_type<flight::Ref<types::VoxelGrid>>, voxel_source};
+  const auto source_three_d = texture::create_texture(source_three_d_options);
+  types::TextureLike source_three_d_view{
+      std::in_place_type<flight::Ref<types::Texture3D>>, source_three_d};
+  const auto selected_voxel_source = texture::get_texture_source(source_three_d_view);
+  bool voxel_source_identity =
+      selected_voxel_source.has_value() &&
+      std::holds_alternative<flight::Ref<types::VoxelGrid>>(
+          selected_voxel_source.value()) &&
+      std::get<flight::Ref<types::VoxelGrid>>(selected_voxel_source.value()) ==
+          voxel_source &&
+      texture::has_texture_source(source_three_d_view) &&
+      texture::is_texture_ready(source_three_d_view);
+  if (mutation == "--mutate-source-3d") voxel_source_identity = false;
+  check(voxel_source_identity,
+        "3D textures expose the exact voxel-grid source owner");
+  double voxel_width = texture::get_texture_width(source_three_d_view);
+  if (mutation == "--mutate-width-3d") voxel_width += 1.0;
+  check(voxel_width == 7.0,
+        "getTextureWidth derives the voxel-grid width for a 3D texture");
+  double voxel_height = texture::get_texture_height(source_three_d_view);
+  if (mutation == "--mutate-height-3d") voxel_height += 1.0;
+  check(voxel_height == 5.0,
+        "getTextureHeight derives the voxel-grid height for a 3D texture");
+  double voxel_depth =
+      std::get<flight::Ref<types::VoxelGrid>>(selected_voxel_source.value())->depth;
+  if (mutation == "--mutate-depth-3d") voxel_depth += 1.0;
+  check(voxel_depth == 3.0,
+        "the exact 3D source owner preserves its voxel depth without a substitute getter");
+  const auto voxel_data = voxel_source->data;
+  texture::invalidate_voxel_grid(voxel_source);
+  bool voxel_invalidation =
+      voxel_source->version == 1.0 && voxel_source->data == voxel_data;
+  if (mutation == "--mutate-voxel-invalidation") voxel_invalidation = false;
+  check(voxel_invalidation,
+        "invalidateVoxelGrid advances content state without replacing voxel bytes");
+  voxel_source->version = 4294967295.0;
+  texture::invalidate_voxel_grid(voxel_source);
+  check(voxel_source->version == 0.0,
+        "invalidateVoxelGrid wraps its shared content version as u32");
+
+  const auto absent_array_options =
+      flight::make_ref<texture::CreateTexture2DArrayVariantOptions>();
+  absent_array_options->dimension = flight::String("2d-array");
+  absent_array_options->sources =
+      flight::Array<std::optional<types::TextureSourceValue>>{std::nullopt};
+  const auto absent_array = texture::create_texture(absent_array_options);
+  const auto absent_three_d_options =
+      flight::make_ref<texture::CreateTexture3DVariantOptions>();
+  absent_three_d_options->dimension = flight::String("3d");
+  const auto absent_three_d = texture::create_texture(absent_three_d_options);
+  const std::array<types::TextureLike, 4> absent_source_textures{
+      types::TextureLike{std::in_place_type<flight::Ref<types::Texture2D>>,
+                         texture::create_texture()},
+      types::TextureLike{std::in_place_type<flight::Ref<types::Texture2DArray>>,
+                         absent_array},
+      types::TextureLike{std::in_place_type<flight::Ref<types::TextureCube>>, cube},
+      types::TextureLike{std::in_place_type<flight::Ref<types::Texture3D>>,
+                         absent_three_d}};
+  bool all_absent_sources_are_empty = true;
+  for (const auto& absent_source_texture : absent_source_textures) {
+    const auto empty_view = flight::geometry::create_vector2(4.0, 5.0);
+    texture::get_texture_view_size(empty_view, absent_source_texture);
+    all_absent_sources_are_empty =
+        all_absent_sources_are_empty &&
+        !texture::get_texture_source(absent_source_texture).has_value() &&
+        !texture::get_texture_source_kind(absent_source_texture).has_value() &&
+        texture::get_texture_width(absent_source_texture) == -1.0 &&
+        texture::get_texture_height(absent_source_texture) == -1.0 &&
+        !texture::has_texture_source(absent_source_texture) &&
+        !texture::is_texture_ready(absent_source_texture) && empty_view->x == 0.0 &&
+        empty_view->y == 0.0;
+  }
+  if (mutation == "--mutate-absent-sources") all_absent_sources_are_empty = false;
+  check(all_absent_sources_are_empty,
+        "all four texture forms expose absent sources as -1 size, not-ready, and empty view");
+
+  const auto view_source = flight::make_ref<types::TextureSource>();
+  view_source->kind = types::image_texture_source_kind;
+  view_source->width = 100.0;
+  view_source->height = 50.0;
+  const auto view_options = flight::make_ref<types::CreateTexture2DOptions>();
+  view_options->source = decltype(types::CreateTexture2DOptions::source){
+      std::in_place_type<flight::Ref<types::TextureSource>>, view_source};
+  view_options->uv_scale = flight::geometry::create_vector2(0.3, 0.2);
+  view_options->uv_rotation = -flight::pi / 2.0;
+  const auto view_texture = texture::create_texture2_d(view_options);
+  const types::TextureLike view_texture_like{
+      std::in_place_type<flight::Ref<types::Texture2D>>, view_texture};
+  const auto view_size = flight::geometry::create_vector2();
+  texture::get_texture_view_size(view_size, view_texture_like);
+  double view_width = view_size->x;
+  double view_height = view_size->y;
+  if (mutation == "--mutate-view-width") view_width += 1.0;
+  if (mutation == "--mutate-view-height") view_height += 1.0;
+  check(view_width == 15.0,
+        "getTextureViewSize measures the rotated scaled 2D width in backing pixels");
+  check(view_height == 20.0,
+        "getTextureViewSize measures the rotated scaled 2D height in backing pixels");
+
+  source_array->uv_scale = flight::geometry::create_vector2(0.5, 2.0);
+  const auto array_view_size = flight::geometry::create_vector2();
+  texture::get_texture_view_size(array_view_size, source_array_view);
+  bool array_view_derived =
+      array_view_size->x == 20.0 && array_view_size->y == 40.0;
+  if (mutation == "--mutate-view-array") array_view_derived = false;
+  check(array_view_derived,
+        "getTextureViewSize derives an unrotated 2D-array view from its first source");
+
+  source_cube->uv_scale = flight::geometry::create_vector2(2.0, 3.0);
+  source_cube->uv_rotation = flight::pi / 2.0;
+  const auto cube_view_size = flight::geometry::create_vector2();
+  texture::get_texture_view_size(cube_view_size, source_cube_view);
+  bool cube_view_derived =
+      cube_view_size->x == 20.0 && cube_view_size->y == 90.0;
+  if (mutation == "--mutate-view-cube") cube_view_derived = false;
+  check(cube_view_derived,
+        "getTextureViewSize derives a quarter-turned cube view from its first face");
+
+  source_three_d->uv_scale = flight::geometry::create_vector2(2.0, 3.0);
+  source_three_d->uv_rotation = flight::pi;
+  const auto three_d_view_size = flight::geometry::create_vector2();
+  texture::get_texture_view_size(three_d_view_size, source_three_d_view);
+  bool three_d_view_derived =
+      three_d_view_size->x == 14.0 && three_d_view_size->y == 15.0;
+  if (mutation == "--mutate-view-3d") three_d_view_derived = false;
+  check(three_d_view_derived,
+        "getTextureViewSize derives a half-turned 3D view from voxel width and height");
+
+  const auto invalid_source = flight::make_ref<types::TextureSource>();
+  invalid_source->kind = types::image_texture_source_kind;
+  invalid_source->width = 0.0;
+  invalid_source->height = -4.0;
+  const auto invalid_options = flight::make_ref<types::CreateTexture2DOptions>();
+  invalid_options->source = decltype(types::CreateTexture2DOptions::source){
+      std::in_place_type<flight::Ref<types::TextureSource>>, invalid_source};
+  const auto invalid_texture = texture::create_texture2_d(invalid_options);
+  const types::TextureLike invalid_texture_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, invalid_texture};
+  const auto invalid_view_size = flight::geometry::create_vector2(4.0, 5.0);
+  texture::get_texture_view_size(invalid_view_size, invalid_texture_view);
+  bool invalid_size_is_empty = texture::is_texture_ready(invalid_texture_view) &&
+                               texture::get_texture_width(invalid_texture_view) == 0.0 &&
+                               texture::get_texture_height(invalid_texture_view) == -4.0 &&
+                               invalid_view_size->x == 0.0 && invalid_view_size->y == 0.0;
+  if (mutation == "--mutate-invalid-view") invalid_size_is_empty = false;
+  check(invalid_size_is_empty,
+        "a present non-positive source stays ready while its derived view is empty");
+
   using SamplerView = flight::StructuralRef<
       flight::RowReadonly<flight::RowOf<types::SamplerLike>>>;
   using OptionalSampler =
@@ -511,7 +845,7 @@ int main(int argc, char** argv) {
         "video destruction detaches only the borrowed image source");
 
   if (failures == 0) {
-    std::cout << "texture construction, cloning, copy, and equality match Flight\n";
+    std::cout << "texture construction, source, size, copy, and equality match Flight\n";
   }
   return failures == 0 ? 0 : 1;
 }

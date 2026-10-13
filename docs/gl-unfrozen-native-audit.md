@@ -12,7 +12,7 @@ equality, ordering, exceptions, settlement, then format breadth.
 
 | Package | Focused native evidence | Highest remaining audited gap |
 | --- | --- | --- |
-| `texture` | Construction covers absent defaults and exact source/resource identity; clone and video lifecycle cover shared versus copied owners. Sampler/2D equality covers null/undefined, same-owner, value-state, and distinct-source identity. Copy/initialize evidence distinguishes construction-row identity, cloned mutable sampling state, shared source owners, preserved destination owners, self-alias safety, and fresh array/cube list storage; every legitimate dimension mismatch and both non-2D source setters reject before mutation. | Source/readiness/size queries and UV matrix/mutation behavior remain. Cube and render-texture helper behavior also reaches declared compiler refusals, so it is not an independent test-only slice. |
+| `texture` | Construction covers absent defaults and exact source/resource identity; clone and video lifecycle cover shared versus copied owners. Sampler/2D equality covers null/undefined, same-owner, value-state, and distinct-source identity. Copy/initialize evidence distinguishes construction-row identity, cloned mutable sampling state, shared source owners, preserved destination owners, self-alias safety, and fresh array/cube list storage; every legitimate dimension mismatch and both non-2D source setters reject before mutation. Source/readiness/size coverage now includes first-source selection, all-absent forms, 2D replacement/version transitions, CPU/GPU kinds, width/height/view derivation for 2D, array, cube, and 3D, non-positive dimensions, and voxel depth/data identity. | UV matrix and mutation behavior remains. Cube-only and render-texture helpers still reach declared compiler refusals, so they are not independent test-only slices. |
 | `texture-formats` | The byte-exact test covers all nine upstream modules: bounded/endian reads, detection and explanations, level layout, selection, and ATF/Basis/DDS/KTX2 parsing and rejection. Two restored source mutations prove mip-count and normalized image-order assertions. | No high-priority semantic gap was found. More malformed-header combinations would add breadth rather than a missing behavior family. |
 | `shading` | The focused test covers all modifier constructors, shared option identity, stable stack ordering, validation, registry isolation/replacement, built-in registration, and define keys. | Remaining cases are repeated option and invalid-value permutations; no uncovered absence, identity, equality, or ordering family was found. |
 | `materials` | `materials-native-inventory.md` records constructor/default, owner identity, equality, ordering, validation, conversion, guard lifecycle, and eight mutation oracles across all 22 suites. | Lower-priority detail remains in color-scale/bias helper permutations, whole-object Phong conversion precedence, forwarded optional-map permutations, and exact diagnostic text. |
@@ -52,8 +52,29 @@ TypeScript discriminated union: once the two public dimensions compare equal, th
 arm necessarily has that same dimension. The native test therefore covers the complete legitimate
 4-by-4 mismatch domain and does not manufacture an inconsistent C++ variant/discriminator pair.
 
+The source/readiness/size follow-on exercises the common helpers over real 2D, 2D-array, cube, and
+3D owners. It proves direct and first-non-null source identity, image/render-target/voxel kinds,
+present and absent readiness, `-1` absent dimensions, CPU and GPU width/height, and the view-size
+derivations for unrotated, quarter-turn, and half-turn transforms. A bound source with zero or
+negative dimensions remains ready because readiness is source presence, while its view size is
+zero. The 2D setter covers bind, same-owner no-op, replacement, clear, and u32 wrap. Voxel coverage
+also preserves the exact source owner, its depth and byte-array identity, and invalidation wrap.
+Twenty-nine focused mutation modes independently suppress source selection, kind, readiness,
+replacement/clear/version, each width/height family, depth, per-form view size, absent-domain, and
+invalid-size oracles.
+
+This slice does not invent a `getTextureDepth` function: no such public helper exists at the pinned
+Flight revision, so depth is observed only through the exact `VoxelGrid` owner returned by
+`getTextureSource`. Likewise, generic cube first-source, width/height, readiness, and view behavior
+is available and tested, but `getCubeTextureFaceSize` remains refused as
+`cpp-contextual-union-missing-expression-type:optionalVariant`, `isCubeTextureComplete` remains
+refused as `cpp-presence-test-without-absence-storage`, and `setCubeTextureFace` remains refused at
+dynamic tuple projection. `createRenderTexture` still stops at the declared
+`cpp-reference-assertion-without-heritage` boundary; using a real `RenderTarget` as a common texture
+source tests the emitted generic source queries without substituting for that missing constructor.
+
 ## Next useful work
 
-The next independent texture slice is source/readiness/size behavior, followed by UV matrices and
-mutation helpers. Image settlement is more valuable globally, but is not independent at this pin:
+The next independent texture slice is UV matrices and mutation helpers. Image settlement is more
+valuable globally, but is not independent at this pin:
 it requires the existing browser URL/location and erased-owner compiler requests to land first.
