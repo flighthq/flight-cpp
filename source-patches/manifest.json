@@ -3713,6 +3713,23 @@
       "unblocks": "@flighthq/render renderState.ts initializeRenderStateRuntime without emission repairs (three of the five render-state-generic-null-* repairs retired). Other packages with bare type-parameter receivers change when their owners next regenerate; this change does not move them.",
       "expires": "when upstream gives a property write through a type-parameter receiver its constraint's member type (docs/compiler-requests/generic-receiver-null-write-engages-optional.md).",
       "appliedOn": "2026-10-13"
+    },
+    {
+      "id": "compiler-new-map-copy",
+      "dependency": "flight-compiler",
+      "patch": "compiler-new-map-copy.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "not a refusal: a silent miscompile. `new Map(existingMap)` lowered to `flight::Map<K, V>(existingMap)` (or `flight::Map(existingMap)`), and when the argument already has the constructed type C++ selects Map's storage-sharing copy constructor over its explicit range constructor, so the new map was the caller's map and every write through it mutated the source. @flighthq/registry's withKindMapEntry, withoutKindMapEntry and concatKindMap mutated their inputs.",
+      "rewrite": "In `new` expression emission, a flight-cpp `new Map(argument)` whose single argument is itself a Map or ReadonlyMap is spelled `flight::Map<K, V>(argument).clone()`. Map::clone() copies every record in insertion order into new storage. Every other Map constructor form (entry arrays, iterators, literals, empty) is emitted exactly as before.",
+      "equivalence": "`new Map(map)` creates a new Map holding map's entries in map's iteration order; clone() of the constructed Map is exactly that. When the argument already has the constructed type, the constructor shares and clone() copies; when it has another element type, the range constructor has already copied and clone() copies the fresh map again, which is redundant and unobservable. The source map is never written, and Map's live iteration over its own storage is unchanged.",
+      "verification": "New cppNewMapCopy.test.ts: 2 pass. The Map-argument case (ReadonlyMap, explicitly typed Map, property-read Map) fails without the rewrite; the control case (entries array, iterator, literal, empty) passes both ways. compiler-backend-cpp suite at -j2 on top of compiler-generic-receiver-null-write: the same 47 pre-existing cppCompilerBackend.test.ts failures as the baseline, no new failure. Native: the emitted probe header, compiled and run, keeps the source map unchanged, preserves insertion order, and leaves live iteration (a key added during for-of is visited) unchanged; with .clone() removed the isolation checks fail. Focused registry regeneration: the registry-new-map-copy-* repairs match nothing and are retired; tests/generated_registry_test.cpp passes.",
+      "whyNotUpstreamFirst": "It is a silent miscompile in the most common way TypeScript copies a Map; upstream receives docs/compiler-requests/new-map-copy-lowered-to-alias.md with the reproduction, and the patch replaces per-site repairs meanwhile.",
+      "unblocks": "@flighthq/registry registryTable.ts without emission repairs. The other packages that copy a Map with `new Map(map)` are fixed when their owners next regenerate them; this change does not move them.",
+      "expires": "when upstream lowers `new Map(existingMap)` to an independent copy (docs/compiler-requests/new-map-copy-lowered-to-alias.md).",
+      "appliedOn": "2026-10-13"
     }
   ]
 }

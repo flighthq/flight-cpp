@@ -13577,30 +13577,6 @@
       "defect": "Same shape as registry-codegen-row-write-array-projection: the member is declared as rows over the entry type and the emitted write passes the entry references themselves. The element conversion is a row projection over the SAME subject, so nothing is reinterpreted; only the unobserved local array has to be rebuilt, and array_of preserves every element identity while returning the separate array handle the local already has no other holder for. See that entry for why array_of is legal only with the identity precondition stated.",
       "expectedWhen": "always",
       "expires": "when the emitter projects an array into the row element type its member declares; sdk:check fails if this repair matches no header."
-    },
-    {
-      "id": "registry-new-map-copy-base",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/registry/registry_table.hpp",
-      "from": "auto entries = flight::Map(base);",
-      "to": "auto entries = base.clone();",
-      "sourceDeclaration": "packages/registry/src/registryTable.ts -- const entries = new Map(base); in concatKindMap",
-      "diagnostic": "none: compiles, then aliases the input (silent); tests/generated_registry_test.cpp's no-mutation assertions fail",
-      "defect": "The emitter lowers new Map(existing) to a sharing copy rather than new storage.",
-      "expectedWhen": "always",
-      "expires": "when the emitter lowers new Map(existingMap) to a copy"
-    },
-    {
-      "id": "registry-new-map-copy-map",
-      "kind": "respell-reference-member-access",
-      "appliesTo": "flight/registry/registry_table.hpp",
-      "from": "auto entries = flight::Map(map);",
-      "to": "auto entries = map.clone();",
-      "sourceDeclaration": "packages/registry/src/registryTable.ts -- const entries = new Map(map); in withKindMapEntry and withoutKindMapEntry",
-      "diagnostic": "none: compiles, then aliases the input (silent); tests/generated_registry_test.cpp's no-mutation assertions fail",
-      "defect": "The emitter lowers new Map(existing) to a sharing copy rather than new storage.",
-      "expectedWhen": "always",
-      "expires": "when the emitter lowers new Map(existingMap) to a copy"
     }
   ]
 }

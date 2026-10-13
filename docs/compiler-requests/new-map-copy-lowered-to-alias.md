@@ -60,10 +60,45 @@ when `x` already has the constructed Map type:
 - `scene3d_gl/gl_shaded_prelude.hpp`;
 - `swf/swf_timeline_parse.hpp`.
 
-## Workaround carried
+## Workaround carried before the patch (retired)
 
-The `registry-new-map-copy-base` and `registry-new-map-copy-map` emission repairs respell the three registry
+The `registry-new-map-copy-base` and `registry-new-map-copy-map` emission repairs respelled the three registry
 sites from `flight::Map(base)` / `flight::Map(map)` to `base.clone()` / `map.clone()`. `clone()` is the
 runtime's copy of a Map: the same entries, in insertion order, in new storage. That is exactly the object
-`new Map(map)` creates, so the repair restores the source's semantics rather than choosing new ones. It
-expires when the emitter lowers `new Map(existingMap)` to a copy.
+`new Map(map)` creates, so the repair restored the source's semantics rather than choosing new ones. They
+were retired when the compiler patch below produced the copy itself.
+
+## Carried compiler patch (supersedes the registry repairs)
+
+[`compiler-new-map-copy.patch`](../../source-patches/compiler-new-map-copy.patch) spells a flight-cpp
+`new Map(argument)` whose single argument is itself a `Map` or `ReadonlyMap` as `flight::Map<K, V>(argument).clone()`.
+Entry arrays, iterators, literals and empty construction are emitted as before. Its fixtures are in
+`cppNewMapCopy.test.ts`. The `registry-new-map-copy-*` emission repairs match nothing after a registry
+regeneration, so they are retired. The compiler's spelling is `flight::Map(map).clone()` where the repair wrote
+`map.clone()`: the text differs, the behavior does not, and `tests/generated_registry_test.cpp` covers it.
+
+Live iteration is unaffected. A Map's own iterators still walk its storage as it changes (a key added during
+`for...of` is visited), and the copy is a snapshot taken at construction, which is exactly what `new Map(map)`
+is in JavaScript.
+
+## Inventory for owners: upstream sites this patch changes on their next regeneration
+
+At flight a627849, `new Map(<expression>)` appears 45 times outside tests. Only those whose argument is itself
+a Map change; array-built maps (`debug.ts`, `lottieDocument.ts`) do not. None was regenerated or edited here.
+
+| Package | Source | Sites |
+| --- | --- | --- |
+| render-gl | `glRenderState.ts` (`buildGlRenderRegistries`, currently refused) | 12 |
+| scene2d-canvas | `canvasRenderState.ts` | 10 |
+| render-wgpu | `wgpuRenderState.ts` | 9 |
+| scene2d-dom | `domRenderState.ts`, `domTextureResolver.ts` | 4 |
+| swf | `swfTimelineParse.ts`, `swfDocument.ts` | 2 |
+| scene2d-formats | `riveLayout.ts` | 1 |
+| scene2d-wgpu | `wgpuVelocity.ts` | 1 |
+| registry | `registryTable.ts` (regenerated with this patch) | 3 |
+
+Whether each one aliases today depends on whether its argument's C++ type equals the constructed type. Every one
+is a silent mutation candidate until its owner regenerates.
+
+`new Set(existingSet)` may have the same shape, because `flight::Set` copies are likewise reference copies. It is
+not examined here.

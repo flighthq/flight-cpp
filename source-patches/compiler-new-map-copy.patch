@@ -1,0 +1,89 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 36b8b4b..dfab358 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -5561,6 +5561,20 @@ function emitExpression(
+       ) {
+         return `flight::make_ref<${typeName}${typeArguments}>(${args.join(', ')})`;
+       }
++      // `new Map(existingMap)` builds a NEW map with the same entries in the same order. flight::Map's copy
++      // constructor shares storage -- a Map passed by value is the same object -- and C++ prefers it to the
++      // explicit range constructor whenever the argument already has the constructed type, so the plain
++      // spelling would alias the caller's map. Map::clone() copies every record in insertion order into new
++      // storage. An argument of another element type already reaches the range constructor, and cloning that
++      // fresh map is redundant but changes nothing observable.
++      if (
++        getCppRuntimeProfile(context.options) === 'flight-cpp' &&
++        ambientConstructorName === 'Map' &&
++        expression.arguments.length === 1 &&
++        isCppMapCopySourceCpp(expression.arguments[0]!, context)
++      ) {
++        return `${typeName}${typeArguments}(${args[0]}).clone()`;
++      }
+       return `${typeName}${typeArguments}(${args.join(', ')})`;
+     }
+     case 'object': {
+@@ -28873,6 +28887,14 @@ function getCppTypeParameterReceiverPropertyTypeCpp(
+   return constraint ? getIrObjectPropertyTypeCpp(constraint, expression.name, context) : undefined;
+ }
+ 
++// Whether a `new Map(argument)` argument is itself a Map: a ReadonlyMap or Map value, whose entries the new
++// map must copy rather than share.
++function isCppMapCopySourceCpp(argument: Readonly<IrExpression>, context: EmitContext): boolean {
++  const type = getIrExpressionBindingTypeCpp(argument, context) ?? getIrExpressionTypeEvidenceCpp(argument, context);
++  const collection = type ? getIrAmbientCollectionTypeCpp(type, context, new Set()) : undefined;
++  return collection?.reference.name === 'Map' || collection?.reference.name === 'ReadonlyMap';
++}
++
+ function getIrExpressionBindingTypeCpp(
+   expression: Readonly<IrExpression>,
+   context: EmitContext,
+diff --git a/packages/compiler-backend-cpp/src/cppNewMapCopy.test.ts b/packages/compiler-backend-cpp/src/cppNewMapCopy.test.ts
+new file mode 100644
+index 0000000..06f5248
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppNewMapCopy.test.ts
+@@ -0,0 +1,43 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/x/src/x.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/x', upstreamDirectory: '/flight' });
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++function returned(contents: string, name: string): string {
++  const lines = contents.split('\n');
++  const start = lines.findIndex((line) => line.includes(` ${name}(`));
++  const body = lines.slice(start + 1).find((line) => line.trim().startsWith('return '));
++  return body?.trim() ?? '';
++}
++
++describe('new Map(existingMap)', () => {
++  const contents = emit(`
++export function copyReadonly(map: ReadonlyMap<string, number>): Map<string, number> { return new Map(map); }
++export function copyTyped(map: Map<string, number>): Map<string, number> { return new Map<string, number>(map); }
++export function copyField(holder: { m: Map<string, number> }): Map<string, number> { return new Map(holder.m); }
++export function fromEntries(entries: [string, number][]): Map<string, number> { return new Map(entries); }
++export function fromIterator(map: Map<string, number>): Map<string, number> { return new Map(map.entries()); }
++export function fromLiteral(): Map<string, number> { return new Map([['a', 1]]); }
++export function empty(): Map<string, number> { return new Map<string, number>(); }
++`);
++
++  it('copies a Map argument into new storage instead of sharing the caller map', () => {
++    expect(returned(contents, 'copy_readonly')).toBe('return flight::Map<flight::String, double>(map).clone();');
++    expect(returned(contents, 'copy_typed')).toBe('return flight::Map<flight::String, double>(map).clone();');
++    expect(returned(contents, 'copy_field')).toBe('return flight::Map<flight::String, double>(holder->m).clone();');
++  });
++
++  it('leaves the constructor forms that already build a new map as they were', () => {
++    expect(returned(contents, 'from_entries')).toBe('return flight::Map<flight::String, double>(entries);');
++    expect(returned(contents, 'from_iterator')).toBe('return flight::Map<flight::String, double>(map.entries());');
++    expect(returned(contents, 'from_literal')).toBe('return flight::Map<flight::String, double>({{flight::String("a"), 1.0}});');
++    expect(returned(contents, 'empty')).toBe('return flight::Map<flight::String, double>();');
++  });
++});
