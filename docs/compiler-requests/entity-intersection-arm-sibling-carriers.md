@@ -128,4 +128,4 @@ on top of this patch.
 
 No patch is carried for `world.ts`. The only source-level fix is to change `Physics2DCollider.world`'s declared
 type in `@flighthq/types`, which is a cross-package carrier change. So natively a collider cannot be created
-through `createPhysics2DCollider`, and `hydratePhysics2DWorld` is refused with it.
+through `createPhysics2DCollider`.

@@ -68,3 +68,7 @@ Natively a world can hold `Physics2DJoint` rows, but no joint can be solved, dra
 checked owner recovery above is the fix. The ABI's two functions are declared without bodies, so a call fails to
 link (overrides/manifest.json, physics2d-abi-variant-shape-encoding). The joint validator throws, as recorded in
 physics2d-step-validation-refusals. Nothing substitutes zeros or common-field-only behavior.
+
+The same module also refuses `world.ts` `hydratePhysics2DWorld` (line 281) on the undeclared-member form at the
+top of this request: `(world as unknown as { version?: unknown }).version` reads a serialized `version` that
+`Physics2DWorld` does not declare.
