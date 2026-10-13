@@ -82,7 +82,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/clock` | 4 | 2 | 37 | dedicated | none | 4 / 0 |
 | `@flighthq/movieclip` | 5 | 3 | 60 | dedicated | none | 4 / 1 |
 | `@flighthq/swf` | 58 | 51 | 441 | dedicated | none | 46 / 12 |
-| `@flighthq/skeleton2d` | 25 | 22 | 220 | none | none | 17 / 8 |
+| `@flighthq/skeleton2d` | 25 | 22 | 220 | dedicated | none | 19 / 6 |
 | `@flighthq/skeleton2d-formats` | 59 | 60 | 533 | none | none | 10 / 5 |
 | `@flighthq/particles` | 13 | 11 | 119 | none | none | 12 / 1 |
 | `@flighthq/particleemitter` | 12 | 12 | 199 | none | none | 7 / 5 |
@@ -539,11 +539,25 @@ Upstream carries per-package records at `flight/agents/packages/skeleton2d/`: `s
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+`flight_cpp.generated_skeleton2d` (dedicated) -- `tests/generated_skeleton2d_test.cpp`, ported from
+`skeleton2d.test.ts` and `slotDeform2D.test.ts`: construction and buffer sizing, the world-transform walk and its
+inherit modes, bone lookup, cloning (bones deep-copied, slots copied, skins shared), equality, setup reset and its
+aliasing guard, bind pose and the skin palette, skins, validation, disposal, and the slot deform record. Three of those
+paths run through this repository's source patches and are asserted directly here: `createSkeleton2D`'s default slots
+store null rather than undefined, `cloneSkeleton2D`'s slot copy keeps an attachment, and the slot deform copy owns its
+offsets.
+
+Mutation-checked in the unit that audited this row, which the test had no record of: four mutations against the
+emitted `skeleton2d.hpp`. Changing the buffer stride from `matrix_stride` to 5 floats per bone fails 4 checks;
+dropping the bone world transform's upper bound and widening the equality walk past the end are both caught, each as a
+`std::range_error` from the out-of-range element access the guard exists to prevent. The fourth -- making the skin
+palette ignore its slot-index bound -- changes nothing the test observes, and that is a gap rather than a redundancy:
+no case in the file drives a skin entry whose `slot_index` is out of range, so the guard on that path is unexercised.
+Naming it here so the next pass can close it rather than rediscover it.
 
 ### Local generation status
 
-17 of 25 modules emitted, 8 refused; 12 refusing modules (8 of them refusal roots). Read from the committed generated tree, not from the pin above.
+19 of 25 modules emitted, 6 refused; 10 refusing modules (6 of them refusal roots). Read from the committed generated tree, not from the pin above.
 
 ### Web-only exclusions
 
