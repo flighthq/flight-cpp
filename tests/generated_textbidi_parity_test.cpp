@@ -230,5 +230,65 @@ int main() {
           "conformance: reorderBidiLine flips the run while preserving digit order");
   }
 
+  // ---- bidiClassKernel.test.ts ---------------------------------------------------------------
+
+  // The compact table is the shared kernel the bidi operations are handed, and it answers the
+  // representative common-script sample the upstream test names explicitly.
+  {
+    const auto class_of = [](double codepoint) {
+      return flight::textbidi::compact_bidi_class_kernel->get_bidi_class(codepoint);
+    };
+    check(class_of(0x0061) == flight::String("L"), "compact kernel: 'a' (Latn) is L");
+    check(class_of(0x005A) == flight::String("L"), "compact kernel: 'Z' is L");
+    check(class_of(0x05D0) == flight::String("R"), "compact kernel: U+05D0 Hebrew alef is R");
+    check(class_of(0x0627) == flight::String("AL"), "compact kernel: U+0627 Arabic alef is AL");
+    check(class_of(0x0035) == flight::String("EN"), "compact kernel: '5' is EN");
+    check(class_of(0x0660) == flight::String("AN"), "compact kernel: U+0660 Arabic-Indic zero is AN");
+    check(class_of(0x0020) == flight::String("WS"), "compact kernel: space is WS");
+    check(class_of(0x0301) == flight::String("NSM"), "compact kernel: U+0301 combining acute is NSM");
+    check(class_of(0x2066) == flight::String("LRI"), "compact kernel: U+2066 LRI is LRI");
+    check(class_of(0x2069) == flight::String("PDI"), "compact kernel: U+2069 PDI is PDI");
+    check(class_of(0x202B) == flight::String("RLE"), "compact kernel: U+202B RLE is RLE");
+    // A codepoint outside the compact table resolves to the LTR default rather than failing.
+    check(class_of(0x4E2D) == flight::String("L"),
+          "compact kernel: an uncovered codepoint (CJK U+4E2D) falls back to L");
+  }
+
+  // explainBidiClassKernel describes the boundary a caller is relying on: a compact kernel claims the
+  // flattened common-script ranges and a proven-valid table, a custom one claims neither.
+  {
+    const auto explanation = flight::textbidi::explain_bidi_class_kernel(
+        as_row(flight::textbidi::compact_bidi_class_kernel));
+    check(explanation->kernel == flight::String("compact"), "explanation: kernel is 'compact'");
+    check(explanation->coverage == flight::String("common-script-ranges"),
+          "explanation: coverage is 'common-script-ranges'");
+    check(explanation->fallback_class == std::optional<flight::String>{flight::String("L")},
+          "explanation: fallback class is L");
+    check(explanation->table_valid == std::optional<bool>{true},
+          "explanation: the compact table reports itself valid");
+    const auto& ranges = explanation->covered_code_point_ranges;
+    bool ordered = true;
+    for (double index = 0.0; index < static_cast<double>(ranges.length()); index += 1.0) {
+      const auto& range = ranges.element(index);
+      if (range->start > range->end) ordered = false;
+      if (index > 0.0 && range->start <= ranges.element(index - 1.0)->end) ordered = false;
+    }
+    check(ordered && static_cast<double>(ranges.length()) > 0.0,
+          "explanation: covered ranges are non-empty, ordered, and never inverted");
+  }
+
+  {
+    const auto custom = constant_kernel("R");
+    const auto explanation = flight::textbidi::explain_bidi_class_kernel(as_row(custom));
+    check(explanation->kernel == flight::String("custom"),
+          "explanation: a caller-supplied kernel is 'custom'");
+    check(explanation->coverage == flight::String("provider-defined"),
+          "explanation: a custom kernel claims provider-defined coverage");
+    check(static_cast<double>(explanation->covered_code_point_ranges.length()) == 0.0,
+          "explanation: a custom kernel claims no covered ranges");
+    check(!explanation->fallback_class.has_value() && !explanation->table_valid.has_value(),
+          "explanation: a custom kernel claims neither a fallback class nor a valid table");
+  }
+
   return failures == 0 ? 0 : 1;
 }
