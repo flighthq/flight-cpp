@@ -119,7 +119,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/statusbar` | 3 | 1 | 18 | dedicated | none | 2 / 1 |
 | `@flighthq/notification` | 3 | 1 | 38 | none | none | 2 / 1 |
 | `@flighthq/share` | 3 | 2 | 14 | dedicated | none | 2 / 1 |
-| `@flighthq/shortcut` | 4 | 2 | 27 | none | none | 3 / 1 |
+| `@flighthq/shortcut` | 4 | 2 | 27 | dedicated | none | 3 / 1 |
 | `@flighthq/shell` | 3 | 1 | 14 | none | none | 3 / 0 |
 | `@flighthq/ipc` | 3 | 1 | 12 | none | none | 3 / 0 |
 | `@flighthq/protocol` | 3 | 2 | 23 | none | none | 3 / 0 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-14 of 39 packages are reached by at least one local CTest executable.
-12 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`.
+15 of 39 packages are reached by at least one local CTest executable.
+13 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`.
 
 ## `@flighthq/app`
 
@@ -1138,7 +1138,43 @@ Upstream carries per-package records at `flight/agents/packages/menu/`: `status.
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+Two dedicated tests. One was already here and is extended by one case; the other is new, because the emitted
+half of the package had no local coverage at all.
+
+- `flight_cpp.generated_shortcut` — `tests/generated_shortcut_test.cpp`, PRE-EXISTING (commit `a68224c7`) and left
+  otherwise intact: it ports the explicit-dependency lifecycle suite against the override that supplies that
+  module — create (normalized accelerator, its own signal, parse failure), attach (attached / already-attached /
+  already-registered / native-refused / trigger-provider-failed), the provider trigger reaching the shortcut's
+  signal, detach (creator-pinned provider, a failed release retained for an exact retry), dispose, the query pair's
+  parse-before-ask, and destroy. This unit changed two things in it, both additive. First, its header recorded one
+  upstream case as unported — "reports an in-progress same-chord acquisition without invoking the provider twice",
+  which it judged to need "a hand-rolled unsettled task rather than a port"; `flight::Task::create` builds exactly
+  that deferred task, so the case is now ported directly and the note replaced. Second, its dispose block asserted
+  that the consumer signal was cleared, but nothing had ever been CONNECTED to that signal in the block, so the
+  signal carried no data either way and the assertion held whether or not dispose cleared anything — a mutation
+  that drops `clearSignal` from dispose was undetected. The block now connects a listener, asserts the signal is
+  live while attached, and only then asserts it is cleared, so the clearing is the thing actually under test.
+- `flight_cpp.generated_shortcut_accelerator` — `tests/generated_shortcut_accelerator_test.cpp`, NEW. The emitted
+  accelerator module (the other 13 upstream cases) had no local test of any kind: chord parsing, alias resolution
+  and canonical key naming, the input-independent normalized modifier order, the separator rule that keeps
+  `CommandOrControl++` and `CommandOrControl+-` parseable as the Plus and Minus keys, the out-object contract
+  (cleared and refilled in place and returned by identity; untouched when the parse fails), the per-platform
+  display form with CommandOrControl resolved before the label, the label tables, equality and conflict, and every
+  rejection reason with the token that caused it.
+
+Mutations, both modules, against the override that supplies the lifecycle and against the emitted accelerator
+header. Accelerator module: seven mutations, all seven with teeth — the canonical modifier order with Alt and
+Shift transposed 2 failures, a separator that always separates 5, `copyParsed` not clearing `out` 1, the conflict
+probe answering with the query's spelling 1, equality comparing raw input 3, the macOS display using a separator
+5, and the modifier read clearing `out` before it knows the parse failed 1 — plus one observationally equivalent
+mutation, the early return in `formatNormalized` removed, which changes nothing because joining a one-element
+array with `'+'` yields that element. Lifecycle module: eight mutations, seven with teeth — the already-registered
+guard dropped 2, the subscribe arm inverted 18, detach using the passed provider instead of the pinned one 4,
+detach erasing before the release 4, dispose keeping the signal 1 (only after the fix above), the query not
+parsing first 1, and the pending guard dropped, which is detected as a HANG rather than as a failed check because
+the mutant subscribes twice for one chord and never settles — plus one observationally equivalent mutation, the
+ownership guard around the accelerator erase removed, which cannot fail because the registration map only ever
+maps a chord to the shortcut that owns it.
 
 ### Local generation status
 

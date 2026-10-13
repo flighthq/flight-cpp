@@ -18,11 +18,10 @@
 //   * the query pair parses before asking and distinguishes registered, not-registered and a provider
 //     fault.
 //
-// One upstream case is not ported: "reports an in-progress same-chord acquisition without invoking the
-// provider twice" needs a provider whose subscribe task is still suspended while a second attach runs.
-// Building that here would mean a hand-rolled unsettled task rather than a port, so the pending-mark
-// release is checked indirectly instead -- every attach case below runs to completion, and the
-// already-registered case shows the mark is gone by then.
+// All fourteen upstream cases are ported. The in-progress one ("reports an in-progress same-chord
+// acquisition without invoking the provider twice") needs a provider whose subscribe task is still
+// suspended while a second attach runs; `flight::Task::create` builds exactly that, so the case is ported
+// directly rather than approached through the already-registered case.
 #include <flight/executor.hpp>
 #include <flight/shortcut/shortcut_explicit_dependency.hpp>
 
@@ -176,6 +175,43 @@ int main() {
           "an attempted provider fault reports failure without inventing provider absence");
   }
 
+  // An acquisition still in flight holds its chord: a second attach for the same chord is refused while the
+  // first is outstanding, and the provider is asked exactly once.
+  {
+    int subscribes = 0;
+    std::function<void(SubscribeOutcome)> settle;
+    auto host = flight::make_ref<Trigger>();
+    host->destroy = []() { return flight::Task<void>::resolve(); };
+    host->subscribe = [&](String, std::function<void()>) -> flight::Task<SubscribeOutcome> {
+      ++subscribes;
+      // A deferred task settled by the test rather than by the provider: this is the one place the port needs
+      // a subscribe that is still suspended when the second attach runs.
+      return flight::Task<SubscribeOutcome>::create([&settle](auto resolver) {
+        settle = [resolver](SubscribeOutcome value) mutable { resolver(std::move(value)); };
+      });
+    };
+    host->unsubscribe = [](flight::Ref<Subscription>) {
+      return flight::Task<flight::Ref<UnsubscribeOutcome>>::resolve(unsubscribe_outcome("unsubscribed"));
+    };
+
+    const auto first = shortcut_for("Control+P");
+    const auto same_chord = shortcut_for("ctrl+p");
+    auto outstanding = flight::shortcut::attach_global_shortcut(host, first);
+    check(subscribes == 1, "the first attach reached the provider");
+    check(settle != nullptr, "and the provider left the request outstanding");
+
+    check(reason_of(flight::shortcut::attach_global_shortcut(host, same_chord).get()) ==
+              "registration-in-progress",
+          "a second attach for the same chord while the first is in flight reports registration-in-progress");
+    check(subscribes == 1, "and never invokes the provider a second time");
+
+    settle(subscribed(flight::make_ref<Subscription>()));
+    check(reason_of(outstanding.get()) == "attached",
+          "once the outstanding acquisition settles, the first attach reports attached");
+    check(reason_of(flight::shortcut::detach_global_shortcut(host, first).get()) == "detached",
+          "and the chord it held is released again");
+  }
+
   // The trigger reaches the shortcut's signal, and the subscription is owned by the attachment.
   {
     std::function<void()> registered;
@@ -264,10 +300,16 @@ int main() {
     };
 
     const auto shortcut = shortcut_for("P");
+    int triggers = 0;
+    flight::signals::connect_signal<std::function<void()>>(shortcut->on_trigger, [&triggers]() { ++triggers; });
     static_cast<void>(flight::shortcut::attach_global_shortcut(host, shortcut).get());
+    check(shortcut->on_trigger->data.has_value(),
+          "the consumer signal is live while the shortcut is attached");
     check(reason_of(flight::shortcut::dispose_global_shortcut(host, shortcut).get()) ==
               "trigger-provider-failed",
           "dispose reports the failed release");
+    // The clearing is only observable against a signal that WAS live: with nothing connected the signal has no
+    // data either way, so this pair of checks is what makes the clearing itself the thing under test.
     check(!shortcut->on_trigger->data.has_value(), "and clears the consumer signal anyway");
     check(reason_of(flight::shortcut::attach_global_shortcut(host, shortcut).get()) == "already-attached",
           "a failed release remains attached so a later detach can retry it");
