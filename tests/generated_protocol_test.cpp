@@ -310,6 +310,97 @@ int main() {
     check(unregister_calls.size() == 2.0, "attempting every entry");
   }
 
+  // --- Cases added by the mutation battery, which found four holes and two unexercised entry points ----
+  //
+  // A 18-mutation battery against the emitted module killed fourteen and SURVIVED four, each a real hole
+  // rather than an equivalence, and two public functions were referenced NOWHERE in this file. The blocks
+  // below close all of them; each survivor is named where its case sits.
+  //
+  // 1. isValidProtocolScheme folds the input before testing it, but every case above is either already lower
+  //    case or illegal for a second reason (`Flight!` fails on the `!`), so dropping the fold was invisible.
+  {
+    check(flight::protocol::is_valid_protocol_scheme(String("MyApp")),
+          "an UPPERCASE scheme is valid, so the grammar is tested case-insensitively");
+    check(flight::protocol::is_valid_protocol_scheme(String("FLIGHT+DESKTOP")),
+          "and so is a mixed-case one with grammar punctuation");
+    check(!flight::protocol::is_valid_protocol_scheme(String("HTTPS")),
+          "while a reserved scheme is still rejected when it arrives in capitals");
+  }
+
+  // 2. parseProtocolUrl checks the scheme's SHAPE as well as its delimiter, which no case above exercised:
+  //    `not-a-url` has no colon at all, so it never reaches the shape test.
+  {
+    check(!flight::protocol::parse_protocol_url(String("1bad:payload")).has_value(),
+          "a colon-delimited URL whose scheme starts with a digit does not parse");
+    check(!flight::protocol::parse_protocol_url(String("bad scheme:payload")).has_value(),
+          "nor does one whose scheme carries a space");
+  }
+
+  // 3. A URL with NO authority: the host-extraction branch is taken only when the rest starts with `//`,
+  //    and the cases above that lack one never assert the host or the path, so taking it unconditionally
+  //    was invisible.
+  {
+    const auto authority_free = flight::protocol::parse_protocol_url(String("flight:/open"));
+    check(authority_free.has_value(), "an authority-free URL parses");
+    if (authority_free.has_value()) {
+      check(authority_free.value()->host == String(""), "and has an EMPTY host rather than one read from its path");
+      check(authority_free.value()->path == String("/open"), "with its whole path preserved");
+    }
+  }
+
+  // 4. createProtocolUrl defaults an absent scheme to `unknown`, which the cases above never reach because
+  //    each one sets a scheme.
+  {
+    // The cases above wrap a FULL object in the partial-row type, and an object's members are always present --
+    // the comment above says so -- so the `??` defaults were never reached. A genuine PARTIAL row is one built
+    // from row_fields, where a slot that is not named is ABSENT rather than empty.
+    using PartialSchema = flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<Parsed>>>>;
+    const auto only_path = flight::make_structural_ref<PartialSchema>(
+        flight::row_field<flight::RowKey<"path">>(String("open")));
+    check(flight::protocol::create_protocol_url(only_path) == String("unknown:/open"),
+          "a PARTIAL row with no scheme builds as `unknown`, with the path still given a leading slash");
+
+    const auto only_scheme = flight::make_structural_ref<PartialSchema>(
+        flight::row_field<flight::RowKey<"scheme">>(String("flight")));
+    check(flight::protocol::create_protocol_url(only_scheme) == String("flight:"),
+          "and a partial row with no host is authority-free, which an object with an empty host cannot express");
+  }
+
+  // 5. Two public entry points this file never called at all: the launch-url read and the default REMOVAL.
+  {
+    auto launch = flight::make_ref<flight::types::HostProtocolLaunchCapability>();
+    launch->get_launch_url = []() { return std::optional<String>{String("flight://open")}; };
+    check(text(flight::protocol::get_protocol_launch_url(launch)) == "flight://open",
+          "getProtocolLaunchUrl returns the provider's launch URL");
+    const auto absent_launch = flight::make_ref<flight::types::HostProtocolLaunchCapability>();
+    absent_launch->get_launch_url = []() { return std::optional<String>{}; };
+    check(!flight::protocol::get_protocol_launch_url(absent_launch).has_value(),
+          "and reports absence when the provider has none");
+
+    int removals = 0;
+    auto defaults = flight::make_ref<flight::types::HostProtocolDefaultCapability>();
+    defaults->remove_as_default = [&removals](String) {
+      ++removals;
+      return true;
+    };
+    check(flight::protocol::remove_protocol_scheme_as_default(defaults, String("flight")),
+          "removeProtocolSchemeAsDefault reports the provider's answer");
+    check(removals == 1, "having routed exactly once");
+    check(!flight::protocol::remove_protocol_scheme_as_default(defaults, String("https")),
+          "a reserved scheme is refused by the validity gate");
+    check(removals == 1, "and the provider is never reached for it");
+  }
+
+  // 6. initializeProtocolHandler is the constructor's initializer, and was never called directly.
+  {
+    flight::types::EntityConstruction<flight::Ref<Handler>> out =
+        flight::entity::allocate_entity<flight::Ref<Handler>>();
+    flight::protocol::initialize_protocol_handler(out);
+    const auto handler = flight::entity::finish_entity<flight::Ref<Handler>>(out);
+    check(handler != nullptr && handler->on_open_url != nullptr,
+          "initializeProtocolHandler is what gives a fresh entity its open-url signal");
+  }
+
   if (failures == 0) std::cout << "generated protocol: all checks passed\n";
   return failures == 0 ? 0 : 1;
 }

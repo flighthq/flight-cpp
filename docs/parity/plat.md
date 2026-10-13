@@ -122,7 +122,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/shortcut` | 4 | 2 | 27 | dedicated | none | 3 / 1 |
 | `@flighthq/shell` | 3 | 1 | 14 | dedicated | ready | 3 / 0 |
 | `@flighthq/ipc` | 3 | 1 | 12 | none | none | 3 / 0 |
-| `@flighthq/protocol` | 3 | 2 | 23 | none | none | 3 / 0 |
+| `@flighthq/protocol` | 3 | 2 | 23 | dedicated | ready | 3 / 0 |
 | `@flighthq/permissions` | 3 | 5 | 31 | none | none | 3 / 0 |
 | `@flighthq/filesystem` | 3 | 1 | 48 | incidental | none | 2 / 1 |
 | `@flighthq/preferences` | 4 | 2 | 45 | none | none | 3 / 1 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-27 of 39 packages are reached by at least one local CTest executable.
-26 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`, `sensors`, `geolocation`, `haptics`, `device`, `power`, `notification`, `shell`.
+28 of 39 packages are reached by at least one local CTest executable.
+27 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`, `sensors`, `geolocation`, `haptics`, `device`, `power`, `notification`, `shell`, `protocol`.
 
 ## `@flighthq/app`
 
@@ -1855,7 +1855,34 @@ Upstream carries per-package records at `flight/agents/packages/protocol/`: `sta
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_protocol` — `tests/generated_protocol_test.cpp` (dedicated), PRE-EXISTING. It was written for
+  this repository before this unit and is not one I added; the roll-up row above read "none" for coverage AND for the
+  tier until this unit corrected both, while the module is in fact READY (3 of 3 emitted, no override). The test runs
+  green at this pin.
+
+  This unit added the MUTATION BATTERY the file had none of. Twenty mutations against the emitted module, all twenty
+  killed: the reserved-scheme set and its check, the scheme grammar tested folded and unfolded, the empty-scheme
+  guard, a grammar that rejects digits and dots, the batch register/unregister validity gate and their
+  all-succeeded results, detach forgetting its registration, attach not detaching first, dispose not clearing the
+  signal, the `+`-to-space decode and its failure path, the parser's scheme-shape check, its authority branch and
+  its `=`-split, the builder's scheme default and its path normalization, the default-removal validity gate, and the
+  launch-url read.
+
+  Four mutations SURVIVED the first run and all four were real holes, closed by ADDING cases:
+  * `isValidProtocolScheme` folds its input, but every existing case was already lower case or illegal for a second
+    reason, so dropping the fold was invisible;
+  * `parseProtocolUrl`'s scheme-SHAPE check had no case reaching it -- `not-a-url` has no colon at all;
+  * the parser's authority branch was never exercised on an authority-FREE url whose host and path are asserted, so
+    taking the branch unconditionally was invisible;
+  * the builder's `unknown` scheme default is unreachable through an OBJECT, and every existing case passes one. The
+    file's own comment notes that an object cannot express absence, and says the partial row exists for exactly this
+    -- but no partial row was ever built. The added case builds one with `row_field`s, which is what makes the `??`
+    fire for the first time in this file.
+
+  Two further public entry points were referenced NOWHERE in the file and are now covered: `getProtocolLaunchUrl`
+  (both a present and an absent launch URL) and `removeProtocolSchemeAsDefault` (routed, and gated by validity).
+
+  No compiler request was filed for this package.
 
 ### Local generation status
 
