@@ -5975,13 +5975,157 @@
       "stage": "emission"
     },
     {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/awd2BlockCensus.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./awd2Parse.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
+      "stage": "dependency"
+    },
+    {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 1978,
-      "module": "packages/scene3d-formats/src/awd2Parse.ts",
+      "line": 44,
+      "module": "packages/scene3d-formats/src/awd2BlockDispatch.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2BlockDispatch.ts: Object.assign requires one closed callable-object target and an exact compatible object literal source",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/awd2BlockRegistry.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./awd2CameraHandler.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2CameraHandler.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 133,
+      "module": "packages/scene3d-formats/src/awd2CameraHandler.ts",
       "package": "@flighthq/scene3d-formats",
       "reason": "cpp emission failed for @flighthq/types/packages/types/src/Camera3D.ts: contextual C++ union conversion requires equivalent source union evidence: target multiVariant carriers [flight::Ref<OrthographicProjection>, flight::Ref<PerspectiveProjection>, flight::Ref<RawProjection>] from identifier source multiVariant carriers [flight::Ref<flight::types::OrthographicProjection>, flight::Ref<flight::types::PerspectiveProjection>]. Narrow or convert the source expression so each of its alternatives names exactly one destination union alternative. The carrier lists show which alternatives lack an exact carrier; preserve the declared collection or member union alias before flow expansion. For a Map or WeakMap lookup followed by a rebind, ensure every rebound member already has the declared value owner member's carrier -- a Readonly structural view does not become a mutable nominal Ref.",
       "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 55,
+      "module": "packages/scene3d-formats/src/awd2GeometryHandler.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2GeometryHandler.ts: ambient value Uint32Array member from has no C++ binding",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 247,
+      "module": "packages/scene3d-formats/src/awd2LightingHandler.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2LightingHandler.ts: an optional logical-OR result requires concrete type evidence for every value-bearing operand; narrow or assert an erased operand before applying ||",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 255,
+      "module": "packages/scene3d-formats/src/awd2MaterialHandler.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2MaterialHandler.ts: a reference assertion from flight::Ref<flight::types::ShadedMaterial> to flight::Ref<flight::types::Material> has no heritage to cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 80,
+      "module": "packages/scene3d-formats/src/awd2Parse.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts: contextual multiVariant construction requires expression type evidence",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/awd2Reader.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./shared.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/shared.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/awd2Requirements.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./awd2BlockCensus.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2BlockCensus.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 14,
+      "line": 26,
+      "module": "packages/scene3d-formats/src/awd2SceneStructureHandler.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2SceneStructureHandler.ts: an optional logical-OR result requires concrete type evidence for every value-bearing operand; narrow or assert an erased operand before applying ||",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 424,
+      "module": "packages/scene3d-formats/src/awd2SkeletonHandler.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2SkeletonHandler.ts: an optional logical-OR result requires concrete type evidence for every value-bearing operand; narrow or assert an erased operand before applying ||",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/colladaAnimationDecoder.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency @flighthq/animation/contract was refused for @flighthq/animation/packages/animation/src/animationTrack.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/colladaCameraDecoder.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./colladaSceneShared.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 34,
+      "module": "packages/scene3d-formats/src/colladaControllerDecoder.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/colladaControllerDecoder.ts: contextual C++ union conversion requires equivalent source union evidence: target multiVariant carriers [bool, double, flight::String] from call source optionalSingle carriers [flight::String]. Narrow or convert the source expression so each of its alternatives names exactly one destination union alternative. The carrier lists show which alternatives lack an exact carrier; preserve the declared collection or member union alias before flow expansion. For a Map or WeakMap lookup followed by a rebind, ensure every rebound member already has the declared value owner member's carrier -- a Readonly structural view does not become a mutable nominal Ref.",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/colladaDecoderFamily.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./colladaAnimationDecoder.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/colladaAnimationDecoder.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/colladaDocument.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./colladaDecoderFamily.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/colladaDecoderFamily.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 14,
+      "line": 9,
+      "module": "packages/scene3d-formats/src/colladaGeometryDecoder.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/colladaGeometryDecoder.ts: spreading an unbounded collection requires a fold or a variadic target",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/colladaLightDecoder.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./colladaSceneShared.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -5993,19 +6137,33 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 510,
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/colladaMaterialDecoder.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./colladaMaterial.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/colladaMaterial.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/colladaParse.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/colladaParse.ts: contextual C++ union conversion requires equivalent source union evidence: target multiVariant carriers [bool, double, flight::String] from call source optionalSingle carriers [flight::String]. Narrow or convert the source expression so each of its alternatives names exactly one destination union alternative. The carrier lists show which alternatives lack an exact carrier; preserve the declared collection or member union alias before flow expansion. For a Map or WeakMap lookup followed by a rebind, ensure every rebound member already has the declared value owner member's carrier -- a Readonly structural view does not become a mutable nominal Ref.",
+      "reason": "dependency ./colladaSceneShared.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 38,
+      "module": "packages/scene3d-formats/src/colladaSceneShared.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/colladaSceneShared.ts: Array length construction is outside the dense flight-cpp array profile because its runtime contract cannot represent holes; use an explicit fill value, build the array with push, or use Array.from when every element should be present",
       "stage": "emission"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/contract.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./awd2Parse was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2Parse.ts",
+      "reason": "dependency ./awd2BlockCensus.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2BlockCensus.ts",
       "stage": "dependency"
     },
     {
@@ -6021,14 +6179,14 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/gltfAnisotropy.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./gltfMaterialExtension was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfMaterialExtension.ts",
+      "reason": "dependency ./gltfMaterialExtension.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfMaterialExtension.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/gltfClearcoat.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./gltfMaterialExtension was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfMaterialExtension.ts",
+      "reason": "dependency ./gltfMaterialExtension.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfMaterialExtension.ts",
       "stage": "dependency"
     },
     {
@@ -6037,14 +6195,21 @@
       "line": 9,
       "module": "packages/scene3d-formats/src/gltfEmissiveStrength.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfEmissiveStrength.ts: the asserted row from flight::types::MaterialLike to flight::Ref<flight::types::StandardPbrMaterial> reads EntityRuntimeKey, alphaCutoff, alphaMap, baseColor, baseColorMap, doubleSided, emissive, emissiveMap, emissiveStrength, metallic, metallicRoughnessMap, normalMap, normalScale, occlusionMap, occlusionStrength and roughness, which the source type does not declare, and alphaMode and blendMode, whose optionality or value representation is not representation-equivalent to the source type's cells, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as StandardPbrMaterial, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that carries EntityRuntimeKey, alphaCutoff, alphaMap, alphaMode, baseColor, baseColorMap, blendMode, doubleSided, emissive, emissiveMap, emissiveStrength, metallic, metallicRoughnessMap, normalMap, normalScale, occlusionMap, occlusionStrength and roughness with the asserted optionality and value representation -- construct StandardPbrMaterial explicitly, then type the retaining slot and every accessor result as StandardPbrMaterial wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::types::MaterialLike. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfEmissiveStrength.ts: the asserted row from flight::types::MaterialLike to flight::Ref<flight::types::StandardPbrMaterial> reads EntityRuntimeKey, alphaCutoff, alphaMap, alphaMode, baseColor, baseColorMap, blendMode, doubleSided, emissive, emissiveMap, emissiveStrength, metallic, metallicRoughnessMap, normalMap, normalScale, occlusionMap, occlusionStrength and roughness, which the source type does not declare, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as StandardPbrMaterial, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that declares EntityRuntimeKey, alphaCutoff, alphaMap, alphaMode, baseColor, baseColorMap, blendMode, doubleSided, emissive, emissiveMap, emissiveStrength, metallic, metallicRoughnessMap, normalMap, normalScale, occlusionMap, occlusionStrength and roughness -- construct StandardPbrMaterial explicitly, then type the retaining slot and every accessor result as StandardPbrMaterial wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::types::MaterialLike. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
       "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/gltfImport.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./gltfParse.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/gltfIridescence.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./gltfMaterialExtension was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfMaterialExtension.ts",
+      "reason": "dependency ./gltfMaterialExtension.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfMaterialExtension.ts",
       "stage": "dependency"
     },
     {
@@ -6053,13 +6218,13 @@
       "line": 22,
       "module": "packages/scene3d-formats/src/gltfMaterialExtension.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfMaterialExtension.ts: the asserted row from flight::Ref<flight::types::Material> to flight::Ref<flight::types::ExtendedPbrMaterial> reads EntityRuntimeKey, alphaCutoff, doubleSided, extensions and standard, which the source type does not declare, and alphaMode and blendMode, whose optionality or value representation is not representation-equivalent to the source type's cells, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as ExtendedPbrMaterial, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that carries EntityRuntimeKey, alphaCutoff, alphaMode, blendMode, doubleSided, extensions and standard with the asserted optionality and value representation -- construct ExtendedPbrMaterial explicitly, then type the retaining slot and every accessor result as ExtendedPbrMaterial wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::Material>. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfMaterialExtension.ts: the asserted row from flight::Ref<flight::types::Material> to flight::Ref<flight::types::ExtendedPbrMaterial> reads EntityRuntimeKey, alphaCutoff, alphaMode, blendMode, doubleSided, extensions and standard, which the source type does not declare, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as ExtendedPbrMaterial, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that declares EntityRuntimeKey, alphaCutoff, alphaMode, blendMode, doubleSided, extensions and standard -- construct ExtendedPbrMaterial explicitly, then type the retaining slot and every accessor result as ExtendedPbrMaterial wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::Material>. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
       "stage": "emission"
     },
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 647,
+      "line": 585,
       "module": "packages/scene3d-formats/src/gltfParse.ts",
       "package": "@flighthq/scene3d-formats",
       "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfParse.ts: property baseColorFactor on C++ absence-carrying storage requires narrowed access: no present-value proof reaches this read. Guard this exact receiver (bind a property or call result to a local first if evaluating it again would produce a different value), then read the member only in the present branch. The compiler will not discard the absence state or call value() without that proof",
@@ -6078,7 +6243,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/gltfSheen.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./gltfMaterialExtension was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfMaterialExtension.ts",
+      "reason": "dependency ./gltfMaterialExtension.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfMaterialExtension.ts",
       "stage": "dependency"
     },
     {
@@ -6094,7 +6259,7 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/gltfSpecular.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./gltfMaterialExtension was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfMaterialExtension.ts",
+      "reason": "dependency ./gltfMaterialExtension.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfMaterialExtension.ts",
       "stage": "dependency"
     },
     {
@@ -6103,7 +6268,7 @@
       "line": 20,
       "module": "packages/scene3d-formats/src/gltfSpecularGlossiness.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSpecularGlossiness.ts: the asserted row from flight::types::MaterialLike to flight::Ref<flight::types::StandardPbrMaterial> reads EntityRuntimeKey, alphaCutoff, alphaMap, baseColor, baseColorMap, doubleSided, emissive, emissiveMap, emissiveStrength, metallic, metallicRoughnessMap, normalMap, normalScale, occlusionMap, occlusionStrength and roughness, which the source type does not declare, and alphaMode and blendMode, whose optionality or value representation is not representation-equivalent to the source type's cells, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as StandardPbrMaterial, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that carries EntityRuntimeKey, alphaCutoff, alphaMap, alphaMode, baseColor, baseColorMap, blendMode, doubleSided, emissive, emissiveMap, emissiveStrength, metallic, metallicRoughnessMap, normalMap, normalScale, occlusionMap, occlusionStrength and roughness with the asserted optionality and value representation -- construct StandardPbrMaterial explicitly, then type the retaining slot and every accessor result as StandardPbrMaterial wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::types::MaterialLike. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSpecularGlossiness.ts: the asserted row from flight::types::MaterialLike to flight::Ref<flight::types::StandardPbrMaterial> reads EntityRuntimeKey, alphaCutoff, alphaMap, alphaMode, baseColor, baseColorMap, blendMode, doubleSided, emissive, emissiveMap, emissiveStrength, metallic, metallicRoughnessMap, normalMap, normalScale, occlusionMap, occlusionStrength and roughness, which the source type does not declare, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as StandardPbrMaterial, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that declares EntityRuntimeKey, alphaCutoff, alphaMap, alphaMode, baseColor, baseColorMap, blendMode, doubleSided, emissive, emissiveMap, emissiveStrength, metallic, metallicRoughnessMap, normalMap, normalScale, occlusionMap, occlusionStrength and roughness -- construct StandardPbrMaterial explicitly, then type the retaining slot and every accessor result as StandardPbrMaterial wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::types::MaterialLike. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
       "stage": "emission"
     },
     {
@@ -6121,23 +6286,62 @@
       "line": 14,
       "module": "packages/scene3d-formats/src/gltfUnlit.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfUnlit.ts: the asserted row from flight::types::MaterialLike to flight::Ref<flight::types::StandardPbrMaterial> reads EntityRuntimeKey, alphaCutoff, alphaMap, baseColor, baseColorMap, doubleSided, emissive, emissiveMap, emissiveStrength, metallic, metallicRoughnessMap, normalMap, normalScale, occlusionMap, occlusionStrength and roughness, which the source type does not declare, and alphaMode and blendMode, whose optionality or value representation is not representation-equivalent to the source type's cells, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as StandardPbrMaterial, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that carries EntityRuntimeKey, alphaCutoff, alphaMap, alphaMode, baseColor, baseColorMap, blendMode, doubleSided, emissive, emissiveMap, emissiveStrength, metallic, metallicRoughnessMap, normalMap, normalScale, occlusionMap, occlusionStrength and roughness with the asserted optionality and value representation -- construct StandardPbrMaterial explicitly, then type the retaining slot and every accessor result as StandardPbrMaterial wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::types::MaterialLike. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfUnlit.ts: the asserted row from flight::types::MaterialLike to flight::Ref<flight::types::StandardPbrMaterial> reads EntityRuntimeKey, alphaCutoff, alphaMap, alphaMode, baseColor, baseColorMap, blendMode, doubleSided, emissive, emissiveMap, emissiveStrength, metallic, metallicRoughnessMap, normalMap, normalScale, occlusionMap, occlusionStrength and roughness, which the source type does not declare, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as StandardPbrMaterial, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that declares EntityRuntimeKey, alphaCutoff, alphaMap, alphaMode, baseColor, baseColorMap, blendMode, doubleSided, emissive, emissiveMap, emissiveStrength, metallic, metallicRoughnessMap, normalMap, normalScale, occlusionMap, occlusionStrength and roughness -- construct StandardPbrMaterial explicitly, then type the retaining slot and every accessor result as StandardPbrMaterial wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::types::MaterialLike. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
       "stage": "emission"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/index.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./contract was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/contract.ts",
+      "reason": "dependency ./awd2BlockDispatch.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/awd2BlockDispatch.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/md2AnimationHandler.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency @flighthq/animation/contract was refused for @flighthq/animation/packages/animation/src/animationTrack.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/md2Document.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./md2Parse.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/md2Parse.ts",
       "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 381,
+      "line": 323,
       "module": "packages/scene3d-formats/src/md2Parse.ts",
       "package": "@flighthq/scene3d-formats",
       "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/md2Parse.ts: contextual multiVariant construction requires expression type evidence",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/md2SectionRegistry.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./md2AnimationHandler.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/md2AnimationHandler.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 14,
+      "line": 21,
+      "module": "packages/scene3d-formats/src/md2SkinHandler.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/md2SkinHandler.ts: a reference assertion from flight::Ref<flight::types::BlinnPhongMaterial> to flight::Ref<flight::types::Material> has no heritage to cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 33,
+      "module": "packages/scene3d-formats/src/md5AnimFeatures.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimFeatures.ts: member trim on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
       "stage": "emission"
     },
     {
@@ -6150,12 +6354,74 @@
       "stage": "emission"
     },
     {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/md5AnimRequirements.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./md5AnimFeatures.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimFeatures.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/md5Document.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./md5AnimParse.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/md5AnimParse.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 14,
+      "line": 18,
+      "module": "packages/scene3d-formats/src/md5MaterialHandler.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/md5MaterialHandler.ts: a reference assertion from flight::Ref<flight::types::BlinnPhongMaterial> to flight::Ref<flight::types::Material> has no heritage to cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage",
+      "stage": "emission"
+    },
+    {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 752,
+      "line": 37,
+      "module": "packages/scene3d-formats/src/md5MeshFeatures.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/md5MeshFeatures.ts: member trim on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/md5MeshRequirements.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./md5MeshFeatures.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/md5MeshFeatures.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 557,
       "module": "packages/scene3d-formats/src/md5Parse.ts",
       "package": "@flighthq/scene3d-formats",
       "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/md5Parse.ts: member trim on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/md5SectionRegistry.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./md5MaterialHandler.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/md5MaterialHandler.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/md5SkeletonHandler.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./md5Parse.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/md5Parse.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 16,
+      "module": "packages/scene3d-formats/src/mergeAwd2ParseOptions.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/mergeAwd2ParseOptions.ts: narrowed C++ union projection requires proven present payload: the narrowing still admits absence, so nothing proved the payload present and reading the value alternative here would unpack storage that may still be holding the sentinel the test left reachable. Test both at once with `x != null`, or narrow the value into a present local the same way",
       "stage": "emission"
     },
     {
@@ -6168,9 +6434,53 @@
       "stage": "emission"
     },
     {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/objBlinnPhongMaterialHandler.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./objMaterialModel.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/objMaterialModel.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/objDocument.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./objParse.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/objParse.ts",
+      "stage": "dependency"
+    },
+    {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 603,
+      "line": 41,
+      "module": "packages/scene3d-formats/src/objFeatures.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/objFeatures.ts: member trimStart on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/objMaterialHelpers.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./shared.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/shared.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/objMaterialModel.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./mtlParse.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/mtlParse.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/objMaterialRegistry.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./objStandardPbrMaterialHandler.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 261,
       "module": "packages/scene3d-formats/src/objParse.ts",
       "package": "@flighthq/scene3d-formats",
       "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/objParse.ts: contextual union value type flight::Uint32Array is not a represented runtime domain",
@@ -6178,37 +6488,53 @@
     },
     {
       "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/objRequirements.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./objFeatures.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/objFeatures.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 30,
+      "module": "packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/objStandardPbrMaterialHandler.ts: structural-row construction requires explicit named properties",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/registerAllGltfHandlers.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./registerGltfAnimationHandlers was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfAnimationHandlers.ts",
+      "reason": "dependency ./registerGltfAnimationHandlers.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/registerGltfAnimationHandlers.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/registerGltfAnimationHandlers.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./gltfAnimations was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfAnimations.ts",
+      "reason": "dependency ./gltfAnimations.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfAnimations.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/registerGltfLightingExtensionHandlers.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./gltfPunctualLights was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfPunctualLights.ts",
+      "reason": "dependency ./gltfPunctualLights.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfPunctualLights.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/registerGltfMaterialExtensionHandlers.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./gltfAnisotropy was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfAnisotropy.ts",
+      "reason": "dependency ./gltfAnisotropy.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfAnisotropy.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene3d-formats/src/registerGltfSkinHandlers.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "dependency ./gltfSkins was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSkins.ts",
+      "reason": "dependency ./gltfSkins.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/gltfSkins.ts",
       "stage": "dependency"
     },
     {
@@ -6239,10 +6565,70 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 1250,
-      "module": "packages/scene3d-formats/src/threeDsParse.ts",
+      "line": 137,
+      "module": "packages/scene3d-formats/src/stlFeatures.ts",
       "package": "@flighthq/scene3d-formats",
-      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsParse.ts: structural-row construction requires explicit named properties",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/stlFeatures.ts: member toLowerCase on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 111,
+      "module": "packages/scene3d-formats/src/stlParse.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/stlParse.ts: member toLowerCase on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/stlRequirements.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./stlFeatures.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/stlFeatures.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/stlTestHelper.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./stlFeatures.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/stlFeatures.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/threeDsCameraHandler.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./shared.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/shared.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/threeDsChunkRegistry.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./threeDsCameraHandler.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsCameraHandler.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/threeDsDocument.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./threeDsChunkRegistry.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsChunkRegistry.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/scene3d-formats/src/threeDsLightHandler.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "dependency ./shared.ts was refused for @flighthq/scene3d-formats/packages/scene3d-formats/src/shared.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 691,
+      "module": "packages/scene3d-formats/src/threeDsMeshHandler.ts",
+      "package": "@flighthq/scene3d-formats",
+      "reason": "cpp emission failed for @flighthq/scene3d-formats/packages/scene3d-formats/src/threeDsMeshHandler.ts: structural-row construction requires explicit named properties",
       "stage": "emission"
     },
     {
