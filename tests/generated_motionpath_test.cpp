@@ -96,7 +96,11 @@ void sampling() {
     auto point = flight::geometry::create_vector2(7, 8);
     auto tangent = flight::geometry::create_vector2(9, 9);
     const bool ok = motionpath::get_motion_path_position(view(mp), point, tangent);
-    check(!ok && point->x == 7 && point->y == 8, "an empty path samples false and leaves outputs unchanged");
+    check(!ok && point->x == 7 && point->y == 8, "an empty path samples false and leaves the point unchanged");
+    // Upstream's comment says both outputs are left unchanged, but its test checks only the point, and the
+    // source samples the tangent unconditionally: @flighthq/path writes its documented (1, 0) fallback.
+    check(tangent->x == 1 && tangent->y == 0, "the tangent takes path's (1, 0) fallback, as the source does");
+    check(motionpath::get_motion_path_heading(view(mp)) == 0, "an empty path's heading falls back to the (1, 0) tangent: 0 radians");
   }
   {
     auto mp = make(line());
@@ -196,6 +200,91 @@ void updates() {
   }
 }
 
+// Not in upstream, which samples only straight lines: a curve, where flattening tolerance matters. A
+// semicircle of radius 50 from (100, 0) around (50, 0) has arc length 50 * pi. `append_path_arc` approximates
+// the arc with cubics and `getPathLength` flattens those to chords, so every bound below is derived from those
+// two errors rather than picked to pass:
+// - a chord whose sagitta is at most s, on radius r, spans at most 2 * acos(1 - s / r); its direction differs
+//   from the true tangent by at most half that, acos(1 - 0.25 / 50) = 0.0999 rad at the default s = 0.25;
+// - a sampled point lies within s of the circle, plus the cubic approximation's radial error (2.7e-4 * r,
+//   0.0136 here): 0.25 + 0.0136 < 0.3;
+// - the length is within the chord deficit (s / (3 r) of the arc, 0.26) plus the cubic overshoot (1.4e-4 of the
+//   arc, 0.022) of 50 * pi: under 0.3.
+flight::Ref<Path> semicircle() {
+  auto path = flight::path::create_path();
+  flight::path::append_path_move_to(path, 100, 0);
+  flight::path::append_path_arc(path, 50, 0, 50, 0, std::numbers::pi);
+  return path;
+}
+
+void curves() {
+  const double arc = 50 * std::numbers::pi;
+  auto mp = make(semicircle());
+  check(std::abs(mp->length - arc) < 0.3, "a semicircle's cached length is 50 * pi within the flattening error");
+
+  const auto withTolerance = [](double tolerance) {
+    return motionpath::create_motion_path(semicircle(), std::nullopt, std::nullopt, tolerance)->length;
+  };
+  const double coarse = withTolerance(1.0), fine = withTolerance(0.01);
+  check(coarse != fine && std::abs(fine - arc) < std::abs(coarse - arc),
+        "the tolerance reaches the arc-length measurement, and a tighter one measures closer to 50 * pi");
+
+  bool onCircle = true;
+  for (double t : {0.0, 0.1, 0.25, 0.5, 0.75, 0.9, 1.0}) {
+    motionpath::set_motion_path_progress(mp, t);
+    auto point = flight::geometry::create_vector2(), tangent = flight::geometry::create_vector2();
+    onCircle = onCircle && motionpath::get_motion_path_position(view(mp), point, tangent) &&
+               std::abs(std::hypot(point->x - 50, point->y) - 50) < 0.3 && close(std::hypot(tangent->x, tangent->y), 1, 9);
+  }
+  check(onCircle, "sampled points stay on the circle and tangents are unit length");
+
+  motionpath::set_motion_path_distance(mp, 0);
+  check(std::abs(motionpath::get_motion_path_heading(view(mp)) - std::numbers::pi / 2) < 0.0999,
+        "the heading leaves (100, 0) along +y, a quarter turn");
+  motionpath::set_motion_path_progress(mp, 1);
+  check(std::abs(motionpath::get_motion_path_heading(view(mp)) + std::numbers::pi / 2) < 0.0999,
+        "and arrives at (0, 0) along -y");
+  motionpath::set_motion_path_progress(mp, 0.5);
+  const double middle = motionpath::get_motion_path_heading(view(mp));
+  check(std::abs(std::abs(middle) - std::numbers::pi) < 0.0999, "at the top it points along -x");
+
+  // Heading is atan2 of the sampled tangent, so it and getMotionPathPosition agree everywhere.
+  bool agrees = true;
+  for (double t : {0.05, 0.3, 0.6, 0.95}) {
+    motionpath::set_motion_path_progress(mp, t);
+    auto point = flight::geometry::create_vector2(), tangent = flight::geometry::create_vector2();
+    static_cast<void>(motionpath::get_motion_path_position(view(mp), point, tangent));
+    agrees = agrees && motionpath::get_motion_path_heading(view(mp)) == std::atan2(tangent->y, tangent->x);
+  }
+  check(agrees, "heading is exactly atan2 of the tangent getMotionPathPosition samples");
+
+  {
+    auto exact = make(line(), 1, "pingpong");
+    motionpath::update_motion_path(exact, 100);
+    check(exact->distance == 100 && exact->direction == 1,
+          "a pingpong step landing exactly on the end stays on the outbound leg (advanced <= length)");
+    auto backward = make(line(), 1, "clamp");
+    motionpath::set_motion_path_distance(backward, 60);
+    motionpath::set_motion_path_direction(backward, -1);
+    motionpath::update_motion_path(backward, 25);
+    check(backward->distance == 35, "clamp travels backward along a reversed direction");
+    motionpath::update_motion_path(backward, 1000);
+    check(backward->distance == 0 && motionpath::is_motion_path_at_end(view(backward)), "and stops at 0");
+    bool inert = true;
+    for (const char* mode : {"loop", "pingpong"}) {
+      auto empty = make(flight::path::create_path(), 5, mode);
+      motionpath::update_motion_path(empty, 16);
+      inert = inert && empty->distance == 0 && empty->direction == 1;
+    }
+    check(inert, "a zero-length path is inert in loop and pingpong too, where wrapping would divide by zero");
+  }
+
+  auto moving = make(semicircle(), 0.05, "loop");
+  motionpath::update_motion_path(moving, 1000);
+  check(close(moving->distance, 50, 9) && close(motionpath::get_motion_path_progress(view(moving)), 50 / moving->length, 12),
+        "timing is speed * deltaTime path units, the same on a curve");
+}
+
 }  // namespace
 
 int main() {
@@ -203,5 +292,6 @@ int main() {
   sampling();
   seeking();
   updates();
+  curves();
   return failures == 0 ? 0 : 1;
 }
