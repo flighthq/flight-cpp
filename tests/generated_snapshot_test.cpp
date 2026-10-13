@@ -1,6 +1,12 @@
 #include <flight/log/contract.hpp>
 #include <flight/snapshot/contract.hpp>
 
+// Native port of all 55 test declarations in packages/snapshot/src/*.test.ts at Flight a627849,
+// plus graph ordering, frozen-alias, non-plain identity, and DataCloneError evidence.
+// Mutation check (2026-10-13): freeze removal, same-identity inversion, array-length omission,
+// object-shape omission, no-schema collapse, clamp removal, compatible-container replacement, and
+// cycle-detection suppression all failed the intended assertions (8/8 killed).
+
 #include <cmath>
 #include <iostream>
 #include <optional>
