@@ -865,6 +865,7 @@ set(FLIGHT_SDK_GENERATED_HEADERS
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/particles_formats/parse_particle_config.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/particles_formats/particle_designer_parse.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/particles_formats/particle_designer_serialize.hpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../include/flight/particles_formats/particles_format_requirements.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/particles_formats/pixi_parse.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/particles_formats/register_built_in_particle_formats.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/particles_formats/spine_parse.hpp"

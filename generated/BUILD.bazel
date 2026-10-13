@@ -871,6 +871,7 @@ cc_library(
         "include/flight/particles_formats/parse_particle_config.hpp",
         "include/flight/particles_formats/particle_designer_parse.hpp",
         "include/flight/particles_formats/particle_designer_serialize.hpp",
+        "include/flight/particles_formats/particles_format_requirements.hpp",
         "include/flight/particles_formats/pixi_parse.hpp",
         "include/flight/particles_formats/register_built_in_particle_formats.hpp",
         "include/flight/particles_formats/spine_parse.hpp",

@@ -3184,14 +3184,14 @@
       "code": "dependency-refused",
       "module": "packages/particles-formats/src/contract.ts",
       "package": "@flighthq/particles-formats",
-      "reason": "dependency ./particleDesignerParse was refused for @flighthq/particles-formats/packages/particles-formats/src/particleDesignerParse.ts",
+      "reason": "dependency ./particleDesignerParse.ts was refused for @flighthq/particles-formats/packages/particles-formats/src/particleDesignerParse.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/particles-formats/src/index.ts",
       "package": "@flighthq/particles-formats",
-      "reason": "dependency ./contract was refused for @flighthq/particles-formats/packages/particles-formats/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/particles-formats/packages/particles-formats/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -3205,11 +3205,11 @@
     },
     {
       "code": "unsupported-ir",
-      "column": 7,
-      "line": 37,
+      "column": 1,
+      "line": 36,
       "module": "packages/particles-formats/src/registerBuiltInParticleFormats.ts",
       "package": "@flighthq/particles-formats",
-      "reason": "cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/registerBuiltInParticleFormats.ts: member trim on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
+      "reason": "cpp emission failed for @flighthq/particles-formats/packages/particles-formats/src/registerBuiltInParticleFormats.ts: an empty array has no concrete element type; add an explicit T[] annotation or T[] assertion at the construction site",
       "stage": "emission"
     },
     {

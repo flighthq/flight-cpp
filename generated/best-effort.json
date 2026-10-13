@@ -16363,6 +16363,19 @@
     {
       "consumers": [
         "@flighthq/particles-formats/packages/particles-formats/src/contract.ts",
+        "@flighthq/particles-formats/packages/particles-formats/src/index.ts"
+      ],
+      "module": {
+        "name": "ParticlesFormatRequirements",
+        "packageName": "@flighthq/particles-formats",
+        "source": "packages/particles-formats/src/particlesFormatRequirements.ts"
+      },
+      "path": "flight/particles_formats/particles_format_requirements.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/particles-formats/packages/particles-formats/src/contract.ts",
         "@flighthq/particles-formats/packages/particles-formats/src/registerBuiltInParticleFormats.ts"
       ],
       "module": {
@@ -16374,22 +16387,26 @@
       "status": "emitted"
     },
     {
-      "classification": "compiler-restriction",
+      "classification": "source-portability",
       "consumers": [
         "@flighthq/particles-formats/packages/particles-formats/src/contract.ts"
       ],
       "declarationFingerprints": [
-        "sha256:1822be2aecbb5456b49686c02bb705e0651aa0fea2bae4df71f31505eaca00ac",
+        "sha256:1ace299481ec810edfd6c4762bf9f3e1f9d5eded84e533f9ed887a155326097a",
         "sha256:269dc0cc817e6d56f8091a126f7b6f4cd78dd303f80ccbeb461d8f2a2e0d6e85",
         "sha256:3264a93b50c54b10f98772b36082b2b3014ad70d280c1201097f5f14f3e97580",
-        "sha256:36ec05cfc6736955e2499e0227fdaf8f7a94df2b8853ca53732dc528b76a6008",
-        "sha256:5f145c2381fea7abb3cccab73d37947b7a9c7a95eb1d856c1ae665c97a841411",
-        "sha256:8fa113d102b84fd7745cd1cf7730c08353817cd36b4a65043c4633a34988bb7a",
+        "sha256:40e068b7e7f270d81e9ce0bb96e2bc1c58f0d265d5c3925ba7a78825f8b42dbe",
+        "sha256:4cd21f35652cf2a14a772c6ff7cb46db244e75fa82ae165c188ca3eddb8aac6e",
+        "sha256:5f4b68ce3978a130790c52bb5f5f39f0d65dcbd7c847566747c9b507580ab7c5",
+        "sha256:6afb6a19cbf694050d0863eedd53dc08c26497a47483d97b53419a4e2b8f5a36",
+        "sha256:71a9f4eaca6faec4fe1b0e501e402c33a3150ecd1bcaf7fc5add39aa327bf02c",
+        "sha256:8b2788e3bff1b0544f0553f39dd3dbce46be520775c8a00631c7f7782e12cfaf",
         "sha256:9d9b269eb07163db50decf7d4ca45a866ad4f6244d6bb72b9eb631baf1c74e51",
-        "sha256:c137178c523cbd9dd05f25972dfef6b88a7c4e6cb5b9c40d5cb622ed7925ba78",
+        "sha256:a42304865a5b3e34989398f9eb119ea5da4f00d9dfe074f331b5daff68a89bd9",
+        "sha256:c58ab2e254ed8fb72cb2601c7a8ec14d908bd98b5ef294358ab23a7c24aaa99a",
+        "sha256:ca98f53e410f40c6a1f1e52d7299fa98cfc914937a77382fcf15f973e335f1fa",
         "sha256:d4a9323199ebf36fb20c0a09e5bbaae236ab6a2d3328be4dacdb6c0f1caf3d22",
-        "sha256:de15d7dd4c7bfc01665f8f7e0aba2a9a360a33dc68de9b26c91f17659f7aa554",
-        "sha256:e70c64cf8d848e2800164560f3fab002b6862b39b1a1035c5f7257cc94b0bcc8"
+        "sha256:f154139523af97c0e31dddf6ae79a1154c748fc4e23cb546cb6e42fa7cc3a226"
       ],
       "module": {
         "name": "RegisterBuiltInParticleFormats",
@@ -16397,7 +16414,7 @@
         "source": "packages/particles-formats/src/registerBuiltInParticleFormats.ts"
       },
       "path": "flight/particles_formats/register_built_in_particle_formats.hpp",
-      "rule": "cpp-member-projection-without-present-storage",
+      "rule": "cpp-empty-array-element-type-unproven",
       "status": "refused-placeholder"
     },
     {

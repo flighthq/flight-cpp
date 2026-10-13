@@ -287,6 +287,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("closeButton") && requires { object.close_button; }) return (object.close_button);
   else if constexpr (Key::name.view() == std::string_view("closed") && requires { object.closed; }) return (object.closed);
   else if constexpr (Key::name.view() == std::string_view("code") && requires { object.code; }) return (object.code);
+  else if constexpr (Key::name.view() == std::string_view("codec") && requires { object.codec; }) return (object.codec);
   else if constexpr (Key::name.view() == std::string_view("codepoints") && requires { object.codepoints; }) return (object.codepoints);
   else if constexpr (Key::name.view() == std::string_view("collideConnected") && requires { object.collide_connected; }) return (object.collide_connected);
   else if constexpr (Key::name.view() == std::string_view("collider") && requires { object.collider; }) return (object.collider);
@@ -1160,6 +1161,8 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("maxParticles") && requires { object.max_particles; }) return (object.max_particles);
   else if constexpr (Key::name.view() == std::string_view("maxPitch") && requires { object.max_pitch; }) return (object.max_pitch);
   else if constexpr (Key::name.view() == std::string_view("maxPolar") && requires { object.max_polar; }) return (object.max_polar);
+  else if constexpr (Key::name.view() == std::string_view("maxRadius") && requires { object.max_radius; }) return (object.max_radius);
+  else if constexpr (Key::name.view() == std::string_view("maxRadiusVariance") && requires { object.max_radius_variance; }) return (object.max_radius_variance);
   else if constexpr (Key::name.view() == std::string_view("maxSize") && requires { object.max_size; }) return (object.max_size);
   else if constexpr (Key::name.view() == std::string_view("maxUpdatesPerFrame") && requires { object.max_updates_per_frame; }) return (object.max_updates_per_frame);
   else if constexpr (Key::name.view() == std::string_view("maxWidth") && requires { object.max_width; }) return (object.max_width);
@@ -1198,6 +1201,8 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("minParticleCount") && requires { object.min_particle_count; }) return (object.min_particle_count);
   else if constexpr (Key::name.view() == std::string_view("minPitch") && requires { object.min_pitch; }) return (object.min_pitch);
   else if constexpr (Key::name.view() == std::string_view("minPolar") && requires { object.min_polar; }) return (object.min_polar);
+  else if constexpr (Key::name.view() == std::string_view("minRadius") && requires { object.min_radius; }) return (object.min_radius);
+  else if constexpr (Key::name.view() == std::string_view("minRadiusVariance") && requires { object.min_radius_variance; }) return (object.min_radius_variance);
   else if constexpr (Key::name.view() == std::string_view("minWidth") && requires { object.min_width; }) return (object.min_width);
   else if constexpr (Key::name.view() == std::string_view("minX") && requires { object.min_x; }) return (object.min_x);
   else if constexpr (Key::name.view() == std::string_view("minY") && requires { object.min_y; }) return (object.min_y);
@@ -1665,6 +1670,8 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("right") && requires { object.right; }) return (object.right);
   else if constexpr (Key::name.view() == std::string_view("rightMargin") && requires { object.right_margin; }) return (object.right_margin);
   else if constexpr (Key::name.view() == std::string_view("root") && requires { object.root; }) return (object.root);
+  else if constexpr (Key::name.view() == std::string_view("rotatePerSecond") && requires { object.rotate_per_second; }) return (object.rotate_per_second);
+  else if constexpr (Key::name.view() == std::string_view("rotatePerSecondVariance") && requires { object.rotate_per_second_variance; }) return (object.rotate_per_second_variance);
   else if constexpr (Key::name.view() == std::string_view("rotated") && requires { object.rotated; }) return (object.rotated);
   else if constexpr (Key::name.view() == std::string_view("rotation") && requires { object.rotation; }) return (object.rotation);
   else if constexpr (Key::name.view() == std::string_view("rotationAmplitude") && requires { object.rotation_amplitude; }) return (object.rotation_amplitude);
@@ -2017,6 +2024,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("textureBindGroup") && requires { object.texture_bind_group; }) return (object.texture_bind_group);
   else if constexpr (Key::name.view() == std::string_view("textureBindGroupLayout") && requires { object.texture_bind_group_layout; }) return (object.texture_bind_group_layout);
   else if constexpr (Key::name.view() == std::string_view("textureCount") && requires { object.texture_count; }) return (object.texture_count);
+  else if constexpr (Key::name.view() == std::string_view("textureFileName") && requires { object.texture_file_name; }) return (object.texture_file_name);
   else if constexpr (Key::name.view() == std::string_view("textureKeys") && requires { object.texture_keys; }) return (object.texture_keys);
   else if constexpr (Key::name.view() == std::string_view("textureResolvers") && requires { object.texture_resolvers; }) return (object.texture_resolvers);
   else if constexpr (Key::name.view() == std::string_view("textureSamplers") && requires { object.texture_samplers; }) return (object.texture_samplers);
@@ -2510,6 +2518,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("closeButton") && requires(Object& object) { object.close_button; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().close_button)>>{};
   else if constexpr (Key::name.view() == std::string_view("closed") && requires(Object& object) { object.closed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().closed)>>{};
   else if constexpr (Key::name.view() == std::string_view("code") && requires(Object& object) { object.code; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().code)>>{};
+  else if constexpr (Key::name.view() == std::string_view("codec") && requires(Object& object) { object.codec; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().codec)>>{};
   else if constexpr (Key::name.view() == std::string_view("codepoints") && requires(Object& object) { object.codepoints; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().codepoints)>>{};
   else if constexpr (Key::name.view() == std::string_view("collideConnected") && requires(Object& object) { object.collide_connected; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().collide_connected)>>{};
   else if constexpr (Key::name.view() == std::string_view("collider") && requires(Object& object) { object.collider; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().collider)>>{};
@@ -3383,6 +3392,8 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("maxParticles") && requires(Object& object) { object.max_particles; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_particles)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxPitch") && requires(Object& object) { object.max_pitch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_pitch)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxPolar") && requires(Object& object) { object.max_polar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_polar)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxRadius") && requires(Object& object) { object.max_radius; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_radius)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maxRadiusVariance") && requires(Object& object) { object.max_radius_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_radius_variance)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxSize") && requires(Object& object) { object.max_size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_size)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxUpdatesPerFrame") && requires(Object& object) { object.max_updates_per_frame; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_updates_per_frame)>>{};
   else if constexpr (Key::name.view() == std::string_view("maxWidth") && requires(Object& object) { object.max_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().max_width)>>{};
@@ -3421,6 +3432,8 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("minParticleCount") && requires(Object& object) { object.min_particle_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_particle_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("minPitch") && requires(Object& object) { object.min_pitch; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_pitch)>>{};
   else if constexpr (Key::name.view() == std::string_view("minPolar") && requires(Object& object) { object.min_polar; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_polar)>>{};
+  else if constexpr (Key::name.view() == std::string_view("minRadius") && requires(Object& object) { object.min_radius; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_radius)>>{};
+  else if constexpr (Key::name.view() == std::string_view("minRadiusVariance") && requires(Object& object) { object.min_radius_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_radius_variance)>>{};
   else if constexpr (Key::name.view() == std::string_view("minWidth") && requires(Object& object) { object.min_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("minX") && requires(Object& object) { object.min_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("minY") && requires(Object& object) { object.min_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().min_y)>>{};
@@ -3888,6 +3901,8 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("right") && requires(Object& object) { object.right; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().right)>>{};
   else if constexpr (Key::name.view() == std::string_view("rightMargin") && requires(Object& object) { object.right_margin; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().right_margin)>>{};
   else if constexpr (Key::name.view() == std::string_view("root") && requires(Object& object) { object.root; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().root)>>{};
+  else if constexpr (Key::name.view() == std::string_view("rotatePerSecond") && requires(Object& object) { object.rotate_per_second; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotate_per_second)>>{};
+  else if constexpr (Key::name.view() == std::string_view("rotatePerSecondVariance") && requires(Object& object) { object.rotate_per_second_variance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotate_per_second_variance)>>{};
   else if constexpr (Key::name.view() == std::string_view("rotated") && requires(Object& object) { object.rotated; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotated)>>{};
   else if constexpr (Key::name.view() == std::string_view("rotation") && requires(Object& object) { object.rotation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotation)>>{};
   else if constexpr (Key::name.view() == std::string_view("rotationAmplitude") && requires(Object& object) { object.rotation_amplitude; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().rotation_amplitude)>>{};
@@ -4240,6 +4255,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("textureBindGroup") && requires(Object& object) { object.texture_bind_group; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().texture_bind_group)>>{};
   else if constexpr (Key::name.view() == std::string_view("textureBindGroupLayout") && requires(Object& object) { object.texture_bind_group_layout; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().texture_bind_group_layout)>>{};
   else if constexpr (Key::name.view() == std::string_view("textureCount") && requires(Object& object) { object.texture_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().texture_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("textureFileName") && requires(Object& object) { object.texture_file_name; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().texture_file_name)>>{};
   else if constexpr (Key::name.view() == std::string_view("textureKeys") && requires(Object& object) { object.texture_keys; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().texture_keys)>>{};
   else if constexpr (Key::name.view() == std::string_view("textureResolvers") && requires(Object& object) { object.texture_resolvers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().texture_resolvers)>>{};
   else if constexpr (Key::name.view() == std::string_view("textureSamplers") && requires(Object& object) { object.texture_samplers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().texture_samplers)>>{};
@@ -4736,6 +4752,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->close_button; }) owner.bind_named("closeButton", [object]() -> decltype(auto) { return (object->close_button); });
   if constexpr (requires { object->closed; }) owner.bind_named("closed", [object]() -> decltype(auto) { return (object->closed); });
   if constexpr (requires { object->code; }) owner.bind_named("code", [object]() -> decltype(auto) { return (object->code); });
+  if constexpr (requires { object->codec; }) owner.bind_named("codec", [object]() -> decltype(auto) { return (object->codec); });
   if constexpr (requires { object->codepoints; }) owner.bind_named("codepoints", [object]() -> decltype(auto) { return (object->codepoints); });
   if constexpr (requires { object->collide_connected; }) owner.bind_named("collideConnected", [object]() -> decltype(auto) { return (object->collide_connected); });
   if constexpr (requires { object->collider; }) owner.bind_named("collider", [object]() -> decltype(auto) { return (object->collider); });
@@ -5609,6 +5626,8 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->max_particles; }) owner.bind_named("maxParticles", [object]() -> decltype(auto) { return (object->max_particles); });
   if constexpr (requires { object->max_pitch; }) owner.bind_named("maxPitch", [object]() -> decltype(auto) { return (object->max_pitch); });
   if constexpr (requires { object->max_polar; }) owner.bind_named("maxPolar", [object]() -> decltype(auto) { return (object->max_polar); });
+  if constexpr (requires { object->max_radius; }) owner.bind_named("maxRadius", [object]() -> decltype(auto) { return (object->max_radius); });
+  if constexpr (requires { object->max_radius_variance; }) owner.bind_named("maxRadiusVariance", [object]() -> decltype(auto) { return (object->max_radius_variance); });
   if constexpr (requires { object->max_size; }) owner.bind_named("maxSize", [object]() -> decltype(auto) { return (object->max_size); });
   if constexpr (requires { object->max_updates_per_frame; }) owner.bind_named("maxUpdatesPerFrame", [object]() -> decltype(auto) { return (object->max_updates_per_frame); });
   if constexpr (requires { object->max_width; }) owner.bind_named("maxWidth", [object]() -> decltype(auto) { return (object->max_width); });
@@ -5647,6 +5666,8 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->min_particle_count; }) owner.bind_named("minParticleCount", [object]() -> decltype(auto) { return (object->min_particle_count); });
   if constexpr (requires { object->min_pitch; }) owner.bind_named("minPitch", [object]() -> decltype(auto) { return (object->min_pitch); });
   if constexpr (requires { object->min_polar; }) owner.bind_named("minPolar", [object]() -> decltype(auto) { return (object->min_polar); });
+  if constexpr (requires { object->min_radius; }) owner.bind_named("minRadius", [object]() -> decltype(auto) { return (object->min_radius); });
+  if constexpr (requires { object->min_radius_variance; }) owner.bind_named("minRadiusVariance", [object]() -> decltype(auto) { return (object->min_radius_variance); });
   if constexpr (requires { object->min_width; }) owner.bind_named("minWidth", [object]() -> decltype(auto) { return (object->min_width); });
   if constexpr (requires { object->min_x; }) owner.bind_named("minX", [object]() -> decltype(auto) { return (object->min_x); });
   if constexpr (requires { object->min_y; }) owner.bind_named("minY", [object]() -> decltype(auto) { return (object->min_y); });
@@ -6114,6 +6135,8 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->right; }) owner.bind_named("right", [object]() -> decltype(auto) { return (object->right); });
   if constexpr (requires { object->right_margin; }) owner.bind_named("rightMargin", [object]() -> decltype(auto) { return (object->right_margin); });
   if constexpr (requires { object->root; }) owner.bind_named("root", [object]() -> decltype(auto) { return (object->root); });
+  if constexpr (requires { object->rotate_per_second; }) owner.bind_named("rotatePerSecond", [object]() -> decltype(auto) { return (object->rotate_per_second); });
+  if constexpr (requires { object->rotate_per_second_variance; }) owner.bind_named("rotatePerSecondVariance", [object]() -> decltype(auto) { return (object->rotate_per_second_variance); });
   if constexpr (requires { object->rotated; }) owner.bind_named("rotated", [object]() -> decltype(auto) { return (object->rotated); });
   if constexpr (requires { object->rotation; }) owner.bind_named("rotation", [object]() -> decltype(auto) { return (object->rotation); });
   if constexpr (requires { object->rotation_amplitude; }) owner.bind_named("rotationAmplitude", [object]() -> decltype(auto) { return (object->rotation_amplitude); });
@@ -6466,6 +6489,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->texture_bind_group; }) owner.bind_named("textureBindGroup", [object]() -> decltype(auto) { return (object->texture_bind_group); });
   if constexpr (requires { object->texture_bind_group_layout; }) owner.bind_named("textureBindGroupLayout", [object]() -> decltype(auto) { return (object->texture_bind_group_layout); });
   if constexpr (requires { object->texture_count; }) owner.bind_named("textureCount", [object]() -> decltype(auto) { return (object->texture_count); });
+  if constexpr (requires { object->texture_file_name; }) owner.bind_named("textureFileName", [object]() -> decltype(auto) { return (object->texture_file_name); });
   if constexpr (requires { object->texture_keys; }) owner.bind_named("textureKeys", [object]() -> decltype(auto) { return (object->texture_keys); });
   if constexpr (requires { object->texture_resolvers; }) owner.bind_named("textureResolvers", [object]() -> decltype(auto) { return (object->texture_resolvers); });
   if constexpr (requires { object->texture_samplers; }) owner.bind_named("textureSamplers", [object]() -> decltype(auto) { return (object->texture_samplers); });
@@ -6995,6 +7019,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(close_button)
   FLIGHT_SDK_ROW_WIDENS(closed)
   FLIGHT_SDK_ROW_WIDENS(code)
+  FLIGHT_SDK_ROW_WIDENS(codec)
   FLIGHT_SDK_ROW_WIDENS(codepoints)
   FLIGHT_SDK_ROW_WIDENS(collide_connected)
   FLIGHT_SDK_ROW_WIDENS(collider)
@@ -7868,6 +7893,8 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(max_particles)
   FLIGHT_SDK_ROW_WIDENS(max_pitch)
   FLIGHT_SDK_ROW_WIDENS(max_polar)
+  FLIGHT_SDK_ROW_WIDENS(max_radius)
+  FLIGHT_SDK_ROW_WIDENS(max_radius_variance)
   FLIGHT_SDK_ROW_WIDENS(max_size)
   FLIGHT_SDK_ROW_WIDENS(max_updates_per_frame)
   FLIGHT_SDK_ROW_WIDENS(max_width)
@@ -7906,6 +7933,8 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(min_particle_count)
   FLIGHT_SDK_ROW_WIDENS(min_pitch)
   FLIGHT_SDK_ROW_WIDENS(min_polar)
+  FLIGHT_SDK_ROW_WIDENS(min_radius)
+  FLIGHT_SDK_ROW_WIDENS(min_radius_variance)
   FLIGHT_SDK_ROW_WIDENS(min_width)
   FLIGHT_SDK_ROW_WIDENS(min_x)
   FLIGHT_SDK_ROW_WIDENS(min_y)
@@ -8373,6 +8402,8 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(right)
   FLIGHT_SDK_ROW_WIDENS(right_margin)
   FLIGHT_SDK_ROW_WIDENS(root)
+  FLIGHT_SDK_ROW_WIDENS(rotate_per_second)
+  FLIGHT_SDK_ROW_WIDENS(rotate_per_second_variance)
   FLIGHT_SDK_ROW_WIDENS(rotated)
   FLIGHT_SDK_ROW_WIDENS(rotation)
   FLIGHT_SDK_ROW_WIDENS(rotation_amplitude)
@@ -8725,6 +8756,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(texture_bind_group)
   FLIGHT_SDK_ROW_WIDENS(texture_bind_group_layout)
   FLIGHT_SDK_ROW_WIDENS(texture_count)
+  FLIGHT_SDK_ROW_WIDENS(texture_file_name)
   FLIGHT_SDK_ROW_WIDENS(texture_keys)
   FLIGHT_SDK_ROW_WIDENS(texture_resolvers)
   FLIGHT_SDK_ROW_WIDENS(texture_samplers)

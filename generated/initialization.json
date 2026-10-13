@@ -2351,6 +2351,11 @@
       "source": "packages/particles-formats/src/particleDesignerSerialize.ts"
     },
     {
+      "name": "ParticlesFormatRequirements",
+      "packageName": "@flighthq/particles-formats",
+      "source": "packages/particles-formats/src/particlesFormatRequirements.ts"
+    },
+    {
       "name": "PixiParse",
       "packageName": "@flighthq/particles-formats",
       "source": "packages/particles-formats/src/pixiParse.ts"
@@ -24649,6 +24654,16 @@
           "name": "UpdateParticleObjects",
           "packageName": "@flighthq/particles",
           "source": "packages/particles/src/updateParticleObjects.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "ParticlesFormatRequirements",
+          "packageName": "@flighthq/particles-formats",
+          "source": "packages/particles-formats/src/particlesFormatRequirements.ts"
         }
       ]
     },
@@ -126714,7 +126729,7 @@
             "line": 11,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/detect.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/detect.ts\",494]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/detect.ts\",497]",
             "kind": "function",
             "name": "detectParticleFormat",
             "scope": "module",
@@ -126736,7 +126751,7 @@
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/detect.ts"
           },
-          "specifier": "./formatRegistry",
+          "specifier": "./formatRegistry.ts",
           "target": {
             "name": "FormatRegistry",
             "packageName": "@flighthq/particles-formats",
@@ -244860,7 +244875,7 @@
             "line": 12,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/parseParticleConfig.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/parseParticleConfig.ts\",436]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/parseParticleConfig.ts\",439]",
             "kind": "import",
             "name": "getParticleFormatCodec",
             "scope": "module",
@@ -244886,7 +244901,7 @@
             "line": 21,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/parseParticleConfig.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/parseParticleConfig.ts\",944]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/parseParticleConfig.ts\",950]",
             "kind": "function",
             "name": "parseParticleConfig",
             "scope": "module",
@@ -244907,7 +244922,7 @@
             "line": 39,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/parseParticleConfig.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/parseParticleConfig.ts\",1784]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/parseParticleConfig.ts\",1790]",
             "kind": "function",
             "name": "parseParticleConfigDocument",
             "scope": "module",
@@ -244929,7 +244944,7 @@
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/parseParticleConfig.ts"
           },
-          "specifier": "./detect",
+          "specifier": "./detect.ts",
           "target": {
             "name": "Detect",
             "packageName": "@flighthq/particles-formats",
@@ -244943,7 +244958,7 @@
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/parseParticleConfig.ts"
           },
-          "specifier": "./formatRegistry",
+          "specifier": "./formatRegistry.ts",
           "target": {
             "name": "FormatRegistry",
             "packageName": "@flighthq/particles-formats",
@@ -247555,6 +247570,62 @@
               "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/particleSpawnOffset.ts\",92]",
               "kind": "variable",
               "name": "TWO_PI",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:a8f6bbb5512d9784137a3a093f6a00fa1d823efd55ed3b2ae7c9f82a385fa59b",
+            "line": 8,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/particlesFormatRequirements.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particlesFormatRequirements.ts\",336]",
+            "kind": "variable",
+            "name": "PARTICLES_REQUIREMENT_KEY_NAMESPACE",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [],
+      "module": {
+        "name": "ParticlesFormatRequirements",
+        "packageName": "@flighthq/particles-formats",
+        "source": "packages/particles-formats/src/particlesFormatRequirements.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:a8f6bbb5512d9784137a3a093f6a00fa1d823efd55ed3b2ae7c9f82a385fa59b",
+              "line": 8,
+              "packageName": "@flighthq/particles-formats",
+              "source": "packages/particles-formats/src/particlesFormatRequirements.ts",
+              "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particlesFormatRequirements.ts\",336]",
+              "kind": "variable",
+              "name": "PARTICLES_REQUIREMENT_KEY_NAMESPACE",
               "scope": "module",
               "space": "value"
             }
