@@ -5826,14 +5826,14 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-resources/src/builtInScene2DDocumentImporters.ts",
       "package": "@flighthq/scene2d-resources",
-      "reason": "dependency @flighthq/scene2d-formats/contract was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
+      "reason": "dependency @flighthq/scene2d-formats/contract was refused for @flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-resources/src/contract.ts",
       "package": "@flighthq/scene2d-resources",
-      "reason": "dependency ./builtInScene2DDocumentImporters was refused for @flighthq/scene2d-resources/packages/scene2d-resources/src/builtInScene2DDocumentImporters.ts",
+      "reason": "dependency ./builtInScene2DDocumentImporters.ts was refused for @flighthq/scene2d-resources/packages/scene2d-resources/src/builtInScene2DDocumentImporters.ts",
       "stage": "dependency"
     },
     {
@@ -5847,7 +5847,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-resources/src/index.ts",
       "package": "@flighthq/scene2d-resources",
-      "reason": "dependency ./contract was refused for @flighthq/scene2d-resources/packages/scene2d-resources/src/contract.ts",
+      "reason": "dependency ./builtInScene2DDocumentImporters.ts was refused for @flighthq/scene2d-resources/packages/scene2d-resources/src/builtInScene2DDocumentImporters.ts",
       "stage": "dependency"
     },
     {

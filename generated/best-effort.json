@@ -27922,7 +27922,8 @@
     },
     {
       "consumers": [
-        "@flighthq/scene2d-resources/packages/scene2d-resources/src/contract.ts"
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/contract.ts",
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/index.ts"
       ],
       "module": {
         "name": "BuiltInScene2DDocumentImporters",
@@ -27931,16 +27932,14 @@
       },
       "path": "flight/scene2d_resources/built_in_scene2_ddocument_importers.hpp",
       "refusedDependencies": [
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieDocument.ts",
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/lottieImport.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveScene2DDocument.ts",
-        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgDocument.ts"
+        "@flighthq/scene2d-formats/packages/scene2d-formats/src/svgImport.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
-      "consumers": [
-        "@flighthq/scene2d-resources/packages/scene2d-resources/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/scene2d-resources",
@@ -27957,7 +27956,8 @@
     },
     {
       "consumers": [
-        "@flighthq/scene2d-resources/packages/scene2d-resources/src/contract.ts"
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/contract.ts",
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/index.ts"
       ],
       "module": {
         "name": "EnableScene2DResourceFailureGuards",
@@ -27979,18 +27979,23 @@
       },
       "path": "flight/scene2d_resources/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/scene2d-resources/packages/scene2d-resources/src/contract.ts"
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/builtInScene2DDocumentImporters.ts",
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/enableScene2DResourceFailureGuards.ts",
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/loadScene2DAudioResources.ts",
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/loadScene2DImageResources.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/scene2d-resources/packages/scene2d-resources/src/contract.ts"
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/contract.ts",
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/index.ts"
       ],
       "declarationFingerprints": [
-        "sha256:0ba1fe5368a7e5508398489dbcfaf8223de4de3d9d2c56913a3aa0f40a5eff2a",
-        "sha256:8923280a2f5fd36f88adc397c0514116df6e408a7aa4e872b9ac0553e08f2e71"
+        "sha256:73cd60a70018322265cd5cc8ee8939ade7de41c7dbe57180110dfe8477da675d",
+        "sha256:7dae6c3f9048965fffd844c8992128c445bc79103d04eea4f6adc41f174d0871",
+        "sha256:bbad89e27000857b7571d1b317dfc2dea63c1183934609fae87c09c099efb617"
       ],
       "module": {
         "name": "LoadScene2DAudioResources",
@@ -28003,12 +28008,13 @@
     {
       "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/scene2d-resources/packages/scene2d-resources/src/contract.ts"
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/contract.ts",
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:0b764f330cef64760612c85521974fed32ddb5d9efd87680eb5b0d209b2b4297",
-        "sha256:78ed9dcd425d2bdcb0aa683bac1516b355d1cec40d31131260ef8e27a009f4be",
-        "sha256:e04e551c9eba320154259373e35ad55177043d6dce501cf84eee7405826b7942"
+        "sha256:6542eb193078038f229549455c8a93c380dac0c0953c2b352859b0556684cc95",
+        "sha256:fcccf3a6c5efe986c52ed69a4469b05bf57eaae60b4665209ced503e57b56dff"
       ],
       "module": {
         "name": "LoadScene2DImageResources",
@@ -28020,7 +28026,8 @@
     },
     {
       "consumers": [
-        "@flighthq/scene2d-resources/packages/scene2d-resources/src/contract.ts"
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/contract.ts",
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/index.ts"
       ],
       "module": {
         "name": "ResolveScene2DResources",
@@ -28034,6 +28041,7 @@
       "consumers": [
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/builtInScene2DDocumentImporters.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/contract.ts",
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/index.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts"
       ],
       "module": {
@@ -28048,6 +28056,7 @@
       "consumers": [
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/builtInScene2DDocumentImporters.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/contract.ts",
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/index.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/scene2DDocumentSource.ts",
         "@flighthq/swf/packages/swf/src/swfDocument.ts"
       ],
@@ -28061,7 +28070,8 @@
     },
     {
       "consumers": [
-        "@flighthq/scene2d-resources/packages/scene2d-resources/src/contract.ts"
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/contract.ts",
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/index.ts"
       ],
       "module": {
         "name": "Scene2DDocumentSource",
@@ -28075,6 +28085,7 @@
       "consumers": [
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/contract.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/enableScene2DResourceFailureGuards.ts",
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/index.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/loadScene2DAudioResources.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/loadScene2DImageResources.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/resolveScene2DResources.ts",
@@ -28092,6 +28103,7 @@
     {
       "consumers": [
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/contract.ts",
+        "@flighthq/scene2d-resources/packages/scene2d-resources/src/index.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/resolveScene2DResources.ts"
       ],
       "module": {

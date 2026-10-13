@@ -269613,7 +269613,7 @@
             "line": 9,
             "packageName": "@flighthq/scene2d-resources",
             "source": "packages/scene2d-resources/src/resolveScene2DResources.ts",
-            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/resolveScene2DResources.ts\",233]",
+            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/resolveScene2DResources.ts\",236]",
             "kind": "import",
             "name": "setScene2DSlotReferenceContent",
             "scope": "module",
@@ -269639,7 +269639,7 @@
             "line": 14,
             "packageName": "@flighthq/scene2d-resources",
             "source": "packages/scene2d-resources/src/resolveScene2DResources.ts",
-            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/resolveScene2DResources.ts\",592]",
+            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/resolveScene2DResources.ts\",598]",
             "kind": "function",
             "name": "resolveScene2DResources",
             "scope": "module",
@@ -269661,7 +269661,7 @@
             "packageName": "@flighthq/scene2d-resources",
             "source": "packages/scene2d-resources/src/resolveScene2DResources.ts"
           },
-          "specifier": "./scene2DResourceDiagnostics",
+          "specifier": "./scene2DResourceDiagnostics.ts",
           "target": {
             "name": "Scene2DResourceDiagnostics",
             "packageName": "@flighthq/scene2d-resources",
@@ -269675,7 +269675,7 @@
             "packageName": "@flighthq/scene2d-resources",
             "source": "packages/scene2d-resources/src/resolveScene2DResources.ts"
           },
-          "specifier": "./scene2DSlotReference",
+          "specifier": "./scene2DSlotReference.ts",
           "target": {
             "name": "Scene2DSlotReference",
             "packageName": "@flighthq/scene2d-resources",
@@ -277219,63 +277219,11 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
-            "line": 1,
-            "packageName": "@flighthq/scene2d-resources",
-            "source": "packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts",
-            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts\",9]",
-            "kind": "import",
-            "name": "allocateEntity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "allocateEntity",
-            "kind": "dependency",
-            "module": {
-              "name": "Entity",
-              "packageName": "@flighthq/entity",
-              "source": "packages/entity/src/entity.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 26,
-            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
-            "line": 1,
-            "packageName": "@flighthq/scene2d-resources",
-            "source": "packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts",
-            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts\",25]",
-            "kind": "import",
-            "name": "finishEntity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "finishEntity",
-            "kind": "dependency",
-            "module": {
-              "name": "Entity",
-              "packageName": "@flighthq/entity",
-              "source": "packages/entity/src/entity.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
             "fingerprint": "sha256:aa079ebbaff15d884a0ca3754a67c27a05e2dcb58b618b86776a0b18469b05a7",
-            "line": 11,
+            "line": 10,
             "packageName": "@flighthq/scene2d-resources",
             "source": "packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts",
-            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts\",302]",
+            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts\",231]",
             "kind": "import",
             "name": "reportScene2DResourceFailure",
             "scope": "module",
@@ -277298,10 +277246,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:672fd330d78d8b629d14adbeb0adcd1a9b03b45fdc8ecab4bff9f43098e64dd9",
-            "line": 13,
+            "line": 12,
             "packageName": "@flighthq/scene2d-resources",
             "source": "packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts",
-            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts\",387]",
+            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts\",319]",
             "kind": "function",
             "name": "createScene2DDocumentFromBytes",
             "scope": "module",
@@ -277319,10 +277267,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:94cea5af32127c197f5e1220bbcadd9d972498353ebd29fc431bc0d973673a6e",
-            "line": 44,
+            "line": 43,
             "packageName": "@flighthq/scene2d-resources",
             "source": "packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts",
-            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts\",1391]",
+            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts\",1323]",
             "kind": "function",
             "name": "createScene2DDocumentImporterRegistry",
             "scope": "module",
@@ -277339,32 +277287,11 @@
           "access": "available-after-instantiation",
           "binding": {
             "column": 17,
-            "fingerprint": "sha256:59212cff77ba29141f86a71769250e81f2d81718c419f83933b5a5ab1fc7e542",
+            "fingerprint": "sha256:4bf5ebfeec3a76d63488f24113120a41600039f753c2b156e16945f4dc27ae8c",
             "line": 50,
             "packageName": "@flighthq/scene2d-resources",
             "source": "packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts",
-            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts\",1628]",
-            "kind": "function",
-            "name": "initializeScene2DDocumentImporterRegistry",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:4bf5ebfeec3a76d63488f24113120a41600039f753c2b156e16945f4dc27ae8c",
-            "line": 56,
-            "packageName": "@flighthq/scene2d-resources",
-            "source": "packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts",
-            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts\",1780]",
+            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts\",1486]",
             "kind": "function",
             "name": "registerScene2DDocumentImporter",
             "scope": "module",
@@ -277382,10 +277309,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:80998e9ad03649d2f13190a8dac045e4eb83b63e83417fda4f5fba055a08bb5b",
-            "line": 68,
+            "line": 62,
             "packageName": "@flighthq/scene2d-resources",
             "source": "packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts",
-            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts\",2206]",
+            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts\",1912]",
             "kind": "function",
             "name": "unregisterScene2DDocumentImporter",
             "scope": "module",
@@ -277407,25 +277334,11 @@
             "packageName": "@flighthq/scene2d-resources",
             "source": "packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts"
           },
-          "specifier": "./scene2DResourceDiagnostics",
+          "specifier": "./scene2DResourceDiagnostics.ts",
           "target": {
             "name": "Scene2DResourceDiagnostics",
             "packageName": "@flighthq/scene2d-resources",
             "source": "packages/scene2d-resources/src/scene2DResourceDiagnostics.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "Scene2DDocumentImporterRegistry",
-            "packageName": "@flighthq/scene2d-resources",
-            "source": "packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts"
-          },
-          "specifier": "@flighthq/entity/contract",
-          "target": {
-            "name": "Entity",
-            "packageName": "@flighthq/entity",
-            "source": "packages/entity/src/entity.ts"
           }
         },
         {
@@ -277443,24 +277356,6 @@
             "name": "AudioResourceReference",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/AudioResourceReference.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "Scene2DDocumentImporterRegistry",
-            "packageName": "@flighthq/scene2d-resources",
-            "source": "packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts"
-          },
-          "importedNames": [
-            "Entity",
-            "EntityConstruction"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Entity",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Entity.ts"
           }
         },
         {
@@ -277495,6 +277390,23 @@
             "name": "Node2D",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/Node2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Scene2DDocumentImporterRegistry",
+            "packageName": "@flighthq/scene2d-resources",
+            "source": "packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts"
+          },
+          "importedNames": [
+            "NonEntityCreateResult"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "NonEntityCreateResult",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/NonEntityCreateResult.ts"
           }
         },
         {
@@ -277583,7 +277495,7 @@
             "line": 9,
             "packageName": "@flighthq/scene2d-resources",
             "source": "packages/scene2d-resources/src/scene2DDocumentSource.ts",
-            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/scene2DDocumentSource.ts\",253]",
+            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/scene2DDocumentSource.ts\",256]",
             "kind": "import",
             "name": "reportScene2DResourceFailure",
             "scope": "module",
@@ -277609,7 +277521,7 @@
             "line": 11,
             "packageName": "@flighthq/scene2d-resources",
             "source": "packages/scene2d-resources/src/scene2DDocumentSource.ts",
-            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/scene2DDocumentSource.ts\",344]",
+            "id": "binding:[\"@flighthq/scene2d-resources\",\"packages/scene2d-resources/src/scene2DDocumentSource.ts\",350]",
             "kind": "function",
             "name": "loadScene2DDocumentFromUrl",
             "scope": "module",
@@ -277631,7 +277543,7 @@
             "packageName": "@flighthq/scene2d-resources",
             "source": "packages/scene2d-resources/src/scene2DDocumentSource.ts"
           },
-          "specifier": "./scene2DDocumentImporterRegistry",
+          "specifier": "./scene2DDocumentImporterRegistry.ts",
           "target": {
             "name": "Scene2DDocumentImporterRegistry",
             "packageName": "@flighthq/scene2d-resources",
@@ -277645,7 +277557,7 @@
             "packageName": "@flighthq/scene2d-resources",
             "source": "packages/scene2d-resources/src/scene2DDocumentSource.ts"
           },
-          "specifier": "./scene2DResourceDiagnostics",
+          "specifier": "./scene2DResourceDiagnostics.ts",
           "target": {
             "name": "Scene2DResourceDiagnostics",
             "packageName": "@flighthq/scene2d-resources",

@@ -188,22 +188,17 @@
       "id": "scene2d-resources-fetch-arity",
       "dependency": "flight",
       "patch": "scene2d-resources-fetch-arity.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene2d-resources/src/loadScene2DAudioResources.ts and packages/scene2d-resources/src/loadScene2DImageResources.ts",
       "package": "@flighthq/scene2d-resources",
       "answers": "diagnostic",
-      "refusal": "callbacks accepted through TypeScript's contextual function and Promise inference lower with zero arguments and Task<null>, which cannot initialize the declared two-argument resource-fetch carriers",
-      "rewrite": "Names both ignored parameters, annotates each reference with the fetch seam's exact Readonly external-reference type, and supplies the declared resource-or-null generic to Promise.resolve so arity, structural ownership, and result carriers are explicit.",
-      "equivalence": "The parameters remain unused and all added annotations and generic arguments are erased. Both callbacks still synchronously create and return Promise.resolve(null), inspect no argument, and have no side effects; function length is not part of the declared or consumed contract.",
-      "whyNotUpstreamFirst": "Matching a callback's declared arity is ordinary target-neutral source and avoids teaching the runtime an unsafe general conversion between incompatible C++ callable signatures.",
+      "refusal": "Promise.resolve(null) infers a Task<nullopt_t> result that cannot initialize the declared audio/image resource-or-null fetch carrier",
+      "rewrite": "Supplies each fetch seam's declared resource-or-null generic to Promise.resolve; the compiler now adapts the ignored callback parameters without source help.",
+      "equivalence": "The generic arguments and image resource type-only import are erased. Both callbacks still synchronously create and return Promise.resolve(null), inspect no argument, and have no side effects.",
+      "whyNotUpstreamFirst": "The explicit Promise result contract is target-neutral and avoids teaching the runtime an unsafe conversion from Task<nullopt_t> to unrelated optional resource task carriers.",
       "unblocks": "Makes the default audio and image resource fetch functions initialize their declared std::function carriers.",
-      "expires": "when contextual function assignment adapts ignored parameters and preserves the declared Promise result carrier during lowering, or Flight adopts the explicit forms.",
-      "appliedOn": "2026-10-07",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "2D",
-        "reason": "context drift: the patched code still exists (2/2 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "expires": "when contextual Promise.resolve(null) preserves the declared resource-or-null callback result carrier, or Flight adopts the explicit generic forms.",
+      "appliedOn": "2026-10-13"
     },
     {
       "id": "shape-formats-keyed-table-owner",
