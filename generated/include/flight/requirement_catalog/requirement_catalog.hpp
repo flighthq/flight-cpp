@@ -47,7 +47,7 @@ inline flight::Array<flight::Ref<flight::types::RequirementCatalogEntry>> get_re
 }
 
 inline flight::String requirement_catalog_entry_identity(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RequirementCatalogEntry>>>> entry) {
-  return flight::Array{flight::row_get<flight::RowKey<"backend">>(entry), flight::row_get<flight::RowKey<"facet">>(entry), flight::row_get<flight::RowKey<"kind">>(entry), flight::row_get<flight::RowKey<"registrarImport">>(entry), flight::row_get<flight::RowKey<"registrarSymbol">>(entry)}.join(flight::String("\u0000"));
+  return flight::Array{flight::row_get<flight::RowKey<"backend">>(entry), flight::row_get<flight::RowKey<"facet">>(entry), flight::row_get<flight::RowKey<"kind">>(entry), flight::row_get<flight::RowKey<"registrarImport">>(entry), flight::row_get<flight::RowKey<"registrarSymbol">>(entry)}.join(flight::String(std::string_view("\u0000", sizeof("\u0000") - 1)));
 }
 
 inline void register_requirement_catalog_entry(flight::Ref<flight::types::RequirementCatalog> catalog, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RequirementCatalogEntry>>>> entry) {
