@@ -33,6 +33,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-nullish-conditional-absent-fallback.patch`](../../source-patches/compiler-nullish-conditional-absent-fallback.patch) | [A nullish-coalesce fallback of `null` is wrapped into an engaged optional](nullish-coalesce-null-into-optional-is-never-absent.md) |
 | [`compiler-declared-present-reference-chain.patch`](../../source-patches/compiler-declared-present-reference-chain.patch) | [An optional chain through a reference declared present must still test it](host-group-optional-chain-dropped.md) |
 | [`compiler-asserted-empty-object-fallback.patch`](../../source-patches/compiler-asserted-empty-object-fallback.patch) | [An asserted `?? {}` fallback must test the storage it reads and build the asserted type](host-initialize-optional-fallback-on-a-required-read.md) |
+| [`compiler-coalesced-union-member-narrowing.patch`](../../source-patches/compiler-coalesced-union-member-narrowing.patch) | [A member-presence narrow must select across every alternative that carries the member](narrowed-member-multi-alternative-selection.md) |
 | [`compiler-dependent-erased-object-recovery-template.patch`](../../source-patches/compiler-dependent-erased-object-recovery-template.patch) | [Dependent erased-object recovery needs a template disambiguator](dependent-erased-object-recovery-template.md) |
 | [`compiler-dependent-indexed-access-reference-carrier.patch`](../../source-patches/compiler-dependent-indexed-access-reference-carrier.patch) | [Dependent indexed access must read through the reference carrier](dependent-indexed-access-reference-carrier.md) |
 | [`compiler-contextual-imported-union-owner.patch`](../../source-patches/compiler-contextual-imported-union-owner.patch) | [Contextual construction of an imported union](compiler-contextual-imported-union-owner.md) |
@@ -220,11 +221,6 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `tray-create-result-and-runtime-owner`, which names the create-result arms once and narrows the
   entity's runtime slot, advancing the refusal to a member-presence narrow (`'error' in result`) that is
   still refused.
-- [A member-presence narrow must select across every alternative that carries the member](narrowed-member-multi-alternative-selection.md) —
-  `'error' in result` over the four failure arms of `TrayCreateCapabilityResult` narrows to three, and
-  the emitter requires exactly one C++ alternative, so `@flighthq/tray` refuses at emission. No
-  workaround carried: the discriminant rewrite answers a different question and would be a source change
-  made solely for the emitter.
 - [An async closure needs the coroutine lowering a module-level function gets](async-closure-coroutine-lowering.md) —
   an `async release()` inside an object literal and an `async () =>` handed to `then` are both refused;
   three functions in `@flighthq/tray`. No workaround carried.

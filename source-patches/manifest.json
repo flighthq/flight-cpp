@@ -3958,6 +3958,23 @@
       "unblocks": "The `(x ?? {}) as T` group writes of @flighthq/host initializeHost, once the Host owner regenerates; the factory additionally needs merged-row construction (separate request).",
       "expires": "when upstream lowers an asserted empty-object nullish fallback to the asserted type with a storage-correct absence test (docs/compiler-requests/host-initialize-optional-fallback-on-a-required-read.md).",
       "appliedOn": "2026-10-13"
+    },
+    {
+      "id": "compiler-coalesced-union-member-narrowing",
+      "dependency": "flight-compiler",
+      "patch": "compiler-coalesced-union-member-narrowing.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "`narrowed member structural switch case must identify one C++ variant alternative` (unruled) on @flighthq/tray createTrayIcon's `'error' in result ? result.error : undefined` after `result.outcome !== 'created'`. Behind it was a soundness defect: getCppUnionMemberComplementTypeCpp excluded the whole C++ slot holding `created`, though that slot also holds `cancelled`, so the branch was typed as the three error arms and the refusal was all that stood between it and a projection that throws on `cancelled`.",
+      "rewrite": "The complement removes only the tested member and keeps every other member stored in the same slot; when the test cannot be tied to one of the slot's own members, no narrowing is claimed. A narrowed union whose members each match exactly one alternative, that together still cover every alternative, and that is planned as the same variant slot for slot with no absence, is emitted as the binding itself.",
+      "equivalence": "TypeScript's `x !== 'created'` complement is the union minus that member; members that share a C++ struct are distinct source members and remain reachable. A narrowing that still admits every C++ alternative needs no conversion: the binding is the same variant value, so identity, mutation visibility and lifetime are the binding's own.",
+      "verification": "New cppCoalescedUnionMemberNarrowing.test.ts: 6 pass; the createTrayIcon read, the whole-binding pass and the coalesced-exclusion refusal fail without the patch; three controls (complement member read, distinct C++ member types, a narrowing still admitting null) pass both ways. compiler-backend-cpp suite at -j2: the same 47 pre-existing failures, none new (1778 pass). Native: the emitted createTrayIcon read gives undefined for created and cancelled (no throw), each error arm's own error object (identity, later mutation visible) or undefined when omitted, and keeps then releases the error (15/15). Scratch regeneration of @flighthq/tray: createTrayIcon passes this refusal and stops at cpp-contextual-union-inequivalent; the four tray headers fail -fsyntax-only with the same 18 errors with and without the patch. Tray rows were not regenerated or committed.",
+      "whyNotUpstreamFirst": "The defect is unsound narrowing, not only a refusal; upstream receives docs/compiler-requests/narrowed-member-multi-alternative-selection.md with the measured root cause.",
+      "unblocks": "The narrowed-member refusal in @flighthq/tray createTrayIcon; the function then needs the twin-carrier contextual union conversion (separate). No other SDK site measured.",
+      "expires": "when upstream computes a union-member-test complement per source member rather than per C++ slot (docs/compiler-requests/narrowed-member-multi-alternative-selection.md).",
+      "appliedOn": "2026-10-13"
     }
   ]
 }

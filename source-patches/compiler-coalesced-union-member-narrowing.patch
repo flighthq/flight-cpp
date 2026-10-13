@@ -1,0 +1,149 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCoalescedUnionMemberNarrowing.test.ts b/packages/compiler-backend-cpp/src/cppCoalescedUnionMemberNarrowing.test.ts
+new file mode 100644
+index 0000000..55afe6a
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppCoalescedUnionMemberNarrowing.test.ts
+@@ -0,0 +1,90 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/x/src/x.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/x', upstreamDirectory: '/flight' });
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++function body(source: string, name: string): string {
++  const lines = emit(source).split('\n');
++  const start = lines.findIndex((line) => line.includes(` ${name}(`) && line.startsWith('inline '));
++  const end = lines.findIndex((line, index) => index > start && line === '}');
++  return lines.slice(start, end + 1).join('\n');
++}
++
++// `@flighthq/types` TrayCreateCapabilityResult. The two discriminant-only arms are one C++ struct, and the
++// three `error` arms are another, so the variant has two alternatives for five source members.
++const result = `export type R =
++  | { readonly outcome: 'created' }
++  | { readonly outcome: 'cancelled' }
++  | { readonly error?: unknown; readonly outcome: 'runtime-api-unavailable' }
++  | { readonly error?: unknown; readonly outcome: 'invalid-icon' }
++  | { readonly error?: unknown; readonly outcome: 'tray-create-failed' };
++`;
++
++describe('narrowing across members that share one C++ alternative', () => {
++  it('lowers the createTrayIcon failure read: excluding created keeps cancelled reachable', () => {
++    const emitted = body(
++      `${result}export function f(result: R): unknown {
++        if (result.outcome !== 'created') { return 'error' in result ? result.error : undefined; }
++        return undefined;
++      }`,
++      'f',
++    );
++    expect(emitted).toContain('if (!((result.index() == 1 && std::get<1>(result)->outcome == flight::String("created")))) {');
++    // The member test is an alternative test over the whole variant, never a projection of one alternative.
++    expect(emitted).toContain('return (result.index() == 0 ? std::visit(');
++    expect(emitted).not.toContain('std::get<0>(result)');
++    expect(emitted).not.toContain(' in ');
++  });
++
++  it('passes a narrowing that still covers every alternative as the binding itself', () => {
++    const emitted = body(
++      `${result}function use(r: R): string { return r.outcome; }
++      export function k(r: R): string { if (r.outcome !== 'created') { return use(r); } return 'x'; }`,
++      'k',
++    );
++    expect(emitted).toContain('return use(r);');
++  });
++
++  it('reads a member of the complement over every alternative it still contains', () => {
++    const emitted = body(
++      `${result}export function k(r: R): string { if (r.outcome !== 'created') { return r.outcome; } return 'x'; }`,
++      'k',
++    );
++    expect(emitted).toContain('std::is_same_v<Value, flight::Ref<outcome_');
++    expect(emitted).toContain('std::is_same_v<Value, flight::Ref<error_outcome_');
++  });
++
++  it('refuses, rather than projecting one alternative, when the excluded member shares its alternative', () => {
++    // `a` and `c` are one struct. Before, excluding `a` dropped that whole alternative, so `'x' in v` was
++    // emitted as source text over `std::get<1>(v)` -- a value that is `c` would have been read as `b`.
++    expect(() =>
++      emit(`type D = { kind: 'a'; x: number } | { kind: 'b'; y: string } | { kind: 'c'; x: number };
++      export function d(v: D): number { if (v.kind !== 'a') { return 'x' in v ? v.x : 0; } return -1; }`),
++    ).toThrow(/requires proven union member access/);
++  });
++
++  it('keeps members with different C++ types in different alternatives', () => {
++    const emitted = body(
++      `type A = { kind: 'a'; x: number } | { kind: 'b'; x: string } | { kind: 'c'; y: number };
++      export function a(v: A): unknown { if ('x' in v) { return v.x; } return 0; }`,
++      'a',
++    );
++    expect(emitted).toContain('if (v.index() == 0 || v.index() == 1) {');
++    expect(emitted).toContain('std::variant<double, flight::String>');
++  });
++
++  it('leaves a narrowing that still admits absence on its own path', () => {
++    const emitted = body(
++      `${result}export function n(r: R | null): R | null { if (r !== null && r.outcome !== 'created') { return r; } return null; }`,
++      'n',
++    );
++    expect(emitted).not.toContain('std::get<');
++  });
++});
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index c591cde..f38122f 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -16105,9 +16105,15 @@ function getCppUnionMemberComplementTypeCpp(
+       slot.sourceAlternatives.some((member) => isDeepStrictEqual(member, evidence.member)),
+   );
+   if (selected.length !== 1) return undefined;
+-  const remaining: Readonly<IrType>[] = plan.valueSlots
+-    .filter((slot) => slot !== selected[0])
+-    .flatMap((slot) => slot.sourceAlternatives);
++  // A slot can hold several source members that share one C++ type -- `{ outcome: 'created' }` and
++  // `{ outcome: 'cancelled' }` are one struct. A test that excluded one of them excluded only that member,
++  // not the slot: the others stay reachable and must stay in the complement. When the test cannot be tied
++  // to one of the slot's own members, it cannot say which of them it excluded, so no narrowing is claimed.
++  const siblings = selected[0]!.sourceAlternatives.filter((member) => !isDeepStrictEqual(member, evidence.member));
++  if (siblings.length === selected[0]!.sourceAlternatives.length && siblings.length > 1) return undefined;
++  const remaining: Readonly<IrType>[] = plan.valueSlots.flatMap((slot) =>
++    slot === selected[0] ? siblings : slot.sourceAlternatives,
++  );
+   return createIrTypeEvidenceUnionCpp([
+     ...remaining,
+     ...union.types.filter((member) => member.kind === 'null' || member.kind === 'undefined'),
+@@ -17009,6 +17015,29 @@ function emitCppNarrowedUnionValueCpp(
+       return matches.length === 1 ? matches[0] : undefined;
+     });
+     const uniqueAlternatives = new Set(selectedAlternatives);
++    // Several narrowed source members can share one C++ alternative, because members that differ only in a
++    // string discriminant are stored as one struct. Each member was matched to exactly one alternative above;
++    // what remains is how many distinct alternatives they name. A narrowed member that matched none, or
++    // more than one, leaves an `undefined` here and keeps the refusal below.
++    if (
++      selectedAlternatives.every((alternative) => alternative !== undefined) &&
++      !hasIrTypeAbsentMember(narrowedUnion)
++    ) {
++      const narrowedPlan = getCppUnionRepresentationPlan(narrowedUnion, context);
++      // Every alternative still reachable: the narrowing removed source members, not C++ alternatives, so the
++      // value is the binding itself -- provided the narrowed union is planned as the very same variant, slot
++      // for slot, so nothing is converted or copied.
++      if (
++        uniqueAlternatives.size === representation.alternatives.length &&
++        narrowedPlan.kind === 'multiVariant' &&
++        narrowedPlan.valueSlots.length === representation.alternatives.length &&
++        narrowedPlan.valueSlots.every(
++          (slot, index) => slot.targetType === representation.alternatives[index]!.targetType,
++        )
++      ) {
++        return binding;
++      }
++    }
+     if (
+       selectedAlternatives.every(
+         (alternative): alternative is CppVariantRepresentation['alternatives'][number] => alternative !== undefined,

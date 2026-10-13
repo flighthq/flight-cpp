@@ -95,8 +95,24 @@ so no patch is carried. The `tween-stagger-origin-selection` override supplies i
 `std::variant<double, flight::String>`: each literal test selects the string alternative holding that
 literal, and the final branch reads the numeric alternative.
 
-## Carrying workaround
+## Root cause and carried compiler patch
 
-None, deliberately. The landed patch `tray-create-result-and-runtime-owner` removes the sibling-owner
-blocker *ahead* of this one and leaves this refusal standing rather than papering it over with the
-rewrite above. The rest of `tray.ts`'s refusal chain is inventoried separately.
+The refusal concealed an unsound complement calculation. `TrayCreateCapabilityResult` stores the
+`created` and `cancelled` source members in one C++ alternative. Excluding `created` dropped that whole
+slot, including `cancelled`, and incorrectly told the later `'error' in result` expression that only the
+three error members remained. Selecting that alternative would have thrown `bad_variant_access` for a
+cancelled value.
+
+[`compiler-coalesced-union-member-narrowing.patch`](../../source-patches/compiler-coalesced-union-member-narrowing.patch)
+computes the complement per source member, retaining coalesced siblings. When the narrowed source union
+still covers every C++ alternative with the same slot plan and no absence, it keeps the original binding
+instead of projecting or copying it. Each narrowed member must still match exactly one alternative; an
+unmatched or ambiguous member remains a refusal.
+
+For Tray, `'error' in result` becomes an alternative test over the original variant, `cancelled` reaches
+the false arm, and each error arm retains its error object by identity. A scratch regeneration advances
+`createTrayIcon` to a separate contextual-union refusal; no Tray generated rows are committed here.
+
+The patch does not change writes through multi-alternative narrowed bindings, optional-chain
+discriminant lowering, or member-presence tests under optional bindings. Those measured boundaries
+remain separate compiler issues. No source rewrite is carried.
