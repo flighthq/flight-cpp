@@ -1622,15 +1622,15 @@
       "package": "@flighthq/tilemap",
       "status": "complete",
       "supplies": "packages/tilemap/src/tilemap.ts",
-      "derivedFrom": "56cffa2ef142c9a2a44612f94a00b2711b68e96be620860b57ab81e3da41deba",
-      "reason": "The emitter uses value access for reference-backed tile data and refuses coordinate, construction, clone, runtime, signal and tint functions across partial rows and flattened entity owners.",
-      "change": "Supplies coordinate and tile-rectangle calculations, data and entity construction, value-preserving clone, tint mutation, runtime slots and weak signal ownership over generated carriers.",
-      "equivalence": "Rows, columns and rectangles preserve atlas dimensions, spacing, margins and invalid sentinels; clone copies tile storage instead of aliasing it; mutations retain dirty ranges and signal identity without unsafe owner casts.",
-      "whyNotAPatchOrRepair": "Member-access repair closes only one emitted spelling. The remaining behavioral omissions require target runtime ownership and typed constructions that declaration insertion cannot express and portable source should not encode.",
+      "derivedFrom": "3d9dba5165fb9d19dca6b0d3487d154b37bf96fabbff4e712a898f8490268157",
+      "reason": "Re-derived against the a627849 emission. The emitter refuses bounds, runtime, entity construction, clone, signal ownership and tint declarations across readonly/writable structural assertions, flattened owners and unrepresented contextual unions. Its retained data initializer also returns optional row values from three-state lambdas, and its three retained mutators call the omitted getTilemapSignals; those compile defects are filed in partial-row-three-state-return.md and retained-declaration-calls-omitted-callee.md. TintMaterialData cannot widen to its declared MaterialData base because emitted interface heritage is flattened, filed in interface-heritage-widening.md.",
+      "change": "Supplies the complete current-pin module over the emitted Tilemap carriers: exact coordinate and rectangle queries, partial data and node construction, a fresh-runtime clone, bounds runtime behavior, identity-keyed runtime and signal slots, stable row-major resize/blit operations, and lazy identity-preserving tint material views.",
+      "equivalence": "Coordinates floor local positions and preserve -1/false sentinels without modifying failed outputs; bounds use columns/rows and tile dimensions only when an atlas exists; clone owns independent tile and material arrays and a fresh runtime; resize and block writes preserve row-major ordering and clipping; signals retain per-tilemap identity; tint allocation is lazy and retains unsigned RGBA through a structural refinement of the same MaterialData object.",
+      "whyNotAPatchOrRepair": "The compile-only optional returns and omitted-callee calls could be repaired textually, but the remaining behavior requires exact owner recovery, runtime and signal identity side storage, interface-refinement identity, and construction across flattened Node2D and TilemapRuntime owners. Declaration insertion cannot express those semantics, and the portable TypeScript already states them.",
       "unblocks": "tilemap.hpp compiles independently and supplies the tilemap package aggregators.",
       "remaining": "None in this module.",
-      "expires": "when nested reference access, partial shape construction, clone spreads, entity runtime slots and signal ownership emit directly.",
-      "authoredOn": "2026-10-07"
+      "expires": "when partial shape construction, flattened owner recovery, interface heritage, clone spreads, runtime slots and signal ownership emit directly.",
+      "authoredOn": "2026-10-12"
     },
     {
       "id": "physics2d-abi-variant-shape-encoding",

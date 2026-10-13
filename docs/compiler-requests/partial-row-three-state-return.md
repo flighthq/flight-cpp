@@ -47,6 +47,14 @@ first site exposes the same malformed return at the second, so both declared key
 `initializeMovieClipData` for `data?.timeline ?? null`. The `movieclip-timeline-node-construction`
 override carries that body in the required three-state shape.
 
+`@flighthq/tilemap/packages/tilemap/src/tilemap.ts` emits the same malformed return twice in
+`initializeTilemapData` at Flight `a627849` / flight-compiler `2b687ea`. The reads
+`data?.atlas ?? null` and `data?.materialData ?? null` each return the row accessor's
+`std::optional<Value>` from a lambda declared as `std::variant<Value, Null, Undefined>`. The direct
+header fails at lines 236 and 238; `contract.hpp` and `_internal_index.hpp` re-export the same errors.
+The `tilemap-runtime-and-nested-reference-boundaries` override carries both initializers without the
+invalid intermediate variant.
+
 ## Carrying workaround
 
 The `materials-custom-shader-records-partial-row-absence` emission repair is anchored to

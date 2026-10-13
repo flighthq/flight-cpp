@@ -45,6 +45,14 @@ was already repaired for the command family (`command-interface-heritage`). The 
 refining a base to a derived interface, is
 [flattened-interface-refinement-identity](flattened-interface-refinement-identity.md).
 
+The same missing heritage blocks `@flighthq/tilemap` at Flight `a627849` / flight-compiler
+`2b687ea`. `setTilemapTileTint` constructs a `TintMaterialData`, which extends `MaterialData`, and
+stores that exact object in the tilemap's `Array<MaterialData | null>`. The emitted owners are
+independent (`TintMaterialData` and `MaterialData` each inherit only `ReferenceEnabled`), so the
+derived reference cannot enter `Array<optional<Ref<MaterialData>>>` without splitting identity. The
+tilemap override preserves the single object through the runtime's structural owner attachment until
+declared C++ heritage makes the ordinary widening possible.
+
 ## Carrying workaround
 
 Emission repairs `adjustments-color-matrix-interface-heritage` and `adjustments-tint-interface-heritage`

@@ -133,3 +133,19 @@ aggregators that re-export it, five errors each -- while the refused module's ow
 because it does not claim the missing function exists. This is the case the "What would close this" note above already describes -- the omission has to
 propagate to declarations that call it -- with the caller on the far side of a module boundary rather than
 inside the module that refused.
+
+## Fifth measured site: `@flighthq/tilemap`
+
+The a627849 tilemap emission refuses `getTilemapSignals` but retains all three mutators that call it:
+`clearTilemap`, `setTilemapTile`, and `setTilemapTiles`. Each emitted body names
+`get_tilemap_signals`, for which the header contains only a `NOT GENERATED` comment and no declaration.
+
+```
+generated/include/flight/tilemap/tilemap.hpp:445:18: error: use of undeclared identifier 'get_tilemap_signals'
+generated/include/flight/tilemap/tilemap.hpp:460:18: error: use of undeclared identifier 'get_tilemap_signals'
+generated/include/flight/tilemap/tilemap.hpp:498:18: error: use of undeclared identifier 'get_tilemap_signals'
+```
+
+The direct header and both aggregators fail together. The refusal itself is the flattened-owner
+identity problem already carried by the package override; this measured site is specifically the
+additional compile defect in the three declarations the emitter claims it retained.

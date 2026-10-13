@@ -1362,6 +1362,8 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("onTextInput") && requires { object.on_text_input; }) return (object.on_text_input);
   else if constexpr (Key::name.view() == std::string_view("onThermalStateChange") && requires { object.on_thermal_state_change; }) return (object.on_thermal_state_change);
   else if constexpr (Key::name.view() == std::string_view("onTick") && requires { object.on_tick; }) return (object.on_tick);
+  else if constexpr (Key::name.view() == std::string_view("onTileChanged") && requires { object.on_tile_changed; }) return (object.on_tile_changed);
+  else if constexpr (Key::name.view() == std::string_view("onTilesChanged") && requires { object.on_tiles_changed; }) return (object.on_tiles_changed);
   else if constexpr (Key::name.view() == std::string_view("onTrigger") && requires { object.on_trigger; }) return (object.on_trigger);
   else if constexpr (Key::name.view() == std::string_view("onUnlockScreen") && requires { object.on_unlock_screen; }) return (object.on_unlock_screen);
   else if constexpr (Key::name.view() == std::string_view("onUpdate") && requires { object.on_update; }) return (object.on_update);
@@ -2000,6 +2002,9 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("thicknessMapUvSet") && requires { object.thickness_map_uv_set; }) return (object.thickness_map_uv_set);
   else if constexpr (Key::name.view() == std::string_view("threshold") && requires { object.threshold; }) return (object.threshold);
   else if constexpr (Key::name.view() == std::string_view("thumb") && requires { object.thumb; }) return (object.thumb);
+  else if constexpr (Key::name.view() == std::string_view("tileHeight") && requires { object.tile_height; }) return (object.tile_height);
+  else if constexpr (Key::name.view() == std::string_view("tileWidth") && requires { object.tile_width; }) return (object.tile_width);
+  else if constexpr (Key::name.view() == std::string_view("tiles") && requires { object.tiles; }) return (object.tiles);
   else if constexpr (Key::name.view() == std::string_view("tilesets") && requires { object.tilesets; }) return (object.tilesets);
   else if constexpr (Key::name.view() == std::string_view("time") && requires { object.time; }) return (object.time);
   else if constexpr (Key::name.view() == std::string_view("timeElapsed") && requires { object.time_elapsed; }) return (object.time_elapsed);
@@ -3545,6 +3550,8 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("onTextInput") && requires(Object& object) { object.on_text_input; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_text_input)>>{};
   else if constexpr (Key::name.view() == std::string_view("onThermalStateChange") && requires(Object& object) { object.on_thermal_state_change; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_thermal_state_change)>>{};
   else if constexpr (Key::name.view() == std::string_view("onTick") && requires(Object& object) { object.on_tick; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_tick)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onTileChanged") && requires(Object& object) { object.on_tile_changed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_tile_changed)>>{};
+  else if constexpr (Key::name.view() == std::string_view("onTilesChanged") && requires(Object& object) { object.on_tiles_changed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_tiles_changed)>>{};
   else if constexpr (Key::name.view() == std::string_view("onTrigger") && requires(Object& object) { object.on_trigger; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_trigger)>>{};
   else if constexpr (Key::name.view() == std::string_view("onUnlockScreen") && requires(Object& object) { object.on_unlock_screen; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_unlock_screen)>>{};
   else if constexpr (Key::name.view() == std::string_view("onUpdate") && requires(Object& object) { object.on_update; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().on_update)>>{};
@@ -4183,6 +4190,9 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("thicknessMapUvSet") && requires(Object& object) { object.thickness_map_uv_set; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().thickness_map_uv_set)>>{};
   else if constexpr (Key::name.view() == std::string_view("threshold") && requires(Object& object) { object.threshold; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().threshold)>>{};
   else if constexpr (Key::name.view() == std::string_view("thumb") && requires(Object& object) { object.thumb; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().thumb)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tileHeight") && requires(Object& object) { object.tile_height; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tile_height)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tileWidth") && requires(Object& object) { object.tile_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tile_width)>>{};
+  else if constexpr (Key::name.view() == std::string_view("tiles") && requires(Object& object) { object.tiles; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tiles)>>{};
   else if constexpr (Key::name.view() == std::string_view("tilesets") && requires(Object& object) { object.tilesets; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().tilesets)>>{};
   else if constexpr (Key::name.view() == std::string_view("time") && requires(Object& object) { object.time; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().time)>>{};
   else if constexpr (Key::name.view() == std::string_view("timeElapsed") && requires(Object& object) { object.time_elapsed; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().time_elapsed)>>{};
@@ -5731,6 +5741,8 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->on_text_input; }) owner.bind_named("onTextInput", [object]() -> decltype(auto) { return (object->on_text_input); });
   if constexpr (requires { object->on_thermal_state_change; }) owner.bind_named("onThermalStateChange", [object]() -> decltype(auto) { return (object->on_thermal_state_change); });
   if constexpr (requires { object->on_tick; }) owner.bind_named("onTick", [object]() -> decltype(auto) { return (object->on_tick); });
+  if constexpr (requires { object->on_tile_changed; }) owner.bind_named("onTileChanged", [object]() -> decltype(auto) { return (object->on_tile_changed); });
+  if constexpr (requires { object->on_tiles_changed; }) owner.bind_named("onTilesChanged", [object]() -> decltype(auto) { return (object->on_tiles_changed); });
   if constexpr (requires { object->on_trigger; }) owner.bind_named("onTrigger", [object]() -> decltype(auto) { return (object->on_trigger); });
   if constexpr (requires { object->on_unlock_screen; }) owner.bind_named("onUnlockScreen", [object]() -> decltype(auto) { return (object->on_unlock_screen); });
   if constexpr (requires { object->on_update; }) owner.bind_named("onUpdate", [object]() -> decltype(auto) { return (object->on_update); });
@@ -6369,6 +6381,9 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->thickness_map_uv_set; }) owner.bind_named("thicknessMapUvSet", [object]() -> decltype(auto) { return (object->thickness_map_uv_set); });
   if constexpr (requires { object->threshold; }) owner.bind_named("threshold", [object]() -> decltype(auto) { return (object->threshold); });
   if constexpr (requires { object->thumb; }) owner.bind_named("thumb", [object]() -> decltype(auto) { return (object->thumb); });
+  if constexpr (requires { object->tile_height; }) owner.bind_named("tileHeight", [object]() -> decltype(auto) { return (object->tile_height); });
+  if constexpr (requires { object->tile_width; }) owner.bind_named("tileWidth", [object]() -> decltype(auto) { return (object->tile_width); });
+  if constexpr (requires { object->tiles; }) owner.bind_named("tiles", [object]() -> decltype(auto) { return (object->tiles); });
   if constexpr (requires { object->tilesets; }) owner.bind_named("tilesets", [object]() -> decltype(auto) { return (object->tilesets); });
   if constexpr (requires { object->time; }) owner.bind_named("time", [object]() -> decltype(auto) { return (object->time); });
   if constexpr (requires { object->time_elapsed; }) owner.bind_named("timeElapsed", [object]() -> decltype(auto) { return (object->time_elapsed); });
@@ -7950,6 +7965,8 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(on_text_input)
   FLIGHT_SDK_ROW_WIDENS(on_thermal_state_change)
   FLIGHT_SDK_ROW_WIDENS(on_tick)
+  FLIGHT_SDK_ROW_WIDENS(on_tile_changed)
+  FLIGHT_SDK_ROW_WIDENS(on_tiles_changed)
   FLIGHT_SDK_ROW_WIDENS(on_trigger)
   FLIGHT_SDK_ROW_WIDENS(on_unlock_screen)
   FLIGHT_SDK_ROW_WIDENS(on_update)
@@ -8588,6 +8605,9 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(thickness_map_uv_set)
   FLIGHT_SDK_ROW_WIDENS(threshold)
   FLIGHT_SDK_ROW_WIDENS(thumb)
+  FLIGHT_SDK_ROW_WIDENS(tile_height)
+  FLIGHT_SDK_ROW_WIDENS(tile_width)
+  FLIGHT_SDK_ROW_WIDENS(tiles)
   FLIGHT_SDK_ROW_WIDENS(tilesets)
   FLIGHT_SDK_ROW_WIDENS(time)
   FLIGHT_SDK_ROW_WIDENS(time_elapsed)

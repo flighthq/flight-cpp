@@ -40483,9 +40483,7 @@
       "status": "dependency-incomplete"
     },
     {
-      "consumers": [
-        "@flighthq/tilemap/packages/tilemap/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/tilemap",
@@ -40506,7 +40504,7 @@
       },
       "path": "flight/tilemap/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/tilemap/packages/tilemap/src/contract.ts"
+        "@flighthq/tilemap/packages/tilemap/src/tilemap.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -40515,7 +40513,8 @@
       "consumers": [
         "@flighthq/interaction/packages/interaction/src/registerTilemapHitTest.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledProject.ts",
-        "@flighthq/tilemap/packages/tilemap/src/contract.ts"
+        "@flighthq/tilemap/packages/tilemap/src/contract.ts",
+        "@flighthq/tilemap/packages/tilemap/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:01fba75e0196b0512c6e524438aba58e4d90965c4ccdcdf36b239c8701748dac",
@@ -40524,10 +40523,10 @@
         "sha256:223a67a3a17e9295d3a82764d7ffdb87a083334aaf8968f79bfc57bb46af1fb3",
         "sha256:2e62d2d48ddb87da7df52dec94230faab2f2138327a8f8486ef8ff500f103cd3",
         "sha256:3d9a277dfe43514db4a457f61e08d2029d2ac44653bab49a41383ff1e6e86931",
-        "sha256:46f01a256db106e82e201f421b9e581d88070adbc2bdbde583e4eda192ef5891",
         "sha256:4a921ba5ed5f48491c9e76bdeb9e69b7e05fbe10028337591ef5ec205a243fb4",
         "sha256:4ec9dee970470ea0d55c79d1dc2d263811d1087e42ee98fd04a4462b70a2bd47",
         "sha256:5394d0765144de33a76ae848cfc6102048205612d105f4d3cd0f2b78ff074cd8",
+        "sha256:5aad5f440f793618c4ce5e1fce59b97005e7daa9d0149933000eece5d20facfa",
         "sha256:5addd6c295f66c46ef9ccdfc21ef4f81fc64683c3c5ceb83426f967c23906213",
         "sha256:7613ba5445e6c1b9a5d0160ad8f6566c6eac26feec26bc16c2b1d1855a4031ea",
         "sha256:764eb32607d6d8e1aef6b0787649b419a30e710c8ed22fcba5831bfcde1f84b4",
