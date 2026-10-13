@@ -1,6 +1,7 @@
 #pragma once
 
 #include <compare>
+#include <concepts>
 #include <cstddef>
 #include <variant>
 
@@ -26,5 +27,18 @@ inline constexpr Null null{};
 
 template <typename Value>
 using Presence = std::variant<Undefined, Null, Value>;
+
+// JavaScript `===` between a nullable, optional value -- the three-state carrier `std::variant<Value, Null,
+// Undefined>` the emitter writes for `T | null | undefined` -- and a present `Value`: true exactly when the
+// carrier holds a `Value` equal to it. Null and undefined never equal a present value, so strict and loose
+// equality agree here and one operator serves `==` and `===`. C++20 rewrites `!=` and the reversed operand
+// order from it. Found by argument-dependent lookup through `flight::Null`.
+// See docs/compiler-requests/nullish-variant-strict-equality.md.
+template <typename Value>
+  requires(!std::same_as<Value, Null> && !std::same_as<Value, Undefined> && std::equality_comparable<Value>)
+[[nodiscard]] bool operator==(const std::variant<Value, Null, Undefined>& carrier, const Value& value) {
+  const auto* present = std::get_if<Value>(&carrier);
+  return present != nullptr && *present == value;
+}
 
 } // namespace flight

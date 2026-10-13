@@ -253,6 +253,20 @@ void test_array_is_array_optional_payload() {
         "Array.isArray still reports false for a present non-array payload");
 }
 
+void test_nullish_variant_strict_equality() {
+  using Carrier = std::variant<flight::String, flight::Null, flight::Undefined>;
+  const Carrier text = flight::String("add");
+  const Carrier none = flight::null;
+  const Carrier absent = flight::undefined;
+  check(text == flight::String("add") && !(text == flight::String("normal")), "a present carrier equals its value and only it");
+  check(!(none == flight::String("add")) && !(absent == flight::String("add")), "null and undefined never equal a present value");
+  check(none != flight::String("") && absent != flight::String("") && text != flight::String("ad"), "!= is the negation, through the rewrite");
+  check(flight::String("add") == text && !(flight::String("add") == none), "the reversed operand order is the same comparison");
+  using Numbers = std::variant<double, flight::Null, flight::Undefined>;
+  check(Numbers{1.5} == 1.5 && !(Numbers{std::nan("")} == std::nan("")) && !(Numbers{flight::null} == 0.0),
+        "a number carrier compares by value, NaN never equal, null never 0");
+}
+
 void test_null_from_nullptr() {
   std::variant<flight::String, flight::Null, flight::Undefined> value = nullptr;
   check(std::holds_alternative<flight::Null>(value), "nullptr selects the Null alternative");
@@ -3952,6 +3966,7 @@ int main() {
   test_array_get_optional_index();
   test_array_is_array_optional_payload();
   test_null_from_nullptr();
+  test_nullish_variant_strict_equality();
   test_structural_ref_from_variant();
   test_array_of();
   test_copy_within();

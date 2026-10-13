@@ -47,3 +47,14 @@ module header, and `ik_constraint2_d.hpp`, which includes it.
 
 [`skeleton2d-bone-name-present-comparison`](../../source-patches/skeleton2d-bone-name-present-comparison.patch)
 narrows the bone name to a present local before comparing.
+
+## Answered in the runtime
+
+`flight/presence.hpp` now defines the comparison: `operator==(const std::variant<Value, Null, Undefined>&, const
+Value&)`, found by argument-dependent lookup through `flight::Null`, with direct tests in `tests/runtime_test.cpp`
+(`test_nullish_variant_strict_equality`) for the present, null, undefined, reversed, `!=` and NaN cases. Emitted
+`===` against a present value now compiles as written. Two packages are affected:
+- `@flighthq/particles-formats` `particleDesignerSerialize.ts` (`blendModeToSrc`, `blendModeToDst`) compiles with
+  no patch.
+- `skeleton2d-bone-name-present-comparison` is no longer needed for its compile error. It stays until skeleton2d
+  is next regenerated without it, which is outside this change.
