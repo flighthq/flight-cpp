@@ -450,6 +450,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_lifecycle_transitions_test",
+    srcs = ["generated_lifecycle_transitions_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_math_test",
     srcs = ["generated_math_test.cpp"],
     size = "small",
@@ -1031,6 +1038,7 @@ test_suite(
         ":generated_keyboard_test",
         ":generated_intl_cache_test",
         ":generated_lifecycle_test",
+        ":generated_lifecycle_transitions_test",
         ":generated_app_loop_test",
         ":generated_app_window_test",
         ":generated_app_core_test",

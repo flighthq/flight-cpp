@@ -389,7 +389,34 @@ Upstream carries per-package records at `flight/agents/packages/lifecycle/`: `st
 
 ### Existing CTest coverage
 
-- `flight_cpp.generated_lifecycle` — `tests/generated_lifecycle_test.cpp` (dedicated)
+Two dedicated tests. The package was already reached before this unit; the second file is new and leaves the first
+untouched.
+
+- `flight_cpp.generated_lifecycle` — `tests/generated_lifecycle_test.cpp` (dedicated), PRE-EXISTING. It pins the
+  shape of the module: the seven signals, the operation explanations and their host/sentinel layer, launch-kind
+  delegation and its `warm` fallback, one raw/paused/resumed/saved/restored sequence, replacement and idempotent
+  detach with release counts, the state helpers, a cancelled back request, and dispose clearing the saved bag.
+- `flight_cpp.generated_lifecycle_transitions` — `tests/generated_lifecycle_transitions_test.cpp` (dedicated), NEW.
+  It takes the EDGE TABLE the first file samples rather than pins, and the save/restore handoff:
+  `onStateChange` is raw, so a repeat notification of the same state is reported again; `onPause`/`onResume` are
+  deduped edges across the `active` boundary only, so `active`→`inactive` (the interruption edge) pauses and
+  `inactive`↔`background` fires neither in either direction; a repeat while already away from `active` does not
+  pause twice; attaching records the provider's state AT ATTACH as the baseline without emitting, so the first
+  move into `active` is a genuine edge from that baseline; the bag handed to `onSaveState` is the very bag a later
+  `onRestoreState` receives (asserted by writing in the save listener and reading it back in the restore listener,
+  which a fresh bag would lose), and a second save replaces what the second restore carries; re-attaching releases
+  the replaced subscription exactly once and the registry keeps one per app; a provider that omits the memory
+  capability is never asked to subscribe to it and still detaches cleanly; the state queries read the provider at
+  call time; and `requestAppBack` answers true unless a listener actually cancelled, with no listener at all being
+  the default path rather than a veto. It drives the signals through connected listeners rather than by replacing
+  each signal's `emit`, so the signal's own slot machinery is on the path.
+
+Mutations against the override that supplies the module, eight with all eight resolved and seven with teeth:
+dropping the resume edge's dedup 2 failures, dropping the pause edge's 3, emitting `onStateChange` only on edges
+5, handing the restore a fresh bag 2, hard-coding the attach baseline to `active` 1, keeping the registration
+across a detach 1, and inverting the back veto 3. The eighth is equivalent by construction and is recorded rather
+than counted: rewriting the back request's `!present || !cancelled` as `!(present && cancelled)` is De Morgan on
+the same two operands, so it changes nothing.
 
 ### Local generation status
 
