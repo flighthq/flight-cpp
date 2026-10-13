@@ -1231,7 +1231,14 @@ decltype(auto) row_get(const StructuralRef<Schema>& source) {
     else return **stored;
   } else {
     auto* value = source.shared_owner()->template named_value<Value>(Key::name.view());
-    if (!value) throw std::out_of_range("required structural row property is absent");
+    if (!value) {
+      if constexpr (detail::optional_traits<Value>::optional &&
+                    detail::schema_readonly<Schema>) {
+        static const Value absent{};
+        return std::as_const(absent);
+      }
+      throw std::out_of_range("required structural row property is absent");
+    }
     if constexpr (detail::schema_readonly<Schema>) return std::as_const(*value);
     else return *value;
   }

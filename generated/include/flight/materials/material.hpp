@@ -61,7 +61,7 @@ inline bool equals_material(flight::StructuralRef<flight::RowReadonly<flight::Ro
 }
 
 template <typename T>
-inline std::optional<T> get_material_of_kind(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>> material, std::remove_cvref_t<decltype(std::declval<T&>().kind)> kind) {
+inline std::optional<T> get_material_of_kind(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>> material, std::remove_cvref_t<decltype(std::declval<T&>()->kind)> kind) {
   return ((material.has_value() && (flight::row_get<flight::RowKey<"kind">>(material.value()) == kind)) ? std::optional<T>{flight::structural_ref_cast<T>(material.value())} : std::nullopt);
 }
 
@@ -81,7 +81,8 @@ inline flight::Ref<flight::types::StandardPbrMaterialProperties> clone_standard_
   return flight::make_ref<flight::types::StandardPbrMaterialProperties>(flight::types::StandardPbrMaterialProperties{.alpha_map = flight::row_get<flight::RowKey<"alphaMap">>(source), .base_color = flight::row_get<flight::RowKey<"baseColor">>(source), .base_color_map = flight::row_get<flight::RowKey<"baseColorMap">>(source), .emissive = flight::row_get<flight::RowKey<"emissive">>(source), .emissive_map = flight::row_get<flight::RowKey<"emissiveMap">>(source), .emissive_strength = flight::row_get<flight::RowKey<"emissiveStrength">>(source), .metallic = flight::row_get<flight::RowKey<"metallic">>(source), .metallic_roughness_map = flight::row_get<flight::RowKey<"metallicRoughnessMap">>(source), .normal_map = flight::row_get<flight::RowKey<"normalMap">>(source), .normal_scale = flight::row_get<flight::RowKey<"normalScale">>(source), .occlusion_map = flight::row_get<flight::RowKey<"occlusionMap">>(source), .occlusion_strength = flight::row_get<flight::RowKey<"occlusionStrength">>(source), .roughness = flight::row_get<flight::RowKey<"roughness">>(source)});
 }
 
-inline void copy_material_fields(flight::Ref<flight::types::Material> dst, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>> src, flight::String kind) {
+template <typename T>
+inline void copy_material_fields(T dst, flight::StructuralRef<flight::RowReadonly<flight::RowOf<T>>> src, flight::String kind) {
   flight::NamedProperties dst_fields = flight::named_properties(dst);
   flight::NamedProperties src_fields = flight::named_properties(src);
   for (auto key : ([&]() { const auto named_view_3 = src_fields; const auto named_keys_3 = named_view_3.keys(); return flight::Array<flight::String>(named_keys_3.begin(), named_keys_3.end()); }())) {
@@ -90,7 +91,7 @@ inline void copy_material_fields(flight::Ref<flight::types::Material> dst, fligh
     }
     auto value = src_fields.get(key);
     if ((((key == flight::String("standard")) && value.has_value()) && (([&]() -> flight::String { const auto& typeof_value = value; if (!typeof_value.has_value()) return flight::String("undefined"); return typeof_value.value().type_of(); }()) == flight::String("object")))) {
-      ([&]() { const auto& named_write_receiver = dst; const auto named_write_key = key; auto assignment_value = clone_standard_pbr_material_properties(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::StandardPbrMaterialProperties>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::StandardPbrMaterialProperties>>>>(([&]() -> flight::Ref<flight::types::StandardPbrMaterialProperties> { const auto& erased_value = value.value(); auto erased_object = erased_value.object_if<flight::types::StandardPbrMaterialProperties>(); if (!erased_object) throw std::logic_error("erased value does not hold the asserted object type"); return erased_object; }())))); if (!flight::named_properties(named_write_receiver).set(named_write_key, flight::Any::object(assignment_value))) throw std::logic_error("Flight named-property write rejected key or value"); return assignment_value; }());
+      ([&]() { const auto& named_write_receiver = dst; const auto named_write_key = key; auto assignment_value = clone_standard_pbr_material_properties(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::StandardPbrMaterialProperties>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::StandardPbrMaterialProperties>>>>(([&]() -> flight::Ref<flight::types::StandardPbrMaterialProperties> { const auto& erased_value = value.value(); auto erased_object = erased_value.template object_if<flight::types::StandardPbrMaterialProperties>(); if (!erased_object) throw std::logic_error("erased value does not hold the asserted object type"); return erased_object; }())))); if (!flight::named_properties(named_write_receiver).set(named_write_key, flight::Any::object(assignment_value))) throw std::logic_error("Flight named-property write rejected key or value"); return assignment_value; }());
     }
     else {
       ([&]() { const auto& named_write_receiver_2 = dst; const auto named_write_key_2 = key; auto assignment_value_2 = value.value(); if (!flight::named_properties(named_write_receiver_2).set(named_write_key_2, assignment_value_2)) throw std::logic_error("Flight named-property write rejected key or value"); return assignment_value_2; }());
@@ -99,18 +100,21 @@ inline void copy_material_fields(flight::Ref<flight::types::Material> dst, fligh
   ([&]() { const auto& named_write_receiver_3 = dst; const auto named_write_key_3 = flight::String("kind"); auto assignment_value_3 = kind; if (!flight::named_properties(named_write_receiver_3).set(named_write_key_3, flight::Any(assignment_value_3))) throw std::logic_error("Flight named-property write rejected key or value"); return assignment_value_3; }());
 }
 
-inline flight::Ref<flight::types::Material> clone_material(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>> source) {
-  flight::types::EntityConstruction<flight::Ref<flight::types::Material>> clone = flight::entity::allocate_entity<flight::Ref<flight::types::Material>>();
-  flight::row_set<flight::RowKey<"kind">>(clone, flight::row_get<flight::RowKey<"kind">>(source));
-  copy_material_fields(flight::structural_ref_cast<flight::Ref<flight::types::Material>>(clone), source, flight::row_get<flight::RowKey<"kind">>(source));
-  return flight::entity::finish_entity<flight::Ref<flight::types::Material>>(clone);
+template <typename T>
+inline T clone_material(flight::StructuralRef<flight::RowReadonly<flight::RowOf<T>>> source) {
+  flight::types::EntityConstruction<T> out = flight::entity::allocate_entity<T>();
+  flight::row_set<flight::RowKey<"kind">>(out, flight::row_get<flight::RowKey<"kind">>(source));
+  T clone = flight::entity::finish_entity<T>(out);
+  copy_material_fields<T>(clone, source, flight::row_get<flight::RowKey<"kind">>(source));
+  return clone;
 }
 
-inline void copy_material(flight::Ref<flight::types::Material> out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>> source) {
-  if ((flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>(out) == source)) {
+template <typename T>
+inline void copy_material(T out, flight::StructuralRef<flight::RowReadonly<flight::RowOf<T>>> source) {
+  if ((flight::StructuralRef<flight::RowReadonly<flight::RowOf<T>>>(out) == source)) {
     return;
   }
-  copy_material_fields(out, source, flight::row_get<flight::RowKey<"kind">>(source));
+  copy_material_fields<T>(out, source, flight::row_get<flight::RowKey<"kind">>(source));
 }
 
 } // namespace flight::materials

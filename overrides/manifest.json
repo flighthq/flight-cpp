@@ -8,7 +8,7 @@
       "path": "flight/materials/material_presets.hpp",
       "package": "@flighthq/materials",
       "status": "complete",
-      "derivedFrom": "bf3c6c8320c6eb7cbfe4585a9c5b8d888039630d85aaa01172ad3e5f859a14d1",
+      "derivedFrom": "4eca63027cd53da0951ce63c5381943efe65a568f99773a39cdaf1557aa9085f",
       "reason": "The emitter refuses all eleven preset functions at named Partial object shapes. The source-patched glass preset additionally names a concrete PBR extension value union whose Scene3D-GL-owned source patch remains pending rebase at this pin.",
       "change": "Implements every upstream preset as a thin assembly over the real material, property, and extension constructors, applying each preset field only when the caller's partial row does not contain that field. The glass result retains the concrete transmission allocation through its generated PbrExtension prefix view.",
       "equivalence": "All eleven packed colors and metallic and roughness defaults match the source, and caller fields retain spread-last precedence. Glass creates a fresh standard block and transmission descriptor, preserves nested overrides and surface options, keeps extension order, and aliases the same concrete extension allocation and control block without copying identity.",

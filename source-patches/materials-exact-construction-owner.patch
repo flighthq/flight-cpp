@@ -59,17 +59,20 @@ diff --git a/packages/materials/src/material.ts b/packages/materials/src/materia
 index b8b35ab..989df57 100644
 --- a/packages/materials/src/material.ts
 +++ b/packages/materials/src/material.ts
-@@ -3,22 +3,22 @@ import type { Kind, Material, EntityConstruction } from '@flighthq/types/contrac
+@@ -3,22 +3,23 @@ import type { Kind, Material, EntityConstruction } from '@flighthq/types/contrac
  
  // Structural shallow clone of any material entity. Scalar fields and kind are copied by
  // value; Texture/map handle references are shared (they are not owned by the material).
 -export function cloneMaterial(source: Readonly<Material>): Material {
 -  const clone = allocateEntity<Material>();
+-  clone.kind = source.kind;
 +export function cloneMaterial<T extends Material>(source: Readonly<T>): T {
-+  const clone = allocateEntity<T>();
-   clone.kind = source.kind;
++  const out = allocateEntity<T>();
++  out.kind = source.kind;
++  const clone = finishEntity(out);
    copyMaterialFields(clone, source, source.kind);
-   return finishEntity(clone);
+-  return finishEntity(clone);
++  return clone;
  }
  
  // Structural copy for pooling and reuse. Writes all own enumerable fields from `source`

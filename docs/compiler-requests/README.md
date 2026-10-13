@@ -27,6 +27,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-constrained-type-parameter-union-slot.patch`](../../source-patches/compiler-constrained-type-parameter-union-slot.patch) | [A local typed by a constrained type parameter is stored as the constraint](constrained-type-parameter-local-storage.md) |
 | [`compiler-dependent-callable-pack-reuse.patch`](../../source-patches/compiler-dependent-callable-pack-reuse.patch) | [A forwarded parameter pack is consumed more than once](forwarded-parameter-pack-reused.md) |
 | [`compiler-dependent-erased-object-recovery-template.patch`](../../source-patches/compiler-dependent-erased-object-recovery-template.patch) | [Dependent erased-object recovery needs a template disambiguator](dependent-erased-object-recovery-template.md) |
+| [`compiler-dependent-indexed-access-reference-carrier.patch`](../../source-patches/compiler-dependent-indexed-access-reference-carrier.patch) | [Dependent indexed access must read through the reference carrier](dependent-indexed-access-reference-carrier.md) |
 | [`compiler-contextual-imported-union-owner.patch`](../../source-patches/compiler-contextual-imported-union-owner.patch) | [Contextual construction of an imported union](compiler-contextual-imported-union-owner.md) |
 | [`compiler-erased-ref-weak-map-view.patch`](../../source-patches/compiler-erased-ref-weak-map-view.patch) | [Checked typed view of an erased WeakMap](compiler-erased-ref-weak-map-view.md) |
 | [`compiler-error-stack-cause-presence.patch`](../../source-patches/compiler-error-stack-cause-presence.patch) | [Runtime-declared Error members and their presence tests](compiler-error-stack-cause-presence.md) |
@@ -77,6 +78,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [Material clone and copy need the concrete generic owner](material-clone-needs-exact-generic-owner.md) —
   base-owner allocation cannot receive a concrete material's dynamically enumerated fields; carried
   by the materials exact-construction-owner source rewrite.
+- [Entity-construction generic calls must retain the finished owner argument](entity-construction-generic-call-inference.md) —
+  inference specializes the material clone helper as `EntityConstruction<T>` instead of its exact
+  finished `T`; carried by finishing the identity view before the private copy.
 - [`Array.isArray` must inspect an optional property's present payload](array-is-array-optional-property.md) —
   `@flighthq/adjustments` reads `Partial<ColorMatrixAdjustment>.colorMatrix` as an optional array,
   but the emitted predicate tests the optional carrier and always returns false; carried by the
@@ -388,6 +392,12 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `@flighthq/signals`' `emitSignalSafe` could not be instantiated for any signal. Carried by the `compiler-constrained-type-parameter-union-slot` patch.
 - [A forwarded parameter pack is consumed more than once](forwarded-parameter-pack-reused.md) —
   silent miscompilation: signal dispatch forwarded an rvalue argument into every slot, so slots after the first received moved-from values. Carried by the `compiler-dependent-callable-pack-reuse` patch.
+- [Optional row reads must accept absent sparse-owner storage](optional-row-read-from-sparse-owner.md) —
+  a `Partial<T>` options owner widened to an interface of optional properties threw on omitted fields;
+  pinned by structural-row and native materials option propagation tests.
+- [Dependent indexed access must read through the reference carrier](dependent-indexed-access-reference-carrier.md) —
+  `T['kind']` emitted a member read directly on `flight::Ref<T>`, preventing materials'
+  discriminant helper from being instantiated with any concrete material owner.
 - [A `for...of` over a Map must iterate it live, because its body may delete from it](map-for-of-live-iteration.md) —
   silent miscompilation: the loop lowers to a range-for over the map's storage, which a `delete` in the body invalidates; tween's `updateTweens` crashed on the pass after a target's last tween finished. Carried by the `tween-update-erased-target-writes` override.
 - [A generic argument that widens into an intersection parameter needs its conversion and template argument](generic-intersection-argument-widening.md) —

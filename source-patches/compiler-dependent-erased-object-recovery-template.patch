@@ -27,7 +27,7 @@ diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/pack
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-@@ -24503,7 +24503,10 @@ function getCppErasedValueAssertionCpp(
+@@ -24503,6 +24503,8 @@ function getCppErasedValueAssertionCpp(
          ? `${emitExpression(expression, context)}.value()`
          : emitExpression(expression, context);
 -    return `([&]() -> ${emitType(target, context)} { const auto& ${erased} = ${erasedValue}; auto ${recovered} = ${erased}.object_if<${referenceElement}>(); if (!${recovered}) throw std::logic_error("erased value does not hold the asserted object type"); return ${recovered}; }())`;

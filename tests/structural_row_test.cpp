@@ -337,6 +337,15 @@ int main() {
     check(flight::row_get<flight::RowKey<"width">>(options) ==
               std::optional<double>{3.0},
           "a supplied partial field keeps its optional storage shape");
+
+    const auto sparse_optional_options = flight::make_structural_ref<
+        flight::RowReadonly<flight::RowPartial<SubjectRow>>>();
+    const flight::StructuralRef<flight::RowReadonly<SubjectRow>> optional_view =
+        sparse_optional_options;
+    check(optional_view.identity() == sparse_optional_options.identity() &&
+              !flight::row_get<SubscribeKey>(optional_view).has_value(),
+          "an omitted optional property stays absent when the sparse options owner is read "
+          "through its ordinary row");
   }
 
   auto provider = flight::make_ref<TestClipboardChangeProvider>();

@@ -5294,10 +5294,10 @@
       "package": "@flighthq/clip"
     },
     {
-      "dependency": "flight",
-      "digest": "393faa8f8661815524803bed000639d13c970e03180e39458a0059aee0c4a390",
-      "id": "materials-named-standard-block-clone",
-      "module": "packages/materials/src/material.ts",
+      "dependency": "flight-compiler",
+      "digest": "a80a6ff738cbb866da5e886d103f755635be24ce9abe5e7555f315e5ab09f164",
+      "id": "compiler-dependent-indexed-access-reference-carrier",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
       "package": "@flighthq/materials"
     },
     {
@@ -5812,17 +5812,17 @@
       "package": "@flighthq/scene2d-canvas"
     },
     {
-      "dependency": "flight",
-      "digest": "ce881c33e262bfcb225d49a6fbfcdbaf7da39197cf26d52e9a8701b501443be6",
-      "id": "materials-glass-preset-option-boundary",
-      "module": "packages/materials/src/materialPresets.ts",
+      "dependency": "flight-compiler",
+      "digest": "7119c0b5403c63623534fd247dbc517dc7b669c224a3d3e81e0228333845f263",
+      "id": "compiler-dependent-erased-object-recovery-template",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
       "package": "@flighthq/materials"
     },
     {
       "dependency": "flight",
-      "digest": "f1f2e82c09eec7231defeaa3810416b780d7f20630b51b57b6370c403b07ca98",
-      "id": "materials-exact-construction-owner",
-      "module": "packages/materials/src/material3d.ts",
+      "digest": "9d081e3811ef93e22a210fe4873eca748170d1136e5ff48dc2e983871f816c15",
+      "id": "materials-named-standard-block-clone",
+      "module": "packages/materials/src/material.ts",
       "package": "@flighthq/materials"
     },
     {
@@ -5831,6 +5831,20 @@
       "id": "render-proxy-destroy-helper-owner",
       "module": "packages/render/src/renderState.ts and packages/types/src/RenderState.ts",
       "package": "@flighthq/render"
+    },
+    {
+      "dependency": "flight",
+      "digest": "ce881c33e262bfcb225d49a6fbfcdbaf7da39197cf26d52e9a8701b501443be6",
+      "id": "materials-glass-preset-option-boundary",
+      "module": "packages/materials/src/materialPresets.ts",
+      "package": "@flighthq/materials"
+    },
+    {
+      "dependency": "flight",
+      "digest": "f67f7a29c2b1b1355d163c4a4b0662a1fc4a0154edfd19aea7cf10f39926830f",
+      "id": "materials-exact-construction-owner",
+      "module": "packages/materials/src/material.ts and material3d.ts",
+      "package": "@flighthq/materials"
     },
     {
       "dependency": "flight",
