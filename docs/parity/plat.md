@@ -118,7 +118,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/tray` | 4 | 2 | 31 | none | none | 3 / 1 |
 | `@flighthq/statusbar` | 3 | 1 | 18 | dedicated | none | 2 / 1 |
 | `@flighthq/notification` | 3 | 1 | 38 | dedicated | partial | 2 / 1 |
-| `@flighthq/share` | 3 | 2 | 14 | dedicated | none | 2 / 1 |
+| `@flighthq/share` | 3 | 2 | 14 | dedicated | assisted | 2 / 1 |
 | `@flighthq/shortcut` | 4 | 2 | 27 | dedicated | none | 3 / 1 |
 | `@flighthq/shell` | 3 | 1 | 14 | none | none | 3 / 0 |
 | `@flighthq/ipc` | 3 | 1 | 12 | none | none | 3 / 0 |
@@ -1687,7 +1687,38 @@ Upstream carries per-package records at `flight/agents/packages/share/`: `status
 
 ### Existing CTest coverage
 
-- `flight_cpp.generated_share` — `tests/generated_share_test.cpp` (dedicated)
+- `flight_cpp.generated_share` — `tests/generated_share_test.cpp` (dedicated), PRE-EXISTING. The roll-up row above
+  already counted it, so the coverage column needed no correction; the TIER column did, and read `none` until this
+  unit changed it to `assisted`. The test was written for this repository before this unit and is not one I added; it
+  runs green at this pin.
+
+  The package ships a COMPLETE hand-written override (`share-complete-module`), not a partial one: the emitter refuses
+  `hasShareContentFields` (`unsupported-ir`, "nullable union member access requires presence-aware C++ narrowing") and
+  mis-lowers the non-empty files tuple with an `Array` carrier instead of its declared tuple, which is why the
+  override exists. There are NO stubs in it -- every function is implemented -- so unlike `@flighthq/notification`
+  there is no stub surface to leave uncovered.
+
+  This unit added the MUTATION BATTERY the file had none of. Fifteen mutations against the override, all fifteen
+  killed: the required and optional emptiness tests in `shareContentFieldPresent`, the `title` and `url` terms of
+  `hasShareContentFields`, `canShareContent` skipping its field guard, the data-URL comma test and its scheme test,
+  `shareContent` reaching the provider when the content is empty, `shareContentWithResult` reaching it when empty and
+  its `completed` flag and its emission loop, attaching signals actually detaching them, `disposeShareSignals` not
+  clearing the signal, `shareText` writing the title instead of the text, and the files tuple's rest starting at the
+  first file instead of the second.
+
+  Two mutations SURVIVED the first run and both were real holes rather than equivalences, so two cases were ADDED to
+  the existing file rather than worked around:
+  * `shareContentFieldPresent`'s OPTIONAL overload was only ever reached with an ABSENT value or a present NON-EMPTY
+    one, so dropping its emptiness test went unnoticed. A present-but-empty optional field is exactly what the
+    source's `field !== undefined && field !== ''` excludes.
+  * the data-URL scheme test had no fixture isolating it -- the failing file fixture fails on the missing COMMA --
+    so dropping `startsWith('data:')` went unnoticed.
+  Both are killed after the additions.
+
+  One measurement note, because it would mislead a reader of the battery: this file's `check` prints its failure
+  message with NO prefix, so a harness counting a `FAIL:` marker reads every detection as a crash. The battery here
+  classifies by EXIT CODE (0 = survived, 1 = a failed check returned from, anything else = a crash), and the counts
+  above are from that run.
 
 ### Local generation status
 

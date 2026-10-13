@@ -250,5 +250,35 @@ int main() {
     return 1;
   }
 
+  // --- Cases added by the mutation battery, which found two holes in this file ---------------------
+  //
+  // A 15-mutation battery against the override killed the rest but SURVIVED two, and each is a real hole
+  // rather than an equivalence. Both are closed here, added rather than rewritten into the cases above.
+  //
+  // 1. shareContentFieldPresent's OPTIONAL overload was only ever reached with an ABSENT value or a present
+  //    NON-EMPTY one, so dropping its emptiness test went unnoticed. A present-but-empty optional field is
+  //    exactly what the source's `field !== undefined && field !== ''` excludes.
+  if (!check(!flight::share::has_share_content_fields(ShareContent{
+                 flight::make_ref<text_title_url_66ef499c1c8b6060>(text_title_url_66ef499c1c8b6060{
+                     .text = String(""),
+                     .title = String(""),        // PRESENT, but empty -- so not a content field
+                     .url = std::nullopt,
+                 })}),
+             "a present-but-EMPTY optional field is not a content field")) {
+    return 1;
+  }
+
+  // 2. The data-URL scheme test had no fixture isolating it: `invalid_file` above fails on the missing COMMA,
+  //    so dropping `startsWith('data:')` went unnoticed. This one carries the comma and lacks the scheme.
+  const auto scheme_only_invalid = flight::make_ref<ShareFile>(ShareFile{
+      .name = String("noscheme.txt"),
+      .mime_type = String("text/plain"),
+      .data_url = String("text/plain,noscheme"),
+  });
+  if (!check(!flight::share::is_share_file_valid(scheme_only_invalid),
+             "a data URL without the `data:` scheme is invalid even when it carries a comma")) {
+    return 1;
+  }
+
   return 0;
 }
