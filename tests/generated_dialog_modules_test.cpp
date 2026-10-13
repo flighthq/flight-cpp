@@ -19,8 +19,11 @@
 //     replaced (`error`, `info`, `warning`) and every other field carried through.
 //
 // The `generated_dialog_test.cpp` in this directory covers the same package's application- and
-// render-side integration; it cannot compile in this tree for a reason outside the package (see the
-// note at the end of this file).
+// render-side integration, and does NOT build in this tree for a reason outside the package: it
+// reaches the render lane, where `generated/include/flight/render/render_state.hpp` includes
+// `flight/types/renderer.hpp` and that header is absent. (This header previously pointed at "the note
+// at the end of this file"; no such note existed, so the pointer was replaced with the measured cause.)
+// The dialog-package semantics are therefore covered here instead.
 #include <flight/dialog/dialog.hpp>
 #include <flight/dialog/file_dialog.hpp>
 #include <flight/dialog/media_dialog.hpp>
