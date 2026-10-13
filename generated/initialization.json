@@ -38621,7 +38621,7 @@
             "line": 16,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/applyParticleCollisions.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",400]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",403]",
             "kind": "variable",
             "name": "s",
             "scope": "module",
@@ -38642,7 +38642,7 @@
             "line": 24,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/applyParticleCollisions.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",823]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",826]",
             "kind": "function",
             "name": "applyParticleCollisions",
             "scope": "module",
@@ -38663,7 +38663,7 @@
             "line": 56,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/applyParticleCollisions.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",1852]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",1855]",
             "kind": "function",
             "name": "applyParticleObjectCollisions",
             "scope": "module",
@@ -38684,7 +38684,7 @@
             "line": 82,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/applyParticleCollisions.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",2563]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",2566]",
             "kind": "function",
             "name": "resolveColliders",
             "scope": "module",
@@ -38705,7 +38705,7 @@
             "line": 107,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/applyParticleCollisions.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",3232]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",3235]",
             "kind": "function",
             "name": "resolvePlane",
             "scope": "module",
@@ -38726,7 +38726,7 @@
             "line": 118,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/applyParticleCollisions.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",3646]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",3649]",
             "kind": "function",
             "name": "resolveCircle",
             "scope": "module",
@@ -38747,7 +38747,7 @@
             "line": 141,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/applyParticleCollisions.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",4433]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",4436]",
             "kind": "function",
             "name": "resolveRect",
             "scope": "module",
@@ -38768,7 +38768,7 @@
             "line": 197,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/applyParticleCollisions.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",6040]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",6043]",
             "kind": "function",
             "name": "resolveSphere",
             "scope": "module",
@@ -38789,7 +38789,7 @@
             "line": 228,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/applyParticleCollisions.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",7231]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",7234]",
             "kind": "function",
             "name": "reflect3",
             "scope": "module",
@@ -38811,7 +38811,7 @@
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/applyParticleCollisions.ts"
           },
-          "specifier": "./particleEmitterState",
+          "specifier": "./particleEmitterState.ts",
           "target": {
             "name": "ParticleEmitterState",
             "packageName": "@flighthq/particles",
@@ -38848,7 +38848,7 @@
               "line": 16,
               "packageName": "@flighthq/particles",
               "source": "packages/particles/src/applyParticleCollisions.ts",
-              "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",400]",
+              "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleCollisions.ts\",403]",
               "kind": "variable",
               "name": "s",
               "scope": "module",
@@ -38900,7 +38900,7 @@
             "line": 13,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/applyParticleForces.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleForces.ts\",326]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleForces.ts\",329]",
             "kind": "variable",
             "name": "accel",
             "scope": "module",
@@ -38921,7 +38921,7 @@
             "line": 22,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/applyParticleForces.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleForces.ts\",772]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleForces.ts\",775]",
             "kind": "function",
             "name": "applyParticleForces",
             "scope": "module",
@@ -38942,7 +38942,7 @@
             "line": 59,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/applyParticleForces.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleForces.ts\",1810]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleForces.ts\",1813]",
             "kind": "function",
             "name": "applyParticleObjectForces",
             "scope": "module",
@@ -38963,7 +38963,7 @@
             "line": 80,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/applyParticleForces.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleForces.ts\",2500]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleForces.ts\",2503]",
             "kind": "function",
             "name": "accumulateForces",
             "scope": "module",
@@ -38984,7 +38984,7 @@
             "line": 151,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/applyParticleForces.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleForces.ts\",4835]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleForces.ts\",4838]",
             "kind": "function",
             "name": "falloffFactor",
             "scope": "module",
@@ -39005,7 +39005,7 @@
             "line": 167,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/applyParticleForces.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleForces.ts\",5486]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleForces.ts\",5489]",
             "kind": "function",
             "name": "valueNoise",
             "scope": "module",
@@ -39026,7 +39026,7 @@
             "line": 183,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/applyParticleForces.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleForces.ts\",5992]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleForces.ts\",5995]",
             "kind": "function",
             "name": "hash2",
             "scope": "module",
@@ -39048,7 +39048,7 @@
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/applyParticleForces.ts"
           },
-          "specifier": "./particleEmitterState",
+          "specifier": "./particleEmitterState.ts",
           "target": {
             "name": "ParticleEmitterState",
             "packageName": "@flighthq/particles",
@@ -39085,7 +39085,7 @@
               "line": 13,
               "packageName": "@flighthq/particles",
               "source": "packages/particles/src/applyParticleForces.ts",
-              "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleForces.ts\",326]",
+              "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/applyParticleForces.ts\",329]",
               "kind": "variable",
               "name": "accel",
               "scope": "module",
@@ -245826,89 +245826,16 @@
     {
       "bindings": [
         {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
-            "line": 1,
-            "packageName": "@flighthq/particles",
-            "source": "packages/particles/src/particleEmitterConfig.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/particleEmitterConfig.ts\",9]",
-            "kind": "import",
-            "name": "allocateEntity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "allocateEntity",
-            "kind": "dependency",
-            "module": {
-              "name": "Entity",
-              "packageName": "@flighthq/entity",
-              "source": "packages/entity/src/entity.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 26,
-            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
-            "line": 1,
-            "packageName": "@flighthq/particles",
-            "source": "packages/particles/src/particleEmitterConfig.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/particleEmitterConfig.ts\",25]",
-            "kind": "import",
-            "name": "finishEntity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "finishEntity",
-            "kind": "dependency",
-            "module": {
-              "name": "Entity",
-              "packageName": "@flighthq/entity",
-              "source": "packages/entity/src/entity.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
           "access": "available-after-instantiation",
           "binding": {
             "column": 17,
             "fingerprint": "sha256:e16302f414831e40aaf112b35484a5290110e093ad12cf81697523be95d413df",
-            "line": 4,
+            "line": 3,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/particleEmitterConfig.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/particleEmitterConfig.ts\",182]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/particleEmitterConfig.ts\",111]",
             "kind": "function",
             "name": "createParticleEmitterConfig",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:907cdc0c996d16a00e5e95846582f91438ef0131f6d41c7603c99d4eb60f0eaf",
-            "line": 10,
-            "packageName": "@flighthq/particles",
-            "source": "packages/particles/src/particleEmitterConfig.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/particleEmitterConfig.ts\",426]",
-            "kind": "function",
-            "name": "initializeParticleEmitterConfig",
             "scope": "module",
             "space": "value"
           },
@@ -245922,20 +245849,6 @@
       ],
       "dependencies": [
         {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "ParticleEmitterConfig",
-            "packageName": "@flighthq/particles",
-            "source": "packages/particles/src/particleEmitterConfig.ts"
-          },
-          "specifier": "@flighthq/entity/contract",
-          "target": {
-            "name": "Entity",
-            "packageName": "@flighthq/entity",
-            "source": "packages/entity/src/entity.ts"
-          }
-        },
-        {
           "evaluation": "type-only",
           "importer": {
             "name": "ParticleEmitterConfig",
@@ -245943,14 +245856,13 @@
             "source": "packages/particles/src/particleEmitterConfig.ts"
           },
           "importedNames": [
-            "Entity",
-            "EntityConstruction"
+            "NonEntityCreateResult"
           ],
           "specifier": "@flighthq/types/contract",
           "target": {
-            "name": "Entity",
+            "name": "NonEntityCreateResult",
             "packageName": "@flighthq/types",
-            "source": "packages/types/src/Entity.ts"
+            "source": "packages/types/src/NonEntityCreateResult.ts"
           }
         },
         {
@@ -329087,7 +328999,7 @@
             "line": 11,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/stepParticleObjects.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/stepParticleObjects.ts\",270]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/stepParticleObjects.ts\",273]",
             "kind": "import",
             "name": "applyParticleObjectForces",
             "scope": "module",
@@ -329113,7 +329025,7 @@
             "line": 12,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/stepParticleObjects.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/stepParticleObjects.ts\",337]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/stepParticleObjects.ts\",343]",
             "kind": "import",
             "name": "updateParticleObjects",
             "scope": "module",
@@ -329139,7 +329051,7 @@
             "line": 30,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/stepParticleObjects.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/stepParticleObjects.ts\",1299]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/stepParticleObjects.ts\",1308]",
             "kind": "function",
             "name": "stepParticleObjects",
             "scope": "module",
@@ -329161,7 +329073,7 @@
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/stepParticleObjects.ts"
           },
-          "specifier": "./applyParticleCollisions",
+          "specifier": "./applyParticleCollisions.ts",
           "target": {
             "name": "ApplyParticleCollisions",
             "packageName": "@flighthq/particles",
@@ -329175,7 +329087,7 @@
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/stepParticleObjects.ts"
           },
-          "specifier": "./applyParticleForces",
+          "specifier": "./applyParticleForces.ts",
           "target": {
             "name": "ApplyParticleForces",
             "packageName": "@flighthq/particles",
@@ -329189,7 +329101,7 @@
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/stepParticleObjects.ts"
           },
-          "specifier": "./updateParticleObjects",
+          "specifier": "./updateParticleObjects.ts",
           "target": {
             "name": "UpdateParticleObjects",
             "packageName": "@flighthq/particles",
@@ -365890,7 +365802,7 @@
             "line": 9,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/updateParticleObjects.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/updateParticleObjects.ts\",205]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/updateParticleObjects.ts\",208]",
             "kind": "import",
             "name": "ensureParticleObjectsStateCapacity",
             "scope": "module",
@@ -365916,7 +365828,7 @@
             "line": 10,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/updateParticleObjects.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/updateParticleObjects.ts\",282]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/updateParticleObjects.ts\",288]",
             "kind": "import",
             "name": "writeParticleSpawnOffset",
             "scope": "module",
@@ -365942,7 +365854,7 @@
             "line": 12,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/updateParticleObjects.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/updateParticleObjects.ts\",346]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/updateParticleObjects.ts\",355]",
             "kind": "variable",
             "name": "PARTICLE_SPAWN_OFFSET",
             "scope": "module",
@@ -365963,7 +365875,7 @@
             "line": 17,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/updateParticleObjects.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/updateParticleObjects.ts\",635]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/updateParticleObjects.ts\",644]",
             "kind": "function",
             "name": "isParticleObjectsComplete",
             "scope": "module",
@@ -365984,7 +365896,7 @@
             "line": 30,
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/updateParticleObjects.ts",
-            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/updateParticleObjects.ts\",1035]",
+            "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/updateParticleObjects.ts\",1044]",
             "kind": "function",
             "name": "updateParticleObjects",
             "scope": "module",
@@ -366006,7 +365918,7 @@
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/updateParticleObjects.ts"
           },
-          "specifier": "./curve",
+          "specifier": "./curve.ts",
           "target": {
             "name": "Curve",
             "packageName": "@flighthq/particles",
@@ -366020,7 +365932,7 @@
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/updateParticleObjects.ts"
           },
-          "specifier": "./particleObjectsState",
+          "specifier": "./particleObjectsState.ts",
           "target": {
             "name": "ParticleObjectsState",
             "packageName": "@flighthq/particles",
@@ -366034,7 +365946,7 @@
             "packageName": "@flighthq/particles",
             "source": "packages/particles/src/updateParticleObjects.ts"
           },
-          "specifier": "./particleSpawnOffset",
+          "specifier": "./particleSpawnOffset.ts",
           "target": {
             "name": "ParticleSpawnOffset",
             "packageName": "@flighthq/particles",
@@ -366229,7 +366141,7 @@
               "line": 12,
               "packageName": "@flighthq/particles",
               "source": "packages/particles/src/updateParticleObjects.ts",
-              "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/updateParticleObjects.ts\",346]",
+              "id": "binding:[\"@flighthq/particles\",\"packages/particles/src/updateParticleObjects.ts\",355]",
               "kind": "variable",
               "name": "PARTICLE_SPAWN_OFFSET",
               "scope": "module",

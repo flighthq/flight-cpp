@@ -3161,14 +3161,14 @@
       "code": "dependency-refused",
       "module": "packages/particles/src/contract.ts",
       "package": "@flighthq/particles",
-      "reason": "dependency ./validateParticleEmitterConfig was refused for @flighthq/particles/packages/particles/src/validateParticleEmitterConfig.ts",
+      "reason": "dependency ./validateParticleEmitterConfig.ts was refused for @flighthq/particles/packages/particles/src/validateParticleEmitterConfig.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/particles/src/index.ts",
       "package": "@flighthq/particles",
-      "reason": "dependency ./contract was refused for @flighthq/particles/packages/particles/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/particles/packages/particles/src/contract.ts",
       "stage": "dependency"
     },
     {
