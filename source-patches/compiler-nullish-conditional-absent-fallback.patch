@@ -1,0 +1,100 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index c05ef26..16252a4 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -21625,9 +21625,32 @@ function getIrNullishCoalesceTypeEvidenceCpp(
+   return createIrTypeEvidenceUnionCpp([
+     ...(leftUnion?.types ?? [left]).filter((member) => member.kind !== 'null' && member.kind !== 'undefined'),
+     ...(rightUnion?.types ?? [right]),
++    ...getCppConditionalAbsentArmTypesCpp(expression.right),
+   ]);
+ }
+ 
++// The sentinels a conditional fallback can produce through a literal arm. `a ?? (c ? x : null)` is absent
++// when `a` is absent and `c` is false, but a conditional's own evidence is its first arm that has any, so the
++// `null` arm was dropped and the whole coalesce was taken as present: its result was built as the present
++// payload, a `nullptr` Ref wrapped as an engaged optional, and a later `if (t && t.width ...)` dereferenced it.
++// Only a literal `null` or `undefined` arm is counted -- it is the one arm with no evidence of its own to lose.
++function getCppConditionalAbsentArmTypesCpp(expression: Readonly<IrExpression>): readonly IrType[] {
++  if (expression.kind !== 'conditional') return [];
++  const arms = [expression.whenTrue, expression.whenFalse];
++  const types: IrType[] = [];
++  if (arms.some((arm) => arm.kind === 'literal' && arm.value === null)) types.push({ kind: 'null' });
++  if (
++    arms.some(
++      (arm) =>
++        arm.kind === 'undefinedValue' ||
++        (arm.kind === 'identifier' && arm.reference.kind === 'ambient' && arm.reference.name === 'undefined'),
++    )
++  ) {
++    types.push({ kind: 'undefined' });
++  }
++  return types;
++}
++
+ // A value logical OR returns the first truthy operand or its final operand. Null and undefined from
+ // a preceding branch therefore cannot reach the result, while every concrete present domain can.
+ // Keeping those domains is deliberately conservative for other falsy values: a broad string,
+diff --git a/packages/compiler-backend-cpp/src/cppNullishConditionalFallback.test.ts b/packages/compiler-backend-cpp/src/cppNullishConditionalFallback.test.ts
+new file mode 100644
+index 0000000..8993de7
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppNullishConditionalFallback.test.ts
+@@ -0,0 +1,57 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/x/src/x.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/x', upstreamDirectory: '/flight' });
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++function declaration(contents: string, name: string): string {
++  return contents.split('\n').find((line) => new RegExp(`\\b${name} = `, 'u').test(line))?.trim() ?? '';
++}
++
++const group = 'export interface G { w: number }\n';
++// textlayout's buildGroups shape: a `let` captured and reassigned by nested functions, coalesced with a
++// conditional whose other arm is absent.
++const captured = (sentinel: 'null' | 'undefined', fallback: string) =>
++  `${group}export function f(gs: G[], b: G | ${sentinel}): number { let active: G | ${sentinel} = ${sentinel}; ` +
++  `function step(): number { const t = active ?? ${fallback}; if (t && t.w > 0) return t.w; return -1; } ` +
++  `function reset(): void { active = ${sentinel}; } reset(); return step(); }`;
++
++describe('a nullish coalesce whose fallback is a conditional with an absent arm', () => {
++  it('keeps a null arm absent instead of building a present nullptr Ref', () => {
++    const t = declaration(emit(captured('null', '(gs.length > 0 ? gs[gs.length - 1] : null)')), 't');
++    expect(t).toContain('-> std::optional<flight::Ref<G>> { auto nullish_coalesce_left = active_capture.read_binding();');
++    expect(t).toContain(': std::nullopt)');
++    expect(t).toContain('if (!contextual_union_source.has_value()) return std::nullopt;');
++    expect(t).not.toContain('nullptr');
++  });
++
++  it('keeps an undefined arm absent the same way', () => {
++    const t = declaration(emit(captured('undefined', '(gs.length > 0 ? gs[gs.length - 1] : undefined)')), 't');
++    expect(t).toContain('-> std::optional<flight::Ref<G>> { auto nullish_coalesce_left = active_capture.read_binding();');
++    expect(t).toContain('if (!contextual_union_source.has_value()) return std::nullopt;');
++  });
++
++  it('leaves present and non-conditional fallbacks as they were', () => {
++    expect(declaration(emit(`${group}export function f(a: G | null, g: G): number { const t = a ?? g; return t.w; }`), 't')).toBe(
++      'auto t = (a.has_value() ? a.value() : g);',
++    );
++    expect(declaration(emit('export function f(a: number | null): number { const t = a ?? 0; return t; }'), 't')).toBe(
++      'const double t = (a.has_value() ? a.value() : 0.0);',
++    );
++    expect(declaration(emit(captured('null', 'b')), 't')).toContain('return b; }());');
++  });
++
++  it('keeps the same optional value for a plain receiver, whose local is now declared auto', () => {
++    // This shape was already lowered to an optional; the evidence fix only lets the local be inferred
++    // instead of spelled. The lambda, and so the value, is unchanged.
++    expect(declaration(emit(`${group}export function f(a: G | null, gs: G[]): number { const t = a ?? (gs.length > 0 ? gs[gs.length - 1] : null); if (t && t.w > 0) return t.w; return -1; }`), 't')).toBe(
++      'auto t = ([&]() -> std::optional<flight::Ref<G>> { auto nullish_coalesce_left = a; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left; return ((static_cast<double>(gs.size()) > 0.0) ? gs.element((static_cast<double>(gs.size()) - 1.0)) : std::nullopt); }());',
++    );
++  });
++});

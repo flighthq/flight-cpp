@@ -3764,6 +3764,23 @@
       "unblocks": "new Set(x.values()) / new Set(x.keys()) on Set, Map and Array receivers. No SDK site at flight a627849 is refused on this today, so the change is preventive; scene2d-formats riveRequirements.ts already emits its map.keys() form.",
       "expires": "when upstream lowers a never-null iterator argument to the Set constructor without a contextual optional construction (docs/compiler-requests/new-set-from-collection-iterator.md).",
       "appliedOn": "2026-10-13"
+    },
+    {
+      "id": "compiler-nullish-conditional-absent-fallback",
+      "dependency": "flight-compiler",
+      "patch": "compiler-nullish-conditional-absent-fallback.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "not a refusal: a silent miscompile that aborts at run time. `a ?? (cond ? x : null)` -- and the `undefined` arm form -- took its type evidence from the conditional's first arm that had any, which dropped the literal null arm, so the whole coalesce was judged present. With a captured, reassigned `let` on the left (textlayout's buildGroups, `activeGroup ?? (groups.length > 0 ? groups[groups.length - 1] : null)`), the coalesce lambda returned the non-optional `flight::Ref<T>`, the null arm became `nullptr`, and the result was wrapped as an ENGAGED optional; `if (trimTarget && trimTarget.positions.length > 0 ...)` then dereferenced null on the first word-wrap segment. Requested in docs/compiler-requests/nullish-coalesce-null-into-optional-is-never-absent.md (filed by builder6).",
+      "rewrite": "getIrNullishCoalesceTypeEvidenceCpp adds the sentinels a conditional fallback can produce through a literal arm: a conditional right operand with a literal `null` arm contributes `null`, and one with an `undefined` arm contributes `undefined`. The coalesce is then lowered against an optional carrier whose fallback absence propagates (`if (!contextual_union_source.has_value()) return std::nullopt;`). Only a literal sentinel arm is counted, and only for a `??` right operand; the general conditional evidence is unchanged.",
+      "equivalence": "In JavaScript `a ?? (c ? x : null)` is null exactly when `a` is nullish and `c` is false. The rewrite only restores that sentinel to the evidence, so the result is stored as absent where JavaScript has null, the truthiness test is has_value(), and the guarded member reads run only when a group is present. Present-fallback and value-fallback coalesces are unchanged.",
+      "verification": "New cppNullishConditionalFallback.test.ts: 4 pass. The captured null-arm and undefined-arm cases fail without the rewrite; a plain receiver keeps the same optional lambda and only its local is now declared `auto` (fails without the rewrite on that spelling alone); the present, number and plain `?? b` controls pass both ways. compiler-backend-cpp suite at -j2 on top of compiler-new-set-from-iterator: the same 47 pre-existing failures, none new. Focused regeneration of @flighthq/textlayout into a scratch output with and without the rewrite: across its 6-package closure only text_layout.hpp changes -- trim_target now built as std::optional with `? std::optional{groups.element(...)} : std::nullopt`, plus one renumbered generated temporary. Native: computeTextLayout with textLayout.test.ts's fixed 10px measure matches node 22 (upstream run in node) on line count, group line indices and widths for 'a b'/13, 'ab cd'/15, 'hello world'/50 (first-segment wraps), 'ab cd'/25, 'hello world'/1000, 'hello world'/50 without wrap, and 'aaa bbb ccc'/60; the unpatched generation segfaults on the first of them. The textlayout row and its tests were not edited or committed.",
+      "whyNotUpstreamFirst": "It is a run-time null dereference on the public text layout word-wrap path that the header compile gate cannot see; upstream receives the request filed by builder6.",
+      "unblocks": "@flighthq/textlayout computeTextLayout word wrap when the first segment already exceeds the wrap width (upstream textLayout.test.ts 'wraps at word boundary when line exceeds width'), once the textlayout owner regenerates. A single-line source scan found no other SDK `x ?? (cond ? y : null|undefined)` site.",
+      "expires": "when upstream keeps a conditional fallback's literal null or undefined arm in a nullish coalesce's result (docs/compiler-requests/nullish-coalesce-null-into-optional-is-never-absent.md).",
+      "appliedOn": "2026-10-13"
     }
   ]
 }
