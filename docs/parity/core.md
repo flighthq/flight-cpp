@@ -89,7 +89,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/registry-codegen` | 3 | 1 | 12 | none | none | 3 / 0 |
 | `@flighthq/log` | 3 | 1 | 139 | dedicated | none | 2 / 1 |
 | `@flighthq/debug` | 4 | 2 | 30 | none | none | 3 / 1 |
-| `@flighthq/requirements` | 4 | 2 | 6 | none | none | 4 / 0 |
+| `@flighthq/requirements` | 4 | 2 | 6 | dedicated | none | 4 / 0 |
 | `@flighthq/importdiagnostics` | 4 | 2 | 7 | dedicated | none | 4 / 0 |
 
 `upstream modules` counts the `.ts` files under `packages/<name>/src`; the generated manifest
@@ -733,7 +733,12 @@ Plain requirement collection and set algebra for content-to-registration resolut
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+`flight_cpp.generated_requirement` (dedicated) -- `tests/generated_requirement_test.cpp`, ported from the two
+upstream test files: the copied, sorted, deduplicated pair of dimensions, the covered-facet difference, the merged
+facts with intersected completeness, the collector's four scene2d facets, and the identity a requirement is
+deduplicated by. It also carries the compiler defect that port exposed -- a U+0000 separator emitted through a
+strlen-measured `const char*` was truncated, made the identity a bare concatenation and silently dropped a
+distinct requirement -- which is filed in `docs/compiler-requests/nul-string-literal-truncated.md`.
 
 ### Local generation status
 
