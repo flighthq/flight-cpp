@@ -4,7 +4,7 @@
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function _validateItem -- source line 186
-#include <flight/any.hpp>
+#include <exception>
 #include <flight/presence.hpp>
 #include <flight/sequence_view.hpp>
 #include <flight/structural_ref.hpp>
@@ -12,7 +12,6 @@
 #include <flight/weak_set.hpp>
 #include <functional>
 #include <optional>
-#include <stdexcept>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -251,21 +250,21 @@ inline void destroy_app_menu(flight::Array<flight::StructuralRef<flight::RowRead
       pending.add(flight::structural_ref_cast<flight::Ref<flight::types::HostAppMenuCapability>>(provider));
     }
   }
-  flight::Any failure = nullptr;
+  std::exception_ptr failure = nullptr;
   for (auto provider_2 : pending) {
     try {
       if (provider_2->destroy.has_value()) {
         assert_sync_void<flight::Undefined>((provider_2->destroy.value()(), flight::undefined));
       }
     }
-    catch (const std::exception& error) {
-      failure;
+    catch (...) {
+      ([&]() { if (!failure) failure = std::current_exception(); return failure; }());
       continue;
     }
     destroyed_app_loop.add(provider_2);
   }
-  if (([&]() { const auto& presence_operand = failure; return !presence_operand.is_null(); }())) {
-    throw failure;
+  if (([&]() { const auto& presence_operand = failure; return presence_operand; }())) {
+    std::rethrow_exception(failure);
   }
 }
 
