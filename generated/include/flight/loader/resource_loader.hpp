@@ -99,7 +99,7 @@ inline void noop(std::optional<flight::Any> value = std::nullopt) {
 }
 
 inline flight::Task<flight::Any> noop_load(flight::AbortSignal signal) {
-  return flight::resolve_task(flight::undefined);
+  return flight::resolve_task<flight::Any>(flight::undefined);
 }
 
 inline flight::Ref<PendingEntry> acquire_pending_entry() {

@@ -56,6 +56,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-profile-type-name-evidence.patch`](../../source-patches/compiler-profile-type-name-evidence.patch) | [A property union loses the guard's evidence](property-union-evidence-lost.md) |
 | [`compiler-guarded-path-narrowing.patch`](../../source-patches/compiler-guarded-path-narrowing.patch) | [A property union loses the guard's evidence](property-union-evidence-lost.md) |
 | [`compiler-catch-await-owned-carrier.patch`](../../source-patches/compiler-catch-await-owned-carrier.patch) | [A catch body that awaits and reads its binding needs an owned caught value](catch-binding-across-await.md) |
+| [`compiler-promise-resolve-domain.patch`](../../source-patches/compiler-promise-resolve-domain.patch) | [A resolved task carries the literal it was given](task-resolved-value-domain-mismatch.md) |
 | [`compiler-scoped-emission-semantic-context.patch`](../../source-patches/compiler-scoped-emission-semantic-context.patch) | [Scoped emission must retain semantic context](compiler-scoped-emission-semantic-context.md) |
 | [`compiler-sdk-lane-local-reexports.patch`](../../source-patches/compiler-sdk-lane-local-reexports.patch) | [SDK-local re-exports in an SDK export lane](compiler-sdk-lane-local-reexports.md) |
 | [`compiler-structural-row-weak-keys.patch`](../../source-patches/compiler-structural-row-weak-keys.patch) | [Structural rows as WeakMap keys](compiler-structural-row-weak-keys.md) |
@@ -66,9 +67,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 
 ## Active requests without a compiler patch
 
-- [A resolved task carries the literal it was given, not the domain the function declared](task-resolved-value-domain-mismatch.md) —
-  `@flighthq/loader`'s `resourceLoader.ts` `_noopLoad`; surfaced once the module stopped being a placeholder, and
-  it is what keeps that header from compiling now.
+- [A function with fewer parameters is assigned where a wider callable is expected](callable-fewer-parameters-adaptation.md) —
+  `@flighthq/loader`'s `resourceLoader.ts` `_noopLoad` into `PendingEntry.wrappedLoad`; the first compile error in
+  that module once it stopped being a placeholder, and not the module's remaining refusal.
 
 - [`Array.isArray` must inspect an optional property's present payload](array-is-array-optional-property.md) —
   `@flighthq/adjustments` reads `Partial<ColorMatrixAdjustment>.colorMatrix` as an optional array,

@@ -68,6 +68,13 @@ cc_test(
 )
 
 cc_test(
+    name = "task_resolve_domain_test",
+    srcs = ["task_resolve_domain_test.cpp"],
+    size = "small",
+    deps = ["//:cpp"],
+)
+
+cc_test(
     name = "caught_exception_test",
     srcs = ["caught_exception_test.cpp"],
     size = "small",

@@ -3340,6 +3340,23 @@
       "expires": "when the runtime represents the caught unknown value itself, so a suspendable handler needs no per-site carrier.",
       "appliedOn": "2026-10-13",
       "whyNotUpstreamFirst": "The carrier is assembled from shapes the target already has -- the catch-recorded exception slot and its `std::current_exception()` assignment -- and the only new runtime piece is the re-binding of the object the pointer owns. Upstream has no newer commit than the pin."
+    },
+    {
+      "id": "compiler-promise-resolve-domain",
+      "dependency": "flight-compiler",
+      "patch": "compiler-promise-resolve-domain.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "A `Promise.resolve(literal)` in a function declaring a WIDER promise domain settles the literal's own domain instead. Measured on @flighthq/loader's resourceLoader.ts `_noopLoad`, surfaced once catch-await-hoisting stopped refusing the module: `Promise.resolve(undefined)` in a `Promise<unknown>` function emitted `flight::resolve_task(flight::undefined)`, which deduces `Task<flight::Undefined>` where the declaration states `Task<flight::Any>` -- and the `return` then has no conversion. It refuses nothing; the header simply does not compile.",
+      "rewrite": "The runtime resolver deduces its task type from the value it is handed, so the settlement is given the DECLARED domain explicitly: `flight::resolve_task<flight::Any>(flight::undefined)`, exactly as a source-written `Promise.resolve<T>(x)` already is. The rule fires only where deduction would answer with the literal's own domain -- a literal, `null`, or the `undefined` the semantic layer keeps as the ambient name it is, whose runtime domain differs from the declared one. A value already in the declared domain, an adopted task, a reference the call boundary already erased, a source-written type argument, and a position that states no promise domain are all left exactly as they were.",
+      "equivalence": "Only the carrier the settlement is built in changes, never the value: `Task<flight::Any>::resolve(undefined)` holds the same `undefined` an explicit source annotation would, and a boxed reference keeps the same object (`object_if` recovers it by identity, which tests/task_resolve_domain_test.cpp pins). Settlement is immediate and once, in both cases, and an adopted task keeps its value, its rejection, and its exception rejection unchanged. Nothing about ordering, rejection, or identity moves, and no conversion is invented: the value is converted by the same `Any` constructor the erased boundary already uses.",
+      "verification": "New cppPromiseResolveDomain.test.ts, 9 controls: the declared domain for a narrower literal (the measured case), for `null`, and for a primitive literal widened into an erased domain; deduction left alone for a literal already in the declared domain and for an exactly-`undefined` domain; the source's own type argument kept as the only one; an adopted task and an already-erased reference untouched; and no firing where the position states no promise domain. Mutations, all with teeth: the rule disabled fails 3; the declared-domain guard dropped fails 3; the source-type-argument guard dropped fails 1. tests/task_resolve_domain_test.cpp (6 checks) pins the runtime half -- the declared domain holding the literal, the same object through it, a deduced settlement unchanged, and adoption keeping a value, a rejection and an exception rejection -- and cppCompilerBackend.test.ts fails the identical 47 tests with and without the set.",
+      "unblocks": "@flighthq/loader's resourceLoader.ts emits and its `_noopLoad` compiles; the module's remaining refusal is flattened-interface-refinement-identity, which is a separate mechanism and stays separate.",
+      "expires": "when the resolver's task type follows the declared domain by itself, at which point the explicit argument has nothing to add.",
+      "appliedOn": "2026-10-13",
+      "whyNotUpstreamFirst": "The explicit argument is the form the emitter already produces for a source-written `Promise.resolve<T>(x)`, so this is the same lowering applied where the source left the domain implicit. Upstream has no newer commit than the pin."
     }
   ]
 }
