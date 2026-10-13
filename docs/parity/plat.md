@@ -242,7 +242,30 @@ frame callback's own argument -- and the table is deliberately not broadened for
   than covered through an invented row, the signatures are not weakened, and `structuralMemberTable` is not
   broadened to reach them.
 
-  app core (`app.ts`, 42 cases) and appHost (3) are also uncovered, per the parcel.
+- `flight_cpp.generated_app_core` — `tests/generated_app_core_test.cpp` (dedicated), NEW, completing the arc. It
+  covers `app.ts`'s one piece of real machinery and samples its delegations, plus the ownership property that is the
+  whole of `appHost.test.ts`. The machinery is the application event entity: `createAppEvents` allocates the six
+  signals, each `attachApp*` family routes one host provider to one signal, `attachAppQuitRequest` is the only family
+  that carries a value in both directions (the host hands it a cancel callback, and a listener that CANCELS the signal
+  must call that callback -- that is how a JS-side veto reaches the native quit, and a listener that does not cancel
+  must leave it alone), `attachAppEvents` attaches all six at once and releases every origin it replaced, and
+  `disposeAppEvents` is teardown in the full sense -- it releases the providers AND clears the listeners, so a
+  provider callback already in hand that fires afterwards reaches nobody. The delegations pinned are the ones where
+  the shape matters: `isAppHidden` derives from the LIFECYCLE provider rather than one of its own, `setAppBadgeCount`
+  returns the provider's task result, the single-instance lock routes three verbs to three separate entries, and the
+  opening/provider pair carries a path and an argv array. The ownership property -- the appHost subject -- is asserted
+  by handing two providers of the same kind and showing that only the selected one is ever touched, which is the
+  behavioural content of that suite's "no ambient backend API" absence case; the test says it is a translation.
+  Seven mutations against the override, all seven with teeth: activate emitting the ready signal 1 failure, the quit
+  request not emitted 2, attaching all six while skipping one family 4, dispose keeping a listener 1, the lock
+  request inverted 1, the hidden query checking the wrong lifecycle state 2, and the badge count not forwarded 1.
+
+  `appHost.test.ts`'s third case asserts an ABSENCE (no `setAppBackend` and five more), covered here by that
+  behavioural content rather than by an export-list check, as noted above.
+
+  The RowMerge boundary the previous pass measured is now filed upstream as
+  `docs/compiler-requests/merged-row-not-constructible.md`, so the uncovered window families above have a request
+  pointing at the cause rather than only a note here. app core and appHost are now covered; the arc is complete.
 
 **Four more members with no row key.** The same table gap the appLoop unit recorded for `HostAppLoopCapability.now`
 applies to `HostWindowLifecycleCapability.close` and the `subscribeClose`/`subscribeMove`/`subscribeVisibility`
