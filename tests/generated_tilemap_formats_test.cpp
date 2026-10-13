@@ -1,6 +1,9 @@
 #include <flight/tilemap_formats/tiled_color.hpp>
 #include <flight/tilemap_formats/tiled_gid.hpp>
+#include <flight/tilemap_formats/tiled_json_parse.hpp>
 #include <flight/tilemap_formats/tiled_layer_data.hpp>
+#include <flight/tilemap_formats/tiled_project.hpp>
+#include <flight/tilemap_formats/tiled_tmj_format.hpp>
 #include <flight/tilemap_formats/tiled_tmx_format.hpp>
 #include <flight/tilemap_formats/tiled_xml_parse.hpp>
 
@@ -36,6 +39,14 @@ auto readonly(const std::shared_ptr<Type>& value) {
 }
 
 bool gids_are(const flight::Uint32Array& actual, const std::vector<double>& expected) {
+  if (actual.length != expected.size()) return false;
+  for (std::size_t index = 0; index < expected.size(); ++index) {
+    if (actual.get_index(static_cast<double>(index)) != expected[index]) return false;
+  }
+  return true;
+}
+
+bool tiles_are(const flight::Int16Array& actual, const std::vector<double>& expected) {
   if (actual.length != expected.size()) return false;
   for (std::size_t index = 0; index < expected.size(); ++index) {
     if (actual.get_index(static_cast<double>(index)) != expected[index]) return false;
@@ -134,6 +145,210 @@ const flight::String expected_rich_tsx(R"(<?xml version="1.0" encoding="UTF-8"?>
 </properties>
 </tile>
 </tileset>)");
+
+const flight::String expected_rich_tmj(R"({
+  "compressionlevel": -1,
+  "height": 2,
+  "infinite": false,
+  "layers": [
+    {
+      "id": 1,
+      "name": "ground",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "x": 0,
+      "y": 0,
+      "data": [
+        1,
+        2,
+        5,
+        2147483649
+      ],
+      "height": 2,
+      "width": 2
+    },
+    {
+      "id": 2,
+      "name": "objs",
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0,
+      "objects": [
+        {
+          "height": 0,
+          "id": 1,
+          "name": "p",
+          "rotation": 0,
+          "type": "marker",
+          "visible": true,
+          "width": 0,
+          "x": 1,
+          "y": 2,
+          "point": true
+        },
+        {
+          "height": 0,
+          "id": 2,
+          "name": "",
+          "rotation": 0,
+          "type": "poly",
+          "visible": true,
+          "width": 0,
+          "x": 0,
+          "y": 0,
+          "polygon": [
+            {
+              "x": 0,
+              "y": 0
+            },
+            {
+              "x": 8,
+              "y": 0
+            },
+            {
+              "x": 8,
+              "y": 8
+            }
+          ],
+          "properties": [
+            {
+              "name": "tag",
+              "type": "string",
+              "value": "zone"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "bg",
+      "opacity": 1,
+      "type": "imagelayer",
+      "visible": true,
+      "x": 0,
+      "y": 0,
+      "image": "sky.png"
+    },
+    {
+      "id": 4,
+      "name": "grp",
+      "opacity": 1,
+      "type": "group",
+      "visible": true,
+      "x": 0,
+      "y": 0,
+      "layers": [
+        {
+          "id": 5,
+          "name": "over",
+          "opacity": 1,
+          "type": "tilelayer",
+          "visible": true,
+          "x": 0,
+          "y": 0,
+          "data": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "height": 2,
+          "width": 2
+        }
+      ]
+    }
+  ],
+  "nextlayerid": 6,
+  "nextobjectid": 3,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.10.2",
+  "tileheight": 16,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "columns": 2,
+      "margin": 0,
+      "name": "base",
+      "spacing": 0,
+      "tilecount": 4,
+      "tileheight": 16,
+      "tilewidth": 16,
+      "image": "base.png",
+      "imageheight": 32,
+      "imagewidth": 32,
+      "tiles": [
+        {
+          "id": 0,
+          "type": "lava",
+          "animation": [
+            {
+              "duration": 200,
+              "tileid": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "firstgid": 5,
+      "source": "extra.tsx"
+    }
+  ],
+  "tilewidth": 16,
+  "type": "map",
+  "version": "1.10",
+  "width": 2,
+  "backgroundcolor": "#ff204060",
+  "properties": [
+    {
+      "name": "name",
+      "type": "string",
+      "value": "demo"
+    },
+    {
+      "name": "score",
+      "type": "int",
+      "value": 10
+    }
+  ]
+})");
+
+const flight::String expected_rich_tsj(R"({
+  "columns": 2,
+  "margin": 0,
+  "name": "base",
+  "spacing": 0,
+  "tilecount": 4,
+  "tileheight": 16,
+  "tilewidth": 16,
+  "image": "base.png",
+  "imageheight": 32,
+  "imagewidth": 32,
+  "tileoffset": {
+    "x": 1,
+    "y": 2
+  },
+  "objectalignment": "center",
+  "tiles": [
+    {
+      "id": 1,
+      "type": "wall",
+      "properties": [
+        {
+          "name": "solid",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    }
+  ],
+  "type": "tileset"
+})");
 
 void color_and_gid_evidence() {
   check(formats::format_tiled_color(0xff8800ff) == flight::String("#ffff8800"),
@@ -312,12 +527,188 @@ void xml_parse_and_tmx_format_evidence() {
         "parseTiledTileset rejects a map root");
 }
 
+void json_parse_and_tmj_format_evidence() {
+  const auto xml_map = formats::parse_tiled_tmx(rich_tmx);
+  check(xml_map.has_value(), "TMJ evidence starts from the readable rich TMX fixture");
+  if (!xml_map) return;
+
+  const auto formatted = formats::format_tiled_tmj(readonly(*xml_map));
+  check(formatted == expected_rich_tmj,
+        "formatTiledTmj matches the current-pin rich fixture byte for byte");
+  const auto parsed = formats::parse_tiled_tmj(formatted);
+  check(parsed.has_value() && parsed.value()->layers.length == 4 &&
+            parsed.value()->tilesets.length == 2 && parsed.value()->properties.length == 2,
+        "parseTiledTmj restores the rich map's layers, tilesets, and properties");
+  if (parsed) {
+    const auto tile_layer =
+        std::get<flight::Ref<types::TiledTileLayer>>(parsed.value()->layers.element(0.0));
+    const auto group =
+        std::get<flight::Ref<types::TiledGroupLayer>>(parsed.value()->layers.element(3.0));
+    check(tile_layer->name == flight::String("ground") &&
+              gids_are(tile_layer->data, {1.0, 2.0, 5.0, 2147483649.0}) &&
+              group->layers.length == 1,
+          "TMJ round trip preserves common layer fields, unsigned GIDs, and nesting");
+    check(formats::format_tiled_tmj(readonly(parsed.value())) == expected_rich_tmj,
+          "TMJ parse-format-parse is byte stable");
+  }
+
+  const auto xml_tileset = formats::parse_tiled_tileset(rich_tsx);
+  check(xml_tileset.has_value(), "TSJ evidence starts from the readable rich TSX fixture");
+  if (xml_tileset) {
+    const auto formatted_tileset = formats::format_tiled_tileset_json(readonly(*xml_tileset));
+    check(formatted_tileset == expected_rich_tsj,
+          "formatTiledTilesetJson matches the current-pin rich fixture byte for byte");
+    const auto parsed_tileset = formats::parse_tiled_tileset_json(formatted_tileset);
+    check(parsed_tileset.has_value() && parsed_tileset.value()->name == flight::String("base") &&
+              parsed_tileset.value()->tile_offset_x == 1.0 &&
+              parsed_tileset.value()->tile_offset_y == 2.0 &&
+              parsed_tileset.value()->tiles.length == 1,
+          "TSJ parse-format-parse preserves offset and per-tile properties");
+    if (parsed_tileset) {
+      check(formats::format_tiled_tileset_json(readonly(parsed_tileset.value())) == expected_rich_tsj,
+            "TSJ parse-format-parse is byte stable");
+    }
+  }
+
+  flight::Array<flight::Ref<types::ImportDiagnostic>> malformed;
+  check(!formats::parse_tiled_tmj(
+             flight::String("{ not json"), std::nullopt,
+             std::optional<flight::Array<flight::Ref<types::ImportDiagnostic>>>{malformed})
+             .has_value() &&
+            malformed.length == 1 &&
+            malformed.element(0.0)->kind == flight::String("tiled.json-malformed") &&
+            malformed.element(0.0)->origin == flight::String("parseTiledTmj") &&
+            std::get<flight::String>(malformed.element(0.0)->detail->get(
+                                         flight::String("path")).value()) == flight::String("map"),
+        "malformed TMJ reports the exact rejection diagnostic");
+
+  flight::Array<flight::Ref<types::ImportDiagnostic>> missing;
+  const auto empty_map = formats::parse_tiled_tmj(
+      flight::String("{}"), std::nullopt,
+      std::optional<flight::Array<flight::Ref<types::ImportDiagnostic>>>{missing});
+  check(empty_map.has_value() && missing.length == 4 &&
+            std::get<flight::String>(missing.element(0.0)->detail->get(
+                                         flight::String("path")).value()) == flight::String("map.height") &&
+            std::get<flight::String>(missing.element(3.0)->detail->get(
+                                         flight::String("path")).value()) == flight::String("map.width"),
+        "TMJ required-field recovery reports all four exact paths in order");
+  check(!formats::parse_tiled_tmj(flight::String("[]")).has_value() &&
+            !formats::parse_tiled_tileset_json(flight::String("42")).has_value(),
+        "JSON front ends reject non-object roots");
+}
+
+flight::Ref<types::TilemapData> resolved_layout(double tile_size) {
+  return flight::make_ref<types::TilemapData>(types::TilemapData{
+      .entity_runtime_key = std::nullopt,
+      .atlas = std::nullopt,
+      .columns = 0.0,
+      .rows = 0.0,
+      .tile_height = tile_size,
+      .tile_width = tile_size,
+      .tiles = flight::Int16Array{},
+      .material_data = std::nullopt,
+  });
+}
+
+flight::Ref<types::TiledMap> project_map(flight::String data, double first_gid = 1.0) {
+  const auto text = flight::String("<map version=\"1\" width=\"2\" height=\"2\" tilewidth=\"16\" tileheight=\"16\">") +
+                    flight::String("<tileset firstgid=\"") + flight::to_string(first_gid) +
+                    flight::String("\" source=\"a.tsx\"/>") +
+                    flight::String("<tileset firstgid=\"5\" source=\"b.tsx\"/>") +
+                    flight::String("<layer id=\"1\" name=\"g\" width=\"2\" height=\"2\"><data encoding=\"csv\">") +
+                    data + flight::String("</data></layer>") +
+                    flight::String("<objectgroup id=\"2\" name=\"o\"><object id=\"1\" x=\"0\" y=\"0\"/></objectgroup></map>");
+  return formats::parse_tiled_tmx(text).value();
+}
+
+void project_evidence() {
+  const auto layout_a = resolved_layout(16.0);
+  const auto layout_b = resolved_layout(16.0);
+  int resolved_a = 0;
+  int resolved_b = 0;
+  const types::TiledTilesetResolver resolve =
+      [&](formats::ProjectTilesetView ref) -> std::optional<flight::Ref<types::TilemapData>> {
+    const auto first_gid = flight::row_get<flight::RowKey<"firstGid">>(ref);
+    if (first_gid == 1.0) {
+      ++resolved_a;
+      return layout_a;
+    }
+    if (first_gid == 5.0) {
+      ++resolved_b;
+      return layout_b;
+    }
+    return std::nullopt;
+  };
+
+  flight::Array<flight::Ref<types::ImportDiagnostic>> clean_diagnostics;
+  const auto split = formats::build_tilemap_layers_from_tiled(
+      readonly(project_map(flight::String("1,5,2147483649,6"))), 0.0, resolve,
+      std::optional<flight::Array<flight::Ref<types::ImportDiagnostic>>>{clean_diagnostics});
+  check(split.has_value() && split->length == 2 &&
+            tiles_are(split->element(0.0)->tiles, {0.0, -1.0, 0.0, -1.0}) &&
+            tiles_are(split->element(1.0)->tiles, {-1.0, 0.0, -1.0, 1.0}),
+        "project splits two tilesets into stable local-id grids and strips flip flags");
+  check(split.has_value() && split->element(1.0)->columns == 2.0 &&
+            split->element(1.0)->rows == 2.0 && split->element(1.0)->tile_width == 16.0 &&
+            split->element(1.0)->tile_height == 16.0 && resolved_a == 1 && resolved_b == 1 &&
+            clean_diagnostics.length == 0,
+        "project preserves dimensions, resolves each firstgid once, and stays silent on success");
+
+  flight::Array<flight::Ref<types::ImportDiagnostic>> unresolved_diagnostics;
+  int unresolved_calls = 0;
+  const types::TiledTilesetResolver only_a =
+      [&](formats::ProjectTilesetView ref) -> std::optional<flight::Ref<types::TilemapData>> {
+    const auto first_gid = flight::row_get<flight::RowKey<"firstGid">>(ref);
+    if (first_gid == 1.0) return layout_a;
+    ++unresolved_calls;
+    return std::nullopt;
+  };
+  const auto partial = formats::build_tilemap_layers_from_tiled(
+      readonly(project_map(flight::String("1,5,1,5"))), 0.0, only_a,
+      std::optional<flight::Array<flight::Ref<types::ImportDiagnostic>>>{unresolved_diagnostics});
+  check(partial.has_value() && partial->length == 1 &&
+            tiles_are(partial->element(0.0)->tiles, {0.0, -1.0, 0.0, -1.0}) &&
+            unresolved_calls == 1,
+        "project caches an unresolved tileset and leaves its cells empty");
+  check(unresolved_diagnostics.length == 1 &&
+            unresolved_diagnostics.element(0.0)->kind == flight::String("tiled.tileset-unresolved") &&
+            std::get<double>(unresolved_diagnostics.element(0.0)->detail->get(
+                                 flight::String("cells")).value()) == 2.0 &&
+            std::get<double>(unresolved_diagnostics.element(0.0)->detail->get(
+                                 flight::String("tilesets")).value()) == 1.0,
+        "project reports unresolved cells once per layer with exact counts");
+
+  flight::Array<flight::Ref<types::ImportDiagnostic>> outside_diagnostics;
+  const auto outside = formats::build_tilemap_layers_from_tiled(
+      readonly(project_map(flight::String("1,5"), 5.0)), 0.0, resolve,
+      std::optional<flight::Array<flight::Ref<types::ImportDiagnostic>>>{outside_diagnostics});
+  check(outside.has_value() && outside_diagnostics.length == 1 &&
+            outside_diagnostics.element(0.0)->kind ==
+                flight::String("tiled.tile-outside-every-tileset") &&
+            std::get<double>(outside_diagnostics.element(0.0)->detail->get(
+                                 flight::String("cells")).value()) == 1.0,
+        "project aggregates GIDs below every declared tileset into one diagnostic");
+
+  const types::TiledTilesetResolver none =
+      [](formats::ProjectTilesetView) -> std::optional<flight::Ref<types::TilemapData>> {
+    return std::nullopt;
+  };
+  const auto map = project_map(flight::String("1,5,2147483649,6"));
+  check(!formats::build_tilemap_layers_from_tiled(readonly(map), 0.0, none).has_value(),
+        "project returns absence when no referenced tileset resolves");
+  check(!formats::build_tilemap_layers_from_tiled(readonly(map), 1.0, resolve).has_value() &&
+            !formats::build_tilemap_layers_from_tiled(readonly(map), 9.0, resolve).has_value(),
+        "project rejects non-tile and out-of-range layers");
+}
+
 } // namespace
 
 int main() {
   color_and_gid_evidence();
   layer_data_evidence();
   xml_parse_and_tmx_format_evidence();
+  json_parse_and_tmj_format_evidence();
+  project_evidence();
   if (failures == 0) {
     std::cout << "generated tilemap-formats tests passed\n";
     return 0;

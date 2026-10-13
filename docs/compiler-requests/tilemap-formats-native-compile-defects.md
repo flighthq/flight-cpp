@@ -20,11 +20,11 @@ The JSON refusal omits `objectField`, `parseJson`, `parsePointsField`,
 refusal omits `buildTiledLayerDataFromXml`. Those omissions are behavior gaps, not merely header
 ordering problems.
 
-After the declared portability patch and XML layer-construction override, the current scoped result
-is 11 of 13 modules emitted and 8 of 13 headers compiling independently. The five remaining compile
-failures are `tiledJsonParse`, `tiledTmjFormat`, `tilemapDetect`, and the two aggregate headers that
-include the JSON failure. `tiledProject` is still a refused partial module even though its emitted
-header compiles, so it is not counted as supplied behavior.
+After the declared portability patch and complete JSON parser, JSON formatter, project projection,
+and XML layer-construction overrides, the current scoped result is 11 of 13 generated modules plus
+faithful supplies for both refused modules. Ten of 13 headers compile independently. The only three
+failures are `tilemapDetect` and the two aggregate headers that include it, all at the frozen older
+registry row's missing `KeyedTable`. No compiler-refused tilemap-formats behavior remains unsupplied.
 
 ## Emitted C++ that does not compile
 
