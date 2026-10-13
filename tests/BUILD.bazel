@@ -562,6 +562,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_input_binding_test",
+    srcs = ["generated_input_binding_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_skeleton2d_test",
     srcs = ["generated_skeleton2d_test.cpp"],
     size = "small",
@@ -1006,6 +1013,7 @@ test_suite(
         ":generated_input_test",
         ":generated_input_manager_test",
         ":generated_input_state_test",
+        ":generated_input_binding_test",
         ":generated_intl_cache_test",
         ":generated_lifecycle_test",
         ":generated_app_loop_test",

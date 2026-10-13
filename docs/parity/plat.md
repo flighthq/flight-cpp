@@ -449,9 +449,29 @@ Upstream carries per-package records at `flight/agents/packages/input/`: `status
   `next === 0` to `next <= 0` changes nothing, because the mask is built by OR-ing non-negative powers of two and is
   therefore never negative, so both spellings agree on every value the pointer path can produce.
 
-NOT covered, and not claimed: the six `attach*Input`/`detach*Input` families' release bookkeeping (the override's
-binding registry), `createInputKeyRepeatTimer`'s interaction with the manager, and the pointer move-relative, wheel and
-text ingress beyond reaching their subscribers — no case here asserts their bookkeeping.
+- `flight_cpp.generated_input_binding` — `tests/generated_input_binding_test.cpp` (dedicated), added by the unit that
+  took `inputManager.test.ts`'s "explicit input ingress parameter" block, the ingress the state machine does not consume,
+  and the repeat timer wired to the manager. It drives all six `attach*Input`/`detach*Input` families against a recording
+  host capability and pins what the binding registry owes: each family calls its own capability entry point, with its own
+  source identity, and hands every one of them the manager's single sink; a detach invokes that kind's release exactly
+  once, and repeating it — or detaching a kind or a source that was never bound — is silent; the binding is selected by
+  source *and* kind, so detaching one kind on a shared source leaves the others bound and vice versa;
+  re-attaching the same source with a different backend releases the origin it replaced exactly once and never again;
+  the registry holds exactly one reference per source however many kinds are bound to it, and drops it when the last kind
+  detaches; an options row is handed through as given, absence included; and detaching a source does not disable the
+  manager, which stays enabled and still normalizes what reaches its sink. It also covers relative pointer move (asserted
+  against every field the row can carry), wheel, and text input/edit for payload pass-through, per-signal order, and the
+  absence of any held-state effect, and wires `createInputKeyRepeatTimer` to the manager — which is where the
+  auto-repeat guard earns its place: the timer's own keydowns must not re-arm the press edge on each tick, the timer
+  keeps ticking while the manager is disabled and resumes delivering when it is re-enabled, and restarting the timer
+  cancels the cycle it replaced so one key cannot drive two repeat streams. Six mutations against the override supply
+  the module, all six with teeth: dropping the previous-release in `setInputBinding` 2 failures, detaching with the
+  wrong kind symbol 8, keeping a cleared registration 4, not cancelling on restart 1, emitting a relative move on the
+  absolute signal 1, and never dropping the emptied source entry 1.
+
+Still not covered, and not claimed: `getGamepadButtonName`/`getGamepadAxisName` are sampled rather than exhaustive (3
+of 18 button indices and 2 of 4 axes), and the sink's `isEnabled` probe is asserted only through a disabled manager
+rather than called directly.
 
 ### Measured divergences from upstream
 
@@ -470,13 +490,23 @@ the check flips when the fix lands.
   `std::range_error` here, because `table[i] ?? null` lowers to the bounds-checked `Array::element` rather than
   `Array::get`. Filed as `docs/compiler-requests/out-of-range-array-index-widened-to-null.md`.
 
-### A row cannot carry a timestamp
+### Members a row cannot carry
 
-`InputKeyboardData`, `InputPointerData` and `InputGamepadConnectData` declare `timeStamp`/`mapping`, but the generated
-row-member table has no key reaching `time_stamp` or `mapping` (it maps the camelCase key `timestamp` to a field of
-that exact name, and no such field exists on these types). A structural row over those types therefore cannot carry a
-timestamp, so no assertion here observes one. This is a property of the generated table rather than of the module, and
-it is recorded rather than worked around.
+The generated row-member table maps a camelCase key to the snake_case field of the same name, and it has no entry for
+several members these types declare. A structural row over them therefore cannot carry those members at all:
+
+| type | declared members with no row key |
+| --- | --- |
+| `InputKeyboardData`, `InputPointerData` | `timeStamp` (the table's `timestamp` key maps to a field spelled `timestamp`, which none of these types has) |
+| `InputPointerData` | `tiltX`, `tiltY`, `twist`, `pointerType`, `wheelMode` |
+| `InputTextData` | `isComposing` |
+| `InputGamepadConnectData` | `mapping` |
+| `AttachInputOptions` | `preventDefault` |
+
+The payload assertions in `tests/generated_input_binding_test.cpp` are exhaustive over what *can* be carried and say
+so; the members above are named here rather than worked around, because the gap is in the generated table rather than
+in the module. `preventDefault` is the one with a behavioural edge: an options row can be handed through and observed
+as present, but its contents cannot be constructed to check that the module forwards them unchanged.
 
 ### Local generation status
 
