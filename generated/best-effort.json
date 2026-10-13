@@ -15817,12 +15817,14 @@
       "declarationFingerprints": [
         "sha256:001df7555f2872a514e2172e837f6d76e1a56c48d37dcc8a1a6dd46af8f714fc",
         "sha256:1250a3819aeda3832e929dee04efdaea5a02c528b2e880b2fce2ca27fadafda0",
+        "sha256:3410d99c8a71a40d52af1b6cad2892320874c2b8edb7f684182333d7ca0188da",
         "sha256:47a0d7a1297bca44164886d472a8aa8bf5b59821b005c40cb6da9f49519465f1",
         "sha256:570752e3357326dd5191fdc44f199b868636f31c6b853f85195b2e3cab5f5245",
         "sha256:64cee95e29df4ebb6471050e32eb9aac7b7bf948958817da6d3d7ccdde9593e6",
         "sha256:685c7cb70edc5f31f8fcf12b0b96c90d478ca2fe0965c10de511e8318b6ac3be",
         "sha256:6cbff8e237e6164fcb8e818b0a3a721a9e7d53de72aba33ca70633fc832cd9df",
         "sha256:7be6f1cb80fe5abc9fd7af5ae4404d8b584f5cf29b70f5e436849b6a516d001c",
+        "sha256:8ea5d7142e61013590061c1b5739c9596161d22f1b401b4cc35eaf328db125f8",
         "sha256:9640ede968eddc06221b43feb40adeb249abaa258ccf40a43b6ed8f1ab077927",
         "sha256:99054bcaaa5887dde0a2ea6837a99caaac0cc7ae80c573be406de218ef0843eb",
         "sha256:acc4a6d6640fd76b4bc81102279c2af2f1d39d6fd3e18c7f695c01a9c711811d",
@@ -15837,9 +15839,7 @@
         "sha256:db1fba1cf163274f9003e4c03f421fbc1007053b35f2b3cd98e3614136c98fed",
         "sha256:e227b24d81cfd2f1b86d44b4ad4401e8fb911bce748e298e1b94656237e2805e",
         "sha256:e3b1702988f15880e64daed7083bb6f02a82804ae6b762f2c2b0c6604ac24c5a",
-        "sha256:e69f72211aff7cf20328db0f7886e74e5a77f1bc4c54509ccc1bb625ed6328f2",
         "sha256:f1ee38b314e954f7042ad1d441123839cf3d170a8c09fcb25890ac739b9f5b88",
-        "sha256:f44244cb76382e7b66b5d74d51dbe5382a06574f79f4566d01d6a3256ff82bde",
         "sha256:fb8b47a29a2dc14099949d3ab7f11c713c27fcd87b1af2c82b0361bc0713a1a1",
         "sha256:fe18b612253df8f4e81891bd5569474cd876979c0979de3a33bd1c8090994e73"
       ],
@@ -15872,9 +15872,9 @@
         "sha256:5930575e0c006869a0827b350c06b742c1b688f0f546b714cdf1ecbdb3780c52",
         "sha256:67f5c874bc13f7247e2903150fb3ff26bf535b96a53f22fcbf30de1c1e14cce4",
         "sha256:7829227c1addadb23d154d0c22bbe4823aa9cd64c463b01b99cde89020eefbc9",
-        "sha256:7a3451b5e786237dbfba3a4f4584da33614bda30369d431a4e4233f222598fc4",
         "sha256:7be6f1cb80fe5abc9fd7af5ae4404d8b584f5cf29b70f5e436849b6a516d001c",
         "sha256:7e0477cbfc26e37251efadf0365678f2419bae9b44a1449cbc145e8868838cac",
+        "sha256:80002b09dd4cbc1389ca3bc827166fa00aa7c0f6259b5e581b0c6c26cfdacea4",
         "sha256:89e040fe0d15f220585e2f53583a299195fcf7ed4a6efa894d2c40436ab2a36a",
         "sha256:8e1c584503feadde1547e5f8b9fc4435162a39adb640251d2ba6d812d3eff47e",
         "sha256:987f9364d044a1312103502ad7d0f686a7128416bb8b24f10e154a35f5cabb1b",
@@ -15958,22 +15958,10 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "target-runtime",
       "consumers": [
         "@flighthq/particleemitter/packages/particleemitter/src/contract.ts",
         "@flighthq/particleemitter/packages/particleemitter/src/prewarmParticleEmitter2D.ts",
         "@flighthq/particleemitter/packages/particleemitter/src/stepParticleEmitter2D.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:21358b51c97beedc818f402da28eeadfea21a1b2bbb7c8336bd1f27917f9e05a",
-        "sha256:268fa6661cf3d3c95b7f92815033b02b47da35361933b07d0fb19a3ef4533287",
-        "sha256:4819bd4abf307f940794ccb71ed6ab0f8f64371a70ba070ce610c342de114bd3",
-        "sha256:4b0f64cc9bdbe454454a1b2a7951ad2462051953e1173bbd1465cecaa9120db1",
-        "sha256:5ac063d391d3e0cefd69228598c677e5e72363cd9374718c24150c1ff6278c42",
-        "sha256:5ed8d9ea29bbaf154860e74128823769709b2f45cba72c949a51a8d734d72657",
-        "sha256:73f87b7e1d3452f5565feffb033a5d62115ddcc4ff7b88e69f4632609004be28",
-        "sha256:7be6f1cb80fe5abc9fd7af5ae4404d8b584f5cf29b70f5e436849b6a516d001c",
-        "sha256:878130cc7c77e8327a5699d207920703482d624e497583166ede2e0fa8412ca6"
       ],
       "module": {
         "name": "UpdateParticleEmitter2D",
@@ -15981,26 +15969,16 @@
         "source": "packages/particleemitter/src/updateParticleEmitter2D.ts"
       },
       "path": "flight/particleemitter/update_particle_emitter2_d.hpp",
-      "rule": "cpp-erased-structural-row-assertion-runtime-required",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/particleemitter/packages/particleemitter/src/particleEmitter.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
-      "classification": "source-portability",
       "consumers": [
         "@flighthq/particleemitter/packages/particleemitter/src/contract.ts",
         "@flighthq/particleemitter/packages/particleemitter/src/prewarmParticleEmitter3D.ts",
         "@flighthq/particleemitter/packages/particleemitter/src/stepParticleEmitter3D.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:21358b51c97beedc818f402da28eeadfea21a1b2bbb7c8336bd1f27917f9e05a",
-        "sha256:268fa6661cf3d3c95b7f92815033b02b47da35361933b07d0fb19a3ef4533287",
-        "sha256:4819bd4abf307f940794ccb71ed6ab0f8f64371a70ba070ce610c342de114bd3",
-        "sha256:6717f7ee2900e2ff09b0270cab575275253b6a790fe9cef80d99e6191aa0eb0d",
-        "sha256:6d950d8d00186ea28b911a1951b23a6fbe218d6db225407581ef4ac0670ba865",
-        "sha256:73f87b7e1d3452f5565feffb033a5d62115ddcc4ff7b88e69f4632609004be28",
-        "sha256:7be6f1cb80fe5abc9fd7af5ae4404d8b584f5cf29b70f5e436849b6a516d001c",
-        "sha256:878130cc7c77e8327a5699d207920703482d624e497583166ede2e0fa8412ca6",
-        "sha256:f3fd32c110d39819c3351bb754a477ff4d46171cf2b01818a61aed8ad7a29a5e"
       ],
       "module": {
         "name": "UpdateParticleEmitter3D",
@@ -16008,8 +15986,10 @@
         "source": "packages/particleemitter/src/updateParticleEmitter3D.ts"
       },
       "path": "flight/particleemitter/update_particle_emitter3_d.hpp",
-      "rule": "cpp-structural-assertion-owner-unproven",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/particleemitter/packages/particleemitter/src/particleEmitter3D.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [

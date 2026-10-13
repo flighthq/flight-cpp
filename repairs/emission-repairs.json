@@ -1585,6 +1585,45 @@
       "expires": "when the emitter materializes every partial row_get into its declared three-state return carrier; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "particleemitter-data-atlas-partial-row-absence",
+      "kind": "project-partial-row-absence",
+      "appliesTo": "flight/particleemitter/particle_emitter.hpp",
+      "keys": [
+        "atlas"
+      ],
+      "sourceDeclaration": "packages/particleemitter/src/particleEmitter.ts -- initializeParticleEmitterData writes out.atlas = data?.atlas ?? null, where atlas: TextureAtlas | null is read from a possibly-absent Readonly<Partial<ParticleEmitterData>> row, against a declared std::variant<flight::Ref<TextureAtlas>, flight::Null, flight::Undefined>",
+      "diagnostic": "no viable conversion from returned value of type 'std::optional<std::shared_ptr<flight::types::TextureAtlas>>' to function return type 'std::variant<flight::Ref<flight::types::TextureAtlas>, flight::Null, flight::Undefined>'",
+      "defect": "Same short-form lowering as node-has-clip-partial-row-absence: the present-receiver branch returns the partial row_get straight into the three-state carrier. The repair writes the emitter's own long form, in which an absent nullable member maps to flight::Null; the receiver check before it already supplies Undefined. See that entry.",
+      "expectedWhen": "always",
+      "expires": "when the emitter uses its long-form lowering at every partial row_get in a three-state position; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "particleemitter-declare-refused-create-2d",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/particleemitter/particle_emitter.hpp",
+      "symbol": "create_particle_emitter2_d",
+      "refusedFunction": "createParticleEmitter2D",
+      "declaration": "flight::Ref<flight::types::ParticleEmitter2D> create_particle_emitter2_d(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_578a7c2cb5b86b30>>>>> obj = std::nullopt);",
+      "sourceDeclaration": "packages/particleemitter/src/particleEmitter.ts -- createParticleEmitter2D(obj?: Readonly<PartialNode<ParticleEmitter2D>>), refused; cloneParticleEmitter2D calls it",
+      "diagnostic": "use of undeclared identifier 'create_particle_emitter2_d'",
+      "defect": "The emitter refuses createParticleEmitter2D -- its construction asserts a scene2d node runtime to the module's runtime subtype, which has no C++ heritage (docs/compiler-requests/asserted-erased-runtime-owner.md), and scene2d's own node construction is itself refused or supplied only for its base kind -- but retains cloneParticleEmitter2D, which calls it, so the whole header fails to compile on an undeclared name. The declaration's signature is the emitter's own: the retained call constructs exactly this parameter carrier for createParticleEmitter2D's declared `obj?: Readonly<PartialNode<ParticleEmitter2D>>`. Declaration only: cloneParticleEmitter2D and any other caller compile, and calling it fails to link -- creation stays unusable, never substituted.",
+      "expectedWhen": "always",
+      "expires": "when createParticleEmitter2D emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "particleemitter-declare-refused-create-3d",
+      "kind": "declare-refused-function",
+      "appliesTo": "flight/particleemitter/particle_emitter3_d.hpp",
+      "symbol": "create_particle_emitter3_d",
+      "refusedFunction": "createParticleEmitter3D",
+      "declaration": "flight::Ref<flight::types::ParticleEmitter3D> create_particle_emitter3_d(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_position_rotation_scale_blend_mode_0944bc601f2d30b4>>>>> obj = std::nullopt);",
+      "sourceDeclaration": "packages/particleemitter/src/particleEmitter3D.ts -- createParticleEmitter3D(obj?: Readonly<PartialNode<ParticleEmitter3D>>), refused; cloneParticleEmitter3D calls it",
+      "diagnostic": "use of undeclared identifier 'create_particle_emitter3_d'",
+      "defect": "The emitter refuses createParticleEmitter3D -- its construction asserts a scene3d node runtime to the module's runtime subtype, which has no C++ heritage (docs/compiler-requests/asserted-erased-runtime-owner.md), and scene3d's own node construction is itself refused or supplied only for its base kind -- but retains cloneParticleEmitter3D, which calls it, so the whole header fails to compile on an undeclared name. The declaration's signature is the emitter's own: the retained call constructs exactly this parameter carrier for createParticleEmitter3D's declared `obj?: Readonly<PartialNode<ParticleEmitter3D>>`. Declaration only: cloneParticleEmitter3D and any other caller compile, and calling it fails to link -- creation stays unusable, never substituted.",
+      "expectedWhen": "always",
+      "expires": "when createParticleEmitter3D emits (the NOT GENERATED marker disappears and this repair matches nothing); sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "materials-standard-material-three-state-member",
       "kind": "unwrap-partial-row-three-state-member",
       "appliesTo": "flight/materials/standard_material.hpp",

@@ -1,0 +1,73 @@
+diff --git a/packages/particleemitter/src/particleEmitter.ts b/packages/particleemitter/src/particleEmitter.ts
+index eaf46e0..554b7bc 100644
+--- a/packages/particleemitter/src/particleEmitter.ts
++++ b/packages/particleemitter/src/particleEmitter.ts
+@@ -83,19 +83,18 @@ export function clearParticleEmitter2D(target: ParticleEmitter2D): void {
+  */
+ export function cloneParticleEmitter2D(source: Readonly<ParticleEmitter2D>): ParticleEmitter2D {
+   const src = source.data;
+-  return createParticleEmitter2D({
+-    data: {
+-      alphas: src.alphas.slice(),
+-      atlas: src.atlas,
+-      colors: src.colors.slice(),
+-      ids: src.ids.slice(),
+-      particleCount: src.particleCount,
+-      positionsZ: src.positionsZ.slice(),
+-      transforms: src.transforms.slice(),
+-      velocities: src.velocities.slice(),
+-      worldSpace: src.worldSpace,
+-    },
+-  });
++  const data: Partial<ParticleEmitterData> = {
++    alphas: src.alphas.slice(),
++    atlas: src.atlas,
++    colors: src.colors.slice(),
++    ids: src.ids.slice(),
++    particleCount: src.particleCount,
++    positionsZ: src.positionsZ.slice(),
++    transforms: src.transforms.slice(),
++    velocities: src.velocities.slice(),
++    worldSpace: src.worldSpace,
++  };
++  return createParticleEmitter2D({ data });
+ }
+ 
+ /**
+diff --git a/packages/particleemitter/src/particleEmitter3D.ts b/packages/particleemitter/src/particleEmitter3D.ts
+index b2a9960..3f9f7a2 100644
+--- a/packages/particleemitter/src/particleEmitter3D.ts
++++ b/packages/particleemitter/src/particleEmitter3D.ts
+@@ -63,20 +63,18 @@ export function clearParticleEmitter3D(target: ParticleEmitter3D): void {
+ 
+ export function cloneParticleEmitter3D(source: Readonly<ParticleEmitter3D>): ParticleEmitter3D {
+   const src = source.data;
+-  return createParticleEmitter3D({
+-    blendMode: source.blendMode,
+-    data: {
+-      alphas: src.alphas.slice(),
+-      atlas: src.atlas,
+-      colors: src.colors.slice(),
+-      ids: src.ids.slice(),
+-      particleCount: src.particleCount,
+-      positionsZ: src.positionsZ.slice(),
+-      transforms: src.transforms.slice(),
+-      velocities: src.velocities.slice(),
+-      worldSpace: src.worldSpace,
+-    },
+-  });
++  const data: Partial<ParticleEmitterData> = {
++    alphas: src.alphas.slice(),
++    atlas: src.atlas,
++    colors: src.colors.slice(),
++    ids: src.ids.slice(),
++    particleCount: src.particleCount,
++    positionsZ: src.positionsZ.slice(),
++    transforms: src.transforms.slice(),
++    velocities: src.velocities.slice(),
++    worldSpace: src.worldSpace,
++  };
++  return createParticleEmitter3D({ blendMode: source.blendMode, data });
+ }
+ 
+ export function compactParticleEmitter3D(target: ParticleEmitter3D): void {
