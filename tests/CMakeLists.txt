@@ -1145,6 +1145,12 @@ add_test(
 flight_cpp_package_test_labels(flight_cpp.generated_textbidi_parity log textbidi types)
 
 add_executable(flight_cpp_c_api_tests c_api_test.c)
+add_executable(flight_cpp_generated_textlayout_parity_tests generated_textlayout_parity_test.cpp)
+target_include_directories(flight_cpp_generated_textlayout_parity_tests BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include")
+target_link_libraries(flight_cpp_generated_textlayout_parity_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_textlayout_parity COMMAND flight_cpp_generated_textlayout_parity_tests)
+flight_cpp_package_test_labels(flight_cpp.generated_textlayout_parity textlayout)
+
 add_executable(flight_cpp_generated_textsegment_parity_tests generated_textsegment_parity_test.cpp)
 target_include_directories(flight_cpp_generated_textsegment_parity_tests BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include")
 target_link_libraries(flight_cpp_generated_textsegment_parity_tests PRIVATE Flight::Cpp Flight::SdkPreview)
