@@ -1929,6 +1929,7 @@
       "classification": "source-portability",
       "consumers": [
         "@flighthq/bitmaptext/packages/bitmaptext/src/contract.ts",
+        "@flighthq/bitmaptext/packages/bitmaptext/src/index.ts",
         "@flighthq/bitmaptext/packages/bitmaptext/src/updateBitmapText.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBitmapText.ts"
       ],
@@ -1943,7 +1944,7 @@
         "sha256:39bae13a5aadbeccc4cfd1d49b66dbee7d8d49c2879ee08438469306354d410e",
         "sha256:3c8f5d0e8d8cbc5bd1c460e4ec325c983ad00d4be46e0873fabec3c860037119",
         "sha256:5695ddffa18d5d76e8e2a78af249ccc38f2721fbab8fd2dd73d00a7f48a181de",
-        "sha256:57d2511ea53e68705b662e7021f6883446bb785cc747fa08bff9d6923f26aab3",
+        "sha256:68992f4571cba97dc3671e665f945bbdc1962d78422792b0e2edc98af3bfa3bd",
         "sha256:69c3c05fde5befd375e9b80b5083eed7d64e88a35e69eca40dc6a0358d4f9abe",
         "sha256:6aed40ec4dc51f78d1d9a6603570ccb7f9e1cdd2fe01f3788c8b9a53d9526f0f",
         "sha256:74a02bc0d5b7037a9fa0004e75add11b2c7dd84f2b8d635c291e0a274f32ad56",
@@ -1968,9 +1969,7 @@
       "status": "refused-placeholder"
     },
     {
-      "consumers": [
-        "@flighthq/bitmaptext/packages/bitmaptext/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/bitmaptext",
@@ -1987,7 +1986,8 @@
     },
     {
       "consumers": [
-        "@flighthq/bitmaptext/packages/bitmaptext/src/contract.ts"
+        "@flighthq/bitmaptext/packages/bitmaptext/src/contract.ts",
+        "@flighthq/bitmaptext/packages/bitmaptext/src/index.ts"
       ],
       "module": {
         "name": "EnableBitmapTextGuards",
@@ -2004,7 +2004,8 @@
     {
       "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/bitmaptext/packages/bitmaptext/src/contract.ts"
+        "@flighthq/bitmaptext/packages/bitmaptext/src/contract.ts",
+        "@flighthq/bitmaptext/packages/bitmaptext/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:b85cdddc6d2aadc32b73527641948e9e5e3800712cc680d4e7ffd8374486e1a3"
@@ -2026,7 +2027,10 @@
       },
       "path": "flight/bitmaptext/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/bitmaptext/packages/bitmaptext/src/contract.ts"
+        "@flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts",
+        "@flighthq/bitmaptext/packages/bitmaptext/src/enableBitmapTextGuards.ts",
+        "@flighthq/bitmaptext/packages/bitmaptext/src/explainBitmapTextMissingGlyphs.ts",
+        "@flighthq/bitmaptext/packages/bitmaptext/src/updateBitmapText.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -2034,7 +2038,8 @@
       "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/bitmaptext/packages/bitmaptext/src/contract.ts",
-        "@flighthq/bitmaptext/packages/bitmaptext/src/enableBitmapTextGuards.ts"
+        "@flighthq/bitmaptext/packages/bitmaptext/src/enableBitmapTextGuards.ts",
+        "@flighthq/bitmaptext/packages/bitmaptext/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:0d31aba485fae1dee00720ee81ef83ecb0ed1ffa996e6c435278eda98124b687",

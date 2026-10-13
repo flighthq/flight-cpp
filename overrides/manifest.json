@@ -1082,7 +1082,7 @@
       "path": "flight/bitmaptext/bitmap_text.hpp",
       "package": "@flighthq/bitmaptext",
       "status": "partial",
-      "derivedFrom": "d3901c2535f6e3aa878835a863eef38f49a681d0966cb841ee1b1f169ed356e5",
+      "derivedFrom": "310b98d0efbb46306ff8e3fcbb1ed1c8689c40d854a8f99a165967e22d087ee9",
       "reason": "Fixes undeclared compute_bitmap_text_local_bounds_rectangle (stub zeros rectangle), target->data.member -> target->data->member (data is Ref<BitmapTextData> = shared_ptr), and undeclared create_texture_atlas (stub creates default TextureAtlas).",
       "expires": "when the emitter generates compute_bitmap_text_local_bounds_rectangle and create_texture_atlas.",
       "change": "Provided compute_bitmap_text_local_bounds_rectangle stub (zeros rectangle), fixed target->data.member to target->data->member, provided create_texture_atlas stub.",

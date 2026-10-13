@@ -3,6 +3,11 @@
 //   1. Stub for compute_bitmap_text_local_bounds_rectangle (refused: cpp-reference-assertion-without-heritage)
 //   2. target->data.member -> target->data->member (data is Ref<BitmapTextData>, not BitmapTextData)
 //   3. Stub for create_texture_atlas (refused: cpp-partial-shape-unresolvable)
+//
+// Re-derived 2026-10-12 at generated digest 310b98d0efbb46306ff8e3fcbb1ed1c8689c40d854a8f99a165967e22d087ee9. The emitted bitmap_text.hpp is still a PARTIAL,
+// so this override remains a completion rather than a copy. Its recorded surface gap stands: zero
+// local bounds and an empty texture atlas, plus the refused layout, pagination, initialization,
+// truncation, reservation and option helpers -- see the manifest's `remaining` for the list.
 #pragma once
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each

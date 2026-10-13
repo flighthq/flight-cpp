@@ -500,6 +500,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("element") && requires { object.element; }) return (object.element);
   else if constexpr (Key::name.view() == std::string_view("elementHandlers") && requires { object.element_handlers; }) return (object.element_handlers);
   else if constexpr (Key::name.view() == std::string_view("ellipse") && requires { object.ellipse; }) return (object.ellipse);
+  else if constexpr (Key::name.view() == std::string_view("ellipsis") && requires { object.ellipsis; }) return (object.ellipsis);
   else if constexpr (Key::name.view() == std::string_view("emission") && requires { object.emission; }) return (object.emission);
   else if constexpr (Key::name.view() == std::string_view("emissive") && requires { object.emissive; }) return (object.emissive);
   else if constexpr (Key::name.view() == std::string_view("emissiveMap") && requires { object.emissive_map; }) return (object.emissive_map);
@@ -703,6 +704,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("glossiness") && requires { object.glossiness; }) return (object.glossiness);
   else if constexpr (Key::name.view() == std::string_view("glyph") && requires { object.glyph; }) return (object.glyph);
   else if constexpr (Key::name.view() == std::string_view("glyphCount") && requires { object.glyph_count; }) return (object.glyph_count);
+  else if constexpr (Key::name.view() == std::string_view("glyphSource") && requires { object.glyph_source; }) return (object.glyph_source);
   else if constexpr (Key::name.view() == std::string_view("glyphStream") && requires { object.glyph_stream; }) return (object.glyph_stream);
   else if constexpr (Key::name.view() == std::string_view("glyphs") && requires { object.glyphs; }) return (object.glyphs);
   else if constexpr (Key::name.view() == std::string_view("goalAzimuth") && requires { object.goal_azimuth; }) return (object.goal_azimuth);
@@ -954,6 +956,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("leftMargin") && requires { object.left_margin; }) return (object.left_margin);
   else if constexpr (Key::name.view() == std::string_view("length") && requires { object.length; }) return (object.length);
   else if constexpr (Key::name.view() == std::string_view("lengths") && requires { object.lengths; }) return (object.lengths);
+  else if constexpr (Key::name.view() == std::string_view("letterSpacing") && requires { object.letter_spacing; }) return (object.letter_spacing);
   else if constexpr (Key::name.view() == std::string_view("levels") && requires { object.levels; }) return (object.levels);
   else if constexpr (Key::name.view() == std::string_view("life") && requires { object.life; }) return (object.life);
   else if constexpr (Key::name.view() == std::string_view("lifeOffset") && requires { object.life_offset; }) return (object.life_offset);
@@ -2189,6 +2192,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("wouldOccupyBucketCount") && requires { object.would_occupy_bucket_count; }) return (object.would_occupy_bucket_count);
   else if constexpr (Key::name.view() == std::string_view("wrapU") && requires { object.wrap_u; }) return (object.wrap_u);
   else if constexpr (Key::name.view() == std::string_view("wrapV") && requires { object.wrap_v; }) return (object.wrap_v);
+  else if constexpr (Key::name.view() == std::string_view("wrapWidth") && requires { object.wrap_width; }) return (object.wrap_width);
   else if constexpr (Key::name.view() == std::string_view("wrappedDiffuseColor") && requires { object.wrapped_diffuse_color; }) return (object.wrapped_diffuse_color);
   else if constexpr (Key::name.view() == std::string_view("wrappedDiffuseMap") && requires { object.wrapped_diffuse_map; }) return (object.wrapped_diffuse_map);
   else if constexpr (Key::name.view() == std::string_view("wrappedDiffuseMapUvSet") && requires { object.wrapped_diffuse_map_uv_set; }) return (object.wrapped_diffuse_map_uv_set);
@@ -2711,6 +2715,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("element") && requires(Object& object) { object.element; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().element)>>{};
   else if constexpr (Key::name.view() == std::string_view("elementHandlers") && requires(Object& object) { object.element_handlers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().element_handlers)>>{};
   else if constexpr (Key::name.view() == std::string_view("ellipse") && requires(Object& object) { object.ellipse; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ellipse)>>{};
+  else if constexpr (Key::name.view() == std::string_view("ellipsis") && requires(Object& object) { object.ellipsis; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ellipsis)>>{};
   else if constexpr (Key::name.view() == std::string_view("emission") && requires(Object& object) { object.emission; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().emission)>>{};
   else if constexpr (Key::name.view() == std::string_view("emissive") && requires(Object& object) { object.emissive; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().emissive)>>{};
   else if constexpr (Key::name.view() == std::string_view("emissiveMap") && requires(Object& object) { object.emissive_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().emissive_map)>>{};
@@ -2914,6 +2919,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("glossiness") && requires(Object& object) { object.glossiness; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().glossiness)>>{};
   else if constexpr (Key::name.view() == std::string_view("glyph") && requires(Object& object) { object.glyph; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().glyph)>>{};
   else if constexpr (Key::name.view() == std::string_view("glyphCount") && requires(Object& object) { object.glyph_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().glyph_count)>>{};
+  else if constexpr (Key::name.view() == std::string_view("glyphSource") && requires(Object& object) { object.glyph_source; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().glyph_source)>>{};
   else if constexpr (Key::name.view() == std::string_view("glyphStream") && requires(Object& object) { object.glyph_stream; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().glyph_stream)>>{};
   else if constexpr (Key::name.view() == std::string_view("glyphs") && requires(Object& object) { object.glyphs; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().glyphs)>>{};
   else if constexpr (Key::name.view() == std::string_view("goalAzimuth") && requires(Object& object) { object.goal_azimuth; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().goal_azimuth)>>{};
@@ -3165,6 +3171,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("leftMargin") && requires(Object& object) { object.left_margin; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().left_margin)>>{};
   else if constexpr (Key::name.view() == std::string_view("length") && requires(Object& object) { object.length; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().length)>>{};
   else if constexpr (Key::name.view() == std::string_view("lengths") && requires(Object& object) { object.lengths; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().lengths)>>{};
+  else if constexpr (Key::name.view() == std::string_view("letterSpacing") && requires(Object& object) { object.letter_spacing; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().letter_spacing)>>{};
   else if constexpr (Key::name.view() == std::string_view("levels") && requires(Object& object) { object.levels; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().levels)>>{};
   else if constexpr (Key::name.view() == std::string_view("life") && requires(Object& object) { object.life; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().life)>>{};
   else if constexpr (Key::name.view() == std::string_view("lifeOffset") && requires(Object& object) { object.life_offset; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().life_offset)>>{};
@@ -4400,6 +4407,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("wouldOccupyBucketCount") && requires(Object& object) { object.would_occupy_bucket_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().would_occupy_bucket_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("wrapU") && requires(Object& object) { object.wrap_u; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().wrap_u)>>{};
   else if constexpr (Key::name.view() == std::string_view("wrapV") && requires(Object& object) { object.wrap_v; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().wrap_v)>>{};
+  else if constexpr (Key::name.view() == std::string_view("wrapWidth") && requires(Object& object) { object.wrap_width; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().wrap_width)>>{};
   else if constexpr (Key::name.view() == std::string_view("wrappedDiffuseColor") && requires(Object& object) { object.wrapped_diffuse_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().wrapped_diffuse_color)>>{};
   else if constexpr (Key::name.view() == std::string_view("wrappedDiffuseMap") && requires(Object& object) { object.wrapped_diffuse_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().wrapped_diffuse_map)>>{};
   else if constexpr (Key::name.view() == std::string_view("wrappedDiffuseMapUvSet") && requires(Object& object) { object.wrapped_diffuse_map_uv_set; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().wrapped_diffuse_map_uv_set)>>{};
@@ -4925,6 +4933,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->element; }) owner.bind_named("element", [object]() -> decltype(auto) { return (object->element); });
   if constexpr (requires { object->element_handlers; }) owner.bind_named("elementHandlers", [object]() -> decltype(auto) { return (object->element_handlers); });
   if constexpr (requires { object->ellipse; }) owner.bind_named("ellipse", [object]() -> decltype(auto) { return (object->ellipse); });
+  if constexpr (requires { object->ellipsis; }) owner.bind_named("ellipsis", [object]() -> decltype(auto) { return (object->ellipsis); });
   if constexpr (requires { object->emission; }) owner.bind_named("emission", [object]() -> decltype(auto) { return (object->emission); });
   if constexpr (requires { object->emissive; }) owner.bind_named("emissive", [object]() -> decltype(auto) { return (object->emissive); });
   if constexpr (requires { object->emissive_map; }) owner.bind_named("emissiveMap", [object]() -> decltype(auto) { return (object->emissive_map); });
@@ -5128,6 +5137,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->glossiness; }) owner.bind_named("glossiness", [object]() -> decltype(auto) { return (object->glossiness); });
   if constexpr (requires { object->glyph; }) owner.bind_named("glyph", [object]() -> decltype(auto) { return (object->glyph); });
   if constexpr (requires { object->glyph_count; }) owner.bind_named("glyphCount", [object]() -> decltype(auto) { return (object->glyph_count); });
+  if constexpr (requires { object->glyph_source; }) owner.bind_named("glyphSource", [object]() -> decltype(auto) { return (object->glyph_source); });
   if constexpr (requires { object->glyph_stream; }) owner.bind_named("glyphStream", [object]() -> decltype(auto) { return (object->glyph_stream); });
   if constexpr (requires { object->glyphs; }) owner.bind_named("glyphs", [object]() -> decltype(auto) { return (object->glyphs); });
   if constexpr (requires { object->goal_azimuth; }) owner.bind_named("goalAzimuth", [object]() -> decltype(auto) { return (object->goal_azimuth); });
@@ -5379,6 +5389,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->left_margin; }) owner.bind_named("leftMargin", [object]() -> decltype(auto) { return (object->left_margin); });
   if constexpr (requires { object->length; }) owner.bind_named("length", [object]() -> decltype(auto) { return (object->length); });
   if constexpr (requires { object->lengths; }) owner.bind_named("lengths", [object]() -> decltype(auto) { return (object->lengths); });
+  if constexpr (requires { object->letter_spacing; }) owner.bind_named("letterSpacing", [object]() -> decltype(auto) { return (object->letter_spacing); });
   if constexpr (requires { object->levels; }) owner.bind_named("levels", [object]() -> decltype(auto) { return (object->levels); });
   if constexpr (requires { object->life; }) owner.bind_named("life", [object]() -> decltype(auto) { return (object->life); });
   if constexpr (requires { object->life_offset; }) owner.bind_named("lifeOffset", [object]() -> decltype(auto) { return (object->life_offset); });
@@ -6614,6 +6625,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->would_occupy_bucket_count; }) owner.bind_named("wouldOccupyBucketCount", [object]() -> decltype(auto) { return (object->would_occupy_bucket_count); });
   if constexpr (requires { object->wrap_u; }) owner.bind_named("wrapU", [object]() -> decltype(auto) { return (object->wrap_u); });
   if constexpr (requires { object->wrap_v; }) owner.bind_named("wrapV", [object]() -> decltype(auto) { return (object->wrap_v); });
+  if constexpr (requires { object->wrap_width; }) owner.bind_named("wrapWidth", [object]() -> decltype(auto) { return (object->wrap_width); });
   if constexpr (requires { object->wrapped_diffuse_color; }) owner.bind_named("wrappedDiffuseColor", [object]() -> decltype(auto) { return (object->wrapped_diffuse_color); });
   if constexpr (requires { object->wrapped_diffuse_map; }) owner.bind_named("wrappedDiffuseMap", [object]() -> decltype(auto) { return (object->wrapped_diffuse_map); });
   if constexpr (requires { object->wrapped_diffuse_map_uv_set; }) owner.bind_named("wrappedDiffuseMapUvSet", [object]() -> decltype(auto) { return (object->wrapped_diffuse_map_uv_set); });
@@ -7172,6 +7184,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(element)
   FLIGHT_SDK_ROW_WIDENS(element_handlers)
   FLIGHT_SDK_ROW_WIDENS(ellipse)
+  FLIGHT_SDK_ROW_WIDENS(ellipsis)
   FLIGHT_SDK_ROW_WIDENS(emission)
   FLIGHT_SDK_ROW_WIDENS(emissive)
   FLIGHT_SDK_ROW_WIDENS(emissive_map)
@@ -7375,6 +7388,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(glossiness)
   FLIGHT_SDK_ROW_WIDENS(glyph)
   FLIGHT_SDK_ROW_WIDENS(glyph_count)
+  FLIGHT_SDK_ROW_WIDENS(glyph_source)
   FLIGHT_SDK_ROW_WIDENS(glyph_stream)
   FLIGHT_SDK_ROW_WIDENS(glyphs)
   FLIGHT_SDK_ROW_WIDENS(goal_azimuth)
@@ -7626,6 +7640,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(left_margin)
   FLIGHT_SDK_ROW_WIDENS(length)
   FLIGHT_SDK_ROW_WIDENS(lengths)
+  FLIGHT_SDK_ROW_WIDENS(letter_spacing)
   FLIGHT_SDK_ROW_WIDENS(levels)
   FLIGHT_SDK_ROW_WIDENS(life)
   FLIGHT_SDK_ROW_WIDENS(life_offset)
@@ -8861,6 +8876,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(would_occupy_bucket_count)
   FLIGHT_SDK_ROW_WIDENS(wrap_u)
   FLIGHT_SDK_ROW_WIDENS(wrap_v)
+  FLIGHT_SDK_ROW_WIDENS(wrap_width)
   FLIGHT_SDK_ROW_WIDENS(wrapped_diffuse_color)
   FLIGHT_SDK_ROW_WIDENS(wrapped_diffuse_map)
   FLIGHT_SDK_ROW_WIDENS(wrapped_diffuse_map_uv_set)

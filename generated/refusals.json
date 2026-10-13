@@ -207,7 +207,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 26,
+      "line": 27,
       "module": "packages/bitmaptext/src/bitmapText.ts",
       "package": "@flighthq/bitmaptext",
       "reason": "cpp emission failed for @flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts: a structural assertion from the readonly row Readonly<Node2DRuntime> to the writable row BitmapTextRuntime claims mutation the source refused: a readonly row never becomes writable, because the boundary the value came through said its subject must not be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the readonly row where the value is only read, or declare the source -- its parameter, slot, or accessor result -- as the writable type where that object may really be mutated. Choosing between those two repairs is the question this assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME OWNER that the mutating paths must write needs a mutable-source accessor returning the full writable owner from the typed runtime slot, with the readonly accessor kept for reads, because the capability has to exist on the storage and accessor that establish those cells; a NODE that the read paths only traverse and never mutate needs the two authorities separated instead, with a readonly view on every read path and a separate mutable entry point for the paths that really mutate, because laundering a writable node out of a readonly boundary grants mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained row carries; neither adds cells to a row that does not declare them. Making only that boundary writable is insufficient here: the source owner does not declare glyphLayoutVersion, lineCount, pages and truncated, so it has no cells for the asserted row to mutate. Declare both the storage slot and the accessor result as the full writable BitmapTextRuntime row where initialization establishes those cells, rather than widening Readonly<Node2DRuntime> at the use site.",
@@ -217,14 +217,14 @@
       "code": "dependency-refused",
       "module": "packages/bitmaptext/src/contract.ts",
       "package": "@flighthq/bitmaptext",
-      "reason": "dependency ./bitmapText was refused for @flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts",
+      "reason": "dependency ./bitmapText.ts was refused for @flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/bitmaptext/src/enableBitmapTextGuards.ts",
       "package": "@flighthq/bitmaptext",
-      "reason": "dependency ./updateBitmapText was refused for @flighthq/bitmaptext/packages/bitmaptext/src/updateBitmapText.ts",
+      "reason": "dependency ./updateBitmapText.ts was refused for @flighthq/bitmaptext/packages/bitmaptext/src/updateBitmapText.ts",
       "stage": "dependency"
     },
     {
@@ -240,7 +240,7 @@
       "code": "dependency-refused",
       "module": "packages/bitmaptext/src/index.ts",
       "package": "@flighthq/bitmaptext",
-      "reason": "dependency ./contract was refused for @flighthq/bitmaptext/packages/bitmaptext/src/contract.ts",
+      "reason": "dependency ./bitmapText.ts was refused for @flighthq/bitmaptext/packages/bitmaptext/src/bitmapText.ts",
       "stage": "dependency"
     },
     {
