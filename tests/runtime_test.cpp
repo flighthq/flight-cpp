@@ -569,6 +569,35 @@ void test_array() {
         "Array.from preserves iterable order and supplies numeric mapper indexes");
   check(copied_array_like.size() == 3 && copied_array_like[1] == 4 && empty_copy.empty(),
         "Array.from accepts represented array-like views and empty inputs");
+  // Oracle: node's Array.from({ length: 3 }, (v, i) => [v === undefined, i]) is
+  // [[true,0],[true,1],[true,2]]; lengths 2.7, -1, NaN give 2, 0, 0; 2 ** 32 and Infinity throw RangeError.
+  std::vector<bool> saw_undefined;
+  const auto by_length = flight::array_from({.length = 3.0}, [&](flight::Any value, double index) {
+    saw_undefined.push_back(value.is_undefined());
+    return index * 10.0;
+  });
+  check(by_length.size() == 3 && by_length[0] == 0.0 && by_length[2] == 20.0 &&
+            saw_undefined == std::vector<bool>{true, true, true},
+        "Array.from({ length }) maps undefined elements with their indexes in order");
+  const auto index_of = [](flight::Any, double index) { return index; };
+  check(flight::array_from({.length = 2.7}, index_of).size() == 2 &&
+            flight::array_from({.length = -1.0}, index_of).empty() &&
+            flight::array_from({.length = std::nan("")}, index_of).empty(),
+        "Array.from({ length }) applies ToLength: truncation, and zero for negatives and NaN");
+  bool too_long_threw = false;
+  try {
+    (void)flight::array_from({.length = 4294967296.0}, index_of);
+  } catch (const std::range_error&) {
+    too_long_threw = true;
+  }
+  bool infinite_threw = false;
+  try {
+    (void)flight::array_from({.length = std::numeric_limits<double>::infinity()}, index_of);
+  } catch (const std::range_error&) {
+    infinite_threw = true;
+  }
+  check(too_long_threw && infinite_threw,
+        "Array.from({ length }) refuses a length an Array cannot hold, as ArrayCreate does");
   const auto tail = mapped.slice(-2);
   check(tail.size() == 2 && tail[0] == 1.0, "array slice normalizes negative boundaries");
   check(mapped.join(flight::String("|")) == flight::String("0|1|5"),

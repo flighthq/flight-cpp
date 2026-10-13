@@ -21,6 +21,7 @@
 
 #include <flight/equality.hpp>
 #include <flight/iterator.hpp>
+#include <flight/presence.hpp>
 
 namespace flight {
 
@@ -713,6 +714,30 @@ template <typename Range, typename Transform>
   for (const auto& value : values) {
     result.push(detail::invoke_array_callback(transform, value, index));
     ++index;
+  }
+  return result;
+}
+
+// The `{ length: n }` source of `Array.from({ length: n }, mapper)`. It has no elements, only a
+// length, so every index reads `undefined` and the mapper sees that and the index.
+struct ArrayLikeLength {
+  double length = 0.0;
+};
+
+// Array.from over an array-like that is only a length. The length is ToLength(n) -- NaN and negatives
+// are 0, fractions truncate -- and a length Array cannot hold throws, as ArrayCreate does for Array.
+template <typename Transform>
+[[nodiscard]] auto array_from(ArrayLikeLength source, Transform transform)
+    -> Array<std::remove_cvref_t<decltype(detail::invoke_array_callback(
+        transform, Undefined{}, std::size_t{}))>> {
+  using Value = std::remove_cvref_t<decltype(detail::invoke_array_callback(
+      transform, Undefined{}, std::size_t{}))>;
+  const double length = std::isnan(source.length) || source.length <= 0.0 ? 0.0 : std::trunc(source.length);
+  if (length > 4294967295.0) throw std::range_error("flight::Array length is outside the JavaScript array range");
+  Array<Value> result;
+  const auto count = static_cast<std::size_t>(length);
+  for (std::size_t index = 0; index < count; ++index) {
+    result.push(detail::invoke_array_callback(transform, Undefined{}, index));
   }
   return result;
 }
