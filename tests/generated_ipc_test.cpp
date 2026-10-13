@@ -288,5 +288,37 @@ int main() {
   }
 
   if (failures == 0) std::cout << "generated ipc: all checks passed\n";
+  // A host that KEEPS delivering to a listener after its unsubscribe has run. A compliant host does
+  // not, which is exactly why nothing above can tell the difference: a mutation removing the listener's
+  // `if (done) return` guard SURVIVES every other assertion in this file, because the fake host above
+  // drops the listener on release and the second delivery never reaches it. The upstream source guards
+  // that case explicitly, so it is pinned here rather than left to a host's good manners.
+  {
+    std::function<void(Args)> captured;
+    int unsubscribes = 0;
+    const auto rogue = flight::make_ref<MessageCapability>();
+    rogue->subscribe = [&captured, &unsubscribes](String, std::function<void(Args)> listener) {
+      captured = listener;
+      return [&unsubscribes]() { ++unsubscribes; };
+    };
+
+    std::vector<std::string> seen;
+    const auto stop = flight::ipc::once_ipc_message(rogue, String("ping"), [&seen](Args args) {
+      seen.push_back(first_argument(args));
+    });
+
+    captured({"1"});
+    check(seen.size() == 1 && seen[0] == "1", "the first message reaches the listener");
+    check(unsubscribes == 1, "and that delivery released the subscription");
+
+    // The host still holds the listener it was given and calls it anyway.
+    captured({"2"});
+    check(seen.size() == 1,
+          "a delivery to an ALREADY-RELEASED subscription is not passed to the listener");
+    captured({"3"});
+    check(seen.size() == 1, "and neither is a third");
+    static_cast<void>(stop);
+  }
+
   return failures == 0 ? 0 : 1;
 }
