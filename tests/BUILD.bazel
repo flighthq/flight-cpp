@@ -311,6 +311,16 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_image_codec_test",
+    srcs = ["generated_image_codec_test.cpp"],
+    size = "small",
+    deps = [
+        "//:cpp",
+        "//:sdk_preview",
+    ],
+)
+
+cc_test(
     name = "generated_importdiagnostics_test",
     srcs = ["generated_importdiagnostics_test.cpp"],
     size = "small",
@@ -671,6 +681,7 @@ test_suite(
         ":generated_geometry_planar_test",
         ":generated_geometry_vectors_test",
         ":generated_geometry_volumes_test",
+        ":generated_image_codec_test",
         ":generated_image_test",
         ":generated_image_test_helper_test",
         ":generated_importdiagnostics_test",
