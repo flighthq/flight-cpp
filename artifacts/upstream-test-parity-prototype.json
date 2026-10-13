@@ -2,7 +2,7 @@
   "schema": "flight-upstream-test-parity-prototype/1",
   "source": {
     "package": "@flighthq/flight",
-    "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad"
+    "revision": "a62784923f3be814463286c9fb28edfe6ab15789"
   },
   "scope": {
     "packages": [
@@ -56,14 +56,14 @@
     "selections": [
       {
         "describe": "*",
-        "sha256": "4a87a63540c53862fec68b439bdbf467e0b561a52fc40a2fb9e59ae484250ad4",
+        "sha256": "6340812eb13ba84b7511912e1cb2c49b27e801e7a12408e4688e0a57b0355075",
         "source": "packages/math/src/clamp.test.ts",
         "tests": 17,
         "title": "*"
       },
       {
         "describe": "reserveFloat32Array",
-        "sha256": "45a961557ec8b6aaa8dbb8e274ebf2456aa264ae182a0377cd22e63c3f841edf",
+        "sha256": "824eacd403329f2dd445839d537d9255f8bf5297eebfe71e7b1458bd21531b04",
         "source": "packages/geometry/src/typedarray.test.ts",
         "tests": 1,
         "title": "leaves extended capacity zero-filled"
