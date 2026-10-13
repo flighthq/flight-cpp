@@ -66,6 +66,11 @@ bool inject_accessor_offset_stride_mutation = false;
 bool inject_accessor_normalization_mutation = false;
 bool inject_accessor_bounds_mutation = false;
 bool inject_accessor_missing_default_mutation = false;
+bool inject_clone_aliasing_mutation = false;
+bool inject_omitted_metadata_mutation = false;
+bool inject_lifecycle_ordering_mutation = false;
+bool inject_reset_disposal_mutation = false;
+bool inject_cache_invalidation_mutation = false;
 
 void check(bool condition, const char* message) {
   if (condition) return;
@@ -75,6 +80,19 @@ void check(bool condition, const char* message) {
 
 bool near(double actual, double expected, double tolerance = 1.0e-5) {
   return std::abs(actual - expected) <= tolerance;
+}
+
+bool has_pristine_mesh_runtime(
+    const flight::Ref<types::MeshGeometryRuntime>& runtime,
+    double bounds_version) {
+  return !runtime->attribute_data_view.has_value() &&
+         !runtime->binding.has_value() &&
+         runtime->bounds_version == bounds_version &&
+         !runtime->morph_bind_pose.has_value() &&
+         !runtime->morph_blended_weights.has_value() &&
+         !runtime->skin_bind_pose.has_value() && !runtime->uid.has_value() &&
+         !runtime->webgl_data.has_value() &&
+         !runtime->webgpu_data.has_value();
 }
 
 flight::Ref<types::VertexAttribute> vertex_attribute(
@@ -481,6 +499,265 @@ void construction_clone_and_owner_identity() {
         "mesh construction retains authored owners while clone owns independent mutable storage, runtime and version state");
 }
 
+void construction_defaults_metadata_and_absence_matrix() {
+  const auto layout = position_layout();
+  flight::Float32Array partial_vertices{1.0F, 2.0F, 3.0F, 99.0F};
+  auto omitted_options = flight::make_ref<types::MeshGeometryOptions>();
+  omitted_options->layout = layout;
+  omitted_options->vertices = partial_vertices;
+  const auto omitted = mesh::create_mesh_geometry(omitted_options);
+  const auto omitted_runtime = omitted->entity_runtime_key.value();
+  bool metadata = omitted->layout == layout &&
+                  omitted->vertices.buffer == partial_vertices.buffer &&
+                  mesh::get_mesh_geometry_vertex_count(omitted) == 1.0 &&
+                  !omitted->indices.has_value() &&
+                  omitted->topology == flight::String("triangle-list") &&
+                  omitted->subsets.size() == 1 &&
+                  omitted->subsets.element(0.0)->index_count == 1.0 &&
+                  omitted->subsets.element(0.0)->index_offset == 0.0 &&
+                  !omitted->bounds.has_value() && omitted->version == 0.0 &&
+                  has_pristine_mesh_runtime(omitted_runtime, -1.0);
+
+  auto null_options = flight::make_ref<types::MeshGeometryOptions>();
+  null_options->indices =
+      std::variant<flight::SequenceView<double>, flight::Null,
+                   flight::Undefined>{std::in_place_type<flight::Null>,
+                                      flight::null};
+  null_options->layout = layout;
+  null_options->vertices = flight::Float32Array(6.0);
+  const auto explicit_null = mesh::create_mesh_geometry(null_options);
+  metadata = metadata && !explicit_null->indices.has_value() &&
+             explicit_null->subsets.element(0.0)->index_count == 2.0;
+
+  flight::Uint16Array empty_indices(0.0);
+  auto empty_index_options = flight::make_ref<types::MeshGeometryOptions>();
+  empty_index_options->indices = flight::SequenceView<double>(empty_indices);
+  empty_index_options->layout = layout;
+  empty_index_options->vertices = flight::Float32Array(3.0);
+  const auto present_empty = mesh::create_mesh_geometry(empty_index_options);
+  metadata =
+      metadata && present_empty->indices.has_value() &&
+      std::holds_alternative<flight::Uint16Array>(
+          present_empty->indices.value()) &&
+      std::get<flight::Uint16Array>(present_empty->indices.value()).size() ==
+          0 &&
+      std::get<flight::Uint16Array>(present_empty->indices.value()).buffer !=
+          empty_indices.buffer &&
+      present_empty->subsets.element(0.0)->index_count == 0.0;
+
+  flight::Uint32Array authored_u32{2, 1, 0};
+  auto u32_options = flight::make_ref<types::MeshGeometryOptions>();
+  u32_options->indices = flight::SequenceView<double>(authored_u32);
+  u32_options->layout = layout;
+  u32_options->vertices = flight::Float32Array(9.0);
+  const auto u32_geometry = mesh::create_mesh_geometry(u32_options);
+  metadata = metadata && u32_geometry->indices.has_value() &&
+             std::holds_alternative<flight::Uint32Array>(
+                 u32_geometry->indices.value()) &&
+             std::get<flight::Uint32Array>(u32_geometry->indices.value())
+                     .buffer != authored_u32.buffer &&
+             index_at(u32_geometry, 0.0) == 2.0 &&
+             index_at(u32_geometry, 1.0) == 1.0 &&
+             index_at(u32_geometry, 2.0) == 0.0;
+
+  flight::Uint16Array narrow_indices{0, 1, 2};
+  auto promoted_options = flight::make_ref<types::MeshGeometryOptions>();
+  promoted_options->indices = flight::SequenceView<double>(narrow_indices);
+  promoted_options->layout = layout;
+  promoted_options->vertices = flight::Float32Array(65536.0 * 3.0);
+  const auto promoted = mesh::create_mesh_geometry(promoted_options);
+  metadata = metadata && promoted->indices.has_value() &&
+             std::holds_alternative<flight::Uint32Array>(
+                 promoted->indices.value()) &&
+             index_at(promoted, 2.0) == 2.0 &&
+             narrow_indices.get_index(2.0) == 2.0;
+
+  flight::Array<flight::Ref<types::MeshSubset>> authored_subsets{
+      mesh_subset(2.0, 1.0), mesh_subset(1.0, 0.0)};
+  auto authored_options = flight::make_ref<types::MeshGeometryOptions>();
+  authored_options->layout = layout;
+  authored_options->subsets = authored_subsets;
+  authored_options->topology = flight::String("line-list");
+  authored_options->vertices = flight::Float32Array(9.0);
+  const auto authored = mesh::create_mesh_geometry(authored_options);
+  metadata = metadata &&
+             authored->subsets.identity() == authored_subsets.identity() &&
+             authored->subsets.element(0.0) ==
+                 authored_subsets.element(0.0) &&
+             authored->topology == flight::String("line-list");
+  authored->subsets.element(0.0)->index_offset = 7.0;
+  metadata = metadata &&
+             authored_subsets.element(0.0)->index_offset == 7.0;
+
+  const auto zero_layout = position_layout(0.0);
+  flight::Float32Array zero_vertices{4.0F, 5.0F, 6.0F};
+  const auto zero_stride = geometry_from(zero_layout, zero_vertices);
+  metadata = metadata &&
+             mesh::get_mesh_geometry_vertex_count(zero_stride) == 0.0 &&
+             zero_stride->subsets.element(0.0)->index_count == 0.0 &&
+             zero_stride->vertices.buffer == zero_vertices.buffer &&
+             zero_stride->vertices.get_index(0.0) == 4.0 &&
+             zero_stride->version == 0.0;
+
+  auto metadata_options = flight::make_ref<types::MeshGeometryOptions>();
+  flight::Uint16Array metadata_indices{0, 1, 2};
+  flight::Array<flight::Ref<types::MeshSubset>> metadata_subsets{
+      mesh_subset(2.0, 1.0)};
+  metadata_options->indices = flight::SequenceView<double>(metadata_indices);
+  metadata_options->layout = layout;
+  metadata_options->subsets = metadata_subsets;
+  metadata_options->topology = flight::String("line-strip");
+  metadata_options->vertices = flight::Float32Array{
+      -1.0F, -2.0F, -3.0F, 4.0F, 5.0F, 6.0F, 7.0F, 8.0F, 9.0F};
+  const auto source = mesh::create_mesh_geometry(metadata_options);
+  mesh::ensure_mesh_geometry_bounds(source);
+  source->version = 9.0;
+  const auto source_runtime = source->entity_runtime_key.value();
+  source_runtime->webgl_data =
+      flight::make_ref<types::MeshGeometryGlData>();
+  const auto copy = mesh::clone_mesh_geometry_metadata(source);
+  const auto copy_runtime = copy->entity_runtime_key.value();
+  const auto source_index_owner =
+      std::get<flight::Uint16Array>(source->indices.value()).buffer;
+  metadata =
+      metadata && copy != source && copy->vertices.size() == 0 &&
+      copy->vertices.buffer != source->vertices.buffer &&
+      copy->layout == source->layout && copy->topology == source->topology &&
+      copy->version == 0.0 && copy->indices.has_value() &&
+      std::holds_alternative<flight::Uint16Array>(copy->indices.value()) &&
+      std::get<flight::Uint16Array>(copy->indices.value()).buffer ==
+          source_index_owner &&
+      copy->subsets.identity() != source->subsets.identity() &&
+      copy->subsets.element(0.0) != source->subsets.element(0.0) &&
+      copy->bounds.has_value() && copy->bounds.value() != source->bounds.value() &&
+      copy->bounds.value()->min != source->bounds.value()->min &&
+      copy->bounds.value()->max != source->bounds.value()->max &&
+      copy_runtime != source_runtime &&
+      has_pristine_mesh_runtime(copy_runtime, 0.0) &&
+      source_runtime->webgl_data.has_value();
+  copy->subsets.element(0.0)->index_count = 77.0;
+  copy->bounds.value()->min->x = -99.0;
+  std::get<flight::Uint16Array>(copy->indices.value()).set_index(0.0, 2.0);
+  metadata = metadata && source->subsets.element(0.0)->index_count == 2.0 &&
+             source->bounds.value()->min->x == -1.0 &&
+             index_at(source, 0.0) == 2.0;
+
+  const auto absent_source = geometry_from(layout, flight::Float32Array(0.0));
+  const auto absent_copy = mesh::clone_mesh_geometry_metadata(absent_source);
+  metadata = metadata && !absent_copy->bounds.has_value() &&
+             !absent_copy->indices.has_value() &&
+             absent_copy->vertices.size() == 0 &&
+             absent_copy->subsets.identity() !=
+                 absent_source->subsets.identity() &&
+             has_pristine_mesh_runtime(
+                 absent_copy->entity_runtime_key.value(), -1.0);
+  if (inject_omitted_metadata_mutation) metadata = false;
+  check(metadata,
+        "construction distinguishes omitted, null, present-empty, narrow, promoted, and Uint32 index inputs; retains authored vertex/layout/subset owners and defaults; floors partial records; and metadata cloning preserves only the upstream shared index/layout identities while isolating subsets, bounds, vertices, version, and runtime including absent metadata");
+}
+
+void clone_aliasing_width_and_runtime_matrix() {
+  const auto layout = position_layout();
+  flight::Float32Array vertices{
+      -2.0F, 1.0F, 3.0F, 4.0F, -5.0F, 6.0F, 1.0F, 2.0F, -7.0F};
+  flight::Uint32Array indices{2, 0, 1};
+  flight::Array<flight::Ref<types::MeshSubset>> subsets{
+      mesh_subset(3.0, 0.0)};
+  auto options = flight::make_ref<types::MeshGeometryOptions>();
+  options->indices = flight::SequenceView<double>(indices);
+  options->layout = layout;
+  options->subsets = subsets;
+  options->topology = flight::String("triangle-strip");
+  options->vertices = vertices;
+  const auto source = mesh::create_mesh_geometry(options);
+  mesh::ensure_mesh_geometry_bounds(source);
+  source->version = 7.0;
+  const auto source_runtime = source->entity_runtime_key.value();
+  const auto gl_data = flight::make_ref<types::MeshGeometryGlData>();
+  const auto wgpu_data = flight::make_ref<types::MeshGeometryWgpuData>();
+  const auto morph_pose = flight::make_ref<types::MeshMorphBindPose>();
+  const auto skin_pose = flight::make_ref<types::MeshSkinBindPose>();
+  source_runtime->attribute_data_view =
+      flight::make_ref<types::buffer_byte_offset_byte_length_view_cb5f900d5c8eb8e9>(
+          types::buffer_byte_offset_byte_length_view_cb5f900d5c8eb8e9{
+              .buffer = source->vertices.buffer,
+              .byte_offset = static_cast<double>(source->vertices.byte_offset),
+              .byte_length = static_cast<double>(source->vertices.byte_length),
+              .view = flight::DataView(
+                  source->vertices.buffer,
+                  static_cast<double>(source->vertices.byte_offset),
+                  static_cast<double>(source->vertices.byte_length)),
+          });
+  source_runtime->binding = flight::ErasedRef(gl_data);
+  source_runtime->morph_bind_pose = morph_pose;
+  source_runtime->morph_blended_weights = flight::Float32Array{0.25F, 0.75F};
+  source_runtime->skin_bind_pose = skin_pose;
+  source_runtime->uid = flight::String("source-runtime");
+  source_runtime->webgl_data = gl_data;
+  source_runtime->webgpu_data = wgpu_data;
+
+  const auto clone = mesh::clone_mesh_geometry(source);
+  const auto clone_runtime = clone->entity_runtime_key.value();
+  bool aliasing =
+      clone != source && clone->layout == source->layout &&
+      clone->topology == source->topology && clone->version == 0.0 &&
+      source->version == 7.0 && clone->vertices.buffer != source->vertices.buffer &&
+      clone->indices.has_value() &&
+      std::holds_alternative<flight::Uint32Array>(clone->indices.value()) &&
+      std::get<flight::Uint32Array>(clone->indices.value()).buffer !=
+          std::get<flight::Uint32Array>(source->indices.value()).buffer &&
+      index_at(clone, 0.0) == 2.0 && index_at(clone, 1.0) == 0.0 &&
+      index_at(clone, 2.0) == 1.0 &&
+      clone->subsets.identity() != source->subsets.identity() &&
+      clone->subsets.element(0.0) != source->subsets.element(0.0) &&
+      clone->bounds.has_value() && clone->bounds.value() != source->bounds.value() &&
+      clone->bounds.value()->min != source->bounds.value()->min &&
+      clone->bounds.value()->max != source->bounds.value()->max &&
+      clone_runtime != source_runtime &&
+      has_pristine_mesh_runtime(clone_runtime, 0.0) &&
+      source_runtime->attribute_data_view.has_value() &&
+      source_runtime->binding.has_value() &&
+      source_runtime->morph_bind_pose ==
+          std::optional<flight::Ref<types::MeshMorphBindPose>>{morph_pose} &&
+      source_runtime->skin_bind_pose ==
+          std::optional<flight::Ref<types::MeshSkinBindPose>>{skin_pose} &&
+      source_runtime->webgl_data ==
+          std::optional<flight::Ref<types::MeshGeometryGlData>>{gl_data} &&
+      source_runtime->webgpu_data ==
+          std::optional<flight::Ref<types::MeshGeometryWgpuData>>{wgpu_data};
+  clone->vertices.set_index(0.0, 99.0);
+  std::get<flight::Uint32Array>(clone->indices.value()).set_index(0.0, 0.0);
+  clone->subsets.element(0.0)->index_count = 1.0;
+  clone->bounds.value()->min->x = -100.0;
+  aliasing = aliasing && source->vertices.get_index(0.0) == -2.0 &&
+             index_at(source, 0.0) == 2.0 &&
+             source->subsets.element(0.0)->index_count == 3.0 &&
+             source->bounds.value()->min->x == -2.0;
+
+  flight::Uint32Array empty_indices(0.0);
+  auto empty_options = flight::make_ref<types::MeshGeometryOptions>();
+  empty_options->indices = flight::SequenceView<double>(empty_indices);
+  empty_options->layout = layout;
+  empty_options->vertices = flight::Float32Array(0.0);
+  const auto empty_source = mesh::create_mesh_geometry(empty_options);
+  const auto empty_clone = mesh::clone_mesh_geometry(empty_source);
+  aliasing = aliasing && empty_clone->indices.has_value() &&
+             std::holds_alternative<flight::Uint32Array>(
+                 empty_clone->indices.value()) &&
+             std::get<flight::Uint32Array>(empty_clone->indices.value())
+                     .size() == 0 &&
+             std::get<flight::Uint32Array>(empty_clone->indices.value())
+                     .buffer !=
+                 std::get<flight::Uint32Array>(empty_source->indices.value())
+                     .buffer &&
+             !empty_clone->bounds.has_value() &&
+             has_pristine_mesh_runtime(
+                 empty_clone->entity_runtime_key.value(), -1.0);
+  if (inject_clone_aliasing_mutation) aliasing = false;
+  check(aliasing,
+        "full cloning preserves layout, topology, values, index width and present-empty state while deep-copying vertices, indices, subset records, bounds vectors and runtime; source runtime caches and deformation/upload slots are never inherited or mutated");
+}
+
 void bounds_cache_and_position_mutation() {
   const auto geometry = indexed_geometry();
   const auto first = mesh::ensure_mesh_geometry_bounds(geometry);
@@ -511,6 +788,210 @@ void bounds_cache_and_position_mutation() {
   if (inject_bounds_mutation) bounds = false;
   check(bounds,
         "bounds are tight, cached by exact owner and version, then refreshed in place after position mutation");
+}
+
+void runtime_lifecycle_ordering_and_idempotence() {
+  const auto geometry = indexed_geometry();
+  mesh::ensure_mesh_geometry_bounds(geometry);
+  const auto runtime = geometry->entity_runtime_key.value();
+  const auto gl_data = flight::make_ref<types::MeshGeometryGlData>();
+  const auto wgpu_data = flight::make_ref<types::MeshGeometryWgpuData>();
+  const auto morph_pose = flight::make_ref<types::MeshMorphBindPose>();
+  const auto skin_pose = flight::make_ref<types::MeshSkinBindPose>();
+  runtime->binding = flight::ErasedRef(gl_data);
+  runtime->morph_blended_weights = flight::Float32Array{0.5F};
+  runtime->uid = flight::String("lifecycle-runtime");
+  runtime->webgl_data = gl_data;
+  runtime->webgpu_data = wgpu_data;
+  mesh::set_mesh_geometry_morph_bind_pose(geometry, morph_pose);
+  mesh::set_mesh_geometry_skin_bind_pose(geometry, skin_pose);
+  const auto vertex_owner = geometry->vertices.buffer;
+  const auto index_owner = index_buffer_identity(geometry);
+  const auto subset_owner = geometry->subsets.identity();
+  const auto bounds_owner = geometry->bounds.value();
+  const double version = geometry->version;
+  const double bounds_version = runtime->bounds_version;
+
+  mesh::destroy_mesh_geometry_gl_data(geometry);
+  bool lifecycle =
+      !runtime->webgl_data.has_value() &&
+      runtime->webgpu_data ==
+          std::optional<flight::Ref<types::MeshGeometryWgpuData>>{wgpu_data} &&
+      runtime->morph_bind_pose ==
+          std::optional<flight::Ref<types::MeshMorphBindPose>>{morph_pose} &&
+      runtime->skin_bind_pose ==
+          std::optional<flight::Ref<types::MeshSkinBindPose>>{skin_pose} &&
+      runtime->morph_blended_weights.has_value() &&
+      runtime->binding.has_value() && runtime->uid.has_value();
+  mesh::destroy_mesh_geometry_gl_data(geometry);
+  lifecycle = lifecycle && !runtime->webgl_data.has_value() &&
+              runtime->webgpu_data.has_value();
+  mesh::destroy_mesh_geometry_wgpu_data(geometry);
+  mesh::destroy_mesh_geometry_wgpu_data(geometry);
+  lifecycle = lifecycle && !runtime->webgl_data.has_value() &&
+              !runtime->webgpu_data.has_value() &&
+              mesh::get_mesh_geometry_morph_bind_pose(geometry) ==
+                  std::optional<flight::Ref<types::MeshMorphBindPose>>{
+                      morph_pose} &&
+              mesh::get_mesh_geometry_skin_bind_pose(geometry) ==
+                  std::optional<flight::Ref<types::MeshSkinBindPose>>{
+                      skin_pose};
+
+  runtime->webgl_data = gl_data;
+  runtime->webgpu_data = wgpu_data;
+  mesh::destroy_mesh_geometry_wgpu_data(geometry);
+  lifecycle = lifecycle && runtime->webgl_data.has_value() &&
+              !runtime->webgpu_data.has_value();
+  mesh::destroy_mesh_geometry_gl_data(geometry);
+  lifecycle = lifecycle && !runtime->webgl_data.has_value() &&
+              !runtime->webgpu_data.has_value() &&
+              geometry->vertices.buffer == vertex_owner &&
+              index_buffer_identity(geometry) == index_owner &&
+              geometry->subsets.identity() == subset_owner &&
+              geometry->bounds.value() == bounds_owner &&
+              geometry->version == version &&
+              runtime->bounds_version == bounds_version &&
+              runtime->binding.has_value() && runtime->uid.has_value() &&
+              runtime->morph_blended_weights.has_value();
+  if (inject_lifecycle_ordering_mutation) lifecycle = false;
+  check(lifecycle,
+        "GL and WebGPU upload teardown is independent in either order and idempotent on repetition; it preserves CPU buffers, descriptors, bounds/version cache, binding, uid, deformation slots, and blended-weight state");
+}
+
+void runtime_reset_disposal_and_missing_owner_paths() {
+  const auto geometry = indexed_geometry();
+  const auto runtime = geometry->entity_runtime_key.value();
+  const auto morph_pose = flight::make_ref<types::MeshMorphBindPose>();
+  const auto skin_pose = flight::make_ref<types::MeshSkinBindPose>();
+  mesh::set_mesh_geometry_morph_bind_pose(geometry, morph_pose);
+  mesh::set_mesh_geometry_skin_bind_pose(geometry, skin_pose);
+  bool reset = mesh::get_mesh_geometry_morph_bind_pose(geometry) ==
+                   std::optional<flight::Ref<types::MeshMorphBindPose>>{
+                       morph_pose} &&
+               mesh::get_mesh_geometry_skin_bind_pose(geometry) ==
+                   std::optional<flight::Ref<types::MeshSkinBindPose>>{
+                       skin_pose};
+  mesh::set_mesh_geometry_morph_bind_pose(geometry, std::nullopt);
+  mesh::set_mesh_geometry_morph_bind_pose(geometry, std::nullopt);
+  reset = reset &&
+          !mesh::get_mesh_geometry_morph_bind_pose(geometry).has_value() &&
+          mesh::get_mesh_geometry_skin_bind_pose(geometry) ==
+              std::optional<flight::Ref<types::MeshSkinBindPose>>{skin_pose};
+  mesh::set_mesh_geometry_skin_bind_pose(geometry, std::nullopt);
+  mesh::set_mesh_geometry_skin_bind_pose(geometry, std::nullopt);
+  reset = reset &&
+          !mesh::get_mesh_geometry_skin_bind_pose(geometry).has_value();
+
+  const auto gl_data = flight::make_ref<types::MeshGeometryGlData>();
+  const auto wgpu_data = flight::make_ref<types::MeshGeometryWgpuData>();
+  runtime->webgl_data = gl_data;
+  runtime->webgpu_data = wgpu_data;
+  mesh::set_mesh_geometry_morph_bind_pose(geometry, morph_pose);
+  mesh::set_mesh_geometry_skin_bind_pose(geometry, skin_pose);
+  const auto vertex_owner = geometry->vertices.buffer;
+  const auto index_owner = index_buffer_identity(geometry);
+  const auto subset_owner = geometry->subsets.identity();
+  const double version = geometry->version;
+  geometry->entity_runtime_key = std::nullopt;
+  reset = reset &&
+          mesh::get_mesh_geometry_runtime_if_present(geometry) ==
+              std::optional<flight::Ref<types::MeshGeometryRuntime>>{runtime} &&
+          mesh::get_mesh_geometry_morph_bind_pose(geometry) ==
+              std::optional<flight::Ref<types::MeshMorphBindPose>>{morph_pose} &&
+          mesh::get_mesh_geometry_skin_bind_pose(geometry) ==
+              std::optional<flight::Ref<types::MeshSkinBindPose>>{skin_pose};
+  mesh::destroy_mesh_geometry_gl_data(geometry);
+  mesh::destroy_mesh_geometry_wgpu_data(geometry);
+  mesh::set_mesh_geometry_morph_bind_pose(geometry, std::nullopt);
+  mesh::set_mesh_geometry_skin_bind_pose(geometry, std::nullopt);
+  reset = reset && !runtime->webgl_data.has_value() &&
+          !runtime->webgpu_data.has_value() &&
+          !runtime->morph_bind_pose.has_value() &&
+          !runtime->skin_bind_pose.has_value() &&
+          geometry->vertices.buffer == vertex_owner &&
+          index_buffer_identity(geometry) == index_owner &&
+          geometry->subsets.identity() == subset_owner &&
+          geometry->version == version;
+
+  auto detached = flight::make_ref<types::MeshGeometry>();
+  detached->bounds = std::nullopt;
+  detached->entity_runtime_key = std::nullopt;
+  detached->indices = std::nullopt;
+  detached->layout = position_layout();
+  detached->subsets =
+      flight::Array<flight::Ref<types::MeshSubset>>{mesh_subset(1.0, 0.0)};
+  detached->topology = flight::String("point-list");
+  detached->version = 13.0;
+  detached->vertices = flight::Float32Array{1.0F, 2.0F, 3.0F};
+  const auto detached_vertex_owner = detached->vertices.buffer;
+  const auto detached_subset_owner = detached->subsets.identity();
+  mesh::set_mesh_geometry_morph_bind_pose(detached, morph_pose);
+  mesh::set_mesh_geometry_skin_bind_pose(detached, skin_pose);
+  mesh::destroy_mesh_geometry_gl_data(detached);
+  mesh::destroy_mesh_geometry_wgpu_data(detached);
+  reset = reset &&
+          !mesh::get_mesh_geometry_runtime_if_present(detached).has_value() &&
+          !mesh::get_mesh_geometry_morph_bind_pose(detached).has_value() &&
+          !mesh::get_mesh_geometry_skin_bind_pose(detached).has_value() &&
+          detached->vertices.buffer == detached_vertex_owner &&
+          detached->vertices.get_index(0.0) == 1.0 &&
+          detached->subsets.identity() == detached_subset_owner &&
+          detached->version == 13.0;
+  if (inject_reset_disposal_mutation) reset = false;
+  check(reset,
+        "bind-pose reset is independent and repeatable, upload teardown follows the retained weak runtime when the public symbol cell is absent, and every lifecycle call is a non-mutating no-op for an owner with no runtime");
+}
+
+void cache_invalidation_and_empty_bounds_lifecycle() {
+  const auto geometry = indexed_geometry();
+  const auto runtime = geometry->entity_runtime_key.value();
+  const auto gl_data = flight::make_ref<types::MeshGeometryGlData>();
+  const auto wgpu_data = flight::make_ref<types::MeshGeometryWgpuData>();
+  runtime->webgl_data = gl_data;
+  runtime->webgpu_data = wgpu_data;
+  const auto first = mesh::ensure_mesh_geometry_bounds(geometry);
+  const auto bounds_owner = first.value();
+  const double first_stamp = runtime->bounds_version;
+  geometry->vertices.set_index(0.0, -20.0);
+  const auto stale = mesh::ensure_mesh_geometry_bounds(geometry);
+  bool cache = stale.has_value() && stale.value() == bounds_owner &&
+               stale.value()->min->x == -2.0 && geometry->version == 0.0 &&
+               runtime->bounds_version == first_stamp &&
+               runtime->webgl_data.has_value() &&
+               runtime->webgpu_data.has_value();
+  mesh::invalidate_mesh_geometry(geometry);
+  cache = cache && geometry->version == 1.0 &&
+          runtime->bounds_version == first_stamp &&
+          geometry->bounds.value() == bounds_owner &&
+          runtime->webgl_data.has_value() && runtime->webgpu_data.has_value();
+  const auto refreshed = mesh::ensure_mesh_geometry_bounds(geometry);
+  cache = cache && refreshed.has_value() && refreshed.value() == bounds_owner &&
+          refreshed.value()->min->x == -20.0 &&
+          runtime->bounds_version == geometry->version;
+  geometry->vertices.set_index(3.0, 40.0);
+  mesh::invalidate_mesh_geometry(geometry);
+  mesh::invalidate_mesh_geometry(geometry);
+  cache = cache && geometry->version == 3.0 &&
+          runtime->bounds_version == 1.0 &&
+          geometry->bounds.value() == bounds_owner;
+  mesh::ensure_mesh_geometry_bounds(geometry);
+  cache = cache && geometry->bounds.value()->max->x == 40.0 &&
+          runtime->bounds_version == 3.0;
+
+  const auto empty = geometry_from(position_layout(), flight::Float32Array(0.0));
+  const auto empty_runtime = empty->entity_runtime_key.value();
+  const auto empty_vertex_owner = empty->vertices.buffer;
+  const auto first_empty = mesh::ensure_mesh_geometry_bounds(empty);
+  const auto empty_bounds_owner = empty->bounds.value();
+  const auto second_empty = mesh::ensure_mesh_geometry_bounds(empty);
+  cache = cache && !first_empty.has_value() && !second_empty.has_value() &&
+          empty->bounds.value() == empty_bounds_owner &&
+          empty_runtime->bounds_version == empty->version &&
+          empty->vertices.buffer == empty_vertex_owner &&
+          empty->vertices.size() == 0 && empty->version == 0.0;
+  if (inject_cache_invalidation_mutation) cache = false;
+  check(cache,
+        "direct CPU writes remain deliberately invisible to the bounds cache until invalidate advances the revision; refresh then reuses the bounds owner, repeated invalidation accumulates, upload slots remain installed for version-based reupload, and empty bounds stay absent and idempotent without touching CPU state");
 }
 
 void index_order_and_compaction() {
@@ -3555,9 +4036,24 @@ int main(int argc, char** argv) {
       mutation == flight::String("--mutate-accessor-bounds");
   inject_accessor_missing_default_mutation =
       mutation == flight::String("--mutate-accessor-missing-defaults");
+  inject_clone_aliasing_mutation =
+      mutation == flight::String("--mutate-clone-aliasing");
+  inject_omitted_metadata_mutation =
+      mutation == flight::String("--mutate-omitted-metadata");
+  inject_lifecycle_ordering_mutation =
+      mutation == flight::String("--mutate-lifecycle-ordering");
+  inject_reset_disposal_mutation =
+      mutation == flight::String("--mutate-reset-disposal");
+  inject_cache_invalidation_mutation =
+      mutation == flight::String("--mutate-cache-invalidation");
 
   construction_clone_and_owner_identity();
+  construction_defaults_metadata_and_absence_matrix();
+  clone_aliasing_width_and_runtime_matrix();
   bounds_cache_and_position_mutation();
+  runtime_lifecycle_ordering_and_idempotence();
+  runtime_reset_disposal_and_missing_owner_paths();
+  cache_invalidation_and_empty_bounds_lifecycle();
   index_order_and_compaction();
   failure_paths_are_non_mutating();
   weld_equivalence_and_attribute_sensitivity();

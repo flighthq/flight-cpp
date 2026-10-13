@@ -73,14 +73,14 @@ inline std::optional<flight::Ref<MeshGeometryRuntime>> get_mesh_geometry_runtime
 inline void destroy_mesh_geometry_gl_data(flight::Ref<MeshGeometry> geometry) {
   std::optional<flight::Ref<MeshGeometryRuntime>> runtime = get_mesh_geometry_runtime_if_present(geometry);
   if (flight::to_boolean(runtime)) {
-    (runtime.value()->webgl_data = nullptr);
+    (runtime.value()->webgl_data = std::nullopt);
   }
 }
 
 inline void destroy_mesh_geometry_wgpu_data(flight::Ref<MeshGeometry> geometry) {
   std::optional<flight::Ref<MeshGeometryRuntime>> runtime = get_mesh_geometry_runtime_if_present(geometry);
   if (flight::to_boolean(runtime)) {
-    (runtime.value()->webgpu_data = nullptr);
+    (runtime.value()->webgpu_data = std::nullopt);
   }
 }
 
@@ -299,23 +299,12 @@ inline flight::Ref<MeshGeometry> clone_mesh_geometry_metadata(flight::Ref<MeshGe
     }));
   }
   auto clone = create_mesh_geometry_from_fields(
-      source->indices.has_value()
-          ? std::visit(
-                [](const auto& indices)
-                    -> std::variant<flight::Uint16Array, flight::Uint32Array,
-                                    flight::Null, flight::Undefined> {
-                  using Value = std::remove_cvref_t<decltype(indices)>;
-                  return std::variant<flight::Uint16Array,
-                                      flight::Uint32Array, flight::Null,
-                                      flight::Undefined>{
-                      std::in_place_type<Value>, indices};
-                },
-                source->indices.value())
-          : std::variant<flight::Uint16Array, flight::Uint32Array,
-                         flight::Null, flight::Undefined>{
-                std::in_place_type<flight::Null>, flight::null},
+      std::variant<flight::Uint16Array, flight::Uint32Array, flight::Null,
+                   flight::Undefined>{std::in_place_type<flight::Null>,
+                                      flight::null},
       source->layout, std::optional{subsets}, source->topology,
       flight::Float32Array(0.0));
+  clone->indices = source->indices;
   if (source->bounds.has_value()) {
     const auto& bounds = source->bounds.value();
     clone->bounds = create_aabb(

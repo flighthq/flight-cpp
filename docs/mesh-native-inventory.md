@@ -36,6 +36,11 @@ header compilation or the existing Scene3D smoke test as behavioral coverage:
 | Evidence family | Native assertion |
 | --- | --- |
 | Geometry ownership and identity | Construction retains the caller's layout and vertex buffer, copies and narrows the authored index view, installs an exact runtime owner, and creates the default subset. Clone retains layout identity while independently owning geometry, runtime, vertices, indices, subset array/elements, and bounds; clone mutation cannot reach the source. Version invalidation wraps as unsigned 32-bit state. |
+| Construction defaults and metadata absence | Omitted and explicit-null indices produce non-indexed geometry, while a present empty typed array remains an indexed zero-element value. Construction distinguishes `Uint16`/`Uint32`, promotes only above 65,535 vertices, floors partial records, returns zero vertices for zero stride, retains authored vertex/layout/subset owners, and supplies exact topology/subset/runtime defaults without mutating any input. Metadata-only cloning preserves the upstream shared live index and layout owners while deep-copying subsets and bounds, allocating an empty vertex stream and fresh runtime, resetting version, and preserving absent bounds/indices exactly. |
+| Full-clone aliasing matrix | Full clones retain topology/layout and exact values, index width, and present-empty state while allocating independent vertex, index, subset-array/element, AABB/vector, and runtime owners. Runtime binding, UID, attribute-view, upload, morph/skin, and blended-weight slots are deliberately not inherited, and mutating every cloned CPU carrier cannot reach the source. |
+| Runtime lifecycle ordering | GL and WebGPU upload teardown clears each slot to true absence independently in either order and is idempotent when repeated. It leaves CPU buffers, descriptors, version/bounds cache, binding, UID, morph/skin owners, and blended weights untouched. |
+| Runtime reset and missing-owner paths | Morph and skin bind poses retain their exact installed owners, clear independently, and tolerate repeated reset. Runtime lookup falls back to the identity-keyed owner after the public runtime cell is cleared; a manually constructed geometry with neither runtime route answers absent and every setter/teardown call is a non-mutating no-op. |
+| Cache invalidation lifecycle | Direct public typed-array writes deliberately remain invisible to cached bounds until `invalidateMeshGeometry` advances the revision; invalidation itself retains the AABB and upload slots, and the next ensure refreshes the same bounds owner and stamp. Repeated invalidations accumulate, while repeated empty-geometry bounds queries remain absent and preserve CPU state. |
 | Bounds and mutation | The first ensure computes the exact AABB and stamps the geometry version. An unchanged ensure returns the same bounds owner. A successful position write increments the version, after which ensure refreshes that same bounds owner to the new extrema and advances the runtime stamp. |
 | Indexing and order | Triangle-list decoding preserves both authored windings. Wireframe edge order is exact. Index expansion follows element order without mutating the source, and compaction assigns new vertices in first-reference order with the exact remapped indices. |
 | Weld equivalence and remapping | Welding compares every byte of the complete packed record: bit-exact duplicates collapse, an adjacent Float32 bit pattern does not, and equal positions with different packed attributes remain separate. Unique records retain first-source order, authored elements remap in exact order, invalid indices return an independent unchanged clone, and empty input stays empty. Sequential indexing switches from `Uint16Array` to `Uint32Array` only above 65,535 vertices. |
@@ -67,7 +72,7 @@ header compilation or the existing Scene3D smoke test as behavioral coverage:
 | Builder parameter guards | Every count-bearing builder floors fractional counts, clamps below-minimum counts, and throws `RangeError` for NaN and infinity on each count parameter. Zero-height cone/truncated-cylinder cases contain no dead triangles; a zero-height cylinder and collapsed/negative box or quad dimensions retain finite canonical records. Custom polyhedron seed positions are observably projected to the requested radius. |
 | Failures | Negative and past-end triangle queries leave the caller's output unchanged. Negative and past-end position writes leave bytes and version unchanged. Invalid weld indices return a deep clone, merge mismatch returns absence, validation rejection is non-mutating, singular transforms preserve the entire destination, and incompatible morph scratch rejects atomically. Unknown formats and invalid component windows throw or no-op according to their return domain; missing, misformatted, misaligned, and out-of-record attributes reject without changing output, bytes, owners, or version. |
 
-Thirty-two independent modes (`--mutate-owner-identity`, `--mutate-bounds`,
+Thirty-seven independent modes (`--mutate-owner-identity`, `--mutate-bounds`,
 `--mutate-index-order`, `--mutate-failure`, `--mutate-channel-order`,
 `--mutate-stride-offset`, `--mutate-normalization`, `--mutate-group-bounds`,
 `--mutate-builder-topology`, `--mutate-builder-seams`, `--mutate-builder-bounds`,
@@ -77,10 +82,13 @@ Thirty-two independent modes (`--mutate-owner-identity`, `--mutate-bounds`,
 `--mutate-mirrored-transform`, `--mutate-transform-bounds`,
 `--mutate-uv-axes-order`, `--mutate-morph-target-order`,
 `--mutate-morph-weight-math`, `--mutate-morph-reset`,
-`--mutate-morph-aliasing`, `--mutate-morph-bounds`, and
+`--mutate-morph-aliasing`, `--mutate-morph-bounds`,
 `--mutate-morph-validation`, `--mutate-format-components`,
 `--mutate-accessor-offset-stride`, `--mutate-accessor-normalization`,
-`--mutate-accessor-bounds`, and `--mutate-accessor-missing-defaults`) suppress one family oracle
+`--mutate-accessor-bounds`, `--mutate-accessor-missing-defaults`,
+`--mutate-clone-aliasing`, `--mutate-omitted-metadata`,
+`--mutate-lifecycle-ordering`, `--mutate-reset-disposal`, and
+`--mutate-cache-invalidation`) suppress one family oracle
 each. Normal execution must pass; every
 mutation execution must fail its named assertion.
 
@@ -95,13 +103,15 @@ passed but cannot build/run `flight_cpp.generated_scene3d` because
 
 ## Honest residual
 
-This is a focused P-3D2 slice, not a claim that all 213 upstream cases are ported. Ranked by remaining
-observable breadth, the largest executable families are now: (1) remaining construction, clone,
-metadata, and runtime-lifecycle permutations; (2) compute gaps such as bounding spheres, flat normals,
-and explicit refresh plus residual compaction/wireframe/index cases; (3) attribute-driven construction
-and residual merge/subset/operation permutations; and (4) residual builder, transform, UV,
+This is a focused P-3D2 slice, not a claim that all 213 upstream cases are ported. The construction,
+clone, metadata, and runtime-lifecycle family is now covered systematically. Ranked by remaining
+observable breadth, the largest executable families are: (1) bounding spheres, flat normals, explicit
+bounds refresh, and residual compaction/wireframe/index cases; (2) attribute-driven construction and
+residual merge/subset/operation permutations; and (3) residual builder, transform, UV,
 morph/deformation, and bind-pose combinations beyond the representative edge matrices above. The
-package currently has no refusal-ledger row, and this slice required no new production patch or
-compiler request. Its
-assisted-tier compiler debt remains explicit in the three existing source patches, one emission
-repair, and six declared overrides rather than being recast as native parity.
+package currently has no refusal-ledger row. This slice required no new compiler request: the emitted
+metadata clone already retains the live index owner, so the discovered copy and engaged-null upload
+slots were implementation mistakes in the existing declared runtime-owner override, whose manifest
+now records the corrected shared/deep boundaries and true-absence teardown. The assisted-tier compiler
+debt remains explicit in the three existing source patches, one emission repair, and six declared
+overrides rather than being recast as native parity.
