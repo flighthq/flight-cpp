@@ -653,6 +653,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_statechart_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_statechart COMMAND flight_cpp_generated_statechart_tests)
 
+add_executable(flight_cpp_generated_log_core_tests generated_log_core_test.cpp)
+target_include_directories(
+  flight_cpp_generated_log_core_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_log_core_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_log_core COMMAND flight_cpp_generated_log_core_tests)
+
 add_executable(flight_cpp_generated_lifecycle_tests generated_lifecycle_test.cpp)
 target_include_directories(
   flight_cpp_generated_lifecycle_tests
@@ -913,6 +921,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_share share)
 flight_cpp_package_test_labels(flight_cpp.generated_updater updater)
 flight_cpp_package_test_labels(flight_cpp.generated_lifecycle lifecycle signals)
 flight_cpp_package_test_labels(flight_cpp.generated_spring spring)
+flight_cpp_package_test_labels(flight_cpp.generated_log_core log signals)
 flight_cpp_package_test_labels(flight_cpp.generated_statechart log signals statechart)
 flight_cpp_package_test_labels(flight_cpp.generated_flow flow log)
 flight_cpp_package_test_labels(flight_cpp.generated_easing easing log)
