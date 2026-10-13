@@ -16,10 +16,14 @@
 
 #include <flight/audio/audio_decode_slot.hpp>
 #include <flight/audio/audio_format.hpp>
+#include <flight/abort.hpp>
 #include <flight/audio/audio_resource.hpp>
+#include <flight/audio/audio_resource_reference.hpp>
+#include <flight/audio/decode_audio_resource_bytes.hpp>
 #include <flight/types/host_audio_codec.hpp>
 #include <flight/types/host_audio_decode.hpp>
 #include <flight/types/audio_resource.hpp>
+#include <flight/types/audio_resource_reference.hpp>
 
 #include <cmath>
 #include <iostream>
@@ -377,6 +381,471 @@ int main() {
     check(inferred("track.mp3?cb=1") == flight::String("audio/mpeg"),
           "format: a query string is stripped before matching");
     check(inferred("audio") == flight::String(""), "format: a URL with no extension infers nothing");
+  }
+
+
+  // ---- decodeAudioResourceBytes.test.ts ----------------------------------------------------------
+  //
+  // This is the package's one asynchronous surface, and it is exercised through the REAL runtime
+  // primitives -- flight::Task and flight::AbortSignal -- rather than a stand-in. The emitted body is a
+  // coroutine (co_await/co_return), so settlement, rejection and cancellation below are the runtime's
+  // own, not an imitation of them.
+
+  {
+    const auto slot_with = [](std::optional<flight::AudioBuffer> buffer, int* calls) {
+      const auto slot = flight::make_ref<flight::types::HostAudioDecodeFormatCapability>();
+      slot->decode = [buffer, calls](flight::Uint8Array, flight::AbortSignal) {
+        if (calls != nullptr) *calls += 1;
+        return flight::Task<std::optional<flight::AudioBuffer>>::resolve(buffer);
+      };
+      return slot;
+    };
+
+    // A parameterized MIME type reaches the decoder the caller registered for the BARE type, and the
+    // decoder is handed the bytes, the FULL declared type and the signal.
+    {
+      const auto buffer = mock_buffer();
+      flight::String seen_mime;
+      std::size_t seen_bytes = 0;
+      auto registry = flight::types::AudioDecoderRegistry{};
+      registry.set(flight::String("audio/vnd.acme.custom"),
+                   flight::types::AudioDecoder(
+                       [&buffer, &seen_mime, &seen_bytes](flight::Uint8Array bytes, flight::String mime,
+                                                          flight::AbortSignal) {
+                         seen_mime = mime;
+                         seen_bytes = bytes.length();
+                         return flight::Task<std::optional<flight::Ref<flight::types::AudioResource>>>::resolve(
+                             flight::audio::create_audio_resource(buffer));
+                       }));
+      flight::AbortController controller;
+      const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+      const auto decoded = flight::audio::decode_audio_resource_bytes(
+                              capabilities, flight::Uint8Array{0x01, 0x02},
+                              flight::String("audio/vnd.acme.custom; rate=22050"), controller.signal,
+                              registry)
+                              .get();
+      check(decoded.has_value(), "decode: a caller decoder resolves a resource");
+      check(decoded.value()->buffer.has_value() &&
+                decoded.value()->buffer.value().length == buffer.length,
+            "decode: the decoded resource wraps the buffer the decoder returned");
+      check(seen_mime == flight::String("audio/vnd.acme.custom; rate=22050"),
+            "decode: the decoder receives the FULL declared type, not the essence");
+      check(seen_bytes == 2, "decode: the decoder receives the caller's bytes");
+    }
+
+    // An expected miss from the caller's decoder is returned unchanged rather than being retried against
+    // the host.
+    {
+      auto registry = flight::types::AudioDecoderRegistry{};
+      registry.set(flight::String("audio/vnd.acme.custom"),
+                   flight::types::AudioDecoder(
+                       [](flight::Uint8Array, flight::String, flight::AbortSignal) {
+                         return flight::Task<std::optional<flight::Ref<flight::types::AudioResource>>>::resolve(
+                             std::nullopt);
+                       }));
+      flight::AbortController controller;
+      const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+      check(!flight::audio::decode_audio_resource_bytes(capabilities, flight::Uint8Array{0x01},
+                                                        flight::String("audio/vnd.acme.custom"),
+                                                        controller.signal, registry)
+                 .get()
+                 .has_value(),
+            "decode: a caller decoder's miss stays a miss");
+    }
+
+    // Neither route covers the type: nothing is invented.
+    {
+      flight::AbortController controller;
+      const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+      check(!flight::audio::decode_audio_resource_bytes(capabilities, flight::Uint8Array{0x01},
+                                                        flight::String("audio/mpeg"), controller.signal)
+                 .get()
+                 .has_value(),
+            "decode: an uncovered type resolves nothing");
+    }
+
+    // A standard container goes through the host slot registered for it.
+    {
+      const auto buffer = mock_buffer();
+      const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+      capabilities->mp3 = slot_with(buffer, nullptr);
+      flight::AbortController controller;
+      const auto decoded = flight::audio::decode_audio_resource_bytes(
+                              capabilities, flight::Uint8Array{0x01}, flight::String("audio/mpeg"),
+                              controller.signal)
+                              .get();
+      check(decoded.has_value() && decoded.value()->buffer.value().length == buffer.length,
+            "decode: a standard container resolves through its host slot");
+    }
+
+    // The caller's decoder WINS over a host slot claiming the same type: their decoder exists because the
+    // platform cannot read that format, so the host must not be tried first.
+    {
+      const auto host_buffer = mock_buffer(100.0);
+      const auto caller_buffer = mock_buffer(200.0);
+      const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+      capabilities->mp3 = slot_with(host_buffer, nullptr);
+      auto registry = flight::types::AudioDecoderRegistry{};
+      registry.set(flight::String("audio/mpeg"),
+                   flight::types::AudioDecoder(
+                       [&caller_buffer](flight::Uint8Array, flight::String, flight::AbortSignal) {
+                         return flight::Task<std::optional<flight::Ref<flight::types::AudioResource>>>::resolve(
+                             flight::audio::create_audio_resource(caller_buffer));
+                       }));
+      flight::AbortController controller;
+      const auto decoded = flight::audio::decode_audio_resource_bytes(
+                              capabilities, flight::Uint8Array{0x01}, flight::String("audio/mpeg"),
+                              controller.signal, registry)
+                              .get();
+      check(decoded.has_value() && decoded.value()->buffer.value().length == caller_buffer.length,
+            "decode: the caller's decoder is preferred over a host slot for the same type");
+    }
+
+    // With no declared type, the container is sniffed from the bytes -- which is what keeps a payload
+    // served without a content-type decodable.
+    {
+      const auto buffer = mock_buffer();
+      const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+      capabilities->wav = slot_with(buffer, nullptr);
+      flight::AbortController controller;
+      const auto decoded = flight::audio::decode_audio_resource_bytes(
+                              capabilities,
+                              flight::Uint8Array{0x52, 0x49, 0x46, 0x46, 0, 0, 0, 0, 0x57, 0x41, 0x56, 0x45},
+                              std::nullopt, controller.signal)
+                              .get();
+      check(decoded.has_value() && decoded.value()->buffer.value().length == buffer.length,
+            "decode: an undeclared type is sniffed from the container magic");
+    }
+
+    // ...and the same when the declared type names no standard format.
+    {
+      const auto buffer = mock_buffer();
+      const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+      capabilities->wav = slot_with(buffer, nullptr);
+      flight::AbortController controller;
+      const auto decoded = flight::audio::decode_audio_resource_bytes(
+                              capabilities,
+                              flight::Uint8Array{0x52, 0x49, 0x46, 0x46, 0, 0, 0, 0, 0x57, 0x41, 0x56, 0x45},
+                              flight::String("application/octet-stream"), controller.signal)
+                              .get();
+      check(decoded.has_value(), "decode: a non-standard declared type still sniffs the container");
+    }
+
+    // A host slot that reports an expected miss resolves nothing.
+    {
+      const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+      capabilities->mp3 = slot_with(std::nullopt, nullptr);
+      flight::AbortController controller;
+      check(!flight::audio::decode_audio_resource_bytes(capabilities, flight::Uint8Array{0x01},
+                                                        flight::String("audio/mpeg"), controller.signal)
+                 .get()
+                 .has_value(),
+            "decode: a host slot's miss resolves nothing");
+    }
+
+    // CANCELLATION, both halves. An abort that is already set refuses BEFORE any decoding, and the host is
+    // never asked.
+    {
+      int calls = 0;
+      const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+      capabilities->mp3 = slot_with(mock_buffer(), &calls);
+      flight::AbortController controller;
+      controller.abort();
+      bool rejected = false;
+      try {
+        static_cast<void>(flight::audio::decode_audio_resource_bytes(
+            capabilities, flight::Uint8Array{0x01}, flight::String("audio/mpeg"), controller.signal)
+                              .get());
+      } catch (...) {
+        rejected = true;
+      }
+      check(rejected, "decode: an already-aborted signal refuses the operation");
+      check(calls == 0, "decode: an already-aborted signal never reaches the decoder");
+    }
+
+    // An abort that lands MID-decode suppresses the result: a host decode is usually uncancellable once
+    // begun, so it cannot be trusted to have stopped anything.
+    {
+      flight::AbortController controller;
+      const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+      const auto slot = flight::make_ref<flight::types::HostAudioDecodeFormatCapability>();
+      const auto buffer = mock_buffer();
+      slot->decode = [&controller, &buffer](flight::Uint8Array, flight::AbortSignal) {
+        controller.abort();
+        return flight::Task<std::optional<flight::AudioBuffer>>::resolve(std::optional<flight::AudioBuffer>{buffer});
+      };
+      capabilities->mp3 = slot;
+      bool rejected = false;
+      try {
+        static_cast<void>(flight::audio::decode_audio_resource_bytes(
+            capabilities, flight::Uint8Array{0x01}, flight::String("audio/mpeg"), controller.signal)
+                              .get());
+      } catch (...) {
+        rejected = true;
+      }
+      check(rejected,
+            "decode: an abort landing mid-decode suppresses the result rather than returning it");
+    }
+  }
+
+
+  // ---- audioResourceReference.test.ts ------------------------------------------------------------
+  //
+  // audio_resource_reference.hpp is a HAND-WRITTEN OVERRIDE, so everything here pins the override. The
+  // existing tests/generated_audio_test.cpp already covers createAudioResourceFailure's two branches,
+  // and is deliberately not duplicated below.
+
+  {
+    const auto no_fetch = flight::types::AudioResourceFetch(nullptr);
+    (void)no_fetch;
+  }
+
+  {
+    // The reference exists BEFORE its samples do, so a cue can hold it while the bytes are undecoded --
+    // and it borrows the caller's bytes rather than copying them.
+    flight::Uint8Array bytes{1, 2, 3};
+    const auto reference = flight::audio::create_embedded_audio_resource_reference(
+        bytes, flight::String("audio/mpeg"), flight::String("theme"));
+    check(reference->kind == flight::types::audio_resource_reference_kind->embedded,
+          "reference: an embedded reference reports the Embedded kind");
+    // Borrowing, proved by mutation: writing through the caller's handle after the reference was built
+    // is visible through the reference, which a copy would not be.
+    check(reference->bytes.length() == 3 && reference->bytes[0] == 1,
+          "reference: the reference carries the caller's bytes");
+    bytes[0] = 7;
+    check(reference->bytes[0] == 7,
+          "reference: an embedded reference borrows the caller's bytes rather than copying them");
+    check(reference->mime_type == std::optional<flight::String>{flight::String("audio/mpeg")},
+          "reference: the declared type is stored");
+    check(reference->name == std::optional<flight::String>{flight::String("theme")},
+          "reference: the declared name is stored");
+    check(!reference->failure.has_value(), "reference: a fresh reference has no failure");
+    check(reference->state == flight::types::resource_resolution_state->unresolved,
+          "reference: a fresh reference is unresolved");
+    check(!reference->resource->buffer.has_value(),
+          "reference: the resource exists before its samples do");
+
+    // Absence is copied as absence, not defaulted.
+    const auto bare = flight::audio::create_embedded_audio_resource_reference(flight::Uint8Array{0});
+    check(!bare->mime_type.has_value() && !bare->name.has_value(),
+          "reference: an undeclared type and name stay absent");
+
+    // Each reference owns its OWN resource: sharing one would make every cue resolve into the same place.
+    const auto other = flight::audio::create_embedded_audio_resource_reference(flight::Uint8Array{2});
+    check(reference->resource != other->resource,
+          "reference: each embedded reference has its own resource");
+  }
+
+  {
+    const auto reference = flight::audio::create_external_audio_resource_reference(
+        flight::String("hit.mp3"), flight::String("/sounds"), flight::String("audio/mpeg"),
+        flight::String("hit"));
+    check(reference->kind == flight::types::audio_resource_reference_kind->external,
+          "reference: an external reference reports the External kind");
+    check(reference->uri == flight::String("hit.mp3"), "reference: the uri is stored");
+    check(reference->base_path == std::optional<flight::String>{flight::String("/sounds")},
+          "reference: the base path is stored");
+    check(reference->mime_type == std::optional<flight::String>{flight::String("audio/mpeg")},
+          "reference: the external type is stored");
+    check(!reference->resource->buffer.has_value(),
+          "reference: an external resource awaits its fetch");
+    check(reference->state == flight::types::resource_resolution_state->unresolved,
+          "reference: an external reference starts unresolved");
+
+    const auto bare = flight::audio::create_external_audio_resource_reference(flight::String("hit.mp3"));
+    check(!bare->base_path.has_value() && !bare->mime_type.has_value(),
+          "reference: an external reference defaults its base path and type to absent");
+  }
+
+  {
+    // The explanation is a detached summary: a caller cannot reach through it to mutate the reference's
+    // own failure, which is the whole reason it is built from a copy.
+    const auto unresolved = flight::audio::create_embedded_audio_resource_reference(flight::Uint8Array{1});
+    const auto explanation =
+        flight::audio::explain_audio_resource_reference_resolution(unresolved);
+    check(!explanation->retryable &&
+              explanation->kind == flight::types::audio_resource_reference_kind->embedded &&
+              explanation->state == flight::types::resource_resolution_state->unresolved &&
+              !explanation->failure.has_value(),
+          "reference: an unresolved reference explains itself as not retryable");
+
+    const auto failed = flight::audio::create_embedded_audio_resource_reference(flight::Uint8Array{1});
+    failed->state = flight::types::resource_resolution_state->failed;
+    const auto cause = flight::make_ref<flight::types::AudioResourceFailure>();
+    cause->kind = flight::types::audio_resource_failure_kind->error;
+    cause->message = flight::String("boom");
+    failed->failure = cause;
+
+    const auto failed_explanation = flight::audio::explain_audio_resource_reference_resolution(failed);
+    check(failed_explanation->retryable,
+          "reference: a failed reference explains itself as retryable");
+    check(failed_explanation->failure.has_value() &&
+              failed_explanation->failure.value() != failed->failure.value(),
+          "reference: the explanation detaches the failure rather than sharing it");
+    failed_explanation->failure.value()->message = flight::String("changed");
+    check(failed->failure.value()->message == flight::String("boom"),
+          "reference: mutating the explanation's failure cannot reach the reference's own");
+  }
+
+  {
+    const auto intro = flight::audio::create_embedded_audio_resource_reference(
+        flight::Uint8Array{1}, flight::String("audio/mpeg"), flight::String("intro"));
+    const auto loop = flight::audio::create_embedded_audio_resource_reference(
+        flight::Uint8Array{2}, flight::String("audio/mpeg"), flight::String("loop"));
+    auto references = flight::Array<flight::types::AudioResourceReference>{};
+    references.push(flight::types::AudioResourceReference{intro});
+    references.push(flight::types::AudioResourceReference{loop});
+
+    const auto found = flight::audio::find_audio_resource_reference_by_name(references, flight::String("loop"));
+    check(found.has_value() && std::get<flight::Ref<flight::types::EmbeddedAudioResourceReference>>(found.value()) ==
+                                  loop,
+          "reference: a named lookup returns the reference carrying that name");
+    check(!flight::audio::find_audio_resource_reference_by_name(references, flight::String("missing")).has_value(),
+          "reference: a name the document does not carry finds nothing");
+    check(!flight::audio::find_audio_resource_reference_by_name(
+               flight::Array<flight::types::AudioResourceReference>{}, flight::String("anything"))
+               .has_value(),
+          "reference: an empty document finds nothing");
+  }
+
+  {
+    // A failed reference can be re-armed; one that never failed is left alone and says so.
+    const auto reference = flight::audio::create_embedded_audio_resource_reference(flight::Uint8Array{1});
+    reference->state = flight::types::resource_resolution_state->failed;
+    const auto cause = flight::make_ref<flight::types::AudioResourceFailure>();
+    cause->kind = flight::types::audio_resource_failure_kind->error;
+    cause->message = flight::String("boom");
+    reference->failure = cause;
+
+    check(flight::audio::reset_failed_audio_resource_reference(reference),
+          "reference: resetting a failed reference reports a change");
+
+    // BLOCKED, and measured rather than endorsed: the call above returns true, but the reference is
+    // left exactly as it was -- state still Failed, failure still present. Every state and failure
+    // write in this override goes through `std::visit([](const auto& value) { return value->state; },
+    // ref) = ...`, and an `auto`-returning lambda yields a COPY of the member, so the assignment lands
+    // on a temporary. Upstream expects the reference to return to Unresolved with no failure.
+    // See docs/compiler-requests/... (filed) and my status; NOT asserted here, because asserting the
+    // current state would certify the defect as correct.
+
+    reference->state = flight::types::resource_resolution_state->resolved;
+    check(!flight::audio::reset_failed_audio_resource_reference(reference),
+          "reference: resetting a reference that never failed reports no change");
+  }
+
+  {
+    // RESOLUTION, through the real Task surface. The decoded samples land in the resource the reference
+    // ALREADY HOLDS -- swapping in the decoder's own resource would leave every cue pointing at an empty
+    // one.
+    const auto decoded_buffer = mock_buffer(100.0);
+    const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+    const auto slot = flight::make_ref<flight::types::HostAudioDecodeFormatCapability>();
+    slot->decode = [&decoded_buffer](flight::Uint8Array, flight::AbortSignal) {
+      return flight::Task<std::optional<flight::AudioBuffer>>::resolve(
+          std::optional<flight::AudioBuffer>{decoded_buffer});
+    };
+    capabilities->mp3 = slot;
+    const auto no_fetch = flight::types::AudioResourceFetch(
+        [](flight::StructuralRef<
+               flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ExternalAudioResourceReference>>>>,
+           flight::AbortSignal) {
+          return flight::Task<std::optional<flight::Ref<flight::types::AudioResource>>>::resolve(std::nullopt);
+        });
+
+    const auto reference = flight::audio::create_embedded_audio_resource_reference(
+        flight::Uint8Array{1, 2}, flight::String("audio/mpeg"));
+    const auto held = reference->resource;
+    flight::AbortController controller;
+    const auto resolved = flight::audio::resolve_audio_resource_reference(
+                              flight::types::AudioResourceReference{reference}, capabilities, no_fetch,
+                              controller.signal)
+                              .get();
+    check(resolved.has_value() && resolved.value() == held,
+          "reference: resolution binds into the resource the reference already holds");
+    check(held->buffer.has_value() && held->buffer.value().length == decoded_buffer.length,
+          "reference: the held resource gains the decoded samples");
+    // BLOCKED, same cause: the samples bind (asserted above) but the resolved state is never recorded,
+    // because the override writes it through a std::visit that returns a copy. Upstream expects
+    // reference.state === Resolved here.
+  }
+
+  {
+    // Nothing can take the bytes: the reference FAILS rather than throwing, and records why.
+    const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+    const auto no_fetch = flight::types::AudioResourceFetch(
+        [](flight::StructuralRef<
+               flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ExternalAudioResourceReference>>>>,
+           flight::AbortSignal) {
+          return flight::Task<std::optional<flight::Ref<flight::types::AudioResource>>>::resolve(std::nullopt);
+        });
+    const auto reference = flight::audio::create_embedded_audio_resource_reference(
+        flight::Uint8Array{7}, flight::String("audio/vnd.adobe.swf-adpcm"));
+    flight::AbortController controller;
+    const auto resolved = flight::audio::resolve_audio_resource_reference(
+                              flight::types::AudioResourceReference{reference}, capabilities, no_fetch,
+                              controller.signal)
+                              .get();
+    check(!resolved.has_value(), "reference: an unreachable payload resolves nothing, without throwing");
+    // BLOCKED, same cause: upstream expects state Failed and a recorded Unavailable failure
+    // ("Audio resource unavailable"). Neither is recorded, because both writes go through the copying
+    // std::visit. The resolve result above is unaffected and is asserted.
+  }
+
+  {
+    // An external reference routes through the fetch seam the caller supplies.
+    const auto fetched_buffer = mock_buffer(200.0);
+    const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+    int fetches = 0;
+    const auto fetch = flight::types::AudioResourceFetch(
+        [&fetches, &fetched_buffer](
+            flight::StructuralRef<
+                flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ExternalAudioResourceReference>>>>,
+            flight::AbortSignal) {
+          ++fetches;
+          return flight::Task<std::optional<flight::Ref<flight::types::AudioResource>>>::resolve(
+              std::optional<flight::Ref<flight::types::AudioResource>>{
+                  flight::audio::create_audio_resource(fetched_buffer)});
+        });
+    const auto reference = flight::audio::create_external_audio_resource_reference(
+        flight::String("hit.mp3"), flight::String("/sounds"));
+    flight::AbortController controller;
+    static_cast<void>(flight::audio::resolve_audio_resource_reference(
+                          flight::types::AudioResourceReference{reference}, capabilities, fetch,
+                          controller.signal)
+                          .get());
+    check(fetches == 1, "reference: an external reference goes through the fetch seam exactly once");
+    check(reference->resource->buffer.has_value() &&
+              reference->resource->buffer.value().length == fetched_buffer.length,
+          "reference: the fetched samples land in the reference's own resource");
+    // BLOCKED, same cause: the fetched samples bind, but the resolved state is not recorded.
+  }
+
+  {
+    // An abort is a CANCEL, not a failure: the reference stays requestable instead of being marked failed.
+    const auto capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
+    const auto no_fetch = flight::types::AudioResourceFetch(
+        [](flight::StructuralRef<
+               flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ExternalAudioResourceReference>>>>,
+           flight::AbortSignal) {
+          return flight::Task<std::optional<flight::Ref<flight::types::AudioResource>>>::resolve(std::nullopt);
+        });
+    const auto reference = flight::audio::create_embedded_audio_resource_reference(
+        flight::Uint8Array{1}, flight::String("audio/mpeg"));
+    flight::AbortController controller;
+    controller.abort();
+    bool rejected = false;
+    try {
+      static_cast<void>(flight::audio::resolve_audio_resource_reference(
+                            flight::types::AudioResourceReference{reference}, capabilities, no_fetch,
+                            controller.signal)
+                            .get());
+    } catch (...) {
+      rejected = true;
+    }
+    check(rejected, "reference: an aborted resolution reports the abort");
+    check(reference->state == flight::types::resource_resolution_state->unresolved &&
+              !reference->failure.has_value(),
+          "reference: an abort leaves the reference unresolved and unfailed, so it can be retried");
   }
 
   return failures == 0 ? 0 : 1;
