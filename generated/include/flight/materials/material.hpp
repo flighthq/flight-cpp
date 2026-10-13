@@ -61,8 +61,8 @@ inline bool equals_material(flight::StructuralRef<flight::RowReadonly<flight::Ro
 }
 
 template <typename T>
-inline std::optional<flight::Ref<flight::types::Material>> get_material_of_kind(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>> material, std::remove_cvref_t<decltype(std::declval<T&>().kind)> kind) {
-  return ((material.has_value() && (flight::row_get<flight::RowKey<"kind">>(material.value()) == kind)) ? std::optional<flight::Ref<flight::types::Material>>{flight::structural_ref_cast<T>(material.value())} : std::nullopt);
+inline std::optional<T> get_material_of_kind(std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>> material, std::remove_cvref_t<decltype(std::declval<T&>().kind)> kind) {
+  return ((material.has_value() && (flight::row_get<flight::RowKey<"kind">>(material.value()) == kind)) ? std::optional<T>{flight::structural_ref_cast<T>(material.value())} : std::nullopt);
 }
 
 inline void initialize_material(flight::types::EntityConstruction<flight::Ref<flight::types::Material>> material, flight::String kind) {

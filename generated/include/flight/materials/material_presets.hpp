@@ -14,7 +14,6 @@
 //   missing: function createSilverStandardPbrMaterial -- source line 141
 //   missing: function createSkinStandardPbrMaterial -- source line 152
 //   missing: function createWoodStandardPbrMaterial -- source line 163
-#include <optional>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -24,9 +23,15 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/extended_pbr_material.hpp>
 
-#include <flight/materials/extended_pbr_material.hpp>
-#include <flight/materials/pbr_materials.hpp>
-#include <flight/materials/transmission_volume_pbr_extension.hpp>
+namespace flight::types { struct ExtendedPbrMaterial; }
+namespace flight::types { struct GlassExtendedPbrMaterialOptions; }
+namespace flight::types { struct StandardPbrMaterial; }
+namespace flight::types { struct StandardPbrMaterialProperties; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { struct TransmissionVolumePbrExtension; }
 
 namespace flight::materials {
 
@@ -35,7 +40,6 @@ using flight::types::GlassExtendedPbrMaterialOptions;
 
 
 // NOT GENERATED: function createAluminumStandardPbrMaterial -- source line 21
-// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   export function createAluminumStandardPbrMaterial(opts?: Readonly<Partial<StandardPbrMaterial>>): StandardPbrMaterial {
@@ -46,15 +50,14 @@ using flight::types::GlassExtendedPbrMaterialOptions;
 //       ...opts,
 //     });
 //   }
-//
+//   
 //   // Solid carbon / black matte: very dark, dielectric, rough.
 //   // Metallic: 0 · roughness: 0.95 · baseColor: 0x1A1A1A
-// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: Partial<T> requires a
-// statically resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: structural-row
+// construction requires explicit named properties
 
 
 // NOT GENERATED: function createCarbonStandardPbrMaterial -- source line 32
-// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   export function createCarbonStandardPbrMaterial(opts?: Readonly<Partial<StandardPbrMaterial>>): StandardPbrMaterial {
@@ -65,15 +68,15 @@ using flight::types::GlassExtendedPbrMaterialOptions;
 //       ...opts,
 //     });
 //   }
-//
+//   
 //   // Clear glass preset composed from a standard metallic-roughness property block and a transmission
 //   // volume descriptor. Metallic: 0 · roughness: 0 · IOR: 1.5 · transmission: 1 · baseColor: white.
-// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: Partial<T> requires a
-// statically resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: structural-row
+// construction requires explicit named properties
 
 
 // NOT GENERATED: function createGlassExtendedPbrMaterial -- source line 43
-// refusal: cpp-partial-shape-unresolvable [source-portability]
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   export function createGlassExtendedPbrMaterial(
@@ -116,15 +119,14 @@ using flight::types::GlassExtendedPbrMaterialOptions;
 //       }),
 //     });
 //   }
-//
+//   
 //   // Gold: fully metallic, moderate roughness, warm saturated base color.
 //   // Metallic: 1 · roughness: 0.25 · baseColor: 0xFFD700 (gold yellow in sRGB)
-// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: Partial<T> requires a
-// statically resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: contextual union value
+// type flight::Array<flight::Ref<flight::types::PbrExtensionValue>> is not a represented runtime domain
 
 
 // NOT GENERATED: function createGoldStandardPbrMaterial -- source line 86
-// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   export function createGoldStandardPbrMaterial(opts?: Readonly<Partial<StandardPbrMaterial>>): StandardPbrMaterial {
@@ -135,15 +137,14 @@ using flight::types::GlassExtendedPbrMaterialOptions;
 //       ...opts,
 //     });
 //   }
-//
+//   
 //   // Iron / cast iron: metallic, moderately rough, dark gray.
 //   // Metallic: 1 · roughness: 0.7 · baseColor: 0x444444
-// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: Partial<T> requires a
-// statically resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: structural-row
+// construction requires explicit named properties
 
 
 // NOT GENERATED: function createIronStandardPbrMaterial -- source line 97
-// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   export function createIronStandardPbrMaterial(opts?: Readonly<Partial<StandardPbrMaterial>>): StandardPbrMaterial {
@@ -154,15 +155,14 @@ using flight::types::GlassExtendedPbrMaterialOptions;
 //       ...opts,
 //     });
 //   }
-//
+//   
 //   // Marble: dielectric, very smooth, white with a hint of gray.
 //   // Metallic: 0 · roughness: 0.05 · baseColor: 0xF5F5F5
-// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: Partial<T> requires a
-// statically resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: structural-row
+// construction requires explicit named properties
 
 
 // NOT GENERATED: function createMarbleStandardPbrMaterial -- source line 108
-// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   export function createMarbleStandardPbrMaterial(opts?: Readonly<Partial<StandardPbrMaterial>>): StandardPbrMaterial {
@@ -173,15 +173,14 @@ using flight::types::GlassExtendedPbrMaterialOptions;
 //       ...opts,
 //     });
 //   }
-//
+//   
 //   // Hard glossy plastic: dielectric, smooth, neutral.
 //   // Metallic: 0 · roughness: 0.05 · baseColor: 0xFFFFFF (caller supplies tint via baseColor override)
-// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: Partial<T> requires a
-// statically resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: structural-row
+// construction requires explicit named properties
 
 
 // NOT GENERATED: function createPlasticStandardPbrMaterial -- source line 119
-// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   export function createPlasticStandardPbrMaterial(opts?: Readonly<Partial<StandardPbrMaterial>>): StandardPbrMaterial {
@@ -192,15 +191,14 @@ using flight::types::GlassExtendedPbrMaterialOptions;
 //       ...opts,
 //     });
 //   }
-//
+//   
 //   // Matte rubber: dielectric, very rough, dark.
 //   // Metallic: 0 · roughness: 0.9 · baseColor: 0x1C1C1C
-// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: Partial<T> requires a
-// statically resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: structural-row
+// construction requires explicit named properties
 
 
 // NOT GENERATED: function createRubberStandardPbrMaterial -- source line 130
-// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   export function createRubberStandardPbrMaterial(opts?: Readonly<Partial<StandardPbrMaterial>>): StandardPbrMaterial {
@@ -211,15 +209,14 @@ using flight::types::GlassExtendedPbrMaterialOptions;
 //       ...opts,
 //     });
 //   }
-//
+//   
 //   // Silver: fully metallic, polished.
 //   // Metallic: 1 · roughness: 0.1 · baseColor: 0xC0C0C0
-// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: Partial<T> requires a
-// statically resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: structural-row
+// construction requires explicit named properties
 
 
 // NOT GENERATED: function createSilverStandardPbrMaterial -- source line 141
-// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   export function createSilverStandardPbrMaterial(opts?: Readonly<Partial<StandardPbrMaterial>>): StandardPbrMaterial {
@@ -230,15 +227,14 @@ using flight::types::GlassExtendedPbrMaterialOptions;
 //       ...opts,
 //     });
 //   }
-//
+//   
 //   // Skin (light tone): dielectric, slight roughness, warm pinkish base.
 //   // Metallic: 0 · roughness: 0.4 · baseColor: 0xFFCC99 (a neutral Caucasian tone in sRGB)
-// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: Partial<T> requires a
-// statically resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: structural-row
+// construction requires explicit named properties
 
 
 // NOT GENERATED: function createSkinStandardPbrMaterial -- source line 152
-// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   export function createSkinStandardPbrMaterial(opts?: Readonly<Partial<StandardPbrMaterial>>): StandardPbrMaterial {
@@ -249,15 +245,14 @@ using flight::types::GlassExtendedPbrMaterialOptions;
 //       ...opts,
 //     });
 //   }
-//
+//   
 //   // Wood (unfinished): dielectric, rough, medium brown.
 //   // Metallic: 0 · roughness: 0.8 · baseColor: 0x8B5A2B
-// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: Partial<T> requires a
-// statically resolvable C++ object shape; T is named
+// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: structural-row
+// construction requires explicit named properties
 
 
 // NOT GENERATED: function createWoodStandardPbrMaterial -- source line 163
-// refusal: cpp-partial-shape-unresolvable [source-portability]
 //
 // The source it stood for:
 //   export function createWoodStandardPbrMaterial(opts?: Readonly<Partial<StandardPbrMaterial>>): StandardPbrMaterial {
@@ -268,8 +263,8 @@ using flight::types::GlassExtendedPbrMaterialOptions;
 //       ...opts,
 //     });
 //   }
-//
-// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: Partial<T> requires a
-// statically resolvable C++ object shape; T is named
+//   
+// cpp emission failed for @flighthq/materials/packages/materials/src/materialPresets.ts: structural-row
+// construction requires explicit named properties
 
 } // namespace flight::materials
