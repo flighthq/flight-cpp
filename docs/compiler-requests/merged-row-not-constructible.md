@@ -21,25 +21,46 @@ feature is sound.
 ```cpp
 // (1) allocate as the merged schema, then write the members it declares
 auto construction = flight::entity::allocate_entity<flight::StructuralRef<Merged>>();
-flight::row_set<flight::RowKey<"getBounds">>(construction, host->get_bounds);
-// error: static assertion failed: structural row schema does not contain the requested property
+flight::row_set<flight::RowKey<"getBounds">>(construction, host->get_bounds);   // capability half
+flight::row_set<flight::RowKey<"center">>(construction, host->center);          // companion half
 ```
 
-Every write fails that way, for members of the capability half and the companion half alike, whether the companion's
-required member is passed as the optional the type declares or as its unwrapped callable, and whether or not the
-`RowRequired` wrapper is present. So the write site resolves the merged schema to `void` while the read-side lookup
-above resolves the same key on the same schema -- the two disagree.
+Measured, one write per key, for BOTH halves -- which is why this is a schema-resolution defect rather than a
+missing member:
+
+```
+include/flight/structural_ref.hpp:1247:17: error: static assertion failed due to requirement '!std::is_void_v<void>':
+    structural row schema does not contain the requested property
+include/flight/structural_ref.hpp:1248:17: error: static assertion failed due to requirement
+    'writes_unrepresentable_null_as_absence || std::constructible_from<void, std::function<...> &>':
+    structural row write has an incompatible value type
+include/flight/structural_ref.hpp:1268:28: error: no matching member function for call to 'set_named_value'
+```
+
+The errors are identical in shape for `getBounds` (a `std::function<WindowBounds(AppWindow, WindowBounds)>`) and for
+`center` (a `std::function<void(AppWindow)>`), and the value type in the second assertion is `void` for both -- so the
+write site resolves the merged schema to `void` while the read-side lookup above resolves the same key on the same
+schema. The two disagree.
 
 ```cpp
 // (2) project an existing capability row into the merged schema
 auto as_row = flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<HostWindowGeometryCapability>>>(host);
 auto merged = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<Merged>>>(as_row);
 center_window(merged, win);
-// compiles; throws std::bad_cast at run time
 ```
 
-The cast is admitted by the type system and then refuses at run time, which is the projection declining to hand over
-a member the source row's own schema does not name.
+The **cast itself succeeds** -- measured: `structural_ref_cast` to `StructuralRef<Merged>` returns without throwing,
+and the row it produces is usable as a value. The failure is one step later, in the MEMBER READ:
+
+```cpp
+flight::row_get<flight::RowKey<"center">>(merged);   // throws std::bad_cast here
+```
+
+and therefore inside `center_window`, whose whole body is that read followed by a call. Measured on the probe above:
+`center_window(merged, win)` throws `std::bad_cast` (`what()` = `"std::bad_cast"`), and the same read on its own
+throws the same. So the projection is admitted by the type system and hands over a row whose OWN merged schema does
+not answer for the member it was projected for -- the read-side lookup works on the schema (below) but the produced
+row does not carry the value.
 
 The emitter's own two merged-row idioms do not give a caller a third route. `node.hpp` emits the allocate-as-merged
 form (`allocate_entity<StructuralRef<RowMerge<...>>>()` then writes), which needs route (1). `command.hpp` emits the
