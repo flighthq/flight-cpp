@@ -38653,7 +38653,8 @@
     },
     {
       "consumers": [
-        "@flighthq/spatial/packages/spatial/src/contract.ts"
+        "@flighthq/spatial/packages/spatial/src/contract.ts",
+        "@flighthq/spatial/packages/spatial/src/index.ts"
       ],
       "module": {
         "name": "Bvh3D",
@@ -38664,9 +38665,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/spatial/packages/spatial/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/spatial",
@@ -38680,7 +38679,8 @@
     },
     {
       "consumers": [
-        "@flighthq/spatial/packages/spatial/src/contract.ts"
+        "@flighthq/spatial/packages/spatial/src/contract.ts",
+        "@flighthq/spatial/packages/spatial/src/index.ts"
       ],
       "module": {
         "name": "ExplainSpatialIndexing2D",
@@ -38692,7 +38692,8 @@
     },
     {
       "consumers": [
-        "@flighthq/spatial/packages/spatial/src/contract.ts"
+        "@flighthq/spatial/packages/spatial/src/contract.ts",
+        "@flighthq/spatial/packages/spatial/src/index.ts"
       ],
       "module": {
         "name": "ExplainSpatialIndexing3D",
@@ -38705,7 +38706,8 @@
     {
       "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/spatial/packages/spatial/src/contract.ts"
+        "@flighthq/spatial/packages/spatial/src/contract.ts",
+        "@flighthq/spatial/packages/spatial/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:4f1334f31d45d77dbb3fc68b73aeb7e4585e092cf196eb2b9f9848639824e421"
@@ -38728,14 +38730,15 @@
       },
       "path": "flight/spatial/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/spatial/packages/spatial/src/contract.ts"
+        "@flighthq/spatial/packages/spatial/src/formatSpatialIndexingNotice.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "consumers": [
         "@flighthq/interaction/packages/interaction/src/interactionSpatialIndex.ts",
-        "@flighthq/spatial/packages/spatial/src/contract.ts"
+        "@flighthq/spatial/packages/spatial/src/contract.ts",
+        "@flighthq/spatial/packages/spatial/src/index.ts"
       ],
       "module": {
         "name": "SpatialIndex",
@@ -38747,7 +38750,8 @@
     },
     {
       "consumers": [
-        "@flighthq/spatial/packages/spatial/src/contract.ts"
+        "@flighthq/spatial/packages/spatial/src/contract.ts",
+        "@flighthq/spatial/packages/spatial/src/index.ts"
       ],
       "module": {
         "name": "SpatialIndex3D",
@@ -38761,6 +38765,7 @@
       "consumers": [
         "@flighthq/spatial/packages/spatial/src/bvh3D.ts",
         "@flighthq/spatial/packages/spatial/src/contract.ts",
+        "@flighthq/spatial/packages/spatial/src/index.ts",
         "@flighthq/spatial/packages/spatial/src/uniformGrid.ts",
         "@flighthq/spatial/packages/spatial/src/uniformGrid3D.ts"
       ],
@@ -38777,6 +38782,7 @@
         "@flighthq/physics2d/packages/physics2d/src/world.ts",
         "@flighthq/spatial/packages/spatial/src/contract.ts",
         "@flighthq/spatial/packages/spatial/src/formatSpatialIndexingNotice.ts",
+        "@flighthq/spatial/packages/spatial/src/index.ts",
         "@flighthq/spatial/packages/spatial/src/spatialIndex.ts",
         "@flighthq/spatial/packages/spatial/src/uniformGrid3D.ts"
       ],
@@ -38792,6 +38798,7 @@
       "consumers": [
         "@flighthq/physics3d/packages/physics3d/src/world.ts",
         "@flighthq/spatial/packages/spatial/src/contract.ts",
+        "@flighthq/spatial/packages/spatial/src/index.ts",
         "@flighthq/spatial/packages/spatial/src/spatialIndex3D.ts"
       ],
       "module": {

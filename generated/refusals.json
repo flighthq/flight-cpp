@@ -8751,7 +8751,7 @@
       "code": "dependency-refused",
       "module": "packages/spatial/src/contract.ts",
       "package": "@flighthq/spatial",
-      "reason": "dependency ./formatSpatialIndexingNotice was refused for @flighthq/spatial/packages/spatial/src/formatSpatialIndexingNotice.ts",
+      "reason": "dependency ./formatSpatialIndexingNotice.ts was refused for @flighthq/spatial/packages/spatial/src/formatSpatialIndexingNotice.ts",
       "stage": "dependency"
     },
     {
@@ -8767,7 +8767,7 @@
       "code": "dependency-refused",
       "module": "packages/spatial/src/index.ts",
       "package": "@flighthq/spatial",
-      "reason": "dependency ./contract was refused for @flighthq/spatial/packages/spatial/src/contract.ts",
+      "reason": "dependency ./formatSpatialIndexingNotice.ts was refused for @flighthq/spatial/packages/spatial/src/formatSpatialIndexingNotice.ts",
       "stage": "dependency"
     },
     {

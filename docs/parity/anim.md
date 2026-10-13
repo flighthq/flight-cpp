@@ -1059,7 +1059,21 @@ Upstream carries per-package records at `flight/agents/packages/spatial/`: `stat
 
 ### Existing CTest coverage
 
-- `flight_cpp_upstream_spatial_smoke` — `examples/upstream/spatial.cpp` (dedicated)
+- `flight_cpp_upstream_spatial_smoke` — `examples/upstream/spatial.cpp` (dedicated). PRE-EXISTING, and untouched by the
+  unit below: it drives the index through a scene.
+- `flight_cpp.generated_spatial` — `tests/generated_spatial_test.cpp` (dedicated), added by that unit for the
+  package-level parity the lane record did not have. Ported from `spatialIndex.test.ts` and the contracts beside the
+  functions it calls, over the upstream suite's own 10-cell fixture: index identity, the pair query's deduplication and
+  determinism, point/region/forward-only-ray semantics, the COPY of the bounds a caller may reuse, update and removal
+  ordering inside the pairs, the decline sentinel for non-finite and inverted bounds and the rule that a declined
+  update REMOVES rather than leaving a stale position, oversized-but-valid bounds staying queryable, and clearing that
+  leaves the index reusable. Six mutations, all six with teeth. Mutation during iteration is not covered: the upstream
+  suite does not define it for this API. One measured observation is recorded rather than asserted -- a zero-area bound
+  is accepted and is then not reached by a point query at its own position.
+
+Scoped compile, the package's first record: **11 of 11 headers compile**, and the slice was migrated onto the current pin
+in the same unit (11 of its own headers changed, so the committed ones really were stale), after which the test above
+was re-run against the migrated tree and still passes.
 
 ### Local generation status
 
