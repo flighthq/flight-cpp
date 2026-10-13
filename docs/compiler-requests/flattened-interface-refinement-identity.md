@@ -32,6 +32,62 @@ The returned value must share the exact reference identity and lifetime of `text
 cast between unrelated structs, a copied `RenderTexture`, or an auxiliary identity table is not an
 equivalent lowering.
 
+## Measured at a627849: why there is no bounded lowering here
+
+Taken with every carried patch applied, on the concrete pair the loader is refused for --
+`flight::types::ResourceLoader` and `ResourceLoaderInternal`:
+
+- **They are independent flattened structs.** Both derive `flight::ReferenceEnabled`, neither derives the
+  other, and the derived one **re-declares every base field** before its own. The emitter's field order is
+  base-fields-then-derived-fields, so the relationship is known where the struct is written; it is not
+  emitted as a base relation. A C++ base would therefore have to also *remove* the duplicated fields, or a
+  read through one view and a write through the other would touch two different cells -- which is exactly
+  the aliasing this request needs and the one thing a duplication cannot give.
+- **The refusal is the model's own boundary.** `cpp-reference-assertion-without-heritage` fires on
+  `emitType(source) !== emitType(target) && !isCppClassHeritageRelatedCpp(source, target)`, and its remedy
+  text is to declare the value as the target where the concrete type is known, or to construct it
+  explicitly. That is the whole model: a class relation is castable, an interface relation is not, and
+  nothing between the two exists.
+- **The runtime's owner-preserving cast is for structural rows, not for these.** `structural_ref_cast`
+  keeps one live owner (`from_owner`) and its own comment says it "grants no reinterpret-cast of the native
+  object". These owners have no row cells -- their fields are plain members -- so a view of one as the other
+  would be a native reinterpretation, which this repository forbids, unless the storage itself becomes a row
+  (a representation change, below).
+- **A checked identity-preserving recovery exists and has no carrier to use.** `flight::ErasedRef` records
+  the exact type a reference was erased from and `erased_ref_as<T>` recovers it, checked, with the same
+  object. An entity is the natural carrier -- `EntityRuntime::binding` is exactly such a slot -- but the
+  emitter's `allocate_entity` sets `entity_runtime_key` to `std::nullopt`, and no generated header ever
+  assigns it. So there is no runtime owner to recover from today. Populating it means every entity
+  allocation carries its concrete owner erased: a representation decision for every entity type in the SDK,
+  not a lowering for this assertion.
+- **A per-site variant does not exist.** The representation is per *type*, fixed where the struct is
+  emitted. "Inherit only where a refinement is asserted" would emit the same interface differently in
+  different modules, so the same object could satisfy it in one and not another.
+
+The three repairs the filed text rules out (a native cast, a copy, a row carrier) are ruled out by the same
+evidence, and so are the two this measurement adds: a base relation without removing the duplicates, and a
+recovery with no carrier behind it.
+
+## What a faithful fix would actually be, as a decision rather than a lowering
+
+Two designs are faithful, and both are representation changes rather than a bounded patch:
+
+1. **Real heritage for interface extension.** Emit `interface B extends A` as C++ inheritance, with `A`'s
+   fields declared **once** (in `A`) rather than duplicated into `B`. Then `Ref<B>` converts to `Ref<A>`
+   implicitly with the same object, and a base-to-derived assertion becomes a checked `dynamic_cast` over
+   one object whose cells are shared. This changes the emitted layout of every interface that extends
+   another, across every package.
+2. **A carried owner with a checked recovery.** Every entity allocation records its concrete owner in the
+   runtime it already has a slot for (`EntityRuntime::binding`), and a refinement lowers to
+   `erased_ref_as<T>` -- same object, checked, no side table, no reinterpretation. This is
+   [`generic-owner-into-widest-container.md`](generic-owner-into-widest-container.md)'s architecture applied
+   to entity owners, and it was already rejected once for Signals.
+
+Either is a deliberate, repository-wide decision. Neither is a per-assertion lowering, and approximating one
+with a native cast, a materialized owner, or side storage is what the refusal exists to prevent. This is
+recorded in [`compiler-interface-heritage-owner-widening.md`](compiler-interface-heritage-owner-widening.md),
+which reaches the same boundary from the assignment direction.
+
 ## Affected modules
 
 `createRenderTexture` in `@flighthq/texture` is refused at the `Texture2D` → `RenderTexture` assertion.
