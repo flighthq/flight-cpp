@@ -3396,21 +3396,21 @@
       "code": "dependency-refused",
       "module": "packages/physics2d-abi/src/contract.ts",
       "package": "@flighthq/physics2d-abi",
-      "reason": "dependency ./physics2DAbiCommand was refused for @flighthq/physics2d-abi/packages/physics2d-abi/src/physics2DAbiCommand.ts",
+      "reason": "dependency ./physics2DAbiCommand.ts was refused for @flighthq/physics2d-abi/packages/physics2d-abi/src/physics2DAbiCommand.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics2d-abi/src/index.ts",
       "package": "@flighthq/physics2d-abi",
-      "reason": "dependency ./physics2DAbiCommand was refused for @flighthq/physics2d-abi/packages/physics2d-abi/src/physics2DAbiCommand.ts",
+      "reason": "dependency ./physics2DAbiCommand.ts was refused for @flighthq/physics2d-abi/packages/physics2d-abi/src/physics2DAbiCommand.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics2d-abi/src/physics2DAbi.ts",
       "package": "@flighthq/physics2d-abi",
-      "reason": "dependency ./referencePhysics2DAbi was refused for @flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
+      "reason": "dependency ./referencePhysics2DAbi.ts was refused for @flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
       "stage": "dependency"
     },
     {

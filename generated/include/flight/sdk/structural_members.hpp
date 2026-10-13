@@ -50,6 +50,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("allocH") && requires { object.alloc_h; }) return (object.alloc_h);
   else if constexpr (Key::name.view() == std::string_view("allocW") && requires { object.alloc_w; }) return (object.alloc_w);
   else if constexpr (Key::name.view() == std::string_view("allowRotation") && requires { object.allow_rotation; }) return (object.allow_rotation);
+  else if constexpr (Key::name.view() == std::string_view("allowSleeping") && requires { object.allow_sleeping; }) return (object.allow_sleeping);
   else if constexpr (Key::name.view() == std::string_view("allowSmoothing") && requires { object.allow_smoothing; }) return (object.allow_smoothing);
   else if constexpr (Key::name.view() == std::string_view("allowedSchemes") && requires { object.allowed_schemes; }) return (object.allowed_schemes);
   else if constexpr (Key::name.view() == std::string_view("alpha") && requires { object.alpha; }) return (object.alpha);
@@ -247,6 +248,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("cascadeCount") && requires { object.cascade_count; }) return (object.cascade_count);
   else if constexpr (Key::name.view() == std::string_view("cascadeSplits") && requires { object.cascade_splits; }) return (object.cascade_splits);
   else if constexpr (Key::name.view() == std::string_view("castsShadow") && requires { object.casts_shadow; }) return (object.casts_shadow);
+  else if constexpr (Key::name.view() == std::string_view("categoryBits") && requires { object.category_bits; }) return (object.category_bits);
   else if constexpr (Key::name.view() == std::string_view("cellSize") && requires { object.cell_size; }) return (object.cell_size);
   else if constexpr (Key::name.view() == std::string_view("cellSizeX") && requires { object.cell_size_x; }) return (object.cell_size_x);
   else if constexpr (Key::name.view() == std::string_view("cellSizeZ") && requires { object.cell_size_z; }) return (object.cell_size_z);
@@ -386,6 +388,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("content") && requires { object.content; }) return (object.content);
   else if constexpr (Key::name.view() == std::string_view("context") && requires { object.context; }) return (object.context);
   else if constexpr (Key::name.view() == std::string_view("contextState") && requires { object.context_state; }) return (object.context_state);
+  else if constexpr (Key::name.view() == std::string_view("continuousCollision") && requires { object.continuous_collision; }) return (object.continuous_collision);
   else if constexpr (Key::name.view() == std::string_view("contourIndex") && requires { object.contour_index; }) return (object.contour_index);
   else if constexpr (Key::name.view() == std::string_view("contours") && requires { object.contours; }) return (object.contours);
   else if constexpr (Key::name.view() == std::string_view("contrast") && requires { object.contrast; }) return (object.contrast);
@@ -779,6 +782,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("groundAnchorBX") && requires { object.ground_anchor_bx; }) return (object.ground_anchor_bx);
   else if constexpr (Key::name.view() == std::string_view("groundAnchorBY") && requires { object.ground_anchor_by; }) return (object.ground_anchor_by);
   else if constexpr (Key::name.view() == std::string_view("groundColor") && requires { object.ground_color; }) return (object.ground_color);
+  else if constexpr (Key::name.view() == std::string_view("groupIndex") && requires { object.group_index; }) return (object.group_index);
   else if constexpr (Key::name.view() == std::string_view("groups") && requires { object.groups; }) return (object.groups);
   else if constexpr (Key::name.view() == std::string_view("growable") && requires { object.growable; }) return (object.growable);
   else if constexpr (Key::name.view() == std::string_view("guard") && requires { object.guard; }) return (object.guard);
@@ -1197,6 +1201,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("marginX") && requires { object.margin_x; }) return (object.margin_x);
   else if constexpr (Key::name.view() == std::string_view("marginY") && requires { object.margin_y; }) return (object.margin_y);
   else if constexpr (Key::name.view() == std::string_view("mask") && requires { object.mask; }) return (object.mask);
+  else if constexpr (Key::name.view() == std::string_view("maskBits") && requires { object.mask_bits; }) return (object.mask_bits);
   else if constexpr (Key::name.view() == std::string_view("maskHandlers") && requires { object.mask_handlers; }) return (object.mask_handlers);
   else if constexpr (Key::name.view() == std::string_view("mass") && requires { object.mass; }) return (object.mass);
   else if constexpr (Key::name.view() == std::string_view("matcap") && requires { object.matcap; }) return (object.matcap);
@@ -1590,6 +1595,9 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("pool") && requires { object.pool; }) return (object.pool);
   else if constexpr (Key::name.view() == std::string_view("popup") && requires { object.popup; }) return (object.popup);
   else if constexpr (Key::name.view() == std::string_view("position") && requires { object.position; }) return (object.position);
+  else if constexpr (Key::name.view() == std::string_view("positionIterations") && requires { object.position_iterations; }) return (object.position_iterations);
+  else if constexpr (Key::name.view() == std::string_view("postSolve") && requires { object.post_solve; }) return (object.post_solve);
+  else if constexpr (Key::name.view() == std::string_view("preSolve") && requires { object.pre_solve; }) return (object.pre_solve);
   else if constexpr (Key::name.view() == std::string_view("positionCorrection") && requires { object.position_correction; }) return (object.position_correction);
   else if constexpr (Key::name.view() == std::string_view("positionLocation") && requires { object.position_location; }) return (object.position_location);
   else if constexpr (Key::name.view() == std::string_view("positions") && requires { object.positions; }) return (object.positions);
@@ -2280,6 +2288,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("velocities") && requires { object.velocities; }) return (object.velocities);
   else if constexpr (Key::name.view() == std::string_view("velocity") && requires { object.velocity; }) return (object.velocity);
   else if constexpr (Key::name.view() == std::string_view("velocityInheritance") && requires { object.velocity_inheritance; }) return (object.velocity_inheritance);
+  else if constexpr (Key::name.view() == std::string_view("velocityIterations") && requires { object.velocity_iterations; }) return (object.velocity_iterations);
   else if constexpr (Key::name.view() == std::string_view("velocityX") && requires { object.velocity_x; }) return (object.velocity_x);
   else if constexpr (Key::name.view() == std::string_view("velocityY") && requires { object.velocity_y; }) return (object.velocity_y);
   else if constexpr (Key::name.view() == std::string_view("velocityZ") && requires { object.velocity_z; }) return (object.velocity_z);
@@ -2303,6 +2312,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("visual") && requires { object.visual; }) return (object.visual);
   else if constexpr (Key::name.view() == std::string_view("w") && requires { object.w; }) return (object.w);
   else if constexpr (Key::name.view() == std::string_view("warmStart") && requires { object.warm_start; }) return (object.warm_start);
+  else if constexpr (Key::name.view() == std::string_view("warmStarting") && requires { object.warm_starting; }) return (object.warm_starting);
   else if constexpr (Key::name.view() == std::string_view("watchPosition") && requires { object.watch_position; }) return (object.watch_position);
   else if constexpr (Key::name.view() == std::string_view("wav") && requires { object.wav; }) return (object.wav);
   else if constexpr (Key::name.view() == std::string_view("webm") && requires { object.webm; }) return (object.webm);
@@ -2403,6 +2413,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("allocH") && requires(Object& object) { object.alloc_h; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().alloc_h)>>{};
   else if constexpr (Key::name.view() == std::string_view("allocW") && requires(Object& object) { object.alloc_w; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().alloc_w)>>{};
   else if constexpr (Key::name.view() == std::string_view("allowRotation") && requires(Object& object) { object.allow_rotation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().allow_rotation)>>{};
+  else if constexpr (Key::name.view() == std::string_view("allowSleeping") && requires(Object& object) { object.allow_sleeping; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().allow_sleeping)>>{};
   else if constexpr (Key::name.view() == std::string_view("allowSmoothing") && requires(Object& object) { object.allow_smoothing; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().allow_smoothing)>>{};
   else if constexpr (Key::name.view() == std::string_view("allowedSchemes") && requires(Object& object) { object.allowed_schemes; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().allowed_schemes)>>{};
   else if constexpr (Key::name.view() == std::string_view("alpha") && requires(Object& object) { object.alpha; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().alpha)>>{};
@@ -2600,6 +2611,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("cascadeCount") && requires(Object& object) { object.cascade_count; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cascade_count)>>{};
   else if constexpr (Key::name.view() == std::string_view("cascadeSplits") && requires(Object& object) { object.cascade_splits; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cascade_splits)>>{};
   else if constexpr (Key::name.view() == std::string_view("castsShadow") && requires(Object& object) { object.casts_shadow; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().casts_shadow)>>{};
+  else if constexpr (Key::name.view() == std::string_view("categoryBits") && requires(Object& object) { object.category_bits; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().category_bits)>>{};
   else if constexpr (Key::name.view() == std::string_view("cellSize") && requires(Object& object) { object.cell_size; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cell_size)>>{};
   else if constexpr (Key::name.view() == std::string_view("cellSizeX") && requires(Object& object) { object.cell_size_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cell_size_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("cellSizeZ") && requires(Object& object) { object.cell_size_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().cell_size_z)>>{};
@@ -2739,6 +2751,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("content") && requires(Object& object) { object.content; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().content)>>{};
   else if constexpr (Key::name.view() == std::string_view("context") && requires(Object& object) { object.context; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().context)>>{};
   else if constexpr (Key::name.view() == std::string_view("contextState") && requires(Object& object) { object.context_state; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().context_state)>>{};
+  else if constexpr (Key::name.view() == std::string_view("continuousCollision") && requires(Object& object) { object.continuous_collision; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().continuous_collision)>>{};
   else if constexpr (Key::name.view() == std::string_view("contourIndex") && requires(Object& object) { object.contour_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().contour_index)>>{};
   else if constexpr (Key::name.view() == std::string_view("contours") && requires(Object& object) { object.contours; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().contours)>>{};
   else if constexpr (Key::name.view() == std::string_view("contrast") && requires(Object& object) { object.contrast; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().contrast)>>{};
@@ -3132,6 +3145,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("groundAnchorBX") && requires(Object& object) { object.ground_anchor_bx; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ground_anchor_bx)>>{};
   else if constexpr (Key::name.view() == std::string_view("groundAnchorBY") && requires(Object& object) { object.ground_anchor_by; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ground_anchor_by)>>{};
   else if constexpr (Key::name.view() == std::string_view("groundColor") && requires(Object& object) { object.ground_color; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().ground_color)>>{};
+  else if constexpr (Key::name.view() == std::string_view("groupIndex") && requires(Object& object) { object.group_index; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().group_index)>>{};
   else if constexpr (Key::name.view() == std::string_view("groups") && requires(Object& object) { object.groups; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().groups)>>{};
   else if constexpr (Key::name.view() == std::string_view("growable") && requires(Object& object) { object.growable; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().growable)>>{};
   else if constexpr (Key::name.view() == std::string_view("guard") && requires(Object& object) { object.guard; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().guard)>>{};
@@ -3550,6 +3564,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("marginX") && requires(Object& object) { object.margin_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().margin_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("marginY") && requires(Object& object) { object.margin_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().margin_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("mask") && requires(Object& object) { object.mask; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().mask)>>{};
+  else if constexpr (Key::name.view() == std::string_view("maskBits") && requires(Object& object) { object.mask_bits; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().mask_bits)>>{};
   else if constexpr (Key::name.view() == std::string_view("maskHandlers") && requires(Object& object) { object.mask_handlers; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().mask_handlers)>>{};
   else if constexpr (Key::name.view() == std::string_view("mass") && requires(Object& object) { object.mass; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().mass)>>{};
   else if constexpr (Key::name.view() == std::string_view("matcap") && requires(Object& object) { object.matcap; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().matcap)>>{};
@@ -3943,6 +3958,9 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("pool") && requires(Object& object) { object.pool; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pool)>>{};
   else if constexpr (Key::name.view() == std::string_view("popup") && requires(Object& object) { object.popup; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().popup)>>{};
   else if constexpr (Key::name.view() == std::string_view("position") && requires(Object& object) { object.position; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().position)>>{};
+  else if constexpr (Key::name.view() == std::string_view("positionIterations") && requires(Object& object) { object.position_iterations; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().position_iterations)>>{};
+  else if constexpr (Key::name.view() == std::string_view("postSolve") && requires(Object& object) { object.post_solve; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().post_solve)>>{};
+  else if constexpr (Key::name.view() == std::string_view("preSolve") && requires(Object& object) { object.pre_solve; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().pre_solve)>>{};
   else if constexpr (Key::name.view() == std::string_view("positionCorrection") && requires(Object& object) { object.position_correction; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().position_correction)>>{};
   else if constexpr (Key::name.view() == std::string_view("positionLocation") && requires(Object& object) { object.position_location; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().position_location)>>{};
   else if constexpr (Key::name.view() == std::string_view("positions") && requires(Object& object) { object.positions; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().positions)>>{};
@@ -4633,6 +4651,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("velocities") && requires(Object& object) { object.velocities; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().velocities)>>{};
   else if constexpr (Key::name.view() == std::string_view("velocity") && requires(Object& object) { object.velocity; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().velocity)>>{};
   else if constexpr (Key::name.view() == std::string_view("velocityInheritance") && requires(Object& object) { object.velocity_inheritance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().velocity_inheritance)>>{};
+  else if constexpr (Key::name.view() == std::string_view("velocityIterations") && requires(Object& object) { object.velocity_iterations; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().velocity_iterations)>>{};
   else if constexpr (Key::name.view() == std::string_view("velocityX") && requires(Object& object) { object.velocity_x; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().velocity_x)>>{};
   else if constexpr (Key::name.view() == std::string_view("velocityY") && requires(Object& object) { object.velocity_y; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().velocity_y)>>{};
   else if constexpr (Key::name.view() == std::string_view("velocityZ") && requires(Object& object) { object.velocity_z; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().velocity_z)>>{};
@@ -4656,6 +4675,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("visual") && requires(Object& object) { object.visual; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().visual)>>{};
   else if constexpr (Key::name.view() == std::string_view("w") && requires(Object& object) { object.w; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().w)>>{};
   else if constexpr (Key::name.view() == std::string_view("warmStart") && requires(Object& object) { object.warm_start; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().warm_start)>>{};
+  else if constexpr (Key::name.view() == std::string_view("warmStarting") && requires(Object& object) { object.warm_starting; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().warm_starting)>>{};
   else if constexpr (Key::name.view() == std::string_view("watchPosition") && requires(Object& object) { object.watch_position; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().watch_position)>>{};
   else if constexpr (Key::name.view() == std::string_view("wav") && requires(Object& object) { object.wav; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().wav)>>{};
   else if constexpr (Key::name.view() == std::string_view("webm") && requires(Object& object) { object.webm; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().webm)>>{};
@@ -4759,6 +4779,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->alloc_h; }) owner.bind_named("allocH", [object]() -> decltype(auto) { return (object->alloc_h); });
   if constexpr (requires { object->alloc_w; }) owner.bind_named("allocW", [object]() -> decltype(auto) { return (object->alloc_w); });
   if constexpr (requires { object->allow_rotation; }) owner.bind_named("allowRotation", [object]() -> decltype(auto) { return (object->allow_rotation); });
+  if constexpr (requires { object->allow_sleeping; }) owner.bind_named("allowSleeping", [object]() -> decltype(auto) { return (object->allow_sleeping); });
   if constexpr (requires { object->allow_smoothing; }) owner.bind_named("allowSmoothing", [object]() -> decltype(auto) { return (object->allow_smoothing); });
   if constexpr (requires { object->allowed_schemes; }) owner.bind_named("allowedSchemes", [object]() -> decltype(auto) { return (object->allowed_schemes); });
   if constexpr (requires { object->alpha; }) owner.bind_named("alpha", [object]() -> decltype(auto) { return (object->alpha); });
@@ -4956,6 +4977,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->cascade_count; }) owner.bind_named("cascadeCount", [object]() -> decltype(auto) { return (object->cascade_count); });
   if constexpr (requires { object->cascade_splits; }) owner.bind_named("cascadeSplits", [object]() -> decltype(auto) { return (object->cascade_splits); });
   if constexpr (requires { object->casts_shadow; }) owner.bind_named("castsShadow", [object]() -> decltype(auto) { return (object->casts_shadow); });
+  if constexpr (requires { object->category_bits; }) owner.bind_named("categoryBits", [object]() -> decltype(auto) { return (object->category_bits); });
   if constexpr (requires { object->cell_size; }) owner.bind_named("cellSize", [object]() -> decltype(auto) { return (object->cell_size); });
   if constexpr (requires { object->cell_size_x; }) owner.bind_named("cellSizeX", [object]() -> decltype(auto) { return (object->cell_size_x); });
   if constexpr (requires { object->cell_size_z; }) owner.bind_named("cellSizeZ", [object]() -> decltype(auto) { return (object->cell_size_z); });
@@ -5095,6 +5117,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->content; }) owner.bind_named("content", [object]() -> decltype(auto) { return (object->content); });
   if constexpr (requires { object->context; }) owner.bind_named("context", [object]() -> decltype(auto) { return (object->context); });
   if constexpr (requires { object->context_state; }) owner.bind_named("contextState", [object]() -> decltype(auto) { return (object->context_state); });
+  if constexpr (requires { object->continuous_collision; }) owner.bind_named("continuousCollision", [object]() -> decltype(auto) { return (object->continuous_collision); });
   if constexpr (requires { object->contour_index; }) owner.bind_named("contourIndex", [object]() -> decltype(auto) { return (object->contour_index); });
   if constexpr (requires { object->contours; }) owner.bind_named("contours", [object]() -> decltype(auto) { return (object->contours); });
   if constexpr (requires { object->contrast; }) owner.bind_named("contrast", [object]() -> decltype(auto) { return (object->contrast); });
@@ -5488,6 +5511,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->ground_anchor_bx; }) owner.bind_named("groundAnchorBX", [object]() -> decltype(auto) { return (object->ground_anchor_bx); });
   if constexpr (requires { object->ground_anchor_by; }) owner.bind_named("groundAnchorBY", [object]() -> decltype(auto) { return (object->ground_anchor_by); });
   if constexpr (requires { object->ground_color; }) owner.bind_named("groundColor", [object]() -> decltype(auto) { return (object->ground_color); });
+  if constexpr (requires { object->group_index; }) owner.bind_named("groupIndex", [object]() -> decltype(auto) { return (object->group_index); });
   if constexpr (requires { object->groups; }) owner.bind_named("groups", [object]() -> decltype(auto) { return (object->groups); });
   if constexpr (requires { object->growable; }) owner.bind_named("growable", [object]() -> decltype(auto) { return (object->growable); });
   if constexpr (requires { object->guard; }) owner.bind_named("guard", [object]() -> decltype(auto) { return (object->guard); });
@@ -5906,6 +5930,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->margin_x; }) owner.bind_named("marginX", [object]() -> decltype(auto) { return (object->margin_x); });
   if constexpr (requires { object->margin_y; }) owner.bind_named("marginY", [object]() -> decltype(auto) { return (object->margin_y); });
   if constexpr (requires { object->mask; }) owner.bind_named("mask", [object]() -> decltype(auto) { return (object->mask); });
+  if constexpr (requires { object->mask_bits; }) owner.bind_named("maskBits", [object]() -> decltype(auto) { return (object->mask_bits); });
   if constexpr (requires { object->mask_handlers; }) owner.bind_named("maskHandlers", [object]() -> decltype(auto) { return (object->mask_handlers); });
   if constexpr (requires { object->mass; }) owner.bind_named("mass", [object]() -> decltype(auto) { return (object->mass); });
   if constexpr (requires { object->matcap; }) owner.bind_named("matcap", [object]() -> decltype(auto) { return (object->matcap); });
@@ -6299,6 +6324,9 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->pool; }) owner.bind_named("pool", [object]() -> decltype(auto) { return (object->pool); });
   if constexpr (requires { object->popup; }) owner.bind_named("popup", [object]() -> decltype(auto) { return (object->popup); });
   if constexpr (requires { object->position; }) owner.bind_named("position", [object]() -> decltype(auto) { return (object->position); });
+  if constexpr (requires { object->position_iterations; }) owner.bind_named("positionIterations", [object]() -> decltype(auto) { return (object->position_iterations); });
+  if constexpr (requires { object->post_solve; }) owner.bind_named("postSolve", [object]() -> decltype(auto) { return (object->post_solve); });
+  if constexpr (requires { object->pre_solve; }) owner.bind_named("preSolve", [object]() -> decltype(auto) { return (object->pre_solve); });
   if constexpr (requires { object->position_correction; }) owner.bind_named("positionCorrection", [object]() -> decltype(auto) { return (object->position_correction); });
   if constexpr (requires { object->position_location; }) owner.bind_named("positionLocation", [object]() -> decltype(auto) { return (object->position_location); });
   if constexpr (requires { object->positions; }) owner.bind_named("positions", [object]() -> decltype(auto) { return (object->positions); });
@@ -6989,6 +7017,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->velocities; }) owner.bind_named("velocities", [object]() -> decltype(auto) { return (object->velocities); });
   if constexpr (requires { object->velocity; }) owner.bind_named("velocity", [object]() -> decltype(auto) { return (object->velocity); });
   if constexpr (requires { object->velocity_inheritance; }) owner.bind_named("velocityInheritance", [object]() -> decltype(auto) { return (object->velocity_inheritance); });
+  if constexpr (requires { object->velocity_iterations; }) owner.bind_named("velocityIterations", [object]() -> decltype(auto) { return (object->velocity_iterations); });
   if constexpr (requires { object->velocity_x; }) owner.bind_named("velocityX", [object]() -> decltype(auto) { return (object->velocity_x); });
   if constexpr (requires { object->velocity_y; }) owner.bind_named("velocityY", [object]() -> decltype(auto) { return (object->velocity_y); });
   if constexpr (requires { object->velocity_z; }) owner.bind_named("velocityZ", [object]() -> decltype(auto) { return (object->velocity_z); });
@@ -7012,6 +7041,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->visual; }) owner.bind_named("visual", [object]() -> decltype(auto) { return (object->visual); });
   if constexpr (requires { object->w; }) owner.bind_named("w", [object]() -> decltype(auto) { return (object->w); });
   if constexpr (requires { object->warm_start; }) owner.bind_named("warmStart", [object]() -> decltype(auto) { return (object->warm_start); });
+  if constexpr (requires { object->warm_starting; }) owner.bind_named("warmStarting", [object]() -> decltype(auto) { return (object->warm_starting); });
   if constexpr (requires { object->watch_position; }) owner.bind_named("watchPosition", [object]() -> decltype(auto) { return (object->watch_position); });
   if constexpr (requires { object->wav; }) owner.bind_named("wav", [object]() -> decltype(auto) { return (object->wav); });
   if constexpr (requires { object->webm; }) owner.bind_named("webm", [object]() -> decltype(auto) { return (object->webm); });
@@ -7149,6 +7179,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(alloc_h)
   FLIGHT_SDK_ROW_WIDENS(alloc_w)
   FLIGHT_SDK_ROW_WIDENS(allow_rotation)
+  FLIGHT_SDK_ROW_WIDENS(allow_sleeping)
   FLIGHT_SDK_ROW_WIDENS(allow_smoothing)
   FLIGHT_SDK_ROW_WIDENS(allowed_schemes)
   FLIGHT_SDK_ROW_WIDENS(alpha)
@@ -7346,6 +7377,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(cascade_count)
   FLIGHT_SDK_ROW_WIDENS(cascade_splits)
   FLIGHT_SDK_ROW_WIDENS(casts_shadow)
+  FLIGHT_SDK_ROW_WIDENS(category_bits)
   FLIGHT_SDK_ROW_WIDENS(cell_size)
   FLIGHT_SDK_ROW_WIDENS(cell_size_x)
   FLIGHT_SDK_ROW_WIDENS(cell_size_z)
@@ -7485,6 +7517,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(content)
   FLIGHT_SDK_ROW_WIDENS(context)
   FLIGHT_SDK_ROW_WIDENS(context_state)
+  FLIGHT_SDK_ROW_WIDENS(continuous_collision)
   FLIGHT_SDK_ROW_WIDENS(contour_index)
   FLIGHT_SDK_ROW_WIDENS(contours)
   FLIGHT_SDK_ROW_WIDENS(contrast)
@@ -7878,6 +7911,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(ground_anchor_bx)
   FLIGHT_SDK_ROW_WIDENS(ground_anchor_by)
   FLIGHT_SDK_ROW_WIDENS(ground_color)
+  FLIGHT_SDK_ROW_WIDENS(group_index)
   FLIGHT_SDK_ROW_WIDENS(groups)
   FLIGHT_SDK_ROW_WIDENS(growable)
   FLIGHT_SDK_ROW_WIDENS(guard)
@@ -8296,6 +8330,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(margin_x)
   FLIGHT_SDK_ROW_WIDENS(margin_y)
   FLIGHT_SDK_ROW_WIDENS(mask)
+  FLIGHT_SDK_ROW_WIDENS(mask_bits)
   FLIGHT_SDK_ROW_WIDENS(mask_handlers)
   FLIGHT_SDK_ROW_WIDENS(mass)
   FLIGHT_SDK_ROW_WIDENS(matcap)
@@ -8689,6 +8724,9 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(pool)
   FLIGHT_SDK_ROW_WIDENS(popup)
   FLIGHT_SDK_ROW_WIDENS(position)
+  FLIGHT_SDK_ROW_WIDENS(position_iterations)
+  FLIGHT_SDK_ROW_WIDENS(post_solve)
+  FLIGHT_SDK_ROW_WIDENS(pre_solve)
   FLIGHT_SDK_ROW_WIDENS(position_correction)
   FLIGHT_SDK_ROW_WIDENS(position_location)
   FLIGHT_SDK_ROW_WIDENS(positions)
@@ -9379,6 +9417,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(velocities)
   FLIGHT_SDK_ROW_WIDENS(velocity)
   FLIGHT_SDK_ROW_WIDENS(velocity_inheritance)
+  FLIGHT_SDK_ROW_WIDENS(velocity_iterations)
   FLIGHT_SDK_ROW_WIDENS(velocity_x)
   FLIGHT_SDK_ROW_WIDENS(velocity_y)
   FLIGHT_SDK_ROW_WIDENS(velocity_z)
@@ -9402,6 +9441,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(visual)
   FLIGHT_SDK_ROW_WIDENS(w)
   FLIGHT_SDK_ROW_WIDENS(warm_start)
+  FLIGHT_SDK_ROW_WIDENS(warm_starting)
   FLIGHT_SDK_ROW_WIDENS(watch_position)
   FLIGHT_SDK_ROW_WIDENS(wav)
   FLIGHT_SDK_ROW_WIDENS(webm)
