@@ -309,17 +309,38 @@ int main() {
     flight::Array<HostRow> providers = flight::Array<HostRow>{};
     providers.push(HostRow(flaky));
     providers.push(HostRow(healthy));
-    flight::menu::destroy_app_menu(providers);
-    check(attempts == 1 && destroyed == 1,
-          "both providers are attempted, and only the healthy one is destroyed");
 
-    // The failed provider was retained, so a later call retries only the failure.
-    flight::menu::destroy_app_menu(providers);
-    check(attempts == 2 && destroyed == 1, "a retained failure is attempted again, not skipped");
+    // CORRECTED SEMANTICS, and the correction matters. The upstream source records the FIRST failure in
+    // the catch, keeps that provider OUT of the destroyed set so it is retried, and -- after attempting
+    // EVERY provider -- rethrows the recorded failure. The emission this suite was written against
+    // emitted a no-op catch and a presence test that was never true, so it swallowed the failure
+    // entirely, and the assertions here used to certify that: they called destroy_app_menu and expected
+    // no throw. A regeneration now emits the catch binding faithfully (failure ??= error; ... throw
+    // failure), which is what the source always said. So the failure is expected here, and what is worth
+    // asserting is that it does not stop the loop.
+    bool threw = false;
+    try {
+      flight::menu::destroy_app_menu(providers);
+    } catch (const std::runtime_error&) {
+      threw = true;
+    }
+    check(threw, "a provider failure is rethrown once every provider has been attempted");
+    check(attempts == 1 && destroyed == 1,
+          "the failure did not stop the loop: the healthy provider was still destroyed");
+
+    // The failed provider was retained, so a later call retries only the failure -- and fails again.
+    threw = false;
+    try {
+      flight::menu::destroy_app_menu(providers);
+    } catch (const std::runtime_error&) {
+      threw = true;
+    }
+    check(threw && attempts == 2 && destroyed == 1,
+          "a retained failure is attempted again, not skipped");
 
     failing = false;
     flight::menu::destroy_app_menu(providers);
-    check(attempts == 3 && destroyed == 2, "and it is destroyed on the retry");
+    check(attempts == 3 && destroyed == 2, "and it is destroyed on the retry, which no longer throws");
 
     flight::menu::destroy_app_menu(providers);
     check(attempts == 3 && destroyed == 2, "a provider that succeeded is never destroyed twice");
