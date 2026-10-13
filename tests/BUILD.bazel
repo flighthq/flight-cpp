@@ -583,6 +583,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_particles_formats_test",
+    srcs = ["generated_particles_formats_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_spring_test",
     srcs = ["generated_spring_test.cpp"],
     size = "small",
@@ -867,6 +874,7 @@ test_suite(
         ":generated_midi_test",
         ":generated_net_test",
         ":generated_spring_test",
+        ":generated_particles_formats_test",
         ":generated_particles_test",
         ":generated_log_core_test",
         ":generated_statechart_test",

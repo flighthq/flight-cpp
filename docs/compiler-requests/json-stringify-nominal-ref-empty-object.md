@@ -47,3 +47,102 @@ the failure into nested arrays, records, and nominal frame/metadata owners. Hand
 duplicate the library serializer and risk property-order, escaping, omission, and numeric-format drift.
 The serializers remain emitted and independently compilable, but end-to-end native JSON evidence stays
 blocked until the runtime recursively enumerates these named values.
+
+## Further sites: particles-formats Spine and Unity serializers (measured)
+
+`@flighthq/particles-formats` `serializeSpineParticle` and `serializeUnityParticle` end the same way, with
+`JSON.stringify(doc, null, 2)` of a freshly built `SpineParticleDocument` or `UnityParticleDocument`. Both headers
+compile, and at flight `a627849` both return exactly `{}` natively for a default config. JavaScript returns the
+full document. For Spine, built from `configToDocument` in the source:
+
+```json
+{
+  "name": "",
+  "maxParticles": 1000,
+  "continuous": true,
+  "duration": -1,
+  "emission": {
+    "low": 8,
+    "high": 12
+  },
+  "life": {
+    "low": 500,
+    "high": 1000
+  },
+  "lifeOffset": {
+    "low": 0,
+    "high": 0
+  },
+  "x": {
+    "low": 0,
+    "high": 0
+  },
+  "y": {
+    "low": 0,
+    "high": 0
+  },
+  "spawnShape": "point",
+  "spawnWidth": {
+    "low": 0,
+    "high": 0
+  },
+  "spawnHeight": {
+    "low": 0,
+    "high": 0
+  },
+  "velocity": {
+    "low": 50,
+    "high": 100
+  },
+  "angle": {
+    "low": -90,
+    "high": 270
+  },
+  "rotation": {
+    "low": 0,
+    "high": 0
+  },
+  "wind": {
+    "low": 0,
+    "high": 0
+  },
+  "gravity": {
+    "low": 0,
+    "high": 0
+  },
+  "scale": {
+    "low": 1,
+    "high": 1
+  },
+  "scaleEnd": {
+    "low": 1,
+    "high": 1
+  },
+  "tint": [
+    {
+      "time": 0,
+      "color": "ffffff"
+    },
+    {
+      "time": 1,
+      "color": "ffffff"
+    }
+  ],
+  "alpha": [
+    {
+      "time": 0,
+      "alpha": 1
+    },
+    {
+      "time": 1,
+      "alpha": 0
+    }
+  ],
+  "blendMode": "normal",
+  "premultiplied": false,
+  "images": []
+}
+```
+
+`tests/generated_particles_formats_test.cpp` does not bless the `{}` text. It pins only the serializers'
+warnings, which are computed from the config alone.
