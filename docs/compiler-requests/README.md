@@ -372,3 +372,5 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   silent until instantiation: velocity keys its samples by `node.shared_object()`, which a merged row does not offer. No workaround.
 - [A structural runtime owner parameter must accept the node rows that carry the runtime](node-transform-runtime-owner-argument.md) —
   silent until instantiation: every `@flighthq/node` world-matrix query fails, which blocks velocity's transform baseline natively. No workaround.
+- [An optional boolean operand of `&&` must be tested for its value, not its presence](logical-and-optional-operand-truthiness.md) —
+  silent miscompilation: `a && b.flag` with `flag?: boolean` treats an explicit `false` as true; flow's overlay walks ticked and drew through `updateBelow: false` / `renderBelow: false`. Carried by the `flow-optional-overlay-flags-explicit` patch.
