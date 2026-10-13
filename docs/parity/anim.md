@@ -908,7 +908,13 @@ nothing to annotate -- their interfaces already declare `SpatialAabb2D` -- and t
 COMMITTED OVERRIDE (`overrides/include/flight/physics2d/collider_transform.hpp`) shadowing the corrected generated
 header, whose `derivedFrom` no longer matches the file it was derived from. That is the drift `overrides:check`
 reports; re-deriving or dropping it is the documented step, and `world.hpp` has a second blocker of its own, so the
-recovery is to be measured rather than assumed. The full chain is in the request.
+recovery is to be measured rather than assumed. The full chain is in the request. The override was then removed and MEASURED, and put back: without it the package
+compiles 9 of 26 rather than 10, because the header that changes is the very one it shadowed -- the GENERATED
+`collider_transform.hpp` mints three owners for one circle shape and returns one where a variant declares another, so it
+does not compile on its own. The override is therefore the module's working supply, not merely a stale copy, and
+re-deriving it from the current generated file would copy the defect. `overrides:check` was also fixed to lead with its
+findings: 38 overrides have drifted and the report put that below 158 lines of inventory, which is why the drift this
+unit was chasing read as silence.
 
 ### Local generation status
 

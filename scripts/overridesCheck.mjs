@@ -44,16 +44,21 @@ const includeDirectory = overridesIncludeDirectory(root);
 const drifted = driftedOverrides(overrides, generatedRoot);
 const unresolved = unresolvedHashReferences(overrides, includeDirectory, generatedRoot);
 const unmanifested = unmanifestedOverrideHeaders(overrides, includeDirectory);
+// The findings come FIRST, and that is a fix rather than a style choice: the declared list below is 150-plus
+// lines of reference material, and writing it before the findings buried a thirty-eight-entry drift report under
+// it. That is not hypothetical -- a runner reading the tail of this output saw the unmanifested-header warning and
+// concluded the gate was quiet about an override whose drift it had in fact named and counted.
+const findings = drifted.length + unresolved.length + unmanifested.length;
 process.stdout.write(
-  `${String(overrides.length)} override(s) declared against ${portable(path.relative(root, generatedRoot))}.\n`,
+  `${String(overrides.length)} override(s) declared against ${portable(path.relative(root, generatedRoot))}.` +
+    (findings === 0
+      ? ' Each one still matches the generated file it was derived from, and no file shadows the tree unmanifested.\n'
+      : `\n\n${String(findings)} finding(s): ${String(drifted.length)} drifted, ` +
+        `${String(unresolved.length)} unresolved hash-suffixed identifier(s), ` +
+        `${String(unmanifested.length)} unmanifested header(s). The detail follows, then the declared list.\n`),
 );
-for (const entry of overrides) process.stdout.write(`- ${entry.path} (${entry.id})\n`);
-if (drifted.length === 0 && unresolved.length === 0 && unmanifested.length === 0) {
-  process.stdout.write(
-    'Each one still matches the generated file it was derived from, and no file shadows the tree unmanifested.\n',
-  );
-  process.exit(0);
-}
+if (findings === 0) process.exit(0);
+
 if (drifted.length > 0) {
   process.stderr.write(`\n${String(drifted.length)} override(s) have drifted:\n`);
   for (const entry of drifted) process.stderr.write(`- ${entry.id}: ${entry.reason}\n`);
@@ -82,6 +87,8 @@ if (unresolved.length > 0) {
   );
 }
 process.exitCode = 1;
+// The declared list, last: reference material, after everything a reader must act on.
+for (const entry of overrides) process.stdout.write(`- ${entry.path} (${entry.id})\n`);
 
 function portable(filename) {
   return filename.split(path.sep).join('/');

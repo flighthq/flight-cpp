@@ -138,3 +138,23 @@ compiler change and not a fifth annotation.
 Two further facts, so the recovery is not over-promised: `world.hpp` has at least one blocker of its own
 (`world.hpp:418`, a `StructuralRowWritable<...>` to `const std::shared_ptr<RigidBody2D>` conversion), so even with the
 override re-derived the package will not be 26 of 26. Whatever does recover is to be measured, not assumed.
+
+### The override is not merely stale -- the generated file it shadows does not compile
+
+Dropped, measured, and put back, because the measurement said the drop was wrong. With
+`overrides/include/flight/physics2d/collider_transform.hpp` removed, the package compiles **9 of 26 headers, not 10** --
+and the header that changes is `collider_transform.hpp` itself, which had been compiling only because the override was
+shadowing it. The generated file carries its own defect, and it is the duplicate-owner family again:
+
+```
+collider_transform.hpp:355: error: no viable conversion from returned value of type
+  std::shared_ptr<flight::physics2d::x_y_radius_kind_entity_runtime_key_3b411ce3c09d63df>
+  to function return type 'std::variant<... flight::Ref<flight::physics2d::x_y_radius_kind_entity_runtime_key_9d232207bd12a07b> ...>'
+```
+
+The generated module mints **three** owners for one circle shape -- `..._3b411ce3c09d63df`, `..._6532500072144184` and
+`..._9d232207bd12a07b` -- and returns one where a variant declares another, in five of the seven shape arms. So dropping
+the override is not available, and re-deriving the minimum remaining override from the current generated file would copy
+that defect rather than remove it. The override stays, as the module's supply, until the emitter stops minting more than
+one owner per shape. Its `derivedFrom` therefore stays drifted on purpose: it genuinely was produced from the previous
+pin's file, and the drift report is telling the truth about that rather than about a mistake.
