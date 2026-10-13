@@ -48,7 +48,7 @@ inline std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<fli
 inline flight::Task<std::optional<flight::Uint8Array>> load_bytes(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>> host_net, flight::String url, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LoadOptions>>>>> input = std::nullopt) {
   try {
     auto response = co_await flight::net::send_net_request(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostNetCapability>>>>>(host_net), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NetRequest>>>>>(flight::make_structural_ref<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::NetRequest>>>>(flight::row_field<flight::RowKey<"method">>(flight::String("GET")), flight::row_field<flight::RowKey<"responseType">>(std::optional<flight::String>{flight::String("arraybuffer")}), flight::row_field<flight::RowKey<"url">>(url))), request_options(url, input));
-    co_return ((response->ok && (response->body instanceof flight::ArrayBuffer)) ? std::optional<flight::Uint8Array>{flight::Uint8Array(response->body)} : std::nullopt);
+    co_return ((response->ok && ([&]() { const auto& kind_test_value = response->body; return ((kind_test_value.has_value() && kind_test_value.value().index() == 0) || (kind_test_value.has_value() && kind_test_value.value().index() == 3 && std::get<3>(kind_test_value.value()).external_if<flight::ArrayBuffer>() != nullptr)); }())) ? std::optional<flight::Uint8Array>{flight::Uint8Array(response->body)} : std::nullopt);
   }
   catch (...) {
     co_return std::nullopt;
