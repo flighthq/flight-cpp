@@ -10,3 +10,18 @@ diff --git a/packages/scene-document/src/sceneDocumentYamlSubset.ts b/packages/s
      if (count >= MAX_COLLECTION_ENTRIES) {
        return this.refuse(
          'flight-document.limit.collection-entries',
+@@ -643,10 +654,11 @@ class SceneDocumentYamlSubsetParser {
+       cursor.index++;
+ 
+-      const colon = tokens[cursor.index];
+-      if (colon?.kind !== 'colon') {
+-        return this.refuse('flight-document.syntax.expected-mapping-entry', colon ?? keyToken);
++      const colon = this.tokenAt(tokens, cursor.index);
++      if (colon === undefined) return this.refuse('flight-document.syntax.expected-mapping-entry', keyToken);
++      if (colon.kind !== 'colon') {
++        return this.refuse('flight-document.syntax.expected-mapping-entry', colon);
+       }
+       cursor.index++;
+ 
+       const valueToken = tokens[cursor.index];
+       if (valueToken === undefined) return this.refuse('flight-document.syntax.expected-value', colon);

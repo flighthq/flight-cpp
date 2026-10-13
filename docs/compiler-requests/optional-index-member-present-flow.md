@@ -111,7 +111,9 @@ where the callable result type is missing, and from [narrowed union presence](na
 where an explicit guard has not projected a dual-level carrier. Here the indexed optional chain or
 nullish fallback already provides the present-flow fact.
 
-No source rewrite or generated repair is carried.
+The scene-document YAML-subset parser now carries one source rewrite in this family: its private
+`tokenAt` helper preserves the nominal token owner while two sequential guards spell the same line and
+first-token absence branches as `line?.tokens[0]`. No generated repair is carried.
 
 ## Third and fourth measured sites: `@flighthq/useragent`
 

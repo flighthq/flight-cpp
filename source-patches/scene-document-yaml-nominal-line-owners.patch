@@ -1,13 +1,18 @@
 diff --git a/packages/scene-document/src/sceneDocumentYamlSubset.ts b/packages/scene-document/src/sceneDocumentYamlSubset.ts
 --- a/packages/scene-document/src/sceneDocumentYamlSubset.ts
 +++ b/packages/scene-document/src/sceneDocumentYamlSubset.ts
-@@ -431,9 +431,14 @@ class SceneDocumentYamlSubsetParser {
+@@ -431,9 +431,19 @@ class SceneDocumentYamlSubsetParser {
      this.lines = lines;
    }
  
 +  private lineAt(index: number): SceneDocumentYamlSubsetLine | undefined {
 +    if (index < 0 || index >= this.lines.length) return undefined;
 +    return this.lines[index]!;
++  }
++
++  private tokenAt(tokens: readonly SceneDocumentYamlSubsetToken[], index: number): SceneDocumentYamlSubsetToken | undefined {
++    if (index < 0 || index >= tokens.length) return undefined;
++    return tokens[index]!;
 +  }
 +
    public parse(): SceneDocumentYamlSubsetResult {
@@ -17,7 +22,7 @@ diff --git a/packages/scene-document/src/sceneDocumentYamlSubset.ts b/packages/s
      if (first.indent !== 0) {
        return this.createRefusal('flight-document.syntax.root-indentation', first.tokens[0]);
      }
-@@ -476,7 +481,7 @@ class SceneDocumentYamlSubsetParser {
+@@ -476,7 +486,7 @@ class SceneDocumentYamlSubsetParser {
  
      let value: SceneDocumentYamlSubsetParseValue;
      if (colonIndex + 1 === tokens.length) {
@@ -26,16 +31,19 @@ diff --git a/packages/scene-document/src/sceneDocumentYamlSubset.ts b/packages/s
        if (next !== undefined && next.indent > indent) value = this.parseBlock(next.indent, depth + 1);
        else value = this.parseNull(colon);
      } else {
-@@ -522,7 +527,7 @@ class SceneDocumentYamlSubsetParser {
+@@ -522,7 +532,8 @@ class SceneDocumentYamlSubsetParser {
    }
  
    private parseBlock(indent: number, depth: number): SceneDocumentYamlSubsetParseValue {
 -    const line = this.lines[this.index];
+-    const first = line?.tokens[0];
+-    if (line === undefined || first === undefined) return PARSE_FAILURE;
 +    const line = this.lineAt(this.index);
-     const first = line?.tokens[0];
-     if (line === undefined || first === undefined) return PARSE_FAILURE;
++    if (line === undefined) return PARSE_FAILURE;
++    const first = this.tokenAt(line.tokens, 0);
++    if (first === undefined) return PARSE_FAILURE;
      if (line.indent !== indent) return this.refuse('flight-document.syntax.unexpected-indentation', first);
-@@ -534,7 +539,7 @@ class SceneDocumentYamlSubsetParser {
+@@ -534,7 +545,7 @@ class SceneDocumentYamlSubsetParser {
      this.index++;
      const value = this.parseInline(line.tokens, 0, depth);
      if (value === PARSE_FAILURE) return PARSE_FAILURE;
@@ -44,7 +52,7 @@ diff --git a/packages/scene-document/src/sceneDocumentYamlSubset.ts b/packages/s
      if (next !== undefined && next.indent > indent) {
        return this.refuse('flight-document.syntax.unexpected-indentation', next.tokens[0]);
      }
-@@ -548,7 +553,7 @@ class SceneDocumentYamlSubsetParser {
+@@ -548,7 +559,7 @@ class SceneDocumentYamlSubsetParser {
      const mapping: SceneDocumentYamlSubsetMapping = Object.create(null);
      let count = 0;
      while (this.index < this.lines.length) {
@@ -53,7 +61,7 @@ diff --git a/packages/scene-document/src/sceneDocumentYamlSubset.ts b/packages/s
        const firstToken = line.tokens[0];
        if (line.indent < indent) break;
        if (line.indent > indent) {
-@@ -574,6 +579,6 @@ class SceneDocumentYamlSubsetParser {
+@@ -574,6 +585,6 @@ class SceneDocumentYamlSubsetParser {
      const sequence: SceneDocumentYamlSubsetValue[] = [];
      while (this.index < this.lines.length) {
 -      const line = this.lines[this.index];
@@ -61,7 +69,7 @@ diff --git a/packages/scene-document/src/sceneDocumentYamlSubset.ts b/packages/s
        const item = line.tokens[0];
        if (line.indent < indent) break;
        if (line.indent > indent) return this.refuse('flight-document.syntax.unexpected-indentation', item);
-@@ -591,7 +596,7 @@ class SceneDocumentYamlSubsetParser {
+@@ -591,7 +602,7 @@ class SceneDocumentYamlSubsetParser {
        this.index++;
        let value: SceneDocumentYamlSubsetParseValue;
        if (line.tokens.length === 1) {
@@ -70,7 +78,7 @@ diff --git a/packages/scene-document/src/sceneDocumentYamlSubset.ts b/packages/s
          value =
            next !== undefined && next.indent > indent ? this.parseBlock(next.indent, depth + 1) : this.parseNull(item);
        } else {
-@@ -604,7 +609,7 @@ class SceneDocumentYamlSubsetParser {
+@@ -604,7 +615,7 @@ class SceneDocumentYamlSubsetParser {
        if (value === PARSE_FAILURE) return PARSE_FAILURE;
        sequence.push(value);
  
@@ -79,7 +87,7 @@ diff --git a/packages/scene-document/src/sceneDocumentYamlSubset.ts b/packages/s
        if (next !== undefined && next.indent > indent) {
          return this.refuse('flight-document.syntax.unexpected-indentation', next.tokens[0]);
        }
-@@ -747,7 +752,7 @@ class SceneDocumentYamlSubsetParser {
+@@ -747,7 +758,7 @@ class SceneDocumentYamlSubsetParser {
      if (count === PARSE_FAILURE) return PARSE_FAILURE;
  
      while (this.index < this.lines.length) {
