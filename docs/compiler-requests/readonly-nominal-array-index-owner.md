@@ -63,7 +63,8 @@ package from compiling.
 
 ## Carrying workaround
 
-The package source can explicitly name the existing element type on only the parser's private local
-reads, leaving the same arrays, elements, order, and runtime objects in place. Those annotations are
-erased from JavaScript and should expire when indexed readonly-array reads retain the nominal element
-carrier.
+The package source explicitly names the existing element type on bounds-dominated reads and routes
+possibly absent reads through a private bounds-checked helper returning that same nominal owner. The
+annotations erase from JavaScript, and the helper returns the identical element or the same undefined
+result as ordinary indexing. Both should expire when indexed readonly-array reads retain the nominal
+element carrier.

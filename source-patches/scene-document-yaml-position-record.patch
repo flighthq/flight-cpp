@@ -1,0 +1,18 @@
+diff --git a/packages/scene-document/src/sceneDocumentYamlSubset.ts b/packages/scene-document/src/sceneDocumentYamlSubset.ts
+--- a/packages/scene-document/src/sceneDocumentYamlSubset.ts
++++ b/packages/scene-document/src/sceneDocumentYamlSubset.ts
+@@ -510,8 +510,13 @@ class SceneDocumentYamlSubsetParser {
+     token: SceneDocumentYamlSubsetToken,
+     limit: number | null = null,
+     actual: number | null = null,
+   ): SceneDocumentYamlSubsetRefusal {
+-    return createSceneDocumentYamlSubsetRefusal(kind, token, limit, actual);
++    const position: SceneDocumentYamlSubsetPosition = {
++      offset: token.offset,
++      line: token.line,
++      column: token.column,
++    };
++    return createSceneDocumentYamlSubsetRefusal(kind, position, limit, actual);
+   }
+ 
+   private getRefusal(): SceneDocumentYamlSubsetRefusal {

@@ -487,11 +487,11 @@
       "package": "@flighthq/scene-document",
       "answers": "diagnostic",
       "refusal": "indexed reads from the parser's readonly SceneDocumentYamlSubsetLine array are emitted as unrelated anonymous indent/tokens owners, so native compilation rejects the reference conversion",
-      "rewrite": "Names SceneDocumentYamlSubsetLine explicitly on each local that retains an indexed parser-line read, including the same possibly-undefined locals the source already guards.",
-      "equivalence": "TypeScript annotations are erased and do not allocate, copy, reorder, or mutate anything. Every local retains the exact same line object from the exact same array index; the existing undefined guards, parser state changes, token reads, diagnostics, and results are unchanged.",
+      "rewrite": "Names SceneDocumentYamlSubsetLine on bounds-dominated indexed reads and routes possibly-absent reads through a private lineAt helper that bounds-checks once and returns the same exact nominal line owner.",
+      "equivalence": "The required-read annotations erase from JavaScript. lineAt returns undefined exactly when ordinary JavaScript indexing does and otherwise returns the identical line object from the identical index; each caller retains its existing undefined guard. No line is copied, allocated, reordered, or mutated, and parser state changes, token reads, diagnostics, and results are unchanged.",
       "whyNotUpstreamFirst": "The source already declares the exact nominal element type on the parser field. The emitter alone replaces inferred indexed reads with anonymous structural owners, as recorded in docs/compiler-requests/readonly-nominal-array-index-owner.md.",
-      "unblocks": "Keeps the YAML-subset parser's generated line locals on their stored nominal owner so scene_document_yaml_subset.hpp can compile and receive direct behavioral coverage.",
-      "expires": "when indexed readonly-array reads retain the declared nominal element carrier, or Flight adopts the explicit local annotations.",
+      "unblocks": "Keeps the YAML-subset parser's required and possibly-absent line locals on their stored nominal owner without nesting the runtime index-miss carrier, so scene_document_yaml_subset.hpp can compile and receive direct behavioral coverage.",
+      "expires": "when indexed readonly-array reads retain the declared nominal element carrier, or Flight adopts the explicit local annotations and lineAt helper.",
       "appliedOn": "2026-10-13"
     },
     {
@@ -508,6 +508,22 @@
       "whyNotUpstreamFirst": "TypeScript already types the indexed read as SceneDocumentYamlSubsetToken under Flight's configuration. The emitter alone exposes its optional index-miss wrapper through the inferred local, as recorded in docs/compiler-requests/array-index-nullish-fallback-present-carrier.md.",
       "unblocks": "Keeps addMappingEntry's colon token on the present reference carrier so scene_document_yaml_subset.hpp and its transitive package headers can compile.",
       "expires": "when inferred indexed locals keep their statically present element carrier through nullish fallback lowering, or Flight adopts the explicit local annotation.",
+      "appliedOn": "2026-10-13"
+    },
+    {
+      "id": "scene-document-yaml-position-record",
+      "dependency": "flight",
+      "patch": "scene-document-yaml-position-record.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/scene-document/src/sceneDocumentYamlSubset.ts",
+      "package": "@flighthq/scene-document",
+      "answers": "diagnostic",
+      "refusal": "the structurally wider SceneDocumentYamlSubsetToken reference cannot enter the smaller readonly SceneDocumentYamlSubsetPosition reference parameter because the emitter gives both interfaces unrelated owning reference carriers",
+      "rewrite": "Builds the private position argument from the same token offset, line, and column immediately before the refusal helper call.",
+      "equivalence": "The helper reads only those three scalar fields and immediately copies them into the published refusal; it neither exposes nor compares the position object's identity. The same token is read once at the same point, the same field getters run in the same order, and the returned reason, limits, position, and parser state are unchanged.",
+      "whyNotUpstreamFirst": "The source already satisfies TypeScript's structural parameter contract. The emitter alone cannot form an identity-preserving readonly view from the wider owner, as recorded in docs/compiler-requests/structural-subtype-reference-argument-owner.md.",
+      "unblocks": "Lets the YAML parser's createRefusal helper call the shared position-based refusal constructor without converting sibling reference owners.",
+      "expires": "when readonly structural subtype arguments retain an identity-preserving view, or Flight adopts the explicit private position record.",
       "appliedOn": "2026-10-13"
     },
     {
