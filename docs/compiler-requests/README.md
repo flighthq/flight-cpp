@@ -371,6 +371,8 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   because it reaches the same fold.
 - [Readonly structural sequences stored as owning arrays](readonly-sequence-owning-array.md) — swf
   timeline frames; font-formats CFF charstrings (supplied by override).
+- [A readonly nominal array element must keep its exact owner when indexed](readonly-nominal-array-index-owner.md)
+  — scene-document's YAML-subset parser stores `Line[]` but reads an unrelated anonymous row.
 - [Callables as arms of a contextual union](callable-arm-in-contextual-union.md) — four swf tag handlers.
 - [Narrowing must prove the payload present](narrowed-union-presence-proof.md) — swf parse-option merge;
   font format inference (supplied by override).
