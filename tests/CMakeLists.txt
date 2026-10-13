@@ -247,6 +247,17 @@ target_link_libraries(
 )
 add_test(NAME flight_cpp.generated_materials COMMAND flight_cpp_generated_materials_tests)
 
+add_executable(flight_cpp_generated_lighting_tests generated_lighting_test.cpp)
+target_include_directories(
+  flight_cpp_generated_lighting_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_lighting_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(NAME flight_cpp.generated_lighting COMMAND flight_cpp_generated_lighting_tests)
+
 add_executable(flight_cpp_generated_shading_tests generated_shading_test.cpp)
 target_include_directories(
   flight_cpp_generated_shading_tests
@@ -899,6 +910,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_textureatlas_formats texture
 flight_cpp_package_test_labels(flight_cpp.generated_spritesheet_formats spritesheet-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_spritesheet signals spritesheet)
 flight_cpp_package_test_labels(flight_cpp.generated_materials materials)
+flight_cpp_package_test_labels(flight_cpp.generated_lighting lighting)
 flight_cpp_package_test_labels(flight_cpp.generated_shading shading)
 flight_cpp_package_test_labels(flight_cpp.generated_scene3d materials mesh node scene3d)
 flight_cpp_package_test_labels(flight_cpp.generated_interaction interaction)
