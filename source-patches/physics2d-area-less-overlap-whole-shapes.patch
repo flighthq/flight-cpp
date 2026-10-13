@@ -1,0 +1,21 @@
+diff --git a/packages/physics2d/src/step.ts b/packages/physics2d/src/step.ts
+index 2bcbf9a4..714ab1f1 100644
+--- a/packages/physics2d/src/step.ts
++++ b/packages/physics2d/src/step.ts
+@@ -148,10 +148,12 @@ function testPhysics2DAreaLessSensorOverlap(
+   a: Readonly<CollisionBuiltInShape2D>,
+   b: Readonly<CollisionBuiltInShape2D>,
+ ): boolean {
+-  if (a.kind === 'point') return getCollisionShapeContainsPoint2D(b, a.x, a.y);
+-  if (b.kind === 'point') return getCollisionShapeContainsPoint2D(a, b.x, b.y);
+-  if (a.kind === 'segment') return testPhysics2DSegmentOverlap(a, b);
+-  if (b.kind === 'segment') return testPhysics2DSegmentOverlap(b, a);
++  const wholeA: Readonly<CollisionBuiltInShape2D> = a;
++  const wholeB: Readonly<CollisionBuiltInShape2D> = b;
++  if (a.kind === 'point') return getCollisionShapeContainsPoint2D(wholeB, a.x, a.y);
++  if (b.kind === 'point') return getCollisionShapeContainsPoint2D(wholeA, b.x, b.y);
++  if (a.kind === 'segment') return testPhysics2DSegmentOverlap(a, wholeB);
++  if (b.kind === 'segment') return testPhysics2DSegmentOverlap(b, wholeA);
+   return false;
+ }
+ 
