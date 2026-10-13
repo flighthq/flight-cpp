@@ -316,6 +316,22 @@ int main() {
     check(state->format_queries.size() == 2 && state->format_queries[0] == String("text/html") &&
               state->format_queries[1] == String("text/rtf"),
           "and those are the exact strings the provider was given");
+    // A host that carries ONLY rtf. The two assertions above check the ANSWER, so on their own they are
+    // satisfied by a module that asks for the wrong constant -- a mutation proved exactly that: swapping
+    // hasClipboardHtml's constant to rtf left both of them passing, and only the exact-strings assertion
+    // caught it. This block makes each NAME load-bearing: with the host carrying rtf and not html, the
+    // html answer is only false if the module really asked for text/html.
+    const auto only_rtf = std::make_shared<Backend>();
+    const auto rtf_formats = formats_of(only_rtf);
+    only_rtf->formats.push_back(String("text/rtf"));
+
+    check(clipboard::has_clipboard_html(rtf_formats).get() == false,
+          "hasClipboardHtml asks for text/html and NOT rtf: a host carrying only rtf has no html");
+    check(clipboard::has_clipboard_rtf(rtf_formats).get(),
+          "hasClipboardRTF asks for text/rtf: a host carrying rtf has it");
+    check(clipboard::has_clipboard_format(rtf_formats, String("text/html")).get() == false,
+          "the same host reports the html format itself as absent");
+
     check(clipboard::has_clipboard_format(formats, String("text/plain")).get() == false,
           "a format that is not present is false");
     check(clipboard::has_clipboard_image(image_of(std::make_shared<Backend>())).get() == false,
