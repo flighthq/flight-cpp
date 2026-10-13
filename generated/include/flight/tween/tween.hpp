@@ -3,7 +3,6 @@
 #include <cmath>
 #include <cstdint>
 #include <flight/any.hpp>
-#include <flight/erased_ref.hpp>
 #include <flight/object.hpp>
 #include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
@@ -63,7 +62,7 @@ inline bool is_tween_manager(flight::Any value) {
 }
 
 template <typename T>
-inline flight::Ref<flight::types::Tween<T>> create_tween(std::variant<flight::Ref<flight::types::TweenManager>, flight::ErasedRef> manager_or_target, std::variant<double, flight::ErasedRef> target_or_duration, std::variant<flight::types::NumericProps<T>, double> duration_or_props, std::optional<std::variant<flight::types::NumericProps<T>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TweenOptions>>>>>> props_or_options = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TweenOptions>>>>> maybe_options = std::nullopt) {
+inline flight::Ref<flight::types::Tween<T>> create_tween(std::variant<flight::Ref<flight::types::TweenManager>, T> manager_or_target, std::variant<T, double> target_or_duration, std::variant<flight::types::NumericProps<T>, double> duration_or_props, std::optional<std::variant<flight::types::NumericProps<T>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TweenOptions>>>>>> props_or_options = std::nullopt, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TweenOptions>>>>> maybe_options = std::nullopt) {
   flight::Ref<flight::types::TweenManager> manager;
   T target;
   double duration;
@@ -71,14 +70,14 @@ inline flight::Ref<flight::types::Tween<T>> create_tween(std::variant<flight::Re
   std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TweenOptions>>>>> options;
   if (is_tween_manager(manager_or_target)) {
     (manager = std::get<0>(manager_or_target));
-    (target = std::get<flight::ErasedRef>(target_or_duration));
+    (target = std::get<T>(target_or_duration));
     (duration = std::get<double>(duration_or_props));
     (property_map = std::get<flight::types::NumericProps<T>>(props_or_options));
     (options = maybe_options);
   }
   else {
     (manager = flight::tween::default_manager);
-    (target = std::get<flight::ErasedRef>(manager_or_target));
+    (target = std::get<T>(manager_or_target));
     (duration = std::get<double>(target_or_duration));
     (property_map = std::get<flight::types::NumericProps<T>>(duration_or_props));
     (options = std::get<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TweenOptions>>>>>(props_or_options));
