@@ -436,3 +436,5 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   silent miscompilation, the Set twin of the Map request: `flight::Set<T>(set)` selects the sharing copy constructor. One SDK site (`scene3d-formats` `objRequirements.ts`).
 - [`new Set(collection.values())` must lower without a contextual optional construction](new-set-from-collection-iterator.md) —
   a refusal (`contextual optionalSingle construction requires expression type evidence`) for `values()`/`keys()` iterator arguments; preventive, no SDK site is refused today. `entries()` and stored iterators stay refused.
+- [A nullish-coalesce fallback of `null` is wrapped into an *engaged* optional, so its truthiness test dereferences null](nullish-coalesce-null-into-optional-is-never-absent.md) —
+  silent miscompilation: `@flighthq/textlayout`'s wrapping path panics on the first-segment overrun that upstream's own fixture exercises. No workaround is carried.
