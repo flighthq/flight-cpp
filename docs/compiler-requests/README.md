@@ -350,3 +350,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   silent miscompilation: signal dispatch forwarded an rvalue argument into every slot, so slots after the first received moved-from values. Carried by the `compiler-dependent-callable-pack-reuse` patch.
 - [A `for...of` over a Map must iterate it live, because its body may delete from it](map-for-of-live-iteration.md) —
   silent miscompilation: the loop lowers to a range-for over the map's storage, which a `delete` in the body invalidates; tween's `updateTweens` crashed on the pass after a target's last tween finished. Carried by the `tween-update-erased-target-writes` override.
+- [A generic argument that widens into an intersection parameter needs its conversion and template argument](generic-intersection-argument-widening.md) —
+  silent until instantiation: velocity's transform traversal passes `NodeOf<Traits>` to node's `Transform2DNode<Traits>` queries bare. No workaround.
+- [A generic node row passed to an `object` parameter must pass its object](generic-node-row-into-object-parameter.md) —
+  silent until instantiation: velocity keys its samples by `node.shared_object()`, which a merged row does not offer. No workaround.
+- [A structural runtime owner parameter must accept the node rows that carry the runtime](node-transform-runtime-owner-argument.md) —
+  silent until instantiation: every `@flighthq/node` world-matrix query fails, which blocks velocity's transform baseline natively. No workaround.
