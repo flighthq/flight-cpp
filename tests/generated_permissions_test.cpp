@@ -307,5 +307,96 @@ int main() {
   }
 
   if (failures == 0) std::cout << "generated permissions: all checks passed\n";
+  // THE STORAGE PERSISTENCE PROJECTION, which this suite never touched: `persistent-storage` appears
+  // zero times above, and all six rows below come from the upstream table. The rule they pin is that the
+  // projection maps the OWNER'S OUTCOME to a reason and carries its permissionState through as state
+  // INDEPENDENTLY -- it never reconciles the two. The first row is the proof: an owner that reports
+  // outcome 'persistent' with permissionState 'denied' must project to reason 'ok' AND state 'granted'.
+  // An implementation that "made them consistent" would report denied, or drop the state, and pass a
+  // weaker test.
+  {
+    // `has_state_key` is the TS-VISIBLE distinction and the only one asserted about the union shape: a
+    // result that carries a `state` property (possibly null) is a different object from one that has no
+    // such property at all, and the fixture's 'operation-failed' row is the latter. Which C++ arm holds
+    // a PRESENT state is an emitter choice invisible to TypeScript, so it is deliberately not asserted.
+    struct Row {
+      const char* owner_outcome;
+      std::optional<const char*> owner_state;
+      const char* expected_reason;
+      std::optional<const char*> expected_state;
+      bool has_state_key;
+      const char* message;
+    };
+    const Row rows[] = {
+        {"persistent", "denied", "ok", "granted", true,
+         "a 'persistent' owner projects to reason ok and state granted, whatever its permissionState said"},
+        {"operation-failed", "granted", "operation-failed", std::nullopt, false,
+         "an 'operation-failed' owner projects to a reason with no state invented for it"},
+        {"best-effort", "granted", "best-effort", "granted", true,
+         "a best-effort owner carries a granted state through"},
+        {"best-effort", "denied", "best-effort", "denied", true,
+         "a best-effort owner carries a denied state through"},
+        {"best-effort", "prompt", "best-effort", "prompt", true,
+         "a best-effort owner carries a prompt state through"},
+        {"best-effort", std::nullopt, "best-effort", std::nullopt, true,
+         "a best-effort owner with NO state keeps an absent state rather than inventing one"},
+    };
+
+    for (const auto& row : rows) {
+      auto persistence = flight::make_ref<flight::types::StoragePersistenceOutcome>();
+      persistence->outcome = String(row.owner_outcome);
+      if (row.owner_state.has_value()) {
+        persistence->permission_state = String(row.owner_state.value());
+      }
+
+      int reads = 0;
+      auto query_owner = flight::make_ref<flight::types::HostPreferencesPersistenceQueryCapability>();
+      query_owner->get_persistence = [&persistence, &reads]() {
+        ++reads;
+        return flight::Task<flight::Ref<flight::types::StoragePersistenceOutcome>>::resolve(persistence);
+      };
+
+      const auto outcome = flight::permissions::get_permission_state(
+                               flight::make_ref<Permissions>(), std::nullopt, query_owner,
+                               String("persistent-storage"))
+                               .get();
+      if (!check(reads == 1, "the persistence owner is asked exactly once per query")) {
+        return 1;
+      }
+      if (!check(query_reason(outcome) == row.expected_reason, row.message)) {
+        return 1;
+      }
+      // A state KEY exists only in the two arms that declare one; the reason-only arm has none.
+      const bool has_state_key = outcome.index() != 0;
+      if (!check(has_state_key == row.has_state_key, row.message)) {
+        return 1;
+      }
+      const auto state = outcome.index() == 1   ? std::optional<std::string>(std::get<1>(outcome)->state.to_utf8())
+                         : outcome.index() == 2 ? std::get<2>(outcome)->state.has_value()
+                                                      ? std::optional<std::string>(
+                                                            std::get<2>(outcome)->state.value().to_utf8())
+                                                      : std::nullopt
+                                                : std::nullopt;
+      if (!check(state.has_value() == row.expected_state.has_value() &&
+                     (!state.has_value() || state.value() == row.expected_state.value()),
+                 row.message)) {
+        return 1;
+      }
+    }
+  }
+
+  // An absent persistence owner is reported structurally: the query does not fall through to the
+  // permissions provider, which cannot answer a storage question.
+  {
+    const auto outcome = flight::permissions::get_permission_state(
+                             flight::make_ref<Permissions>(), std::nullopt, std::nullopt,
+                             String("persistent-storage"))
+                             .get();
+    if (!check(query_reason(outcome) == "unsupported",
+               "a storage query with no persistence owner reports unsupported")) {
+      return 1;
+    }
+  }
+
   return failures == 0 ? 0 : 1;
 }
