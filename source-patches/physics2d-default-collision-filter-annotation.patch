@@ -1,0 +1,19 @@
+diff --git a/packages/physics2d/src/step.ts b/packages/physics2d/src/step.ts
+--- a/packages/physics2d/src/step.ts
++++ b/packages/physics2d/src/step.ts
+@@ -19,6 +19,7 @@
+   CollisionSegment2D,
+   CollisionBuiltInShape2D,
+   CollisionTimeOfImpact2D,
++  Physics2DCollisionFilter,
+   Physics2DContact,
+   Physics2DContactPoint,
+   Physics2DWorld,
+@@ -1376,6 +1377,6 @@
+ let physics2DJointResolutionGuard: Physics2DJointResolutionGuard | null = null;
+ let physics2DStepGuard: Physics2DStepGuard | null = null;
+ const physics2DStepScratchPool: Physics2DStepScratch[] = [createPhysics2DStepScratch()];
+-const defaultCollisionFilter = { categoryBits: 1, maskBits: 0xffffffff, groupIndex: 0 };
++const defaultCollisionFilter: Readonly<Physics2DCollisionFilter> = { categoryBits: 1, maskBits: 0xffffffff, groupIndex: 0 };
+ const CCD_ROTATION_INCREMENT = Math.PI / 90;
+ const CCD_ROTATION_BISECTION_ITERATIONS = 12;
