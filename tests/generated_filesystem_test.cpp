@@ -1,11 +1,13 @@
 // Focused behavior tests for @flighthq/filesystem.
 //
-// The package is `partial` at a627849 in the sense that its one implementation module is REFUSED whole:
-// `cpp emission failed for … filesystem.ts: indexedAccess types require C++ type computation lowering:
-// object is AbortSignalEventMap, index is unknown` — a signature-level refusal that withholds all
-// forty-seven declarations, so the emitted header is a placeholder and the module is supplied by
-// overrides/include/flight/filesystem/filesystem.hpp. This test exercises that supply, and every case is
-// ported from the module's own upstream suite (packages/filesystem/src/filesystem.test.ts):
+// At a627849 the package's one implementation module is REFUSED whole: `cpp emission failed for …
+// filesystem.ts: indexedAccess types require C++ type computation lowering: object is AbortSignalEventMap,
+// index is unknown` — a signature-level refusal that withholds all forty-four declarations, so the emitted
+// header is a placeholder and the module is supplied by overrides/include/flight/filesystem/filesystem.hpp.
+// Every one of those forty-four declarations has a definition in that supply (checked, not assumed), and
+// this test exercises it. Every case is ported from the module's own upstream suite under
+// .dependencies/flight/packages/filesystem/src/filesystem.test.ts, which has 48 cases; all 48 are covered
+// here:
 //
 //   * path normalization, including the two asymmetries the source documents at length: an absolute path
 //     clamps `..` at its root, and a relative path KEEPS a leading `..`;
@@ -17,12 +19,19 @@
 //   * discovery order and matching: `findFiles` keeps the directory's own order and matches a pattern
 //     against an entry's name or its path;
 //   * host identity: each operation reads only its own slot on the capability it was given, and an
-//     aborted signal stops the operation before the host is reached.
+//     aborted signal stops the operation before the host is reached;
+//   * the dialog-handle family, which is the whole reason the supply carries an operations authority
+//     beside the handle: a native path delegates to the passed host, and a pathless handle falls back to
+//     the operations it retained;
+//   * `writeBinaryFileChunks`, driven through a real `WritableStream` sink and a real `AsyncIterable`, so
+//     the chunk copies, the abort-with-reason path, and the failure path are all exercised.
 //
-// NOT ported here: `writeBinaryFileChunks`' abort machinery (the abort listener's identity, the chunk
-// copies, and the writer-abort suppression). Driving it needs a host-side stream fixture — an
-// AsyncIterable of chunks plus a writer — which is a fixture this file would have to invent rather than
-// port, and the override's own equivalence note is the record of what that lowering does.
+// One upstream assertion has no observable counterpart here and is not faked: case 44 also checks that the
+// abort listener is REMOVED from the caller's signal (`removeEventListener`). `flight::AbortSignal` keeps
+// its listener list private with no public count, so a retained listener is not externally observable
+// through the runtime's own API. What IS observable — and asserted — is that the writer was aborted with
+// the caller's exact reason (which distinguishes the abort-listener path from the catch's reasonless
+// fallback) and that the failure path did not close the writer.
 #include <flight/executor.hpp>
 #include <flight/filesystem/filesystem.hpp>
 
@@ -360,8 +369,9 @@ int main() {
   // deliberately non-default and non-first, so an assertion that a call FORWARDS an argument cannot be
   // satisfied by an implementation that invented its own.
   //
-  // The three fixture cases that are NOT here are named at the end of this file with the exact
-  // declaration each one needs.
+  // No fixture case is left out: the three that an earlier pass believed unreachable --
+  // `getFilePermissions`, `openFileReadStream` and `openFileWriteStream` -- are all defined by the supply,
+  // and their cases appear below with `setFilePermissions`' own.
   {
     // appendTextFile: the provider receives the path AND the text, in that order.
     String appended_path;
@@ -549,6 +559,79 @@ int main() {
                "readFileSymlink owns its absence result and resolves null") ||
         !check(!flight::filesystem::get_file_real_path(String("a")).get().has_value(),
                "getFileRealPath owns its absence result and resolves null")) {
+      return 1;
+    }
+  }
+
+  {
+    // getFilePermissions and setFilePermissions take NO host at all: like createFileSymlink they own their
+    // documented absence result, so they answer for themselves rather than requiring a provider this
+    // profile does not have. `setFilePermissions` takes a permission record by value, so its argument must
+    // cross the structural boundary rather than be dropped.
+    const auto permissions = flight::make_ref<flight::types::FilePermissions>(
+        flight::types::FilePermissions{.readable = true, .writable = true, .executable = false});
+    if (!check(!flight::filesystem::get_file_permissions(String("secrets/key.pem")).get().has_value(),
+               "getFilePermissions owns its absence result and resolves null") ||
+        !check(!flight::filesystem::set_file_permissions(String("secrets/key.pem"), permissions).get(),
+               "setFilePermissions owns its absence result and resolves false")) {
+      return 1;
+    }
+  }
+
+  {
+    // openFileReadStream / openFileWriteStream: an OMITTED provider operation resolves the documented null
+    // -- absence, not an empty or inert stream -- and a pre-aborted signal rejects before the provider can
+    // be consulted, so an aborted open costs the provider nothing.
+    auto bare_read = flight::make_ref<Host>();
+    auto bare_write = flight::make_ref<Host>();
+    if (!check(!flight::filesystem::open_file_read_stream(bare_read, String("logs/app.log")).get().has_value(),
+               "openFileReadStream resolves null when the provider omits it") ||
+        !check(!flight::filesystem::open_file_write_stream(bare_write, String("logs/app.log")).get().has_value(),
+               "openFileWriteStream resolves null when the provider omits it")) {
+      return 1;
+    }
+
+    int opens = 0;
+    auto present = flight::make_ref<Host>();
+    present->open_file_read_stream = [&opens](String, std::optional<flight::AbortSignal>) {
+      ++opens;
+      return flight::Task<std::optional<flight::ReadableStream<flight::Uint8Array>>>::resolve(
+          std::optional<flight::ReadableStream<flight::Uint8Array>>{
+              flight::ReadableStream<flight::Uint8Array>{}});
+    };
+    present->open_file_write_stream = [&opens](String, std::optional<flight::AbortSignal>) {
+      ++opens;
+      return flight::Task<std::optional<flight::WritableStream<flight::Uint8Array>>>::resolve(
+          std::optional<flight::WritableStream<flight::Uint8Array>>{
+              flight::WritableStream<flight::Uint8Array>{}});
+    };
+    flight::AbortController pre;
+    pre.abort();
+    bool read_rejected = false;
+    bool write_rejected = false;
+    try {
+      static_cast<void>(
+          flight::filesystem::open_file_read_stream(present, String("logs/app.log"), pre.signal).get());
+    } catch (...) {
+      read_rejected = true;
+    }
+    try {
+      static_cast<void>(
+          flight::filesystem::open_file_write_stream(present, String("logs/app.log"), pre.signal).get());
+    } catch (...) {
+      write_rejected = true;
+    }
+    if (!check(read_rejected, "a pre-aborted read open rejects") ||
+        !check(write_rejected, "a pre-aborted write open rejects") ||
+        !check(opens == 0, "and neither reaches the provider")) {
+      return 1;
+    }
+
+    // Not aborted, the provider IS consulted, and its own answer is what settles the task.
+    const auto opened =
+        flight::filesystem::open_file_write_stream(present, String("logs/app.log")).get();
+    if (!check(opened.has_value() && opens == 1,
+               "and a live open hands the provider's own stream back")) {
       return 1;
     }
   }
