@@ -91,7 +91,7 @@ upstream package map, which groups packages differently and would put, for insta
 | package | upstream modules | test files | cases | local CTest | web-only declared | generated emitted / refused |
 | --- | ---: | ---: | ---: | --- | --- | --- |
 | `@flighthq/app` | 6 | 5 | 201 | dedicated | none | 4 / 2 |
-| `@flighthq/host` | 6 | 4 | 141 | none | none | 6 / 0 |
+| `@flighthq/host` | 6 | 4 | 141 | dedicated | none | 6 / 0 |
 | `@flighthq/platform` | 3 | 1 | 37 | none | none | 3 / 0 |
 | `@flighthq/lifecycle` | 3 | 2 | 44 | dedicated | none | 2 / 1 |
 | `@flighthq/input` | 3 | 2 | 66 | none | none | 2 / 1 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-11 of 39 packages are reached by at least one local CTest executable.
-9 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`.
+12 of 39 packages are reached by at least one local CTest executable.
+10 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`.
 
 ## `@flighthq/app`
 
@@ -301,9 +301,40 @@ Portable host interface: host construction, capability queries, and host diagnos
 
 Upstream carries per-package records at `flight/agents/packages/host/`: `status.md`, `charter.md`.
 
+### Two measured defects, both filed
+
+This package is the diagnostic surface -- it exists so a MALFORMED host can be understood -- and both of its worst
+behaviours are on exactly that input. Neither is worked around; each is filed under `docs/compiler-requests/`.
+
+- **Every accessor in `hostQuery.ts` dereferences its capability GROUP unconditionally.** The source is
+  `host.audio?.device ?? null`, and its own comment says the group access is optional-chained because "a structurally
+  built stand-in with a group missing must produce `null` rather than a TypeError"; the emitted C++ is
+  `return flight::row_get<RowKey<"audio">>(host)->device;`. Measured: a host row with no `audio` group PANICS with
+  "member access within null pointer of type 'HostAudioCapabilities'" where the source returns null. Filed as
+  [host-group-optional-chain-dropped](../compiler-requests/host-group-optional-chain-dropped.md).
+- **`createHost`/`initializeHost` do not compile for any instantiation.** `capabilities.audio ?? {}` is lowered to
+  `.value_or(...)` on a read that yields a `Ref` rather than an optional, so the whole of `host.ts` has no callable
+  surface and its six upstream cases cannot be ported. Filed as
+  [host-initialize-optional-fallback-on-a-required-read](../compiler-requests/host-initialize-optional-fallback-on-a-required-read.md).
+
+A third boundary is environmental rather than a defect: `enableHostGuards` routes every warning through
+`@flighthq/log`, and that package's override declares throwing stubs, so enabling the guards aborts with
+`flight::Error: flight::log::merge_span_fields was not generated for this profile`. The guard tier is therefore left
+uncovered rather than asserted through a stubbed seam; the slot-level tables it consumes are covered by the test
+below. The package is tier *assisted* for an emission repair, not an override.
+
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_host` — `tests/generated_host_test.cpp` (dedicated), NEW. It covers what the two defects leave
+  reachable, building hosts by hand group by group because the factory cannot be called: each accessor returns the
+  capability it names BY IDENTITY, not a copy; a group that is present with an absent slot reads as an absent optional
+  rather than an error; `explainHost` enumerates only the groups the host actually carries, with each group's filled
+  slot names and none for a group carrying nothing; its capability census names every covered slot with its group,
+  slot and presence; `isSlotPresent` answers for a group/slot pair; and a per-capability explanation reports presence
+  or, when absent, the missing slot and a message. The absent-group panic is recorded at the point of use rather than
+  asserted, since a panic cannot be asserted in-process. Five mutations against the emitted modules, all five with
+  teeth: the slot-presence test inverted 6 failures, every capability reported present 1, the mixer explained as the
+  device 2, the device accessor always absent 1, and the video accessor always absent 1.
 
 ### Local generation status
 

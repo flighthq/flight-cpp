@@ -443,3 +443,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   silent miscompilation: `@flighthq/textshaper` cannot recover the derived run carrier through its structural row view. No workaround is carried.
 - [A merged structural row can be read but not constructed](merged-row-not-constructible.md) —
   `@flighthq/app`'s window API takes merged rows that callers cannot construct; no patch is carried.
+- [An optional chain on a host capability group is lowered as an unconditional dereference](host-group-optional-chain-dropped.md) —
+  `@flighthq/host` accessors panic when an optional capability group is absent. No patch is carried.
+- [A nullish fallback on a required read lowers to `value_or` on a non-optional](host-initialize-optional-fallback-on-a-required-read.md) —
+  `@flighthq/host`'s `createHost` and `initializeHost` do not compile. No patch is carried.

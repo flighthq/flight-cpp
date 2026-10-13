@@ -802,6 +802,11 @@ target_link_libraries(flight_cpp_generated_lifecycle_tests PRIVATE Flight::Cpp F
 add_test(NAME flight_cpp.generated_lifecycle COMMAND flight_cpp_generated_lifecycle_tests)
 
 add_executable(flight_cpp_generated_useragent_tests generated_useragent_test.cpp)
+add_executable(flight_cpp_generated_host_tests generated_host_test.cpp)
+target_include_directories(flight_cpp_generated_host_tests BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include")
+target_link_libraries(flight_cpp_generated_host_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_host COMMAND flight_cpp_generated_host_tests)
+
 add_executable(flight_cpp_generated_app_core_tests generated_app_core_test.cpp)
 target_include_directories(flight_cpp_generated_app_core_tests BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include")
 target_link_libraries(flight_cpp_generated_app_core_tests PRIVATE Flight::Cpp Flight::SdkPreview)
@@ -1116,6 +1121,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_useragent useragent)
 flight_cpp_package_test_labels(flight_cpp.generated_app_loop app signals)
 flight_cpp_package_test_labels(flight_cpp.generated_app_window app signals)
 flight_cpp_package_test_labels(flight_cpp.generated_app_core app signals)
+flight_cpp_package_test_labels(flight_cpp.generated_host host)
 flight_cpp_package_test_labels(flight_cpp.generated_dialog app dialog filesystem geometry node render signals)
 flight_cpp_package_test_labels(flight_cpp.generated_textshaper_cache textshaper)
 
