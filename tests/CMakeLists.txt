@@ -978,6 +978,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_skeleton2d_formats_registry_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_skeleton2d_formats_registry COMMAND flight_cpp_generated_skeleton2d_formats_registry_tests)
 
+add_executable(flight_cpp_generated_physics2d_abi_tests generated_physics2d_abi_test.cpp)
+target_include_directories(
+  flight_cpp_generated_physics2d_abi_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_physics2d_abi_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_physics2d_abi COMMAND flight_cpp_generated_physics2d_abi_tests)
+
 add_executable(flight_cpp_generated_lifecycle_tests generated_lifecycle_test.cpp)
 target_include_directories(
   flight_cpp_generated_lifecycle_tests
@@ -1341,6 +1349,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_input_binding input)
 flight_cpp_package_test_labels(flight_cpp.generated_keyboard keyboard signals)
 flight_cpp_package_test_labels(flight_cpp.generated_skeleton2d geometry skeleton2d)
 flight_cpp_package_test_labels(flight_cpp.generated_spine_binary_reader skeleton2d-formats)
+flight_cpp_package_test_labels(flight_cpp.generated_physics2d_abi collision physics2d-abi)
 flight_cpp_package_test_labels(flight_cpp.generated_skeleton2d_formats_registry skeleton2d-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_skeleton2d_formats_spine_binary skeleton2d-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_signals_throttle signals)
