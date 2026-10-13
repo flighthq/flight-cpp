@@ -1356,6 +1356,27 @@ add_test(
   COMMAND flight_cpp_generated_textshaper_parity_tests
 )
 flight_cpp_package_test_labels(flight_cpp.generated_textshaper_parity textshaper)
+
+# Behavioural parity for @flighthq/media, over the two upstream fixtures whose modules emit (the
+# package is `partial`: audioMixer and videoChannel are refused and cannot be covered). Driven by a
+# mock HostAudioDeviceCapability, the way the upstream fixtures are.
+add_executable(
+  flight_cpp_generated_media_parity_tests
+  generated_media_parity_test.cpp
+)
+target_include_directories(
+  flight_cpp_generated_media_parity_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_media_parity_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(
+  NAME flight_cpp.generated_media_parity
+  COMMAND flight_cpp_generated_media_parity_tests
+)
+flight_cpp_package_test_labels(flight_cpp.generated_media_parity media)
 flight_cpp_package_test_labels(flight_cpp.generated_net net)
 flight_cpp_package_test_labels(flight_cpp.generated_socket signals socket)
 flight_cpp_package_test_labels(flight_cpp.generated_encoding encoding)

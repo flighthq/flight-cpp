@@ -95,3 +95,48 @@ None. Nothing narrower is available: the source expression is `Array.from(runtim
 the disagreement is between two emitter-chosen names for one shape, which a source edit cannot reach.
 For the progress site, reusing `LoadProgress` in the public Scene3D callback would remove the duplicate
 declaration, but that is a Flight API decision rather than a compiler workaround and is not carried.
+
+## What was tried, and what it rules out
+
+Two source-level repairs were written, applied through the patch manifest and measured at flight
+`a627849`, flight-compiler `2b687ea`. **Both failed with a byte-identical refusal**, and the patch
+manifest's own gate reported them: *"did not remove the refusal they name ... do not carry it
+unexamined."* Neither is carried.
+
+1. **Naming the element type where the collection is created.** The mixer runtime record is stored as a
+   literal with two empty Sets; the patch named their elements and stored the record through a local
+   annotated with the module's own `AudioMixerRuntime`:
+
+   ```ts
+   const runtime: AudioMixerRuntime = {
+     activeChannels: new Set<AudioChannel>(),
+     channelsPausedByMixer: new Set<AudioChannel>(),
+     …
+   };
+   mixerRuntimes.set(mixer, runtime);
+   ```
+
+2. **Naming the element on the rebind itself.** With the patch above reverted, the refusal localizes to
+   `registerBusInReverseMap` (source line 278) — `let runtimes = busToMixerRuntimes.get(bus); … runtimes
+   = new Set();` — which is exactly the shape this request's own message prescribes fixing ("For a Map
+   or WeakMap lookup followed by a rebind, ensure every rebound member already has the declared value
+   owner member's carrier"). The patch did precisely that:
+
+   ```ts
+   runtimes = new Set<AudioMixerRuntime>();
+   ```
+
+   Refused identically.
+
+So the disagreement is **not** reachable from the source: annotating the collection with the declared
+element type changes nothing, including at the very site the refusal points to, and including the fix
+the message itself names. That is a stronger negative than "no workaround was found" and it means the
+remaining repair is on the emitter side, as the request above concludes.
+
+One further measurement, from the same session, that a reader should have before attempting the
+regeneration path: regenerating `@flighthq/media` package-scoped while the SDK is mid-binding-profile
+transition produces a tree inconsistent with media's own dependencies (`@flighthq/entity`,
+`@flighthq/log`, `@flighthq/math`), and it moves `audio_mixer.hpp` from *17 declarations missing* to
+*1 missing* — while making it stop compiling, because the single remaining omission
+(`registerBusInReverseMap`) is called from emitted code. The compile count goes 4/7 to 2/7. So the
+regeneration is not a package-scoped operation today; it has to be done with the dependency closure.

@@ -1,0 +1,318 @@
+// Behavioural parity for @flighthq/media, driven by the upstream Vitest fixtures in
+// .dependencies/flight/packages/media/src/.
+//
+// SCOPE, and why it is what it is. @flighthq/media is at `partial`: 5 of 7 modules emit, and two are
+// refused at this pin -- audioMixer.ts (contextual C++ union conversion over a Set carrier) and
+// videoChannel.ts (a WeakMap value that is a bound external carrier). Both refusals are filed
+// (media-audio-mixer-runtime-set-union-conversion.md, media-weakmap-value-representation.md) and
+// neither is reachable from the source: naming the collection's element type does not clear either,
+// including at the site the message itself prescribes. So three of media's five upstream fixtures --
+// audioMixer, enableAudioMixerGuards and videoChannel -- cannot be covered here at all, and this file
+// covers exactly the two whose modules emit: mediaChannelSignals and audioChannel.
+//
+// Everything below drives the emitted code through a mock HostAudioDeviceCapability, which is how the
+// upstream fixtures drive it too. No decoder, no browser, no SDL: the host seam is supplied by the
+// test and the package never invents one.
+
+#include <flight/audio/audio_resource.hpp>
+#include <flight/media/audio_channel.hpp>
+#include <flight/media/media_channel_signals.hpp>
+#include <flight/types/audio_resource.hpp>
+#include <flight/types/video_resource.hpp>
+#include <flight/types/host_audio_device.hpp>
+#include <flight/types/media_channel_signals.hpp>
+
+#include <cmath>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <string>
+#include <vector>
+
+namespace {
+
+int failures = 0;
+
+void check(bool condition, const char* message) {
+  if (condition) return;
+  std::cerr << "FAIL: " << message << '\n';
+  ++failures;
+}
+
+void check_close(double got, double want, const char* message) {
+  if (std::abs(got - want) < 1e-9) return;
+  std::cerr << "FAIL: " << message << "\n  want " << want << "\n  got  " << got << '\n';
+  ++failures;
+}
+
+// The host the upstream fixtures record against: every method is a stub the test can inspect, and the
+// ended-callback map is what lets a fixture drive a loop or a completion.
+struct MockDevice {
+  double device_time = 0.0;
+  double next_source = 1.0;
+  int create_source_calls = 0;
+  int destroy_source_calls = 0;
+  int start_source_calls = 0;
+  int stop_source_calls = 0;
+  std::map<double, std::function<void()>> on_ended;
+};
+
+flight::Ref<flight::types::HostAudioDeviceCapability> mock_backend(MockDevice& state) {
+  const auto backend = flight::make_ref<flight::types::HostAudioDeviceCapability>();
+  backend->create_buffer = [](double, double, double, double, flight::Array<flight::Float32Array>) {
+    return 1.0;
+  };
+  backend->create_device = [](double) { return 1.0; };
+  backend->create_source = [&state](double, double) {
+    state.create_source_calls += 1;
+    return state.next_source++;
+  };
+  backend->destroy_buffer = [](double) {};
+  backend->destroy_device = [](double) {};
+  backend->destroy_source = [&state](double source) {
+    state.destroy_source_calls += 1;
+    state.on_ended.erase(source);
+  };
+  backend->get_device_time = [&state](double) { return state.device_time; };
+  backend->on_source_ended = [&state](double source, std::optional<std::function<void()>> callback) {
+    if (callback.has_value()) {
+      state.on_ended[source] = callback.value();
+    } else {
+      state.on_ended.erase(source);
+    }
+  };
+  backend->resume_device = [](double) {};
+  backend->set_source_gain = [](double, double) {};
+  backend->set_source_pan = [](double, double) {};
+  backend->set_source_playback_rate = [](double, double) {};
+  backend->start_source = [&state](double, double, double) { state.start_source_calls += 1; };
+  backend->stop_source = [&state](double) { state.stop_source_calls += 1; };
+  return backend;
+}
+
+// A one-second mono buffer. The upstream fixtures' mockBuffer() uses 8Hz because it is a plain object
+// literal the runtime never validates; the real AudioBuffer does validate its rate, so this uses the
+// same 44100Hz/44100-sample shape the audio-channel fixture declares, which is also one second long.
+flight::AudioBuffer mock_buffer() {
+  return flight::AudioBuffer(flight::AudioBufferOptions{
+      .length = 44100.0, .number_of_channels = 1.0, .sample_rate = 44100.0});
+}
+
+flight::Ref<flight::types::AudioChannel> play(const flight::Ref<flight::types::HostAudioDeviceCapability>& backend,
+                                              std::optional<double> loops = std::nullopt) {
+  std::optional<flight::Ref<flight::types::AudioPlayOptions>> options;
+  if (loops.has_value()) {
+    auto play_options = flight::make_ref<flight::types::AudioPlayOptions>();
+    play_options->loops = loops;
+    options = play_options;
+  }
+  const auto channel = flight::media::play_audio_resource(backend, 1.0,
+                                                          flight::audio::create_audio_resource(mock_buffer()),
+                                                          options);
+  return channel.value_or(nullptr);
+}
+
+}  // namespace
+
+int main() {
+  // ---- mediaChannelSignals.test.ts ---------------------------------------------------------------
+  //
+  // The contract is opt-in: nothing is allocated until a caller asks, and the same object comes back
+  // on every later call so a caller's listeners are not silently replaced.
+
+  {
+    MockDevice state;
+    const auto backend = mock_backend(state);
+    const auto channel = play(backend);
+    check(channel != nullptr, "signals: a channel plays against the supplied host");
+
+    // Absent until asked for -- the whole reason the map is consulted rather than the channel.
+    check(!flight::media::get_audio_channel_signals(channel).has_value(),
+          "signals: an un-opted channel has no signals");
+
+    const auto enabled = flight::media::enable_audio_channel_signals(channel);
+    check(enabled != nullptr, "signals: enabling allocates a signals object");
+    check(enabled->on_complete != nullptr && enabled->on_loop != nullptr && enabled->on_pause != nullptr &&
+              enabled->on_play != nullptr && enabled->on_stop != nullptr,
+          "signals: the object carries the channel signals");
+
+    check(flight::media::get_audio_channel_signals(channel).has_value() &&
+              flight::media::get_audio_channel_signals(channel).value() == enabled,
+          "signals: after enabling, the query returns the enabled object");
+
+    // Identity, not merely equality: a second enable must not replace the object a caller's
+    // listeners are attached to.
+    check(flight::media::enable_audio_channel_signals(channel) == enabled,
+          "signals: enabling twice returns the same object rather than replacing listeners");
+
+    // An un-opted channel runs its whole lifecycle without producing anything.
+    MockDevice quiet_state;
+    const auto quiet_backend = mock_backend(quiet_state);
+    const auto quiet = play(quiet_backend);
+    flight::media::pause_audio_channel(quiet);
+    flight::media::resume_audio_channel(quiet);
+    flight::media::stop_audio_channel(quiet);
+    check(!flight::media::get_audio_channel_signals(quiet).has_value(),
+          "signals: an un-opted channel records nothing across its whole lifecycle");
+  }
+
+  {
+    // Video and audio channels are independent: enabling one does not enable the other, and two
+    // channels never share one signals object.
+    const auto first = flight::make_ref<flight::types::VideoChannel>();
+    const auto second = flight::make_ref<flight::types::VideoChannel>();
+    // Asked before anything is enabled, so this really is the un-opted state.
+    check(!flight::media::get_video_channel_signals(first).has_value(),
+          "signals: a video channel has no signals until asked");
+    check(flight::media::enable_video_channel_signals(first) !=
+              flight::media::enable_video_channel_signals(second),
+          "signals: video channels are independent per channel");
+    const auto enabled = flight::media::enable_video_channel_signals(first);
+    check(enabled != nullptr && flight::media::get_video_channel_signals(first).has_value() &&
+              flight::media::get_video_channel_signals(first).value() == enabled,
+          "signals: enabling a video channel makes its signals reachable");
+  }
+
+  // ---- audioChannel.test.ts: the lifecycle the signals are delivered through ----------------------
+
+  {
+    // Playing allocates a source through the host and starts it; the channel records the buffer's
+    // duration in milliseconds and the requested loop count.
+    MockDevice state;
+    const auto backend = mock_backend(state);
+    const auto channel = play(backend, 3.0);
+    check(channel != nullptr, "audio: a buffer-backed resource plays");
+    check_close(channel->length, 1000.0, "audio: the channel length is the buffer duration in ms");
+    check_close(channel->loops, 3.0, "audio: the requested loop count is recorded");
+    check(channel->state == flight::String("playing"), "audio: the channel starts playing");
+    check(state.create_source_calls == 1, "audio: playing asks the host for one source");
+    check(state.start_source_calls > 0, "audio: playing starts the host source");
+
+    // Pause and resume move the state and drive the host.
+    flight::media::pause_audio_channel(channel);
+    check(channel->state == flight::String("paused"), "audio: pausing marks the channel paused");
+    flight::media::resume_audio_channel(channel);
+    check(channel->state == flight::String("playing"), "audio: resuming marks the channel playing");
+
+    // Stop tears the source down and returns the channel to the start.
+    flight::media::stop_audio_channel(channel);
+    check(channel->state == flight::String("stopped"), "audio: stopping marks the channel stopped");
+    check_close(channel->current_time, 0.0, "audio: stopping rewinds the channel");
+    check(state.destroy_source_calls > 0, "audio: stopping releases the host source");
+  }
+
+  {
+    // Pausing twice is idempotent: the state is already paused, so the host is not told again.
+    MockDevice state;
+    const auto backend = mock_backend(state);
+    const auto channel = play(backend);
+    flight::media::pause_audio_channel(channel);
+    flight::media::pause_audio_channel(channel);
+    check(channel->state == flight::String("paused"),
+          "audio: pausing an already-paused channel is inert");
+  }
+
+  {
+    // A channel with no buffer cannot play: the resource carries absence and the seam says so rather
+    // than fabricating a silent channel.
+    MockDevice state;
+    const auto backend = mock_backend(state);
+    const auto empty = flight::audio::create_audio_resource(std::nullopt);
+    check(!flight::media::play_audio_resource(backend, 1.0, empty, std::nullopt).has_value(),
+          "audio: a resource with no buffer does not play");
+    check(state.create_source_calls == 0, "audio: a resource with no buffer never reaches the host");
+  }
+
+  {
+    // The source route is a seam the caller supplies and can clear; clearing leaves the channel
+    // usable rather than tearing it down.
+    MockDevice state;
+    const auto backend = mock_backend(state);
+    const auto channel = play(backend);
+    std::vector<double> routed;
+    flight::media::set_audio_channel_source_route(
+        channel, std::optional<std::function<void(double)>>{
+                     std::function<void(double)>([&routed](double handle) { routed.push_back(handle); })});
+    flight::media::set_audio_channel_source_route(channel, std::nullopt);
+    check(channel->state == flight::String("playing"),
+          "audio: clearing the source route leaves the channel playing");
+    check(routed.size() <= 1, "audio: the route is invoked at most once per source");
+  }
+
+  {
+    // Gain, pan and playback rate are read back from the channel and clamped to their domains.
+    MockDevice state;
+    const auto backend = mock_backend(state);
+    const auto channel = play(backend);
+    check_close(channel->gain, 1.0, "audio: the default gain is unity");
+    check_close(channel->playback_rate, 1.0, "audio: the default playback rate is unity");
+
+    flight::media::set_audio_channel_gain(channel, 0.25);
+    check_close(channel->gain, 0.25, "audio: setting the gain stores it");
+    check_close(flight::media::set_audio_channel_pan(channel, 5.0), 1.0,
+                "audio: pan clamps to the hard-right bound");
+    check_close(flight::media::set_audio_channel_pan(channel, -5.0), -1.0,
+                "audio: pan clamps to the hard-left bound");
+    check_close(channel->pan, -1.0, "audio: the clamped pan is what the channel keeps");
+
+    // Muting is a flag, not a pause: it must not disturb the playing state.
+    check(flight::media::set_audio_channel_muted(channel, true), "audio: muting reports the new state");
+    check(flight::media::is_audio_channel_muted(channel), "audio: a muted channel reads as muted");
+    check(channel->state == flight::String("playing"), "audio: muting does not pause the channel");
+  }
+
+  {
+    // Seeking is bounded by the channel's own length, the way the upstream fixture asserts.
+    MockDevice state;
+    const auto backend = mock_backend(state);
+    const auto channel = play(backend);
+    check_close(flight::media::set_audio_channel_current_time(channel, 250.0), 250.0,
+                "audio: seeking forward stores the requested time");
+    check_close(flight::media::get_audio_channel_current_time(channel), 250.0,
+                "audio: the current time reads back");
+    flight::media::set_audio_channel_current_time(channel, -10.0);
+    check(channel->current_time >= 0.0, "audio: seeking before the start clamps to zero");
+  }
+
+  {
+    // The loop region is inclusive of a valid span and refused when it is not one, and clearing it
+    // returns the channel to playing the whole buffer.
+    MockDevice state;
+    const auto backend = mock_backend(state);
+    const auto channel = play(backend);
+    check(flight::media::set_audio_channel_loop_region(channel, 100.0, 400.0),
+          "audio: a well-formed loop region is accepted");
+    check_close(channel->loop_start, 100.0, "audio: the loop start is stored");
+    check_close(channel->loop_end, 400.0, "audio: the loop end is stored");
+    check(!flight::media::set_audio_channel_loop_region(channel, 400.0, 100.0),
+          "audio: an inverted loop region is refused");
+    flight::media::clear_audio_channel_loop_region(channel);
+    check_close(channel->loop_start, 0.0, "audio: clearing the loop region drops the start");
+    check_close(channel->loop_end, 0.0, "audio: clearing the loop region drops the end");
+  }
+
+  {
+    // Destroying a channel releases the host source and leaves it stopped and rewound.
+    MockDevice state;
+    const auto backend = mock_backend(state);
+    const auto channel = play(backend);
+    const int destroys_before = state.destroy_source_calls;
+    flight::media::destroy_audio_channel(channel);
+    check(state.destroy_source_calls > destroys_before,
+          "audio: destroying a channel releases its host source");
+    check(channel->state == flight::String("stopped"), "audio: a destroyed channel is stopped");
+  }
+
+  {
+    // The duration accessor reports the channel's own length, and an unplayed channel reports zero.
+    MockDevice state;
+    const auto backend = mock_backend(state);
+    const auto channel = play(backend);
+    check_close(flight::media::get_audio_channel_duration(channel), channel->length,
+                "audio: the duration is the channel length");
+    check_close(flight::media::get_audio_channel_duration(flight::make_ref<flight::types::AudioChannel>()),
+                0.0, "audio: a channel that never played has no duration");
+  }
+
+  return failures == 0 ? 0 : 1;
+}
