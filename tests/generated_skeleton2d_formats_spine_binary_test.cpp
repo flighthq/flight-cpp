@@ -111,6 +111,32 @@ Bytes skel_with_events(const std::string& version, std::uint32_t count) {
   return cat({out, varint(0)});
 }
 
+// Two animations. The first carries an attachment and an RGBA slot timeline, an IK timeline and a deform
+// timeline, each with two frames so every per-frame skip and last-frame exit runs; the second carries a
+// draw-order and an event timeline. A wrong skip anywhere in the first misreads the second.
+Bytes skel_with_animations() {
+  Bytes out = skel_head("4.1.0");
+  for (int i = 0; i < 8; ++i) out = cat({out, varint(0)});  // bones .. skins, events
+  out = cat({out, varint(2)});
+  out = cat({out, spine_string("a"), varint(0),
+             // slot timelines: one slot, two timelines
+             varint(1), varint(0), varint(2),
+             {0}, varint(2), zeros(4), varint(0), zeros(4), varint(0),     // attachment: 4 bytes + varint per frame
+             {1}, varint(2), varint(0), zeros(8), zeros(8), {0},            // rgba: curve frames
+             varint(0),                                                     // bone timelines
+             varint(1), varint(0), varint(2), varint(0), zeros(12),         // ik: one timeline, two frames
+             zeros(3), zeros(12), {0}, zeros(3),
+             varint(0), varint(0),                                          // transform, path
+             varint(1), varint(0), varint(1), varint(0), varint(1),         // deform: skin, slot, attachment
+             varint(0), {0}, varint(2), varint(0), zeros(4),
+             varint(1), varint(0), zeros(4), zeros(4), {0}, varint(0),
+             varint(0), varint(0)});                                        // draw order, events
+  out = cat({out, spine_string("b"), varint(0), varint(0), varint(0), varint(0), varint(0), varint(0), varint(0),
+             varint(1), zeros(4), varint(1), varint(0), varint(0),           // draw order: one frame, one offset
+             varint(1), zeros(4), varint(0), varint(0), zeros(4), {0}});     // events: one frame
+  return out;
+}
+
 bool is_null(const std::optional<flight::String>& value) { return !value.has_value(); }
 bool is(const std::optional<flight::String>& value, const char* text) {
   return value.has_value() && value.value() == flight::String(text);
@@ -216,6 +242,15 @@ void section_counts() {
 
   auto events = spine::collect_spine_binary_section_counts(u8(skel_with_events("4.1.0", 1)));
   check(events.has_value() && events->get(types::spine_binary_section_kind->events) == 1.0, "counts one event");
+
+  auto animated = spine::collect_spine_binary_section_counts(u8(skel_with_animations()));
+  const auto& kind = types::spine_binary_timeline_kind;
+  check(animated.has_value() && animated->get(types::spine_binary_section_kind->animations) == 2.0,
+        "counts two animations");
+  check(animated.has_value() && animated->get(kind->slot) == 2.0 && animated->get(kind->ik) == 1.0 &&
+            animated->get(kind->deform) == 1.0 && animated->get(kind->draw_order) == 1.0 &&
+            animated->get(kind->event) == 1.0 && !animated->has(kind->bone) && animated->size() == 6,
+        "tallies every timeline kind across both animations, and only those");
 
   // The census checks for overrun only through the header. A section cut short past it still yields the
   // counts declared before the cut, and the sections after it read as empty -- the source's behaviour,
