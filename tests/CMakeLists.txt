@@ -205,6 +205,23 @@ target_link_libraries(
 add_test(NAME flight_cpp.generated_camera COMMAND flight_cpp_generated_camera_tests)
 
 add_executable(
+  flight_cpp_generated_camera_controls_tests
+  generated_camera_controls_test.cpp
+)
+target_include_directories(
+  flight_cpp_generated_camera_controls_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_camera_controls_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(
+  NAME flight_cpp.generated_camera_controls
+  COMMAND flight_cpp_generated_camera_controls_tests
+)
+
+add_executable(
   flight_cpp_generated_textureatlas_tests
   generated_textureatlas_test.cpp
 )
@@ -1172,6 +1189,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_texture texture types)
 flight_cpp_package_test_labels(flight_cpp.generated_texture_formats texture-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_clip clip)
 flight_cpp_package_test_labels(flight_cpp.generated_camera camera geometry)
+flight_cpp_package_test_labels(flight_cpp.generated_camera_controls camera camera-controls geometry)
 flight_cpp_package_test_labels(flight_cpp.generated_textureatlas textureatlas)
 flight_cpp_package_test_labels(flight_cpp.generated_textureatlas_formats textureatlas textureatlas-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_spritesheet_formats spritesheet-formats)
