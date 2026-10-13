@@ -541,6 +541,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_path_test",
+    srcs = ["generated_path_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_clock_test",
     srcs = ["generated_clock_test.cpp"],
     size = "small",
@@ -1096,6 +1103,7 @@ test_suite(
         ":generated_timeline_test",
         ":generated_velocity_test",
         ":generated_motionpath_test",
+        ":generated_path_test",
         ":generated_clock_test",
         ":generated_movieclip_test",
         ":generated_swf_reader_test",
