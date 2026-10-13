@@ -63,6 +63,13 @@ flight-compiler `2b687ea`, this refuses `createLassoSelection`, `createMarqueeSe
 The selection completion headers preserve one object by spelling the declared C++ heritage and removing
 only the duplicated base fields.
 
+At flight `a627849`, `@flighthq/gizmo` reaches the same identity boundary while creating state:
+the concrete `GizmoRuntime<NodeType>` object must enter the `EntityRuntime` slot on
+`GizmoState<NodeType>`. The emitter refuses `createGizmoState` rather than copy or cast between the
+independent flattened owners. The gizmo override keeps the concrete owner in an identity-keyed weak
+table and gives the public state an ordinary entity marker; it expires with an owner-preserving
+heritage carrier.
+
 ## Carrying workaround
 
 Emission repairs `adjustments-color-matrix-interface-heritage` and `adjustments-tint-interface-heritage`

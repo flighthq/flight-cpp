@@ -112,6 +112,14 @@ Two facts about this site worth recording against the request rather than agains
   is `| null` only, taking that spelling is a semantics-preserving one-line source change; where an
   `undefined` arm exists it is not, and the three-state carrier this request asks for is the only fix.
 
+## A fourth site: gizmo disposal's nullable parent
+
+At flight `a627849`, `@flighthq/gizmo` refuses `disposeGizmoState` at
+`if (parent !== null) removeNodeChild(parent, runtime.overlayRoot)`. The parent result is declared
+`Node | null`, so its emitted `std::optional` has an unambiguous present/absent interpretation at this
+site; the override tests `has_value()` before removal. Disposal remains idempotent, runs cleanups in
+reverse order, and clears the four retained external references.
+
 ## A third site: equality with a literal (measured)
 
 The same refusal fires when a `T | null` value is compared with a string literal and nothing tests presence

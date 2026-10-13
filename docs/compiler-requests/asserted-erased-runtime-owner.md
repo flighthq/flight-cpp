@@ -62,9 +62,18 @@ runtime behind the erased slot; today each one either narrows its declaration or
 `@flighthq/app` — `appRenderView.ts`, one of its two refused modules, supplied by the
 `app-render-view-unqualified-types-and-member-access` override.
 
+### Third measured site: `@flighthq/gizmo`
+
+At flight `a627849`, `packages/gizmo/src/gizmoState.ts` refuses `getGizmoRuntime` for the same
+reason. `GizmoState<NodeType>` retains only `EntityRuntime`, while the asserted
+`GizmoRuntime<NodeType>` adds the complete transform, handle, selection, camera, snapping, and
+viewport state. The refusal is honest: the flattened C++ owners have no checked recovery relation.
+The package override therefore keeps the exact `GizmoRuntime<NodeType>` owner in a weak,
+state-identity-keyed table instead of casting the erased slot or materializing a replacement.
+
 ## Carrying workaround
 
-The override above supplies the module by hand at this pin.
+The app override above and the gizmo state override supply their modules by hand at this pin.
 
 ## Third measured site: `@flighthq/selection`
 
