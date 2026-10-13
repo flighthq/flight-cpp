@@ -774,18 +774,6 @@
       "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
     },
     {
-      "id": "registry-registrytable-using-declaration",
-      "kind": "insert-using-declaration",
-      "appliesTo": "flight/registry/",
-      "symbol": "RegistryTable",
-      "declaration": "using flight::types::RegistryTable;",
-      "include": "flight/types/registry_table.hpp",
-      "diagnostic": "'RegistryTable' was not declared in this scope; did you mean 'flight::types::RegistryTable'?",
-      "defect": "The emitter writes RegistryTable unqualified inside namespace flight::registry, where the type is flight::types::RegistryTable. A types-owned name used from another package's namespace without qualification, and without the header that defines it.",
-      "expectedWhen": "always",
-      "expires": "when the emitter qualifies types-owned names used from another package's namespace; sdk:check fails if this repair matches no header."
-    },
-    {
       "id": "name-in-place-record-alternative",
       "kind": "name-in-place-alternative",
       "appliesTo": "flight/",

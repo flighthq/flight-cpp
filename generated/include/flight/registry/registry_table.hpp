@@ -26,8 +26,6 @@ namespace flight::types { template <typename T> struct OrdinalTable; }
 
 namespace flight::registry {
 
-using flight::types::RegistryTable;
-
 using flight::types::OrdinalTable;
 
 template <typename T>

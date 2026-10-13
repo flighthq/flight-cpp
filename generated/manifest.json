@@ -636,9 +636,7 @@
       "id": "node-noderuntime-using-declaration"
     },
     {
-      "files": [
-        "flight/registry/registry_table.hpp"
-      ],
+      "files": [],
       "id": "registry-registrytable-using-declaration"
     },
     {
