@@ -38,19 +38,34 @@ header compilation or the existing Scene3D smoke test as behavioral coverage:
 | Geometry ownership and identity | Construction retains the caller's layout and vertex buffer, copies and narrows the authored index view, installs an exact runtime owner, and creates the default subset. Clone retains layout identity while independently owning geometry, runtime, vertices, indices, subset array/elements, and bounds; clone mutation cannot reach the source. Version invalidation wraps as unsigned 32-bit state. |
 | Bounds and mutation | The first ensure computes the exact AABB and stamps the geometry version. An unchanged ensure returns the same bounds owner. A successful position write increments the version, after which ensure refreshes that same bounds owner to the new extrema and advances the runtime stamp. |
 | Indexing and order | Triangle-list decoding preserves both authored windings. Wireframe edge order is exact. Index expansion follows element order without mutating the source, and compaction assigns new vertices in first-reference order with the exact remapped indices. |
-| Failures | Negative and past-end triangle queries leave the caller's output unchanged. Negative and past-end position writes leave bytes and version unchanged. Out-of-range indices and zero-stride layouts fail validation while the original geometry remains valid. |
+| Packed channel ownership and order | A non-zero-offset `Float32Array` view is retained exactly with its authored layout. Attribute declaration order deliberately differs from byte order; semantic lookup still reads `uv1`, `color0`, `joints0`, and `weights0` into exact x/y/z/w component order from the second interleaved record. |
+| Stride, offsets, and packed interpretation | Reads honor both the view's byte offset and the 32-byte vertex stride. Packed writes clamp and round `uint16x4`, clamp/round/normalize `unorm8x4`, preserve float UV interpretation, and increment the version exactly once per successful channel. Bytes outside the view remain untouched. |
+| Normals, tangents, and groups | Smooth normals and tangents update in place without replacing vertex or index owners, produce unit +Z/+X frames for canonical UVs, preserve exact version increments, and distinguish positive from negative handedness. Position groups choose the first bit-exact representative, never escape vertex bounds, reject an adjacent Float32 bit pattern, and area-weight grouped normals across a seam. |
+| Layout conversion | Conversion matches attributes by semantic rather than declaration order, installs the exact target layout and a fresh runtime/vertex/index owner while retaining subsets, zero-fills target-only components, preserves the source, and round-trips packed color/joint bytes through float storage. Canonical rigid/skinned strides and skin-channel offsets are asserted. |
+| Failures | Negative and past-end triangle queries leave the caller's output unchanged. Negative and past-end position writes leave bytes and version unchanged. Out-of-range indices and zero-stride layouts fail validation while the original geometry remains valid. Packed attributes with negative offsets or records extending past stride reject reads and writes without changing output, bytes, or version. |
 
-Four independent modes (`--mutate-owner-identity`, `--mutate-bounds`,
-`--mutate-index-order`, and `--mutate-failure`) suppress one family oracle each. Normal execution
-must pass; every mutation execution must fail its named assertion.
+Eight independent modes (`--mutate-owner-identity`, `--mutate-bounds`,
+`--mutate-index-order`, `--mutate-failure`, `--mutate-channel-order`,
+`--mutate-stride-offset`, `--mutate-normalization`, and `--mutate-group-bounds`) suppress one
+family oracle each. Normal execution must pass; every mutation execution must fail its named
+assertion.
+
+## Verification boundary
+
+The package-scoped compiler gate passes all 16/16 emitted mesh headers with the declared override
+stack. The exact `flight_cpp.generated_mesh` CTest builds and passes. The broader exact `pkg:mesh`
+label contains that test plus the pre-existing frozen Scene3D consumer; it reports the mesh test as
+passed but cannot build/run `flight_cpp.generated_scene3d` because
+`overrides/include/flight/scene3d/mesh.hpp` includes the absent
+`flight/types/material_value.hpp`. This mesh work does not modify or mask that frozen consumer.
 
 ## Honest residual
 
-This is a focused P-3D2 slice, not a claim that all 213 upstream cases are ported. The largest
-remaining executable families are primitive-builder topology and seams; extended packed vertex
-channels; normal/tangent and position-group computation; layout conversion; index/weld breadth;
-subset operations; mirrored transforms; UV transforms; morph/deformation flows; and vertex-format
-permutations. The package currently has no refusal-ledger row, and this slice required no new
+This is a focused P-3D2 slice, not a claim that all 213 upstream cases are ported. Ranked by remaining
+observable breadth, the largest executable families are: (1) primitive-builder topology, degeneracy,
+and seam rules; (2) index welding plus merge/subset/validation breadth; (3) mirrored transforms and UV
+transforms; (4) morph/deformation flows; and (5) the remaining vertex-format permutations and accessor
+rejection matrix. The package currently has no refusal-ledger row, and this slice required no new
 production patch or compiler request. Its assisted-tier compiler debt remains explicit in the three
 existing source patches, one emission repair, and six declared overrides rather than being recast as
 native parity.
