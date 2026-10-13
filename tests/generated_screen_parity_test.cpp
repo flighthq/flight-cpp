@@ -145,7 +145,10 @@ int main() {
     // out. Here those are unrelated C++ types: the input is a row over the named Vector2Like (Ref<Vector2>)
     // and the out is the anonymous x_y_8365950bd60f783f shape. Passing one as the other is a hard
     // compile error inside the runtime ("structural reference source has an incompatible object type"),
-    // so no argument can alias. The value cases above still pin the arithmetic and the returned identity.
+    // so no argument can alias. Filed as
+    // docs/compiler-requests/named-input-and-anonymous-output-carriers-cannot-alias.md, with the
+    // strict negatives that any widening must still refuse. The value cases above still pin the
+    // arithmetic and the returned identity.
 
     const auto rect_out = out_rect();
     const auto rect_returned =

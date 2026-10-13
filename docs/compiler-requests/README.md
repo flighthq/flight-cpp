@@ -468,6 +468,8 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   silent miscompilation: `@flighthq/textlayout`'s wrapping path panics on the first-segment overrun that upstream's own fixture exercises. No workaround is carried.
 - [A structural view of an entity-allocated carrier is invisible when the carrier derives from the row's subject](structural-view-of-a-derived-carrier-is-invisible.md) —
   silent miscompilation: `@flighthq/textshaper` cannot recover the derived run carrier through its structural row view. No workaround is carried.
+- [A named input carrier and a structurally identical anonymous output carrier cannot alias](named-input-and-anonymous-output-carriers-cannot-alias.md) —
+  `@flighthq/screen` loses the aliasing half of all four `dipToScreen*`/`screenToDip*` conversions: the input is a row over the named `Vector2Like`/`RectangleLike` while the out is the anonymous `x_y` shape, so a single object cannot be passed as both. Measured as a hard compile error. No workaround is carried.
 - [A merged structural row can be read but not constructed](merged-row-not-constructible.md) —
   `@flighthq/app`'s window API takes merged rows that callers cannot construct; no patch is carried.
 - [An optional chain on a host capability group is lowered as an unconditional dereference](host-group-optional-chain-dropped.md) —
