@@ -35,6 +35,13 @@ int main(int argc, char** argv) {
         matrix->m.get_index(1.0) * u + matrix->m.get_index(4.0) * v +
             matrix->m.get_index(7.0)};
   };
+  const auto make_video_resource = [](std::size_t width, std::size_t height) {
+    const auto resource = flight::make_ref<types::VideoResource>();
+    resource->element = flight::host_sdl::ImageSource::rgba8(
+        width, height, flight::Uint8ClampedArray(width * height * 4),
+        flight::host_sdl::ImageSourceKind::video_element);
+    return resource;
+  };
 
   const auto defaults = texture::create_texture();
   check(defaults->dimension == flight::String("2d"), "the default constructor selects 2D");
@@ -1273,6 +1280,309 @@ int main(int argc, char** argv) {
   check(!video->source.has_value() && video->version == texture::initial_video_version,
         "video destruction detaches only the borrowed image source");
   texture::destroy_video_texture(video_uv);
+
+  auto video_image_construction =
+      flight::entity::allocate_entity<flight::Ref<types::ImageResource>>();
+  texture::initialize_video_image_resource(
+      video_image_construction, video_source->element.value(), 23.0);
+  const auto initialized_video_image =
+      flight::entity::finish_entity<flight::Ref<types::ImageResource>>(
+          video_image_construction);
+  bool video_initializer_fields =
+      initialized_video_image->source == video_source->element.value() &&
+      initialized_video_image->alpha_type == flight::String("straight") &&
+      initialized_video_image->gamut == flight::String("srgb") &&
+      initialized_video_image->kind == types::image_texture_source_kind &&
+      initialized_video_image->width == 0.0 &&
+      initialized_video_image->height == 0.0 &&
+      initialized_video_image->version == 23.0;
+  if (mutation == "--mutate-video-initializer") video_initializer_fields = false;
+  check(video_initializer_fields,
+        "initializeVideoImageResource retains the host handle and initializes every source field");
+
+  const auto provider_resource = make_video_resource(1, 1);
+  const auto provider_element = provider_resource->element.value();
+  const auto provider_host = flight::make_ref<types::HostVideoCapability>();
+  provider_host->can_play_type = [](flight::String) { return true; };
+  int provider_width_calls = 0;
+  int provider_height_calls = 0;
+  int provider_ready_calls = 0;
+  bool provider_received_borrowed_identity = true;
+  provider_host->get_width = [&](types::HostImageSource received) {
+    ++provider_width_calls;
+    provider_received_borrowed_identity =
+        provider_received_borrowed_identity && received == provider_element;
+    return 34.0;
+  };
+  provider_host->get_height = [&](types::HostImageSource received) {
+    ++provider_height_calls;
+    provider_received_borrowed_identity =
+        provider_received_borrowed_identity && received == provider_element;
+    return 12.0;
+  };
+  provider_host->is_ready = [&](types::HostImageSource received) {
+    ++provider_ready_calls;
+    provider_received_borrowed_identity =
+        provider_received_borrowed_identity && received == provider_element;
+    return true;
+  };
+  const auto provider_texture =
+      texture::create_video_texture(provider_host, provider_resource);
+  const types::TextureLike provider_texture_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, provider_texture};
+  const auto provider_image = texture::get_video_image(provider_texture_view);
+  const double provider_width =
+      texture::get_video_texture_width(provider_host, provider_texture_view);
+  const double provider_height =
+      texture::get_video_texture_height(provider_host, provider_texture_view);
+  const bool provider_ready =
+      texture::is_video_texture_frame_ready(provider_host, provider_texture_view);
+  bool provider_routing =
+      provider_image.has_value() && (*provider_image)->source == provider_element &&
+      (*provider_image)->width == 34.0 && (*provider_image)->height == 12.0 &&
+      provider_width == 34.0 && provider_height == 12.0 && provider_ready &&
+      provider_received_borrowed_identity && provider_width_calls == 3 &&
+      provider_height_calls == 3 && provider_ready_calls == 1;
+  if (mutation == "--mutate-video-provider-routing") provider_routing = false;
+  check(provider_routing,
+        "video construction and accessors route the borrowed handle only through the host provider");
+
+  const auto missing_provider = flight::make_ref<types::HostVideoCapability>();
+  missing_provider->can_play_type = [](flight::String) { return false; };
+  const auto missing_provider_texture =
+      texture::create_video_texture(missing_provider, provider_resource);
+  const types::TextureLike missing_provider_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, missing_provider_texture};
+  const auto missing_provider_image =
+      texture::get_video_image(missing_provider_view);
+  bool missing_provider_sentinels =
+      missing_provider_image.has_value() &&
+      (*missing_provider_image)->width == 0.0 &&
+      (*missing_provider_image)->height == 0.0 &&
+      texture::get_video_texture_width(
+          missing_provider, missing_provider_view) == -1.0 &&
+      texture::get_video_texture_height(
+          missing_provider, missing_provider_view) == -1.0 &&
+      !texture::is_video_texture_frame_ready(
+          missing_provider, missing_provider_view);
+  if (mutation == "--mutate-video-missing-provider") {
+    missing_provider_sentinels = false;
+  }
+  check(missing_provider_sentinels,
+        "omitted video inspection methods retain a source but expose dimension and readiness sentinels");
+
+  const auto absent_video_resource = flight::make_ref<types::VideoResource>();
+  const auto absent_video_texture =
+      texture::create_video_texture(provider_host, absent_video_resource);
+  const types::TextureLike absent_video_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, absent_video_texture};
+  bool absent_video_sentinels =
+      !texture::get_video_image(absent_video_view).has_value() &&
+      !absent_video_texture->source.has_value() &&
+      absent_video_texture->version == texture::initial_video_version &&
+      texture::get_video_texture_width(provider_host, absent_video_view) == -1.0 &&
+      texture::get_video_texture_height(provider_host, absent_video_view) == -1.0 &&
+      !texture::is_video_texture_frame_ready(provider_host, absent_video_view) &&
+      texture::advance_video_texture(provider_host, absent_video_view) ==
+          texture::initial_video_version;
+  if (mutation == "--mutate-video-absent-source") absent_video_sentinels = false;
+  check(absent_video_sentinels,
+        "an absent borrowed host element produces an unbound texture and stable sentinels");
+
+  const auto readiness_resource = make_video_resource(1, 1);
+  const auto readiness_host = flight::make_ref<types::HostVideoCapability>();
+  readiness_host->can_play_type = [](flight::String) { return true; };
+  bool readiness_flag = true;
+  double readiness_width = 5.0;
+  double readiness_height = 4.0;
+  readiness_host->is_ready =
+      [&](types::HostImageSource) { return readiness_flag; };
+  readiness_host->get_width =
+      [&](types::HostImageSource) { return readiness_width; };
+  readiness_host->get_height =
+      [&](types::HostImageSource) { return readiness_height; };
+  const auto readiness_texture =
+      texture::create_video_texture(readiness_host, readiness_resource);
+  const types::TextureLike readiness_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, readiness_texture};
+  bool readiness_domain =
+      texture::is_video_texture_frame_ready(readiness_host, readiness_view);
+  readiness_flag = false;
+  readiness_domain = readiness_domain &&
+                     !texture::is_video_texture_frame_ready(
+                         readiness_host, readiness_view);
+  readiness_flag = true;
+  readiness_width = 0.0;
+  readiness_domain = readiness_domain &&
+                     !texture::is_video_texture_frame_ready(
+                         readiness_host, readiness_view);
+  readiness_width = 5.0;
+  readiness_height = 0.0;
+  readiness_domain = readiness_domain &&
+                     !texture::is_video_texture_frame_ready(
+                         readiness_host, readiness_view);
+  if (mutation == "--mutate-video-readiness-domain") readiness_domain = false;
+  check(readiness_domain,
+        "video readiness requires provider readiness and both positive dimensions");
+
+  const auto lifecycle_resource = make_video_resource(1, 1);
+  const auto lifecycle_element = lifecycle_resource->element.value();
+  const auto lifecycle_host = flight::make_ref<types::HostVideoCapability>();
+  lifecycle_host->can_play_type = [](flight::String) { return true; };
+  double lifecycle_width = 3.0;
+  double lifecycle_height = 2.0;
+  lifecycle_host->get_width =
+      [&](types::HostImageSource) { return lifecycle_width; };
+  lifecycle_host->get_height =
+      [&](types::HostImageSource) { return lifecycle_height; };
+  lifecycle_host->is_ready = [](types::HostImageSource) { return true; };
+  const auto lifecycle_options = flight::make_ref<types::CreateTexture2DOptions>();
+  lifecycle_options->color_space = flight::String("linear");
+  lifecycle_options->uv_offset = flight::geometry::create_vector2(2.0, 3.0);
+  lifecycle_options->uv_scale = flight::geometry::create_vector2(4.0, 5.0);
+  const auto lifecycle_texture = texture::create_video_texture(
+      lifecycle_host, lifecycle_resource, lifecycle_options);
+  types::TextureLike lifecycle_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, lifecycle_texture};
+  const auto lifecycle_image = texture::get_video_image(lifecycle_view).value();
+  lifecycle_width = 6.0;
+  lifecycle_height = 4.0;
+  const double first_frame_version =
+      texture::advance_video_texture(lifecycle_host, lifecycle_view);
+  bool advance_state = first_frame_version == 0.0 &&
+                       lifecycle_texture->version == 0.0 &&
+                       lifecycle_image->version == 0.0 &&
+                       lifecycle_image->width == 6.0 &&
+                       lifecycle_image->height == 4.0 &&
+                       texture::get_video_image(lifecycle_view).value() == lifecycle_image;
+  const double second_frame_version =
+      texture::advance_video_texture(lifecycle_host, lifecycle_view);
+  advance_state = advance_state && second_frame_version == 1.0 &&
+                  lifecycle_texture->version == 1.0 &&
+                  lifecycle_image->version == 1.0;
+  if (mutation == "--mutate-video-advance-state") advance_state = false;
+  check(advance_state,
+        "video advance refreshes dimensions and synchronizes source and texture u32 revisions");
+
+  const auto video_clone_union =
+      texture::clone_video_texture(lifecycle_view);
+  const auto video_clone =
+      std::get<flight::Ref<types::Texture2D>>(video_clone_union);
+  const types::TextureLike video_clone_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, video_clone};
+  bool video_clone_ownership =
+      video_clone != lifecycle_texture &&
+      texture::get_video_image(video_clone_view).value() == lifecycle_image &&
+      video_clone->sampler != lifecycle_texture->sampler &&
+      video_clone->uv_offset != lifecycle_texture->uv_offset &&
+      video_clone->uv_scale != lifecycle_texture->uv_scale &&
+      video_clone->uv_offset->x == 2.0 && video_clone->uv_scale->y == 5.0 &&
+      video_clone->version == 1.0;
+  video_clone->uv_offset->x = 9.0;
+  video_clone_ownership = video_clone_ownership &&
+                          lifecycle_texture->uv_offset->x == 2.0;
+  if (mutation == "--mutate-video-clone-ownership") {
+    video_clone_ownership = false;
+  }
+  check(video_clone_ownership,
+        "cloneVideoTexture shares the image source but owns fresh sampler and UV state");
+
+  const auto copy_video_resource = make_video_resource(2, 2);
+  const auto copy_video_out =
+      texture::create_video_texture(lifecycle_host, copy_video_resource);
+  const auto copy_video_sampler = copy_video_out->sampler;
+  const auto copy_video_offset = copy_video_out->uv_offset;
+  const auto copy_video_scale = copy_video_out->uv_scale;
+  types::TextureLike copy_video_view{
+      std::in_place_type<flight::Ref<types::Texture2D>>, copy_video_out};
+  texture::copy_video_texture(copy_video_view, lifecycle_view);
+  bool video_copy_ownership =
+      copy_video_out->sampler == copy_video_sampler &&
+      copy_video_out->uv_offset == copy_video_offset &&
+      copy_video_out->uv_scale == copy_video_scale &&
+      copy_video_out->sampler != lifecycle_texture->sampler &&
+      copy_video_out->uv_offset != lifecycle_texture->uv_offset &&
+      copy_video_out->color_space == flight::String("linear") &&
+      copy_video_out->uv_scale->x == 4.0 && copy_video_out->version == 1.0 &&
+      texture::get_video_image(copy_video_view).value() == lifecycle_image;
+  const auto alias_video_sampler = lifecycle_texture->sampler;
+  const auto alias_video_offset = lifecycle_texture->uv_offset;
+  const auto alias_video_scale = lifecycle_texture->uv_scale;
+  texture::copy_video_texture(lifecycle_view, lifecycle_view);
+  video_copy_ownership = video_copy_ownership &&
+                         lifecycle_texture->sampler == alias_video_sampler &&
+                         lifecycle_texture->uv_offset == alias_video_offset &&
+                         lifecycle_texture->uv_scale == alias_video_scale &&
+                         lifecycle_texture->uv_scale->x == 4.0 &&
+                         lifecycle_texture->version == 1.0;
+  if (mutation == "--mutate-video-copy-ownership") video_copy_ownership = false;
+  check(video_copy_ownership,
+        "copyVideoTexture preserves destination owners, shares the image, and is alias-safe");
+
+  texture::reset_video_texture_frame(lifecycle_view);
+  bool reset_video_revision =
+      lifecycle_texture->version == texture::initial_video_version &&
+      lifecycle_image->version == texture::initial_video_version;
+  if (mutation == "--mutate-video-reset-state") reset_video_revision = false;
+  check(reset_video_revision,
+        "resetVideoTextureFrame resets both shared revisions to the pre-first-frame sentinel");
+
+  const auto replacement_video_resource = make_video_resource(4, 3);
+  const auto replacement_video_element =
+      replacement_video_resource->element.value();
+  lifecycle_width = 9.0;
+  lifecycle_height = 7.0;
+  texture::set_video_texture_source(
+      lifecycle_host, lifecycle_view, replacement_video_resource);
+  const auto replacement_video_image =
+      texture::get_video_image(lifecycle_view).value();
+  bool video_source_replaced = replacement_video_image != lifecycle_image &&
+                               replacement_video_image->source ==
+                                   replacement_video_element &&
+                               replacement_video_image->width == 9.0 &&
+                               replacement_video_image->height == 7.0 &&
+                               replacement_video_image->version ==
+                                   texture::initial_video_version &&
+                               lifecycle_texture->version ==
+                                   texture::initial_video_version &&
+                               lifecycle_image->source == lifecycle_element &&
+                               lifecycle_resource->element.value() == lifecycle_element;
+  if (mutation == "--mutate-video-source-replacement") {
+    video_source_replaced = false;
+  }
+  check(video_source_replaced,
+        "setVideoTextureSource swaps to a new borrowed image owner and leaves the old resource intact");
+
+  texture::set_video_texture_source(
+      lifecycle_host, lifecycle_view, absent_video_resource);
+  bool video_source_cleared =
+      !texture::get_video_image(lifecycle_view).has_value() &&
+      !lifecycle_texture->source.has_value() &&
+      lifecycle_texture->version == texture::initial_video_version &&
+      texture::get_video_texture_width(lifecycle_host, lifecycle_view) == -1.0 &&
+      texture::get_video_texture_height(lifecycle_host, lifecycle_view) == -1.0;
+  if (mutation == "--mutate-video-source-clear") video_source_cleared = false;
+  check(video_source_cleared,
+        "setVideoTextureSource clears the texture when the replacement host element is absent");
+
+  texture::set_video_texture_source(
+      lifecycle_host, lifecycle_view, replacement_video_resource);
+  const auto destroy_video_image = texture::get_video_image(lifecycle_view).value();
+  texture::destroy_video_texture(lifecycle_texture);
+  texture::destroy_video_texture(lifecycle_texture);
+  bool video_destroy_state =
+      !lifecycle_texture->source.has_value() &&
+      lifecycle_texture->version == texture::initial_video_version &&
+      replacement_video_resource->element.value() == replacement_video_element &&
+      destroy_video_image->source == replacement_video_element &&
+      texture::get_video_texture_width(lifecycle_host, lifecycle_view) == -1.0 &&
+      texture::get_video_texture_height(lifecycle_host, lifecycle_view) == -1.0 &&
+      !texture::is_video_texture_frame_ready(lifecycle_host, lifecycle_view) &&
+      texture::advance_video_texture(lifecycle_host, lifecycle_view) ==
+          texture::initial_video_version;
+  if (mutation == "--mutate-video-destroy-state") video_destroy_state = false;
+  check(video_destroy_state,
+        "video destruction is idempotent, preserves the borrowed resource, and leaves stable sentinels");
 
   if (failures == 0) {
     std::cout << "texture construction, source, UV, copy, and equality match Flight\n";
