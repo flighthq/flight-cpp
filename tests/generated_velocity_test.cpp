@@ -3,8 +3,16 @@
 // helpers and their out-aliasing, the per-frame field with identity-keyed samples, explicit contribution
 // and suppression, staleness, the explanation query, and affine reprojection of a sample.
 //
-// contributeTransformVelocity is emitted as a template over NodeOf<Traits>; driving it needs a native
-// Node2D, which the generated node package cannot yet construct, so the transform baseline is not covered.
+// contributeTransformVelocity (transformVelocity.test.ts) is not covered, and not because a native node is
+// missing: scene2d's create_display_object supplies one. The emitted traversal does not instantiate for any real
+// node at a627849 -- its node calls lack their conversion and template argument
+// (docs/compiler-requests/generic-intersection-argument-widening.md), its sample key reads shared_object() from
+// a merged row (generic-node-row-into-object-parameter.md), and @flighthq/node's own world-matrix queries fail
+// to instantiate (node-transform-runtime-owner-argument.md).
+//
+// Tolerances: `close` is upstream's toBeCloseTo default (two digits) wherever upstream uses it; everything else
+// is exact, because the arithmetic is exact in binary for the values used (small integers, halves, and the
+// 3-4-5 triangle's 0.6/0.8 only through `close`).
 #include <flight/geometry/matrix.hpp>
 #include <flight/velocity/velocity_field.hpp>
 #include <flight/velocity/velocity_sample.hpp>
@@ -226,6 +234,9 @@ void reprojection() {
   auto rotated = at(create_matrix(), create_matrix(0, 1, -1, 0, 0, 0), 1, 0);
   check(close(rotated->x, -1) && close(rotated->y, 1), "a rotating transform off the origin");
   check(equals(at(create_matrix(1, 0, 0, 1, 1, 2), create_matrix(1, 0, 0, 1, 4, 6), 0, 0), 3, 4), "a translated pair");
+  // Not in upstream: a rotated PREVIOUS transform. (1, 0) was at (0, 1) under a quarter turn and is at (1, 0)
+  // under the identity, so the point moved by (1, -1); every term is an exact small integer.
+  check(equals(at(create_matrix(0, 1, -1, 0, 0, 0), create_matrix(), 1, 0), 1, -1), "a rotated previous transform reprojects too");
 
   auto f = velocity::create_velocity_field();
   auto a = source();
