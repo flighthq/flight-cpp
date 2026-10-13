@@ -20,6 +20,12 @@ The JSON refusal omits `objectField`, `parseJson`, `parsePointsField`,
 refusal omits `buildTiledLayerDataFromXml`. Those omissions are behavior gaps, not merely header
 ordering problems.
 
+After the declared portability patch and XML layer-construction override, the current scoped result
+is 11 of 13 modules emitted and 8 of 13 headers compiling independently. The five remaining compile
+failures are `tiledJsonParse`, `tiledTmjFormat`, `tilemapDetect`, and the two aggregate headers that
+include the JSON failure. `tiledProject` is still a refused partial module even though its emitted
+header compiles, so it is not counted as supplied behavior.
+
 ## Emitted C++ that does not compile
 
 After the first diagnostic is expanded, the failures reduce to these boundaries:
@@ -38,9 +44,13 @@ After the first diagnostic is expanded, the failures reduce to these boundaries:
 6. object literals returned as `TiledLayer | null` are emitted directly as designated initializers for
    the optional multi-variant instead of constructing the narrowed nominal layer arm.
 7. destructuring `array.entries()` emits `.element()` calls on `std::tuple` rather than `std::get`.
+8. `buildTiledLayerFromXml` evaluates the shared `{ ...base, type, ... }` layer object spread but drops
+   every base field from the concrete aggregate. The result compiles after the contextual union-owner
+   repair, yet silently loses id, name, opacity, visibility, offsets, tint, parallax, class, and
+   properties for tile, object, image, and group layers.
 
-Items 2, 3, 5, 6, and 7 do not yet have a narrower request. They are listed here before any carrying
-patch so a compiling rewrite cannot erase the compiler evidence.
+Items 2, 3, 5, 6, 7, and 8 do not yet have a narrower request. They are listed here before any
+carrying patch so a compiling rewrite cannot erase the compiler evidence.
 
 ## Frozen dependency boundary
 
@@ -60,4 +70,3 @@ registry row.
   `KeyedTable` locally.
 - Exercise the four upstream TMX/TMJ/TSX/TSJ fixtures, byte-exact serializer output, and distinct
   malformed/compression failures natively before calling the package complete.
-

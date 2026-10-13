@@ -2418,6 +2418,22 @@
       "status": "complete"
     },
     {
+      "id": "tilemap-formats-xml-layer-construction",
+      "path": "flight/tilemap_formats/tiled_xml_parse.hpp",
+      "package": "@flighthq/tilemap-formats",
+      "status": "complete",
+      "supplies": "packages/tilemap-formats/src/tiledXmlParse.ts",
+      "derivedFrom": "cd292a8074959de5651e1de6b21adeebcc2ca468ff463c3954d0cf12a47918e6",
+      "reason": "The emitted XML parser constructs each layer return as an optional of the raw std::variant base instead of the declared TiledLayer wrapper, which does not compile. It also evaluates but drops the shared layer-base object spread, so a compiling carrier-only repair would silently erase id, name, opacity, visibility, offsets, tint, parallax, class, and properties.",
+      "change": "Constructs optional<TiledLayer> directly for the tile, object, image, and group branches and copies the already-built common layer fields onto each concrete allocation before returning it.",
+      "equivalence": "Each successful branch returns the same alternative, Ref allocation and identity, optional presence, and common fields as the upstream `{ ...base, type, ... }` discriminated-union object.",
+      "whyNotAPatchOrRepair": "The source already names the branch types, returns them through TiledLayer, and spells the shared object spread correctly. A repair can add declarations only and cannot replace the return carrier or restore aggregate fields dropped from executable construction.",
+      "unblocks": "The emitted XML parse module and native XML parse/TMX serialize round-trip evidence.",
+      "remaining": "None in the supplied module at this pin.",
+      "expires": "when return construction preserves both the declared contextual-union wrapper and object-spread members on the concrete arm.",
+      "authoredOn": "2026-10-13"
+    },
+    {
       "id": "signals-throttle-typed-argument-buffers",
       "path": "flight/signals/throttle.hpp",
       "package": "@flighthq/signals",
