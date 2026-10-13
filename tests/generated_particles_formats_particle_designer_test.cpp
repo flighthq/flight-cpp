@@ -517,6 +517,32 @@ void parse_particle_designer_plist() {
         replace(circle, "<key>sourcePositionVariancey</key><real>10</real>", "<key>sourcePositionVariancey</key><real>5</real>"));
     check(r->emitter_shape == String("rect") && r->emitter_width == 20.0 && r->emitter_height == 10.0 && r->emitter_radius == 0.0,
           "Addition: unequal variances map to a rect of 2*vx by 2*vy");
+    // Addition: emitterShape = vx === 0 && vy === 0 ? 'point' : vx === vy ? 'circle' : 'rect' -- one zero axis is a rect.
+    const auto y_only = pf::parse_particle_designer_plist(
+        replace(FIRE_PLIST, "<key>sourcePositionVariancey</key><real>0</real>", "<key>sourcePositionVariancey</key><real>5</real>"));
+    check(y_only->emitter_shape == String("rect") && y_only->emitter_width == 0.0 && y_only->emitter_height == 10.0 &&
+              y_only->emitter_radius == 0.0,
+          "Addition: vx 0, vy 5 maps to a rect 0 x 10");
+    const auto x_only = pf::parse_particle_designer_plist(
+        replace(FIRE_PLIST, "<key>sourcePositionVariancex</key><real>0</real>", "<key>sourcePositionVariancex</key><real>5</real>"));
+    check(x_only->emitter_shape == String("rect") && x_only->emitter_width == 10.0 && x_only->emitter_height == 0.0 &&
+              x_only->emitter_radius == 0.0,
+          "Addition: vx 5, vy 0 maps to a rect 10 x 0");
+  });
+  guarded("Addition: non-boolean self-closing value stores nothing", [] {
+    // parsePlistRawDict: a self-closing tag stores only when it is <true/> or <false/>; any other leaves the key
+    // unset, so str() returns its default ''.
+    const String plist = replace(FIRE_PLIST, "<key>textureFileName</key><string>fire.png</string>", "<key>textureFileName</key><foo/>");
+    const auto result = pf::parse_particle_designer_plist_document(plist);
+    check(result->document->texture_file_name == String(""),
+          "Addition: <foo/> leaves textureFileName '' (got '" + result->document->texture_file_name.to_utf8() + "')");
+    check(result->document->max_particles == 200.0 && result->document->blend_func_destination == 771.0,
+          "Addition: <foo/> leaves the other keys intact");
+    // The key stays pending through <foo/>, so the next value element is still stored under it.
+    const String pending = replace(FIRE_PLIST, "<key>maxParticles</key><integer>200</integer>",
+                                   "<key>maxParticles</key><foo/><integer>5</integer>");
+    check(pf::parse_particle_designer_plist(pending)->max_particles == 5.0,
+          "Addition: a key stays pending through a non-boolean self-closing tag");
   });
   guarded("Addition: maxParticles truncation and non-number values", [] {
     const auto t = pf::parse_particle_designer_plist(
@@ -742,6 +768,22 @@ void serialize_particle_designer_plist() {
     const std::string actual = serialize(config).to_utf8();
     check(actual == expected, "Addition: exact serialized plist for a small config");
     if (actual != expected) std::cerr << "--- expected\n" << expected << "\n--- actual\n" << actual << "\n---\n";
+  });
+  guarded("Addition: rotation serialization", [] {
+    // configToDocument: rotSpeedMid = (1 + 3) * 0.5 = 2, rotSpeedVar = (3 - 1) * 0.5 = 1, lifetimeMid =
+    // (1 + 3) * 0.5 = 2 (no `|| 1` here); rotationStart = rotationEnd = 2 * 2 * RAD_TO_DEG and the variances
+    // = 1 * 2 * RAD_TO_DEG. RAD_TO_DEG = 180 / PI; JS prints the shortest round-trip forms, both non-integers.
+    const auto xml = serialize(make_config([](ConfigInput& c) {
+      c.rotation_speed_min = 1.0;
+      c.rotation_speed_max = 3.0;
+      c.lifetime_min = 1.0;
+      c.lifetime_max = 3.0;
+    }));
+    check(contains(xml, kv("particleLifespan", "integer", "2") + kv("particleLifespanVariance", "integer", "1")),
+          "Addition: lifespan 2 +/- 1");
+    check(contains(xml, kv("rotationStart", "real", "229.1831180523293") + kv("rotationStartVariance", "real", "114.59155902616465") +
+                            kv("rotationEnd", "real", "229.1831180523293") + kv("rotationEndVariance", "real", "114.59155902616465")),
+          "Addition: rotationStart/End = 2 * 2 * RAD_TO_DEG, variances = 1 * 2 * RAD_TO_DEG");
   });
   guarded("Addition: blend mode and shape mapping", [] {
     const auto add = serialize(make_config([](ConfigInput& c) {

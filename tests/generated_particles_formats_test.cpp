@@ -400,6 +400,16 @@ void starling_parse() {
     const std::string attrFirst = "<particleEmitterConfig>\n  <attribute name=\"maxParticles\" value=\"9\"/>\n"
                                   "<key>maxParticles</key><integer>11</integer>\n</particleEmitterConfig>";
     check(pex(attrFirst)->max_particles == 9, "an attribute value is not overwritten by an element-style one");
+    // A key followed by a self-closing tag other than <true/> or <false/> stores nothing.
+    const std::string selfClosed = "<particleEmitterConfig>\n<key>textureFileName</key><foo/>\n</particleEmitterConfig>";
+    check(pf::parse_starling_pex_document(String(selfClosed.c_str()))->document->texture_file_name == String(""),
+          "a non-boolean self-closing tag after a key stores nothing");
+  }
+  // Addition: a duration of exactly 0 is an infinite, looping emitter; a positive one is finite.
+  {
+    const auto zero = pex(replace_once(fire_pex, "duration\" value=\"-1\"", "duration\" value=\"0\""));
+    const auto finite = pex(replace_once(fire_pex, "duration\" value=\"-1\"", "duration\" value=\"2.5\""));
+    check(zero->loop && zero->duration == 0 && !finite->loop && finite->duration == 2.5, "duration 0 loops, duration 2.5 is finite");
   }
 }
 

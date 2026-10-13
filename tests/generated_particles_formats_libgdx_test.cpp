@@ -564,6 +564,40 @@ void parse_libgdx_particle() {
     const auto line = pf::parse_libgdx_particle(replace(SPARK_P, "shape: point", "shape: line"));
     check(line->emitter_shape == String("point"), "Addition: line maps to point");
   });
+  guarded("Addition: zero duration loops", [] {
+    // documentToConfig: durMid = midpoint of rangeToMinMax(duration); loop = durMid <= 0, duration = durMid > 0 ?
+    // durMid / 1000 : 0. The section is named "Duration" (bare line), as sectionsToDocument reads it.
+    const auto c = pf::parse_libgdx_particle(replace(SPARK_P, "Duration\nlowMin: 3000\nlowMax: 3000\nhighMin: 3000\nhighMax: 3000",
+                                                     "Duration\nlowMin: 0\nlowMax: 0\nhighMin: 0\nhighMax: 0"));
+    check(c->loop == true, "Addition: duration midpoint exactly 0 loops");
+    check(c->duration == 0.0, "Addition: duration midpoint exactly 0 gives duration 0");
+    // Only lowMin/lowMax present: highMin/highMax default to 0 in readRange, so the midpoint is still 0.
+    const auto bare = pf::parse_libgdx_particle(String("Particle Effect\n- Bare -\nDuration\nlowMin: 0\nlowMax: 0\n"));
+    check(bare->loop == true && bare->duration == 0.0, "Addition: Duration lowMin/lowMax 0 with default highs loops");
+  });
+  guarded("Addition: rotation speed", [] {
+    // rangeToMinMax: lo = (lowMin + lowMax) * 0.5, hi = (highMin + highMax) * 0.5; [min(lo, hi), max(lo, hi)].
+    // Rotation 10/30 and 100/140 -> rot [20, 120]. Life 200/600 and 600/1000 -> life [400, 800] ms.
+    // lifetimeMid = (400/1000 + 800/1000) * 0.5 || 1; rotationSpeed = rot * DEG_TO_RAD / lifetimeMid.
+    String text = replace(SPARK_P, "Rotation\nactive: false\nlowMin: 0\nlowMax: 0\nhighMin: 0\nhighMax: 0",
+                          "Rotation\nactive: true\nlowMin: 10\nlowMax: 30\nhighMin: 100\nhighMax: 140");
+    text = replace(text, "Life\nlowMin: 400\nlowMax: 400\nhighMin: 800\nhighMax: 800",
+                   "Life\nlowMin: 200\nlowMax: 600\nhighMin: 600\nhighMax: 1000");
+    const auto c = pf::parse_libgdx_particle(text);
+    const double life_min = (200.0 + 600.0) * 0.5;
+    const double life_max = (600.0 + 1000.0) * 0.5;
+    const double lifetime_mid = (life_min / 1000.0 + life_max / 1000.0) * 0.5;
+    const double rot_min = (10.0 + 30.0) * 0.5;
+    const double rot_max = (100.0 + 140.0) * 0.5;
+    check(c->lifetime_min == life_min / 1000.0 && c->lifetime_max == life_max / 1000.0, "Addition: life midpoints 400/800 ms");
+    check(c->rotation_speed_min == (rot_min * deg_to_rad) / lifetime_mid,
+          "Addition: rotationSpeedMin = (20 * DEG_TO_RAD) / 0.6 (got " + std::to_string(c->rotation_speed_min) + ")");
+    check(c->rotation_speed_max == (rot_max * deg_to_rad) / lifetime_mid,
+          "Addition: rotationSpeedMax = (120 * DEG_TO_RAD) / 0.6 (got " + std::to_string(c->rotation_speed_max) + ")");
+    // An inactive Rotation section reads as [0, 0] whatever its range.
+    const auto off = pf::parse_libgdx_particle(replace(text, "Rotation\nactive: true", "Rotation\nactive: false"));
+    check(off->rotation_speed_min == 0.0 && off->rotation_speed_max == 0.0, "Addition: inactive rotation ignores its range");
+  });
   guarded("Addition: defaults for a bare emitter", [] {
     // Every section absent: Duration lowMin/lowMax 3000 with highs 0 -> [0, 3000] -> mid 1500 ms (finite 1.5 s),
     // Life 1000..0 -> [0, 1] s, Velocity 0..100 active,
