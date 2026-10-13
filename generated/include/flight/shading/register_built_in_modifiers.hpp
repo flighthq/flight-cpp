@@ -8,21 +8,33 @@
 //   missing: variable (binding) -- source line 56
 //   missing: variable (binding) -- source line 79
 //   missing: variable (binding) -- source line 123
-#include <flight/any.hpp>
-#include <functional>
-#include <optional>
+#include <flight/structural_ref.hpp>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AnimatedNormalModifier; }
+namespace flight::types { struct EmissiveModifier; }
+namespace flight::types { struct FogModifier; }
+namespace flight::types { struct Modifier; }
+namespace flight::types { struct ModifierDefinition; }
+namespace flight::types { struct ModifierRegistry; }
+namespace flight::types { struct Texture2D; }
+namespace flight::types { struct Texture2DArray; }
+namespace flight::types { struct Texture3D; }
+namespace flight::types { struct TextureCube; }
+namespace flight::types { struct Vector3; }
+namespace flight::types { struct VertexDisplaceModifier; }
+
+#include <flight/types/contract.hpp>
 #include <flight/shading/modifier_registry.hpp>
 
 namespace flight::shading {
 
 
 // NOT GENERATED: variable (binding) -- source line 31
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
 //   export const animatedNormalModifierDefinition: ModifierDefinition = {
@@ -38,24 +50,27 @@ namespace flight::shading {
 //   // The substrate-agnostic Dissolve built-in definition (slot: Effect). Its signature is `m` when a
 //   // mask/noise texture is supplied (a sampled-noise program) and `''` for the procedural-noise variant
 //   // — the one compile-time-affecting choice; threshold/edge width/scale are uniforms.
-// cpp emission failed for @flighthq/shading/packages/shading/src/registerBuiltInModifiers.ts: a reference
-// assertion from flight::Ref<Modifier> to flight::Ref<AnimatedNormalModifier> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHADING_MAP_9970632804581D74
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHADING_MAP_9970632804581D74
-struct map_9970632804581d74 : public flight::ReferenceEnabled {
-  std::optional<flight::Any> map;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SHADING_MAP_9970632804581D74
+// cpp emission failed for @flighthq/shading/packages/shading/src/registerBuiltInModifiers.ts: the asserted row
+// from flight::Ref<flight::types::Modifier> to flight::Ref<flight::types::AnimatedNormalModifier> reads map,
+// scroll, secondaryMap, secondaryScroll and strength, which the source type does not declare, and a structural
+// owner binds the members and storage representations of the type the object was first reached as, so a member
+// the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading
+// the value back from retained storage does not recover a wider owner: an assertion cannot add those cells,
+// change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the
+// source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain
+// indices, keys, or tokens into storage that remains typed as AnimatedNormalModifier, rather than storing an
+// erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the
+// reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a
+// checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a
+// type that declares map, scroll, secondaryMap, secondaryScroll and strength -- construct AnimatedNormalModifier
+// explicitly, then type the retaining slot and every accessor result as AnimatedNormalModifier wherever that
+// concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed
+// slot erased it -- rather than asserting past flight::Ref<flight::types::Modifier>. The compiler will not
+// reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.
 
 
 // NOT GENERATED: variable (binding) -- source line 44
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-writable-capability-unproven [source-portability]
 //
 // The source it stood for:
 //   export const dissolveModifierDefinition: ModifierDefinition = {
@@ -70,17 +85,27 @@ struct map_9970632804581d74 : public flight::ReferenceEnabled {
 //   // two compile-time-affecting options — `m` when masked, `g` when facing-gated (facing set and not
 //   // Ignore), combined `mg` — never the uniform-fed color/strength. Shared by every backend snippet so
 //   // the batch key and the compiled program variant stay single-sourced.
-// cpp emission failed for @flighthq/shading/packages/shading/src/registerBuiltInModifiers.ts: a reference
-// assertion from flight::Ref<Modifier> to flight::Ref<map_9970632804581d74> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/shading/packages/shading/src/registerBuiltInModifiers.ts: a structural
+// assertion from the readonly row Readonly<Modifier> to the writable row object claims mutation the source
+// refused: a readonly row never becomes writable, because the boundary the value came through said its subject
+// must not be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld.
+// Assert to the readonly row where the value is only read, or declare the source -- its parameter, slot, or
+// accessor result -- as the writable type where that object may really be mutated. Choosing between those two
+// repairs is the question this assertion was answering, so ask it of the value's ROLE rather than of its
+// spelling: a RUNTIME OWNER that the mutating paths must write needs a mutable-source accessor returning the
+// full writable owner from the typed runtime slot, with the readonly accessor kept for reads, because the
+// capability has to exist on the storage and accessor that establish those cells; a NODE that the read paths
+// only traverse and never mutate needs the two authorities separated instead, with a readonly view on every read
+// path and a separate mutable entry point for the paths that really mutate, because laundering a writable node
+// out of a readonly boundary grants mutation no caller asked for. Both repairs keep the exact Traits or generic
+// specialization the retained row carries; neither adds cells to a row that does not declare them. Making only
+// that boundary writable is insufficient here: the source owner does not declare map, so it has no cells for the
+// asserted row to mutate. Declare both the storage slot and the accessor result as the full writable object row
+// where initialization establishes those cells, rather than widening Readonly<Modifier> at the use site.
 
 
 // NOT GENERATED: variable (binding) -- source line 56
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
 //   export const emissiveModifierDefinition: ModifierDefinition = {
@@ -98,19 +123,29 @@ struct map_9970632804581d74 : public flight::ReferenceEnabled {
 //   // The substrate-agnostic EnvReflect built-in definition (slot: Effect). One program shape, so no
 //   // signature — tint/intensity/fresnelBias/roughness are all uniforms and never split a variant. It
 //   // samples the shared baked environment cubemap the lit block already binds.
-// cpp emission failed for @flighthq/shading/packages/shading/src/registerBuiltInModifiers.ts: a reference
-// assertion from flight::Ref<Modifier> to flight::Ref<EmissiveModifier> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/shading/packages/shading/src/registerBuiltInModifiers.ts: the asserted row
+// from flight::Ref<flight::types::Modifier> to flight::Ref<flight::types::EmissiveModifier> reads color, facing,
+// facingSoftness, mask and strength, which the source type does not declare, and a structural owner binds the
+// members and storage representations of the type the object was first reached as, so a member the source's own
+// declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back
+// from retained storage does not recover a wider owner: an assertion cannot add those cells, change their
+// representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type
+// through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or
+// tokens into storage that remains typed as EmissiveModifier, rather than storing an erased reference and
+// asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an
+// entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery
+// contract that validates and returns the exact owner before dispatch. Declare the source as a type that
+// declares color, facing, facingSoftness, mask and strength -- construct EmissiveModifier explicitly, then type
+// the retaining slot and every accessor result as EmissiveModifier wherever that concrete owner is known;
+// changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather
+// than asserting past flight::Ref<flight::types::Modifier>. The compiler will not reinterpret the owner, cast
+// it, copy or materialize a replacement, or add side storage.
 
-inline flight::Ref<ModifierDefinition> env_reflect_modifier_definition = flight::make_ref<ModifierDefinition>(ModifierDefinition{.kind = env_reflect_modifier_kind, .slot = modifier_slot.effect});
+inline flight::Ref<flight::types::ModifierDefinition> env_reflect_modifier_definition = flight::make_ref<flight::types::ModifierDefinition>(flight::types::ModifierDefinition{.kind = flight::types::env_reflect_modifier_kind, .slot = flight::types::modifier_slot->effect});
 
 
 // NOT GENERATED: variable (binding) -- source line 79
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
 //   export const fogModifierDefinition: ModifierDefinition = {
@@ -128,21 +163,30 @@ inline flight::Ref<ModifierDefinition> env_reflect_modifier_definition = flight:
 //   // (the eight exported built-in definitions). Not called at module load (packages are import
 //   // side-effect-free); a caller opts in once, alongside any vendor-prefixed kinds, before composing.
 //   // Last-write-wins, so calling it after a custom override re-installs the built-ins.
-// cpp emission failed for @flighthq/shading/packages/shading/src/registerBuiltInModifiers.ts: a reference
-// assertion from flight::Ref<Modifier> to flight::Ref<FogModifier> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/shading/packages/shading/src/registerBuiltInModifiers.ts: the asserted row
+// from flight::Ref<flight::types::Modifier> to flight::Ref<flight::types::FogModifier> reads color, density,
+// far, mode and near, which the source type does not declare, and a structural owner binds the members and
+// storage representations of the type the object was first reached as, so a member the source's own declaration
+// lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained
+// storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or
+// prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage,
+// callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage
+// that remains typed as FogModifier, rather than storing an erased reference and asserting it back; an identity
+// map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its
+// owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns
+// the exact owner before dispatch. Declare the source as a type that declares color, density, far, mode and near
+// -- construct FogModifier explicitly, then type the retaining slot and every accessor result as FogModifier
+// wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a
+// base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::Modifier>. The compiler
+// will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.
 
-inline flight::Ref<ModifierDefinition> rim_modifier_definition = flight::make_ref<ModifierDefinition>(ModifierDefinition{.kind = rim_modifier_kind, .slot = modifier_slot.effect});
+inline flight::Ref<flight::types::ModifierDefinition> rim_modifier_definition = flight::make_ref<flight::types::ModifierDefinition>(flight::types::ModifierDefinition{.kind = flight::types::rim_modifier_kind, .slot = flight::types::modifier_slot->effect});
 
-inline flight::Ref<ModifierDefinition> toon_modifier_definition = flight::make_ref<ModifierDefinition>(ModifierDefinition{.kind = toon_modifier_kind, .slot = modifier_slot.effect});
+inline flight::Ref<flight::types::ModifierDefinition> toon_modifier_definition = flight::make_ref<flight::types::ModifierDefinition>(flight::types::ModifierDefinition{.kind = flight::types::toon_modifier_kind, .slot = flight::types::modifier_slot->effect});
 
 
 // NOT GENERATED: variable (binding) -- source line 123
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
 //   export const vertexDisplaceModifierDefinition: ModifierDefinition = {
@@ -156,23 +200,34 @@ inline flight::Ref<ModifierDefinition> toon_modifier_definition = flight::make_r
 //     },
 //   };
 //   
-// cpp emission failed for @flighthq/shading/packages/shading/src/registerBuiltInModifiers.ts: a reference
-// assertion from flight::Ref<Modifier> to flight::Ref<VertexDisplaceModifier> has no heritage to cast along: the
-// declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten
-// into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the
-// target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and
-// recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or
-// invent side storage
+// cpp emission failed for @flighthq/shading/packages/shading/src/registerBuiltInModifiers.ts: the asserted row
+// from flight::Ref<flight::types::Modifier> to flight::Ref<flight::types::VertexDisplaceModifier> reads
+// amplitude, axis, direction, frequency, map, source and speed, which the source type does not declare, and a
+// structural owner binds the members and storage representations of the type the object was first reached as, so
+// a member the source's own declaration lacks or carries differently has no compatible cell to answer the read.
+// Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those
+// cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in
+// the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain
+// indices, keys, or tokens into storage that remains typed as VertexDisplaceModifier, rather than storing an
+// erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the
+// reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a
+// checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a
+// type that declares amplitude, axis, direction, frequency, map, source and speed -- construct
+// VertexDisplaceModifier explicitly, then type the retaining slot and every accessor result as
+// VertexDisplaceModifier wherever that concrete owner is known; changing only the accessor result cannot recover
+// a wider owner after a base-typed slot erased it -- rather than asserting past
+// flight::Ref<flight::types::Modifier>. The compiler will not reinterpret the owner, cast it, copy or
+// materialize a replacement, or add side storage.
 
-inline void register_built_in_modifiers(flight::Ref<ModifierRegistry> registry) {
-  register_modifier(registry, animated_normal_modifier_definition);
-  register_modifier(registry, dissolve_modifier_definition);
-  register_modifier(registry, emissive_modifier_definition);
-  register_modifier(registry, env_reflect_modifier_definition);
-  register_modifier(registry, fog_modifier_definition);
-  register_modifier(registry, rim_modifier_definition);
-  register_modifier(registry, toon_modifier_definition);
-  register_modifier(registry, vertex_displace_modifier_definition);
+inline void register_built_in_modifiers(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>> registry) {
+  flight::shading::register_modifier(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>>>(registry), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>>(animated_normal_modifier_definition)));
+  flight::shading::register_modifier(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>>>(registry), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>>(dissolve_modifier_definition)));
+  flight::shading::register_modifier(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>>>(registry), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>>(emissive_modifier_definition)));
+  flight::shading::register_modifier(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>>>(registry), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>>(env_reflect_modifier_definition)));
+  flight::shading::register_modifier(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>>>(registry), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>>(fog_modifier_definition)));
+  flight::shading::register_modifier(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>>>(registry), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>>(rim_modifier_definition)));
+  flight::shading::register_modifier(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>>>(registry), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>>(toon_modifier_definition)));
+  flight::shading::register_modifier(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierRegistry>>>>>(registry), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ModifierDefinition>>>>(vertex_displace_modifier_definition)));
 }
 
 } // namespace flight::shading
