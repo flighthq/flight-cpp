@@ -3435,7 +3435,7 @@
       "code": "dependency-refused",
       "module": "packages/physics3d/src/broadphase.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./colliderTransform was refused for @flighthq/physics3d/packages/physics3d/src/colliderTransform.ts",
+      "reason": "dependency ./colliderTransform.ts was refused for @flighthq/physics3d/packages/physics3d/src/colliderTransform.ts",
       "stage": "dependency"
     },
     {
@@ -3458,35 +3458,35 @@
       "code": "dependency-refused",
       "module": "packages/physics3d/src/contactIntake.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./colliderCollision was refused for @flighthq/physics3d/packages/physics3d/src/colliderCollision.ts",
+      "reason": "dependency ./colliderCollision.ts was refused for @flighthq/physics3d/packages/physics3d/src/colliderCollision.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics3d/src/continuous.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./colliderCollision was refused for @flighthq/physics3d/packages/physics3d/src/colliderCollision.ts",
+      "reason": "dependency ./colliderCollision.ts was refused for @flighthq/physics3d/packages/physics3d/src/colliderCollision.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics3d/src/contract.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./colliderTransform was refused for @flighthq/physics3d/packages/physics3d/src/colliderTransform.ts",
+      "reason": "dependency ./colliderCollision.ts was refused for @flighthq/physics3d/packages/physics3d/src/colliderCollision.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics3d/src/debugGeometry.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./world was refused for @flighthq/physics3d/packages/physics3d/src/world.ts",
+      "reason": "dependency ./world.ts was refused for @flighthq/physics3d/packages/physics3d/src/world.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics3d/src/enablePhysics3DGuards.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./contactIntake was refused for @flighthq/physics3d/packages/physics3d/src/contactIntake.ts",
+      "reason": "dependency ./contactIntake.ts was refused for @flighthq/physics3d/packages/physics3d/src/contactIntake.ts",
       "stage": "dependency"
     },
     {
@@ -3500,42 +3500,42 @@
       "code": "dependency-refused",
       "module": "packages/physics3d/src/explainPhysics3DJoints.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./world was refused for @flighthq/physics3d/packages/physics3d/src/world.ts",
+      "reason": "dependency ./world.ts was refused for @flighthq/physics3d/packages/physics3d/src/world.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics3d/src/explainPhysics3DStep.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./stepValidation was refused for @flighthq/physics3d/packages/physics3d/src/stepValidation.ts",
+      "reason": "dependency ./stepValidation.ts was refused for @flighthq/physics3d/packages/physics3d/src/stepValidation.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics3d/src/index.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./continuous was refused for @flighthq/physics3d/packages/physics3d/src/continuous.ts",
+      "reason": "dependency ./colliderCollision.ts was refused for @flighthq/physics3d/packages/physics3d/src/colliderCollision.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics3d/src/islands.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./world was refused for @flighthq/physics3d/packages/physics3d/src/world.ts",
+      "reason": "dependency ./world.ts was refused for @flighthq/physics3d/packages/physics3d/src/world.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics3d/src/jointFactories.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./joints was refused for @flighthq/physics3d/packages/physics3d/src/joints.ts",
+      "reason": "dependency ./joints.ts was refused for @flighthq/physics3d/packages/physics3d/src/joints.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics3d/src/jointRegistry.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./world was refused for @flighthq/physics3d/packages/physics3d/src/world.ts",
+      "reason": "dependency ./world.ts was refused for @flighthq/physics3d/packages/physics3d/src/world.ts",
       "stage": "dependency"
     },
     {
@@ -3551,21 +3551,21 @@
       "code": "dependency-refused",
       "module": "packages/physics3d/src/registerBuiltInPhysics3DJointSolvers.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./jointRegistry was refused for @flighthq/physics3d/packages/physics3d/src/jointRegistry.ts",
+      "reason": "dependency ./jointRegistry.ts was refused for @flighthq/physics3d/packages/physics3d/src/jointRegistry.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics3d/src/solver.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./colliderCollision was refused for @flighthq/physics3d/packages/physics3d/src/colliderCollision.ts",
+      "reason": "dependency ./colliderCollision.ts was refused for @flighthq/physics3d/packages/physics3d/src/colliderCollision.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics3d/src/step.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./contactIntake was refused for @flighthq/physics3d/packages/physics3d/src/contactIntake.ts",
+      "reason": "dependency ./contactIntake.ts was refused for @flighthq/physics3d/packages/physics3d/src/contactIntake.ts",
       "stage": "dependency"
     },
     {
@@ -3590,7 +3590,7 @@
       "code": "dependency-refused",
       "module": "packages/physics3d/src/worldQueries.ts",
       "package": "@flighthq/physics3d",
-      "reason": "dependency ./colliderCollision was refused for @flighthq/physics3d/packages/physics3d/src/colliderCollision.ts",
+      "reason": "dependency ./colliderCollision.ts was refused for @flighthq/physics3d/packages/physics3d/src/colliderCollision.ts",
       "stage": "dependency"
     },
     {

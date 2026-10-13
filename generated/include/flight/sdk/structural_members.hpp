@@ -934,6 +934,12 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("inverseInertiaWorldYY") && requires { object.inverse_inertia_world_yy; }) return (object.inverse_inertia_world_yy);
   else if constexpr (Key::name.view() == std::string_view("inverseInertiaWorldYZ") && requires { object.inverse_inertia_world_yz; }) return (object.inverse_inertia_world_yz);
   else if constexpr (Key::name.view() == std::string_view("inverseInertiaWorldZZ") && requires { object.inverse_inertia_world_zz; }) return (object.inverse_inertia_world_zz);
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaXX") && requires { object.inverse_inertia_xx; }) return (object.inverse_inertia_xx);
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaXY") && requires { object.inverse_inertia_xy; }) return (object.inverse_inertia_xy);
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaXZ") && requires { object.inverse_inertia_xz; }) return (object.inverse_inertia_xz);
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaYY") && requires { object.inverse_inertia_yy; }) return (object.inverse_inertia_yy);
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaYZ") && requires { object.inverse_inertia_yz; }) return (object.inverse_inertia_yz);
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaZZ") && requires { object.inverse_inertia_zz; }) return (object.inverse_inertia_zz);
   else if constexpr (Key::name.view() == std::string_view("inverseMass") && requires { object.inverse_mass; }) return (object.inverse_mass);
   else if constexpr (Key::name.view() == std::string_view("inverseViewProjection") && requires { object.inverse_view_projection; }) return (object.inverse_view_projection);
   else if constexpr (Key::name.view() == std::string_view("invoke") && requires { object.invoke; }) return (object.invoke);
@@ -1873,6 +1879,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("sensor") && requires { object.sensor; }) return (object.sensor);
   else if constexpr (Key::name.view() == std::string_view("sensors") && requires { object.sensors; }) return (object.sensors);
   else if constexpr (Key::name.view() == std::string_view("sequential") && requires { object.sequential; }) return (object.sequential);
+  else if constexpr (Key::name.view() == std::string_view("sequentialImpulse") && requires { object.sequential_impulse; }) return (object.sequential_impulse);
   else if constexpr (Key::name.view() == std::string_view("setAccessoryBarVisible") && requires { object.set_accessory_bar_visible; }) return (object.set_accessory_bar_visible);
   else if constexpr (Key::name.view() == std::string_view("setActivationPolicy") && requires { object.set_activation_policy; }) return (object.set_activation_policy);
   else if constexpr (Key::name.view() == std::string_view("setAlwaysOnTop") && requires { object.set_always_on_top; }) return (object.set_always_on_top);
@@ -1981,6 +1988,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("softKeyboard") && requires { object.soft_keyboard; }) return (object.soft_keyboard);
   else if constexpr (Key::name.view() == std::string_view("softness") && requires { object.softness; }) return (object.softness);
   else if constexpr (Key::name.view() == std::string_view("solve") && requires { object.solve; }) return (object.solve);
+  else if constexpr (Key::name.view() == std::string_view("solver") && requires { object.solver; }) return (object.solver);
   else if constexpr (Key::name.view() == std::string_view("solveIslandBodyCounts") && requires { object.solve_island_body_counts; }) return (object.solve_island_body_counts);
   else if constexpr (Key::name.view() == std::string_view("solveIslandBodyIndices") && requires { object.solve_island_body_indices; }) return (object.solve_island_body_indices);
   else if constexpr (Key::name.view() == std::string_view("solveIslandBodyStarts") && requires { object.solve_island_body_starts; }) return (object.solve_island_body_starts);
@@ -2107,6 +2115,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("subscribeThermalStateChange") && requires { object.subscribe_thermal_state_change; }) return (object.subscribe_thermal_state_change);
   else if constexpr (Key::name.view() == std::string_view("subscribeUnlock") && requires { object.subscribe_unlock; }) return (object.subscribe_unlock);
   else if constexpr (Key::name.view() == std::string_view("subsets") && requires { object.subsets; }) return (object.subsets);
+  else if constexpr (Key::name.view() == std::string_view("substeps") && requires { object.substeps; }) return (object.substeps);
   else if constexpr (Key::name.view() == std::string_view("subsurfaceEnabled") && requires { object.subsurface_enabled; }) return (object.subsurface_enabled);
   else if constexpr (Key::name.view() == std::string_view("supercompression") && requires { object.supercompression; }) return (object.supercompression);
   else if constexpr (Key::name.view() == std::string_view("supportedFormats") && requires { object.supported_formats; }) return (object.supported_formats);
@@ -3297,6 +3306,12 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("inverseInertiaWorldYY") && requires(Object& object) { object.inverse_inertia_world_yy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_inertia_world_yy)>>{};
   else if constexpr (Key::name.view() == std::string_view("inverseInertiaWorldYZ") && requires(Object& object) { object.inverse_inertia_world_yz; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_inertia_world_yz)>>{};
   else if constexpr (Key::name.view() == std::string_view("inverseInertiaWorldZZ") && requires(Object& object) { object.inverse_inertia_world_zz; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_inertia_world_zz)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaXX") && requires(Object& object) { object.inverse_inertia_xx; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_inertia_xx)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaXY") && requires(Object& object) { object.inverse_inertia_xy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_inertia_xy)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaXZ") && requires(Object& object) { object.inverse_inertia_xz; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_inertia_xz)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaYY") && requires(Object& object) { object.inverse_inertia_yy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_inertia_yy)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaYZ") && requires(Object& object) { object.inverse_inertia_yz; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_inertia_yz)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inverseInertiaZZ") && requires(Object& object) { object.inverse_inertia_zz; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_inertia_zz)>>{};
   else if constexpr (Key::name.view() == std::string_view("inverseMass") && requires(Object& object) { object.inverse_mass; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_mass)>>{};
   else if constexpr (Key::name.view() == std::string_view("inverseViewProjection") && requires(Object& object) { object.inverse_view_projection; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inverse_view_projection)>>{};
   else if constexpr (Key::name.view() == std::string_view("invoke") && requires(Object& object) { object.invoke; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().invoke)>>{};
@@ -4236,6 +4251,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("sensor") && requires(Object& object) { object.sensor; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sensor)>>{};
   else if constexpr (Key::name.view() == std::string_view("sensors") && requires(Object& object) { object.sensors; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sensors)>>{};
   else if constexpr (Key::name.view() == std::string_view("sequential") && requires(Object& object) { object.sequential; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sequential)>>{};
+  else if constexpr (Key::name.view() == std::string_view("sequentialImpulse") && requires(Object& object) { object.sequential_impulse; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().sequential_impulse)>>{};
   else if constexpr (Key::name.view() == std::string_view("setAccessoryBarVisible") && requires(Object& object) { object.set_accessory_bar_visible; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_accessory_bar_visible)>>{};
   else if constexpr (Key::name.view() == std::string_view("setActivationPolicy") && requires(Object& object) { object.set_activation_policy; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_activation_policy)>>{};
   else if constexpr (Key::name.view() == std::string_view("setAlwaysOnTop") && requires(Object& object) { object.set_always_on_top; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().set_always_on_top)>>{};
@@ -4344,6 +4360,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("softKeyboard") && requires(Object& object) { object.soft_keyboard; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().soft_keyboard)>>{};
   else if constexpr (Key::name.view() == std::string_view("softness") && requires(Object& object) { object.softness; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().softness)>>{};
   else if constexpr (Key::name.view() == std::string_view("solve") && requires(Object& object) { object.solve; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().solve)>>{};
+  else if constexpr (Key::name.view() == std::string_view("solver") && requires(Object& object) { object.solver; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().solver)>>{};
   else if constexpr (Key::name.view() == std::string_view("solveIslandBodyCounts") && requires(Object& object) { object.solve_island_body_counts; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().solve_island_body_counts)>>{};
   else if constexpr (Key::name.view() == std::string_view("solveIslandBodyIndices") && requires(Object& object) { object.solve_island_body_indices; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().solve_island_body_indices)>>{};
   else if constexpr (Key::name.view() == std::string_view("solveIslandBodyStarts") && requires(Object& object) { object.solve_island_body_starts; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().solve_island_body_starts)>>{};
@@ -4470,6 +4487,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("subscribeThermalStateChange") && requires(Object& object) { object.subscribe_thermal_state_change; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().subscribe_thermal_state_change)>>{};
   else if constexpr (Key::name.view() == std::string_view("subscribeUnlock") && requires(Object& object) { object.subscribe_unlock; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().subscribe_unlock)>>{};
   else if constexpr (Key::name.view() == std::string_view("subsets") && requires(Object& object) { object.subsets; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().subsets)>>{};
+  else if constexpr (Key::name.view() == std::string_view("substeps") && requires(Object& object) { object.substeps; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().substeps)>>{};
   else if constexpr (Key::name.view() == std::string_view("subsurfaceEnabled") && requires(Object& object) { object.subsurface_enabled; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().subsurface_enabled)>>{};
   else if constexpr (Key::name.view() == std::string_view("supercompression") && requires(Object& object) { object.supercompression; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().supercompression)>>{};
   else if constexpr (Key::name.view() == std::string_view("supportedFormats") && requires(Object& object) { object.supported_formats; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().supported_formats)>>{};
@@ -5663,6 +5681,12 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->inverse_inertia_world_yy; }) owner.bind_named("inverseInertiaWorldYY", [object]() -> decltype(auto) { return (object->inverse_inertia_world_yy); });
   if constexpr (requires { object->inverse_inertia_world_yz; }) owner.bind_named("inverseInertiaWorldYZ", [object]() -> decltype(auto) { return (object->inverse_inertia_world_yz); });
   if constexpr (requires { object->inverse_inertia_world_zz; }) owner.bind_named("inverseInertiaWorldZZ", [object]() -> decltype(auto) { return (object->inverse_inertia_world_zz); });
+  if constexpr (requires { object->inverse_inertia_xx; }) owner.bind_named("inverseInertiaXX", [object]() -> decltype(auto) { return (object->inverse_inertia_xx); });
+  if constexpr (requires { object->inverse_inertia_xy; }) owner.bind_named("inverseInertiaXY", [object]() -> decltype(auto) { return (object->inverse_inertia_xy); });
+  if constexpr (requires { object->inverse_inertia_xz; }) owner.bind_named("inverseInertiaXZ", [object]() -> decltype(auto) { return (object->inverse_inertia_xz); });
+  if constexpr (requires { object->inverse_inertia_yy; }) owner.bind_named("inverseInertiaYY", [object]() -> decltype(auto) { return (object->inverse_inertia_yy); });
+  if constexpr (requires { object->inverse_inertia_yz; }) owner.bind_named("inverseInertiaYZ", [object]() -> decltype(auto) { return (object->inverse_inertia_yz); });
+  if constexpr (requires { object->inverse_inertia_zz; }) owner.bind_named("inverseInertiaZZ", [object]() -> decltype(auto) { return (object->inverse_inertia_zz); });
   if constexpr (requires { object->inverse_mass; }) owner.bind_named("inverseMass", [object]() -> decltype(auto) { return (object->inverse_mass); });
   if constexpr (requires { object->inverse_view_projection; }) owner.bind_named("inverseViewProjection", [object]() -> decltype(auto) { return (object->inverse_view_projection); });
   if constexpr (requires { object->invoke; }) owner.bind_named("invoke", [object]() -> decltype(auto) { return (object->invoke); });
@@ -6602,6 +6626,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->sensor; }) owner.bind_named("sensor", [object]() -> decltype(auto) { return (object->sensor); });
   if constexpr (requires { object->sensors; }) owner.bind_named("sensors", [object]() -> decltype(auto) { return (object->sensors); });
   if constexpr (requires { object->sequential; }) owner.bind_named("sequential", [object]() -> decltype(auto) { return (object->sequential); });
+  if constexpr (requires { object->sequential_impulse; }) owner.bind_named("sequentialImpulse", [object]() -> decltype(auto) { return (object->sequential_impulse); });
   if constexpr (requires { object->set_accessory_bar_visible; }) owner.bind_named("setAccessoryBarVisible", [object]() -> decltype(auto) { return (object->set_accessory_bar_visible); });
   if constexpr (requires { object->set_activation_policy; }) owner.bind_named("setActivationPolicy", [object]() -> decltype(auto) { return (object->set_activation_policy); });
   if constexpr (requires { object->set_always_on_top; }) owner.bind_named("setAlwaysOnTop", [object]() -> decltype(auto) { return (object->set_always_on_top); });
@@ -6710,6 +6735,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->soft_keyboard; }) owner.bind_named("softKeyboard", [object]() -> decltype(auto) { return (object->soft_keyboard); });
   if constexpr (requires { object->softness; }) owner.bind_named("softness", [object]() -> decltype(auto) { return (object->softness); });
   if constexpr (requires { object->solve; }) owner.bind_named("solve", [object]() -> decltype(auto) { return (object->solve); });
+  if constexpr (requires { object->solver; }) owner.bind_named("solver", [object]() -> decltype(auto) { return (object->solver); });
   if constexpr (requires { object->solve_island_body_counts; }) owner.bind_named("solveIslandBodyCounts", [object]() -> decltype(auto) { return (object->solve_island_body_counts); });
   if constexpr (requires { object->solve_island_body_indices; }) owner.bind_named("solveIslandBodyIndices", [object]() -> decltype(auto) { return (object->solve_island_body_indices); });
   if constexpr (requires { object->solve_island_body_starts; }) owner.bind_named("solveIslandBodyStarts", [object]() -> decltype(auto) { return (object->solve_island_body_starts); });
@@ -6836,6 +6862,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->subscribe_thermal_state_change; }) owner.bind_named("subscribeThermalStateChange", [object]() -> decltype(auto) { return (object->subscribe_thermal_state_change); });
   if constexpr (requires { object->subscribe_unlock; }) owner.bind_named("subscribeUnlock", [object]() -> decltype(auto) { return (object->subscribe_unlock); });
   if constexpr (requires { object->subsets; }) owner.bind_named("subsets", [object]() -> decltype(auto) { return (object->subsets); });
+  if constexpr (requires { object->substeps; }) owner.bind_named("substeps", [object]() -> decltype(auto) { return (object->substeps); });
   if constexpr (requires { object->subsurface_enabled; }) owner.bind_named("subsurfaceEnabled", [object]() -> decltype(auto) { return (object->subsurface_enabled); });
   if constexpr (requires { object->supercompression; }) owner.bind_named("supercompression", [object]() -> decltype(auto) { return (object->supercompression); });
   if constexpr (requires { object->supported_formats; }) owner.bind_named("supportedFormats", [object]() -> decltype(auto) { return (object->supported_formats); });
@@ -8063,6 +8090,12 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(inverse_inertia_world_yy)
   FLIGHT_SDK_ROW_WIDENS(inverse_inertia_world_yz)
   FLIGHT_SDK_ROW_WIDENS(inverse_inertia_world_zz)
+  FLIGHT_SDK_ROW_WIDENS(inverse_inertia_xx)
+  FLIGHT_SDK_ROW_WIDENS(inverse_inertia_xy)
+  FLIGHT_SDK_ROW_WIDENS(inverse_inertia_xz)
+  FLIGHT_SDK_ROW_WIDENS(inverse_inertia_yy)
+  FLIGHT_SDK_ROW_WIDENS(inverse_inertia_yz)
+  FLIGHT_SDK_ROW_WIDENS(inverse_inertia_zz)
   FLIGHT_SDK_ROW_WIDENS(inverse_mass)
   FLIGHT_SDK_ROW_WIDENS(inverse_view_projection)
   FLIGHT_SDK_ROW_WIDENS(invoke)
@@ -9002,6 +9035,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(sensor)
   FLIGHT_SDK_ROW_WIDENS(sensors)
   FLIGHT_SDK_ROW_WIDENS(sequential)
+  FLIGHT_SDK_ROW_WIDENS(sequential_impulse)
   FLIGHT_SDK_ROW_WIDENS(set_accessory_bar_visible)
   FLIGHT_SDK_ROW_WIDENS(set_activation_policy)
   FLIGHT_SDK_ROW_WIDENS(set_always_on_top)
@@ -9110,6 +9144,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(soft_keyboard)
   FLIGHT_SDK_ROW_WIDENS(softness)
   FLIGHT_SDK_ROW_WIDENS(solve)
+  FLIGHT_SDK_ROW_WIDENS(solver)
   FLIGHT_SDK_ROW_WIDENS(solve_island_body_counts)
   FLIGHT_SDK_ROW_WIDENS(solve_island_body_indices)
   FLIGHT_SDK_ROW_WIDENS(solve_island_body_starts)
@@ -9236,6 +9271,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(subscribe_thermal_state_change)
   FLIGHT_SDK_ROW_WIDENS(subscribe_unlock)
   FLIGHT_SDK_ROW_WIDENS(subsets)
+  FLIGHT_SDK_ROW_WIDENS(substeps)
   FLIGHT_SDK_ROW_WIDENS(subsurface_enabled)
   FLIGHT_SDK_ROW_WIDENS(supercompression)
   FLIGHT_SDK_ROW_WIDENS(supported_formats)

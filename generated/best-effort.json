@@ -18281,6 +18281,7 @@
         "@flighthq/physics3d/packages/physics3d/src/contactIntake.ts",
         "@flighthq/physics3d/packages/physics3d/src/continuous.ts",
         "@flighthq/physics3d/packages/physics3d/src/contract.ts",
+        "@flighthq/physics3d/packages/physics3d/src/index.ts",
         "@flighthq/physics3d/packages/physics3d/src/world.ts",
         "@flighthq/physics3d/packages/physics3d/src/worldQueries.ts"
       ],
@@ -18300,6 +18301,8 @@
       "consumers": [
         "@flighthq/physics3d/packages/physics3d/src/contactIntake.ts",
         "@flighthq/physics3d/packages/physics3d/src/continuous.ts",
+        "@flighthq/physics3d/packages/physics3d/src/contract.ts",
+        "@flighthq/physics3d/packages/physics3d/src/index.ts",
         "@flighthq/physics3d/packages/physics3d/src/solver.ts",
         "@flighthq/physics3d/packages/physics3d/src/worldQueries.ts"
       ],
@@ -18323,6 +18326,7 @@
         "@flighthq/physics3d/packages/physics3d/src/broadphase.ts",
         "@flighthq/physics3d/packages/physics3d/src/continuous.ts",
         "@flighthq/physics3d/packages/physics3d/src/contract.ts",
+        "@flighthq/physics3d/packages/physics3d/src/index.ts",
         "@flighthq/physics3d/packages/physics3d/src/solver.ts",
         "@flighthq/physics3d/packages/physics3d/src/world.ts",
         "@flighthq/physics3d/packages/physics3d/src/worldQueries.ts"
@@ -18342,6 +18346,7 @@
       "consumers": [
         "@flighthq/physics3d/packages/physics3d/src/contract.ts",
         "@flighthq/physics3d/packages/physics3d/src/enablePhysics3DGuards.ts",
+        "@flighthq/physics3d/packages/physics3d/src/index.ts",
         "@flighthq/physics3d/packages/physics3d/src/step.ts"
       ],
       "module": {
@@ -18406,6 +18411,7 @@
       "path": "flight/physics3d/contract.hpp",
       "refusedDependencies": [
         "@flighthq/physics3d/packages/physics3d/src/broadphase.ts",
+        "@flighthq/physics3d/packages/physics3d/src/colliderCollision.ts",
         "@flighthq/physics3d/packages/physics3d/src/colliderTransform.ts",
         "@flighthq/physics3d/packages/physics3d/src/contactIntake.ts",
         "@flighthq/physics3d/packages/physics3d/src/continuous.ts",
@@ -18525,17 +18531,24 @@
       },
       "path": "flight/physics3d/_internal_index.hpp",
       "refusedDependencies": [
+        "@flighthq/physics3d/packages/physics3d/src/broadphase.ts",
+        "@flighthq/physics3d/packages/physics3d/src/colliderCollision.ts",
+        "@flighthq/physics3d/packages/physics3d/src/colliderTransform.ts",
+        "@flighthq/physics3d/packages/physics3d/src/contactIntake.ts",
         "@flighthq/physics3d/packages/physics3d/src/continuous.ts",
         "@flighthq/physics3d/packages/physics3d/src/debugGeometry.ts",
         "@flighthq/physics3d/packages/physics3d/src/enablePhysics3DGuards.ts",
         "@flighthq/physics3d/packages/physics3d/src/explainPhysics3DCollision.ts",
         "@flighthq/physics3d/packages/physics3d/src/explainPhysics3DJoints.ts",
         "@flighthq/physics3d/packages/physics3d/src/explainPhysics3DStep.ts",
+        "@flighthq/physics3d/packages/physics3d/src/islands.ts",
         "@flighthq/physics3d/packages/physics3d/src/jointFactories.ts",
         "@flighthq/physics3d/packages/physics3d/src/jointRegistry.ts",
         "@flighthq/physics3d/packages/physics3d/src/joints.ts",
         "@flighthq/physics3d/packages/physics3d/src/registerBuiltInPhysics3DJointSolvers.ts",
+        "@flighthq/physics3d/packages/physics3d/src/solver.ts",
         "@flighthq/physics3d/packages/physics3d/src/step.ts",
+        "@flighthq/physics3d/packages/physics3d/src/stepValidation.ts",
         "@flighthq/physics3d/packages/physics3d/src/world.ts",
         "@flighthq/physics3d/packages/physics3d/src/worldQueries.ts"
       ],
@@ -18562,6 +18575,7 @@
       "consumers": [
         "@flighthq/physics3d/packages/physics3d/src/contract.ts",
         "@flighthq/physics3d/packages/physics3d/src/enablePhysics3DGuards.ts",
+        "@flighthq/physics3d/packages/physics3d/src/index.ts",
         "@flighthq/physics3d/packages/physics3d/src/step.ts"
       ],
       "module": {
@@ -18625,6 +18639,8 @@
     },
     {
       "consumers": [
+        "@flighthq/physics3d/packages/physics3d/src/contract.ts",
+        "@flighthq/physics3d/packages/physics3d/src/index.ts",
         "@flighthq/physics3d/packages/physics3d/src/jointRows.ts",
         "@flighthq/physics3d/packages/physics3d/src/joints.ts"
       ],
@@ -18674,6 +18690,8 @@
     },
     {
       "consumers": [
+        "@flighthq/physics3d/packages/physics3d/src/contract.ts",
+        "@flighthq/physics3d/packages/physics3d/src/index.ts",
         "@flighthq/physics3d/packages/physics3d/src/joints.ts"
       ],
       "module": {
@@ -18862,6 +18880,8 @@
     {
       "consumers": [
         "@flighthq/physics3d/packages/physics3d/src/continuous.ts",
+        "@flighthq/physics3d/packages/physics3d/src/contract.ts",
+        "@flighthq/physics3d/packages/physics3d/src/index.ts",
         "@flighthq/physics3d/packages/physics3d/src/jointRegistry.ts",
         "@flighthq/physics3d/packages/physics3d/src/step.ts",
         "@flighthq/physics3d/packages/physics3d/src/world.ts"
@@ -18877,6 +18897,8 @@
     {
       "consumers": [
         "@flighthq/physics3d/packages/physics3d/src/broadphase.ts",
+        "@flighthq/physics3d/packages/physics3d/src/contract.ts",
+        "@flighthq/physics3d/packages/physics3d/src/index.ts",
         "@flighthq/physics3d/packages/physics3d/src/world.ts"
       ],
       "module": {
@@ -18890,6 +18912,7 @@
     {
       "consumers": [
         "@flighthq/physics3d/packages/physics3d/src/broadphase.ts",
+        "@flighthq/physics3d/packages/physics3d/src/contract.ts",
         "@flighthq/physics3d/packages/physics3d/src/enablePhysics3DGuards.ts"
       ],
       "module": {
@@ -18921,6 +18944,7 @@
     {
       "consumers": [
         "@flighthq/physics3d/packages/physics3d/src/contract.ts",
+        "@flighthq/physics3d/packages/physics3d/src/index.ts",
         "@flighthq/physics3d/packages/physics3d/src/step.ts"
       ],
       "module": {
@@ -18965,6 +18989,7 @@
         "@flighthq/physics3d/packages/physics3d/src/continuous.ts",
         "@flighthq/physics3d/packages/physics3d/src/contract.ts",
         "@flighthq/physics3d/packages/physics3d/src/explainPhysics3DStep.ts",
+        "@flighthq/physics3d/packages/physics3d/src/index.ts",
         "@flighthq/physics3d/packages/physics3d/src/step.ts"
       ],
       "declarationFingerprints": [
@@ -19001,6 +19026,8 @@
     {
       "consumers": [
         "@flighthq/physics3d/packages/physics3d/src/continuous.ts",
+        "@flighthq/physics3d/packages/physics3d/src/contract.ts",
+        "@flighthq/physics3d/packages/physics3d/src/index.ts",
         "@flighthq/physics3d/packages/physics3d/src/integrate.ts",
         "@flighthq/physics3d/packages/physics3d/src/jointMath.ts",
         "@flighthq/physics3d/packages/physics3d/src/jointRows.ts",
