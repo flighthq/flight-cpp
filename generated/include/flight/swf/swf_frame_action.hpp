@@ -245,17 +245,17 @@ inline bool push_swf_abc_value(flight::StructuralRef<flight::RowReadonly<flight:
 
 inline flight::String resolve_abc_name(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AbcFile>>>> file, double index) {
   std::optional<flight::Ref<flight::types::AbcMultiname>> multiname = flight::row_get<flight::RowKey<"constantPool">>(file)->multinames.get(index);
-  return (!multiname.has_value() ? flight::String("") : ([&]() -> flight::String { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"constantPool">>(file)->strings.get(multiname.value()->name); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()));
+  return (([&]() { const auto& presence_operand = multiname; return !presence_operand.has_value(); }()) ? flight::String("") : ([&]() -> flight::String { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"constantPool">>(file)->strings.get(multiname.value()->name); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()));
 }
 
 inline flight::String resolve_abc_qualified_name(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AbcFile>>>> file, double index) {
   std::optional<flight::Ref<flight::types::AbcMultiname>> multiname = flight::row_get<flight::RowKey<"constantPool">>(file)->multinames.get(index);
-  if (!multiname.has_value()) {
+  if (([&]() { const auto& presence_operand = multiname; return !presence_operand.has_value(); }())) {
     return flight::String("");
   }
   const flight::String name = ([&]() -> flight::String { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"constantPool">>(file)->strings.get(multiname.value()->name); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }());
   std::optional<flight::Ref<flight::types::AbcNamespace>> namespace_ = flight::row_get<flight::RowKey<"constantPool">>(file)->namespaces.get(multiname.value()->namespace_);
-  const flight::String package_name = (!namespace_.has_value() ? flight::String("") : ([&]() -> flight::String { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"constantPool">>(file)->strings.get(namespace_.value()->name); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()));
+  const flight::String package_name = (([&]() { const auto& presence_operand = namespace_; return !presence_operand.has_value(); }()) ? flight::String("") : ([&]() -> flight::String { auto nullish_coalesce_left = flight::row_get<flight::RowKey<"constantPool">>(file)->strings.get(namespace_.value()->name); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String(""); }()));
   return ((package_name == flight::String("")) ? name : flight::String("") + flight::to_string(package_name) + flight::String(".") + flight::to_string(name) + flight::String(""));
 }
 

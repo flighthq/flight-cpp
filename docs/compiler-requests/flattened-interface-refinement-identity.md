@@ -118,6 +118,14 @@ emitter, correctly, will not use a native pointer cast, materialize a replacemen
 in the module is supplied and no workaround is carried, which is why 4 of that package's 5 modules refuse: `contract.ts`
 and `index.ts` behind it, and the two remaining modules behind dependencies (below).
 
+Also blocks `@flighthq/swf` at a627849, in two modules that emit rather than refuse: `swf_timeline_parse.hpp`
+and the tag families call a handler's `parse` with the reader they hold, and the handler's signature expects the
+`SwfTagReader` interface -- `no known conversion from 'flight::Ref<flight::swf::SwfReader>' to
+'std::shared_ptr<flight::types::SwfTagReader>'`. A `SwfReader` is a `SwfTagReader` in TypeScript; in the emitted C++ the
+two are independent owners, so the call has no conversion, exactly as the texture and scene2d sites have none. The same
+package's `swf_frame_action.hpp` fails the same way one step further out, converting a row view of a `MovieClip` into
+the `Ref<MovieClip>` the timeline API declares.
+
 Also blocks `@flighthq/scene2d` at a627849, where it is the larger cluster: five modules refuse on the same family --
 `displayObject.ts`, `sprite.ts`, `scene2d.ts`, `scale9Sprite.ts` and `htmlView.ts`, the first four on reference
 assertions between a base and a derived runtime or node type, the fifth on a structural assertion from a readonly row.

@@ -81,7 +81,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/motionpath` | 3 | 1 | 29 | dedicated | none | 3 / 0 |
 | `@flighthq/clock` | 4 | 2 | 37 | dedicated | none | 4 / 0 |
 | `@flighthq/movieclip` | 5 | 3 | 60 | dedicated | none | 4 / 1 |
-| `@flighthq/swf` | 58 | 51 | 441 | none | none | 16 / 3 |
+| `@flighthq/swf` | 58 | 51 | 441 | dedicated | none | 46 / 12 |
 | `@flighthq/skeleton2d` | 25 | 22 | 220 | none | none | 17 / 8 |
 | `@flighthq/skeleton2d-formats` | 59 | 60 | 533 | none | none | 10 / 5 |
 | `@flighthq/particles` | 13 | 11 | 119 | none | none | 12 / 1 |
@@ -473,11 +473,28 @@ Upstream carries per-package records at `flight/agents/packages/swf/`: `status.m
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+`flight_cpp.generated_swf_reader` (dedicated) -- `tests/generated_swf_reader_test.cpp`, the native port of
+`swfReader.test.ts`: the reader holds the caller's own byte buffer, starts where it was told, stops at `end` even when
+the buffer continues past it, and the rest of that file's expectations.
+
+`flight_cpp.generated_swf` (dedicated) -- `tests/generated_swf_test.cpp`, covering the reachable non-document surface
+that no other native test asserted: `expandSwfTagHandlerDispatch` (every claimed tag maps to its handler, an empty
+array claims nothing, and a contested tag resolves to the last handler named, in either order -- the caller-named half
+of that module's cases, since the family presets it also tests are refused), `swfKnownTags` (the three authored 32-bit
+masks as format facts, the code space bounded at 94, and membership agreeing with the masks across the whole range,
+which is what catches an off-by-one in the emitted indexing) and `swfImageMimeType`. Mutation-checked on the additions:
+four of five mutations detected, the fifth observationally equivalent because the masks already make code 95 unknown.
+
+Not covered, because they do not compile or do not emit: everything that reads a document through `swfDocument`, and
+the shape, text, bitmap, video, control, script and filter families behind it. 37 of the package's 58 modules are
+refused, and of the headers that do emit, 17 of 58 compile -- the rest are blocked by dependencies outside this package
+(`@flighthq/scene2d` and `@flighthq/image` four times each, `@flighthq/effects` four, `@flighthq/text-markup` two,
+`@flighthq/texture` three) and by the closed flattened-interface decision at the handler call sites, all recorded in
+`docs/compiler-requests/`.
 
 ### Local generation status
 
-16 of 19 modules emitted, 3 refused; 12 refusing modules (3 of them refusal roots). Read from the committed generated tree, not from the pin above.
+46 of 58 modules emitted, 12 refused; 37 refusing modules (12 of them refusal roots). Read from the committed generated tree, not from the pin above.
  Hand-written overrides shadow generated headers here: `swf-explain-portable-uncompress-boundary`, `swf-tag-registry-refused-handler-boundaries`.
 
 ### Web-only exclusions

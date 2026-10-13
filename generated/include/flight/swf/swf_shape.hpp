@@ -582,7 +582,7 @@ inline std::optional<flight::Ref<flight::types::SwfMorphShapePaths>> read_swf_mo
       {
         std::optional<SwfShapeRecord> start_record = start_records.value().get(start_index);
         std::optional<SwfShapeRecord> end_record = end_records.value().get(end_index);
-        if ((!start_record.has_value() || !end_record.has_value())) {
+        if ((([&]() { const auto& presence_operand = start_record; return !presence_operand.has_value(); }()) || ([&]() { const auto& presence_operand = end_record; return !presence_operand.has_value(); }()))) {
           break;
         }
         if (start_record.index() == 0) {
@@ -649,7 +649,7 @@ inline void append_swf_shape_style_layer(flight::Ref<flight::types::Shape> shape
   for (auto index : ([&]() { flight::Array<double> array_spread_result; { auto&& array_spread_collection = state->fill_segments; for (const auto& [array_spread_key, array_spread_mapped_value] : array_spread_collection) { static_cast<void>(array_spread_mapped_value); array_spread_result.push(array_spread_key); } } return array_spread_result; }()).sort(compare_swf_shape_style_index)) {
     std::optional<flight::Ref<SwfShapeFill>> fill = state->styles->fills.get((index - 1.0));
     std::optional<flight::Array<flight::Ref<SwfShapeSegment>>> segments = state->fill_segments.get(index);
-    if ((!fill.has_value() || !segments.has_value())) {
+    if ((([&]() { const auto& presence_operand = fill; return !presence_operand.has_value(); }()) || !segments.has_value())) {
       continue;
     }
     if (fill.value()->texture.has_value()) {
@@ -669,7 +669,7 @@ inline void append_swf_shape_style_layer(flight::Ref<flight::types::Shape> shape
   for (auto index_2 : ([&]() { flight::Array<double> array_spread_result_2; { auto&& array_spread_collection_2 = state->line_segments; for (const auto& [array_spread_key_2, array_spread_mapped_value_2] : array_spread_collection_2) { static_cast<void>(array_spread_mapped_value_2); array_spread_result_2.push(array_spread_key_2); } } return array_spread_result_2; }()).sort(compare_swf_shape_style_index)) {
     std::optional<flight::Ref<SwfShapeLine>> line = state->styles->lines.get((index_2 - 1.0));
     std::optional<flight::Array<flight::Ref<SwfShapeSegment>>> segments_2 = state->line_segments.get(index_2);
-    if ((!line.has_value() || !segments_2.has_value())) {
+    if ((([&]() { const auto& presence_operand = line; return !presence_operand.has_value(); }()) || !segments_2.has_value())) {
       continue;
     }
     flight::shape::append_shape_line_style(shape, (line.value()->width / twips_per_pixel_flight_value_variable__u000054__u000057__u000049__u000050__u000053__u00005f__u000050__u000045__u000052__u00005f__u000050__u000049__u000058__u000045__u00004c__flight_private_d29d655d8b2ca6b9), line.value()->color, line.value()->alpha, line.value()->pixel_hinting, flight::String("normal"), line.value()->caps, line.value()->joints, line.value()->miter_limit);
