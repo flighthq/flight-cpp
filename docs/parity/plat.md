@@ -125,7 +125,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/protocol` | 3 | 2 | 23 | dedicated | ready | 3 / 0 |
 | `@flighthq/permissions` | 3 | 5 | 31 | none | none | 3 / 0 |
 | `@flighthq/filesystem` | 3 | 1 | 48 | incidental | none | 2 / 1 |
-| `@flighthq/preferences` | 4 | 2 | 45 | none | none | 3 / 1 |
+| `@flighthq/preferences` | 4 | 2 | 45 | dedicated | partial | 3 / 1 |
 | `@flighthq/updater` | 3 | 1 | 6 | dedicated | none | 2 / 1 |
 | `@flighthq/useragent` | 4 | 2 | 104 | dedicated | none | 3 / 1 |
 | `@flighthq/connectivity` | 3 | 1 | 17 | dedicated | none | 2 / 1 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-28 of 39 packages are reached by at least one local CTest executable.
-27 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`, `sensors`, `geolocation`, `haptics`, `device`, `power`, `notification`, `shell`, `protocol`.
+29 of 39 packages are reached by at least one local CTest executable.
+28 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`, `sensors`, `geolocation`, `haptics`, `device`, `power`, `notification`, `shell`, `protocol`, `preferences`.
 
 ## `@flighthq/app`
 
@@ -1969,7 +1969,40 @@ Upstream carries per-package records at `flight/agents/packages/preferences/`: `
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_preferences` — `tests/generated_preferences_test.cpp` (dedicated), PRE-EXISTING. It was
+  written for this repository before this unit and is not one I added; the roll-up row above read "none" for coverage
+  AND for the tier until this unit corrected both, while the package is in fact PARTIAL. It runs green at this pin.
+
+  THE DEFERRAL IS NOW DISCHARGED, and that is the substance of this unit. The file originally covered only two axes
+  -- the signal lifecycle and host identity -- and said why: the module builds its outcome arms through its own
+  factories whose success/failure index conventions differ per family, so "the persistence and batching axes ...
+  are left to the module's own suite ... until that vocabulary is pinned". This unit pinned it from the factories and
+  covered the deferred tract:
+
+  value = index 1 on success, 0 on failure; query = 0 on success, 1 on failure; batch = 0 on success, 1 on failure;
+  mutation = 1 when the reason is `ok`, else 0; migration = 0 success, 1 read-failure, 2 checkpoint-failure. Every
+  added assertion reads an outcome by INDEX as well as by field, so a factory whose convention shifted fails here
+  instead of agreeing with itself.
+
+  Covered: boolean parsing's four answers (`true`, `false`, ABSENT as a success with no value, and `parse-failed`);
+  the `or` variants, where an absent key and an unparseable one take the SAME fallback but report `ok` versus
+  `parse-failed`, so the two stay separable; the missing-versus-EMPTY distinction (an item that exists and holds ""
+  must not collapse into the fallback); presence and count; query aggregation naming the FAILING key rather than the
+  first; the namespace prefix on keys, reads, key lists and entries, including STRIPPING it rather than returning it;
+  batch aggregation stopping at the first failure and reporting how many COMPLETED before it; namespace clearing
+  scoped to its own prefix; byte size as (key + value) doubled over prefixed keys only; and the change signal, which
+  is emitted only for a real change -- a same-value write emits NOTHING, a removal emits the old value with an absent
+  new one, an absent removal emits nothing at all, and a wholesale clear emits one change with all three fields
+  absent.
+
+  Eighteen mutations against the OVERRIDE, all eighteen detected: seventeen by failing checks and one by the mutant
+  ABORTING. That last one is the `removeStorageItem` old-value guard -- with it removed, removing a key that held no
+  value reaches the emission and dereferences an empty optional, so the mutant dies with `bad_optional_access`
+  (SIGABRT) on the case added for it. Detection by crash is real detection, but it is recorded as a crash rather
+  than as a failing check, and the suite was re-run with an exit-code-aware classifier to say which is which.
+
+  No compiler request was filed by this unit. The module is `partial` because the emitter refuses eleven of its
+  declarations under `contextual-union-value-arm-member-shape.md`, which the override's own manifest entry names.
 
 ### Local generation status
 
