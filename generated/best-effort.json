@@ -17414,6 +17414,8 @@
     },
     {
       "consumers": [
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
         "@flighthq/physics2d/packages/physics2d/src/step.ts",
         "@flighthq/physics2d/packages/physics2d/src/world.ts",
         "@flighthq/physics2d/packages/physics2d/src/worldQueries.ts"
@@ -17584,6 +17586,7 @@
         "@flighthq/physics2d/packages/physics2d/src/registerBuiltInPhysics2DJointSolvers.ts",
         "@flighthq/physics2d/packages/physics2d/src/solver.ts",
         "@flighthq/physics2d/packages/physics2d/src/step.ts",
+        "@flighthq/physics2d/packages/physics2d/src/stepValidation.ts",
         "@flighthq/physics2d/packages/physics2d/src/world.ts",
         "@flighthq/physics2d/packages/physics2d/src/worldQueries.ts"
       ],
@@ -17611,6 +17614,8 @@
     },
     {
       "consumers": [
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
         "@flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
         "@flighthq/physics2d/packages/physics2d/src/step.ts",
         "@flighthq/physics2d/packages/physics2d/src/world.ts"
@@ -17677,6 +17682,8 @@
     },
     {
       "consumers": [
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
         "@flighthq/physics2d/packages/physics2d/src/joints.ts"
       ],
       "module": {
@@ -17786,6 +17793,8 @@
     },
     {
       "consumers": [
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
         "@flighthq/physics2d/packages/physics2d/src/islands.ts",
         "@flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
         "@flighthq/physics2d/packages/physics2d/src/step.ts",
@@ -17911,6 +17920,7 @@
         "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
         "@flighthq/physics2d/packages/physics2d/src/contract.ts",
         "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DStep.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
         "@flighthq/physics2d/packages/physics2d/src/step.ts"
       ],
       "declarationFingerprints": [

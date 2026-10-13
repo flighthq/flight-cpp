@@ -3274,7 +3274,7 @@
       "code": "dependency-refused",
       "module": "packages/physics2d/src/contract.ts",
       "package": "@flighthq/physics2d",
-      "reason": "dependency ./debugGeometry was refused for @flighthq/physics2d/packages/physics2d/src/debugGeometry.ts",
+      "reason": "dependency ./debugGeometry.ts was refused for @flighthq/physics2d/packages/physics2d/src/debugGeometry.ts",
       "stage": "dependency"
     },
     {
@@ -3290,49 +3290,49 @@
       "code": "dependency-refused",
       "module": "packages/physics2d/src/enablePhysics2DGuards.ts",
       "package": "@flighthq/physics2d",
-      "reason": "dependency ./step was refused for @flighthq/physics2d/packages/physics2d/src/step.ts",
+      "reason": "dependency ./step.ts was refused for @flighthq/physics2d/packages/physics2d/src/step.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics2d/src/explainPhysics2DJoints.ts",
       "package": "@flighthq/physics2d",
-      "reason": "dependency ./world was refused for @flighthq/physics2d/packages/physics2d/src/world.ts",
+      "reason": "dependency ./world.ts was refused for @flighthq/physics2d/packages/physics2d/src/world.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics2d/src/explainPhysics2DStep.ts",
       "package": "@flighthq/physics2d",
-      "reason": "dependency ./stepValidation was refused for @flighthq/physics2d/packages/physics2d/src/stepValidation.ts",
+      "reason": "dependency ./stepValidation.ts was refused for @flighthq/physics2d/packages/physics2d/src/stepValidation.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics2d/src/index.ts",
       "package": "@flighthq/physics2d",
-      "reason": "dependency ./debugGeometry was refused for @flighthq/physics2d/packages/physics2d/src/debugGeometry.ts",
+      "reason": "dependency ./debugGeometry.ts was refused for @flighthq/physics2d/packages/physics2d/src/debugGeometry.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics2d/src/islands.ts",
       "package": "@flighthq/physics2d",
-      "reason": "dependency ./world was refused for @flighthq/physics2d/packages/physics2d/src/world.ts",
+      "reason": "dependency ./world.ts was refused for @flighthq/physics2d/packages/physics2d/src/world.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics2d/src/jointFactories.ts",
       "package": "@flighthq/physics2d",
-      "reason": "dependency ./joints was refused for @flighthq/physics2d/packages/physics2d/src/joints.ts",
+      "reason": "dependency ./joints.ts was refused for @flighthq/physics2d/packages/physics2d/src/joints.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics2d/src/jointRegistry.ts",
       "package": "@flighthq/physics2d",
-      "reason": "dependency ./islands was refused for @flighthq/physics2d/packages/physics2d/src/islands.ts",
+      "reason": "dependency ./islands.ts was refused for @flighthq/physics2d/packages/physics2d/src/islands.ts",
       "stage": "dependency"
     },
     {
@@ -3348,14 +3348,14 @@
       "code": "dependency-refused",
       "module": "packages/physics2d/src/registerBuiltInPhysics2DJointSolvers.ts",
       "package": "@flighthq/physics2d",
-      "reason": "dependency ./jointRegistry was refused for @flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
+      "reason": "dependency ./jointRegistry.ts was refused for @flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/physics2d/src/solver.ts",
       "package": "@flighthq/physics2d",
-      "reason": "dependency ./islands was refused for @flighthq/physics2d/packages/physics2d/src/islands.ts",
+      "reason": "dependency ./islands.ts was refused for @flighthq/physics2d/packages/physics2d/src/islands.ts",
       "stage": "dependency"
     },
     {
@@ -3389,7 +3389,7 @@
       "code": "dependency-refused",
       "module": "packages/physics2d/src/worldQueries.ts",
       "package": "@flighthq/physics2d",
-      "reason": "dependency ./world was refused for @flighthq/physics2d/packages/physics2d/src/world.ts",
+      "reason": "dependency ./world.ts was refused for @flighthq/physics2d/packages/physics2d/src/world.ts",
       "stage": "dependency"
     },
     {

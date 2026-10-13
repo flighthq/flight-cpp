@@ -89,7 +89,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/particles-formats` | 18 | 15 | 274 | none | none | 11 / 6 |
 | `@flighthq/flow` | 4 | 2 | 32 | none | none | 4 / 0 |
 | `@flighthq/statechart` | 5 | 3 | 39 | dedicated | none | 5 / 0 |
-| `@flighthq/physics2d` | 26 | 25 | 457 | none | none | 21 / 5 |
+| `@flighthq/physics2d` | 26 | 25 | 457 | dedicated | none | 21 / 5 |
 | `@flighthq/physics2d-abi` | 8 | 6 | 85 | none | none | 6 / 2 |
 | `@flighthq/collision` | 38 | 37 | 500 | dedicated | none | 32 / 6 |
 | `@flighthq/spatial` | 11 | 9 | 148 | dedicated | none | 10 / 1 |
@@ -884,7 +884,20 @@ Upstream carries per-package records at `flight/agents/packages/physics2d/`: `st
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+`flight_cpp.generated_physics2d` (dedicated) -- `tests/generated_physics2d_test.cpp`, added by the unit that
+regenerated this package onto the current pin. It covers the two emitting modules whose behaviour is closed-form and
+reachable without a world: material mixing (friction as the geometric mean, so equal surfaces keep their coefficient,
+either surface at zero makes the pair frictionless, and two large finite coefficients do not overflow; restitution as
+the bouncier surface; both symmetric in the pair) and derived mass properties (a disc's area x density and ½mr², a
+box's w·h·density and m(w²+h²)/12 with an oriented box using the same expression, a capsule as its rectangle plus one
+disc of area with the end-cap cross term a naive parallel-axis step drops, and the documented failure behaviour where
+an area-less shape or unrecognised kind zeroes the entry rather than faulting). Six mutations, all six with teeth.
+
+Not covered, and not faked: everything that needs a `Physics2DWorld` -- the step, broadphase, solver, joints, queries,
+stepping assertions and the joint-suppression index -- because `world.hpp` is one of 16 of the package's 26 headers
+that do not compile. Its blocker is single: a bounds literal is emitted as a module-local anonymous owner and passed
+where the named `flight::types::SpatialAabb2D` is declared, which takes 14 headers down together, filed in
+`docs/compiler-requests/contextual-object-return-nominal-owner.md` with the physics2d sites. No workaround is carried.
 
 ### Local generation status
 

@@ -534,6 +534,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_physics2d_test",
+    srcs = ["generated_physics2d_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_skeleton2d_test",
     srcs = ["generated_skeleton2d_test.cpp"],
     size = "small",
@@ -1020,6 +1027,7 @@ test_suite(
         ":generated_materials_test",
         ":generated_lighting_test",
         ":generated_protocol_test",
+        ":generated_physics2d_test",
         ":generated_quadbatch_test",
         ":generated_preferences_test",
         ":generated_power_test",
