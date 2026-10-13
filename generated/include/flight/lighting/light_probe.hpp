@@ -198,7 +198,7 @@ inline bool sample_light_probe_grid(flight::Float32Array out, flight::Structural
           continue;
         }
         std::optional<flight::Ref<flight::types::LightProbe>> probe = flight::row_get<flight::RowKey<"probes">>(grid).get((((x0 + cx) + ((y0 + cy) * nx)) + (((z0 + cz) * nx) * ny)));
-        if ((!probe.has_value() || !probe.value()->enabled)) {
+        if ((([&]() { const auto& presence_operand = probe; return !presence_operand.has_value(); }()) || !probe.value()->enabled)) {
           (corner += 1.0);
           continue;
         }

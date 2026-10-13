@@ -1,5 +1,5 @@
 // Derived from @flighthq/lighting/packages/lighting/src/lightAnalysis.ts
-// at generated digest d213c6793a59f26bf6a33ea38321533d00daf43a4a2404d55192a526d4fd3620.
+// at generated digest c3ddcde40291dbcf3c32df79191bb2193e7708885fde55dbe3ff75c7cc754cee.
 #pragma once
 
 #include <cmath>

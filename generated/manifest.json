@@ -3601,6 +3601,7 @@
         "flight/geometry/vector2.hpp",
         "flight/geometry/vector3.hpp",
         "flight/geometry/vector4.hpp",
+        "flight/lighting/light_analysis.hpp",
         "flight/lighting/light_intensity.hpp",
         "flight/loader/resource_loader.hpp",
         "flight/materials/pbr_materials.hpp",

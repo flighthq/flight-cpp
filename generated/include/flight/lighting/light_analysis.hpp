@@ -6,25 +6,50 @@
 //   missing: function getLightInfluenceBounds -- source line 71
 //   missing: function getLightLuminance -- source line 122
 //   missing: function hasLightInfluenceOnBounds -- source line 163
-//   missing: function getLightContributionAtBoundingSphere -- source line 29
 #include <cmath>
 #include <cstdint>
+#include <flight/structural_ref.hpp>
 #include <random>
+#include <type_traits>
 #include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AmbientLight; }
+namespace flight::types { struct AreaLight; }
+namespace flight::types { struct BoundingSphere; }
+namespace flight::types { struct DirectionalLight; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct HemisphereLight; }
+namespace flight::types { struct Light; }
+namespace flight::types { struct PointLight; }
+namespace flight::types { struct SpotLight; }
+namespace flight::types { struct Vector3; }
+
+#include <flight/types/ambient_light.hpp>
+#include <flight/types/area_light.hpp>
+#include <flight/types/bounding_sphere.hpp>
+#include <flight/types/directional_light.hpp>
+#include <flight/types/entity.hpp>
+#include <flight/types/environment.hpp>
+#include <flight/types/hemisphere_light.hpp>
+#include <flight/types/light.hpp>
+#include <flight/types/light_unit.hpp>
+#include <flight/types/point_light.hpp>
+#include <flight/types/spot_light.hpp>
+#include <flight/types/vector3.hpp>
+
 namespace flight::lighting {
 
-inline bool is_light_enabled(flight::Ref<Light> light) {
-  return (!(flight::String("enabled") in light) || (light->enabled != false));
+inline bool is_light_enabled(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Light>>>> light) {
+  return (!(flight::String("enabled") in light) || (flight::row_get<flight::RowKey<"enabled">>(light) != false));
 }
 
 
 // NOT GENERATED: function getLightInfluenceBounds -- source line 71
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getLightInfluenceBounds(out: BoundingSphereLike, light: Readonly<Light>): void {
@@ -78,16 +103,29 @@ inline bool is_light_enabled(flight::Ref<Light> light) {
 //   // weights, matching the radiance that packScene3DLightBlock sends to the shader. Hemisphere lights
 //   // use the mean of their sky/ground luminances; Environment and open custom kinds return zero.
 //   // Disabled lights also return zero.
-// cpp emission failed for @flighthq/lighting/packages/lighting/src/lightAnalysis.ts: a reference assertion from
-// flight::Ref<Light> to flight::Ref<PointLight> has no heritage to cast along: the declarations share no emitted
-// C++ class-heritage path (source interface and intersection relationships flatten into independent owners), and
-// the source carrier does not retain a checked dynamic owner that can recover the target. Keep the exact
-// declared owner at the API boundary, or add a runtime contract that validates and recovers the target owner;
-// the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
+// cpp emission failed for @flighthq/lighting/packages/lighting/src/lightAnalysis.ts: the asserted row from
+// flight::Ref<flight::types::Light> to flight::Ref<flight::types::PointLight> reads castsShadow, color, decay,
+// enabled, intensity, intensityUnit, layerMask, normalBias, pcfRadius, position, priority, range, shadowBias,
+// shadowFar, shadowMapSize, shadowNear and shadowStrength, which the source type does not declare, and a
+// structural owner binds the members and storage representations of the type the object was first reached as, so
+// a member the source's own declaration lacks or carries differently has no compatible cell to answer the read.
+// Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those
+// cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in
+// the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain
+// indices, keys, or tokens into storage that remains typed as PointLight, rather than storing an erased
+// reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference
+// identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked
+// recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type
+// that declares castsShadow, color, decay, enabled, intensity, intensityUnit, layerMask, normalBias, pcfRadius,
+// position, priority, range, shadowBias, shadowFar, shadowMapSize, shadowNear and shadowStrength -- construct
+// PointLight explicitly, then type the retaining slot and every accessor result as PointLight wherever that
+// concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed
+// slot erased it -- rather than asserting past flight::Ref<flight::types::Light>. The compiler will not
+// reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.
 
 
 // NOT GENERATED: function getLightLuminance -- source line 122
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
 //   export function getLightLuminance(light: Readonly<Light>): number {
@@ -131,16 +169,26 @@ inline bool is_light_enabled(flight::Ref<Light> light) {
 //   // hemisphere, directional, environment) and infinite-range lights always return true. For spatial
 //   // lights with a finite range, tests whether the influence sphere intersects `bounds` using a
 //   // sphere-sphere overlap test. An empty `bounds` (radius < 0) is treated as no overlap.
-// cpp emission failed for @flighthq/lighting/packages/lighting/src/lightAnalysis.ts: a reference assertion from
-// flight::Ref<Light> to flight::Ref<AmbientLight> has no heritage to cast along: the declarations share no
-// emitted C++ class-heritage path (source interface and intersection relationships flatten into independent
-// owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the
-// exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target
-// owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
+// cpp emission failed for @flighthq/lighting/packages/lighting/src/lightAnalysis.ts: the asserted row from
+// flight::Ref<flight::types::Light> to flight::Ref<flight::types::AmbientLight> reads color, enabled, intensity
+// and intensityUnit, which the source type does not declare, and a structural owner binds the members and
+// storage representations of the type the object was first reached as, so a member the source's own declaration
+// lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained
+// storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or
+// prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage,
+// callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage
+// that remains typed as AmbientLight, rather than storing an erased reference and asserting it back; an identity
+// map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its
+// owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns
+// the exact owner before dispatch. Declare the source as a type that declares color, enabled, intensity and
+// intensityUnit -- construct AmbientLight explicitly, then type the retaining slot and every accessor result as
+// AmbientLight wherever that concrete owner is known; changing only the accessor result cannot recover a wider
+// owner after a base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::Light>. The
+// compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.
 
 
 // NOT GENERATED: function hasLightInfluenceOnBounds -- source line 163
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
 //   export function hasLightInfluenceOnBounds(light: Readonly<Light>, bounds: Readonly<BoundingSphereLike>): boolean {
@@ -179,22 +227,35 @@ inline bool is_light_enabled(flight::Ref<Light> light) {
 //   // kind may legitimately omit it. The `in` check narrows without asserting a shape the value may not
 //   // have, and comparing against `true` keeps the declared return type honest for a custom kind whose
 //   // `castsShadow` is absent or is not a boolean at all.
-// cpp emission failed for @flighthq/lighting/packages/lighting/src/lightAnalysis.ts: a reference assertion from
-// flight::Ref<Light> to flight::Ref<PointLight> has no heritage to cast along: the declarations share no emitted
-// C++ class-heritage path (source interface and intersection relationships flatten into independent owners), and
-// the source carrier does not retain a checked dynamic owner that can recover the target. Keep the exact
-// declared owner at the API boundary, or add a runtime contract that validates and recovers the target owner;
-// the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
+// cpp emission failed for @flighthq/lighting/packages/lighting/src/lightAnalysis.ts: the asserted row from
+// flight::Ref<flight::types::Light> to flight::Ref<flight::types::PointLight> reads castsShadow, color, decay,
+// enabled, intensity, intensityUnit, layerMask, normalBias, pcfRadius, position, priority, range, shadowBias,
+// shadowFar, shadowMapSize, shadowNear and shadowStrength, which the source type does not declare, and a
+// structural owner binds the members and storage representations of the type the object was first reached as, so
+// a member the source's own declaration lacks or carries differently has no compatible cell to answer the read.
+// Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those
+// cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in
+// the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain
+// indices, keys, or tokens into storage that remains typed as PointLight, rather than storing an erased
+// reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference
+// identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked
+// recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type
+// that declares castsShadow, color, decay, enabled, intensity, intensityUnit, layerMask, normalBias, pcfRadius,
+// position, priority, range, shadowBias, shadowFar, shadowMapSize, shadowNear and shadowStrength -- construct
+// PointLight explicitly, then type the retaining slot and every accessor result as PointLight wherever that
+// concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed
+// slot erased it -- rather than asserting past flight::Ref<flight::types::Light>. The compiler will not
+// reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.
 
-inline bool is_light_casting_shadow(flight::Ref<Light> light) {
+inline bool is_light_casting_shadow(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Light>>>> light) {
   if (!is_light_enabled(light)) {
     return false;
   }
-  flight::Ref<Kind> kind = light->kind;
-  if ((((kind == ambient_light_kind) || (kind == hemisphere_light_kind)) || (kind == environment_kind))) {
+  flight::String kind = flight::row_get<flight::RowKey<"kind">>(light);
+  if ((((kind == flight::types::ambient_light_kind) || (kind == flight::types::hemisphere_light_kind)) || (kind == flight::types::environment_kind))) {
     return false;
   }
-  return ((flight::String("castsShadow") in light) && (light->casts_shadow == true));
+  return ((flight::String("castsShadow") in light) && (flight::row_get<flight::RowKey<"castsShadow">>(light) == true));
 }
 
 inline double smoothstep(double edge0, double edge1, double value) {
@@ -205,54 +266,33 @@ inline double smoothstep(double edge0, double edge1, double value) {
   return ((t * t) * (3.0 - (2.0 * t)));
 }
 
-
-// NOT GENERATED: function getLightContributionAtBoundingSphere -- source line 29
-// refusal: cpp-union-member-access-unguarded [compiler-restriction]
-//
-// The source it stood for:
-//   export function getLightContributionAtBoundingSphere(
-//     light: Readonly<PointLight | SpotLight>,
-//     bounds: Readonly<BoundingSphereLike>,
-//   ): number {
-//     if (!isLightEnabled(light) || bounds.radius < 0) return 0;
-//   
-//     const centerDx = bounds.center.x - light.position.x;
-//     const centerDy = bounds.center.y - light.position.y;
-//     const centerDz = bounds.center.z - light.position.z;
-//     const centerDistance = Math.hypot(centerDx, centerDy, centerDz);
-//     const distance = Math.max(centerDistance - bounds.radius, 0);
-//     const distanceSquared = distance * distance;
-//   
-//     let window = 1;
-//     if (light.range > 0) {
-//       const factor = distanceSquared / (light.range * light.range);
-//       const windowed = Math.max(0, Math.min(1, 1 - factor * factor));
-//       window = windowed * windowed;
-//     }
-//     const attenuation = Math.max(distance, 0.01) ** light.decay;
-//     let contribution = (getLightLuminance(light) * window) / attenuation;
-//   
-//     if (light.kind === SpotLightKind) {
-//       const spot = light as Readonly<SpotLight>;
-//       const directionLength = Math.hypot(spot.direction.x, spot.direction.y, spot.direction.z);
-//       const inverseRayLength = centerDistance > 0 ? 1 / centerDistance : 0;
-//       const inverseDirectionLength = directionLength > 0 ? 1 / directionLength : 0;
-//       const cosine =
-//         (spot.direction.x * centerDx + spot.direction.y * centerDy + spot.direction.z * centerDz) *
-//         inverseRayLength *
-//         inverseDirectionLength;
-//       contribution *= smoothstep(spot.outerConeCos, spot.innerConeCos, centerDistance > 0 ? cosine : 1);
-//     }
-//   
-//     return contribution;
-//   }
-//   
-//   // Writes the world-space influence bounding sphere of a light into `out`. The sphere bounds the
-//   // region the light can illuminate. Lights with a finite `range` produce a sphere centered at
-//   // `position` with `radius = range`. Non-spatial lights (ambient, hemisphere, environment) and
-//   // infinite-range spatial lights produce a sentinel sphere with `radius = -1` (unlimited reach).
-//   // Disabled lights write a zero-radius bound at the origin; culling queries reject them explicitly.
-// cpp emission failed for @flighthq/lighting/packages/lighting/src/lightAnalysis.ts: property position on a C++
-// variant requires proven union member access
+inline double get_light_contribution_at_bounding_sphere(std::variant<flight::Ref<flight::types::SpotLight>, flight::Ref<flight::types::PointLight>> light, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::BoundingSphereLike>>> bounds) {
+  if ((!is_light_enabled(light) || (flight::row_get<flight::RowKey<"radius">>(bounds) < 0.0))) {
+    return 0.0;
+  }
+  const double center_dx = (flight::row_get<flight::RowKey<"center">>(bounds)->x - std::visit([](const auto& value) -> flight::Ref<flight::types::Vector3> { using Value = std::remove_cvref_t<decltype(value)>; if constexpr (std::is_same_v<Value, flight::Ref<flight::types::SpotLight>>) return value->position; else if constexpr (std::is_same_v<Value, flight::Ref<flight::types::PointLight>>) return value->position; else { static_assert(!sizeof(Value), "unproved variant property alternative"); } }, light).x);
+  const double center_dy = (flight::row_get<flight::RowKey<"center">>(bounds)->y - std::visit([](const auto& value) -> flight::Ref<flight::types::Vector3> { using Value = std::remove_cvref_t<decltype(value)>; if constexpr (std::is_same_v<Value, flight::Ref<flight::types::SpotLight>>) return value->position; else if constexpr (std::is_same_v<Value, flight::Ref<flight::types::PointLight>>) return value->position; else { static_assert(!sizeof(Value), "unproved variant property alternative"); } }, light).y);
+  const double center_dz = (flight::row_get<flight::RowKey<"center">>(bounds)->z - std::visit([](const auto& value) -> flight::Ref<flight::types::Vector3> { using Value = std::remove_cvref_t<decltype(value)>; if constexpr (std::is_same_v<Value, flight::Ref<flight::types::SpotLight>>) return value->position; else if constexpr (std::is_same_v<Value, flight::Ref<flight::types::PointLight>>) return value->position; else { static_assert(!sizeof(Value), "unproved variant property alternative"); } }, light).z);
+  const double center_distance = std::hypot(center_dx, center_dy, center_dz);
+  const double distance = flight::maximum((center_distance - flight::row_get<flight::RowKey<"radius">>(bounds)), 0.0);
+  const double distance_squared = (distance * distance);
+  double window = 1.0;
+  if ((std::visit([](const auto& value) { return value->range; }, light) > 0.0)) {
+    const double factor = (distance_squared / (std::visit([](const auto& value) { return value->range; }, light) * std::visit([](const auto& value) { return value->range; }, light)));
+    const double windowed = flight::maximum(0.0, flight::minimum(1.0, (1.0 - (factor * factor))));
+    (window = (windowed * windowed));
+  }
+  const double attenuation = flight::number_power(flight::maximum(distance, 0.01), std::visit([](const auto& value) { return value->decay; }, light));
+  double contribution = ((get_light_luminance(light) * window) / attenuation);
+  if (light.index() == 0) {
+    flight::StructuralRef<flight::RowReadonly<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SpotLight>>>>> spot = flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpotLight>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SpotLight>>>>(std::get<flight::Ref<flight::types::SpotLight>>(light)));
+    const double direction_length = std::hypot(flight::row_get<flight::RowKey<"direction">>(spot)->x, flight::row_get<flight::RowKey<"direction">>(spot)->y, flight::row_get<flight::RowKey<"direction">>(spot)->z);
+    const double inverse_ray_length = ((center_distance > 0.0) ? (1.0 / center_distance) : 0.0);
+    const double inverse_direction_length = ((direction_length > 0.0) ? (1.0 / direction_length) : 0.0);
+    const double cosine = (((((flight::row_get<flight::RowKey<"direction">>(spot)->x * center_dx) + (flight::row_get<flight::RowKey<"direction">>(spot)->y * center_dy)) + (flight::row_get<flight::RowKey<"direction">>(spot)->z * center_dz)) * inverse_ray_length) * inverse_direction_length);
+    (contribution *= smoothstep(flight::row_get<flight::RowKey<"outerConeCos">>(spot), flight::row_get<flight::RowKey<"innerConeCos">>(spot), ((center_distance > 0.0) ? cosine : 1.0)));
+  }
+  return contribution;
+}
 
 } // namespace flight::lighting
