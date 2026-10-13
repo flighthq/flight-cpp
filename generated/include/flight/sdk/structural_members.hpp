@@ -838,6 +838,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("inertiaYZ") && requires { object.inertia_yz; }) return (object.inertia_yz);
   else if constexpr (Key::name.view() == std::string_view("inertiaZZ") && requires { object.inertia_zz; }) return (object.inertia_zz);
   else if constexpr (Key::name.view() == std::string_view("infinite") && requires { object.infinite; }) return (object.infinite);
+  else if constexpr (Key::name.view() == std::string_view("inflate") && requires { object.inflate; }) return (object.inflate);
   else if constexpr (Key::name.view() == std::string_view("influenceCounts") && requires { object.influence_counts; }) return (object.influence_counts);
   else if constexpr (Key::name.view() == std::string_view("influences") && requires { object.influences; }) return (object.influences);
   else if constexpr (Key::name.view() == std::string_view("initialFocus") && requires { object.initial_focus; }) return (object.initial_focus);
@@ -3048,6 +3049,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("inertiaYZ") && requires(Object& object) { object.inertia_yz; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inertia_yz)>>{};
   else if constexpr (Key::name.view() == std::string_view("inertiaZZ") && requires(Object& object) { object.inertia_zz; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inertia_zz)>>{};
   else if constexpr (Key::name.view() == std::string_view("infinite") && requires(Object& object) { object.infinite; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().infinite)>>{};
+  else if constexpr (Key::name.view() == std::string_view("inflate") && requires(Object& object) { object.inflate; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().inflate)>>{};
   else if constexpr (Key::name.view() == std::string_view("influenceCounts") && requires(Object& object) { object.influence_counts; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().influence_counts)>>{};
   else if constexpr (Key::name.view() == std::string_view("influences") && requires(Object& object) { object.influences; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().influences)>>{};
   else if constexpr (Key::name.view() == std::string_view("initialFocus") && requires(Object& object) { object.initial_focus; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().initial_focus)>>{};
@@ -5261,6 +5263,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->inertia_yz; }) owner.bind_named("inertiaYZ", [object]() -> decltype(auto) { return (object->inertia_yz); });
   if constexpr (requires { object->inertia_zz; }) owner.bind_named("inertiaZZ", [object]() -> decltype(auto) { return (object->inertia_zz); });
   if constexpr (requires { object->infinite; }) owner.bind_named("infinite", [object]() -> decltype(auto) { return (object->infinite); });
+  if constexpr (requires { object->inflate; }) owner.bind_named("inflate", [object]() -> decltype(auto) { return (object->inflate); });
   if constexpr (requires { object->influence_counts; }) owner.bind_named("influenceCounts", [object]() -> decltype(auto) { return (object->influence_counts); });
   if constexpr (requires { object->influences; }) owner.bind_named("influences", [object]() -> decltype(auto) { return (object->influences); });
   if constexpr (requires { object->initial_focus; }) owner.bind_named("initialFocus", [object]() -> decltype(auto) { return (object->initial_focus); });
@@ -7507,6 +7510,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(inertia_yz)
   FLIGHT_SDK_ROW_WIDENS(inertia_zz)
   FLIGHT_SDK_ROW_WIDENS(infinite)
+  FLIGHT_SDK_ROW_WIDENS(inflate)
   FLIGHT_SDK_ROW_WIDENS(influence_counts)
   FLIGHT_SDK_ROW_WIDENS(influences)
   FLIGHT_SDK_ROW_WIDENS(initial_focus)

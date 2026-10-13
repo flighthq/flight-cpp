@@ -9111,7 +9111,7 @@
       "code": "dependency-refused",
       "module": "packages/tilemap-formats/src/enableTilemapFormatsGuards.ts",
       "package": "@flighthq/tilemap-formats",
-      "reason": "dependency ./tiledLayerData.ts was refused for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledLayerData.ts",
+      "reason": "dependency @flighthq/log/contract was refused for @flighthq/log/packages/log/src/log.ts",
       "stage": "dependency"
     },
     {
@@ -9133,15 +9133,6 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 45,
-      "module": "packages/tilemap-formats/src/tiledLayerData.ts",
-      "package": "@flighthq/tilemap-formats",
-      "reason": "cpp emission failed for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledLayerData.ts: ambient value Uint32Array member from has no C++ binding",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
       "line": 23,
       "module": "packages/tilemap-formats/src/tiledProject.ts",
       "package": "@flighthq/tilemap-formats",
@@ -9149,22 +9140,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 243,
-      "module": "packages/tilemap-formats/src/tiledXmlParse.ts",
-      "package": "@flighthq/tilemap-formats",
-      "reason": "cpp emission failed for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledXmlParse.ts: ambient value Uint32Array member from has no C++ binding",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 35,
+      "code": "dependency-refused",
       "module": "packages/tilemap-formats/src/tilemapDetect.ts",
       "package": "@flighthq/tilemap-formats",
-      "reason": "cpp emission failed for @flighthq/tilemap-formats/packages/tilemap-formats/src/tilemapDetect.ts: an empty array has no concrete element type; add an explicit T[] annotation or T[] assertion at the construction site",
-      "stage": "emission"
+      "reason": "dependency ./tiledJsonParse.ts was refused for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledJsonParse.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",

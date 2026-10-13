@@ -4251,6 +4251,11 @@
       "source": "packages/tilemap-formats/src/tiledGid.ts"
     },
     {
+      "name": "TiledLayerData",
+      "packageName": "@flighthq/tilemap-formats",
+      "source": "packages/tilemap-formats/src/tiledLayerData.ts"
+    },
+    {
       "name": "TiledTmjFormat",
       "packageName": "@flighthq/tilemap-formats",
       "source": "packages/tilemap-formats/src/tiledTmjFormat.ts"
@@ -4259,6 +4264,11 @@
       "name": "TiledTmxFormat",
       "packageName": "@flighthq/tilemap-formats",
       "source": "packages/tilemap-formats/src/tiledTmxFormat.ts"
+    },
+    {
+      "name": "TiledXmlParse",
+      "packageName": "@flighthq/tilemap-formats",
+      "source": "packages/tilemap-formats/src/tiledXmlParse.ts"
     },
     {
       "name": "TilemapFormatRequirements",
@@ -28281,6 +28291,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "TiledLayerData",
+          "packageName": "@flighthq/tilemap-formats",
+          "source": "packages/tilemap-formats/src/tiledLayerData.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "TiledTmjFormat",
           "packageName": "@flighthq/tilemap-formats",
           "source": "packages/tilemap-formats/src/tiledTmjFormat.ts"
@@ -28294,6 +28314,16 @@
           "name": "TiledTmxFormat",
           "packageName": "@flighthq/tilemap-formats",
           "source": "packages/tilemap-formats/src/tiledTmxFormat.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "TiledXmlParse",
+          "packageName": "@flighthq/tilemap-formats",
+          "source": "packages/tilemap-formats/src/tiledXmlParse.ts"
         }
       ]
     },
@@ -352942,6 +352972,248 @@
       "steps": []
     },
     {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:bc96a2746105740fa550f21cb271c5637ed5e4050d816eee1677e54ec0800b7e",
+            "line": 16,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledLayerData.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledLayerData.ts\",792]",
+            "kind": "function",
+            "name": "decodeTiledBase64Layer",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:a4e4c53e9db8f6f485c831ad2dc0f1aa36949a0c638cce306b813d19105bfca7",
+            "line": 45,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledLayerData.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledLayerData.ts\",1712]",
+            "kind": "function",
+            "name": "decodeTiledCsvLayer",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:48e75209e9b9dd075304df559f3da808a5f85203905be1087db27380ad72066c",
+            "line": 62,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledLayerData.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledLayerData.ts\",2531]",
+            "kind": "function",
+            "name": "explainTiledLayerData",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:ad665c46f611d66865751590b1d9d057a405d52a695bbe571013db01d6d92a50",
+            "line": 78,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledLayerData.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledLayerData.ts\",3422]",
+            "kind": "function",
+            "name": "setTiledLayerDataGuard",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:9a6f8c83cb87f971e620981f9e05471ee1324a6624263a0db73be71b8315b722",
+            "line": 86,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledLayerData.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledLayerData.ts\",3762]",
+            "kind": "function",
+            "name": "decodeBase64",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:3b12f7e79f6322f7e9f98b77fa075c983040be24ae5e40d747d2c43c61d52546",
+            "line": 102,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledLayerData.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledLayerData.ts\",4446]",
+            "kind": "variable",
+            "name": "BASE64_TABLE",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 5,
+            "fingerprint": "sha256:2a96a07219c2e8603f6fb4723fe4095bde699759f3f098a33622232ff8b56c9c",
+            "line": 104,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledLayerData.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledLayerData.ts\",4534]",
+            "kind": "variable",
+            "name": "_guard",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "TiledLayerData",
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledLayerData.ts"
+          },
+          "importedNames": [
+            "TiledLayerDataExplanation",
+            "TiledLayerDataFailure"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "TiledLayerDataExplanation",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TiledLayerDataExplanation.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "TiledLayerData",
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledLayerData.ts"
+          },
+          "importedNames": [
+            "TiledCompression",
+            "TiledInflate"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "TiledParseOptions",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TiledParseOptions.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "TiledLayerData",
+        "packageName": "@flighthq/tilemap-formats",
+        "source": "packages/tilemap-formats/src/tiledLayerData.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:3b12f7e79f6322f7e9f98b77fa075c983040be24ae5e40d747d2c43c61d52546",
+              "line": 102,
+              "packageName": "@flighthq/tilemap-formats",
+              "source": "packages/tilemap-formats/src/tiledLayerData.ts",
+              "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledLayerData.ts\",4446]",
+              "kind": "variable",
+              "name": "BASE64_TABLE",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            5
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 5,
+              "fingerprint": "sha256:2a96a07219c2e8603f6fb4723fe4095bde699759f3f098a33622232ff8b56c9c",
+              "line": 104,
+              "packageName": "@flighthq/tilemap-formats",
+              "source": "packages/tilemap-formats/src/tiledLayerData.ts",
+              "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledLayerData.ts\",4534]",
+              "kind": "variable",
+              "name": "_guard",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            6
+          ]
+        }
+      ]
+    },
+    {
       "bindings": [],
       "dependencies": [],
       "module": {
@@ -353562,10 +353834,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:9b4c2f5be7add37448c13bb7a79d7bfd5464c09d6e288b50c2829eb785c919fa",
-            "line": 11,
+            "line": 12,
             "packageName": "@flighthq/tilemap-formats",
             "source": "packages/tilemap-formats/src/tiledTmxFormat.ts",
-            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",172]",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",187]",
             "kind": "import",
             "name": "formatTiledColor",
             "scope": "module",
@@ -353588,10 +353860,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:5b3454481a8f458ddfc8f09fb2d75e8d2299d385c58329c9a3ca55d477630e86",
-            "line": 16,
+            "line": 17,
             "packageName": "@flighthq/tilemap-formats",
             "source": "packages/tilemap-formats/src/tiledTmxFormat.ts",
-            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",506]",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",521]",
             "kind": "function",
             "name": "formatTiledTileset",
             "scope": "module",
@@ -353609,10 +353881,10 @@
           "binding": {
             "column": 17,
             "fingerprint": "sha256:63a24bb57c485693212c61017832e50c40935beb67e5d7cfa541a918c295b879",
-            "line": 26,
+            "line": 27,
             "packageName": "@flighthq/tilemap-formats",
             "source": "packages/tilemap-formats/src/tiledTmxFormat.ts",
-            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",1080]",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",1095]",
             "kind": "function",
             "name": "formatTiledTmx",
             "scope": "module",
@@ -353630,10 +353902,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:42436d1ffabb6cfdf58f00f5e31dcbbc0c3f91217845cd8286062fbc7ee95432",
-            "line": 50,
+            "line": 51,
             "packageName": "@flighthq/tilemap-formats",
             "source": "packages/tilemap-formats/src/tiledTmxFormat.ts",
-            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",2233]",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",2248]",
             "kind": "function",
             "name": "attr",
             "scope": "module",
@@ -353651,10 +353923,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:f7224db4a172d0de4be3a4ed49cd677752abe7ac3435bf7dee4c8287717c301f",
-            "line": 54,
+            "line": 55,
             "packageName": "@flighthq/tilemap-formats",
             "source": "packages/tilemap-formats/src/tiledTmxFormat.ts",
-            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",2349]",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",2364]",
             "kind": "function",
             "name": "escapeXml",
             "scope": "module",
@@ -353672,10 +353944,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:26ec82f3144bc23c6f0fac57b951d8ff38d4bae29a11e3035bde24e1dd534f32",
-            "line": 58,
+            "line": 59,
             "packageName": "@flighthq/tilemap-formats",
             "source": "packages/tilemap-formats/src/tiledTmxFormat.ts",
-            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",2503]",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",2518]",
             "kind": "function",
             "name": "formatLayerBaseAttrs",
             "scope": "module",
@@ -353693,10 +353965,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:87aadfc649bc20ceb65a53657ab466b09aa1c9ad97ee5c4e3dd8d01813debda0",
-            "line": 73,
+            "line": 74,
             "packageName": "@flighthq/tilemap-formats",
             "source": "packages/tilemap-formats/src/tiledTmxFormat.ts",
-            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",3397]",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",3412]",
             "kind": "function",
             "name": "formatPoints",
             "scope": "module",
@@ -353714,10 +353986,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:b39c3db7e0e3fa1e0f59592cfe9dc4dc329d07f6394f161fe97b2dceecbc5b80",
-            "line": 77,
+            "line": 78,
             "packageName": "@flighthq/tilemap-formats",
             "source": "packages/tilemap-formats/src/tiledTmxFormat.ts",
-            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",3532]",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",3534]",
             "kind": "function",
             "name": "writeLayer",
             "scope": "module",
@@ -353735,10 +354007,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:1e0ef7f6bbdc6c478977472c941448279a0b427930277f240385f2b37720a0d5",
-            "line": 110,
+            "line": 111,
             "packageName": "@flighthq/tilemap-formats",
             "source": "packages/tilemap-formats/src/tiledTmxFormat.ts",
-            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",4728]",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",4730]",
             "kind": "function",
             "name": "writeObject",
             "scope": "module",
@@ -353756,10 +354028,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:d97aaf25f7712e25d5bb55ab4b0a4e721508f40c4b32d95eafea47c867849fc7",
-            "line": 140,
+            "line": 141,
             "packageName": "@flighthq/tilemap-formats",
             "source": "packages/tilemap-formats/src/tiledTmxFormat.ts",
-            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",5965]",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",5967]",
             "kind": "function",
             "name": "writeProperties",
             "scope": "module",
@@ -353777,10 +354049,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:100428823741b9b32fe0cb3da52e462ea5be61761861bf81fbd13407afa34284",
-            "line": 155,
+            "line": 156,
             "packageName": "@flighthq/tilemap-formats",
             "source": "packages/tilemap-formats/src/tiledTmxFormat.ts",
-            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",6669]",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",6671]",
             "kind": "function",
             "name": "writeTileset",
             "scope": "module",
@@ -353798,10 +354070,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:d36ec1759c6982099497dff3b0e8a7033a2eb0c7f6fe692aa580392afa98166d",
-            "line": 178,
+            "line": 179,
             "packageName": "@flighthq/tilemap-formats",
             "source": "packages/tilemap-formats/src/tiledTmxFormat.ts",
-            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",7836]",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",7838]",
             "kind": "function",
             "name": "writeTilesetRef",
             "scope": "module",
@@ -353819,10 +354091,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:b077da3bcc7344ba871a836683c019bd20df47a4cc8fb1ae59944e6a1aa6a4a5",
-            "line": 186,
+            "line": 187,
             "packageName": "@flighthq/tilemap-formats",
             "source": "packages/tilemap-formats/src/tiledTmxFormat.ts",
-            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",8134]",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledTmxFormat.ts\",8136]",
             "kind": "function",
             "name": "writeTilesetTile",
             "scope": "module",
@@ -353849,6 +354121,24 @@
             "name": "TiledColor",
             "packageName": "@flighthq/tilemap-formats",
             "source": "packages/tilemap-formats/src/tiledColor.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "TiledTmxFormat",
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledTmxFormat.ts"
+          },
+          "importedNames": [
+            "Entity",
+            "EntityWithoutRuntime"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
           }
         },
         {
@@ -353957,6 +354247,7 @@
             "source": "packages/tilemap-formats/src/tiledTmxFormat.ts"
           },
           "importedNames": [
+            "Vector2",
             "Vector2Like"
           ],
           "specifier": "@flighthq/types/contract",
@@ -353971,6 +354262,848 @@
         "name": "TiledTmxFormat",
         "packageName": "@flighthq/tilemap-formats",
         "source": "packages/tilemap-formats/src/tiledTmxFormat.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ccdcca3573966df731afc28dd8f60c480f924d7d3672e3719cfe7834c97af20f",
+            "line": 1,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",9]",
+            "kind": "import",
+            "name": "reportImportDiagnostic",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "reportImportDiagnostic",
+            "kind": "dependency",
+            "module": {
+              "name": "ImportDiagnosticCollector",
+              "packageName": "@flighthq/importdiagnostics",
+              "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:4ed29d9b9c788211ee983240067a7fabe2c29c3555a536a2250a5c90c9f8e21b",
+            "line": 27,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",613]",
+            "kind": "import",
+            "name": "ImportDiagnosticSeverity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "ImportDiagnosticSeverity",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:aa07b4c2deb1807d4b140222638abde5a6a28917ecc0e3ce252b3d18d64674fe",
+            "line": 29,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",684]",
+            "kind": "import",
+            "name": "getXmlElementAttribute",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getXmlElementAttribute",
+            "kind": "dependency",
+            "module": {
+              "name": "XmlQuery",
+              "packageName": "@flighthq/xml",
+              "source": "packages/xml/src/xmlQuery.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:7edebafa8eddba54c0f962305d2c487cdc3af56fb6ff0278da193c19c05d1241",
+            "line": 30,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",710]",
+            "kind": "import",
+            "name": "getXmlElementChildByName",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getXmlElementChildByName",
+            "kind": "dependency",
+            "module": {
+              "name": "XmlQuery",
+              "packageName": "@flighthq/xml",
+              "source": "packages/xml/src/xmlQuery.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:50b226886a60a7036ed21ab30bb8141a84a9c4af11f7ab63d39464d361649332",
+            "line": 31,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",738]",
+            "kind": "import",
+            "name": "getXmlElementChildrenByName",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getXmlElementChildrenByName",
+            "kind": "dependency",
+            "module": {
+              "name": "XmlQuery",
+              "packageName": "@flighthq/xml",
+              "source": "packages/xml/src/xmlQuery.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 3,
+            "fingerprint": "sha256:8d9515c78d7ccf75690c6db0cbd9cf876b4392739f1caf52023e8e3fa1553cd4",
+            "line": 32,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",769]",
+            "kind": "import",
+            "name": "parseXmlDocument",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "parseXmlDocument",
+            "kind": "dependency",
+            "module": {
+              "name": "XmlParse",
+              "packageName": "@flighthq/xml",
+              "source": "packages/xml/src/xmlParse.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:d6d37f8f082f0bcf68670e8aec6cfe6cfc973dd214488ef4125383066cc4685c",
+            "line": 35,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",830]",
+            "kind": "import",
+            "name": "parseTiledColor",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "parseTiledColor",
+            "kind": "dependency",
+            "module": {
+              "name": "TiledColor",
+              "packageName": "@flighthq/tilemap-formats",
+              "source": "packages/tilemap-formats/src/tiledColor.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:bc96a2746105740fa550f21cb271c5637ed5e4050d816eee1677e54ec0800b7e",
+            "line": 36,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",881]",
+            "kind": "import",
+            "name": "decodeTiledBase64Layer",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "decodeTiledBase64Layer",
+            "kind": "dependency",
+            "module": {
+              "name": "TiledLayerData",
+              "packageName": "@flighthq/tilemap-formats",
+              "source": "packages/tilemap-formats/src/tiledLayerData.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 34,
+            "fingerprint": "sha256:a4e4c53e9db8f6f485c831ad2dc0f1aa36949a0c638cce306b813d19105bfca7",
+            "line": 36,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",905]",
+            "kind": "import",
+            "name": "decodeTiledCsvLayer",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "decodeTiledCsvLayer",
+            "kind": "dependency",
+            "module": {
+              "name": "TiledLayerData",
+              "packageName": "@flighthq/tilemap-formats",
+              "source": "packages/tilemap-formats/src/tiledLayerData.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:9cec5867ea6f31373bc63abe8922119b4c1fab8e712b930668e6e3da6eec6cc5",
+            "line": 44,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",1386]",
+            "kind": "function",
+            "name": "parseTiledTileset",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:f75c0a34d8b82edf73df81d5a335ea4898bc092454e9439adf34f7d6eccf9adc",
+            "line": 70,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",2401]",
+            "kind": "function",
+            "name": "parseTiledTmx",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:6f9e1e558f827f459a824172c172761ebc58ca50a5b1fa3c86e43fad5880a666",
+            "line": 140,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",5198]",
+            "kind": "function",
+            "name": "attrBool",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e4dda6544d3adebee9c00e3915cbfcd9a30fe96c9b391dabd323af5ed88f6f20",
+            "line": 146,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",5432]",
+            "kind": "function",
+            "name": "attrNumber",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:dbfa7d08c3e15085164aa40b8bb38a056fa6e9fbc81ea48c4c860057a44a3a68",
+            "line": 153,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",5716]",
+            "kind": "function",
+            "name": "attrString",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:0509f5901d73b16414f4c382b39fe846a92cb00497130baac3bd0eb7f568b229",
+            "line": 158,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",5911]",
+            "kind": "function",
+            "name": "buildTiledLayerBaseFromXml",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:fe4ec4aff6535c0cbd9fa0dd5c22ef310121749d9f329a4ac5e035755e2b20ac",
+            "line": 188,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",6927]",
+            "kind": "function",
+            "name": "buildTiledLayerFromXml",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:c79466b342c36f845e74b01befa132087b6044dfbaa58f85850dcc9dfb9bec3b",
+            "line": 257,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",9224]",
+            "kind": "function",
+            "name": "buildTiledLayerDataFromXml",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:608bd7f754178f840a6f7448c88dcd4d07a4029a59c11f12f72353a1ddcbf53d",
+            "line": 309,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",11069]",
+            "kind": "function",
+            "name": "buildTiledObjectFromXml",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e478884a5c12b0abd2762fee6863c45401fd55d0a5a5f6cc3c268d787d07d9e6",
+            "line": 332,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",12189]",
+            "kind": "function",
+            "name": "buildTiledPropertiesFromXml",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:b47cbb0c516f01221a69a00a253ae468057f2547f243a1f852259d42bde5193b",
+            "line": 342,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",12721]",
+            "kind": "function",
+            "name": "buildTiledTilesetFromXml",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:6765058689d5971c421dc45a82eabcdc9d41eb0268ff65c21cad66b6b6678739",
+            "line": 373,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",14276]",
+            "kind": "function",
+            "name": "buildTiledTilesetRefFromXml",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:d63545c843e76eec622e90fb3e9d73bb070ed5bf8737dd673fcee41c327af2c9",
+            "line": 386,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",14650]",
+            "kind": "function",
+            "name": "buildTiledTilesetTileFromXml",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:5531cb30b0d1880138b29458f312d4ece8bf6bdc71fc79bef13ff320cf5f5c7d",
+            "line": 408,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",15620]",
+            "kind": "function",
+            "name": "parseTiledPoints",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:dac0aacb52b6964842dc7a23ff3bf098e6bd54713c325a203da2453ca6e41529",
+            "line": 419,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",15964]",
+            "kind": "function",
+            "name": "reportMissingRequiredField",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:cae8a327d1d23f7b11550242a44c972990bb3baeb9979d3067b5d71e472d6a7d",
+            "line": 431,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",16360]",
+            "kind": "function",
+            "name": "reportMissingXmlAttribute",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:f6f9a7dfd3af649ab55637541a49fa370ef79fd3490a6e8fb2322f1602762451",
+            "line": 442,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",16693]",
+            "kind": "function",
+            "name": "asCompression",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:9fa6b14fa67e2c7289a84673e4130858ca19b5cbbe83be04ec06cff7548aecd4",
+            "line": 446,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",16850]",
+            "kind": "function",
+            "name": "asOrientation",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:52c22781d33933475fc884e18826803066d60713437be13fa4b744fe8d0e116e",
+            "line": 452,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",17215]",
+            "kind": "function",
+            "name": "asObjectAlignment",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:c27c1b3051ca81b5e1b6299d9f4971ad12f7568d26322281c9e3456b2ed545d2",
+            "line": 468,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",17732]",
+            "kind": "function",
+            "name": "asStaggerAxis",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:58969dbbceec5dc2b89db3ec35078c0ff42e204bf25efe348ab6ea2c03b1e0bf",
+            "line": 472,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",17863]",
+            "kind": "function",
+            "name": "asStaggerIndex",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:344063e32ebe1fd9991a79fefe9bf385742c7cbedc2310881601dad5c820ae8f",
+            "line": 476,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",18001]",
+            "kind": "function",
+            "name": "asPropertyType",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:336ea1866957057b0c801d9300123ac23e40fd899da46f99de1df1a2f8e9dd95",
+            "line": 487,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",18248]",
+            "kind": "function",
+            "name": "asRenderOrder",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:b137a8407e090f00ac4c6c0e2891d2bc1b87aba6f6e2903ec7944bd01fa51b18",
+            "line": 491,
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts",
+            "id": "binding:[\"@flighthq/tilemap-formats\",\"packages/tilemap-formats/src/tiledXmlParse.ts\",18418]",
+            "kind": "function",
+            "name": "parsePropertyValue",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "TiledXmlParse",
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts"
+          },
+          "specifier": "./tiledColor.ts",
+          "target": {
+            "name": "TiledColor",
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledColor.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "TiledXmlParse",
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts"
+          },
+          "specifier": "./tiledLayerData.ts",
+          "target": {
+            "name": "TiledLayerData",
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledLayerData.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "TiledXmlParse",
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts"
+          },
+          "specifier": "@flighthq/importdiagnostics/contract",
+          "target": {
+            "name": "ImportDiagnosticCollector",
+            "packageName": "@flighthq/importdiagnostics",
+            "source": "packages/importdiagnostics/src/importDiagnosticCollector.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "TiledXmlParse",
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "TiledXmlParse",
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts"
+          },
+          "importedNames": [
+            "parseXmlDocument"
+          ],
+          "specifier": "@flighthq/xml/contract",
+          "target": {
+            "name": "XmlParse",
+            "packageName": "@flighthq/xml",
+            "source": "packages/xml/src/xmlParse.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "TiledXmlParse",
+            "packageName": "@flighthq/tilemap-formats",
+            "source": "packages/tilemap-formats/src/tiledXmlParse.ts"
+          },
+          "importedNames": [
+            "getXmlElementAttribute",
+            "getXmlElementChildByName",
+            "getXmlElementChildrenByName"
+          ],
+          "specifier": "@flighthq/xml/contract",
+          "target": {
+            "name": "XmlQuery",
+            "packageName": "@flighthq/xml",
+            "source": "packages/xml/src/xmlQuery.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "TiledXmlParse",
+        "packageName": "@flighthq/tilemap-formats",
+        "source": "packages/tilemap-formats/src/tiledXmlParse.ts"
       },
       "steps": []
     },

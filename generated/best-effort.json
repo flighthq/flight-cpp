@@ -40567,9 +40567,7 @@
       "refusedDependencies": [
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/enableTilemapFormatsGuards.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledJsonParse.ts",
-        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledLayerData.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledProject.ts",
-        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledXmlParse.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tilemapDetect.ts"
       ],
       "status": "dependency-incomplete"
@@ -40585,8 +40583,7 @@
       },
       "path": "flight/tilemap_formats/enable_tilemap_formats_guards.hpp",
       "refusedDependencies": [
-        "@flighthq/log/packages/log/src/log.ts",
-        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledLayerData.ts"
+        "@flighthq/log/packages/log/src/log.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -40681,21 +40678,11 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/contract.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/enableTilemapFormatsGuards.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledJsonParse.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledXmlParse.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:005098f8e10b885e2c6a6c7a066f4b4469cf682297cd1c8e1aa66892eb462471",
-        "sha256:094ac97bc01ff89b2e4d0bff521fd336ba21f38f01bd6e4a97dcc29b9ed85750",
-        "sha256:1991b0241ae8f5a7584c2792c6fec9710157fc87d7e0f3b8dcdd75d5e2347783",
-        "sha256:7600a62759d42985b7755f0c2167453fce6ebaef9ee92acf26427fafb057e6cb",
-        "sha256:b0ed0562d6cbf76fff125cfab78213fcdebb8c7ee0211d169b82b109a94cef57",
-        "sha256:bf294048a826959dfb84e75e2de6b9a1b0a565ddc0ff18042385cfd9e1712282",
-        "sha256:f83200b8904bf892b7d1f1c357a6a385997b68e210e2889028750828dd54ebcf"
       ],
       "module": {
         "name": "TiledLayerData",
@@ -40703,7 +40690,7 @@
         "source": "packages/tilemap-formats/src/tiledLayerData.ts"
       },
       "path": "flight/tilemap_formats/tiled_layer_data.hpp",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "classification": "compiler-restriction",
@@ -40748,36 +40735,9 @@
       "status": "emitted"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/contract.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tilemapDetect.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:0442dcd8ae7d4643c5f7938cd03cd03bec2ea6ad4ebf3631c390e8aaea2cbbc0",
-        "sha256:2775aea364af8bd820b26f33b6193914f0be0e78e8cb50e0241189dd16f7258f",
-        "sha256:287a7b98d328d72670d485c84aa6f5aea562ceaa86a07c2bafa4c04852535e3e",
-        "sha256:2f1611da0c3f6d8be1cfdcb7915e4c5423b6117fc3a42657f167a5b0f9bc8151",
-        "sha256:33590b9112e7c9162a0af87c69f2b42c496307b6e7d4f0838b18d0c8fbddce7a",
-        "sha256:34a2338540cf27012f8b7088b02442a63ba83e9c4379b55c89edac3384c81367",
-        "sha256:3c8d5ed90912152499deed490dd4c833cd2d38ea7aa57d41324c47f336cde905",
-        "sha256:400207e79f58770ad43573f7bb43ded3a7305f297492289502b09e497623460b",
-        "sha256:480a0f9fe91c8db6f854f6d92c218c9ac2623f2c05d45c720ca8462b7f6b5407",
-        "sha256:493ec92c5fbe5418321702469fab44cd45bafeaa07465ae74d8f1be0b791975c",
-        "sha256:4b7d2faccb6557f92bde55c7ddf7049daa0da624743626799a6626945f9f9151",
-        "sha256:5d1be3258a6dda5537af60a70f12c52b735650b3437ab86887b230c63786cf5d",
-        "sha256:5ecc56abbc1a17589bb2cb7dd755d6e4a548bf50619d6fa1ac43bb540712f62f",
-        "sha256:6c2872173672d1fb4b2402cc18a42793c3758bd23e24a4fcf0beaedcc9225b7d",
-        "sha256:7ba41653158a8e17190d34121f7bbb68cc07a3be6c62455bf611f283e8782bc6",
-        "sha256:7e4e15be3633472012d2090b6704e116fabea2ba38f5f6d5424c774a5a7f61cf",
-        "sha256:81d9866175430bc5599c67368e4a7ae44ca52bc426cb0a41b4d94514ee2a0dd3",
-        "sha256:8e2f7f97a20ca26a8a14742cc334e4c5e9c0bca234f078e16c0558983a55c13c",
-        "sha256:a424fb14fcc645b59f151ccb3e2eaba8f18b20b345652bd9e81f6aa9b1d8cbaa",
-        "sha256:a93ff5d7609eacd1a6c5cf0ae8f6e1d8d45bc9078d058d1fb34974b7cb18fb3e",
-        "sha256:c21d2fcc24dcc7a14ccfae4734358b8533764eda8c528af641b31e6ab1537305",
-        "sha256:e3bb7c540a16c56632b2f1d5a3c2ff9992eeb33605a272000c65b2a17c1076f5",
-        "sha256:f8be101ac487687e0c53a7e64a974f2106f3d02fa4f138c46b1cbafdcff2c3f4",
-        "sha256:fecfe379096579e8fb146cbf5418a93bd37d4e0f0e55e43940748960b1c252c8"
       ],
       "module": {
         "name": "TiledXmlParse",
@@ -40785,40 +40745,11 @@
         "source": "packages/tilemap-formats/src/tiledXmlParse.ts"
       },
       "path": "flight/tilemap_formats/tiled_xml_parse.hpp",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
-      "classification": "source-portability",
       "consumers": [
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:0955ac0f1ea639a928c8ba6e439745238462cecf847b66aad8ae9adae21dc691",
-        "sha256:273550774c0913278897fd16936ba93e10b453cf6fbcbd222c3d6cb2222bf9b6",
-        "sha256:2e0242d117cc7ff1dc826fe41728c24ab3b22c5cbe49a3b8c801d89f1bae717b",
-        "sha256:33af99603a76d7b4c67c95c1c278c16bf63a018dabfac66da1fa6fc385bb8437",
-        "sha256:3565f45dcddcea5421d57196ea9ae2edb83d6761c6694b8802c9631791662da1",
-        "sha256:388627947735779f0132bec2186c06271b3fb99a9a6a9f84eb3fe6bd9d5862c1",
-        "sha256:539be529dfdbb8503d89a0f524ca861236f459d6f938cbe1dccd6dd8e4824fad",
-        "sha256:57109a018f9562c25c186d1ffea223020ec1ac4a56043e1bf9e7e22668d10a5b",
-        "sha256:5d0a18fcc3d21e27743c78de3f85da89c29aa5d4aab8679d3edee4a2fc9246fb",
-        "sha256:5e5e24cc8646f7e8cb4fdd6e3e367d697705af3e719bcb6fb413e9e67a3aef30",
-        "sha256:65299c5b7cdf505c7fd6b928214757664b958dc6a9ff4149907b29e8e0706afd",
-        "sha256:6891f281eeb45c8cd053dc5bd1dac7c2e8ac7e1c6182e6ef3ac2b6e55611de4b",
-        "sha256:6adf2faacd6058b794300dba53928e03a958470b41dcf41c86496bff00523f38",
-        "sha256:6cfdb8f5dba90d25eef2aa93a51499b963c127aec2c72723e4e1f8b2d07b42d5",
-        "sha256:6ecfc738032af18085687afe4a0c85970ecd8083c50b6f094acd2cccba7e405a",
-        "sha256:7e52e1e72833b4fdd38e4dd81e509197247cac2df0bfdb57cc8aaa6c118e1a8f",
-        "sha256:813eeb46e9b0c94f6db367f0a0e95002d11413be54d6d3dc361544570fd1332a",
-        "sha256:83127cfa0cead82d0a3dd4d497900a87c3a962cdfd76aca304b31868f613b369",
-        "sha256:936715ae34ebfff22ee964a40a20023459600ffe181ddb744674f7da52c7066d",
-        "sha256:a40a971608b7886d960bcdf51cec2cce8b74a77c2baa6839e6727eaafea6b49e",
-        "sha256:c21878615b7352befb7a0fcf7ec6fc7c2a3713178674d2742e9acc3883e1acec",
-        "sha256:ca2fb60ba2f0ac3980f07f596d30e642e65a21ca41fdbb765cf3a1277f36457b",
-        "sha256:e5eb542ba9051e2bb96102c9f087250dd8bb4a6a0d51adf2e2068771789c0dfa",
-        "sha256:ebf814dbb4c500f5c3f43c20fc7103061473c3b827a98577dafca4ccb686a812",
-        "sha256:f926b4831e04b1b39e1797425cae9c5210679905f28d783e1d13c6b298e02e6c",
-        "sha256:ff0e63f8a0bcec50254506cc048d25333398618f309928e168feffbf8b8327d3"
       ],
       "module": {
         "name": "TilemapDetect",
@@ -40826,8 +40757,11 @@
         "source": "packages/tilemap-formats/src/tilemapDetect.ts"
       },
       "path": "flight/tilemap_formats/tilemap_detect.hpp",
-      "rule": "cpp-empty-array-element-type-unproven",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/registry/packages/registry/src/registryTable.ts",
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledJsonParse.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [

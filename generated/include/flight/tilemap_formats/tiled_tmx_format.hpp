@@ -13,8 +13,7 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/types/screen.hpp>
-
+namespace flight::types { struct Entity; }
 namespace flight::types { struct TiledGroupLayer; }
 namespace flight::types { struct TiledImageLayer; }
 namespace flight::types { struct TiledMap; }
@@ -28,6 +27,7 @@ namespace flight::types { struct TiledTilesetTile; }
 namespace flight::types { struct TiledTilesetTileFrame; }
 namespace flight::types { struct Vector2; }
 
+#include <flight/types/entity.hpp>
 #include <flight/types/tiled_layer.hpp>
 #include <flight/types/tiled_map.hpp>
 #include <flight/types/tiled_object.hpp>
@@ -80,13 +80,8 @@ inline flight::String format_layer_base_attrs(flight::types::TiledLayer layer) {
   return out;
 }
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TILEMAP_FORMATS_X_Y_8365950BD60F783F
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TILEMAP_FORMATS_X_Y_8365950BD60F783F
-using x_y_8365950bd60f783f = flight::types::x_y_8365950bd60f783f;
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TILEMAP_FORMATS_X_Y_8365950BD60F783F
-
-inline flight::String format_points(auto points) {
-  return points.map([=](flight::Ref<x_y_8365950bd60f783f> p) { return flight::String("") + flight::to_string(p->x) + flight::String(",") + flight::to_string(p->y) + flight::String(""); }).join(flight::String(" "));
+inline flight::String format_points(flight::Array<flight::types::Vector2Like> points) {
+  return points.map([=](flight::types::Vector2Like p) { return flight::String("") + flight::to_string(p->x) + flight::String(",") + flight::to_string(p->y) + flight::String(""); }).join(flight::String(" "));
 }
 
 inline void write_properties(flight::Array<flight::String> lines, flight::Array<flight::Ref<flight::types::TiledProperty>> properties) {
