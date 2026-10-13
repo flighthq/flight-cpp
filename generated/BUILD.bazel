@@ -2010,6 +2010,8 @@ cc_library(
         "include/flight/tilemap_formats/tiled_tmj_format.hpp",
         "include/flight/tilemap_formats/tiled_tmx_format.hpp",
         "include/flight/tilemap_formats/tiled_xml_parse.hpp",
+        "include/flight/tilemap_formats/tilemap_detect.hpp",
+        "include/flight/tilemap_formats/tilemap_format_requirements.hpp",
         "include/flight/timeline/_internal_index.hpp",
         "include/flight/timeline/contract.hpp",
         "include/flight/timeline/timeline.hpp",

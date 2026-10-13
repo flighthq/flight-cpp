@@ -2004,6 +2004,8 @@ set(FLIGHT_SDK_GENERATED_HEADERS
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/tilemap_formats/tiled_tmj_format.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/tilemap_formats/tiled_tmx_format.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/tilemap_formats/tiled_xml_parse.hpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../include/flight/tilemap_formats/tilemap_detect.hpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../include/flight/tilemap_formats/tilemap_format_requirements.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/timeline/_internal_index.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/timeline/contract.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/timeline/timeline.hpp"

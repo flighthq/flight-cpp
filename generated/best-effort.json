@@ -40569,9 +40569,8 @@
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledJsonParse.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledLayerData.ts",
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledProject.ts",
-        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledTmjFormat.ts",
-        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledTmxFormat.ts",
-        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledXmlParse.ts"
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tiledXmlParse.ts",
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tilemapDetect.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -40636,7 +40635,8 @@
     {
       "classification": "target-runtime",
       "consumers": [
-        "@flighthq/tilemap-formats/packages/tilemap-formats/src/contract.ts"
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/contract.ts",
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tilemapDetect.ts"
       ],
       "declarationFingerprints": [
         "sha256:00d4b322f354c0d8e8f07228830079fd6c6f80165642c154d59061ded8b86b0e",
@@ -40724,21 +40724,8 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:11a69e1c6af547cc5580aa637844a52959ded4da4ea8c5cc7dd41a692219af8d",
-        "sha256:289b3cc68ac9c589d437f5470b92e5734f4e75ba4bf4f0c05dba69fef0eb29fd",
-        "sha256:60da4603a455102c09ca7dfea087c68e25820ea61578a7ea69e96cf67a1e2b28",
-        "sha256:9ac4cee2e5d47e372335e5f141173b09b4bfb9cf5d2dd2edcd3f2495e79676fa",
-        "sha256:9bbbddd334d5056d58b8fcaf6edf7829f67c693b69a4d13afe350a69e452d30a",
-        "sha256:aa7c960f90a0cd4c710e54d780edc450f4735950e88c3252e7e11c156f5e2c44",
-        "sha256:b6cbce4cc62a4fd0e588690d7bc1e6f146b85a0bc2c61bc8c8e1866e87d2dacf",
-        "sha256:cdff6c12441505837e09d2ce383cf9ed495eb459b7042bef562130b0d3de21ae",
-        "sha256:d1a6dee89d7f36414a4c4598cca27021e5aad6dc05bd13716673d87fae07e161",
-        "sha256:e4e2107dca106b50fda1ff7c4a99185951474513be17571c6432b390b3a84dc3"
       ],
       "module": {
         "name": "TiledTmjFormat",
@@ -40746,26 +40733,11 @@
         "source": "packages/tilemap-formats/src/tiledTmjFormat.ts"
       },
       "path": "flight/tilemap_formats/tiled_tmj_format.hpp",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/tilemap-formats/packages/tilemap-formats/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:0197682f94f65273528ecd18009d19664c56c630f839a06a0ebde2d1ea7220b1",
-        "sha256:152cdd2cffc3a8377cdb9b4a6d70a8f2fda12f4324cc15a1ac143f011a17965a",
-        "sha256:16d36af19b23b11f1dc8e1900d9eff57fcbbefcb4ae40e4927149b05c561ce50",
-        "sha256:9b464d4c47fca86c487b2a1ded49dce55b2f0c39545539fc25cafa0b0f296a54",
-        "sha256:9bfff8dd598c229d692823be85c78cd5ec6f4b395cf2c3881ee2597ad4b68c0b",
-        "sha256:a1fe56af7ead41817577ba307cb824f8dec49d896c449c47eee5afcd6380ee93",
-        "sha256:cd577f019808f2983b578c13d46986dcc92c1e25f1931676136ad1ed6c484c48",
-        "sha256:d6d1ac41a6b7bd990dfdfe72d27deae2ad845c0af6c889060c95d63a7b63f934",
-        "sha256:dbcae9d8d6e08064b37c2fe04fe80ad208646e0f0015f35c5c6262fe3d7fb357",
-        "sha256:e68eb25a9fd913063751f2a42eb85aba09f62b468f6731db7dde00615ca4d54a",
-        "sha256:ee697b23d66c002ca20dd31f03de15665027b5facfa9be6438867ee3500eb003",
-        "sha256:f05a3e1c3e53fd5821a7f070ec5dcb1acd0459dbf33f3000511cceb9e618df38"
       ],
       "module": {
         "name": "TiledTmxFormat",
@@ -40773,12 +40745,13 @@
         "source": "packages/tilemap-formats/src/tiledTmxFormat.ts"
       },
       "path": "flight/tilemap_formats/tiled_tmx_format.hpp",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/tilemap-formats/packages/tilemap-formats/src/contract.ts"
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/contract.ts",
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/tilemapDetect.ts"
       ],
       "declarationFingerprints": [
         "sha256:0442dcd8ae7d4643c5f7938cd03cd03bec2ea6ad4ebf3631c390e8aaea2cbbc0",
@@ -40813,6 +40786,61 @@
       },
       "path": "flight/tilemap_formats/tiled_xml_parse.hpp",
       "status": "refused-placeholder"
+    },
+    {
+      "classification": "source-portability",
+      "consumers": [
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/contract.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:0955ac0f1ea639a928c8ba6e439745238462cecf847b66aad8ae9adae21dc691",
+        "sha256:273550774c0913278897fd16936ba93e10b453cf6fbcbd222c3d6cb2222bf9b6",
+        "sha256:2e0242d117cc7ff1dc826fe41728c24ab3b22c5cbe49a3b8c801d89f1bae717b",
+        "sha256:33af99603a76d7b4c67c95c1c278c16bf63a018dabfac66da1fa6fc385bb8437",
+        "sha256:3565f45dcddcea5421d57196ea9ae2edb83d6761c6694b8802c9631791662da1",
+        "sha256:388627947735779f0132bec2186c06271b3fb99a9a6a9f84eb3fe6bd9d5862c1",
+        "sha256:539be529dfdbb8503d89a0f524ca861236f459d6f938cbe1dccd6dd8e4824fad",
+        "sha256:57109a018f9562c25c186d1ffea223020ec1ac4a56043e1bf9e7e22668d10a5b",
+        "sha256:5d0a18fcc3d21e27743c78de3f85da89c29aa5d4aab8679d3edee4a2fc9246fb",
+        "sha256:5e5e24cc8646f7e8cb4fdd6e3e367d697705af3e719bcb6fb413e9e67a3aef30",
+        "sha256:65299c5b7cdf505c7fd6b928214757664b958dc6a9ff4149907b29e8e0706afd",
+        "sha256:6891f281eeb45c8cd053dc5bd1dac7c2e8ac7e1c6182e6ef3ac2b6e55611de4b",
+        "sha256:6adf2faacd6058b794300dba53928e03a958470b41dcf41c86496bff00523f38",
+        "sha256:6cfdb8f5dba90d25eef2aa93a51499b963c127aec2c72723e4e1f8b2d07b42d5",
+        "sha256:6ecfc738032af18085687afe4a0c85970ecd8083c50b6f094acd2cccba7e405a",
+        "sha256:7e52e1e72833b4fdd38e4dd81e509197247cac2df0bfdb57cc8aaa6c118e1a8f",
+        "sha256:813eeb46e9b0c94f6db367f0a0e95002d11413be54d6d3dc361544570fd1332a",
+        "sha256:83127cfa0cead82d0a3dd4d497900a87c3a962cdfd76aca304b31868f613b369",
+        "sha256:936715ae34ebfff22ee964a40a20023459600ffe181ddb744674f7da52c7066d",
+        "sha256:a40a971608b7886d960bcdf51cec2cce8b74a77c2baa6839e6727eaafea6b49e",
+        "sha256:c21878615b7352befb7a0fcf7ec6fc7c2a3713178674d2742e9acc3883e1acec",
+        "sha256:ca2fb60ba2f0ac3980f07f596d30e642e65a21ca41fdbb765cf3a1277f36457b",
+        "sha256:e5eb542ba9051e2bb96102c9f087250dd8bb4a6a0d51adf2e2068771789c0dfa",
+        "sha256:ebf814dbb4c500f5c3f43c20fc7103061473c3b827a98577dafca4ccb686a812",
+        "sha256:f926b4831e04b1b39e1797425cae9c5210679905f28d783e1d13c6b298e02e6c",
+        "sha256:ff0e63f8a0bcec50254506cc048d25333398618f309928e168feffbf8b8327d3"
+      ],
+      "module": {
+        "name": "TilemapDetect",
+        "packageName": "@flighthq/tilemap-formats",
+        "source": "packages/tilemap-formats/src/tilemapDetect.ts"
+      },
+      "path": "flight/tilemap_formats/tilemap_detect.hpp",
+      "rule": "cpp-empty-array-element-type-unproven",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/contract.ts",
+        "@flighthq/tilemap-formats/packages/tilemap-formats/src/index.ts"
+      ],
+      "module": {
+        "name": "TilemapFormatRequirements",
+        "packageName": "@flighthq/tilemap-formats",
+        "source": "packages/tilemap-formats/src/tilemapFormatRequirements.ts"
+      },
+      "path": "flight/tilemap_formats/tilemap_format_requirements.hpp",
+      "status": "emitted"
     },
     {
       "consumers": [

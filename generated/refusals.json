@@ -9104,21 +9104,21 @@
       "code": "dependency-refused",
       "module": "packages/tilemap-formats/src/contract.ts",
       "package": "@flighthq/tilemap-formats",
-      "reason": "dependency ./tiledJsonParse was refused for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledJsonParse.ts",
+      "reason": "dependency ./tiledJsonParse.ts was refused for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledJsonParse.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/tilemap-formats/src/enableTilemapFormatsGuards.ts",
       "package": "@flighthq/tilemap-formats",
-      "reason": "dependency ./tiledLayerData was refused for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledLayerData.ts",
+      "reason": "dependency ./tiledLayerData.ts was refused for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledLayerData.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/tilemap-formats/src/index.ts",
       "package": "@flighthq/tilemap-formats",
-      "reason": "dependency ./contract was refused for @flighthq/tilemap-formats/packages/tilemap-formats/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/tilemap-formats/packages/tilemap-formats/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -9151,28 +9151,19 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 54,
-      "module": "packages/tilemap-formats/src/tiledTmjFormat.ts",
-      "package": "@flighthq/tilemap-formats",
-      "reason": "cpp emission failed for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledTmjFormat.ts: ambient value Array member from has no C++ binding",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 77,
-      "module": "packages/tilemap-formats/src/tiledTmxFormat.ts",
-      "package": "@flighthq/tilemap-formats",
-      "reason": "cpp emission failed for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledTmxFormat.ts: ambient value Array member from has no C++ binding",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
       "line": 243,
       "module": "packages/tilemap-formats/src/tiledXmlParse.ts",
       "package": "@flighthq/tilemap-formats",
       "reason": "cpp emission failed for @flighthq/tilemap-formats/packages/tilemap-formats/src/tiledXmlParse.ts: ambient value Uint32Array member from has no C++ binding",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 35,
+      "module": "packages/tilemap-formats/src/tilemapDetect.ts",
+      "package": "@flighthq/tilemap-formats",
+      "reason": "cpp emission failed for @flighthq/tilemap-formats/packages/tilemap-formats/src/tilemapDetect.ts: an empty array has no concrete element type; add an explicit T[] annotation or T[] assertion at the construction site",
       "stage": "emission"
     },
     {
