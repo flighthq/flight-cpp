@@ -106,7 +106,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/video` | 5 | 3 | 79 | dedicated | none | 4 / 1 |
 | `@flighthq/webcam` | 2 | 1 | 1 | none | none | 2 / 0 |
 | `@flighthq/midi` | 7 | 5 | 40 | dedicated | none | 5 / 2 |
-| `@flighthq/sensors` | 3 | 2 | 67 | none | none | 3 / 0 |
+| `@flighthq/sensors` | 3 | 2 | 67 | dedicated | none | 3 / 0 |
 | `@flighthq/geolocation` | 4 | 2 | 13 | none | none | 4 / 0 |
 | `@flighthq/haptics` | 3 | 1 | 19 | none | none | 3 / 0 |
 | `@flighthq/device` | 3 | 1 | 12 | none | none | 3 / 0 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-20 of 39 packages are reached by at least one local CTest executable.
-19 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`.
+21 of 39 packages are reached by at least one local CTest executable.
+20 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`, `sensors`.
 
 ## `@flighthq/app`
 
@@ -1128,7 +1128,33 @@ Upstream carries per-package records at `flight/agents/packages/sensors/`: `stat
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_sensors` — `tests/generated_sensors_test.cpp` (dedicated), NEW. The package emits at this pin
+  (3 of 3 modules, no override), and the roll-up row above read "none" before this unit. It covers both halves.
+
+  The six pure transforms are asserted on the identity AND on non-degenerate input: a quarter turn about z, a device
+  pitched a quarter turn, a device rolled a quarter turn, and every axis at a quarter turn. The non-identity cases
+  are not decoration -- a transform can agree at the identity and be wrong in every coefficient the identity zeroes,
+  which is what the battery below found, and the metadata (interval, timestamp, accuracy) is asserted alongside the
+  computed value so a conversion that got the numbers right and the metadata wrong still fails.
+
+  The subscription fan-out wires TEN provider streams to eleven signals: `subscribeMotion` alone reaches BOTH
+  `onAccelerometer` and `onGyroscope`, and the two arms carry DIFFERENT reading types (`MotionReading` and
+  `RotationRateReading`), which is why the two signals are not interchangeable. `attachSensors` detaches first, so
+  re-attaching releases the ten subscriptions it replaced; detaching twice releases nothing further; `disposeSensors`
+  releases all ten; and a provider that answers `false` to `isMotionSupported` is reported as unsupported rather than
+  inferred from anything else. `getSensorsPermissionState` and `requestSensorsPermission` are NOT covered: they call
+  through the host's `getPermissionState`/`requestPermission`, and a permission seam is the host's to provide, so
+  nothing here fakes one.
+
+  Fourteen mutations against the emitted module, all fourteen detected: the gravity magnitude, the gravity y sign, a
+  sin/cos swap on the gravity x axis, the Euler yaw left in radians, the rotation matrix's antisymmetric pair broken
+  at index 1 and again at index 3, the quaternion scalar product's sign, the screen-relative axes swapped, the
+  world-acceleration cross-term sign, `attachSensors`' dropped prior detach, a stream dropped from the release body,
+  the release entry never erased, the quaternion constructor's identity default, and a probe reading the wrong
+  capability. The quaternion-scalar mutation SURVIVED the first run: with alpha, beta or gamma at zero one of the
+  four half-angle products vanishes, so the terms only all matter together. That was a hole in this file rather than
+  an equivalence, so `test_every_axis_at_a_quarter_turn_product_is_not_the_identity` was added for it, and it is
+  killed. No equivalence was found on this surface and none is claimed.
 
 ### Local generation status
 

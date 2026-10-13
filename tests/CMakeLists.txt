@@ -528,6 +528,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_video_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_video COMMAND flight_cpp_generated_video_tests)
 
+add_executable(flight_cpp_generated_sensors_tests generated_sensors_test.cpp)
+target_include_directories(
+  flight_cpp_generated_sensors_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_sensors_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_sensors COMMAND flight_cpp_generated_sensors_tests)
+
 add_executable(flight_cpp_generated_midi_tests generated_midi_test.cpp)
 target_include_directories(
   flight_cpp_generated_midi_tests
@@ -1319,6 +1327,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_quadbatch quadbatch signals)
 flight_cpp_package_test_labels(flight_cpp.generated_clipboard clipboard signals)
 flight_cpp_package_test_labels(flight_cpp.generated_power power)
 flight_cpp_package_test_labels(flight_cpp.generated_video video)
+flight_cpp_package_test_labels(flight_cpp.generated_sensors sensors signals)
 flight_cpp_package_test_labels(flight_cpp.generated_connectivity connectivity)
 flight_cpp_package_test_labels(flight_cpp.generated_share share)
 flight_cpp_package_test_labels(flight_cpp.generated_updater updater)
