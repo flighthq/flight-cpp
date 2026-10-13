@@ -1,0 +1,50 @@
+diff --git a/packages/particles-formats/src/starlingPexParse.ts b/packages/particles-formats/src/starlingPexParse.ts
+index 2e81ab1..6455a0b 100644
+--- a/packages/particles-formats/src/starlingPexParse.ts
++++ b/packages/particles-formats/src/starlingPexParse.ts
+@@ -46,6 +46,27 @@ export function parseStarlingPexDocument(xml: string, options?: StarlingPexParse
+ 
+ type PexDict = Record<string, string>;
+ 
++// `key in dict` for a dictionary created as `{}`: an own key, or one of Object.prototype's own property names,
++// which an ordinary object inherits.
++const OBJECT_PROTOTYPE_KEYS: ReadonlySet<string> = new Set<string>([
++  '__defineGetter__',
++  '__defineSetter__',
++  '__lookupGetter__',
++  '__lookupSetter__',
++  '__proto__',
++  'constructor',
++  'hasOwnProperty',
++  'isPrototypeOf',
++  'propertyIsEnumerable',
++  'toLocaleString',
++  'toString',
++  'valueOf',
++]);
++
++function pexDictHas(dict: PexDict, key: string): boolean {
++  return Object.hasOwn(dict, key) || OBJECT_PROTOTYPE_KEYS.has(key);
++}
++
+ // Single-field checks (not a hot loop) → direct reports; collectStarlingPexDiagnostics is the physical
+ // emitter and hence the origin. Recover = approximated with a Flight substitute; Skip = a recognized field
+ // Flight does not model.
+@@ -273,7 +294,7 @@ function parsePexXml(xml: string): PexDict {
+       if (name === 'key') inTag = 'key';
+       else if (name === 'integer' || name === 'real' || name === 'string') inTag = name;
+     } else if (isSelfClose) {
+-      if ((name === 'true' || name === 'false') && currentKey !== null && !(currentKey in dict)) {
++      if ((name === 'true' || name === 'false') && currentKey !== null && !pexDictHas(dict, currentKey)) {
+         dict[currentKey] = name;
+         currentKey = null;
+       }
+@@ -281,7 +302,7 @@ function parsePexXml(xml: string): PexDict {
+       if (name === 'key' && inTag === 'key') {
+         currentKey = text || null;
+         inTag = null;
+-      } else if (currentKey !== null && !(currentKey in dict)) {
++      } else if (currentKey !== null && !pexDictHas(dict, currentKey)) {
+         if ((name === 'integer' || name === 'real' || name === 'string') && inTag === name) {
+           dict[currentKey] = text;
+           currentKey = null;

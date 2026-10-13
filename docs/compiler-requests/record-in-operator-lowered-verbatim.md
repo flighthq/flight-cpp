@@ -24,9 +24,13 @@ inline bool is_new_key(flight::Record<flight::String, double> dict, std::optiona
 
 ## Expected behavior
 
-`k in r` over a `flight::Record` is `r.has(k)`. `Record::has` answers by own key, which is what `in` answers for
-a plain record object: no prototype chain is involved for these carriers. A numeric key goes through the same
-canonical record key the runtime already uses for `get` and `set`.
+`k in r` tests own keys and the prototype chain. A `Record` written as `{}` is an ordinary object, so it also
+answers `true` for `Object.prototype`'s names: `constructor`, `toString`, `valueOf`, `hasOwnProperty`,
+`isPrototypeOf`, `propertyIsEnumerable`, `toLocaleString`, `__proto__`, `__defineGetter__`,
+`__defineSetter__`, `__lookupGetter__` and `__lookupSetter__`. `flight::Record::has(k)` answers own keys only,
+so the lowering is `r.has(k)` combined with a test against that fixed set of prototype names. It may be
+`r.has(k)` alone only where the record provably has no prototype (`Object.create(null)`). A numeric key goes
+through the canonical record key the runtime already uses for `get` and `set`.
 
 ## Affected modules
 

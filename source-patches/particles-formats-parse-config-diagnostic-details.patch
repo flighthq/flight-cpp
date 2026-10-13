@@ -1,0 +1,60 @@
+diff --git a/packages/particles-formats/src/parseParticleConfig.ts b/packages/particles-formats/src/parseParticleConfig.ts
+index 9fa6173..2ac4cc5 100644
+--- a/packages/particles-formats/src/parseParticleConfig.ts
++++ b/packages/particles-formats/src/parseParticleConfig.ts
+@@ -43,28 +43,30 @@ export function parseParticleConfigDocument(
+   const format = detectParticleFormat(text);
+   if (format === null) {
+     const diagnostics: ImportDiagnostic[] = [];
++    const details: Record<string, boolean | number | string> = {
++      reason: 'no-format-detected',
++    };
+     reportImportDiagnostic(
+       diagnostics,
+       ImportDiagnosticSeverity.Reject,
+       'particles.unknown-format',
+       'parseParticleConfigDocument',
+-      {
+-        reason: 'no-format-detected',
+-      },
++      details,
+     );
+     return { config: createParticleEmitterConfig(), diagnostics, format: null };
+   }
+   const codec = getParticleFormatCodec(format);
+   if (codec === null) {
+     const diagnostics: ImportDiagnostic[] = [];
++    const details: Record<string, boolean | number | string> = {
++      reason: 'no-registered-parser',
++    };
+     reportImportDiagnostic(
+       diagnostics,
+       ImportDiagnosticSeverity.Reject,
+       'particles.unknown-format',
+       'parseParticleConfigDocument',
+-      {
+-        reason: 'no-registered-parser',
+-      },
++      details,
+     );
+     return { config: createParticleEmitterConfig(), diagnostics, format };
+   }
+@@ -73,14 +75,15 @@ export function parseParticleConfigDocument(
+     return { config: result.config, diagnostics: result.diagnostics, format };
+   } catch (err) {
+     const diagnostics: ImportDiagnostic[] = [];
++    const details: Record<string, boolean | number | string> = {
++      message: (err as Error).message,
++    };
+     reportImportDiagnostic(
+       diagnostics,
+       ImportDiagnosticSeverity.Reject,
+       'particles.parse-error',
+       'parseParticleConfigDocument',
+-      {
+-        message: (err as Error).message,
+-      },
++      details,
+     );
+     return { config: createParticleEmitterConfig(), diagnostics, format };
+   }

@@ -1,0 +1,13 @@
+diff --git a/packages/particles-formats/src/particleDesignerSerialize.ts b/packages/particles-formats/src/particleDesignerSerialize.ts
+index a0d89fb..5b54898 100644
+--- a/packages/particles-formats/src/particleDesignerSerialize.ts
++++ b/packages/particles-formats/src/particleDesignerSerialize.ts
+@@ -109,7 +109,7 @@ function documentToPlist(doc: ParticleDesignerDocument): string {
+       if (Number.isInteger(value)) lines.push(`\t<integer>${value}</integer>`);
+       else lines.push(`\t<real>${value}</real>`);
+     } else {
+-      lines.push(`\t<string>${escapeXml(value)}</string>`);
++      lines.push(`\t<string>${escapeXml(value as string)}</string>`);
+     }
+   }
+ 

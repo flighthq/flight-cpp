@@ -43,6 +43,12 @@ using flight::types::StarlingPexDocument;
 
 using PexDict = flight::Record<flight::String, flight::String>;
 
+inline flight::Set<flight::String> object_prototype_keys = flight::Set<flight::String>(flight::Array<flight::String>{flight::String("__defineGetter__"), flight::String("__defineSetter__"), flight::String("__lookupGetter__"), flight::String("__lookupSetter__"), flight::String("__proto__"), flight::String("constructor"), flight::String("hasOwnProperty"), flight::String("isPrototypeOf"), flight::String("propertyIsEnumerable"), flight::String("toLocaleString"), flight::String("toString"), flight::String("valueOf")});
+
+inline bool pex_dict_has(PexDict dict, flight::String key) {
+  return (dict.has(key) || object_prototype_keys.has(key));
+}
+
 inline flight::Array<flight::Ref<flight::types::ImportDiagnostic>> collect_starling_pex_diagnostics(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::StarlingPexDocument>>>> doc) {
   flight::Array<flight::Ref<flight::types::ImportDiagnostic>> diagnostics = flight::Array<flight::Ref<flight::types::ImportDiagnostic>>{};
   if ((flight::row_get<flight::RowKey<"emitterType">>(doc) == 1.0)) {
@@ -189,7 +195,7 @@ inline PexDict parse_pex_xml(flight::String xml) {
     }
     else {
       if (is_self_close) {
-        if (((((name_3 == flight::String("true")) || (name_3 == flight::String("false"))) && current_key.has_value()) && !(current_key.value() in dict))) {
+        if (((((name_3 == flight::String("true")) || (name_3 == flight::String("false"))) && current_key.has_value()) && !pex_dict_has(dict, current_key.value()))) {
           ([&]() { auto assignment_value = name_3; dict.set(std::optional<flight::String>{current_key.value()}.value(), assignment_value); return assignment_value; }());
           (current_key = std::nullopt);
         }
@@ -200,7 +206,7 @@ inline PexDict parse_pex_xml(flight::String xml) {
           (in_tag = std::nullopt);
         }
         else {
-          if ((current_key.has_value() && !(current_key.value() in dict))) {
+          if ((current_key.has_value() && !pex_dict_has(dict, current_key.value()))) {
             if (((((name_3 == flight::String("integer")) || (name_3 == flight::String("real"))) || (name_3 == flight::String("string"))) && (in_tag == name_3))) {
               ([&]() { auto assignment_value = text; dict.set(std::optional<flight::String>{current_key.value()}.value(), assignment_value); return assignment_value; }());
               (current_key = std::nullopt);

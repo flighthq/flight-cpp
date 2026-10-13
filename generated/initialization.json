@@ -203088,7 +203088,7 @@
             "line": 235,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/libgdxSerialize.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/libgdxSerialize.ts\",7619]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/libgdxSerialize.ts\",7578]",
             "kind": "function",
             "name": "documentToText",
             "scope": "module",
@@ -203109,7 +203109,7 @@
             "line": 293,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/libgdxSerialize.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/libgdxSerialize.ts\",10072]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/libgdxSerialize.ts\",10031]",
             "kind": "function",
             "name": "makeConstRange",
             "scope": "module",
@@ -203130,7 +203130,7 @@
             "line": 297,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/libgdxSerialize.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/libgdxSerialize.ts\",10235]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/libgdxSerialize.ts\",10194]",
             "kind": "function",
             "name": "rangeToLines",
             "scope": "module",
@@ -203151,7 +203151,7 @@
             "line": 312,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/libgdxSerialize.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/libgdxSerialize.ts\",10869]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/libgdxSerialize.ts\",10828]",
             "kind": "function",
             "name": "rgbToHex",
             "scope": "module",
@@ -245388,7 +245388,7 @@
             "line": 168,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/particleDesignerSerialize.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerSerialize.ts\",7387]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerSerialize.ts\",7397]",
             "kind": "function",
             "name": "escapeXml",
             "scope": "module",
@@ -245409,7 +245409,7 @@
             "line": 172,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/particleDesignerSerialize.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerSerialize.ts\",7509]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerSerialize.ts\",7519]",
             "kind": "function",
             "name": "blendModeToSrc",
             "scope": "module",
@@ -245430,7 +245430,7 @@
             "line": 178,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/particleDesignerSerialize.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerSerialize.ts\",7703]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerSerialize.ts\",7713]",
             "kind": "function",
             "name": "blendModeToDst",
             "scope": "module",
@@ -245451,7 +245451,7 @@
             "line": 189,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/particleDesignerSerialize.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerSerialize.ts\",8217]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerSerialize.ts\",8227]",
             "kind": "function",
             "name": "serializeParticleDesignerPlist",
             "scope": "module",
@@ -245472,7 +245472,7 @@
             "line": 205,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/particleDesignerSerialize.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerSerialize.ts\",8895]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerSerialize.ts\",8905]",
             "kind": "function",
             "name": "serializeParticleDesignerPlistDocument",
             "scope": "module",
@@ -245493,7 +245493,7 @@
             "line": 217,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/particleDesignerSerialize.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerSerialize.ts\",9411]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/particleDesignerSerialize.ts\",9421]",
             "kind": "function",
             "name": "collectParticleDesignerSerializeWarnings",
             "scope": "module",
@@ -327164,14 +327164,56 @@
           "mutation": "mutable"
         },
         {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:c70255bf6bbbf4ece0e833f8a8ca5abaf878fd4ccf2e90adeb7a779af137c166",
+            "line": 51,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/starlingPexParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",2210]",
+            "kind": "variable",
+            "name": "OBJECT_PROTOTYPE_KEYS",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:eca4672cf36b9810790bdfba74c68af45da6af05e794f7ac7e1dc13b5fe55cc9",
+            "line": 66,
+            "packageName": "@flighthq/particles-formats",
+            "source": "packages/particles-formats/src/starlingPexParse.ts",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",2519]",
+            "kind": "function",
+            "name": "pexDictHas",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
           "access": "available-after-instantiation",
           "binding": {
             "column": 10,
             "fingerprint": "sha256:5fdfd12be0485989e751ac0b803e2e1a8ffcdca24bf1f974252556f03bdc0205",
-            "line": 52,
+            "line": 73,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/starlingPexParse.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",2301]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",2888]",
             "kind": "function",
             "name": "collectStarlingPexDiagnostics",
             "scope": "module",
@@ -327189,10 +327231,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:129f26942891f638fe05e482b064c6ca718014de1723d1a34271bf5e719d42b5",
-            "line": 99,
+            "line": 120,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/starlingPexParse.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",3899]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",4486]",
             "kind": "function",
             "name": "dictToDocument",
             "scope": "module",
@@ -327210,10 +327252,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:400156919a350649f01a339d384cdb416eb57b7777cd3237716c0012f695e585",
-            "line": 145,
+            "line": 166,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/starlingPexParse.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",6299]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",6886]",
             "kind": "function",
             "name": "documentToConfig",
             "scope": "module",
@@ -327231,10 +327273,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:302a73eaa8abbea626d3c737cf99a79c7c0aab9b1cec6040f8defa7ebc600f5c",
-            "line": 206,
+            "line": 227,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/starlingPexParse.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",9108]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",9695]",
             "kind": "function",
             "name": "extractAttr",
             "scope": "module",
@@ -327252,10 +327294,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:bd4d4f813ada34c0d3acbfc780875cbc8a55379661ef1a396cde899961f52d50",
-            "line": 212,
+            "line": 233,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/starlingPexParse.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",9297]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",9884]",
             "kind": "function",
             "name": "pColor",
             "scope": "module",
@@ -327273,10 +327315,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:3c06ae2f50744da3c65e760f5a59c9d106f09fbb0ee8d55fc5db03b50088cb49",
-            "line": 221,
+            "line": 242,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/starlingPexParse.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",9845]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",10432]",
             "kind": "function",
             "name": "pexBlendMode",
             "scope": "module",
@@ -327294,10 +327336,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:b128d34d68a8b98dc62fd0592462fea557ed01f117446c51069bf927522e9d01",
-            "line": 228,
+            "line": 249,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/starlingPexParse.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",10100]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",10687]",
             "kind": "function",
             "name": "pNum",
             "scope": "module",
@@ -327315,10 +327357,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:f9b3fd937fbe5ab07997196033d7e249104a0950620e3cb35a27796809e06f4a",
-            "line": 236,
+            "line": 257,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/starlingPexParse.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",10385]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",10972]",
             "kind": "function",
             "name": "parsePexXml",
             "scope": "module",
@@ -327336,10 +327378,10 @@
           "binding": {
             "column": 10,
             "fingerprint": "sha256:e2635726bb2766a0d47c47796df4e61b1dcb6f55370b6631c66fb179d2666fb5",
-            "line": 296,
+            "line": 317,
             "packageName": "@flighthq/particles-formats",
             "source": "packages/particles-formats/src/starlingPexParse.ts",
-            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",12744]",
+            "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",13347]",
             "kind": "function",
             "name": "pStr",
             "scope": "module",
@@ -327416,7 +327458,31 @@
         "packageName": "@flighthq/particles-formats",
         "source": "packages/particles-formats/src/starlingPexParse.ts"
       },
-      "steps": []
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:c70255bf6bbbf4ece0e833f8a8ca5abaf878fd4ccf2e90adeb7a779af137c166",
+              "line": 51,
+              "packageName": "@flighthq/particles-formats",
+              "source": "packages/particles-formats/src/starlingPexParse.ts",
+              "id": "binding:[\"@flighthq/particles-formats\",\"packages/particles-formats/src/starlingPexParse.ts\",2210]",
+              "kind": "variable",
+              "name": "OBJECT_PROTOTYPE_KEYS",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            3
+          ]
+        }
+      ]
     },
     {
       "bindings": [],

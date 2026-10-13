@@ -1,0 +1,33 @@
+diff --git a/packages/particles-formats/src/libgdxSerialize.ts b/packages/particles-formats/src/libgdxSerialize.ts
+index c2028a4..360e087 100644
+--- a/packages/particles-formats/src/libgdxSerialize.ts
++++ b/packages/particles-formats/src/libgdxSerialize.ts
+@@ -73,16 +73,16 @@ function configToDocument(
+   const scaleMinPx = config.scaleMin * textureSize;
+   const scaleMaxPx = config.scaleMax * textureSize;
+   // Emitter shape -> spawn shape
+-  let spawnShape: LibgdxParticleDocument['spawnShape'] = { shape: 'point', edges: false, side: 'both' };
++  let spawnShapeKind: LibgdxParticleDocument['spawnShape']['shape'] = 'point';
+   let spawnWidth = makeConstRange(0);
+   let spawnHeight = makeConstRange(0);
+   if (config.emitterShape === 'circle') {
+-    spawnShape = { shape: 'ellipse', edges: false, side: 'both' };
++    spawnShapeKind = 'ellipse';
+     const diam = config.emitterRadius * 2;
+     spawnWidth = makeConstRange(diam);
+     spawnHeight = makeConstRange(diam);
+   } else if (config.emitterShape === 'rect') {
+-    spawnShape = { shape: 'square', edges: false, side: 'both' };
++    spawnShapeKind = 'square';
+     spawnWidth = makeConstRange(config.emitterWidth);
+     spawnHeight = makeConstRange(config.emitterHeight);
+   }
+@@ -149,7 +149,7 @@ function configToDocument(
+       scaling: [1],
+       timeline: [0],
+     },
+-    spawnShape,
++    spawnShape: { shape: spawnShapeKind, edges: false, side: 'both' },
+     spawnWidth,
+     spawnHeight,
+     scale: {

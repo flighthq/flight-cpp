@@ -53,7 +53,7 @@ inline flight::String document_to_plist(flight::Ref<flight::types::ParticleDesig
       }
     }
     else {
-      lines.push(flight::String("\t<string>") + flight::to_string(escape_xml_flight_value_function_escape_u000058_ml_flight_private_0e515013f2ef4167((value.index() == 0 ? std::variant<bool, flight::String>{std::in_place_type<bool>, std::get<0>(value)} : std::variant<bool, flight::String>{std::in_place_type<flight::String>, std::get<2>(value)}))) + flight::String("</string>"));
+      lines.push(flight::String("\t<string>") + flight::to_string(escape_xml_flight_value_function_escape_u000058_ml_flight_private_0e515013f2ef4167(std::get<flight::String>(value))) + flight::String("</string>"));
     }
   }
 });

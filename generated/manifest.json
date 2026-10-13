@@ -5063,6 +5063,34 @@
     },
     {
       "dependency": "flight",
+      "digest": "5a111d77448151e1380c5493f9421ca16d08b72297e91a9d53bdb2c272c7a524",
+      "id": "particles-formats-parse-config-diagnostic-details",
+      "module": "packages/particles-formats/src/parseParticleConfig.ts",
+      "package": "@flighthq/particles-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "7abcb3b4f9cbe9ea0ef20504a9685dc092879e2c2f1459cdd9297e490c09b692",
+      "id": "particles-formats-pex-plist-key-presence",
+      "module": "packages/particles-formats/src/starlingPexParse.ts",
+      "package": "@flighthq/particles-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "a7dc1ad54521fecbb50dacbfba3b1e797e2e24f247471848e60860baee382051",
+      "id": "particles-formats-plist-string-value",
+      "module": "packages/particles-formats/src/particleDesignerSerialize.ts",
+      "package": "@flighthq/particles-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "d39161d27c506425882932b35f44197e8d7296d46aeedc2e5b033bba8dfd04c9",
+      "id": "particles-formats-libgdx-spawn-shape-kind",
+      "module": "packages/particles-formats/src/libgdxSerialize.ts",
+      "package": "@flighthq/particles-formats"
+    },
+    {
+      "dependency": "flight",
       "digest": "a50d46ce2a5a708b637d16daa6ce0fce933b434cdac62d4ead2e310f867cd761",
       "id": "gui-hit-area-type-evidence",
       "module": "packages/gui/src/guiController.ts",
