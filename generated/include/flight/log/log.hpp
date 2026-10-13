@@ -3,36 +3,20 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function serializeLogError -- source line 568
-//   missing: function _operationFailureMessage -- source line 705
-//   missing: function _destroyFileLogSinkState -- source line 678
-//   missing: function _mergeContextFields -- source line 764
-//   missing: function _mergeSpanFields -- source line 773
-//   missing: function logDebugWith -- source line 441
-//   missing: function logErrorWith -- source line 458
-//   missing: function logInfoWith -- source line 475
-//   missing: function logVerboseWith -- source line 506
-//   missing: function logWarnWith -- source line 523
-//   missing: function logWith -- source line 536
-//   missing: function createJsonLogFormatter -- source line 195
-//   missing: function createTextLogFormatter -- source line 284
-//   missing: function endLogTimer -- source line 352
-//   missing: function initializeLogEntity -- source line 796
-//   missing: function createBufferedLogSink -- source line 101
-//   missing: function createChildLogContext -- source line 132
-//   missing: function createRateLimitedLogSink -- source line 249
-//   missing: function enableLogSignals -- source line 332
-//   missing: variable (binding) -- source line 802
-//   missing: function _writeConsoleCaptureEntry -- source line 814
-//   missing: function _writeConsoleLogEntry -- source line 829
+//   missing: function _writeConsoleCaptureEntry -- source line 816
 #include <cmath>
 #include <coroutine>
 #include <cstddef>
 #include <flight/any.hpp>
+#include <flight/array.hpp>
 #include <flight/boolean.hpp>
+#include <flight/erased_ref.hpp>
+#include <flight/error.hpp>
 #include <flight/host/console.hpp>
 #include <flight/host/performance.hpp>
 #include <flight/host/timers.hpp>
+#include <flight/json.hpp>
+#include <flight/number.hpp>
 #include <flight/object.hpp>
 #include <flight/record.hpp>
 #include <flight/structural_ref.hpp>
@@ -48,100 +32,114 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
-#include <flight/signals/emitter.hpp>
+#include <flight/types/shell.hpp>
 
 #include <flight/types/log.hpp>
 
-namespace flight::log {
+namespace flight::types { struct BufferedLogSink; }
+namespace flight::types { struct Entity; }
+namespace flight::types { struct EntityRuntime; }
+namespace flight::types { struct FileLogSink; }
+namespace flight::types { struct FileLogSinkDestroyOutcome; }
+namespace flight::types { struct LogContext; }
+namespace flight::types { struct LogEntry; }
+namespace flight::types { struct LogSignals; }
+namespace flight::types { struct LogSpan; }
+namespace flight::types { struct LogTimer; }
+namespace flight::types { struct LogTransport; }
+namespace flight::types { struct MemoryLogSink; }
+namespace flight::types { struct RateLimitedLogSink; }
+namespace flight::types { template <typename T> struct Signal; }
 
-using flight::signals::emit_signal;
+namespace flight::log {
 
 using flight::types::LogTransport;
 
 using flight::types::LogSpan;
 
-using flight::types::LogSink;
-
 using flight::types::LogEntry;
-
 struct BufferedLogSinkState;
 struct MemoryLogSinkState;
 struct FileLogSinkState;
+} // namespace flight::log
 
-inline flight::Ref<LogSink> create_fanout_log_sink(flight::Array<flight::Ref<LogSink>> sinks_2) {
-  flight::Array<flight::Ref<LogSink>> list = sinks_2.slice();
-  return [=](flight::Ref<LogEntry> entry) {
+#include <flight/signals/emitter.hpp>
+#include <flight/signals/signal.hpp>
+#include <flight/types/buffered_log_sink.hpp>
+#include <flight/types/entity.hpp>
+#include <flight/types/file_log_sink.hpp>
+#include <flight/types/log.hpp>
+#include <flight/types/log_signals.hpp>
+#include <flight/types/memory_log_sink.hpp>
+#include <flight/types/rate_limited_log_sink.hpp>
+#include <flight/types/signal.hpp>
+
+namespace flight::log {
+
+inline flight::types::LogSink create_fanout_log_sink(flight::Array<flight::types::LogSink> sinks_2) {
+  flight::Array<flight::types::LogSink> list = sinks_2.slice();
+  return [=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>> entry) {
   for (auto s : list) {
     s(entry);
   }
 };
 }
 
-inline flight::Ref<LogSink> create_filter_log_sink(flight::Ref<LogSink> target, std::function<bool(flight::Ref<LogEntry>)> predicate) {
-  return [=](flight::Ref<LogEntry> entry) {
+inline flight::types::LogSink create_filter_log_sink(flight::types::LogSink target, std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>)> predicate) {
+  return [=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>> entry) {
   if (predicate(entry)) {
-    target(entry);
+    target(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>>(entry));
   }
 };
 }
 
-inline flight::Ref<LogSink> create_sampled_log_sink(flight::Ref<LogSink> target, double rate) {
+inline flight::types::LogSink create_sampled_log_sink(flight::types::LogSink target, double rate) {
   if ((rate <= 1.0)) {
-    return [=](flight::Ref<LogEntry> entry) { return target(entry); };
+    return [=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>> entry) { return target(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>>(entry)); };
   }
   const auto counter_capture = flight::make_binding_cell(double{0.0});
-  return [=](flight::Ref<LogEntry> entry) {
+  return [=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>> entry) {
   counter_capture.rebind(std::fmod((counter_capture.read_binding() + 1.0), rate));
   if ((counter_capture.read_binding() == 0.0)) {
-    target(entry);
+    target(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>>(entry));
   }
 };
 }
 
-
-// NOT GENERATED: function serializeLogError -- source line 568
-// refusal: cpp-error-name-runtime-required [target-runtime]
-//
-// The source it stood for:
-//   export function serializeLogError(value: unknown): Record<string, unknown> {
-//     if (!(value instanceof Error)) return { value: String(value) };
-//     const result: Record<string, unknown> = {
-//       name: value.name,
-//       message: value.message,
-//     };
-//     if (value.stack !== undefined) result.stack = value.stack;
-//     if (value.cause !== undefined) result.cause = serializeLogError(value.cause);
-//     return result;
-//   }
-//   
-//   // Listener side. Sets a per-channel minimum emit level. Resolution order: channel level if set,
-//   // else global level. Use getLogChannelLevel to read, clearLogChannelLevels to reset.
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: reading Error.name from an erased value
-// requires both an instance flight::Error::name() const accessor that preserves RangeError and TypeError names
-// through Error-typed value storage, and a checked flight::Any Error projection that accepts those subclasses;
-// the current static class names and exact-type Any projections provide neither contract, and an external
-// binding profile cannot replace this built-in runtime capability
+inline flight::Record<flight::String, flight::Any> serialize_log_error(flight::Any value) {
+  if (!value.error_if() != nullptr) {
+    return {{flight::String("value"), flight::to_string(value)}};
+  }
+  flight::Record<flight::String, flight::Any> result = {{flight::String("name"), value.error_if()->name()}, {flight::String("message"), value.error_if()->message()}};
+  if (value.error_if()->stack().has_value()) {
+    (result.get(flight::String("stack")).value() = value.error_if()->stack());
+  }
+  if (([&]() { const auto& presence_operand = value.error_if()->cause().value_or(flight::Any()); return !presence_operand.is_undefined(); }())) {
+    (result.get(flight::String("cause")).value() = serialize_log_error(value.error_if()->cause().value_or(flight::Any())));
+  }
+  return result;
+}
 
 struct BufferedLogSinkState : public flight::ReferenceEnabled {
-  flight::Array<flight::Ref<LogEntry>> buf;
+  flight::Array<flight::Ref<flight::types::LogEntry>> buf;
   std::function<void()> flush;
-  std::optional<double> timer;
+  std::optional<flight::host::TimerHandle> timer;
 };
 
 struct MemoryLogSinkState : public flight::ReferenceEnabled {
-  flight::Array<flight::Ref<LogEntry>> buf;
+  flight::Array<flight::Ref<flight::types::LogEntry>> buf;
   double head;
 };
 
 struct FileLogSinkState : public flight::ReferenceEnabled {
-  std::optional<flight::Task<flight::Ref<FileLogSinkDestroyOutcome>>> destroy_promise;
+  std::optional<flight::Task<flight::Ref<flight::types::FileLogSinkDestroyOutcome>>> destroy_promise;
   flight::String status;
-  std::optional<flight::Ref<LogTransport>> transport;
+  std::optional<flight::Ref<flight::types::LogTransport>> transport;
 };
 
-inline flight::WeakMap<flight::Ref<BufferedLogSink>, flight::Ref<BufferedLogSinkState>> buffered_sink_states = flight::WeakMap<flight::Ref<BufferedLogSink>, flight::Ref<BufferedLogSinkState>>();
+inline flight::WeakMap<flight::Ref<flight::types::BufferedLogSink>, flight::Ref<BufferedLogSinkState>> buffered_sink_states = flight::WeakMap<flight::Ref<flight::types::BufferedLogSink>, flight::Ref<BufferedLogSinkState>>();
 
-inline void dispose_log_sink(flight::Ref<BufferedLogSink> handle) {
+inline void dispose_log_sink(flight::Ref<flight::types::BufferedLogSink> handle) {
   auto state = buffered_sink_states.get(handle);
   if (!state.has_value()) {
     return;
@@ -153,18 +151,18 @@ inline void dispose_log_sink(flight::Ref<BufferedLogSink> handle) {
   (state.value()->timer = std::nullopt);
 }
 
-inline void flush_log_sink(flight::Ref<BufferedLogSink> handle) {
+inline void flush_log_sink(flight::Ref<flight::types::BufferedLogSink> handle) {
   auto state = buffered_sink_states.get(handle);
   if (flight::to_boolean(state)) {
     state.value()->flush();
   }
 }
 
-inline flight::WeakMap<flight::Ref<FileLogSink>, flight::Ref<FileLogSinkState>> file_log_sink_states = flight::WeakMap<flight::Ref<FileLogSink>, flight::Ref<FileLogSinkState>>();
+inline flight::WeakMap<flight::Ref<flight::types::FileLogSink>, flight::Ref<FileLogSinkState>> file_log_sink_states = flight::WeakMap<flight::Ref<flight::types::FileLogSink>, flight::Ref<FileLogSinkState>>();
 
-inline flight::WeakMap<flight::Ref<MemoryLogSink>, flight::Ref<MemoryLogSinkState>> memory_sink_states = flight::WeakMap<flight::Ref<MemoryLogSink>, flight::Ref<MemoryLogSinkState>>();
+inline flight::WeakMap<flight::Ref<flight::types::MemoryLogSink>, flight::Ref<MemoryLogSinkState>> memory_sink_states = flight::WeakMap<flight::Ref<flight::types::MemoryLogSink>, flight::Ref<MemoryLogSinkState>>();
 
-inline void clear_memory_log_sink(flight::Ref<MemoryLogSink> handle) {
+inline void clear_memory_log_sink(flight::Ref<flight::types::MemoryLogSink> handle) {
   auto state = memory_sink_states.get(handle);
   if (!state.has_value()) {
     return;
@@ -173,35 +171,35 @@ inline void clear_memory_log_sink(flight::Ref<MemoryLogSink> handle) {
   (state.value()->head = 0.0);
 }
 
-inline flight::Array<flight::Ref<LogEntry>> get_memory_log_sink_entries(flight::Ref<MemoryLogSink> handle) {
+inline flight::Array<flight::Ref<flight::types::LogEntry>> get_memory_log_sink_entries(flight::Ref<flight::types::MemoryLogSink> handle) {
   auto state = memory_sink_states.get(handle);
   if (!state.has_value()) {
-    return flight::Array<flight::Ref<LogEntry>>{};
+    return flight::Array<flight::Ref<flight::types::LogEntry>>{};
   }
   auto object_pattern_value = state.value();
-  flight::Array<flight::Ref<LogEntry>> buf = object_pattern_value->buf;
+  flight::Array<flight::Ref<flight::types::LogEntry>> buf = object_pattern_value->buf;
   const double head = object_pattern_value->head;
   if ((head == 0.0)) {
     return buf.slice();
   }
-  return ([&]() { flight::Array<flight::Ref<LogEntry>> array_spread_result; for (const auto& array_spread_item : buf.slice(head)) { array_spread_result.push(array_spread_item); } for (const auto& array_spread_item : buf.slice(0.0, head)) { array_spread_result.push(array_spread_item); } return array_spread_result; }());
+  return ([&]() { flight::Array<flight::Ref<flight::types::LogEntry>> array_spread_result; for (const auto& array_spread_item : buf.slice(head)) { array_spread_result.push(array_spread_item); } for (const auto& array_spread_item : buf.slice(0.0, head)) { array_spread_result.push(array_spread_item); } return array_spread_result; }());
 }
 
-inline flight::Record<flight::Ref<log_level>, flight::String> console_methods = ([]() { flight::Record<flight::Ref<log_level>, flight::String> record_construction = {}; auto record_construction_key = log_level.none; auto record_construction_value = flight::String("log"); record_construction.set(record_construction_key, record_construction_value); auto record_construction_key_2 = log_level.error; auto record_construction_value_2 = flight::String("error"); record_construction.set(record_construction_key_2, record_construction_value_2); auto record_construction_key_3 = log_level.warn; auto record_construction_value_3 = flight::String("warn"); record_construction.set(record_construction_key_3, record_construction_value_3); auto record_construction_key_4 = log_level.info; auto record_construction_value_4 = flight::String("info"); record_construction.set(record_construction_key_4, record_construction_value_4); auto record_construction_key_5 = log_level.debug; auto record_construction_value_5 = flight::String("debug"); record_construction.set(record_construction_key_5, record_construction_value_5); auto record_construction_key_6 = log_level.verbose; auto record_construction_value_6 = flight::String("log"); record_construction.set(record_construction_key_6, record_construction_value_6); return record_construction; }());
+inline flight::Record<flight::types::LogLevel, flight::String> console_methods = ([]() { flight::Record<flight::types::LogLevel, flight::String> record_construction = {}; auto record_construction_key = flight::types::LogLevel::None; auto record_construction_value = flight::String("log"); record_construction.set(record_construction_key, record_construction_value); auto record_construction_key_2 = flight::types::LogLevel::Error; auto record_construction_value_2 = flight::String("error"); record_construction.set(record_construction_key_2, record_construction_value_2); auto record_construction_key_3 = flight::types::LogLevel::Warn; auto record_construction_value_3 = flight::String("warn"); record_construction.set(record_construction_key_3, record_construction_value_3); auto record_construction_key_4 = flight::types::LogLevel::Info; auto record_construction_value_4 = flight::String("info"); record_construction.set(record_construction_key_4, record_construction_value_4); auto record_construction_key_5 = flight::types::LogLevel::Debug; auto record_construction_value_5 = flight::String("debug"); record_construction.set(record_construction_key_5, record_construction_value_5); auto record_construction_key_6 = flight::types::LogLevel::Verbose; auto record_construction_value_6 = flight::String("log"); record_construction.set(record_construction_key_6, record_construction_value_6); return record_construction; }());
 
-inline flight::Record<flight::Ref<log_level>, flight::String> level_names = ([]() { flight::Record<flight::Ref<log_level>, flight::String> record_construction_2 = {}; auto record_construction_key_7 = log_level.none; auto record_construction_value_7 = flight::String("none"); record_construction_2.set(record_construction_key_7, record_construction_value_7); auto record_construction_key_8 = log_level.error; auto record_construction_value_8 = flight::String("error"); record_construction_2.set(record_construction_key_8, record_construction_value_8); auto record_construction_key_9 = log_level.warn; auto record_construction_value_9 = flight::String("warn"); record_construction_2.set(record_construction_key_9, record_construction_value_9); auto record_construction_key_10 = log_level.info; auto record_construction_value_10 = flight::String("info"); record_construction_2.set(record_construction_key_10, record_construction_value_10); auto record_construction_key_11 = log_level.debug; auto record_construction_value_11 = flight::String("debug"); record_construction_2.set(record_construction_key_11, record_construction_value_11); auto record_construction_key_12 = log_level.verbose; auto record_construction_value_12 = flight::String("verbose"); record_construction_2.set(record_construction_key_12, record_construction_value_12); return record_construction_2; }());
+inline flight::Record<flight::types::LogLevel, flight::String> level_names = ([]() { flight::Record<flight::types::LogLevel, flight::String> record_construction_2 = {}; auto record_construction_key_7 = flight::types::LogLevel::None; auto record_construction_value_7 = flight::String("none"); record_construction_2.set(record_construction_key_7, record_construction_value_7); auto record_construction_key_8 = flight::types::LogLevel::Error; auto record_construction_value_8 = flight::String("error"); record_construction_2.set(record_construction_key_8, record_construction_value_8); auto record_construction_key_9 = flight::types::LogLevel::Warn; auto record_construction_value_9 = flight::String("warn"); record_construction_2.set(record_construction_key_9, record_construction_value_9); auto record_construction_key_10 = flight::types::LogLevel::Info; auto record_construction_value_10 = flight::String("info"); record_construction_2.set(record_construction_key_10, record_construction_value_10); auto record_construction_key_11 = flight::types::LogLevel::Debug; auto record_construction_value_11 = flight::String("debug"); record_construction_2.set(record_construction_key_11, record_construction_value_11); auto record_construction_key_12 = flight::types::LogLevel::Verbose; auto record_construction_value_12 = flight::String("verbose"); record_construction_2.set(record_construction_key_12, record_construction_value_12); return record_construction_2; }());
 
-inline flight::String get_log_level_name(flight::Ref<log_level> level_2) {
+inline flight::String get_log_level_name(flight::types::LogLevel level_2) {
   return ([&]() -> flight::String { auto nullish_coalesce_left = level_names.get(level_2); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("unknown"); }());
 }
 
-inline flight::Map<flight::String, flight::Ref<log_level>> level_by_name = flight::Map<flight::String, flight::Ref<log_level>>({{flight::String("none"), log_level.none}, {flight::String("error"), log_level.error}, {flight::String("warn"), log_level.warn}, {flight::String("info"), log_level.info}, {flight::String("debug"), log_level.debug}, {flight::String("verbose"), log_level.verbose}});
+inline flight::Map<flight::String, flight::types::LogLevel> level_by_name = flight::Map<flight::String, flight::types::LogLevel>({{flight::String("none"), flight::types::LogLevel::None}, {flight::String("error"), flight::types::LogLevel::Error}, {flight::String("warn"), flight::types::LogLevel::Warn}, {flight::String("info"), flight::types::LogLevel::Info}, {flight::String("debug"), flight::types::LogLevel::Debug}, {flight::String("verbose"), flight::types::LogLevel::Verbose}});
 
-inline std::optional<flight::Ref<log_level>> parse_log_level(flight::String name) {
+inline std::optional<flight::types::LogLevel> parse_log_level(flight::String name) {
   return level_by_name.get(name.to_lower());
 }
 
-inline flight::Map<flight::String, flight::Ref<log_level>> channel_levels = flight::Map<flight::String, flight::Ref<log_level>>();
+inline flight::Map<flight::String, flight::types::LogLevel> channel_levels = flight::Map<flight::String, flight::types::LogLevel>();
 
 inline void clear_log_channel_level(flight::String channel) {
   channel_levels.erase(channel);
@@ -211,11 +209,11 @@ inline void clear_log_channel_levels() {
   channel_levels.clear();
 }
 
-inline std::optional<flight::Ref<log_level>> get_log_channel_level(flight::String channel) {
+inline std::optional<flight::types::LogLevel> get_log_channel_level(flight::String channel) {
   return channel_levels.get(channel);
 }
 
-inline void set_log_channel_level(flight::String channel, flight::Ref<log_level> level_2) {
+inline void set_log_channel_level(flight::String channel, flight::types::LogLevel level_2) {
   channel_levels.set(channel, level_2);
 }
 
@@ -248,9 +246,9 @@ inline void register_log_serializer(flight::String kind, std::function<flight::R
   serializers.set(kind, fn);
 }
 
-inline flight::Array<flight::Ref<LogSink>> sinks = flight::Array<flight::Ref<LogSink>>{};
+inline flight::Array<flight::types::LogSink> sinks = flight::Array<flight::types::LogSink>{};
 
-inline void add_log_sink(flight::Ref<LogSink> sink) {
+inline void add_log_sink(flight::types::LogSink sink) {
   if (sinks.includes(sink)) {
     return;
   }
@@ -261,7 +259,7 @@ inline void clear_log_sinks() {
   ([&]() { auto&& assignment_receiver = sinks; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
 }
 
-inline bool remove_log_sink(flight::Ref<LogSink> sink) {
+inline bool remove_log_sink(flight::types::LogSink sink) {
   const double idx = sinks.index_of(sink);
   if ((idx < 0.0)) {
     return false;
@@ -270,33 +268,33 @@ inline bool remove_log_sink(flight::Ref<LogSink> sink) {
   return true;
 }
 
-inline void set_log_sink(std::optional<flight::Ref<LogSink>> sink) {
+inline void set_log_sink(std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>)>> sink) {
   ([&]() { auto&& assignment_receiver = sinks; const auto assignment_value = 0.0; assignment_receiver.resize(assignment_value); return assignment_value; }());
   if (sink.has_value()) {
     sinks.push(sink.value());
   }
 }
 
-inline flight::Array<flight::Ref<LogSpan>> span_stack = flight::Array<flight::Ref<LogSpan>>{};
+inline flight::Array<flight::Ref<flight::types::LogSpan>> span_stack = flight::Array<flight::Ref<flight::types::LogSpan>>{};
 
-inline void enter_log_span(flight::Ref<LogSpan> span) {
-  span_stack.push(span);
+inline void enter_log_span(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogSpan>>>> span) {
+  span_stack.push(flight::structural_ref_cast<flight::Ref<flight::types::LogSpan>>(span));
 }
 
-inline void exit_log_span(flight::Ref<LogSpan> span) {
+inline void exit_log_span(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogSpan>>>> span) {
   const double idx = span_stack.index_of(span);
   if ((idx >= 0.0)) {
     span_stack.splice(idx, 1.0);
   }
 }
 
-inline flight::Ref<log_level> console_level = log_level.info;
+inline flight::types::LogLevel console_level = flight::types::LogLevel::Info;
 
-inline flight::Ref<log_level> get_log_console_level() {
+inline flight::types::LogLevel get_log_console_level() {
   return console_level;
 }
 
-inline void set_log_console_level(flight::Ref<log_level> level_2) {
+inline void set_log_console_level(flight::types::LogLevel level_2) {
   (console_level = level_2);
 }
 
@@ -306,78 +304,70 @@ inline void clear_log_groups() {
   (group_depth = 0.0);
 }
 
-inline flight::Ref<log_level> level = log_level.verbose;
+inline flight::types::LogLevel level = flight::types::LogLevel::Verbose;
 
-inline flight::Ref<log_level> get_log_level() {
+inline flight::types::LogLevel get_log_level() {
   return level;
 }
 
-inline void set_log_level(flight::Ref<log_level> level_2) {
+inline void set_log_level(flight::types::LogLevel level_2) {
   (level = level_2);
 }
 
-inline std::optional<flight::Ref<LogSignals>> log_signals = std::nullopt;
+inline std::optional<flight::Ref<flight::types::LogSignals>> log_signals = std::nullopt;
 
+inline flight::String operation_failure_message(flight::Any error) {
+  return (error.error_if() != nullptr ? error.error_if()->message() : flight::to_string(error));
+}
 
-// NOT GENERATED: function _operationFailureMessage -- source line 705
-// refusal: cpp-erased-error-view-runtime-required [target-runtime]
-//
-// The source it stood for:
-//   function _operationFailureMessage(error: unknown): string {
-//     return error instanceof Error ? error.message : String(error);
-//   }
-//   
-//   // Applies registered serializers to values whose `__kind` matches a registered kind.
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: reading Error.message after narrowing an erased
-// value requires flight::Any to expose a checked Error view that accepts Error subclasses; keep the value typed
-// as Error before erasure or add that runtime contract
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_REASON_DELIVERY_3724413A85240C26
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_REASON_DELIVERY_3724413A85240C26
+using reason_delivery_3724413a85240c26 = flight::types::reason_delivery_3724413a85240c26;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_REASON_DELIVERY_3724413A85240C26
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_REASON_43A745D20647BFB6
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_REASON_43A745D20647BFB6
+using reason_43a745d20647bfb6 = flight::types::reason_43a745d20647bfb6;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_REASON_43A745D20647BFB6
 
-// NOT GENERATED: function _destroyFileLogSinkState -- source line 678
-//
-// The source it stood for:
-//   async function _destroyFileLogSinkState(state: FileLogSinkState): Promise<FileLogSinkDestroyOutcome> {
-//     const transport = state.transport!;
-//     let flush: LogTransportFlushOutcome;
-//     let destroy: LogTransportDestroyOutcome;
-//   
-//     try {
-//       flush = await transport.flush();
-//     } catch (error) {
-//       flush = { message: _operationFailureMessage(error), reason: 'operation-failed' };
-//     }
-//   
-//     try {
-//       destroy = await transport.destroy();
-//     } catch (error) {
-//       destroy = { message: _operationFailureMessage(error), reason: 'operation-failed' };
-//     }
-//   
-//     state.transport = null;
-//     state.status = 'destroyed';
-//     return {
-//       destroy,
-//       flush,
-//       reason:
-//         flush.reason === 'operation-failed' || destroy.reason === 'operation-failed' ? 'operation-failed' : 'destroyed',
-//     };
-//   }
-//   
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: union member test requires a C++ variant
-// binding
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_REASON_MESSAGE_D46086B32265B61F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_REASON_MESSAGE_D46086B32265B61F
+using reason_message_d46086b32265b61f = flight::types::reason_message_d46086b32265b61f;
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_REASON_MESSAGE_D46086B32265B61F
 
-inline flight::Task<flight::Ref<FileLogSinkDestroyOutcome>> destroy_file_log_sink(flight::Ref<FileLogSink> handle) {
+inline flight::Task<flight::Ref<flight::types::FileLogSinkDestroyOutcome>> destroy_file_log_sink_state(flight::Ref<FileLogSinkState> state) {
+  auto transport = state->transport.value();
+  flight::types::LogTransportFlushOutcome flush;
+  flight::types::LogTransportDestroyOutcome destroy;
+  try {
+    (flush = co_await transport->flush());
+  }
+  catch (const std::exception& error) {
+    (flush = std::variant<flight::Ref<flight::types::reason_delivery_3724413a85240c26>, flight::Ref<flight::types::reason_message_d46086b32265b61f>, flight::Ref<flight::types::reason_43a745d20647bfb6>>{std::in_place_type<flight::Ref<flight::types::reason_message_d46086b32265b61f>>, ([&]() { auto object_member_message = operation_failure_message(error); auto object_member_reason = flight::String("operation-failed"); return flight::make_ref<flight::types::reason_message_d46086b32265b61f>(flight::types::reason_message_d46086b32265b61f{.reason = object_member_reason, .message = object_member_message}); }())});
+  }
+  try {
+    (destroy = co_await transport->destroy());
+  }
+  catch (const std::exception& error) {
+    (destroy = std::variant<flight::Ref<flight::types::reason_message_d46086b32265b61f>, flight::Ref<flight::types::reason_43a745d20647bfb6>>{std::in_place_type<flight::Ref<flight::types::reason_message_d46086b32265b61f>>, ([&]() { auto object_member_message_2 = operation_failure_message(error_2); auto object_member_reason_2 = flight::String("operation-failed"); return flight::make_ref<flight::types::reason_message_d46086b32265b61f>(flight::types::reason_message_d46086b32265b61f{.reason = object_member_reason_2, .message = object_member_message_2}); }())});
+  }
+  (state->transport = std::nullopt);
+  (state->status = flight::String("destroyed"));
+  co_return ([&]() { auto object_member_destroy = destroy; auto object_member_flush = flush; auto object_member_reason_3 = ((flush.index() == 1 || destroy.index() == 0) ? flight::String("operation-failed") : flight::String("destroyed")); return flight::make_ref<flight::types::FileLogSinkDestroyOutcome>(flight::types::FileLogSinkDestroyOutcome{.reason = object_member_reason_3, .flush = object_member_flush, .destroy = object_member_destroy}); }());
+}
+
+inline flight::Task<flight::Ref<flight::types::FileLogSinkDestroyOutcome>> destroy_file_log_sink(flight::Ref<flight::types::FileLogSink> handle) {
   auto state = file_log_sink_states.get(handle);
   if (!state.has_value()) {
     throw flight::Error(flight::String("destroyFileLogSink received an unknown handle"));
   }
   if ((state.value()->status != flight::String("active"))) {
-    flight::Ref<FileLogSinkDestroyOutcome> outcome = co_await state.value()->destroy_promise.value();
-    co_return flight::make_ref<FileLogSinkDestroyOutcome>(FileLogSinkDestroyOutcome{.reason = flight::String("already-destroyed")});
+    auto outcome = co_await state.value()->destroy_promise.value();
+    co_return flight::make_ref<flight::types::FileLogSinkDestroyOutcome>(flight::types::FileLogSinkDestroyOutcome{.reason = flight::String("already-destroyed")});
   }
   (state.value()->status = flight::String("destroying"));
   remove_log_sink(handle->sink);
-  (state.value()->destroy_promise = std::optional<flight::Task<flight::Ref<FileLogSinkDestroyOutcome>>>{destroy_file_log_sink_state(state.value())});
+  (state.value()->destroy_promise = std::optional<flight::Task<flight::Ref<flight::types::FileLogSinkDestroyOutcome>>>{destroy_file_log_sink_state(state.value())});
   co_return co_await state.value()->destroy_promise.value();
 }
 
@@ -426,69 +416,62 @@ inline flight::Record<flight::String, flight::Any> apply_redaction(flight::Recor
   return result;
 }
 
-inline void emit_to_sinks(flight::Ref<LogEntry> entry) {
+inline void emit_to_sinks(flight::Ref<flight::types::LogEntry> entry) {
   for (auto sink : sinks) {
-    sink(entry);
+    sink(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>(entry)));
   }
   if (log_signals.has_value()) {
-    emit_signal(log_signals.value()->on_log_entry, entry);
-    if ((entry->level == log_level.error)) {
-      emit_signal(log_signals.value()->on_log_error, entry);
+    flight::signals::emit_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>)>>(log_signals.value()->on_log_entry, entry);
+    if ((entry->level == flight::types::LogLevel::Error)) {
+      flight::signals::emit_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>)>>(log_signals.value()->on_log_error, entry);
     }
   }
 }
 
+inline flight::types::LogData merge_context_fields(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogContext>>>> context, flight::types::LogData data) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogContext>>>> object_pattern_value = context;
+  flight::Record<flight::String, flight::Any> fields = flight::row_get<flight::RowKey<"fields">>(object_pattern_value);
+  if ((static_cast<double>(flight::object_keys(fields).size()) == 0.0)) {
+    return data;
+  }
+  if (data.index() == 1) {
+    return {.msg = std::get<1>(data)};
+  }
+  return {};
+}
 
-// NOT GENERATED: function _mergeContextFields -- source line 764
-//
-// The source it stood for:
-//   function _mergeContextFields(context: Readonly<LogContext>, data: LogData): LogData {
-//     const { fields } = context;
-//     if (Object.keys(fields).length === 0) return data;
-//     if (typeof data === 'string') return { msg: data, ...fields };
-//     return { ...fields, ...(data as Record<string, unknown>) };
-//   }
-//   
-//   // Merges active span fields into emitted data. Span fields have lower priority than data fields;
-//   // later spans in the stack win over earlier ones on key collision within span fields.
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: union member test requires a C++ variant
-// binding
+inline flight::types::LogData merge_span_fields(flight::types::LogData data, std::optional<flight::String> channel) {
+  if ((static_cast<double>(span_stack.size()) == 0.0)) {
+    return data;
+  }
+  flight::Record<flight::String, flight::Any> span_fields = flight::Record<flight::String, flight::Any>{};
+  for (auto span : span_stack) {
+    flight::object_assign(span_fields, span->fields);
+  }
+  if ((static_cast<double>(flight::object_keys(span_fields).size()) == 0.0)) {
+    return data;
+  }
+  if (data.index() == 1) {
+    return {.msg = std::get<1>(data)};
+  }
+  return {};
+}
 
-
-// NOT GENERATED: function _mergeSpanFields -- source line 773
-//
-// The source it stood for:
-//   function _mergeSpanFields(data: LogData, _channel: string | null): LogData {
-//     if (_spanStack.length === 0) return data;
-//     // Accumulate span fields oldest-first so newer spans overwrite older ones.
-//     const spanFields: Record<string, unknown> = {};
-//     for (const span of _spanStack) {
-//       Object.assign(spanFields, span.fields);
-//     }
-//     if (Object.keys(spanFields).length === 0) return data;
-//     // Data fields win over span fields on key collision.
-//     if (typeof data === 'string') return { msg: data, ...spanFields };
-//     return { ...spanFields, ...(data as Record<string, unknown>) };
-//   }
-//   
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: Object.assign requires one closed
-// callable-object target and an exact compatible object literal source
-
-inline bool passes_level_gate(flight::Ref<log_level> level_2, std::optional<flight::String> channel) {
+inline bool passes_level_gate(flight::types::LogLevel level_2, std::optional<flight::String> channel) {
   if (((static_cast<double>(sinks.size()) == 0.0) && !log_signals.has_value())) {
     return false;
   }
-  flight::Ref<LogLevel> gate = ((channel.has_value() && channel_levels.has(channel.value())) ? channel_levels.get(channel.value()).value() : level);
-  return ((level_2 <= gate) && (level_2 != log_level.none));
+  flight::types::LogLevel gate = ((channel.has_value() && channel_levels.has(channel.value())) ? channel_levels.get(channel.value()).value() : level);
+  return ((level_2 <= gate) && (level_2 != flight::types::LogLevel::None));
 }
 
 inline void begin_log_group(flight::String label, std::optional<std::optional<flight::String>> channel = std::nullopt) {
   channel = channel.value_or(std::nullopt);
   group_depth++;
-  if (!passes_level_gate(log_level.debug, channel.value())) {
+  if (!passes_level_gate(flight::types::LogLevel::Debug, channel.value())) {
     return;
   }
-  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = log_level.debug, .channel = channel.value(), .data = flight::make_ref<LogData>(LogData{.msg = label, .group = flight::String("begin"), .depth = group_depth})}));
+  emit_to_sinks(flight::make_ref<flight::types::LogEntry>(flight::types::LogEntry{.level = flight::types::LogLevel::Debug, .channel = channel.value(), .data = std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::Record<flight::String, flight::Any>>, flight::Record<flight::String, flight::Any>{{flight::String("msg"), label}, {flight::String("group"), flight::String("begin")}, {flight::String("depth"), group_depth}}}}));
 }
 
 inline void end_log_group(std::optional<std::optional<flight::String>> channel = std::nullopt) {
@@ -497,121 +480,92 @@ inline void end_log_group(std::optional<std::optional<flight::String>> channel =
     return;
   }
   group_depth--;
-  if (!passes_level_gate(log_level.debug, channel.value())) {
+  if (!passes_level_gate(flight::types::LogLevel::Debug, channel.value())) {
     return;
   }
-  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = log_level.debug, .channel = channel.value(), .data = flight::make_ref<LogData>(LogData{.group = flight::String("end"), .depth = (group_depth + 1.0)})}));
+  emit_to_sinks(flight::make_ref<flight::types::LogEntry>(flight::types::LogEntry{.level = flight::types::LogLevel::Debug, .channel = channel.value(), .data = std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::Record<flight::String, flight::Any>>, flight::Record<flight::String, flight::Any>{{flight::String("group"), flight::String("end")}, {flight::String("depth"), (group_depth + 1.0)}}}}));
 }
 
-inline void log(flight::Ref<log_level> level_2, std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
+inline void log(flight::types::LogLevel level_2, std::variant<std::function<flight::types::LogData()>, flight::Record<flight::String, flight::Any>, flight::String> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
   channel = channel.value_or(std::nullopt);
   if (!passes_level_gate(level_2, channel.value())) {
     return;
   }
-  flight::Ref<LogData> resolved = (data.index() == 0 ? std::get<0>(data)() : std::get<1>(data));
-  flight::Ref<LogEntry> entry = flight::make_ref<LogEntry>(LogEntry{.level = level_2, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())});
+  auto resolved = (data.index() == 0 ? std::get<0>(data)() : (data.index() == 2 ? std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::String>, std::get<2>(data)} : std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::Record<flight::String, flight::Any>>, std::get<1>(data)}));
+  flight::Ref<flight::types::LogEntry> entry = flight::make_ref<flight::types::LogEntry>(flight::types::LogEntry{.level = level_2, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())});
   emit_to_sinks(entry);
 }
 
-inline void log_assert(bool condition, std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
+inline void log_assert(bool condition, std::variant<std::function<flight::types::LogData()>, flight::Record<flight::String, flight::Any>, flight::String> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
   channel = channel.value_or(std::nullopt);
   if (condition) {
     return;
   }
-  if (!passes_level_gate(log_level.error, channel.value())) {
+  if (!passes_level_gate(flight::types::LogLevel::Error, channel.value())) {
     return;
   }
-  flight::Ref<LogData> resolved = (data.index() == 0 ? std::get<0>(data)() : std::get<1>(data));
-  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = log_level.error, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
+  auto resolved = (data.index() == 0 ? std::get<0>(data)() : (data.index() == 2 ? std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::String>, std::get<2>(data)} : std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::Record<flight::String, flight::Any>>, std::get<1>(data)}));
+  emit_to_sinks(flight::make_ref<flight::types::LogEntry>(flight::types::LogEntry{.level = flight::types::LogLevel::Error, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
 }
 
-inline void log_debug(std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
+inline void log_debug(std::variant<std::function<flight::types::LogData()>, flight::Record<flight::String, flight::Any>, flight::String> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
   channel = channel.value_or(std::nullopt);
-  if (!passes_level_gate(log_level.debug, channel.value())) {
+  if (!passes_level_gate(flight::types::LogLevel::Debug, channel.value())) {
     return;
   }
-  flight::Ref<LogData> resolved = (data.index() == 0 ? std::get<0>(data)() : std::get<1>(data));
-  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = log_level.debug, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
+  auto resolved = (data.index() == 0 ? std::get<0>(data)() : (data.index() == 2 ? std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::String>, std::get<2>(data)} : std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::Record<flight::String, flight::Any>>, std::get<1>(data)}));
+  emit_to_sinks(flight::make_ref<flight::types::LogEntry>(flight::types::LogEntry{.level = flight::types::LogLevel::Debug, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
 }
 
+inline void log_debug_with(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogContext>>>> context, std::variant<std::function<flight::types::LogData()>, flight::Record<flight::String, flight::Any>, flight::String> data) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogContext>>>> object_pattern_value = context;
+  const std::optional<flight::String> channel = flight::row_get<flight::RowKey<"channel">>(object_pattern_value);
+  if (!passes_level_gate(flight::types::LogLevel::Debug, channel)) {
+    return;
+  }
+  auto resolved = (data.index() == 0 ? std::get<0>(data)() : (data.index() == 2 ? std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::String>, std::get<2>(data)} : std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::Record<flight::String, flight::Any>>, std::get<1>(data)}));
+  emit_to_sinks(flight::make_ref<flight::types::LogEntry>(flight::types::LogEntry{.level = flight::types::LogLevel::Debug, .channel = channel, .data = merge_context_fields(context, merge_span_fields(resolved, channel))}));
+}
 
-// NOT GENERATED: function logDebugWith -- source line 441
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function logDebugWith(context: Readonly<LogContext>, data: LogData | LogDataProvider): void {
-//     const { channel } = context;
-//     if (!_passesLevelGate(LogLevel.Debug, channel)) return;
-//     const resolved: LogData = typeof data === 'function' ? data() : data;
-//     _emitToSinks({
-//       level: LogLevel.Debug,
-//       channel,
-//       data: _mergeContextFields(context, _mergeSpanFields(resolved, channel)),
-//     });
-//   }
-//   
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: contextual optionalSingle construction requires
-// expression type evidence
-
-inline void log_error(std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
+inline void log_error(std::variant<std::function<flight::types::LogData()>, flight::Record<flight::String, flight::Any>, flight::String> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
   channel = channel.value_or(std::nullopt);
-  if (!passes_level_gate(log_level.error, channel.value())) {
+  if (!passes_level_gate(flight::types::LogLevel::Error, channel.value())) {
     return;
   }
-  flight::Ref<LogData> resolved = (data.index() == 0 ? std::get<0>(data)() : std::get<1>(data));
-  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = log_level.error, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
+  auto resolved = (data.index() == 0 ? std::get<0>(data)() : (data.index() == 2 ? std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::String>, std::get<2>(data)} : std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::Record<flight::String, flight::Any>>, std::get<1>(data)}));
+  emit_to_sinks(flight::make_ref<flight::types::LogEntry>(flight::types::LogEntry{.level = flight::types::LogLevel::Error, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
 }
 
+inline void log_error_with(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogContext>>>> context, std::variant<std::function<flight::types::LogData()>, flight::Record<flight::String, flight::Any>, flight::String> data) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogContext>>>> object_pattern_value = context;
+  const std::optional<flight::String> channel = flight::row_get<flight::RowKey<"channel">>(object_pattern_value);
+  if (!passes_level_gate(flight::types::LogLevel::Error, channel)) {
+    return;
+  }
+  auto resolved = (data.index() == 0 ? std::get<0>(data)() : (data.index() == 2 ? std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::String>, std::get<2>(data)} : std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::Record<flight::String, flight::Any>>, std::get<1>(data)}));
+  emit_to_sinks(flight::make_ref<flight::types::LogEntry>(flight::types::LogEntry{.level = flight::types::LogLevel::Error, .channel = channel, .data = merge_context_fields(context, merge_span_fields(resolved, channel))}));
+}
 
-// NOT GENERATED: function logErrorWith -- source line 458
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function logErrorWith(context: Readonly<LogContext>, data: LogData | LogDataProvider): void {
-//     const { channel } = context;
-//     if (!_passesLevelGate(LogLevel.Error, channel)) return;
-//     const resolved: LogData = typeof data === 'function' ? data() : data;
-//     _emitToSinks({
-//       level: LogLevel.Error,
-//       channel,
-//       data: _mergeContextFields(context, _mergeSpanFields(resolved, channel)),
-//     });
-//   }
-//   
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: contextual optionalSingle construction requires
-// expression type evidence
-
-inline void log_info(std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
+inline void log_info(std::variant<std::function<flight::types::LogData()>, flight::Record<flight::String, flight::Any>, flight::String> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
   channel = channel.value_or(std::nullopt);
-  if (!passes_level_gate(log_level.info, channel.value())) {
+  if (!passes_level_gate(flight::types::LogLevel::Info, channel.value())) {
     return;
   }
-  flight::Ref<LogData> resolved = (data.index() == 0 ? std::get<0>(data)() : std::get<1>(data));
-  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = log_level.info, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
+  auto resolved = (data.index() == 0 ? std::get<0>(data)() : (data.index() == 2 ? std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::String>, std::get<2>(data)} : std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::Record<flight::String, flight::Any>>, std::get<1>(data)}));
+  emit_to_sinks(flight::make_ref<flight::types::LogEntry>(flight::types::LogEntry{.level = flight::types::LogLevel::Info, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
 }
 
+inline void log_info_with(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogContext>>>> context, std::variant<std::function<flight::types::LogData()>, flight::Record<flight::String, flight::Any>, flight::String> data) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogContext>>>> object_pattern_value = context;
+  const std::optional<flight::String> channel = flight::row_get<flight::RowKey<"channel">>(object_pattern_value);
+  if (!passes_level_gate(flight::types::LogLevel::Info, channel)) {
+    return;
+  }
+  auto resolved = (data.index() == 0 ? std::get<0>(data)() : (data.index() == 2 ? std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::String>, std::get<2>(data)} : std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::Record<flight::String, flight::Any>>, std::get<1>(data)}));
+  emit_to_sinks(flight::make_ref<flight::types::LogEntry>(flight::types::LogEntry{.level = flight::types::LogLevel::Info, .channel = channel, .data = merge_context_fields(context, merge_span_fields(resolved, channel))}));
+}
 
-// NOT GENERATED: function logInfoWith -- source line 475
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function logInfoWith(context: Readonly<LogContext>, data: LogData | LogDataProvider): void {
-//     const { channel } = context;
-//     if (!_passesLevelGate(LogLevel.Info, channel)) return;
-//     const resolved: LogData = typeof data === 'function' ? data() : data;
-//     _emitToSinks({
-//       level: LogLevel.Info,
-//       channel,
-//       data: _mergeContextFields(context, _mergeSpanFields(resolved, channel)),
-//     });
-//   }
-//   
-//   // Emit side. Emits a given key at most once per process lifetime (useful for warmup warnings and
-//   // deprecation notices). Returns true if the entry was emitted, false if it was suppressed.
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: contextual optionalSingle construction requires
-// expression type evidence
-
-inline bool log_once(flight::String key, flight::Ref<log_level> level_2, std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
+inline bool log_once(flight::String key, flight::types::LogLevel level_2, std::variant<std::function<flight::types::LogData()>, flight::Record<flight::String, flight::Any>, flight::String> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
   channel = channel.value_or(std::nullopt);
   if (once_keys.has(key)) {
     return false;
@@ -621,129 +575,89 @@ inline bool log_once(flight::String key, flight::Ref<log_level> level_2, std::va
   return true;
 }
 
-inline void log_verbose(std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
+inline void log_verbose(std::variant<std::function<flight::types::LogData()>, flight::Record<flight::String, flight::Any>, flight::String> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
   channel = channel.value_or(std::nullopt);
-  if (!passes_level_gate(log_level.verbose, channel.value())) {
+  if (!passes_level_gate(flight::types::LogLevel::Verbose, channel.value())) {
     return;
   }
-  flight::Ref<LogData> resolved = (data.index() == 0 ? std::get<0>(data)() : std::get<1>(data));
-  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = log_level.verbose, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
+  auto resolved = (data.index() == 0 ? std::get<0>(data)() : (data.index() == 2 ? std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::String>, std::get<2>(data)} : std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::Record<flight::String, flight::Any>>, std::get<1>(data)}));
+  emit_to_sinks(flight::make_ref<flight::types::LogEntry>(flight::types::LogEntry{.level = flight::types::LogLevel::Verbose, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
 }
 
-
-// NOT GENERATED: function logVerboseWith -- source line 506
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function logVerboseWith(context: Readonly<LogContext>, data: LogData | LogDataProvider): void {
-//     const { channel } = context;
-//     if (!_passesLevelGate(LogLevel.Verbose, channel)) return;
-//     const resolved: LogData = typeof data === 'function' ? data() : data;
-//     _emitToSinks({
-//       level: LogLevel.Verbose,
-//       channel,
-//       data: _mergeContextFields(context, _mergeSpanFields(resolved, channel)),
-//     });
-//   }
-//   
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: contextual optionalSingle construction requires
-// expression type evidence
-
-inline void log_warn(std::variant<flight::Ref<LogDataProvider>, flight::Ref<LogData>> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
-  channel = channel.value_or(std::nullopt);
-  if (!passes_level_gate(log_level.warn, channel.value())) {
+inline void log_verbose_with(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogContext>>>> context, std::variant<std::function<flight::types::LogData()>, flight::Record<flight::String, flight::Any>, flight::String> data) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogContext>>>> object_pattern_value = context;
+  const std::optional<flight::String> channel = flight::row_get<flight::RowKey<"channel">>(object_pattern_value);
+  if (!passes_level_gate(flight::types::LogLevel::Verbose, channel)) {
     return;
   }
-  flight::Ref<LogData> resolved = (data.index() == 0 ? std::get<0>(data)() : std::get<1>(data));
-  emit_to_sinks(flight::make_ref<LogEntry>(LogEntry{.level = log_level.warn, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
+  auto resolved = (data.index() == 0 ? std::get<0>(data)() : (data.index() == 2 ? std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::String>, std::get<2>(data)} : std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::Record<flight::String, flight::Any>>, std::get<1>(data)}));
+  emit_to_sinks(flight::make_ref<flight::types::LogEntry>(flight::types::LogEntry{.level = flight::types::LogLevel::Verbose, .channel = channel, .data = merge_context_fields(context, merge_span_fields(resolved, channel))}));
 }
 
+inline void log_warn(std::variant<std::function<flight::types::LogData()>, flight::Record<flight::String, flight::Any>, flight::String> data, std::optional<std::optional<flight::String>> channel = std::nullopt) {
+  channel = channel.value_or(std::nullopt);
+  if (!passes_level_gate(flight::types::LogLevel::Warn, channel.value())) {
+    return;
+  }
+  auto resolved = (data.index() == 0 ? std::get<0>(data)() : (data.index() == 2 ? std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::String>, std::get<2>(data)} : std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::Record<flight::String, flight::Any>>, std::get<1>(data)}));
+  emit_to_sinks(flight::make_ref<flight::types::LogEntry>(flight::types::LogEntry{.level = flight::types::LogLevel::Warn, .channel = channel.value(), .data = merge_span_fields(resolved, channel.value())}));
+}
 
-// NOT GENERATED: function logWarnWith -- source line 523
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function logWarnWith(context: Readonly<LogContext>, data: LogData | LogDataProvider): void {
-//     const { channel } = context;
-//     if (!_passesLevelGate(LogLevel.Warn, channel)) return;
-//     const resolved: LogData = typeof data === 'function' ? data() : data;
-//     _emitToSinks({
-//       level: LogLevel.Warn,
-//       channel,
-//       data: _mergeContextFields(context, _mergeSpanFields(resolved, channel)),
-//     });
-//   }
-//   
-//   // Emit side. Emits a log entry using the bound channel and merged fields from a LogContext. The
-//   // context's fields are merged into the entry's data (string data becomes { msg, ...fields }).
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: contextual optionalSingle construction requires
-// expression type evidence
+inline void log_warn_with(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogContext>>>> context, std::variant<std::function<flight::types::LogData()>, flight::Record<flight::String, flight::Any>, flight::String> data) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogContext>>>> object_pattern_value = context;
+  const std::optional<flight::String> channel = flight::row_get<flight::RowKey<"channel">>(object_pattern_value);
+  if (!passes_level_gate(flight::types::LogLevel::Warn, channel)) {
+    return;
+  }
+  auto resolved = (data.index() == 0 ? std::get<0>(data)() : (data.index() == 2 ? std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::String>, std::get<2>(data)} : std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::Record<flight::String, flight::Any>>, std::get<1>(data)}));
+  emit_to_sinks(flight::make_ref<flight::types::LogEntry>(flight::types::LogEntry{.level = flight::types::LogLevel::Warn, .channel = channel, .data = merge_context_fields(context, merge_span_fields(resolved, channel))}));
+}
 
-
-// NOT GENERATED: function logWith -- source line 536
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function logWith(context: Readonly<LogContext>, level: LogLevel, data: LogData | LogDataProvider): void {
-//     const { channel } = context;
-//     if (!_passesLevelGate(level, channel)) return;
-//     const resolved: LogData = typeof data === 'function' ? data() : data;
-//     _emitToSinks({ level, channel, data: _mergeContextFields(context, _mergeSpanFields(resolved, channel)) });
-//   }
-//   
-//   // Listener side. Parses a level name (case-insensitive) back to a LogLevel. Returns null for
-//   // unknown names (sentinel, not a throw).
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: contextual optionalSingle construction requires
-// expression type evidence
+inline void log_with(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogContext>>>> context, flight::types::LogLevel level_2, std::variant<std::function<flight::types::LogData()>, flight::Record<flight::String, flight::Any>, flight::String> data) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogContext>>>> object_pattern_value = context;
+  const std::optional<flight::String> channel = flight::row_get<flight::RowKey<"channel">>(object_pattern_value);
+  if (!passes_level_gate(level_2, channel)) {
+    return;
+  }
+  auto resolved = (data.index() == 0 ? std::get<0>(data)() : (data.index() == 2 ? std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::String>, std::get<2>(data)} : std::variant<flight::Record<flight::String, flight::Any>, flight::String>{std::in_place_type<flight::Record<flight::String, flight::Any>>, std::get<1>(data)}));
+  emit_to_sinks(flight::make_ref<flight::types::LogEntry>(flight::types::LogEntry{.level = level_2, .channel = channel, .data = merge_context_fields(context, merge_span_fields(resolved, channel))}));
+}
 
 inline double timestamp() {
   return (true ? flight::host::performance_now() : flight::Date::now());
 }
 
-
-// NOT GENERATED: function createJsonLogFormatter -- source line 195
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function createJsonLogFormatter(): LogFormatter {
-//     return (entry: Readonly<LogEntry>): string => {
-//       const { level, channel, data } = entry;
-//       const serialized = _applySerializers(typeof data === 'string' ? { msg: data } : (data as Record<string, unknown>));
-//       const redacted = _redactionPaths.length > 0 ? _applyRedaction(serialized) : serialized;
-//       return JSON.stringify({
-//         __flight: true,
-//         t: _timestamp(),
-//         level: _levelNames[level],
-//         channel,
-//         data: redacted,
-//       });
-//     };
-//   }
-//   
-//   // Creates a bound logging context with a channel and optional base fields. Pass the context to
-//   // logWith / logErrorWith / etc. to have the channel and fields merged into every entry.
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: contextual optionalSingle construction requires
-// expression type evidence
+inline flight::types::LogFormatter create_json_log_formatter() {
+  return [=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>> entry) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>> object_pattern_value = entry;
+  flight::types::LogLevel level_2 = flight::row_get<flight::RowKey<"level">>(object_pattern_value);
+  const std::optional<flight::String> channel = flight::row_get<flight::RowKey<"channel">>(object_pattern_value);
+  flight::types::LogData data = flight::row_get<flight::RowKey<"data">>(object_pattern_value);
+  flight::Record<flight::String, flight::Any> serialized = apply_serializers((data.index() == 1 ? {{flight::String("msg"), std::get<1>(data)}} : std::get<flight::Record<flight::String, flight::Any>>(data)));
+  flight::Record<flight::String, flight::Any> redacted = ((static_cast<double>(redaction_paths.size()) > 0.0) ? apply_redaction(serialized) : serialized);
+  return flight::Json::stringify({.flight = true, .t = timestamp(), .level = level_names.get(level_2).value(), .channel = channel, .data = redacted}, std::nullopt, std::nullopt);
+};
+}
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_FORMATTER_C3F72D72FEB278C6
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_FORMATTER_C3F72D72FEB278C6
 struct formatter_c3f72d72feb278c6 : public flight::ReferenceEnabled {
-  std::optional<flight::Ref<LogFormatter>> formatter;
+  std::optional<flight::types::LogFormatter> formatter;
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_FORMATTER_C3F72D72FEB278C6
 
-inline flight::Ref<FileLogSink> create_file_log_sink(flight::Ref<LogTransport> transport, std::optional<flight::Ref<formatter_c3f72d72feb278c6>> options = std::nullopt) {
+inline flight::Ref<flight::types::FileLogSink> create_file_log_sink(flight::Ref<flight::types::LogTransport> transport, std::optional<flight::Ref<formatter_c3f72d72feb278c6>> options = std::nullopt) {
   options = options.value_or(flight::make_ref<formatter_c3f72d72feb278c6>(formatter_c3f72d72feb278c6{}));
-  flight::Ref<LogFormatter> formatter = ([&]() -> flight::Ref<LogFormatter> { auto nullish_coalesce_left = options.value()->formatter; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_json_log_formatter(); }());
-  flight::Ref<LogSink> sink = [=](flight::Ref<LogEntry> entry) {
+  flight::types::LogFormatter formatter = ([&]() -> std::function<flight::String(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>)> { auto nullish_coalesce_left = options.value()->formatter; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_json_log_formatter(); }());
+  flight::types::LogSink sink = [=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>> entry) {
   auto state = file_log_sink_states.get(handle);
   if (((!state.has_value() || (state.value()->status != flight::String("active"))) || !state.value()->transport.has_value())) {
     return;
   }
-  state.value()->transport.value()->write(formatter(entry) + flight::String("\n"));
+  state.value()->transport.value()->write(formatter(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>>(entry)) + flight::String("\n"));
 };
-  flight::Ref<FileLogSink> handle = flight::make_ref<FileLogSink>(FileLogSink{.sink = sink});
-  file_log_sink_states.set(handle, flight::make_ref<FileLogSinkState>(FileLogSinkState{.destroy_promise = std::nullopt, .status = flight::String("active"), .transport = std::optional<flight::Ref<LogTransport>>{transport}}));
+  flight::Ref<flight::types::FileLogSink> handle = flight::make_ref<flight::types::FileLogSink>(flight::types::FileLogSink{.sink = sink});
+  file_log_sink_states.set(handle, flight::make_ref<FileLogSinkState>(FileLogSinkState{.destroy_promise = std::nullopt, .status = flight::String("active"), .transport = std::optional<flight::Ref<flight::types::LogTransport>>{transport}}));
   return handle;
 }
 
@@ -756,70 +670,51 @@ struct indent_groups_level_prefix_timestamp_85ef46f909e535f5 : public flight::Re
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_INDENT_GROUPS_LEVEL_PREFIX_TIMESTAMP_85EF46F909E535F5
 
-
-// NOT GENERATED: function createTextLogFormatter -- source line 284
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function createTextLogFormatter(
-//     options: { indentGroups?: boolean; levelPrefix?: boolean; timestamp?: boolean } = {},
-//   ): LogFormatter {
-//     return (entry: Readonly<LogEntry>): string => {
-//       const { level, channel, data } = entry;
-//       const parts: string[] = [];
-//       if (options.timestamp) parts.push(`t=${_timestamp().toFixed(2)}`);
-//       if (options.levelPrefix) parts.push(_levelNames[level] ?? 'unknown');
-//       parts.push(channel !== null ? `[${channel}]` : '[flight]');
-//       if (options.indentGroups && _groupDepth > 0) parts.push('  '.repeat(_groupDepth));
-//       if (typeof data === 'string') parts.push(data);
-//       else parts.push(JSON.stringify(data));
-//       return parts.join(' ');
-//     };
-//   }
-//   
-//   // Makes the sink terminal and unregisters it synchronously, then awaits its delivery boundary before
-//   // attempting terminal transport teardown. Destroy is attempted even when flush fails or rejects, and
-//   // both operation outcomes are preserved. Repeated calls await the same teardown without invoking the
-//   // provider again.
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: contextual optionalSingle construction requires
-// expression type evidence
-
-
-// NOT GENERATED: function endLogTimer -- source line 352
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function endLogTimer(timer: Readonly<LogTimer>): number {
-//     const elapsed = _timestamp() - timer.startedAt;
-//     logDebug({ label: timer.label, elapsedMs: elapsed }, timer.channel);
-//     return elapsed;
-//   }
-//   
-//   // Activates a log span, pushing it onto the active-span stack. While active, the span's fields
-//   // and channel are merged into every emitted entry. The span with the highest stack index (most
-//   // recently entered) wins on field key collision. Pair every enterLogSpan with exitLogSpan.
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: contextual optionalSingle construction requires
-// expression type evidence
-
-inline flight::Ref<LogTimer> start_log_timer(flight::String label, std::optional<std::optional<flight::String>> channel = std::nullopt) {
-  channel = channel.value_or(std::nullopt);
-  return flight::make_ref<LogTimer>(LogTimer{.label = label, .channel = channel.value(), .started_at = timestamp()});
+inline flight::types::LogFormatter create_text_log_formatter(std::optional<flight::Ref<indent_groups_level_prefix_timestamp_85ef46f909e535f5>> options = std::nullopt) {
+  options = options.value_or(flight::make_ref<indent_groups_level_prefix_timestamp_85ef46f909e535f5>(indent_groups_level_prefix_timestamp_85ef46f909e535f5{}));
+  return [=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>> entry) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>> object_pattern_value = entry;
+  flight::types::LogLevel level_2 = flight::row_get<flight::RowKey<"level">>(object_pattern_value);
+  const std::optional<flight::String> channel = flight::row_get<flight::RowKey<"channel">>(object_pattern_value);
+  flight::types::LogData data = flight::row_get<flight::RowKey<"data">>(object_pattern_value);
+  flight::Array<flight::String> parts = flight::Array<flight::String>{};
+  if (flight::to_boolean(options.value()->timestamp)) {
+    parts.push(flight::String("t=") + flight::to_string(flight::number_to_fixed(timestamp(), 2.0)) + flight::String(""));
+  }
+  if (flight::to_boolean(options.value()->level_prefix)) {
+    parts.push(([&]() -> flight::String { auto nullish_coalesce_left = level_names.get(level_2); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return flight::String("unknown"); }()));
+  }
+  parts.push((channel.has_value() ? flight::String("[") + flight::to_string(channel.value()) + flight::String("]") : flight::String("[flight]")));
+  if (flight::to_boolean((options.value()->indent_groups && (group_depth > 0.0)))) {
+    parts.push(flight::String("  ").repeat(group_depth));
+  }
+  if (data.index() == 1) {
+    parts.push(std::get<1>(data));
+  }
+  else {
+    parts.push(flight::Json::stringify(std::get<0>(data), std::nullopt, std::nullopt));
+  }
+  return parts.join(flight::String(" "));
+};
 }
 
+inline double end_log_timer(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogTimer>>>> timer) {
+  const double elapsed = (timestamp() - flight::row_get<flight::RowKey<"startedAt">>(timer));
+  log_debug(flight::types::LogData{std::in_place_type<flight::Record<flight::String, flight::Any>>, flight::Record<flight::String, flight::Any>{{flight::String("label"), flight::row_get<flight::RowKey<"label">>(timer)}, {flight::String("elapsedMs"), elapsed}}}, flight::row_get<flight::RowKey<"channel">>(timer));
+  return elapsed;
+}
 
-// NOT GENERATED: function initializeLogEntity -- source line 796
-// refusal: cpp-intersection-member-shapeless [source-portability]
-//
-// The source it stood for:
-//   function initializeLogEntity<Type extends object>(value: Type): Type & Entity {
-//     const entity = value as Type & Entity;
-//     entity[EntityRuntimeKey] = undefined;
-//     return entity;
-//   }
-//   
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: intersection types require C++
-// multiple-inheritance lowering: no shape for Type, Entity. Declare the object shape the code reads rather than
-// intersecting a conjunct that has none
+inline flight::Ref<flight::types::LogTimer> start_log_timer(flight::String label, std::optional<std::optional<flight::String>> channel = std::nullopt) {
+  channel = channel.value_or(std::nullopt);
+  return flight::make_ref<flight::types::LogTimer>(flight::types::LogTimer{.label = label, .channel = channel.value(), .started_at = timestamp()});
+}
+
+template <typename Type>
+inline flight::StructuralRef<flight::RowMerge<flight::RowOf<Type>, flight::RowOf<flight::Ref<flight::types::Entity>>>> initialize_log_entity(Type value) {
+  flight::StructuralRef<flight::RowMerge<flight::RowOf<Type>, flight::RowOf<flight::Ref<flight::types::Entity>>>> entity = flight::structural_ref_cast<flight::StructuralRef<flight::RowMerge<flight::RowOf<Type>, flight::RowOf<flight::Ref<flight::types::Entity>>>>>(value);
+  flight::row_set(entity, flight::types::entity_runtime_key, std::nullopt);
+  return entity;
+}
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_SIZE_INTERVAL_MS_014EB73ADB446976
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_SIZE_INTERVAL_MS_014EB73ADB446976
@@ -829,110 +724,77 @@ struct size_interval_ms_014eb73adb446976 : public flight::ReferenceEnabled {
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_SIZE_INTERVAL_MS_014EB73ADB446976
 
-
-// NOT GENERATED: function createBufferedLogSink -- source line 101
-// refusal: cpp-optional-member-access-unproven [compiler-restriction]
-//
-// The source it stood for:
-//   export function createBufferedLogSink(
-//     target: LogSink,
-//     options: { size?: number; intervalMs?: number } = {},
-//   ): BufferedLogSink {
-//     const size = options.size ?? 100;
-//     const intervalMs = options.intervalMs ?? 1000;
-//   
-//     const flush = (): void => {
-//       const state = _bufferedSinkStates.get(handle)!;
-//       if (state.buf.length === 0) return;
-//       const batch = state.buf.splice(0);
-//       for (const entry of batch) target(entry);
-//     };
-//   
-//     const sink: LogSink = (entry: Readonly<LogEntry>) => {
-//       const state = _bufferedSinkStates.get(handle)!;
-//       state.buf.push({ level: entry.level, channel: entry.channel, data: entry.data });
-//       if (state.buf.length >= size) flush();
-//     };
-//   
-//     const handle: BufferedLogSink = initializeLogEntity({ sink });
-//     let timer: ReturnType<typeof setInterval> | null = null;
-//     if (intervalMs > 0 && typeof setInterval !== 'undefined') {
-//       timer = setInterval(flush, intervalMs);
-//     }
-//     _bufferedSinkStates.set(handle, { buf: [], timer, flush });
-//     return handle;
-//   }
-//   
-//   // Creates a child context that inherits the parent's channel and fields. The child wins on key
-//   // collision. An explicit channel overrides the parent's channel.
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: property buf on C++ absence-carrying storage
-// requires narrowed access: no present-value proof reaches this read. Guard this exact receiver (bind a property
-// or call result to a local first if evaluating it again would produce a different value), then read the member
-// only in the present branch. The compiler will not discard the absence state or call value() without that proof
-
-
-// NOT GENERATED: function createChildLogContext -- source line 132
-// refusal: cpp-member-projection-without-present-storage [compiler-restriction]
-//
-// The source it stood for:
-//   export function createChildLogContext(
-//     parent: Readonly<LogContext>,
-//     fields: Readonly<Record<string, unknown>>,
-//     channel?: string | null,
-//   ): LogContext {
-//     const merged = { ...parent.fields, ...fields };
-//     return initializeLogEntity({ channel: channel !== undefined ? channel : parent.channel, fields: merged });
-//   }
-//   
-//   // Creates a sink that records every entry as a tagged JSON envelope on console.debug — low
-//   // visual noise, but the Playwright capture script reads every console level, so it always
-//   // lands in logs.jsonl. Entries at or above the console threshold (setLogConsoleLevel) are ALSO
-//   // printed as a human-readable line via the matching console method. Install with addLogSink or
-//   // setLogSink.
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: narrowed C++ union projection requires proven
-// present payload: the narrowing still admits absence, so nothing proved the payload present and reading the
-// value alternative here would unpack storage that may still be holding the sentinel the test left reachable.
-// Test both at once with `x != null`, or narrow the value into a present local the same way
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_CHANNEL_FIELDS_1F56163CB6145760
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_CHANNEL_FIELDS_1F56163CB6145760
-struct channel_fields_1f56163cb6145760 : public flight::ReferenceEnabled {
-  std::optional<flight::String> channel;
-  flight::Record<flight::String, flight::Any> fields;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_CHANNEL_FIELDS_1F56163CB6145760
-
-inline flight::Ref<LogContext> create_log_context(std::optional<flight::String> channel, std::optional<flight::Record<flight::String, flight::Any>> fields = std::nullopt) {
-  fields = fields.value_or(flight::Record<flight::String, flight::Any>{});
-  return initialize_log_entity<flight::Ref<channel_fields_1f56163cb6145760>>(flight::make_ref<channel_fields_1f56163cb6145760>(channel_fields_1f56163cb6145760{.channel = channel, .fields = fields.value()}));
-}
-
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_NAME_FIELDS_CHANNEL_2C921024833B1D00
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_NAME_FIELDS_CHANNEL_2C921024833B1D00
-struct name_fields_channel_2c921024833b1d00 : public flight::ReferenceEnabled {
-  flight::String name;
-  flight::Record<flight::String, flight::Any> fields;
-  std::optional<flight::String> channel;
-};
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_NAME_FIELDS_CHANNEL_2C921024833B1D00
-
-inline flight::Ref<LogSpan> create_log_span(flight::String name, std::optional<flight::Record<flight::String, flight::Any>> fields = std::nullopt, std::optional<std::optional<flight::String>> channel = std::nullopt) {
-  fields = fields.value_or(flight::Record<flight::String, flight::Any>{});
-  channel = channel.value_or(std::nullopt);
-  return initialize_log_entity<flight::Ref<name_fields_channel_2c921024833b1d00>>(flight::make_ref<name_fields_channel_2c921024833b1d00>(name_fields_channel_2c921024833b1d00{.name = name, .fields = fields.value(), .channel = channel.value()}));
-}
-
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_SINK_65EED447EB7D5CB3
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_SINK_65EED447EB7D5CB3
 struct sink_65eed447eb7d5cb3 : public flight::ReferenceEnabled {
-  flight::Ref<LogSink> sink;
+  flight::types::LogSink sink;
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_SINK_65EED447EB7D5CB3
 
-inline flight::Ref<MemoryLogSink> create_memory_log_sink(double capacity) {
-  flight::Ref<MemoryLogSinkState> state = flight::make_ref<MemoryLogSinkState>(MemoryLogSinkState{.buf = flight::Array<flight::Ref<LogEntry>>{}, .head = 0.0});
-  flight::Ref<LogSink> sink = [=](flight::Ref<LogEntry> entry) {
-  flight::Ref<LogEntry> stored = flight::make_ref<LogEntry>(LogEntry{.level = entry->level, .channel = entry->channel, .data = entry->data});
+inline flight::Ref<flight::types::BufferedLogSink> create_buffered_log_sink(flight::types::LogSink target, std::optional<flight::Ref<size_interval_ms_014eb73adb446976>> options = std::nullopt) {
+  options = options.value_or(flight::make_ref<size_interval_ms_014eb73adb446976>(size_interval_ms_014eb73adb446976{}));
+  const double size = ([&]() -> double { auto nullish_coalesce_left = options.value()->size; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 100.0; }());
+  const double interval_ms = ([&]() -> double { auto nullish_coalesce_left = options.value()->interval_ms; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 1000.0; }());
+  std::function<void()> flush = [=]() {
+  auto state = buffered_sink_states.get(handle);
+  if (!state.has_value()) {
+    throw flight::TypeError(flight::String("Cannot read properties of undefined (reading 'buf')"));
+  }
+  if ((static_cast<double>(state.value()->buf.size()) == 0.0)) {
+    return;
+  }
+  flight::Array<flight::Ref<flight::types::LogEntry>> batch = state.value()->buf.splice(0.0);
+  for (auto entry : batch) {
+    target(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>(entry)));
+  }
+};
+  flight::types::LogSink sink = [=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>> entry) {
+  auto state = buffered_sink_states.get(handle);
+  if (!state.has_value()) {
+    throw flight::TypeError(flight::String("Cannot read properties of undefined (reading 'buf')"));
+  }
+  state.value()->buf.push(flight::make_ref<flight::types::LogEntry>(flight::types::LogEntry{.level = flight::row_get<flight::RowKey<"level">>(entry), .channel = flight::row_get<flight::RowKey<"channel">>(entry), .data = flight::row_get<flight::RowKey<"data">>(entry)}));
+  if ((static_cast<double>(state.value()->buf.size()) >= size)) {
+    flush();
+  }
+};
+  auto handle = initialize_log_entity<flight::Ref<sink_65eed447eb7d5cb3>>(flight::make_ref<sink_65eed447eb7d5cb3>(sink_65eed447eb7d5cb3{.sink = sink}));
+  std::optional<flight::host::TimerHandle> timer = std::nullopt;
+  if (((interval_ms > 0.0) && true)) {
+    (timer = std::optional<flight::host::TimerHandle>{flight::host::set_interval(flush, interval_ms)});
+  }
+  buffered_sink_states.set(handle, ([&]() { auto object_member_buf = flight::Array<flight::Ref<flight::types::LogEntry>>{}; auto object_member_timer = timer; auto object_member_flush_2 = flush; return flight::make_ref<BufferedLogSinkState>(BufferedLogSinkState{.buf = object_member_buf, .flush = object_member_flush_2, .timer = object_member_timer}); }()));
+  return handle;
+}
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_CHANNEL_FIELDS_0246D83417C910B8
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_CHANNEL_FIELDS_0246D83417C910B8
+struct channel_fields_0246d83417c910b8 : public flight::ReferenceEnabled {
+  std::optional<flight::String> channel;
+  flight::ErasedRef fields;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_CHANNEL_FIELDS_0246D83417C910B8
+
+inline flight::Ref<flight::types::LogContext> create_child_log_context(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogContext>>>> parent, flight::Record<flight::String, flight::Any> fields, std::optional<std::optional<flight::String>> channel = std::nullopt) {
+  auto merged = {};
+  return initialize_log_entity<flight::Ref<channel_fields_0246d83417c910b8>>(flight::make_ref<channel_fields_0246d83417c910b8>(channel_fields_0246d83417c910b8{.channel = (([&]() { const auto& presence_operand = channel; return presence_operand.has_value(); }()) ? channel.value() : flight::row_get<flight::RowKey<"channel">>(parent)), .fields = merged}));
+}
+
+inline flight::Ref<flight::types::LogContext> create_log_context(std::optional<flight::String> channel, std::optional<flight::Record<flight::String, flight::Any>> fields = std::nullopt) {
+  fields = fields.value_or(flight::Record<flight::String, flight::Any>{});
+  return initialize_log_entity<flight::Ref<flight::types::LogContext>>(flight::make_ref<flight::types::LogContext>(flight::types::LogContext{.channel = channel, .fields = fields.value()}));
+}
+
+inline flight::Ref<flight::types::LogSpan> create_log_span(flight::String name, std::optional<flight::Record<flight::String, flight::Any>> fields = std::nullopt, std::optional<std::optional<flight::String>> channel = std::nullopt) {
+  fields = fields.value_or(flight::Record<flight::String, flight::Any>{});
+  channel = channel.value_or(std::nullopt);
+  return initialize_log_entity<flight::Ref<flight::types::LogSpan>>(flight::make_ref<flight::types::LogSpan>(flight::types::LogSpan{.name = name, .fields = fields.value(), .channel = channel.value()}));
+}
+
+inline flight::Ref<flight::types::MemoryLogSink> create_memory_log_sink(double capacity) {
+  flight::Ref<MemoryLogSinkState> state = flight::make_ref<MemoryLogSinkState>(MemoryLogSinkState{.buf = flight::Array<flight::Ref<flight::types::LogEntry>>{}, .head = 0.0});
+  flight::types::LogSink sink = [=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>> entry) {
+  flight::Ref<flight::types::LogEntry> stored = flight::make_ref<flight::types::LogEntry>(flight::types::LogEntry{.level = flight::row_get<flight::RowKey<"level">>(entry), .channel = flight::row_get<flight::RowKey<"channel">>(entry), .data = flight::row_get<flight::RowKey<"data">>(entry)});
   if ((static_cast<double>(state->buf.size()) < capacity)) {
     state->buf.push(stored);
   }
@@ -941,7 +803,7 @@ inline flight::Ref<MemoryLogSink> create_memory_log_sink(double capacity) {
     (state->head = std::fmod((state->head + 1.0), capacity));
   }
 };
-  flight::Ref<MemoryLogSink> handle = initialize_log_entity<flight::Ref<sink_65eed447eb7d5cb3>>(flight::make_ref<sink_65eed447eb7d5cb3>(sink_65eed447eb7d5cb3{.sink = sink}));
+  auto handle = initialize_log_entity<flight::Ref<sink_65eed447eb7d5cb3>>(flight::make_ref<sink_65eed447eb7d5cb3>(sink_65eed447eb7d5cb3{.sink = sink}));
   memory_sink_states.set(handle, state);
   return handle;
 }
@@ -955,81 +817,57 @@ struct per_channel_max_per_interval_interval_ms_b055d1b6af9da40a : public flight
 };
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_PER_CHANNEL_MAX_PER_INTERVAL_INTERVAL_MS_B055D1B6AF9DA40A
 
+inline flight::Ref<flight::types::RateLimitedLogSink> create_rate_limited_log_sink(flight::types::LogSink target, flight::Ref<per_channel_max_per_interval_interval_ms_b055d1b6af9da40a> options) {
+  auto object_pattern_value = options;
+  const bool per_channel = object_pattern_value->per_channel.value_or(false);
+  const double max_per_interval = object_pattern_value->max_per_interval;
+  const double interval_ms = object_pattern_value->interval_ms;
+  auto counts = flight::Map<std::optional<flight::String>, double>();
+  const auto window_start_capture = flight::make_binding_cell(double{timestamp()});
+  flight::types::LogSink sink = [=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>> entry) {
+  const double now = timestamp();
+  if (((now - window_start_capture.read_binding()) >= interval_ms)) {
+    counts.clear();
+    window_start_capture.rebind(now);
+  }
+  const std::optional<flight::String> key = (per_channel ? std::optional{flight::row_get<flight::RowKey<"channel">>(entry)} : std::nullopt);
+  const double current = ([&]() -> double { auto nullish_coalesce_left = counts.get(key); if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());
+  if ((current >= max_per_interval)) {
+    return;
+  }
+  counts.set(key, (current + 1.0));
+  target(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>>(entry));
+};
+  return initialize_log_entity<flight::Ref<flight::types::RateLimitedLogSink>>(flight::make_ref<flight::types::RateLimitedLogSink>(flight::types::RateLimitedLogSink{.sink = sink}));
+}
 
-// NOT GENERATED: function createRateLimitedLogSink -- source line 249
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   export function createRateLimitedLogSink(
-//     target: LogSink,
-//     options: { perChannel?: boolean; maxPerInterval: number; intervalMs: number },
-//   ): RateLimitedLogSink {
-//     const { perChannel = false, maxPerInterval, intervalMs } = options;
-//     const counts = new Map<string | null, number>();
-//     let windowStart = _timestamp();
-//   
-//     const sink: LogSink = (entry: Readonly<LogEntry>): void => {
-//       const now = _timestamp();
-//       if (now - windowStart >= intervalMs) {
-//         counts.clear();
-//         windowStart = now;
-//       }
-//       const key = perChannel ? entry.channel : null;
-//       const current = counts.get(key) ?? 0;
-//       if (current >= maxPerInterval) return;
-//       counts.set(key, current + 1);
-//       target(entry);
-//     };
-//     return initializeLogEntity({ sink });
-//   }
-//   
-//   // Creates a sink that forwards approximately 1-in-N entries (probability = 1 / rate when rate > 1).
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: contextual optionalSingle construction requires
-// expression type evidence
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_ON_LOG_ENTRY_ON_LOG_ERROR_BFAB274832EC5D1C
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_ON_LOG_ENTRY_ON_LOG_ERROR_BFAB274832EC5D1C
+struct on_log_entry_on_log_error_bfab274832ec5d1c : public flight::ReferenceEnabled {
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>)>>> on_log_entry;
+  std::shared_ptr<flight::types::Signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>)>>> on_log_error;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_LOG_ON_LOG_ENTRY_ON_LOG_ERROR_BFAB274832EC5D1C
 
+inline flight::Ref<flight::types::LogSignals> enable_log_signals() {
+  if (log_signals.has_value()) {
+    return log_signals.value();
+  }
+  (log_signals = std::optional<flight::Ref<flight::types::LogSignals>>{initialize_log_entity<flight::Ref<on_log_entry_on_log_error_bfab274832ec5d1c>>(flight::make_ref<on_log_entry_on_log_error_bfab274832ec5d1c>(on_log_entry_on_log_error_bfab274832ec5d1c{.on_log_entry = flight::signals::create_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>)>>(), .on_log_error = flight::signals::create_signal<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>)>>()}))});
+  return log_signals.value();
+}
 
-// NOT GENERATED: function enableLogSignals -- source line 332
-// refusal: cpp-intersection-member-shapeless [source-portability]
-//
-// The source it stood for:
-//   export function enableLogSignals(): LogSignals {
-//     if (_logSignals !== null) return _logSignals;
-//     _logSignals = initializeLogEntity({
-//       onLogEntry: createSignal<(entry: Readonly<LogEntry>) => void>(),
-//       onLogError: createSignal<(entry: Readonly<LogEntry>) => void>(),
-//     });
-//     return _logSignals;
-//   }
-//   
-//   // Closes the innermost open log group (decrements nesting depth). Emits a Debug entry marking
-//   // the group end. No-op if no group is open.
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: intersection types require C++
-// multiple-inheritance lowering: no shape for Entity. Declare the object shape the code reads rather than
-// intersecting a conjunct that has none
+inline flight::types::LogFormatter default_json_formatter = [](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>> entry) {
+  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>> object_pattern_value = entry;
+  flight::types::LogLevel level_2 = flight::row_get<flight::RowKey<"level">>(object_pattern_value);
+  const std::optional<flight::String> channel = flight::row_get<flight::RowKey<"channel">>(object_pattern_value);
+  flight::types::LogData data = flight::row_get<flight::RowKey<"data">>(object_pattern_value);
+  return flight::Json::stringify({.flight = true, .t = timestamp(), .level = level_names.get(level_2).value(), .channel = channel, .data = (data.index() == 1 ? {{flight::String("msg"), std::get<1>(data)}} : std::get<0>(data))}, std::nullopt, std::nullopt);
+};
 
 
-// NOT GENERATED: variable (binding) -- source line 802
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
-//
-// The source it stood for:
-//   const _defaultJsonFormatter: LogFormatter = (entry: Readonly<LogEntry>): string => {
-//     const { level, channel, data } = entry;
-//     return JSON.stringify({
-//       __flight: true,
-//       t: _timestamp(),
-//       level: _levelNames[level],
-//       channel,
-//       data: typeof data === 'string' ? { msg: data } : data,
-//     });
-//   };
-//   
-//   /* eslint-disable no-console -- this is the console-capture sink; writing to the console is its job */
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: contextual optionalSingle construction requires
-// expression type evidence
-
-
-// NOT GENERATED: function _writeConsoleCaptureEntry -- source line 814
-// refusal: cpp-contextual-union-missing-expression-type:optionalSingle [compiler-restriction]
+// NOT GENERATED: function _writeConsoleCaptureEntry -- source line 816
+// refusal: cpp-closed-key-external-member-arguments [compiler-restriction]
 //
 // The source it stood for:
 //   function _writeConsoleCaptureEntry(entry: Readonly<LogEntry>, envelopeFormatter: LogFormatter): void {
@@ -1047,38 +885,29 @@ struct per_channel_max_per_interval_interval_ms_b055d1b6af9da40a : public flight
 //     }
 //   }
 //   
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: contextual optionalSingle construction requires
-// expression type evidence
+// cpp emission failed for @flighthq/log/packages/log/src/log.ts: finite-key call console[key](...) forwards
+// exactly one string message to its bound members; this call passes 2 argument(s), which no bound member target
+// accepts
 
-inline flight::Ref<LogSink> create_console_capture_sink(std::optional<flight::Ref<formatter_c3f72d72feb278c6>> options = std::nullopt) {
+inline flight::types::LogSink create_console_capture_sink(std::optional<flight::Ref<formatter_c3f72d72feb278c6>> options = std::nullopt) {
   options = options.value_or(flight::make_ref<formatter_c3f72d72feb278c6>(formatter_c3f72d72feb278c6{}));
-  flight::Ref<LogFormatter> envelope_formatter = ([&]() -> flight::Ref<LogFormatter> { auto nullish_coalesce_left = options.value()->formatter; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return default_json_formatter; }());
-  return [=](flight::Ref<LogEntry> entry) {
+  flight::types::LogFormatter envelope_formatter = ([&]() -> std::function<flight::String(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>)> { auto nullish_coalesce_left = options.value()->formatter; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return default_json_formatter; }());
+  return [=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>> entry) {
   return write_console_capture_entry(entry, envelope_formatter);
 };
 }
 
+inline void write_console_log_entry(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>> entry, flight::types::LogFormatter formatter) {
+  if (false) {
+    return;
+  }
+  ([&]() -> void { const auto member_key_2 = console_methods.get(flight::row_get<flight::RowKey<"level">>(entry)).value(); const auto member_argument_2 = formatter(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>>(entry)); if (member_key_2 == flight::String("debug")) { flight::host::console_debug(member_argument_2); return; } if (member_key_2 == flight::String("error")) { flight::host::console_error(member_argument_2); return; } if (member_key_2 == flight::String("info")) { flight::host::console_info(member_argument_2); return; } if (member_key_2 == flight::String("log")) { flight::host::console_log(member_argument_2); return; } if (member_key_2 == flight::String("warn")) { flight::host::console_warn(member_argument_2); return; } throw flight::TypeError(flight::String("console[key] is not a function")); }());
+}
 
-// NOT GENERATED: function _writeConsoleLogEntry -- source line 829
-// refusal: cpp-closed-key-access-without-object-storage [compiler-restriction]
-//
-// The source it stood for:
-//   function _writeConsoleLogEntry(entry: Readonly<LogEntry>, formatter: LogFormatter): void {
-//     if (typeof console === 'undefined') return;
-//     console[_consoleMethods[entry.level]](formatter(entry));
-//   }
-//   /* eslint-enable no-console */
-//   
-// cpp emission failed for @flighthq/log/packages/log/src/log.ts: closed-key element access over an unevidenced
-// receiver requires represented object storage: the finite key set proves which members may be selected, but the
-// receiver does not retain one exact flight::Ref owner whose shape defines those members. Accept a concrete
-// declared object type at this boundary (or a Record when keyed storage is intended); the compiler will not
-// cast, copy, or materialize an owner to make the access possible
-
-inline flight::Ref<LogSink> create_console_log_sink(std::optional<flight::Ref<formatter_c3f72d72feb278c6>> options = std::nullopt) {
+inline flight::types::LogSink create_console_log_sink(std::optional<flight::Ref<formatter_c3f72d72feb278c6>> options = std::nullopt) {
   options = options.value_or(flight::make_ref<formatter_c3f72d72feb278c6>(formatter_c3f72d72feb278c6{}));
-  flight::Ref<LogFormatter> formatter = ([&]() -> flight::Ref<LogFormatter> { auto nullish_coalesce_left = options.value()->formatter; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_text_log_formatter(flight::make_ref<indent_groups_level_prefix_timestamp_85ef46f909e535f5>(indent_groups_level_prefix_timestamp_85ef46f909e535f5{.level_prefix = std::optional<bool>{true}})); }());
-  return [=](flight::Ref<LogEntry> entry) {
+  flight::types::LogFormatter formatter = ([&]() -> std::function<flight::String(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>>)> { auto nullish_coalesce_left = options.value()->formatter; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return create_text_log_formatter(flight::make_ref<indent_groups_level_prefix_timestamp_85ef46f909e535f5>(indent_groups_level_prefix_timestamp_85ef46f909e535f5{.level_prefix = std::optional<bool>{true}})); }());
+  return [=](flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::LogEntry>>>> entry) {
   return write_console_log_entry(entry, formatter);
 };
 }

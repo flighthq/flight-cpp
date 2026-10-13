@@ -2826,10 +2826,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 568,
+      "line": 816,
       "module": "packages/log/src/log.ts",
       "package": "@flighthq/log",
-      "reason": "cpp emission failed for @flighthq/log/packages/log/src/log.ts: reading Error.name from an erased value requires both an instance flight::Error::name() const accessor that preserves RangeError and TypeError names through Error-typed value storage, and a checked flight::Any Error projection that accepts those subclasses; the current static class names and exact-type Any projections provide neither contract, and an external binding profile cannot replace this built-in runtime capability",
+      "reason": "cpp emission failed for @flighthq/log/packages/log/src/log.ts: finite-key call console[key](...) forwards exactly one string message to its bound members; this call passes 2 argument(s), which no bound member target accepts",
       "stage": "emission"
     },
     {

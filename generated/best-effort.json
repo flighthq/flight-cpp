@@ -13487,7 +13487,7 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "target-runtime",
+      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/assets/packages/assets/src/enableAssetGuards.ts",
         "@flighthq/bitmapfont/packages/bitmapfont/src/enableBitmapFontGuards.ts",
@@ -13600,6 +13600,7 @@
         "sha256:7debef3b6da1d1a777904a2f8cacbe7bb14e51083fe478723da29186e5e7770c",
         "sha256:7e40401f8c1f673eb3e108ebe8025142d4c2b4165ac82c8246f9664f5e1d6a9c",
         "sha256:7fae6530ad9769936af585b37a373743a677624155485061c2860e06b81fb6c8",
+        "sha256:883ebce5130128da8449f2c5a091723b7710416e633a1d5df230f6bf580d2f15",
         "sha256:8a4ced292e8d7795c1a0d767aa6464ec5cec931e8d5794cdbca04c09a6bb882d",
         "sha256:929e524bddfec89c932aac63618036134aae47c6dada17b0b7db0b6bfe7473be",
         "sha256:92f93c0ab81887f8d373a0048fe6dc7ae1385223835fe9b4fb4671c262450b7f",
@@ -13636,7 +13637,6 @@
         "sha256:d8498db8bbbcdde40b79b8bc89837e581bc8c0489dc36c9304282e56defed336",
         "sha256:eb45387b75e0d1277bf38013f9fef04cb81513f520309dc6b65c10b122bca85c",
         "sha256:eb4b01afde0cce43890ae67c464eed609307204753a61f0ce3bd80ca17011deb",
-        "sha256:f3bd710b6379088c3d6fc5d9584143912a8c4d59980ae588356f73428b9439c6",
         "sha256:f8d7aa0f1dcd54c4229e1c692ea73144e6bd595eb7c6773a3edceda3901b562f",
         "sha256:f9b15b652a03b01cf33b83e83578233b14b17f3640ef0def6e8ab7444b965da5",
         "sha256:fa79c927c8cf3ff492187ae3692344fa16b631e54f211e7beb31c46061905a63",
@@ -13649,7 +13649,7 @@
         "source": "packages/log/src/log.ts"
       },
       "path": "flight/log/log.hpp",
-      "rule": "cpp-error-name-runtime-required",
+      "rule": "cpp-closed-key-external-member-arguments",
       "status": "refused-placeholder"
     },
     {

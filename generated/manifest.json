@@ -174,9 +174,7 @@
       "id": "log-logentry-using-declaration"
     },
     {
-      "files": [
-        "flight/log/log.hpp"
-      ],
+      "files": [],
       "id": "log-logsink-using-declaration"
     },
     {
@@ -218,6 +216,7 @@
         "flight/gui/gui_controller.hpp",
         "flight/loader/load.hpp",
         "flight/loader/resource_loader.hpp",
+        "flight/log/log.hpp",
         "flight/media/audio_channel.hpp",
         "flight/midi/midi_subscription.hpp",
         "flight/net/net.hpp",
@@ -670,6 +669,7 @@
         "flight/geometry/enable_geometry_pool_guards.hpp",
         "flight/glyphatlas/enable_glyph_atlas_guards.hpp",
         "flight/interaction/enable_interaction_guards.hpp",
+        "flight/log/log.hpp",
         "flight/media/enable_audio_mixer_guards.hpp",
         "flight/node/enable_node_guards.hpp",
         "flight/render/enable_scene_render_guards.hpp",
@@ -803,6 +803,7 @@
         "flight/geometry/enable_geometry_pool_guards.hpp",
         "flight/glyphatlas/enable_glyph_atlas_guards.hpp",
         "flight/interaction/enable_interaction_guards.hpp",
+        "flight/log/log.hpp",
         "flight/media/enable_audio_mixer_guards.hpp",
         "flight/movieclip/enable_movie_clip_guards.hpp",
         "flight/node/enable_node_guards.hpp",
@@ -893,6 +894,7 @@
         "flight/bitmapfont_formats/bitmap_font_fnt.hpp",
         "flight/command/command_history.hpp",
         "flight/flow/flow.hpp",
+        "flight/log/log.hpp",
         "flight/mesh/mesh_geometry.hpp",
         "flight/mesh/mesh_geometry_operations.hpp",
         "flight/node/node_color_adjustment.hpp",
@@ -2801,9 +2803,7 @@
       "id": "lifecycle-unqualified-signals-names"
     },
     {
-      "files": [
-        "flight/log/log.hpp"
-      ],
+      "files": [],
       "id": "log-unqualified-signals-names"
     },
     {
@@ -6006,6 +6006,27 @@
       "id": "flow-optional-overlay-flags-explicit",
       "module": "packages/flow/src/flow.ts",
       "package": "@flighthq/flow"
+    },
+    {
+      "dependency": "flight-compiler",
+      "digest": "fbb9b7878a4f8b405da3646a2237a7e5de7602f2ec6e747b4a18f595c381180e",
+      "id": "compiler-error-name-and-erased-error-reads",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/log"
+    },
+    {
+      "dependency": "flight-compiler",
+      "digest": "7ffd75d00899c8265ea55677494e01a75a156302d4a416c2eb6586cf98cd71f7",
+      "id": "compiler-unrepresented-error-member",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/log"
+    },
+    {
+      "dependency": "flight",
+      "digest": "31e4826e03668f0e58a7602ba5db2577b32a5c94781383148ca506c7c5478269",
+      "id": "log-buffered-sink-state-explicit-guard",
+      "module": "packages/log/src/log.ts",
+      "package": "@flighthq/log"
     }
   ],
   "duplicateStructuralStructAliases": {
@@ -6039,6 +6060,7 @@
       "flight/interaction/register_sprite_hit_test.hpp",
       "flight/interaction/register_text_hit_test.hpp",
       "flight/interaction/register_tilemap_hit_test.hpp",
+      "flight/log/log.hpp",
       "flight/mesh/mesh_geometry.hpp",
       "flight/mesh/mesh_geometry_attributes.hpp",
       "flight/midi/midi_access.hpp",
@@ -6148,7 +6170,9 @@
       "reason_43a745d20647bfb6",
       "reason_5a15b37101877c7d",
       "reason_b3999eadeca23809",
+      "reason_delivery_3724413a85240c26",
       "reason_fbb74a314a7a269d",
+      "reason_message_d46086b32265b61f",
       "reason_state_7172771d69bee031",
       "reason_state_86decb2e3186b77a",
       "reflection_rotation_scale_translation_9dff6858eecb0eb4",
@@ -7278,7 +7302,7 @@
       "sourceModules": 4
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/log",
       "cppNamespace": "flight::log",
       "emittedModules": 2,
