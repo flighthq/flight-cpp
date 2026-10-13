@@ -99,7 +99,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/interaction` | 19 | 17 | 212 | dedicated | none | 8 / 11 |
 | `@flighthq/gui` | 20 | 18 | 115 | none | none | 16 / 4 |
 | `@flighthq/layout` | 8 | 7 | 73 | none | none | 5 / 3 |
-| `@flighthq/accessibility` | 3 | 1 | 6 | none | none | 3 / 0 |
+| `@flighthq/accessibility` | 3 | 1 | 6 | dedicated | none | 3 / 0 |
 | `@flighthq/audio` | 8 | 6 | 109 | none | none | 5 / 3 |
 | `@flighthq/media` | 7 | 5 | 127 | none | none | 5 / 2 |
 | `@flighthq/mediasession` | 3 | 1 | 19 | none | none | 3 / 0 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-15 of 39 packages are reached by at least one local CTest executable.
-13 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`.
+16 of 39 packages are reached by at least one local CTest executable.
+14 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`.
 
 ## `@flighthq/app`
 
@@ -676,7 +676,31 @@ Upstream carries per-package records at `flight/agents/packages/gui/`: `status.m
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_accessibility` — `tests/generated_accessibility_test.cpp` (dedicated), NEW. The package had no
+  local test of any kind. It is six functions that only route an operation to the Host provider the caller selected,
+  so what this file pins is what the module passes through UNCHANGED: `announceAccessibility` supplies the declared
+  `polite` default when liveness is omitted and passes an explicit `assertive` through rather than replacing it; every
+  operation returns the provider's own outcome with BOTH its reason and its variant arm preserved (an `ok` and a
+  blocked answer are asserted not to collapse into one arm); each function reaches exactly its own entry point, with a
+  call log asserting the six in order and a second provider standing untouched so the Host parameter is shown to be
+  explicit rather than ambient; a published node arrives whole, including role, description, parentId and the nested
+  `bounds` and `states` rows, with a cleared state preserved as present-and-false rather than absent; the object the
+  provider recovers is the very object published rather than a copy; an empty id is forwarded as given because the
+  module validates nothing; and a provider that throws propagates instead of being absorbed. Seven mutations against
+  the emitted module, all seven with teeth: the default liveness changed 1 failure, the default emptied 2, the message
+  dropped 1, `setFocus` routed to `removeNode` 2, `destroy` routed to `clear` 3, `setNode` publishing a fresh node
+  instead of the caller's 8, and a rebuilt outcome replacing the provider's 1. An eighth is equivalent by
+  construction and is recorded rather than counted: inlining the `value_or` default into the call, rather than
+  assigning it to the by-value parameter first, passes the same value and mutates nothing observable.
+
+### A member with no row key
+
+The generated row-member table has no entry for `AccessibilityNode`'s `role`, `description` or `parentId`, so those
+members cannot be read by key (`flight::row_get<flight::RowKey<"role">>` does not compile) even though a
+`Ref`-backed row carries them faithfully to the callee -- `test_a_published_node_arrives_whole` reads them through
+the recovered object for that reason. The same table has no key for `AccessibilityState`'s `level` and the
+`valueMin`/`valueMax`/`valueNow` numeric range. Recorded rather than worked around: deciding whether those keys
+should exist is a table-generation question, not this package's.
 
 ### Local generation status
 
