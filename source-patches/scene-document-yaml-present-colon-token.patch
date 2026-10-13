@@ -1,0 +1,12 @@
+diff --git a/packages/scene-document/src/sceneDocumentYamlSubset.ts b/packages/scene-document/src/sceneDocumentYamlSubset.ts
+--- a/packages/scene-document/src/sceneDocumentYamlSubset.ts
++++ b/packages/scene-document/src/sceneDocumentYamlSubset.ts
+@@ -455,7 +455,7 @@ class SceneDocumentYamlSubsetParser {
+     indent: number,
+     depth: number,
+   ): number | typeof PARSE_FAILURE {
+-    const colon = tokens[colonIndex];
++    const colon: SceneDocumentYamlSubsetToken = tokens[colonIndex];
+     if (count >= MAX_COLLECTION_ENTRIES) {
+       return this.refuse(
+         'flight-document.limit.collection-entries',

@@ -495,6 +495,22 @@
       "appliedOn": "2026-10-13"
     },
     {
+      "id": "scene-document-yaml-present-colon-token",
+      "dependency": "flight",
+      "patch": "scene-document-yaml-present-colon-token.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/scene-document/src/sceneDocumentYamlSubset.ts",
+      "package": "@flighthq/scene-document",
+      "answers": "diagnostic",
+      "refusal": "the inferred colon token local keeps the runtime array index-miss wrapper, so its use as the fallback of tokens[0] ?? colon returns optional<Ref<Token>> from a lambda declared to return Ref<Token>",
+      "rewrite": "Names SceneDocumentYamlSubsetToken explicitly on the existing colon local whose index is returned by the already-successful top-level-colon scan.",
+      "equivalence": "The annotation erases from JavaScript. The same array index is read once at the same point and retains the identical token object; the caller rejects a negative colon index before entry, so no absence is removed from the supported path. Fallback evaluation, diagnostic selection, parser state, ordering, and returned values are unchanged.",
+      "whyNotUpstreamFirst": "TypeScript already types the indexed read as SceneDocumentYamlSubsetToken under Flight's configuration. The emitter alone exposes its optional index-miss wrapper through the inferred local, as recorded in docs/compiler-requests/array-index-nullish-fallback-present-carrier.md.",
+      "unblocks": "Keeps addMappingEntry's colon token on the present reference carrier so scene_document_yaml_subset.hpp and its transitive package headers can compile.",
+      "expires": "when inferred indexed locals keep their statically present element carrier through nullish fallback lowering, or Flight adopts the explicit local annotation.",
+      "appliedOn": "2026-10-13"
+    },
+    {
       "id": "optional-null-storage-evidence",
       "dependency": "flight",
       "patch": "optional-null-storage-evidence.patch",
