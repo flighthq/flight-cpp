@@ -1021,9 +1021,28 @@ Future explicit-host live webcam streaming, device enumeration, and stream lifec
 
 Upstream carries per-package records at `flight/agents/packages/webcam/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
 
+### There is no behaviour here to cover
+
+This package is an EMPTY PLACEHOLDER at the pin, and the figures in the row above are real but mean less than they
+look:
+
+- `src/index.ts` is `export {}` and `src/contract.ts` is `export {}` -- the package exports nothing.
+- Its one "upstream test file", `src/missing.test.ts`, is a single case that reads
+  `it('will have tests later', () => { assert(true); })`. It asserts `true`. That is why the case count in the row
+  above is 1, and it is not a specification of anything.
+- The emitted tree agrees: `flight/webcam/contract.hpp` and `flight/webcam/_internal_index.hpp` are each a namespace
+  with **no declarations in them**, and the tier reports 2/2 emitted and 2/2 compiled because there is nothing in
+  either. `ready` here is vacuous, not reassuring.
+
+So there is no portable behaviour to port, and no native test belongs here: any test would include an empty header
+and assert nothing, which is the same placeholder the upstream file is. This package is the one the profile's
+applicability rule warns about in the other direction -- `@flighthq/webcam` must never be parked for its NAME, because
+it carries no web-only code; the accurate statement is that it carries no code at all. Recorded so a reader does not
+mistake the 1-case row or the `ready` tier for coverage.
+
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+None, and none is warranted -- see above. No local test, example, or benchmark includes a header of this package.
 
 ### Local generation status
 
