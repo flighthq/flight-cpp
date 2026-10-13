@@ -207,6 +207,25 @@ void layout() {
             length->wake_body == 16,
         "record lengths, literally");
 
+  // The payload offset tables, literally: the reader of a record indexes by these.
+  const auto& body_payload = abi::physics2_dabi_set_body_payload_offset;
+  check(body_payload->flags == 0 && body_payload->reserved == 4 && body_payload->values == 8, "SetBody payload offsets");
+  const auto& collider_payload = abi::physics2_dabi_set_collider_payload_offset;
+  check(collider_payload->flags == 0 && collider_payload->category_bits == 4 && collider_payload->mask_bits == 8 &&
+            collider_payload->group_index == 12 && collider_payload->density == 16 && collider_payload->friction == 24 &&
+            collider_payload->restitution == 32 && collider_payload->shape == 40,
+        "SetCollider payload offsets");
+  const auto& joint_payload = abi::physics2_dabi_set_joint_payload_offset;
+  check(joint_payload->kind == 0 && joint_payload->body_a == 4 && joint_payload->body_b == 8 && joint_payload->flags == 12 &&
+            joint_payload->common_values == 16 && joint_payload->kind_values == 64,
+        "SetJoint payload offsets");
+  const auto& solver_payload = abi::physics2_dabi_set_solver_config_payload_offset;
+  check(solver_payload->flags == 0 && solver_payload->reserved0 == 4 && solver_payload->max_ccd_substeps == 8 &&
+            solver_payload->max_ccd_rotation_substeps == 12 && solver_payload->velocity_iterations == 16 &&
+            solver_payload->position_iterations == 20 && solver_payload->reserved1 == 24 &&
+            solver_payload->reserved2 == 28 && solver_payload->values == 32,
+        "SetSolverConfig payload offsets");
+
   const auto& kind = abi::physics2_dabi_command_kind;
   check(kind->set_gravity == 1 && kind->set_solver_config == 2 && kind->set_body == 3 && kind->destroy_body == 4 &&
             kind->set_collider == 5 && kind->destroy_collider == 6 && kind->set_joint == 7 &&
