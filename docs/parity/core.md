@@ -90,7 +90,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/log` | 3 | 1 | 139 | dedicated | none | 2 / 1 |
 | `@flighthq/debug` | 4 | 2 | 30 | none | none | 3 / 1 |
 | `@flighthq/requirements` | 4 | 2 | 6 | none | none | 4 / 0 |
-| `@flighthq/importdiagnostics` | 4 | 2 | 7 | none | none | 4 / 0 |
+| `@flighthq/importdiagnostics` | 4 | 2 | 7 | dedicated | none | 4 / 0 |
 
 `upstream modules` counts the `.ts` files under `packages/<name>/src`; the generated manifest
 counts its own `sourceModules`, and the two differ where declaration files or generated outputs
@@ -761,7 +761,12 @@ Upstream carries per-package records at `flight/agents/packages/importdiagnostic
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+`flight_cpp.generated_importdiagnostics` (dedicated) -- `tests/generated_importdiagnostics_test.cpp`, ported from
+the two upstream test files: the collector's crumbs and their order, the extended-crumb push and the absence of
+detail, the silent path with no sink, and the rendered line's shape, sorted detail keys and no-detail case. The
+generation unit that compiled this package added three cases the port did not carry -- a recorded crumb rendering
+as its line, each detail value domain rendering as its own text, and the collector keeping two identical crumbs --
+and mutation-checked the whole file.
 
 ### Local generation status
 

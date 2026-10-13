@@ -94,5 +94,37 @@ int main() {
   check(diagnostics::format_import_diagnostic(bad_magic) == String("Reject parseMd2: md2.bad-magic"),
         "omits the detail section when there is no detail");
 
+
+  // Added by the builder7 unit that regenerated, compiled and mutation-checked this port: three properties the
+  // upstream suite leaves untested. The two halves meeting (a crumb the collector recorded is what the text side
+  // renders), each detail value domain rendering as its own text rather than one catch-all, and the collector
+  // being an append-only log rather than a set.
+  const Sink recorded = diagnostics::collect_import_diagnostics([](Sink sink) {
+    diagnostics::report_import_diagnostic(sink, severity()->skip, String("awd2.method-material"),
+                                          String("resolveAwdMaterial"), detail_of({{"count", 2.0}}));
+  });
+  check(recorded.size() == 1 &&
+            diagnostics::format_import_diagnostic(recorded[0]) ==
+                String("Skip resolveAwdMaterial: awd2.method-material count=2"),
+        "a crumb the collector recorded renders as the line its fields describe");
+
+  Detail domains;
+  domains.set(String("flag"), true);
+  domains.set(String("count"), 2.0);
+  domains.set(String("name"), String("Skin"));
+  const auto aggregate = flight::make_ref<ImportDiagnostic>(ImportDiagnostic{
+      .detail = domains,
+      .kind = String("awd2.aggregate"),
+      .origin = String("build"),
+      .severity = severity()->drop,
+  });
+  check(diagnostics::format_import_diagnostic(aggregate) == String("Drop build: awd2.aggregate count=2 flag=true name=Skin"),
+        "each detail value domain renders as its own text, in sorted key order");
+
+  Sink repeated;
+  diagnostics::report_import_diagnostic(repeated, severity()->drop, String("awd2.skin-vertex-mismatch"), String("buildAwdSkin"));
+  diagnostics::report_import_diagnostic(repeated, severity()->drop, String("awd2.skin-vertex-mismatch"), String("buildAwdSkin"));
+  check(repeated.size() == 2, "the same crumb reported twice is two crumbs: the collector is an append-only log");
+
   return failures == 0 ? 0 : 1;
 }
