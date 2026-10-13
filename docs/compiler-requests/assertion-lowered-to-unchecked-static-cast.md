@@ -93,3 +93,19 @@ The tween overrides (`tween-internal-erased-numeric-record` and the three module
 replace each `static_cast<flight::Record<...>>` with the keyed view the assertion stands for: an object's
 own members through `flight::named_properties`, or a `Record<String, number>` the `Any` carries as an
 external, recovered with `external_if`. Both write the caller's object rather than a copy.
+
+## Third measured site: `@flighthq/snapshot`
+
+At the same compiler and Flight pin, `interpolateSnapshots.ts` and `restoreSnapshot.ts` accept
+parameters written as `object`, assert them to `Record<string, unknown>` or `unknown[]`, and then
+operate on the asserted view. The retained C++ helpers instead write conversions such as:
+
+```cpp
+static_cast<flight::Record<flight::String, flight::Any>>(out); // out: Ref<void>
+static_cast<flight::Array<flight::Any>>(source);                // source: Ref<void>
+```
+
+Both are hard compile errors. The record assertion needs an identity-preserving named-property view;
+the array assertion needs the checked erased-array view described in
+`erased-array-identity-preserving-view.md`. Neither TypeScript assertion requests a new record or
+array value, so a copying conversion would also be wrong.

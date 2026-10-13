@@ -50,3 +50,15 @@ array with no typed sibling or destination may still need an explicit source ann
 absent, and iterates the identical array when present. Absence still performs zero calls; presence keeps
 the same references, order, and last-write behavior. The analogous texture-atlas patch carries the same
 rewrite. Both expire when the empty fallback inherits its sibling's contextual element type.
+
+## Separate snapshot boundary: an erased empty array
+
+`@flighthq/snapshot` `ensureSnapshotContainer(existing, isArray): object` returns
+`isArray ? [] : {}`. This is not the optional-fallback case above: the declared result deliberately
+erases the concrete container, and later code narrows it with `Array.isArray` before treating it as
+`unknown[]`. At the same pin the function is refused with the same empty-array diagnostic.
+
+The required carrier is therefore the identity-preserving erased array view described in
+`erased-array-identity-preserving-view.md`, not an element type borrowed from the object arm. Choosing
+`Array<Any>` by fiat is only correct if that is the array's actual storage; copying another typed
+array into it would change identity and break the restore/interpolation writes.
