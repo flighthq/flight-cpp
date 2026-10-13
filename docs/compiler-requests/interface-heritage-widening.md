@@ -72,6 +72,14 @@ selection generation cannot rewrite its already-current `@flighthq/types` depend
 keeps its name, type and declaration order. They expire when the emitter retains
 declared interface heritage.
 
+## Same defect, the GL render state at flight a627849 (registry migration group)
+
+`@flighthq/render-gl` `glRenderState.ts`, `destroyGlRenderState`: `destroyRenderState(state)` passes a
+`GlRenderState` where `RenderState` is declared. The emitted call fails because the generated interfaces
+do not preserve the declared heritage. This blocks 144 renderer header compilations across render-gl,
+effects-gl, scene2d-gl and scene3d-gl. The faithful fix remains real heritage
+(`GlRenderState : RenderState`), retaining one owner and enabling the intended pointer conversion.
+
 ## Same defect in Surface runtime storage
 
 At flight `a627849` and flight-compiler `2b687ea`, `SurfaceRuntime extends EntityRuntime` is emitted as
