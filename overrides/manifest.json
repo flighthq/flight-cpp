@@ -2431,7 +2431,7 @@
       "unblocks": "Complete native TMJ and TSJ parsing, aggregate headers, detection codecs, and byte-exact JSON round trips.",
       "remaining": "None in the supplied module at this pin.",
       "expires": "when unknown JSON trees lower to a represented dynamic JSON domain with safe field lookup, coercion, narrowing, and contextual object construction.",
-      "authoredOn": "2026-10-13"
+      "authoredOn": "2026-10-12"
     },
     {
       "id": "tilemap-formats-json-value-formatter",
@@ -2447,7 +2447,7 @@
       "unblocks": "Complete native TMJ and TSJ serialization and JSON fidelity round trips.",
       "remaining": "None in the supplied module at this pin.",
       "expires": "when heterogeneous Record construction, insertion, object spread, and JSON serialization lower through a represented dynamic JSON carrier.",
-      "authoredOn": "2026-10-13"
+      "authoredOn": "2026-10-12"
     },
     {
       "id": "tilemap-formats-project-union-projection",
@@ -2463,7 +2463,7 @@
       "unblocks": "Complete multi-tileset projection from parsed Tiled maps to runtime TilemapData arrays.",
       "remaining": "None in the supplied module at this pin.",
       "expires": "when contextual multi-variant narrowing preserves the concrete expression owner through the projected layer body.",
-      "authoredOn": "2026-10-13"
+      "authoredOn": "2026-10-12"
     },
     {
       "id": "tilemap-formats-xml-layer-construction",
@@ -2479,7 +2479,7 @@
       "unblocks": "The emitted XML parse module and native XML parse/TMX serialize round-trip evidence.",
       "remaining": "None in the supplied module at this pin.",
       "expires": "when return construction preserves both the declared contextual-union wrapper and object-spread members on the concrete arm.",
-      "authoredOn": "2026-10-13"
+      "authoredOn": "2026-10-12"
     },
     {
       "id": "signals-throttle-typed-argument-buffers",
@@ -2687,6 +2687,130 @@
       "unblocks": "Capture/mutate/restore lifecycle and interpolation-then-restore on one live object.",
       "remaining": "None for the represented native plain-data graph; cyclic restore remains outside the source contract exactly as documented upstream.",
       "expires": "when imported Snapshot<T> and checked erased record/array views lower directly.",
+      "authoredOn": "2026-10-13"
+    },
+    {
+      "id": "selection-lasso-runtime-heritage",
+      "path": "flight/types/lasso_selection_runtime.hpp",
+      "package": "@flighthq/selection",
+      "status": "complete",
+      "derivedFrom": "54b40ffb9ed7bd4b3c82d04dc3e072413f370b5c45e3e1deb3352b4c8ac18fb9",
+      "reason": "The type emitter flattens LassoSelectionRuntime extends EntityRuntime into an unrelated owner, so createLassoSelection cannot store the runtime in the entity slot without splitting identity.",
+      "change": "Spells the declared EntityRuntime base and retains only the runtime's own active and path fields; inherited binding and uid occupy the same base subobject.",
+      "equivalence": "The TypeScript declaration already extends EntityRuntime. One derived allocation now widens and narrows along real C++ heritage, preserving object identity and the same fields.",
+      "whyNotAPatchOrRepair": "The declaration lives in the already-current types dependency row, which scoped selection generation must not rewrite; a selection source patch cannot alter its emitted C++ heritage.",
+      "unblocks": "Identity-preserving lasso runtime storage and recovery.",
+      "remaining": "None in this declaration at this pin.",
+      "expires": "when the type emitter preserves declared interface heritage.",
+      "authoredOn": "2026-10-12"
+    },
+    {
+      "id": "selection-marquee-runtime-heritage",
+      "path": "flight/types/marquee_selection_runtime.hpp",
+      "package": "@flighthq/selection",
+      "status": "complete",
+      "derivedFrom": "cc1b277c5533bf368d33460ecc68802998aa113518f9024d660cc0ea9dd0c067",
+      "reason": "The type emitter flattens MarqueeSelectionRuntime extends EntityRuntime into an unrelated owner, so createMarqueeSelection cannot store the runtime in the entity slot without splitting identity.",
+      "change": "Spells the declared EntityRuntime base and retains only active, rectangle, startX, and startY as derived fields.",
+      "equivalence": "The same allocation carries the inherited binding and uid plus all marquee fields and widens through the source-declared base relation.",
+      "whyNotAPatchOrRepair": "The declaration is in the already-current types row outside the permitted selection-only regeneration splice.",
+      "unblocks": "Identity-preserving marquee runtime storage and recovery.",
+      "remaining": "None in this declaration at this pin.",
+      "expires": "when the type emitter preserves declared interface heritage.",
+      "authoredOn": "2026-10-12"
+    },
+    {
+      "id": "selection-state-runtime-heritage",
+      "path": "flight/types/selection_state_runtime.hpp",
+      "package": "@flighthq/selection",
+      "status": "complete",
+      "derivedFrom": "1db5b168856e7a901c85187b3b9e0e4a2c1fc8561111788193eae4ac762f459a",
+      "reason": "The type emitter both flattens SelectionStateRuntime<NodeType> extends EntityRuntime and substitutes NodeAny for its optional activeNode member.",
+      "change": "Restores the declared EntityRuntime base and retains NodeType in activeNode, alongside the exact Set, Array, and SelectionSignals<NodeType> members.",
+      "equivalence": "The source declares the same heritage and NodeType domains. The runtime remains one allocation and every selected node retains its original reference identity.",
+      "whyNotAPatchOrRepair": "Scoped selection generation cannot rewrite the already-current types row, and a source patch in selection cannot change this imported declaration.",
+      "unblocks": "Generic selection runtime construction, recovery, active-node updates, and signal dispatch.",
+      "remaining": "None in this declaration at this pin.",
+      "expires": "when interface heritage and constrained generic member storage emit from the declared types.",
+      "authoredOn": "2026-10-12"
+    },
+    {
+      "id": "selection-generic-signal-domain",
+      "path": "flight/types/selection_state.hpp",
+      "package": "@flighthq/selection",
+      "status": "complete",
+      "derivedFrom": "d41f8403da76dba3f4b046261a71e27e8b8cf0aa6c97662968ac335ba3c0e644",
+      "reason": "SelectionSignals<NodeType>.onActiveChange is emitted as Signal<(NodeAny|null)=>void> while its sibling onChange correctly retains NodeType.",
+      "change": "Respells the active callback as std::optional<NodeType> and otherwise copies the modifier, signal, and state declarations exactly.",
+      "equivalence": "The TypeScript member is Signal<(active: NodeType | null) => void>; preserving NodeType is the declared API and avoids copying or erasing concrete node identities.",
+      "whyNotAPatchOrRepair": "The wrong carrier is inside a generated types declaration outside the selection-only splice; declaration insertion cannot replace the member type.",
+      "unblocks": "Generic active-change signals for concrete node families.",
+      "remaining": "None in this declaration at this pin.",
+      "expires": "when nested callback members retain their enclosing constrained type parameter.",
+      "authoredOn": "2026-10-12"
+    },
+    {
+      "id": "selection-complete-lasso",
+      "path": "flight/selection/lasso_selection.hpp",
+      "package": "@flighthq/selection",
+      "status": "complete",
+      "supplies": "packages/selection/src/lassoSelection.ts",
+      "derivedFrom": "f0c2d8366d3d94a7668c21400bdfa6fd2350d1c90a4494de0fc2fd82cbf5da1a",
+      "reason": "The emitter refuses createLassoSelection and its runtime accessor at flattened interface heritage and erased-owner recovery, then retains callers of the missing accessor.",
+      "change": "Supplies construction and runtime recovery over the restored heritage and retains the emitted gesture, polygon-boundary, candidate-order, and path-identity algorithms.",
+      "equivalence": "One lasso owns one runtime and one live even-odd path; begin resets it, active points append in order, end closes once, and center-in-polygon selection includes the boundary in caller order.",
+      "whyNotAPatchOrRepair": "A source patch cannot create missing C++ interface heritage, and declaration repair cannot supply the two refused bodies.",
+      "unblocks": "The complete lasso module and both aggregate headers.",
+      "remaining": "None in lassoSelection.ts at this pin.",
+      "expires": "when runtime interface heritage and checked recovery emit without refusals.",
+      "authoredOn": "2026-10-13"
+    },
+    {
+      "id": "selection-complete-marquee",
+      "path": "flight/selection/marquee_selection.hpp",
+      "package": "@flighthq/selection",
+      "status": "complete",
+      "supplies": "packages/selection/src/marqueeSelection.ts",
+      "derivedFrom": "da09d9dc8db599bf582d10a2de66df2d0070a00fc445ac51f0390bfb34428f39",
+      "reason": "The emitter refuses createMarqueeSelection and its runtime accessor, then retains every operation that calls the missing accessor.",
+      "change": "Supplies construction and recovery over real heritage and retains normalized drag rectangles, inactive-update suppression, live rectangle identity, and intersect/contain filtering.",
+      "equivalence": "The same rectangle object survives the gesture; either drag direction normalizes to identical bounds, end only changes lifecycle state, and candidates remain in caller order under the upstream geometry predicates.",
+      "whyNotAPatchOrRepair": "The missing bodies depend on C++ heritage unavailable to a target-neutral source patch, and insertion cannot replace refused behavior.",
+      "unblocks": "The complete marquee module and both aggregate headers.",
+      "remaining": "None in marqueeSelection.ts at this pin.",
+      "expires": "when runtime interface heritage and checked recovery emit without refusals.",
+      "authoredOn": "2026-10-13"
+    },
+    {
+      "id": "selection-complete-state",
+      "path": "flight/selection/selection_state.hpp",
+      "package": "@flighthq/selection",
+      "status": "complete",
+      "supplies": "packages/selection/src/selectionState.ts",
+      "derivedFrom": "9c14cfd344f3818293a6617fd83cf4d9ab032c6ca00f00fbe2065e052d8949c9",
+      "reason": "The emitter refuses selection-state construction and runtime recovery, leaving all retained operations dependent on a missing template callee.",
+      "change": "Supplies the two refused boundaries and preserves the emitted ordered Set/Array updates, active-node rules, duplicate and no-op suppression, snapshot signals, and generic node carriers.",
+      "equivalence": "Selection is identity-based and insertion-ordered; add, remove, clear, select-one, select-all, and toggle match the source branches, with onChange receiving a copied array after state finalization and onActiveChange emitted only on identity change.",
+      "whyNotAPatchOrRepair": "The bodies require restored runtime heritage and the corrected imported signal carrier; neither can be expressed by a selection source rewrite or a declaration-only repair.",
+      "unblocks": "The complete selection state module and policy instantiation.",
+      "remaining": "None in selectionState.ts at this pin.",
+      "expires": "when runtime heritage, erased-owner recovery, and generic signal domains emit faithfully.",
+      "authoredOn": "2026-10-13"
+    },
+    {
+      "id": "selection-pointer-present-hit",
+      "path": "flight/selection/pointer_selection_policy.hpp",
+      "package": "@flighthq/selection",
+      "status": "complete",
+      "supplies": "packages/selection/src/pointerSelectionPolicy.ts",
+      "derivedFrom": "bcdb364718792ca9ac781ed33f9242e5503f5a5bd06fe026669325e3f40b0e3f",
+      "reason": "The emitted pointer-up template passes std::optional<NodeType> to functions taking NodeType after the source has already narrowed hit non-null.",
+      "change": "Preserves every policy branch and projects hit.value() at the two pointer-up calls, matching the correctly emitted pointer-down form.",
+      "equivalence": "Alt, empty-space, Shift, Ctrl/Command, drag, selected-hit, and pointer-up behavior is unchanged; the same present node identity reaches state operations.",
+      "whyNotAPatchOrRepair": "A declaration repair cannot replace invalid executable arguments, and the TypeScript narrowing is already canonical and target-neutral.",
+      "unblocks": "Instantiable pointer-down and pointer-up selection policy.",
+      "remaining": "None in pointerSelectionPolicy.ts at this pin.",
+      "expires": "when nullable generic narrowing unwraps the present payload at calls.",
       "authoredOn": "2026-10-13"
     }
   ]
