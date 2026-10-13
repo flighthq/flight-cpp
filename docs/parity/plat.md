@@ -117,7 +117,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/menu` | 4 | 2 | 58 | none | none | 3 / 1 |
 | `@flighthq/tray` | 4 | 2 | 31 | none | none | 3 / 1 |
 | `@flighthq/statusbar` | 3 | 1 | 18 | dedicated | none | 2 / 1 |
-| `@flighthq/notification` | 3 | 1 | 38 | none | none | 2 / 1 |
+| `@flighthq/notification` | 3 | 1 | 38 | dedicated | partial | 2 / 1 |
 | `@flighthq/share` | 3 | 2 | 14 | dedicated | none | 2 / 1 |
 | `@flighthq/shortcut` | 4 | 2 | 27 | dedicated | none | 3 / 1 |
 | `@flighthq/shell` | 3 | 1 | 14 | none | none | 3 / 0 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-25 of 39 packages are reached by at least one local CTest executable.
-24 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`, `sensors`, `geolocation`, `haptics`, `device`, `power`.
+26 of 39 packages are reached by at least one local CTest executable.
+25 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`, `sensors`, `geolocation`, `haptics`, `device`, `power`, `notification`.
 
 ## `@flighthq/app`
 
@@ -1565,7 +1565,45 @@ Upstream carries per-package records at `flight/agents/packages/tray/`: `status.
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_notification` — `tests/generated_notification_test.cpp` (dedicated), NEW. This package is
+  NOT a clean emission, and that shapes what parity can mean here. The emitter refuses `notification.ts` itself
+  (`unsupported-ir`, "Object.assign requires one closed callable-object target and an exact compatible object
+  literal source", filed as `object-assign-onto-structural-record`), so `contract.ts` and `index.ts` fall with it as
+  dependency-refused, and the tree ships a hand-written override recorded as
+  `notification-subscription-lifecycle` with status **partial**. The generated header is therefore not a usable
+  module and the test runs against the OVERRIDE, which is why the tier is `partial` rather than `ready`.
+
+  Covered, over the override's real implementation: the eight host routing calls, each dispatching through the
+  exact capability trait and returning the provider's own outcome — asserted BY IDENTITY where the upstream case
+  uses `resolves.toBe(outcome)`, so a version that rebuilt the outcome instead of forwarding it fails; the two
+  resource constructors, including the empty-string tag default and the caller's request and schedule carried BY
+  IDENTITY; `releaseNotificationAttachment`, where a rejected release becomes `operation-failed` rather than
+  escaping; the `closeNotification` and `cancelScheduledNotification` state machines (no bound handler is
+  `operation-failed`; a successful handler marks the resource so the next call is `already-closed` /
+  `already-cancelled` and the handler never runs twice; a FAILED close does not mark it, so a retry still reaches
+  the handler); both initializers called DIRECTLY, not only through their constructors; and the five subscription
+  factories with their five detach wrappers, which report `not-attached` before an attach.
+
+  NOT covered, deliberately: the five `attachNotification*Subscription` and five `disposeNotification*Subscription`
+  wrappers are STUBS in the override — the header says so, every attach reports `operation-failed` with
+  `attachFailed: true` and every dispose reports `already-disposed`. Their real behaviour depends on
+  `createNotificationSubscription`, `attachNotificationSubscription` and `disposeNotificationSubscription`, the three
+  functions the emitter REFUSED and the override marks `NOT GENERATED`. Asserting the stubs would certify a stub as
+  parity, which this repository forbids, so those ten functions are left uncovered and their upstream cases are
+  unreachable rather than passing.
+
+  Thirteen mutations against the override, all thirteen killed: the `already-closed` and `already-cancelled`
+  reasons, a missing binding reported as success, a close that does not mark the resource closed, a close that never
+  succeeds, a cancel that does not mark, the tag default, the title written from the id, a failed release reported
+  as `ok`, the close-all outcome rebuilt instead of forwarded, the permission query routed to the request entry, the
+  detach reason, and the scheduled initializer dropping the request. One SURVIVED the first run and was a real hole
+  rather than an equivalence: `createNotificationResource` resolves an omitted tag to the empty string BEFORE it
+  calls the initializer, so the initializer's own default was never reached through the constructor. The direct
+  initializer case was added for it and it is killed. No equivalence was found on this surface and none is claimed.
+
+  No compiler request was filed by this unit: the refusals and the three malformed emitted forms this override
+  documents are already filed (the override's own `reason` names them), and the package is correctly recorded as
+  partial rather than presented as shippable.
 
 ### Local generation status
 
