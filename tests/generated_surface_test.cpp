@@ -14,6 +14,8 @@
 // observable. NativeSurfaceHandle is deliberately opaque; the byte-backed fixture below verifies
 // exact storage without inventing an image decoder or pretending @flighthq/image's refused browser
 // and erased-owner modules exist.
+// Mutation check (2026-10-12): dropping the stored handle, swapping resize dimensions, dropping GL
+// acquisition options, and propagating WGPU rejection each made this executable fail.
 
 namespace {
 
@@ -108,9 +110,11 @@ void test_surface_runtime_storage() {
 
   const auto second = make_surface(Any::external<int>(2));
   const auto second_runtime = surface::get_surface_runtime(readonly_surface(second));
+  const auto recovered_second =
+      surface::get_surface_handle(readonly_surface(second)).external_if<int>();
   check(first_runtime != second_runtime,
         "each allocated surface has its own runtime rather than shared side storage");
-  check(*surface::get_surface_handle(readonly_surface(second)).external_if<int>() == 2,
+  check(recovered_second != nullptr && *recovered_second == 2,
         "the second surface retains its own native handle");
 
   const auto numeric = make_surface(Any(7));
