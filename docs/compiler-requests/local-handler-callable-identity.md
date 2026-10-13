@@ -37,3 +37,21 @@ compared by identity after `std::function` erasure has the same defect.
 
 Override [`signals-throttle-typed-argument-buffers`](../../overrides/manifest.json) declares every
 handler as a `flight::Function`. The request closes when locally declared function values keep identity.
+
+## Same family: a module-level function compared against a nullable registry slot (render, flight a627849)
+
+`@flighthq/render` `enableColorAdjustmentGuards.ts` stores the module function `warnUnsupportedColorAdjustment`
+into `RenderRegistries.colorAdjustmentUnsupportedGuard`. That slot is declared
+`((state: RenderState, node: NodeAny) => void) | null` and is optional. The function then tests idempotence with
+`runtime.registries.colorAdjustmentUnsupportedGuard === warnUnsupportedColorAdjustment`. At a627849 the emitter
+generates the function, where the old pin refused it, and lowers that test to `==` between
+`std::variant<std::function<...>, Null, Undefined>` and the function. This fails to compile with
+`invalid operands to binary expression` (`flight/render/enable_color_adjustment_guards.hpp:62`).
+
+The required shape is the one above. The stored value and the compared value must both be the same
+`flight::Function` (one retained identity), so that `===` is `callable_identity_equal` over the present
+alternative and is false for null and undefined. No workaround is carried. A std::function comparison or a
+target-pointer comparison would invent an equality JavaScript does not have.
+
+This one header blocks all four `@flighthq/debug` headers, because `debug.ts` imports
+`enableColorAdjustmentGuards` through render's contract.
