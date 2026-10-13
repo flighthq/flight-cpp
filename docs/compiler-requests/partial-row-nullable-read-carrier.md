@@ -55,3 +55,18 @@ native test of `texture_atlas_page_meta.hpp`, which does not include this depend
 and executes successfully.
 
 No dependency override or source rewrite is carried by the textureatlas-formats migration.
+
+## Native carrying repair
+
+The textureatlas repair derives `flight/textureatlas/texture_atlas_region.hpp` from the generated
+header and changes only the six invalid nullable reads in `setTextureAtlasRegion`. Because every
+source expression coalesces both `null` and `undefined` to `null`, consuming the emitted
+`std::optional<T>` directly preserves the observable result: an empty carrier stays empty and a
+present payload stays present. The same derived copy keeps the independently filed
+`TextureAtlasRotation` nullish result in its declared enum domain.
+
+Measured with package-scoped compilation at two workers, textureatlas improves from 1/7 to 3/7
+independently compiling headers. Its remaining guard refusal and texture-factory mismatch are
+independent. Bitmaptext improves from 2/6 to 6/6: its three concrete consumers and aggregate no
+longer fail through this dependency. Bitmaptext still reports its pre-existing stale `bitmap_text.hpp`
+override; this compiler repair does not re-derive or change that TEXT behavior.

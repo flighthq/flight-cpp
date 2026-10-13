@@ -2829,6 +2829,22 @@
       "remaining": "None in gizmoState.ts at this pin.",
       "expires": "when declared interface heritage, exact runtime recovery, present generic narrowing, readonly structural propagation, hierarchy arguments and callback identity all lower faithfully.",
       "authoredOn": "2026-10-13"
+    },
+    {
+      "id": "textureatlas-region-nullable-partial-read",
+      "path": "flight/textureatlas/texture_atlas_region.hpp",
+      "package": "@flighthq/textureatlas",
+      "status": "complete",
+      "supplies": "packages/textureatlas/src/textureAtlasRegion.ts",
+      "derivedFrom": "32749972ef785432622182bd60b5e19b7833d0f735e70e43a231525036a617ca",
+      "reason": "The emitter applies std::holds_alternative and std::get to the std::optional carriers returned for six nullable fields read through Readonly<Partial<TextureAtlasRegionLike>>. Once those errors are removed, it also widens the TextureAtlasRotation nullish result to variant<TextureAtlasRotation, double> and assigns that variant to the enum field. Both compiler defects were filed before this override.",
+      "change": "Keeps the emitted module semantically verbatim outside setTextureAtlasRegion: the six nullable scalar reads consume their actual optional carriers directly, and the rotation read retains TextureAtlasRotation ownership through its default.",
+      "equivalence": "For each nullable scalar, both an absent Partial property and the source null value intentionally coalesce to null, represented by std::nullopt, while a present payload is retained. Rotation preserves a supplied enum member and defaults only absence to TextureAtlasRotation::None, exactly matching the source branches.",
+      "whyNotAPatchOrRepair": "A declaration-only emission repair cannot replace invalid executable expressions, and the source already uses canonical nullish coalescing with the correct TypeScript types. Rewriting it to name native optional or variant representation would encode a C++ lowering defect in portable source.",
+      "unblocks": "Measured at two workers: textureatlas improves from 1/7 to 3/7 independently compiled headers, and bitmaptext improves from 2/6 to 6/6, clearing its three concrete consumers plus aggregate. Textureatlas's four remaining failures and bitmaptext's stale-override warning are independent and reported separately.",
+      "remaining": "None in textureAtlasRegion.ts at this pin; the unrelated textureAtlasFrom compiler failure is outside this override.",
+      "expires": "when nullable Partial reads lower against their actual carrier and enum nullish defaults retain the declared enum owner.",
+      "authoredOn": "2026-10-13"
     }
   ]
 }

@@ -50,3 +50,8 @@ that enum, and the destination is the same enum. The textureatlas-formats migrat
 explicit annotation for its mutable local in
 `source-patches/textureatlas-formats-indexed-lines.patch`. It does not rewrite the
 `@flighthq/textureatlas` dependency's nullish-default path.
+
+The textureatlas native repair carries that dependency path in its derived
+`texture_atlas_region.hpp`: it reads the optional enum carrier and applies
+`TextureAtlasRotation::None` with `value_or`, so no numeric alternative is introduced. The separate
+libGDX source annotation remains owned by textureatlas-formats.
