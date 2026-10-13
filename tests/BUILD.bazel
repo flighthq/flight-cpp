@@ -11,6 +11,13 @@ cc_test(
 )
 
 cc_test(
+    name = "nullish_or_test",
+    srcs = ["nullish_or_test.cpp"],
+    size = "small",
+    deps = ["//:cpp"],
+)
+
+cc_test(
     name = "upstream_math_geometry_parity_test",
     srcs = [
         "generated/upstream_math_geometry_parity.cpp",

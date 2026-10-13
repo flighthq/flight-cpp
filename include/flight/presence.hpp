@@ -3,6 +3,10 @@
 #include <compare>
 #include <concepts>
 #include <cstddef>
+#include <memory>
+#include <optional>
+#include <type_traits>
+#include <utility>
 #include <variant>
 
 namespace flight {
@@ -27,6 +31,28 @@ inline constexpr Null null{};
 
 template <typename Value>
 using Presence = std::variant<Undefined, Null, Value>;
+
+// `left ?? fallback` where storage is known only after template instantiation. Absence means an empty
+// optional or null reference; other values are present. The fallback is evaluated lazily.
+namespace detail {
+template <typename Value> inline constexpr bool is_std_optional_v = false;
+template <typename Value> inline constexpr bool is_std_optional_v<std::optional<Value>> = true;
+template <typename Value> inline constexpr bool is_shared_ptr_v = false;
+template <typename Value> inline constexpr bool is_shared_ptr_v<std::shared_ptr<Value>> = true;
+} // namespace detail
+
+template <typename Target, typename Left, typename Fallback>
+[[nodiscard]] Target nullish_or(Left&& left, Fallback&& fallback) {
+  using Stored = std::remove_cvref_t<Left>;
+  if constexpr (detail::is_std_optional_v<Stored>) {
+    if (left.has_value()) return Target(*std::forward<Left>(left));
+  } else if constexpr (detail::is_shared_ptr_v<Stored>) {
+    if (left) return Target(std::forward<Left>(left));
+  } else {
+    return Target(std::forward<Left>(left));
+  }
+  return Target(std::forward<Fallback>(fallback)());
+}
 
 // JavaScript `===` between a nullable, optional value -- the three-state carrier `std::variant<Value, Null,
 // Undefined>` the emitter writes for `T | null | undefined` -- and a present `Value`: true exactly when the

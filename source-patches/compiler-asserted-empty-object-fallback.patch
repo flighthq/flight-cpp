@@ -1,0 +1,94 @@
+diff --git a/packages/compiler-backend-cpp/src/cppAssertedEmptyObjectFallback.test.ts b/packages/compiler-backend-cpp/src/cppAssertedEmptyObjectFallback.test.ts
+new file mode 100644
+index 0000000..f457c3e
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppAssertedEmptyObjectFallback.test.ts
+@@ -0,0 +1,45 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/x/src/x.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/x', upstreamDirectory: '/flight' });
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++function line(contents: string, needle: string): string {
++  return contents.split('\n').find((candidate) => candidate.includes(needle))?.trim() ?? '';
++}
++
++// initializeHost's shape: every group is `(capabilities.group ?? {}) as Host['group']`, read through a row over a
++// type parameter whose storage is std::optional for one instantiation and a required Ref for another.
++const host = 'export interface Audio { device?: number }\nexport interface Hst { audio: Audio }\n';
++
++describe('an asserted `?? {}` fallback', () => {
++  it('tests absence in the storage the instantiation has, and builds the fallback as the asserted type', () => {
++    const contents = emit(`${host}export function initialize<C extends Partial<Hst>>(out: Hst, caps: Readonly<C>): void { out.audio = (caps.audio ?? {}) as Hst['audio']; }`);
++    expect(line(contents, 'out->audio =')).toBe(
++      '(out->audio = flight::nullish_or<flight::Ref<Audio>>(flight::row_get<flight::RowKey<"audio">>(caps), [&]() -> flight::Ref<Audio> { return flight::make_ref<Audio>(Audio{}); }));',
++    );
++    expect(contents).not.toContain('value_or');
++  });
++
++  it('does the same for a non-generic partial receiver', () => {
++    const contents = emit(`${host}export function f(caps: Partial<Hst>): Audio { return (caps.audio ?? {}) as Hst['audio']; }`);
++    expect(line(contents, 'return ')).toBe(
++      'return flight::nullish_or<flight::Ref<Audio>>(caps->audio, [&]() -> flight::Ref<Audio> { return flight::make_ref<Audio>(Audio{}); });',
++    );
++  });
++
++  it('leaves an unasserted fallback, a non-empty fallback, a value fallback and a required read as they were', () => {
++    expect(emit(`${host}export function f(caps: Partial<Hst>): object { return caps.audio ?? {}; }`)).not.toContain('nullish_or');
++    expect(emit(`${host}export function f(caps: Partial<Hst>): Audio { return (caps.audio ?? { device: 1 }) as Hst['audio']; }`)).not.toContain('nullish_or');
++    expect(line(emit(`${host}export function f(a: Audio): number { return a.device ?? 0; }`), 'return ')).toBe(
++      'return ([&]() -> double { auto nullish_coalesce_left = a->device; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 0.0; }());',
++    );
++    expect(line(emit(`${host}export function f(caps: Hst): Audio { return caps.audio; }`), 'return ')).toBe('return caps->audio;');
++  });
++});
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 1ab4504..c591cde 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -4333,6 +4333,8 @@ function emitExpression(
+         : invocation;
+     }
+     case 'cast': {
++      const assertedEmptyFallback = emitCppAssertedEmptyObjectFallbackCpp(expression, context);
++      if (assertedEmptyFallback) return assertedEmptyFallback;
+       if (getCppErasedRefWeakMapViewPlan(expression, context)) {
+         refuseCppErasedRefWeakMapView(context);
+       }
+@@ -28967,6 +28969,29 @@ function isCppCollectionIteratorCallCpp(expression: Readonly<IrExpression>, cont
+   );
+ }
+ 
++// `(left ?? {}) as Target`, the shape of initializeHost's every group: `(capabilities.audio ?? {}) as Host['audio']`.
++// Two things go wrong when it is lowered piece by piece. `left` is often a read through a row over a type
++// parameter, whose storage is a std::optional for one instantiation and a required Ref for another, so the
++// `.value_or` chosen from the constraint does not exist on the Ref. And the empty literal, lowered with no
++// destination, becomes an anonymous struct that converts to nothing. The assertion names the destination: the
++// fallback is an empty `Target`, and `flight::nullish_or` tests absence in whatever storage `left` turns out to
++// have, evaluating the fallback only when it is needed.
++function emitCppAssertedEmptyObjectFallbackCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'cast' }>>,
++  context: EmitContext,
++): string | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
++  const inner = expression.expression;
++  if (inner.kind !== 'binary' || inner.operator !== '??') return undefined;
++  if (inner.right.kind !== 'object' || inner.right.members.length !== 0) return undefined;
++  if (!hasFlightReferenceRepresentationCpp(expression.type, context)) return undefined;
++  const target = emitType(expression.type, context);
++  const fallback = emitExpression(inner.right, context, expression.type);
++  const left = emitExpression(inner.left, context);
++  context.includes.add('flight/presence.hpp');
++  return `flight::nullish_or<${target}>(${left}, [&]() -> ${target} { return ${fallback}; })`;
++}
++
+ function getIrExpressionBindingTypeCpp(
+   expression: Readonly<IrExpression>,
+   context: EmitContext,

@@ -3946,6 +3946,23 @@
       "unblocks": "@flighthq/host hostQuery.ts getHost* and hasHost* on a stand-in Host with missing groups, once the Host owner regenerates.",
       "expires": "when upstream keeps the run-time receiver test of an optional chain through a nullable reference representation (docs/compiler-requests/host-group-optional-chain-dropped.md).",
       "appliedOn": "2026-10-13"
+    },
+    {
+      "id": "compiler-asserted-empty-object-fallback",
+      "dependency": "flight-compiler",
+      "patch": "compiler-asserted-empty-object-fallback.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "not a refusal: an instantiation failure. `(capabilities.group ?? {}) as Host['group']` in @flighthq/host initializeHost lowered to `row_get<...>(capabilities).value_or(make_ref<anonymous_...<Capabilities>>(...))`. With a required-group capabilities type (Host itself) row_get yields a Ref with no value_or; with an optional one the empty anonymous fallback converts to nothing. The header gate never instantiates the template, so neither surfaced.",
+      "rewrite": "A new cast-case handler lowers exactly `(left ?? {}) as Target`, Target a reference type, as `flight::nullish_or<Target>(left, [&]() -> Target { return <{} built as Target>; })`. flight::nullish_or (include/flight/presence.hpp) tests absence in whatever storage `left` has at instantiation: an empty std::optional or a null shared_ptr. Unasserted fallbacks, non-empty fallbacks and value fallbacks are not matched.",
+      "equivalence": "`x ?? {}` is x when x is not nullish and a fresh empty object otherwise; the assertion names that object's type. nullish_or returns a present value itself (identity kept), calls the fallback only for a nullish read (laziness kept), and builds the fallback as the asserted type with every member absent, which is the empty literal's value.",
+      "verification": "New cppAssertedEmptyObjectFallback.test.ts: 3 pass. The generic and non-generic asserted cases fail without the rewrite; the controls (unasserted `?? {}`, non-empty fallback, number fallback, required read) pass both ways. compiler-backend-cpp suite at -j2 on top of compiler-declared-present-reference-chain: the same 47 pre-existing failures, none new. tests/nullish_or_test.cpp matches node's `??` (empty optional, null Ref, present identity, 0 kept, laziness). Native, on a fixture module of the initializeHost shape: required-read and optional-read instantiations both keep a present group by identity and install a fresh empty group for a missing one; the old emission fails to compile in both with the two errors builder7 reported. Scratch regeneration of @flighthq/host with the rewrite changes only host.hpp (each of the 51 group writes). The Host factory still does not instantiate, because of the separate merged-row construction defect (merged-row-not-constructible.md); with this change those writes are its only remaining errors. Host rows were not regenerated or edited.",
+      "whyNotUpstreamFirst": "The Host factory is the entry point a native host instantiates; upstream receives docs/compiler-requests/host-initialize-optional-fallback-on-a-required-read.md.",
+      "unblocks": "The `(x ?? {}) as T` group writes of @flighthq/host initializeHost, once the Host owner regenerates; the factory additionally needs merged-row construction (separate request).",
+      "expires": "when upstream lowers an asserted empty-object nullish fallback to the asserted type with a storage-correct absence test (docs/compiler-requests/host-initialize-optional-fallback-on-a-required-read.md).",
+      "appliedOn": "2026-10-13"
     }
   ]
 }

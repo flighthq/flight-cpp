@@ -32,6 +32,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-new-set-from-iterator.patch`](../../source-patches/compiler-new-set-from-iterator.patch) | [`new Set(collection.values())` must lower without a contextual optional construction](new-set-from-collection-iterator.md) |
 | [`compiler-nullish-conditional-absent-fallback.patch`](../../source-patches/compiler-nullish-conditional-absent-fallback.patch) | [A nullish-coalesce fallback of `null` is wrapped into an engaged optional](nullish-coalesce-null-into-optional-is-never-absent.md) |
 | [`compiler-declared-present-reference-chain.patch`](../../source-patches/compiler-declared-present-reference-chain.patch) | [An optional chain through a reference declared present must still test it](host-group-optional-chain-dropped.md) |
+| [`compiler-asserted-empty-object-fallback.patch`](../../source-patches/compiler-asserted-empty-object-fallback.patch) | [An asserted `?? {}` fallback must test the storage it reads and build the asserted type](host-initialize-optional-fallback-on-a-required-read.md) |
 | [`compiler-dependent-erased-object-recovery-template.patch`](../../source-patches/compiler-dependent-erased-object-recovery-template.patch) | [Dependent erased-object recovery needs a template disambiguator](dependent-erased-object-recovery-template.md) |
 | [`compiler-dependent-indexed-access-reference-carrier.patch`](../../source-patches/compiler-dependent-indexed-access-reference-carrier.patch) | [Dependent indexed access must read through the reference carrier](dependent-indexed-access-reference-carrier.md) |
 | [`compiler-contextual-imported-union-owner.patch`](../../source-patches/compiler-contextual-imported-union-owner.patch) | [Contextual construction of an imported union](compiler-contextual-imported-union-owner.md) |
@@ -461,6 +462,8 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   a refusal (`contextual optionalSingle construction requires expression type evidence`) for `values()`/`keys()` iterator arguments; preventive, no SDK site is refused today. `entries()` and stored iterators stay refused.
 - [An optional chain through a reference declared present must still test it](host-group-optional-chain-dropped.md) —
   `@flighthq/host` `hostQuery.ts`: `host.group?.slot ?? null` dereferenced a missing group's null `Ref`. Carried by the `compiler-declared-present-reference-chain` patch.
+- [An asserted `?? {}` fallback must test the storage it reads and build the asserted type](host-initialize-optional-fallback-on-a-required-read.md) —
+  `@flighthq/host` `initializeHost`: `.value_or` on a required read plus an empty anonymous fallback. Carried by the `compiler-asserted-empty-object-fallback` patch and `flight::nullish_or`.
 - [A nullish-coalesce fallback of `null` is wrapped into an *engaged* optional, so its truthiness test dereferences null](nullish-coalesce-null-into-optional-is-never-absent.md) —
   silent miscompilation: `@flighthq/textlayout`'s wrapping path panics on the first-segment overrun that upstream's own fixture exercises. No workaround is carried.
 - [A structural view of an entity-allocated carrier is invisible when the carrier derives from the row's subject](structural-view-of-a-derived-carrier-is-invisible.md) —

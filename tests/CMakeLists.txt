@@ -4,6 +4,11 @@ flight_cpp_set_project_warnings(flight_cpp_runtime_tests)
 
 add_test(NAME flight_cpp.runtime COMMAND flight_cpp_runtime_tests)
 
+add_executable(flight_cpp_nullish_or_tests nullish_or_test.cpp)
+target_link_libraries(flight_cpp_nullish_or_tests PRIVATE Flight::Cpp)
+flight_cpp_set_project_warnings(flight_cpp_nullish_or_tests)
+add_test(NAME flight_cpp.nullish_or COMMAND flight_cpp_nullish_or_tests)
+
 add_executable(
   flight_cpp_upstream_math_geometry_parity_tests
   generated/upstream_math_geometry_parity.cpp
