@@ -58,15 +58,7 @@ using flight::types::SpineBinaryTimelineContext;
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_FORMATS_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_9B0EADFED5E06042
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_FORMATS_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_9B0EADFED5E06042
-struct times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042 : public flight::ReferenceEnabled {
-  flight::SequenceView<double> times;
-  flight::SequenceView<double> values;
-  std::optional<double> components;
-  std::optional<flight::types::AnimationInterpolation> interpolation;
-  std::optional<bool> quaternion;
-  std::variant<std::function<double(double)>, flight::Null, flight::Undefined> easing = std::variant<std::function<double(double)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined> segment_easings = std::variant<flight::Array<std::optional<std::function<double(double)>>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-};
+using times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042 = flight::animation::times_values_components_interpolation_quaternion_easing_segment_easings_9b0eadfed5e06042;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SKELETON2D_FORMATS_TIMES_VALUES_COMPONENTS_INTERPOLATION_QUATERNION_EASING_SEGMENT_EASINGS_9B0EADFED5E06042
 
 inline void add_spine_binary_attachment_channel(flight::Ref<flight::types::ByteReader> reader, flight::Array<flight::Ref<flight::types::AnimationChannel>> channels, flight::Array<std::optional<flight::String>> strings, std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::AttachmentSkin2D>>>>> setup, double slot_index, double frame_count) {
