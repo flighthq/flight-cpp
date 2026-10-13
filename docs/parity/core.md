@@ -768,7 +768,13 @@ Upstream carries per-package records at `flight/agents/packages/debug/`: `status
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+None, and at this base none is possible: every header of the package fails to compile with
+`'flight/types/renderer.hpp' file not found`, because `flight/render/render_state.hpp` (the `@flighthq/render` row,
+still at 7e2fc7d with 11 of 25 modules emitted) includes a header the current `@flighthq/types` row no longer emits.
+The override that shadows `debug_timing.hpp` is caught by the same chain, since it includes `debug.hpp`. Independently,
+`debug.ts` refuses at emission and only `enableDebug` within it is blocked (`cpp-contextual-union-inequivalent`), filed
+as `docs/compiler-requests/contextual-union-map-value-carrier.md`; every other function of the module is emitted. So
+until the render row is migrated there is no callable surface to test, and no test stands in for one here.
 
 ### Local generation status
 
