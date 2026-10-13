@@ -1076,6 +1076,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_haptics_test",
+    srcs = ["generated_haptics_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_xml_test",
     srcs = ["generated_xml_test.cpp"],
     size = "small",
@@ -1234,6 +1241,7 @@ test_suite(
         ":generated_video_test",
         ":generated_sensors_test",
         ":generated_geolocation_test",
+        ":generated_haptics_test",
         ":generated_xml_test",
     ],
 )

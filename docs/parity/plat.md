@@ -108,7 +108,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/midi` | 7 | 5 | 40 | dedicated | none | 5 / 2 |
 | `@flighthq/sensors` | 3 | 2 | 67 | dedicated | none | 3 / 0 |
 | `@flighthq/geolocation` | 4 | 2 | 13 | dedicated | none | 4 / 0 |
-| `@flighthq/haptics` | 3 | 1 | 19 | none | none | 3 / 0 |
+| `@flighthq/haptics` | 3 | 1 | 19 | dedicated | none | 3 / 0 |
 | `@flighthq/device` | 3 | 1 | 12 | none | none | 3 / 0 |
 | `@flighthq/screen` | 3 | 1 | 46 | none | none | 3 / 0 |
 | `@flighthq/power` | 3 | 1 | 31 | none | none | 2 / 1 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-22 of 39 packages are reached by at least one local CTest executable.
-21 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`, `sensors`, `geolocation`.
+23 of 39 packages are reached by at least one local CTest executable.
+22 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`, `sensors`, `geolocation`, `haptics`.
 
 ## `@flighthq/app`
 
@@ -1241,7 +1241,34 @@ Upstream carries per-package records at `flight/agents/packages/haptics/`: `stat
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_haptics` — `tests/generated_haptics_test.cpp` (dedicated), NEW. The package emits at this
+  pin (3 of 3 modules, no override), and the roll-up row above read "none" before this unit. It routes haptic
+  requests to a host capability and returns the provider's own boolean, so what is portable is the routing, the
+  argument defaults, two decisions made BEFORE the provider is reached, and one fallback.
+
+  Covered: every function returns the provider's answer rather than assuming success, so a provider reporting
+  failure is reported as failing; an omitted impact intensity is forwarded as the literal 1 (present, not absent)
+  while an explicit intensity is forwarded unchanged; every impact style and notification type reaches the provider
+  as itself and in the order given; `prepareHaptics` warms up a provider that implements `prepare` and is silent
+  when it does not (the package's one optional chain, and its absence is not a failure); the caller-owned
+  capabilities object is filled by the provider and returned BY IDENTITY, not copied; an empty pattern is refused
+  without the provider being called; and a waveform request to a provider without waveform support falls back to
+  `vibratePattern` with the timings, so a provider that cannot express amplitudes still buzzes rather than silently
+  doing nothing. An omitted waveform repeat is forwarded as the default -1.
+
+  The recording provider in the test is the same shape as the upstream fixture's own `makeHost`/`record(name,
+  result)` stubs; nothing is invented for a device, there is no ambient slot to install into, and no SDK, browser or
+  log host is supplied.
+
+  Fourteen mutations, all fourteen killed: cancel negated, support negated, the intensity default changed and the
+  explicit intensity overridden, the notification type dropped, the duration offset by one, the empty-pattern guard
+  inverted and again removed, the repeat default changed, the empty-timings guard removed, the waveform arguments
+  swapped, the fallback handed the amplitudes instead of the timings, the capabilities call handed a fresh object
+  instead of the caller's, and `prepare` never called. No equivalence was found on this surface and none is claimed.
+
+  No compiler request was filed for this package, and unlike the `@flighthq/host` capability groups, this package's
+  optional `prepare` chain lowers correctly: `row_get` on the optional member answers `has_value()` and the emitted
+  guard reads it, so the absence is silent rather than a dereference.
 
 ### Local generation status
 
