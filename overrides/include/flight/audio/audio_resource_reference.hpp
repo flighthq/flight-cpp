@@ -32,6 +32,20 @@ namespace flight::types { struct HostAudioDecodeCapabilities; }
 #include <flight/audio/audio_resource.hpp>
 #include <flight/audio/decode_audio_resource_bytes.hpp>
 
+// REPAIR (2026-10-13): every accessor below is a lambda over the VARIANT, and each one previously
+// deduced `auto`, which drops the reference -- `return value->state;` yielded a COPY, so every
+// `std::visit(...) = x` in this override assigned to a temporary and was silently discarded. The
+// reference's state and failure were therefore never written: resetFailedAudioResourceReference
+// returned true while changing nothing, and resolveAudioResourceReference recorded no
+// Loading/Resolved/Failed state and no failure. Each accessor now returns an assignable reference, so
+// reads still read and writes reach the object. Measured before the fix:
+//   before: state=Failed has_failure=1 ; reset returned: 1 ; after: state=Failed has_failure=1
+//
+// The return type is spelled out per member because `decltype(auto)` is NOT enough here: on this
+// toolchain an accessor written that way still loses the write (a minimal std::variant probe
+// reproduces it -- decltype(auto) leaves the member at its old value, an explicit reference return
+// updates it). Do not "simplify" these back to decltype(auto) without re-running that probe.
+
 namespace flight::audio {
 
 using flight::types::AudioResource;
@@ -54,7 +68,7 @@ inline flight::Ref<flight::types::AudioResourceFailure> create_audio_resource_fa
 }
 
 inline flight::Ref<flight::types::AudioResourceReferenceResolutionExplanation> explain_audio_resource_reference_resolution(flight::types::AudioResourceReference ref) {
-  return flight::make_ref<flight::types::AudioResourceReferenceResolutionExplanation>(flight::types::AudioResourceReferenceResolutionExplanation{.failure = (!std::visit([](const auto& value) { return value->failure; }, ref).has_value() ? std::nullopt : std::optional<flight::Ref<flight::types::AudioResourceFailure>>{flight::make_ref<flight::types::AudioResourceFailure>(*std::visit([](const auto& value) { return value->failure; }, ref).value())}), .kind = std::visit([](const auto& value) { return value->kind; }, ref), .retryable = (std::visit([](const auto& value) { return value->state; }, ref) == flight::types::resource_resolution_state->failed), .state = std::visit([](const auto& value) { return value->state; }, ref)});
+  return flight::make_ref<flight::types::AudioResourceReferenceResolutionExplanation>(flight::types::AudioResourceReferenceResolutionExplanation{.failure = (!std::visit([](const auto& value) -> std::optional<flight::Ref<flight::types::AudioResourceFailure>>& { return value->failure; }, ref).has_value() ? std::nullopt : std::optional<flight::Ref<flight::types::AudioResourceFailure>>{flight::make_ref<flight::types::AudioResourceFailure>(*std::visit([](const auto& value) -> std::optional<flight::Ref<flight::types::AudioResourceFailure>>& { return value->failure; }, ref).value())}), .kind = std::visit([](const auto& value) -> flight::String& { return value->kind; }, ref), .retryable = (std::visit([](const auto& value) -> flight::types::ResourceResolutionState& { return value->state; }, ref) == flight::types::resource_resolution_state->failed), .state = std::visit([](const auto& value) -> flight::types::ResourceResolutionState& { return value->state; }, ref)});
 }
 
 inline std::optional<flight::types::AudioResourceReference> find_audio_resource_reference_by_name(flight::Array<flight::types::AudioResourceReference> references, flight::String name) {
@@ -62,7 +76,7 @@ inline std::optional<flight::types::AudioResourceReference> find_audio_resource_
     double i = 0.0;
     while ((i < static_cast<double>(references.size()))) {
       {
-        if ((std::visit([](const auto& value) { return value->name; }, references.element(i)) == name)) {
+        if ((std::visit([](const auto& value) -> std::optional<flight::String>& { return value->name; }, references.element(i)) == name)) {
           return references.element(i);
         }
       }
@@ -116,17 +130,17 @@ inline flight::Ref<flight::types::ExternalAudioResourceReference> create_externa
 }
 
 inline bool reset_failed_audio_resource_reference(flight::types::AudioResourceReference ref) {
-  if ((std::visit([](const auto& value) { return value->state; }, ref) != flight::types::resource_resolution_state->failed)) {
+  if ((std::visit([](const auto& value) -> flight::types::ResourceResolutionState& { return value->state; }, ref) != flight::types::resource_resolution_state->failed)) {
     return false;
   }
-  (std::visit([](const auto& value) { return value->failure; }, ref) = std::nullopt);
-  (std::visit([](const auto& value) { return value->state; }, ref) = flight::types::resource_resolution_state->unresolved);
+  (std::visit([](const auto& value) -> std::optional<flight::Ref<flight::types::AudioResourceFailure>>& { return value->failure; }, ref) = std::nullopt);
+  (std::visit([](const auto& value) -> flight::types::ResourceResolutionState& { return value->state; }, ref) = flight::types::resource_resolution_state->unresolved);
   return true;
 }
 
 inline flight::Task<std::optional<flight::Ref<flight::types::AudioResource>>> resolve_audio_resource_reference(flight::types::AudioResourceReference ref, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::HostAudioDecodeCapabilities>>>> audio_decode, flight::types::AudioResourceFetch fetch, flight::AbortSignal signal, std::optional<flight::types::AudioDecoderRegistry> decoders = std::nullopt) {
-  (std::visit([](const auto& value) { return value->failure; }, ref) = std::nullopt);
-  (std::visit([](const auto& value) { return value->state; }, ref) = flight::types::resource_resolution_state->loading);
+  (std::visit([](const auto& value) -> std::optional<flight::Ref<flight::types::AudioResourceFailure>>& { return value->failure; }, ref) = std::nullopt);
+  (std::visit([](const auto& value) -> flight::types::ResourceResolutionState& { return value->state; }, ref) = flight::types::resource_resolution_state->loading);
   try {
     std::optional<flight::Ref<flight::types::AudioResource>> decoded;
     if (ref.index() == 0) {
@@ -136,27 +150,27 @@ inline flight::Task<std::optional<flight::Ref<flight::types::AudioResource>>> re
       (decoded = co_await fetch(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ExternalAudioResourceReference>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ExternalAudioResourceReference>>>>(std::get<1>(ref))), signal));
     }
     if ((!decoded.has_value() || !decoded.value()->buffer.has_value())) {
-      (std::visit([](const auto& value) { return value->failure; }, ref) = std::optional<flight::Ref<flight::types::AudioResourceFailure>>{([=]() {
+      (std::visit([](const auto& value) -> std::optional<flight::Ref<flight::types::AudioResourceFailure>>& { return value->failure; }, ref) = std::optional<flight::Ref<flight::types::AudioResourceFailure>>{([=]() {
   flight::types::EntityConstruction<flight::Ref<flight::types::AudioResourceFailure>> out = flight::entity::allocate_entity<flight::Ref<flight::types::AudioResourceFailure>>();
   flight::row_set<flight::RowKey<"kind">>(out, flight::types::audio_resource_failure_kind->unavailable);
   flight::row_set<flight::RowKey<"message">>(out, flight::String("Audio resource unavailable"));
   flight::row_set<flight::RowKey<"name">>(out, std::nullopt);
   return flight::entity::finish_entity<flight::Ref<flight::types::AudioResourceFailure>>(out);
 })()});
-      (std::visit([](const auto& value) { return value->state; }, ref) = flight::types::resource_resolution_state->failed);
+      (std::visit([](const auto& value) -> flight::types::ResourceResolutionState& { return value->state; }, ref) = flight::types::resource_resolution_state->failed);
       co_return std::nullopt;
     }
-    (std::visit([](const auto& value) { return value->resource; }, ref)->buffer = std::optional<flight::AudioBuffer>{decoded.value()->buffer.value()});
-    (std::visit([](const auto& value) { return value->state; }, ref) = flight::types::resource_resolution_state->resolved);
-    co_return std::optional<flight::Ref<flight::types::AudioResource>>{std::visit([](const auto& value) { return value->resource; }, ref)};
+    (std::visit([](const auto& value) -> flight::Ref<flight::types::AudioResource>& { return value->resource; }, ref)->buffer = std::optional<flight::AudioBuffer>{decoded.value()->buffer.value()});
+    (std::visit([](const auto& value) -> flight::types::ResourceResolutionState& { return value->state; }, ref) = flight::types::resource_resolution_state->resolved);
+    co_return std::optional<flight::Ref<flight::types::AudioResource>>{std::visit([](const auto& value) -> flight::Ref<flight::types::AudioResource>& { return value->resource; }, ref)};
   }
   catch (const std::exception& cause) {
     if (flight::to_boolean(signal.aborted)) {
-      (std::visit([](const auto& value) { return value->state; }, ref) = flight::types::resource_resolution_state->unresolved);
+      (std::visit([](const auto& value) -> flight::types::ResourceResolutionState& { return value->state; }, ref) = flight::types::resource_resolution_state->unresolved);
       throw cause;
     }
-    (std::visit([](const auto& value) { return value->failure; }, ref) = std::optional<flight::Ref<flight::types::AudioResourceFailure>>{create_audio_resource_failure(cause)});
-    (std::visit([](const auto& value) { return value->state; }, ref) = flight::types::resource_resolution_state->failed);
+    (std::visit([](const auto& value) -> std::optional<flight::Ref<flight::types::AudioResourceFailure>>& { return value->failure; }, ref) = std::optional<flight::Ref<flight::types::AudioResourceFailure>>{create_audio_resource_failure(cause)});
+    (std::visit([](const auto& value) -> flight::types::ResourceResolutionState& { return value->state; }, ref) = flight::types::resource_resolution_state->failed);
     co_return std::nullopt;
   }
 }

@@ -720,17 +720,15 @@ int main() {
     check(flight::audio::reset_failed_audio_resource_reference(reference),
           "reference: resetting a failed reference reports a change");
 
-    // BLOCKED, and measured rather than endorsed: the call above returns true, but the reference is
-    // left exactly as it was -- state still Failed, failure still present. Every state and failure
-    // write in this override goes through `std::visit([](const auto& value) { return value->state; },
-    // ref) = ...`, and an `auto`-returning lambda yields a COPY of the member, so the assignment lands
-    // on a temporary. Upstream expects the reference to return to Unresolved with no failure.
-    // See docs/compiler-requests/... (filed) and my status; NOT asserted here, because asserting the
-    // current state would certify the defect as correct.
+    check(reference->state == flight::types::resource_resolution_state->unresolved &&
+              !reference->failure.has_value(),
+          "reference: resetting returns a failed reference to unresolved and clears the failure");
 
     reference->state = flight::types::resource_resolution_state->resolved;
     check(!flight::audio::reset_failed_audio_resource_reference(reference),
           "reference: resetting a reference that never failed reports no change");
+    check(reference->state == flight::types::resource_resolution_state->resolved,
+          "reference: a reference that never failed is left untouched");
   }
 
   {
@@ -764,9 +762,8 @@ int main() {
           "reference: resolution binds into the resource the reference already holds");
     check(held->buffer.has_value() && held->buffer.value().length == decoded_buffer.length,
           "reference: the held resource gains the decoded samples");
-    // BLOCKED, same cause: the samples bind (asserted above) but the resolved state is never recorded,
-    // because the override writes it through a std::visit that returns a copy. Upstream expects
-    // reference.state === Resolved here.
+    check(reference->state == flight::types::resource_resolution_state->resolved,
+          "reference: a resolved reference records the resolved state");
   }
 
   {
@@ -786,9 +783,12 @@ int main() {
                               controller.signal)
                               .get();
     check(!resolved.has_value(), "reference: an unreachable payload resolves nothing, without throwing");
-    // BLOCKED, same cause: upstream expects state Failed and a recorded Unavailable failure
-    // ("Audio resource unavailable"). Neither is recorded, because both writes go through the copying
-    // std::visit. The resolve result above is unaffected and is asserted.
+    check(reference->state == flight::types::resource_resolution_state->failed,
+          "reference: an unreachable payload fails the reference rather than throwing");
+    check(reference->failure.has_value() &&
+              reference->failure.value()->kind == flight::types::audio_resource_failure_kind->unavailable &&
+              reference->failure.value()->message == flight::String("Audio resource unavailable"),
+          "reference: the failure names the unavailable kind and its message");
   }
 
   {
@@ -817,7 +817,8 @@ int main() {
     check(reference->resource->buffer.has_value() &&
               reference->resource->buffer.value().length == fetched_buffer.length,
           "reference: the fetched samples land in the reference's own resource");
-    // BLOCKED, same cause: the fetched samples bind, but the resolved state is not recorded.
+    check(reference->state == flight::types::resource_resolution_state->resolved,
+          "reference: an external reference resolves");
   }
 
   {
@@ -848,5 +849,41 @@ int main() {
           "reference: an abort leaves the reference unresolved and unfailed, so it can be retried");
   }
 
+  {
+    // IDENTITY AND LIFETIME. The accessors above now hand back references into the POINTEE, so the
+    // repair must not have made one reference's state reach another's, and a read must still read. Two
+    // independently-created references are driven through the same calls:
+    const auto first = flight::audio::create_embedded_audio_resource_reference(
+        flight::Uint8Array{1}, flight::String("audio/mpeg"));
+    const auto second = flight::audio::create_embedded_audio_resource_reference(
+        flight::Uint8Array{2}, flight::String("audio/mpeg"));
+    first->state = flight::types::resource_resolution_state->failed;
+    second->state = flight::types::resource_resolution_state->failed;
+
+    check(flight::audio::reset_failed_audio_resource_reference(
+              flight::types::AudioResourceReference{first}),
+          "reference: resetting one failed reference reports a change");
+    check(first->state == flight::types::resource_resolution_state->unresolved,
+          "reference: the reset reference is the one that changed");
+    check(second->state == flight::types::resource_resolution_state->failed,
+          "reference: a reset writes ONLY the reference it was given, never another");
+
+    // The variant holds the same object, so a write through it is a write to that object -- which is
+    // what makes the accessor sound rather than merely compiling.
+    flight::types::AudioResourceReference held{first};
+    std::visit([](const auto& value) -> flight::types::ResourceResolutionState& { return value->state; },
+               held) = flight::types::resource_resolution_state->failed;
+    check(first->state == flight::types::resource_resolution_state->failed,
+          "reference: a write through the variant reaches the object the variant holds");
+
+    // And a read taken before a write does not follow it: the accessor returns a reference, not a view
+    // that outlives the call in some other way.
+    check(flight::audio::find_audio_resource_reference_by_name(
+              flight::Array<flight::types::AudioResourceReference>{}, flight::String("x"))
+              .has_value() == false,
+          "reference: a lookup over an empty document still reads as nothing");
+  }
+
+  // ---- audioResourceFrom.test.ts
   return failures == 0 ? 0 : 1;
 }
