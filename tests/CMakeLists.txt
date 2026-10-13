@@ -429,6 +429,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_protocol_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_protocol COMMAND flight_cpp_generated_protocol_tests)
 
+add_executable(flight_cpp_generated_quadbatch_tests generated_quadbatch_test.cpp)
+target_include_directories(
+  flight_cpp_generated_quadbatch_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_quadbatch_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_quadbatch COMMAND flight_cpp_generated_quadbatch_tests)
+
 add_executable(flight_cpp_generated_permissions_tests generated_permissions_test.cpp)
 target_include_directories(
   flight_cpp_generated_permissions_tests

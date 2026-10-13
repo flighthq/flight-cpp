@@ -580,6 +580,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_quadbatch_test",
+    srcs = ["generated_quadbatch_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_permissions_test",
     srcs = ["generated_permissions_test.cpp"],
     size = "small",
@@ -814,6 +821,7 @@ test_suite(
         ":generated_spritesheet_test",
         ":generated_materials_test",
         ":generated_protocol_test",
+        ":generated_quadbatch_test",
         ":generated_preferences_test",
         ":generated_power_test",
         ":generated_permissions_test",
