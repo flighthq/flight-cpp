@@ -1,0 +1,580 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCatchAwaitCarrier.test.ts b/packages/compiler-backend-cpp/src/cppCatchAwaitCarrier.test.ts
+new file mode 100644
+index 0000000..d6f3aac
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppCatchAwaitCarrier.test.ts
+@@ -0,0 +1,132 @@
++import { describe, expect, it } from 'vitest';
++
++import ts from 'typescript';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++// A catch body that awaits is hoisted out of the handler. A body that also READS its binding cannot be hoisted
++// as a flag alone: the handler's `const std::exception&` is gone by the time the body runs. The handler now
++// records an OWNED `std::exception_ptr` -- which keeps the thrown object alive across the suspension -- and the
++// hoisted body re-binds the same caught object from it, so the body reads what the handler caught, with the
++// representation every non-awaiting `catch (error)` already has.
++//
++// The measured site is `@flighthq/loader`'s `resourceLoader.ts` `runEntry`, which retries after
++// `await delay(delayMs)` and passes the caught `error` to `entry.reject(error)` and to
++// `error instanceof DOMException`. The runtime half is pinned in tests/caught_exception_test.cpp.
++function emit(source: string) {
++  const sourceFile = ts.createSourceFile('/flight/packages/math/src/catch.ts', source, ts.ScriptTarget.Latest, true);
++  return emitIrModuleCpp(
++    lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/math', upstreamDirectory: '/flight' }).module,
++    { runtimeProfile: 'flight-cpp' },
++  ).contents;
++}
++
++const AWAITING_READ = `export async function run(load: () => Promise<number>, retry: () => Promise<void>, reject: (e: unknown) => void): Promise<void> {
++  try {
++    await load();
++  } catch (error) {
++    if (Math.random() < 0.5) {
++      await retry();
++      return;
++    }
++    reject(error);
++  }
++}`;
++
++describe('a caught value that survives an await', () => {
++  it('owns the caught object and re-binds it in the hoisted body', () => {
++    const contents = emit(AWAITING_READ);
++    expect(contents).toContain('std::exception_ptr');
++    expect(contents).toContain('std::current_exception()');
++    expect(contents).toContain('const std::exception& error = flight::caught_exception(');
++    // The body's own uses keep reading `error`; nothing else about them moved.
++    expect(contents).toContain('reject(error)');
++  });
++
++  it('keeps the handler narrow, because the re-bound value must be a class exception', () => {
++    const contents = emit(AWAITING_READ);
++    // The carrier is re-bound rather than rethrown, so the handler may not widen to `catch (...)`: a thrown
++    // value that is not a class exception has no `const std::exception&` to re-bind, and the source's own
++    // narrowing never admits one.
++    expect(contents).toContain('catch (const std::exception& error)');
++    expect(contents).not.toContain('catch (...)');
++  });
++
++  it('re-binds from the very carrier the handler recorded', () => {
++    const contents = emit(AWAITING_READ);
++    const recorded = /catch \(const std::exception& error\) \{\n\s*(\w+) = std::current_exception\(\);/.exec(
++      contents,
++    )?.[1];
++    expect(recorded).toBeDefined();
++    expect(contents).toContain(`flight::caught_exception(${String(recorded)})`);
++  });
++
++  it('carries nothing when the hoisted body never reads its binding', () => {
++    const contents = emit(`export async function run(load: () => Promise<number>, retry: () => Promise<void>): Promise<void> {
++      try {
++        await load();
++      } catch (error) {
++        await retry();
++      }
++    }`);
++    // The flag alone is still the whole lowering: no carrier, no re-binding -- and the handler may widen,
++    // because nothing downstream has to name the caught value.
++    expect(contents).not.toContain('std::exception_ptr');
++    expect(contents).not.toContain('caught_exception');
++    expect(contents).toContain('catch (...)');
++  });
++
++  it('leaves a catch that never awaits alone', () => {
++    const contents = emit(`export function run(load: () => number, reject: (e: unknown) => void): void {
++      try {
++        load();
++      } catch (error) {
++        reject(error);
++      }
++    }`);
++    expect(contents).not.toContain('std::exception_ptr');
++    expect(contents).not.toContain('caught_exception');
++    expect(contents).toContain('catch (const std::exception& error)');
++  });
++
++  it('gives each competing suspension its own carrier', () => {
++    const contents = emit(`export async function run(a: () => Promise<number>, b: () => Promise<number>, reject: (e: unknown) => void): Promise<void> {
++      try {
++        await a();
++      } catch (first) {
++        await b();
++        reject(first);
++      }
++      try {
++        await b();
++      } catch (second) {
++        await b();
++        reject(second);
++      }
++    }`);
++    expect(contents.match(/std::exception_ptr/g)?.length).toBe(2);
++    expect(contents.match(/flight::caught_exception\(/g)?.length).toBe(2);
++    expect(contents).toContain('reject(first)');
++    expect(contents).toContain('reject(second)');
++  });
++
++  it('keeps a nested catch inside a hoisted body on its own carrier', () => {
++    const contents = emit(`export async function run(load: () => Promise<number>, inner: () => Promise<number>, reject: (e: unknown) => void): Promise<void> {
++      try {
++        await load();
++      } catch (outer) {
++        try {
++          await inner();
++        } catch (nested) {
++          await inner();
++          reject(nested);
++        }
++        reject(outer);
++      }
++    }`);
++    expect(contents.match(/std::exception_ptr/g)?.length).toBe(2);
++    expect(contents).toContain('reject(nested)');
++    expect(contents).toContain('reject(outer)');
++  });
++});
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+index fd9670d..e96f2e6 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -2982,7 +2982,7 @@ describe('createCppCompilerBackend', () => {
+     expect(failure.classification).toBe('compiler-restriction');
+   });
+ 
+-  it('attributes a caught unknown value consumed after suspension to the target runtime', () => {
++  it('carries a caught unknown value consumed after suspension in an owned target carrier', () => {
+     const result = lower(
+       'catch-value-after-await.ts',
+       `export async function run<T>(
+@@ -2994,19 +2994,19 @@ describe('createCppCompilerBackend', () => {
+          catch (error) { await pause; reject(error); }
+        }`,
+     );
+-    const failure = captureBackendEmissionFailure(() => emitIrModuleCpp(result.module));
++    const contents = emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
+ 
+-    // The catch contract already records that `error` is the thrown unknown value. An exception_ptr
+-    // owns enough state to rethrow after suspension, but cannot recreate that source value for a generic
+-    // consumer. That conversion belongs in the runtime's erased-value contract, not in a cast here.
+-    expect(failure.rule).toBe('cpp-lowering-pass-refused');
+-    expect(failure.classification).toBe('target-runtime');
+-    expect(failure.message).toContain('owned caught-value carrier');
+-    expect(failure.message).toContain('flight::Any');
+-    expect(failure.message).toContain('std::exception_ptr alone preserves rethrow');
++    // This used to be a refusal attributed to the target runtime: the carrier had to own the thrown value
++    // across suspension AND give a generic consumer the same value back. It does now -- the handler records
++    // `std::current_exception()`, and the hoisted body re-binds the caught object from it -- so the boundary
++    // is met rather than restated. `tests/caught_exception_test.cpp` pins the runtime half.
++    expect(contents).toContain('std::exception_ptr');
++    expect(contents).toContain('catch (const std::exception& error)');
++    expect(contents).toContain('const std::exception& error = flight::caught_exception(');
++    expect(contents).toContain('reject(error)');
+   });
+ 
+-  it('keeps a deferred catch rethrow in the compiler lowering lane', () => {
++  it('keeps a deferred catch rethrow on the same carrier', () => {
+     const result = lower(
+       'catch-rethrow-after-await.ts',
+       `export async function run(task: Promise<void>, pause: Promise<void>): Promise<void> {
+@@ -3014,14 +3014,12 @@ describe('createCppCompilerBackend', () => {
+          catch (error) { await pause; throw error; }
+        }`,
+     );
+-    const failure = captureBackendEmissionFailure(() => emitIrModuleCpp(result.module));
++    const contents = emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
+ 
+-    // std::exception_ptr can preserve this identity without exposing it as an erased source value;
+-    // synthesizing that local remains compiler work and must not be assigned to the runtime carrier.
+-    expect(failure.rule).toBe('cpp-lowering-pass-refused');
+-    expect(failure.classification).toBe('compiler-restriction');
+-    expect(failure.message).toContain('owned exception-value lowering');
+-    expect(failure.message).not.toContain('owned caught-value carrier');
++    // The rethrow reads the same object the handler caught, through the same carrier a value read uses.
++    expect(contents).toContain('std::exception_ptr');
++    expect(contents).toContain('flight::caught_exception(');
++    expect(contents).toContain('throw error');
+   });
+ 
+   it('accepts the RenderProxy2D source refinement from Node<any> to the Node2D intersection', () => {
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index bec69ae..6242396 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -351,6 +351,12 @@ interface EmitContext {
+   // Dependent callable packs spread more than once, or inside a loop, in their declaring function.
+   reusedDependentCallablePackIds: ReadonlySet<string>;
+   exceptionPointerBindingIds: ReadonlySet<string>;
++  // The carriers whose caught value a hoisted catch body re-binds instead of rethrowing. A handler that
++  // records into one of these may NOT widen to `catch (...)`: the value it records has to become the
++  // `const std::exception&` a non-awaiting handler binds, and a thrown value that is not a class exception
++  // has no such representation -- so it keeps the narrow handler, exactly as the source's own narrowing
++  // does for every non-awaiting catch.
++  reboundExceptionPointers: ReadonlySet<string>;
+   directBindingOwners: ReadonlyMap<string, CppDirectBindingOwner | null>;
+   // The bindings whose declaration elected the erased dynamic value as its storage. A presence test
+   // asks this rather than the declared type, because the two disagree in both directions and each
+@@ -607,6 +613,7 @@ function emitIrModuleCppWithContext(
+       ([bindingId]) => !denseArrayLengthBindingIds.has(bindingId),
+     ),
+   );
++  const exceptionPointerBindings = collectCppExceptionPointerBindingIdsCpp(module, bindingTypes);
+   const context: EmitContext = {
+     activeDependentCallablePackIds: new Set(),
+     anonymousStructs: new Map(),
+@@ -627,7 +634,8 @@ function emitIrModuleCppWithContext(
+     directBindingOwners: directBindingOwners ?? createCppDirectBindingOwners(sourceModules),
+     erasedDynamicStorageBindingIds,
+     erasedObjectParameterBindingIds,
+-    exceptionPointerBindingIds: collectCppExceptionPointerBindingIdsCpp(module, bindingTypes),
++    exceptionPointerBindingIds: exceptionPointerBindings.exceptionPointers,
++    reboundExceptionPointers: exceptionPointerBindings.rebound,
+     externalCallResultPresenceBindings: new Map(),
+     externalBindingStorageTargetTypes,
+     forwardDeclaredFunctionBindingIds,
+@@ -2686,6 +2694,27 @@ function isCppDeducibleUnknownStorageCpp(
+   return !mutable && initializer !== undefined && type?.kind === 'unknown';
+ }
+ 
++// A caught value re-entered from the owned carrier a hoisted catch body reads it through. The binding
++// keeps the representation every non-awaiting `catch (error)` has -- a `const std::exception&` to the
++// object the pointer owns -- so every rule that already answers for a caught value answers here too, and
++// the object is the one that was thrown rather than a copy of it.
++function emitCppCaughtValueRebindingCpp(
++  declaration: Readonly<{
++    binding: IrBindingIdentity;
++    initializer?: Readonly<IrExpression> | undefined;
++    mutable: boolean;
++  }>,
++  context: EmitContext,
++): string | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return undefined;
++  if (declaration.mutable) return undefined;
++  const initializer = declaration.initializer;
++  if (initializer?.kind !== 'identifier' || initializer.reference.kind !== 'binding') return undefined;
++  if (!context.exceptionPointerBindingIds.has(initializer.reference.binding.id)) return undefined;
++  context.includes.add('flight/error.hpp');
++  return `const std::exception& ${getBindingTargetName(declaration.binding, context)} = flight::caught_exception(${emitExpression(initializer, context)});`;
++}
++
+ function emitVariableDeclaration(declaration: Readonly<IrVariableDeclaration>, context: EmitContext): string[] {
+   if ('pattern' in declaration) {
+     emissionError(context, 'binding patterns require destructuring lowering before C++ emission');
+@@ -2697,6 +2726,8 @@ function emitVariableDeclaration(declaration: Readonly<IrVariableDeclaration>, c
+       'cpp-uninitialized-variable-missing-type-evidence',
+     );
+   }
++  const caughtValueRebinding = 'pattern' in declaration ? undefined : emitCppCaughtValueRebindingCpp(declaration, context);
++  if (caughtValueRebinding) return [caughtValueRebinding];
+   const name = getBindingTargetName(declaration.binding, context);
+   const arrayElement = context.arrayElementBindingIds.has(declaration.binding.id);
+   const externalCallResultPresence = context.externalCallResultPresenceBindings.get(declaration.binding.id);
+@@ -2746,6 +2777,8 @@ function emitVariable(variable: Readonly<IrVariable>, context: EmitContext): str
+       'cpp-uninitialized-variable-missing-type-evidence',
+     );
+   }
++  const caughtValueRebinding = emitCppCaughtValueRebindingCpp(variable, context);
++  if (caughtValueRebinding) return caughtValueRebinding;
+   const name = getBindingTargetName(variable.binding, context);
+   const arrayElement = context.arrayElementBindingIds.has(variable.binding.id);
+   const weakMapViewInitializer =
+@@ -9227,6 +9260,7 @@ function isCppReifyOnlyCatchBindingCpp(
+         expression.left.kind === 'identifier' &&
+         expression.left.reference.kind === 'binding' &&
+         context.exceptionPointerBindingIds.has(expression.left.reference.binding.id) &&
++        !context.reboundExceptionPointers.has(expression.left.reference.binding.id) &&
+         expression.right.kind === 'identifier' &&
+         expression.right.reference.kind === 'binding' &&
+         expression.right.reference.binding.id === binding.id
+@@ -23467,7 +23501,7 @@ function collectCppExternalBindingStorageTargetTypesCpp(
+ function collectCppExceptionPointerBindingIdsCpp(
+   module: Readonly<IrModule>,
+   bindingTypes: ReadonlyMap<string, Readonly<IrType>>,
+-): ReadonlySet<string> {
++): Readonly<{ exceptionPointers: ReadonlySet<string>; rebound: ReadonlySet<string> }> {
+   // Preserve the caught exception object only for the closed capture-and-rethrow pattern. Counting
+   // every reference keeps ordinary unknown storage on the dynamic-value path as soon as it is read,
+   // initialized, or assigned from anything other than a catch binding.
+@@ -23496,7 +23530,23 @@ function collectCppExceptionPointerBindingIdsCpp(
+   const referenceCounts = new Map<string, number>();
+   const throwCounts = new Map<string, number>();
+   const nullishTestCounts = new Map<string, number>();
++  // The one read of the carrier this pattern admits: a caught binding RE-BOUND from it by the
++  // catch-await hoisting. That read is what lets a hoisted body see the value its handler caught, and it
++  // is still a closed shape -- the carrier is handed to nothing else.
++  const rebindingCounts = new Map<string, number>();
+   analyzeIrModuleTraversal(module, {
++    variable(variable) {
++      // Recognized by the SHAPE: a declaration whose initializer reads a candidate carrier. Nothing else can
++      // -- a second read of that carrier disqualifies it from being one -- so the binding's kind says
++      // nothing this rule needs.
++      if (!('binding' in variable) || variable.mutable) return undefined;
++      const initializer = variable.initializer;
++      if (initializer?.kind !== 'identifier' || initializer.reference.kind !== 'binding') return undefined;
++      const bindingId = initializer.reference.binding.id;
++      if (!candidates.has(bindingId)) return undefined;
++      rebindingCounts.set(bindingId, (rebindingCounts.get(bindingId) ?? 0) + 1);
++      return undefined;
++    },
+     expression(expression) {
+       if (expression.kind === 'identifier' && expression.reference.kind === 'binding') {
+         const bindingId = expression.reference.binding.id;
+@@ -23546,19 +23596,27 @@ function collectCppExceptionPointerBindingIdsCpp(
+       }
+     },
+   });
+-  return new Set(
++  const accepted = new Set(
+     [...candidates].filter((bindingId) => {
+       const assignments = assignmentCounts.get(bindingId) ?? 0;
+       const throws = throwCounts.get(bindingId) ?? 0;
+       const nullishTests = nullishTestCounts.get(bindingId) ?? 0;
++      const rebindings = rebindingCounts.get(bindingId) ?? 0;
++      // The carrier must be consumed AS an exception -- rethrown, or re-bound by a hoisted catch body --
++      // rather than left as ordinary unknown storage that happens to have been assigned a caught value.
+       return (
+         assignments > 0 &&
+-        throws > 0 &&
++        throws + rebindings > 0 &&
+         !invalidAssignments.has(bindingId) &&
+-        referenceCounts.get(bindingId) === assignments + throws + nullishTests
++        referenceCounts.get(bindingId) ===
++          assignments + throws + nullishTests + (rebindingCounts.get(bindingId) ?? 0)
+       );
+     }),
+   );
++  return {
++    exceptionPointers: accepted,
++    rebound: new Set([...accepted].filter((bindingId) => (rebindingCounts.get(bindingId) ?? 0) > 0)),
++  };
+ }
+ 
+ function collectCppContextualBindingStorageTargetTypesCpp(
+diff --git a/packages/compiler-lowering/src/compilerCatchAwaitHoistingLowering.ts b/packages/compiler-lowering/src/compilerCatchAwaitHoistingLowering.ts
+index c1333bc..d440bff 100644
+--- a/packages/compiler-lowering/src/compilerCatchAwaitHoistingLowering.ts
++++ b/packages/compiler-lowering/src/compilerCatchAwaitHoistingLowering.ts
+@@ -146,6 +146,65 @@ function createIrCatchFlagBinding(
+   };
+ }
+ 
++// The owned carrier a hoisted catch body reads its binding through.
++//
++// `std::exception_ptr` in the emitted code: it OWNS the thrown object for as long as it is held, which is
++// what lets the value outlive the handler the body was hoisted out of. It is deliberately a plain mutable
++// local with no initializer and no declared type -- the shape the target already recognises as a caught
++// exception recorded for a rethrow -- so nothing new has to be represented, only carried further.
++function createIrCaughtCarrierBinding(
++  origin: Readonly<IrDeclaration>['origin'],
++  counter: { value: number },
++): IrBindingIdentity {
++  const index = counter.value++;
++  return {
++    ...origin,
++    id: `binding:${JSON.stringify([origin.packageName, origin.source, origin.line, origin.column, 'caught-value', index])}`,
++    kind: 'variable',
++    name: 'caught',
++    scope: 'block',
++    space: 'value',
++  };
++}
++
++// The binding the hoisted body reads its caught value through. It is a NEW identity, not the handler's
++// binding re-declared: an identity is introduced once, and the handler's belongs to the handler. It keeps
++// the source name, so everything the body already wrote reads the same, and the body's references to the
++// handler's binding are rewritten onto it below.
++function createIrCaughtValueBinding(
++  origin: Readonly<IrDeclaration>['origin'],
++  binding: IrBindingIdentity,
++  counter: { value: number },
++): IrBindingIdentity {
++  const index = counter.value++;
++  return {
++    ...origin,
++    id: `binding:${JSON.stringify([origin.packageName, origin.source, origin.line, origin.column, 'caught-value-binding', index])}`,
++    kind: 'variable',
++    name: binding.name ?? 'error',
++    scope: 'block',
++    space: 'value',
++  };
++}
++
++// Every reference to one binding identity, rewritten onto another. The IR is plain data, so the rewrite is
++// a walk that rebuilds only the identifier nodes it targets and leaves every other field as it was -- which
++// keeps this safe for constructs this pass does not otherwise understand.
++function replaceIrBindingReferences<T>(node: T, fromId: string, to: IrBindingIdentity): T {
++  if (Array.isArray(node)) return node.map((item) => replaceIrBindingReferences(item, fromId, to)) as T;
++  if (node === null || typeof node !== 'object') return node;
++  const record = node as Record<string, unknown>;
++  if (record.kind === 'identifier') {
++    const reference = record.reference as Readonly<{ binding?: Readonly<{ id?: string }>; kind?: string }> | undefined;
++    if (reference?.kind === 'binding' && reference.binding?.id === fromId) {
++      return { ...record, reference: { ...reference, binding: { ...reference.binding, ...to } } } as T;
++    }
++  }
++  const rebuilt: Record<string, unknown> = {};
++  for (const [key, value] of Object.entries(record)) rebuilt[key] = replaceIrBindingReferences(value, fromId, to);
++  return rebuilt as T;
++}
++
+ function lowerIrModuleCatchAwaitHoisting(module: Readonly<IrModule>): IrModule {
+   return {
+     ...module,
+@@ -248,24 +307,16 @@ function lowerIrStatementCatchAwaitHoisting(
+         };
+       }
+ 
+-      if (
+-        statement.catchClause.binding &&
+-        hasIrStatementBindingReference(statement.catchClause.body, statement.catchClause.binding.id)
+-      ) {
+-        const valueCrossesAwait = hasIrStatementBindingValueReferenceAfterAwait(
+-          statement.catchClause.body,
+-          statement.catchClause.binding.id,
+-        );
+-        throw createCompilerLoweringFailure(
+-          'unsupported-ir',
+-          compilerLoweringPassNameCatchAwaitHoisting,
+-          origin,
+-          valueCrossesAwait
+-            ? 'a caught source value used after an await requires an owned target representation that preserves the thrown unknown value across suspension'
+-            : 'a referenced catch binding cannot cross an await without owned exception-value lowering',
+-        );
+-      }
+-
++      // A catch body that reads its binding cannot be hoisted as a flag alone: the handler's
++      // `const std::exception&` is gone by the time the body runs. The handler records the OWNED pointer
++      // instead (`std::current_exception()`), and the hoisted body re-binds the same binding from it, so
++      // the body reads the value the handler caught -- the same object, not a copy -- with the
++      // representation every non-awaiting `catch (error)` already has.
++      const catchBinding = statement.catchClause.binding;
++      const referencesCaughtValue =
++        catchBinding !== undefined &&
++        hasIrStatementBindingReference(statement.catchClause.body, catchBinding.id);
++      const carrierBinding = referencesCaughtValue ? createIrCaughtCarrierBinding(origin, counter) : undefined;
+       const catchBody = lowerIrStatementCatchAwaitHoisting(statement.catchClause.body, origin, counter);
+       const flagBinding = createIrCatchFlagBinding(origin, counter);
+       const flagVariable: IrStatement = {
+@@ -278,39 +329,102 @@ function lowerIrStatementCatchAwaitHoisting(
+         ],
+         kind: 'variable',
+       };
++      const flagAssignment: IrStatement = {
++        expression: {
++          kind: 'assignment',
++          left: { kind: 'identifier', reference: { binding: flagBinding, kind: 'binding' } },
++          operator: '=',
++          right: { kind: 'literal', value: true },
++          semantics: {
++            left: { declared: 'boolean', flow: 'boolean' },
++            result: 'boolean',
++            right: { declared: 'boolean', flow: 'boolean' },
++          },
++        },
++        kind: 'expression',
++      };
++      const recordCaughtValue: IrStatement | undefined =
++        catchBinding === undefined || carrierBinding === undefined
++          ? undefined
++          : {
++              expression: {
++                kind: 'assignment',
++                left: { kind: 'identifier', reference: { binding: carrierBinding, kind: 'binding' } },
++                operator: '=',
++                right: { kind: 'identifier', reference: { binding: catchBinding, kind: 'binding' } },
++                semantics: {
++                  left: { declared: 'unknown', flow: 'unknown' },
++                  result: 'unknown',
++                  right: { declared: 'unknown', flow: 'unknown' },
++                },
++              },
++              kind: 'expression',
++            };
+       const tryCatchWithFlag: IrStatement = {
+         catchClause: {
+           ...statement.catchClause,
+           body: {
+             kind: 'block',
+-            statements: [
+-              {
+-                expression: {
+-                  kind: 'assignment',
+-                  left: { kind: 'identifier', reference: { binding: flagBinding, kind: 'binding' } },
+-                  operator: '=',
+-                  right: { kind: 'literal', value: true },
+-                  semantics: {
+-                    left: { declared: 'boolean', flow: 'boolean' },
+-                    result: 'boolean',
+-                    right: { declared: 'boolean', flow: 'boolean' },
+-                  },
+-                },
+-                kind: 'expression',
+-              },
+-            ],
++            statements: [...(recordCaughtValue ? [recordCaughtValue] : []), flagAssignment],
+           },
+         },
+         kind: 'try',
+         tryBody: loweredTryBody,
+       };
++      const caughtValueBinding =
++        catchBinding === undefined || carrierBinding === undefined
++          ? undefined
++          : createIrCaughtValueBinding(origin, catchBinding, counter);
++      const rebindCaughtValue: IrStatement | undefined =
++        caughtValueBinding === undefined || carrierBinding === undefined
++          ? undefined
++          : {
++              declarations: [
++                {
++                  binding: caughtValueBinding,
++                  initializer: {
++                    kind: 'identifier',
++                    reference: { binding: carrierBinding, kind: 'binding' },
++                  },
++                  mutable: false,
++                  type: { kind: 'unknown', source: 'unknown' },
++                },
++              ],
++              kind: 'variable',
++            };
++      const hoistedCatchBody =
++        caughtValueBinding === undefined
++          ? catchBody
++          : replaceIrBindingReferences(catchBody, catchBinding!.id, caughtValueBinding);
+       const ifCaught: IrStatement = {
+         condition: { kind: 'identifier', reference: { binding: flagBinding, kind: 'binding' } },
+-        consequent: catchBody,
++        consequent: rebindCaughtValue
++          ? {
++              kind: 'block',
++              statements: [
++                rebindCaughtValue,
++                ...(hoistedCatchBody.kind === 'block' ? hoistedCatchBody.statements : [hoistedCatchBody]),
++              ],
++            }
++          : catchBody,
+         kind: 'if',
+         origin,
+       };
+-      const statements: IrStatement[] = [flagVariable, tryCatchWithFlag, ifCaught];
++      const carrierVariable: IrStatement | undefined =
++        carrierBinding === undefined
++          ? undefined
++          : {
++              declarations: [
++                { binding: carrierBinding, mutable: true, type: { kind: 'unknown', source: 'unknown' } },
++              ],
++              kind: 'variable',
++            };
++      const statements: IrStatement[] = [
++        ...(carrierVariable ? [carrierVariable] : []),
++        flagVariable,
++        tryCatchWithFlag,
++        ifCaught,
++      ];
+       if (loweredFinally) {
+         return {
+           kind: 'block',

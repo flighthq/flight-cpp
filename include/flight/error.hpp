@@ -64,6 +64,32 @@ class Error : public std::runtime_error, public ReferenceEnabled {
   std::shared_ptr<const Any> cause_;
 };
 
+// The object a caught-exception pointer owns, as the reference a non-awaiting handler binds.
+//
+// C++ forbids `co_await` inside a handler, so a catch body that awaits is hoisted out of it and the
+// handler's `const std::exception&` does not survive the jump. `std::exception_ptr` does: it OWNS the
+// thrown object for as long as it is held. This re-enters that object as the very reference the handler
+// would have bound -- the same object, not a copy and not a second Error -- so a hoisted body reads its
+// catch binding exactly as a non-awaiting body does, and every conversion that follows from that
+// representation (`static_cast<flight::Error>`, the erased Error view, a task rejection) answers the same.
+[[nodiscard]] inline const std::exception& caught_exception(const std::exception_ptr& pointer) {
+  if (pointer == nullptr) {
+    // Unreachable from source: the pointer is read only on the branch that recorded it, and it is recorded
+    // from inside a handler, which always has an exception to record. Reaching this means the emitter
+    // re-bound a caught value on a path that never caught -- a defect, not a value the source could hold,
+    // so it fails as one rather than inventing an exception.
+    throw std::logic_error("flight: a hoisted catch body was entered without a caught exception");
+  }
+  try {
+    std::rethrow_exception(pointer);
+  } catch (const std::exception& caught) {
+    // Safe to return: the object lives in the exception the caller's pointer owns, which outlives this
+    // handler. A thrown value that is not a class exception never reaches here -- the handler this
+    // re-binding belongs to catches `const std::exception&`, so the hoisted body is not entered for it.
+    return caught;
+  }
+}
+
 class RangeError final : public Error {
  public:
   explicit RangeError(String message = String()) : Error(std::move(message)) {}

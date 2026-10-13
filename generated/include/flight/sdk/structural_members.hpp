@@ -641,6 +641,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("gamma") && requires { object.gamma; }) return (object.gamma);
   else if constexpr (Key::name.view() == std::string_view("gamut") && requires { object.gamut; }) return (object.gamut);
   else if constexpr (Key::name.view() == std::string_view("gateWeave") && requires { object.gate_weave; }) return (object.gate_weave);
+  else if constexpr (Key::name.view() == std::string_view("generation") && requires { object.generation; }) return (object.generation);
   else if constexpr (Key::name.view() == std::string_view("geolocation") && requires { object.geolocation; }) return (object.geolocation);
   else if constexpr (Key::name.view() == std::string_view("geometry") && requires { object.geometry; }) return (object.geometry);
   else if constexpr (Key::name.view() == std::string_view("getActiveNotifications") && requires { object.get_active_notifications; }) return (object.get_active_notifications);
@@ -1635,6 +1636,9 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("restore") && requires { object.restore; }) return (object.restore);
   else if constexpr (Key::name.view() == std::string_view("restrict") && requires { object.restrict; }) return (object.restrict);
   else if constexpr (Key::name.view() == std::string_view("resumeDevice") && requires { object.resume_device; }) return (object.resume_device);
+  else if constexpr (Key::name.view() == std::string_view("retryBackoff") && requires { object.retry_backoff; }) return (object.retry_backoff);
+  else if constexpr (Key::name.view() == std::string_view("retryBaseDelayMs") && requires { object.retry_base_delay_ms; }) return (object.retry_base_delay_ms);
+  else if constexpr (Key::name.view() == std::string_view("retryMaxDelayMs") && requires { object.retry_max_delay_ms; }) return (object.retry_max_delay_ms);
   else if constexpr (Key::name.view() == std::string_view("reveal") && requires { object.reveal; }) return (object.reveal);
   else if constexpr (Key::name.view() == std::string_view("reverse") && requires { object.reverse; }) return (object.reverse);
   else if constexpr (Key::name.view() == std::string_view("revokeObjectUrl") && requires { object.revoke_object_url; }) return (object.revoke_object_url);
@@ -2829,6 +2833,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("gamma") && requires(Object& object) { object.gamma; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gamma)>>{};
   else if constexpr (Key::name.view() == std::string_view("gamut") && requires(Object& object) { object.gamut; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gamut)>>{};
   else if constexpr (Key::name.view() == std::string_view("gateWeave") && requires(Object& object) { object.gate_weave; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().gate_weave)>>{};
+  else if constexpr (Key::name.view() == std::string_view("generation") && requires(Object& object) { object.generation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().generation)>>{};
   else if constexpr (Key::name.view() == std::string_view("geolocation") && requires(Object& object) { object.geolocation; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().geolocation)>>{};
   else if constexpr (Key::name.view() == std::string_view("geometry") && requires(Object& object) { object.geometry; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().geometry)>>{};
   else if constexpr (Key::name.view() == std::string_view("getActiveNotifications") && requires(Object& object) { object.get_active_notifications; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().get_active_notifications)>>{};
@@ -3823,6 +3828,9 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("restore") && requires(Object& object) { object.restore; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().restore)>>{};
   else if constexpr (Key::name.view() == std::string_view("restrict") && requires(Object& object) { object.restrict; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().restrict)>>{};
   else if constexpr (Key::name.view() == std::string_view("resumeDevice") && requires(Object& object) { object.resume_device; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().resume_device)>>{};
+  else if constexpr (Key::name.view() == std::string_view("retryBackoff") && requires(Object& object) { object.retry_backoff; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().retry_backoff)>>{};
+  else if constexpr (Key::name.view() == std::string_view("retryBaseDelayMs") && requires(Object& object) { object.retry_base_delay_ms; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().retry_base_delay_ms)>>{};
+  else if constexpr (Key::name.view() == std::string_view("retryMaxDelayMs") && requires(Object& object) { object.retry_max_delay_ms; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().retry_max_delay_ms)>>{};
   else if constexpr (Key::name.view() == std::string_view("reveal") && requires(Object& object) { object.reveal; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().reveal)>>{};
   else if constexpr (Key::name.view() == std::string_view("reverse") && requires(Object& object) { object.reverse; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().reverse)>>{};
   else if constexpr (Key::name.view() == std::string_view("revokeObjectUrl") && requires(Object& object) { object.revoke_object_url; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().revoke_object_url)>>{};
@@ -5020,6 +5028,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->gamma; }) owner.bind_named("gamma", [object]() -> decltype(auto) { return (object->gamma); });
   if constexpr (requires { object->gamut; }) owner.bind_named("gamut", [object]() -> decltype(auto) { return (object->gamut); });
   if constexpr (requires { object->gate_weave; }) owner.bind_named("gateWeave", [object]() -> decltype(auto) { return (object->gate_weave); });
+  if constexpr (requires { object->generation; }) owner.bind_named("generation", [object]() -> decltype(auto) { return (object->generation); });
   if constexpr (requires { object->geolocation; }) owner.bind_named("geolocation", [object]() -> decltype(auto) { return (object->geolocation); });
   if constexpr (requires { object->geometry; }) owner.bind_named("geometry", [object]() -> decltype(auto) { return (object->geometry); });
   if constexpr (requires { object->get_active_notifications; }) owner.bind_named("getActiveNotifications", [object]() -> decltype(auto) { return (object->get_active_notifications); });
@@ -6014,6 +6023,9 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->restore; }) owner.bind_named("restore", [object]() -> decltype(auto) { return (object->restore); });
   if constexpr (requires { object->restrict; }) owner.bind_named("restrict", [object]() -> decltype(auto) { return (object->restrict); });
   if constexpr (requires { object->resume_device; }) owner.bind_named("resumeDevice", [object]() -> decltype(auto) { return (object->resume_device); });
+  if constexpr (requires { object->retry_backoff; }) owner.bind_named("retryBackoff", [object]() -> decltype(auto) { return (object->retry_backoff); });
+  if constexpr (requires { object->retry_base_delay_ms; }) owner.bind_named("retryBaseDelayMs", [object]() -> decltype(auto) { return (object->retry_base_delay_ms); });
+  if constexpr (requires { object->retry_max_delay_ms; }) owner.bind_named("retryMaxDelayMs", [object]() -> decltype(auto) { return (object->retry_max_delay_ms); });
   if constexpr (requires { object->reveal; }) owner.bind_named("reveal", [object]() -> decltype(auto) { return (object->reveal); });
   if constexpr (requires { object->reverse; }) owner.bind_named("reverse", [object]() -> decltype(auto) { return (object->reverse); });
   if constexpr (requires { object->revoke_object_url; }) owner.bind_named("revokeObjectUrl", [object]() -> decltype(auto) { return (object->revoke_object_url); });
@@ -7244,6 +7256,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(gamma)
   FLIGHT_SDK_ROW_WIDENS(gamut)
   FLIGHT_SDK_ROW_WIDENS(gate_weave)
+  FLIGHT_SDK_ROW_WIDENS(generation)
   FLIGHT_SDK_ROW_WIDENS(geolocation)
   FLIGHT_SDK_ROW_WIDENS(geometry)
   FLIGHT_SDK_ROW_WIDENS(get_active_notifications)
@@ -8238,6 +8251,9 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(restore)
   FLIGHT_SDK_ROW_WIDENS(restrict)
   FLIGHT_SDK_ROW_WIDENS(resume_device)
+  FLIGHT_SDK_ROW_WIDENS(retry_backoff)
+  FLIGHT_SDK_ROW_WIDENS(retry_base_delay_ms)
+  FLIGHT_SDK_ROW_WIDENS(retry_max_delay_ms)
   FLIGHT_SDK_ROW_WIDENS(reveal)
   FLIGHT_SDK_ROW_WIDENS(reverse)
   FLIGHT_SDK_ROW_WIDENS(revoke_object_url)

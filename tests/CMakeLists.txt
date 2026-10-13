@@ -46,6 +46,11 @@ target_link_libraries(flight_cpp_structural_row_tests PRIVATE Flight::Cpp Flight
 flight_cpp_set_project_warnings(flight_cpp_structural_row_tests)
 add_test(NAME flight_cpp.structural_row COMMAND flight_cpp_structural_row_tests)
 
+add_executable(flight_cpp_caught_exception_tests caught_exception_test.cpp)
+target_link_libraries(flight_cpp_caught_exception_tests PRIVATE Flight::Cpp)
+flight_cpp_set_project_warnings(flight_cpp_caught_exception_tests)
+add_test(NAME flight_cpp.caught_exception COMMAND flight_cpp_caught_exception_tests)
+
 add_executable(flight_cpp_union_kind_tests union_kind_test.cpp)
 target_link_libraries(flight_cpp_union_kind_tests PRIVATE Flight::Cpp)
 flight_cpp_set_project_warnings(flight_cpp_union_kind_tests)

@@ -55,6 +55,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-runtime-instanceof-lowering.patch`](../../source-patches/compiler-runtime-instanceof-lowering.patch) | [TypeScript `instanceof` is emitted verbatim as C++ text](instanceof-lowered-verbatim.md) |
 | [`compiler-profile-type-name-evidence.patch`](../../source-patches/compiler-profile-type-name-evidence.patch) | [A property union loses the guard's evidence](property-union-evidence-lost.md) |
 | [`compiler-guarded-path-narrowing.patch`](../../source-patches/compiler-guarded-path-narrowing.patch) | [A property union loses the guard's evidence](property-union-evidence-lost.md) |
+| [`compiler-catch-await-owned-carrier.patch`](../../source-patches/compiler-catch-await-owned-carrier.patch) | [A catch body that awaits and reads its binding needs an owned caught value](catch-binding-across-await.md) |
 | [`compiler-scoped-emission-semantic-context.patch`](../../source-patches/compiler-scoped-emission-semantic-context.patch) | [Scoped emission must retain semantic context](compiler-scoped-emission-semantic-context.md) |
 | [`compiler-sdk-lane-local-reexports.patch`](../../source-patches/compiler-sdk-lane-local-reexports.patch) | [SDK-local re-exports in an SDK export lane](compiler-sdk-lane-local-reexports.md) |
 | [`compiler-structural-row-weak-keys.patch`](../../source-patches/compiler-structural-row-weak-keys.patch) | [Structural rows as WeakMap keys](compiler-structural-row-weak-keys.md) |
@@ -64,6 +65,10 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-unrepresented-error-member.patch`](../../source-patches/compiler-unrepresented-error-member.patch) | [An Error member the runtime does not carry must be refused, not emitted](compiler-unrepresented-error-member.md) |
 
 ## Active requests without a compiler patch
+
+- [A resolved task carries the literal it was given, not the domain the function declared](task-resolved-value-domain-mismatch.md) —
+  `@flighthq/loader`'s `resourceLoader.ts` `_noopLoad`; surfaced once the module stopped being a placeholder, and
+  it is what keeps that header from compiling now.
 
 - [`Array.isArray` must inspect an optional property's present payload](array-is-array-optional-property.md) —
   `@flighthq/adjustments` reads `Partial<ColorMatrixAdjustment>.colorMatrix` as an optional array,
@@ -78,8 +83,6 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   carried for socket by the override `socket-complete-lifecycle`.
 - [Member reads on a collapsed union record must use one access form](collapsed-union-record-member-access.md) —
   carried for socket by the override `socket-guard-reporting`.
-- [A catch body that awaits and reads its binding needs an owned caught value](catch-binding-across-await.md) —
-  refuses `@flighthq/loader` `resourceLoader.ts`; no workaround.
 - [Asserting a `Promise<unknown>` to `Promise<T>` needs a typed task view](generic-promise-assertion-to-type-parameter.md) —
   first refusal in `@flighthq/assets` `assetLibrary.ts`; carried by the override `assets-reject-task-template-parameter`.
 - [`Promise.allSettled` needs a binding and a settled-result lowering](promise-all-settled-binding.md) —

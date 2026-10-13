@@ -13381,7 +13381,7 @@
         "source": "packages/loader/src/resourceLoader.ts"
       },
       "path": "flight/loader/resource_loader.hpp",
-      "rule": "cpp-lowering-pass-refused",
+      "rule": "cpp-reference-assertion-without-heritage",
       "status": "refused-placeholder"
     },
     {
