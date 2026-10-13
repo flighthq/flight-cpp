@@ -1,3 +1,4 @@
+#include <flight/geometry/bounding_sphere.hpp>
 #include <flight/geometry/matrix4.hpp>
 #include <flight/mesh/mesh_geometry.hpp>
 #include <flight/mesh/mesh_geometry_attributes.hpp>
@@ -71,6 +72,11 @@ bool inject_omitted_metadata_mutation = false;
 bool inject_lifecycle_ordering_mutation = false;
 bool inject_reset_disposal_mutation = false;
 bool inject_cache_invalidation_mutation = false;
+bool inject_sphere_math_mutation = false;
+bool inject_flat_split_remap_mutation = false;
+bool inject_refresh_invalidation_mutation = false;
+bool inject_wireframe_edge_mutation = false;
+bool inject_index_promotion_mutation = false;
 
 void check(bool condition, const char* message) {
   if (condition) return;
@@ -994,6 +1000,261 @@ void cache_invalidation_and_empty_bounds_lifecycle() {
         "direct CPU writes remain deliberately invisible to the bounds cache until invalidate advances the revision; refresh then reuses the bounds owner, repeated invalidation accumulates, upload slots remain installed for version-based reupload, and empty bounds stay absent and idempotent without touching CPU state");
 }
 
+void bounding_sphere_exact_math_and_degenerate_cases() {
+  const auto source = geometry_from(
+      position_layout(),
+      flight::Float32Array{
+          -2.0F, -1.0F, 3.0F,
+          4.0F, 5.0F, -3.0F,
+          1.0F, 2.0F, 0.0F,
+      });
+  const auto vertex_owner = source->vertices.buffer;
+  const auto runtime_owner = source->entity_runtime_key.value();
+  const auto sphere = geometry::create_bounding_sphere(91.0, 92.0, 93.0, 94.0);
+  const auto center_owner = sphere->center;
+  mesh::compute_mesh_geometry_bounding_sphere(sphere, source);
+  bool exact = sphere->center == center_owner &&
+               near(sphere->center->x, 1.0) &&
+               near(sphere->center->y, 2.0) &&
+               near(sphere->center->z, 0.0) &&
+               near(sphere->radius, std::sqrt(27.0)) &&
+               source->vertices.buffer == vertex_owner &&
+               source->entity_runtime_key.value() == runtime_owner &&
+               !source->bounds.has_value() && source->version == 0.0 &&
+               runtime_owner->bounds_version == -1.0;
+
+  const auto asymmetric = geometry_from(
+      position_layout(),
+      flight::Float32Array{
+          -4.0F, 0.0F, 0.0F,
+          2.0F, 0.0F, 0.0F,
+          1.0F, 0.0F, 0.0F,
+      });
+  mesh::compute_mesh_geometry_bounding_sphere(sphere, asymmetric);
+  exact = exact && sphere->center == center_owner &&
+          sphere->center->x == -1.0 && sphere->center->y == 0.0 &&
+          sphere->center->z == 0.0 && sphere->radius == 3.0;
+
+  const auto repeated = geometry_from(
+      position_layout(),
+      flight::Float32Array{
+          7.0F, -8.0F, 9.0F,
+          7.0F, -8.0F, 9.0F,
+      });
+  mesh::compute_mesh_geometry_bounding_sphere(sphere, repeated);
+  exact = exact && sphere->center->x == 7.0 &&
+          sphere->center->y == -8.0 && sphere->center->z == 9.0 &&
+          sphere->radius == 0.0;
+
+  const auto empty =
+      geometry_from(position_layout(), flight::Float32Array(0.0));
+  mesh::compute_mesh_geometry_bounding_sphere(sphere, empty);
+  exact = exact && sphere->center == center_owner &&
+          sphere->center->x == 0.0 && sphere->center->y == 0.0 &&
+          sphere->center->z == 0.0 && sphere->radius == -1.0;
+
+  const auto zero_stride = geometry_from(
+      position_layout(0.0), flight::Float32Array{1.0F, 2.0F, 3.0F});
+  sphere->center->x = 12.0;
+  sphere->radius = 13.0;
+  mesh::compute_mesh_geometry_bounding_sphere(sphere, zero_stride);
+  exact = exact && sphere->center->x == 0.0 &&
+          sphere->center->y == 0.0 && sphere->center->z == 0.0 &&
+          sphere->radius == -1.0 &&
+          zero_stride->vertices.get_index(0.0) == 1.0 &&
+          zero_stride->version == 0.0;
+  if (inject_sphere_math_mutation) exact = false;
+  check(exact,
+        "bounding spheres use the exact AABB midpoint and farthest authored vertex, preserve the destination center owner and source state, return zero radius for repeated points, and reset empty or zero-stride inputs to the invalid sentinel");
+}
+
+void flat_normals_split_order_and_ownership() {
+  flight::Float32Array vertices(48.0);
+  const double positions[][3] = {
+      {0.0, 0.0, 0.0},
+      {1.0, 0.0, 0.0},
+      {0.0, 1.0, 0.0},
+      {0.0, 0.0, 1.0},
+  };
+  for (double vertex = 0.0; vertex < 4.0; vertex += 1.0) {
+    for (double component = 0.0; component < 3.0; component += 1.0) {
+      vertices.set_index(
+          vertex * 12.0 + component,
+          positions[static_cast<std::size_t>(vertex)]
+                   [static_cast<std::size_t>(component)]);
+    }
+  }
+  flight::Uint16Array indices{0, 1, 2, 0, 3, 1};
+  auto options = flight::make_ref<types::MeshGeometryOptions>();
+  options->indices = flight::SequenceView<double>(indices);
+  options->layout = mesh::canonical_mesh_geometry_layout;
+  options->vertices = vertices;
+  const auto source = mesh::create_mesh_geometry(options);
+  const auto separate = mesh::clone_mesh_geometry(source);
+  const auto separate_vertex_owner = separate->vertices.buffer;
+  const auto separate_index_owner = index_buffer_identity(separate);
+  mesh::compute_mesh_geometry_flat_normals(separate, source);
+  const auto direct = mesh::clone_mesh_geometry(source);
+  const auto direct_vertex_owner = direct->vertices.buffer;
+  const auto direct_index_owner = index_buffer_identity(direct);
+  mesh::compute_mesh_geometry_flat_normals(direct, direct);
+  const double direct_expected[][3] = {
+      {0.0, 1.0, 0.0},
+      {0.0, 1.0, 0.0},
+      {0.0, 0.0, 1.0},
+      {0.0, 1.0, 0.0},
+  };
+  bool split = direct->vertices.buffer == direct_vertex_owner &&
+               index_buffer_identity(direct) == direct_index_owner &&
+               direct->version == 1.0 &&
+               separate->vertices.buffer == separate_vertex_owner &&
+               index_buffer_identity(separate) == separate_index_owner &&
+               separate->vertices.buffer != source->vertices.buffer &&
+               separate->version == 1.0 && source->version == 0.0;
+  for (double vertex = 0.0; vertex < 4.0; vertex += 1.0) {
+    for (double component = 0.0; component < 3.0; component += 1.0) {
+      const double expected =
+          direct_expected[static_cast<std::size_t>(vertex)]
+                         [static_cast<std::size_t>(component)];
+      split = split &&
+              near(direct->vertices.get_index(
+                       vertex * 12.0 + 3.0 + component),
+                   expected) &&
+              near(separate->vertices.get_index(
+                       vertex * 12.0 + 3.0 + component),
+                   expected);
+    }
+  }
+
+  const auto expanded = mesh::expand_mesh_geometry_indices(source);
+  const auto expanded_owner = expanded->vertices.buffer;
+  const auto expanded_runtime = expanded->entity_runtime_key.value();
+  const double expected_positions[][3] = {
+      {0.0, 0.0, 0.0},
+      {1.0, 0.0, 0.0},
+      {0.0, 1.0, 0.0},
+      {0.0, 0.0, 0.0},
+      {0.0, 0.0, 1.0},
+      {1.0, 0.0, 0.0},
+  };
+  split = split && !expanded->indices.has_value() &&
+          expanded->layout == source->layout &&
+          expanded->vertices.buffer != source->vertices.buffer &&
+          expanded->subsets.identity() != source->subsets.identity() &&
+          expanded->entity_runtime_key.value() !=
+              source->entity_runtime_key.value() &&
+          mesh::get_mesh_geometry_vertex_count(expanded) == 6.0;
+  for (double vertex = 0.0; vertex < 6.0; vertex += 1.0) {
+    for (double component = 0.0; component < 3.0; component += 1.0) {
+      split = split && expanded->vertices.get_index(
+                             vertex * 12.0 + component) ==
+                             expected_positions[static_cast<std::size_t>(vertex)]
+                                               [static_cast<std::size_t>(component)];
+    }
+  }
+  mesh::compute_mesh_geometry_flat_normals(expanded, expanded);
+  split = split && expanded->vertices.buffer == expanded_owner &&
+          expanded->entity_runtime_key.value() == expanded_runtime &&
+          expanded->version == 1.0 && !expanded->indices.has_value();
+  for (double vertex = 0.0; vertex < 6.0; vertex += 1.0) {
+    const double expected_x = 0.0;
+    const double expected_y = vertex < 3.0 ? 0.0 : 1.0;
+    const double expected_z = vertex < 3.0 ? 1.0 : 0.0;
+    split = split &&
+            near(expanded->vertices.get_index(vertex * 12.0 + 3.0),
+                 expected_x) &&
+            near(expanded->vertices.get_index(vertex * 12.0 + 4.0),
+                 expected_y) &&
+            near(expanded->vertices.get_index(vertex * 12.0 + 5.0),
+                 expected_z);
+  }
+  for (double vertex = 0.0; vertex < 4.0; vertex += 1.0) {
+    split = split && source->vertices.get_index(vertex * 12.0 + 3.0) == 0.0 &&
+            source->vertices.get_index(vertex * 12.0 + 4.0) == 0.0 &&
+            source->vertices.get_index(vertex * 12.0 + 5.0) == 0.0;
+  }
+
+  const auto degenerate = canonical_triangle();
+  degenerate->vertices.set_index(24.0, 2.0);
+  degenerate->vertices.set_index(25.0, 0.0);
+  mesh::compute_mesh_geometry_flat_normals(degenerate, degenerate);
+  for (double vertex = 0.0; vertex < 3.0; vertex += 1.0) {
+    split = split && degenerate->vertices.get_index(vertex * 12.0 + 3.0) == 0.0 &&
+            degenerate->vertices.get_index(vertex * 12.0 + 4.0) == 0.0 &&
+            degenerate->vertices.get_index(vertex * 12.0 + 5.0) == 0.0;
+  }
+  if (inject_flat_split_remap_mutation) split = false;
+  check(split,
+        "flat normals follow authored triangle order with the last shared face winning, while explicit index expansion splits complete records in corner order so each face owns an isolated unit normal; all operations retain their destination owners and degenerate faces write zero");
+}
+
+void explicit_refresh_vs_cached_bounds() {
+  const auto geometry = indexed_geometry();
+  const auto runtime = geometry->entity_runtime_key.value();
+  const auto first = mesh::ensure_mesh_geometry_bounds(geometry);
+  const auto bounds_owner = first.value();
+  const auto vertex_owner = geometry->vertices.buffer;
+  geometry->vertices.set_index(0.0, -20.0);
+  const auto cached = mesh::ensure_mesh_geometry_bounds(geometry);
+  bool refresh = cached.has_value() && cached.value() == bounds_owner &&
+                 cached.value()->min->x == -2.0 && geometry->version == 0.0 &&
+                 runtime->bounds_version == 0.0;
+  mesh::refresh_mesh_geometry_bounds(geometry);
+  refresh = refresh && geometry->bounds.value() == bounds_owner &&
+            geometry->bounds.value()->min->x == -20.0 &&
+            runtime->bounds_version == geometry->version &&
+            geometry->vertices.buffer == vertex_owner;
+  geometry->vertices.set_index(3.0, 40.0);
+  const auto still_cached = mesh::ensure_mesh_geometry_bounds(geometry);
+  refresh = refresh && still_cached.has_value() &&
+            still_cached.value()->max->x == 4.0;
+  mesh::refresh_mesh_geometry_bounds(geometry);
+  refresh = refresh && geometry->bounds.value() == bounds_owner &&
+            geometry->bounds.value()->max->x == 40.0 &&
+            runtime->bounds_version == 0.0 && geometry->version == 0.0;
+
+  geometry->vertices.set_index(6.0, -70.0);
+  mesh::invalidate_mesh_geometry(geometry);
+  const auto invalidated = mesh::ensure_mesh_geometry_bounds(geometry);
+  refresh = refresh && invalidated.has_value() &&
+            invalidated.value() == bounds_owner &&
+            invalidated.value()->min->x == -70.0 &&
+            runtime->bounds_version == geometry->version;
+
+  const auto empty =
+      geometry_from(position_layout(), flight::Float32Array(0.0));
+  const auto empty_runtime = empty->entity_runtime_key.value();
+  mesh::refresh_mesh_geometry_bounds(empty);
+  const auto empty_owner = empty->bounds.value();
+  const auto empty_result = mesh::ensure_mesh_geometry_bounds(empty);
+  refresh = refresh && !empty_result.has_value() &&
+            empty->bounds.value() == empty_owner &&
+            empty->bounds.value()->min->x ==
+                std::numeric_limits<double>::infinity() &&
+            empty->bounds.value()->max->x ==
+                -std::numeric_limits<double>::infinity() &&
+            empty_runtime->bounds_version == empty->version;
+
+  auto detached = flight::make_ref<types::MeshGeometry>();
+  detached->bounds = std::nullopt;
+  detached->entity_runtime_key = std::nullopt;
+  detached->indices = std::nullopt;
+  detached->layout = position_layout();
+  detached->subsets = flight::Array<flight::Ref<types::MeshSubset>>{};
+  detached->topology = flight::String("point-list");
+  detached->version = 7.0;
+  detached->vertices = flight::Float32Array{3.0F, 4.0F, 5.0F};
+  mesh::refresh_mesh_geometry_bounds(detached);
+  refresh = refresh && detached->bounds.has_value() &&
+            detached->bounds.value()->min->x == 3.0 &&
+            detached->bounds.value()->max->z == 5.0 &&
+            !mesh::get_mesh_geometry_runtime_if_present(detached).has_value() &&
+            detached->version == 7.0;
+  if (inject_refresh_invalidation_mutation) refresh = false;
+  check(refresh,
+        "ensure honors a matching cache stamp after direct writes, explicit refresh bypasses that cache and reuses the AABB owner, invalidation makes ensure refresh, and empty or runtime-less owners receive exact bounds without synthetic runtime state");
+}
+
 void index_order_and_compaction() {
   const auto geometry = indexed_geometry();
   auto triangle = flight::make_ref<types::MeshTriangleVertexIndices>();
@@ -1047,6 +1308,282 @@ void index_order_and_compaction() {
   if (inject_index_order_mutation) order = false;
   check(order,
         "triangle, wireframe, expansion and compaction preserve their exact source-defined index orders");
+}
+
+void wireframe_edge_order_width_and_duplication() {
+  const auto layout = position_layout();
+  flight::Float32Array vertices{
+      0.0F, 0.0F, 0.0F,
+      1.0F, 0.0F, 0.0F,
+      0.0F, 1.0F, 0.0F,
+      1.0F, 1.0F, 0.0F,
+      2.0F, 0.0F, 0.0F,
+      2.0F, 1.0F, 0.0F,
+  };
+  auto make_indexed = [&](auto indices, const char* topology) {
+    auto options = flight::make_ref<types::MeshGeometryOptions>();
+    options->indices = flight::SequenceView<double>(indices);
+    options->layout = layout;
+    options->topology = flight::String(topology);
+    options->vertices = vertices;
+    return mesh::create_mesh_geometry(options);
+  };
+
+  flight::Uint16Array quad_indices{0, 1, 2, 2, 1, 3, 5};
+  const auto quad = make_indexed(quad_indices, "triangle-list");
+  const auto quad_owner = index_buffer_identity(quad);
+  const auto narrow = mesh::compute_mesh_geometry_wireframe_indices(quad);
+  const double expected_quad[] = {
+      0.0, 1.0, 1.0, 2.0, 2.0, 0.0,
+      2.0, 1.0, 1.0, 3.0, 3.0, 2.0,
+  };
+  bool edges = std::holds_alternative<flight::Uint16Array>(narrow) &&
+               std::get<flight::Uint16Array>(narrow).size() == 12 &&
+               index_buffer_identity(quad) == quad_owner &&
+               index_at(quad, 6.0) == 5.0;
+  for (double index = 0.0; index < 12.0; index += 1.0) {
+    edges = edges && variant_index_at(narrow, index) ==
+                         expected_quad[static_cast<std::size_t>(index)];
+  }
+  edges = edges && variant_index_at(narrow, 2.0) == 1.0 &&
+          variant_index_at(narrow, 3.0) == 2.0 &&
+          variant_index_at(narrow, 6.0) == 2.0 &&
+          variant_index_at(narrow, 7.0) == 1.0;
+
+  flight::Uint32Array wide_indices{0, 1, 2, 2, 1, 3};
+  const auto wide = mesh::compute_mesh_geometry_wireframe_indices(
+      make_indexed(wide_indices, "triangle-list"));
+  edges = edges && std::holds_alternative<flight::Uint32Array>(wide) &&
+          std::get<flight::Uint32Array>(wide).size() == 12;
+  for (double index = 0.0; index < 12.0; index += 1.0) {
+    edges = edges && variant_index_at(wide, index) ==
+                         expected_quad[static_cast<std::size_t>(index)];
+  }
+
+  flight::Uint16Array strip_indices{0, 1, 2, 3};
+  const auto strip = mesh::compute_mesh_geometry_wireframe_indices(
+      make_indexed(strip_indices, "triangle-strip"));
+  const double expected_strip[] = {
+      0.0, 1.0, 1.0, 2.0, 2.0, 0.0,
+      1.0, 2.0, 2.0, 3.0, 3.0, 1.0,
+  };
+  edges = edges && std::holds_alternative<flight::Uint16Array>(strip) &&
+          std::get<flight::Uint16Array>(strip).size() == 12;
+  for (double index = 0.0; index < 12.0; index += 1.0) {
+    edges = edges && variant_index_at(strip, index) ==
+                         expected_strip[static_cast<std::size_t>(index)];
+  }
+
+  auto sequential_options = flight::make_ref<types::MeshGeometryOptions>();
+  sequential_options->layout = layout;
+  sequential_options->topology = flight::String("triangle-list");
+  sequential_options->vertices = vertices;
+  const auto sequential = mesh::create_mesh_geometry(sequential_options);
+  const auto sequential_edges =
+      mesh::compute_mesh_geometry_wireframe_indices(sequential);
+  const double expected_sequential[] = {
+      0.0, 1.0, 1.0, 2.0, 2.0, 0.0,
+      3.0, 4.0, 4.0, 5.0, 5.0, 3.0,
+  };
+  edges = edges && std::holds_alternative<flight::Uint32Array>(sequential_edges) &&
+          std::get<flight::Uint32Array>(sequential_edges).size() == 12 &&
+          !sequential->indices.has_value();
+  for (double index = 0.0; index < 12.0; index += 1.0) {
+    edges = edges && variant_index_at(sequential_edges, index) ==
+                         expected_sequential[static_cast<std::size_t>(index)];
+  }
+
+  flight::Uint16Array invalid_indices{0, 99, 2};
+  const auto invalid = mesh::compute_mesh_geometry_wireframe_indices(
+      make_indexed(invalid_indices, "triangle-list"));
+  const double expected_invalid[] = {0.0, 99.0, 99.0, 2.0, 2.0, 0.0};
+  for (double index = 0.0; index < 6.0; index += 1.0) {
+    edges = edges && variant_index_at(invalid, index) ==
+                         expected_invalid[static_cast<std::size_t>(index)];
+  }
+
+  const auto point_indexed =
+      make_indexed(flight::Uint16Array{0, 1}, "point-list");
+  const auto empty_narrow =
+      mesh::compute_mesh_geometry_wireframe_indices(point_indexed);
+  auto point_options = flight::make_ref<types::MeshGeometryOptions>();
+  point_options->layout = layout;
+  point_options->topology = flight::String("point-list");
+  point_options->vertices = flight::Float32Array{0.0F, 0.0F, 0.0F};
+  const auto empty_wide = mesh::compute_mesh_geometry_wireframe_indices(
+      mesh::create_mesh_geometry(point_options));
+  edges = edges && std::holds_alternative<flight::Uint16Array>(empty_narrow) &&
+          std::get<flight::Uint16Array>(empty_narrow).empty() &&
+          std::holds_alternative<flight::Uint32Array>(empty_wide) &&
+          std::get<flight::Uint32Array>(empty_wide).empty();
+  if (inject_wireframe_edge_mutation) edges = false;
+  check(edges,
+        "wireframe extraction emits every directed face edge in authored list or sliding-strip order, deliberately retains shared edges instead of deduplicating them, ignores incomplete trailing triangles, mirrors the source index width (or Uint32 for sequential input), and transports invalid index values without mutating the source");
+}
+
+void compaction_index_promotion_and_invalid_domains() {
+  const auto layout = position_layout();
+  flight::Float32Array small_vertices{
+      10.0F, 0.0F, 0.0F,
+      20.0F, 0.0F, 0.0F,
+      30.0F, 0.0F, 0.0F,
+      40.0F, 0.0F, 0.0F,
+  };
+  flight::Uint32Array small_indices{3, 1, 3, 2};
+  auto small_options = flight::make_ref<types::MeshGeometryOptions>();
+  small_options->indices = flight::SequenceView<double>(small_indices);
+  small_options->layout = layout;
+  small_options->topology = flight::String("line-list");
+  small_options->vertices = small_vertices;
+  const auto small = mesh::create_mesh_geometry(small_options);
+  const auto compact = mesh::compact_mesh_geometry_vertices(small);
+  const double expected_indices[] = {0.0, 1.0, 0.0, 2.0};
+  const double expected_positions[] = {40.0, 20.0, 30.0};
+  bool domains = compact->indices.has_value() &&
+                 std::holds_alternative<flight::Uint16Array>(
+                     compact->indices.value()) &&
+                 mesh::get_mesh_geometry_vertex_count(compact) == 3.0 &&
+                 compact->vertices.buffer != small->vertices.buffer &&
+                 index_buffer_identity(compact) != index_buffer_identity(small) &&
+                 compact->subsets.identity() != small->subsets.identity() &&
+                 std::holds_alternative<flight::Uint32Array>(
+                     small->indices.value());
+  for (double index = 0.0; index < 4.0; index += 1.0) {
+    domains = domains && index_at(compact, index) ==
+                           expected_indices[static_cast<std::size_t>(index)] &&
+              index_at(small, index) == small_indices.get_index(index);
+  }
+  for (double vertex = 0.0; vertex < 3.0; vertex += 1.0) {
+    domains = domains && compact->vertices.get_index(vertex * 3.0) ==
+                           expected_positions[static_cast<std::size_t>(vertex)];
+  }
+
+  auto invalid_clone = [&](const flight::Ref<types::MeshGeometry>& source) {
+    const auto result = mesh::compact_mesh_geometry_vertices(source);
+    bool cloned = result != source && result->layout == source->layout &&
+                  result->vertices.buffer != source->vertices.buffer &&
+                  result->vertices.byte_length == source->vertices.byte_length &&
+                  result->subsets.identity() != source->subsets.identity() &&
+                  result->topology == source->topology &&
+                  result->version == source->version &&
+                  result->indices.has_value() == source->indices.has_value();
+    const flight::Uint8Array source_bytes(
+        source->vertices.buffer,
+        static_cast<double>(source->vertices.byte_offset),
+        static_cast<double>(source->vertices.byte_length));
+    const flight::Uint8Array result_bytes(
+        result->vertices.buffer,
+        static_cast<double>(result->vertices.byte_offset),
+        static_cast<double>(result->vertices.byte_length));
+    for (double byte = 0.0;
+         byte < static_cast<double>(source->vertices.byte_length);
+         byte += 1.0) {
+      cloned = cloned &&
+               result_bytes.get_index(byte) == source_bytes.get_index(byte);
+    }
+    if (source->indices.has_value()) {
+      cloned = cloned &&
+               index_buffer_identity(result) != index_buffer_identity(source) &&
+               result->indices.value().index() == source->indices.value().index() &&
+               std::visit([](const auto& values) { return values.size(); },
+                          result->indices.value()) ==
+                   std::visit([](const auto& values) { return values.size(); },
+                              source->indices.value());
+      const double count = std::visit(
+          [](const auto& values) { return static_cast<double>(values.size()); },
+          source->indices.value());
+      for (double index = 0.0; index < count; index += 1.0) {
+        cloned = cloned && index_at(result, index) == index_at(source, index);
+      }
+    }
+    return cloned;
+  };
+
+  const auto nonindexed = geometry_from(layout, small_vertices);
+  domains = domains && invalid_clone(nonindexed) &&
+            !mesh::compact_mesh_geometry_vertices(nonindexed)
+                 ->indices.has_value();
+
+  auto indexed_with_layout = [&](double stride,
+                                 const flight::Float32Array& values,
+                                 const flight::Uint16Array& indices) {
+    auto options = flight::make_ref<types::MeshGeometryOptions>();
+    options->indices = flight::SequenceView<double>(indices);
+    options->layout = position_layout(stride);
+    options->vertices = values;
+    return mesh::create_mesh_geometry(options);
+  };
+  const auto zero_stride = indexed_with_layout(
+      0.0, flight::Float32Array{1.0F, 2.0F, 3.0F},
+      flight::Uint16Array{0});
+  const auto misaligned_stride = indexed_with_layout(
+      14.0, flight::Float32Array(7.0), flight::Uint16Array{0});
+  const auto partial_record = indexed_with_layout(
+      12.0, flight::Float32Array{1.0F, 2.0F, 3.0F, 99.0F},
+      flight::Uint16Array{0});
+  const auto out_of_range = indexed_with_layout(
+      12.0, flight::Float32Array{1.0F, 2.0F, 3.0F},
+      flight::Uint16Array{1});
+  domains = domains && invalid_clone(zero_stride) &&
+            invalid_clone(misaligned_stride) &&
+            invalid_clone(partial_record) && invalid_clone(out_of_range) &&
+            index_at(out_of_range, 0.0) == 1.0;
+
+  const auto partial_indexed = mesh::index_mesh_geometry_vertices(
+      geometry_from(layout,
+                    flight::Float32Array{1.0F, 2.0F, 3.0F, 99.0F}));
+  const auto zero_indexed = mesh::index_mesh_geometry_vertices(
+      geometry_from(position_layout(0.0),
+                    flight::Float32Array{1.0F, 2.0F, 3.0F}));
+  domains = domains && partial_indexed->indices.has_value() &&
+            std::holds_alternative<flight::Uint16Array>(
+                partial_indexed->indices.value()) &&
+            std::get<flight::Uint16Array>(partial_indexed->indices.value())
+                    .size() == 1 &&
+            index_at(partial_indexed, 0.0) == 0.0 &&
+            zero_indexed->indices.has_value() &&
+            std::holds_alternative<flight::Uint16Array>(
+                zero_indexed->indices.value()) &&
+            std::get<flight::Uint16Array>(zero_indexed->indices.value())
+                .empty();
+
+  const auto already_indexed = mesh::index_mesh_geometry_vertices(small);
+  domains = domains && already_indexed != small &&
+            already_indexed->vertices.buffer != small->vertices.buffer &&
+            index_buffer_identity(already_indexed) != index_buffer_identity(small) &&
+            std::holds_alternative<flight::Uint32Array>(
+                already_indexed->indices.value());
+  for (double index = 0.0; index < 4.0; index += 1.0) {
+    domains = domains && index_at(already_indexed, index) ==
+                           small_indices.get_index(index);
+  }
+
+  constexpr double wide_count = 65536.0;
+  flight::Float32Array wide_vertices(wide_count * 3.0);
+  flight::Uint32Array wide_indices(wide_count);
+  for (double vertex = 0.0; vertex < wide_count; vertex += 1.0) {
+    wide_vertices.set_index(vertex * 3.0, vertex);
+    wide_indices.set_index(vertex, vertex);
+  }
+  auto wide_options = flight::make_ref<types::MeshGeometryOptions>();
+  wide_options->indices = flight::SequenceView<double>(wide_indices);
+  wide_options->layout = layout;
+  wide_options->topology = flight::String("point-list");
+  wide_options->vertices = wide_vertices;
+  const auto wide_source = mesh::create_mesh_geometry(wide_options);
+  const auto wide_compact = mesh::compact_mesh_geometry_vertices(wide_source);
+  domains = domains && wide_compact->indices.has_value() &&
+            std::holds_alternative<flight::Uint32Array>(
+                wide_compact->indices.value()) &&
+            mesh::get_mesh_geometry_vertex_count(wide_compact) == wide_count &&
+            index_at(wide_compact, 0.0) == 0.0 &&
+            index_at(wide_compact, wide_count - 1.0) == wide_count - 1.0 &&
+            wide_compact->vertices.get_index((wide_count - 1.0) * 3.0) ==
+                wide_count - 1.0 &&
+            index_at(wide_source, wide_count - 1.0) == wide_count - 1.0;
+  if (inject_index_promotion_mutation) domains = false;
+  check(domains,
+        "compaction assigns first-reference-stable records, down-converts a wide source from compact cardinality, promotes only beyond 65,535 unique vertices, and deep-clones nonindexed, invalid-stride, partial-record, or out-of-range domains; indexing floors partial records, yields empty narrow indices for zero stride, and preserves an authored wide index representation by deep clone");
 }
 
 void failure_paths_are_non_mutating() {
@@ -4046,6 +4583,16 @@ int main(int argc, char** argv) {
       mutation == flight::String("--mutate-reset-disposal");
   inject_cache_invalidation_mutation =
       mutation == flight::String("--mutate-cache-invalidation");
+  inject_sphere_math_mutation =
+      mutation == flight::String("--mutate-sphere-math");
+  inject_flat_split_remap_mutation =
+      mutation == flight::String("--mutate-flat-split-remap");
+  inject_refresh_invalidation_mutation =
+      mutation == flight::String("--mutate-refresh-invalidation");
+  inject_wireframe_edge_mutation =
+      mutation == flight::String("--mutate-wireframe-edges");
+  inject_index_promotion_mutation =
+      mutation == flight::String("--mutate-index-promotion");
 
   construction_clone_and_owner_identity();
   construction_defaults_metadata_and_absence_matrix();
@@ -4054,7 +4601,12 @@ int main(int argc, char** argv) {
   runtime_lifecycle_ordering_and_idempotence();
   runtime_reset_disposal_and_missing_owner_paths();
   cache_invalidation_and_empty_bounds_lifecycle();
+  bounding_sphere_exact_math_and_degenerate_cases();
+  flat_normals_split_order_and_ownership();
+  explicit_refresh_vs_cached_bounds();
   index_order_and_compaction();
+  wireframe_edge_order_width_and_duplication();
+  compaction_index_promotion_and_invalid_domains();
   failure_paths_are_non_mutating();
   weld_equivalence_and_attribute_sensitivity();
   weld_remap_order_and_index_width();
