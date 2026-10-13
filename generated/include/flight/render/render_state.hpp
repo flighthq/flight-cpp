@@ -2,6 +2,7 @@
 #pragma once
 #include <cstddef>
 #include <flight/any.hpp>
+#include <flight/erased_ref.hpp>
 #include <flight/map.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -73,6 +74,19 @@ struct RenderStateInitialization : public flight::ReferenceEnabled {
   std::optional<flight::String> scene_graph_sync_policy;
   std::optional<bool> round_pixels;
 };
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_1D13107B211AF64F
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_1D13107B211AF64F
+template <typename Runtime, typename Registries>
+struct callable_clear_signals_1d13107b211af64f : public flight::ReferenceEnabled {
+  std::function<void(flight::types::RenderRegistryTable, flight::String)> callable;
+  std::function<void()> clear;
+  flight::Ref<flight::types::RenderRegistrySignals> signals;
+  void operator()(flight::types::RenderRegistryTable argument_0, flight::String argument_1) const {
+    return callable(argument_0, argument_1);
+  }
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_1D13107B211AF64F
 
 template <typename Runtime, typename Registries>
 inline Runtime initialize_render_state_runtime(Runtime runtime, Registries registries) {

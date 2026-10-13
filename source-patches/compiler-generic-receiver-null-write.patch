@@ -1,0 +1,95 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 4c97076..36b8b4b 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -28851,10 +28851,28 @@ function getIrAssignmentTargetTypeCpp(
+     structuralProperty?.type ??
+     (expression.kind === 'element' ? getCppClosedKeyElementWriteTypeCpp(expression, context) : undefined) ??
+     getIrExpressionBindingTypeCpp(expression, context) ??
+-    getIrExpressionTypeEvidenceCpp(expression, context)
++    getIrExpressionTypeEvidenceCpp(expression, context) ??
++    getCppTypeParameterReceiverPropertyTypeCpp(expression, context)
+   );
+ }
+ 
++// A write through a receiver typed by a type parameter -- `runtime.miss = null` in
++// `function init<R extends Runtime>(runtime: R)` -- has no receiver evidence of its own, because the
++// parameter names no members. Its constraint does: the source checker resolves the write against it, and
++// every instantiation must provide that member. Without this the written value is lowered with no
++// destination type, so a `null` falls back to `nullptr` and engages the member's optional around a null
++// pointer, where the same statement through a concrete receiver writes `std::nullopt`.
++function getCppTypeParameterReceiverPropertyTypeCpp(
++  expression: Readonly<IrExpression>,
++  context: EmitContext,
++): Readonly<IrType> | undefined {
++  if (expression.kind !== 'property' || expression.optional) return undefined;
++  const receiverType =
++    getIrExpressionBindingTypeCpp(expression.object, context) ?? getIrExpressionTypeEvidenceCpp(expression.object, context);
++  const constraint = receiverType ? getCppTypeParameterConstraintCpp(receiverType, context) : undefined;
++  return constraint ? getIrObjectPropertyTypeCpp(constraint, expression.name, context) : undefined;
++}
++
+ function getIrExpressionBindingTypeCpp(
+   expression: Readonly<IrExpression>,
+   context: EmitContext,
+diff --git a/packages/compiler-backend-cpp/src/cppGenericReceiverNullWrite.test.ts b/packages/compiler-backend-cpp/src/cppGenericReceiverNullWrite.test.ts
+new file mode 100644
+index 0000000..1d0e414
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppGenericReceiverNullWrite.test.ts
+@@ -0,0 +1,55 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/x/src/x.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/x', upstreamDirectory: '/flight' });
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++function writes(contents: string, member: string): string[] {
++  return contents
++    .split('\n')
++    .map((line) => line.trim())
++    .filter((line) => line.startsWith(`(runtime->${member} = `));
++}
++
++const runtime = `export interface Hooks { clear(): void }
++export interface Runtime {
++  miss: Hooks | null;
++  hook: ((n: number) => void) | null;
++  tag: object | null;
++  count: number;
++  owner: Hooks;
++}
++`;
++
++describe('a null written through a type-parameter receiver', () => {
++  const generic = emit(
++    `${runtime}export function init<R extends Runtime>(runtime: R, owner: Hooks): R { runtime.miss = null; runtime.hook = null; runtime.tag = null; runtime.count = 1; runtime.owner = owner; return runtime; }`,
++  );
++  const concrete = emit(
++    `${runtime}export function init(runtime: Runtime, owner: Hooks): Runtime { runtime.miss = null; runtime.hook = null; runtime.tag = null; runtime.count = 1; runtime.owner = owner; return runtime; }`,
++  );
++
++  it('writes the absent state of a nullable reference, callable and object member, never an engaged nullptr', () => {
++    for (const member of ['miss', 'hook', 'tag']) {
++      expect(writes(generic, member)).toEqual([`(runtime->${member} = std::nullopt);`]);
++      expect(generic).not.toContain(`(runtime->${member} = nullptr);`);
++    }
++  });
++
++  it('lowers each write exactly as the same statement through a concrete receiver', () => {
++    for (const member of ['miss', 'hook', 'tag', 'count', 'owner']) {
++      expect(writes(generic, member)).toEqual(writes(concrete, member));
++    }
++  });
++
++  it('leaves non-null writes through the same receiver as they were', () => {
++    expect(writes(generic, 'count')).toEqual(['(runtime->count = 1.0);']);
++    expect(writes(generic, 'owner')).toEqual(['(runtime->owner = owner);']);
++  });
++});

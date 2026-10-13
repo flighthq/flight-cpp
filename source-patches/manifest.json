@@ -3696,6 +3696,23 @@
       "unblocks": "@flighthq/requirement-codegen's requirementCodegen.ts emits, so requirement_codegen.hpp and its two aggregate headers compile; it is the last refusal in that package's three modules.",
       "expires": "when the emitter carries an identity-preserving projected sequence (the runtime shape docs/compiler-requests/readonly-sequence-owning-array.md asks for), at which point the aliasing form lowers and this patch has nothing left to rewrite.",
       "appliedOn": "2026-10-13"
+    },
+    {
+      "id": "compiler-generic-receiver-null-write",
+      "dependency": "flight-compiler",
+      "patch": "compiler-generic-receiver-null-write.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "not a refusal: a silent miscompile. A `null` written to a `T | null` member through a receiver typed by a type parameter (`runtime.registryMiss = null` in `initializeRenderStateRuntime<Runtime, Registries>`) had no destination type, because receiver evidence for a type parameter names no members. The literal therefore fell back to `nullptr`, which engages the member's std::optional around a null pointer, while every emitted reader tests that member with has_value(). createRenderState() followed by destroyRenderState() dereferenced null.",
+      "rewrite": "getIrAssignmentTargetTypeCpp gains a last fallback, used only when every existing source of target evidence is absent: for a non-optional property write whose receiver type is a type parameter, the member type is read from the parameter's constraint (getCppTypeParameterConstraintCpp, then getIrObjectPropertyTypeCpp). The written value is then lowered against that destination exactly as through a concrete receiver, so `null` becomes std::nullopt via the existing optional-absence plan.",
+      "equivalence": "The source checker resolves a property write through a type-parameter receiver against the constraint, and every instantiation must provide that member, so the constraint's member type is the destination the source states. The fallback only supplies a type where none was found; any write that already had target evidence is lowered as before. The new fixtures prove a generic-receiver write lowers byte-for-byte as the same statement through a concrete receiver, for nullable reference, callable and object members, and for non-null writes.",
+      "verification": "New cppGenericReceiverNullWrite.test.ts: 3 pass. The 2 null-write cases fail without the rewrite; the non-null control passes both ways. compiler-backend-cpp suite at -j2: the same 47 pre-existing cppCompilerBackend.test.ts failures with and without the rewrite (identical failing-test sets), and no new failure. Focused render regeneration: the three runtime writes in initializeRenderStateRuntime (binding, renderAdaptHook, registryMiss) now emit std::nullopt, so their render-state-generic-null-* repairs match nothing and are retired. The two displayObjectClipHooks writes in initializeRenderStateFields go through EntityConstruction<State>, a mapped type over the parameter, which this rewrite deliberately does not reach, so those two repairs stay. Side effect: render_state.hpp also gains an unused anonymous callable struct templated on <Runtime, Registries> (the registryMiss intersection spelled in the template's scope) and an erased_ref.hpp include; both compile and add no behavior. Native: tests/generated_render_state_test.cpp passes against the regenerated header, including createRenderState then destroyRenderState, which segfaulted before.",
+      "whyNotUpstreamFirst": "It is a silent miscompile that crashes the render state lifecycle natively. Upstream receives docs/compiler-requests/generic-receiver-null-write-engages-optional.md with the reproduction; the patch removes the need for per-site repairs meanwhile.",
+      "unblocks": "@flighthq/render renderState.ts initializeRenderStateRuntime without emission repairs (three of the five render-state-generic-null-* repairs retired). Other packages with bare type-parameter receivers change when their owners next regenerate; this change does not move them.",
+      "expires": "when upstream gives a property write through a type-parameter receiver its constraint's member type (docs/compiler-requests/generic-receiver-null-write-engages-optional.md).",
+      "appliedOn": "2026-10-13"
     }
   ]
 }

@@ -65,9 +65,53 @@ fallback).
 19 generic-receiver `member = nullptr` writes exist across 11 generated headers. Each is a candidate with the
 same defect when its member's storage is a pointer-like optional. They are not examined here.
 
-## Workaround carried
+## Workaround carried before the patch (retired)
 
-The `render-state-generic-null-*` emission repairs respell the five render sites to `std::nullopt`. They also
-respell the `??` fallback's null arm to `std::nullopt` with the present arm wrapped in `std::optional{...}`.
+The `render-state-generic-null-*` emission repairs respelled the five render sites to `std::nullopt`. They also
+respelled the `??` fallback's null arm to `std::nullopt` with the present arm wrapped in `std::optional{...}`.
 Each writes exactly what the concrete-receiver lowering of the same statement writes, and what every emitted
-reader tests for. They expire when generic-receiver null writes produce the absent state.
+reader tests for. Three were retired when the compiler patch below made the same output without them; two remain (see below).
+
+## Carried compiler patch (supersedes the render repairs)
+
+[`compiler-generic-receiver-null-write.patch`](../../source-patches/compiler-generic-receiver-null-write.patch) gives a property write
+through a type-parameter receiver its constraint's member type, but only where no other target evidence
+exists. The written value is then lowered exactly as through a concrete receiver. Its fixtures are in
+`cppGenericReceiverNullWrite.test.ts`.
+
+Under focused render regeneration, three of the five `render-state-generic-null-*` repairs became mechanically
+obsolete and are retired: the `binding`, `renderAdaptHook` and `registryMiss` writes in
+`initializeRenderStateRuntime`, including the crash. The two `displayObjectClipHooks` writes in
+`initializeRenderStateFields` remain repaired. Their receiver is `state: EntityConstruction<State>`, a mapped type
+over the type parameter, written through a structural-row `row_set`; the patch deliberately does not reach that
+shape. Reaching it would mean resolving mapped types over type parameters, which is a larger change than this
+defect needs.
+
+The patch also leaves an unused anonymous callable struct, templated on `<Runtime, Registries>`, in
+`render_state.hpp`. It is the `registryMiss` intersection type spelled in the template's scope once the member type
+is resolved there. It compiles and adds no behavior.
+
+## Inventory for owners: same symptom through other receiver shapes, not changed by this patch
+
+The patch covers a receiver whose type IS a type parameter (`runtime: R`). At flight a627849, sixteen other
+generated writes put `nullptr` into a member stored as `std::optional<...>`, so they have the same
+engaged-null symptom. Their receivers are not bare type parameters, though, so this patch does not change
+them. Each needs its own reproduction before a fix is chosen. None was edited.
+
+| Package | Header | Write | Receiver shape |
+| --- | --- | --- | --- |
+| effects-wgpu | `wgpu_effect_state.hpp` | `out->scene_target`, `out->velocity_texture` | `EntityConstruction<Ref<WgpuEffectState>>` |
+| interaction | `focus_manager.hpp` | `out->focused` | `EntityConstruction<Ref<FocusManager<N>>>` in a template over `N` |
+| interaction | `interaction_manager.hpp` | `out->cursor_target`, `out->dispatch_layers` | `EntityConstruction<Ref<InteractionManager<N>>>` |
+| interaction | `interaction_manager.hpp` | `state->last_click_target`, `last_pointer_click_interaction_state`, `last_pointer_click_target` | `Ref<InteractionPointerState<N>>` |
+| interaction | `node_interaction_state.hpp` | `out->cursor`, `out->hit_area` | `EntityConstruction<Ref<NodeInteractionState>>` |
+| picking | `pick_scene3_d.hpp` | `out->node` | `EntityConstruction<Ref<Scene3DHit>>` |
+| scene2d-formats | `rive_import_registry.hpp` | `out->skeleton` | `EntityConstruction<Ref<RiveArtboardImportContext>>` |
+| scene3d-resources | `resolve_scene3_dresources.hpp` | `ref->failure` | `Ref<ImageResourceReference>` |
+| skeleton3d | `skeleton3d.hpp` | `skeleton->names` | `Ref<Skeleton3D>` |
+| textlayout | `rich_text_content.hpp` | `runtime->rich_text_content` | `Ref<RichTextRuntime>` |
+| texture | `video_texture.hpp` | `texture->source` | `Ref<Texture2D>` |
+
+Not every member here is pointer-like optional storage (`pick_scene3_d.hpp`'s `node` is a bare
+`NodeAny`, where `nullptr` is the faithful null). Each row is a candidate for its owner, not a confirmed
+defect.
