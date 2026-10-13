@@ -277,14 +277,14 @@
       "code": "dependency-refused",
       "module": "packages/capture/src/contract.ts",
       "package": "@flighthq/capture",
-      "reason": "dependency ./captureBaseline.js was refused for @flighthq/capture/packages/capture/src/captureBaseline.ts",
+      "reason": "dependency ./captureBaseline.ts was refused for @flighthq/capture/packages/capture/src/captureBaseline.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/capture/src/index.ts",
       "package": "@flighthq/capture",
-      "reason": "dependency ./contract was refused for @flighthq/capture/packages/capture/src/contract.ts",
+      "reason": "dependency ./captureBaseline.ts was refused for @flighthq/capture/packages/capture/src/captureBaseline.ts",
       "stage": "dependency"
     },
     {

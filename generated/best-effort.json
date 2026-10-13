@@ -2404,7 +2404,8 @@
     {
       "classification": "target-runtime",
       "consumers": [
-        "@flighthq/capture/packages/capture/src/contract.ts"
+        "@flighthq/capture/packages/capture/src/contract.ts",
+        "@flighthq/capture/packages/capture/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:02966a2286b8d662933aa62c8acc693562db3584b782a159e74773dc768c59db",
@@ -2427,7 +2428,8 @@
     },
     {
       "consumers": [
-        "@flighthq/capture/packages/capture/src/contract.ts"
+        "@flighthq/capture/packages/capture/src/contract.ts",
+        "@flighthq/capture/packages/capture/src/index.ts"
       ],
       "module": {
         "name": "CaptureComparison",
@@ -2438,9 +2440,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/capture/packages/capture/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/capture",
@@ -2461,7 +2461,7 @@
       },
       "path": "flight/capture/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/capture/packages/capture/src/contract.ts"
+        "@flighthq/capture/packages/capture/src/captureBaseline.ts"
       ],
       "status": "dependency-incomplete"
     },

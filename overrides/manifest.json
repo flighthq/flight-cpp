@@ -1137,18 +1137,20 @@
       "authoredOn": "2026-10-06"
     },
     {
-      "id": "capture-baseline-object-if-on-jsonvalue",
+      "id": "capture-baseline-imported-record-alias",
       "path": "flight/capture/capture_baseline.hpp",
       "package": "@flighthq/capture",
       "status": "complete",
-      "derivedFrom": "c25091a97a9fbd643fa29ec8ad3b9caf9ff00085769a4ea85ab796551b3f6d4f",
-      "reason": "The emitter calls erased_value.object_if<CaptureBaseline>() on a flight::JsonValue, but object_if is a method of flight::Any, not JsonValue.",
-      "expires": "when the emitter uses the correct deserialization method for JsonValue.",
-      "change": "Replaced object_if<CaptureBaseline>() call on JsonValue with CaptureBaseline{} construction, since the preceding guards already confirm the parsed value is a JSON object. Added missing include and using declaration for CaptureBaselineProvenanceField.",
-      "equivalence": "The CaptureBaseline construction produces the same default-initialized value. The guards that precede it verify the same condition.",
-      "whyNotAPatchOrRepair": "The method replacement and construction pattern change are code corrections a repair cannot express.",
-      "unblocks": "capture_baseline.hpp and its 2 downstream includers.",
-      "authoredOn": "2026-10-06"
+      "supplies": "packages/capture/src/captureBaseline.ts",
+      "derivedFrom": "d86c942f12c4a27015889aeeab5551c8c3565394f837f15597f4f0aba42eef9c",
+      "reason": "At a627849 the emitter classifies the imported CaptureBaseline alias as an unsupported ambient reference even though the types package emits its exact Record<String, Ref<CaptureColumnBaseline>> carrier. That first boundary refuses all seven public baseline operations; filed as imported-record-alias-loses-runtime-representation.md.",
+      "change": "Uses the exact generated CaptureBaseline Record and column/provenance owners to supply allocation, canonical JSON formatting and parsing, independent field/provenance reads and writes, and provenance copy semantics. The one emitted provenanceMember helper is retained with the same branch.",
+      "equivalence": "Each allocation has distinct Record storage; value parameters retain that storage identity for writes. Formatting sorts UTF-16 column keys and emits fields in the source's canonical order with two-space indentation and one trailing newline. Parsing accepts an object produced by that format and rejects malformed or non-object input. Field writes merge and overwrite on the same column owner. Provenance writes allocate a new owner and copy all six values, so later caller mutation cannot rewrite the baseline; field-specific provenance remains independent.",
+      "whyNotAPatchOrRepair": "A declaration repair cannot supply seven refused behavioral functions. The TypeScript import resolves to a normal exported alias and already states the exact type, so changing source spelling would only work around the compiler's imported-alias resolution defect.",
+      "unblocks": "The complete capture baseline lifecycle and both capture aggregators at the current pin; together with the emitted comparison module, @flighthq/capture's public contract is usable natively.",
+      "remaining": "None at this pin for values satisfying the declared CaptureBaseline contract. The native parser validates that represented column and provenance members have their declared JSON types; malformed nested values that TypeScript's unchecked assertion would retain cannot be stored in the exact native carrier.",
+      "expires": "when imported generated Record aliases reuse their defining module's represented carrier instead of entering the ambient binding path.",
+      "authoredOn": "2026-10-12"
     },
     {
       "id": "command-undeclared-node-helpers",
