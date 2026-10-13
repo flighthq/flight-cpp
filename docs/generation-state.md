@@ -6031,3 +6031,50 @@ regenerate them at all -- their committed output is whole-SDK residue and no tes
 current types row does not emit, so the package is reachable only after the render row migrates. All three `none`
 cells in `docs/parity/core.md` are accurate as written; the row-level audit found no stale coverage claim there, and
 the CORE inventory's coverage column was corrected earlier the same day for the rows that were wrong.
+
+## ANIM lane base-truth audit, 2026-10-13
+
+Same method as the CORE audit above: committed artifacts only, no package regenerated and no test written. Coverage is
+attributed the way `docs/parity/` says it is -- a registered test or example target that includes one of the package's
+emitted headers directly -- which matters here, because two ANIM packages are covered only through `examples/upstream`
+and a name-based scan would have missed them.
+
+| package | generated | covered by |
+| --- | --- | --- |
+| animation | 12 of 13, 1 refused | `flight_cpp.generated_animation` |
+| timeline | 3 of 3, 0 refused | `flight_cpp.generated_timeline` |
+| tween | 7 of 10, 3 refused | none |
+| spring | 6 of 6, 0 refused | `flight_cpp.generated_spring` |
+| easing | 22 of 23, 1 refused | none |
+| velocity | 5 of 5, 0 refused | `flight_cpp.generated_velocity` |
+| motionpath | 3 of 3, 0 refused | `flight_cpp.generated_motionpath` |
+| clock | 4 of 4, 0 refused | `flight_cpp.generated_clock` |
+| movieclip | 4 of 5, 1 refused | `flight_cpp.generated_movieclip` |
+| swf | 46 of 58, 12 refused | `flight_cpp.generated_swf`, `flight_cpp.generated_swf_reader` |
+| skeleton2d | 19 of 25, 6 refused | `flight_cpp.generated_skeleton2d` |
+| skeleton2d-formats | 10 of 15, 5 refused | none |
+| particles | 12 of 13, 1 refused | none |
+| particleemitter | 7 of 12, 5 refused | none |
+| particles-formats | 11 of 17, 6 refused | none |
+| flow | 4 of 4, 0 refused | none |
+| statechart | 5 of 5, 0 refused | `flight_cpp.generated_socket_statechart` (incidental) |
+| physics2d | 21 of 26, 5 refused | none |
+| physics2d-abi | 6 of 8, 2 refused | none |
+| collision | 32 of 38, 6 refused | `flight_cpp.generated_collision` |
+| spatial | 10 of 11, 1 refused | `flight_cpp_upstream_spatial_smoke` (`examples/upstream/spatial.cpp`) |
+
+Three coverage cells were stale, all the same way: `timeline`, `spring` and `velocity` were marked as having no local
+coverage while each has a dedicated registered test with substantial checks (48, 31 and 49 respectively), authored the
+same day the tests landed. The row's emitted/refused figures were accurate for all 21 packages, and the one apparent
+exception -- `spatial`, marked dedicated with no test in `tests/` -- is correct: its coverage is the upstream example,
+which is exactly the lane the method names and which a `tests/`-only scan misses.
+
+Scoped compile evidence exists for 11 of the 21 (`out/pkg/<package>/header-compilation.json`, gitignored and therefore
+not a committed artifact): animation, timeline, tween, spring, easing, velocity, motionpath, clock, movieclip, swf and
+skeleton2d. For the other ten there is no recorded compile to audit; the parity section states the missing-compile case
+where it was noticed rather than quoting a fraction nobody measured.
+
+The pattern worth naming: of the last eight dispatches that named a package, seven found the work already in the base.
+The rows were written before the tests landed and never revisited, and in every case only a gate or a `git log -- <path>`
+check kept a second implementation from being written over the first. A row that names a package is a claim about
+remaining work; the test that would carry that work is what settles it.

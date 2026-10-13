@@ -73,11 +73,11 @@ upstream package map, which groups packages differently and would put, for insta
 | package | upstream modules | test files | cases | local CTest | web-only declared | generated emitted / refused |
 | --- | ---: | ---: | ---: | --- | --- | --- |
 | `@flighthq/animation` | 13 | 11 | 144 | dedicated | none | 12 / 1 |
-| `@flighthq/timeline` | 3 | 1 | 63 | none | none | 3 / 0 |
+| `@flighthq/timeline` | 3 | 1 | 63 | dedicated | none | 3 / 0 |
 | `@flighthq/tween` | 10 | 7 | 121 | none | none | 7 / 3 |
-| `@flighthq/spring` | 6 | 4 | 45 | none | none | 6 / 0 |
+| `@flighthq/spring` | 6 | 4 | 45 | dedicated | none | 6 / 0 |
 | `@flighthq/easing` | 23 | 22 | 165 | none | none | 22 / 1 |
-| `@flighthq/velocity` | 5 | 3 | 58 | none | none | 4 / 1 |
+| `@flighthq/velocity` | 5 | 3 | 58 | dedicated | none | 4 / 1 |
 | `@flighthq/motionpath` | 3 | 1 | 29 | dedicated | none | 3 / 0 |
 | `@flighthq/clock` | 4 | 2 | 37 | dedicated | none | 4 / 0 |
 | `@flighthq/movieclip` | 5 | 3 | 60 | dedicated | none | 4 / 1 |
@@ -157,7 +157,12 @@ Upstream carries per-package records at `flight/agents/packages/timeline/`: `sta
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+`flight_cpp.generated_timeline` (dedicated) -- `tests/generated_timeline_test.cpp`, ported from
+`timeline.test.ts`: defaults, labels, seeking and clamping, play and stop, the update return value and frame
+accounting (frameRate-null stepping, timed advance, multi-frame skip, loop and once), the lifecycle signals, and the
+frame-script registry. Realized frames are observed through onEnterFrame, which fires for every realized frame. The
+package's own module is also reached incidentally by `flight_cpp.generated_movieclip`, whose clip is a timeline
+target.
 
 ### Local generation status
 
@@ -220,7 +225,9 @@ Upstream carries per-package records at `flight/agents/packages/spring/`: `statu
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+`flight_cpp.generated_spring` (dedicated) -- `tests/generated_spring_test.cpp`, ported from the package's own tests:
+the analytic damped-harmonic step, settle detection, the angle seam, the vector springs matching the scalar solver axis
+by axis, and the config constructors.
 
 ### Local generation status
 
@@ -298,7 +305,11 @@ Upstream carries per-package records at `flight/agents/packages/velocity/`: `sta
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+`flight_cpp.generated_velocity` (dedicated) -- `tests/generated_velocity_test.cpp`, ported from `velocityField.test.ts`
+and `velocitySample.test.ts`: the vector helpers and their out-aliasing, the per-frame field with identity-keyed
+samples, explicit contribution and suppression, staleness, the explanation query, and affine reprojection of a sample.
+`contributeTransformVelocity` is emitted as a template over `NodeOf<Traits>`, so driving it needs a native node the
+test does not fabricate.
 
 ### Local generation status
 
