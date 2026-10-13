@@ -16,8 +16,10 @@
 // erased-value-stringification.md and compiler-interface-heritage-owner-widening.md requests. This
 // target does not counterfeit either missing behavior with a test-only implementation.
 //
-// MUTATION SENSITIVITY: recorded after the baseline test is committed and the generated header is
-// exercised with reversible mutations.
+// MUTATION SENSITIVITY, measured 2026-10-12 from a clean committed baseline and then restored:
+//   * replacing cloneImageResource's borrowed source with an empty carrier fails the source-identity check;
+//   * changing isImageResourceEmpty's width-or-height condition to require both dimensions fails the
+//     one-zero-dimension bounds check.
 
 namespace {
 
