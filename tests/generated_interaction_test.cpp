@@ -1,12 +1,53 @@
 #include <flight/interaction/node_interaction_state.hpp>
+#include <flight/interaction/spatial_query.hpp>
 
 #include <iostream>
+
+// Mutation evidence (2026-10-13): the focused assertions killed replacing the
+// caller output with a fresh array and inverting the circle disabled-root guard.
 
 namespace {
 
 bool check(bool condition, const char* message) {
   if (!condition) std::cerr << message << '\n';
   return condition;
+}
+
+flight::types::Node2D make_node2d(bool enabled) {
+  return flight::make_structural_ref<flight::types::Node2D::schema_type>(
+      flight::row_field<flight::RowKey<"enabled">>(enabled),
+      flight::row_field<flight::RowKey<"kind">>(flight::String("DisplayObject")),
+      flight::row_field<flight::RowKey<"name">>(std::optional<flight::String>{}),
+      flight::row_field<flight::RowKey<"alpha">>(1.0),
+      flight::row_field<flight::RowKey<"visible">>(true),
+      flight::row_field<flight::RowKey<"blendMode">>(std::optional<flight::String>{}),
+      flight::row_field<flight::RowKey<"clip">>(
+          std::optional<flight::Ref<flight::types::ClipRegion>>{}),
+      flight::row_field<flight::RowKey<"material">>(
+          std::optional<flight::Ref<flight::types::Material2D>>{}),
+      flight::row_field<flight::RowKey<"materialData">>(
+          std::optional<flight::Ref<flight::types::MaterialData>>{}),
+      flight::row_field<flight::RowKey<"pivotX">>(0.0),
+      flight::row_field<flight::RowKey<"pivotY">>(0.0),
+      flight::row_field<flight::RowKey<"rotation">>(0.0),
+      flight::row_field<flight::RowKey<"scaleX">>(1.0),
+      flight::row_field<flight::RowKey<"scaleY">>(1.0),
+      flight::row_field<flight::RowKey<"skewX">>(0.0),
+      flight::row_field<flight::RowKey<"skewY">>(0.0),
+      flight::row_field<flight::RowKey<"x">>(0.0),
+      flight::row_field<flight::RowKey<"y">>(0.0));
+}
+
+auto rectangle_view(double x, double y, double width, double height) {
+  auto rectangle = flight::make_ref<flight::types::Rectangle>();
+  rectangle->x = x;
+  rectangle->y = y;
+  rectangle->width = width;
+  rectangle->height = height;
+  auto writable = flight::StructuralRef<flight::RowWritable<
+      flight::RowOf<flight::Ref<flight::types::Rectangle>>>>(rectangle);
+  return flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<
+      flight::RowOf<flight::Ref<flight::types::Rectangle>>>>>(writable);
 }
 
 } // namespace
@@ -83,6 +124,56 @@ int main() {
              "cursor clear did not restore absence") ||
       !check(!flight::interaction::get_node_hit_area(node).has_value(),
              "hit-area clear did not restore absence")) {
+    return 1;
+  }
+
+  const auto disabled = make_node2d(false);
+  const auto query_rectangle = rectangle_view(0.0, 0.0, 50.0, 50.0);
+  flight::Array<flight::types::Node2D> seeded{disabled};
+  const auto seeded_identity = seeded.identity();
+  const auto disabled_rectangle_result = flight::interaction::hit_test_area_query(
+      disabled, query_rectangle, seeded);
+  const auto disabled_circle_result = flight::interaction::hit_test_area_query_circle(
+      disabled, 20.0, 20.0, 30.0);
+  if (!check(disabled_rectangle_result.identity() == seeded_identity &&
+                 disabled_rectangle_result.size() == 1 &&
+                 disabled_rectangle_result[0] == disabled,
+             "disabled spatial query did not preserve the caller output") ||
+      !check(disabled_circle_result.empty(),
+             "disabled circle query did not return an empty default output")) {
+    return 1;
+  }
+
+  const auto enabled = make_node2d(true);
+  flight::Array<flight::types::Node2D> untouched{disabled};
+  const auto untouched_identity = untouched.identity();
+  bool rectangle_failed_loudly = false;
+  bool circle_failed_loudly = false;
+  try {
+    static_cast<void>(flight::interaction::hit_test_area_query(
+        enabled, query_rectangle, untouched));
+  } catch (const flight::Error& error) {
+    rectangle_failed_loudly =
+        error.message() == flight::String(
+            "World bounds require the unavailable checked HasBoundsRectangleRuntime owner");
+  }
+  try {
+    static_cast<void>(flight::interaction::hit_test_area_query_circle(
+        enabled, 20.0, 20.0, 30.0));
+  } catch (const flight::Error& error) {
+    circle_failed_loudly =
+        error.message() == flight::String(
+            "World bounds require the unavailable checked HasBoundsRectangleRuntime owner");
+  }
+  if (!check(rectangle_failed_loudly && circle_failed_loudly,
+             "enabled spatial queries did not expose the exact bounds-owner gap") ||
+      !check(untouched.identity() == untouched_identity && untouched.size() == 1 &&
+                 untouched[0] == disabled,
+             "failed spatial query mutated the caller output") ||
+      !check(flight::row_get<flight::RowKey<"enabled">>(enabled) &&
+                 flight::row_get<flight::RowKey<"x">>(query_rectangle) == 0.0 &&
+                 flight::row_get<flight::RowKey<"width">>(query_rectangle) == 50.0,
+             "failed spatial query mutated its inputs")) {
     return 1;
   }
 

@@ -10,6 +10,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/node.hpp>
+
+#include <flight/types/entity.hpp>
+
+namespace flight::types { struct Node2DTraits; }
+namespace flight::types { struct Rectangle; }
+namespace flight::types { template <typename Traits> struct Node; }
+namespace flight::types { template <typename Traits> struct NodeRuntime; }
+
 #include <flight/geometry/rectangle.hpp>
 #include <flight/node/bounds_rectangle.hpp>
 #include <flight/node/bounds_rectangle_access.hpp>
@@ -17,6 +26,35 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/contract.hpp>
 
 namespace flight::interaction {
+
+using flight::types::NodeRuntime;
+using flight::types::entity_runtime_key;
+
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_INTERACTION_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_2C509F673D62DD2B
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_INTERACTION_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_2C509F673D62DD2B
+struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_2c509f673d62dd2b : public flight::ReferenceEnabled {
+  std::optional<flight::Ref<flight::types::Node2DData>> data;
+  bool enabled;
+  flight::String kind;
+  std::optional<flight::String> name;
+  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>> entity_runtime_key;
+  double alpha;
+  bool visible;
+  std::optional<flight::String> blend_mode;
+  std::optional<flight::Ref<flight::types::ClipRegion>> clip;
+  std::optional<flight::Ref<flight::types::Material>> material;
+  std::optional<flight::Ref<flight::types::MaterialData>> material_data;
+  double pivot_x;
+  double pivot_y;
+  double rotation;
+  double scale_x;
+  double scale_y;
+  double skew_x;
+  double skew_y;
+  double x;
+  double y;
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_INTERACTION_DATA_ENABLED_KIND_NAME_ENTITY_RUNTIME_KEY_ALPHA_VISIBLE_BLEND_MODE_CLIP_MATERIAL_MATERIAL_DATA_PIVOT_X_PIVOT_Y_ROTATION_SCALE_X_SCALE_Y_SKEW_X_SKEW_Y_X_Y_2C509F673D62DD2B
 
 inline flight::Array<flight::types::Node2D> hit_test_area_query(flight::types::Node2D root, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Rectangle>>>> rect, std::optional<flight::Array<flight::types::Node2D>> out = std::nullopt) {
   out = out.value_or(flight::Array<flight::types::Node2D>{});
