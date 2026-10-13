@@ -503,6 +503,33 @@ class Any final {
       value_;
 };
 
+// `String(value)`: the explicit conversion, over the domain the runtime can answer without inventing a
+// ToPrimitive -- undefined, null, booleans, numbers (as Number.prototype.toString renders them), strings,
+// and symbols, which String() renders as `Symbol(description)` where implicit conversion would throw. An
+// object, function or external value throws TypeError: the runtime has no toString to consult for them,
+// and "[object Object]" would be an answer it made up.
+[[nodiscard]] inline String to_string(const Any& value) {
+  switch (value.kind()) {
+    case AnyKind::undefined:
+      return String("undefined");
+    case AnyKind::null:
+      return String("null");
+    case AnyKind::boolean:
+      return String(value.as_boolean() ? "true" : "false");
+    case AnyKind::number:
+      return number_to_string(value.as_number());
+    case AnyKind::string:
+      return value.as_string();
+    case AnyKind::symbol:
+      return String("Symbol(") + value.as_symbol().key() + String(")");
+    case AnyKind::object:
+    case AnyKind::function:
+    case AnyKind::external:
+      break;
+  }
+  throw TypeError(String("String(value) of a non-primitive flight::Any: the runtime has no ToPrimitive"));
+}
+
 // The ECMAScript abstract relational comparison, for the primitive domain it is defined over
 // without a prototype chain. Two numbers where either is NaN are `unordered`, which is exactly
 // what makes every relational operator on them false.

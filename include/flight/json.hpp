@@ -24,6 +24,9 @@
 
 namespace flight {
 
+template <typename Key, typename Value>
+class Record;
+
 class JsonArray;
 class JsonObject;
 
@@ -195,6 +198,17 @@ void append_json_row(std::string& output, const Owner& owner, std::size_t indent
 template <typename Erased>
 void append_json_erased(std::string& output, const Erased& value, std::size_t indentation, std::size_t depth);
 
+template <typename Record>
+void append_json_record(std::string& output, const Record& record, std::size_t indentation, std::size_t depth);
+
+// flight::Record is recognized by its template, not by shape: a Map has the same entry iteration and
+// JSON.stringify writes a Map as `{}`, so only a Record may take the object path. Declared rather than
+// included, so this header keeps its dependency-free footprint.
+template <typename Type>
+inline constexpr bool is_json_record = false;
+template <typename Key, typename Value>
+inline constexpr bool is_json_record<Record<Key, Value>> = true;
+
 template <typename Type>
 concept json_complete_type = requires { sizeof(Type); };
 
@@ -296,6 +310,8 @@ void append_json_value(std::string& output, const Value& value, std::size_t inde
   } else if constexpr (requires { typename Type::element_type; value.get(); }) {
     if (value) append_json_value(output, *value, indentation, depth);
     else output.append("null");
+  } else if constexpr (is_json_record<Type>) {
+    append_json_record(output, value, indentation, depth);
   } else if constexpr (requires { value.shared_owner(); }) {
     append_json_row(output, value.shared_owner(), indentation, depth);
   } else if constexpr (requires {
@@ -396,8 +412,72 @@ void append_json_erased(std::string& output, const Erased& value, std::size_t in
       }
       output.append("{}");
       return;
+    case std::remove_cvref_t<decltype(value.kind())>::external:
+      // A Record value travels in an Any as an external -- the runtime's carrier for one -- and is the
+      // object JavaScript would serialize. Any other external has no JSON form.
+      if constexpr (json_complete_type<Record<String, Erased>>) {
+        if (const auto* record = value.template external_if<Record<String, Erased>>()) {
+          append_json_record(output, *record, indentation, depth);
+          return;
+        }
+      }
+      output.append("null");
+      return;
     default: output.append("null"); return;
   }
+}
+
+// Whether JSON.stringify leaves an object property out: a value that is undefined, a function or a symbol.
+template <typename Value>
+[[nodiscard]] bool json_omits_property(const Value& value) {
+  using Type = std::remove_cvref_t<Value>;
+  if constexpr (std::same_as<Type, Undefined>) {
+    return true;
+  } else if constexpr (requires { value.type_of(); value.is_undefined(); }) {
+    const auto type = value.type_of();
+    return value.is_undefined() || type == String("function") || type == String("symbol");
+  } else if constexpr (requires { value.has_value(); *value; } && !requires { value.index(); }) {
+    return !value.has_value();
+  } else {
+    return false;
+  }
+}
+
+// A flight::Record is a JavaScript object: its own keys in the record's order -- which is already the order
+// JavaScript enumerates, integer-like keys first -- each written as a string. A number key is written as its
+// string form; a symbol-keyed property is skipped, as JSON.stringify skips symbol keys; a property whose value is
+// undefined, a function or a symbol is omitted.
+template <typename Record>
+void append_json_record(std::string& output, const Record& record, std::size_t indentation, std::size_t depth) {
+  output.push_back('{');
+  bool first = true;
+  for (const auto& [key, value] : record) {
+    using Key = std::remove_cvref_t<decltype(key)>;
+    String name;
+    if constexpr (std::same_as<Key, String>) {
+      name = key;
+    } else if constexpr (std::floating_point<Key> || std::integral<Key>) {
+      name = String::from_number(static_cast<double>(key));
+    } else {
+      continue;
+    }
+    if (json_omits_property(value)) continue;
+    if (!first) output.push_back(',');
+    if (indentation > 0) {
+      output.push_back('\n');
+      append_json_indent(output, depth + 1, indentation);
+    }
+    append_json_string(output, name);
+    output.push_back(':');
+    if (indentation > 0) output.push_back(' ');
+    append_json_value(output, value, indentation, depth + 1);
+    first = false;
+  }
+  if (!first && indentation > 0) {
+    output.push_back('\n');
+    append_json_indent(output, depth, indentation);
+  }
+  output.push_back('}');
 }
 
 class JsonParser {

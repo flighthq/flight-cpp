@@ -838,6 +838,55 @@ void test_font_face() {
   static_cast<void>(previous_executor);
 }
 
+void test_json_record() {
+  // JSON.stringify on a Record is JSON.stringify on an object: own keys in JavaScript order, each value
+  // written, and a property whose value is undefined, a function or a symbol left out.
+  flight::Record<flight::String, flight::Any> record;
+  record.set(flight::String("b"), flight::Any(2.0));
+  record.set(flight::String("a"), flight::Any(flight::String("x")));
+  record.set(flight::String("1"), flight::Any(true));
+  record.set(flight::String("gone"), flight::Any());
+  record.set(flight::String("fn"), flight::Any::function([] {}));
+  record.set(flight::String("sym"), flight::Any(flight::Symbol(flight::String("s"))));
+  record.set(flight::String("none"), flight::Any(flight::null));
+  check(flight::Json::stringify(record) == flight::String("{\"1\":true,\"b\":2,\"a\":\"x\",\"none\":null}"),
+        "a Record serializes as an object: integer-like keys first, undefined/function/symbol values omitted");
+  flight::Record<flight::String, flight::Any> inner{{flight::String("k"), flight::Any(1.0)}};
+  flight::Record<flight::String, flight::Any> outer{{flight::String("nested"), flight::Any::external(inner)}};
+  check(flight::Json::stringify(outer) == flight::String("{\"nested\":{\"k\":1}}"),
+        "a Record carried in an Any as an external serializes as the object it is");
+  flight::Record<double, flight::String> numeric{{2.0, flight::String("two")}, {1.5, flight::String("x")}};
+  check(flight::Json::stringify(numeric) == flight::String("{\"2\":\"two\",\"1.5\":\"x\"}"), "number keys are written as their string form");
+  check(flight::Json::stringify(record, nullptr, 2.0).to_utf8().find("\n  \"1\": true") != std::string::npos, "indentation applies");
+  flight::Map<flight::String, double> map;
+  map.set(flight::String("k"), 1.0);
+  check(flight::Json::stringify(map) == flight::String("{}"), "a Map still serializes as {}, as in JavaScript");
+}
+
+void test_any_to_string() {
+  // String(value) over the primitive domain, as JavaScript renders each.
+  check(flight::to_string(flight::Any()) == flight::String("undefined") && flight::to_string(flight::Any(flight::null)) == flight::String("null"),
+        "String(undefined) and String(null)");
+  check(flight::to_string(flight::Any(true)) == flight::String("true") && flight::to_string(flight::Any(false)) == flight::String("false"),
+        "String(true) and String(false)");
+  check(flight::to_string(flight::Any(42.0)) == flight::String("42") && flight::to_string(flight::Any(-0.5)) == flight::String("-0.5") &&
+            flight::to_string(flight::Any(std::numeric_limits<double>::quiet_NaN())) == flight::String("NaN") &&
+            flight::to_string(flight::Any(-std::numeric_limits<double>::infinity())) == flight::String("-Infinity") &&
+            flight::to_string(flight::Any(-0.0)) == flight::String("0"),
+        "numbers render as Number.prototype.toString does, -0 as 0");
+  check(flight::to_string(flight::Any(flight::String("x y"))) == flight::String("x y"), "a string renders as itself");
+  check(flight::to_string(flight::Any(flight::Symbol(flight::String("tag")))) == flight::String("Symbol(tag)") &&
+            flight::to_string(flight::Any(flight::Symbol())) == flight::String("Symbol()"),
+        "String(symbol) renders the description, where implicit conversion would throw");
+  bool threw = false;
+  try {
+    static_cast<void>(flight::to_string(flight::Any::object(flight::make_ref<TestReference>(TestReference{.value = 1}))));
+  } catch (const flight::TypeError&) {
+    threw = true;
+  }
+  check(threw, "an object has no ToPrimitive here, so String(object) throws rather than inventing text");
+}
+
 void test_erased_ref() {
   // The entity binding slot: `attachEntityBinding` stores an arbitrary object, and
   // `getEntityBindingAs<Type>` reads it back at one type or not at all.
@@ -4011,6 +4060,8 @@ int main() {
   test_audio_buffer();
   test_binary_data();
   test_base64();
+  test_json_record();
+  test_any_to_string();
   test_erased_ref();
   test_ambient_statics();
   test_self_reference();
