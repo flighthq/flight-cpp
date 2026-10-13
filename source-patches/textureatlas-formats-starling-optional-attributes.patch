@@ -1,0 +1,31 @@
+diff --git a/packages/textureatlas-formats/src/textureAtlasStarlingParse.ts b/packages/textureatlas-formats/src/textureAtlasStarlingParse.ts
+--- a/packages/textureatlas-formats/src/textureAtlasStarlingParse.ts
++++ b/packages/textureatlas-formats/src/textureAtlasStarlingParse.ts
+@@ -24,7 +24,8 @@ export function parseTextureAtlasStarlingXml(xml: string, atlas: TextureAtlas):
+   for (const el of atlasEl.children) {
+     if (el.name !== 'SubTexture') continue;
+     const a = el.attributes;
+-    if (!a['name']) continue;
++    const name = a['name'] ?? '';
++    if (!name) continue;
+     const x = parseFloat(a['x'] ?? '0');
+     const y = parseFloat(a['y'] ?? '0');
+     const width = parseFloat(a['width'] ?? '0');
+@@ -32,7 +33,7 @@ export function parseTextureAtlasStarlingXml(xml: string, atlas: TextureAtlas):
+     const frameWidth = a['frameWidth'] !== undefined ? parseFloat(a['frameWidth']) : null;
+     const frameHeight = a['frameHeight'] !== undefined ? parseFloat(a['frameHeight']) : null;
+     const trimmed = frameWidth !== null || a['frameX'] !== undefined;
+-    const rotated = a['rotated'] === 'true';
++    const rotated = (a['rotated'] ?? 'false') === 'true';
+     // Pivot in Starling is in source (original frame) pixel coordinates.
+     const pivotX = a['pivotX'] !== undefined ? parseFloat(a['pivotX']) : null;
+     const pivotY = a['pivotY'] !== undefined ? parseFloat(a['pivotY']) : null;
+@@ -40,7 +41,7 @@ export function parseTextureAtlasStarlingXml(xml: string, atlas: TextureAtlas):
+       createTextureAtlasRegion({
+         height,
+         id,
+-        name: a['name'],
++        name,
+         originalHeight: trimmed ? (frameHeight ?? (rotated ? width : height)) : null,
+         originalWidth: trimmed ? (frameWidth ?? (rotated ? height : width)) : null,
+         pivotX,

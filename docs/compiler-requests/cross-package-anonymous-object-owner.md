@@ -108,6 +108,12 @@ same structural suffixes and byte-identical fields, but the caller owners live i
 `flight::spritesheet`. Clang consequently rejects those calls before any parser can run. This reach
 needs the same identity-preserving canonical-owner behavior as the four-component mesh example.
 
+`@flighthq/textureatlas-formats` supplies a third direct reach. Its Aseprite, libGDX, Starling, and
+TexturePacker parsers pass fresh region option objects to `createTextureAtlasRegion` from
+`@flighthq/textureatlas`. The caller and callee declarations are byte-identical and share the same
+structural suffix, but their package namespaces make them unrelated nominal C++ owners. The parser
+calls therefore require the same canonical, identity-preserving owner rule.
+
 ## Carrying workaround
 
 The emission repair `skeleton3d-mesh-attribute-four-component-owner` aliases only the caller's

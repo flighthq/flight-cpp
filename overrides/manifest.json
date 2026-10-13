@@ -2167,6 +2167,38 @@
       "authoredOn": "2026-10-13"
     },
     {
+      "id": "textureatlas-formats-aseprite-checked-json",
+      "path": "flight/textureatlas_formats/texture_atlas_aseprite_parse.hpp",
+      "package": "@flighthq/textureatlas-formats",
+      "status": "complete",
+      "supplies": "packages/textureatlas-formats/src/textureAtlasAsepriteParse.ts",
+      "derivedFrom": "d173926995b071da3a8e605b108e8623a30af6ab1eefdea86f499f4a003f2eba",
+      "reason": "The emitted public JSON parser applies static_cast<TextureAtlasAsepriteDocument> to JsonValue. The runtime exposes no unchecked conversion from an erased JSON tree to that nominal schema union, so the otherwise complete header cannot compile.",
+      "change": "Keeps the repaired emitted document parser verbatim and replaces only the invalid string-entry body with checked JsonValue object and array traversal shared by the two JSON atlas formats.",
+      "equivalence": "Hash and array frame order, sequential ids, packed geometry, trim offsets and original sizes, clockwise rotation, null pivots, image metadata and numeric or string scale are preserved. Malformed JSON leaves the atlas unchanged; malformed frames are skipped while readable siblings survive, matching the source's never-throw policy.",
+      "whyNotAPatchOrRepair": "The TypeScript assertion is ordinary and correct, but a declaration-only repair cannot turn JsonValue into a checked nominal schema. Rewriting portable TypeScript around the native JsonValue API would encode C++ runtime representation into the source.",
+      "unblocks": "The Aseprite parser and package aggregate headers compile and both parsed-document and public JSON paths can be exercised natively.",
+      "remaining": "None in textureAtlasAsepriteParse.ts at this pin; registry-backed package detection remains a separately owned frozen-row residual.",
+      "expires": "when JSON assertions to declared schema unions lower through checked recursive materialization rather than static_cast.",
+      "authoredOn": "2026-10-13"
+    },
+    {
+      "id": "textureatlas-formats-texture-packer-checked-json",
+      "path": "flight/textureatlas_formats/texture_packer_atlas_parse.hpp",
+      "package": "@flighthq/textureatlas-formats",
+      "status": "complete",
+      "supplies": "packages/textureatlas-formats/src/texturePackerAtlasParse.ts",
+      "derivedFrom": "67db0de1ff422535feb6bdad8bfa7c3f3f20ab6477f9213c661cb6ae939b6d15",
+      "reason": "The emitted public JSON parser applies static_cast<TexturePackerAtlasDocument> to JsonValue. The runtime exposes no unchecked conversion from an erased JSON tree to that nominal schema union, so the otherwise complete header cannot compile.",
+      "change": "Keeps the repaired emitted document parser verbatim and replaces only the invalid string-entry body with checked JsonValue traversal, including the optional path-prefix policy.",
+      "equivalence": "Hash and array order, ids, names and prefix stripping, packed geometry, trim metadata, pivots, clockwise rotation, page image, dimensions and scale are preserved. Malformed JSON is non-throwing and unchanged; malformed frames are skipped without dropping readable siblings.",
+      "whyNotAPatchOrRepair": "The portable source's assertion is correct, while a text-only repair cannot supply checked recursive conversion. The shared native helper is explicit about every accepted JSON kind and never fabricates a nominal document owner.",
+      "unblocks": "The TexturePacker parser and package aggregate headers compile and its document, JSON, option, and failure paths can be exercised natively.",
+      "remaining": "None in texturePackerAtlasParse.ts at this pin; registry-backed package detection remains a separately owned frozen-row residual.",
+      "expires": "when JSON assertions to declared schema unions lower through checked recursive materialization rather than static_cast.",
+      "authoredOn": "2026-10-13"
+    },
+    {
       "id": "textureatlas-region-nullable-partial-read",
       "path": "flight/textureatlas/texture_atlas_region.hpp",
       "package": "@flighthq/textureatlas",

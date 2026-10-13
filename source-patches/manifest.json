@@ -3376,6 +3376,23 @@
       "appliedOn": "2026-10-12"
     },
     {
+      "id": "textureatlas-formats-starling-optional-attributes",
+      "dependency": "flight",
+      "patch": "textureatlas-formats-starling-optional-attributes.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/textureatlas-formats/src/textureAtlasStarlingParse.ts",
+      "package": "@flighthq/textureatlas-formats",
+      "answers": "diagnostic",
+      "refusal": "absent Starling name and rotated Record keys are emitted as unguarded optional.value() reads, changing JavaScript skip/false behavior into bad_optional_access",
+      "rewrite": "Binds name through an empty-string nullish fallback and rotated through a false-string nullish fallback before using the same guard, comparison, and region construction.",
+      "equivalence": "An absent or empty name remains falsy and skips the same element. An absent rotated attribute compares unequal to true exactly as undefined does; every present string, parsed field, region id, and iteration order is unchanged.",
+      "verification": "Scoped textureatlas-formats regeneration compiles the Starling header; native tests parse ordinary unrotated entries without throwing, skip unnamed entries, and preserve rotated fallback dimensions.",
+      "whyNotUpstreamFirst": "Both fallbacks are target-neutral and make the source's already-defined absence results explicit while the emitter cannot lower direct Record-key truthiness or equality without forcing optional presence.",
+      "unblocks": "Ordinary Starling files whose unrotated entries omit the optional rotated attribute execute without throwing.",
+      "expires": "when equality and truthiness over an absent Record key consume the optional carrier without an unguarded value read.",
+      "appliedOn": "2026-10-13"
+    },
+    {
       "id": "compiler-indexed-element-presence-test",
       "dependency": "flight-compiler",
       "patch": "compiler-indexed-element-presence-test.patch",

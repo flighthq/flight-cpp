@@ -57,15 +57,7 @@ struct h_w_f3b7a8658ce65b31 : public flight::ReferenceEnabled {
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTUREATLAS_FORMATS_APP_FORMAT_FRAME_TAGS_IMAGE_SCALE_SIZE_VERSION_D9300326D86029C2
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTUREATLAS_FORMATS_APP_FORMAT_FRAME_TAGS_IMAGE_SCALE_SIZE_VERSION_D9300326D86029C2
-struct app_format_frame_tags_image_scale_size_version_d9300326d86029c2 : public flight::ReferenceEnabled {
-  flight::String app;
-  flight::String format;
-  std::optional<flight::Array<flight::Ref<direction_from_name_to_color_e4606dabfca58bc7>>> frame_tags;
-  flight::String image;
-  std::variant<double, flight::String> scale;
-  flight::Ref<h_w_f3b7a8658ce65b31> size;
-  flight::String version;
-};
+using app_format_frame_tags_image_scale_size_version_d9300326d86029c2 = flight::types::TextureAtlasAsepriteMeta;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTUREATLAS_FORMATS_APP_FORMAT_FRAME_TAGS_IMAGE_SCALE_SIZE_VERSION_D9300326D86029C2
 
 inline void apply_aseprite_page_meta(flight::Ref<flight::types::TextureAtlas> atlas, flight::types::TextureAtlasAsepriteDocument doc) {
@@ -82,23 +74,7 @@ inline void apply_aseprite_page_meta(flight::Ref<flight::types::TextureAtlas> at
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTUREATLAS_FORMATS_HEIGHT_ID_NAME_ORIGINAL_HEIGHT_ORIGINAL_WIDTH_PAGE_NAME_PIVOT_X_PIVOT_Y_ROTATION_SOURCE_X_SOURCE_Y_TRIMMED_X_Y_WIDTH_CC6B37D497B99A10
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTUREATLAS_FORMATS_HEIGHT_ID_NAME_ORIGINAL_HEIGHT_ORIGINAL_WIDTH_PAGE_NAME_PIVOT_X_PIVOT_Y_ROTATION_SOURCE_X_SOURCE_Y_TRIMMED_X_Y_WIDTH_CC6B37D497B99A10
-struct height_id_name_original_height_original_width_page_name_pivot_x_pivot_y_rotation_source_x_source_y_trimmed_x_y_width_cc6b37d497b99a10 : public flight::ReferenceEnabled {
-  std::optional<double> height;
-  std::optional<double> id;
-  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<double, flight::Null, flight::Undefined> original_height = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<double, flight::Null, flight::Undefined> original_width = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::String, flight::Null, flight::Undefined> page_name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<double, flight::Null, flight::Undefined> pivot_x = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<double, flight::Null, flight::Undefined> pivot_y = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::optional<flight::types::TextureAtlasRotation> rotation;
-  std::optional<double> source_x;
-  std::optional<double> source_y;
-  std::optional<bool> trimmed;
-  std::optional<double> x;
-  std::optional<double> y;
-  std::optional<double> width;
-};
+using height_id_name_original_height_original_width_page_name_pivot_x_pivot_y_rotation_source_x_source_y_trimmed_x_y_width_cc6b37d497b99a10 = flight::textureatlas::height_id_name_original_height_original_width_page_name_pivot_x_pivot_y_rotation_source_x_source_y_trimmed_x_y_width_cc6b37d497b99a10;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTUREATLAS_FORMATS_HEIGHT_ID_NAME_ORIGINAL_HEIGHT_ORIGINAL_WIDTH_PAGE_NAME_PIVOT_X_PIVOT_Y_ROTATION_SOURCE_X_SOURCE_Y_TRIMMED_X_Y_WIDTH_CC6B37D497B99A10
 
 inline void apply_aseprite_frame(flight::Ref<flight::types::TextureAtlas> atlas, flight::String name, std::variant<flight::Ref<flight::types::TextureAtlasAsepriteArrayFrame>, flight::Ref<flight::types::TextureAtlasAsepriteBaseFrame>> entry) {
@@ -124,7 +100,7 @@ inline flight::Ref<flight::types::TextureAtlas> parse_texture_atlas_aseprite_doc
     for (auto array_pattern_value : flight::object_entries(std::get<1>(doc)->frames)) {
       const flight::String frame_name = std::get<0>(array_pattern_value);
       auto entry_2 = std::get<1>(array_pattern_value);
-      apply_aseprite_frame(atlas, frame_name, std::variant<flight::Ref<flight::types::TextureAtlasAsepriteArrayFrame>, flight::Ref<flight::types::TextureAtlasAsepriteBaseFrame>>{std::in_place_type<flight::Ref<flight::types::TextureAtlasAsepriteBaseFrame>>, ([&]() -> flight::Ref<flight::types::TextureAtlasAsepriteBaseFrame> { const auto structural_record_source = entry_2; return flight::make_ref<flight::types::TextureAtlasAsepriteBaseFrame>(flight::types::TextureAtlasAsepriteBaseFrame{.duration = structural_record_source->duration, .frame = structural_record_source->frame, .rotated = structural_record_source->rotated, .sourceSize = structural_record_source->sourceSize, .spriteSourceSize = structural_record_source->spriteSourceSize, .trimmed = structural_record_source->trimmed}); }())});
+      apply_aseprite_frame(atlas, frame_name, std::variant<flight::Ref<flight::types::TextureAtlasAsepriteArrayFrame>, flight::Ref<flight::types::TextureAtlasAsepriteBaseFrame>>{std::in_place_type<flight::Ref<flight::types::TextureAtlasAsepriteBaseFrame>>, ([&]() -> flight::Ref<flight::types::TextureAtlasAsepriteBaseFrame> { const auto structural_record_source = entry_2; return flight::make_ref<flight::types::TextureAtlasAsepriteBaseFrame>(flight::types::TextureAtlasAsepriteBaseFrame{.duration = structural_record_source->duration, .frame = structural_record_source->frame, .rotated = structural_record_source->rotated, .source_size = structural_record_source->source_size, .sprite_source_size = structural_record_source->sprite_source_size, .trimmed = structural_record_source->trimmed}); }())});
     }
   }
   return atlas;

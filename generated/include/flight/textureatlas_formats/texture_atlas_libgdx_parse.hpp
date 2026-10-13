@@ -27,28 +27,12 @@ namespace flight::textureatlas_formats {
 inline flight::String read_atlas_value(flight::Array<flight::String> values, double index, std::optional<flight::String> fallback = std::nullopt) {
   fallback = fallback.value_or(flight::String(""));
   const std::optional<flight::String> value = values.get(index);
-  return (!value.has_value() ? fallback.value() : value.value());
+  return (([&]() { const auto& presence_operand = value; return !presence_operand.has_value(); }()) ? fallback.value() : value.value());
 }
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTUREATLAS_FORMATS_HEIGHT_ID_NAME_ORIGINAL_HEIGHT_ORIGINAL_WIDTH_PAGE_NAME_PIVOT_X_PIVOT_Y_ROTATION_SOURCE_X_SOURCE_Y_TRIMMED_X_Y_WIDTH_CC6B37D497B99A10
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTUREATLAS_FORMATS_HEIGHT_ID_NAME_ORIGINAL_HEIGHT_ORIGINAL_WIDTH_PAGE_NAME_PIVOT_X_PIVOT_Y_ROTATION_SOURCE_X_SOURCE_Y_TRIMMED_X_Y_WIDTH_CC6B37D497B99A10
-struct height_id_name_original_height_original_width_page_name_pivot_x_pivot_y_rotation_source_x_source_y_trimmed_x_y_width_cc6b37d497b99a10 : public flight::ReferenceEnabled {
-  std::optional<double> height;
-  std::optional<double> id;
-  std::variant<flight::String, flight::Null, flight::Undefined> name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<double, flight::Null, flight::Undefined> original_height = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<double, flight::Null, flight::Undefined> original_width = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<flight::String, flight::Null, flight::Undefined> page_name = std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<double, flight::Null, flight::Undefined> pivot_x = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::variant<double, flight::Null, flight::Undefined> pivot_y = std::variant<double, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::optional<flight::types::TextureAtlasRotation> rotation;
-  std::optional<double> source_x;
-  std::optional<double> source_y;
-  std::optional<bool> trimmed;
-  std::optional<double> x;
-  std::optional<double> y;
-  std::optional<double> width;
-};
+using height_id_name_original_height_original_width_page_name_pivot_x_pivot_y_rotation_source_x_source_y_trimmed_x_y_width_cc6b37d497b99a10 = flight::textureatlas::height_id_name_original_height_original_width_page_name_pivot_x_pivot_y_rotation_source_x_source_y_trimmed_x_y_width_cc6b37d497b99a10;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_TEXTUREATLAS_FORMATS_HEIGHT_ID_NAME_ORIGINAL_HEIGHT_ORIGINAL_WIDTH_PAGE_NAME_PIVOT_X_PIVOT_Y_ROTATION_SOURCE_X_SOURCE_Y_TRIMMED_X_Y_WIDTH_CC6B37D497B99A10
 
 inline flight::Ref<flight::types::TextureAtlas> parse_texture_atlas_libgdx_atlas(flight::String text, flight::Ref<flight::types::TextureAtlas> atlas) {
