@@ -37,8 +37,9 @@ Both shapes of the kind reproduce it: the single `symbol` form and the `symbols`
 
 ## Required behavior
 
-A symbol counts as used only where it appears outside comment lines. A repair whose symbol appears only in
-comments matches nothing, and a full run then reports it as obsolete. Two things stay unchanged:
+A symbol counts as used only where it appears outside the generated provenance comment. A repair whose symbol
+appears only there matches nothing, and a full run then reports it as obsolete. (Quotation comments are a separate
+question; see the last section.) Two things stay unchanged:
 - a repair that declares `requiredText`, which deliberately witnesses a `NOT GENERATED` marker;
 - every other repair kind.
 
