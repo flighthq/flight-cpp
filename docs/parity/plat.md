@@ -98,7 +98,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/keyboard` | 3 | 1 | 23 | dedicated | none | 3 / 0 |
 | `@flighthq/interaction` | 19 | 17 | 212 | dedicated | none | 8 / 11 |
 | `@flighthq/gui` | 20 | 18 | 115 | none | none | 16 / 4 |
-| `@flighthq/layout` | 8 | 7 | 73 | none | none | 5 / 3 |
+| `@flighthq/layout` | 8 | 7 | 73 | dedicated | none | 5 / 3 |
 | `@flighthq/accessibility` | 3 | 1 | 6 | dedicated | none | 3 / 0 |
 | `@flighthq/audio` | 8 | 6 | 109 | none | none | 5 / 3 |
 | `@flighthq/media` | 7 | 5 | 127 | none | none | 5 / 2 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-16 of 39 packages are reached by at least one local CTest executable.
-14 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`.
+17 of 39 packages are reached by at least one local CTest executable.
+15 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`.
 
 ## `@flighthq/app`
 
@@ -731,9 +731,43 @@ Renderer-neutral anchor, flex, and grid rectangle layout over flat trees
 
 Upstream carries per-package records at `flight/agents/packages/layout/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
 
+### What compiles, and therefore what "parity" can mean here
+
+The package declares eight modules and resolves none of the three solvers. `anchorLayout`, `flexLayout` and
+`gridLayout` are refused at this pin -- object-key iteration, and two type assertions the emitter cannot lower -- and
+although partial headers are written for the refused modules, **five of the package's eight headers do not compile**:
+the three refused ones plus `contract.hpp` and `_internal_index.hpp`, which include them. Measured directly: the
+compile record reports 3 passed and 5 failed, and a spot check agrees (`layout_state.hpp`,
+`enable_layout_guards.hpp` and `resolve_layout_tree.hpp` compile; `anchor_layout.hpp` fails on
+`no matching function for call to 'is_optional_number'`, `flex_layout.hpp` on an invalid binary operand,
+`grid_layout.hpp` on an undeclared `is_track_list`). So 52 of the package's 73 upstream cases -- anchor 7, flex 30,
+grid 15 -- sit in modules that have no compilable surface at this pin, and the remaining 2 are a tree-shaking case
+about the import graph rather than runtime behavior. The 19 cases in `layoutState`, `enableLayoutGuards` and
+`resolveLayoutTree` are the whole of what can be asserted here, and they are what the test below asserts. No API is
+invented for the three solvers, and the row-member table is not broadened to reach them.
+
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_layout` — `tests/generated_layout_test.cpp` (dedicated), NEW. It ports all 19 coverable
+  upstream cases and extends them: the state's eight initialized fields and the register/unregister pair in which an
+  ABSENT resolver erases the kind rather than storing an empty one; the guard seam that turns a silent sentinel into a
+  structured warning, and its silence when resolution succeeds; the driver's two length checks running before anything
+  else (a short output buffer and a short intrinsic-size buffer each reported as their own kind, with actual and
+  required lengths); every root written as the available rectangle with a NaN or negative available size sanitized to
+  0; a child dispatched through its PARENT's resolver with the parent and child indices passed through; a self-parent
+  and a parent below the root sentinel both rejected as InvalidHierarchy; a resolver's failure kind retained with the
+  resolver kind that raised it, and charged to the CHILD for an item-style failure but to the PARENT for a container
+  one; a retained failure answering only for the node it names (or for any node when asked with a negative index) and
+  never leaking to a different node; a successful resolution clearing what a failed one retained; and the caller's
+  output array rewritten in place on a second run. Nine mutations against the emitted modules, all nine with teeth:
+  the pre-resolution clear dropped 1 failure, the output-length boundary made inclusive 35, the available-size
+  sanitizer bypassed 2, the root width written as zero 3, a self-parent allowed 1, a container-style failure charged to
+  the child 1, the retained-failure node test inverted 3, the guard call disabled 1, and unregister turned into a
+  no-op 1. A tenth is equivalent by construction and is recorded rather than counted: rewriting a loop bound from
+  `i < size` to `i <= size - 1` is the same test for every non-negative size.
+
+The remaining upstream modules are `contract.ts` and `index.ts` (lane re-exports), so the boundary above is the whole
+of the gap.
 
 ### Local generation status
 
