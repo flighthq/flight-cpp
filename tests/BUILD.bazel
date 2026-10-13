@@ -646,6 +646,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_adjustments_test",
+    srcs = ["generated_adjustments_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_surface_test",
     srcs = ["generated_surface_test.cpp"],
     size = "small",
@@ -691,6 +698,7 @@ test_suite(
     name = "generated_tests",
     tests = [
         ":generated_abc_test",
+        ":generated_adjustments_test",
         ":generated_animation_test",
         ":generated_app_render_view_test",
         ":generated_assets_test",

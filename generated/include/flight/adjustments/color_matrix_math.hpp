@@ -2,6 +2,7 @@
 #pragma once
 #include <cmath>
 #include <cstdint>
+#include <flight/array.hpp>
 #include <optional>
 #include <random>
 #include <flight/runtime.hpp>
