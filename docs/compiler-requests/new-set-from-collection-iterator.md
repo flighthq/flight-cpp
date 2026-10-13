@@ -62,3 +62,11 @@ The two SDK sources that build a Set from a Map's `keys()` behave as follows:
 - `scene2d-formats` `riveRequirements.ts:65`, `new Set(registry.handlers.keys())`, already emits in package context
   as `flight::Set<double>(registry->handlers.keys())`, because its receiver is a typed property with evidence;
 - `scene3d-formats` `awd2LightingHandler.ts:403` is in a module that is not emitted at all, for other reasons.
+
+## Carried compiler patch
+
+[`compiler-new-set-from-iterator.patch`](../../source-patches/compiler-new-set-from-iterator.patch) emits the
+single argument of a flight-cpp `new Set(...)` as itself when it is a non-optional, argument-free `values()` or
+`keys()` call on a Set, ReadonlySet, Map, ReadonlyMap or Array receiver. It then reaches the range constructor.
+`entries()` and stored iterators are not matched and stay refused. Fixtures are in `cppNewSetIterator.test.ts`.
+Native behavior matches node 22 for every matched form. No SDK row was regenerated.
