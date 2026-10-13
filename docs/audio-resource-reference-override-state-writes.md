@@ -1,8 +1,8 @@
-# The audio resource-reference override does not write its own state
+# The audio resource-reference override did not write its own state (fixed)
 
 `overrides/include/flight/audio/audio_resource_reference.hpp` supplies
-`@flighthq/audio`'s `audioResourceReference.ts`. Every write it makes to a **state** or **failure**
-member goes through `std::visit` with an `auto`-returning lambda:
+`@flighthq/audio`'s `audioResourceReference.ts`. Every write it made to a **state** or **failure**
+member went through `std::visit` with an `auto`-returning lambda:
 
 ```cpp
 (std::visit([](const auto& value) { return value->state; }, ref) = flight::types::resource_resolution_state->unresolved);
@@ -42,21 +42,40 @@ So the reference's state machine and its failure reporting are inoperative, whil
 does not depend on them (construction, byte borrowing, name lookup, the detached explanation, the
 resolve *result*) is correct.
 
+## Fixed
+
+The repair makes every accessor return an **assignable reference**, so `std::visit(...) = x` reaches the
+object. Measured after it:
+
+```
+before: state=Failed has_failure=1
+reset returned: 1
+after:  state=Unresolved has_failure=0
+```
+
+`decltype(auto)` is NOT sufficient and that is measured, not assumed: an accessor written that way
+still loses the write on this toolchain (a minimal `std::variant` probe reproduces it -- `decltype(auto)`
+leaves the member at its old value; an explicit reference return type updates it). The return type is
+therefore spelled out per member, with a comment in the override warning against "simplifying" it back.
+
+Two guards hold it: a mutation that reintroduces the value-returning accessor is caught (3 assertions for
+the state accessor, 2 for the failure accessor), and the parity suite asserts that a reset writes only the
+reference it was given -- a second, independently-created reference keeps its own state.
+
 ## Status
 
-Nine assertions in `tests/generated_audio_parity_test.cpp` are recorded BLOCKED against this: the file
-asserts the resolve *results* and the `reset` return value, and names the missing state and failure
-recording in place rather than asserting the broken values. Asserting them would certify the defect.
+Repaired, verified, and committed (`60d746a8`). The nine assertions that were recorded BLOCKED are
+restored and pass: `reset_failed_audio_resource_reference` returns a failed reference to `Unresolved`
+with no failure, a resolved reference records `Resolved`, an unreachable payload records `Failed` with
+the `Unavailable` failure and its message, and an external reference records `Resolved`.
 
-The override's manifest entry records it as `complete`, which is no longer true: it compiles and
-supplies its module, but it does not supply the behavior it claims. `partial` — with
-`remaining` naming the state and failure writes — is the honest status, and it would hold
-`@flighthq/audio` below shippable, which is what a package whose reference state machine does not work
-should be. Raising it is a repository decision, not this unit's to take silently.
+The override's manifest entry records it as `complete`, and with the repair in place that is now TRUE
+rather than an overclaim -- it compiles, supplies its module, and records state and failures. No
+manifest change was needed. Before the repair that same entry was an overclaim, which is why the defect
+was worth stopping for rather than filing as a known gap.
 
-## Not an emitter defect
+## A note for whoever touches this next
 
-Nothing here is a compiler or runtime gap: the emitted `std::visit` shape is the hand-written
-override's own choice. A `decltype(auto)` return (or `return (value->state);` with an explicit
-reference return type) would fix every site. That edit is proposed rather than made, because the two
-prior override defects in this repository were recorded first and repaired second.
+The accessors are deliberately NOT `decltype(auto)`. That spelling looks like the obvious fix and does
+not work here; a mutation that reverts an accessor to a value return is caught by the parity suite, so
+the guard is mechanical rather than a comment nobody reads.
