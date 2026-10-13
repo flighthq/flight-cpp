@@ -129,3 +129,22 @@ This is NOT the same defect as the fold above, and the difference matters for wh
 They are linked because both surface as "typeof is wrong", and because a reader meeting one will assume
 it explains the other. They should be fixed as two things; if a single change happens to clear both, that
 is worth saying explicitly rather than assuming.
+
+## Third package, and a second shape inside it (linked evidence, 2026-10-13)
+
+`@flighthq/bitmapfont-formats` is refused twice for `typeof` on `JsonValue` (bitmapFontJson.ts and
+explainBitmapFontParse.ts), and its emitted `bitmap_font_format_kind.hpp` fails for a related reason:
+
+```
+no member named 'object_if' in 'flight::JsonValue'   (bitmap_font_format_kind.hpp:41)
+```
+
+`object_if` is the emitter reaching for an owner-preserving object read on `JsonValue` -- the same missing
+runtime accessor the two refusals describe, now visible as emitted code rather than as a refusal. So this
+package needs the SAME `JsonValue` kind/owner accessor as the bitmapfont-formats refusals above, which are
+already recorded as a runtime capability rather than a lowering defect.
+
+One more distinction worth keeping: the same package's other failure is a `.width` read on the texture
+source variant (`bitmap_font_fnt.hpp:187`), which belongs to the interface-heritage family in
+compiler-interface-heritage-owner-widening.md, NOT to this one. The two appear side by side in one package and
+should not be conflated when it is next picked up.

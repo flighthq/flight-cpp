@@ -1729,7 +1729,9 @@
     },
     {
       "consumers": [
-        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/contract.ts"
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontDetect.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/contract.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/index.ts"
       ],
       "module": {
         "name": "BitmapFontBinary",
@@ -1740,8 +1742,42 @@
       "status": "emitted"
     },
     {
+      "classification": "source-portability",
       "consumers": [
-        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/contract.ts"
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/contract.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/index.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:14e765fcf687eb00affe19ae046092b7a68865bb01d7e66aa1fffe374a7ee7f9",
+        "sha256:32da727a0bdd01fc72aca1613e43998e549f02e05dd955c1ae9fecb7691204f3",
+        "sha256:386645ebe7f9d55385f1ac13fc722a1d574e5a56debf9e470fe93402515a59e0",
+        "sha256:551ffa0cdbf0d33480085280b5fe4b3e732e06f62f11e59a20c8b3c0e48a7970",
+        "sha256:643946d75718b55adcbf2b4f6c964d61a1d3197bc7de0564b650f8f20c1fca3c",
+        "sha256:6aedd2ea3c7e61c16e8c41af866bcf0403c9622258ed8518186dd4cdb6a99b14",
+        "sha256:86a0c1ffa404110aebcb31935fe97d52bd2e0177d6be49a06e5b36215b8167f5",
+        "sha256:86a9e75707f2362e13c061ad5756df6e0c750ffd2c6d1bd28d1974fbe8a87e52",
+        "sha256:95f4e97b8e121826ca7529b245a33221d3ea9c076dda593e8d4483768da0c94d",
+        "sha256:a3c7f8a2ef37360384279bdd6e4010de8f95e4cd653b41f4e26202774ac24e9c",
+        "sha256:b6fea85ec4cad0f4b3a1bd7aabe9159f75f3bc1eabfcea511de2d32b0459fa0e",
+        "sha256:bf2b99f3b0dbde19e9719c91b87895a59c67c4bfe4d9e16e730b1b806480134c",
+        "sha256:c56e097ff888c1ad1f22a11867f08ecbcd9693054cad9a9826888f1560bb8954",
+        "sha256:d5721014364fed85a0f186b81cf2d2fb30495178817ecc256cec49f1dabd855e",
+        "sha256:e3f481f1e28599fe886cf7aa3dac3fee1b084a1ab358828654a6ba9c4ac201de"
+      ],
+      "module": {
+        "name": "BitmapFontDetect",
+        "packageName": "@flighthq/bitmapfont-formats",
+        "source": "packages/bitmapfont-formats/src/bitmapFontDetect.ts"
+      },
+      "path": "flight/bitmapfont_formats/bitmap_font_detect.hpp",
+      "rule": "cpp-empty-array-element-type-unproven",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontDetect.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/contract.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/index.ts"
       ],
       "module": {
         "name": "BitmapFontFnt",
@@ -1752,9 +1788,25 @@
       "status": "emitted"
     },
     {
+      "consumers": [
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontDetect.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/contract.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/index.ts"
+      ],
+      "module": {
+        "name": "BitmapFontFormatKind",
+        "packageName": "@flighthq/bitmapfont-formats",
+        "source": "packages/bitmapfont-formats/src/bitmapFontFormatKind.ts"
+      },
+      "path": "flight/bitmapfont_formats/bitmap_font_format_kind.hpp",
+      "status": "emitted"
+    },
+    {
       "classification": "target-runtime",
       "consumers": [
-        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/contract.ts"
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontDetect.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/contract.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:169a79ccf04bbd1ce96c6b0adcfe079bd407df6ad55d3e070941bfa00a58459e",
@@ -1779,7 +1831,8 @@
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontBinary.ts",
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontFnt.ts",
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontJson.ts",
-        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontXml.ts"
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontXml.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/contract.ts"
       ],
       "module": {
         "name": "BitmapFontRecord",
@@ -1791,7 +1844,9 @@
     },
     {
       "consumers": [
-        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/contract.ts"
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontDetect.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/contract.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/index.ts"
       ],
       "module": {
         "name": "BitmapFontXml",
@@ -1803,8 +1858,19 @@
     },
     {
       "consumers": [
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/contract.ts",
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/index.ts"
       ],
+      "module": {
+        "name": "BitmapfontFormatRequirements",
+        "packageName": "@flighthq/bitmapfont-formats",
+        "source": "packages/bitmapfont-formats/src/bitmapfontFormatRequirements.ts"
+      },
+      "path": "flight/bitmapfont_formats/bitmapfont_format_requirements.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/bitmapfont-formats",
@@ -1812,6 +1878,7 @@
       },
       "path": "flight/bitmapfont_formats/contract.hpp",
       "refusedDependencies": [
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontDetect.ts",
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontJson.ts",
         "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/explainBitmapFontParse.ts"
       ],
@@ -1820,7 +1887,8 @@
     {
       "classification": "target-runtime",
       "consumers": [
-        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/contract.ts"
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/contract.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:02b38e3854d6b5bf3bebf17975ec1e4f155dd188791437940d1d72568174f1ef",
@@ -1851,7 +1919,9 @@
       },
       "path": "flight/bitmapfont_formats/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/contract.ts"
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontDetect.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontJson.ts",
+        "@flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/explainBitmapFontParse.ts"
       ],
       "status": "dependency-incomplete"
     },

@@ -1053,7 +1053,7 @@
       "path": "flight/bitmapfont_formats/bitmap_font_record.hpp",
       "package": "@flighthq/bitmapfont-formats",
       "status": "complete",
-      "derivedFrom": "9063b10e5aa4d595e1566ec44b5c3db06fdc319d5c4dd2300c4e3c41e6cc72b3",
+      "derivedFrom": "eb4d4fdffab9dc009000d5e6e084b63dc70abf21c7c7b138b3d72d9ebf5d3aa5",
       "reason": "The emitter wrote {{key, value}} as the last argument to report_import_diagnostic, which expects std::optional<Record<String, variant<bool,double,String>>>. A brace-enclosed initializer list cannot implicitly convert to std::optional<Record<...>>.",
       "expires": "when the emitter wraps Record arguments in explicit constructor calls.",
       "change": "Wrapped brace-enclosed initializer lists in explicit flight::Record<flight::String, std::variant<bool, double, flight::String>>(...) constructors at all 3 call sites.",

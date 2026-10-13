@@ -166,6 +166,15 @@
     {
       "code": "unsupported-ir",
       "column": 1,
+      "line": 36,
+      "module": "packages/bitmapfont-formats/src/bitmapFontDetect.ts",
+      "package": "@flighthq/bitmapfont-formats",
+      "reason": "cpp emission failed for @flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontDetect.ts: an empty array has no concrete element type; add an explicit T[] annotation or T[] assertion at the construction site",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
       "line": 33,
       "module": "packages/bitmapfont-formats/src/bitmapFontJson.ts",
       "package": "@flighthq/bitmapfont-formats",
@@ -176,7 +185,7 @@
       "code": "dependency-refused",
       "module": "packages/bitmapfont-formats/src/contract.ts",
       "package": "@flighthq/bitmapfont-formats",
-      "reason": "dependency ./bitmapFontJson was refused for @flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontJson.ts",
+      "reason": "dependency ./bitmapFontDetect.ts was refused for @flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontDetect.ts",
       "stage": "dependency"
     },
     {
@@ -192,7 +201,7 @@
       "code": "dependency-refused",
       "module": "packages/bitmapfont-formats/src/index.ts",
       "package": "@flighthq/bitmapfont-formats",
-      "reason": "dependency ./contract was refused for @flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/contract.ts",
+      "reason": "dependency ./bitmapFontDetect.ts was refused for @flighthq/bitmapfont-formats/packages/bitmapfont-formats/src/bitmapFontDetect.ts",
       "stage": "dependency"
     },
     {
