@@ -47,3 +47,18 @@ The carried patch therefore writes the inferred argument explicitly:
 `getNodeWorldMatrix<Node2DTraits>(emitter)`, and `getNodeWorldMatrix4<Node3DTraits>` /
 `getNodeLocalMatrix4<Node3DTraits>`. An explicit type argument equal to the inferred one is erased and selects the
 same call.
+
+The same missing inference hits the source's own direct `invalidateNodeLocalBounds(emitter)` in
+updateParticleEmitter2D, which had no assertion at all. The patch gives it `<Node2DTraits>` too.
+
+## Then node's transform functions do not instantiate (node-side, already filed)
+
+With the inference fixed, the update headers instantiate node's `get_node_world_matrix<Node2DTraits>`,
+`get_node_world_matrix4<Node3DTraits>` and `get_node_local_matrix4<Node3DTraits>`, and those fail inside
+`@flighthq/node`. Node's `get_transform2_druntime` / `get_transform3_druntime` accept no conversion from node's own
+`Transform2DNode` / `Transform3DNode` view. That is
+[node-transform-runtime-owner-argument](node-transform-runtime-owner-argument.md). It belongs to `@flighthq/node`,
+whose rows this unit does not edit. `updateParticleEmitter2D/3D`, `stepParticleEmitter2D/3D` and
+`prewarmParticleEmitter2D/3D` therefore stay non-compiling and residual. The patch is kept because it removes the
+particleemitter-side refusals and the missing `Traits` argument, so these modules emit and the only remaining blocker is
+node's.

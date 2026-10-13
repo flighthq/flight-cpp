@@ -1,5 +1,5 @@
 diff --git a/packages/particleemitter/src/updateParticleEmitter2D.ts b/packages/particleemitter/src/updateParticleEmitter2D.ts
-index 98beafd..8d591a0 100644
+index 98beafd..bc08775 100644
 --- a/packages/particleemitter/src/updateParticleEmitter2D.ts
 +++ b/packages/particleemitter/src/updateParticleEmitter2D.ts
 @@ -8,7 +8,7 @@ import {
@@ -20,6 +20,15 @@ index 98beafd..8d591a0 100644
    data.worldSpace = worldTransform !== null;
  
    // Guard against a zero or negative time step: no time has elapsed, so there is
+@@ -471,7 +471,7 @@ export function updateParticleEmitter2D(
+     signals.onEmitterComplete.emit();
+   }
+ 
+-  invalidateNodeLocalBounds(emitter);
++  invalidateNodeLocalBounds<Node2DTraits>(emitter);
+ }
+ 
+ function clamp01(v: number): number {
 diff --git a/packages/particleemitter/src/updateParticleEmitter3D.ts b/packages/particleemitter/src/updateParticleEmitter3D.ts
 index 7cc7764..ba547c3 100644
 --- a/packages/particleemitter/src/updateParticleEmitter3D.ts

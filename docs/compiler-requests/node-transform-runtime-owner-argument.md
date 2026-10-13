@@ -54,3 +54,11 @@ auto runtime = flight::row_get(target, flight::types::entity_runtime_key).value(
 ## Carrying workaround
 
 None. `@flighthq/node` is not part of the velocity unit that found it.
+
+## Further site: particleemitter update (measured)
+
+`@flighthq/particleemitter`'s `updateParticleEmitter2D` and `updateParticleEmitter3D`, once their own refusals are patched
+(`particleemitter-node-matrix-direct-emitter`), instantiate `getNodeWorldMatrix<Node2DTraits>`,
+`invalidateNodeLocalBounds<Node2DTraits>`, `getNodeWorldMatrix4<Node3DTraits>` and `getNodeLocalMatrix4<Node3DTraits>`.
+They fail here, in `node_transform2d.hpp:249` and `node_transform3d.hpp:113/122/199/218`. Through them the step and
+prewarm modules fail too.

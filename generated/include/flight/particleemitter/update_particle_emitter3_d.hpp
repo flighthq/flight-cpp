@@ -16,6 +16,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/particle_emitter2_d.hpp>
 
 namespace flight::types { struct Matrix4; }
+namespace flight::types { struct Node3DTraits; }
 namespace flight::types { struct ParticleEmitter3D; }
 namespace flight::types { struct ParticleEmitterCallbacks; }
 namespace flight::types { struct ParticleEmitterConfig; }
@@ -92,12 +93,12 @@ inline flight::Array<double> rotate_to_direction_flight_value_function_rotate_u0
 
 inline void update_particle_emitter3_d(flight::Ref<flight::types::ParticleEmitter3D> emitter, flight::Ref<flight::types::ParticleEmitterState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitterConfig>>>> config, double delta_time, std::optional<flight::Ref<flight::types::ParticleEmitterCallbacks>> callbacks = std::nullopt) {
   auto data = emitter->data;
-  std::optional<flight::Float32Array> world_m = (flight::row_get<flight::RowKey<"worldSpace">>(config) ? std::optional<flight::Float32Array>{flight::row_get<flight::RowKey<"m">>(flight::node::get_node_world_matrix4(flight::structural_ref_cast<flight::types::Transform3DNode<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ParticleEmitter3D>>>>(emitter))))} : std::nullopt);
+  std::optional<flight::Float32Array> world_m = (flight::row_get<flight::RowKey<"worldSpace">>(config) ? std::optional<flight::Float32Array>{flight::row_get<flight::RowKey<"m">>(flight::node::get_node_world_matrix4<flight::Ref<flight::types::Node3DTraits>>(flight::structural_ref_cast<flight::types::Transform3DNode<flight::Ref<flight::types::Node3DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ParticleEmitter3D>>>>(emitter))))} : std::nullopt);
   (data->world_space = world_m.has_value());
   if ((delta_time <= 0.0)) {
     return;
   }
-  flight::Float32Array origin_m = (world_m.has_value() ? world_m.value() : flight::row_get<flight::RowKey<"m">>(flight::node::get_node_local_matrix4(flight::structural_ref_cast<flight::types::Transform3DNode<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ParticleEmitter3D>>>>(emitter)))));
+  flight::Float32Array origin_m = (world_m.has_value() ? world_m.value() : flight::row_get<flight::RowKey<"m">>(flight::node::get_node_local_matrix4<flight::Ref<flight::types::Node3DTraits>>(flight::structural_ref_cast<flight::types::Transform3DNode<flight::Ref<flight::types::Node3DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ParticleEmitter3D>>>>(emitter)))));
   const double track_x = origin_m.get_index(12.0);
   const double track_y = origin_m.get_index(13.0);
   const double track_z = origin_m.get_index(14.0);

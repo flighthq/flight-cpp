@@ -15,7 +15,10 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 #include <flight/types/particle_emitter2_d.hpp>
 
+#include <flight/types/node2_d.hpp>
+
 namespace flight::types { struct Matrix; }
+namespace flight::types { struct Node2DTraits; }
 namespace flight::types { struct ParticleEmitter2D; }
 namespace flight::types { struct ParticleEmitterCallbacks; }
 namespace flight::types { struct ParticleEmitterConfig; }
@@ -35,8 +38,10 @@ namespace flight::types { template <typename T> struct Signal; }
 
 namespace flight::particleemitter {
 
+using flight::types::Node2DTraits;
 using flight::types::ParticleEmitter2D;
 using flight::types::ParticleEmitterData;
+using flight::types::Node2DTraits;
 
 inline const double particle_transform_stride_flight_value_variable__u000050__u000041__u000052__u000054__u000049__u000043__u00004c__u000045__u00005f__u000054__u000052__u000041__u00004e__u000053__u000046__u00004f__u000052__u00004d__u00005f__u000053__u000054__u000052__u000049__u000044__u000045__flight_private_74fffbaf518a6f1b = 4.0;
 
@@ -94,7 +99,7 @@ inline flight::Array<double> rotate_to_direction_flight_value_function_rotate_u0
 
 inline void update_particle_emitter2_d(flight::Ref<flight::types::ParticleEmitter2D> emitter, flight::Ref<flight::types::ParticleEmitterState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitterConfig>>>> config, double delta_time, std::optional<flight::Ref<flight::types::ParticleEmitterCallbacks>> callbacks = std::nullopt) {
   auto data = emitter->data;
-  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>> world_transform = (flight::row_get<flight::RowKey<"worldSpace">>(config) ? std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>{flight::node::get_node_world_matrix(flight::structural_ref_cast<flight::types::Transform2DNode<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>>(emitter)))} : std::nullopt);
+  std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>> world_transform = (flight::row_get<flight::RowKey<"worldSpace">>(config) ? std::optional<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix>>>>>{flight::node::get_node_world_matrix<flight::Ref<flight::types::Node2DTraits>>(flight::structural_ref_cast<flight::types::Transform2DNode<flight::Ref<flight::types::Node2DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>>(emitter)))} : std::nullopt);
   (data->world_space = world_transform.has_value());
   if ((delta_time <= 0.0)) {
     return;
@@ -443,7 +448,7 @@ inline void update_particle_emitter2_d(flight::Ref<flight::types::ParticleEmitte
   if ((signals.has_value() && is_particle_emitter2_dcomplete(emitter, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ParticleEmitterState>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ParticleEmitterState>>>>(state)), config))) {
     signals.value()->on_emitter_complete->emit();
   }
-  flight::node::invalidate_node_local_bounds(flight::structural_ref_cast<flight::types::NodeOf<Traits>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>>(emitter)));
+  flight::node::invalidate_node_local_bounds<flight::Ref<flight::types::Node2DTraits>>(flight::structural_ref_cast<flight::types::NodeOf<flight::Ref<flight::types::Node2DTraits>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::ParticleEmitter2D>>>>(emitter)));
 }
 
 } // namespace flight::particleemitter
