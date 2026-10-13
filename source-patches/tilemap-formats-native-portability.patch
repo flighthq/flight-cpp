@@ -1,0 +1,225 @@
+diff --git a/packages/tilemap-formats/src/tilemapDetect.ts b/packages/tilemap-formats/src/tilemapDetect.ts
+--- a/packages/tilemap-formats/src/tilemapDetect.ts
++++ b/packages/tilemap-formats/src/tilemapDetect.ts
+@@ -33,8 +33,12 @@ import { parseTiledTileset, parseTiledTmx } from './tiledXmlParse.ts';
+  * detector asks one shared discrimination and answers only for its own kind.
+  */
+ export function applyTilemapImportOptions(options: Readonly<TilemapImportOptions>): void {
+-  for (const format of options.mapFormats ?? []) bindTilemapFormat(format.kind, format.entry);
+-  for (const format of options.tilesetFormats ?? []) bindTilesetFormat(format.kind, format.entry);
++  const mapFormats = options.mapFormats;
++  if (mapFormats !== undefined)
++    for (const format of mapFormats) bindTilemapFormat(format.kind, format.entry);
++  const tilesetFormats = options.tilesetFormats;
++  if (tilesetFormats !== undefined)
++    for (const format of tilesetFormats) bindTilesetFormat(format.kind, format.entry);
+ }
+ 
+ /** Sniff the text of a tilemap-domain document and return its format kind, or `null` when no registered
+diff --git a/packages/tilemap-formats/src/tiledLayerData.ts b/packages/tilemap-formats/src/tiledLayerData.ts
+--- a/packages/tilemap-formats/src/tiledLayerData.ts
++++ b/packages/tilemap-formats/src/tiledLayerData.ts
+@@ -50,7 +50,9 @@ export function decodeTiledCsvLayer(text: string): Uint32Array {
+     const n = Number(trimmed);
+     out.push(Number.isFinite(n) ? n >>> 0 : 0);
+   }
+-  return Uint32Array.from(out);
++  const decoded = new Uint32Array(out.length);
++  for (let i = 0; i < out.length; i++) decoded[i] = out[i];
++  return decoded;
+ }
+ 
+ // Explains whether an encoded layer payload decodes, and when it does not, which of the two causes it
+diff --git a/packages/tilemap-formats/src/tiledTmxFormat.ts b/packages/tilemap-formats/src/tiledTmxFormat.ts
+--- a/packages/tilemap-formats/src/tiledTmxFormat.ts
++++ b/packages/tilemap-formats/src/tiledTmxFormat.ts
+@@ -6,6 +6,7 @@ import type {
+   TiledTileset,
+   TiledTilesetRef,
+   TiledTilesetTile,
++  Vector2Like,
+ } from '@flighthq/types/contract';
+ 
+ import { formatTiledColor } from './tiledColor.ts';
+@@ -68,7 +69,7 @@ function formatLayerBaseAttrs(layer: Readonly<TiledLayer>): string {
+   return out;
+ }
+ 
+-function formatPoints(points: readonly { x: number; y: number }[]): string {
++function formatPoints(points: readonly Vector2Like[]): string {
+   return points.map((p) => `${p.x},${p.y}`).join(' ');
+ }
+ 
+diff --git a/packages/tilemap-formats/src/tiledXmlParse.ts b/packages/tilemap-formats/src/tiledXmlParse.ts
+--- a/packages/tilemap-formats/src/tiledXmlParse.ts
++++ b/packages/tilemap-formats/src/tiledXmlParse.ts
+@@ -2,10 +2,14 @@ import type {
+   ImportDiagnostic,
+   TiledCompression,
++  TiledGroupLayer,
++  TiledImageLayer,
+   TiledLayer,
+   TiledMap,
+   TiledObject,
+   TiledObjectAlignment,
++  TiledObjectGroup,
+   TiledOrientation,
++  TiledTileLayer,
+   TiledStaggerAxis,
+   TiledStaggerIndex,
+   TiledParseOptions,
+@@ -44,16 +48,18 @@ export function parseTiledTileset(
+ ): TiledTileset | null {
+   const root = parseXmlDocument(text);
+   if (root === null) {
+-    reportImportDiagnostic(diagnostics, ImportDiagnosticSeverity.Reject, 'tiled.xml-malformed', 'parseTiledTileset', {
++    const detail: Record<string, string | number | boolean> = {
+       path: 'tileset',
+-    });
++    };
++    reportImportDiagnostic(diagnostics, ImportDiagnosticSeverity.Reject, 'tiled.xml-malformed', 'parseTiledTileset', detail);
+     return null;
+   }
+   if (root.name !== 'tileset') {
+-    reportImportDiagnostic(diagnostics, ImportDiagnosticSeverity.Reject, 'tiled.root-unexpected', 'parseTiledTileset', {
++    const detail: Record<string, string | number | boolean> = {
+       actual: root.name,
+       path: 'tileset',
+-    });
++    };
++    reportImportDiagnostic(diagnostics, ImportDiagnosticSeverity.Reject, 'tiled.root-unexpected', 'parseTiledTileset', detail);
+     return null;
+   }
+   return buildTiledTilesetFromXml(root, diagnostics, 'tileset');
+@@ -68,16 +74,18 @@ export function parseTiledTmx(
+ ): TiledMap | null {
+   const root = parseXmlDocument(text);
+   if (root === null) {
+-    reportImportDiagnostic(diagnostics, ImportDiagnosticSeverity.Reject, 'tiled.xml-malformed', 'parseTiledTmx', {
++    const detail: Record<string, string | number | boolean> = {
+       path: 'map',
+-    });
++    };
++    reportImportDiagnostic(diagnostics, ImportDiagnosticSeverity.Reject, 'tiled.xml-malformed', 'parseTiledTmx', detail);
+     return null;
+   }
+   if (root.name !== 'map') {
+-    reportImportDiagnostic(diagnostics, ImportDiagnosticSeverity.Reject, 'tiled.root-unexpected', 'parseTiledTmx', {
++    const detail: Record<string, string | number | boolean> = {
+       actual: root.name,
+       path: 'map',
+-    });
++    };
++    reportImportDiagnostic(diagnostics, ImportDiagnosticSeverity.Reject, 'tiled.root-unexpected', 'parseTiledTmx', detail);
+     return null;
+   }
+   if (diagnostics !== undefined) {
+@@ -88,7 +96,9 @@ export function parseTiledTmx(
+   }
+ 
+   const tilesets: TiledTilesetRef[] = [];
+-  for (const [index, element] of getXmlElementChildrenByName(root, 'tileset').entries()) {
++  const tilesetElements = getXmlElementChildrenByName(root, 'tileset');
++  for (let index = 0; index < tilesetElements.length; index++) {
++    const element = tilesetElements[index];
+     tilesets.push(
+       buildTiledTilesetRefFromXml(element, diagnostics, diagnostics === undefined ? '' : `map.tilesets[${index}]`),
+     );
+@@ -186,7 +196,7 @@ function buildTiledLayerFromXml(
+     }
+     const width = attrNumber(element, 'width', 0);
+     const height = attrNumber(element, 'height', 0);
+-    return {
++    const layer: TiledTileLayer = {
+       ...base,
+       data: buildTiledLayerDataFromXml(
+         element,
+@@ -201,17 +211,19 @@ function buildTiledLayerFromXml(
+       type: 'tilelayer',
+       width,
+     };
++    return layer;
+   }
+   if (element.name === 'objectgroup') {
+-    return {
++    const layer: TiledObjectGroup = {
+       ...base,
+       objects: getXmlElementChildrenByName(element, 'object').map(buildTiledObjectFromXml),
+       type: 'objectgroup',
+     };
++    return layer;
+   }
+   if (element.name === 'imagelayer') {
+     const image = getXmlElementChildByName(element, 'image');
+-    return {
++    const layer: TiledImageLayer = {
+       ...base,
+       image: image !== null ? attrString(image, 'source', '') : '',
+       repeatX: attrBool(element, 'repeatx', false),
+@@ -212,6 +224,7 @@ function buildTiledLayerFromXml(
+       repeatY: attrBool(element, 'repeaty', false),
+       type: 'imagelayer',
+     };
++    return layer;
+   }
+   if (element.name === 'group') {
+     const layers: TiledLayer[] = [];
+@@ -225,7 +238,8 @@ function buildTiledLayerFromXml(
+       );
+       if (layer !== null) layers.push(layer);
+     }
+-    return { ...base, layers, type: 'group' };
++    const layer: TiledGroupLayer = { ...base, layers, type: 'group' };
++    return layer;
+   }
+   return null;
+ }
+@@ -261,28 +275,30 @@ function buildTiledLayerDataFromXml(
+   } else if (encoding === 'base64') {
+     const compression = asCompression(getXmlElementAttribute(data, 'compression'));
+     if (compression !== null && options?.inflate === undefined) {
++      const detail: Record<string, string | number | boolean> = { compression, path };
+       reportImportDiagnostic(
+         diagnostics,
+         ImportDiagnosticSeverity.Recover,
+         'tiled.layer-inflate-unavailable',
+         'buildTiledLayerDataFromXml',
+-        { compression, path },
++        detail,
+       );
+     }
+     decoded = decodeTiledBase64Layer(data.text, compression, options?.inflate);
+   } else {
+     if (encoding !== null) {
++      const detail: Record<string, string | number | boolean> = { encoding, path: `${path}.encoding` };
+       reportImportDiagnostic(
+         diagnostics,
+         ImportDiagnosticSeverity.Recover,
+         'tiled.layer-encoding-invalid',
+         'buildTiledLayerDataFromXml',
+-        { encoding, path: `${path}.encoding` },
++        detail,
+       );
+     }
+-    decoded = Uint32Array.from(
+-      getXmlElementChildrenByName(data, 'tile').map((tile) => attrNumber(tile, 'gid', 0) >>> 0),
+-    );
++    const tiles = getXmlElementChildrenByName(data, 'tile');
++    decoded = new Uint32Array(tiles.length);
++    for (let index = 0; index < tiles.length; index++) decoded[index] = attrNumber(tiles[index], 'gid', 0) >>> 0;
+   }
+   if (decoded === null) return grid;
+   grid.set(decoded.subarray(0, grid.length));
+@@ -405,9 +421,10 @@ function reportMissingRequiredField(
+   path: string,
+   field?: string,
+ ): void {
+-  reportImportDiagnostic(diagnostics, ImportDiagnosticSeverity.Recover, 'tiled.required-field-missing', origin, {
++  const detail: Record<string, string | number | boolean> = {
+     path: field === undefined ? path : `${path}.${field}`,
+-  });
++  };
++  reportImportDiagnostic(diagnostics, ImportDiagnosticSeverity.Recover, 'tiled.required-field-missing', origin, detail);
+ }
+ 
+ function reportMissingXmlAttribute(

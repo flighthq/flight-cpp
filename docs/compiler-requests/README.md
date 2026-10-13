@@ -304,6 +304,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [String conversion of an erased value needs a runtime contract](erased-value-stringification.md) —
   `String(cause)` over `unknown` emits an invalid `to_string(Any)` call in image resource failure
   handling; object conversion cannot be approximated without changing diagnostics.
+- [`@flighthq/tilemap-formats` native-compile defect inventory](tilemap-formats-native-compile-defects.md) —
+  records the five current-pin refusals, seven emitted-C++ failure families, and frozen registry
+  dependency before any package workaround is carried.
 - [intl is refused for carried union and absence evidence](compiler-intl-optional-and-union-carrier-evidence.md)
   — 7 of 9 `@flighthq/intl` modules; one is supplied by the intl-formatter-cache override, the rest
   are retained refusals.

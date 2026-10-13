@@ -291,6 +291,23 @@
       "appliedOn": "2026-10-07"
     },
     {
+      "id": "tilemap-formats-native-portability",
+      "dependency": "flight",
+      "patch": "tilemap-formats-native-portability.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/tilemap-formats/src/tilemapDetect.ts, packages/tilemap-formats/src/tiledLayerData.ts, packages/tilemap-formats/src/tiledTmxFormat.ts, and packages/tilemap-formats/src/tiledXmlParse.ts",
+      "package": "@flighthq/tilemap-formats",
+      "answers": "diagnostic",
+      "refusal": "The compiler loses the typed sibling of nullish empty-array fallbacks, has no Uint32Array.from value binding, invents an anonymous owner for Vector2Like callback elements, emits optional diagnostic Record literals at the optional carrier, returns narrowed TiledLayer literals through the union instead of their named arms, and lowers Array.entries destructuring as tuple.element().",
+      "rewrite": "Uses explicit absence guards for optional format arrays, fills pre-sized Uint32Array values in source order, names Vector2Like and each narrowed layer owner, binds diagnostic detail Records before calls, and spells indexed iteration directly.",
+      "equivalence": "Absent format arrays still perform zero registrations; present arrays retain identity, order, and last-write behavior. Pre-sized typed arrays apply the same Uint32 conversion in the same order as Uint32Array.from. Vector2Like is the declared canonical owner of the same x/y values. Typed locals retain the same single fresh objects and diagnostic keys. Indexed loops visit exactly the entries sequence in ascending order.",
+      "verification": "Scoped regeneration must emit applyTilemapImportOptions, decodeTiledCsvLayer, and buildTiledLayerDataFromXml; tiled_tmx_format.hpp and tiled_xml_parse.hpp must compile independently once their declared dependency rows are current; native evidence must prove exact GID order, XML parse/serialize bytes, and distinct compression failures.",
+      "whyNotUpstreamFirst": "Each rewrite is target-neutral TypeScript that makes an already-declared carrier or no-op absence branch explicit while the general compiler defects remain filed.",
+      "unblocks": "Removes three direct refusals and the known emitted owner/optional/tuple failures from the XML and TMX codec path without supplying behavior outside the pinned source.",
+      "expires": "when contextual fallbacks, typed-array static from, structural element owners, optional Records, narrowed union returns, and entries destructuring preserve their declared carriers, or Flight adopts these explicit spellings.",
+      "appliedOn": "2026-10-13"
+    },
+    {
       "id": "spritesheet-player-readonly-identity-comparison",
       "dependency": "flight",
       "patch": "spritesheet-player-readonly-identity-comparison.patch",
