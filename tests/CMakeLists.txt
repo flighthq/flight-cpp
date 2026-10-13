@@ -729,6 +729,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_particles_formats_particle_designer_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_particles_formats_particle_designer COMMAND flight_cpp_generated_particles_formats_particle_designer_tests)
 
+add_executable(flight_cpp_generated_particleemitter_tests generated_particleemitter_test.cpp)
+target_include_directories(
+  flight_cpp_generated_particleemitter_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_particleemitter_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_particleemitter COMMAND flight_cpp_generated_particleemitter_tests)
+
 add_executable(flight_cpp_generated_lifecycle_tests generated_lifecycle_test.cpp)
 target_include_directories(
   flight_cpp_generated_lifecycle_tests
@@ -1008,6 +1016,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_share share)
 flight_cpp_package_test_labels(flight_cpp.generated_updater updater)
 flight_cpp_package_test_labels(flight_cpp.generated_lifecycle lifecycle signals)
 flight_cpp_package_test_labels(flight_cpp.generated_spring spring)
+flight_cpp_package_test_labels(flight_cpp.generated_particleemitter geometry math particleemitter particles scene2d scene3d)
 flight_cpp_package_test_labels(flight_cpp.generated_particles_formats_particle_designer particles particles-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_particles_formats_libgdx particles particles-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_particles_formats particles particles-formats)
