@@ -54,6 +54,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-readonly-view-argument-substitution.patch`](../../source-patches/compiler-readonly-view-argument-substitution.patch) | [A callee's type parameter must not survive into an emitted structural row](compiler-generic-signal-row-projection.md) |
 | [`compiler-runtime-instanceof-lowering.patch`](../../source-patches/compiler-runtime-instanceof-lowering.patch) | [TypeScript `instanceof` is emitted verbatim as C++ text](instanceof-lowered-verbatim.md) |
 | [`compiler-profile-type-name-evidence.patch`](../../source-patches/compiler-profile-type-name-evidence.patch) | [A property union loses the guard's evidence](property-union-evidence-lost.md) |
+| [`compiler-guarded-path-narrowing.patch`](../../source-patches/compiler-guarded-path-narrowing.patch) | [A property union loses the guard's evidence](property-union-evidence-lost.md) |
 | [`compiler-scoped-emission-semantic-context.patch`](../../source-patches/compiler-scoped-emission-semantic-context.patch) | [Scoped emission must retain semantic context](compiler-scoped-emission-semantic-context.md) |
 | [`compiler-sdk-lane-local-reexports.patch`](../../source-patches/compiler-sdk-lane-local-reexports.patch) | [SDK-local re-exports in an SDK export lane](compiler-sdk-lane-local-reexports.md) |
 | [`compiler-structural-row-weak-keys.patch`](../../source-patches/compiler-structural-row-weak-keys.patch) | [Structural rows as WeakMap keys](compiler-structural-row-weak-keys.md) |

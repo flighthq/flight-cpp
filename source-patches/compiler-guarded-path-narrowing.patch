@@ -1,0 +1,514 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 1ef1651..bec69ae 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -373,6 +373,11 @@ interface EmitContext {
+   namespaceScope: boolean;
+   nullableBindingIds: ReadonlySet<string>;
+   narrowedBindingTypes: ReadonlyMap<string, Readonly<IrType>>;
++  // The union alternative a lowered `instanceof` guard proved for one property PATH inside the branch the
++  // guard controls (key: the path, value: the C++ type of the alternative). The guard NAMES the alternative
++  // and the carrier it tested, so the read behind the guard can be projected from that same expansion --
++  // which is the whole reason this is carried here rather than resolved again from the declaration.
++  guardedPathKinds: ReadonlyMap<string, string>;
+   options: Readonly<CppCompilerBackendOptions>;
+   preservedInitializerTypes: Map<string, Readonly<IrType>>;
+   referenceRepresentationPlanner: CompilerCppReferenceRepresentationPlanner;
+@@ -635,6 +640,7 @@ function emitIrModuleCppWithContext(
+     namespaceScope: true,
+     nullableBindingIds,
+     narrowedBindingTypes: new Map(),
++    guardedPathKinds: new Map(),
+     options,
+     preservedInitializerTypes,
+     referenceRepresentationPlanner:
+@@ -6037,8 +6043,21 @@ function emitExpression(
+       refuseCppUnsupportedErrorMemberReadCpp(expression, context);
+       const enumMember = emitCppEnumMemberReferenceCpp(expression, context);
+       if (enumMember) return enumMember;
+-      const narrowedUnion = emitCppNarrowedPropertyUnionValueCpp(expression, context);
++      // The semantic layer's own proof wins where it reaches; where it does not, the proof the GUARD
++      // carries reaches a member declared through an alias exactly as it reaches a written union. Either
++      // way the carrier is emitted with this path's proof withdrawn, so a projection is applied once.
++      const guardedPathKind = getCppGuardedPathKindCpp(expression, context);
++      const carrierContext = withoutCppGuardedPathKindCpp(expression, context);
++      const narrowedUnion = emitCppNarrowedPropertyUnionValueCpp(expression, carrierContext);
+       if (narrowedUnion) return narrowedUnion;
++      if (guardedPathKind !== undefined) {
++        const storage = emitExpression(
++          { ...expression, narrowedType: undefined, presence: undefined },
++          carrierContext,
++        );
++        context.includes.add('flight/optional_variant.hpp');
++        return `flight::union_kind_or_throw<${guardedPathKind}>(${storage})`;
++      }
+       const narrowedPresent = emitCppNarrowedPresentAccessCpp(expression, context, expectedType);
+       if (narrowedPresent) return narrowedPresent;
+       const erasedIndexNamedProperty = emitCppErasedIndexNamedPropertyReadCpp(expression, context);
+@@ -9329,7 +9348,9 @@ function emitStatements(statements: readonly IrStatement[], context: EmitContext
+       immediateDenseArrayElementPresence.size > 0
+         ? { ...statementContext, immediateDenseArrayElementPresence }
+         : statementContext;
+-    emitted.push(...emitStatement(statement, emissionContext));
++    emitted.push(
++      ...emitStatement(statement, withdrawCppAssignedGuardedPathsBeforeEmissionCpp(statement, emissionContext)),
++    );
+     const narrowing = getCppOptionalStoragePresentGuardNarrowingCpp(statement, statementContext);
+     if (narrowing) {
+       statementContext = {
+@@ -9338,6 +9359,16 @@ function emitStatements(statements: readonly IrStatement[], context: EmitContext
+       };
+     }
+     statementContext = withdrawCppAssignedNarrowingsCpp(statement, statementContext);
++    statementContext = withdrawCppAssignedGuardedPathsCpp(statement, statementContext, true);
++    // Recorded AFTER the withdrawal, because a terminating guard's own body may call or construct -- the
++    // `throw new Error(...)` the source writes to report the bad case -- and that runs only on the path
++    // that never falls through, so it proves nothing about the statements this one leaves behind.
++    const afterTerminatingGuard = getCppGuardedPathKindsAfterTerminatingGuardCpp(statement, statementContext);
++    if (afterTerminatingGuard.size > 0) {
++      const guardedPathKinds = new Map(statementContext.guardedPathKinds);
++      for (const [key, kind] of afterTerminatingGuard) guardedPathKinds.set(key, kind);
++      statementContext = { ...statementContext, guardedPathKinds };
++    }
+   }
+   return emitted;
+ }
+@@ -16262,6 +16293,134 @@ function emitCppVariantPropertyArrayPredicateCpp(
+   return `std::visit([](const auto& value) { return flight::is_array(value${evidence.operator}${evidence.memberAccess}); }, ${emitExpression(argument.object, context)})`;
+ }
+ 
++// The path a guard's operand names, as a key a read can be matched against. Only a binding or a chain of
++// plain properties has one: an element access's index is an evaluated expression, and a proof about the
++// index it happened to hold says nothing about the next read.
++function getCppGuardedPathKeyCpp(expression: Readonly<IrExpression>): string | undefined {
++  if (expression.kind === 'identifier' && expression.reference.kind === 'binding') {
++    return expression.reference.binding.id;
++  }
++  if (expression.kind !== 'property' || expression.optional) return undefined;
++  const prefix = getCppGuardedPathKeyCpp(expression.object);
++  return prefix === undefined ? undefined : `${prefix}.${expression.name}`;
++}
++
++// What a condition proves about the paths its `instanceof` tests name, when the condition is what HOLDS.
++// A conjunction proves every conjunct; nothing else is walked, because a disjunction proves neither arm and
++// a comparison outside `instanceof` is not a union-alternative proof at all.
++function collectCppGuardedPathKindsCpp(
++  condition: Readonly<IrExpression>,
++  context: EmitContext,
++): ReadonlyMap<string, string> {
++  const entries = new Map<string, string>();
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp') return entries;
++  const visit = (expression: Readonly<IrExpression>): void => {
++    if (expression.kind === 'binary' && expression.operator === '&&') {
++      visit(expression.left);
++      visit(expression.right);
++      return;
++    }
++    if (expression.kind !== 'binary' || expression.operator !== 'instanceof') return;
++    const target = getCppInstanceOfTargetCpp(expression.right, context);
++    if (!target) return;
++    const key = getCppGuardedPathKeyCpp(expression.left);
++    if (key === undefined) return;
++    entries.set(key, target.targetName);
++  };
++  visit(condition);
++  return entries;
++}
++
++// What a statement that TERMINATES on the negation of a guard proves for the statements after it: the
++// fall-through is the case where the guard held, exactly as `if (x === null) return;` proves presence.
++function getCppGuardedPathKindsAfterTerminatingGuardCpp(
++  statement: Readonly<IrStatement>,
++  context: EmitContext,
++): ReadonlyMap<string, string> {
++  if (statement.kind !== 'if' || statement.otherwise !== undefined) return new Map();
++  if (!isCppAbruptCompletionStatement(statement.consequent)) return new Map();
++  const condition = statement.condition;
++  if (condition.kind !== 'unary' || condition.operator !== '!') return new Map();
++  return collectCppGuardedPathKindsCpp(condition.operand, context);
++}
++
++// A write to a path -- or to any prefix of it -- withdraws the proof: the guard said nothing about a value
++// written after it. `response.body = ...` and `response = ...` both invalidate `response.body`.
++function withdrawCppAssignedGuardedPathsCpp(
++  statement: Readonly<IrStatement>,
++  context: EmitContext,
++  includeCalls: boolean,
++): EmitContext {
++  if (context.guardedPathKinds.size === 0) return context;
++  const mutating = collectCppGuardedPathMutationCpp(statement);
++  // TypeScript invalidates a narrowing of a PROPERTY ACCESS at any call, because the call may write it; a
++  // read after one has no proof and is emitted without a projection rather than with a stale one. A call the
++  // READ ITSELF sits inside is not that: its arguments are evaluated before it runs, which is why a
++  // statement's own calls are considered only for the statements AFTER it.
++  if (includeCalls && mutating.unbounded) {
++    return { ...context, guardedPathKinds: new Map() };
++  }
++  const withdrawn = [...context.guardedPathKinds.keys()].filter((key) =>
++    mutating.paths.some((path) => key === path || key.startsWith(`${path}.`)),
++  );
++  if (withdrawn.length === 0) return context;
++  const guardedPathKinds = new Map(context.guardedPathKinds);
++  for (const key of withdrawn) guardedPathKinds.delete(key);
++  return { ...context, guardedPathKinds };
++}
++
++function collectCppGuardedPathMutationCpp(
++  statement: Readonly<IrStatement>,
++): Readonly<{ paths: readonly string[]; unbounded: boolean }> {
++  const paths = new Set<string>();
++  let unbounded = false;
++  analyzeIrStatementSubtreeTraversal(statement, {
++    expression(expression) {
++      if (expression.kind === 'call' || expression.kind === 'new') unbounded = true;
++      if (expression.kind === 'assignment') {
++        const path = getCppGuardedPathKeyCpp(expression.left);
++        if (path !== undefined) paths.add(path);
++      }
++    },
++  });
++  return { paths: [...paths], unbounded };
++}
++
++// The proof this read may use, if the guard that dominates it named this exact path.
++function getCppGuardedPathKindCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'property' }>>,
++  context: EmitContext,
++): string | undefined {
++  if (getCppRuntimeProfile(context.options) !== 'flight-cpp' || context.guardedPathKinds.size === 0) {
++    return undefined;
++  }
++  const key = getCppGuardedPathKeyCpp(expression);
++  return key === undefined ? undefined : context.guardedPathKinds.get(key);
++}
++
++// The same context with THIS path's proof withdrawn, for the emission of the carrier the projection reads:
++// the projection is applied once, at the read, and never again inside the expression it projects.
++function withoutCppGuardedPathKindCpp(
++  expression: Readonly<IrExpression>,
++  context: EmitContext,
++): EmitContext {
++  if (context.guardedPathKinds.size === 0) return context;
++  const key = getCppGuardedPathKeyCpp(expression);
++  if (key === undefined || !context.guardedPathKinds.has(key)) return context;
++  const guardedPathKinds = new Map(context.guardedPathKinds);
++  guardedPathKinds.delete(key);
++  return { ...context, guardedPathKinds };
++}
++
++// A statement's own writes withdraw the proof BEFORE it is emitted: an assignment target is a write, not a
++// read of the value the guard proved, and emitting a projection onto an lvalue does not compile.
++function withdrawCppAssignedGuardedPathsBeforeEmissionCpp(
++  statement: Readonly<IrStatement>,
++  context: EmitContext,
++): EmitContext {
++  return withdrawCppAssignedGuardedPathsCpp(statement, context, false);
++}
++
+ function getCppConditionBranchContextCpp(
+   condition: Readonly<IrExpression>,
+   result: boolean,
+@@ -16269,21 +16428,30 @@ function getCppConditionBranchContextCpp(
+ ): EmitContext {
+   const unionMemberTest = condition.kind === 'binary' ? condition.semantics.unionMemberTest : undefined;
+   const unionContext = getCppUnionMemberTestBranchContextCpp(unionMemberTest, result, context);
+-  const arrayValue = getCppVariantArrayPredicateEvidenceCpp(condition, unionContext);
++  const guardedPathEntries = result ? collectCppGuardedPathKindsCpp(condition, unionContext) : new Map<string, string>();
++  const guardedContext =
++    guardedPathEntries.size === 0
++      ? unionContext
++      : (() => {
++          const guardedPathKinds = new Map(unionContext.guardedPathKinds);
++          for (const [key, kind] of guardedPathEntries) guardedPathKinds.set(key, kind);
++          return { ...unionContext, guardedPathKinds };
++        })();
++  const arrayValue = getCppVariantArrayPredicateEvidenceCpp(condition, guardedContext);
+   if (arrayValue) {
+     return {
+-      ...unionContext,
+-      narrowedBindingTypes: new Map(unionContext.narrowedBindingTypes).set(
++      ...guardedContext,
++      narrowedBindingTypes: new Map(guardedContext.narrowedBindingTypes).set(
+         arrayValue.binding.id,
+         result ? arrayValue.arrayType : arrayValue.nonArrayType,
+       ),
+     };
+   }
+   const arrayProperty = getCppVariantPropertyArrayPredicateEvidenceCpp(condition, context);
+-  if (!arrayProperty) return unionContext;
++  if (!arrayProperty) return guardedContext;
+   return {
+-    ...unionContext,
+-    narrowedBindingTypes: new Map(unionContext.narrowedBindingTypes).set(
++    ...guardedContext,
++    narrowedBindingTypes: new Map(guardedContext.narrowedBindingTypes).set(
+       arrayProperty.binding.id,
+       result ? arrayProperty.arrayReceiverType : arrayProperty.nonArrayReceiverType,
+     ),
+diff --git a/packages/compiler-backend-cpp/src/cppGuardedPathNarrowing.test.ts b/packages/compiler-backend-cpp/src/cppGuardedPathNarrowing.test.ts
+new file mode 100644
+index 0000000..ce83694
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppGuardedPathNarrowing.test.ts
+@@ -0,0 +1,214 @@
++import { describe, expect, it } from 'vitest';
++
++import ts from 'typescript';
++
++import { isBackendEmissionFailure } from '../../compiler-emission/src/index.js';
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++// The proof a lowered `instanceof` guard carries, and the read it projects.
++//
++// A property read whose declared union the analysis cannot state -- a member declared through an alias, or a
++// union naming a type the run's profiles do not provide -- has no semantic proof to project through, while the
++// GUARD still names the alternative and the carrier it tested. This backend change carries that name into the
++// branch the guard controls and emits the read as the throwing twin of the guard's own question, from the same
++// carrier expansion. Its lifetime is TypeScript's: a write to the path or any prefix withdraws it, any call
++// withdraws it, and it never escapes the branch that proves it.
++//
++// The imported-alias case (`body: NetResponseBody`, the measured @flighthq/loader shape) is proven end to end by
++// regenerating that package: `load.hpp` must contain the projection. The stand-in used here -- the same guard and
++// read over a union the analysis cannot state -- differs only in why the semantic proof is absent.
++const NET_RESPONSE_BODY = 'string | unknown | ArrayBuffer | Blob | null';
++
++function lower(file: string, source: string, profileTypeNames?: readonly string[]) {
++  const sourceFile = ts.createSourceFile(
++    `/flight/packages/math/src/${file}`,
++    source,
++    ts.ScriptTarget.Latest,
++    true,
++  );
++  return lowerTypeScriptSource(sourceFile, {
++    packageName: '@flighthq/math',
++    upstreamDirectory: '/flight',
++    ...(profileTypeNames === undefined ? {} : { profileTypeNames }),
++  });
++}
++
++const externalBindings = {
++  bindings: [
++    { headers: ['flight/blob.hpp'], nullability: 'non-null' as const, ownership: 'shared' as const, sourceName: 'Blob', space: 'type' as const, targetName: 'flight::Blob' },
++    { headers: ['flight/blob.hpp'], nullability: 'non-null' as const, ownership: 'shared' as const, sourceName: 'Blob', space: 'value' as const, targetName: 'flight::Blob' },
++  ],
++  schema: 'flight-cpp-external-bindings/1' as const,
++};
++
++function emit(file: string, source: string, profileTypeNames?: readonly string[]) {
++  return emitIrModuleCpp(lower(file, source, profileTypeNames).module, {
++    externalBindings,
++    runtimeProfile: 'flight-cpp',
++  }).contents;
++}
++
++function captureBackendEmissionFailure(run: () => unknown) {
++  try {
++    run();
++  } catch (error) {
++    if (isBackendEmissionFailure(error)) return error;
++    throw error;
++  }
++  throw new Error('expected C++ emission to refuse and it did not');
++}
++
++const GUARD = 'flight::union_kind_if<flight::ArrayBuffer>(response->body) != nullptr';
++const PROJECTION = 'flight::union_kind_or_throw<flight::ArrayBuffer>(response->body)';
++
++describe('the proof a lowered instanceof guard carries', () => {
++  it('projects a read whose union the analysis cannot state', () => {
++    const contents = emit(
++      'guarded-path-absent-evidence.ts',
++      `export interface R { ok: boolean; body: ${NET_RESPONSE_BODY}; }
++       export function f(response: R): Uint8Array | null {
++         return response.ok && response.body instanceof ArrayBuffer ? new Uint8Array(response.body) : null;
++       }`,
++    );
++    expect(contents).toContain(GUARD);
++    expect(contents).toContain(PROJECTION);
++    // Applied once: the carrier inside the projection is the carrier, not another projection.
++    expect(contents).toContain('flight::Uint8Array(flight::union_kind_or_throw<flight::ArrayBuffer>(response->body))');
++    expect(contents).not.toContain('union_kind_or_throw<flight::ArrayBuffer>(flight::union_kind_or_throw');
++  });
++
++  it('projects the same read when the union evidence IS available, from that proof', () => {
++    const contents = emit(
++      'guarded-path-with-evidence.ts',
++      `export interface R { ok: boolean; body: ${NET_RESPONSE_BODY}; }
++       export function f(response: R): Uint8Array | null {
++         return response.ok && response.body instanceof ArrayBuffer ? new Uint8Array(response.body) : null;
++       }`,
++      ['Blob'],
++    );
++    expect(contents).toContain(GUARD);
++    expect(contents).toContain('flight::Uint8Array(flight::union_kind_or_throw<flight::ArrayBuffer>(response->body))');
++  });
++
++  it('projects a read the semantic proof already reaches, exactly once', () => {
++    const contents = emit(
++      'guarded-path-written-union.ts',
++      `export interface R { ok: boolean; body: string | ArrayBuffer | null; }
++       export function f(response: R): Uint8Array | null {
++         return response.ok && response.body instanceof ArrayBuffer ? new Uint8Array(response.body) : null;
++       }`,
++    );
++    expect(contents).toContain(GUARD);
++    expect(contents).toContain('flight::Uint8Array(std::get<0>(response->body.value()))');
++    expect(contents).not.toContain('union_kind_or_throw<flight::ArrayBuffer>(flight::union_kind_or_throw');
++  });
++
++  it('projects a read behind a terminating guard', () => {
++    const contents = emit(
++      'guarded-path-terminating.ts',
++      `export interface R { body: ${NET_RESPONSE_BODY}; }
++       export function f(response: R): Uint8Array {
++         if (!(response.body instanceof ArrayBuffer)) throw new Error('bad');
++         return new Uint8Array(response.body);
++       }`,
++    );
++    expect(contents).toContain('flight::union_kind_if<flight::ArrayBuffer>(response->body) != nullptr');
++    expect(contents).toContain(PROJECTION);
++  });
++
++  it('reads the same carrier the guard tested, by reference', () => {
++    const contents = emit(
++      'guarded-path-identity.ts',
++      `export interface R { ok: boolean; body: ${NET_RESPONSE_BODY}; }
++       export function f(response: R): Uint8Array | null {
++         return response.ok && response.body instanceof ArrayBuffer ? new Uint8Array(response.body) : null;
++       }`,
++    );
++    // One carrier expression, named by both: the guard tests it and the projection reads into it. The
++    // runtime's own identity behaviour is pinned in tests/union_kind_test.cpp.
++    expect(contents.match(/response->body/g)?.length).toBeGreaterThanOrEqual(2);
++    expect(contents).toContain('flight::union_kind_if<flight::ArrayBuffer>(response->body)');
++    expect(contents).toContain('flight::union_kind_or_throw<flight::ArrayBuffer>(response->body)');
++  });
++
++  it('withdraws the proof when the path itself is written', () => {
++    const contents = emit(
++      'guarded-path-written.ts',
++      `export interface R { body: string | ArrayBuffer | null; }
++       export function f(response: R, next: string | ArrayBuffer | null): Uint8Array | null {
++         if (response.body instanceof ArrayBuffer) { response.body = next; return new Uint8Array(response.body); }
++         return null;
++       }`,
++    );
++    expect(contents).toContain('flight::union_kind_if<flight::ArrayBuffer>(response->body) != nullptr');
++    // The write is a value the guard said nothing about, so the read after it is emitted without a projection.
++    expect(contents).toContain('response->body =');
++    expect(contents).toContain('flight::Uint8Array(response->body)');
++    expect(contents).not.toContain('union_kind_or_throw');
++  });
++
++  it('withdraws the proof when a prefix of the path is written', () => {
++    const contents = emit(
++      'guarded-path-prefix-written.ts',
++      `export interface R { body: string | ArrayBuffer | null; }
++       export function f(response: R, other: R): Uint8Array | null {
++         if (response.body instanceof ArrayBuffer) { response = other; return new Uint8Array(response.body); }
++         return null;
++       }`,
++    );
++    expect(contents).toContain('flight::union_kind_if<flight::ArrayBuffer>(response->body) != nullptr');
++    expect(contents).toContain('response = other');
++    expect(contents).not.toContain('union_kind_or_throw');
++  });
++
++  it('withdraws the proof across a call, as TypeScript does for a property narrowing', () => {
++    const contents = emit(
++      'guarded-path-call.ts',
++      // The call does not itself read the path, so the only projection the assertion can see is the one the
++      // rule is about: whether the proof survives the call for the read after it.
++      `export interface R { body: ${NET_RESPONSE_BODY}; }
++       export function f(response: R): Uint8Array | null {
++         if (response.body instanceof ArrayBuffer) { const n = Number('1'); return new Uint8Array(response.body); }
++         return null;
++       }`,
++    );
++    expect(contents).toContain('flight::union_kind_if<flight::ArrayBuffer>(response->body) != nullptr');
++    expect(contents).not.toContain('union_kind_or_throw');
++  });
++
++  it('does not project a different path that the same guard proves nothing about', () => {
++    const contents = emit(
++      'guarded-path-other.ts',
++      `export interface R { body: string | ArrayBuffer | null; other: string | ArrayBuffer | null; }
++       export function f(response: R): Uint8Array | null {
++         return response.body instanceof ArrayBuffer ? new Uint8Array(response.other) : null;
++       }`,
++    );
++    expect(contents).toContain('flight::union_kind_if<flight::ArrayBuffer>(response->body) != nullptr');
++    expect(contents).not.toContain('union_kind_or_throw');
++  });
++
++  it('does not project the path outside the branch the guard controls', () => {
++    const contents = emit(
++      'guarded-path-outside.ts',
++      `export interface R { body: ${NET_RESPONSE_BODY}; }
++       export function f(response: R): Uint8Array | null {
++         if (response.body instanceof ArrayBuffer) return new Uint8Array(response.body);
++         return new Uint8Array(response.body);
++       }`,
++    );
++    expect(contents.match(/union_kind_or_throw/g)?.length).toBe(1);
++    expect(contents.match(/flight::Uint8Array\(response->body\)/g)?.length).toBe(1);
++  });
++
++  it('refuses a guard whose operand has no carrier to ask about', () => {
++    const failure = captureBackendEmissionFailure(() =>
++      emit(
++        'guarded-path-concrete.ts',
++        `export function f(value: ArrayBuffer): boolean { return value instanceof Uint8Array; }`,
++      ),
++    );
++    expect(failure.rule).toBe('cpp-instanceof-operand-unresolved');
++  });
++});
+diff --git a/packages/compiler-backend-cpp/src/cppRuntimeInstanceOf.test.ts b/packages/compiler-backend-cpp/src/cppRuntimeInstanceOf.test.ts
+index accf685..29ec6da 100644
+--- a/packages/compiler-backend-cpp/src/cppRuntimeInstanceOf.test.ts
++++ b/packages/compiler-backend-cpp/src/cppRuntimeInstanceOf.test.ts
+@@ -134,19 +134,29 @@ describe('C++ instanceof lowering', () => {
+        export function f(response: R): Uint8Array | null {
+          return response.ok && response.body instanceof ArrayBuffer ? new Uint8Array(response.body) : null;
+        }`;
+-    // The same source with nothing threaded: the analysis may not assume `Blob` is a type, so the union
+-    // loses that alternative along with the proof every guard on the union reads -- and the guarded read
+-    // has nothing to project through, which is what the two assertions below are: with the name the read
+-    // is projected, without it the whole carrier is handed on.
+-    //
+-    // The consequence is a header the target refuses to compile, not a named emission refusal: the emitter
+-    // spells the carrier from the declaration whether or not the analysis kept it, so there is nothing left
+-    // at the emission site to detect. That boundary is recorded in the request.
+-    const withoutNames = emit('runtime-kind-no-profiles.ts', source);
+-    expect(withoutNames).toContain('flight::Uint8Array(response->body)');
+-    expect(withoutNames).not.toContain('union_kind_or_throw');
+-    const withNames = emit('runtime-kind-named-profiles.ts', source, ['Blob']);
+-    expect(withNames).toContain('flight::Uint8Array(flight::union_kind_or_throw<flight::ArrayBuffer>(response->body))');
++    // The names reach the ANALYSIS, so the control is on the analysis: with them the property keeps the
++    // union the declaration states, and without them it keeps nothing -- nothing is invented for a name no
++    // loaded profile provides. The emission itself no longer differs, because the guarded read is projected
++    // from the guard's own proof either way.
++    const recordedType = (profileTypeNames?: readonly string[]) => {
++      const recorded: unknown[] = [];
++      const walk = (node: unknown): void => {
++        if (Array.isArray(node)) {
++          for (const item of node) walk(item);
++          return;
++        }
++        if (!node || typeof node !== 'object') return;
++        const record = node as Record<string, unknown>;
++        if (record.kind === 'property' && record.name === 'body') recorded.push(record.type);
++        for (const value of Object.values(record)) walk(value);
++      };
++      walk(lower('runtime-kind-recorded-type.ts', source, profileTypeNames).module);
++      return recorded;
++    };
++    expect(recordedType(['Blob']).some((type) => (type as { kind?: string } | undefined)?.kind === 'union')).toBe(
++      true,
++    );
++    expect(recordedType().every((type) => type === undefined)).toBe(true);
+   });
+ 
+   it('answers the measured site through the pipeline entry, not only the single-module one', () => {

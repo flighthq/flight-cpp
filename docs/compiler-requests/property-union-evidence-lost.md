@@ -79,32 +79,49 @@ analysis depends on a name the compiler happens to declare.
 
 ## Carrying workaround
 
-`@flighthq/audio`'s override supplies the projection through `flight::union_kind_or_throw`, the same
-mechanism the emitter uses for the guard, and its native test passes; what else remains in that copy is the
-logical-or lambda return type, which is its own filed request. `@flighthq/loader` carries no override and
-does not compile.
+`@flighthq/loader` carries no override and compiles: 4/4 headers at `-j2`, with the guarded read emitted as
+`flight::Uint8Array(flight::union_kind_or_throw<flight::ArrayBuffer>(response->body))`. `@flighthq/audio`
+still carries an override, and after this patch it supplies exactly one thing -- the logical-or lambda return
+type, which is its own filed request.
 
-## The residual, measured
+## Closed: the guard carries the proof, not the declaration
 
-Both patches land the mechanism and the two axes of evidence, but the two measured sites read a property
-whose declared type is an **alias**: `response.body` is declared `body: NetResponseBody`, and the
-alternatives live behind the name. The narrowing compares the alternatives *the declaration states* --
-which for an aliased member is the name, not the union -- so the guarded read still has no proof to project
-through, and `load.hpp` keeps `flight::Uint8Array(response->body)`.
+The pair of evidence patches left one hop open: `response.body` is declared through an **alias**
+(`body: NetResponseBody`), so the analysis states the name of the union rather than its alternatives, and the
+narrowing had nothing to compare. Three routes were measured (below), and the one that reached the site
+traded a bookkeeping record for it. The route taken instead is the one the emitter was already holding:
+**the guard names the alternative AND the carrier it tested**, so the backend carries that name into the
+branch the guard controls and emits the read from the same carrier expansion.
 
-Three routes were measured, each with the same synthetic reduction that other rows in this file use, and
-then against `@flighthq/loader` itself:
+`source-patches/compiler-guarded-path-narrowing.patch` does that, and resolves nothing:
+`flight::union_kind_if<T>(response->body)` proves the branch, and a read of `response.body` inside it is
+emitted as `flight::union_kind_or_throw<T>(response->body)` -- the throwing twin of the very question that
+admitted the branch, over the same carrier expression. No alias is opened a second time and no type
+reference is materialized that the module never wrote.
 
-| route | reaches the measured site | cost |
+Its lifetime is TypeScript's, and each rule is a withdrawal rather than an invention -- where the proof is
+gone the read is emitted exactly as it was before this patch:
+
+| the proof survives | the proof is withdrawn |
+| --- | --- |
+| inside the branch the guard controls (including the fall-through of a terminating guard, `if (!(test)) throw;`) | at the branch's end |
+| through a call in the same statement, whose arguments are evaluated before it runs | for the statements AFTER a call, because a call may write the property |
+| | on a write to the path, or to any prefix of it (`response = ...` invalidates `response.body`) |
+
+A read the semantic layer's own proof already reaches is left to that proof, so nothing is projected twice,
+and a projection that runs where its guard did not hold is a `std::logic_error` -- a compiler defect with no
+TypeScript shape, never a `flight::Error` a source `catch` could take for an application failure.
+
+Controls: `cppGuardedPathNarrowing.test.ts`, 11 cases -- the evidence-starved read, the read with evidence,
+a read the semantic proof already reaches, a terminating guard's fall-through, identity (both name the same
+carrier), and the four withdrawals plus the branch boundary and a refusal. Mutations: branch recording
+disabled fails 3, the write withdrawal 2, the call withdrawal 1, emitting the carrier with the proof live
+(a double projection) 6, the terminating-guard recording 1.
+
+## The three routes that were measured and rejected, kept for the record
+
+| route | reaches the measured site | why not |
 | --- | --- | --- |
-| resolve the alias through the declaration's shape (`getIrTypeConstructionTargetShape`) | **yes** -- `union_kind_or_throw<flight::ArrayBuffer>(response->body)` in `load.hpp` | it also materializes the declaration's members, which registers type references the module never wrote: `SignalData` appeared in `load.ts`'s imported-name record in `initialization.json` and in the refused `resourceLoader` placeholder's import list |
-| resolve it through the IR type-binding table by binding id | no -- the lookup misses an imported alias | none |
-| resolve it through the checker's `aliasSymbol` on the declared type | no -- the checker's declared type for these members carries no alias to follow | none |
-
-So the honest statement is: the site is one hop short, and the hop is reachable -- but not by any route that
-is both effective and side-effect free as the analysis is currently given its input. The next unit should
-decide between (a) teaching the analysis to hand the emitter's own alias resolution to the narrower, so the
-projection is emitted from the same expansion the carrier came from, and (b) giving the backend the proof:
-the guard it lowers already names the alternative, so a branch could carry it to the read without the
-semantic layer resolving anything. (b) is the one that matches "one shared mechanism" most closely, and it
-is the route this file recommends.
+| resolve the alias through the declaration's shape (`getIrTypeConstructionTargetShape`) | yes | it also materializes the declaration's members, which registers type references the module never wrote: `SignalData` appeared in `load.ts`'s imported-name record in `initialization.json` and in the refused `resourceLoader` placeholder |
+| resolve it through the IR type-binding table by binding id | no | the lookup misses an imported alias |
+| resolve it through the checker's `aliasSymbol` on the declared type | no | the checker's declared type for these members carries no alias to follow |

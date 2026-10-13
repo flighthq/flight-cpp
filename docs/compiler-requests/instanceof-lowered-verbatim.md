@@ -86,5 +86,6 @@ separate defect rather than a gap in this one: `NetResponseBody` is `string | un
 | null`, and for a read of that declared type the analysis produced neither the union evidence the guard
 needs nor the narrowing the guarded read needs. `typeof o.body === 'string'` on the same property refused
 for the same reason, so the defect was never about `instanceof`. It is fixed by
-`source-patches/compiler-profile-type-name-evidence.patch` and recorded in
+`source-patches/compiler-profile-type-name-evidence.patch` and
+`source-patches/compiler-guarded-path-narrowing.patch`, and recorded in
 [`property-union-evidence-lost.md`](property-union-evidence-lost.md).
