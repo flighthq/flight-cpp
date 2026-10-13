@@ -1473,6 +1473,26 @@ add_test(
   COMMAND flight_cpp_generated_audio_parity_tests
 )
 flight_cpp_package_test_labels(flight_cpp.generated_audio_parity audio)
+
+# Behavioural parity for @flighthq/screen, over the emitted code (no overrides exist for it). The host
+# seam is a recording HostScreenQueryCapability supplied by the test, as upstream supplies it.
+add_executable(
+  flight_cpp_generated_screen_parity_tests
+  generated_screen_parity_test.cpp
+)
+target_include_directories(
+  flight_cpp_generated_screen_parity_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_screen_parity_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(
+  NAME flight_cpp.generated_screen_parity
+  COMMAND flight_cpp_generated_screen_parity_tests
+)
+flight_cpp_package_test_labels(flight_cpp.generated_screen_parity screen)
 flight_cpp_package_test_labels(flight_cpp.generated_net net)
 flight_cpp_package_test_labels(flight_cpp.generated_socket signals socket)
 flight_cpp_package_test_labels(flight_cpp.generated_encoding encoding)
