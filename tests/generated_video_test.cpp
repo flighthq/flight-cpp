@@ -234,6 +234,23 @@ int main() {
     check(!flight::video::is_video_resource_empty(host, resource), "a sized resource is not empty");
     check(flight::video::is_video_resource_ready(host, resource), "and a ready host makes it ready");
 
+    // One dimension at a time. The check above zeroes BOTH dimensions when it means "no extent", so an `||`
+    // that tested only one of the two would pass it -- which is exactly what the upstream suite warns about,
+    // and what a mutation to a strict zero test on either operand went undetected by until this pair existed.
+    {
+      auto wide = flight::make_ref<HostVideoCapability>();
+      wide->get_width = [](flight::types::HostImageSource) { return 640.0; };
+      wide->get_height = [](flight::types::HostImageSource) { return 0.0; };
+      check(flight::video::is_video_resource_empty(wide, resource),
+            "a resource with no height is empty even when its width is 640");
+
+      auto tall = flight::make_ref<HostVideoCapability>();
+      tall->get_width = [](flight::types::HostImageSource) { return 0.0; };
+      tall->get_height = [](flight::types::HostImageSource) { return 480.0; };
+      check(flight::video::is_video_resource_empty(tall, resource),
+            "and one with no width is empty even when its height is 480");
+    }
+
     // The host may report NaN before metadata and Infinity for a live stream; both pass through.
     auto live = flight::make_ref<HostVideoCapability>();
     live->get_duration = [](flight::types::HostImageSource) {

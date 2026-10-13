@@ -103,7 +103,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/audio` | 8 | 6 | 109 | none | none | 5 / 3 |
 | `@flighthq/media` | 7 | 5 | 127 | none | none | 5 / 2 |
 | `@flighthq/mediasession` | 3 | 1 | 19 | dedicated | none | 3 / 0 |
-| `@flighthq/video` | 5 | 3 | 79 | none | none | 4 / 1 |
+| `@flighthq/video` | 5 | 3 | 79 | dedicated | none | 4 / 1 |
 | `@flighthq/webcam` | 2 | 1 | 1 | none | none | 2 / 0 |
 | `@flighthq/midi` | 7 | 5 | 40 | dedicated | none | 5 / 2 |
 | `@flighthq/sensors` | 3 | 2 | 67 | none | none | 3 / 0 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-19 of 39 packages are reached by at least one local CTest executable.
-18 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`.
+20 of 39 packages are reached by at least one local CTest executable.
+19 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`.
 
 ## `@flighthq/app`
 
@@ -964,9 +964,37 @@ Video resources and URL constructors
 
 Upstream carries per-package records at `flight/agents/packages/video/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
 
+### What is coverable here
+
+One of the package's five modules is refused and is not supplied by an override, so the package is tier PARTIAL:
+`videoResourceFrom.ts` -- "C++ runtime contract maps distinct union domains to one carrier without a discriminator",
+which `contract.ts` and `index.ts` then inherit. The refusal already has its filed request
+([image-source-union-domain-discriminator](../compiler-requests/image-source-union-domain-discriminator.md)), so
+nothing was filed again. Measured rather than read off the tier summary: `video_format.hpp` and
+`video_resource.hpp` compile, and `video_resource_from.hpp` does not ("use of undeclared identifier"), taking
+`contract.hpp` with it. That leaves the 12 upstream cases in `videoResourceFrom` with no emitted surface, and the 67
+in `videoFormat` (32) and `videoResource` (35) as the whole of what can be asserted. Video imports no `@flighthq/media`
+symbol, so it is independent of the media work in flight elsewhere.
+
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_video` — `tests/generated_video_test.cpp` (dedicated), PRE-EXISTING (the roll-up row above read
+  "none" until this unit corrected it). It covers the two modules that emit and compile whole: `detectVideoMimeType`
+  reading magic bytes with a four-byte minimum and an eight-byte `ftyp` probe, accepting either buffer kind and
+  answering null rather than guessing; `inferVideoMimeType`'s extension table with the query string dropped and case
+  ignored; `canPlayVideoType` refusing an empty media type without consulting the host; `selectVideoResourceUrl`
+  preferring the declared type, returning the SAME source object and answering null when nothing probes; and the
+  video resource's ownership, object-URL revocation and element-less reads.
+
+  This unit added the MUTATION battery the package had none of, five mutations against the two covered modules, and
+  one of them found a real hole. Four bit immediately: the four-byte minimum off by one 2 failures, the `ftyp` probe
+  reading the wrong byte 1, the query string not stripped 1, and the owns-element default flipped 1. The fifth --
+  making `isVideoResourceEmpty`'s zero test on ONE dimension strict -- was UNDETECTED, because the local test only
+  ever zeroed BOTH dimensions, so an `||` that tested one operand alone would have passed it. That is the vacuity the
+  upstream suite calls out in as many words ("an `||` that tested only one of them would still pass a test that
+  zeroed both"), so the case is now covered here: a heightless 640-wide resource and a widthless 480-tall one are
+  both asserted empty, and the mutation then fails the check. No equivalence was found on this surface and none is
+  claimed.
 
 ### Local generation status
 
