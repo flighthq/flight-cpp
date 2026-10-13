@@ -1243,15 +1243,20 @@ int main() {
     int bodiless_decodes = 0;
     const auto bodiless_capabilities = flight::make_ref<flight::types::HostAudioDecodeCapabilities>();
     bodiless_capabilities->mp3 = decoding_slot(buffer, &bodiless_decodes);
+    // The rejection must be the LOADER'S OWN, naming the invalid body. A bare "did it throw" is not
+    // enough: with the guard removed the following std::get/.value() still throws, so the assertion
+    // would pass without the guard existing -- which a mutation proved before this was tightened.
     bool body_rejected = false;
     try {
       static_cast<void>(flight::audio::load_audio_resource_from_url(
                             bodiless_net, bodiless_capabilities, flight::String("sound.mp3"), controller.signal)
                             .get());
+    } catch (const flight::Error& error) {
+      const flight::String message = error.message();
+      body_rejected = message.index_of(flight::String("invalid body")) != -1;
     } catch (...) {
-      body_rejected = true;
     }
-    check(body_rejected, "url: a successful response with no body is rejected");
+    check(body_rejected, "url: a successful response with no body is rejected BY THE LOADER, naming it");
     check(bodiless_decodes == 0, "url: a response with no body is never decoded");
 
     // Cancellation while the decode is in flight.
