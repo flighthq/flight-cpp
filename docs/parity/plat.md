@@ -107,7 +107,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/webcam` | 2 | 1 | 1 | none | none | 2 / 0 |
 | `@flighthq/midi` | 7 | 5 | 40 | dedicated | none | 5 / 2 |
 | `@flighthq/sensors` | 3 | 2 | 67 | dedicated | none | 3 / 0 |
-| `@flighthq/geolocation` | 4 | 2 | 13 | none | none | 4 / 0 |
+| `@flighthq/geolocation` | 4 | 2 | 13 | dedicated | none | 4 / 0 |
 | `@flighthq/haptics` | 3 | 1 | 19 | none | none | 3 / 0 |
 | `@flighthq/device` | 3 | 1 | 12 | none | none | 3 / 0 |
 | `@flighthq/screen` | 3 | 1 | 46 | none | none | 3 / 0 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-21 of 39 packages are reached by at least one local CTest executable.
-20 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`, `sensors`.
+22 of 39 packages are reached by at least one local CTest executable.
+21 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `host`, `mediasession`, `midi`, `video`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`, `input`, `keyboard`, `shortcut`, `accessibility`, `layout`, `platform`, `sensors`, `geolocation`.
 
 ## `@flighthq/app`
 
@@ -1182,7 +1182,39 @@ Upstream carries per-package records at `flight/agents/packages/geolocation/`: `
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_geolocation` — `tests/generated_geolocation_test.cpp` (dedicated), NEW. The package emits at
+  this pin (4 of 4 modules, no override), and the roll-up row above read "none" before this unit. It is a THIN ROUTER
+  over a host capability -- every function either forwards to the provider or post-processes its answer -- so what is
+  pinned is the routing and its two edge cases rather than any arithmetic.
+
+  Covered: `clearGeolocationWatch` forwards the id unchanged; `isGeolocationAvailable` reports the provider's own
+  answer rather than inferring one; the position and result calls hand back the provider's objects; the watch
+  delivers to the handler AND returns the provider's own watch id, so the id `clearGeolocationWatch` is later given
+  is the provider's and not one this package minted; an `onError` is forwarded and reached; a fresh position is
+  zeroed across all nine fields; and `promptForGeolocationAccess`'s arms -- granted passes through, denied/dismissed/
+  timeout stay three DISTINCT answers, an absent provider is `runtime-unavailable` rather than a throw, and a throwing
+  provider is `operation-failed` rather than escaping.
+
+  One case is worth stating on its own because it is the kind that a routing test usually misses: `options ?? _emptyOptions`
+  is an IDENTITY, not a fresh object. When options are omitted the provider is handed the SAME shared options row on
+  every call, and a caller-supplied options row is forwarded as itself rather than replaced -- asserted by comparing
+  the row identity the provider observes, so a version that built a fresh empty row per call is caught.
+
+  No coordinate transformation is covered because the package declares none: there is no transform anywhere in
+  `geolocation.ts` or `geolocationAccess.ts`, so "coordinate transformations where available" has no available
+  surface and nothing was invented for it.
+
+  Twelve mutations, all twelve killed: the cleared id offset by one, availability negated, two constructor defaults
+  not zeroed, the shared empty options replaced with a fresh row, a caller's options ignored in favour of the
+  default, the forwarded error handler dropped, the watch returning a minted id instead of the provider's, both
+  `promptForGeolocationAccess` arms mis-reported, its absence guard dropped (so an absent provider is dereferenced
+  and lands in the catch instead of being reported), and its answer fixed to `granted`. No equivalence was found on
+  this surface and none is claimed.
+
+  Measured note, not a divergence: the upstream case asserts `Object.hasOwn(position, EntityRuntimeKey)`, and both
+  halves of that hold here -- the slot is declared by the type and `allocateEntity`'s counterpart writes it, while
+  the value written is the absent one, so a fresh entity carries no attached runtime (the same thing
+  `entity/clone.test.ts` asserts of a fresh clone). No compiler request was filed for this package.
 
 ### Local generation status
 
