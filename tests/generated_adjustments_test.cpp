@@ -1,6 +1,8 @@
 // Native port of the 137 upstream test declarations in packages/adjustments/src/*.test.ts at
 // Flight a627849. Cases are grouped by observable semantics and retain upstream numeric references.
 // Vitest's toBeCloseTo(x, digits) means absolute error < 10^-digits / 2; close() mirrors that rule.
+// Mutation check (2026-10-13): optional array recognition, composition order, LUT size flooring,
+// LUT clamping, trilinear interpolation, matrix-length failure, exposure base, and HSL clamping died.
 #include <flight/adjustments/contract.hpp>
 
 #include <cmath>
@@ -169,6 +171,12 @@ void matrix_math() {
   const auto fused = adjustments::fuse_color_matrices(
       flight::Array<flight::Array<double>>{invert, gray, contrast});
   check(array_close(fused, expected), "fusion composes index zero first");
+  const auto brightness_then_contrast = adjustments::fuse_color_matrices(
+      flight::Array<flight::Array<double>>{
+          adjustments::create_brightness_color_matrix(0.2),
+          adjustments::create_contrast_color_matrix(2.0)});
+  check(close(brightness_then_contrast.element(4), -0.1, 10),
+        "fusion order applies brightness before contrast, including translated bias");
   const auto forward = adjustments::fuse_color_matrices(
       flight::Array<flight::Array<double>>{invert, sepia});
   const auto reverse = adjustments::fuse_color_matrices(
