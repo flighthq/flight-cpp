@@ -65,6 +65,10 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 
 ## Active requests without a compiler patch
 
+- [`Array.isArray` must inspect an optional property's present payload](array-is-array-optional-property.md) —
+  `@flighthq/adjustments` reads `Partial<ColorMatrixAdjustment>.colorMatrix` as an optional array,
+  but the emitted predicate tests the optional carrier and always returns false; carried by the
+  optional-aware `flight::is_array` runtime binding.
 - [A typed readonly callback needs to retain its derived owner](readonly-callback-derived-owner-recovery.md) —
   Scene2D's Sprite bounds hook loses both the exact Sprite node and its SpriteRuntime slot after the
   generic Node2D callback boundary; carried by the source patch `scene2d-sprite-exact-runtime-runner`.
