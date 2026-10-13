@@ -415,6 +415,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_app_loop_test",
+    srcs = ["generated_app_loop_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_math_test",
     srcs = ["generated_math_test.cpp"],
     size = "small",
@@ -935,6 +942,7 @@ test_suite(
         ":generated_input_test",
         ":generated_intl_cache_test",
         ":generated_lifecycle_test",
+        ":generated_app_loop_test",
         ":generated_loader_test",
         ":generated_log_test",
         ":generated_log_levels_and_sinks_test",

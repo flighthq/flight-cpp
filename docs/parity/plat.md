@@ -90,7 +90,7 @@ upstream package map, which groups packages differently and would put, for insta
 
 | package | upstream modules | test files | cases | local CTest | web-only declared | generated emitted / refused |
 | --- | ---: | ---: | ---: | --- | --- | --- |
-| `@flighthq/app` | 6 | 5 | 201 | incidental | none | 4 / 2 |
+| `@flighthq/app` | 6 | 5 | 201 | dedicated | none | 4 / 2 |
 | `@flighthq/host` | 6 | 4 | 141 | none | none | 6 / 0 |
 | `@flighthq/platform` | 3 | 1 | 37 | none | none | 3 / 0 |
 | `@flighthq/lifecycle` | 3 | 2 | 44 | dedicated | none | 2 / 1 |
@@ -135,8 +135,8 @@ counts its own `sourceModules`, and the two differ where declaration files or ge
 are involved.
 
 **39** packages, **117** upstream test files, **2021** cases.
-10 of 39 packages are reached by at least one local CTest executable.
-8 by a test dedicated to the package: `lifecycle`, `interaction`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`.
+11 of 39 packages are reached by at least one local CTest executable.
+9 by a test dedicated to the package: `lifecycle`, `interaction`, `app`, `dialog`, `statusbar`, `share`, `updater`, `useragent`, `connectivity`.
 
 ## `@flighthq/app`
 
@@ -160,6 +160,37 @@ Upstream carries per-package records at `flight/agents/packages/app/`: `status.m
 ### Existing CTest coverage
 
 - `flight_cpp.generated_dialog` — `tests/generated_dialog_test.cpp` (incidental: includes the package as part of a larger closure)
+- `flight_cpp.generated_app_loop` — `tests/generated_app_loop_test.cpp` (dedicated), NEW. It ports the whole
+  `appLoop.test.ts` suite -- 60 of the package's 201 upstream cases, and the package's largest tractable surface --
+  and the loop is where this package's real logic lives, so what is covered is a scheduler rather than getters: the
+  first tick is worth zero because `lastTime` starts at the not-a-time sentinel; a stall is clamped by
+  `maxDeltaTime` (250ms by default, replaced when given); a target frame rate throttles by skipping whole ticks and
+  folding the skipped time into the emitted delta; the frame interval is re-read from the LIFECYCLE provider on every
+  tick, so a loop started while backgrounded keeps the background rate until the state actually changes; a fixed
+  timestep runs whole steps, keeps the remainder as the interpolation alpha, caps updates per frame so a stall cannot
+  spiral, and carries the remainder across calls -- including across a change of step size and across a call that ran
+  no fixed step at all; pause stops emission WITHOUT cancelling the requested frame, while resume resets the baseline
+  so the pause's gap does not land in one frame; the window registry keeps registration order, ignores repeats, and
+  drops a window's main-window claim when it is unregistered; and the exit listener is routed through the host, with
+  the previous host released when it is replaced or detached. Nine mutations against the override that supplies the
+  module, all nine with teeth and one of them by crashing: the first tick measuring the gap 4 failures, the clamp
+  dropped 4, the throttle skipping nothing 3, the fixed accumulator not carrying 6, the update cap removed 1, pause
+  cancelling the frame 1, resume keeping the baseline 1, the main-window read put back on the bounds-checked accessor
+  0 failures but an ABORT, and unregister keeping the main-window claim 1. No equivalence was found on this surface
+  and none is claimed.
+
+**An override bug this unit fixed.** `getAppLoopMainWindow` is `_mainWindows.get(app) ?? app.windows[0] ?? null`. The
+override's own comment described that fallback correctly -- "the fallback is an array element that may be absent" --
+while the code called `Array::element(0.0)`, the bounds-CHECKED accessor, which throws `std::range_error` on an empty
+registry instead of producing the absent read. The upstream suite names that case exactly: "returns null with no
+windows". The fix is one line to `.get(0.0)`, the accessor that means an absent index. It is the same divergence
+already filed as `docs/compiler-requests/out-of-range-array-index-widened-to-null.md` -- there for an emitted
+lowering, here in hand-written supply code that contradicted its own comment. The mutation that restores the throwing
+accessor aborts, which is how the fix is now covered.
+
+**A member with no row key, again.** `HostAppLoopCapability` declares `now`, and the generated row-member table has no
+key that reaches it, so a capability row cannot carry one. Nothing in the module needs it -- the time arrives as the
+frame callback's own argument -- and the table is deliberately not broadened for it. The test's row builder says so.
 
 ### Local generation status
 

@@ -136,8 +136,10 @@ inline std::optional<flight::Ref<flight::types::AppWindow>> get_app_loop_main_wi
   return ([&]() -> std::optional<flight::Ref<flight::types::AppWindow>> {
     auto from_map = main_windows.get(flight::structural_ref_cast<flight::Ref<flight::types::AppLoop>>(app));
     if (from_map.has_value()) return from_map;
-    const auto from_windows = flight::row_get<flight::RowKey<"windows">>(app).element(0.0);
-    return from_windows == nullptr ? std::nullopt : std::optional<flight::Ref<flight::types::AppWindow>>{from_windows};
+    // `get`, not `element`: an empty registry has no element zero, and the absent read is what the second
+    // `??` produces. `element` is the bounds-checked accessor and throws on an empty array, which is the case
+    // the upstream suite names ("returns null with no windows").
+    return flight::row_get<flight::RowKey<"windows">>(app).get(0.0);
   }());
 }
 
