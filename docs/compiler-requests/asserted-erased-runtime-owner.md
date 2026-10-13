@@ -81,6 +81,22 @@ but the flattened C++ declarations have no heritage by which to prove it. The se
 the declared interface heritage, stores the same derived object in the base slot, and recovers it with
 `std::static_pointer_cast`; there is no copied or parallel runtime identity.
 
+## Fourth measured site: `@flighthq/gizmo`
+
+At the same Flight/compiler pins, `getGizmoRuntime<NodeType>` is refused under
+`cpp-structural-assertion-owner-unproven` at `gizmoState.ts:481`. The source stores a
+`GizmoRuntime<NodeType>` in `GizmoState<NodeType>`'s inherited `EntityRuntime` slot during
+construction and later recovers it through an assertion. The asserted owner adds the complete gizmo
+state: bounds and scratch geometry, camera and selection references, handle/outline nodes, signals,
+snap and pivot settings, active drag state, and lifecycle cleanup storage. The emitter flattens
+`GizmoRuntime extends EntityRuntime`, so the generated owners have neither declared heritage nor a
+checked recovery path and the accessor is omitted. Every public state operation retained in the
+partial header calls that missing accessor.
+
+The native completion must keep one derived runtime allocation, store it through the declared base
+slot, and recover that same identity along real C++ heritage. It must not copy the runtime or maintain
+parallel state beside the entity.
+
 ## Related
 
 [`entity-intersection-arm-sibling-carriers.md`](entity-intersection-arm-sibling-carriers.md) — the tray
