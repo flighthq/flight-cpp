@@ -4301,29 +4301,6 @@
     },
     {
       "code": "dependency-refused",
-      "module": "packages/requirement-codegen/src/contract.ts",
-      "package": "@flighthq/requirement-codegen",
-      "reason": "dependency ./requirementCodegen.ts was refused for @flighthq/requirement-codegen/packages/requirement-codegen/src/requirementCodegen.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/requirement-codegen/src/index.ts",
-      "package": "@flighthq/requirement-codegen",
-      "reason": "dependency ./requirementCodegen.ts was refused for @flighthq/requirement-codegen/packages/requirement-codegen/src/requirementCodegen.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 80,
-      "module": "packages/requirement-codegen/src/requirementCodegen.ts",
-      "package": "@flighthq/requirement-codegen",
-      "reason": "cpp emission failed for @flighthq/requirement-codegen/packages/requirement-codegen/src/requirementCodegen.ts: a readonly structural sequence cannot be stored as an owning array without changing array identity: each RowOf element retains its exact nominal referent, but the view keeps the outer owner only behind opaque identity and accessors, so recovering the elements would still require copying them into a different array object. Until flight-cpp provides identity-preserving projected-sequence storage, declare both the target and the source with the nominal element type rather than its Readonly projection.",
-      "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
       "module": "packages/scene-document/src/contract.ts",
       "package": "@flighthq/scene-document",
       "reason": "dependency ./flightDocumentResourceDependencies was refused for @flighthq/scene-document/packages/scene-document/src/flightDocumentResourceDependencies.ts",

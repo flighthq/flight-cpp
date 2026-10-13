@@ -28,3 +28,9 @@ exposes element views over it, rather than a copied owning array.
 - `createSwfTimelineSource` in `@flighthq/swf` (`swfDocument.ts`): refused, not supplied.
 - `cffCharstring.ts` in `@flighthq/font-formats`: refused, supplied by override
   `font-formats-cff-charstring-structural-subroutines`.
+- `expandRequirements` in `@flighthq/requirement-codegen` (`requirementCodegen.ts`): refused, supplied by the source
+  patch `requirement-codegen-expand-requirements-nominal-copy`, which builds the accumulator from fresh objects
+  copied field by field instead of aliasing the caller's row sequence and spreading a catalog row's sequence into
+  it. The equivalence rests on the helper being private and its result being consumed once, by a caller that reads
+  only `facet` and `key` and mints its own objects -- asserted in `tests/generated_requirement_codegen_test.cpp`,
+  whose additive-expansion cases fail when the originals stop being carried through.

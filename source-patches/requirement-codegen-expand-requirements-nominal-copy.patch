@@ -1,0 +1,30 @@
+diff --git a/packages/requirement-codegen/src/requirementCodegen.ts b/packages/requirement-codegen/src/requirementCodegen.ts
+index 7ff9cb99..921ddf2f 100644
+--- a/packages/requirement-codegen/src/requirementCodegen.ts
++++ b/packages/requirement-codegen/src/requirementCodegen.ts
+@@ -82,15 +82,22 @@ function expandRequirements(
+   requirements: readonly Readonly<Requirement>[],
+ ): readonly Readonly<Requirement>[] {
+   const translations = catalog.translations;
+-  if (translations === undefined || translations.length === 0) return requirements;
+-  const expanded: Readonly<Requirement>[] = [...requirements];
++  const expanded: Readonly<Requirement>[] = [];
++  for (const requirement of requirements) {
++    expanded.push({ facet: requirement.facet, key: requirement.key });
++  }
++  if (translations === undefined || translations.length === 0) return expanded;
+   for (const requirement of requirements) {
+     const namespace = requirement.key.includes('.') ? requirement.key.slice(0, requirement.key.indexOf('.')) : null;
+     for (const translation of translations) {
+       if (translation.from.facet !== requirement.facet) continue;
+       const matches =
+         translation.from.key === requirement.key || (namespace !== null && translation.from.key === namespace);
+-      if (matches) expanded.push(...translation.to);
++      if (matches) {
++        for (const translated of translation.to) {
++          expanded.push({ facet: translated.facet, key: translated.key });
++        }
++      }
+     }
+   }
+   return expanded;

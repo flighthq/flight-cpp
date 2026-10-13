@@ -22256,10 +22256,7 @@
         "source": "packages/requirement-codegen/src/contract.ts"
       },
       "path": "flight/requirement_codegen/contract.hpp",
-      "refusedDependencies": [
-        "@flighthq/requirement-codegen/packages/requirement-codegen/src/requirementCodegen.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "consumers": [],
@@ -22269,22 +22266,12 @@
         "source": "packages/requirement-codegen/src/index.ts"
       },
       "path": "flight/requirement_codegen/_internal_index.hpp",
-      "refusedDependencies": [
-        "@flighthq/requirement-codegen/packages/requirement-codegen/src/requirementCodegen.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
-      "classification": "target-runtime",
       "consumers": [
         "@flighthq/requirement-codegen/packages/requirement-codegen/src/contract.ts",
         "@flighthq/requirement-codegen/packages/requirement-codegen/src/index.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:01854801cd6f327da04445b8c49d4894d7e4213355fc5978781909200ae15e57",
-        "sha256:63811a4cdeeefc709316a99c4b62a62871a5c5e97b9b0833c6b228b8c53e398b",
-        "sha256:6fd529adf2c314dcb052741d915d4a442410a5cb2a574dc0b1680ed40d7e53ce",
-        "sha256:da06a72a4b7e01afdbd0b5e38d55526c5a3818801b852ad96dcdabadd46a8389"
       ],
       "module": {
         "name": "RequirementCodegen",
@@ -22292,8 +22279,7 @@
         "source": "packages/requirement-codegen/src/requirementCodegen.ts"
       },
       "path": "flight/requirement_codegen/requirement_codegen.hpp",
-      "rule": "cpp-contextual-structural-array-nominal-recovery-unproven",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [],

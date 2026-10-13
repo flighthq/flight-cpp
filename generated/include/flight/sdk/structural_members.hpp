@@ -459,6 +459,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("display") && requires { object.display; }) return (object.display);
   else if constexpr (Key::name.view() == std::string_view("displayAsPassword") && requires { object.display_as_password; }) return (object.display_as_password);
   else if constexpr (Key::name.view() == std::string_view("displayObjectClipHooks") && requires { object.display_object_clip_hooks; }) return (object.display_object_clip_hooks);
+  else if constexpr (Key::name.view() == std::string_view("dispositions") && requires { object.dispositions; }) return (object.dispositions);
   else if constexpr (Key::name.view() == std::string_view("distance") && requires { object.distance; }) return (object.distance);
   else if constexpr (Key::name.view() == std::string_view("distro") && requires { object.distro; }) return (object.distro);
   else if constexpr (Key::name.view() == std::string_view("distroVersion") && requires { object.distro_version; }) return (object.distro_version);
@@ -2084,6 +2085,7 @@ decltype(auto) generated_row_member(Object& object) {
   else if constexpr (Key::name.view() == std::string_view("transitionWeight") && requires { object.transition_weight; }) return (object.transition_weight);
   else if constexpr (Key::name.view() == std::string_view("transitions") && requires { object.transitions; }) return (object.transitions);
   else if constexpr (Key::name.view() == std::string_view("translationAmplitude") && requires { object.translation_amplitude; }) return (object.translation_amplitude);
+  else if constexpr (Key::name.view() == std::string_view("translations") && requires { object.translations; }) return (object.translations);
   else if constexpr (Key::name.view() == std::string_view("transmission") && requires { object.transmission; }) return (object.transmission);
   else if constexpr (Key::name.view() == std::string_view("transmissionEnabled") && requires { object.transmission_enabled; }) return (object.transmission_enabled);
   else if constexpr (Key::name.view() == std::string_view("transmissionMap") && requires { object.transmission_map; }) return (object.transmission_map);
@@ -2679,6 +2681,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("display") && requires(Object& object) { object.display; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().display)>>{};
   else if constexpr (Key::name.view() == std::string_view("displayAsPassword") && requires(Object& object) { object.display_as_password; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().display_as_password)>>{};
   else if constexpr (Key::name.view() == std::string_view("displayObjectClipHooks") && requires(Object& object) { object.display_object_clip_hooks; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().display_object_clip_hooks)>>{};
+  else if constexpr (Key::name.view() == std::string_view("dispositions") && requires(Object& object) { object.dispositions; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().dispositions)>>{};
   else if constexpr (Key::name.view() == std::string_view("distance") && requires(Object& object) { object.distance; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().distance)>>{};
   else if constexpr (Key::name.view() == std::string_view("distro") && requires(Object& object) { object.distro; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().distro)>>{};
   else if constexpr (Key::name.view() == std::string_view("distroVersion") && requires(Object& object) { object.distro_version; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().distro_version)>>{};
@@ -4304,6 +4307,7 @@ consteval auto generated_row_member_type_identity() {
   else if constexpr (Key::name.view() == std::string_view("transitionWeight") && requires(Object& object) { object.transition_weight; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transition_weight)>>{};
   else if constexpr (Key::name.view() == std::string_view("transitions") && requires(Object& object) { object.transitions; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transitions)>>{};
   else if constexpr (Key::name.view() == std::string_view("translationAmplitude") && requires(Object& object) { object.translation_amplitude; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().translation_amplitude)>>{};
+  else if constexpr (Key::name.view() == std::string_view("translations") && requires(Object& object) { object.translations; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().translations)>>{};
   else if constexpr (Key::name.view() == std::string_view("transmission") && requires(Object& object) { object.transmission; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transmission)>>{};
   else if constexpr (Key::name.view() == std::string_view("transmissionEnabled") && requires(Object& object) { object.transmission_enabled; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transmission_enabled)>>{};
   else if constexpr (Key::name.view() == std::string_view("transmissionMap") && requires(Object& object) { object.transmission_map; }) return std::type_identity<std::remove_cvref_t<decltype(std::declval<Object&>().transmission_map)>>{};
@@ -4902,6 +4906,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->display; }) owner.bind_named("display", [object]() -> decltype(auto) { return (object->display); });
   if constexpr (requires { object->display_as_password; }) owner.bind_named("displayAsPassword", [object]() -> decltype(auto) { return (object->display_as_password); });
   if constexpr (requires { object->display_object_clip_hooks; }) owner.bind_named("displayObjectClipHooks", [object]() -> decltype(auto) { return (object->display_object_clip_hooks); });
+  if constexpr (requires { object->dispositions; }) owner.bind_named("dispositions", [object]() -> decltype(auto) { return (object->dispositions); });
   if constexpr (requires { object->distance; }) owner.bind_named("distance", [object]() -> decltype(auto) { return (object->distance); });
   if constexpr (requires { object->distro; }) owner.bind_named("distro", [object]() -> decltype(auto) { return (object->distro); });
   if constexpr (requires { object->distro_version; }) owner.bind_named("distroVersion", [object]() -> decltype(auto) { return (object->distro_version); });
@@ -6527,6 +6532,7 @@ void bind_generated_row_members(RowOwner& owner, const std::shared_ptr<Object>& 
   if constexpr (requires { object->transition_weight; }) owner.bind_named("transitionWeight", [object]() -> decltype(auto) { return (object->transition_weight); });
   if constexpr (requires { object->transitions; }) owner.bind_named("transitions", [object]() -> decltype(auto) { return (object->transitions); });
   if constexpr (requires { object->translation_amplitude; }) owner.bind_named("translationAmplitude", [object]() -> decltype(auto) { return (object->translation_amplitude); });
+  if constexpr (requires { object->translations; }) owner.bind_named("translations", [object]() -> decltype(auto) { return (object->translations); });
   if constexpr (requires { object->transmission; }) owner.bind_named("transmission", [object]() -> decltype(auto) { return (object->transmission); });
   if constexpr (requires { object->transmission_enabled; }) owner.bind_named("transmissionEnabled", [object]() -> decltype(auto) { return (object->transmission_enabled); });
   if constexpr (requires { object->transmission_map; }) owner.bind_named("transmissionMap", [object]() -> decltype(auto) { return (object->transmission_map); });
@@ -7158,6 +7164,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(display)
   FLIGHT_SDK_ROW_WIDENS(display_as_password)
   FLIGHT_SDK_ROW_WIDENS(display_object_clip_hooks)
+  FLIGHT_SDK_ROW_WIDENS(dispositions)
   FLIGHT_SDK_ROW_WIDENS(distance)
   FLIGHT_SDK_ROW_WIDENS(distro)
   FLIGHT_SDK_ROW_WIDENS(distro_version)
@@ -8783,6 +8790,7 @@ consteval bool generated_row_widening_matches() {
   FLIGHT_SDK_ROW_WIDENS(transition_weight)
   FLIGHT_SDK_ROW_WIDENS(transitions)
   FLIGHT_SDK_ROW_WIDENS(translation_amplitude)
+  FLIGHT_SDK_ROW_WIDENS(translations)
   FLIGHT_SDK_ROW_WIDENS(transmission)
   FLIGHT_SDK_ROW_WIDENS(transmission_enabled)
   FLIGHT_SDK_ROW_WIDENS(transmission_map)

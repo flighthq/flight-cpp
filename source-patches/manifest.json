@@ -3442,6 +3442,22 @@
       "unblocks": "createStatechartInstance accepts charts with conditional transitions; no header-count change.",
       "expires": "when the emitter enumerates a const object table's values from its members, or the member table binds const-table keys.",
       "appliedOn": "2026-10-13"
+    },
+    {
+      "id": "requirement-codegen-expand-requirements-nominal-copy",
+      "dependency": "flight",
+      "patch": "requirement-codegen-expand-requirements-nominal-copy.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/requirement-codegen/src/requirementCodegen.ts",
+      "package": "@flighthq/requirement-codegen",
+      "answers": "refusal",
+      "refusal": "a readonly structural sequence cannot be stored as an owning array without changing array identity",
+      "rewrite": "expandRequirements built its result by aliasing the caller's readonly row sequence into an owning array (`[...requirements]`) and by spreading a catalog row's own sequence into it (`...translation.to`). It now builds the owning array from fresh objects, copying facet and key from each source row instead of storing the row itself.",
+      "equivalence": "The helper is private and its result is consumed immediately by one caller, which reads only facet and key from each element, deduplicates on the identity those two fields form, and pushes objects it constructs itself into unresolved/declined -- so no element identity, array identity, or reference identity is observable, and the emitted plan is field-for-field and order-for-order what the aliasing version produced. Element ORDER is unchanged (every original in order, then each requirement's matching translations in catalog order), and expansion stays additive with the original requirement kept, which is the whole point of the function. The only object that is no longer shared is the intermediate array, which no caller retained.",
+      "whyNotUpstreamFirst": "The refusal's own remedy is stated in it -- declare the source with the nominal element type rather than storing the Readonly projection -- and this is that remedy applied to the one construction that needed it, with no runtime surface invented. Upstream has no newer commit than the pin.",
+      "unblocks": "@flighthq/requirement-codegen's requirementCodegen.ts emits, so requirement_codegen.hpp and its two aggregate headers compile; it is the last refusal in that package's three modules.",
+      "expires": "when the emitter carries an identity-preserving projected sequence (the runtime shape docs/compiler-requests/readonly-sequence-owning-array.md asks for), at which point the aliasing form lowers and this patch has nothing left to rewrite.",
+      "appliedOn": "2026-10-13"
     }
   ]
 }

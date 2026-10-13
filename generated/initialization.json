@@ -2971,6 +2971,21 @@
       "source": "packages/requirement-catalog/src/requirementCatalog.ts"
     },
     {
+      "name": "Contract",
+      "packageName": "@flighthq/requirement-codegen",
+      "source": "packages/requirement-codegen/src/contract.ts"
+    },
+    {
+      "name": "Index",
+      "packageName": "@flighthq/requirement-codegen",
+      "source": "packages/requirement-codegen/src/index.ts"
+    },
+    {
+      "name": "RequirementCodegen",
+      "packageName": "@flighthq/requirement-codegen",
+      "source": "packages/requirement-codegen/src/requirementCodegen.ts"
+    },
+    {
       "name": "SceneDocumentYamlSubset",
       "packageName": "@flighthq/scene-document",
       "source": "packages/scene-document/src/sceneDocumentYamlSubset.ts"
@@ -25734,6 +25749,36 @@
           "name": "GlShader",
           "packageName": "@flighthq/render-gl",
           "source": "packages/render-gl/src/glShader.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "RequirementCodegen",
+          "packageName": "@flighthq/requirement-codegen",
+          "source": "packages/requirement-codegen/src/requirementCodegen.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Contract",
+          "packageName": "@flighthq/requirement-codegen",
+          "source": "packages/requirement-codegen/src/contract.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Index",
+          "packageName": "@flighthq/requirement-codegen",
+          "source": "packages/requirement-codegen/src/index.ts"
         }
       ]
     },
@@ -103888,6 +103933,31 @@
           "evaluation": "runtime",
           "importer": {
             "name": "Contract",
+            "packageName": "@flighthq/requirement-codegen",
+            "source": "packages/requirement-codegen/src/contract.ts"
+          },
+          "specifier": "./requirementCodegen.ts",
+          "target": {
+            "name": "RequirementCodegen",
+            "packageName": "@flighthq/requirement-codegen",
+            "source": "packages/requirement-codegen/src/requirementCodegen.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Contract",
+        "packageName": "@flighthq/requirement-codegen",
+        "source": "packages/requirement-codegen/src/contract.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
             "packageName": "@flighthq/path",
             "source": "packages/path/src/contract.ts"
           },
@@ -173803,6 +173873,31 @@
         "name": "Index",
         "packageName": "@flighthq/mediasession",
         "source": "packages/mediasession/src/index.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/requirement-codegen",
+            "source": "packages/requirement-codegen/src/index.ts"
+          },
+          "specifier": "./requirementCodegen.ts",
+          "target": {
+            "name": "RequirementCodegen",
+            "packageName": "@flighthq/requirement-codegen",
+            "source": "packages/requirement-codegen/src/requirementCodegen.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Index",
+        "packageName": "@flighthq/requirement-codegen",
+        "source": "packages/requirement-codegen/src/index.ts"
       },
       "steps": []
     },
@@ -272923,6 +273018,222 @@
         "name": "RenderState",
         "packageName": "@flighthq/types",
         "source": "packages/types/src/RenderState.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
+            "line": 1,
+            "packageName": "@flighthq/requirement-codegen",
+            "source": "packages/requirement-codegen/src/requirementCodegen.ts",
+            "id": "binding:[\"@flighthq/requirement-codegen\",\"packages/requirement-codegen/src/requirementCodegen.ts\",9]",
+            "kind": "import",
+            "name": "allocateEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "allocateEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 26,
+            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
+            "line": 1,
+            "packageName": "@flighthq/requirement-codegen",
+            "source": "packages/requirement-codegen/src/requirementCodegen.ts",
+            "id": "binding:[\"@flighthq/requirement-codegen\",\"packages/requirement-codegen/src/requirementCodegen.ts\",25]",
+            "kind": "import",
+            "name": "finishEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "finishEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:af73e100e892f5797629f2015c797c693fc181ea1a3253456f60e150295439de",
+            "line": 2,
+            "packageName": "@flighthq/requirement-codegen",
+            "source": "packages/requirement-codegen/src/requirementCodegen.ts",
+            "id": "binding:[\"@flighthq/requirement-codegen\",\"packages/requirement-codegen/src/requirementCodegen.ts\",83]",
+            "kind": "import",
+            "name": "findRequirementCatalogEntries",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "findRequirementCatalogEntries",
+            "kind": "dependency",
+            "module": {
+              "name": "RequirementCatalog",
+              "packageName": "@flighthq/requirement-catalog",
+              "source": "packages/requirement-catalog/src/requirementCatalog.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:3881f6fbb61c730f3d283cb9395501104b52a907e4d47a8004cdeb924090d306",
+            "line": 14,
+            "packageName": "@flighthq/requirement-codegen",
+            "source": "packages/requirement-codegen/src/requirementCodegen.ts",
+            "id": "binding:[\"@flighthq/requirement-codegen\",\"packages/requirement-codegen/src/requirementCodegen.ts\",394]",
+            "kind": "function",
+            "name": "createRequirementCodegenPlan",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:ef7f0a026776881e657daa441791d7417a6a0cb8a9ad6a3c7a75b7729fdeee38",
+            "line": 26,
+            "packageName": "@flighthq/requirement-codegen",
+            "source": "packages/requirement-codegen/src/requirementCodegen.ts",
+            "id": "binding:[\"@flighthq/requirement-codegen\",\"packages/requirement-codegen/src/requirementCodegen.ts\",954]",
+            "kind": "function",
+            "name": "initializeRequirementCodegenPlan",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:9d36c7cab1e2e8907efe925a857600a64968bb166dadfff36751010661e1c5d8",
+            "line": 80,
+            "packageName": "@flighthq/requirement-codegen",
+            "source": "packages/requirement-codegen/src/requirementCodegen.ts",
+            "id": "binding:[\"@flighthq/requirement-codegen\",\"packages/requirement-codegen/src/requirementCodegen.ts\",3523]",
+            "kind": "function",
+            "name": "expandRequirements",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:a475a95651dd9b9a650eba357a1132e70b1172c74f695507408299dc087054b2",
+            "line": 106,
+            "packageName": "@flighthq/requirement-codegen",
+            "source": "packages/requirement-codegen/src/requirementCodegen.ts",
+            "id": "binding:[\"@flighthq/requirement-codegen\",\"packages/requirement-codegen/src/requirementCodegen.ts\",4577]",
+            "kind": "function",
+            "name": "requirementIdentity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "RequirementCodegen",
+            "packageName": "@flighthq/requirement-codegen",
+            "source": "packages/requirement-codegen/src/requirementCodegen.ts"
+          },
+          "specifier": "@flighthq/entity/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/entity",
+            "source": "packages/entity/src/entity.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "RequirementCodegen",
+            "packageName": "@flighthq/requirement-codegen",
+            "source": "packages/requirement-codegen/src/requirementCodegen.ts"
+          },
+          "specifier": "@flighthq/requirement-catalog/contract",
+          "target": {
+            "name": "RequirementCatalog",
+            "packageName": "@flighthq/requirement-catalog",
+            "source": "packages/requirement-catalog/src/requirementCatalog.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "RequirementCodegen",
+            "packageName": "@flighthq/requirement-codegen",
+            "source": "packages/requirement-codegen/src/requirementCodegen.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "RequirementCodegen",
+        "packageName": "@flighthq/requirement-codegen",
+        "source": "packages/requirement-codegen/src/requirementCodegen.ts"
       },
       "steps": []
     },
