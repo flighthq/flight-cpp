@@ -40002,6 +40002,8 @@
     },
     {
       "consumers": [
+        "@flighthq/texture-formats/packages/texture-formats/src/contract.ts",
+        "@flighthq/texture-formats/packages/texture-formats/src/index.ts",
         "@flighthq/texture-formats/packages/texture-formats/src/parseAtf.ts",
         "@flighthq/texture-formats/packages/texture-formats/src/parseBasis.ts",
         "@flighthq/texture-formats/packages/texture-formats/src/parseDds.ts",
@@ -40016,9 +40018,7 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/texture-formats/packages/texture-formats/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/texture-formats",
@@ -40034,7 +40034,8 @@
     {
       "consumers": [
         "@flighthq/texture-formats/packages/texture-formats/src/contract.ts",
-        "@flighthq/texture-formats/packages/texture-formats/src/explainTextureContainerParse.ts"
+        "@flighthq/texture-formats/packages/texture-formats/src/explainTextureContainerParse.ts",
+        "@flighthq/texture-formats/packages/texture-formats/src/index.ts"
       ],
       "module": {
         "name": "DetectTextureContainer",
@@ -40046,7 +40047,8 @@
     },
     {
       "consumers": [
-        "@flighthq/texture-formats/packages/texture-formats/src/contract.ts"
+        "@flighthq/texture-formats/packages/texture-formats/src/contract.ts",
+        "@flighthq/texture-formats/packages/texture-formats/src/index.ts"
       ],
       "module": {
         "name": "ExplainTextureContainerParse",
@@ -40068,7 +40070,8 @@
       },
       "path": "flight/texture_formats/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/texture-formats/packages/texture-formats/src/contract.ts"
+        "@flighthq/texture-formats/packages/texture-formats/src/explainTextureContainerParse.ts",
+        "@flighthq/texture-formats/packages/texture-formats/src/parseAtf.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -40076,7 +40079,8 @@
       "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/texture-formats/packages/texture-formats/src/contract.ts",
-        "@flighthq/texture-formats/packages/texture-formats/src/explainTextureContainerParse.ts"
+        "@flighthq/texture-formats/packages/texture-formats/src/explainTextureContainerParse.ts",
+        "@flighthq/texture-formats/packages/texture-formats/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:065ff26e0d4378d01118962815839c59906da49d38483f10df92caf5ab4e4cb1",
@@ -40110,7 +40114,8 @@
     {
       "consumers": [
         "@flighthq/texture-formats/packages/texture-formats/src/contract.ts",
-        "@flighthq/texture-formats/packages/texture-formats/src/explainTextureContainerParse.ts"
+        "@flighthq/texture-formats/packages/texture-formats/src/explainTextureContainerParse.ts",
+        "@flighthq/texture-formats/packages/texture-formats/src/index.ts"
       ],
       "module": {
         "name": "ParseBasis",
@@ -40123,7 +40128,8 @@
     {
       "consumers": [
         "@flighthq/texture-formats/packages/texture-formats/src/contract.ts",
-        "@flighthq/texture-formats/packages/texture-formats/src/explainTextureContainerParse.ts"
+        "@flighthq/texture-formats/packages/texture-formats/src/explainTextureContainerParse.ts",
+        "@flighthq/texture-formats/packages/texture-formats/src/index.ts"
       ],
       "module": {
         "name": "ParseDds",
@@ -40136,7 +40142,8 @@
     {
       "consumers": [
         "@flighthq/texture-formats/packages/texture-formats/src/contract.ts",
-        "@flighthq/texture-formats/packages/texture-formats/src/explainTextureContainerParse.ts"
+        "@flighthq/texture-formats/packages/texture-formats/src/explainTextureContainerParse.ts",
+        "@flighthq/texture-formats/packages/texture-formats/src/index.ts"
       ],
       "module": {
         "name": "ParseKtx2",
@@ -40148,7 +40155,8 @@
     },
     {
       "consumers": [
-        "@flighthq/texture-formats/packages/texture-formats/src/contract.ts"
+        "@flighthq/texture-formats/packages/texture-formats/src/contract.ts",
+        "@flighthq/texture-formats/packages/texture-formats/src/index.ts"
       ],
       "module": {
         "name": "SelectTextureContainer",
@@ -40161,6 +40169,7 @@
     {
       "consumers": [
         "@flighthq/texture-formats/packages/texture-formats/src/contract.ts",
+        "@flighthq/texture-formats/packages/texture-formats/src/index.ts",
         "@flighthq/texture-formats/packages/texture-formats/src/parseDds.ts"
       ],
       "module": {

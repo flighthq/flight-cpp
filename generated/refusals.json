@@ -8954,21 +8954,21 @@
       "code": "dependency-refused",
       "module": "packages/texture-formats/src/contract.ts",
       "package": "@flighthq/texture-formats",
-      "reason": "dependency ./parseAtf was refused for @flighthq/texture-formats/packages/texture-formats/src/parseAtf.ts",
+      "reason": "dependency ./parseAtf.ts was refused for @flighthq/texture-formats/packages/texture-formats/src/parseAtf.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/texture-formats/src/explainTextureContainerParse.ts",
       "package": "@flighthq/texture-formats",
-      "reason": "dependency ./parseAtf was refused for @flighthq/texture-formats/packages/texture-formats/src/parseAtf.ts",
+      "reason": "dependency ./parseAtf.ts was refused for @flighthq/texture-formats/packages/texture-formats/src/parseAtf.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/texture-formats/src/index.ts",
       "package": "@flighthq/texture-formats",
-      "reason": "dependency ./contract was refused for @flighthq/texture-formats/packages/texture-formats/src/contract.ts",
+      "reason": "dependency ./explainTextureContainerParse.ts was refused for @flighthq/texture-formats/packages/texture-formats/src/explainTextureContainerParse.ts",
       "stage": "dependency"
     },
     {
