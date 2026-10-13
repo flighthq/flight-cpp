@@ -1,0 +1,20 @@
+diff --git a/packages/particles-formats/src/particleDesignerParse.ts b/packages/particles-formats/src/particleDesignerParse.ts
+index 46023b7..e5d334f 100644
+--- a/packages/particles-formats/src/particleDesignerParse.ts
++++ b/packages/particles-formats/src/particleDesignerParse.ts
+@@ -60,13 +60,13 @@ function unescapeXml(s: string): string {
+ }
+ 
+ function num(d: ParticleDesignerRawDict, key: string, def = 0): number {
+-  const v = d[key];
++  const v = Object.hasOwn(d, key) ? d[key] : undefined;
+   // Reject NaN (e.g. from an empty or malformed <integer>/<real> tag) so a
+   // corrupt field falls back to its default instead of poisoning the config.
+   return typeof v === 'number' && Number.isFinite(v) ? v : def;
+ }
+ function str(d: ParticleDesignerRawDict, key: string, def = ''): string {
+-  const v = d[key];
++  const v = Object.hasOwn(d, key) ? d[key] : undefined;
+   return typeof v === 'string' ? v : def;
+ }
+ 

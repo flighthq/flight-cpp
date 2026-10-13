@@ -44,3 +44,13 @@ object's enumerable own fields in their insertion order. The resulting owner is 
 call, binds the returned entry once, and lists its closed fields in the same property order. The
 TexturePacker branch lists `pivot` in its original position only when present. The patch expires when a
 call-result spread contributes every returned field and preserves its evaluation order.
+
+## Further site: particles-formats libGDX ranges (measured)
+
+`@flighthq/particles-formats` `libgdxParse.ts` builds nine `LibgdxActiveRangeValue`s as
+`{ active: boolKey(section, 'active', d), ...readRange(section, def) }`. Each is emitted as
+`LibgdxActiveRangeValue{.active = ...}`, so every parsed delay, lifeOffset, x/yOffset, velocity, angle,
+rotation, wind and gravity range was zero, with empty scaling and timeline. Velocity, angle and spread
+therefore came out 0. A measured single-module reduction shows the same: the spread form yields zeros
+natively, and the named form yields the range. It is carried by the `particles-formats-libgdx-active-ranges`
+source patch, which names the seven range fields in a helper.

@@ -66,3 +66,23 @@ A source patch was measured first, and no equivalent spelling lowers correctly:
 - `Partial<Record<symbol, T>>` is refused: it has an open member set.
 - `const v: T | undefined = s[slot]; return v ?? null` emits `return value;` from an
   `optional<optional<Ref<T>>>`. The coalesce is dropped again, and the result does not compile.
+
+## A plain index read has the same defect (measured)
+
+No `??` is needed to hit it. Without `noUncheckedIndexedAccess`, `d[key]` on a `Record<string, T>` has type `T`,
+and the emitter lowers it as `d.get(key).value()`. A missing key then throws where JavaScript reads
+`undefined`. Measured at flight-compiler `2b687ea`, with all 44 compiler patches applied:
+
+```ts
+export function numA(d: Record<string, string | number | boolean>, key: string, def = 0): number {
+  const v = d[key];                       // const auto v = d.get(key).value();  -> throws for a missing key
+  return typeof v === 'number' && Number.isFinite(v) ? v : def;
+}
+```
+
+A typed local, `const v: string | number | boolean | undefined = d[key]`, still throws. The spelling
+`Object.hasOwn(d, key) ? d[key] : undefined` returns the default.
+
+This affects `@flighthq/particles-formats` `particleDesignerParse.ts` `num` and `str`, which every document
+parse and every incomplete plist reaches. It is carried by the `particles-formats-pd-dict-own-key-reads`
+source patch.

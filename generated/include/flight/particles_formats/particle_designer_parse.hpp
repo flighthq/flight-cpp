@@ -9,6 +9,7 @@
 #include <limits>
 #include <optional>
 #include <random>
+#include <type_traits>
 #include <variant>
 #include <flight/runtime.hpp>
 
@@ -114,14 +115,14 @@ inline ParticleDesignerRawDict parse_plist_raw_dict(flight::String xml) {
 
 inline double num(ParticleDesignerRawDict d, flight::String key, std::optional<double> def = std::nullopt) {
   def = def.value_or(0.0);
-  const auto v = d.get(key).value();
-  return ((v.index() == 1 && std::isfinite(std::get<1>(v))) ? std::get<1>(v) : def.value());
+  const std::optional<std::variant<bool, double, flight::String>> v = (d.has(key) ? std::optional{std::visit([&](const auto& contextual_union_value) -> std::optional<std::variant<bool, double, flight::String>> { using contextual_union_value_type = std::decay_t<decltype(contextual_union_value)>; if constexpr (std::is_same_v<contextual_union_value_type, bool>) return std::optional<std::variant<bool, double, flight::String>>{std::in_place, std::in_place_type<bool>, contextual_union_value}; else if constexpr (std::is_same_v<contextual_union_value_type, double>) return std::optional<std::variant<bool, double, flight::String>>{std::in_place, std::in_place_type<double>, contextual_union_value}; else return std::optional<std::variant<bool, double, flight::String>>{std::in_place, std::in_place_type<flight::String>, contextual_union_value}; }, d.get(key).value())} : std::nullopt);
+  return (((v.has_value() && v.value().index() == 1) && std::isfinite(std::get<1>(v.value()))) ? std::get<1>(v.value()) : def.value());
 }
 
 inline flight::String str(ParticleDesignerRawDict d, flight::String key, std::optional<flight::String> def = std::nullopt) {
   def = def.value_or(flight::String(""));
-  const auto v = d.get(key).value();
-  return (v.index() == 2 ? std::get<2>(v) : def.value());
+  const std::optional<std::variant<bool, double, flight::String>> v = (d.has(key) ? std::optional{std::visit([&](const auto& contextual_union_value_2) -> std::optional<std::variant<bool, double, flight::String>> { using contextual_union_value_type_2 = std::decay_t<decltype(contextual_union_value_2)>; if constexpr (std::is_same_v<contextual_union_value_type_2, bool>) return std::optional<std::variant<bool, double, flight::String>>{std::in_place, std::in_place_type<bool>, contextual_union_value_2}; else if constexpr (std::is_same_v<contextual_union_value_type_2, double>) return std::optional<std::variant<bool, double, flight::String>>{std::in_place, std::in_place_type<double>, contextual_union_value_2}; else return std::optional<std::variant<bool, double, flight::String>>{std::in_place, std::in_place_type<flight::String>, contextual_union_value_2}; }, d.get(key).value())} : std::nullopt);
+  return ((v.has_value() && v.value().index() == 2) ? std::get<2>(v.value()) : def.value());
 }
 
 inline std::optional<flight::String> pd_blend_mode(double src, double dst) {

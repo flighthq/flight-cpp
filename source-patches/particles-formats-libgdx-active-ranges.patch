@@ -1,0 +1,72 @@
+diff --git a/packages/particles-formats/src/libgdxParse.ts b/packages/particles-formats/src/libgdxParse.ts
+index 9fa7118..8924b9e 100644
+--- a/packages/particles-formats/src/libgdxParse.ts
++++ b/packages/particles-formats/src/libgdxParse.ts
+@@ -6,6 +6,7 @@ import type {
+   LibgdxParseOptions,
+   LibgdxParseResult,
+   ParticleEmitterConfig,
++  LibgdxActiveRangeValue,
+   LibgdxParticleDocument,
+   LibgdxRangeValue,
+ } from '@flighthq/types/contract';
+@@ -308,6 +309,21 @@ function readRange(section: LibgdxSection, def: Partial<LibgdxRangeValue> = {}):
+   };
+ }
+ 
++// `{ active, ...readRange(section, def) }`, with the range's fields named rather than spread.
++function readActiveRange(section: LibgdxSection, active: boolean, def?: Partial<LibgdxRangeValue>): LibgdxActiveRangeValue {
++  const range = readRange(section, def);
++  return {
++    active,
++    lowMin: range.lowMin,
++    lowMax: range.lowMax,
++    highMin: range.highMin,
++    highMax: range.highMax,
++    relative: range.relative,
++    scaling: range.scaling,
++    timeline: range.timeline,
++  };
++}
++
+ function sectionsToDocument(sections: ReadonlyMap<string, LibgdxSection>): LibgdxParticleDocument {
+   // Find the emitter name: the "- Emitter -" section contains both the emitter name
+   // and the root metadata keys (maxParticleCount, additive, imagePath, etc.).
+@@ -368,28 +384,22 @@ function sectionsToDocument(sections: ReadonlyMap<string, LibgdxSection>): Libgd
+     maxParticleCount: numKey(root, 'maxParticleCount', 100),
+     additive: boolKey(root, 'additive', false),
+     premultipliedAlpha: boolKey(root, 'premultipliedAlpha', false),
+-    delay: { active: boolKey(delaySection, 'active', false), ...readRange(delaySection) },
++    delay: readActiveRange(delaySection, boolKey(delaySection, 'active', false)),
+     duration: readRange(durationSection, { lowMin: 3000, lowMax: 3000 }),
+     emission: readRange(emissionSection, { highMin: 32, highMax: 64 }),
+     life: readRange(lifeSection, { lowMin: 1000, lowMax: 1000 }),
+-    lifeOffset: { active: boolKey(lifeOffsetSection, 'active', false), ...readRange(lifeOffsetSection) },
+-    xOffset: { active: boolKey(xOffSection, 'active', false), ...readRange(xOffSection) },
+-    yOffset: { active: boolKey(yOffSection, 'active', false), ...readRange(yOffSection) },
++    lifeOffset: readActiveRange(lifeOffsetSection, boolKey(lifeOffsetSection, 'active', false)),
++    xOffset: readActiveRange(xOffSection, boolKey(xOffSection, 'active', false)),
++    yOffset: readActiveRange(yOffSection, boolKey(yOffSection, 'active', false)),
+     spawnShape,
+     spawnWidth: readRange(spawnWidthSection),
+     spawnHeight: readRange(spawnHeightSection),
+     scale: readRange(scaleSection, { highMin: 32, highMax: 32 }),
+-    velocity: {
+-      active: boolKey(velocitySection, 'active', true),
+-      ...readRange(velocitySection, { highMin: 100, highMax: 100 }),
+-    },
+-    angle: {
+-      active: boolKey(angleSection, 'active', true),
+-      ...readRange(angleSection, { highMin: 360, highMax: 360 }),
+-    },
+-    rotation: { active: boolKey(rotationSection, 'active', false), ...readRange(rotationSection) },
+-    wind: { active: boolKey(windSection, 'active', false), ...readRange(windSection) },
+-    gravity: { active: boolKey(gravitySection, 'active', false), ...readRange(gravitySection) },
++    velocity: readActiveRange(velocitySection, boolKey(velocitySection, 'active', true), { highMin: 100, highMax: 100 }),
++    angle: readActiveRange(angleSection, boolKey(angleSection, 'active', true), { highMin: 360, highMax: 360 }),
++    rotation: readActiveRange(rotationSection, boolKey(rotationSection, 'active', false)),
++    wind: readActiveRange(windSection, boolKey(windSection, 'active', false)),
++    gravity: readActiveRange(gravitySection, boolKey(gravitySection, 'active', false)),
+     tint: { colors: tintColors, timeline: tintTimeline },
+     transparency: readRange(transparencySection, { highMin: 1, highMax: 1 }),
+     imageCount: numKey(root, 'imageCount', 1),
