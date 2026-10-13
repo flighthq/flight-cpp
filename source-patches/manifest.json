@@ -204,22 +204,17 @@
       "id": "shape-formats-keyed-table-owner",
       "dependency": "flight",
       "patch": "shape-formats-keyed-table-owner.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/shape-formats/src/shapeCommandSchemas.ts plus packages/shape-formats/src/shapeJson.ts",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/shape-formats/src/shapeJson.ts",
       "package": "@flighthq/shape-formats",
       "answers": "diagnostic",
-      "refusal": "the inferred registry table loses its ShapeCommandSchema owner across persistent updates, and an Array.isArray-narrowed unknown remains an uniterable Any carrier",
-      "rewrite": "Annotates the registry accumulator with its exact KeyedTable value type and snapshots the array-narrowed value into an erased unknown[] local before iterating it.",
-      "equivalence": "Both annotations are erased. The same table is updated in the same order, and after Array.isArray succeeds the unknown[] local aliases the exact same array whose entries the original loop visits once in order.",
-      "whyNotUpstreamFirst": "These target-neutral local contracts document the values already proved by the factory and guard while retaining evidence the emitter otherwise loses.",
-      "unblocks": "Keeps the schema registry on one KeyedTable carrier and gives is_finite_number_array an iterable dense-array carrier.",
-      "expires": "when generic factory results retain their explicit type arguments through reassignment and Array.isArray narrowing preserves an iterable array carrier, or Flight adopts the annotations.",
-      "appliedOn": "2026-10-07",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "2D",
-        "reason": "context drift: the patched code still exists (1/2 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "refusal": "an Array.isArray-narrowed unknown remains an uniterable Any carrier",
+      "rewrite": "Snapshots the array-narrowed value into an erased unknown[] local before iterating it.",
+      "equivalence": "The annotation is erased. After Array.isArray succeeds, the unknown[] local aliases the exact same array whose entries the original loop visits once in order.",
+      "whyNotUpstreamFirst": "This target-neutral local contract documents the value already proved by the guard while retaining evidence the emitter otherwise loses.",
+      "unblocks": "Gives is_finite_number_array an iterable dense-array carrier.",
+      "expires": "when Array.isArray narrowing preserves an iterable array carrier, or Flight adopts the annotation.",
+      "appliedOn": "2026-10-13"
     },
     {
       "id": "tokens-string-narrowing-binding",

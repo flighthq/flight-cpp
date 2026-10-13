@@ -1,15 +1,3 @@
-diff --git a/packages/shape-formats/src/shapeCommandSchemas.ts b/packages/shape-formats/src/shapeCommandSchemas.ts
---- a/packages/shape-formats/src/shapeCommandSchemas.ts
-+++ b/packages/shape-formats/src/shapeCommandSchemas.ts
-@@ -7,7 +7,7 @@ import type {
- } from '@flighthq/types/contract';
- 
- function createDefaultShapeCommandSchemas(): KeyedTable<ShapeCommandSchema> {
--  let table = createKeyedTable<ShapeCommandSchema>('ShapeCommandSchema', 'Unregistered');
-+  let table: KeyedTable<ShapeCommandSchema> = createKeyedTable<ShapeCommandSchema>('ShapeCommandSchema', 'Unregistered');
-   for (const key of Object.keys(SHAPE_COMMAND_SCHEMA_ARGUMENTS) as ShapeCommandKey[]) {
-     const schema = SHAPE_COMMAND_SCHEMA_ARGUMENTS[key];
-     table = withRegistryTableEntry(table, key, {
 diff --git a/packages/shape-formats/src/shapeJson.ts b/packages/shape-formats/src/shapeJson.ts
 --- a/packages/shape-formats/src/shapeJson.ts
 +++ b/packages/shape-formats/src/shapeJson.ts
