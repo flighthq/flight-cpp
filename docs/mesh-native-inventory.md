@@ -46,6 +46,12 @@ header compilation or the existing Scene3D smoke test as behavioral coverage:
 | Mirrored winding and handedness | A negative general-matrix determinant reverses every indexed triangle in place and negates every tangent handedness. Negative scale swaps complete second/third records for each non-indexed triangle, retaining attached UVs; strips deliberately retain element order while still flipping handedness. Positive determinants preserve both order and handedness, and no operation replaces the index or vertex owner. |
 | Transform bounds and cache state | Translation and scaling update an existing AABB owner to exact extrema and advance the geometry version while deliberately leaving the runtime bounds stamp stale until the next ensure. Translation preserves normals, tangents, and UVs; centering computes missing bounds, and already-centered or position-less geometry is an exact no-op. |
 | UV axes, order, and ownership | Offset then scale resolves `uv0` by semantic despite declaration/byte-order differences in a custom stride, keeps u/v axes distinct, and produces order-sensitive values. It retains the vertex/index/layout/bounds owners and every non-UV word, advances the generic version/cache stamp once per nonempty operation, does not silently rebuild tangent handedness after a UV mirror, and no-ops for absent or empty UV streams. |
+| Morph capture and target/channel order | Capture resolves position, normal, and tangent by semantic despite declaration order, deinterleaves exact vertex order, and allocates independently owned immutable bases and reusable scratch. Blending pairs each target with its authored weight, retains geometry/layout/target/weight owners, restores from capture rather than current vertices, and rewrites only position/normal/tangent xyz while preserving tangent handedness and UVs. |
+| Morph weight domain and sparse targets | Weights are additive coefficients rather than a clamped interpolation: zero skips, negative and greater-than-one values apply exactly. Short delta arrays affect only their prefix; unmatched extra targets and weights are ignored at the shorter count, and every input target and weight remains unchanged. |
+| Morph accumulation and reset | Every direct blend resets the same scratch owner from the immutable base before accumulation. Repeated calls are value-idempotent, weight changes never compound from a prior frame, zero restores the base, and direct calls advance the version once even when their resulting bytes match. |
+| Deformation clone isolation and bind-pose precedence | A deformation clone restores an exact morph bind pose ahead of an also-present skin pose, otherwise restores skin position and normal while leaving tangent data alone. It recomputes tight bounds, owns independent vertices/runtime/bounds, clears both deformation slots, and cannot mutate the already-deformed source; source slot getters preserve the exact installed owners. |
+| Morph update runtime and bounds state | The node-level update lazily installs one bind-pose owner and a non-aliasing weight snapshot, reuses scratch and same-length snapshot owners, reallocates only when the weight count changes, and reblends from the base. Each changed update advances the version and leaves bounds stale until ensure refreshes the same AABB; settled weights plus null or undefined morph slots are exact no-ops. |
+| Morph compatibility and failure atomicity | Missing optional normal/tangent deltas validly preserve those base channels and all unrelated data. Sparse targets and target/weight count mismatches follow the documented bounded prefixes, while an undersized bind-pose scratch raises before changing geometry bytes/owner/version, bounds/cache state, targets, or weights. |
 | Packed channel ownership and order | A non-zero-offset `Float32Array` view is retained exactly with its authored layout. Attribute declaration order deliberately differs from byte order; semantic lookup still reads `uv1`, `color0`, `joints0`, and `weights0` into exact x/y/z/w component order from the second interleaved record. |
 | Stride, offsets, and packed interpretation | Reads honor both the view's byte offset and the 32-byte vertex stride. Packed writes clamp and round `uint16x4`, clamp/round/normalize `unorm8x4`, preserve float UV interpretation, and increment the version exactly once per successful channel. Bytes outside the view remain untouched. |
 | Normals, tangents, and groups | Smooth normals and tangents update in place without replacing vertex or index owners, produce unit +Z/+X frames for canonical UVs, preserve exact version increments, and distinguish positive from negative handedness. Position groups choose the first bit-exact representative, never escape vertex bounds, reject an adjacent Float32 bit pattern, and area-weight grouped normals across a seam. |
@@ -54,17 +60,20 @@ header compilation or the existing Scene3D smoke test as behavioral coverage:
 | Builder bounds | Every builder's cached AABB is recomputed independently from every emitted position and must be byte-for-byte tight at the current version. Box, capsule, plane, and torus also pin semantic half-extents/radius extents. |
 | Primitive seams | Box corners retain face-specific records; capsule, circle, cylinder, ring, UV sphere, torus, and torus-knot closures retain duplicate positions/normals with their required UV endpoints. Cone apex vertices remain duplicated across segment U values. Spherical polyhedra and the icosphere use independent face records, lift crossing longitudes past 1, never leave a face split across 0/1, and place pole U between its face-mates. |
 | Builder parameter guards | Every count-bearing builder floors fractional counts, clamps below-minimum counts, and throws `RangeError` for NaN and infinity on each count parameter. Zero-height cone/truncated-cylinder cases contain no dead triangles; a zero-height cylinder and collapsed/negative box or quad dimensions retain finite canonical records. Custom polyhedron seed positions are observably projected to the requested radius. |
-| Failures | Negative and past-end triangle queries leave the caller's output unchanged. Negative and past-end position writes leave bytes and version unchanged. Invalid weld indices return a deep clone, merge mismatch returns absence, validation rejection is non-mutating, and singular transforms preserve the entire destination. Packed attributes with negative offsets or records extending past stride reject reads and writes without changing output, bytes, or version. |
+| Failures | Negative and past-end triangle queries leave the caller's output unchanged. Negative and past-end position writes leave bytes and version unchanged. Invalid weld indices return a deep clone, merge mismatch returns absence, validation rejection is non-mutating, singular transforms preserve the entire destination, and incompatible morph scratch rejects atomically. Packed attributes with negative offsets or records extending past stride reject reads and writes without changing output, bytes, or version. |
 
-Twenty-one independent modes (`--mutate-owner-identity`, `--mutate-bounds`,
+Twenty-seven independent modes (`--mutate-owner-identity`, `--mutate-bounds`,
 `--mutate-index-order`, `--mutate-failure`, `--mutate-channel-order`,
 `--mutate-stride-offset`, `--mutate-normalization`, `--mutate-group-bounds`,
 `--mutate-builder-topology`, `--mutate-builder-seams`, `--mutate-builder-bounds`,
 `--mutate-builder-guards`, `--mutate-weld-equivalence`, `--mutate-index-remap-order`,
-`--mutate-subset-boundaries`, `--mutate-merge-aliasing`, and
+`--mutate-subset-boundaries`, `--mutate-merge-aliasing`,
 `--mutate-validation-branches`, `--mutate-transform-components`,
-`--mutate-mirrored-transform`, `--mutate-transform-bounds`, and
-`--mutate-uv-axes-order`) suppress one family oracle each. Normal execution must pass; every
+`--mutate-mirrored-transform`, `--mutate-transform-bounds`,
+`--mutate-uv-axes-order`, `--mutate-morph-target-order`,
+`--mutate-morph-weight-math`, `--mutate-morph-reset`,
+`--mutate-morph-aliasing`, `--mutate-morph-bounds`, and
+`--mutate-morph-validation`) suppress one family oracle each. Normal execution must pass; every
 mutation execution must fail its named assertion.
 
 ## Verification boundary
@@ -79,10 +88,11 @@ passed but cannot build/run `flight_cpp.generated_scene3d` because
 ## Honest residual
 
 This is a focused P-3D2 slice, not a claim that all 213 upstream cases are ported. Ranked by remaining
-observable breadth, the largest executable families are now: (1) morph/deformation flows; (2) the
-remaining vertex-format permutations and accessor rejection matrix; (3) residual construction,
-compute, index, operation, transform, and UV permutations outside the focused ownership and boundary
-oracles above; and (4) bind-pose/runtime-slot combinations. The package currently has no
-refusal-ledger row, and this slice required no new production patch or compiler request. Its
+observable breadth, the largest executable families are now: (1) the remaining vertex-format
+permutations and accessor rejection matrix; (2) residual construction, compute, index, and operation
+permutations outside the focused ownership and boundary oracles above; and (3) residual transform,
+UV, morph/deformation, and bind-pose combinations beyond the representative edge matrices above. The
+package currently has no refusal-ledger row, and this slice required no new production patch or
+compiler request. Its
 assisted-tier compiler debt remains explicit in the three existing source patches, one emission
 repair, and six declared overrides rather than being recast as native parity.

@@ -3,12 +3,15 @@
 #include <flight/mesh/mesh_geometry_attributes.hpp>
 #include <flight/mesh/mesh_geometry_builders.hpp>
 #include <flight/mesh/mesh_geometry_compute.hpp>
+#include <flight/mesh/mesh_geometry_deformation_clone.hpp>
 #include <flight/mesh/mesh_geometry_index.hpp>
 #include <flight/mesh/mesh_geometry_layout.hpp>
 #include <flight/mesh/mesh_geometry_operations.hpp>
 #include <flight/mesh/mesh_geometry_subset.hpp>
 #include <flight/mesh/mesh_geometry_transforms.hpp>
 #include <flight/mesh/mesh_geometry_uvs.hpp>
+#include <flight/mesh/morph_mesh_geometry.hpp>
+#include <flight/mesh/update_mesh_morph.hpp>
 
 #include <algorithm>
 #include <array>
@@ -18,6 +21,7 @@
 #include <iostream>
 #include <limits>
 #include <optional>
+#include <stdexcept>
 #include <utility>
 #include <variant>
 #include <vector>
@@ -50,6 +54,12 @@ bool inject_transform_component_mutation = false;
 bool inject_mirrored_transform_mutation = false;
 bool inject_transform_bounds_mutation = false;
 bool inject_uv_axes_mutation = false;
+bool inject_morph_target_order_mutation = false;
+bool inject_morph_weight_math_mutation = false;
+bool inject_morph_reset_mutation = false;
+bool inject_morph_aliasing_mutation = false;
+bool inject_morph_bounds_mutation = false;
+bool inject_morph_validation_mutation = false;
 
 void check(bool condition, const char* message) {
   if (condition) return;
@@ -99,6 +109,34 @@ flight::Ref<types::MeshGeometry> geometry_from(
   options->layout = layout;
   options->vertices = vertices;
   return mesh::create_mesh_geometry(options);
+}
+
+flight::Ref<types::MorphTarget> morph_target(
+    const flight::Float32Array& position_deltas,
+    std::optional<flight::Float32Array> normal_deltas = std::nullopt,
+    std::optional<flight::Float32Array> tangent_deltas = std::nullopt) {
+  return flight::make_ref<types::MorphTarget>(types::MorphTarget{
+      .normal_deltas = std::move(normal_deltas),
+      .position_deltas = position_deltas,
+      .tangent_deltas = std::move(tangent_deltas),
+  });
+}
+
+flight::Ref<types::MeshMorph> mesh_morph(
+    flight::Array<flight::Ref<types::MorphTarget>> targets,
+    const flight::Float32Array& weights) {
+  return flight::make_ref<types::MeshMorph>(types::MeshMorph{
+      .targets = std::move(targets), .weights = weights});
+}
+
+flight::Ref<types::Mesh> morph_carrier(
+    const flight::Ref<types::MeshGeometry>& geometry,
+    std::variant<flight::Ref<types::MeshMorph>, flight::Null,
+                 flight::Undefined> morph) {
+  auto carrier = flight::make_ref<types::Mesh>();
+  carrier->geometry = geometry;
+  carrier->morph = std::move(morph);
+  return carrier;
 }
 
 flight::Ref<types::MeshGeometry> canonical_frame_vertex(
@@ -1807,6 +1845,450 @@ void uv_axes_order_ownership_and_noops() {
         "UV offset and scale resolve uv0 by semantic, preserve u/v axes and call order in a custom stride, retain every non-UV owner and channel, invalidate only the generic version cache, and no-op for absent or empty UV streams");
 }
 
+void morph_target_channel_order_and_capture_ownership() {
+  const auto layout = vertex_layout(
+      flight::Array<flight::Ref<types::VertexAttribute>>{
+          vertex_attribute("tangent", "float32x4", 24.0),
+          vertex_attribute("position", "float32x3", 0.0),
+          vertex_attribute("uv0", "float32x2", 40.0),
+          vertex_attribute("normal", "float32x3", 12.0)},
+      48.0);
+  const flight::Float32Array vertices{
+      1.0F, 2.0F, 3.0F, 4.0F, 5.0F, 6.0F,
+      7.0F, 8.0F, 9.0F, 10.0F, 11.0F, 12.0F,
+      -1.0F, -2.0F, -3.0F, -4.0F, -5.0F, -6.0F,
+      -7.0F, -8.0F, -9.0F, -10.0F, -11.0F, -12.0F,
+  };
+  const auto geometry = geometry_from(layout, vertices);
+  const auto vertex_owner = geometry->vertices.buffer;
+  const auto bind_pose = mesh::capture_mesh_morph_bind_pose(geometry);
+  const double expected_positions[] = {1.0, 2.0, 3.0, -1.0, -2.0, -3.0};
+  const double expected_normals[] = {4.0, 5.0, 6.0, -4.0, -5.0, -6.0};
+  const double expected_tangents[] = {7.0, 8.0, 9.0, -7.0, -8.0, -9.0};
+  bool ordered = bind_pose->positions.size() == 6 &&
+                 bind_pose->blended_positions.size() == 6 &&
+                 bind_pose->normals.has_value() &&
+                 bind_pose->blended_normals.has_value() &&
+                 bind_pose->tangents.has_value() &&
+                 bind_pose->blended_tangents.has_value() &&
+                 bind_pose->positions.buffer != geometry->vertices.buffer &&
+                 bind_pose->blended_positions.buffer !=
+                     bind_pose->positions.buffer &&
+                 bind_pose->normals.value().buffer !=
+                     bind_pose->blended_normals.value().buffer &&
+                 bind_pose->tangents.value().buffer !=
+                     bind_pose->blended_tangents.value().buffer;
+  for (double index = 0.0; index < 6.0; index += 1.0) {
+    const auto i = static_cast<std::size_t>(index);
+    ordered = ordered &&
+              bind_pose->positions.get_index(index) == expected_positions[i] &&
+              bind_pose->normals.value().get_index(index) ==
+                  expected_normals[i] &&
+              bind_pose->tangents.value().get_index(index) ==
+                  expected_tangents[i];
+  }
+
+  const auto first = morph_target(
+      flight::Float32Array{1.0F, 0.0F, 0.0F, 0.0F, 2.0F, 0.0F},
+      flight::Float32Array{0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 3.0F});
+  const auto second = morph_target(
+      flight::Float32Array{0.0F, 0.0F, 4.0F, 5.0F, 0.0F, 0.0F},
+      std::nullopt,
+      flight::Float32Array{1.0F, 2.0F, 3.0F, 4.0F, 5.0F, 6.0F});
+  const auto first_position_owner = first->position_deltas.buffer;
+  const auto second_tangent_owner = second->tangent_deltas.value().buffer;
+  const auto morph = mesh_morph(
+      flight::Array<flight::Ref<types::MorphTarget>>{first, second},
+      flight::Float32Array{2.0F, -0.5F});
+  const auto target_owner = morph->targets.identity();
+  const auto weight_owner = morph->weights.buffer;
+  geometry->vertices.set_index(0.0, 99.0);
+  const double version = geometry->version;
+  mesh::blend_mesh_geometry_morph(geometry, morph, bind_pose);
+  const double expected_vertices[] = {
+      3.0, 2.0, 1.0, 4.0, 7.0, 6.0,
+      6.5, 7.0, 7.5, 10.0, 11.0, 12.0,
+      -3.5, 2.0, -3.0, -4.0, -5.0, 0.0,
+      -9.0, -10.5, -12.0, -10.0, -11.0, -12.0,
+  };
+  ordered = ordered && geometry->vertices.buffer == vertex_owner &&
+            geometry->layout == layout && geometry->version == version + 1.0 &&
+            morph->targets.identity() == target_owner &&
+            morph->weights.buffer == weight_owner &&
+            first->position_deltas.buffer == first_position_owner &&
+            second->tangent_deltas.value().buffer == second_tangent_owner &&
+            bind_pose->positions.get_index(0.0) == 1.0;
+  for (double index = 0.0; index < 24.0; index += 1.0) {
+    ordered = ordered && geometry->vertices.get_index(index) ==
+                               expected_vertices[static_cast<std::size_t>(index)];
+  }
+  if (inject_morph_target_order_mutation) ordered = false;
+  check(ordered,
+        "morph capture resolves channels by semantic into independent ordered base and scratch arrays, then pairs each target with its authored weight while retaining every geometry, target, and weight owner and preserving tangent w and UVs");
+}
+
+void morph_weight_math_sparse_targets_and_limits() {
+  const auto geometry = geometry_from(
+      position_layout(),
+      flight::Float32Array{10.0F, 20.0F, 30.0F, 40.0F, 50.0F, 60.0F});
+  const auto bind_pose = mesh::capture_mesh_morph_bind_pose(geometry);
+  const auto zero = morph_target(flight::Float32Array{
+      90.0F, 90.0F, 90.0F, 90.0F, 90.0F, 90.0F});
+  const auto negative = morph_target(flight::Float32Array{
+      1.0F, 2.0F, 3.0F, 4.0F, 5.0F, 6.0F});
+  const auto sparse = morph_target(flight::Float32Array{10.0F, 20.0F});
+  const auto ignored = morph_target(flight::Float32Array{
+      100.0F, 100.0F, 100.0F, 100.0F, 100.0F, 100.0F});
+  const auto morph = mesh_morph(
+      flight::Array<flight::Ref<types::MorphTarget>>{
+          zero, negative, sparse, ignored},
+      flight::Float32Array{0.0F, -2.0F, 1.5F});
+  const auto weights_owner = morph->weights.buffer;
+  const auto zero_owner = zero->position_deltas.buffer;
+  const auto sparse_owner = sparse->position_deltas.buffer;
+  mesh::blend_mesh_geometry_morph(geometry, morph, bind_pose);
+  const double expected[] = {23.0, 46.0, 24.0, 32.0, 40.0, 48.0};
+  bool weights = morph->weights.buffer == weights_owner &&
+                 zero->position_deltas.buffer == zero_owner &&
+                 sparse->position_deltas.buffer == sparse_owner &&
+                 morph->weights.get_index(0.0) == 0.0 &&
+                 morph->weights.get_index(1.0) == -2.0 &&
+                 morph->weights.get_index(2.0) == 1.5 &&
+                 ignored->position_deltas.get_index(0.0) == 100.0;
+  for (double index = 0.0; index < 6.0; index += 1.0) {
+    weights = weights && geometry->vertices.get_index(index) ==
+                           expected[static_cast<std::size_t>(index)];
+  }
+
+  const auto extra_weight_geometry = geometry_from(
+      position_layout(), flight::Float32Array{1.0F, 2.0F, 3.0F});
+  const auto extra_weight_pose =
+      mesh::capture_mesh_morph_bind_pose(extra_weight_geometry);
+  const auto extra_weight_morph = mesh_morph(
+      flight::Array<flight::Ref<types::MorphTarget>>{
+          morph_target(flight::Float32Array{2.0F, 3.0F, 4.0F})},
+      flight::Float32Array{2.0F, 99.0F});
+  mesh::blend_mesh_geometry_morph(
+      extra_weight_geometry, extra_weight_morph, extra_weight_pose);
+  weights = weights && extra_weight_geometry->vertices.get_index(0.0) == 5.0 &&
+            extra_weight_geometry->vertices.get_index(1.0) == 8.0 &&
+            extra_weight_geometry->vertices.get_index(2.0) == 11.0;
+  if (inject_morph_weight_math_mutation) weights = false;
+  check(weights,
+        "morph weights are unbounded additive coefficients: zero skips, negative and greater-than-one values apply exactly, sparse deltas affect only their prefix, and unmatched extra targets or weights are ignored without mutating any input array");
+}
+
+void morph_accumulation_reset_and_repeated_updates() {
+  const auto geometry = geometry_from(
+      position_layout(), flight::Float32Array{1.0F, 2.0F, 3.0F});
+  const auto bind_pose = mesh::capture_mesh_morph_bind_pose(geometry);
+  const auto scratch_owner = bind_pose->blended_positions.buffer;
+  const auto target = morph_target(
+      flight::Float32Array{2.0F, 4.0F, 6.0F});
+  const auto morph = mesh_morph(
+      flight::Array<flight::Ref<types::MorphTarget>>{target},
+      flight::Float32Array{1.0F});
+  const double version = geometry->version;
+  mesh::blend_mesh_geometry_morph(geometry, morph, bind_pose);
+  bool reset = geometry->vertices.get_index(0.0) == 3.0 &&
+               geometry->vertices.get_index(1.0) == 6.0 &&
+               geometry->vertices.get_index(2.0) == 9.0 &&
+               geometry->version == version + 1.0;
+  mesh::blend_mesh_geometry_morph(geometry, morph, bind_pose);
+  reset = reset && geometry->vertices.get_index(0.0) == 3.0 &&
+          geometry->vertices.get_index(1.0) == 6.0 &&
+          geometry->vertices.get_index(2.0) == 9.0 &&
+          geometry->version == version + 2.0;
+  morph->weights.set_index(0.0, -1.0);
+  mesh::blend_mesh_geometry_morph(geometry, morph, bind_pose);
+  reset = reset && geometry->vertices.get_index(0.0) == -1.0 &&
+          geometry->vertices.get_index(1.0) == -2.0 &&
+          geometry->vertices.get_index(2.0) == -3.0;
+  morph->weights.set_index(0.0, 0.0);
+  mesh::blend_mesh_geometry_morph(geometry, morph, bind_pose);
+  reset = reset && geometry->vertices.get_index(0.0) == 1.0 &&
+          geometry->vertices.get_index(1.0) == 2.0 &&
+          geometry->vertices.get_index(2.0) == 3.0 &&
+          bind_pose->positions.get_index(0.0) == 1.0 &&
+          bind_pose->positions.get_index(1.0) == 2.0 &&
+          bind_pose->positions.get_index(2.0) == 3.0 &&
+          bind_pose->blended_positions.buffer == scratch_owner;
+  if (inject_morph_reset_mutation) reset = false;
+  check(reset,
+        "every direct morph blend resets reusable scratch from the immutable captured base before accumulation, so repeated calls are value-idempotent, changed and zero weights never compound, and only the version advances per call");
+}
+
+void morph_deformation_clone_aliasing_and_bind_pose_precedence() {
+  const auto source = canonical_frame_vertex(
+      1.0, 2.0, 3.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0,
+      0.25, 0.75);
+  const auto morph_pose = mesh::capture_mesh_morph_bind_pose(source);
+  mesh::set_mesh_geometry_morph_bind_pose(source, morph_pose);
+  const auto skin_pose = flight::make_ref<types::MeshSkinBindPose>();
+  skin_pose->positions = flight::Float32Array{90.0F, 91.0F, 92.0F};
+  skin_pose->normals = flight::Float32Array{9.0F, 9.0F, 9.0F};
+  skin_pose->tangents = flight::Float32Array{8.0F, 8.0F, 8.0F};
+  skin_pose->joints = flight::Float32Array(4.0);
+  skin_pose->weights = flight::Float32Array(4.0);
+  skin_pose->skinned_positions = flight::Float32Array(3.0);
+  skin_pose->skinned_normals = flight::Float32Array(3.0);
+  skin_pose->skinned_tangents = flight::Float32Array(3.0);
+  mesh::set_mesh_geometry_skin_bind_pose(source, skin_pose);
+  const auto morph = mesh_morph(
+      flight::Array<flight::Ref<types::MorphTarget>>{morph_target(
+          flight::Float32Array{5.0F, 0.0F, 0.0F},
+          flight::Float32Array{1.0F, 0.0F, 0.0F},
+          flight::Float32Array{0.0F, 2.0F, 0.0F})},
+      flight::Float32Array{1.0F});
+  mesh::blend_mesh_geometry_morph(source, morph, morph_pose);
+  const auto source_vertex_owner = source->vertices.buffer;
+  const auto source_runtime = source->entity_runtime_key.value();
+  const auto clone = mesh::clone_mesh_geometry_for_deformation(source);
+  const auto clone_runtime = clone->entity_runtime_key.value();
+  bool aliasing = source->vertices.get_index(0.0) == 6.0 &&
+                  source->vertices.get_index(3.0) == 1.0 &&
+                  source->vertices.get_index(7.0) == 2.0 &&
+                  mesh::get_mesh_geometry_morph_bind_pose(source) ==
+                      std::optional<flight::Ref<types::MeshMorphBindPose>>{
+                          morph_pose} &&
+                  mesh::get_mesh_geometry_skin_bind_pose(source) ==
+                      std::optional<flight::Ref<types::MeshSkinBindPose>>{
+                          skin_pose} &&
+                  clone != source && clone->vertices.buffer != source_vertex_owner &&
+                  clone->layout == source->layout && clone_runtime != source_runtime &&
+                  clone->vertices.get_index(0.0) == 1.0 &&
+                  clone->vertices.get_index(1.0) == 2.0 &&
+                  clone->vertices.get_index(2.0) == 3.0 &&
+                  clone->vertices.get_index(3.0) == 0.0 &&
+                  clone->vertices.get_index(4.0) == 1.0 &&
+                  clone->vertices.get_index(5.0) == 0.0 &&
+                  clone->vertices.get_index(6.0) == 1.0 &&
+                  clone->vertices.get_index(7.0) == 0.0 &&
+                  clone->vertices.get_index(8.0) == 0.0 &&
+                  clone->vertices.get_index(9.0) == 1.0 &&
+                  clone->vertices.get_index(10.0) == 0.25 &&
+                  clone->vertices.get_index(11.0) == 0.75 &&
+                  !mesh::get_mesh_geometry_morph_bind_pose(clone).has_value() &&
+                  !mesh::get_mesh_geometry_skin_bind_pose(clone).has_value() &&
+                  clone->bounds.has_value() &&
+                  clone->bounds.value()->min->x == 1.0 &&
+                  clone->bounds.value()->max->x == 1.0;
+  clone->vertices.set_index(0.0, -100.0);
+  aliasing = aliasing && source->vertices.get_index(0.0) == 6.0 &&
+             morph_pose->positions.get_index(0.0) == 1.0;
+
+  const auto skin_source = canonical_frame_vertex(
+      9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 8.0, 8.0, 8.0, -1.0);
+  const auto skin_only = flight::make_ref<types::MeshSkinBindPose>();
+  skin_only->positions = flight::Float32Array{2.0F, 3.0F, 4.0F};
+  skin_only->normals = flight::Float32Array{0.0F, 1.0F, 0.0F};
+  skin_only->tangents = flight::Float32Array{7.0F, 7.0F, 7.0F};
+  skin_only->joints = flight::Float32Array(4.0);
+  skin_only->weights = flight::Float32Array(4.0);
+  skin_only->skinned_positions = flight::Float32Array(3.0);
+  skin_only->skinned_normals = flight::Float32Array(3.0);
+  skin_only->skinned_tangents = flight::Float32Array(3.0);
+  mesh::set_mesh_geometry_skin_bind_pose(skin_source, skin_only);
+  const auto skin_clone =
+      mesh::clone_mesh_geometry_for_deformation(skin_source);
+  aliasing = aliasing && skin_clone->vertices.get_index(0.0) == 2.0 &&
+             skin_clone->vertices.get_index(1.0) == 3.0 &&
+             skin_clone->vertices.get_index(2.0) == 4.0 &&
+             skin_clone->vertices.get_index(3.0) == 0.0 &&
+             skin_clone->vertices.get_index(4.0) == 1.0 &&
+             skin_clone->vertices.get_index(5.0) == 0.0 &&
+             skin_clone->vertices.get_index(6.0) == 8.0 &&
+             skin_clone->vertices.get_index(7.0) == 8.0 &&
+             skin_clone->vertices.get_index(8.0) == 8.0 &&
+             skin_source->vertices.get_index(0.0) == 9.0 &&
+             !mesh::get_mesh_geometry_skin_bind_pose(skin_clone).has_value();
+  if (inject_morph_aliasing_mutation) aliasing = false;
+  check(aliasing,
+        "deformation cloning restores the deeper morph bind pose ahead of a skin pose, falls back to skin position and normal only, recomputes exact bounds, and isolates vertex, runtime, and bind-pose state without changing the deformed source");
+}
+
+void morph_update_bounds_runtime_slots_and_settled_noops() {
+  const auto geometry = geometry_from(
+      position_layout(),
+      flight::Float32Array{0.0F, 0.0F, 0.0F, 2.0F, 0.0F, 0.0F});
+  const auto bounds = mesh::ensure_mesh_geometry_bounds(geometry);
+  const auto runtime = geometry->entity_runtime_key.value();
+  const double initial_version = geometry->version;
+  const double initial_stamp = runtime->bounds_version;
+  const auto morph = mesh_morph(
+      flight::Array<flight::Ref<types::MorphTarget>>{morph_target(
+          flight::Float32Array{0.0F, 4.0F, 0.0F, 3.0F, 0.0F, 0.0F})},
+      flight::Float32Array{0.5F});
+  const auto carrier = morph_carrier(
+      geometry,
+      std::variant<flight::Ref<types::MeshMorph>, flight::Null,
+                   flight::Undefined>{
+          std::in_place_type<flight::Ref<types::MeshMorph>>, morph});
+  mesh::update_mesh_morph(carrier);
+  const auto bind_pose = mesh::get_mesh_geometry_morph_bind_pose(geometry);
+  bool bounds_and_slots = bounds.has_value() && bind_pose.has_value() &&
+                          geometry->version == initial_version + 1.0 &&
+                          geometry->bounds == bounds &&
+                          runtime->bounds_version == initial_stamp &&
+                          geometry->vertices.get_index(1.0) == 2.0 &&
+                          geometry->vertices.get_index(3.0) == 3.5 &&
+                          runtime->morph_blended_weights.has_value() &&
+                          runtime->morph_blended_weights.value().buffer !=
+                              morph->weights.buffer &&
+                          runtime->morph_blended_weights.value().get_index(0.0) ==
+                              0.5;
+  const auto weight_snapshot_owner =
+      runtime->morph_blended_weights.value().buffer;
+  const auto scratch_owner = bind_pose.value()->blended_positions.buffer;
+  bounds_and_slots =
+      bounds_and_slots &&
+      mesh::ensure_mesh_geometry_bounds(geometry) == bounds &&
+      bounds.value()->min->y == 0.0 && bounds.value()->max->y == 2.0 &&
+      bounds.value()->max->x == 3.5 &&
+      runtime->bounds_version == geometry->version;
+  const double settled_version = geometry->version;
+  const double settled_stamp = runtime->bounds_version;
+  mesh::update_mesh_morph(carrier);
+  mesh::update_mesh_morph(carrier);
+  bounds_and_slots = bounds_and_slots &&
+                     geometry->version == settled_version &&
+                     runtime->bounds_version == settled_stamp &&
+                     geometry->bounds == bounds &&
+                     bind_pose.value()->blended_positions.buffer == scratch_owner;
+
+  morph->weights.set_index(0.0, 2.0);
+  mesh::update_mesh_morph(carrier);
+  bounds_and_slots = bounds_and_slots &&
+                     geometry->version == settled_version + 1.0 &&
+                     geometry->vertices.get_index(1.0) == 8.0 &&
+                     geometry->vertices.get_index(3.0) == 8.0 &&
+                     runtime->morph_blended_weights.value().buffer ==
+                         weight_snapshot_owner &&
+                     runtime->morph_blended_weights.value().get_index(0.0) ==
+                         2.0 &&
+                     runtime->bounds_version == settled_stamp;
+  morph->weights.set_index(0.0, 3.0);
+  bounds_and_slots =
+      bounds_and_slots &&
+      runtime->morph_blended_weights.value().get_index(0.0) == 2.0;
+  morph->weights = flight::Float32Array{3.0F, 99.0F};
+  mesh::update_mesh_morph(carrier);
+  bounds_and_slots = bounds_and_slots &&
+                     geometry->vertices.get_index(1.0) == 12.0 &&
+                     geometry->vertices.get_index(3.0) == 11.0 &&
+                     runtime->morph_blended_weights.value().size() == 2 &&
+                     runtime->morph_blended_weights.value().buffer !=
+                         weight_snapshot_owner &&
+                     runtime->morph_blended_weights.value().get_index(0.0) ==
+                         3.0 &&
+                     runtime->morph_blended_weights.value().get_index(1.0) ==
+                         99.0;
+  bounds_and_slots =
+      bounds_and_slots &&
+      mesh::ensure_mesh_geometry_bounds(geometry) == bounds &&
+      bounds.value()->min->y == 0.0 && bounds.value()->max->y == 12.0 &&
+      bounds.value()->max->x == 11.0 &&
+      runtime->bounds_version == geometry->version;
+
+  const auto null_geometry = geometry_from(
+      position_layout(), flight::Float32Array{5.0F, 6.0F, 7.0F});
+  const auto null_owner = null_geometry->vertices.buffer;
+  const double null_version = null_geometry->version;
+  const auto null_carrier = morph_carrier(
+      null_geometry,
+      std::variant<flight::Ref<types::MeshMorph>, flight::Null,
+                   flight::Undefined>{
+          std::in_place_type<flight::Null>, flight::null});
+  mesh::update_mesh_morph(null_carrier);
+  const auto undefined_carrier = morph_carrier(
+      null_geometry,
+      std::variant<flight::Ref<types::MeshMorph>, flight::Null,
+                   flight::Undefined>{
+          std::in_place_type<flight::Undefined>, flight::undefined});
+  mesh::update_mesh_morph(undefined_carrier);
+  bounds_and_slots = bounds_and_slots &&
+                     null_geometry->vertices.buffer == null_owner &&
+                     null_geometry->version == null_version &&
+                     null_geometry->vertices.get_index(0.0) == 5.0 &&
+                     !mesh::get_mesh_geometry_morph_bind_pose(null_geometry)
+                          .has_value();
+  if (inject_morph_bounds_mutation) bounds_and_slots = false;
+  check(bounds_and_slots,
+        "updateMeshMorph lazily installs one exact bind-pose owner, snapshots weights without aliasing them, invalidates but defers bounds recomputation, skips settled weights exactly, reallocates only when weight length changes, and no-ops for null or undefined morph slots");
+}
+
+void morph_validation_and_non_mutating_failures() {
+  const auto geometry = geometry_from(
+      position_layout(),
+      flight::Float32Array{1.0F, 2.0F, 3.0F, 4.0F, 5.0F, 6.0F});
+  const auto bounds = mesh::ensure_mesh_geometry_bounds(geometry);
+  const auto runtime = geometry->entity_runtime_key.value();
+  const auto vertex_owner = geometry->vertices.buffer;
+  const double version = geometry->version;
+  const double stamp = runtime->bounds_version;
+  std::array<double, 6> values{};
+  for (double index = 0.0; index < 6.0; index += 1.0) {
+    values[static_cast<std::size_t>(index)] =
+        geometry->vertices.get_index(index);
+  }
+  const auto invalid_pose = flight::make_ref<types::MeshMorphBindPose>();
+  invalid_pose->positions =
+      flight::Float32Array{1.0F, 2.0F, 3.0F, 4.0F, 5.0F, 6.0F};
+  invalid_pose->blended_positions = flight::Float32Array(3.0);
+  invalid_pose->normals = std::nullopt;
+  invalid_pose->blended_normals = std::nullopt;
+  invalid_pose->tangents = std::nullopt;
+  invalid_pose->blended_tangents = std::nullopt;
+  const auto target = morph_target(
+      flight::Float32Array{9.0F, 9.0F, 9.0F, 9.0F, 9.0F, 9.0F});
+  const auto morph = mesh_morph(
+      flight::Array<flight::Ref<types::MorphTarget>>{target},
+      flight::Float32Array{1.0F});
+  bool threw = false;
+  try {
+    mesh::blend_mesh_geometry_morph(geometry, morph, invalid_pose);
+  } catch (const std::range_error&) {
+    threw = true;
+  } catch (...) {
+  }
+  bool validation = threw && geometry->vertices.buffer == vertex_owner &&
+                    geometry->version == version && geometry->bounds == bounds &&
+                    runtime->bounds_version == stamp &&
+                    target->position_deltas.get_index(0.0) == 9.0 &&
+                    morph->weights.get_index(0.0) == 1.0;
+  for (double index = 0.0; index < 6.0; index += 1.0) {
+    validation = validation && geometry->vertices.get_index(index) ==
+                                   values[static_cast<std::size_t>(index)];
+  }
+
+  const auto channel_geometry = canonical_frame_vertex(
+      1.0, 2.0, 3.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -1.0,
+      0.25, 0.75);
+  const auto channel_pose =
+      mesh::capture_mesh_morph_bind_pose(channel_geometry);
+  const auto position_only = mesh_morph(
+      flight::Array<flight::Ref<types::MorphTarget>>{morph_target(
+          flight::Float32Array{5.0F, 6.0F, 7.0F})},
+      flight::Float32Array{1.0F});
+  mesh::blend_mesh_geometry_morph(
+      channel_geometry, position_only, channel_pose);
+  validation = validation && channel_geometry->vertices.get_index(0.0) == 6.0 &&
+               channel_geometry->vertices.get_index(1.0) == 8.0 &&
+               channel_geometry->vertices.get_index(2.0) == 10.0 &&
+               channel_geometry->vertices.get_index(3.0) == 0.0 &&
+               channel_geometry->vertices.get_index(4.0) == 1.0 &&
+               channel_geometry->vertices.get_index(5.0) == 0.0 &&
+               channel_geometry->vertices.get_index(6.0) == 1.0 &&
+               channel_geometry->vertices.get_index(7.0) == 0.0 &&
+               channel_geometry->vertices.get_index(8.0) == 0.0 &&
+               channel_geometry->vertices.get_index(9.0) == -1.0 &&
+               channel_geometry->vertices.get_index(10.0) == 0.25 &&
+               channel_geometry->vertices.get_index(11.0) == 0.75;
+  if (inject_morph_validation_mutation) validation = false;
+  check(validation,
+        "an undersized bind-pose scratch rejects before changing geometry, bounds, cache state, targets, or weights, while absent optional normal and tangent deltas validly preserve those channels and all unrelated data");
+}
+
 void primitive_builder_topology_order_ownership_and_bounds() {
   const flight::Array<flight::Array<double>> triangle_vertices{
       flight::Array<double>{0.0, 1.0, 0.0},
@@ -2483,6 +2965,18 @@ int main(int argc, char** argv) {
       mutation == flight::String("--mutate-transform-bounds");
   inject_uv_axes_mutation =
       mutation == flight::String("--mutate-uv-axes-order");
+  inject_morph_target_order_mutation =
+      mutation == flight::String("--mutate-morph-target-order");
+  inject_morph_weight_math_mutation =
+      mutation == flight::String("--mutate-morph-weight-math");
+  inject_morph_reset_mutation =
+      mutation == flight::String("--mutate-morph-reset");
+  inject_morph_aliasing_mutation =
+      mutation == flight::String("--mutate-morph-aliasing");
+  inject_morph_bounds_mutation =
+      mutation == flight::String("--mutate-morph-bounds");
+  inject_morph_validation_mutation =
+      mutation == flight::String("--mutate-morph-validation");
 
   construction_clone_and_owner_identity();
   bounds_cache_and_position_mutation();
@@ -2502,6 +2996,12 @@ int main(int argc, char** argv) {
   mirrored_transform_winding_and_handedness();
   transform_bounds_center_and_cache_invalidation();
   uv_axes_order_ownership_and_noops();
+  morph_target_channel_order_and_capture_ownership();
+  morph_weight_math_sparse_targets_and_limits();
+  morph_accumulation_reset_and_repeated_updates();
+  morph_deformation_clone_aliasing_and_bind_pose_precedence();
+  morph_update_bounds_runtime_slots_and_settled_noops();
+  morph_validation_and_non_mutating_failures();
   primitive_builder_topology_order_ownership_and_bounds();
   primitive_builder_seam_behavior();
   primitive_builder_parameter_guards_and_degeneracy();
