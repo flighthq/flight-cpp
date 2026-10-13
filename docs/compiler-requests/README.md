@@ -433,3 +433,5 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   silent miscompilation and a crash: `initializeRenderStateRuntime<Runtime, …>` writes `registry_miss = nullptr`, so `createRenderState()` then `destroyRenderState()` dereferences null. Carried by the `compiler-generic-receiver-null-write` patch; two `render-state-generic-null-clip-hooks-*` repairs remain for the mapped-type receiver.
 - [`new Set(existingSet)` must copy, not alias](new-set-copy-lowered-to-alias.md) —
   silent miscompilation, the Set twin of the Map request: `flight::Set<T>(set)` selects the sharing copy constructor. One SDK site (`scene3d-formats` `objRequirements.ts`).
+- [`new Set(collection.values())` must lower without a contextual optional construction](new-set-from-collection-iterator.md) —
+  a refusal (`contextual optionalSingle construction requires expression type evidence`) for `values()`/`keys()` iterator arguments; preventive, no SDK site is refused today. `entries()` and stored iterators stay refused.
