@@ -981,8 +981,19 @@ Upstream carries per-package records at `flight/agents/packages/collision/`: `st
 
 ### Existing CTest coverage
 
-- `flight_cpp.generated_collision` — `tests/generated_collision_test.cpp` (dedicated)
+- `flight_cpp.generated_collision` — `tests/generated_collision_test.cpp` (dedicated), the public SweepCircle2D sweep regression
 - `flight_cpp_upstream_collision_smoke` — `examples/upstream/collision.cpp` (dedicated)
+- `flight_cpp.generated_collision_shapes` — `tests/generated_collision_shapes_test.cpp` (dedicated), added by the unit that audited this
+  lane, for the two emitting modules the sweep regression does not reach: `packContactFeatureId` (the aliased face pair stays
+  distinct, every distinct feature across each field's packing boundary has its own id, the widest id is an exact integer, and
+  the two bits that ride on top distinguish what they name) and `getCollisionShapeContainsPoint2D` (the capsule as a segment
+  plus its round caps including the diagonal a rectangular reading admits, boundary-inclusive circle, box and rotated box,
+  convex polygon inside and out, a degenerate polygon rejected, a tiny polygon staying proportional, a segment, a point
+  collider, and zero-radius and zero-length shapes behaving as points). Mutation evidence, which the package had none of:
+  five of six mutations bite — dropping the second-point bit fails 3 checks, removing the capsule's projection clamp 3,
+  making the circle boundary exclusive 2, making the box corner exclusive 1, accepting degenerate polygons 1 — and the sixth,
+  halving the edge scale, is unitable only if a face index may equal the documented 2^25 limit, which no valid index does.
+  Scoped compile: **38 of 38 headers compile**, the whole package, which no other ANIM package manages.
 
 ### Local generation status
 

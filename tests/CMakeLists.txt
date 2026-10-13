@@ -81,6 +81,14 @@ target_include_directories(
 )
 target_link_libraries(flight_cpp_generated_collision_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_collision COMMAND flight_cpp_generated_collision_tests)
+
+add_executable(flight_cpp_generated_collision_shapes_tests generated_collision_shapes_test.cpp)
+target_include_directories(
+  flight_cpp_generated_collision_shapes_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_collision_shapes_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_collision_shapes COMMAND flight_cpp_generated_collision_shapes_tests)
 set_tests_properties(flight_cpp.generated_collision PROPERTIES SKIP_RETURN_CODE 77)
 
 add_executable(flight_cpp_generated_registry_tests generated_registry_test.cpp)
@@ -1049,6 +1057,7 @@ endfunction()
 
 flight_cpp_package_test_labels(flight_cpp.structural_row types)
 flight_cpp_package_test_labels(flight_cpp.generated_collision collision)
+flight_cpp_package_test_labels(flight_cpp.generated_collision_shapes collision)
 flight_cpp_package_test_labels(flight_cpp.generated_registry registry)
 flight_cpp_package_test_labels(flight_cpp.generated_requirement requirement)
 flight_cpp_package_test_labels(flight_cpp.generated_requirement_codegen requirement-codegen)
