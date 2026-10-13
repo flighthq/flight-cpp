@@ -1456,6 +1456,36 @@
       "authoredOn": "2026-10-13"
     },
     {
+      "id": "physics3d-abi-exact-shape-encoding",
+      "path": "flight/physics3d_abi/physics3_dabi_command.hpp",
+      "package": "@flighthq/physics3d-abi",
+      "status": "partial",
+      "derivedFrom": "948f979310e4229d64206594aaedfac4c83e18f6f9cd095b4c312a769693a40e",
+      "reason": "At a627849 the emitter retains a heightfield scalar-count read through an invalid structural access and refuses the shape scalar writer because narrowing does not select the exact generated variant arm. The same module refuses SetJoint at the flattened base-to-derived joint boundary.",
+      "change": "Keeps the current-pin generated module, removes an accidental physics2d-abi helper import, reads heightfield storage from its exact variant owner, and writes every built-in 3D shape arm through std::get on the generated variant.",
+      "equivalence": "Each supported shape preserves its ABI kind, scalar and integer counts, source scalar order, mesh indices, heightfield dimensions, version, eight-byte record alignment, and zero-only alignment padding. No joint record is published because the common Physics3DJoint owner cannot recover the derived flag and value cells faithfully.",
+      "whyNotAPatchOrRepair": "A declaration repair cannot replace the invalid retained expression or supply variant-dependent scalar writes. Portable TypeScript already performs ordinary discriminant narrowing, while changing its public joint parameter to a generated C++ variant would alter the API.",
+      "unblocks": "physics3_dabi_command.hpp compiles independently and exposes every non-joint command writer, including all nine collider shape encodings.",
+      "remaining": "writePhysics3DAbiSetJointCommand remains unavailable until joint storage retains a checked concrete owner or declared interface heritage. The override does not write a zero-filled or otherwise fabricated joint payload.",
+      "expires": "when 3D shape narrowing emits exact variant visitation and joint narrowing retains recoverable derived ownership.",
+      "authoredOn": "2026-10-13"
+    },
+    {
+      "id": "physics3d-abi-reference-world-with-honest-joint-boundary",
+      "path": "flight/physics3d_abi/reference_physics3_dabi.hpp",
+      "package": "@flighthq/physics3d-abi",
+      "status": "partial",
+      "derivedFrom": "b004ab52c6de7634feb160397fa4ed1773b670767dd0294d2ff84b381e1598d9",
+      "reason": "At a627849 the reference module omits world-state construction, collider-shape validation and derived joint construction. Retained code additionally depends on refused core joint, collision-step, collider-factory and shape-cast operations; assigns an anonymous decoded config into its exact public owner; and invents a nominal type for selecting two ray-query functions.",
+      "change": "Keeps the current-pin generated runtime, constructs each persistent world with exact generated owners and weak self-captures, copies decoded config fields into exact public owners, delegates validation to the exact-variant physics3d validator, clones all nine collider variants into separate local/world storage, calls supported ray queries directly, integrates collider-free bodies through the available core primitives, rejects SetJoint before mutation, and clears the contact-hooks capability while collision stepping is unavailable.",
+      "equivalence": "World handles remain monotonic and instance-local; maps, sorted caller IDs, reusable readback arrays and supported callbacks belong to one persistent world. Exact body and collider mutation, validation, readback, point/ray/region queries and collider-free substepped integration preserve source values and identity. Unsupported joint wire data produces UnsupportedJoint before mutation, and unavailable collision or joint stepping never fabricates contacts, hooks, owners or payloads.",
+      "whyNotAPatchOrRepair": "The missing world factory requires executable mutually recursive callback state, while declaration insertion cannot replace retained config assignment, collider construction, function selection or SetJoint bodies. The portable source already expresses them correctly; changing physics3d core is outside this package-owned task, and copying derived joints into a flattened base would break identity.",
+      "unblocks": "reference_physics3_dabi.hpp and the three package aggregators compile with callable world lifecycle, body and collider commands, collider-free stepping, readback, and point/ray/region queries.",
+      "remaining": "SetJoint encoding and construction remain unavailable until joint interfaces retain checked concrete ownership; execution reports UnsupportedJoint without mutation. Worlds containing colliders, contacts or joints report Declined from step until core collision and joint stepping compile. queryShapeCast remains an empty callback until the refused core collider sweep is available; no no-hit result is fabricated.",
+      "expires": "when shared mutable self-capture lowers with initial storage, collider unions narrow to exact owners, decoded structural configs retain their destination owner, and core joint, collision-step and shape-cast dependencies compile.",
+      "authoredOn": "2026-10-13"
+    },
+    {
       "id": "effects-render-effect-field-role-record",
       "path": "flight/effects/render_effect_interpolation.hpp",
       "package": "@flighthq/effects",
