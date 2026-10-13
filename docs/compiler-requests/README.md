@@ -422,3 +422,5 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   silent miscompilation: the values come from a dynamic view whose keys the member table never binds, so the array is empty; statechart rejected every conditional transition as an invalid comparison. Carried by the `statechart-comparison-closed-set` patch.
 - [Resolving an imported type's declaring owner must not re-walk every star re-export](exported-type-owner-lookup-uncached.md) —
   performance only: an uncached owner lookup over the `@flighthq/types/contract` barrel makes the registry migration group's generation take 3h40m. No workaround is carried.
+- [A `?? null` fallback written into nullable structural storage must produce that storage's absent state](nullish-null-fallback-into-nullable-structural-storage.md) —
+  `@flighthq/render`'s `initializeRenderState` (`canvasHost`, `imageHost`); one statement failed 227 renderer header compilations. Carried by the `render-state-nullable-structural-*-fallback` emission repairs.

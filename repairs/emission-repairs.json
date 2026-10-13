@@ -13540,6 +13540,30 @@
       "expires": "when structural-record materialization consistently uses normalized emitted C++ member names; sdk:check fails if this repair matches no header"
     },
     {
+      "id": "render-state-nullable-structural-canvas-host-fallback",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/render/render_state.hpp",
+      "from": "? nullptr : std::get<0>(canvas_host))",
+      "to": "? std::nullopt : std::optional{std::get<0>(canvas_host)})",
+      "sourceDeclaration": "packages/render/src/renderState.ts -- state.canvasHost = obj?.canvasHost ?? null; into RenderState.canvasHost: Readonly<HostCanvasCapability> | null",
+      "diagnostic": "non-pointer operand type incompatible with nullptr",
+      "defect": "The emitter lowers the null fallback as nullptr rather than nullable structural storage's disengaged state.",
+      "expectedWhen": "always",
+      "expires": "when the emitter gives a null fallback into nullable structural storage that storage's absent state"
+    },
+    {
+      "id": "render-state-nullable-structural-image-host-fallback",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/render/render_state.hpp",
+      "from": "? nullptr : std::get<0>(image_host))",
+      "to": "? std::nullopt : std::optional{std::get<0>(image_host)})",
+      "sourceDeclaration": "packages/render/src/renderState.ts -- state.imageHost = obj?.imageHost ?? null; into RenderState.imageHost: Readonly<HostImageCapability> | null",
+      "diagnostic": "non-pointer operand type incompatible with nullptr",
+      "defect": "The emitter lowers the null fallback as nullptr rather than nullable structural storage's disengaged state.",
+      "expectedWhen": "always",
+      "expires": "when the emitter gives a null fallback into nullable structural storage that storage's absent state"
+    },
+    {
       "id": "requirement-codegen-row-write-array-projection",
       "kind": "project-array-at-row-write",
       "appliesTo": "flight/requirement_codegen/requirement_codegen.hpp",
