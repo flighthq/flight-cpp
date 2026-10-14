@@ -72,12 +72,13 @@ before its result was read.
 | A3 | the playback rate is doubled | SURVIVED | caught |
 | M1 | the bus gain is never stored | SURVIVED | caught |
 | M2 | the pan is no longer clamped | SURVIVED | caught |
-| G1 | `disableAudioMixerGuards` never clears the guard | SURVIVED | still survives -- equivalent under the log boundary |
-| G2 | `enableAudioMixerGuards` never installs it | SURVIVED | still survives -- equivalent under the log boundary |
+| G1 | `disableAudioMixerGuards` never clears the guard | SURVIVED | caught, once the Log override landed -- see below |
+| G2 | `enableAudioMixerGuards` never installs it | SURVIVED | caught, once the Log override landed -- see below |
 | A4 | the target gain is never stored (both arms of the fade) | SURVIVED | caught |
 
-Six of the eight mutants are now caught by the assertion written for each; the guard pair is unobservable on
-this profile for the measured reason above. Every catch is a clean `FAIL:` line, not a crash. A4 was
+Eight of the eight mutants are now caught by the assertion written for each -- the guard pair's row was
+"survives, equivalent" only while the Log boundary denied them an observable, and the Post-Log re-audit below
+re-runs both to a clean catch. Every catch is a clean `FAIL:` line, not a crash. A4 was
 mis-targeted on the first pass (the store appears in both arms of the fade, so a one-site anchor could not
 reach it); re-run as a declared two-site mutation, it is caught.
 
