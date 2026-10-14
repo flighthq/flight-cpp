@@ -27,7 +27,10 @@
 // test and the package never invents one.
 
 #include <flight/audio/audio_resource.hpp>
+#include <flight/log/log.hpp>
 #include <flight/media/audio_channel.hpp>
+#include <flight/media/audio_mixer.hpp>
+#include <flight/media/enable_audio_mixer_guards.hpp>
 #include <flight/media/media_channel_signals.hpp>
 #include <flight/types/audio_resource.hpp>
 #include <flight/types/video_resource.hpp>
@@ -100,6 +103,34 @@ flight::Ref<flight::types::HostAudioDeviceCapability> mock_backend(MockDevice& s
   backend->start_source = [&state](double, double, double) { state.start_source_calls += 1; };
   backend->stop_source = [&state](double) { state.stop_source_calls += 1; };
   return backend;
+}
+
+// The mixer host the audioMixer fixture records against. Every member is present so the emitted bus
+// setters have an operation to reach; nothing here is a real mixer graph.
+struct MockMixer {
+  int gain_nodes = 0;
+  int pan_nodes = 0;
+  double last_gain = -1.0;
+  double last_pan = -99.0;
+};
+
+flight::Ref<flight::types::HostAudioMixerCapability> mock_mixer(MockMixer& state) {
+  const auto host = flight::make_ref<flight::types::HostAudioMixerCapability>();
+  host->create_mixer_graph = [](double, double) { return 1.0; };
+  host->destroy_mixer_graph = [](double) {};
+  host->create_bus_node = [&state](double, double, double) {
+    state.gain_nodes += 1;
+    return 1.0;
+  };
+  host->destroy_bus_node = [](double, double) {};
+  host->set_bus_node_gain = [&state](double, double, double value) { state.last_gain = value; };
+  host->set_bus_node_pan = [&state](double, double, double value) { state.last_pan = value; };
+  host->fade_bus_node_gain = [](double, double, double, double) {};
+  host->set_master_gain = [](double, double) {};
+  host->route_source_to_bus = [](double, double, double) {};
+  host->unroute_source = [](double, double) {};
+  host->route_source_to_default = [](double, double) {};
+  return host;
 }
 
 // A one-second mono buffer. The upstream fixtures' mockBuffer() uses 8Hz because it is a plain object
@@ -325,6 +356,106 @@ int main() {
     check_close(flight::media::get_audio_channel_duration(flight::make_ref<flight::types::AudioChannel>()),
                 0.0, "audio: a channel that never played has no duration");
   }
+
+  // ---- THE ROWS THIS SUITE'S OWN SCOPE NOTE CALLED UNREACHABLE ---------------------------------
+  //
+  // The note at the top of this file says audioMixer, enableAudioMixerGuards and videoChannel "cannot be
+  // covered here at all". That is true of videoChannel (its header does not compile) and FALSE for the
+  // other two: enableAudioMixerGuards emits all three of its functions and compiles, and audioMixer emits
+  // seven, including the four bus setters. Seven mutations of the functions below SURVIVED the whole suite
+  // before this block existed, which is how the overstated note was found.
+  {
+    MockDevice state;
+    const auto backend = mock_backend(state);
+    const auto channel = play(backend);
+    check(channel != nullptr, "channel: plays against the supplied host");
+
+    check(flight::media::is_audio_channel_playing(channel),
+          "isAudioChannelPlaying reports true while the channel is playing");
+    flight::media::pause_audio_channel(channel);
+    check(!flight::media::is_audio_channel_playing(channel), "and false once it is paused");
+
+    check_close(flight::media::get_audio_channel_source_handle(channel), 0.0,
+                "getAudioChannelSourceHandle reports the invalid sentinel once the source is inactive");
+  }
+
+  {
+    MockDevice state;
+    const auto backend = mock_backend(state);
+    check(!flight::media::has_audio_channel_fade(backend),
+          "hasAudioChannelFade is false when the host declares no fadeSourceGain");
+
+    double faded_source = -1.0;
+    double faded_target = -1.0;
+    double faded_ms = -1.0;
+    backend->fade_source_gain = [&faded_source, &faded_target, &faded_ms](double source, double target,
+                                                                         double ms) {
+      faded_source = source;
+      faded_target = target;
+      faded_ms = ms;
+    };
+    check(flight::media::has_audio_channel_fade(backend),
+          "and true once the host declares it");
+
+    const auto channel = play(backend);
+    check(channel != nullptr, "channel: plays against the supplied host");
+    flight::media::fade_audio_channel_gain(backend, channel, 0.5, 500.0);
+    check_close(faded_target, 0.5, "fadeAudioChannelGain hands the host the target gain");
+    check_close(faded_ms, 500.0, "in MILLISECONDS, converting nothing itself");
+    check_close(channel->gain, 0.5, "and stores the target on the channel");
+    check(faded_source >= 1.0, "against the channel's own source handle");
+  }
+
+  {
+    MockDevice state;
+    const auto backend = mock_backend(state);
+    double rate_forwarded = -1.0;
+    backend->set_source_playback_rate = [&rate_forwarded](double, double value) { rate_forwarded = value; };
+    const auto channel = play(backend);
+
+    check_close(flight::media::set_audio_channel_playback_rate(channel, 2.0), 2.0,
+                "setAudioChannelPlaybackRate answers the value it was given");
+    check_close(channel->playback_rate, 2.0, "stores it on the channel");
+    check_close(rate_forwarded, 2.0, "and forwards it to the selected host once");
+  }
+
+  {
+    MockMixer mixer_state;
+    const auto mixer = mock_mixer(mixer_state);
+    const auto bus = flight::media::create_audio_bus();
+    check(bus != nullptr, "createAudioBus creates a bus");
+    check_close(bus->gain, 1.0, "with the documented default gain");
+    check(!bus->muted, "unmuted by default");
+
+    check_close(flight::media::set_audio_bus_gain(mixer, bus, 0.25), 0.25,
+                "setAudioBusGain answers the value it was given");
+    check_close(bus->gain, 0.25, "stores the gain on the bus");
+
+    check(flight::media::set_audio_bus_muted(mixer, bus, true), "setAudioBusMuted answers the value");
+    check(bus->muted, "and stores it");
+
+    check_close(flight::media::set_audio_bus_pan(mixer, bus, 9.0), 1.0,
+                "setAudioBusPan answers the CLAMPED value");
+    check_close(bus->pan, 1.0, "and stores the clamped pan, not the raw one");
+    check_close(flight::media::set_audio_bus_pan(mixer, bus, -9.0), -1.0, "clamped at the other end too");
+  }
+
+  // ---- THE GUARD PAIR, AND WHY THEY ARE NOT OBSERVABLE HERE ---------------------------------------
+  //
+  // enableAudioMixerGuards / disableAudioMixerGuards differ in exactly one observable: with the guard
+  // installed, a gain change on a bus that belongs to no mixer emits a WARNING through `@flighthq/log`.
+  // That warning cannot be observed on this profile, and the reason is precise rather than "the fixture is
+  // unreachable": `generated/include/flight/log/log.hpp` is itself PARTIAL -- 23 omissions -- and its
+  // retained `log_info`/`log_error`/`log_debug` call `merge_span_fields`, which is NOT GENERATED (the
+  // source's `_mergeSpanFields`, log.ts line 773). Calling any of them therefore throws
+  // "flight::log::merge_span_fields was not generated for this profile" rather than logging.
+  //
+  // So the guard's own effect is unobservable here through no fault of the media module: the seam it warns
+  // through does not run. Two mutations of these functions (enable never installing the guard, disable never
+  // clearing it) survive this suite, and they survive because NOTHING on this profile can distinguish them --
+  // an equivalent pair under this boundary, not an oversight. The boundary is a measured defect in the log
+  // package, recorded with the other measured sites of the same defect in
+  // docs/compiler-requests/retained-declaration-calls-omitted-callee.md.
 
   return failures == 0 ? 0 : 1;
 }
