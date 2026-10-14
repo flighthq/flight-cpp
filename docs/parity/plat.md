@@ -1833,6 +1833,15 @@ Upstream carries per-package records at `flight/agents/packages/shell/`: `status
   case-insensitivity across both sides was still added, since the upstream suite asserts it, but it is not
   what kills any mutation and is not claimed to be.
 
+  A LATER pass mechanically re-audited the case list and re-ran the battery with target-diff confirmation; the
+  outcome is a VERIFICATION, not a change. All fourteen upstream cases are plain `it(` -- this file uses NO
+  `it.each` or `test.each`, so the naive count is the true count here, unlike `@flighthq/share` where three
+  value tables hid eleven assertions. Each named case maps to a real assertion, the two-host isolation case
+  records each host's own URL, and the trash case asserts that every operation STARTS in input order before
+  anything settles and that outcomes come back in input order rather than settlement order. Fifteen mutations
+  re-run with the mutant confirmed to differ from the original: all fifteen killed. The URL-side `toLower`
+  equivalence from the first pass stands.
+
   No compiler request was filed for this package.
 
 ### Local generation status
