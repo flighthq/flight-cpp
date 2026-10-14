@@ -202,3 +202,50 @@ accepts whatever it is handed and throws at conversion -- which is precisely why
 before this unit. A REAL `merge_span_fields` takes a `LogData` value, so the ported bodies need a working
 dereference of `Ref<LogData>` that this pass did not establish. Attempted, reverted, and recorded rather than
 half-landed.
+
+## Fifth pass: PROMOTED -- both Log suites pass, and two packages' parked assertions are restored
+
+The faithful conversion turned out to be the source's own union, not a new carrier, so it is Log-local and no
+compiler request was needed for it.
+
+### The conversion, derived request-first
+
+Tracing the domain first settled it. The source says `LogData = string | Record<string, unknown>` and
+`LogDataProvider` is its thunk, so the public parameter is `LogData | LogDataProvider`. The emitter FLATTENS that
+into a three-arm variant (`function<LogData()>` / `Record` / `String`), which is why a `LogData` value -- what
+the tests pass, and what `Ref<LogData>` IS, since `LogData` is not `ReferenceEnabled` and `Ref<T>` therefore
+resolves to `T` -- cannot convert into it.
+
+The smallest faithful repair is therefore NOT a carrier change but a re-spelling: keep the union structured as
+`std::variant<flight::types::LogDataProvider, flight::types::LogData>`, which is the source's own
+`LogData | LogDataProvider`. A `LogData` converts into its second arm, a provider into its first, and the body
+resolves exactly as the source does -- `typeof data === 'function' ? data() : data`:
+
+```cpp
+  flight::types::LogData resolved = (data.index() == 0 ? std::get<0>(data)() : std::get<1>(data));
+```
+
+No dereference is needed (my fourth pass wrongly assumed a pointer), no runtime or compiler-wide carrier change
+is involved, and absence, error and object identity are preserved because a `LogData` is carried by value
+through the union exactly as before. Merge precedence is untouched: `merge_span_fields` still takes a `LogData`
+value and still applies data-wins-over-spans, msg-wins-in-the-string-arm, and no-fields-returns-input.
+
+The one further spelling, in the same class: `createFilterLogSink`'s predicate takes the entry, so it is spelled
+`std::function<bool(flight::Ref<LogEntry>)>` like the sink it filters, not with the emitted row spelling.
+
+### Result
+
+* `@flighthq/log` compiles 3/3 with **no override drift**; tier stays `partial`, as required.
+* `tests/generated_log_test.cpp` and `tests/generated_log_levels_and_sinks_test.cpp` **PASS, tests unmodified**.
+* The override is PROMOTED, and its manifest entry now carries the re-derived `derivedFrom`, the Ref-retention
+  rationale, and `remaining` naming only the console refusal.
+* `createConsoleCaptureSink` remains OMITTED, not stubbed -- the console object-argument path stays refused.
+
+### The parked checks, now run
+
+* **TextBidi**: the four `enableTextBidiGuards` cases were recorded BLOCKED because they assert on log entries
+  and emitting one threw. They are now ported and pass -- including "warns once and names the kernel fixing
+  call", which is direct evidence that the logging path runs end to end rather than merely compiling.
+* **Media**: the guard pair's assertions were replaced by a boundary note for the same reason. Restored, and
+  the two mutations that had survived with "no test able to distinguish them" (`enable` never installing the
+  guard, `disable` never clearing it) are now CAUGHT.

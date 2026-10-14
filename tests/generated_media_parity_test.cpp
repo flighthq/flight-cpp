@@ -440,22 +440,55 @@ int main() {
     check_close(flight::media::set_audio_bus_pan(mixer, bus, -9.0), -1.0, "clamped at the other end too");
   }
 
-  // ---- THE GUARD PAIR, AND WHY THEY ARE NOT OBSERVABLE HERE ---------------------------------------
+  // ---- THE GUARD PAIR, NOW OBSERVABLE --------------------------------------------------------------
   //
-  // enableAudioMixerGuards / disableAudioMixerGuards differ in exactly one observable: with the guard
-  // installed, a gain change on a bus that belongs to no mixer emits a WARNING through `@flighthq/log`.
-  // That warning cannot be observed on this profile, and the reason is precise rather than "the fixture is
-  // unreachable": `generated/include/flight/log/log.hpp` is itself PARTIAL -- 23 omissions -- and its
-  // retained `log_info`/`log_error`/`log_debug` call `merge_span_fields`, which is NOT GENERATED (the
-  // source's `_mergeSpanFields`, log.ts line 773). Calling any of them therefore throws
-  // "flight::log::merge_span_fields was not generated for this profile" rather than logging.
-  //
-  // So the guard's own effect is unobservable here through no fault of the media module: the seam it warns
-  // through does not run. Two mutations of these functions (enable never installing the guard, disable never
-  // clearing it) survive this suite, and they survive because NOTHING on this profile can distinguish them --
-  // an equivalent pair under this boundary, not an oversight. The boundary is a measured defect in the log
-  // package, recorded with the other measured sites of the same defect in
-  // docs/compiler-requests/retained-declaration-calls-omitted-callee.md.
+  // These cases assert on a LOG ENTRY, which this profile could not produce while the log override
+  // stubbed merge_span_fields: that override's log_once builds every structured entry through it, so
+  // emitting one threw "flight::log::merge_span_fields was not generated for this profile". The log CORE
+  // override now supplies a real merge_span_fields, so the pair is observable and the two mutations that
+  // used to survive with no test able to distinguish them are caught below.
+  {
+    std::vector<std::string> entries;
+    const flight::types::LogSink sink =
+        [&entries](flight::Ref<flight::types::LogEntry> entry) {
+          const auto data = entry->data;
+          if (data.index() == 0) {
+            const auto message = std::get<0>(data).get(flight::String("message"));
+            entries.push_back(message.has_value() ? message.value().as_string().to_utf8()
+                                                  : std::string("<none>"));
+          } else {
+            entries.push_back(std::get<1>(data).to_utf8());
+          }
+        };
+    flight::log::set_log_sink(std::optional<flight::types::LogSink>{sink});
+
+    MockMixer mixer_state;
+    const auto mixer = mock_mixer(mixer_state);
+    const auto orphan = flight::media::create_audio_bus();
+
+    // Without the guard the failure is invisible: the value is stored and nothing is logged.
+    flight::log::clear_log_once_keys();
+    entries.clear();
+    static_cast<void>(flight::media::set_audio_bus_gain(mixer, orphan, 0.25));
+    check(entries.empty(), "an unmixed bus gain change is silent while the guards are off");
+
+    flight::media::enable_audio_mixer_guards();
+    flight::log::clear_log_once_keys();
+    entries.clear();
+    check_close(flight::media::set_audio_bus_gain(mixer, orphan, 0.5), 0.5,
+                "the guarded setter still answers the value it set");
+    check(entries.size() == 1, "enabling the guards makes the next unmixed gain change warn");
+    check(!entries.empty() && entries[0].find("addAudioBusToMixer") != std::string::npos,
+          "and the warning names the operation that would have fixed it");
+
+    flight::media::disable_audio_mixer_guards();
+    flight::log::clear_log_once_keys();
+    entries.clear();
+    static_cast<void>(flight::media::set_audio_bus_gain(mixer, orphan, 0.75));
+    check(entries.empty(), "disabling the guards returns the silent no-op to silence");
+
+    flight::log::set_log_sink(std::nullopt);
+  }
 
   return failures == 0 ? 0 : 1;
 }

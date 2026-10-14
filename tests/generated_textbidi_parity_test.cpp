@@ -463,37 +463,58 @@ int main() {
 
   // ---- enableTextBidiGuards.test.ts -----------------------------------------------------------
 
-  // BLOCKED, and recorded rather than worked around: the upstream tests for enableTextBidiGuards
-  // assert on LOG ENTRIES -- a miss is reported once, the report names BidiClassKernel, and covered
-  // text or a caller-supplied kernel produce nothing. That path cannot be exercised in this profile:
-  // overrides/include/flight/log/log.hpp defines merge_span_fields as NotImplementedInThisProfile, and
-  // log_once/log_assert build every structured entry through it, so emitting one throws
-  // ("flight::log::merge_span_fields was not generated for this profile"). That is the log package's
-  // deliberate fail-loud boundary, not a textbidi defect, and it is the log lane's to close.
+  // UNBLOCKED: the log path this suite could not exercise is now supplied.
   //
-  // What CAN be verified here is the wiring the guards are built on, without the log: enable installs
-  // a guard callback and disable removes it, and the guard is what reports the miss. The reporting
-  // semantics themselves are pinned by the textBidiGuards cases above.
+  // The upstream enableTextBidiGuards.test.ts cases assert on LOG ENTRIES. That was impossible while the
+  // log override stubbed merge_span_fields as NotImplementedInThisProfile -- log_once builds every
+  // structured entry through it, so emitting one threw -- and the block that stood here recorded that
+  // rather than working around it. The log CORE override now supplies a real merge_span_fields, so the
+  // cases are ported.
   {
-    flight::textbidi::disable_text_bidi_guards();
-    check(!flight::textbidi::guard.has_value(), "guards: guards start disabled");
+    std::vector<std::string> entries;
+    const flight::types::LogSink sink =
+        [&entries](flight::Ref<flight::types::LogEntry> entry) {
+          const auto data = entry->data;
+          if (data.index() == 0) {
+            const auto message = std::get<0>(data).get(flight::String("message"));
+            entries.push_back(message.has_value() ? message.value().as_string().to_utf8()
+                                                  : std::string("<none>"));
+          } else {
+            entries.push_back(std::get<1>(data).to_utf8());
+          }
+        };
+    const auto kernel = as_row(flight::textbidi::compact_bidi_class_kernel);
 
+    // disableTextBidiGuards: restores the silent compact fallback.
+    entries.clear();
+    flight::log::clear_log_once_keys();
+    flight::log::set_log_sink(std::optional<flight::types::LogSink>{sink});
     flight::textbidi::enable_text_bidi_guards();
-    check(flight::textbidi::guard.has_value(),
-          "guards: enabling installs a miss-report callback");
+    flight::textbidi::disable_text_bidi_guards();
+    static_cast<void>(
+        flight::textbidi::resolve_bidi_levels(kernel, text16(u"中"), flight::String("ltr")));
+    check(entries.empty(), "guards: a disabled guard restores the silent compact fallback");
 
-    // The installed callback is reachable exactly as the compact table reaches it -- through
-    // report_text_bidi_compact_table_miss -- which is the seam the log assertions would observe.
-    bool reported = false;
-    const auto previous = flight::textbidi::guard;
-    flight::textbidi::set_text_bidi_guard(
-        std::function<void(double)>([&reported](double) { reported = true; }));
-    flight::textbidi::report_text_bidi_compact_table_miss(0x4E2D);
-    check(reported, "guards: an installed callback receives the compact-table miss");
-    flight::textbidi::set_text_bidi_guard(previous);
+    // enableTextBidiGuards: warns ONCE and names the kernel fixing call.
+    entries.clear();
+    flight::log::clear_log_once_keys();
+    flight::textbidi::enable_text_bidi_guards();
+    static_cast<void>(
+        flight::textbidi::resolve_bidi_levels(kernel, text16(u"中文"), flight::String("ltr")));
+    check(entries.size() == 1, "guards: an uncovered code point warns exactly once");
+    check(!entries.empty() && entries[0].find("BidiClassKernel") != std::string::npos,
+          "and the warning names the kernel fixing call");
+
+    // ...and stays silent for compact-table coverage.
+    entries.clear();
+    flight::log::clear_log_once_keys();
+    flight::textbidi::enable_text_bidi_guards();
+    static_cast<void>(flight::textbidi::resolve_bidi_levels(kernel, text16(u"abc שלום ابت"),
+                                                            flight::String("auto")));
+    check(entries.empty(), "guards: compact-table coverage produces nothing");
 
     flight::textbidi::disable_text_bidi_guards();
-    check(!flight::textbidi::guard.has_value(), "guards: disabling removes the callback");
+    flight::log::set_log_sink(std::nullopt);
   }
 
   return failures == 0 ? 0 : 1;
