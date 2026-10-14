@@ -1022,22 +1022,20 @@
       "id": "canvas-render-state-runtime-owner-and-initialization",
       "dependency": "flight",
       "patch": "canvas-render-state-runtime-owner-and-initialization.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene2d-canvas/src/canvasRenderState.ts",
       "package": "@flighthq/scene2d-canvas",
       "answers": "refusal",
       "refusal": "CanvasRenderState construction and runtime recovery assert flattened derived interfaces to RenderState and RenderStateRuntime owners with no emitted C++ heritage",
-      "rewrite": "Declares CanvasRenderState's exact runtime-symbol owner beside the type, constructs base state fields through the shared derived-state initializer, attaches the exact Canvas runtime through its owner accessor, initializes the derived runtime with an exact CanvasRenderRegistries object, preserves the public Partial<CanvasRenderOptions> signature over a closed implementation shape, binds the Matrix coalesce to its declared result, and gives the registry-miss closure an explicit void contract.",
+      "rewrite": "Re-derived 2026-10-14 against the live pin, which has restructured this module since the patch was first written (createCanvasRenderState now takes one CanvasRenderStateOptions carrier, renderTransform2D and CanvasRenderStateInitialization are gone, and registries is written from the runtime aggregate). Each asserting expression is replaced by a declared owner, mirroring the accepted GL precedent in render-state-runtime-owner-and-initialization: `_createRenderState({...}) as CanvasRenderState` becomes `createDerivedRenderStateConstruction<CanvasRenderState>({...})`; `createRenderStateRuntime() as CanvasRenderStateRuntime` becomes `initializeRenderStateRuntime<CanvasRenderStateRuntime, CanvasRenderRegistries>({} as CanvasRenderStateRuntime, runtimeRegistries)`; `state[EntityRuntimeKey] = runtime` becomes `writeCanvasRenderStateRuntimeOwner(state, runtime)`; the accessor reads the owner through `readCanvasRenderStateRuntimeOwner(state)`; and `(state as { registries: ... }).registries = ...` becomes a plain `state.registries = runtime.registries` on the construction. packages/types/src/CanvasRenderState.ts gains the computed-symbol cell on the interface and the two accessor functions beside it, so the owner is declared rather than asserted.",
       "equivalence": "State and runtime each retain one allocation, the same field values and initialization order, and the same EntityRuntimeKey attachment. Base fields are initialized before Canvas fields as before. Registry spreading still produces one shallow derived registry object, and the state still retains the original readonly registry aggregate. The public overload accepts the same options, the closed implementation shape lists exactly their six fields, the Matrix local evaluates the same coalesce once, and the block-bodied callback invokes the same optional emitter once while discarding its void result. The owner helpers read and write the same symbol property without copying or side storage; only erased TypeScript evidence is made explicit.",
       "whyNotUpstreamFirst": "The rewrite is target-neutral TypeScript and makes the already-intended derived owners explicit. It depends on the temporary generic render initializer only because the emitter flattens interface heritage; no public factory signature changes.",
       "unblocks": "In the 27-package @flighthq/scene2d-canvas closure, the final callback refinement moves the inventory from 1309/1404 modules with 95 refusals to 1310/1404 with 94. The exact runtime accessors, runtime factory, and complete createCanvasRenderState body emit. The module now remains dependency-refused only because canvasTextureResolver is independently refused, which is addressed separately.",
       "expires": "when the emitter preserves CanvasRenderState and CanvasRenderStateRuntime heritage and computed-symbol ownership across their RenderState bases, or Flight adopts these exact-owner helpers.",
       "appliedOn": "2026-10-08",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "2D",
-        "reason": "context drift: the patched code still exists (10/14 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "rebasedOn": "2026-10-14",
+      "verification": "Re-derived at the current pin and applied in manifest order; the named refusal is removed (measured on a full generation run, see the batch report). Focused compiler fixtures assert the exact cpp-reference-assertion-without-heritage diagnostic and owner pair before, and the declared owner with no as-assertion and no symbol-indexed read after; a native test asserts the allocation and accessor identity invariants."
     },
     {
       "id": "node-initialize-node-non-optional-source",
