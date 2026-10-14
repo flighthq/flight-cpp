@@ -150,11 +150,16 @@ void md2_feature_detection_and_failures() {
   }
 
   const auto empty = formats::collect_md2_features(md2_header(0, 3, 0));
+  const auto bind_pose_only =
+      formats::collect_md2_features(md2_header(0, 3, 1));
   auto bad_magic = md2_header(1, 1, 1);
   bad_magic.set_index(0.0, 0.0);
   auto bad_version = md2_header(1, 1, 1);
   write_le(bad_version, 4, 7, 4);
   exact = exact && empty.has_value() && empty->empty() &&
+          bind_pose_only.has_value() && bind_pose_only->size() == 1 &&
+          bind_pose_only->has(formats::md2_feature_mesh) &&
+          !bind_pose_only->has(formats::md2_feature_animation) &&
           !formats::collect_md2_features(md2_header(-1, 1, 1)).has_value() &&
           !formats::collect_md2_features(bad_magic).has_value() &&
           !formats::collect_md2_features(bad_version).has_value() &&
@@ -168,12 +173,14 @@ void obj_material_reference_order() {
   const auto references = formats::collect_obj_material_library_references(
       flight::String(" # ignored\nmtllib first.mtl second.mtl\n"
                      "usemtl first\n\tmtllib second.mtl third.mtl\n"
-                     "mtllib fourth.mtl first.mtl\n"));
-  bool exact = references.size() == 4 &&
+                     "mtllib fourth.mtl first.mtl\n"
+                     "mtllib\tfifth.mtl\n"));
+  bool exact = references.size() == 5 &&
                references.element(0.0) == flight::String("first.mtl") &&
                references.element(1.0) == flight::String("second.mtl") &&
                references.element(2.0) == flight::String("third.mtl") &&
-               references.element(3.0) == flight::String("fourth.mtl");
+               references.element(3.0) == flight::String("fourth.mtl") &&
+               references.element(4.0) == flight::String("fifth.mtl");
   if (inject_obj_mutation) exact = false;
   check(exact,
         "OBJ material-library discovery trims lines, ignores comments and usemtl, splits multi-path directives, and deduplicates in first-seen order");
@@ -259,7 +266,9 @@ void three_ds_nested_census_and_recovery() {
           formats::get_three_ds_chunk_name(types::three_ds_trimesh) ==
               flight::String("Trimesh") &&
           formats::get_three_ds_chunk_name(0xbeef) ==
-              flight::String("Unknown(0xbeef)");
+              flight::String("Unknown(0xbeef)") &&
+          formats::get_three_ds_chunk_name(0x2) ==
+              flight::String("Unknown(0x0002)");
 
   auto wrong_magic = source.slice();
   wrong_magic.set_index(0.0, 0.0);
@@ -325,13 +334,29 @@ void gltf_registry_order_replacement_and_decoder_lifecycle() {
   const auto decoded = decoder.has_value()
                            ? (*decoder)(flight::Uint8Array(4.0), {})
                            : std::nullopt;
+  formats::register_gltf_draco_decoder(
+      [](flight::Uint8Array bytes,
+         flight::Record<flight::String, double>)
+          -> std::optional<flight::Ref<types::GltfDracoMesh>> {
+        return flight::make_ref<types::GltfDracoMesh>(types::GltfDracoMesh{
+            .attributes = {},
+            .indices = std::nullopt,
+            .vertex_count = static_cast<double>(bytes.size()) + 100.0,
+        });
+      });
+  const auto replacement_decoder = formats::get_gltf_draco_decoder();
+  const auto replacement_decoded =
+      replacement_decoder.has_value()
+          ? (*replacement_decoder)(flight::Uint8Array(4.0), {})
+          : std::nullopt;
   exact = exact && core_handlers.size() == 2 &&
           core_handlers.element(0.0) == core_mesh_replacement &&
           core_handlers.element(1.0) == core_camera &&
           extension_handlers.size() == 1 &&
           extension_handlers.element(0.0) == extension_replacement &&
           formats::has_gltf_draco_decoder() && decoded.has_value() &&
-          (*decoded)->vertex_count == 4.0;
+          (*decoded)->vertex_count == 4.0 && replacement_decoded.has_value() &&
+          (*replacement_decoded)->vertex_count == 104.0;
   formats::unregister_gltf_draco_decoder();
   exact = exact && !formats::has_gltf_draco_decoder();
 
@@ -346,14 +371,35 @@ void material_defaults_colors_and_diagnostics() {
   bool exact = material->name == flight::String("paint") &&
                material->ambient.size() == 3 &&
                material->ambient.element(0.0) == 0.0 &&
+               material->ambient.element(1.0) == 0.0 &&
+               material->ambient.element(2.0) == 0.0 &&
                material->diffuse.size() == 3 &&
                material->diffuse.element(0.0) == 0.8 &&
+               material->diffuse.element(1.0) == 0.8 &&
+               material->diffuse.element(2.0) == 0.8 &&
                material->specular.size() == 3 &&
+               material->specular.element(0.0) == 0.0 &&
+               material->specular.element(1.0) == 0.0 &&
+               material->specular.element(2.0) == 0.0 &&
+               material->specular_exponent == 0.0 &&
                material->dissolve == 1.0 && material->illumination == 2.0 &&
+               !material->anisotropy.has_value() &&
+               !material->anisotropy_rotation.has_value() &&
+               !material->clearcoat.has_value() &&
+               !material->clearcoat_roughness.has_value() &&
                !material->emissive.has_value() &&
+               !material->map_ambient.has_value() &&
+               !material->map_bump.has_value() &&
                !material->map_diffuse.has_value() &&
+               !material->map_dissolve.has_value() &&
+               !material->map_emissive.has_value() &&
+               !material->map_metallic.has_value() &&
+               !material->map_normal.has_value() &&
+               !material->map_roughness.has_value() &&
+               !material->map_specular.has_value() &&
                !material->metallic.has_value() &&
-               !material->roughness.has_value();
+               !material->roughness.has_value() &&
+               !material->sheen.has_value();
 
   flight::Map<flight::String, flight::Ref<formats::MtlDropTally>> tallies;
   const std::optional<decltype(tallies)> collector{tallies};
@@ -376,6 +422,22 @@ void material_defaults_colors_and_diagnostics() {
           (*too_few)->severity == types::import_diagnostic_severity->recover &&
           non_numeric.has_value() && (*non_numeric)->count == 1.0 &&
           tallies.size() == 2;
+  if (too_few.has_value()) {
+    const auto first_directive =
+        (*too_few)->detail.get(flight::String("firstDirective"));
+    const auto first_line =
+        (*too_few)->detail.get(flight::String("firstLine"));
+    const auto* directive =
+        first_directive.has_value()
+            ? std::get_if<flight::String>(&first_directive.value())
+            : nullptr;
+    const auto* line = first_line.has_value()
+                           ? std::get_if<double>(&first_line.value())
+                           : nullptr;
+    exact = exact && directive != nullptr &&
+            *directive == flight::String("Ka") && line != nullptr &&
+            *line == 5.0;
+  }
   if (inject_material_mutation) exact = false;
   check(exact,
         "MTL helpers preserve canonical defaults and absent optionals, parse exact RGB triples, reject malformed colors, and aggregate diagnostics by kind/discriminator while retaining first evidence");
@@ -400,6 +462,8 @@ void md5_line_parsing_component_order_and_diagnostics() {
                (*pose)->orientation_y == 0.2 &&
                (*pose)->orientation_z == 0.3 &&
                formats::count_md5_anim_flag_components(63.0) == 6.0 &&
+               formats::count_md5_anim_flag_components(64.0) == 0.0 &&
+               formats::count_md5_anim_flag_components(127.0) == 6.0 &&
                formats::total_md5_anim_components(
                    flight::Array<flight::Ref<formats::Md5AnimHierarchyEntry>>{
                        *root, *child}) == 8.0;
