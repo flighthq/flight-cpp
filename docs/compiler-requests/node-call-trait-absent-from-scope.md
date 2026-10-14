@@ -7,7 +7,10 @@
   it emits elsewhere, so an unnarrowed `Node2D` row is passed to a parameter declared
   `Transform2DNode<Traits>` — a `RowMerge` over `RowOf` — and `Traits` cannot be deduced.
 - **Face B, undeclared identifier.** Here the emitter *does* emit the cast, but writes the bare name
-  `Traits` inside a function that is **not a template**, so it refers to nothing.
+  `Traits` inside a function that is **not a template**, so it refers to nothing. This face is **two
+  symbols, not one** — `getNodeLocalMatrix` *and* `getNodeLocalTransformRevision`. Measured by builder7 on a
+  scratch emission: once the matrix call is given its trait, line 67 remains a bare-`Traits` error on the
+  revision call. A repair that fixes only the first symbol leaves the header failing.
 
 Both were introduced by the same regeneration: `d1fdb0bb` (Migrate the registry renderer group, 11 rows).
 This is the newest emission, not a stale one.
@@ -33,11 +36,18 @@ export function computeScene2DRenderTargetTransform(
 `packages/render/src/renderTransform2d.ts`:
 
 ```ts
+// updateRenderProxy2DTransform -- emits to render_transform2d.hpp:67
+const localTransformId = getNodeLocalTransformRevision(data.source as Node);
+
+// recalculateRenderTransform2D -- emits to render_transform2d.hpp:55
 function recalculateRenderTransform2D(state: RenderState, data: RenderProxy2D, parentData?: RenderProxy2D): void {
   const transform2D = getNodeLocalMatrix(data.source as Node & HasTransform2D);
   // ...
 }
 ```
+
+Note the two calls take *different* TS argument types — `Node` for the revision and `Node & HasTransform2D`
+for the matrix — and the emitter writes the bare name `Traits` for both.
 
 TypeScript infers the trait in both cases — from `Node2D` in the first, from the `Node & HasTransform2D`
 intersection in the second — and the emitter has no C++ name to write for what TypeScript inferred.
@@ -57,11 +67,15 @@ node_transform2d.hpp:173:102: note: candidate template ignored:
     could not match 'flight::RowMerge' against 'flight::RowOf'
 ```
 
-**Face B** — `generated/include/flight/render/render_transform2d.hpp:55` and `:67`, inside plain functions
-(`recalculate_render_transform2_d` and `update_render_proxy2_dtransform`):
+**Face B** — `generated/include/flight/render/render_transform2d.hpp`, TWO symbols across `:55` and `:67`,
+inside plain functions (`recalculate_render_transform2_d` and `update_render_proxy2_dtransform`):
 
 ```cpp
+// line 55 -- getNodeLocalMatrix
 flight::node::get_node_local_matrix(flight::structural_ref_cast<flight::types::Transform2DNode<Traits>>(flight::StructuralRef<flight::RowWritable<...>>(...)))
+
+// line 67 -- getNodeLocalTransformRevision
+flight::node::get_node_local_transform_revision(flight::structural_ref_cast<flight::types::Transform2DNode<Traits>>(flight::StructuralRef<flight::RowWritable<...>>(...)))
 ```
 
 ```
@@ -113,21 +127,38 @@ to
 invalidateNodeLocalBounds<Node2DTraits>(emitter);
 ```
 
-— that is, it names explicitly the trait TypeScript had been inferring. The same shape applies to both sites
-here:
+— that is, it names explicitly the trait TypeScript had been inferring. The same shape applies to **all three
+sites**, two files and two symbols:
 
 ```ts
-// renderTarget.ts
+// renderTarget.ts:58 -- getNodeLocalMatrix, unnarrowed argument (Face A)
 const localTransform = getNodeLocalMatrix<Node2DTraits>(source);
 
-// renderTransform2d.ts
+// renderTransform2d.ts:30 -- getNodeLocalMatrix (Face B, matrix)
 const transform2D = getNodeLocalMatrix<Node2DTraits>(data.source as Node & HasTransform2D);
+
+// renderTransform2d.ts:12 -- getNodeLocalTransformRevision (Face B, revision)
+const localTransformId = getNodeLocalTransformRevision<Node2DTraits>(data.source as Node);
 ```
+
+Three sites total: one in `renderTarget.ts`, two in `renderTransform2d.ts`. The second Face B site is the
+one an earlier draft of this document omitted, and it is not optional — builder7 measured that giving only
+the matrix call its trait leaves line 67 failing on the revision call.
 
 Stated as the specification, not as a verified result: whether the emitter then writes the concrete trait
 rather than the bare name must be confirmed by regenerating the `@flighthq/render` closure after the patch
 is written. I did not run a regeneration for this document (docs-only), and the precedent's own evidence is
 that the rewrite is what made the particleemitter calls instantiate.
+
+### Equivalence
+
+The rewrite only makes explicit a type argument TypeScript was already inferring, so it cannot change
+observable behaviour: the same node is passed to the same helper with the same traits, the helper reads the
+same runtime cell, and absence, reference identity, equality, ordering, exception shape and task settlement
+are untouched. It adds no call, removes none, and reorders nothing. What it removes is the emitter's
+freedom to guess — which is the only reason the emitted C++ differs at all. A version of this rewrite that
+changed *which* trait is named would not be equivalent, which is why the specification names
+`Node2DTraits` at all three sites rather than leaving the choice open.
 
 ## Focused reproductions
 
@@ -150,10 +181,23 @@ printf '#include <flight/node/bounds_rectangle.hpp>\nint main(){return 0;}\n' > 
 c++ -std=c++20 -fsyntax-only -w $CXXFLAGS -Ioverrides/include -Igenerated/include -Iinclude /tmp/c.cpp
 ```
 
-A compiler-side fixture should lower both shapes and assert the diagnostic, not merely that emission failed:
-Face A must name `get_node_local_matrix` and the `RowMerge`/`RowOf` mismatch, and Face B must name `Traits`
-as undeclared. The control fixture should assert the same call emits **without** a diagnostic when
-`Traits` is a declared template parameter, or the fixture proves nothing about which case is handled.
+**A compiler-side fixture is NOT the verification path here, and that is measured rather than assumed.**
+The fixture harness cannot faithfully model this call, because `getNodeLocalTransformRevision` and
+`getNodeLocalMatrix` are real `@flighthq/node` external bindings: both the implicit synthetic shape and the
+explicit one stop at `cpp-runtime-external-symbol-binding-incomplete`. A fixture built either way therefore
+fails for a reason of its own and would tell us nothing about the emission defect.
+
+The verification is **actual scratch-emitted C++ plus the package tests**: emit the `@flighthq/render`
+closure, compile the two headers standalone, and confirm that `get_node_local_matrix` /
+`get_node_local_transform_revision` take a concrete trait and that `Traits` no longer appears at all. That is
+also how builder7 found the second Face B symbol — by fixing the first and re-emitting, not by reasoning
+about the shape.
+
+If a fixture is ever wanted, it must assert the diagnostic and not merely that emission failed — Face A must
+name `get_node_local_matrix` and the `RowMerge`/`RowOf` mismatch, Face B must name `Traits` as undeclared —
+and the control must assert the same call emits **without** a diagnostic where `Traits` is a declared
+template parameter. Until the external binding can be modelled, the scratch emission is the evidence and the
+fixture is not.
 
 ## Gate obligation
 
