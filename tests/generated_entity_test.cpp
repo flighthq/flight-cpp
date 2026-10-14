@@ -7,10 +7,13 @@
 // structural-construction-finish-identity.md and proxy-return-loses-nominal-traps.md requests record
 // the two other residuals rather than letting usable-state or entity-slot checks overclaim them.
 //
-// MUTATION SENSITIVITY, measured 2026-10-13: four one-at-a-time implementation mutations were
-// compiled and run, then restored. The suite killed disabled optional-cell clearing (4 failures),
-// forced binding runtime replacement (2), a UID generator that did not advance (1), and a guard
-// proxy listening to the wrong symbol (3).
+// MUTATION SENSITIVITY, measured 2026-10-13: ten one-at-a-time shadow-header mutations were
+// compiled and run, then discarded. The suite killed construction with a pre-bound runtime (8
+// failures), forced binding runtime replacement (2), retained clone/strip runtime slots (3), a
+// guard mode that never disables (5), swapped diagnostic helper order (1), retained detached
+// binding ownership (1), a UID generator that did not advance (1), a guard proxy listening to the
+// wrong property (3), disabled runtime guarding that minted a new owner (1), and an ordinary
+// property incorrectly observed by the entity guard (3).
 #include <flight/entity/contract.hpp>
 
 #include <iostream>
@@ -200,6 +203,10 @@ void guard_lifecycle_and_diagnostics() {
   const auto unguarded = entity::create_guarded_entity(view);
   check(unguarded == view,
         "guard creation preserves the original row while guard mode is disabled");
+  const auto unguarded_runtime = entity::create_entity_runtime();
+  check(entity::create_guarded_entity_runtime(unguarded_runtime) ==
+            unguarded_runtime,
+        "disabled runtime guard creation preserves the original runtime identity");
 
   std::vector<flight::String> slots;
   entity::enable_entity_runtime_guards(
@@ -213,6 +220,18 @@ void guard_lifecycle_and_diagnostics() {
             target->entity_runtime_key.has_value() &&
             target->entity_runtime_key.value() == assigned_runtime,
         "a guarded runtime-slot write reports once and still reaches the entity");
+
+  using RichGuardedView = flight::StructuralRef<flight::RowMerge<
+      flight::RowOf<flight::Ref<RichEntity>>,
+      flight::RowOf<flight::Ref<types::Entity>>>>;
+  const auto ordinary_target = flight::make_ref<RichEntity>();
+  const RichGuardedView ordinary_view =
+      flight::structural_ref_cast<RichGuardedView>(ordinary_target);
+  const auto ordinary_guarded =
+      entity::create_guarded_entity<flight::Ref<RichEntity>>(ordinary_view);
+  flight::row_set<flight::RowKey<"x">>(ordinary_guarded, 4.0);
+  check(slots.size() == 1 && ordinary_target->x == 4.0,
+        "guarded ordinary-property writes stay silent and reach the entity");
 
   entity::set_entity_runtime_guard_mode(false);
   flight::row_set(guarded, types::entity_runtime_key, std::nullopt);
