@@ -26,7 +26,15 @@ int main() {
                  defaults->visible,
              "status info display defaults changed") ||
       !check(flight::statusbar::packed_rgba_to_hex_color(0x123456ff) == String("#123456"),
-             "packed RGBA conversion changed")) {
+             "packed RGBA conversion dropped the alpha byte") ||
+      // The upstream case is titled "drops alpha AND pads hex digits", and its own value needs the second
+      // half: 0x01020304 has an rgb of 0x010203, whose hex is five digits. The 0x123456ff above is six
+      // digits and exercises no padding at all -- a mutation padding to four digits instead of six SURVIVED
+      // this suite until these two assertions existed.
+      !check(flight::statusbar::packed_rgba_to_hex_color(0x01020304) == String("#010203"),
+             "packed RGBA conversion pads a short hex to six digits") ||
+      !check(flight::statusbar::packed_rgba_to_hex_color(0x000000ff) == String("#000000"),
+             "and a black pixel is six zeros rather than a short string")) {
     return 1;
   }
 
