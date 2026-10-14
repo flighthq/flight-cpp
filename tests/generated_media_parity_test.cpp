@@ -6,9 +6,21 @@
 // videoChannel.ts (a WeakMap value that is a bound external carrier). Both refusals are filed
 // (media-audio-mixer-runtime-set-union-conversion.md, media-weakmap-value-representation.md) and
 // neither is reachable from the source: naming the collection's element type does not clear either,
-// including at the site the message itself prescribes. So three of media's five upstream fixtures --
-// audioMixer, enableAudioMixerGuards and videoChannel -- cannot be covered here at all, and this file
-// covers exactly the two whose modules emit: mediaChannelSignals and audioChannel.
+// including at the site the message itself prescribes.
+//
+// THE SCOPE NOTE THAT STOOD HERE WAS WRONG IN TWO PLACES, and a re-audit found it by mutation. It said
+// audioMixer, enableAudioMixerGuards and videoChannel "cannot be covered here at all". True of videoChannel
+// (its header does not compile); FALSE of the other two. enableAudioMixerGuards emits all three of its
+// functions and compiles, and audioMixer emits seven -- including the four bus setters. Seven mutations of
+// those functions SURVIVED this suite before the coverage below existed. Reachability per fixture, measured
+// rather than assumed:
+//
+//   mediaChannelSignals   8 cases  reachable (covered)
+//   audioChannel         55 cases  reachable (covered, extended below)
+//   audioMixer           32 cases  PARTLY reachable: 7 functions emit and their surface is covered below;
+//                                  the refused mixer surface is not
+//   enableAudioMixer*    3 cases   2 reachable in principle but NOT observable here -- see the guard block
+//   videoChannel         29 cases  unreachable: video_channel.hpp does not compile (filed defect)
 //
 // Everything below drives the emitted code through a mock HostAudioDeviceCapability, which is how the
 // upstream fixtures drive it too. No decoder, no browser, no SDL: the host seam is supplied by the
