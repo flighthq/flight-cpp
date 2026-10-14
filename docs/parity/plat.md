@@ -503,9 +503,28 @@ A LATER unit DISCHARGED PART OF THE DEFERRAL that entry records. Mapping inputMa
   of them found a real hole: the frame boundary's GAMEPAD clear was unasserted, because only the KEYBOARD edges were
   re-checked after a frame, and a case was added for it.
 
-  STILL UNCOVERED, and named rather than implied: the SIX INGRESS ATTACHMENT FAMILIES (gamepad, keyboard, pointer,
-  relative-pointer, text, wheel) with their detaches and the three explicit-ingress identity cases, which need a host
-  seam these two files do not build.
+  A THIRD UNIT CLOSED THE INGRESS SEAM, which the two paragraphs above named as still uncovered. The seam is a
+  `HostInputIngressCapability` row -- six attach slots -- so the file builds a recording host of the same shape every
+  other package's fixture is, and drives the behaviour through the sink the host is handed. Now covered:
+
+  * EACH FAMILY reaches exactly its OWN host slot, is handed the EXACT source it was given, and shares the manager's
+    ONE sink rather than minting its own -- a family cannot strand a sink.
+  * DETACH runs the release its own origin answered with and nothing else: detaching one family leaves the others
+    attached, and a second detach runs nothing because the binding is gone.
+  * REATTACHING the same source and family through a DIFFERENT host releases the PRIOR origin exactly once and
+    detaches the replacement -- the origin-pinning the upstream suite names -- while cleanup stays pinned to the
+    origin that recorded it, since a detach is given only the manager and the source.
+  * THE SINK delivers into the manager's signal only while `enabled` is true: it publishes, stops when the manager is
+    disabled, and resumes when it is enabled again.
+
+  Nine mutations against the seam, every one confirmed to differ at its target, ALL NINE KILLED BY FAILING CHECKS:
+  a family routed to its sibling's slot, the binding not recorded, reattach not releasing the old, detach not
+  releasing, detach not forgetting, a disabled manager still delivering, the sink not cached per manager, the source
+  identity dropped, and a detach clearing the wrong kind.
+
+  THE DISPOSER REMAINS UNCOVERED and is not worked around: `connectInputStateToInputManager`'s returned disposer
+  still aborts under `local-handler-callable-identity.md`, and the test keeps that case explicitly uncovered until the
+  compiler/runtime fix lands.
 - `flight_cpp.generated_input_manager` — `tests/generated_input_manager_test.cpp` (dedicated), added by the unit that
   audited this package for the half the timer test does not reach: the axis and radial stick dead zones, ported from
   `inputManager.test.ts`'s own cases for them. The axis maps a value inside `[-deadZone, deadZone]` to 0 and rescales

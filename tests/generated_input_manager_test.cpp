@@ -291,12 +291,162 @@ void test_the_gamepad_name_maps() {
         "and a non-standard mapping names no axis either");
 }
 
+// --- The six ingress attachment families ----------------------------------------------------------------------
+//
+// The host seam is a `HostInputIngressCapability` row -- six attach slots, one per family -- so this is a recording
+// host of the same shape every other package's fixture is: each slot records the source and the sink it was handed
+// and answers with a release function that counts its own invocation. Nothing is faked about the ingress itself;
+// what is under test is which slot a family reaches, what it is given, and what a detach releases.
+
+using IngressOptionsRow = std::optional<
+    flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<types::AttachInputOptions>>>>>;
+using IngressSlot = std::function<std::function<void()>(
+    types::InputIngressSource, flight::Ref<types::InputIngressSink>, IngressOptionsRow)>;
+using IngressHostSchema =
+    flight::RowReadonly<flight::RowOf<flight::Ref<types::HostInputIngressCapability>>>;
+
+struct IngressHost {
+  int calls[6] = {0, 0, 0, 0, 0, 0};
+  int releases[6] = {0, 0, 0, 0, 0, 0};
+  flight::ErasedRef seen_source[6];
+  flight::Ref<types::InputIngressSink> seen_sink[6];
+
+  flight::Ref<types::HostInputIngressCapability> capability =
+      flight::make_ref<types::HostInputIngressCapability>();
+
+  IngressSlot slot_for(int index) {
+    return [this, index](types::InputIngressSource source, flight::Ref<types::InputIngressSink> sink,
+                         IngressOptionsRow) {
+      ++calls[index];
+      seen_source[index] = source;
+      seen_sink[index] = sink;
+      return std::function<void()>([this, index]() { ++releases[index]; });
+    };
+  }
+
+  IngressHost() {
+    capability->attach_gamepad = slot_for(0);
+    capability->attach_keyboard = slot_for(1);
+    capability->attach_pointer = slot_for(2);
+    capability->attach_relative_pointer = slot_for(3);
+    capability->attach_text = slot_for(4);
+    capability->attach_wheel = slot_for(5);
+  }
+
+  flight::StructuralRef<IngressHostSchema> row() {
+    return flight::make_structural_ref<IngressHostSchema>(
+        flight::row_field<flight::RowKey<"attachGamepad">>(capability->attach_gamepad),
+        flight::row_field<flight::RowKey<"attachKeyboard">>(capability->attach_keyboard),
+        flight::row_field<flight::RowKey<"attachPointer">>(capability->attach_pointer),
+        flight::row_field<flight::RowKey<"attachRelativePointer">>(capability->attach_relative_pointer),
+        flight::row_field<flight::RowKey<"attachText">>(capability->attach_text),
+        flight::row_field<flight::RowKey<"attachWheel">>(capability->attach_wheel));
+  }
+};
+
+types::InputIngressSource origin() {
+  return flight::ErasedRef(flight::make_ref<types::InputIngressSink>());
+}
+
+void test_each_family_attaches_through_its_own_host_entry() {
+  IngressHost host;
+  const auto manager = input::create_input_manager();
+  const auto source = origin();
+
+  input::attach_gamepad_input(host.row(), manager, source);
+  input::attach_keyboard_input(host.row(), manager, source);
+  input::attach_pointer_input(host.row(), manager, source);
+  input::attach_relative_pointer_input(host.row(), manager, source);
+  input::attach_text_input(host.row(), manager, source);
+  input::attach_wheel_input(host.row(), manager, source);
+
+  for (int i = 0; i < 6; ++i) {
+    check(host.calls[i] == 1, "each family reaches exactly its own host slot");
+  }
+  for (int i = 0; i < 6; ++i) {
+    check(host.seen_source[i] == source, "and every one is handed the EXACT source it was given");
+    check(host.seen_sink[i] != nullptr, "with a live sink rather than nothing");
+  }
+  // One manager, one sink: the families share the manager's single ingress sink rather than each minting one.
+  for (int i = 1; i < 6; ++i) {
+    check(host.seen_sink[i].get() == host.seen_sink[0].get(),
+          "and all six share the manager's one sink, so a family cannot strand its own");
+  }
+}
+
+void test_detach_releases_only_its_own_family() {
+  IngressHost host;
+  const auto manager = input::create_input_manager();
+  const auto source = origin();
+
+  input::attach_gamepad_input(host.row(), manager, source);
+  input::attach_keyboard_input(host.row(), manager, source);
+
+  input::detach_keyboard_input(manager, source);
+  check(host.releases[1] == 1, "detaching a family runs the release its own origin answered with");
+  check(host.releases[0] == 0, "and leaves every OTHER family attached");
+
+  input::detach_keyboard_input(manager, source);
+  check(host.releases[1] == 1, "a second detach runs nothing, because the binding is gone");
+
+  input::detach_gamepad_input(manager, source);
+  check(host.releases[0] == 1, "and the other family releases when its own detach is called");
+}
+
+void test_reattaching_the_same_source_releases_the_old_origin_once() {
+  IngressHost first;
+  IngressHost second;
+  const auto manager = input::create_input_manager();
+  const auto source = origin();
+
+  input::attach_gamepad_input(first.row(), manager, source);
+  check(first.releases[0] == 0, "the first attachment is live");
+
+  // The same source and the same family, now through a DIFFERENT host: the binding replaces, and the release it
+  // holds -- the one the ORIGIN host answered with -- runs exactly once.
+  input::attach_gamepad_input(second.row(), manager, source);
+  check(first.releases[0] == 1, "reattaching releases the prior origin exactly once");
+  check(second.releases[0] == 0, "while the replacement is live");
+
+  input::detach_gamepad_input(manager, source);
+  check(second.releases[0] == 1, "and detaching runs the REPLACEMENT's release, not the first host's again");
+  check(first.releases[0] == 1, "which never runs a second time");
+}
+
+void test_the_sink_delivers_only_while_the_manager_is_enabled() {
+  IngressHost host;
+  const auto manager = input::create_input_manager();
+  input::attach_keyboard_input(host.row(), manager, origin());
+
+  int keys = 0;
+  flight::signals::connect_signal<std::function<void(KeyRow)>>(
+      manager->on_key_down, [&keys](KeyRow) { ++keys; });
+
+  const auto data = flight::make_ref<types::InputKeyboardData>();
+  data->key_code = 65.0;
+  host.seen_sink[1]->key_down(KeyRow(data));
+  check(keys == 1, "the sink the host was handed publishes into the manager's signal");
+
+  manager->enabled = false;
+  host.seen_sink[1]->key_down(KeyRow(data));
+  check(keys == 1, "and publishes nothing while the manager is disabled");
+
+  manager->enabled = true;
+  host.seen_sink[1]->key_down(KeyRow(data));
+  check(keys == 2, "resuming as soon as it is enabled again");
+}
+
 int main() {
   test_the_state_and_manager_constructors_start_where_the_source_says();
   test_connect_tracks_the_keyboard_transitions();
   test_connect_tracks_pointer_buttons_and_cancel();
   test_connect_tracks_gamepad_buttons_and_axes();
   test_the_gamepad_name_maps();
+
+  test_each_family_attaches_through_its_own_host_entry();
+  test_detach_releases_only_its_own_family();
+  test_reattaching_the_same_source_releases_the_old_origin_once();
+  test_the_sink_delivers_only_while_the_manager_is_enabled();
 
   test_axis_dead_zone();
   test_stick_dead_zone_is_radial();
