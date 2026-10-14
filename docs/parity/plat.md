@@ -1943,6 +1943,28 @@ Upstream carries per-package records at `flight/agents/packages/share/`: `status
   classifies by EXIT CODE (0 = survived, 1 = a failed check returned from, anything else = a crash), and the counts
   above are from that run.
 
+  A CORRECTIVE AUDIT AGAINST THE AUTHORITATIVE INTEGRATED BASELINE (Foreman supplied it as 1def4dda; this
+  checkout's test and override are byte-for-byte the delivered snapshot) found NOTHING to change. The three-axis
+  inventory, run first:
+
+  * EVERY REGISTERED TEST: exactly one, `flight_cpp.generated_share`, and its file is IDENTICAL to the live one, so
+    there is no stale copy and no second file to duplicate against.
+  * PINNED DIVERGENCES: TWO, both recorded in the override entry `share-complete-module` with status `complete` and
+    both carrying `expires` conditions -- the nullable-union member read and the mis-lowered non-empty tuple carrier,
+    the latter also filed as `non-empty-tuple-spread-lowered-as-array.md`. This suite asserts AROUND them
+    consistently: the tuple's first-plus-rest order is asserted because the override's hand-corrected carrier is the
+    deliberate, recorded behaviour, not a defect to work around.
+  * LIVE INTEGRATED STATE: identical to this checkout, so the mapping is against live content rather than the local
+    seed -- which matters here, because quimby/base is now far ahead of this tree.
+
+  Seventeen mutations re-run, every one confirmed to differ at its target, ALL SEVENTEEN DETECTED by failing checks.
+  The RETAIN TEST is applied to this unit's own additions: the empty-name and empty-mimeType mutations SURVIVE
+  against the file with those parameterized rows removed and are killed with them present, so those rows are
+  load-bearing rather than decorative and are retained. Nothing was added, because nothing survived the full suite.
+
+  ONE HARNESS NOTE, repeated from an earlier share unit because it bit again: this file's `check` prints NO failure
+  prefix, so a scratch runner that counts a `FAIL:` marker misreads every detection as a crash. The seventeen exits
+  above are the test's OWN failure return, not aborts, and the two-row retention probe was read the same way.
 ### Local generation status
 
 2 of 3 modules emitted, 1 refused; 3 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
