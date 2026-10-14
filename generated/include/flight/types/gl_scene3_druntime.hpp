@@ -134,7 +134,7 @@ struct GlScene3DRuntime : public flight::ReferenceEnabled {
   flight::Array<flight::Ref<GlScene3DDrawEntry>> opaque_pool;
   std::variant<std::function<void(flight::Array<flight::Ref<flight::types::PbrExtension>>)>, flight::Null, flight::Undefined> pbr_extension_guard = std::variant<std::function<void(flight::Array<flight::Ref<flight::types::PbrExtension>>)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::optional<flight::Ref<flight::types::GlPbrTransmissionSceneColor>> pbr_transmission_scene_color;
-  flight::Map<flight::String, flight::Ref<flight::types::GlMeshProgram>> program_cache;
+  flight::Map<flight::String, flight::ErasedRef> program_cache;
   std::variant<flight::Array<std::function<void(flight::Ref<flight::types::GlRenderState>)>>, flight::Null, flight::Undefined> resource_cleanups = std::variant<flight::Array<std::function<void(flight::Ref<flight::types::GlRenderState>)>>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::optional<flight::Ref<GlScene3DShadow>> shadow;
   std::optional<flight::Ref<flight::types::GlTextureRenderTarget>> shadow_target;

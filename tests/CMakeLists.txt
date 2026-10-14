@@ -196,6 +196,23 @@ add_test(
 )
 
 add_executable(
+  flight_cpp_generated_canvas_render_state_owner_tests
+  generated_canvas_render_state_owner_test.cpp
+)
+target_include_directories(
+  flight_cpp_generated_canvas_render_state_owner_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_canvas_render_state_owner_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(
+  NAME flight_cpp.generated_canvas_render_state_owner
+  COMMAND flight_cpp_generated_canvas_render_state_owner_tests
+)
+
+add_executable(
   flight_cpp_generated_canvas_texture_resolver_tests
   generated_canvas_texture_resolver_test.cpp
 )
@@ -1571,6 +1588,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_log log)
 flight_cpp_package_test_labels(flight_cpp.generated_log_levels_and_sinks log)
 flight_cpp_package_test_labels(flight_cpp.generated_render_state render types)
 flight_cpp_package_test_labels(flight_cpp.generated_render_scene2d_coverage render)
+flight_cpp_package_test_labels(flight_cpp.generated_canvas_render_state_owner render types)
 flight_cpp_package_test_labels(flight_cpp.generated_canvas_texture_resolver scene2d-canvas)
 flight_cpp_package_test_labels(flight_cpp.generated_texture texture types)
 flight_cpp_package_test_labels(flight_cpp.generated_bitmap bitmap)

@@ -120,8 +120,8 @@ struct GridLayoutItemStyle : public flight::ReferenceEnabled {
 
 template <typename ContainerStyle, typename ItemStyle>
 struct LayoutNode : public flight::ReferenceEnabled {
-  std::optional<flight::ErasedRef> container_style;
-  std::optional<flight::ErasedRef> item_style;
+  std::optional<ContainerStyle> container_style;
+  std::optional<ItemStyle> item_style;
   flight::String kind;
   double parent_index;
 };

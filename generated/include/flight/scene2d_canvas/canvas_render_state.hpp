@@ -3,10 +3,8 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function getCanvasRenderStateRuntime -- source line 79
-//   missing: function buildCanvasRenderRegistries -- source line 114
-//   missing: function createCanvasRenderStateRuntime -- source line 54
-//   missing: function createCanvasRenderState -- source line 20
+//   missing: function buildCanvasRenderRegistries -- source line 119
+//   missing: function createCanvasRenderState -- source line 23
 #include <cstddef>
 #include <flight/map.hpp>
 #include <flight/structural_ref.hpp>
@@ -21,8 +19,6 @@ static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-cont
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
 #include <flight/scene2d_canvas/canvas_render_state.hpp>
-
-#include <flight/types/texture.hpp>
 
 #include <flight/types/render_state.hpp>
 
@@ -57,7 +53,6 @@ namespace flight::types { struct RenderProxy2D; }
 namespace flight::types { struct RenderProxy; }
 namespace flight::types { struct RenderRegistrySignals; }
 namespace flight::types { struct RenderState; }
-namespace flight::types { struct RenderStateRuntime; }
 namespace flight::types { struct StrokeStyle; }
 namespace flight::types { template <typename K> struct CanvasShapeCommand; }
 namespace flight::types { template <typename Traits> struct Node; }
@@ -78,42 +73,10 @@ using flight::types::CanvasTextureResolvers;
 using flight::types::RenderProxy2D;
 using flight::types::RenderRegistrySignals;
 using flight::types::RenderState;
-using flight::types::RenderStateRuntime;
-using flight::types::Texture;
 
-
-// NOT GENERATED: function getCanvasRenderStateRuntime -- source line 79
-// refusal: cpp-structural-assertion-owner-unproven [source-portability]
-//
-// The source it stood for:
-//   export function getCanvasRenderStateRuntime(state: CanvasRenderState): CanvasRenderStateRuntime {
-//     return state[EntityRuntimeKey] as CanvasRenderStateRuntime;
-//   }
-//   
-//   // The state's own resolution set, which a shape rasterizer on another backend can share so both resolve
-//   // one Texture through one transcode cache.
-// cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts: the
-// asserted row from flight::Ref<flight::types::RenderStateRuntime> to
-// flight::Ref<flight::types::CanvasRenderStateRuntime> reads canvasBlendEffectBackdrops, canvasHost,
-// canvasTextureResolvers, currentAlpha, currentBlendMode, currentRenderTarget, imageSmoothingEnabled,
-// imageSmoothingQuality, passStack and teardowns, which the source type does not declare, and registries, whose
-// optionality or value representation is not representation-equivalent to the source type's cells, and a
-// structural owner binds the members and storage representations of the type the object was first reached as, so
-// a member the source's own declaration lacks or carries differently has no compatible cell to answer the read.
-// Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those
-// cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in
-// the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain
-// indices, keys, or tokens into storage that remains typed as CanvasRenderStateRuntime, rather than storing an
-// erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the
-// reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a
-// checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a
-// type that carries canvasBlendEffectBackdrops, canvasHost, canvasTextureResolvers, currentAlpha,
-// currentBlendMode, currentRenderTarget, imageSmoothingEnabled, imageSmoothingQuality, passStack, registries and
-// teardowns with the asserted optionality and value representation -- construct CanvasRenderStateRuntime
-// explicitly, then type the retaining slot and every accessor result as CanvasRenderStateRuntime wherever that
-// concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed
-// slot erased it -- rather than asserting past flight::Ref<flight::types::RenderStateRuntime>. The compiler will
-// not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.
+inline flight::Ref<flight::types::CanvasRenderStateRuntime> get_canvas_render_state_runtime(flight::Ref<flight::types::CanvasRenderState> state) {
+  return flight::types::read_canvas_render_state_runtime_owner(state);
+}
 
 inline flight::Ref<flight::types::CanvasTextureResolvers> get_canvas_render_state_texture_resolvers(flight::Ref<flight::types::CanvasRenderState> state) {
   return get_canvas_render_state_runtime(state)->canvas_texture_resolvers;
@@ -146,7 +109,7 @@ inline void set_canvas_image_smoothing(flight::Ref<flight::types::CanvasRenderSt
 }
 
 
-// NOT GENERATED: function buildCanvasRenderRegistries -- source line 114
+// NOT GENERATED: function buildCanvasRenderRegistries -- source line 119
 // refusal: cpp-member-projection-without-present-storage [compiler-restriction]
 //
 // The source it stood for:
@@ -179,9 +142,9 @@ inline void set_canvas_image_smoothing(flight::Ref<flight::types::CanvasRenderSt
 // sentinel the test left reachable. Test both at once with `x != null`, or narrow the value into a present local
 // the same way
 
-#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_CANVAS_SHAPE_COMMANDS_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENT_UNSUPPORTED_GUARD_EFFECT_PADDING_RESOLVERS_NODE_RENDERERS_RENDER_ROOT_GUARD_STROKE_TESSELLATOR_BLEND_MODE_APPLICATION_MATERIAL_RENDERERS_EFFECTS_69947E4DD0959F89
-#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_CANVAS_SHAPE_COMMANDS_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENT_UNSUPPORTED_GUARD_EFFECT_PADDING_RESOLVERS_NODE_RENDERERS_RENDER_ROOT_GUARD_STROKE_TESSELLATOR_BLEND_MODE_APPLICATION_MATERIAL_RENDERERS_EFFECTS_69947E4DD0959F89
-struct canvas_shape_commands_color_adjustments_color_adjustment_unsupported_guard_effect_padding_resolvers_node_renderers_render_root_guard_stroke_tessellator_blend_mode_application_material_renderers_effects_69947e4dd0959f89 : public flight::ReferenceEnabled {
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_CANVAS_SHAPE_COMMANDS_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENT_UNSUPPORTED_GUARD_EFFECT_PADDING_RESOLVERS_NODE_RENDERERS_RENDER_ROOT_GUARD_STROKE_TESSELLATOR_BLEND_MODE_APPLICATION_MATERIAL_RENDERERS_EFFECTS_707F9AB0EE7D3F0C
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_CANVAS_SHAPE_COMMANDS_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENT_UNSUPPORTED_GUARD_EFFECT_PADDING_RESOLVERS_NODE_RENDERERS_RENDER_ROOT_GUARD_STROKE_TESSELLATOR_BLEND_MODE_APPLICATION_MATERIAL_RENDERERS_EFFECTS_707F9AB0EE7D3F0C
+struct canvas_shape_commands_color_adjustments_color_adjustment_unsupported_guard_effect_padding_resolvers_node_renderers_render_root_guard_stroke_tessellator_blend_mode_application_material_renderers_effects_707f9ab0ee7d3f0c : public flight::ReferenceEnabled {
   std::optional<flight::Map<flight::String, flight::Ref<flight::types::CanvasShapeCommand<flight::types::ShapeCommandKey>>>> canvas_shape_commands;
   std::variant<std::function<void(flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::RenderProxy>, std::optional<flight::Ref<flight::types::RenderProxy>>)>, flight::Null, flight::Undefined> color_adjustments = std::variant<std::function<void(flight::Ref<flight::types::RenderState>, flight::Ref<flight::types::RenderProxy>, std::optional<flight::Ref<flight::types::RenderProxy>>)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::variant<std::function<void(flight::Ref<flight::types::RenderState>, flight::types::NodeAny)>, flight::Null, flight::Undefined> color_adjustment_unsupported_guard = std::variant<std::function<void(flight::Ref<flight::types::RenderState>, flight::types::NodeAny)>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
@@ -193,7 +156,7 @@ struct canvas_shape_commands_color_adjustments_color_adjustment_unsupported_guar
   std::optional<flight::Map<flight::String, flight::Ref<flight::types::CanvasQuadMaterialRenderer>>> material_renderers;
   flight::Map<flight::String, flight::types::CanvasEffectRunner> effects;
 };
-#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_CANVAS_SHAPE_COMMANDS_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENT_UNSUPPORTED_GUARD_EFFECT_PADDING_RESOLVERS_NODE_RENDERERS_RENDER_ROOT_GUARD_STROKE_TESSELLATOR_BLEND_MODE_APPLICATION_MATERIAL_RENDERERS_EFFECTS_69947E4DD0959F89
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_CANVAS_SHAPE_COMMANDS_COLOR_ADJUSTMENTS_COLOR_ADJUSTMENT_UNSUPPORTED_GUARD_EFFECT_PADDING_RESOLVERS_NODE_RENDERERS_RENDER_ROOT_GUARD_STROKE_TESSELLATOR_BLEND_MODE_APPLICATION_MATERIAL_RENDERERS_EFFECTS_707F9AB0EE7D3F0C
 
 inline flight::Ref<flight::types::CanvasRenderRegistries> clone_canvas_render_registries(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasRenderRegistries>>>> registries) {
   auto out = flight::make_ref<flight::types::CanvasRenderRegistries>(*flight::structural_ref_cast<flight::Ref<flight::types::CanvasRenderRegistries>>(registries));
@@ -211,57 +174,46 @@ inline flight::Ref<flight::types::CanvasRenderRegistries> clone_canvas_render_re
   return out;
 }
 
+#ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_ANONYMOUS_3E6B344A3B6BD77E
+#define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_ANONYMOUS_3E6B344A3B6BD77E
+struct anonymous_3e6b344a3b6bd77e : public flight::ReferenceEnabled {
+};
+#endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_SCENE2D_CANVAS_ANONYMOUS_3E6B344A3B6BD77E
 
-// NOT GENERATED: function createCanvasRenderStateRuntime -- source line 54
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
-//
-// The source it stood for:
-//   export function createCanvasRenderStateRuntime(
-//     registries: Readonly<CanvasRenderRegistries>,
-//     canvasTextureResolvers: CanvasTextureResolvers,
-//   ): CanvasRenderStateRuntime {
-//     const runtime = createRenderStateRuntime() as CanvasRenderStateRuntime;
-//     runtime.registries = cloneCanvasRenderRegistries(registries);
-//     runtime.canvasTextureResolvers = canvasTextureResolvers;
-//     runtime.currentRenderTarget = null;
-//     runtime.passStack = [];
-//     runtime.teardowns = [];
-//     return runtime;
-//   }
-//   
-// cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts: a reference
-// assertion from flight::Ref<flight::types::RenderStateRuntime> to
-// flight::Ref<flight::types::CanvasRenderStateRuntime> has no heritage to cast along: the declarations share no
-// emitted C++ class-heritage path (source interface and intersection relationships flatten into independent
-// owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the
-// exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target
-// owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage
+inline flight::Ref<flight::types::CanvasRenderStateRuntime> create_canvas_render_state_runtime(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasRenderRegistries>>>> registries, flight::Ref<flight::types::CanvasTextureResolvers> canvas_texture_resolvers) {
+  auto runtime_registries = clone_canvas_render_registries(registries);
+  auto runtime = flight::render::initialize_render_state_runtime<flight::Ref<flight::types::CanvasRenderStateRuntime>, flight::Ref<flight::types::CanvasRenderRegistries>>(flight::make_ref<flight::types::CanvasRenderStateRuntime>(flight::types::CanvasRenderStateRuntime{}), runtime_registries);
+  (runtime->canvas_texture_resolvers = canvas_texture_resolvers);
+  (runtime->current_render_target = std::nullopt);
+  (runtime->pass_stack = flight::Array<flight::Ref<flight::types::CanvasRenderPass>>{});
+  (runtime->teardowns = flight::Array<std::function<void(flight::Ref<flight::types::CanvasRenderState>)>>{});
+  return runtime;
+}
 
 
-// NOT GENERATED: function createCanvasRenderState -- source line 20
-// refusal: cpp-reference-assertion-without-heritage [target-runtime]
+// NOT GENERATED: function createCanvasRenderState -- source line 23
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   export function createCanvasRenderState(options: Readonly<CanvasRenderStateOptions> = {}): CanvasRenderState {
-//     const state = _createRenderState({
-//       pixelRatio: options.pixelRatio ?? 1,
-//       roundPixels: options.roundPixels ?? false,
-//       sceneGraphSyncPolicy: options.sceneGraphSyncPolicy,
-//     }) as CanvasRenderState;
-//   
-//     state.applyBlendMode = options.blendModeApplication ?? null;
-//     state.canvasCssFilterResolver = null;
-//   
 //     const registries = buildCanvasRenderRegistries(options);
 //     const canvasTextureResolvers = options.canvasTextureResolvers ?? createCanvasTextureResolvers(options.canvasHost!);
 //     const runtime = createCanvasRenderStateRuntime(registries, canvasTextureResolvers);
 //     if (options.canvasHost !== undefined) runtime.canvasHost = options.canvasHost;
-//     state[EntityRuntimeKey] = runtime;
+//     const state = createDerivedRenderStateConstruction<CanvasRenderState>({
+//       pixelRatio: options.pixelRatio ?? 1,
+//       roundPixels: options.roundPixels ?? false,
+//       sceneGraphSyncPolicy: options.sceneGraphSyncPolicy,
+//     });
+//     writeCanvasRenderStateRuntimeOwner(state, runtime);
+//   
+//     state.applyBlendMode = options.blendModeApplication ?? null;
+//     state.canvasCssFilterResolver = null;
 //     // The entity field is a read view of the SAME aggregate the runtime holds, as on GL and WGPU — not
 //     // the caller's object. Registrars replace tables on the runtime copy-on-write, so a field pointing
 //     // at a separate object would be frozen at construction: it would never observe a registration, and
 //     // the offscreen factories that derive a pipeline from it would snapshot an empty policy.
-//     (state as { registries: Readonly<CanvasRenderRegistries> }).registries = runtime.registries;
+//     state.registries = runtime.registries;
 //     // The state owns a resolution set and points its miss seam at its own emitter. The closure reads the
 //     // emitter at call time, so enabling the guards later still reports through it.
 //     runtime.canvasTextureResolvers.registryMiss = (registry, kind) => runtime.registryMiss?.(registry, kind);
@@ -276,13 +228,12 @@ inline flight::Ref<flight::types::CanvasRenderRegistries> clone_canvas_render_re
 //   // attaches one to each state under EntityRuntimeKey and populates its fields;
 //   // getCanvasRenderStateRuntime reads it back. The render path writes the returned object every frame,
 //   // so the return is intentionally mutable (not Readonly).
-// cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts: a reference
-// assertion from flight::Ref<flight::types::RenderState> to flight::Ref<flight::types::CanvasRenderState> has no
-// heritage to cast along: the declarations share no emitted C++ class-heritage path (source interface and
-// intersection relationships flatten into independent owners), and the source carrier does not retain a checked
-// dynamic owner that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime
-// contract that validates and recovers the target owner; the compiler will not use a native pointer cast,
-// materialize a replacement row, or invent side storage
+// cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts: contextual
+// union callable value type std::function<std::optional<void>(flight::types::RenderRegistryTable,
+// flight::String)> agrees with no alternative's signature: the destination holds
+// [std::function<void(flight::types::RenderRegistryTable, flight::String)>]. A callable is a represented domain,
+// so the obstacle is that the destination's signature cannot call this one. Declare the value's parameters so
+// the destination's signature supplies them, and its result as one the destination holds
 
 inline flight::WeakSet<flight::Ref<flight::types::CanvasRenderState>> destroyed_states = flight::WeakSet<flight::Ref<flight::types::CanvasRenderState>>();
 

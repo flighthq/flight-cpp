@@ -31,7 +31,6 @@ namespace flight::types { struct Texture2DArray; }
 namespace flight::types { struct Texture3D; }
 namespace flight::types { struct TextureCube; }
 namespace flight::types { template <typename Traits> struct Node; }
-namespace flight::types { template <typename Traits> struct NodeRuntime; }
 
 namespace flight::types {
 struct Scale9SpriteData;
@@ -54,6 +53,7 @@ struct Scale9Sprite;
 #include <flight/types/matrix.hpp>
 #include <flight/types/rectangle.hpp>
 #include <flight/types/has_bounds_rectangle.hpp>
+#include <flight/types/sprite.hpp>
 #include <flight/types/blend_mode.hpp>
 #include <flight/types/clip_region.hpp>
 #include <flight/types/material2_d.hpp>
@@ -74,7 +74,7 @@ struct data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_m
   bool enabled;
   flight::String kind;
   std::optional<flight::String> name;
-  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>> entity_runtime_key;
+  std::optional<std::shared_ptr<NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>> entity_runtime_key;
   double alpha;
   bool visible;
   std::optional<flight::String> blend_mode;
@@ -160,7 +160,7 @@ struct Scale9Sprite : public flight::ReferenceEnabled {
   bool enabled;
   flight::String kind;
   std::optional<flight::String> name;
-  std::optional<std::shared_ptr<flight::types::NodeRuntime<flight::Ref<flight::types::Node2DTraits>>>> entity_runtime_key;
+  std::optional<flight::Ref<flight::types::SpriteRuntime>> entity_runtime_key;
   double alpha;
   bool visible;
   std::optional<flight::String> blend_mode;

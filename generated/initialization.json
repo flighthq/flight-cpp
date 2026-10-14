@@ -10791,6 +10791,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "Entity",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/Entity.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "CanvasRenderState",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/CanvasRenderState.ts"
@@ -11914,16 +11924,6 @@
           "name": "EmissiveModifierOptions",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/EmissiveModifierOptions.ts"
-        }
-      ]
-    },
-    {
-      "cyclic": false,
-      "modules": [
-        {
-          "name": "Entity",
-          "packageName": "@flighthq/types",
-          "source": "packages/types/src/Entity.ts"
         }
       ]
     },
@@ -75509,7 +75509,76 @@
       "steps": []
     },
     {
-      "bindings": [],
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8dbd9a7a5a2bbacbe8a8f1b2c515bdfce0b4062e3b92fcac4e71e01f6dd140a3",
+            "line": 8,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/CanvasRenderState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/CanvasRenderState.ts\",499]",
+            "kind": "import",
+            "name": "EntityRuntimeKey",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "EntityRuntimeKey",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/Entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:7cbee2b1e4cf86499e595aed11afddc02069a78cddca82f6a544153cf518041d",
+            "line": 29,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/CanvasRenderState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/CanvasRenderState.ts\",1869]",
+            "kind": "function",
+            "name": "readCanvasRenderStateRuntimeOwner",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:13725b6dd9a6e82cefd7c340f9e1e74bdf6a07f59d531113579da562e0933f5f",
+            "line": 33,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/CanvasRenderState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/CanvasRenderState.ts\",2021]",
+            "kind": "function",
+            "name": "writeCanvasRenderStateRuntimeOwner",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
       "dependencies": [
         {
           "evaluation": "type-only",
@@ -75624,7 +75693,7 @@
           }
         },
         {
-          "evaluation": "type-only",
+          "evaluation": "runtime",
           "importer": {
             "name": "CanvasRenderState",
             "packageName": "@flighthq/types",
@@ -76459,6 +76528,20 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/CanvasShapeDrawState.ts"
           },
+          "specifier": "./HostImageSource",
+          "target": {
+            "name": "HostImageSource",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostImageSource.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "CanvasShapeDrawState",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/CanvasShapeDrawState.ts"
+          },
           "specifier": "./Matrix.ts",
           "target": {
             "name": "Matrix",
@@ -77087,6 +77170,20 @@
             "name": "HostCanvas",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/HostCanvas.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "CanvasTextureResolver",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/CanvasTextureResolver.ts"
+          },
+          "specifier": "./HostImageSource",
+          "target": {
+            "name": "HostImageSource",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostImageSource.ts"
           }
         },
         {
@@ -125815,7 +125912,55 @@
       "steps": []
     },
     {
-      "bindings": [],
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8dbd9a7a5a2bbacbe8a8f1b2c515bdfce0b4062e3b92fcac4e71e01f6dd140a3",
+            "line": 80,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/DomRenderState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/DomRenderState.ts\",4417]",
+            "kind": "import",
+            "name": "EntityRuntimeKey",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "EntityRuntimeKey",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/Entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:f11ba902a320ca8f0578e0a81f538cf13b2f794465687b58b390e01de5bc5d21",
+            "line": 55,
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/DomRenderState.ts",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/DomRenderState.ts\",3128]",
+            "kind": "function",
+            "name": "readDomRenderStateRuntimeOwner",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
       "dependencies": [
         {
           "evaluation": "type-only",
@@ -125899,6 +126044,20 @@
             "name": "EffectPadding",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/EffectPadding.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "DomRenderState",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/DomRenderState.ts"
+          },
+          "specifier": "./Entity",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
           }
         },
         {
@@ -166113,7 +166272,7 @@
           "declaration": "variable",
           "path": [
             "declarations",
-            3
+            2
           ]
         }
       ]
@@ -319691,10 +319850,10 @@
           "binding": {
             "column": 14,
             "fingerprint": "sha256:8f0d07d2a8ba596b322338740b68a7a3f690788e02f15b15e26ddae3b38f8c21",
-            "line": 17,
+            "line": 19,
             "packageName": "@flighthq/types",
             "source": "packages/types/src/Sprite.ts",
-            "id": "binding:[\"@flighthq/types\",\"packages/types/src/Sprite.ts\",405]",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/Sprite.ts\",507]",
             "kind": "variable",
             "name": "SpriteKind",
             "scope": "module",
@@ -319709,6 +319868,20 @@
         }
       ],
       "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Sprite",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Sprite.ts"
+          },
+          "specifier": "./Entity.ts",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        },
         {
           "evaluation": "type-only",
           "importer": {
@@ -319778,10 +319951,10 @@
             {
               "column": 14,
               "fingerprint": "sha256:8f0d07d2a8ba596b322338740b68a7a3f690788e02f15b15e26ddae3b38f8c21",
-              "line": 17,
+              "line": 19,
               "packageName": "@flighthq/types",
               "source": "packages/types/src/Sprite.ts",
-              "id": "binding:[\"@flighthq/types\",\"packages/types/src/Sprite.ts\",405]",
+              "id": "binding:[\"@flighthq/types\",\"packages/types/src/Sprite.ts\",507]",
               "kind": "variable",
               "name": "SpriteKind",
               "scope": "module",

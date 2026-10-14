@@ -23457,7 +23457,7 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "source-portability",
+      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/effects-canvas/packages/effects-canvas/src/canvasBlendEffect.ts",
         "@flighthq/effects-canvas/packages/effects-canvas/src/canvasEffectRegistry.ts",
@@ -23486,14 +23486,14 @@
         "sha256:571d366756b5ac2a30a0c9da96e8e4cb18175cd109f8c32ce1ded3853388c9f9",
         "sha256:740b3afeef47ad18ba99694cb9efe3d044c0fa63ce656e53b7b994c75c1ff808",
         "sha256:7fe60361b44e3e1ced050ac267ea667e12de5f1180ebdbbf21c0b6043c353080",
+        "sha256:89eaad6d61340642492261867946d035ba528d0a61233288a4266f1b6696b14c",
         "sha256:8f81257bc6ef7cd8659f79c5d05e4d989378adb1728655d1ea5f28388203bcb7",
         "sha256:921ff83676dc394ad4f9c52be9a0242cd97422b224cfd320c6316a747e488830",
         "sha256:a4ad339619ebe53a08d369a4ee51ccde825188bccfc6172b8ac1b050adf409ea",
-        "sha256:bf39e90aa063ada710f191f2a2e5fb18783376cf4483c0e245c9ea86baedd0f4",
+        "sha256:b759db65c5d3dd9ec1e0828fb905f8ea21f8fb0c6935e99225b83745f23a2eac",
+        "sha256:b8712979a15366c7e60ecc01ea64e1bbe4720d4898600ab2647aac4118a779b4",
         "sha256:c2912e4fbbce6ff6d374dad33ae3bbdf39653ffb2c65c4d049df2dca29b570d5",
-        "sha256:ccfb2ded18f6a7049804975e1275e7d9c536715121da8c870a93d865479ecb95",
-        "sha256:de0b16150fb9a71ff70faa812907317d0c6ffdc37529a7976072900e20cfc02e",
-        "sha256:e52bf0d15d8bf1b4d627c0cf1a87f6b644ce730620f3bdf980d8a03786c77e56"
+        "sha256:ccfb2ded18f6a7049804975e1275e7d9c536715121da8c870a93d865479ecb95"
       ],
       "module": {
         "name": "CanvasRenderState",
@@ -23501,7 +23501,7 @@
         "source": "packages/scene2d-canvas/src/canvasRenderState.ts"
       },
       "path": "flight/scene2d_canvas/canvas_render_state.hpp",
-      "rule": "cpp-structural-assertion-owner-unproven",
+      "rule": "cpp-member-projection-without-present-storage",
       "status": "refused-placeholder"
     },
     {
@@ -44244,6 +44244,8 @@
         "@flighthq/host/packages/host/src/hostQuery.ts",
         "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuHost.ts",
         "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuScreenRenderTarget.ts",
+        "@flighthq/render/packages/render/src/imageSurface.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasElement.ts",
         "@flighthq/surface/packages/surface/src/canvasSurface.ts",
         "@flighthq/surface/packages/surface/src/glSurface.ts",
         "@flighthq/surface/packages/surface/src/wgpuSurface.ts",
@@ -45780,7 +45782,6 @@
     {
       "consumers": [
         "@flighthq/effects-canvas/packages/effects-canvas/src/canvasEffectTestSupport.ts",
-        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTestSupport.ts",
         "@flighthq/types/packages/types/src/CanvasRenderStateOptions.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -45798,7 +45799,6 @@
         "@flighthq/effects-canvas/packages/effects-canvas/src/canvasEffectState.ts",
         "@flighthq/effects-canvas/packages/effects-canvas/src/canvasEffectTestSupport.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderTexture.ts",
-        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTestSupport.ts",
         "@flighthq/types/packages/types/src/CanvasRenderState.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -45835,7 +45835,6 @@
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderTexture.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderTexturePool.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderTextureResolver.ts",
-        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTestSupport.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/enableCanvasTextureResolverGuards.ts",
         "@flighthq/types/packages/types/src/CanvasEffectState.ts",
         "@flighthq/types/packages/types/src/CanvasRenderPass.ts",
@@ -45895,7 +45894,6 @@
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderTexture.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderTexturePool.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasScreenRenderTarget.ts",
-        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTestSupport.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureRenderTarget.ts",
         "@flighthq/types/packages/types/src/CanvasEffectState.ts",
         "@flighthq/types/packages/types/src/CanvasRenderPass.ts",
@@ -45932,6 +45930,7 @@
       "consumers": [
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommandTable.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommands.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
         "@flighthq/types/packages/types/src/CanvasShapeRegistry.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -45946,9 +45945,12 @@
     },
     {
       "consumers": [
+        "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
+        "@flighthq/render/packages/render/src/mergeRenderOptions.ts",
         "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommandTable.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommands.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
         "@flighthq/types/packages/types/src/CanvasRenderState.ts",
         "@flighthq/types/packages/types/src/CanvasRenderStateOptions.ts",
@@ -45973,6 +45975,17 @@
     },
     {
       "consumers": [
+        "@flighthq/render/packages/render/src/imageSurface.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasElement.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasFillPattern.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderTexture.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasScreenRenderTarget.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextMeasure.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureRenderTarget.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/explainCanvasTextureResolution.ts",
         "@flighthq/surface/packages/surface/src/canvasSurface.ts",
         "@flighthq/types/packages/types/src/CanvasRenderTarget.ts",
         "@flighthq/types/packages/types/src/CanvasTextureResolver.ts",
@@ -46026,7 +46039,6 @@
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderTextureResolver.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommands.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRasterizer.ts",
-        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTestSupport.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/explainCanvasTextureResolution.ts",
@@ -47113,8 +47125,6 @@
       "consumers": [
         "@flighthq/image-codec/packages/image-codec/src/decodeImage.ts",
         "@flighthq/image-codec/packages/image-codec/src/encodeImage.ts",
-        "@flighthq/image-codec/packages/image-codec/src/imageDecoderRegistry.ts",
-        "@flighthq/image-codec/packages/image-codec/src/imageEncoderRegistry.ts",
         "@flighthq/swf/packages/swf/src/swfImageDecoder.ts",
         "@flighthq/types/packages/types/src/HostImageDecode.ts",
         "@flighthq/types/packages/types/src/HostImageEncode.ts",
@@ -47310,7 +47320,6 @@
         "@flighthq/gizmo/packages/gizmo/src/gizmoState.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssetBinding.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveImportRegistry.ts",
-        "@flighthq/scene2d/packages/scene2d/src/displayContainer.ts",
         "@flighthq/types/packages/types/src/LottieDocumentImport.ts",
         "@flighthq/types/packages/types/src/LottieRegistry.ts",
         "@flighthq/types/packages/types/src/RiveDocument.ts",
@@ -47702,6 +47711,12 @@
     },
     {
       "consumers": [
+        "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
+        "@flighthq/render/packages/render/src/mergeRenderOptions.ts",
+        "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
+        "@flighthq/render/packages/render/src/renderTarget.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
         "@flighthq/types/packages/types/src/CanvasRenderState.ts",
         "@flighthq/types/packages/types/src/CanvasRenderStateOptions.ts",
         "@flighthq/types/packages/types/src/DomRenderOptions.ts",
@@ -48267,11 +48282,14 @@
         "@flighthq/power/packages/power/src/power.ts",
         "@flighthq/preferences/packages/preferences/src/storage.ts",
         "@flighthq/protocol/packages/protocol/src/protocol.ts",
+        "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/render-gl/packages/render-gl/src/glRenderTargetPool.ts",
         "@flighthq/render-gl/packages/render-gl/src/glRenderView.ts",
         "@flighthq/render-gl/packages/render-gl/src/glSkinPaletteTexture.ts",
         "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuHost.ts",
         "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuScreenRenderTarget.ts",
+        "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
+        "@flighthq/render/packages/render/src/mergeRenderOptions.ts",
         "@flighthq/render/packages/render/src/renderRegistryGuards.ts",
         "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
         "@flighthq/render/packages/render/src/renderTarget.ts",
@@ -48284,7 +48302,7 @@
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasScale9SpriteSlices.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasScreenRenderTarget.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommandTable.ts",
-        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTestSupport.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureRenderTarget.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts",
@@ -48297,7 +48315,6 @@
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuRendererData.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuScale9Mapper.ts",
-        "@flighthq/scene2d/packages/scene2d/src/displayContainer.ts",
         "@flighthq/scene2d/packages/scene2d/src/scale9Sprite.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfAnisotropy.ts",
         "@flighthq/scene3d-formats/packages/scene3d-formats/src/gltfClearcoat.ts",
@@ -48683,6 +48700,7 @@
         "@flighthq/types/packages/types/src/SplitPaneController.ts",
         "@flighthq/types/packages/types/src/SpotLight.ts",
         "@flighthq/types/packages/types/src/Spring.ts",
+        "@flighthq/types/packages/types/src/Sprite.ts",
         "@flighthq/types/packages/types/src/Spritesheet.ts",
         "@flighthq/types/packages/types/src/SpritesheetAnimation.ts",
         "@flighthq/types/packages/types/src/SpritesheetAnimationData.ts",
@@ -51518,6 +51536,15 @@
       "consumers": [
         "@flighthq/host/packages/host/src/host.ts",
         "@flighthq/host/packages/host/src/hostQuery.ts",
+        "@flighthq/render/packages/render/src/imageSurface.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasElement.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderTexture.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderTexturePool.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureRenderTarget.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/explainCanvasTextureResolution.ts",
         "@flighthq/surface/packages/surface/src/canvasSurface.ts",
         "@flighthq/types/packages/types/src/CanvasEffectState.ts",
         "@flighthq/types/packages/types/src/CanvasRenderState.ts",
@@ -51640,6 +51667,7 @@
     },
     {
       "consumers": [
+        "@flighthq/image-codec/packages/image-codec/src/decodeImage.ts",
         "@flighthq/types/packages/types/src/ElectronHost.ts",
         "@flighthq/types/packages/types/src/Host.ts",
         "@flighthq/types/packages/types/src/ImageBitmapComposition.ts",
@@ -51674,6 +51702,7 @@
     },
     {
       "consumers": [
+        "@flighthq/image-codec/packages/image-codec/src/encodeImage.ts",
         "@flighthq/types/packages/types/src/ElectronHost.ts",
         "@flighthq/types/packages/types/src/Host.ts",
         "@flighthq/types/packages/types/src/WebHost.ts",
@@ -51736,6 +51765,8 @@
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/testHelper.ts",
         "@flighthq/texture/packages/texture/src/videoTexture.ts",
         "@flighthq/textureatlas/packages/textureatlas/src/textureAtlas.ts",
+        "@flighthq/types/packages/types/src/CanvasShapeDrawState.ts",
+        "@flighthq/types/packages/types/src/CanvasTextureResolver.ts",
         "@flighthq/types/packages/types/src/HostBitmapReadback.ts",
         "@flighthq/types/packages/types/src/HostImageDimensions.ts",
         "@flighthq/types/packages/types/src/HostVideo.ts",
@@ -52022,7 +52053,6 @@
     {
       "consumers": [
         "@flighthq/image-codec/packages/image-codec/src/decodeImage.ts",
-        "@flighthq/image-codec/packages/image-codec/src/imageDecoderRegistry.ts",
         "@flighthq/swf/packages/swf/src/swfImageDecoder.ts",
         "@flighthq/types/packages/types/src/HostImageDecode.ts",
         "@flighthq/types/packages/types/src/ImageDecoder.ts",
@@ -52039,9 +52069,6 @@
     },
     {
       "consumers": [
-        "@flighthq/image-codec/packages/image-codec/src/decodeImage.ts",
-        "@flighthq/image-codec/packages/image-codec/src/explainImageDecodeFailure.ts",
-        "@flighthq/image-codec/packages/image-codec/src/imageDecoderRegistry.ts",
         "@flighthq/swf/packages/swf/src/swfImageDecoder.ts",
         "@flighthq/types/packages/types/src/Scene2DResources.ts",
         "@flighthq/types/packages/types/src/contract.ts",
@@ -52058,7 +52085,6 @@
     {
       "consumers": [
         "@flighthq/image-codec/packages/image-codec/src/encodeImage.ts",
-        "@flighthq/image-codec/packages/image-codec/src/imageEncoderRegistry.ts",
         "@flighthq/types/packages/types/src/HostImageEncode.ts",
         "@flighthq/types/packages/types/src/ImageEncoder.ts",
         "@flighthq/types/packages/types/src/contract.ts",
@@ -52074,9 +52100,6 @@
     },
     {
       "consumers": [
-        "@flighthq/image-codec/packages/image-codec/src/encodeImage.ts",
-        "@flighthq/image-codec/packages/image-codec/src/explainImageEncodeFailure.ts",
-        "@flighthq/image-codec/packages/image-codec/src/imageEncoderRegistry.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -52116,7 +52139,6 @@
         "@flighthq/render-gl/packages/render-gl/src/glTextureUpload.ts",
         "@flighthq/render-gl/packages/render-gl/src/glTextureVideoUpload.ts",
         "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuTextureUpload.ts",
-        "@flighthq/render/packages/render/src/imageSurface.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasImageSource.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasImageTextureResolver.ts",
@@ -53050,6 +53072,7 @@
         "@flighthq/net/packages/net/src/enableNetGuards.ts",
         "@flighthq/physics2d/packages/physics2d/src/enablePhysics2DGuards.ts",
         "@flighthq/physics3d/packages/physics3d/src/enablePhysics3DGuards.ts",
+        "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
         "@flighthq/render/packages/render/src/enableSceneRenderGuards.ts",
         "@flighthq/render/packages/render/src/renderRegistryGuards.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/enableScene2DResourceFailureGuards.ts",
@@ -53307,6 +53330,7 @@
     },
     {
       "consumers": [
+        "@flighthq/node/packages/node/src/hasMaterial.ts",
         "@flighthq/types/packages/types/src/HasMaterial.ts",
         "@flighthq/types/packages/types/src/Node2D.ts",
         "@flighthq/types/packages/types/src/RenderProxy2D.ts",
@@ -53409,7 +53433,6 @@
         "@flighthq/render/packages/render/src/renderTarget.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasFillPattern.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommands.ts",
-        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTestSupport.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domClipContours.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domTransform.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/regionAttachment2D.ts",
@@ -53917,7 +53940,6 @@
     },
     {
       "consumers": [
-        "@flighthq/node/packages/node/src/hasBoundsRectangle.ts",
         "@flighthq/node/packages/node/src/hasTransform2d.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -54285,15 +54307,19 @@
         "@flighthq/interaction/packages/interaction/src/displayObjectOverlap.ts",
         "@flighthq/interaction/packages/interaction/src/registerTextHitTest.ts",
         "@flighthq/interaction/packages/interaction/src/spriteHitTests.ts",
+        "@flighthq/node/packages/node/src/hasBoundsRectangle.ts",
         "@flighthq/node/packages/node/src/stageFit.ts",
         "@flighthq/physics2d/packages/physics2d/src/nodeSync.ts",
+        "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
+        "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
         "@flighthq/render/packages/render/src/renderTarget.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentInteractiveStateBindings.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssetBinding.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/resolveScene2DResources.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/scene2DDocument.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/scene2DSlotReference.ts",
-        "@flighthq/scene2d/packages/scene2d/src/displayContainer.ts",
         "@flighthq/scene2d/packages/scene2d/src/displayObjectAnimation.ts",
         "@flighthq/scene2d/packages/scene2d/src/scale9Sprite.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/prepareGlScene3DForwardLights.ts",
@@ -54408,7 +54434,6 @@
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/scene2DDocumentImporterRegistry.ts",
         "@flighthq/scene2d-resources/packages/scene2d-resources/src/scene2DSlotReference.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuShape.ts",
-        "@flighthq/scene2d/packages/scene2d/src/displayContainer.ts",
         "@flighthq/scene2d/packages/scene2d/src/displayObjectAnimation.ts",
         "@flighthq/scene2d/packages/scene2d/src/scale9Sprite.ts",
         "@flighthq/shape/packages/shape/src/scale9Shape.ts",
@@ -54670,6 +54695,11 @@
     },
     {
       "consumers": [
+        "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
+        "@flighthq/render/packages/render/src/mergeRenderOptions.ts",
+        "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
         "@flighthq/types/packages/types/src/CanvasRenderState.ts",
         "@flighthq/types/packages/types/src/CanvasRenderStateOptions.ts",
         "@flighthq/types/packages/types/src/DomRenderOptions.ts",
@@ -54720,6 +54750,7 @@
         "@flighthq/physics2d/packages/physics2d/src/worldQueries.ts",
         "@flighthq/physics3d/packages/physics3d/src/world.ts",
         "@flighthq/physics3d/packages/physics3d/src/worldQueries.ts",
+        "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRasterizer.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextMeasure.ts",
         "@flighthq/shortcut/packages/shortcut/src/shortcutExplicitDependency.ts",
@@ -54925,7 +54956,6 @@
       "consumers": [
         "@flighthq/gizmo/packages/gizmo/src/gizmoState.ts",
         "@flighthq/scene2d-formats/packages/scene2d-formats/src/riveAssetBinding.ts",
-        "@flighthq/scene2d/packages/scene2d/src/displayContainer.ts",
         "@flighthq/scene2d/packages/scene2d/src/scale9Sprite.ts",
         "@flighthq/shape/packages/shape/src/scale9Shape.ts",
         "@flighthq/types/packages/types/src/contract.ts",
@@ -55322,7 +55352,9 @@
         "@flighthq/path/packages/path/src/tessellatePath.ts",
         "@flighthq/path/packages/path/src/tessellatePathTyped.ts",
         "@flighthq/path/packages/path/src/tessellateStrokePath.ts",
+        "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
         "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
         "@flighthq/skeleton2d/packages/skeleton2d/src/deformPathAttachment2D.ts",
         "@flighthq/types/packages/types/src/CanvasRenderState.ts",
@@ -55482,7 +55514,9 @@
         "@flighthq/path/packages/path/src/tessellatePath.ts",
         "@flighthq/path/packages/path/src/tessellatePathTyped.ts",
         "@flighthq/path/packages/path/src/tessellateStrokePath.ts",
+        "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
         "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
         "@flighthq/types/packages/types/src/CanvasRenderState.ts",
         "@flighthq/types/packages/types/src/DomRenderState.ts",
@@ -56480,11 +56514,9 @@
     {
       "consumers": [
         "@flighthq/command/packages/command/src/commandBinding.ts",
-        "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
+        "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/scene-document/packages/scene-document/src/flightDocumentResourceDependencies.ts",
         "@flighthq/scene-document/packages/scene-document/src/sceneDocumentInteractiveStateBindings.ts",
-        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommandTable.ts",
-        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
         "@flighthq/shape-formats/packages/shape-formats/src/shapeCommandSchemas.ts",
         "@flighthq/skeleton2d-formats/packages/skeleton2d-formats/src/skeletonDetect.ts",
         "@flighthq/spritesheet-formats/packages/spritesheet-formats/src/spritesheetDetect.ts",
@@ -56579,7 +56611,10 @@
     },
     {
       "consumers": [
+        "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
+        "@flighthq/render/packages/render/src/mergeRenderOptions.ts",
         "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glShape.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuShape.ts",
@@ -56609,7 +56644,9 @@
     },
     {
       "consumers": [
+        "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
         "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glShape.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuShape.ts",
@@ -56638,7 +56675,9 @@
     },
     {
       "consumers": [
+        "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
         "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
         "@flighthq/types/packages/types/src/CanvasRenderState.ts",
         "@flighthq/types/packages/types/src/DomRenderState.ts",
@@ -56694,8 +56733,10 @@
     },
     {
       "consumers": [
+        "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
         "@flighthq/render/packages/render/src/renderRegistryGuards.ts",
         "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
         "@flighthq/types/packages/types/src/CanvasRenderState.ts",
         "@flighthq/types/packages/types/src/CanvasTextureResolver.ts",
@@ -56740,10 +56781,12 @@
         "@flighthq/effects/packages/effects/src/tiltShiftEffect.ts",
         "@flighthq/render-gl/packages/render-gl/src/enableGlTextureResolverGuards.ts",
         "@flighthq/render-gl/packages/render-gl/src/glRenderView.ts",
+        "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
+        "@flighthq/render/packages/render/src/mergeRenderOptions.ts",
         "@flighthq/render/packages/render/src/renderRegistryGuards.ts",
         "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRasterizer.ts",
-        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTestSupport.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/enableCanvasTextureResolverGuards.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/enableDomTextureResolverGuards.ts",
@@ -56782,6 +56825,7 @@
     },
     {
       "consumers": [
+        "@flighthq/render/packages/render/src/mergeRenderOptions.ts",
         "@flighthq/types/packages/types/src/CanvasRenderStateOptions.ts",
         "@flighthq/types/packages/types/src/GlRenderStateOptions.ts",
         "@flighthq/types/packages/types/src/WgpuRenderStateOptions.ts",
@@ -56915,7 +56959,6 @@
         "@flighthq/effects-gl/packages/effects-gl/src/glOuterGlowEffect.ts",
         "@flighthq/render-gl/packages/render-gl/src/glRenderTargetPool.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderTexture.ts",
-        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTestSupport.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/presentGlScene3D.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -58278,6 +58321,7 @@
       "consumers": [
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommandTable.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommands.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
         "@flighthq/shape/packages/shape/src/enableShapeBoundsGuards.ts",
         "@flighthq/shape/packages/shape/src/shapeBoundsRegistry.ts",
         "@flighthq/types/packages/types/src/CanvasShapeRegistry.ts",
@@ -58310,6 +58354,7 @@
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommandTable.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommands.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRasterizer.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domClipContours.ts",
         "@flighthq/shape-formats/packages/shape-formats/src/shapeCommandSchemas.ts",
         "@flighthq/shape/packages/shape/src/explainShapeTessellation.ts",
@@ -58688,6 +58733,7 @@
         "@flighthq/signals/packages/signals/src/connection.ts",
         "@flighthq/signals/packages/signals/src/emitter.ts",
         "@flighthq/signals/packages/signals/src/safe.ts",
+        "@flighthq/signals/packages/signals/src/scope.ts",
         "@flighthq/signals/packages/signals/src/signal.ts",
         "@flighthq/signals/packages/signals/src/slot.ts",
         "@flighthq/signals/packages/signals/src/throttle.ts",
@@ -60155,7 +60201,9 @@
       "consumers": [
         "@flighthq/path/packages/path/src/strokePathGeometry.ts",
         "@flighthq/path/packages/path/src/tessellateStrokePath.ts",
+        "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
         "@flighthq/render/packages/render/src/renderRegistrySignals.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
         "@flighthq/types/packages/types/src/CanvasRenderState.ts",
         "@flighthq/types/packages/types/src/DomRenderState.ts",
@@ -60176,8 +60224,15 @@
     },
     {
       "consumers": [
+        "@flighthq/image/packages/image/src/imageResourceFrom.ts",
         "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuHost.ts",
         "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuScreenRenderTarget.ts",
+        "@flighthq/render/packages/render/src/imageSurface.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasElement.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasFillPattern.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasScreenRenderTarget.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureRenderTarget.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts",
         "@flighthq/surface/packages/surface/src/canvasSurface.ts",
         "@flighthq/surface/packages/surface/src/glSurface.ts",
         "@flighthq/surface/packages/surface/src/surface.ts",
@@ -63955,11 +64010,11 @@
         "@flighthq/materials/packages/materials/src/customShaderMaterial.ts",
         "@flighthq/materials/packages/materials/src/explainMaterialConversion.ts",
         "@flighthq/materials/packages/materials/src/extendedPbrMaterial.ts",
+        "@flighthq/materials/packages/materials/src/material3d.ts",
         "@flighthq/materials/packages/materials/src/materialPresets.ts",
         "@flighthq/materials/packages/materials/src/pbrMaterials.ts",
         "@flighthq/materials/packages/materials/src/phongToPbr.ts",
         "@flighthq/materials/packages/materials/src/standardMaterial.ts",
-        "@flighthq/materials/packages/materials/src/surfaceMaterial.ts",
         "@flighthq/materials/packages/materials/src/unlitMaterials.ts",
         "@flighthq/mesh/packages/mesh/src/updateMeshMorph.ts",
         "@flighthq/movieclip/packages/movieclip/src/movieClip.ts",
@@ -64014,7 +64069,6 @@
         "@flighthq/quadbatch/packages/quadbatch/src/quadBatch.ts",
         "@flighthq/registry-catalog/packages/registry-catalog/src/registryCatalog.ts",
         "@flighthq/registry-codegen/packages/registry-codegen/src/registryCodegen.ts",
-        "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/render-gl/packages/render-gl/src/enableGlRenderStateGuards.ts",
         "@flighthq/render-gl/packages/render-gl/src/enableGlRenderTextureGuards.ts",
         "@flighthq/render-gl/packages/render-gl/src/explainGlTextureResolution.ts",
@@ -64064,7 +64118,6 @@
         "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuTestHelper.ts",
         "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuTextureRenderTarget.ts",
         "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuTextureResolver.ts",
-        "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
         "@flighthq/render/packages/render/src/enableColorAdjustments.ts",
         "@flighthq/render/packages/render/src/explainScene2DCoverage.ts",
         "@flighthq/render/packages/render/src/explainScene2DPipelineCoverage.ts",
@@ -64093,12 +64146,12 @@
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasCache.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasClip.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasClipRectangle.ts",
-        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasMaterialRegistry.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasMaterials.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasNode2D.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasParticleEmitter2D.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasPipeline.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasQuadBatch.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasQuadMaterialRegistry.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderPass.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderSurface.ts",
@@ -64106,8 +64159,8 @@
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasScale9Shape.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasScale9Sprite.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShape.ts",
-        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasSprite.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTestSupport.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextInput.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextLabel.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTilemap.ts",

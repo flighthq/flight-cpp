@@ -439,8 +439,6 @@
         "flight/types/scale9_shape.hpp",
         "flight/types/scale9_sprite.hpp",
         "flight/types/scene2_dresources.hpp",
-        "flight/types/selection_state.hpp",
-        "flight/types/selection_state_runtime.hpp",
         "flight/types/shape.hpp",
         "flight/types/skeleton2_ddraw_order_animation_target.hpp",
         "flight/types/sprite.hpp",
@@ -3715,9 +3713,7 @@
       "id": "debug-enable-debug-forward-declaration"
     },
     {
-      "files": [
-        "flight/types/signal.hpp"
-      ],
+      "files": [],
       "id": "signals-generic-slot-storage"
     },
     {
@@ -5118,9 +5114,9 @@
     },
     {
       "dependency": "flight",
-      "digest": "3c4eedc759cdeb14e6459ee4f7ee97a35dd234bb37e345c150987e437f34a6f3",
-      "id": "canvas-texture-resolver-void-miss-callback",
-      "module": "packages/scene2d-canvas/src/canvasTextureResolver.ts",
+      "digest": "8cc1a61299547bfa3b81fc4a7c848cfda3aacc411e2305ffec5dcade29515f2f",
+      "id": "canvas-render-state-runtime-owner-and-initialization",
+      "module": "packages/scene2d-canvas/src/canvasRenderState.ts",
       "package": "@flighthq/scene2d-canvas"
     },
     {
@@ -5230,10 +5226,10 @@
     },
     {
       "dependency": "flight",
-      "digest": "24323d32bdb09a289add8adec7d62e77adf762f9fbbf10d2aa17ec479ad2493b",
-      "id": "node3d-named-runtime-carriers",
-      "module": "Node3D, Mesh, and InstancedMesh runtime carriers",
-      "package": "@flighthq/types"
+      "digest": "9ec7259170dcb0e5bef12d3efc81f2fd7fc50b6ab0b3d5b74fc4e0a9c6155699",
+      "id": "texture-source-concrete-value-arms",
+      "module": "packages/types/src/TextureSourceValue.ts and cube Texture source storage",
+      "package": "@flighthq/types and @flighthq/scene3d-gl"
     },
     {
       "dependency": "flight",
@@ -5293,10 +5289,10 @@
     },
     {
       "dependency": "flight",
-      "digest": "2c5836a5a1eff160257b6834b3f1ece2b3cdd9e231bdb710802a0b3365a2112c",
-      "id": "texture-source-concrete-value-arms",
-      "module": "packages/types/src/TextureSourceValue.ts and cube Texture source storage",
-      "package": "@flighthq/types and @flighthq/scene3d-gl"
+      "digest": "e80816253df8001eb96e1e5ee3119d6ef35f1df8bcc8522e062a3b1559405dea",
+      "id": "scene3d-exact-owner-boundaries",
+      "module": "Scene3D node traits/construction, billboards, meshes, animation, document assembly, appearance, instance colors, and opt-in diagnostics",
+      "package": "@flighthq/scene3d and @flighthq/types"
     },
     {
       "dependency": "flight",
@@ -5440,10 +5436,10 @@
     },
     {
       "dependency": "flight",
-      "digest": "05c5e644bef0d09eef8e97a8afa131872d68fe4995635a885811a50e05a18a48",
-      "id": "scene3d-exact-owner-boundaries",
-      "module": "Scene3D node traits/construction, billboards, meshes, animation, document assembly, appearance, instance colors, and opt-in diagnostics",
-      "package": "@flighthq/scene3d and @flighthq/types"
+      "digest": "24323d32bdb09a289add8adec7d62e77adf762f9fbbf10d2aa17ec479ad2493b",
+      "id": "node3d-named-runtime-carriers",
+      "module": "Node3D, Mesh, and InstancedMesh runtime carriers",
+      "package": "@flighthq/types"
     },
     {
       "dependency": "flight",
@@ -5559,6 +5555,13 @@
     },
     {
       "dependency": "flight",
+      "digest": "3c4eedc759cdeb14e6459ee4f7ee97a35dd234bb37e345c150987e437f34a6f3",
+      "id": "canvas-texture-resolver-void-miss-callback",
+      "module": "packages/scene2d-canvas/src/canvasTextureResolver.ts",
+      "package": "@flighthq/scene2d-canvas"
+    },
+    {
+      "dependency": "flight",
       "digest": "322e828c53e5681be22063d05f9af44f64deccfec897e33344ab15fc43b782f0",
       "id": "canvas-texture-resolver-present-registry",
       "module": "packages/scene2d-canvas/src/canvasTextureResolver.ts",
@@ -5583,13 +5586,6 @@
       "digest": "a707c5b909a2f7a1a39d11148eca1e43c111602974eef0ae7d66a90fd9da4516",
       "id": "canvas-texture-resolver-host-image-result",
       "module": "packages/types/src/CanvasTextureResolver.ts and packages/scene2d-canvas/src/canvasTextureResolver.ts",
-      "package": "@flighthq/scene2d-canvas"
-    },
-    {
-      "dependency": "flight",
-      "digest": "b1b0ec5443ee54580fee94b12244c019f234b1e6907bb26a6c12ae9a1b462b27",
-      "id": "scene2d-canvas-host-image-draw-flow",
-      "module": "packages/scene2d-canvas/src/canvasAtlasRegion.ts, canvasTextureView.ts, canvasBitmapTextureResolver.ts, canvasImageTextureResolver.ts, canvasTextureWindowSource.ts; packages/types/src/CanvasShapeDrawState.ts",
       "package": "@flighthq/scene2d-canvas"
     },
     {
@@ -5633,6 +5629,13 @@
       "id": "materials-standard-pbr-exact-owner-initialization",
       "module": "packages/materials/src/pbrMaterials.ts",
       "package": "@flighthq/materials"
+    },
+    {
+      "dependency": "flight",
+      "digest": "b1b0ec5443ee54580fee94b12244c019f234b1e6907bb26a6c12ae9a1b462b27",
+      "id": "scene2d-canvas-host-image-draw-flow",
+      "module": "packages/scene2d-canvas/src/canvasAtlasRegion.ts, canvasTextureView.ts, canvasBitmapTextureResolver.ts, canvasImageTextureResolver.ts, canvasTextureWindowSource.ts; packages/types/src/CanvasShapeDrawState.ts",
+      "package": "@flighthq/scene2d-canvas"
     },
     {
       "dependency": "flight",
