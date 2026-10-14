@@ -29,8 +29,10 @@ const SCHEMA = 'flight-cpp-source-patches/1';
 // What the patch's `refusal` field names. A patch can answer a compiler REFUSAL, in which case
 // generation can check the refusal is gone, or a C++ DIAGNOSTIC in emitted code, which only the header
 // compile gate can see. The distinction exists so the effectiveness check does not quietly pass a
-// patch it cannot actually evaluate.
-const ANSWERS = new Set(['refusal', 'diagnostic']);
+// patch it cannot actually evaluate. A PERFORMANCE patch answers neither: the emitted output is unchanged, so
+// there is no refusal for generation to see disappear, and the claim it carries -- byte-identical output -- is
+// stated and measured in its `verification`, not re-checked here.
+const ANSWERS = new Set(['refusal', 'diagnostic', 'performance']);
 const REQUIRED = [
   'id',
   'dependency',

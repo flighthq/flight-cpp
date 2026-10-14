@@ -37,6 +37,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-narrowed-coalesced-arm-slot.patch`](../../source-patches/compiler-narrowed-coalesced-arm-slot.patch) | [A binding narrowed to one coalesced arm must enter a wider union as the slot it is stored in](narrowed-coalesced-arm-into-wider-union.md) |
 | [`compiler-dependent-indexed-access-carrier.patch`](../../source-patches/compiler-dependent-indexed-access-carrier.patch) | [`T['key']` on a type parameter must read the member through the type argument's carrier](dependent-indexed-access-through-references.md) |
 | [`compiler-async-closure-coroutine.patch`](../../source-patches/compiler-async-closure-coroutine.patch) | [An async closure needs the coroutine lowering a module-level function gets](async-closure-coroutine-lowering.md) |
+| [`compiler-exported-type-owner-cache.patch`](../../source-patches/compiler-exported-type-owner-cache.patch) | [Resolving an imported type's declaring owner must not re-walk every star re-export](exported-type-owner-lookup-uncached.md) |
 | [`compiler-dependent-erased-object-recovery-template.patch`](../../source-patches/compiler-dependent-erased-object-recovery-template.patch) | [Dependent erased-object recovery needs a template disambiguator](dependent-erased-object-recovery-template.md) |
 | [`compiler-dependent-indexed-access-reference-carrier.patch`](../../source-patches/compiler-dependent-indexed-access-reference-carrier.patch) | [Dependent indexed access must read through the reference carrier](dependent-indexed-access-reference-carrier.md) |
 | [`compiler-contextual-imported-union-owner.patch`](../../source-patches/compiler-contextual-imported-union-owner.patch) | [Contextual construction of an imported union](compiler-contextual-imported-union-owner.md) |
@@ -458,7 +459,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [`Object.values` of a const object table must enumerate its members](object-values-of-const-table-unbound-keys.md) —
   silent miscompilation: the values come from a dynamic view whose keys the member table never binds, so the array is empty; statechart rejected every conditional transition as an invalid comparison. Carried by the `statechart-comparison-closed-set` patch.
 - [Resolving an imported type's declaring owner must not re-walk every star re-export](exported-type-owner-lookup-uncached.md) —
-  performance only: an uncached owner lookup over the `@flighthq/types/contract` barrel makes the registry migration group's generation take 3h40m. No workaround is carried.
+  performance only: a scoped `@flighthq/scene2d-gl` generation drops from 8172 s to 830 s with byte-identical output. Carried by the `compiler-exported-type-owner-cache` patch (`answers: performance`).
 - [A `?? null` fallback written into nullable structural storage must produce that storage's absent state](nullish-null-fallback-into-nullable-structural-storage.md) —
   `@flighthq/render`'s `initializeRenderState` (`canvasHost`, `imageHost`); one statement failed 227 renderer header compilations. Carried by the `render-state-nullable-structural-*-fallback` emission repairs.
 - [`new Map(existingMap)` must copy, not alias](new-map-copy-lowered-to-alias.md) —

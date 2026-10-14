@@ -1,0 +1,167 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 351d1f4..a91ee82 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -17497,14 +17497,40 @@ function getCppUnionAliasDeclarationOwnerCpp(
+   return directTargets[0] === context.module ? undefined : directTargets[0];
+ }
+ 
++// Which declarations a module exports under a name, following `export *` and re-exports. The answer is a
++// function of the module graph alone, which does not change during an emission session, so it is memoized per
++// session (keyed on the session's planner, which owns module resolution). Without the memo, every lookup of a
++// name exported through `@flighthq/types/contract` -- a barrel of about a thousand star re-exports -- walked the
++// whole barrel again, which made one emission of a renderer group take hours.
++//
++// A cycle cuts a walk short: a key already on the current path contributes nothing. An answer computed under such
++// a cut may be partial, so only answers whose walk was never cut are cached; the caller-facing result is unchanged.
++const cppExportedTypeOwnerCacheCpp = new WeakMap<object, Map<string, readonly CppTypeDeclarationOwner[]>>();
++
+ function getCppExportedTypeDeclarationOwnersCpp(
+   module: Readonly<IrModule>,
+   exportedName: string,
+   context: EmitContext,
+   visited: ReadonlySet<string>,
+ ): readonly CppTypeDeclarationOwner[] {
++  return lookupCppExportedTypeDeclarationOwnersCpp(module, exportedName, context, visited).owners;
++}
++
++function lookupCppExportedTypeDeclarationOwnersCpp(
++  module: Readonly<IrModule>,
++  exportedName: string,
++  context: EmitContext,
++  visited: ReadonlySet<string>,
++): Readonly<{ owners: readonly CppTypeDeclarationOwner[]; truncated: boolean }> {
+   const key = `${getCppModuleIdentityKey(module)}\0${exportedName}`;
+-  if (visited.has(key)) return [];
++  if (visited.has(key)) return { owners: [], truncated: true };
++  let cache = cppExportedTypeOwnerCacheCpp.get(context.referenceRepresentationPlanner);
++  if (!cache) {
++    cache = new Map();
++    cppExportedTypeOwnerCacheCpp.set(context.referenceRepresentationPlanner, cache);
++  }
++  const cached = cache.get(key);
++  if (cached) return { owners: cached, truncated: false };
+   const nextVisited = new Set(visited).add(key);
+   const bindingIds = new Set([
+     ...module.declarations.flatMap((declaration) =>
+@@ -17528,6 +17554,7 @@ function getCppExportedTypeDeclarationOwnersCpp(
+     }
+     return [{ declaration, module }];
+   });
++  let truncated = false;
+   const forwarded = module.exports.flatMap((exported): readonly CppTypeDeclarationOwner[] => {
+     const importedName =
+       exported.kind === 'all'
+@@ -17537,11 +17564,15 @@ function getCppExportedTypeDeclarationOwnersCpp(
+           : undefined;
+     if (!importedName || (exported.kind !== 'all' && exported.kind !== 'reexport')) return [];
+     const moduleContext = module === context.module ? context : { ...context, module };
+-    return getCppResolvedImportModules(exported.specifier, moduleContext).flatMap((targetModule) =>
+-      getCppExportedTypeDeclarationOwnersCpp(targetModule, importedName, context, nextVisited),
+-    );
++    return getCppResolvedImportModules(exported.specifier, moduleContext).flatMap((targetModule) => {
++      const answer = lookupCppExportedTypeDeclarationOwnersCpp(targetModule, importedName, context, nextVisited);
++      truncated ||= answer.truncated;
++      return answer.owners;
++    });
+   });
+-  return [...direct, ...forwarded];
++  const owners = [...direct, ...forwarded];
++  if (!truncated) cache.set(key, owners);
++  return { owners, truncated };
+ }
+ 
+ // Names the alternatives the declaring module minted, qualified by that module's namespace, so a
+diff --git a/packages/compiler-backend-cpp/src/cppExportedTypeOwnerCache.test.ts b/packages/compiler-backend-cpp/src/cppExportedTypeOwnerCache.test.ts
+new file mode 100644
+index 0000000..6403c8e
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppExportedTypeOwnerCache.test.ts
+@@ -0,0 +1,87 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import type { CompilerModuleResolutionPlan } from '../../compiler-types/src/index.js';
++import { createCppCompilerBackend } from './cppCompilerBackend.js';
++
++// `@flighthq/types/contract` is a barrel of about a thousand `export *` lines, and every lookup of a name exported
++// through it resolved the whole barrel again. This builds a barrel of the same shape and emits a consumer that
++// resolves imported union aliases through it many times.
++const barrelSize = 400;
++
++function emitThroughBarrel(consumer: string, extraTypes: readonly [string, string][] = []): string {
++  const typeModules = Array.from({ length: barrelSize }, (_, index) => [
++    `T${index}.ts`,
++    `export type U${index} = { readonly kind: 'a${index}'; readonly n: number } | { readonly kind: 'b${index}'; readonly s: string };`,
++  ] as const);
++  const all = [...typeModules, ...extraTypes];
++  const contract = all.map(([file]) => `export * from './${file.replace(/\.ts$/u, '')}';`).join('\n');
++  const moduleResolution: CompilerModuleResolutionPlan = {
++    edges: [
++      ...all.map(([file]) => ({
++        specifier: `./${file.replace(/\.ts$/u, '')}`,
++        target: { packageName: '@flighthq/types', source: `packages/types/src/${file}` },
++      })),
++      { specifier: '@flighthq/types/contract', target: { packageName: '@flighthq/types', source: 'packages/types/src/contract.ts' } },
++    ],
++    schema: 'flight-compiler-module-resolution/1',
++  };
++  const source = (packageName: string, file: string, text: string) => ({
++    packageName,
++    sourceFile: ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true),
++    upstreamDirectory: '/flight',
++  });
++  const results = lowerTypeScriptSources(
++    [
++      ...all.map(([file, text]) => source('@flighthq/types', `/flight/packages/types/src/${file}`, text)),
++      source('@flighthq/types', '/flight/packages/types/src/contract.ts', contract),
++      source('@flighthq/consumer', '/flight/packages/consumer/src/x.ts', consumer),
++    ],
++    moduleResolution,
++  );
++  expect(results.flatMap((result) => result.diagnostics)).toEqual([]);
++  const modules = results.map((result) => result.module);
++  const session = createCppCompilerBackend().createEmissionSession!({
++    moduleResolution,
++    modules,
++    options: {
++      packageTargets: {
++        '@flighthq/consumer': { includePrefix: 'flight/consumer', namespace: 'flight::consumer' },
++        '@flighthq/types': { includePrefix: 'flight/types', namespace: 'flight::types' },
++      },
++      runtimeProfile: 'flight-cpp',
++    },
++  });
++  return session.emitModule(modules.at(-1)!)[0]!.contents;
++}
++
++const uses = Array.from({ length: 20 }, (_, index) => index * 19);
++const consumer = `import type { ${uses.map((index) => `U${index}`).join(', ')} } from '@flighthq/types/contract';
++${uses.map((index) => `export function f${index}(value: U${index}): U${index} { return value; }
++export function g${index}(value: U${index}): number { return value.kind === 'a${index}' ? value.n : 0; }`).join('\n')}`;
++
++describe('resolving a name exported through a star re-export barrel', () => {
++  it('resolves each imported alias to its declaring module, and answers repeated lookups from the session', () => {
++    const started = performance.now();
++    const emitted = emitThroughBarrel(consumer);
++    const elapsed = performance.now() - started;
++    for (const index of uses) {
++      expect(emitted).toContain(`inline flight::types::U${index} f${index}(flight::types::U${index} value) {`);
++    }
++    // Generous: the uncached walk took over a minute for this barrel; the cached one takes a few seconds.
++    expect(elapsed).toBeLessThan(30_000);
++  });
++
++  it('still terminates and resolves through a star re-export cycle', () => {
++    const emitted = emitThroughBarrel(
++      `import type { Looped } from '@flighthq/types/contract';
++       export function h(value: Looped): Looped { return value; }`,
++      [
++        ['CycleA.ts', "export * from './CycleB';\nexport type Looped = { readonly kind: 'x'; readonly x: number } | { readonly kind: 'y'; readonly y: string };"],
++        ['CycleB.ts', "export * from './CycleA';"],
++      ],
++    );
++    expect(emitted).toContain('inline flight::types::Looped h(flight::types::Looped value) {');
++  });
++});

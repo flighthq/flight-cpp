@@ -92,8 +92,24 @@ table for a strongly connected group of modules at once.
 - The earlier "render-gl / scene2d-gl hang" entries in generation-state.md are consistent with this
   cost. The 2026-10-08 measurement already found emission advancing slowly rather than looping.
 
-## Workaround carried
+## Carried compiler patch
 
-None. The output is correct, so there is nothing to repair. Runs are simply slow. A compiler patch would
-need to be shown byte-identical on generated output before it could be carried. Until then, long runs use
-`--progress`, and a stalled trace is checked with an inspector sample before it is called a hang.
+[`compiler-exported-type-owner-cache.patch`](../../source-patches/compiler-exported-type-owner-cache.patch)
+memoizes the lookup per emission session, as described under Required behavior. It is keyed on the session's
+planner, which owns module resolution. A walk that a cycle cut short is not cached, nor is anything above it on
+that path. It is carried with `answers: performance`, a manifest value added for this case: there is no
+refusal for generation to see disappear, so the claim is byte-identical output, measured below.
+
+Measured with flight-compiler `2b687ea`, every carried patch, flight `a627849`:
+
+| Run | Without | With | Output |
+| --- | ---: | ---: | --- |
+| `sdkGeneration --package=@flighthq/scene2d-gl` (1517-module closure, includes `scene2DGlPipeline.ts`) | 8172 s | 830 s | `include/` byte-identical (`diff -r`), `refusals.json` identical |
+| `sdkGeneration --package=@flighthq/tray` | 232 s | 230 s | byte-identical |
+
+Fixture checks, in `cppExportedTypeOwnerCache.test.ts`:
+- a 400-module star barrel resolves each imported alias to its declaring module. Owner-lookup calls for that
+  emission fall from 184,460 to 8,460.
+- a star re-export cycle still terminates and resolves.
+
+The backend suite has no new failures.
