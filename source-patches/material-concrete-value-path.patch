@@ -536,15 +536,23 @@ diff --git a/packages/types/src/GlMeshMaterialRenderer.ts b/packages/types/src/G
 diff --git a/packages/types/src/GlScene3DRuntime.ts b/packages/types/src/GlScene3DRuntime.ts
 --- a/packages/types/src/GlScene3DRuntime.ts
 +++ b/packages/types/src/GlScene3DRuntime.ts
-@@ -6,6 +6,7 @@ import type { GlTextureRenderTarget } from './GlRenderTarget.ts';
+@@ -1,11 +1,15 @@
+ import type { Camera3D } from './Camera3D.ts';
++import type { ColorScaleBias } from './ColorScaleBias.ts';
++import type { GlMeshMaterialRenderer } from './GlMeshMaterialRenderer.ts';
+ import type { GlMeshProgram } from './GlMeshProgram.ts';
+ import type { GlPbrTransmissionSceneColor } from './GlPbrTransmissionSceneColor.ts';
+ import type { GlRenderState } from './GlRenderState.ts';
+ import type { GlTextureRenderTarget } from './GlRenderTarget.ts';
  import type { GlSkinPaletteTexture } from './GlSkinPaletteTexture.ts';
++import type { Material3DValue } from './Material3DValue.ts';
  import type { Matrix4 } from './Matrix4.ts';
  import type { Mesh } from './Mesh.ts';
 +import type { MeshSubset } from './MeshGeometry.ts';
  import type { Node3D } from './Node3D.ts';
  import type { PbrExtensionValue } from './PbrExtension.ts';
  import type { Scene3DLightBlock } from './Scene3DLightBlock.ts';
-@@ -47,16 +48,16 @@ export interface GlScene3DIbl {
+@@ -47,16 +51,16 @@ export interface GlScene3DIbl {
  // passes; the pool is never exposed outside renderGlScene3D.
  export interface GlScene3DDrawEntry {
    alpha: number;
