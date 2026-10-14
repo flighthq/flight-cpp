@@ -9,8 +9,13 @@
 //
 // Not ported, and why:
 // - world: the four createPhysics2DCollider cases (the function itself is refused), the three
-//   invalidatePhysics2DCollider cases and the two hydratePhysics2DWorld cases (both refused); the three
-//   `typeof initialize… === 'function'` cases are covered by compiling.
+//   invalidatePhysics2DCollider cases (both refused); the three `typeof initialize… === 'function'` cases are
+//   covered by compiling.
+// - hydratePhysics2DWorld (carried by physics2d-hydrate-version-declared-read): "preserves current values and
+//   rejects unknown future versions" is ported whole. "upgrades pre-CCD body and solver records" deletes declared
+//   members, which a native struct cannot lack, so its `=== undefined` branches cannot be reached; what it can
+//   express is ported: an older version upgrades to the current one, keeps every value, and the world still steps.
+//   The cases after it check the version bounds and that hydration keeps every owner's identity.
 // - enablePhysics2DGuards: the three cases that call registerBuiltInPhysics2DJointSolvers ("says nothing about
 //   joints once their solvers are registered", "reports a joint whose endpoint body is gone…", "still speaks when a
 //   second, different fault appears…"): the built-in joint solvers are refused.
@@ -356,6 +361,89 @@ void world_cases(Runner& runner) {
       expect(world->body_by_index.has(first->index)).to_be(false);
     });
   });
+  runner.describe("hydratePhysics2DWorld", [&] {
+    runner.it("upgrades an older world to the current version and keeps every value it holds", [] {
+      for (double legacy : {0.0, 1.0}) {
+        auto world = pt::world(0, 0);
+        auto body = add(world, box_body(0, 0));
+        world->version = legacy;
+        world->config->continuous_collision = false;
+        world->config->max_ccd_substeps = 3;
+        world->config->max_ccd_rotation_substeps = 5;
+        body->bullet = true;
+        body->fixed_rotation = true;
+        body->sleep_enabled = false;
+
+        expect(p2::hydrate_physics2_dworld(world)).to_be(true);
+
+        expect(world->version).to_be(p2::physics2_dworld_version);
+        expect(world->config->continuous_collision).to_be(false);
+        expect(world->config->max_ccd_substeps).to_be(3.0);
+        expect(world->config->max_ccd_rotation_substeps).to_be(5.0);
+        expect(body->bullet).to_be(true);
+        expect(body->fixed_rotation).to_be(true);
+        expect(body->sleep_enabled).to_be(false);
+        expect(throws([&] { step(world); })).to_be(false);
+      }
+    });
+
+    runner.it("preserves current values and rejects unknown future versions", [] {
+      auto current = default_world();
+      current->config->continuous_collision = false;
+      current->config->max_ccd_substeps = 2;
+      expect(p2::hydrate_physics2_dworld(current)).to_be(true);
+      expect(current->config->continuous_collision).to_be(false);
+      expect(current->config->max_ccd_substeps).to_be(2.0);
+
+      auto future = default_world();
+      future->version = p2::physics2_dworld_version + 1;
+      expect(p2::hydrate_physics2_dworld(future)).to_be(false);
+      expect(future->version).to_be(p2::physics2_dworld_version + 1);
+    });
+
+    runner.it("rejects a version that is not a non-negative safe integer and leaves it untouched", [] {
+      for (double bad : {-1.0, 1.5, std::nan(""), INF, 9007199254740992.0}) {
+        auto world = default_world();
+        world->version = bad;
+        expect(p2::hydrate_physics2_dworld(world)).to_be(false);
+        if (std::isnan(bad)) {
+          require(std::isnan(world->version), "a NaN version stays NaN");
+        } else {
+          expect(world->version).to_be(bad);
+        }
+      }
+    });
+
+    runner.it("keeps the world's own config, bodies and index objects", [] {
+      auto world = pt::world(0, 0);
+      auto body = add(world, box_body(0, 0));
+      world->version = 0;
+      const auto config = world->config;
+      const auto index = world->index;
+      expect(p2::hydrate_physics2_dworld(world)).to_be(true);
+      require(world->config == config, "the same config object, not a replacement");
+      require(world->index == index, "the same broadphase index");
+      require(world->bodies.size() == 1 && world->bodies.element(0) == body, "the same body object");
+      require(p2::find_physics2_dbody(pt::view(world), body->index).value() == body, "still found by its index");
+    });
+
+    runner.it("refuses to hydrate a world while it is stepping", [] {
+      auto world = default_world();
+      world->version = 0;
+      bool threw_inside = false;
+      world->contact_hooks->pre_solve = [&](flight::Ref<flight::types::Physics2DWorld> stepping, flight::Ref<flight::types::Physics2DContact>) {
+        threw_inside = throws([&] { static_cast<void>(p2::hydrate_physics2_dworld(stepping)); });
+      };
+      auto a = add(world, box_body(0, 0));
+      auto b = add(world, box_body(0.5, 0));
+      static_cast<void>(a);
+      static_cast<void>(b);
+      step(world);
+      require(threw_inside, "hydration inside a contact hook throws, as assertPhysics2DWorldNotStepping requires");
+      expect(world->version).to_be(0.0);
+    });
+  });
+
   runner.describe("isPhysics2DPairOrdered", [&] {
     runner.it("orders by persistent index, which is the only key that survives motion", [] {
       auto world = default_world();
