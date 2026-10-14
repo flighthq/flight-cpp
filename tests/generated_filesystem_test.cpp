@@ -26,6 +26,20 @@
 //   * `writeBinaryFileChunks`, driven through a real `WritableStream` sink and a real `AsyncIterable`, so
 //     the chunk copies, the abort-with-reason path, and the failure path are all exercised.
 //
+// TWO DEFECTS FOUND BY A LATER AUDIT OF THIS FILE, and the first is why that audit was asked for:
+//
+//   1. THE PASS SUMMARY WAS PRINTED 479 LINES BEFORE THE END. Every assertion after it -- 65 of them, the
+//      entire second half of this suite -- could fail while the run still emitted "all checks passed", so
+//      anything grepping for that string, which is what this project's own verification does, read a failing
+//      run as green. The banner is now the last statement, and the former post-banner region is pinned by
+//      mutations that fail only it.
+//   2. THE SIGNAL-PRESENT FORWARDING BRANCH OF EVERY SIGNAL-TAKING OPERATION WAS UNEXERCISED. Each of those
+//      bodies is a ternary -- `signal.has_value() ? f(path, data, signal) : f(path, data, nullopt)` -- and
+//      the suite took the nullopt arm almost everywhere. Two mutations proved it by SURVIVING the whole
+//      suite: swapping appendTextFile's path and data on that branch, and dropping readDirectory's signal on
+//      it. A block now drives that branch for appendTextFile, readTextFile, readDirectory, writeTextFile,
+//      writeFileAtomic and readBinaryFileRange, comparing the signal by identity.
+//
 // One upstream assertion has no observable counterpart here and is not faked: case 44 also checks that the
 // abort listener is REMOVED from the caller's signal (`removeEventListener`). `flight::AbortSignal` keeps
 // its listener list private with no public count, so a retained listener is not externally observable
@@ -530,7 +544,98 @@ int main() {
   }
 
   {
-    // The omitted-operation defaults, each its own documented value rather than a shared "falsy".
+    // THE SIGNAL-PRESENT FORWARDING BRANCH of every operation that takes a signal. Each of these bodies is a
+  // ternary -- `signal.has_value() ? f(path, data, signal) : f(path, data, nullopt)` -- and the suite took
+  // the nullopt arm almost everywhere, so the arm that actually carries the caller's signal was unexercised.
+  // Two mutations proved it: swapping append's path and data on that branch, and dropping readDirectory's
+  // signal on it, both SURVIVED the whole suite before this block existed.
+  //
+  // The signal is compared by identity (`AbortSignal::operator==` compares its shared state), so a forwarded
+  // substitute -- a fresh signal, or a wrapper -- is a different answer, not a passed test.
+  {
+    flight::AbortController controller;
+    const auto signal = controller.signal;
+    std::optional<flight::AbortSignal> seen;
+
+    // The path and data are recorded alongside the signal: asserting only the signal on this branch left a
+    // path/data swap alive (measured -- that mutation survived the first version of this very block).
+    String append_path;
+    String append_data;
+    auto host = flight::make_ref<Host>();
+    host->append_text_file = [&seen, &append_path, &append_data](
+                                 String path, String data, std::optional<flight::AbortSignal> received) {
+      seen = received;
+      append_path = path;
+      append_data = data;
+      return flight::Task<bool>::resolve(true);
+    };
+    static_cast<void>(flight::filesystem::append_text_file(host, String("notes/on.txt"), String("omega"),
+                                                           signal)
+                          .get());
+    check(seen.has_value() && seen.value() == signal,
+          "appendTextFile forwards the caller's signal on the carrying branch");
+    check(append_path == String("notes/on.txt") && append_data == String("omega"),
+          "and its path and text unswapped on that same branch");
+
+    auto reading = flight::make_ref<Host>();
+    reading->read_text_file = [&seen](String, std::optional<flight::AbortSignal> received) {
+      seen = received;
+      return flight::Task<std::optional<String>>::resolve(std::optional<String>{String("x")});
+    };
+    static_cast<void>(flight::filesystem::read_text_file(reading, String("a"), signal).get());
+    check(seen.has_value() && seen.value() == signal, "readTextFile forwards the caller's signal");
+
+    auto listing = flight::make_ref<Host>();
+    listing->read_directory = [&seen](String, std::optional<flight::AbortSignal> received) {
+      seen = received;
+      return flight::Task<flight::Array<flight::Ref<Entry>>>::resolve(
+          flight::Array<flight::Ref<Entry>>{});
+    };
+    static_cast<void>(flight::filesystem::read_directory(listing, String("a"), signal).get());
+    check(seen.has_value() && seen.value() == signal,
+          "readDirectory forwards the caller's signal rather than dropping it");
+
+    String write_path;
+    String write_data;
+    auto writing = flight::make_ref<Host>();
+    writing->write_text_file = [&seen, &write_path, &write_data](
+                                   String path, String data, std::optional<flight::AbortSignal> received) {
+      seen = received;
+      write_path = path;
+      write_data = data;
+      return flight::Task<bool>::resolve(true);
+    };
+    static_cast<void>(flight::filesystem::write_text_file(writing, String("out/on.txt"), String("sigma"),
+                                                          signal)
+                          .get());
+    check(seen.has_value() && seen.value() == signal,
+          "writeTextFile forwards the caller's signal directly, not only through a dialog handle");
+    check(write_path == String("out/on.txt") && write_data == String("sigma"),
+          "and its path and text unswapped on that same branch");
+
+    auto binary = flight::make_ref<Host>();
+    binary->write_file_atomic = [&seen](String, std::variant<flight::Uint8Array, String>,
+                                        std::optional<flight::AbortSignal> received) {
+      seen = received;
+      return flight::Task<bool>::resolve(true);
+    };
+    static_cast<void>(
+        flight::filesystem::write_file_atomic(binary, String("a"), String("b"), signal).get());
+    check(seen.has_value() && seen.value() == signal, "writeFileAtomic forwards the caller's signal");
+
+    auto ranged = flight::make_ref<Host>();
+    ranged->read_binary_file_range = [&seen](String, double, double,
+                                             std::optional<flight::AbortSignal> received) {
+      seen = received;
+      return flight::Task<std::optional<flight::Uint8Array>>::resolve(std::nullopt);
+    };
+    static_cast<void>(
+        flight::filesystem::read_binary_file_range(ranged, String("a"), 0.0, 1.0, signal).get());
+    check(seen.has_value() && seen.value() == signal,
+          "readBinaryFileRange forwards the caller's signal");
+  }
+
+  // The omitted-operation defaults, each its own documented value rather than a shared "falsy".
     const auto bare = flight::make_ref<Host>();
     if (!check(!flight::filesystem::make_directory(bare, String("new/dir")).get(),
                "makeDirectory resolves false when the host omits it") ||
