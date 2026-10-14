@@ -47,3 +47,34 @@ unchanged: same object, same identity, no conversion. In every other case, the e
 `@flighthq/tray` `destroyTrayRuntime` (`return result` after `result.outcome === 'destroyed'`). That function is
 independently blocked by [caught-value-into-unknown-member.md](caught-value-into-unknown-member.md), so this
 alone does not let it emit.
+
+## Carried compiler patch
+
+[`compiler-narrowed-coalesced-arm-slot.patch`](../../source-patches/compiler-narrowed-coalesced-arm-slot.patch)
+implements the required behavior above. When no destination slot matches by spelling, it handles a value that is a
+binding narrowed to one non-union member. It finds the one slot of the binding's own representation holding that
+member. If the slot's carrier is not the member's own spelling, and exactly one destination slot has that carrier,
+the narrowed read is placed in it unchanged:
+
+```cpp
+if (result.index() == 1) {
+  return std::variant<Ref<failures_outcome_…>, Ref<outcome_bd96…>>{std::in_place_type<Ref<outcome_bd96…>>, std::get<1>(result)};
+}
+```
+
+Fixtures in `cppNarrowedCoalescedArm.test.ts`:
+- **positive:** the `destroyTrayRuntime` shape, which fails without the patch;
+- **negatives, refused both ways:**
+  - a value whose declared type is the single-arm struct;
+  - a narrowed property read (`h.r`);
+  - a narrowed binding whose storage also admits `null`. This is conservative: a nullable source is not handled.
+
+The upstream backend test `preserves an imported written outcome alias through an awaited method call` fails at the
+pin with this same refusal, for an assignment-narrowed binding returned as its declared alias. With the patch, it
+passes with all of its expectations.
+
+Natively, the emitted function returns the very object on both branches. A later write is visible through the
+result, and the result keeps the object alive and then releases it.
+
+A scratch regeneration of `@flighthq/tray` is byte-identical with and without the patch, because
+`destroyTrayRuntime` is refused first by [caught-value-into-unknown-member.md](caught-value-into-unknown-member.md).

@@ -1,0 +1,123 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index f38122f..43e6bda 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -18252,6 +18252,16 @@ function emitContextualUnionExpressionInContextCpp(
+       : undefined;
+   const representedValueSlot = constrainedValueSlot ?? callableValueSlot ?? matchedValueSlot;
+   if (representedValueSlot < 0) {
++    const coalescedNarrowedSlot = getCppCoalescedNarrowedMemberValueSlotCpp(expression, runtimeType, plan, context);
++    if (coalescedNarrowedSlot !== undefined) {
++      return emitCppUnionValueConstruction(
++        emitExpression(expression, context, runtimeType, false),
++        plan.valueSlots[coalescedNarrowedSlot]!.targetType,
++        union,
++        plan.kind,
++        context,
++      );
++    }
+     if (targetType.startsWith('std::variant<')) {
+       emissionError(
+         context,
+@@ -18572,6 +18582,45 @@ function haveSameCppUnionValueSlotTypesCpp(
+ // the destination and every one of them is a destination alternative at the same C++ type. Undefined when
+ // that is not the shape: a source alternative the destination cannot hold means the source language rejects
+ // the conversion too, and the refusal owns it.
++// The destination slot for a binding narrowed to one member of its own union, when the slot that stores that
++// member is a shared shape struct. `{ outcome: 'destroyed' }` and `{ outcome: 'already-destroyed' }` are both
++// stored as one struct named for the shape `{ outcome }`; the narrowed member, spelled on its own, names a
++// literal-specific struct no value is stored as, so it matches no destination slot by spelling. What the binding's storage actually holds is the shared slot, and reading the
++// narrowed binding projects exactly that slot. So the value enters the destination slot of that same carrier
++// unchanged -- same object, no conversion -- and only when the answer is unique on both sides: the member is held
++// by exactly one source slot, and exactly one destination slot has that slot's carrier. A value that is not a
++// narrowed binding, or whose declared type is itself the single-member struct, is not this case.
++function getCppCoalescedNarrowedMemberValueSlotCpp(
++  expression: Readonly<IrExpression>,
++  runtimeType: Readonly<IrType>,
++  plan: ReturnType<typeof getCppUnionRepresentationPlan>,
++  context: EmitContext,
++): number | undefined {
++  if (expression.kind !== 'identifier' || expression.reference.kind !== 'binding') return undefined;
++  const bindingId = expression.reference.binding.id;
++  const narrowedType = context.narrowedBindingTypes.get(bindingId) ?? expression.narrowedType;
++  if (!narrowedType || getIrUnionTypeCpp(narrowedType, context, new Set())) return undefined;
++  const bindingType = getCppBindingTypeCpp(bindingId, context);
++  const sourceUnion = bindingType ? getIrUnionTypeCpp(bindingType, context, new Set()) : undefined;
++  if (!sourceUnion) return undefined;
++  const isolatedContext = { ...context, anonymousStructs: new Map(), includes: new Set<string>() };
++  const sourcePlan = getCppUnionRepresentationPlan(sourceUnion, isolatedContext);
++  const holding = sourcePlan.valueSlots.filter((slot) =>
++    slot.sourceAlternatives.some(
++      (member) => isDeepStrictEqual(member, narrowedType) || isDeepStrictEqual(member, runtimeType),
++    ),
++  );
++  if (holding.length !== 1) return undefined;
++  const carrier = qualifyCppDeclaringModuleTypeCpp(holding[0]!.targetType, context);
++  // A carrier spelled the same as the member itself would have matched by spelling already; this is only the
++  // case where the stored carrier is the shared shape struct and the member's own spelling is not.
++  if (carrier === qualifyCppDeclaringModuleTypeCpp(emitType(runtimeType, isolatedContext), context)) return undefined;
++  const destinations = plan.valueSlots.flatMap((slot, index) =>
++    qualifyCppDeclaringModuleTypeCpp(slot.targetType, context) === carrier ? [index] : [],
++  );
++  return destinations.length === 1 ? destinations[0] : undefined;
++}
++
+ function getCppContextualUnionSubsetSlotsCpp(
+   expressionPlan: ReturnType<typeof getCppUnionRepresentationPlan>,
+   plan: ReturnType<typeof getCppUnionRepresentationPlan>,
+diff --git a/packages/compiler-backend-cpp/src/cppNarrowedCoalescedArm.test.ts b/packages/compiler-backend-cpp/src/cppNarrowedCoalescedArm.test.ts
+new file mode 100644
+index 0000000..267eb46
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppNarrowedCoalescedArm.test.ts
+@@ -0,0 +1,50 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/x/src/x.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/x', upstreamDirectory: '/flight' });
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++// `@flighthq/types` TrayDestroyCapabilityResult and TrayDestroyResult. `{ outcome: 'destroyed' }` is stored as the
++// shared `{ outcome }` shape struct, in DC and in DR alike; spelled on its own it names a different struct.
++const results = `export interface F { readonly error?: unknown; readonly step: 'native-resource' }
++export type DC = { readonly outcome: 'destroyed' } | { readonly failures: readonly F[]; readonly outcome: 'tray-destroy-failed' };
++export type DR = DC | { readonly outcome: 'already-destroyed' };
++`;
++
++describe('a binding narrowed to one arm enters a wider union as its stored slot', () => {
++  it('returns the narrowed destroyTrayRuntime result as the very slot it is stored in', () => {
++    const emitted = emit(
++      `${results}export function n(result: DC): DR { if (result.outcome === 'destroyed') { return result; } return result; }`,
++    );
++    expect(emitted).toContain('if (result.index() == 1) {');
++    expect(emitted).toMatch(/\{std::in_place_type<flight::Ref<outcome_[0-9a-f]+>>, std::get<1>\(result\)\};/);
++  });
++
++  it('refuses a value whose declared type is the single-arm struct itself', () => {
++    expect(() => emit(`${results}export function s(d: { readonly outcome: 'destroyed' }): DR { return d; }`)).toThrow(
++      /is not a represented runtime domain/,
++    );
++  });
++
++  it('refuses a narrowed property read, which is not a narrowed binding', () => {
++    expect(() =>
++      emit(
++        `${results}export interface H { r: DC } export function p(h: H): DR { if (h.r.outcome === 'destroyed') { return h.r; } return h.r; }`,
++      ),
++    ).toThrow(/is not a represented runtime domain/);
++  });
++
++  it('refuses a narrowed binding whose storage also admits absence', () => {
++    expect(() =>
++      emit(
++        `${results}export function o(result: DC | null): DR | null { if (result !== null && result.outcome === 'destroyed') { return result; } return null; }`,
++      ),
++    ).toThrow(/is not a represented runtime domain/);
++  });
++});

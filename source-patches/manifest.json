@@ -3970,6 +3970,23 @@
       "unblocks": "The narrowed-member refusal in @flighthq/tray createTrayIcon; the function then needs the twin-carrier contextual union conversion (separate). No other SDK site measured.",
       "expires": "when upstream computes a union-member-test complement per source member rather than per C++ slot (docs/compiler-requests/narrowed-member-multi-alternative-selection.md).",
       "appliedOn": "2026-10-13"
+    },
+    {
+      "id": "compiler-narrowed-coalesced-arm-slot",
+      "dependency": "flight-compiler",
+      "patch": "compiler-narrowed-coalesced-arm-slot.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "`contextual union value type flight::Ref<outcome_4c14…> is not a represented runtime domain` on @flighthq/tray destroyTrayRuntime's `return result` after `result.outcome === 'destroyed'`. The narrowed arm is spelled on its own as a literal-specific struct, while the binding stores it, and the destination holds it, as the shared `{ outcome }` shape struct, so no destination slot matched by spelling.",
+      "rewrite": "When no destination slot matches and the value is an identifier binding narrowed to one non-union member, find the single slot of the binding's own union representation that holds that member. If its carrier differs from the member's own spelling and exactly one destination slot has that same carrier, emit the narrowed read (which projects that slot) into that destination slot. Values whose declared type is the single-arm struct, property reads, nullable bindings and ambiguous cases keep the refusal.",
+      "equivalence": "Reading the narrowed binding already projects the stored slot, so the value is an object of the destination slot's C++ type: it enters the variant unchanged. No cast, copy or materialization; identity, mutation visibility and lifetime are the source object's.",
+      "verification": "New cppNarrowedCoalescedArm.test.ts: 4 pass. The positive fails without the patch; three negatives (a declared single-arm value, a narrowed property read, a nullable binding) are refused both ways. compiler-backend-cpp suite at -j2 on top of compiler-coalesced-union-member-narrowing: 46 failures, all pre-existing, none new. The pre-existing failure 'preserves an imported written outcome alias through an awaited method call' now passes; it fails without the patch with the same refusal, and every expectation in it holds. Native: the emitted function returns the very object on both branches into DR, a later write is visible, and the result keeps then releases the object (5/5). Scratch regeneration of @flighthq/tray: output byte-identical with and without the patch, because destroyTrayRuntime's first refusal is the caught value into an unknown member (caught-value-into-unknown-member.md).",
+      "whyNotUpstreamFirst": "It is the shape of an upstream-owned backend test that is failing at the pin; upstream receives docs/compiler-requests/narrowed-coalesced-arm-into-wider-union.md.",
+      "unblocks": "The `return result` in @flighthq/tray destroyTrayRuntime once the caught-value capability lands; the upstream backend test above. No Tray declaration emits from this alone.",
+      "expires": "when upstream matches a narrowed binding to the destination slot of its stored carrier (docs/compiler-requests/narrowed-coalesced-arm-into-wider-union.md).",
+      "appliedOn": "2026-10-14"
     }
   ]
 }

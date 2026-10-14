@@ -34,6 +34,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-declared-present-reference-chain.patch`](../../source-patches/compiler-declared-present-reference-chain.patch) | [An optional chain through a reference declared present must still test it](host-group-optional-chain-dropped.md) |
 | [`compiler-asserted-empty-object-fallback.patch`](../../source-patches/compiler-asserted-empty-object-fallback.patch) | [An asserted `?? {}` fallback must test the storage it reads and build the asserted type](host-initialize-optional-fallback-on-a-required-read.md) |
 | [`compiler-coalesced-union-member-narrowing.patch`](../../source-patches/compiler-coalesced-union-member-narrowing.patch) | [A member-presence narrow must select across every alternative that carries the member](narrowed-member-multi-alternative-selection.md) |
+| [`compiler-narrowed-coalesced-arm-slot.patch`](../../source-patches/compiler-narrowed-coalesced-arm-slot.patch) | [A binding narrowed to one coalesced arm must enter a wider union as the slot it is stored in](narrowed-coalesced-arm-into-wider-union.md) |
 | [`compiler-dependent-erased-object-recovery-template.patch`](../../source-patches/compiler-dependent-erased-object-recovery-template.patch) | [Dependent erased-object recovery needs a template disambiguator](dependent-erased-object-recovery-template.md) |
 | [`compiler-dependent-indexed-access-reference-carrier.patch`](../../source-patches/compiler-dependent-indexed-access-reference-carrier.patch) | [Dependent indexed access must read through the reference carrier](dependent-indexed-access-reference-carrier.md) |
 | [`compiler-contextual-imported-union-owner.patch`](../../source-patches/compiler-contextual-imported-union-owner.patch) | [Contextual construction of an imported union](compiler-contextual-imported-union-owner.md) |
@@ -79,8 +80,6 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 
 ## Active requests without a compiler patch
 
-- [A binding narrowed to one coalesced arm must enter a wider union as the slot it is stored in](narrowed-coalesced-arm-into-wider-union.md) —
-  `@flighthq/tray` `destroyTrayRuntime`: `return result` after `result.outcome === 'destroyed'` is refused, because the narrowed arm is spelled as its own struct rather than the coalesced slot it is stored in.
 - [A fresh object literal asserted to a type parameter has no C++ owner to become](fresh-literal-asserted-to-type-parameter.md) —
   `@flighthq/tray` `invokeUpdate` (`cpp-reference-assertion-without-heritage`): the asserted value is a new literal, so no heritage proof applies. The unrefused `{ outcome } as Result` branch emits `make_ref<Result>(Result{...})`, which cannot instantiate for a variant. Sound lowering needs exact-shape alternative selection at instantiation.
 - [A caught value written into an `unknown` member needs an `Any` that can hold it](caught-value-into-unknown-member.md) —
@@ -485,5 +484,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `@flighthq/host` accessors panic when an optional capability group is absent. No patch is carried.
 - [A nullish fallback on a required read lowers to `value_or` on a non-optional](host-initialize-optional-fallback-on-a-required-read.md) —
   `@flighthq/host`'s `createHost` and `initializeHost` do not compile. No patch is carried.
+- [A binding narrowed to one coalesced arm must enter a wider union as the slot it is stored in](narrowed-coalesced-arm-into-wider-union.md) —
+  `@flighthq/tray` `destroyTrayRuntime` `return result`, and an upstream backend test failing at the pin. Carried by the `compiler-narrowed-coalesced-arm-slot` patch; `destroyTrayRuntime` stays blocked by the caught-value capability.
 - [An out-of-range indexed array read must widen to `null`](out-of-range-array-index-widened-to-null.md) —
   `@flighthq/input` array indexing throws where TypeScript returns `null`; no workaround is carried.
