@@ -223,5 +223,78 @@ int main() {
     }
   }
 
+  // Two upstream assertions the cases above leave out, each measured against a mutant of the
+  // statusbar-complete-module override that survived without it (clear with no baseline restore; a visibility
+  // animation default other than 'none'). Each fake host mirrors upstream's fakeHost: one info, style and
+  // visibility capability per host, so two hosts keep separate style stacks.
+  struct FakeHost {
+    flight::Ref<HostStatusBarInfoCapability> info;
+    flight::Ref<HostStatusBarStyleCapability> style;
+    flight::Ref<HostStatusBarVisibilityCapability> visibility;
+    std::shared_ptr<std::vector<String>> styles = std::make_shared<std::vector<String>>();
+    std::shared_ptr<std::vector<std::pair<bool, std::optional<String>>>> visible =
+        std::make_shared<std::vector<std::pair<bool, std::optional<String>>>>();
+  };
+  const auto fake_host = [](String initial_style) {
+    FakeHost host;
+    host.info = flight::make_ref<HostStatusBarInfoCapability>(HostStatusBarInfoCapability{
+        .get_info = [initial_style](flight::Ref<StatusBarInfo> out) {
+          out->color = 0.0;
+          out->height = 20.0;
+          out->overlays_content = false;
+          out->style = initial_style;
+          out->visible = true;
+          return out;
+        }});
+    auto styles = host.styles;
+    host.style = flight::make_ref<HostStatusBarStyleCapability>(
+        HostStatusBarStyleCapability{.set_style = [styles](String value) { styles->push_back(std::move(value)); }});
+    auto visible = host.visible;
+    host.visibility = flight::make_ref<HostStatusBarVisibilityCapability>(HostStatusBarVisibilityCapability{
+        .set_visible = [visible](bool value, std::optional<String> animation) {
+          visible->emplace_back(value, std::move(animation));
+        }});
+    return host;
+  };
+  const auto push = [&](const FakeHost& host, flight::Ref<StatusBarStyleEntry> entry) {
+    return flight::statusbar::push_status_bar_style_entry(color_provider, host.info, overlays_provider, host.style,
+                                                          host.visibility, entry);
+  };
+  const auto style_entry = [](std::optional<String> style, std::optional<bool> visible) {
+    return flight::make_ref<StatusBarStyleEntry>(StatusBarStyleEntry{
+        .animation = std::nullopt, .color = std::nullopt, .overlays_content = std::nullopt, .style = style, .visible = visible});
+  };
+
+  // clearStatusBarStyleStack restores ONLY the passed host's baseline: the other host's stack and setters are
+  // untouched.
+  {
+    const auto first = fake_host(String("light"));
+    const auto second = fake_host(String("dark"));
+    push(first, style_entry(String("dark"), std::nullopt));
+    push(second, style_entry(String("light"), std::nullopt));
+    flight::statusbar::clear_status_bar_style_stack(first.info);
+    if (!check(!first.styles->empty() && first.styles->back() == String("light"),
+               "clear restores the passed host's captured baseline style") ||
+        !check(second.styles->size() == 1, "and leaves the other host's stack alone")) {
+      return 1;
+    }
+    flight::statusbar::clear_status_bar_style_stack(second.info);
+  }
+
+  // pushStatusBarStyleEntry merges unset fields through the stack: a second entry that sets only visibility
+  // does not re-apply the style, and with no animation on any entry the visibility change animates 'none'.
+  {
+    const auto host = fake_host(String("light"));
+    push(host, style_entry(String("dark"), std::nullopt));
+    push(host, style_entry(std::nullopt, false));
+    if (!check(host.styles->size() == 1, "an entry that leaves style unset does not re-apply it") ||
+        !check(!host.visible->empty() && !host.visible->back().first &&
+                   host.visible->back().second == String("none"),
+               "visibility with no animation on any entry animates 'none'")) {
+      return 1;
+    }
+    flight::statusbar::clear_status_bar_style_stack(host.info);
+  }
+
   return 0;
 }
