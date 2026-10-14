@@ -13,12 +13,17 @@
 // So the divergence is asserted EXPLICITLY, with the upstream expectation named beside it, and the
 // behaviours that are genuinely this profile's are tested directly.
 
+#include <flight/log/log.hpp>
+#include <flight/textsegment/enable_text_segment_guards.hpp>
+#include <flight/textsegment/text_segment.hpp>
 #include <flight/textsegment/text_segment_boundary.hpp>
 #include <flight/textsegment/text_segment_guards.hpp>
 #include <flight/textsegment/text_segmenter_backend.hpp>
+#include <flight/types/log.hpp>
 #include <flight/types/text_segment.hpp>
 
 #include <iostream>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -82,6 +87,32 @@ flight::Ref<flight::types::HostTextSegmenterCapability> backend_with(
 double boundary_of(std::optional<flight::Ref<flight::types::TextSegmentRange>> range, bool start) {
   if (!range.has_value()) return -1.0;
   return start ? range.value()->start : range.value()->end;
+}
+
+// A backend that only RECORDS the granularity it was asked for, so the wrappers' granularity can be
+// pinned. Without it no assertion in this suite can tell a grapheme query from a sentence query: the
+// other helpers take the granularity as given and ignore it, which is exactly why swapping two
+// granularities in a wrapper survived the whole suite until this existed.
+using BackendRef = flight::Ref<flight::types::HostTextSegmenterCapability>;
+using BackendRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<BackendRef>>>;
+
+BackendRow as_backend_row(BackendRef backend) {
+  return flight::structural_ref_cast<BackendRow>(
+      flight::StructuralRef<flight::RowWritable<flight::RowOf<BackendRef>>>(backend));
+}
+
+BackendRef granularity_recorder(std::string* seen) {
+  const auto out = flight::make_ref<flight::types::HostTextSegmenterCapability>(
+      flight::types::HostTextSegmenterCapability{});
+  out->segment = [seen](flight::String text, flight::types::TextSegmentGranularity granularity,
+                        std::optional<flight::String>) {
+    *seen = granularity.to_utf8();
+    flight::Array<flight::Ref<flight::types::TextSegment>> segments;
+    segments.push(flight::make_ref<flight::types::TextSegment>(
+        flight::types::TextSegment{.start = 0.0, .end = static_cast<double>(text.length()), .text = text}));
+    return segments;
+  };
+  return out;
 }
 
 }  // namespace
@@ -258,6 +289,80 @@ int main() {
     check(seen == "ja-JP", "wordRange: the requested locale reaches the active backend");
   }
 
+  // The INDEX RANGE. getWordRangeAt clamps the index to [0, text.length] before it resolves, so an
+  // out-of-range index is not "no word" -- it is the first or last word. Upstream's clampIndex does
+  // exactly this (textSegmentBoundary.ts), and both directions were unpinned here: clamping away
+  // either branch left every assertion above still passing, because every index they pass is already
+  // in range.
+  {
+    const auto words = backend_with({0.0, 3.0, 4.0, 7.0}, std::vector<bool>{true, false, true});
+    const flight::String text("foo bar");
+    const auto before = flight::textsegment::get_word_range_at(words, text, -5.0, std::nullopt);
+    check(boundary_of(before, true) == 0.0 && boundary_of(before, false) == 3.0,
+          "wordRange: a negative index clamps to the start and selects the FIRST word");
+    const auto beyond = flight::textsegment::get_word_range_at(words, text, 999.0, std::nullopt);
+    check(boundary_of(beyond, true) == 4.0 && boundary_of(beyond, false) == 7.0,
+          "wordRange: an index past the end clamps to the length and selects the LAST word");
+  }
+
+  // The GRANULARITY the wrappers ask for. The six get*Boundary wrappers differ from one another only
+  // in this argument -- getNextGraphemeBoundary IS getNextTextSegmentBoundary with "grapheme" -- so a
+  // wrapper that asked for the wrong granularity is a real defect that no other assertion here can
+  // see, because every other backend in this file takes the granularity and ignores it.
+  {
+    std::string asked;
+    const auto recorder = granularity_recorder(&asked);
+    const flight::String text("ab");
+    static_cast<void>(
+        flight::textsegment::get_next_grapheme_boundary(recorder, text, 0.0, std::nullopt));
+    check(asked == "grapheme", "boundary: getNextGraphemeBoundary asks for GRAPHEME granularity");
+    static_cast<void>(
+        flight::textsegment::get_next_sentence_boundary(recorder, text, 0.0, std::nullopt));
+    check(asked == "sentence", "boundary: getNextSentenceBoundary asks for SENTENCE granularity");
+    static_cast<void>(flight::textsegment::get_next_word_boundary(recorder, text, 0.0, std::nullopt));
+    check(asked == "word", "boundary: getNextWordBoundary asks for WORD granularity");
+    static_cast<void>(
+        flight::textsegment::get_previous_grapheme_boundary(recorder, text, 2.0, std::nullopt));
+    check(asked == "grapheme", "boundary: getPreviousGraphemeBoundary asks for GRAPHEME granularity");
+    static_cast<void>(
+        flight::textsegment::get_previous_sentence_boundary(recorder, text, 2.0, std::nullopt));
+    check(asked == "sentence", "boundary: getPreviousSentenceBoundary asks for SENTENCE granularity");
+    static_cast<void>(
+        flight::textsegment::get_previous_word_boundary(recorder, text, 2.0, std::nullopt));
+    check(asked == "word", "boundary: getPreviousWordBoundary asks for WORD granularity");
+  }
+
+  // textSegment.test.ts, the two cases that do NOT need a real Intl segmenter: the wrappers hand the
+  // caller's own host straight through, and a locale is threaded unchanged. Upstream's other four
+  // cases in that file assert the bundled Intl provider's own clustering, which is the boundary stated
+  // at the top of this file, so they are named rather than copied.
+  {
+    std::string seen = "unset";
+    const auto recording = flight::make_ref<flight::types::HostTextSegmenterCapability>(
+        flight::types::HostTextSegmenterCapability{});
+    recording->segment = [&seen](flight::String text, flight::types::TextSegmentGranularity granularity,
+                                 std::optional<flight::String> locale) {
+      seen = granularity.to_utf8() + ":" + (locale.has_value() ? locale.value().to_utf8() : "<none>");
+      flight::Array<flight::Ref<flight::types::TextSegment>> segments;
+      segments.push(flight::make_ref<flight::types::TextSegment>(
+          flight::types::TextSegment{.start = 0.0, .end = static_cast<double>(text.length()), .text = text}));
+      return segments;
+    };
+    const auto row = as_backend_row(recording);
+    static_cast<void>(flight::textsegment::segment_graphemes(row, flight::String("hi"), std::nullopt));
+    check(seen == "grapheme:<none>",
+          "segment: segmentGraphemes hands the caller's own host GRAPHEME granularity");
+    static_cast<void>(
+        flight::textsegment::segment_sentences(row, flight::String("hi"), std::nullopt));
+    check(seen == "sentence:<none>",
+          "segment: segmentSentences hands the caller's own host SENTENCE granularity");
+    static_cast<void>(flight::textsegment::segment_words(row, flight::String("hi"), std::nullopt));
+    check(seen == "word:<none>", "segment: segmentWords hands the caller's own host WORD granularity");
+    static_cast<void>(
+        flight::textsegment::segment_graphemes(row, flight::String("hi"), flight::String("de-DE")));
+    check(seen == "grapheme:de-DE", "segment: a locale given to a segmenter wrapper reaches the host");
+  }
+
   // The bundled provider has no segmenter, so the same queries answer with the clamp and with null
   // rather than fabricating boundaries -- the portable stance, and the reason upstream's expectations
   // for these functions cannot be copied here.
@@ -270,6 +375,41 @@ int main() {
                                                   1.0, std::nullopt)
                .has_value(),
           "portable: getWordRangeAt on the segmenter-less provider returns null, not a fabricated range");
+  }
+
+  // The log core now supplies structured entries, so the reachable guard cases can be asserted.
+  {
+    std::vector<std::string> entries;
+    const flight::types::LogSink sink = [&entries](flight::Ref<flight::types::LogEntry> entry) {
+      const auto data = entry->data;
+      if (data.index() == 0) {
+        const auto message = std::get<0>(data).get(flight::String("message"));
+        entries.push_back(message.has_value() ? message.value().as_string().to_utf8() : std::string("<none>"));
+      } else {
+        entries.push_back(std::get<1>(data).to_utf8());
+      }
+    };
+    const auto web = as_backend_row(flight::textsegment::web_text_segmenter_backend);
+
+    entries.clear();
+    flight::log::clear_log_once_keys();
+    flight::log::set_log_sink(std::optional<flight::types::LogSink>{sink});
+    flight::textsegment::enable_text_segment_guards();
+    flight::textsegment::disable_text_segment_guards();
+    static_cast<void>(flight::textsegment::segment_graphemes(web, flight::String("text")));
+    check(entries.empty(), "guards: a disabled guard restores silent missing-engine recovery");
+
+    entries.clear();
+    flight::log::clear_log_once_keys();
+    flight::textsegment::enable_text_segment_guards();
+    static_cast<void>(flight::textsegment::segment_graphemes(web, flight::String("first")));
+    static_cast<void>(flight::textsegment::segment_graphemes(web, flight::String("second")));
+    check(entries.size() == 1, "guards: an absent Intl.Segmenter warns exactly once across two calls");
+    check(!entries.empty() && entries[0].find("HostTextSegmenterCapability") != std::string::npos,
+          "and the warning names the provider type the caller must supply");
+
+    flight::textsegment::disable_text_segment_guards();
+    flight::log::set_log_sink(std::nullopt);
   }
 
   return failures == 0 ? 0 : 1;
