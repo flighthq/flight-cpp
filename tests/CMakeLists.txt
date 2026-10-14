@@ -177,6 +177,25 @@ target_link_libraries(
 add_test(NAME flight_cpp.generated_render_state COMMAND flight_cpp_generated_render_state_tests)
 
 add_executable(
+  flight_cpp_generated_render_scene2d_coverage_tests
+  generated_render_scene2d_coverage_test.cpp
+)
+target_include_directories(
+  flight_cpp_generated_render_scene2d_coverage_tests
+  BEFORE PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/render_scene2d_coverage_support"
+    "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_render_scene2d_coverage_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(
+  NAME flight_cpp.generated_render_scene2d_coverage
+  COMMAND flight_cpp_generated_render_scene2d_coverage_tests
+)
+
+add_executable(
   flight_cpp_generated_canvas_texture_resolver_tests
   generated_canvas_texture_resolver_test.cpp
 )
@@ -1420,6 +1439,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_animation_layers animation)
 flight_cpp_package_test_labels(flight_cpp.generated_log log)
 flight_cpp_package_test_labels(flight_cpp.generated_log_levels_and_sinks log)
 flight_cpp_package_test_labels(flight_cpp.generated_render_state render types)
+flight_cpp_package_test_labels(flight_cpp.generated_render_scene2d_coverage render)
 flight_cpp_package_test_labels(flight_cpp.generated_canvas_texture_resolver scene2d-canvas)
 flight_cpp_package_test_labels(flight_cpp.generated_texture texture types)
 flight_cpp_package_test_labels(flight_cpp.generated_bitmap bitmap)

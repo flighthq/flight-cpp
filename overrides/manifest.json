@@ -4,6 +4,22 @@
   "note": "Hand-written headers that SHADOW the generated tree. An override is placed earlier on the include path than the generated include directory, so the generated file stays untouched and the override is the whole of the modification: the set of files under overrides/include is the diff, and no computation is needed to find it. Reserved for what the declared mechanisms cannot reach -- source-patches/ rewrites the pinned TypeScript, repairs/ adds text with no behavior to emitted output, and either is preferable because neither carries a copy. An override does carry a copy, so each entry records `derivedFrom`, the sha256 of the generated file it was produced from. When a pin move changes that file the digest stops matching and `npm run overrides:check` says so, which is the signal to re-derive the override or drop it. Each entry also carries a `status`: `complete` means the override compiles, `incomplete` means it is partway and says what remains, so nobody mistakes a half-finished override for a finished one.",
   "overrides": [
     {
+      "id": "render-scene2d-coverage-variant-arms",
+      "path": "flight/render/explain_scene2_dcoverage.hpp",
+      "package": "@flighthq/render",
+      "status": "complete",
+      "supplies": "packages/render/src/explainScene2DCoverage.ts",
+      "derivedFrom": "a0cf6448c777cd3c33907cbbe1b5f4bbb6ce6566ba11d164eda8283faef6f6d7",
+      "reason": "The emitter applies designated initializers directly to the five-reference SceneCoverageEntry variant instead of constructing its elected reference arm. The generated registry-presence checks and all declarations are otherwise complete.",
+      "change": "Constructs the elected satisfied, unavailable, fallback-unavailable, unregistered, and fallback-remediable entry owner at each invalid union-construction site while retaining the current node-renderer and optional shape-command map membership checks verbatim.",
+      "equivalence": "Satisfied, unavailable, fallback-unavailable, unregistered, and fallback-remediable entries preserve every facet, kind, registry, remedy, and coverage value. Node kinds remain ordered before shape-command kinds, catalog lookup remains first-match, output clearing retains array identity, and stop-at-first still returns before any gap write.",
+      "whyNotAPatchOrRepair": "The TypeScript discriminated union is already precise; a text insertion cannot replace the four invalid object-literal-to-union expressions with explicit elected reference owners.",
+      "unblocks": "explain_scene2_dcoverage.hpp compiles independently.",
+      "remaining": "None in the emitted declarations of this module.",
+      "expires": "when contextual object literals construct the elected SceneCoverageEntry union arm.",
+      "authoredOn": "2026-10-13"
+    },
+    {
       "id": "materials-upstream-preset-assemblies",
       "path": "flight/materials/material_presets.hpp",
       "package": "@flighthq/materials",
