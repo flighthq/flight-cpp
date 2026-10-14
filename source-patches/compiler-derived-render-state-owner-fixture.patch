@@ -1,0 +1,178 @@
+diff --git a/packages/compiler-backend-cpp/src/cppDerivedRenderStateOwner.test.ts b/packages/compiler-backend-cpp/src/cppDerivedRenderStateOwner.test.ts
+new file mode 100644
+index 0000000..685179f
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppDerivedRenderStateOwner.test.ts
+@@ -0,0 +1,172 @@
++// Focused fixture for docs/compiler-requests/canvas-render-state-owner-asserted-without-heritage.md.
++//
++// The module lowers both halves of one defect so the rule, the owner pair, and the repair are pinned
++// together rather than inferred from a single "emission failed":
++//
++//   BEFORE  a derived owner asserted from its base factory result. This is NOT a generic assertion
++//           failure: it is `cpp-reference-assertion-without-heritage`, classified target-runtime, and it
++//           names the exact pair the source meant. A fixture that only checked "emission failed" would
++//           pass for the wrong reason, because the same module refuses for other classes too.
++//   AFTER   the declared-owner form the repository carries: the construction is named for the derived
++//           owner, the runtime is initialized through the declared generic entry point, and the owner is
++//           attached by a declared function. The emitted header must carry the DERIVED owner, must not
++//           carry a cast the assertion would have needed, and must contain no symbol-indexed owner read.
++//
++// The second, differently worded refusal the request names -- the entity-runtime symbol read -- is pinned
++// separately, because it is the shape the declared accessor replaces and it refuses under its own rule
++// rather than this one.
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { isBackendEmissionFailure } from '../../compiler-emission/src/index.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { createCppCompilerBackend } from './cppCompilerBackend.js';
++
++function captureBackendEmissionFailure(run: () => unknown) {
++  try {
++    run();
++  } catch (error) {
++    if (isBackendEmissionFailure(error)) return error;
++    throw error;
++  }
++  throw new Error('expected C++ emission to refuse and it did not');
++}
++
++// The base layer in its own package, as @flighthq/render carries it: a base factory, a base runtime
++// factory, and the two declared entry points the repair leans on. Nothing here is target-specific.
++const BASE_LAYER = `export interface RenderState { pixelRatio: number }
++export interface RenderStateRuntime { currentFrameId: number }
++export interface RenderStateInitialization { pixelRatio?: number }
++export interface EntityConstruction<Value> { value: Value }
++export function createRenderState(obj?: RenderStateInitialization): RenderState {
++  return { pixelRatio: obj?.pixelRatio ?? 1 };
++}
++export function createRenderStateRuntime(): RenderStateRuntime {
++  return { currentFrameId: 0 };
++}
++export function createDerivedRenderStateConstruction<State extends RenderState>(
++  obj?: RenderStateInitialization,
++): EntityConstruction<State> {
++  const value = { pixelRatio: obj?.pixelRatio ?? 1 };
++  return { value: value as unknown as State };
++}
++export function initializeRenderStateRuntime<Runtime extends RenderStateRuntime, Registries>(
++  runtime: Runtime,
++  registries: Registries,
++): Runtime {
++  runtime.currentFrameId = registries === undefined ? 0 : 0;
++  return runtime;
++}`;
++
++const CANVAS_TYPES = `import type { RenderState, RenderStateRuntime } from '@flighthq/render/contract';
++export interface CanvasRenderState extends RenderState { registries: number }
++export interface CanvasRenderStateRuntime extends RenderStateRuntime { passStack: number[] }`;
++
++const ASSERTED = `${CANVAS_TYPES}
++import { createRenderState, createRenderStateRuntime } from '@flighthq/render/contract';
++export function createCanvasRenderState(): CanvasRenderState {
++  const state = createRenderState({}) as CanvasRenderState;
++  const runtime = createRenderStateRuntime() as CanvasRenderStateRuntime;
++  state.registries = runtime.currentFrameId;
++  return state;
++}`;
++
++const DECLARED = `${CANVAS_TYPES}
++import { createDerivedRenderStateConstruction, initializeRenderStateRuntime } from '@flighthq/render/contract';
++export interface EntityConstruction<Value> { value: Value }
++export function writeCanvasRenderStateRuntimeOwner(
++  owner: EntityConstruction<CanvasRenderState>,
++  runtime: CanvasRenderStateRuntime,
++): void {
++  owner.registries = runtime.currentFrameId;
++}
++export function createCanvasRenderState(): CanvasRenderState {
++  const runtime = initializeRenderStateRuntime<CanvasRenderStateRuntime, number>(
++    {} as CanvasRenderStateRuntime,
++    0,
++  );
++  const state = createDerivedRenderStateConstruction<CanvasRenderState>({});
++  writeCanvasRenderStateRuntimeOwner(state, runtime);
++  state.registries = runtime.currentFrameId;
++  return state;
++}`;
++
++const SYMBOL_READ = `${CANVAS_TYPES}
++export function getCanvasRenderStateRuntime(state: CanvasRenderState): CanvasRenderStateRuntime {
++  return state[Symbol.for('EntityRuntime')] as CanvasRenderStateRuntime;
++}`;
++
++function emitCanvas(body: string, moduleName = 'canvasRenderState.ts') {
++  const moduleResolution = {
++    edges: [
++      {
++        specifier: '@flighthq/render/contract',
++        target: { packageName: '@flighthq/render', source: 'packages/render/src/contract.ts' },
++      },
++    ],
++    schema: 'flight-compiler-module-resolution/1',
++  };
++  const source = (packageName: string, pathName: string, text: string) => ({
++    packageName,
++    sourceFile: ts.createSourceFile(`/flight/${pathName}`, text, ts.ScriptTarget.Latest, true),
++    upstreamDirectory: '/flight',
++  });
++  const results = lowerTypeScriptSources(
++    [
++      source('@flighthq/render', 'packages/render/src/contract.ts', BASE_LAYER),
++      source('@flighthq/scene2d-canvas', `packages/scene2d-canvas/src/${moduleName}`, body),
++    ],
++    moduleResolution,
++  );
++  const session = createCppCompilerBackend().createEmissionSession!({
++    moduleResolution,
++    modules: results.map((result) => result.module),
++    options: { runtimeProfile: 'flight-cpp' },
++  });
++  return { session, module: results[1]!.module };
++}
++
++function emitContents(body: string): string {
++  const { session, module } = emitCanvas(body);
++  return session.emitModule(module)[0]!.contents;
++}
++
++describe('a derived render owner asserted from its base has no heritage to cast along', () => {
++  it('refuses the asserted base-to-derived owner pair under cpp-reference-assertion-without-heritage', () => {
++    const { session, module } = emitCanvas(ASSERTED);
++    const failure = captureBackendEmissionFailure(() => session.emitModule(module));
++    // The rule AND the classification, so a fixture that merely saw "emission failed" cannot pass.
++    expect(failure.rule).toBe('cpp-reference-assertion-without-heritage');
++    expect(failure.classification).toBe('target-runtime');
++    // The owner pair, in the emitter's own spelling: the base owner the factory allocated, and the
++    // derived owner the source asserted into.
++    expect(failure.message).toContain('a reference assertion from flight::Ref<flighthq_render::RenderState>');
++    expect(failure.message).toContain('to flight::Ref<CanvasRenderState>');
++    expect(failure.message).toContain('has no heritage to cast along');
++  });
++
++  it('emits the declared derived owner, with no assertion left to cast along', () => {
++    const contents = emitContents(DECLARED);
++    // The derived owner is named at each declared boundary -- not the base.
++    expect(contents).toContain('create_derived_render_state_construction<flight::Ref<CanvasRenderState>>');
++    expect(contents).toContain('initialize_render_state_runtime<flight::Ref<CanvasRenderStateRuntime>, double>');
++    expect(contents).toContain('write_canvas_render_state_runtime_owner(state, runtime);');
++    // No assertion survives: an `as` that needed a cast would have emitted one of these.
++    expect(contents).not.toContain('structural_ref_cast');
++    expect(contents).not.toContain('reinterpret_cast');
++    expect(contents).not.toContain('static_cast<flight::Ref<CanvasRenderState>>');
++  });
++
++  it('contains no symbol-indexed owner read once the accessor is declared', () => {
++    // The read that produced the second refusal is the shape being replaced, and it refuses under its own
++    // rule -- pinned here so the two are visible together rather than discovered as one.
++    const symbolRead = emitCanvas(SYMBOL_READ, 'canvasRuntimeAccess.ts');
++    const failure = captureBackendEmissionFailure(() => symbolRead.session.emitModule(symbolRead.module));
++    expect(failure.rule).not.toBe('cpp-reference-assertion-without-heritage');
++
++    // The declared module neither contains that read nor subscript access on the owner.
++    const contents = emitContents(DECLARED);
++    expect(contents).not.toContain('EntityRuntimeKey');
++    expect(contents).not.toMatch(/state\s*\[/u);
++  });
++});

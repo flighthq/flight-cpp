@@ -4131,6 +4131,23 @@
       "unblocks": "@flighthq/registry registryTable.ts, contract.ts and index.ts, and through them render's renderer.ts and the group's Registry dependency.",
       "expires": "when flight-compiler builds a fresh array at its contextual element union (docs/compiler-requests/fresh-null-array-into-nullable-element-union.md), or upstream annotates the callback.",
       "appliedOn": "2026-10-14"
+    },
+    {
+      "id": "compiler-derived-render-state-owner-fixture",
+      "dependency": "flight-compiler",
+      "patch": "compiler-derived-render-state-owner-fixture.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppDerivedRenderStateOwner.test.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "a derived render owner asserted from its base factory result is refused as cpp-reference-assertion-without-heritage, classified target-runtime, naming the base owner the factory allocated and the derived owner the source asserted into",
+      "rewrite": "No emission change. This entry adds a focused compiler regression that lowers both halves of the defect docs/compiler-requests/canvas-render-state-owner-asserted-without-heritage.md describes: the asserted form, the declared-owner form the carried source patch substitutes, and the entity-runtime symbol read that produced the second, differently worded refusal. It exists so the substituted form cannot silently rot against the pinned compiler and so the rule, the classification and the owner pair are pinned together rather than inferred from an unqualified \"emission failed\".",
+      "equivalence": "The emitted C++ is unchanged: this entry adds a test module and nothing else. No declaration, refusal, or emitted header differs with it applied.",
+      "verification": "packages/compiler-backend-cpp/src/cppDerivedRenderStateOwner.test.ts, 3 cases, all passing at the pinned compiler: (1) the asserted form refuses with rule cpp-reference-assertion-without-heritage, classification target-runtime, and the owner pair flight::Ref<flighthq_render::RenderState> -> flight::Ref<CanvasRenderState>; (2) the declared form emits create_derived_render_state_construction<flight::Ref<CanvasRenderState>> and initialize_render_state_runtime<flight::Ref<CanvasRenderStateRuntime>, double> and the declared owner write, with no structural_ref_cast, no reinterpret_cast and no static_cast to the derived owner; (3) the declared module contains no entity-runtime symbol read and no subscript access on the owner, while that read is separately pinned as refusing under its own rule.",
+      "whyNotUpstreamFirst": "The fixture is a regression guard for the pinned compiler and for the source patch carried beside it, so it has to exist here before the emitter changes; it is the evidence a future pin move has not silently un-pinned the behaviour the source patch depends on.",
+      "unblocks": "Evidence for @flighthq/scene2d-canvas canvasRenderState.ts, whose base-to-derived owner assertions and entity-runtime symbol read are replaced by the declared-owner form this fixture pins.",
+      "expires": "when the pinned compiler preserves derived render-owner heritage or provides the declared initializer upstream and the asserted half of the fixture no longer refuses, at which point the fixture is a stale guard rather than a regression test.",
+      "appliedOn": "2026-10-14"
     }
   ]
 }
