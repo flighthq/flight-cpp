@@ -306,7 +306,6 @@ int main() {
           "the host's 'default' permission projects to Flight's 'prompt' state");
   }
 
-  if (failures == 0) std::cout << "generated permissions: all checks passed\n";
   // THE STORAGE PERSISTENCE PROJECTION, which this suite never touched: `persistent-storage` appears
   // zero times above, and all six rows below come from the upstream table. The rule they pin is that the
   // projection maps the OWNER'S OUTCOME to a reason and carries its permissionState through as state
@@ -398,5 +397,9 @@ int main() {
     }
   }
 
+  // The summary is printed LAST. It used to sit hundreds of lines earlier -- every assertion after it
+  // could fail while the run still emitted this line, so anything grepping for it read a failing run as
+  // green. Found by auditing a sibling suite for the same defect.
+  if (failures == 0) std::cout << "generated permissions: all checks passed\n";
   return failures == 0 ? 0 : 1;
 }

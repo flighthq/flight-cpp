@@ -276,7 +276,6 @@ int main() {
     check(calls == 1, "and a write with no signal still reaches the provider");
   }
 
-  if (failures == 0) std::cout << "generated filesystem: all checks passed\n";
   // THE PATH-NAME HELPERS, which this suite never called -- three pure functions whose absence from
   // the list above is why nothing would notice them changing.
   {
@@ -933,5 +932,9 @@ int main() {
     }
   }
 
+  // The summary is printed LAST. It used to sit hundreds of lines earlier -- every assertion after it
+  // could fail while the run still emitted this line, so anything grepping for it read a failing run as
+  // green. Found by auditing a sibling suite for the same defect.
+  if (failures == 0) std::cout << "generated filesystem: all checks passed\n";
   return failures == 0 ? 0 : 1;
 }
