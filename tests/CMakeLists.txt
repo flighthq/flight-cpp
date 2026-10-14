@@ -1329,6 +1329,23 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_shape_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_shape COMMAND flight_cpp_generated_shape_tests)
 
+add_executable(
+  flight_cpp_generated_effects_wgpu_gradient_ramp_tests
+  generated_effects_wgpu_gradient_ramp_test.cpp
+)
+target_include_directories(
+  flight_cpp_generated_effects_wgpu_gradient_ramp_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_effects_wgpu_gradient_ramp_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(
+  NAME flight_cpp.generated_effects_wgpu_gradient_ramp
+  COMMAND flight_cpp_generated_effects_wgpu_gradient_ramp_tests
+)
+
 add_executable(flight_cpp_generated_color_tests generated_color_test.cpp)
 target_include_directories(
   flight_cpp_generated_color_tests
@@ -1611,6 +1628,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_importdiagnostics importdiag
 flight_cpp_package_test_labels(flight_cpp.generated_loader loader)
 flight_cpp_package_test_labels(flight_cpp.generated_surface surface)
 flight_cpp_package_test_labels(flight_cpp.generated_shape shape)
+flight_cpp_package_test_labels(flight_cpp.generated_effects_wgpu_gradient_ramp effects-wgpu)
 flight_cpp_package_test_labels(flight_cpp.generated_color color)
 flight_cpp_package_test_labels(flight_cpp.generated_adjustments adjustments)
 flight_cpp_package_test_labels(flight_cpp.generated_capture capture)

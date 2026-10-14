@@ -1025,15 +1025,15 @@
       "path": "flight/effects_wgpu/wgpu_effect_gradient_ramp.hpp",
       "package": "@flighthq/effects-wgpu",
       "status": "complete",
-      "derivedFrom": "3d923dfce95bda337eb53f0be275c36c3bff1ba8c7aa98eee6a071357b4f3a74",
-      "reason": "The retained gradient upload calls create_texture and queue.write_texture on the SDL profile's identity-only WgpuDevice handle, which has neither member.",
-      "change": "Keeps CPU ramp generation and cache behavior unchanged while making the unavailable GPU upload helper throw a profile-specific Error.",
-      "equivalence": "No GPU texture can be created through the current host ABI. The override therefore returns no fabricated handle and changes no cache on failure; supported CPU ramp construction remains byte-for-byte emitted code.",
-      "whyNotAPatchOrRepair": "The TypeScript correctly calls the WebGPU API. A source rewrite cannot create missing native host operations, and a text-only repair cannot replace the invalid member-call body.",
+      "derivedFrom": "681c4a1ba04286bc0d9e3664e5a48fcd86dec38b6120d6bcfd5772c1e0006260",
+      "reason": "The retained queue.write_texture call passes two anonymous descriptor literals to a variadic host-profile member; C++ cannot deduce either literal's argument type, so the current generated header does not compile.",
+      "change": "Keeps emitted CPU ramp generation and cache behavior unchanged while replacing only the unavailable GPU upload with a profile-specific Error.",
+      "equivalence": "No GPU texture can be created through the current host ABI. The override still evaluates CPU ramp construction before the unavailable upload, then returns no fabricated handle and makes no cache entry on failure; all other code is current emitted text.",
+      "whyNotAPatchOrRepair": "The TypeScript correctly calls the WebGPU API. A source rewrite cannot create a native upload path, and a text-only repair cannot type the anonymous descriptor arguments without still reaching deliberately unavailable host operations.",
       "unblocks": "wgpu_effect_gradient_ramp.hpp compiles independently.",
       "remaining": "Gradient-ramp texture creation and upload remain unavailable until the SDL host binds a real native WebGPU device and queue ABI.",
       "expires": "when the SDL-WGPU profile exposes texture creation and queue upload operations.",
-      "authoredOn": "2026-10-06"
+      "authoredOn": "2026-10-14"
     },
     {
       "id": "mesh-geometry-runtime-owner",

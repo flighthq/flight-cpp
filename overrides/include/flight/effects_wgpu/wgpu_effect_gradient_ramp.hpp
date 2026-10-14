@@ -12,9 +12,15 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+#include <flight/types/wgpu_render_state.hpp>
+
+namespace flight::types { struct WgpuRenderState; }
+
 #include <flight/types/contract.hpp>
 
 namespace flight::effects_wgpu {
+
+using flight::types::WgpuRenderState;
 
 inline flight::Uint8ClampedArray build_ramp_data(flight::Array<double> colors, flight::Array<double> alphas, flight::Array<double> ratios) {
   flight::Uint8ClampedArray out = flight::Uint8ClampedArray((256.0 * 4.0));
@@ -80,6 +86,11 @@ inline flight::Uint8ClampedArray build_ramp_data(flight::Array<double> colors, f
 }
 
 inline flight::host_sdl::WgpuTexture create_wgpu_effect_gradient_ramp_texture(flight::Ref<flight::types::WgpuRenderState> state, flight::Array<double> colors, flight::Array<double> alphas, flight::Array<double> ratios) {
+  flight::Uint8ClampedArray data = build_ramp_data(colors, alphas, ratios);
+  auto object_pattern_value = state;
+  flight::host_sdl::WgpuDevice device = object_pattern_value->device;
+  (void)data;
+  (void)device;
   throw flight::Error(flight::String("effects-wgpu: gradient texture upload is unavailable in this profile"));
 }
 

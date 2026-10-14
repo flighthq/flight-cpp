@@ -1061,6 +1061,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_effects_wgpu_gradient_ramp_test",
+    srcs = ["generated_effects_wgpu_gradient_ramp_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_selection_test",
     srcs = ["generated_selection_test.cpp"],
     size = "small",
@@ -1326,6 +1333,7 @@ test_suite(
         ":generated_statusbar_test",
         ":generated_surface_test",
         ":generated_shape_test",
+        ":generated_effects_wgpu_gradient_ramp_test",
         ":generated_swf_test",
         ":generated_textshaper_cache_test",
         ":generated_textshaper_parity_test",
