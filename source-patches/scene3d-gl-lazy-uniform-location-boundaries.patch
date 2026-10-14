@@ -1,24 +1,26 @@
 diff --git a/packages/scene3d-gl/src/glMeshProgram.ts b/packages/scene3d-gl/src/glMeshProgram.ts
 --- a/packages/scene3d-gl/src/glMeshProgram.ts
 +++ b/packages/scene3d-gl/src/glMeshProgram.ts
-@@ -5,4 +5,5 @@ import { getTextureUvMatrix, hasTextureSource, hasTextureUvTransform } from '@fl
+@@ -3,6 +3,7 @@ import { createMatrix3, createMatrix4 } from '@flighthq/geometry/contract';
+ import { createGlProgram, uploadGlSkinPaletteTexture } from '@flighthq/render-gl/contract';
+ import { getTextureUvMatrix, hasTextureSource, hasTextureUvTransform } from '@flighthq/texture/contract';
  import type {
 +  ColorScaleBias,
    GlContext,
    GlMeshProgram,
    Camera3D,
-@@ -44,6 +45,107 @@ export function beginGlMeshDraw(state: GlRenderState, program: Readonly<GlMeshPr
+@@ -42,6 +43,107 @@ export function beginGlMeshDraw(state: GlRenderState, program: Readonly<GlMeshPr
    }
  }
  
-+function presentGlMeshUniformLocation(
++export function presentGlMeshUniformLocation(
 +  location: WebGLUniformLocation | null | undefined,
 +): WebGLUniformLocation | null {
 +  if (location != null) return location;
 +  return null;
 +}
 +
-+function presentGlMeshFloat32Array(
++export function presentGlMeshFloat32Array(
 +  value: Readonly<Float32Array> | null | undefined,
 +): Readonly<Float32Array> | null {
 +  if (value != null) return value;
@@ -115,7 +117,8 @@ diff --git a/packages/scene3d-gl/src/glMeshProgram.ts b/packages/scene3d-gl/src/
  // Uploads and binds the per-instance linear RGBA colours consumed by a HAS_INSTANCES program. One texel
  // per instance, mirroring bindGlInstancePalette's four.
  export function bindGlInstanceColorPalette(
-@@ -58,10 +160,6 @@ export function bindGlInstanceColorPalette(
+@@ -54,11 +156,7 @@ export function bindGlInstanceColorPalette(
+   const palette = ensureGlInstanceColorPalette(state);
    gl.activeTexture(gl.TEXTURE0 + INSTANCE_COLOR_PALETTE_TEXTURE_UNIT);
    uploadGlSkinPaletteTexture(gl, palette, instanceColors, instanceCount, 1);
 -  let loc = program.locInstanceColorPalette;
@@ -127,7 +130,8 @@ diff --git a/packages/scene3d-gl/src/glMeshProgram.ts b/packages/scene3d-gl/src/
    if (loc !== null) gl.uniform1i(loc, INSTANCE_COLOR_PALETTE_TEXTURE_UNIT);
  }
  
-@@ -76,10 +174,6 @@ export function bindGlInstancePalette(
+@@ -72,11 +170,7 @@ export function bindGlInstancePalette(
+   const palette = ensureGlInstancePalette(state);
    gl.activeTexture(gl.TEXTURE0 + INSTANCE_PALETTE_TEXTURE_UNIT);
    uploadGlSkinPaletteTexture(gl, palette, instanceMatrices, instanceCount);
 -  let loc = program.locInstancePalette;
@@ -139,42 +143,7 @@ diff --git a/packages/scene3d-gl/src/glMeshProgram.ts b/packages/scene3d-gl/src/
    if (loc !== null) gl.uniform1i(loc, INSTANCE_PALETTE_TEXTURE_UNIT);
  }
  
-@@ -98,7 +192,8 @@ export function bindGlMeshSkinPalette(
-   proxy: Readonly<Scene3DRenderProxy>,
- ): boolean {
--  const jointMatrices = proxy.jointMatrices;
--  const gpuSkinned = program.locJointTexture != null && jointMatrices != null;
-+  const jointMatrices: Readonly<Float32Array> | null = presentGlMeshFloat32Array(proxy.jointMatrices);
-+  const jointTextureLocation: WebGLUniformLocation | null = presentGlMeshUniformLocation(program.locJointTexture);
-+  const gpuSkinned = jointTextureLocation !== null && jointMatrices !== null;
-   if (!gpuSkinned) return false;
- 
-   const gl = state.gl;
-@@ -108,17 +203,19 @@ export function bindGlMeshSkinPalette(
-   gl.activeTexture(gl.TEXTURE0 + SKIN_PALETTE_TEXTURE_UNIT);
-   uploadGlSkinPaletteTexture(gl, palette, jointMatrices, jointCount);
--  gl.uniform1i(program.locJointTexture!, SKIN_PALETTE_TEXTURE_UNIT);
-+  gl.uniform1i(jointTextureLocation, SKIN_PALETTE_TEXTURE_UNIT);
- 
-   // The normal palette rides its own unit and its own texture: three texels per joint, not four.
-   // ★ THE JOINT COUNT COMES FROM THE POSE PALETTE ON PURPOSE. The normal array is 12 floats per joint,
-   // not 16, so deriving a count from its own length with the pose divisor would silently under-count
-   // every skeleton and upload a truncated row — a quiet corruption rather than a failure.
--  const normalMatrices = proxy.normalMatrices;
--  if (program.locJointNormalTexture != null && normalMatrices != null) {
-+  const normalMatrices: Readonly<Float32Array> | null = presentGlMeshFloat32Array(proxy.normalMatrices);
-+  const jointNormalTextureLocation: WebGLUniformLocation | null =
-+    presentGlMeshUniformLocation(program.locJointNormalTexture);
-+  if (jointNormalTextureLocation !== null && normalMatrices !== null) {
-     const normalPalette = ensureGlSkinNormalPalette(state);
-     gl.activeTexture(gl.TEXTURE0 + SKIN_NORMAL_PALETTE_TEXTURE_UNIT);
-     uploadGlSkinPaletteTexture(gl, normalPalette, normalMatrices, jointCount, 3);
--    gl.uniform1i(program.locJointNormalTexture, SKIN_NORMAL_PALETTE_TEXTURE_UNIT);
-+    gl.uniform1i(jointNormalTextureLocation, SKIN_NORMAL_PALETTE_TEXTURE_UNIT);
-   }
-   return true;
- }
-@@ -131,11 +228,7 @@ export function bindGlUvTransform(
+@@ -91,11 +185,7 @@ export function bindGlUvTransform(
    program: Readonly<GlMeshProgram>,
    texture: Readonly<TextureLike> | null,
  ): void {
@@ -187,7 +156,9 @@ diff --git a/packages/scene3d-gl/src/glMeshProgram.ts b/packages/scene3d-gl/src/
    if (loc === null || texture === null) return;
    getTextureUvMatrix(scratchUvMatrix, texture);
    gl.uniformMatrix3fv(loc, false, scratchUvMatrix.m);
-@@ -181,36 +274,19 @@ export function drawGlMeshSubset(
+@@ -141,21 +231,10 @@ export function drawGlMeshSubset(
+   // A resolved per-object transform promotes only this draw run to the registered material-feature
+   // variant. Resolve and cache its locations lazily so an untinted/base program performs no lookups
    // or uploads; the promoted Shaded/Phong/PBR fragments consume the same two affine vectors.
 -  const colorMatrix = proxy.colorMatrix;
 -  const colorScaleBias = proxy.colorScaleBias;
@@ -211,7 +182,7 @@ diff --git a/packages/scene3d-gl/src/glMeshProgram.ts b/packages/scene3d-gl/src/
      if (loc0 !== null) {
        gl.uniform4f(loc0, colorMatrix[0], colorMatrix[1], colorMatrix[2], colorMatrix[3]);
        gl.uniform4f(program.locColorMatrix1!, colorMatrix[5], colorMatrix[6], colorMatrix[7], colorMatrix[8]);
-       gl.uniform4f(program.locColorMatrix2!, colorMatrix[10], colorMatrix[11], colorMatrix[12], colorMatrix[13]);
+@@ -163,16 +242,10 @@ export function drawGlMeshSubset(
        gl.uniform4f(program.locColorMatrix3!, colorMatrix[15], colorMatrix[16], colorMatrix[17], colorMatrix[18]);
        gl.uniform4f(program.locColorMatrixOffset!, colorMatrix[4], colorMatrix[9], colorMatrix[14], colorMatrix[19]);
      }
@@ -232,13 +203,18 @@ diff --git a/packages/scene3d-gl/src/glMeshProgram.ts b/packages/scene3d-gl/src/
        gl.uniform4f(
          locColorScale,
          colorScaleBias.redScale,
-@@ -233,12 +309,14 @@ export function drawGlMeshSubset(
+@@ -191,7 +264,8 @@ export function drawGlMeshSubset(
+   }
  
    const instanceCount = proxy.instanceCount ?? 0;
 -  const gpuInstanced = instanceCount > 0 && proxy.instanceMatrices != null;
 +  const instanceMatrices: Readonly<Float32Array> | null = presentGlMeshFloat32Array(proxy.instanceMatrices);
 +  const gpuInstanced = instanceCount > 0 && instanceMatrices !== null;
-   const gpuSkinned = gpuInstanced ? false : bindGlMeshSkinPalette(state, program, proxy);
+   // Skinning is opt-in: with no capability registered there is no binder to call, and renderGlScene3D
+   // has already left activeSkinnedRun false so the selected program carries no HAS_SKIN variant.
+   const skinFeature = getGlScene3DRuntime(state).meshSkinFeature ?? null;
+@@ -199,9 +273,10 @@ export function drawGlMeshSubset(
+     gpuInstanced || skinFeature === null ? false : skinFeature.bindMeshSkinPalette(state, program, proxy);
  
    if (gpuInstanced) {
 -    bindGlInstancePalette(state, program, proxy.instanceMatrices!, instanceCount);
@@ -251,9 +227,9 @@ diff --git a/packages/scene3d-gl/src/glMeshProgram.ts b/packages/scene3d-gl/src/
      }
    }
  
-@@ -470,19 +548,11 @@ export function uploadGlMeshDrawAlpha(
+@@ -366,18 +441,10 @@ export function uploadGlMeshDrawAlpha(
    alpha: number,
-   material: Readonly<MaterialValue> | null,
+   material: Readonly<Material> | null,
  ): void {
 -  let location = program.locObjectAlpha;
 -  if (location === undefined) {
@@ -272,4 +248,57 @@ diff --git a/packages/scene3d-gl/src/glMeshProgram.ts b/packages/scene3d-gl/src/
    if (coverageLocation !== null) {
      gl.uniform1f(coverageLocation, isGlMeshAlphaCoverage(material) ? 1 : 0);
    }
+diff --git a/packages/scene3d-gl/src/glMeshSkinning.ts b/packages/scene3d-gl/src/glMeshSkinning.ts
+--- a/packages/scene3d-gl/src/glMeshSkinning.ts
++++ b/packages/scene3d-gl/src/glMeshSkinning.ts
+@@ -10,7 +10,12 @@
+ import { uploadGlSkinPaletteTexture } from '@flighthq/render-gl/contract';
+ import type { GlMeshProgram, GlMeshSkinFeature, GlRenderState, Scene3DRenderProxy } from '@flighthq/types/contract';
+ 
+-import { SKIN_NORMAL_PALETTE_TEXTURE_UNIT, SKIN_PALETTE_TEXTURE_UNIT } from './glMeshProgram.ts';
++import {
++  presentGlMeshFloat32Array,
++  presentGlMeshUniformLocation,
++  SKIN_NORMAL_PALETTE_TEXTURE_UNIT,
++  SKIN_PALETTE_TEXTURE_UNIT,
++} from './glMeshProgram.ts';
+ import { ensureGlSkinNormalPalette, ensureGlSkinPalette, getGlScene3DRuntime } from './glScene3DRuntime.ts';
+ 
+ // Uploads and binds the pose + normal palettes consumed by a HAS_SKIN mesh program. Returns true only
+@@ -22,8 +27,9 @@ export function bindGlMeshSkinPalette(
+   program: Readonly<GlMeshProgram>,
+   proxy: Readonly<Scene3DRenderProxy>,
+ ): boolean {
+-  const jointMatrices = proxy.jointMatrices;
+-  const gpuSkinned = program.locJointTexture != null && jointMatrices != null;
++  const jointMatrices: Readonly<Float32Array> | null = presentGlMeshFloat32Array(proxy.jointMatrices);
++  const jointTextureLocation: WebGLUniformLocation | null = presentGlMeshUniformLocation(program.locJointTexture);
++  const gpuSkinned = jointTextureLocation !== null && jointMatrices !== null;
+   if (!gpuSkinned) return false;
+ 
+   const gl = state.gl;
+@@ -31,18 +37,20 @@ export function bindGlMeshSkinPalette(
+   const palette = ensureGlSkinPalette(state);
+   gl.activeTexture(gl.TEXTURE0 + SKIN_PALETTE_TEXTURE_UNIT);
+   uploadGlSkinPaletteTexture(gl, palette, jointMatrices, jointCount);
+-  gl.uniform1i(program.locJointTexture!, SKIN_PALETTE_TEXTURE_UNIT);
++  gl.uniform1i(jointTextureLocation, SKIN_PALETTE_TEXTURE_UNIT);
+ 
+   // The normal palette rides its own unit and its own texture: three texels per joint, not four.
+   // ★ THE JOINT COUNT COMES FROM THE POSE PALETTE ON PURPOSE. The normal array is 12 floats per joint,
+   // not 16, so deriving a count from its own length with the pose divisor would silently under-count
+   // every skeleton and upload a truncated row — a quiet corruption rather than a failure.
+-  const normalMatrices = proxy.normalMatrices;
+-  if (program.locJointNormalTexture != null && normalMatrices != null) {
++  const normalMatrices: Readonly<Float32Array> | null = presentGlMeshFloat32Array(proxy.normalMatrices);
++  const jointNormalTextureLocation: WebGLUniformLocation | null =
++    presentGlMeshUniformLocation(program.locJointNormalTexture);
++  if (jointNormalTextureLocation !== null && normalMatrices !== null) {
+     const normalPalette = ensureGlSkinNormalPalette(state);
+     gl.activeTexture(gl.TEXTURE0 + SKIN_NORMAL_PALETTE_TEXTURE_UNIT);
+     uploadGlSkinPaletteTexture(gl, normalPalette, normalMatrices, jointCount, 3);
+-    gl.uniform1i(program.locJointNormalTexture, SKIN_NORMAL_PALETTE_TEXTURE_UNIT);
++    gl.uniform1i(jointNormalTextureLocation, SKIN_NORMAL_PALETTE_TEXTURE_UNIT);
+   }
+   return true;
  }

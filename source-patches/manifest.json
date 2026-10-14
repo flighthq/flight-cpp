@@ -1966,23 +1966,20 @@
       "id": "scene3d-gl-lazy-uniform-location-boundaries",
       "dependency": "flight",
       "patch": "scene3d-gl-lazy-uniform-location-boundaries.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene3d-gl/src/glMeshProgram.ts",
       "package": "@flighthq/scene3d-gl",
       "answers": "refusal",
       "refusal": "lazy WebGL uniform-location fields carry three distinct source states -- undefined before lookup, null when the shader omits the uniform, and a present location -- while inferred mutable locals and nullable property tests lose the state evidence required by native optional storage",
-      "rewrite": "Moves every lazy lookup behind a field-specific resolver with an exact WebGLUniformLocation-or-null return, collapses non-lazy optional location and proxy-array reads through present-only helpers, and retains explicit nullable locals through skin, instance, color-adjustment, UV-transform, and per-draw-alpha binding.",
+      "rewrite": "Re-derived 2026-10-14 from docs/compiler-requests/scene3d-gl-lazy-uniform-location-boundaries.md, SITE BY SITE over all seven lazy uniform-location caches (locInstanceColorPalette, locInstancePalette, locUvTransform, locColorMatrix0, locColorScale, locObjectAlpha, locAlphaIsCoverage): each lookup moves behind its own field-specific resolver returning an exact WebGLUniformLocation | null, and the four present-only helpers carry the non-lazy optional reads (proxy.instanceMatrices, proxy.instanceColors, proxy.jointMatrices, proxy.normalMatrices) through a declared Readonly<Float32Array> | null. Two context drifts since 7e2fc7d were handled rather than merged: bindGlMeshSkinPalette and its jointMatrices block moved unchanged from glMeshProgram.ts to the new scene3d-gl/src/glMeshSkinning.ts, so those two hunks are re-targeted there; and drawGlMeshSubset now reaches the skin binder through the skinFeature indirection, so that hunk carries the current context. All seven resolvers are defined exactly once and called exactly once.",
       "equivalence": "Each resolver reads the same cache field, performs the same getUniformLocation call exactly once only when that field is undefined, stores the identical null or location result back on the same program object, and returns it to the same uniform call. Present-only helpers map undefined to null only where the original code used a loose null check and therefore treated them identically. The same palettes, transforms, alpha values, color adjustments, texture units, GL calls, cache objects, and draw ordering remain.",
-      "verification": "The complete patch stack must compose, focused glMeshProgram regeneration must emit the module with zero omissions/refusals, and full Scene3D-GL regeneration plus generated-header compilation verifies every material family that depends on it.",
+      "verification": "Applied in manifest order; the external-binding-storage refusal is cleared (measured on a full generation run, see the batch report), and the module then stops at the material-concrete-value-path site the request documents. Equivalence holds as the request states it: each resolver reads the same cache field, calls getUniformLocation exactly once and only when that field is undefined, stores the identical null-or-location result back on the same program object, and returns it to the same uniform call, so null stays cached as omitted and is never retried. The upstream suites caught a defect in the first re-derivation and the fix is folded in: the two re-targeted bindGlMeshSkinPalette hunks call presentGlMeshFloat32Array and presentGlMeshUniformLocation, which live in glMeshProgram.ts and were private, so the moved module threw ReferenceError: presentGlMeshFloat32Array is not defined on a skinned draw. Both helpers are now exported from glMeshProgram.ts and imported by glMeshSkinning.ts, which already imported unit constants from that module. Re-run over the five named upstream suites (glMeshProgram, glMeshUpload, glScene3DRuntime, glPbrExtensionRegistry, renderGlScene3D): 100 tests, 100 passing, 0 failing.",
       "whyNotUpstreamFirst": "The undefined-versus-null lazy cache is a deliberate WebGL contract. Explicit resolver boundaries are target-neutral and preserve it without replacing the cache representation, repeating lookups, or teaching the emitter to conflate the states.",
       "unblocks": "Restores the shared mesh bind/draw implementation beneath classic, debug, shaded, toon, unlit, wireframe, and PBR material families, including instancing, GPU skinning, UV transforms, color adjustments, and object opacity.",
       "expires": "when flight-compiler retains exact dual-sentinel property state through inferred locals and presence branches automatically, or Flight adopts explicit lazy-location resolvers upstream.",
       "appliedOn": "2026-10-08",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "GL",
-        "reason": "context drift: the patched code still exists (46/52 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "rebasedOn": "2026-10-14"
     },
     {
       "id": "node3d-named-runtime-carriers",
