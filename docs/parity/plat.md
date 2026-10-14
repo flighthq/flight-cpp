@@ -94,7 +94,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/host` | 6 | 4 | 141 | dedicated | none | 6 / 0 |
 | `@flighthq/platform` | 3 | 1 | 37 | dedicated | none | 3 / 0 |
 | `@flighthq/lifecycle` | 3 | 2 | 44 | dedicated | none | 2 / 1 |
-| `@flighthq/input` | 3 | 2 | 66 | dedicated | none | 3 / 0 |
+| `@flighthq/input` | 3 | 2 | 66 | dedicated | assisted | 3 / 0 |
 | `@flighthq/keyboard` | 3 | 1 | 23 | dedicated | ready | 3 / 0 |
 | `@flighthq/interaction` | 19 | 17 | 212 | dedicated | none | 8 / 11 |
 | `@flighthq/gui` | 20 | 18 | 115 | none | none | 16 / 4 |
@@ -475,6 +475,37 @@ Upstream carries per-package records at `flight/agents/packages/input/`: `status
   key-repeat timer's contract — the callback runs immediately on press, again after the delay, then every interval
   until stop(), and a new start cancels what the previous one left behind — driven by pumping a queue rather than by
   waiting.
+A LATER unit DISCHARGED PART OF THE DEFERRAL that entry records. Mapping inputManager.test.ts's 63 cases
+  mechanically showed the module's STATE half was covered by NEITHER local test -- between them they called exactly
+  one manager function -- so the constructors, the frame boundary, the `connectInputStateToInputManager` transitions,
+  the `is_`/`was_` queries and the gamepad name maps are now covered. The transitions are driven THROUGH the
+  connection rather than by writing into the state, so a connect that dropped a transition fails: a held key is not
+  re-pressed by its own auto-repeat, a press-and-release inside one frame reports BOTH edges, `pointercancel` clears
+  a pointer's buttons wholesale, and a gamepad's index is part of its key so a button on one gamepad leaves another
+  alone.
+
+  TWO MEASURED DIVERGENCES, each handled differently and neither worked around silently:
+
+  * The DISPOSER `connectInputStateToInputManager` returns is UNREACHABLE. Calling it aborts with `callable identity
+    is unavailable after std::function erasure` -- the filed `local-handler-callable-identity.md`, where a handler
+    connected from a local closure cannot be disconnected by its own cleanup closure because the emitted
+    `std::function` erased the identity the disconnect compares. The upstream case `returns a disposer that stops
+    tracking` is therefore not covered, and the test says so rather than asserting a throw.
+
+  * The gamepad NAME MAPS were FIXED, in the override that already supplies this module. The emitter lowers the
+    source's out-of-range-tolerant index read as the BOUNDS-CHECKED `element`, which throws
+    `flight::Array index is outside the array` where the source returns null -- and the upstream case is literally
+    `returns null for an out-of-range index`. One line each, `get(index).value_or(std::nullopt)`, with the reason in
+    the file. This is the same correction already applied to `app_loop.hpp` for the same lowering.
+
+  Eleven mutations against the override, every one confirmed to differ at its target, ALL ELEVEN DETECTED -- ten by
+  failing checks and one by CRASH (restoring the bounds-checked read, which aborts exactly as the fix prevents). One
+  of them found a real hole: the frame boundary's GAMEPAD clear was unasserted, because only the KEYBOARD edges were
+  re-checked after a frame, and a case was added for it.
+
+  STILL UNCOVERED, and named rather than implied: the SIX INGRESS ATTACHMENT FAMILIES (gamepad, keyboard, pointer,
+  relative-pointer, text, wheel) with their detaches and the three explicit-ingress identity cases, which need a host
+  seam these two files do not build.
 - `flight_cpp.generated_input_manager` — `tests/generated_input_manager_test.cpp` (dedicated), added by the unit that
   audited this package for the half the timer test does not reach: the axis and radial stick dead zones, ported from
   `inputManager.test.ts`'s own cases for them. The axis maps a value inside `[-deadZone, deadZone]` to 0 and rescales

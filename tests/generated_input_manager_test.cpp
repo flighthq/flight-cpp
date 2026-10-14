@@ -12,13 +12,19 @@
 //     the magnitude is rescaled onto [0, 1]. It is documented as alias-safe, which is asserted rather than assumed:
 //     passing the output object's own fields as the inputs must give the answer the inputs imply.
 //
-// What is NOT covered here, and is not claimed: the manager's event/state transitions, pointer and touch ingress,
-// focus and capture, multiple devices, and frame boundaries. The upstream suite has 63 cases for those; this unit takes
-// the closed-form contract and says so, rather than implying the package is covered.
+// A LATER unit discharged part of what this header used to defer. Mapped mechanically against inputManager.test.ts's
+// 63 cases, the STATE half of the module was covered by NEITHER local test -- between them they called exactly one
+// manager function -- so the constructors, the frame boundary, the `connectInputStateToInputManager` transitions, the
+// is_/was_ queries and the gamepad name maps are covered below. The deferral is now narrower and still honest: what
+// remains uncovered is the SIX INGRESS ATTACHMENT FAMILIES (gamepad, keyboard, pointer, relative-pointer, text,
+// wheel) with their detaches and the explicit-ingress identity cases, which need a host seam this file does not
+// build.
 #include <flight/input/input_manager.hpp>
+#include <flight/signals/slot.hpp>
 
 #include <cmath>
 #include <iostream>
+#include <optional>
 
 namespace {
 
@@ -95,7 +101,203 @@ void test_stick_dead_zone_is_alias_safe() {
 
 }  // namespace
 
+
+// --- The state half of the same module ------------------------------------------------------------------------
+//
+// Every read below goes through `connectInputStateToInputManager`, so the CONNECTION is what populates the state
+// rather than the test writing into it directly: a connect that dropped a transition would fail here.
+
+using State = types::InputState;
+using StateRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<State>>>>;
+using KeyRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<types::InputKeyboardData>>>>;
+using PointerRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<types::InputPointerData>>>>;
+using ButtonRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<types::InputGamepadButtonData>>>>;
+using AxisRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<types::InputGamepadAxisData>>>>;
+
+void test_the_state_and_manager_constructors_start_where_the_source_says() {
+  const auto state = input::create_input_state();
+  check(state->keys_down.size() == 0.0 && state->just_pressed_keys.size() == 0.0 &&
+            state->just_released_keys.size() == 0.0 && state->gamepad_buttons_down.size() == 0.0 &&
+            state->just_pressed_gamepad_buttons.size() == 0.0 &&
+            state->just_released_gamepad_buttons.size() == 0.0 && state->pointer_buttons_down.size() == 0.0 &&
+            state->axis_values.size() == 0.0,
+        "createInputState starts with every map and set empty");
+
+  const auto manager = input::create_input_manager();
+  check(manager->enabled, "createInputManager is enabled by default");
+  check(manager->on_key_down != nullptr && manager->on_key_up != nullptr &&
+            manager->on_pointer_down != nullptr && manager->on_pointer_up != nullptr &&
+            manager->on_pointer_cancel != nullptr && manager->on_wheel != nullptr &&
+            manager->on_gamepad_axis_move != nullptr && manager->on_gamepad_button_down != nullptr &&
+            manager->on_gamepad_button_up != nullptr && manager->on_gamepad_connect != nullptr &&
+            manager->on_gamepad_disconnect != nullptr,
+        "and carries every input signal it publishes through");
+
+  const auto signals = input::create_input_signals();
+  check(signals->on_key_down != nullptr && signals->on_key_up != nullptr &&
+            signals->on_pointer_down != nullptr && signals->on_pointer_up != nullptr &&
+            signals->on_pointer_cancel != nullptr && signals->on_pointer_move != nullptr &&
+            signals->on_pointer_move_relative != nullptr && signals->on_wheel != nullptr &&
+            signals->on_text_input != nullptr && signals->on_text_edit != nullptr &&
+            signals->on_gamepad_axis_move != nullptr && signals->on_gamepad_button_down != nullptr &&
+            signals->on_gamepad_button_up != nullptr && signals->on_gamepad_connect != nullptr &&
+            signals->on_gamepad_disconnect != nullptr,
+        "createInputSignals creates all fifteen signals, not a subset of them");
+}
+
+void test_connect_tracks_the_keyboard_transitions() {
+  const auto state = input::create_input_state();
+  const auto manager = input::create_input_manager();
+  const auto keep_alive = input::connect_input_state_to_input_manager(state, manager);
+  (void)keep_alive;
+  const auto state_row = StateRow(state);
+
+  const auto press = flight::make_ref<types::InputKeyboardData>();
+  press->key_code = 65.0;
+  press->repeat = false;
+  const auto repeat = flight::make_ref<types::InputKeyboardData>();
+  repeat->key_code = 65.0;
+  repeat->repeat = true;
+  const auto release = flight::make_ref<types::InputKeyboardData>();
+  release->key_code = 65.0;
+  release->repeat = false;
+
+  flight::signals::emit_signal<std::function<void(KeyRow)>>(manager->on_key_down, KeyRow(press));
+  check(input::is_input_key_down(state_row, 65.0), "a keydown holds the key down");
+  check(input::was_input_key_pressed(state_row, 65.0), "and reports it as pressed this frame");
+
+  input::end_input_state_frame(state);
+  check(input::was_input_key_pressed(state_row, 65.0) == false,
+        "endInputStateFrame clears the pressed edge");
+  check(input::is_input_key_down(state_row, 65.0),
+        "while the key is still HELD, which the frame boundary does not clear");
+
+  flight::signals::emit_signal<std::function<void(KeyRow)>>(manager->on_key_down, KeyRow(repeat));
+  check(input::was_input_key_pressed(state_row, 65.0) == false,
+        "an auto-repeat keydown of a key that is already held is NOT a press");
+
+  flight::signals::emit_signal<std::function<void(KeyRow)>>(manager->on_key_up, KeyRow(release));
+  check(input::was_input_key_released(state_row, 65.0), "a keyup reports the released edge");
+  check(input::is_input_key_down(state_row, 65.0) == false, "and the key is no longer held");
+
+  input::end_input_state_frame(state);
+  check(input::was_input_key_released(state_row, 65.0) == false,
+        "which endInputStateFrame clears too, so the edge lasts one frame");
+
+  flight::signals::emit_signal<std::function<void(KeyRow)>>(manager->on_key_down, KeyRow(press));
+  flight::signals::emit_signal<std::function<void(KeyRow)>>(manager->on_key_up, KeyRow(release));
+  check(input::was_input_key_pressed(state_row, 65.0) && input::was_input_key_released(state_row, 65.0),
+        "a key pressed and released within ONE frame reports BOTH edges");
+
+  input::end_input_state_frame(state);
+  flight::signals::emit_signal<std::function<void(KeyRow)>>(manager->on_key_up, KeyRow(release));
+  flight::signals::emit_signal<std::function<void(KeyRow)>>(manager->on_key_down, KeyRow(press));
+  check(input::was_input_key_pressed(state_row, 65.0) && input::was_input_key_released(state_row, 65.0),
+        "and so does a key released and pressed again within one frame");
+
+  // The DISPOSER is NOT called here, and that case is recorded rather than asserted: `disconnect()`
+  // aborts with `callable identity is unavailable after std::function erasure`, which is
+  // docs/compiler-requests/local-handler-callable-identity.md -- a handler connected from a local
+  // closure cannot be disconnected by its own cleanup closure, because the emitted `std::function`
+  // erased the identity the disconnect compares. So `connectInputStateToInputManager :: returns a
+  // disposer that stops tracking` is UNREACHABLE at this pin, and no workaround is carried.
+}
+
+void test_connect_tracks_pointer_buttons_and_cancel() {
+  const auto state = input::create_input_state();
+  const auto manager = input::create_input_manager();
+  const auto keep_alive = input::connect_input_state_to_input_manager(state, manager);
+  (void)keep_alive;
+  const auto state_row = StateRow(state);
+
+  const auto down = flight::make_ref<types::InputPointerData>();
+  down->pointer_id = 1.0;
+  down->button = 2.0;
+  const auto up = flight::make_ref<types::InputPointerData>();
+  up->pointer_id = 1.0;
+  up->button = 2.0;
+
+  check(input::is_input_pointer_button_down(state_row, 1.0, 2.0) == false, "a button starts up");
+  flight::signals::emit_signal<std::function<void(PointerRow)>>(manager->on_pointer_down, PointerRow(down));
+  check(input::is_input_pointer_button_down(state_row, 1.0, 2.0), "a pointerdown holds its button");
+  check(input::is_input_pointer_button_down(state_row, 1.0, 0.0) == false,
+        "and only ITS button, since the held buttons are a bitmask");
+
+  flight::signals::emit_signal<std::function<void(PointerRow)>>(manager->on_pointer_up, PointerRow(up));
+  check(input::is_input_pointer_button_down(state_row, 1.0, 2.0) == false, "a pointerup releases it");
+
+  flight::signals::emit_signal<std::function<void(PointerRow)>>(manager->on_pointer_down, PointerRow(down));
+  flight::signals::emit_signal<std::function<void(PointerRow)>>(manager->on_pointer_cancel, PointerRow(down));
+  check(input::is_input_pointer_button_down(state_row, 1.0, 2.0) == false,
+        "and a pointercancel clears the pointer's buttons wholesale");
+
+}
+
+void test_connect_tracks_gamepad_buttons_and_axes() {
+  const auto state = input::create_input_state();
+  const auto manager = input::create_input_manager();
+  const auto keep_alive = input::connect_input_state_to_input_manager(state, manager);
+  (void)keep_alive;
+  const auto state_row = StateRow(state);
+
+  const auto button_down = flight::make_ref<types::InputGamepadButtonData>();
+  button_down->gamepad = 1.0;
+  button_down->button = 3.0;
+  flight::signals::emit_signal<std::function<void(ButtonRow)>>(manager->on_gamepad_button_down,
+                                                               ButtonRow(button_down));
+  check(input::is_input_gamepad_button_down(state_row, 1.0, 3.0),
+        "a gamepad button down holds that gamepad's button");
+  check(input::was_input_gamepad_button_pressed(state_row, 1.0, 3.0), "and is a pressed edge this frame");
+  check(input::is_input_gamepad_button_down(state_row, 0.0, 3.0) == false,
+        "the gamepad index is part of the key, so another gamepad is unaffected");
+
+  const auto axis = flight::make_ref<types::InputGamepadAxisData>();
+  axis->gamepad = 1.0;
+  axis->axis = 2.0;
+  axis->value = 0.5;
+  flight::signals::emit_signal<std::function<void(AxisRow)>>(manager->on_gamepad_axis_move, AxisRow(axis));
+  check(close(input::get_input_gamepad_axis(state_row, 1.0, 2.0), 0.5), "an axis move records its value");
+  check(input::get_input_gamepad_axis(state_row, 1.0, 9.0) == 0.0,
+        "and an axis never moved reads 0 rather than throwing");
+
+  const auto button_up = flight::make_ref<types::InputGamepadButtonData>();
+  button_up->gamepad = 1.0;
+  button_up->button = 3.0;
+  flight::signals::emit_signal<std::function<void(ButtonRow)>>(manager->on_gamepad_button_up,
+                                                              ButtonRow(button_up));
+  check(input::was_input_gamepad_button_released(state_row, 1.0, 3.0), "a gamepad button up is a released edge");
+
+  // The frame boundary clears the GAMEPAD edges too. The mutation battery found this unasserted: dropping the
+  // gamepad clear from endInputStateFrame went unnoticed, because only the KEYBOARD edges were re-checked
+  // after a frame.
+  input::end_input_state_frame(state);
+  check(input::was_input_gamepad_button_released(state_row, 1.0, 3.0) == false,
+        "which endInputStateFrame clears like the keyboard edge");
+  check(input::is_input_gamepad_button_down(state_row, 1.0, 3.0) == false,
+        "and the held set is untouched by the boundary, since that button really is up");
+
+}
+
+void test_the_gamepad_name_maps() {
+  check(input::get_gamepad_button_name(flight::String("standard"), 0.0).has_value(),
+        "a standard mapping names button 0");
+  check(input::get_gamepad_button_name(flight::String("standard"), 99.0).has_value() == false,
+        "and an out-of-range index names nothing rather than inventing one");
+  check(input::get_gamepad_button_name(flight::String("xbox"), 0.0).has_value() == false,
+        "while a non-standard mapping names nothing at all");
+
+  check(input::get_gamepad_axis_name(flight::String("standard"), 0.0).has_value(), "an axis index is named");
+  check(input::get_gamepad_axis_name(flight::String("xbox"), 0.0).has_value() == false,
+        "and a non-standard mapping names no axis either");
+}
+
 int main() {
+  test_the_state_and_manager_constructors_start_where_the_source_says();
+  test_connect_tracks_the_keyboard_transitions();
+  test_connect_tracks_pointer_buttons_and_cancel();
+  test_connect_tracks_gamepad_buttons_and_axes();
+  test_the_gamepad_name_maps();
+
   test_axis_dead_zone();
   test_stick_dead_zone_is_radial();
   test_stick_dead_zone_is_alias_safe();

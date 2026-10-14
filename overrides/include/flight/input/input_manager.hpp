@@ -378,7 +378,12 @@ inline std::optional<flight::String> get_gamepad_button_name(flight::types::Game
   if ((mapping != flight::String("standard"))) {
     return std::nullopt;
   }
-  return standard_button_names.element(index);
+  // FIXED here: the emitter lowers the source's out-of-range-tolerant index read as the BOUNDS-CHECKED
+  // `element`, which throws `flight::Array index is outside the array` where the source returns null --
+  // the upstream case is literally `returns null for an out-of-range index`. `get` is the bounds-safe read
+  // and `value_or(nullopt)` unwraps it to the declared optional. The same lowering is in the generated
+  // header; this is the same one-line correction already applied to `app_loop.hpp` for the same pattern.
+  return standard_button_names.get(index).value_or(std::nullopt);
 }
 
 inline flight::Array<std::optional<flight::String>> standard_axis_names = flight::Array<std::optional<flight::String>>{std::optional<flight::String>{flight::types::gamepad_axis_kind->stick_left_x}, std::optional<flight::String>{flight::types::gamepad_axis_kind->stick_left_y}, std::optional<flight::String>{flight::types::gamepad_axis_kind->stick_right_x}, std::optional<flight::String>{flight::types::gamepad_axis_kind->stick_right_y}};
@@ -387,7 +392,12 @@ inline std::optional<flight::String> get_gamepad_axis_name(flight::types::Gamepa
   if ((mapping != flight::String("standard"))) {
     return std::nullopt;
   }
-  return standard_axis_names.element(index);
+  // FIXED here: the emitter lowers the source's out-of-range-tolerant index read as the BOUNDS-CHECKED
+  // `element`, which throws `flight::Array index is outside the array` where the source returns null --
+  // the upstream case is literally `returns null for an out-of-range index`. `get` is the bounds-safe read
+  // and `value_or(nullopt)` unwraps it to the declared optional. The same lowering is in the generated
+  // header; this is the same one-line correction already applied to `app_loop.hpp` for the same pattern.
+  return standard_axis_names.get(index).value_or(std::nullopt);
 }
 
 inline flight::WeakMap<flight::Ref<flight::types::InputManager>, flight::Ref<flight::types::InputIngressSink>> input_ingress_sinks = flight::WeakMap<flight::Ref<flight::types::InputManager>, flight::Ref<flight::types::InputIngressSink>>();
