@@ -8,7 +8,8 @@ diff --git a/packages/scene2d-canvas/src/canvasTextureView.ts b/packages/scene2d
  import type { HostImageSource, Texture2D } from '@flighthq/types/contract';
  
  // Draws a Texture view into the current local coordinate system. The caller owns the local-to-target
-@@ -16,5 +16,6 @@ export function drawCanvasTextureView(
+@@ -14,8 +14,9 @@ export function drawCanvasTextureView(
+   viewWidth: number,
    viewHeight: number,
  ): void {
 -  const backingWidth = getTextureWidth(texture);
@@ -17,3 +18,5 @@ diff --git a/packages/scene2d-canvas/src/canvasTextureView.ts b/packages/scene2d
 +  const backingWidth = textureSource === null ? -1 : textureSource.width;
 +  const backingHeight = textureSource === null ? -1 : textureSource.height;
    if (backingWidth <= 0 || backingHeight <= 0 || viewWidth <= 0 || viewHeight <= 0) return;
+ 
+   if (texture.uvRotation === 0 && !texture.flipX && !texture.flipY && texture.uvScale.x > 0 && texture.uvScale.y > 0) {
