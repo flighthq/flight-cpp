@@ -822,6 +822,14 @@ Upstream carries per-package records at `flight/agents/packages/accessibility/`:
 
 None. No local test, example, or benchmark includes a header of this package.
 
+A later re-audit confirmed all 38 cases with no parameterized table. It also made the two
+failure-preservation cases observed rather than inferred: provider-owned failure arms are returned by
+identity instead of being collapsed to granted or an empty success. Eight call-reachability mutants were
+detected by crash when routed through fresh unset capabilities; the audit records those as crash detection,
+not failing checks. Dispose-clears and deleted-symbol absence checks do not apply here, and the package's
+dedicated/partial metadata remains correct. Nineteen mutations were target-diff confirmed and detected:
+ten by failing checks and nine by crash.
+
 ### Local generation status
 
 3 of 3 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.

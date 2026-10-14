@@ -242,6 +242,38 @@ void test_showing_a_notification_returns_the_providers_delivery_arm() {
   check(reason_of(outcome) == "accepted", "and its reason");
 }
 
+// A provider FAILURE is preserved rather than collapsed. The upstream suite names these cases for the
+// permission query ("preserves query failure instead of collapsing it to denied") and the pending list
+// ("preserves provider failure instead of returning an empty success"), and both functions are one-line
+// forwards -- so the property holds by construction. That is an INFERENCE, which is why it is observed
+// here instead: a provider's own denial arm is fed in and asserted to come back BY IDENTITY.
+void test_a_provider_failure_is_preserved_rather_than_collapsed() {
+  auto permission = flight::make_ref<types::HostNotificationPermissionCapability>();
+  const auto denied = flight::make_ref<types::permission_reason_2a03a8a4faab9e18>();
+  denied->reason = flight::String("denied");
+  permission->get_permission = [denied]() {
+    return flight::Task<types::NotificationPermissionQueryOutcome>::resolve(
+        types::NotificationPermissionQueryOutcome{std::in_place_index<0>, denied});
+  };
+
+  const auto outcome = notif::get_notification_permission(permission).get();
+  check(std::get<0>(outcome).get() == denied.get(),
+        "a provider's denial comes back as ITS OWN object, not collapsed into an empty success");
+  check(reason_of(outcome) == "denied", "carrying the provider's own reason");
+
+  auto scheduling = flight::make_ref<types::HostNotificationSchedulingCapability>();
+  const auto none_pending = flight::make_ref<types::notifications_reason_6255c80019d34f04>();
+  none_pending->reason = flight::String("unsupported");
+  scheduling->get_pending_notifications = [none_pending]() {
+    return flight::Task<types::NotificationPendingListOutcome>::resolve(
+        types::NotificationPendingListOutcome{std::in_place_index<0>, none_pending});
+  };
+
+  const auto pending = notif::get_pending_notifications(scheduling).get();
+  check(std::get<0>(pending).get() == none_pending.get(),
+        "and the pending list's provider failure is preserved the same way");
+}
+
 // --- the resource constructors ----------------------------------------------------------------------------------
 
 void test_a_notification_resource_starts_with_its_given_facts() {
@@ -473,6 +505,7 @@ int main() {
   test_the_initializers_are_the_constructors_and_default_the_tag_themselves();
   test_a_scheduled_notification_carries_the_callers_request_and_schedule();
 
+  test_a_provider_failure_is_preserved_rather_than_collapsed();
   test_releasing_an_attachment_returns_its_own_outcome();
   test_a_failing_release_becomes_operation_failed_rather_than_escaping();
 
