@@ -1101,7 +1101,7 @@
       "package": "@flighthq/shape",
       "status": "complete",
       "supplies": "packages/shape/src/scale9ShapeCommands.ts",
-      "derivedFrom": "34b4a67874983c35ee048b583b592bd3b3d3bd7560df38608f552a51af076a9c",
+      "derivedFrom": "86a51fac4f30c8b5ad9c5fe10227e8bd4b5532a1f98bebe03a9c02b776aa435f",
       "reason": "The emitter compares two ShapeCommandToken arrays by casting the source to Array<Any>, but no such heterogeneous Array conversion exists.",
       "change": "Compares the two arrays in their exact common ShapeCommandToken representation before deciding whether to copy.",
       "equivalence": "Aliased arrays are not recopied and distinct arrays receive the same token-for-token copy before scale-nine coordinate mapping.",
@@ -1109,7 +1109,7 @@
       "unblocks": "scale9_shape_commands.hpp compiles independently.",
       "remaining": "None in this module.",
       "expires": "when array identity comparison retains its common represented element type.",
-      "authoredOn": "2026-10-06"
+      "authoredOn": "2026-10-14"
     },
     {
       "id": "shape-stroke-outline-binding-assignment",

@@ -1,9 +1,9 @@
-// Focused native parity for the supported @flighthq/shape shape.ts, shapeCommands.ts, and
-// shapeStrokeOutline.ts subsets at Flight a627849. The suite covers default construction,
-// command-array identity, element copying, valid-stream counting, command encoding/defaults, path
-// expansion, stroke-outline routing, and node revision invalidation. Partial-node options,
-// ShapeRuntime bounds methods, malformed command streams, and MorphShape paint bindings remain
-// explicit override debt.
+// Focused native parity for the supported @flighthq/shape shape.ts, shapeCommands.ts,
+// scale9ShapeCommands.ts, and shapeStrokeOutline.ts subsets at Flight a627849. The suite covers
+// default construction, command-array identity, element copying, valid-stream counting, command
+// encoding/defaults, path expansion, Scale9 remapping, stroke-outline routing, and node revision
+// invalidation. Partial-node options, ShapeRuntime bounds methods, malformed command streams, and
+// MorphShape paint bindings remain explicit override debt.
 //
 // MUTATION SENSITIVITY, measured 2026-10-14 against isolated one-at-a-time override changes:
 // five mutants produced 3/3/3/2/1 failures for array assignment in place of element copying,
@@ -15,15 +15,20 @@
 // Six shapeStrokeOutline mutants produced 3/3/1/1/1/1 failures for wrong MOVE_TO X and Y operands,
 // accepting a one-segment return, tightening closure epsilon, omitting texture fallback, and omitting
 // style-span flush. Each mutant was restored before the next measurement.
+// One scale9ShapeCommands mutant produced 10 failures when the distinct-array identity guard was
+// inverted. It was restored after the measurement.
+#include <flight/shape/scale9_shape_commands.hpp>
 #include <flight/shape/shape.hpp>
 #include <flight/shape/shape_commands.hpp>
 #include <flight/shape/shape_stroke_outline.hpp>
 
 #include <cmath>
+#include <initializer_list>
 #include <iostream>
 #include <memory>
 #include <optional>
 #include <string>
+#include <utility>
 #include <variant>
 
 namespace {
@@ -50,6 +55,11 @@ Token number_token(double value) {
   return Token{std::in_place, std::in_place_type<double>, value};
 }
 
+Token array_token(flight::Array<double> value) {
+  return Token{std::in_place, std::in_place_type<flight::Array<double>>,
+               std::move(value)};
+}
+
 bool is_string(const Token& token, const char* expected) {
   return token.has_value() &&
          std::holds_alternative<flight::String>(token.value()) &&
@@ -69,6 +79,34 @@ bool is_near_number(const Token& token, double expected) {
 bool is_bool(const Token& token, bool expected) {
   return token.has_value() && std::holds_alternative<bool>(token.value()) &&
          std::get<bool>(token.value()) == expected;
+}
+
+const flight::Array<double>* as_number_array(const Token& token) {
+  if (!token.has_value() ||
+      !std::holds_alternative<flight::Array<double>>(token.value())) {
+    return nullptr;
+  }
+  return &std::get<flight::Array<double>>(token.value());
+}
+
+bool numbers_are(const flight::Array<double>& actual,
+                 std::initializer_list<double> expected) {
+  if (actual.size() != expected.size()) return false;
+  std::size_t index = 0;
+  for (const double value : expected) {
+    if (actual[index++] != value) return false;
+  }
+  return true;
+}
+
+flight::Array<Token> remap_copy(
+    flight::Array<Token> source,
+    const flight::Ref<types::Scale9Mapper>& mapper) {
+  flight::Array<Token> out(source.size());
+  out[0] = string_token("sentinel");
+  out[1] = number_token(static_cast<double>(source.size() - 2));
+  shape::map_scale9_shape_commands(out, source, mapper);
+  return out;
 }
 
 template <typename Type>
@@ -352,6 +390,136 @@ void polygon_and_arc_expansion() {
         "a zero-radius elliptical arc falls back to lineTo and invalidates once");
 }
 
+void scale9_command_mapping_and_identity() {
+  const auto mapper = flight::make_ref<types::Scale9Mapper>(
+      types::Scale9Mapper{
+          .map_x = [](double x) { return x * 2.0; },
+          .map_y = [](double y) { return y * 3.0; },
+      });
+
+  flight::Array<Token> style_source{
+      string_token("beginFill"), number_token(2.0),
+      number_token(0xff0000ff), number_token(1.0)};
+  flight::Array<Token> style_out(style_source.size());
+  style_out[0] = string_token("sentinel");
+  style_out[1] = number_token(2.0);
+  const void* source_identity = style_source.identity();
+  const void* out_identity = style_out.identity();
+  shape::map_scale9_shape_commands(style_out, style_source, mapper);
+  check(style_source.identity() == source_identity &&
+            style_out.identity() == out_identity &&
+            style_out.identity() != style_source.identity(),
+        "Scale9 mapping copies distinct arrays without replacing either owner identity");
+  check(style_out.size() == 4 && is_string(style_out[0], "beginFill") &&
+            is_number(style_out[1], 2.0) &&
+            is_number(style_out[2], 0xff0000ff) &&
+            is_number(style_out[3], 1.0),
+        "Scale9 mapping passes style commands through unchanged");
+  style_source[2] = number_token(17.0);
+  check(is_number(style_out[2], 0xff0000ff),
+        "Scale9 mapping copies distinct command elements instead of aliasing the source array");
+
+  const auto move = remap_copy(
+      flight::Array<Token>{string_token("moveTo"), number_token(2.0),
+                           number_token(10.0), number_token(20.0)},
+      mapper);
+  check(move.size() == 4 && is_number(move[2], 20.0) &&
+            is_number(move[3], 60.0),
+        "Scale9 mapping remaps moveTo coordinates");
+
+  const auto line = remap_copy(
+      flight::Array<Token>{string_token("lineTo"), number_token(2.0),
+                           number_token(100.0), number_token(50.0)},
+      mapper);
+  check(line.size() == 4 && is_number(line[2], 200.0) &&
+            is_number(line[3], 150.0),
+        "Scale9 mapping remaps lineTo coordinates");
+
+  const auto rectangle = remap_copy(
+      flight::Array<Token>{string_token("drawRectangle"), number_token(4.0),
+                           number_token(10.0), number_token(20.0),
+                           number_token(50.0), number_token(30.0)},
+      mapper);
+  check(rectangle.size() == 6 && is_number(rectangle[2], 20.0) &&
+            is_number(rectangle[3], 60.0) &&
+            is_number(rectangle[4], 100.0) &&
+            is_number(rectangle[5], 90.0),
+        "Scale9 mapping remaps rectangle corners and recomputes its size");
+
+  const auto rounded = remap_copy(
+      flight::Array<Token>{string_token("drawRoundedRectangle"),
+                           number_token(5.0), number_token(10.0),
+                           number_token(20.0), number_token(50.0),
+                           number_token(30.0), number_token(20.0)},
+      mapper);
+  check(rounded.size() == 7 && is_number(rounded[2], 20.0) &&
+            is_number(rounded[3], 60.0) &&
+            is_number(rounded[4], 100.0) &&
+            is_number(rounded[5], 90.0) &&
+            is_number(rounded[6], 20.0),
+        "Scale9 mapping remaps rounded-rectangle corners without changing its radius");
+
+  const auto circle = remap_copy(
+      flight::Array<Token>{string_token("drawCircle"), number_token(3.0),
+                           number_token(50.0), number_token(50.0),
+                           number_token(25.0)},
+      mapper);
+  check(circle.size() == 5 && is_number(circle[2], 100.0) &&
+            is_number(circle[3], 150.0) && is_number(circle[4], 25.0),
+        "Scale9 mapping remaps a circle center without changing its radius");
+
+  const auto ellipse = remap_copy(
+      flight::Array<Token>{string_token("drawEllipse"), number_token(4.0),
+                           number_token(50.0), number_token(25.0),
+                           number_token(50.0), number_token(25.0)},
+      mapper);
+  check(ellipse.size() == 6 && is_number(ellipse[2], 100.0) &&
+            is_number(ellipse[3], 75.0) && is_number(ellipse[4], 100.0) &&
+            is_number(ellipse[5], 75.0),
+        "Scale9 mapping remaps ellipse extrema and recomputes its center and radii");
+
+  const auto curves = remap_copy(
+      flight::Array<Token>{
+          string_token("quadraticCurveTo"), number_token(4.0),
+          number_token(10.0), number_token(20.0), number_token(30.0),
+          number_token(40.0), string_token("cubicCurveTo"),
+          number_token(6.0), number_token(1.0), number_token(2.0),
+          number_token(3.0), number_token(4.0), number_token(5.0),
+          number_token(6.0)},
+      mapper);
+  check(curves.size() == 14 && is_number(curves[2], 20.0) &&
+            is_number(curves[3], 60.0) && is_number(curves[4], 60.0) &&
+            is_number(curves[5], 120.0) && is_number(curves[8], 2.0) &&
+            is_number(curves[9], 6.0) && is_number(curves[10], 6.0) &&
+            is_number(curves[11], 12.0) && is_number(curves[12], 10.0) &&
+            is_number(curves[13], 18.0),
+        "Scale9 mapping remaps every quadratic and cubic control and endpoint");
+
+  flight::Array<Token> in_place{
+      string_token("moveTo"), number_token(2.0), number_token(7.0),
+      number_token(11.0)};
+  const void* in_place_identity = in_place.identity();
+  shape::map_scale9_shape_commands(in_place, in_place, mapper);
+  check(in_place.identity() == in_place_identity && in_place.size() == 4 &&
+            is_number(in_place[2], 14.0) && is_number(in_place[3], 33.0),
+        "Scale9 mapping preserves an aliased command array while rewriting it in place");
+
+  const auto path = remap_copy(
+      flight::Array<Token>{
+          string_token("drawPath"), number_token(2.0),
+          array_token(flight::Array<double>{1.0, 3.0, 4.0, 6.0}),
+          array_token(flight::Array<double>{
+              1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0,
+              9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0})},
+      mapper);
+  const auto* path_data = path.size() == 4 ? as_number_array(path[3]) : nullptr;
+  check(path_data != nullptr &&
+            numbers_are(*path_data,
+                        {2.0, 6.0, 6.0, 12.0, 10.0, 18.0, 7.0, 8.0,
+                         18.0, 30.0, 22.0, 36.0, 26.0, 42.0, 30.0, 48.0}),
+        "Scale9 mapping remaps drawPath data for every represented path verb");
+}
+
 void stroke_outline_regions_and_fallbacks() {
   const auto open = shape::create_shape();
   shape::append_shape_line_style(open, 8.0, 0x123456ff, 0.5, false,
@@ -479,11 +647,12 @@ int main() {
   clear_count_and_empty();
   command_defaults_and_invalidation();
   polygon_and_arc_expansion();
+  scale9_command_mapping_and_identity();
   stroke_outline_regions_and_fallbacks();
   stroke_centerline_closure();
 
   if (failures == 0) {
-    std::cout << "shape construction, command emission, and stroke outlines match the supported Flight subset\n";
+    std::cout << "shape construction, command emission, Scale9 mapping, and stroke outlines match the supported Flight subset\n";
   }
   return failures == 0 ? 0 : 1;
 }
