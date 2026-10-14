@@ -103,3 +103,44 @@ call shape, `optional<Ref<LogSignals>>` construction, the `defaultJsonFormatter`
 `_writeConsoleCaptureEntry` -- which IS called, from `createConsoleLogSink`, and is the one remaining emitter
 omission. That last one is the console object-argument path the unit keeps refused pending a user decision, so
 it is supplied or stubbed only with that decision.
+
+## Third pass: the module now compiles with ZERO errors -- and promotion is NOT narrow
+
+Every non-console compile failure is repaired. The repaired header builds clean at `-ferror-limit=0`: **0
+errors**, from 21 at the start of this pass. The only thing not supplied is `createConsoleCaptureSink`, which is
+**omitted rather than stubbed** so the console object-argument refusal stands -- and it is the one function whose
+body calls the emitter's single remaining omission, `_writeConsoleCaptureEntry`.
+
+Repairs in this pass, all faithful to log.ts: `redactPath` (a one-level shallow copy built from
+`NamedProperties` and recursed into -- `flight::Record` shares storage on copy, so the local handle and the one
+stored in the object are the same object, which is what the source's `obj[key] = {...next}` then recursion
+means); `applySerializers` (`'__kind' in value` over a named-properties view); both `Json::stringify` sites (a
+designated initializer cannot be deduced through the template, and the envelope is now built explicitly, with an
+absent channel passed as `undefined` so stringify OMITS it, matching `JSON.stringify`); the `log_debug` call
+shape; the three anonymous carriers the emitter invented (`sink_65ee…`, `channel_fields_…`,
+`on_log_entry_on_log_error_…`) replaced by the DECLARED named types (`BufferedLogSink`, `LogContext`,
+`LogSignals`) -- each is exactly the named type minus `entity_runtime_key`, which is what `initialize_log_entity`
+exists to set -- and their now-superseded definitions deleted; and the `Record<LogLevel, String>` rekey to
+`Record<double, String>` with all twelve keys and five lookups cast at the boundary, exactly as the previous
+override's `change` field describes.
+
+### WHY IT IS NOT PROMOTED: the residual failures, exactly
+
+Promotion does not stay narrow, because the LogSink representation it settles on does not keep the SDK green:
+
+* `tests/generated_log_test.cpp` **FAILS AT RUN TIME**:
+  `a generated handle or sink registry lost callable identity` -- so the identity property the types override
+  exists to preserve is not preserved by this shape.
+* `tests/generated_log_levels_and_sinks_test.cpp` **FAILS TO BUILD**: six errors, at lines 103/109/115
+  (`no viable conversion from 'Ref<std::variant<Record<...>>>'`) and 153/154/169
+  (`no viable conversion from a lambda to LogSink`).
+
+Both were measured against the repaired override, not inferred. The seven LogSink lambda parameters and one
+static_assert in the tests were converted to the row spelling to get as far as this, and the conversion is not
+sufficient: the identity failure is a RUNTIME semantic difference, not a spelling one, so it cannot be fixed by
+re-spelling call sites.
+
+That is the whole reason the override exists, and it means the promotion decision is not mine to take by
+choosing a spelling: the module can be made to COMPILE with the emitter's row spelling, but the project's own
+tests pin callable identity through the REF spelling, and the two disagree. Recorded here rather than resolved
+by weakening either side.
