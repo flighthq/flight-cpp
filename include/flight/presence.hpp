@@ -17,11 +17,15 @@ struct Undefined {
 
 struct Null {
   constexpr Null() noexcept = default;
-  // TypeScript's `x.name = null` lowers to `= nullptr`, and a three-state
-  // `variant<Value, Null, Undefined>` has no alternative constructible from `std::nullptr_t` without
-  // this. `Any` already carries the same conversion -- `Any(std::nullptr_t) : value_(Null{})` -- so this
-  // makes the two agree rather than inventing a rule. Implicit on purpose: the emitter writes the bare
-  // literal and an explicit constructor would not be selected by the variant's converting assignment.
+  // The compiler does NOT lower a source `null` to a bare `nullptr`. For a three-state
+  // `variant<Value, Null, Undefined>` it constructs the arm explicitly --
+  // `{std::in_place_type<flight::Null>, flight::null}` -- so what selects the Null alternative in
+  // emitted code is that construction, not this constructor. This exists for direct runtime `Null`
+  // construction and for parity with `Any`, which already carries the same conversion
+  // (`Any(std::nullptr_t) : value_(Null{})`). It is deliberately not relied on to make
+  // `variant<String, Null, Undefined> = nullptr` compile: `nullptr` is also convertible to `String`
+  // through its implicit `const char*` constructor, both conversions rank equally, and the variant's
+  // converting constructor then has no unique winner.
   constexpr Null(std::nullptr_t) noexcept {}
   constexpr auto operator<=>(const Null&) const noexcept = default;
 };
