@@ -1433,23 +1433,20 @@
       "id": "scene3d-gl-erased-upload-cache",
       "dependency": "flight",
       "patch": "scene3d-gl-erased-upload-cache.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/types/src/GlScene3DRuntime.ts plus packages/scene3d-gl/src/glScene3DRuntime.ts and glMeshUpload.ts",
       "package": "@flighthq/scene3d-gl",
       "answers": "refusal",
       "refusal": "flight-cpp WeakMap<object, object> typed views require the runtime overload flight::checked_weak_map_view<Key, Value>(flight::WeakMap<flight::Ref<void>, flight::ErasedRef>&)",
-      "rewrite": "Keeps GlScene3DRuntime.uploadCache in the context slot's existing WeakMap<object, object> type, initializes that backing map directly, and acquires the WeakMap<MeshGeometry, GlMeshUpload> view as one immutable local at the upload consumer.",
+      "rewrite": "Re-derived 2026-10-14 from docs/compiler-requests/scene3d-gl-erased-upload-cache.md against the live pin, at its manifest position after pbr-extension-concrete-value-arms. The drift was only the .ts import specifiers plus the neighbouring import the PBR patch renames, as the request measured. Three files: types/GlScene3DRuntime.ts declares uploadCache as WeakMap<object, object> and drops its now-unused MeshGeometry import; scene3d-gl/glScene3DRuntime.ts reads the context slot in its own WeakMap<object, object> | null type and stores a new WeakMap<object, object> with no assertion, dropping MeshGeometry; scene3d-gl/glMeshUpload.ts carries the single immutable typed view at the consumer, as WeakMap<MeshGeometry, GlMeshUpload>. The GlMeshUpload type import in glScene3DRuntime.ts is deliberately KEPT even though the rewrite leaves it unused: the later active scene3d-gl-erased-program-cache patch uses that line as context, and Flight tsconfig sets no noUnused* flags.",
       "equivalence": "Type assertions and generic arguments erase in JavaScript. The same one WeakMap is still created lazily, stored in the same context slot, retained in the same scene runtime, and queried or updated with the same geometry and upload objects. Derived render states still share the primary context map; no cache key, value, lifetime, call order, or identity changes.",
-      "verification": "The source patch reverse-applies exactly to the prepared Flight tree; compiler and runtime regressions verify that the consumer becomes a checked typed view over the same erased backing map.",
+      "verification": "Applied in manifest order; the named refusal is cleared (measured on a full generation run, see the batch report) -- flight::checked_weak_map_view no longer appears for glScene3DRuntime.ts, and the module then stops at the separate nullish-assignment-result-presence refusal the request documents. The stack still composes: the GlMeshUpload import context is preserved for scene3d-gl-erased-program-cache, and the full chain applies in order.",
       "whyNotUpstreamFirst": "The context tier intentionally exposes one renderer-neutral object cache, while the pinned native target needs its type erasure stated at that storage boundary and its exact view stated at the consumer. The rewrite is target-neutral and changes only static annotations.",
       "unblocks": "Clears glScene3DRuntime's root refusal and the dependency chain needed by material registration, lit programs, PBR extensions, scene time, and the final Scene3D draw traversal.",
       "expires": "when WeakMap generic assignability preserves checked typed views across object-erased fields automatically, or Flight adopts the same boundary and local-view annotations upstream.",
       "appliedOn": "2026-10-08",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "GL",
-        "reason": "context drift: the patched code still exists (8/9 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "rebasedOn": "2026-10-14"
     },
     {
       "id": "scene3d-gl-erased-program-cache",

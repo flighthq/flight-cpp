@@ -1,8 +1,7 @@
 diff --git a/packages/scene3d-gl/src/glMeshUpload.ts b/packages/scene3d-gl/src/glMeshUpload.ts
-index 697f8cf..6a05834 100644
 --- a/packages/scene3d-gl/src/glMeshUpload.ts
 +++ b/packages/scene3d-gl/src/glMeshUpload.ts
-@@ -139,6 +139,6 @@ export function ensureGlMeshUpload(
+@@ -139,7 +139,7 @@ export function ensureGlMeshUpload(
    gpuSkinned = false,
  ): GlMeshUpload {
    const gl = state.gl;
@@ -10,22 +9,19 @@ index 697f8cf..6a05834 100644
 +  const cache = getGlScene3DRuntime(state).uploadCache as WeakMap<MeshGeometry, GlMeshUpload>;
    let upload = cache.get(geometry as MeshGeometry);
    const primitiveMode = getGlPrimitiveMode(gl, geometry.topology);
+ 
 diff --git a/packages/scene3d-gl/src/glScene3DRuntime.ts b/packages/scene3d-gl/src/glScene3DRuntime.ts
-index 1022088..eb37ae0 100644
 --- a/packages/scene3d-gl/src/glScene3DRuntime.ts
 +++ b/packages/scene3d-gl/src/glScene3DRuntime.ts
-@@ -5,10 +5,8 @@ import {
- } from '@flighthq/render-gl/contract';
- import type {
-   GlScene3DRuntime,
--  GlMeshUpload,
+@@ -9,7 +9,6 @@ import type {
    GlRenderState,
    GlRenderStateRuntime,
    GlSkinPaletteTexture,
 -  MeshGeometry,
  } from '@flighthq/types/contract';
  import { EntityRuntimeKey } from '@flighthq/types/contract';
-@@ -138,13 +136,10 @@ export function getGlScene3DRuntime(state: GlRenderState): GlScene3DRuntime {
+ 
+@@ -151,13 +150,10 @@ export function getGlScene3DRuntime(state: GlRenderState): GlScene3DRuntime {
    if (scene === undefined) {
      // The runtime accessor routes this slot to the context tier. A derived state must retain the map
      // already installed by its primary instead of replacing it with a state-local upload identity.
@@ -43,18 +39,22 @@ index 1022088..eb37ae0 100644
      scene = {
        activeBlendedRun: false,
 diff --git a/packages/types/src/GlScene3DRuntime.ts b/packages/types/src/GlScene3DRuntime.ts
-index 72bd054..7cd5c9e 100644
 --- a/packages/types/src/GlScene3DRuntime.ts
 +++ b/packages/types/src/GlScene3DRuntime.ts
-@@ -10,3 +10,3 @@ import type { MaterialValue } from './MaterialValue';
- import type { Mesh } from './Mesh';
--import type { MeshGeometry, MeshSubset } from './MeshGeometry';
-+import type { MeshSubset } from './MeshGeometry';
- import type { PbrExtensionValue } from './PbrExtension';
-@@ -145,5 +145,5 @@ export interface GlScene3DRuntime {
+@@ -6,7 +6,6 @@ import type { GlTextureRenderTarget } from './GlRenderTarget.ts';
+ import type { GlSkinPaletteTexture } from './GlSkinPaletteTexture.ts';
+ import type { Matrix4 } from './Matrix4.ts';
+ import type { Mesh } from './Mesh.ts';
+-import type { MeshGeometry } from './MeshGeometry.ts';
+ import type { Node3D } from './Node3D.ts';
+ import type { PbrExtensionValue } from './PbrExtension.ts';
+ import type { Scene3DLightBlock } from './Scene3DLightBlock.ts';
+@@ -187,7 +186,7 @@ export interface GlScene3DRuntime {
    // it: a 3x3 padded to three vec4 columns uploads directly this way, with no per-frame repacking.
    skinNormalPalette: GlSkinPaletteTexture | null;
    time: number;
 -  uploadCache: WeakMap<MeshGeometry, GlMeshUpload>;
 +  uploadCache: WeakMap<object, object>;
  }
+ 
+ // The GPU upload of one MeshGeometry for one GlRenderState: a VAO binding the interleaved vertex
