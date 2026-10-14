@@ -2,8 +2,9 @@
 //
 // The package emits whole at a627849 -- 3/3 modules, no refusals, no override -- so this is the
 // emission's own behavior under test. Every case is ported from the module's upstream suite
-// (packages/ipc/src/ipc.test.ts), which is the specification, and the starred ones are the cases that
-// suite marks as the reason the module exists:
+// (packages/ipc/src/ipc.test.ts), which has exactly 12 cases, all behavioural; there are NO "is exported"
+// cases in this fixture, and all six exports are exercised here. The starred ones are the cases that suite
+// marks as the reason the module exists:
 //
 //   * onceIpcMessage delivers the first message, releases the subscription, and is idempotent; its
 //     returned stop works before any message arrives; and a provider that delivers SYNCHRONOUSLY during
@@ -13,6 +14,30 @@
 //
 // The host capabilities are plain operation-tight functions, so each case below supplies its own fake
 // provider and nothing is shared between cases.
+//
+// TWO DEFECTS FOUND BY A LATER AUDIT OF THIS FILE, both in the TEST rather than the module:
+//
+//   1. EVERY FORWARDING CASE CHECKED ONLY THE FIRST ARGUMENT. `first_argument` was the only reader of the
+//      argument list anywhere in the file, so an implementation that forwarded the head and dropped the
+//      rest passed every assertion. The upstream cases forward two or three arguments and compare the whole
+//      array. The cases now use `arguments_of` and pass several.
+//   2. THE PASS SUMMARY WAS PRINTED BEFORE THE LAST BLOCK. A run that failed only the final (rogue-host)
+//      block printed "generated ipc: all checks passed" and then its FAIL lines -- measured, not argued --
+//      so anything that greps for the pass string, as this suite's own verification does, read a failing
+//      run as green. The summary is now the last statement.
+//
+// The final block is also the one case a COMPLIANT host cannot produce: a host that keeps delivering to a
+// listener after its unsubscribe ran. A mutation removing the listener's `done` guard survives every other
+// assertion in this file, because the fakes above drop the listener on release and the second delivery
+// never reaches it. It is pinned against a deliberately non-compliant host rather than left to good
+// manners.
+//
+// NOT expressible here, and recorded rather than faked: the upstream suite opens three cases with
+// `expectTypeOf(fn).parameter(0).toEqualTypeOf<...>()`, asserting the CAPABILITY TYPE each function takes.
+// That is a compile-time claim in TypeScript with no runtime counterpart; on this surface the parameter
+// type is part of the emitted signature, so a caller passing the wrong capability does not compile. Three
+// such assertions (invokeIpc, onIpcInvoke, sendIpcMessageTo) have no native text, and the behavioural half
+// of each of those cases is asserted.
 #include <flight/executor.hpp>
 #include <flight/ipc/ipc.hpp>
 
@@ -94,29 +119,48 @@ std::string first_argument(const Args& args) {
   return args.size() > 0.0 ? args.element(0.0).as_string().to_utf8() : std::string("<none>");
 }
 
+// Every argument, joined in order. `first_argument` alone cannot see the difference between forwarding the
+// whole argument list and forwarding only its head -- and every forwarding case below used to check only the
+// head, so an implementation that dropped everything after the first argument passed the whole file.
+std::string arguments_of(const Args& args) {
+  std::string joined;
+  for (double index = 0.0; index < args.size(); index += 1.0) {
+    if (index > 0.0) joined += ",";
+    joined += args.element(index).as_string().to_utf8();
+  }
+  return joined.empty() ? std::string("<none>") : joined;
+}
+
 }  // namespace
 
 int main() {
   const auto executor = std::make_shared<flight::QueueExecutor>();
   const flight::ExecutorScope scope(executor);
 
-  // invokeIpc forwards the channel and the argument list and returns the provider's own response.
+  // invokeIpc forwards the channel and the WHOLE argument list, and returns the provider's own response.
   {
     std::string seen_channel;
-    std::string seen_argument;
+    std::string seen_arguments;
     auto host = flight::make_ref<flight::types::HostIpcInvokeCapability>();
+    // The provider echoes what it received, so the response is provably derived from the request rather
+    // than a constant that would answer the same whatever was forwarded.
     host->invoke = [&](String channel, Args args) {
       seen_channel = channel.to_utf8();
-      seen_argument = first_argument(args);
-      return flight::Task<flight::Any>::resolve(flight::Any(String("pong")));
+      seen_arguments = arguments_of(args);
+      return flight::Task<flight::Any>::resolve(
+          flight::Any(String(channel + String(":") + String(arguments_of(args)))));
     };
 
     Args args = Args{};
     args.push(flight::Any(String("payload")));
+    args.push(flight::Any(String("second")));
+    args.push(flight::Any(String("third")));
     const auto response = flight::ipc::invoke_ipc(host, String("ping"), args).get();
     check(seen_channel == "ping", "invokeIpc forwards the channel");
-    check(seen_argument == "payload", "and the arguments");
-    check(response.as_string() == String("pong"), "and returns the provider's response");
+    check(seen_arguments == "payload,second,third",
+          "and the whole argument list, in order, not merely its first element");
+    check(response.as_string() == String("ping:payload,second,third"),
+          "and returns the provider's response, which is derived from what it was given");
   }
 
   // onceIpcMessage: the first message, then the subscription is gone.
@@ -193,30 +237,31 @@ int main() {
 
     const auto stop = flight::ipc::on_ipc_invoke(host, String("double"), [](Args args) -> decltype(auto) {
       return std::variant<flight::Task<flight::Any>, flight::Any>{
-          std::in_place_index<1>, flight::Any(String("doubled:" ) + first_argument(args))};
+          std::in_place_index<1>, flight::Any(String("doubled:") + String(arguments_of(args)))};
     });
     check(seen_channel == "double", "onIpcInvoke registers on the channel it was given");
 
     Args args = Args{};
     args.push(flight::Any(String("4")));
+    args.push(flight::Any(String("5")));
     const auto outcome = registered(args);
-    check(outcome.index() == 1 && std::get<1>(outcome).as_string() == String("doubled:4"),
-          "the handler receives the arguments and its answer is returned");
+    check(outcome.index() == 1 && std::get<1>(outcome).as_string() == String("doubled:4,5"),
+          "the handler receives the whole argument list and its answer is returned");
     stop();
     check(!registered, "and the returned release removes this registration");
   }
 
-  // onIpcMessage: every message on its channel, with the sent arguments.
+  // onIpcMessage: every message on its channel, with the whole sent argument list.
   {
     FakeMessageHost host;
     const auto capability = host.capability();
     std::vector<std::string> seen;
     static_cast<void>(flight::ipc::on_ipc_message(capability, String("ping"),
-                                                  [&seen](Args args) { seen.push_back(first_argument(args)); }));
-    host.deliver("ping", {"1"});
+                                                  [&seen](Args args) { seen.push_back(arguments_of(args)); }));
+    host.deliver("ping", {"1", "two", "3"});
     host.deliver("ping", {"2"});
-    check(seen.size() == 2 && seen[0] == "1" && seen[1] == "2",
-          "every message on the channel is delivered, in order");
+    check(seen.size() == 2 && seen[0] == "1,two,3" && seen[1] == "2",
+          "every message on the channel is delivered, in order, with all of its arguments");
   }
 
   // onIpcMessage: only its own channel.
@@ -263,31 +308,32 @@ int main() {
   // sendIpcMessage and sendIpcMessageTo forward their channel, target and arguments unchanged.
   {
     std::string seen_channel;
-    std::string seen_argument;
+    std::string seen_arguments;
     auto send_host = flight::make_ref<flight::types::HostIpcSendCapability>();
     send_host->send = [&](String channel, Args args) {
       seen_channel = channel.to_utf8();
-      seen_argument = first_argument(args);
+      seen_arguments = arguments_of(args);
     };
     Args args = Args{};
     args.push(flight::Any(String("hello")));
+    args.push(flight::Any(String("7")));
     flight::ipc::send_ipc_message(send_host, String("notify"), args);
-    check(seen_channel == "notify" && seen_argument == "hello",
-          "sendIpcMessage forwards the channel and the arguments");
+    check(seen_channel == "notify" && seen_arguments == "hello,7",
+          "sendIpcMessage forwards the channel and the whole argument list");
 
     std::string seen_target;
     auto targeted_host = flight::make_ref<flight::types::HostIpcTargetedSendCapability<String>>();
     targeted_host->send = [&](String target, String channel, Args received) {
       seen_target = target.to_utf8();
       seen_channel = channel.to_utf8();
-      seen_argument = first_argument(received);
+      seen_arguments = arguments_of(received);
     };
     flight::ipc::send_ipc_message_to<String>(targeted_host, String("window-7"), String("notify"), args);
     check(seen_target == "window-7", "sendIpcMessageTo forwards the target unchanged");
-    check(seen_channel == "notify" && seen_argument == "hello", "with its channel and arguments");
+    check(seen_channel == "notify" && seen_arguments == "hello,7",
+          "with its channel and the whole argument list");
   }
 
-  if (failures == 0) std::cout << "generated ipc: all checks passed\n";
   // A host that KEEPS delivering to a listener after its unsubscribe has run. A compliant host does
   // not, which is exactly why nothing above can tell the difference: a mutation removing the listener's
   // `if (done) return` guard SURVIVES every other assertion in this file, because the fake host above
@@ -320,5 +366,10 @@ int main() {
     static_cast<void>(stop);
   }
 
+  // The summary is printed LAST. It used to be printed before the block above, so a failure in that block
+  // produced a run that contained the line "all checks passed" -- and any consumer that greps for that
+  // string, as this suite's own verification does, read a failing run as green. A summary that can be
+  // printed alongside FAIL lines is worse than no summary.
+  if (failures == 0) std::cout << "generated ipc: all checks passed\n";
   return failures == 0 ? 0 : 1;
 }
