@@ -97,13 +97,41 @@ optional.
 
 ## Reach
 
-`@flighthq/textureatlas`'s `texture_atlas_region.hpp` is the first native error inherited by six of
-the eight `@flighthq/textureatlas-formats` headers. Package-scoped compilation therefore reports
-those consumers as failures even though textureatlas-formats itself emits 8/8 modules. A file-based
-native test of `texture_atlas_page_meta.hpp`, which does not include this dependency header, compiles
-and executes successfully.
+**Historical, before the override landed.** The generated `texture_atlas_region.hpp` failed clang at
+`:290`, and because that module is in the package's include closure the error was inherited by the
+`@flighthq/textureatlas-formats` consumers: six of its eight headers failed to compile for this
+reason while textureatlas-formats itself emitted 8/8 modules. A file-based native test of
+`texture_atlas_page_meta.hpp` compiled and ran because it does not include this dependency header.
 
-No dependency override or source rewrite is carried by the textureatlas-formats migration.
+**Current.** The root is carried by the `textureatlas-region-nullable-partial-read` override, so the
+inherited failure is gone. Measured on this branch, one
+`clang -std=c++20 -fsyntax-only -w -Ioverrides/include -Igenerated/include -Iinclude` per header:
+
+- `texture_atlas_aseprite_parse.hpp`, `texture_atlas_libgdx_parse.hpp`,
+  `texture_atlas_starling_parse.hpp`, `texture_packer_atlas_parse.hpp` and
+  `texture_atlas_page_meta.hpp` all exit 0 -- the four parse headers now compile.
+- `_internal_index.hpp`, `contract.hpp` and `texture_atlas_detect.hpp` still exit 1, but each one's
+  first error is at `texture_atlas_detect.hpp:67` and **`:290` appears zero times** in the output.
+  They do not reach this defect.
+
+The override's own manifest `remaining` reads "None in textureAtlasRegion.ts at this pin"; its
+`expires` names what would let it be dropped -- nullable `Partial` reads lowering against their actual
+carrier, enum defaults retaining their owner, and narrowed `Texture2D` rows retaining a recoverable
+concrete owner.
+
+**Consumers beyond textureatlas-formats, withdrawn.** `@flighthq/bitmaptext` and
+`@flighthq/movieclip` were recorded elsewhere as consumers of this root. Neither is one now:
+bitmaptext's compile output mentions `:290` zero times and its four failing headers are its own errors
+(`no matching function for call to 'create_texture'` at `update_bitmap_text.hpp:121`, and
+`use of undeclared identifier 'build_bitmap_text_words'` at `:254` and `:303`); movieclip's first
+failure is `scene2d/sprite.hpp:107`.
+
+**Overrides are now carried.** The earlier statement that no dependency override or source rewrite
+accompanies this work no longer holds: `textureatlas-region-nullable-partial-read` carries this root,
+and `textureatlas-formats` carries `textureatlas-formats-aseprite-checked-json` and
+`textureatlas-formats-texture-packer-checked-json`, both `complete`. The emitter defect itself is
+unpatched -- the override shadows its output rather than repairing it, which is why the generated-path
+reproducer above still fails while the header name compiles.
 
 ## Native carrying repair
 
