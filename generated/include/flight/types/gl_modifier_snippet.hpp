@@ -9,9 +9,17 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AnimatedNormalModifier; }
+namespace flight::types { struct DissolveModifier; }
+namespace flight::types { struct EmissiveModifier; }
+namespace flight::types { struct EnvReflectModifier; }
+namespace flight::types { struct FogModifier; }
 namespace flight::types { struct GlRenderState; }
 namespace flight::types { struct Modifier; }
 namespace flight::types { struct ModifierDefinition; }
+namespace flight::types { struct RimModifier; }
+namespace flight::types { struct ToonModifier; }
+namespace flight::types { struct VertexDisplaceModifier; }
 
 namespace flight::types {
 struct GlModifierBindContext;
@@ -19,11 +27,11 @@ struct GlModifierSnippet;
 } // namespace flight::types
 
 #include <flight/types/gl_render_state.hpp>
-#include <flight/types/modifier.hpp>
+#include <flight/types/modifier_value.hpp>
 #include <flight/types/modifier_definition.hpp>
 #include <flight/types/modifier_kind.hpp>
 #include <flight/types/modifier_slot.hpp>
-#include <flight/types/modifier.hpp>
+#include <flight/types/modifier_value.hpp>
 
 namespace flight::types {
 
@@ -37,10 +45,10 @@ struct GlModifierBindContext : public flight::ReferenceEnabled {
 struct GlModifierSnippet : public flight::ReferenceEnabled {
   flight::String kind;
   flight::String slot;
-  std::optional<std::function<flight::String(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Modifier>>>>)>> get_define_signature;
-  std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Modifier>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GlModifierBindContext>>>>)>> bind;
-  std::function<flight::String(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Modifier>>>>, double)> contribution;
-  std::optional<std::function<flight::String(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Modifier>>>>, double)>> declarations;
+  std::optional<std::function<flight::String(flight::Ref<flight::types::ReadonlyModifierValue>)>> get_define_signature;
+  std::optional<std::function<void(flight::types::ReadonlyModifierValue, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<GlModifierBindContext>>>>)>> bind;
+  std::function<flight::String(flight::types::ReadonlyModifierValue, double)> contribution;
+  std::optional<std::function<flight::String(flight::types::ReadonlyModifierValue, double)>> declarations;
 };
 
 } // namespace flight::types

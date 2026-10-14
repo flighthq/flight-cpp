@@ -7,20 +7,28 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AnimatedNormalModifier; }
+namespace flight::types { struct DissolveModifier; }
+namespace flight::types { struct EmissiveModifier; }
 namespace flight::types { struct EntityRuntime; }
+namespace flight::types { struct EnvReflectModifier; }
+namespace flight::types { struct FogModifier; }
 namespace flight::types { struct Material3D; }
 namespace flight::types { struct Modifier; }
+namespace flight::types { struct RimModifier; }
 namespace flight::types { struct Texture2D; }
 namespace flight::types { struct Texture2DArray; }
 namespace flight::types { struct Texture3D; }
 namespace flight::types { struct TextureCube; }
+namespace flight::types { struct ToonModifier; }
+namespace flight::types { struct VertexDisplaceModifier; }
 
 namespace flight::types {
 struct ShadedMaterial;
 } // namespace flight::types
 
 #include <flight/types/material3_d.hpp>
-#include <flight/types/modifier.hpp>
+#include <flight/types/modifier_value.hpp>
 #include <flight/types/texture.hpp>
 #include <flight/types/blend_mode.hpp>
 #include <flight/types/entity.hpp>
@@ -38,7 +46,7 @@ struct ShadedMaterial : public flight::ReferenceEnabled {
   bool double_sided;
   double diffuse;
   std::optional<flight::types::Texture> diffuse_map;
-  flight::Array<flight::Ref<flight::types::Modifier>> modifiers;
+  flight::Array<flight::types::ModifierValue> modifiers;
   std::optional<flight::types::Texture> normal_map;
   double normal_scale;
   double shininess;

@@ -11,9 +11,16 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct Aabb; }
 namespace flight::types { struct Adjustment; }
+namespace flight::types { struct BlinnPhongMaterial; }
 namespace flight::types { struct ColorScaleBias; }
+namespace flight::types { struct CustomShaderMaterial; }
+namespace flight::types { struct DepthMaterial; }
+namespace flight::types { struct EmissiveMaterial; }
+namespace flight::types { struct ExtendedPbrMaterial; }
 namespace flight::types { struct InstancedMeshSignals; }
 namespace flight::types { struct InteractionSignals; }
+namespace flight::types { struct LambertMaterial; }
+namespace flight::types { struct MatcapMaterial; }
 namespace flight::types { struct Material3D; }
 namespace flight::types { struct Matrix4; }
 namespace flight::types { struct MeshGeometry; }
@@ -23,8 +30,17 @@ namespace flight::types { struct Node3DTraits; }
 namespace flight::types { struct NodeData; }
 namespace flight::types { struct NodeInteractionState; }
 namespace flight::types { struct NodeSignals; }
+namespace flight::types { struct NormalMaterial; }
+namespace flight::types { struct PhongMaterial; }
 namespace flight::types { struct Quaternion; }
+namespace flight::types { struct ShadedMaterial; }
+namespace flight::types { struct SpecularGlossinessPbrMaterial; }
+namespace flight::types { struct StandardPbrMaterial; }
+namespace flight::types { struct ToonMaterial; }
+namespace flight::types { struct UnlitMaterial; }
 namespace flight::types { struct Vector3; }
+namespace flight::types { struct VertexColorMaterial; }
+namespace flight::types { struct WireframeMaterial; }
 namespace flight::types { template <typename Traits> struct Node; }
 
 namespace flight::types {
@@ -37,7 +53,7 @@ struct InstancedMeshRuntime;
 #include <flight/types/aabb.hpp>
 #include <flight/types/entity.hpp>
 #include <flight/types/instanced_mesh_signals.hpp>
-#include <flight/types/material3_d.hpp>
+#include <flight/types/material3_dvalue.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/mesh_geometry.hpp>
 #include <flight/types/node3_d.hpp>
@@ -136,7 +152,7 @@ struct InstancedMesh : public flight::ReferenceEnabled {
   std::optional<flight::Uint32Array> instance_colors;
   double instance_count;
   flight::Array<flight::Ref<flight::types::Matrix4>> instance_matrices;
-  flight::Array<std::optional<flight::Ref<flight::types::Material3D>>> materials;
+  flight::Array<std::optional<flight::types::Material3DValue>> materials;
   double version;
 };
 

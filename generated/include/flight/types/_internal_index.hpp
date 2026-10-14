@@ -476,6 +476,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/methods_of.hpp>
 #include <flight/types/modifier.hpp>
 #include <flight/types/modifier_kind.hpp>
+#include <flight/types/modifier_value.hpp>
 #include <flight/types/modifier_slot.hpp>
 #include <flight/types/morph_target.hpp>
 #include <flight/types/morph_shape.hpp>
@@ -759,6 +760,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/bitmap_histogram.hpp>
 #include <flight/types/material2_d.hpp>
 #include <flight/types/material3_d.hpp>
+#include <flight/types/material3_dvalue.hpp>
 #include <flight/types/material3_doptions.hpp>
 #include <flight/types/bitmap_mismatch.hpp>
 #include <flight/types/bitmap_region.hpp>
@@ -961,6 +963,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/env_reflect_modifier_options.hpp>
 #include <flight/types/fog_modifier_options.hpp>
 #include <flight/types/modifier_definition.hpp>
+#include <flight/types/modifier_definition_value.hpp>
 #include <flight/types/modifier_registry.hpp>
 #include <flight/types/rim_modifier_options.hpp>
 #include <flight/types/shaded_material_options.hpp>

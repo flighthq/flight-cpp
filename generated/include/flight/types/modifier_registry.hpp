@@ -5,19 +5,21 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct GlModifierSnippet; }
 namespace flight::types { struct ModifierDefinition; }
+namespace flight::types { struct WgpuModifierSnippet; }
 
 namespace flight::types {
 struct ModifierRegistry;
 } // namespace flight::types
 
-#include <flight/types/modifier_definition.hpp>
+#include <flight/types/modifier_definition_value.hpp>
 #include <flight/types/modifier_kind.hpp>
 
 namespace flight::types {
 
 struct ModifierRegistry : public flight::ReferenceEnabled {
-  flight::Map<flight::String, flight::Ref<flight::types::ModifierDefinition>> definitions;
+  flight::Map<flight::String, flight::types::ModifierDefinitionValue> definitions;
 };
 
 } // namespace flight::types

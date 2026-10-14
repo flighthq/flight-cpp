@@ -43844,6 +43844,7 @@
       "consumers": [
         "@flighthq/shading/packages/shading/src/getModifierDefineKey.ts",
         "@flighthq/shading/packages/shading/src/getUnregisteredModifierKinds.ts",
+        "@flighthq/types/packages/types/src/ModifierValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -44160,6 +44161,7 @@
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/transmissionVolumePbrGlExtension.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/wrappedDiffusePbrGlExtension.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/anisotropyPbrScene3DMaterialTextures.ts",
+        "@flighthq/types/packages/types/src/PbrExtension.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -45363,6 +45365,7 @@
     },
     {
       "consumers": [
+        "@flighthq/types/packages/types/src/Material3DValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -46307,6 +46310,7 @@
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/transmissionVolumePbrGlExtension.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/wrappedDiffusePbrGlExtension.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/clearcoatPbrScene3DMaterialTextures.ts",
+        "@flighthq/types/packages/types/src/PbrExtension.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -46727,6 +46731,7 @@
         "@flighthq/types/packages/types/src/ColorAdjustmentRuntime.ts",
         "@flighthq/types/packages/types/src/ColorScaleBiasAdjustment.ts",
         "@flighthq/types/packages/types/src/GlRenderState.ts",
+        "@flighthq/types/packages/types/src/GlScene3DRuntime.ts",
         "@flighthq/types/packages/types/src/HasColorScaleBias.ts",
         "@flighthq/types/packages/types/src/Node.ts",
         "@flighthq/types/packages/types/src/RenderProxy.ts",
@@ -47095,6 +47100,7 @@
     },
     {
       "consumers": [
+        "@flighthq/types/packages/types/src/Material3DValue.ts",
         "@flighthq/types/packages/types/src/WgpuScene3DRuntime.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -47144,6 +47150,7 @@
     },
     {
       "consumers": [
+        "@flighthq/types/packages/types/src/Material3DValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -47339,6 +47346,7 @@
       "consumers": [
         "@flighthq/shading/packages/shading/src/getModifierDefineKey.ts",
         "@flighthq/shading/packages/shading/src/getUnregisteredModifierKinds.ts",
+        "@flighthq/types/packages/types/src/ModifierValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -47865,6 +47873,7 @@
     },
     {
       "consumers": [
+        "@flighthq/types/packages/types/src/Material3DValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -47881,6 +47890,7 @@
         "@flighthq/shading/packages/shading/src/getModifierDefineKey.ts",
         "@flighthq/shading/packages/shading/src/getUnregisteredModifierKinds.ts",
         "@flighthq/types/packages/types/src/EmissiveModifierOptions.ts",
+        "@flighthq/types/packages/types/src/ModifierValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -48785,6 +48795,7 @@
       "consumers": [
         "@flighthq/shading/packages/shading/src/getModifierDefineKey.ts",
         "@flighthq/shading/packages/shading/src/getUnregisteredModifierKinds.ts",
+        "@flighthq/types/packages/types/src/ModifierValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -48871,6 +48882,7 @@
     },
     {
       "consumers": [
+        "@flighthq/types/packages/types/src/Material3DValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -49260,6 +49272,7 @@
         "@flighthq/shading/packages/shading/src/getModifierDefineKey.ts",
         "@flighthq/shading/packages/shading/src/getUnregisteredModifierKinds.ts",
         "@flighthq/types/packages/types/src/FogModifierOptions.ts",
+        "@flighthq/types/packages/types/src/ModifierValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -49968,6 +49981,7 @@
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/registerGlStandardPbrMaterial.ts",
         "@flighthq/types/packages/types/src/GlRenderState.ts",
         "@flighthq/types/packages/types/src/GlRenderStateOptions.ts",
+        "@flighthq/types/packages/types/src/GlScene3DRuntime.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -50012,6 +50026,7 @@
         "@flighthq/shading/packages/shading/src/modifierRegistry.ts",
         "@flighthq/types/packages/types/src/GlRenderState.ts",
         "@flighthq/types/packages/types/src/GlRenderStateOptions.ts",
+        "@flighthq/types/packages/types/src/ModifierDefinitionValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -52604,6 +52619,7 @@
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/transmissionVolumePbrGlExtension.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/wrappedDiffusePbrGlExtension.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/iridescencePbrScene3DMaterialTextures.ts",
+        "@flighthq/types/packages/types/src/PbrExtension.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -52699,6 +52715,7 @@
     },
     {
       "consumers": [
+        "@flighthq/types/packages/types/src/Material3DValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -53278,6 +53295,7 @@
     },
     {
       "consumers": [
+        "@flighthq/types/packages/types/src/Material3DValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -53297,7 +53315,6 @@
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sceneResourceSignals.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocumentLights.ts",
         "@flighthq/types/packages/types/src/CanvasQuadMaterialRenderer.ts",
-        "@flighthq/types/packages/types/src/GlMeshMaterialRenderer.ts",
         "@flighthq/types/packages/types/src/GlQuadMaterialRenderer.ts",
         "@flighthq/types/packages/types/src/GlRenderState.ts",
         "@flighthq/types/packages/types/src/HasMaterial.ts",
@@ -53348,21 +53365,18 @@
     },
     {
       "consumers": [
-        "@flighthq/types/packages/types/src/Billboard.ts",
         "@flighthq/types/packages/types/src/BlinnPhongMaterial.ts",
         "@flighthq/types/packages/types/src/CustomShaderMaterial.ts",
         "@flighthq/types/packages/types/src/DepthMaterial.ts",
         "@flighthq/types/packages/types/src/EmissiveMaterial.ts",
         "@flighthq/types/packages/types/src/ExtendedPbrMaterial.ts",
         "@flighthq/types/packages/types/src/GlassExtendedPbrMaterialOptions.ts",
-        "@flighthq/types/packages/types/src/InstancedMesh.ts",
         "@flighthq/types/packages/types/src/LambertMaterial.ts",
         "@flighthq/types/packages/types/src/MatcapMaterial.ts",
         "@flighthq/types/packages/types/src/Material3DOptions.ts",
-        "@flighthq/types/packages/types/src/Mesh.ts",
+        "@flighthq/types/packages/types/src/Material3DValue.ts",
         "@flighthq/types/packages/types/src/NormalMaterial.ts",
         "@flighthq/types/packages/types/src/PhongMaterial.ts",
-        "@flighthq/types/packages/types/src/Scene3DRenderProxy.ts",
         "@flighthq/types/packages/types/src/ShadedMaterial.ts",
         "@flighthq/types/packages/types/src/ShadedMaterialOptions.ts",
         "@flighthq/types/packages/types/src/SpecularGlossinessPbrMaterial.ts",
@@ -53395,6 +53409,25 @@
         "source": "packages/types/src/Material3DOptions.ts"
       },
       "path": "flight/types/material3_doptions.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/types/packages/types/src/Billboard.ts",
+        "@flighthq/types/packages/types/src/GlMeshMaterialRenderer.ts",
+        "@flighthq/types/packages/types/src/GlScene3DRuntime.ts",
+        "@flighthq/types/packages/types/src/InstancedMesh.ts",
+        "@flighthq/types/packages/types/src/Mesh.ts",
+        "@flighthq/types/packages/types/src/Scene3DRenderProxy.ts",
+        "@flighthq/types/packages/types/src/contract.ts",
+        "@flighthq/types/packages/types/src/index.ts"
+      ],
+      "module": {
+        "name": "Material3DValue",
+        "packageName": "@flighthq/types",
+        "source": "packages/types/src/Material3DValue.ts"
+      },
+      "path": "flight/types/material3_dvalue.hpp",
       "status": "emitted"
     },
     {
@@ -53985,14 +54018,10 @@
         "@flighthq/types/packages/types/src/EmissiveModifier.ts",
         "@flighthq/types/packages/types/src/EnvReflectModifier.ts",
         "@flighthq/types/packages/types/src/FogModifier.ts",
-        "@flighthq/types/packages/types/src/GlModifierSnippet.ts",
-        "@flighthq/types/packages/types/src/ModifierDefinition.ts",
+        "@flighthq/types/packages/types/src/ModifierValue.ts",
         "@flighthq/types/packages/types/src/RimModifier.ts",
-        "@flighthq/types/packages/types/src/ShadedMaterial.ts",
-        "@flighthq/types/packages/types/src/ShadedMaterialOptions.ts",
         "@flighthq/types/packages/types/src/ToonModifier.ts",
         "@flighthq/types/packages/types/src/VertexDisplaceModifier.ts",
-        "@flighthq/types/packages/types/src/WgpuModifierSnippet.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -54010,7 +54039,7 @@
         "@flighthq/shading/packages/shading/src/getUnregisteredModifierKinds.ts",
         "@flighthq/shading/packages/shading/src/modifierRegistry.ts",
         "@flighthq/types/packages/types/src/GlModifierSnippet.ts",
-        "@flighthq/types/packages/types/src/ModifierRegistry.ts",
+        "@flighthq/types/packages/types/src/ModifierDefinitionValue.ts",
         "@flighthq/types/packages/types/src/WgpuModifierSnippet.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -54021,6 +54050,20 @@
         "source": "packages/types/src/ModifierDefinition.ts"
       },
       "path": "flight/types/modifier_definition.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/types/packages/types/src/ModifierRegistry.ts",
+        "@flighthq/types/packages/types/src/contract.ts",
+        "@flighthq/types/packages/types/src/index.ts"
+      ],
+      "module": {
+        "name": "ModifierDefinitionValue",
+        "packageName": "@flighthq/types",
+        "source": "packages/types/src/ModifierDefinitionValue.ts"
+      },
+      "path": "flight/types/modifier_definition_value.hpp",
       "status": "emitted"
     },
     {
@@ -54092,6 +54135,24 @@
         "source": "packages/types/src/ModifierSlot.ts"
       },
       "path": "flight/types/modifier_slot.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/types/packages/types/src/GlModifierSnippet.ts",
+        "@flighthq/types/packages/types/src/ModifierDefinition.ts",
+        "@flighthq/types/packages/types/src/ShadedMaterial.ts",
+        "@flighthq/types/packages/types/src/ShadedMaterialOptions.ts",
+        "@flighthq/types/packages/types/src/WgpuModifierSnippet.ts",
+        "@flighthq/types/packages/types/src/contract.ts",
+        "@flighthq/types/packages/types/src/index.ts"
+      ],
+      "module": {
+        "name": "ModifierValue",
+        "packageName": "@flighthq/types",
+        "source": "packages/types/src/ModifierValue.ts"
+      },
+      "path": "flight/types/modifier_value.hpp",
       "status": "emitted"
     },
     {
@@ -54768,6 +54829,7 @@
     },
     {
       "consumers": [
+        "@flighthq/types/packages/types/src/Material3DValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -55755,6 +55817,7 @@
     },
     {
       "consumers": [
+        "@flighthq/types/packages/types/src/Material3DValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -57287,6 +57350,7 @@
       "consumers": [
         "@flighthq/shading/packages/shading/src/getModifierDefineKey.ts",
         "@flighthq/shading/packages/shading/src/getUnregisteredModifierKinds.ts",
+        "@flighthq/types/packages/types/src/ModifierValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -58270,6 +58334,7 @@
     },
     {
       "consumers": [
+        "@flighthq/types/packages/types/src/Material3DValue.ts",
         "@flighthq/types/packages/types/src/ShadedMaterialOptions.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -58584,6 +58649,7 @@
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/transmissionVolumePbrGlExtension.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/wrappedDiffusePbrGlExtension.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/sheenPbrScene3DMaterialTextures.ts",
+        "@flighthq/types/packages/types/src/PbrExtension.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -59475,6 +59541,7 @@
     },
     {
       "consumers": [
+        "@flighthq/types/packages/types/src/Material3DValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -59498,6 +59565,7 @@
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/transmissionVolumePbrGlExtension.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/wrappedDiffusePbrGlExtension.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/specularPbrScene3DMaterialTextures.ts",
+        "@flighthq/types/packages/types/src/PbrExtension.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -60006,6 +60074,7 @@
         "@flighthq/scene3d-wgpu/packages/scene3d-wgpu/src/registerWgpuStandardPbrMaterial.ts",
         "@flighthq/types/packages/types/src/ExtendedPbrMaterial.ts",
         "@flighthq/types/packages/types/src/GlassExtendedPbrMaterialOptions.ts",
+        "@flighthq/types/packages/types/src/Material3DValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -62134,6 +62203,7 @@
     },
     {
       "consumers": [
+        "@flighthq/types/packages/types/src/Material3DValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -62149,6 +62219,7 @@
       "consumers": [
         "@flighthq/shading/packages/shading/src/getModifierDefineKey.ts",
         "@flighthq/shading/packages/shading/src/getUnregisteredModifierKinds.ts",
+        "@flighthq/types/packages/types/src/ModifierValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -62254,6 +62325,7 @@
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/wrappedDiffusePbrGlExtension.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/transmissionVolumePbrScene3DMaterialTextures.ts",
         "@flighthq/types/packages/types/src/GlassExtendedPbrMaterialOptions.ts",
+        "@flighthq/types/packages/types/src/PbrExtension.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -62457,6 +62529,7 @@
     },
     {
       "consumers": [
+        "@flighthq/types/packages/types/src/Material3DValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -62672,6 +62745,7 @@
     },
     {
       "consumers": [
+        "@flighthq/types/packages/types/src/Material3DValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -62687,6 +62761,7 @@
       "consumers": [
         "@flighthq/shading/packages/shading/src/getModifierDefineKey.ts",
         "@flighthq/shading/packages/shading/src/getUnregisteredModifierKinds.ts",
+        "@flighthq/types/packages/types/src/ModifierValue.ts",
         "@flighthq/types/packages/types/src/VertexDisplaceModifierOptions.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
@@ -63315,6 +63390,7 @@
         "@flighthq/shading/packages/shading/src/getModifierDefineKey.ts",
         "@flighthq/shading/packages/shading/src/getUnregisteredModifierKinds.ts",
         "@flighthq/shading/packages/shading/src/modifierRegistry.ts",
+        "@flighthq/types/packages/types/src/ModifierDefinitionValue.ts",
         "@flighthq/types/packages/types/src/WgpuRenderState.ts",
         "@flighthq/types/packages/types/src/WgpuRenderStateOptions.ts",
         "@flighthq/types/packages/types/src/contract.ts",
@@ -63835,6 +63911,7 @@
     },
     {
       "consumers": [
+        "@flighthq/types/packages/types/src/Material3DValue.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
@@ -63897,6 +63974,7 @@
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/transmissionVolumePbrGlExtension.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/wrappedDiffusePbrGlExtension.ts",
         "@flighthq/scene3d-resources/packages/scene3d-resources/src/wrappedDiffusePbrScene3DMaterialTextures.ts",
+        "@flighthq/types/packages/types/src/PbrExtension.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],

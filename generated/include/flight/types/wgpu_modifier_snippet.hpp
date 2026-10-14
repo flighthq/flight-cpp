@@ -8,12 +8,20 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AnimatedNormalModifier; }
+namespace flight::types { struct DissolveModifier; }
+namespace flight::types { struct EmissiveModifier; }
+namespace flight::types { struct EnvReflectModifier; }
+namespace flight::types { struct FogModifier; }
 namespace flight::types { struct Modifier; }
 namespace flight::types { struct ModifierDefinition; }
+namespace flight::types { struct RimModifier; }
 namespace flight::types { struct Texture2D; }
 namespace flight::types { struct Texture2DArray; }
 namespace flight::types { struct Texture3D; }
 namespace flight::types { struct TextureCube; }
+namespace flight::types { struct ToonModifier; }
+namespace flight::types { struct VertexDisplaceModifier; }
 
 namespace flight::types {
 struct WgpuModifierCompileContext;
@@ -21,12 +29,12 @@ struct WgpuModifierContribution;
 struct WgpuModifierSnippet;
 } // namespace flight::types
 
-#include <flight/types/modifier.hpp>
+#include <flight/types/modifier_value.hpp>
 #include <flight/types/modifier_definition.hpp>
 #include <flight/types/texture.hpp>
 #include <flight/types/modifier_kind.hpp>
 #include <flight/types/modifier_slot.hpp>
-#include <flight/types/modifier.hpp>
+#include <flight/types/modifier_value.hpp>
 
 namespace flight::types {
 
@@ -43,10 +51,10 @@ struct WgpuModifierContribution : public flight::ReferenceEnabled {
 struct WgpuModifierSnippet : public flight::ReferenceEnabled {
   flight::String kind;
   flight::String slot;
-  std::optional<std::function<flight::String(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Modifier>>>>)>> get_define_signature;
-  std::optional<std::function<void(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Modifier>>>>, flight::Float32Array, double)>> bind;
-  std::function<flight::Ref<WgpuModifierContribution>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Modifier>>>>, double, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<WgpuModifierCompileContext>>>>)> contribution;
-  std::optional<std::function<double(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Modifier>>>>, flight::Array<std::optional<flight::types::Texture>>, double)>> textures;
+  std::optional<std::function<flight::String(flight::Ref<flight::types::ReadonlyModifierValue>)>> get_define_signature;
+  std::optional<std::function<void(flight::types::ReadonlyModifierValue, flight::Float32Array, double)>> bind;
+  std::function<flight::Ref<WgpuModifierContribution>(flight::types::ReadonlyModifierValue, double, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<WgpuModifierCompileContext>>>>)> contribution;
+  std::optional<std::function<double(flight::types::ReadonlyModifierValue, flight::Array<std::optional<flight::types::Texture>>, double)>> textures;
 };
 
 } // namespace flight::types

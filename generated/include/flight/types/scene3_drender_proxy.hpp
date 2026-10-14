@@ -8,18 +8,34 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct BlinnPhongMaterial; }
 namespace flight::types { struct ColorScaleBias; }
+namespace flight::types { struct CustomShaderMaterial; }
+namespace flight::types { struct DepthMaterial; }
+namespace flight::types { struct EmissiveMaterial; }
+namespace flight::types { struct ExtendedPbrMaterial; }
+namespace flight::types { struct LambertMaterial; }
+namespace flight::types { struct MatcapMaterial; }
 namespace flight::types { struct Material3D; }
 namespace flight::types { struct Matrix3; }
 namespace flight::types { struct Matrix4; }
 namespace flight::types { struct MeshSubset; }
+namespace flight::types { struct NormalMaterial; }
+namespace flight::types { struct PhongMaterial; }
+namespace flight::types { struct ShadedMaterial; }
+namespace flight::types { struct SpecularGlossinessPbrMaterial; }
+namespace flight::types { struct StandardPbrMaterial; }
+namespace flight::types { struct ToonMaterial; }
+namespace flight::types { struct UnlitMaterial; }
+namespace flight::types { struct VertexColorMaterial; }
+namespace flight::types { struct WireframeMaterial; }
 
 namespace flight::types {
 struct Scene3DRenderProxy;
 } // namespace flight::types
 
 #include <flight/types/color_scale_bias.hpp>
-#include <flight/types/material3_d.hpp>
+#include <flight/types/material3_dvalue.hpp>
 #include <flight/types/matrix3.hpp>
 #include <flight/types/matrix4.hpp>
 #include <flight/types/mesh_geometry.hpp>
@@ -35,7 +51,7 @@ struct Scene3DRenderProxy : public flight::ReferenceEnabled {
   std::variant<flight::Float32Array, flight::Null, flight::Undefined> instance_colors = std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::variant<flight::Float32Array, flight::Null, flight::Undefined> joint_matrices = std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::variant<flight::Float32Array, flight::Null, flight::Undefined> normal_matrices = std::variant<flight::Float32Array, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>> material;
+  flight::types::Material3DValue material;
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix3>>>> normal_matrix;
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshSubset>>>> subset;
   flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Matrix4>>>> world_matrix;

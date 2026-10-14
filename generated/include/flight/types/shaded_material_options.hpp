@@ -7,20 +7,28 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AnimatedNormalModifier; }
+namespace flight::types { struct DissolveModifier; }
+namespace flight::types { struct EmissiveModifier; }
+namespace flight::types { struct EnvReflectModifier; }
+namespace flight::types { struct FogModifier; }
 namespace flight::types { struct Material3DOptions; }
 namespace flight::types { struct Modifier; }
+namespace flight::types { struct RimModifier; }
 namespace flight::types { struct ShadedMaterial; }
 namespace flight::types { struct Texture2D; }
 namespace flight::types { struct Texture2DArray; }
 namespace flight::types { struct Texture3D; }
 namespace flight::types { struct TextureCube; }
+namespace flight::types { struct ToonModifier; }
+namespace flight::types { struct VertexDisplaceModifier; }
 
 namespace flight::types {
 struct ShadedMaterialOptions;
 } // namespace flight::types
 
 #include <flight/types/material3_doptions.hpp>
-#include <flight/types/modifier.hpp>
+#include <flight/types/modifier_value.hpp>
 #include <flight/types/shaded_material.hpp>
 #include <flight/types/texture.hpp>
 #include <flight/types/material3_d.hpp>
@@ -35,7 +43,7 @@ struct ShadedMaterialOptions : public flight::ReferenceEnabled {
   std::optional<bool> double_sided;
   std::optional<double> diffuse;
   std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, flight::Null, flight::Undefined> diffuse_map = std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
-  std::optional<flight::Array<flight::Ref<flight::types::Modifier>>> modifiers;
+  std::optional<flight::Array<flight::types::ModifierValue>> modifiers;
   std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, flight::Null, flight::Undefined> normal_map = std::variant<flight::Ref<flight::types::Texture2DArray>, flight::Ref<flight::types::TextureCube>, flight::Ref<flight::types::Texture2D>, flight::Ref<flight::types::Texture3D>, flight::Null, flight::Undefined>{std::in_place_type<flight::Undefined>, flight::undefined};
   std::optional<double> normal_scale;
   std::optional<double> shininess;

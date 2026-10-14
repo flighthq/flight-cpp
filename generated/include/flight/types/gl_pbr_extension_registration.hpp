@@ -7,10 +7,17 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct AnisotropyPbrExtension; }
+namespace flight::types { struct ClearcoatPbrExtension; }
 namespace flight::types { struct GlPbrExtensionBindContext; }
 namespace flight::types { struct GlPbrExtensionShaderContext; }
 namespace flight::types { struct GlPbrExtensionShaderContribution; }
+namespace flight::types { struct IridescencePbrExtension; }
 namespace flight::types { struct PbrExtension; }
+namespace flight::types { struct SheenPbrExtension; }
+namespace flight::types { struct SpecularPbrExtension; }
+namespace flight::types { struct TransmissionVolumePbrExtension; }
+namespace flight::types { struct WrappedDiffusePbrExtension; }
 
 namespace flight::types {
 struct GlPbrExtensionRegistration;
@@ -24,9 +31,9 @@ struct GlPbrExtensionRegistration;
 namespace flight::types {
 
 struct GlPbrExtensionRegistration : public flight::ReferenceEnabled {
-  std::function<void(flight::Ref<flight::types::GlPbrExtensionBindContext>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PbrExtension>>>>)> bind;
-  std::function<flight::Ref<flight::types::GlPbrExtensionShaderContribution>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PbrExtension>>>>)> create_shader_contribution;
-  std::function<bool(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::PbrExtension>>>>)> is_supported;
+  std::function<void(flight::Ref<flight::types::GlPbrExtensionBindContext>, flight::types::PbrExtensionValue)> bind;
+  std::function<flight::Ref<flight::types::GlPbrExtensionShaderContribution>(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlPbrExtensionShaderContext>>>>, flight::types::PbrExtensionValue)> create_shader_contribution;
+  std::function<bool(flight::types::PbrExtensionValue)> is_supported;
 };
 
 } // namespace flight::types

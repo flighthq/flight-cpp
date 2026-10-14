@@ -6776,6 +6776,11 @@
       "source": "packages/types/src/Material3DOptions.ts"
     },
     {
+      "name": "Material3DValue",
+      "packageName": "@flighthq/types",
+      "source": "packages/types/src/Material3DValue.ts"
+    },
+    {
       "name": "MaterialConversionExplanation",
       "packageName": "@flighthq/types",
       "source": "packages/types/src/MaterialConversionExplanation.ts"
@@ -6921,6 +6926,11 @@
       "source": "packages/types/src/ModifierDefinition.ts"
     },
     {
+      "name": "ModifierDefinitionValue",
+      "packageName": "@flighthq/types",
+      "source": "packages/types/src/ModifierDefinitionValue.ts"
+    },
+    {
       "name": "ModifierKind",
       "packageName": "@flighthq/types",
       "source": "packages/types/src/ModifierKind.ts"
@@ -6934,6 +6944,11 @@
       "name": "ModifierSlot",
       "packageName": "@flighthq/types",
       "source": "packages/types/src/ModifierSlot.ts"
+    },
+    {
+      "name": "ModifierValue",
+      "packageName": "@flighthq/types",
+      "source": "packages/types/src/ModifierValue.ts"
     },
     {
       "name": "MorphShape",
@@ -14411,6 +14426,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "Material3DValue",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/Material3DValue.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "MaterialConversionExplanation",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/MaterialConversionExplanation.ts"
@@ -14701,6 +14726,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "ModifierDefinitionValue",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/ModifierDefinitionValue.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "ModifierKind",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/ModifierKind.ts"
@@ -14724,6 +14759,16 @@
           "name": "ModifierSlot",
           "packageName": "@flighthq/types",
           "source": "packages/types/src/ModifierSlot.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "ModifierValue",
+          "packageName": "@flighthq/types",
+          "source": "packages/types/src/ModifierValue.ts"
         }
       ]
     },
@@ -50015,7 +50060,7 @@
             "line": 11,
             "packageName": "@flighthq/types",
             "source": "packages/types/src/Billboard.ts",
-            "id": "binding:[\"@flighthq/types\",\"packages/types/src/Billboard.ts\",418]",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/Billboard.ts\",433]",
             "kind": "variable",
             "name": "BillboardKind",
             "scope": "module",
@@ -50037,11 +50082,11 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/Billboard.ts"
           },
-          "specifier": "./Material3D.ts",
+          "specifier": "./Material3DValue.ts",
           "target": {
-            "name": "Material3D",
+            "name": "Material3DValue",
             "packageName": "@flighthq/types",
-            "source": "packages/types/src/Material3D.ts"
+            "source": "packages/types/src/Material3DValue.ts"
           }
         },
         {
@@ -50088,7 +50133,7 @@
               "line": 11,
               "packageName": "@flighthq/types",
               "source": "packages/types/src/Billboard.ts",
-              "id": "binding:[\"@flighthq/types\",\"packages/types/src/Billboard.ts\",418]",
+              "id": "binding:[\"@flighthq/types\",\"packages/types/src/Billboard.ts\",433]",
               "kind": "variable",
               "name": "BillboardKind",
               "scope": "module",
@@ -107313,6 +107358,20 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/contract.ts"
           },
+          "specifier": "./Material3DValue.ts",
+          "target": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          },
           "specifier": "./MaterialConversionExplanation.ts",
           "target": {
             "name": "MaterialConversionExplanation",
@@ -107719,6 +107778,20 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/contract.ts"
           },
+          "specifier": "./ModifierDefinitionValue.ts",
+          "target": {
+            "name": "ModifierDefinitionValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierDefinitionValue.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          },
           "specifier": "./ModifierKind.ts",
           "target": {
             "name": "ModifierKind",
@@ -107752,6 +107825,20 @@
             "name": "ModifierSlot",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/ModifierSlot.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          },
+          "specifier": "./ModifierValue.ts",
+          "target": {
+            "name": "ModifierValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierValue.ts"
           }
         },
         {
@@ -137532,7 +137619,7 @@
             "line": 14,
             "packageName": "@flighthq/types",
             "source": "packages/types/src/ExtendedPbrMaterial.ts",
-            "id": "binding:[\"@flighthq/types\",\"packages/types/src/ExtendedPbrMaterial.ts\",673]",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/ExtendedPbrMaterial.ts\",683]",
             "kind": "variable",
             "name": "ExtendedPbrMaterialKind",
             "scope": "module",
@@ -137619,7 +137706,7 @@
               "line": 14,
               "packageName": "@flighthq/types",
               "source": "packages/types/src/ExtendedPbrMaterial.ts",
-              "id": "binding:[\"@flighthq/types\",\"packages/types/src/ExtendedPbrMaterial.ts\",673]",
+              "id": "binding:[\"@flighthq/types\",\"packages/types/src/ExtendedPbrMaterial.ts\",683]",
               "kind": "variable",
               "name": "ExtendedPbrMaterialKind",
               "scope": "module",
@@ -147208,11 +147295,11 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/GlMeshMaterialRenderer.ts"
           },
-          "specifier": "./Material.ts",
+          "specifier": "./Material3DValue.ts",
           "target": {
-            "name": "Material",
+            "name": "Material3DValue",
             "packageName": "@flighthq/types",
-            "source": "packages/types/src/Material.ts"
+            "source": "packages/types/src/Material3DValue.ts"
           }
         },
         {
@@ -147299,20 +147386,6 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/GlModifierSnippet.ts"
           },
-          "specifier": "./Modifier.ts",
-          "target": {
-            "name": "Modifier",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Modifier.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "GlModifierSnippet",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/GlModifierSnippet.ts"
-          },
           "specifier": "./ModifierDefinition.ts",
           "target": {
             "name": "ModifierDefinition",
@@ -147346,6 +147419,20 @@
             "name": "ModifierSlot",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/ModifierSlot.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "GlModifierSnippet",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlModifierSnippet.ts"
+          },
+          "specifier": "./ModifierValue.ts",
+          "target": {
+            "name": "ModifierValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierValue.ts"
           }
         }
       ],
@@ -149195,6 +149282,34 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/GlScene3DRuntime.ts"
           },
+          "specifier": "./ColorScaleBias.ts",
+          "target": {
+            "name": "ColorScaleBias",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ColorScaleBias.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "GlScene3DRuntime",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlScene3DRuntime.ts"
+          },
+          "specifier": "./GlMeshMaterialRenderer.ts",
+          "target": {
+            "name": "GlMeshMaterialRenderer",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlMeshMaterialRenderer.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "GlScene3DRuntime",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlScene3DRuntime.ts"
+          },
           "specifier": "./GlMeshProgram.ts",
           "target": {
             "name": "GlMeshProgram",
@@ -149256,6 +149371,20 @@
             "name": "GlSkinPaletteTexture",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/GlSkinPaletteTexture.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "GlScene3DRuntime",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlScene3DRuntime.ts"
+          },
+          "specifier": "./Material3DValue.ts",
+          "target": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
           }
         },
         {
@@ -176073,6 +176202,20 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/index.ts"
           },
+          "specifier": "./Material3DValue.ts",
+          "target": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/index.ts"
+          },
           "specifier": "./MaterialConversionExplanation.ts",
           "target": {
             "name": "MaterialConversionExplanation",
@@ -176479,6 +176622,20 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/index.ts"
           },
+          "specifier": "./ModifierDefinitionValue.ts",
+          "target": {
+            "name": "ModifierDefinitionValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierDefinitionValue.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/index.ts"
+          },
           "specifier": "./ModifierKind.ts",
           "target": {
             "name": "ModifierKind",
@@ -176512,6 +176669,20 @@
             "name": "ModifierSlot",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/ModifierSlot.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/index.ts"
+          },
+          "specifier": "./ModifierValue.ts",
+          "target": {
+            "name": "ModifierValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierValue.ts"
           }
         },
         {
@@ -186575,7 +186746,7 @@
             "line": 44,
             "packageName": "@flighthq/types",
             "source": "packages/types/src/InstancedMesh.ts",
-            "id": "binding:[\"@flighthq/types\",\"packages/types/src/InstancedMesh.ts\",2432]",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/InstancedMesh.ts\",2447]",
             "kind": "variable",
             "name": "InstancedMeshKind",
             "scope": "module",
@@ -186639,11 +186810,11 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/InstancedMesh.ts"
           },
-          "specifier": "./Material3D.ts",
+          "specifier": "./Material3DValue.ts",
           "target": {
-            "name": "Material3D",
+            "name": "Material3DValue",
             "packageName": "@flighthq/types",
-            "source": "packages/types/src/Material3D.ts"
+            "source": "packages/types/src/Material3DValue.ts"
           }
         },
         {
@@ -186718,7 +186889,7 @@
               "line": 44,
               "packageName": "@flighthq/types",
               "source": "packages/types/src/InstancedMesh.ts",
-              "id": "binding:[\"@flighthq/types\",\"packages/types/src/InstancedMesh.ts\",2432]",
+              "id": "binding:[\"@flighthq/types\",\"packages/types/src/InstancedMesh.ts\",2447]",
               "kind": "variable",
               "name": "InstancedMeshKind",
               "scope": "module",
@@ -207826,6 +207997,255 @@
       "steps": []
     },
     {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          },
+          "specifier": "./BlinnPhongMaterial.ts",
+          "target": {
+            "name": "BlinnPhongMaterial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/BlinnPhongMaterial.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          },
+          "specifier": "./CustomShaderMaterial.ts",
+          "target": {
+            "name": "CustomShaderMaterial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/CustomShaderMaterial.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          },
+          "specifier": "./DepthMaterial.ts",
+          "target": {
+            "name": "DepthMaterial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/DepthMaterial.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          },
+          "specifier": "./EmissiveMaterial.ts",
+          "target": {
+            "name": "EmissiveMaterial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/EmissiveMaterial.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          },
+          "specifier": "./ExtendedPbrMaterial.ts",
+          "target": {
+            "name": "ExtendedPbrMaterial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ExtendedPbrMaterial.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          },
+          "specifier": "./LambertMaterial.ts",
+          "target": {
+            "name": "LambertMaterial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/LambertMaterial.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          },
+          "specifier": "./MatcapMaterial.ts",
+          "target": {
+            "name": "MatcapMaterial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/MatcapMaterial.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          },
+          "specifier": "./Material3D.ts",
+          "target": {
+            "name": "Material3D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          },
+          "specifier": "./NormalMaterial.ts",
+          "target": {
+            "name": "NormalMaterial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/NormalMaterial.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          },
+          "specifier": "./PhongMaterial.ts",
+          "target": {
+            "name": "PhongMaterial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/PhongMaterial.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          },
+          "specifier": "./ShadedMaterial.ts",
+          "target": {
+            "name": "ShadedMaterial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ShadedMaterial.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          },
+          "specifier": "./SpecularGlossinessPbrMaterial.ts",
+          "target": {
+            "name": "SpecularGlossinessPbrMaterial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/SpecularGlossinessPbrMaterial.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          },
+          "specifier": "./StandardPbrMaterial.ts",
+          "target": {
+            "name": "StandardPbrMaterial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/StandardPbrMaterial.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          },
+          "specifier": "./ToonMaterial.ts",
+          "target": {
+            "name": "ToonMaterial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ToonMaterial.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          },
+          "specifier": "./UnlitMaterial.ts",
+          "target": {
+            "name": "UnlitMaterial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/UnlitMaterial.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          },
+          "specifier": "./VertexColorMaterial.ts",
+          "target": {
+            "name": "VertexColorMaterial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/VertexColorMaterial.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Material3DValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Material3DValue.ts"
+          },
+          "specifier": "./WireframeMaterial.ts",
+          "target": {
+            "name": "WireframeMaterial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/WireframeMaterial.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Material3DValue",
+        "packageName": "@flighthq/types",
+        "source": "packages/types/src/Material3DValue.ts"
+      },
+      "steps": []
+    },
+    {
       "bindings": [
         {
           "access": "dependency-live",
@@ -216616,7 +217036,7 @@
             "line": 56,
             "packageName": "@flighthq/types",
             "source": "packages/types/src/Mesh.ts",
-            "id": "binding:[\"@flighthq/types\",\"packages/types/src/Mesh.ts\",3397]",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/Mesh.ts\",3412]",
             "kind": "variable",
             "name": "MeshKind",
             "scope": "module",
@@ -216666,11 +217086,11 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/Mesh.ts"
           },
-          "specifier": "./Material3D.ts",
+          "specifier": "./Material3DValue.ts",
           "target": {
-            "name": "Material3D",
+            "name": "Material3DValue",
             "packageName": "@flighthq/types",
-            "source": "packages/types/src/Material3D.ts"
+            "source": "packages/types/src/Material3DValue.ts"
           }
         },
         {
@@ -216759,7 +217179,7 @@
               "line": 56,
               "packageName": "@flighthq/types",
               "source": "packages/types/src/Mesh.ts",
-              "id": "binding:[\"@flighthq/types\",\"packages/types/src/Mesh.ts\",3397]",
+              "id": "binding:[\"@flighthq/types\",\"packages/types/src/Mesh.ts\",3412]",
               "kind": "variable",
               "name": "MeshKind",
               "scope": "module",
@@ -224023,20 +224443,6 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/ModifierDefinition.ts"
           },
-          "specifier": "./Modifier.ts",
-          "target": {
-            "name": "Modifier",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Modifier.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "ModifierDefinition",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/ModifierDefinition.ts"
-          },
           "specifier": "./ModifierKind.ts",
           "target": {
             "name": "ModifierKind",
@@ -224057,12 +224463,79 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/ModifierSlot.ts"
           }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ModifierDefinition",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierDefinition.ts"
+          },
+          "specifier": "./ModifierValue.ts",
+          "target": {
+            "name": "ModifierValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierValue.ts"
+          }
         }
       ],
       "module": {
         "name": "ModifierDefinition",
         "packageName": "@flighthq/types",
         "source": "packages/types/src/ModifierDefinition.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ModifierDefinitionValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierDefinitionValue.ts"
+          },
+          "specifier": "./GlModifierSnippet.ts",
+          "target": {
+            "name": "GlModifierSnippet",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/GlModifierSnippet.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ModifierDefinitionValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierDefinitionValue.ts"
+          },
+          "specifier": "./ModifierDefinition.ts",
+          "target": {
+            "name": "ModifierDefinition",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierDefinition.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ModifierDefinitionValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierDefinitionValue.ts"
+          },
+          "specifier": "./WgpuModifierSnippet.ts",
+          "target": {
+            "name": "WgpuModifierSnippet",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/WgpuModifierSnippet.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "ModifierDefinitionValue",
+        "packageName": "@flighthq/types",
+        "source": "packages/types/src/ModifierDefinitionValue.ts"
       },
       "steps": []
     },
@@ -224175,11 +224648,11 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/ModifierRegistry.ts"
           },
-          "specifier": "./ModifierDefinition.ts",
+          "specifier": "./ModifierDefinitionValue.ts",
           "target": {
-            "name": "ModifierDefinition",
+            "name": "ModifierDefinitionValue",
             "packageName": "@flighthq/types",
-            "source": "packages/types/src/ModifierDefinition.ts"
+            "source": "packages/types/src/ModifierDefinitionValue.ts"
           }
         },
         {
@@ -224259,6 +224732,143 @@
           ]
         }
       ]
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ModifierValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierValue.ts"
+          },
+          "specifier": "./AnimatedNormalModifier.ts",
+          "target": {
+            "name": "AnimatedNormalModifier",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/AnimatedNormalModifier.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ModifierValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierValue.ts"
+          },
+          "specifier": "./DissolveModifier.ts",
+          "target": {
+            "name": "DissolveModifier",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/DissolveModifier.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ModifierValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierValue.ts"
+          },
+          "specifier": "./EmissiveModifier.ts",
+          "target": {
+            "name": "EmissiveModifier",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/EmissiveModifier.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ModifierValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierValue.ts"
+          },
+          "specifier": "./EnvReflectModifier.ts",
+          "target": {
+            "name": "EnvReflectModifier",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/EnvReflectModifier.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ModifierValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierValue.ts"
+          },
+          "specifier": "./FogModifier.ts",
+          "target": {
+            "name": "FogModifier",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/FogModifier.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ModifierValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierValue.ts"
+          },
+          "specifier": "./Modifier.ts",
+          "target": {
+            "name": "Modifier",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Modifier.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ModifierValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierValue.ts"
+          },
+          "specifier": "./RimModifier.ts",
+          "target": {
+            "name": "RimModifier",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RimModifier.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ModifierValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierValue.ts"
+          },
+          "specifier": "./ToonModifier.ts",
+          "target": {
+            "name": "ToonModifier",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ToonModifier.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ModifierValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierValue.ts"
+          },
+          "specifier": "./VertexDisplaceModifier.ts",
+          "target": {
+            "name": "VertexDisplaceModifier",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/VertexDisplaceModifier.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "ModifierValue",
+        "packageName": "@flighthq/types",
+        "source": "packages/types/src/ModifierValue.ts"
+      },
+      "steps": []
     },
     {
       "bindings": [
@@ -246239,11 +246849,109 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/PbrExtension.ts"
           },
+          "specifier": "./AnisotropyPbrExtension.ts",
+          "target": {
+            "name": "AnisotropyPbrExtension",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/AnisotropyPbrExtension.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "PbrExtension",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/PbrExtension.ts"
+          },
+          "specifier": "./ClearcoatPbrExtension.ts",
+          "target": {
+            "name": "ClearcoatPbrExtension",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ClearcoatPbrExtension.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "PbrExtension",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/PbrExtension.ts"
+          },
           "specifier": "./Entity.ts",
           "target": {
             "name": "Entity",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/Entity.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "PbrExtension",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/PbrExtension.ts"
+          },
+          "specifier": "./IridescencePbrExtension.ts",
+          "target": {
+            "name": "IridescencePbrExtension",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/IridescencePbrExtension.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "PbrExtension",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/PbrExtension.ts"
+          },
+          "specifier": "./SheenPbrExtension.ts",
+          "target": {
+            "name": "SheenPbrExtension",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/SheenPbrExtension.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "PbrExtension",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/PbrExtension.ts"
+          },
+          "specifier": "./SpecularPbrExtension.ts",
+          "target": {
+            "name": "SpecularPbrExtension",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/SpecularPbrExtension.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "PbrExtension",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/PbrExtension.ts"
+          },
+          "specifier": "./TransmissionVolumePbrExtension.ts",
+          "target": {
+            "name": "TransmissionVolumePbrExtension",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TransmissionVolumePbrExtension.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "PbrExtension",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/PbrExtension.ts"
+          },
+          "specifier": "./WrappedDiffusePbrExtension.ts",
+          "target": {
+            "name": "WrappedDiffusePbrExtension",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/WrappedDiffusePbrExtension.ts"
           }
         }
       ],
@@ -281724,11 +282432,11 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/Scene3DRenderProxy.ts"
           },
-          "specifier": "./Material3D.ts",
+          "specifier": "./Material3DValue.ts",
           "target": {
-            "name": "Material3D",
+            "name": "Material3DValue",
             "packageName": "@flighthq/types",
-            "source": "packages/types/src/Material3D.ts"
+            "source": "packages/types/src/Material3DValue.ts"
           }
         },
         {
@@ -292481,7 +293189,7 @@
             "line": 35,
             "packageName": "@flighthq/types",
             "source": "packages/types/src/ShadedMaterial.ts",
-            "id": "binding:[\"@flighthq/types\",\"packages/types/src/ShadedMaterial.ts\",1860]",
+            "id": "binding:[\"@flighthq/types\",\"packages/types/src/ShadedMaterial.ts\",1875]",
             "kind": "variable",
             "name": "ShadedMaterialKind",
             "scope": "module",
@@ -292531,11 +293239,11 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/ShadedMaterial.ts"
           },
-          "specifier": "./Modifier.ts",
+          "specifier": "./ModifierValue.ts",
           "target": {
-            "name": "Modifier",
+            "name": "ModifierValue",
             "packageName": "@flighthq/types",
-            "source": "packages/types/src/Modifier.ts"
+            "source": "packages/types/src/ModifierValue.ts"
           }
         },
         {
@@ -292568,7 +293276,7 @@
               "line": 35,
               "packageName": "@flighthq/types",
               "source": "packages/types/src/ShadedMaterial.ts",
-              "id": "binding:[\"@flighthq/types\",\"packages/types/src/ShadedMaterial.ts\",1860]",
+              "id": "binding:[\"@flighthq/types\",\"packages/types/src/ShadedMaterial.ts\",1875]",
               "kind": "variable",
               "name": "ShadedMaterialKind",
               "scope": "module",
@@ -292636,11 +293344,11 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/ShadedMaterialOptions.ts"
           },
-          "specifier": "./Modifier.ts",
+          "specifier": "./ModifierValue.ts",
           "target": {
-            "name": "Modifier",
+            "name": "ModifierValue",
             "packageName": "@flighthq/types",
-            "source": "packages/types/src/Modifier.ts"
+            "source": "packages/types/src/ModifierValue.ts"
           }
         },
         {
@@ -375930,20 +376638,6 @@
             "packageName": "@flighthq/types",
             "source": "packages/types/src/WgpuModifierSnippet.ts"
           },
-          "specifier": "./Modifier.ts",
-          "target": {
-            "name": "Modifier",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Modifier.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "WgpuModifierSnippet",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/WgpuModifierSnippet.ts"
-          },
           "specifier": "./ModifierDefinition.ts",
           "target": {
             "name": "ModifierDefinition",
@@ -375977,6 +376671,20 @@
             "name": "ModifierSlot",
             "packageName": "@flighthq/types",
             "source": "packages/types/src/ModifierSlot.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "WgpuModifierSnippet",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/WgpuModifierSnippet.ts"
+          },
+          "specifier": "./ModifierValue.ts",
+          "target": {
+            "name": "ModifierValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ModifierValue.ts"
           }
         },
         {

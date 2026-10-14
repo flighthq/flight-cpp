@@ -6,13 +6,29 @@
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
 static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mismatch");
 
+namespace flight::types { struct BlinnPhongMaterial; }
+namespace flight::types { struct CustomShaderMaterial; }
+namespace flight::types { struct DepthMaterial; }
+namespace flight::types { struct EmissiveMaterial; }
+namespace flight::types { struct ExtendedPbrMaterial; }
+namespace flight::types { struct LambertMaterial; }
+namespace flight::types { struct MatcapMaterial; }
 namespace flight::types { struct Material3D; }
 namespace flight::types { struct MeshGeometry; }
 namespace flight::types { struct Node3D; }
 namespace flight::types { struct Node3DRuntime; }
 namespace flight::types { struct NodeData; }
+namespace flight::types { struct NormalMaterial; }
+namespace flight::types { struct PhongMaterial; }
 namespace flight::types { struct Quaternion; }
+namespace flight::types { struct ShadedMaterial; }
+namespace flight::types { struct SpecularGlossinessPbrMaterial; }
+namespace flight::types { struct StandardPbrMaterial; }
+namespace flight::types { struct ToonMaterial; }
+namespace flight::types { struct UnlitMaterial; }
 namespace flight::types { struct Vector3; }
+namespace flight::types { struct VertexColorMaterial; }
+namespace flight::types { struct WireframeMaterial; }
 
 namespace flight::types {
 struct Billboard;
@@ -20,7 +36,7 @@ using BillboardMode = flight::String;
 using BillboardRuntime = flight::Ref<flight::types::Node3DRuntime>;
 } // namespace flight::types
 
-#include <flight/types/material3_d.hpp>
+#include <flight/types/material3_dvalue.hpp>
 #include <flight/types/mesh_geometry.hpp>
 #include <flight/types/node3_d.hpp>
 #include <flight/types/node.hpp>
@@ -43,7 +59,7 @@ struct Billboard : public flight::ReferenceEnabled {
   flight::Ref<flight::types::Quaternion> rotation;
   flight::Ref<flight::types::Vector3> scale;
   flight::Ref<flight::types::MeshGeometry> geometry;
-  flight::Array<std::optional<flight::Ref<flight::types::Material3D>>> materials;
+  flight::Array<std::optional<flight::types::Material3DValue>> materials;
   BillboardMode mode;
 };
 

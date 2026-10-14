@@ -8229,14 +8229,14 @@
       "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/types",
       "cppNamespace": "flight::types",
-      "emittedModules": 1029,
+      "emittedModules": 1032,
       "package": "@flighthq/types",
       "refusedModules": 0,
       "source": {
         "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
-      "sourceModules": 1029
+      "sourceModules": 1032
     },
     {
       "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
@@ -8327,8 +8327,8 @@
   },
   "summary": {
     "packages": 156,
-    "emittedModules": 2475,
+    "emittedModules": 2478,
     "refusedModules": 605,
-    "sourceModules": 3080
+    "sourceModules": 3083
   }
 }
