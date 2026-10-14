@@ -32,6 +32,7 @@
 // succeeded one is not destroyed twice. Nothing about either function is left unasserted here.
 #include <flight/power/power.hpp>
 
+#include <chrono>
 #include <iostream>
 #include <optional>
 #include <string>
@@ -694,6 +695,154 @@ int main() {
     }
     check(kept == String("the lock failed first"),
           "detach rethrows the FIRST teardown failure when a later one also throws, not the last");
+  }
+
+  // --- Additive parity re-audit: exact mutation survivors -------------------------------------------
+  //
+  // The authoritative 701-line suite above was frozen before a second exact-diff battery. Seventeen of
+  // 34 valid mutations survived; every check below answers one or more of those survivors, and nothing
+  // here changes or narrows an existing assertion.
+  {
+    // Omitting or replacing onIdleStateChange/onResume survived because the old allocation check named
+    // only three signals and kept only onChange's identity. Pin the complete nine-signal contract.
+    const auto entity = power::create_power();
+    power::enable_power_signals(entity);
+    check(entity->on_change.has_value() && entity->on_charging.has_value() &&
+              entity->on_discharging.has_value() && entity->on_idle_state_change.has_value() &&
+              entity->on_lock_screen.has_value() && entity->on_resume.has_value() &&
+              entity->on_suspend.has_value() && entity->on_thermal_state_change.has_value() &&
+              entity->on_unlock_screen.has_value(),
+          "enablePowerSignals allocates all nine signals, including idle and resume");
+    const auto on_change = entity->on_change.value();
+    const auto on_charging = entity->on_charging.value();
+    const auto on_discharging = entity->on_discharging.value();
+    const auto on_idle_state_change = entity->on_idle_state_change.value();
+    const auto on_lock_screen = entity->on_lock_screen.value();
+    const auto on_resume = entity->on_resume.value();
+    const auto on_suspend = entity->on_suspend.value();
+    const auto on_thermal_state_change = entity->on_thermal_state_change.value();
+    const auto on_unlock_screen = entity->on_unlock_screen.value();
+    power::enable_power_signals(entity);
+    check(entity->on_change.value() == on_change && entity->on_charging.value() == on_charging &&
+              entity->on_discharging.value() == on_discharging &&
+              entity->on_idle_state_change.value() == on_idle_state_change &&
+              entity->on_lock_screen.value() == on_lock_screen && entity->on_resume.value() == on_resume &&
+              entity->on_suspend.value() == on_suspend &&
+              entity->on_thermal_state_change.value() == on_thermal_state_change &&
+              entity->on_unlock_screen.value() == on_unlock_screen,
+          "enablePowerSignals is idempotent for every signal, not just onChange");
+  }
+
+  {
+    // Both threshold lanes and the timer callback survived independently. Drive the query once, then
+    // attach with a non-default threshold and pump the native timer until its changed-state event runs.
+    const auto idle = flight::make_ref<HostPowerIdleCapability>();
+    std::vector<double> thresholds;
+    String state("Active");
+    idle->get_idle_state = [&thresholds, &state](double threshold) {
+      thresholds.push_back(threshold);
+      return state;
+    };
+    idle->get_idle_time_seconds = []() { return 0.0; };
+    check(power::get_power_system_idle_state(idle, 91.0) == String("Active") &&
+              thresholds.size() == 1 && thresholds.front() == 91.0,
+          "getPowerSystemIdleState forwards its caller's exact threshold");
+
+    thresholds.clear();
+    const auto entity = power::create_power();
+    power::enable_power_signals(entity);
+    int idle_events = 0;
+    connect(entity->on_idle_state_change.value(), [&idle_events]() { ++idle_events; });
+    power::set_power_idle_polling_interval_ms(1.0);
+    power::attach_power(std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, view(idle),
+                        entity, 37.0);
+    check(thresholds.size() == 1 && thresholds.front() == 37.0,
+          "attachPower forwards its custom idle threshold to the baseline read");
+    state = String("Idle");
+    const auto deadline = std::chrono::steady_clock::now() + std::chrono::milliseconds(100);
+    while (idle_events == 0 && std::chrono::steady_clock::now() < deadline) {
+      static_cast<void>(flight::host::pump_timers());
+    }
+    check(idle_events == 1, "a changed polled idle state reaches onIdleStateChange");
+    bool polled_with_custom_threshold = thresholds.size() >= 2;
+    for (const double threshold : thresholds) polled_with_custom_threshold &= threshold == 37.0;
+    check(polled_with_custom_threshold,
+          "the timer callback keeps the custom idle threshold instead of substituting the default");
+    power::detach_power(entity);
+    power::set_power_idle_polling_interval_ms(5000.0);
+  }
+
+  {
+    // The previous lock-stream case observed onLockScreen and both lock teardowns, but no assertion
+    // invoked onUnlockScreen, onSuspend, or onResume. Each subscription and each emission survived.
+    const auto session_lock = flight::make_ref<HostPowerSessionLockCapability>();
+    std::function<void()> unlock_listener;
+    session_lock->subscribe_lock = [](std::function<void()>) { return std::function<void()>{[]() {}}; };
+    session_lock->subscribe_unlock = [&unlock_listener](std::function<void()> listener) {
+      unlock_listener = std::move(listener);
+      return std::function<void()>{[]() {}};
+    };
+    const auto suspension = flight::make_ref<HostPowerSuspensionCapability>();
+    std::function<void()> suspend_listener;
+    std::function<void()> resume_listener;
+    suspension->subscribe_suspend = [&suspend_listener](std::function<void()> listener) {
+      suspend_listener = std::move(listener);
+      return std::function<void()>{[]() {}};
+    };
+    suspension->subscribe_resume = [&resume_listener](std::function<void()> listener) {
+      resume_listener = std::move(listener);
+      return std::function<void()>{[]() {}};
+    };
+    const auto entity = power::create_power();
+    power::enable_power_signals(entity);
+    int unlocked = 0;
+    int suspended = 0;
+    int resumed = 0;
+    connect(entity->on_unlock_screen.value(), [&unlocked]() { ++unlocked; });
+    connect(entity->on_suspend.value(), [&suspended]() { ++suspended; });
+    connect(entity->on_resume.value(), [&resumed]() { ++resumed; });
+    power::attach_power(std::nullopt, std::nullopt, view(session_lock), view(suspension), std::nullopt,
+                        std::nullopt, entity);
+    check(static_cast<bool>(unlock_listener) && static_cast<bool>(suspend_listener) &&
+              static_cast<bool>(resume_listener),
+          "attachPower registers the unlock, suspend, and resume streams");
+    if (unlock_listener) unlock_listener();
+    if (suspend_listener) suspend_listener();
+    if (resume_listener) resume_listener();
+    check(unlocked == 1 && suspended == 1 && resumed == 1,
+          "unlock, suspend, and resume provider events reach their matching signals");
+    power::detach_power(entity);
+  }
+
+  {
+    // Clearing onChange masked a missing detach, and it said nothing about the three other clear calls
+    // whose removal survived. Observe the provider release separately, then emit straight at those
+    // three signals on both sides of disposePower.
+    const auto change = std::make_shared<Change>();
+    const auto entity = power::create_power();
+    power::enable_power_signals(entity);
+    int resumed = 0;
+    int unlocked = 0;
+    int thermal = 0;
+    connect(entity->on_resume.value(), [&resumed]() { ++resumed; });
+    connect(entity->on_unlock_screen.value(), [&unlocked]() { ++unlocked; });
+    connect(entity->on_thermal_state_change.value(), [&thermal](String) { ++thermal; });
+    power::attach_power(std::nullopt, view(change_of(change)), std::nullopt, std::nullopt, std::nullopt,
+                        std::nullopt, entity);
+    flight::signals::emit_signal<std::function<void()>>(entity->on_resume.value());
+    flight::signals::emit_signal<std::function<void()>>(entity->on_unlock_screen.value());
+    flight::signals::emit_signal<std::function<void(String)>>(entity->on_thermal_state_change.value(),
+                                                              String("Nominal"));
+    check(resumed == 1 && unlocked == 1 && thermal == 1,
+          "the resume, unlock, and thermal listeners are live before disposePower");
+    power::dispose_power(entity);
+    check(change->releases == 1, "disposePower releases its host subscription rather than only clearing signals");
+    flight::signals::emit_signal<std::function<void()>>(entity->on_resume.value());
+    flight::signals::emit_signal<std::function<void()>>(entity->on_unlock_screen.value());
+    flight::signals::emit_signal<std::function<void(String)>>(entity->on_thermal_state_change.value(),
+                                                              String("Critical"));
+    check(resumed == 1 && unlocked == 1 && thermal == 1,
+          "disposePower clears the resume, unlock, and thermal signals themselves");
   }
 
   if (failures == 0) std::cout << "generated power: all checks passed\n";
