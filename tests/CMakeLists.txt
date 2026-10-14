@@ -1636,7 +1636,7 @@ add_test(
   NAME flight_cpp.generated_textshaper_parity
   COMMAND flight_cpp_generated_textshaper_parity_tests
 )
-flight_cpp_package_test_labels(flight_cpp.generated_textshaper_parity textshaper)
+flight_cpp_package_test_labels(flight_cpp.generated_textshaper_parity textshaper types)
 
 # Behavioural parity for @flighthq/media, over the two upstream fixtures whose modules emit (the
 # package is `partial`: audioMixer and videoChannel are refused and cannot be covered). Driven by a
@@ -1657,7 +1657,7 @@ add_test(
   NAME flight_cpp.generated_media_parity
   COMMAND flight_cpp_generated_media_parity_tests
 )
-flight_cpp_package_test_labels(flight_cpp.generated_media_parity media)
+flight_cpp_package_test_labels(flight_cpp.generated_media_parity audio log media types)
 
 # Behavioural parity for @flighthq/audio over the modules whose surface is reachable without a host
 # (audioResource, audioDecodeSlot, audioFormat). Host seams are supplied by the fixture, never faked.
@@ -1677,7 +1677,7 @@ add_test(
   NAME flight_cpp.generated_audio_parity
   COMMAND flight_cpp_generated_audio_parity_tests
 )
-flight_cpp_package_test_labels(flight_cpp.generated_audio_parity audio)
+flight_cpp_package_test_labels(flight_cpp.generated_audio_parity audio types)
 
 # Behavioural parity for @flighthq/screen, over the emitted code (no overrides exist for it). The host
 # seam is a recording HostScreenQueryCapability supplied by the test, as upstream supplies it.
@@ -1697,7 +1697,7 @@ add_test(
   NAME flight_cpp.generated_screen_parity
   COMMAND flight_cpp_generated_screen_parity_tests
 )
-flight_cpp_package_test_labels(flight_cpp.generated_screen_parity screen)
+flight_cpp_package_test_labels(flight_cpp.generated_screen_parity screen types)
 flight_cpp_package_test_labels(flight_cpp.generated_net net)
 flight_cpp_package_test_labels(flight_cpp.generated_socket signals socket)
 flight_cpp_package_test_labels(flight_cpp.generated_encoding encoding)
@@ -1751,13 +1751,13 @@ add_executable(flight_cpp_generated_textlayout_parity_tests generated_textlayout
 target_include_directories(flight_cpp_generated_textlayout_parity_tests BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include")
 target_link_libraries(flight_cpp_generated_textlayout_parity_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_textlayout_parity COMMAND flight_cpp_generated_textlayout_parity_tests)
-flight_cpp_package_test_labels(flight_cpp.generated_textlayout_parity textlayout)
+flight_cpp_package_test_labels(flight_cpp.generated_textlayout_parity textlayout types)
 
 add_executable(flight_cpp_generated_textsegment_parity_tests generated_textsegment_parity_test.cpp)
 target_include_directories(flight_cpp_generated_textsegment_parity_tests BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include")
 target_link_libraries(flight_cpp_generated_textsegment_parity_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_textsegment_parity COMMAND flight_cpp_generated_textsegment_parity_tests)
-flight_cpp_package_test_labels(flight_cpp.generated_textsegment_parity textsegment)
+flight_cpp_package_test_labels(flight_cpp.generated_textsegment_parity log textsegment types)
 
 target_link_libraries(flight_cpp_c_api_tests PRIVATE Flight::C)
 flight_cpp_set_project_warnings(flight_cpp_c_api_tests)
