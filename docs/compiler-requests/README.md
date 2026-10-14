@@ -79,6 +79,8 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 
 ## Active requests without a compiler patch
 
+- [A binding narrowed to one coalesced arm must enter a wider union as the slot it is stored in](narrowed-coalesced-arm-into-wider-union.md) —
+  `@flighthq/tray` `destroyTrayRuntime`: `return result` after `result.outcome === 'destroyed'` is refused, because the narrowed arm is spelled as its own struct rather than the coalesced slot it is stored in.
 - [A fresh object literal asserted to a type parameter has no C++ owner to become](fresh-literal-asserted-to-type-parameter.md) —
   `@flighthq/tray` `invokeUpdate` (`cpp-reference-assertion-without-heritage`): the asserted value is a new literal, so no heritage proof applies. The unrefused `{ outcome } as Result` branch emits `make_ref<Result>(Result{...})`, which cannot instantiate for a variant. Sound lowering needs exact-shape alternative selection at instantiation.
 - [A caught value written into an `unknown` member needs an `Any` that can hold it](caught-value-into-unknown-member.md) —
