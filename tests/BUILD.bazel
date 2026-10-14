@@ -153,6 +153,21 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_camera_edge_test",
+    srcs = ["generated_camera_edge_test.cpp"],
+    size = "small",
+    tags = [
+        "pkg:camera",
+        "pkg:geometry",
+        "pkg:types",
+    ],
+    deps = [
+        "//:cpp",
+        "//:sdk_preview",
+    ],
+)
+
+cc_test(
     name = "generated_canvas_texture_resolver_test",
     srcs = ["generated_canvas_texture_resolver_test.cpp"],
     size = "small",
