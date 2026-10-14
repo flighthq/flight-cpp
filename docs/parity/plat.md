@@ -1924,6 +1924,27 @@ Upstream carries per-package records at `flight/agents/packages/protocol/`: `sta
   Two further public entry points were referenced NOWHERE in the file and are now covered: `getProtocolLaunchUrl`
   (both a present and an absent launch URL) and `removeProtocolSchemeAsDefault` (routed, and gated by validity).
 
+  A LATER re-audit CONFIRMED the upstream case count independently and re-ran the battery with target-diff
+  confirmation; it found ONE more hole. The count is 23 -- `protocol.test.ts` 20 plus `protocolHost.test.ts` 3 --
+  and neither file contains `it.each`, `test.each` or `describe.each`, nor any loop-generated row, so the plain
+  count IS the true count here. That check is stated because `@flighthq/share` failed it: three value tables hid
+  eleven assertions behind the same naive count. Every named case maps to a real assertion: the two-host layout
+  cases in `protocolHost.test.ts` are exercised by the registration and launch cases here, the re-attach case
+  asserts both the new subscription and the prior release, and the dispose assertion is NOT vacuous -- it connects
+  a listener before disposing, so the clearing is observed against a signal that was live.
+
+  The hole was `setProtocolSchemeAsDefault`'s OWN validity gate: the file called the setter only with a VALID
+  scheme, so removing its gate went unnoticed, while its sibling `removeAsDefault` had the case. Added, and killed
+  by that mutation. Twenty-five mutations now, all twenty-five killed with target-diff confirmation.
+
+  One upstream case is an ABSENCE -- `protocolHost.test.ts` requires the module to expose no ambient resolver family
+  (`explainProtocolBackend`, `getProtocolBackend`, `installProtocolHostBackend`, `observeProtocolHostResult`,
+  `resetProtocolBackendForTest`, `setProtocolBackend`). It is recorded in the test rather than asserted, because a
+  C++ qualified lookup of an undeclared name is a HARD error rather than a substitution failure: measured,
+  `requires { flight::protocol::set_protocol_backend; }` fails to compile with "no member named
+  'set_protocol_backend' in namespace 'flight::protocol'" instead of evaluating false. The same measurement and the
+  same recording are in `@flighthq/device`'s entry.
+
   No compiler request was filed for this package.
 
 ### Local generation status

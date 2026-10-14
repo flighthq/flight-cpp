@@ -14,6 +14,14 @@
 //     across repeated calls, dispose clears the handler's listeners, and two live hosts each serve
 //     their own handler.
 #include <flight/executor.hpp>
+// ONE UPSTREAM CASE IS AN ABSENCE AND IS RECORDED RATHER THAN ASSERTED. `protocolHost.test.ts` requires the
+// module to expose no ambient resolver family -- `explainProtocolBackend`, `getProtocolBackend`,
+// `installProtocolHostBackend`, `observeProtocolHostResult`, `resetProtocolBackendForTest`,
+// `setProtocolBackend`. Measured: a C++ qualified lookup of a name a namespace does not declare is a HARD error
+// rather than a substitution failure -- `requires { flight::protocol::set_protocol_backend; }` fails to compile
+// with "no member named 'set_protocol_backend' in namespace 'flight::protocol'" instead of evaluating false -- so
+// the absence cannot be checked in-process. The positive half is asserted below (the module's whole surface is the
+// operations this file calls and nothing else) and the absence itself is this note, not a dressed-up runtime check.
 #include <flight/protocol/protocol.hpp>
 
 #include <functional>
@@ -258,6 +266,12 @@ int main() {
           "an invalid scheme is not registered through the host");
     check(!flight::protocol::unregister_protocol_scheme(unregistration_host, String("https")),
           "and an invalid scheme is not unregistered through the host");
+    // The setter's OWN gate, which the mutation battery found unasserted: `setAsDefault` was only ever
+    // called with a VALID scheme here, so removing its validity check went unnoticed. Its sibling
+    // `removeAsDefault` had this case; `setAsDefault` did not.
+    check(!flight::protocol::set_protocol_scheme_as_default(default_host, String("https")),
+          "and an invalid scheme is refused by the setter's own gate");
+
     check(seen.calls.empty(), "no provider was consulted for any of them");
 
     check(flight::protocol::is_protocol_scheme_default(default_host, String("flight")),
