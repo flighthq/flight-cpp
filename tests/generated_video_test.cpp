@@ -25,7 +25,10 @@
 #include <iostream>
 #include <memory>
 #include <optional>
+#include <stdexcept>
+#include <string>
 #include <variant>
+#include <vector>
 
 namespace {
 
@@ -77,7 +80,11 @@ flight::Ref<HostVideoCapability> video_host(bool answer) {
 
 }  // namespace
 
-int main() {
+// The body is a function so that an exception escaping it is NAMED rather than left to abort the
+// process. That matters for mutation checking: an implementation that reaches for an absent object URL
+// throws where the real one returns early, and without this the run ends as "terminating due to uncaught
+// exception" with no indication of which assertion it was passing through.
+int run_checks() {
   // detectVideoMimeType: magic bytes, the length gate, and both carrier arms.
   {
     const auto webm = flight::video::detect_video_mime_type(
@@ -326,6 +333,185 @@ int main() {
           "a host with no teardown hooks still leaves the resource cleared");
   }
 
+  // THE REMAINING REACHABLE CASES. Each uses the fixture's own input, because these are ports rather than
+  // new probes: an assertion that only resembles the case is how a case quietly stops being covered.
+  {
+    // An EMPTY source list selects nothing. This is a different claim from "nothing in the list is
+    // playable" -- it never enters the loop at all.
+    auto host = video_host(true);
+    flight::Array<flight::Ref<VideoResourceUrl>> nothing = flight::Array<flight::Ref<VideoResourceUrl>>{};
+    check(!flight::video::select_video_resource_url(host, nothing).has_value(),
+          "an empty source list selects nothing");
+  }
+
+  {
+    // An explicit EMPTY type is AUTHORITATIVE: the URL behind it is never read. The URL here would infer
+    // video/webm, which this backend plays, so a source probed through its URL would be selected -- and it
+    // must not be, which is the only way to observe "the URL is not read" on a surface where a member read
+    // cannot throw.
+    int probes = 0;
+    auto host = flight::make_ref<HostVideoCapability>();
+    host->can_play_type = [&probes](String) {
+      ++probes;
+      return true;
+    };
+    flight::Array<flight::Ref<VideoResourceUrl>> sources = flight::Array<flight::Ref<VideoResourceUrl>>{};
+    sources.push(source_url("clip.webm", ""));
+    check(!flight::video::select_video_resource_url(host, sources).has_value(),
+          "an explicit empty type is authoritative and selects nothing");
+    check(probes == 0, "and the backend is never asked about it");
+  }
+
+  {
+    // A source nothing can name costs NO probe, and a later playable one is still reached.
+    int probes = 0;
+    auto host = flight::make_ref<HostVideoCapability>();
+    host->can_play_type = [&probes](String) {
+      ++probes;
+      return true;
+    };
+    flight::Array<flight::Ref<VideoResourceUrl>> sources = flight::Array<flight::Ref<VideoResourceUrl>>{};
+    sources.push(source_url("clip.avi"));
+    sources.push(source_url("clip.ogv"));
+    const auto selected = flight::video::select_video_resource_url(host, sources);
+    check(selected.has_value() && selected.value()->url == String("clip.ogv"),
+          "an unnameable source is skipped and the next playable source is selected");
+    check(probes == 1, "and the unnameable source cost no probe");
+  }
+
+  {
+    // A backend that throws for one source does not end the search: the exception is a refusal for THAT
+    // source, and the next one is still tried.
+    int calls = 0;
+    auto host = flight::make_ref<HostVideoCapability>();
+    host->can_play_type = [&calls](String) {
+      ++calls;
+      if (calls == 1) throw std::runtime_error("unavailable");
+      return true;
+    };
+    flight::Array<flight::Ref<VideoResourceUrl>> sources = flight::Array<flight::Ref<VideoResourceUrl>>{};
+    sources.push(source_url("first.mp4"));
+    sources.push(source_url("second.webm"));
+    // The escape is caught here rather than left to abort the process: an exception that leaks out of the
+    // search is exactly the failure this case names, and a crash would hide every assertion after it.
+    std::optional<flight::Ref<VideoResourceUrl>> selected;
+    bool escaped = false;
+    try {
+      selected = flight::video::select_video_resource_url(host, sources);
+    } catch (...) {
+      escaped = true;
+    }
+    check(!escaped, "a backend exception does not escape the search");
+    check(selected.has_value() && selected.value()->url == String("second.webm"),
+          "a backend exception is a refusal for that source, not the end of the search");
+    check(calls == 2, "and the next source was tried after it");
+  }
+
+  {
+    // Teardown ORDER. The source is explicit about why it matters -- the element must let go of its src
+    // before the URL behind it is revoked -- and the counts asserted in the blocks above cannot see it: an
+    // implementation that revoked first and released second passes every one of them.
+    std::vector<std::string> order;
+    const auto element = element_value();
+    auto host = flight::make_ref<HostVideoCapability>();
+    host->release_element = [&order](flight::types::HostImageSource) { order.push_back("release"); };
+    host->revoke_object_url = [&order](String) { order.push_back("revoke"); };
+
+    auto owned = flight::video::create_video_resource(element, String("blob:ordered"), true);
+    flight::video::destroy_video_resource(host, owned);
+    check(order == std::vector<std::string>{"release", "revoke"},
+          "destroy releases the element BEFORE revoking the URL behind it");
+
+    order.clear();
+    auto disposed = flight::video::create_video_resource(element, String("blob:ordered"), false);
+    flight::video::dispose_video_resource(host, disposed);
+    check(order == std::vector<std::string>{"release", "revoke"},
+          "and dispose holds the same order for a borrowed element");
+  }
+
+  {
+    // dispose on a resource that never had an element, and one that owns no object URL.
+    int releases = 0;
+    int revokes = 0;
+    auto host = flight::make_ref<HostVideoCapability>();
+    host->release_element = [&releases](flight::types::HostImageSource) { ++releases; };
+    host->revoke_object_url = [&revokes](String) { ++revokes; };
+
+    const auto never_had = flight::video::create_video_resource();
+    const auto no_url = flight::video::create_video_resource(element_value());
+    // Both of these teardown a resource carrying no object URL. Upstream returns early for exactly that
+    // case, so an implementation that reaches for the absent URL throws instead -- caught here so it is a
+    // recorded failure rather than an abort that hides the assertions after it.
+    bool threw = false;
+    try {
+      flight::video::dispose_video_resource(host, never_had);
+    } catch (...) {
+      threw = true;
+    }
+    check(!threw, "disposing a resource that never had an element does not throw");
+    check(releases == 0, "and it releases nothing");
+
+    try {
+      flight::video::dispose_video_resource(host, no_url);
+    } catch (...) {
+      threw = true;
+    }
+    check(!threw, "disposing a resource with no object URL does not throw");
+    check(releases == 1, "a present element is released");
+    check(revokes == 0, "and a resource owning no object URL revokes nothing");
+  }
+
+  {
+    // The reads that answer 0 for an ABSENT hook, which is a different host from one whose hook answers 0.
+    const auto resource = flight::video::create_video_resource(element_value());
+    const auto bare = flight::make_ref<HostVideoCapability>();
+    check(flight::video::get_video_resource_duration(bare, resource) == 0.0,
+          "duration is 0 when the host carries no duration hook");
+    check(flight::video::get_video_resource_height(bare, resource) == 0.0,
+          "height is 0 when the host carries no height hook");
+    check(flight::video::get_video_resource_width(bare, resource) == 0.0,
+          "width is 0 when the host carries no width hook");
+  }
+
+  {
+    // Exactly ONE dimension reported zero, on either side.
+    const auto resource = flight::video::create_video_resource(element_value());
+    auto wide = flight::make_ref<HostVideoCapability>();
+    wide->get_width = [](flight::types::HostImageSource) { return 640.0; };
+    wide->get_height = [](flight::types::HostImageSource) { return 0.0; };
+    auto tall = flight::make_ref<HostVideoCapability>();
+    tall->get_width = [](flight::types::HostImageSource) { return 0.0; };
+    tall->get_height = [](flight::types::HostImageSource) { return 480.0; };
+    check(flight::video::is_video_resource_empty(wide, resource),
+          "a resource with a width but no height is empty");
+    check(flight::video::is_video_resource_empty(tall, resource),
+          "and one with a height but no width is empty too");
+  }
+
+  {
+    // initializeVideoResource is a required export and is the construction initializer createVideoResource
+    // calls -- so it must build the same resource when driven directly.
+    auto construction = flight::entity::allocate_entity<flight::Ref<flight::types::VideoResource>>();
+    flight::video::initialize_video_resource(construction, element_value(),
+                                             std::optional<String>{String("blob:init")}, true);
+    const auto built = flight::entity::finish_entity<flight::Ref<flight::types::VideoResource>>(construction);
+    check(built->element.has_value() && built->object_url.has_value() &&
+              built->object_url.value() == String("blob:init") && built->owns_element,
+          "initializeVideoResource is the construction initializer and sets all three members");
+  }
+
   if (failures == 0) std::cout << "generated video: all checks passed\n";
   return failures == 0 ? 0 : 1;
+}
+
+int main() {
+  try {
+    return run_checks();
+  } catch (const std::exception& error) {
+    std::cerr << "FAIL: an unexpected exception escaped: " << error.what() << '\n';
+    return 1;
+  } catch (...) {
+    std::cerr << "FAIL: an unexpected non-standard exception escaped\n";
+    return 1;
+  }
 }
