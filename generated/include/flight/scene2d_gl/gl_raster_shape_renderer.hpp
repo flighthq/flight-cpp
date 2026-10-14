@@ -37,6 +37,7 @@ namespace flight::types { struct Texture2D; }
 namespace flight::types { struct Texture2DArray; }
 namespace flight::types { struct Texture3D; }
 namespace flight::types { struct TextureCube; }
+namespace flight::types { struct TextureSource; }
 namespace flight::types { template <typename Traits> struct Node; }
 
 #include <flight/types/contract.hpp>

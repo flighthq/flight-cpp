@@ -14,6 +14,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/canvas_texture_resolver.hpp>
 
 namespace flight::types { struct Bitmap; }
+namespace flight::types { struct CanvasBitmapElementCacheEntry; }
 namespace flight::types { struct CanvasSurface; }
 namespace flight::types { struct CanvasTextureResolvers; }
 namespace flight::types { struct HostCanvasCapability; }

@@ -3,9 +3,10 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function getGlScene3DRuntime -- source line 148
-//   missing: function addGlScene3DResourceCleanup -- source line 19
+//   missing: function getGlScene3DRuntime -- source line 152
+//   missing: function addGlScene3DResourceCleanup -- source line 20
 #include <cstddef>
+#include <flight/erased_ref.hpp>
 #include <flight/host_sdl/webgl.hpp>
 #include <flight/structural_ref.hpp>
 #include <flight/weak_map.hpp>
@@ -50,7 +51,8 @@ inline void destroy_gl_scene3_druntime(flight::Ref<flight::types::GlRenderState>
   flight::host_sdl::WebGl2Context gl = state->gl;
   for (const auto& [for_of_key, for_of_value] : scene.value()->program_cache) {
     static_cast<void>(for_of_key);
-    auto program = for_of_value;
+    auto value = for_of_value;
+    auto program = flight::erased_ref_as<flight::types::GlMeshProgram>(value);
     gl.delete_program(program->program);
   }
   scene.value()->program_cache.clear();
@@ -108,7 +110,7 @@ inline void destroy_gl_scene3_druntime(flight::Ref<flight::types::GlRenderState>
 }
 
 
-// NOT GENERATED: function getGlScene3DRuntime -- source line 148
+// NOT GENERATED: function getGlScene3DRuntime -- source line 152
 // refusal: cpp-weak-map-erased-ref-view-unsupported [compiler-restriction]
 //
 // The source it stood for:
@@ -168,7 +170,7 @@ inline void destroy_gl_scene3_druntime(flight::Ref<flight::types::GlRenderState>
 // Value>(flight::WeakMap<flight::Ref<void>, flight::ErasedRef>&)
 
 
-// NOT GENERATED: function addGlScene3DResourceCleanup -- source line 19
+// NOT GENERATED: function addGlScene3DResourceCleanup -- source line 20
 // refusal: cpp-member-projection-without-present-storage [compiler-restriction]
 //
 // The source it stood for:

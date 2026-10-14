@@ -74,7 +74,7 @@ inline std::optional<std::function<void(flight::StructuralRef<flight::RowReadonl
 inline void register_wgpu_velocity_writer(flight::Ref<flight::types::WgpuRenderState> state, flight::String kind, flight::types::WgpuVelocityWriter writer) {
   auto runtime = flight::render_wgpu::get_wgpu_render_state_runtime(state);
   flight::Map<flight::String, flight::types::WgpuVelocityWriter> table = runtime->registries->velocity_writers;
-  flight::Map<flight::String, flight::types::WgpuVelocityWriter> entries = flight::Map<flight::String, flight::types::WgpuVelocityWriter>(table);
+  flight::Map<flight::String, flight::types::WgpuVelocityWriter> entries = flight::Map<flight::String, flight::types::WgpuVelocityWriter>(table).clone();
   entries.set(kind, writer);
   (runtime->registries->velocity_writers = entries);
 }

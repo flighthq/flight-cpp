@@ -246,7 +246,7 @@ inline void release_gl_render_pass_handle(flight::host_sdl::WebGl2Context gl, fl
 
 
 // NOT GENERATED: function endGlRenderPass -- source line 160
-// refusal: cpp-presence-test-without-absence-storage [compiler-restriction]
+// refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
 //   export function endGlRenderPass(pass: GlRenderPass): void {
@@ -292,8 +292,27 @@ inline void release_gl_render_pass_handle(flight::host_sdl::WebGl2Context gl, fl
 //     }
 //   }
 //   
-// cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glRenderPass.ts: a presence test against
-// null has no absence channel in the emitted C++ storage for property
+// cpp emission failed for @flighthq/render-gl/packages/render-gl/src/glRenderPass.ts: the asserted row from
+// flight::Ref<flight::types::GlRenderTarget> to flight::Ref<flight::types::GlTextureRenderTarget> reads
+// colorFormats, colorRenderbuffers, depth, depthStencilRenderbuffer, depthTexture, format, requestedAxes,
+// resolveFramebuffer, sampleCount, texture and textures, which the source type does not declare, and
+// framebuffer, whose optionality or value representation is not representation-equivalent to the source type's
+// cells, and a structural owner binds the members and storage representations of the type the object was first
+// reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to
+// answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion
+// cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the
+// concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch
+// storage, retain indices, keys, or tokens into storage that remains typed as GlTextureRenderTarget, rather than
+// storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried
+// beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is
+// intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch.
+// Declare the source as a type that carries colorFormats, colorRenderbuffers, depth, depthStencilRenderbuffer,
+// depthTexture, format, framebuffer, requestedAxes, resolveFramebuffer, sampleCount, texture and textures with
+// the asserted optionality and value representation -- construct GlTextureRenderTarget explicitly, then type the
+// retaining slot and every accessor result as GlTextureRenderTarget wherever that concrete owner is known;
+// changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather
+// than asserting past flight::Ref<flight::types::GlRenderTarget>. The compiler will not reinterpret the owner,
+// cast it, copy or materialize a replacement, or add side storage.
 
 inline flight::Float32Array clear_depth_flight_value_variable__u00005f_clear_u000044_epth_flight_private_66f0f824b019f028 = flight::Float32Array(1.0);
 

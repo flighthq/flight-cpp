@@ -173,7 +173,7 @@ inline std::optional<flight::Ref<flight::types::GlTextureRealization>> resolve_g
 }
 
 inline void register_gl_render_texture_resolver(flight::Ref<flight::types::GlRenderState> state) {
-  register_bound_gl_texture_resolver(state, flight::types::render_target_texture_source_kind, resolve_gl_render_texture);
+  register_bound_gl_texture_resolver(state, flight::types::render_target_texture_source_kind, [](flight::Ref<flight::types::GlRenderState> contextual_callable_argument0, flight::types::GlTextureValue contextual_callable_argument1, bool contextual_callable_argument2, flight::types::TextureColorSpace contextual_callable_argument3) -> std::optional<flight::Ref<flight::types::GlTextureRealization>> { return resolve_gl_render_texture(contextual_callable_argument0, contextual_callable_argument1); });
 }
 
 inline void register_standard_gl_texture_resolvers(flight::Ref<flight::types::GlRenderState> state) {
@@ -182,6 +182,6 @@ inline void register_standard_gl_texture_resolvers(flight::Ref<flight::types::Gl
   register_gl_render_texture_resolver(state);
 }
 
-inline flight::Map<flight::String, flight::types::GlTextureResolver> standard_gl_texture_resolvers = flight::registry::with_kind_map_entry<flight::types::GlTextureResolver>(flight::registry::with_kind_map_entry<flight::types::GlTextureResolver>(flight::registry::with_kind_map_entry<flight::types::GlTextureResolver>(flight::Map<flight::String, flight::types::GlTextureResolver>(), flight::types::bitmap_texture_source_kind, resolve_gl_bitmap_texture), flight::types::image_texture_source_kind, resolve_gl_image_texture), flight::types::render_target_texture_source_kind, resolve_gl_render_texture);
+inline flight::Map<flight::String, flight::types::GlTextureResolver> standard_gl_texture_resolvers = flight::registry::with_kind_map_entry<flight::types::GlTextureResolver>(flight::registry::with_kind_map_entry<flight::types::GlTextureResolver>(flight::registry::with_kind_map_entry<flight::types::GlTextureResolver>(flight::Map<flight::String, flight::types::GlTextureResolver>(), flight::types::bitmap_texture_source_kind, resolve_gl_bitmap_texture), flight::types::image_texture_source_kind, resolve_gl_image_texture), flight::types::render_target_texture_source_kind, [](flight::Ref<flight::types::GlRenderState> contextual_callable_argument0_2, flight::types::GlTextureValue contextual_callable_argument1_2, bool contextual_callable_argument2_2, flight::types::TextureColorSpace contextual_callable_argument3_2) -> std::optional<flight::Ref<flight::types::GlTextureRealization>> { return resolve_gl_render_texture(contextual_callable_argument0_2, contextual_callable_argument1_2); });
 
 } // namespace flight::render_gl

@@ -11,39 +11,37 @@
 
 // Declared here, for the replacement to supply:
 //   interface DomSpriteData { canvas: HTMLCanvasElement | null; context: CanvasRenderingContext2D | null; image: HTMLImageElement | null; video: HTMLVideoElement | null } -- :18
-//   function createDomSpriteData(state: RenderState, source: Renderable): DomSpriteData -- :25
+//   function createDomSpriteData(state: RenderState, source: NodeAny): DomSpriteData -- :25
 //   function drawDomSprite(state: DomRenderState, renderProxy: RenderProxy2D): void -- :34
 //   function renderSpriteAsCanvas(state: DomRenderState, renderProxy: RenderProxy2D, data: DomSpriteData, source: CanvasImageSource, texture: Readonly<Texture2D>, viewWidth: number, viewHeight: number): void -- :69
 //   function renderSpriteAsImage(state: DomRenderState, renderProxy: RenderProxy2D, data: DomSpriteData, source: HTMLImageElement): void -- :101
 //   function renderSpriteAsVideo(state: DomRenderState, renderProxy: RenderProxy2D, data: DomSpriteData, source: HTMLVideoElement): void -- :121
 //   function applyDomSpriteSampling(state: DomRenderState, element: HTMLElement, renderProxy: RenderProxy2D): void -- :137
-//   const defaultDomSpriteRenderer: Scene2DRenderer -- :143
+//   const domSpriteRenderer: Scene2DRenderer -- :143
 //   const spriteViewSize: { ... } -- :149
 
 // Imported by this module, which the replacement likely needs:
 //   { drawCanvasTextureView } from '@flighthq/scene2d-canvas/contract'
 //   { createSpriteRendererData, isSpriteRendererDirty } from '@flighthq/scene2d/contract'
 //   { getTextureHeight, getTextureViewSize, getTextureWidth } from '@flighthq/texture/contract'
-//   type { DomRenderState, Renderable, RenderProxy2D, RenderState, Scene2DRenderer, Sprite, SpriteIdentityRendererData, Texture2D } from '@flighthq/types/contract'
-//   { applyDomStyle, prepareDomElement, setDomRendererElement } from './domStyle'
-//   { resolveDomTexture } from './domTextureResolver'
+//   type { DomRenderState, NodeAny, RenderProxy2D, RenderState, Scene2DRenderer, Sprite, SpriteIdentityRendererData, Texture2D } from '@flighthq/types/contract'
+//   { applyDomStyle, prepareDomElement, setDomRendererElement } from './domStyle.ts'
+//   { resolveDomTexture } from './domTextureResolver.ts'
 //   type { Texture } from '@flighthq/types/contract'
-//   type { NodeAny } from '@flighthq/types/contract'
-//   type { Node2D } from '@flighthq/types/contract'
-//   type { Node3D } from '@flighthq/types/contract'
-//   type { RenderCache } from '@flighthq/types/contract'
+//   type { Node } from '@flighthq/types/contract'
 //   type { Kind } from '@flighthq/types/contract'
 //   type { RenderProxy } from '@flighthq/types/contract'
 //   type { BlendMode } from '@flighthq/types/contract'
 //   type { ColorScaleBias } from '@flighthq/types/contract'
 //   type { Material } from '@flighthq/types/contract'
 //   type { MaterialData } from '@flighthq/types/contract'
-//   type { Renderer } from '@flighthq/types/contract'
+//   type { NodeRenderer } from '@flighthq/types/contract'
 //   type { RendererData } from '@flighthq/types/contract'
+//   type { Material2D } from '@flighthq/types/contract'
+//   type { Node2D } from '@flighthq/types/contract'
 //   type { Matrix } from '@flighthq/types/contract'
 //   type { Adjustment } from '@flighthq/types/contract'
 //   type { NodeOf } from '@flighthq/types/contract'
-//   type { Node } from '@flighthq/types/contract'
 //   type { ClipRegion } from '@flighthq/types/contract'
 //   type { InteractionSignals } from '@flighthq/types/contract'
 //   type { NodeSignals } from '@flighthq/types/contract'
@@ -53,7 +51,11 @@
 //   type { NodeRuntime } from '@flighthq/types/contract'
 //   type { Node2DTraits } from '@flighthq/types/contract'
 //   type { EntityRuntime } from '@flighthq/types/contract'
+//   type { Rectangle } from '@flighthq/types/contract'
+//   type { BoundsNode } from '@flighthq/types/contract'
+//   type { Scene2D } from '@flighthq/types/contract'
 //   type { SpriteData } from '@flighthq/types/contract'
+//   type { SpriteRuntime } from '@flighthq/types/contract'
 //   type { Texture2DArray } from '@flighthq/types/contract'
 //   type { Texture3D } from '@flighthq/types/contract'
 //   type { TextureCube } from '@flighthq/types/contract'
@@ -66,15 +68,14 @@
 //   type { Vector2Like } from '@flighthq/types/contract'
 //   type { RenderProxyAdapter } from '@flighthq/types/contract'
 //   type { RenderRegistrySignals } from '@flighthq/types/contract'
-//   type { KeyedTable } from '@flighthq/types/contract'
 //   type { CanvasShapeCommand } from '@flighthq/types/contract'
-//   type { SlotTable } from '@flighthq/types/contract'
-//   type { RenderEffectPaddingResolver } from '@flighthq/types/contract'
+//   type { EffectPaddingResolver } from '@flighthq/types/contract'
 //   type { Path } from '@flighthq/types/contract'
 //   type { StrokeStyle } from '@flighthq/types/contract'
 //   type { PathMesh } from '@flighthq/types/contract'
 //   type { Scene2DClipHooks } from '@flighthq/types/contract'
-//   type { ImageSurfaceCreator } from '@flighthq/types/contract'
+//   type { HostCanvasCapability } from '@flighthq/types/contract'
+//   type { HostImageCapability } from '@flighthq/types/contract'
 //   type { ShapeRasterizer } from '@flighthq/types/contract'
 //   type { DomTextureResolver } from '@flighthq/types/contract'
 //   type { PathWinding } from '@flighthq/types/contract'

@@ -201,14 +201,7 @@ struct callable_clear_signals_dae585a4889ecc48 : public flight::ReferenceEnabled
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_682A2AD3A9F4953F
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_682A2AD3A9F4953F
-struct callable_clear_signals_682a2ad3a9f4953f : public flight::ReferenceEnabled {
-  std::function<void(flight::types::RenderRegistryTable, flight::String)> callable;
-  std::function<void()> clear;
-  flight::Ref<flight::types::RenderRegistrySignals> signals;
-  void operator()(flight::types::RenderRegistryTable argument_0, flight::String argument_1) const {
-    return callable(argument_0, argument_1);
-  }
-};
+using callable_clear_signals_682a2ad3a9f4953f = flight::types::callable_clear_signals_682a2ad3a9f4953f;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_RENDER_CALLABLE_CLEAR_SIGNALS_682A2AD3A9F4953F
 
 inline void destroy_render_state(flight::Ref<flight::types::RenderState> state) {

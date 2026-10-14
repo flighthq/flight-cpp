@@ -2786,6 +2786,21 @@
       "source": "packages/protocol/src/protocol.ts"
     },
     {
+      "name": "Contract",
+      "packageName": "@flighthq/registry",
+      "source": "packages/registry/src/contract.ts"
+    },
+    {
+      "name": "Index",
+      "packageName": "@flighthq/registry",
+      "source": "packages/registry/src/index.ts"
+    },
+    {
+      "name": "RegistryTable",
+      "packageName": "@flighthq/registry",
+      "source": "packages/registry/src/registryTable.ts"
+    },
+    {
       "name": "BuiltInRegistryCatalogEntries",
       "packageName": "@flighthq/registry-catalog",
       "source": "packages/registry-catalog/src/builtInRegistryCatalogEntries.ts"
@@ -2826,6 +2841,16 @@
       "source": "packages/render/src/explainScene2DCoverage.ts"
     },
     {
+      "name": "ExplainScene2DPipelineCoverage",
+      "packageName": "@flighthq/render",
+      "source": "packages/render/src/explainScene2DPipelineCoverage.ts"
+    },
+    {
+      "name": "ExplainScene3DPipelineCoverage",
+      "packageName": "@flighthq/render",
+      "source": "packages/render/src/explainScene3DPipelineCoverage.ts"
+    },
+    {
       "name": "ImageSurface",
       "packageName": "@flighthq/render",
       "source": "packages/render/src/imageSurface.ts"
@@ -2854,6 +2879,11 @@
       "name": "RenderViewport",
       "packageName": "@flighthq/render",
       "source": "packages/render/src/renderViewport.ts"
+    },
+    {
+      "name": "Renderer",
+      "packageName": "@flighthq/render",
+      "source": "packages/render/src/renderer.ts"
     },
     {
       "name": "Scene2dWorkingColorSpace",
@@ -2981,6 +3011,11 @@
       "source": "packages/scene2d-canvas/src/canvasTextMeasure.ts"
     },
     {
+      "name": "CanvasTextureView",
+      "packageName": "@flighthq/scene2d-canvas",
+      "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+    },
+    {
       "name": "CanvasTransform",
       "packageName": "@flighthq/scene2d-canvas",
       "source": "packages/scene2d-canvas/src/canvasTransform.ts"
@@ -3019,6 +3054,11 @@
       "name": "DomTransform",
       "packageName": "@flighthq/scene2d-dom",
       "source": "packages/scene2d-dom/src/domTransform.ts"
+    },
+    {
+      "name": "MergeDomRenderOptions",
+      "packageName": "@flighthq/scene2d-dom",
+      "source": "packages/scene2d-dom/src/mergeDomRenderOptions.ts"
     },
     {
       "name": "LottieNullLayer",
@@ -3574,6 +3614,11 @@
       "name": "ShapeStrokeOutline",
       "packageName": "@flighthq/shape",
       "source": "packages/shape/src/shapeStrokeOutline.ts"
+    },
+    {
+      "name": "ShapeCommandSchemas",
+      "packageName": "@flighthq/shape-formats",
+      "source": "packages/shape-formats/src/shapeCommandSchemas.ts"
     },
     {
       "name": "Contract",
@@ -25436,6 +25481,36 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "RegistryTable",
+          "packageName": "@flighthq/registry",
+          "source": "packages/registry/src/registryTable.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Contract",
+          "packageName": "@flighthq/registry",
+          "source": "packages/registry/src/contract.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Index",
+          "packageName": "@flighthq/registry",
+          "source": "packages/registry/src/index.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "BuiltInRegistryCatalogEntries",
           "packageName": "@flighthq/registry-catalog",
           "source": "packages/registry-catalog/src/builtInRegistryCatalogEntries.ts"
@@ -25526,6 +25601,26 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "ExplainScene2DPipelineCoverage",
+          "packageName": "@flighthq/render",
+          "source": "packages/render/src/explainScene2DPipelineCoverage.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "ExplainScene3DPipelineCoverage",
+          "packageName": "@flighthq/render",
+          "source": "packages/render/src/explainScene3DPipelineCoverage.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "ImageSurface",
           "packageName": "@flighthq/render",
           "source": "packages/render/src/imageSurface.ts"
@@ -25569,6 +25664,16 @@
           "name": "RenderViewport",
           "packageName": "@flighthq/render",
           "source": "packages/render/src/renderViewport.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "Renderer",
+          "packageName": "@flighthq/render",
+          "source": "packages/render/src/renderer.ts"
         }
       ]
     },
@@ -25846,6 +25951,16 @@
       "cyclic": false,
       "modules": [
         {
+          "name": "CanvasTextureView",
+          "packageName": "@flighthq/scene2d-canvas",
+          "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
           "name": "DomClipContours",
           "packageName": "@flighthq/scene2d-dom",
           "source": "packages/scene2d-dom/src/domClipContours.ts"
@@ -25909,6 +26024,16 @@
           "name": "DomTransform",
           "packageName": "@flighthq/scene2d-dom",
           "source": "packages/scene2d-dom/src/domTransform.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "MergeDomRenderOptions",
+          "packageName": "@flighthq/scene2d-dom",
+          "source": "packages/scene2d-dom/src/mergeDomRenderOptions.ts"
         }
       ]
     },
@@ -27029,6 +27154,16 @@
           "name": "ShapeBoundsRegistry",
           "packageName": "@flighthq/shape",
           "source": "packages/shape/src/shapeBoundsRegistry.ts"
+        }
+      ]
+    },
+    {
+      "cyclic": false,
+      "modules": [
+        {
+          "name": "ShapeCommandSchemas",
+          "packageName": "@flighthq/shape-formats",
+          "source": "packages/shape-formats/src/shapeCommandSchemas.ts"
         }
       ]
     },
@@ -74037,7 +74172,7 @@
             "line": 8,
             "packageName": "@flighthq/scene2d-canvas",
             "source": "packages/scene2d-canvas/src/canvasAtlasRegion.ts",
-            "id": "binding:[\"@flighthq/scene2d-canvas\",\"packages/scene2d-canvas/src/canvasAtlasRegion.ts\",481]",
+            "id": "binding:[\"@flighthq/scene2d-canvas\",\"packages/scene2d-canvas/src/canvasAtlasRegion.ts\",498]",
             "kind": "function",
             "name": "drawCanvasAtlasRegion",
             "scope": "module",
@@ -74053,12 +74188,33 @@
       ],
       "dependencies": [
         {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "CanvasAtlasRegion",
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasAtlasRegion.ts"
+          },
+          "importedNames": [
+            "HostImageSource"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostImageSource",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostImageSource.ts"
+          }
+        },
+        {
           "evaluation": "runtime",
           "importer": {
             "name": "CanvasAtlasRegion",
             "packageName": "@flighthq/scene2d-canvas",
             "source": "packages/scene2d-canvas/src/canvasAtlasRegion.ts"
           },
+          "importedNames": [
+            "TextureAtlasRegion",
+            "TextureAtlasRotation"
+          ],
           "specifier": "@flighthq/types/contract",
           "target": {
             "name": "TextureAtlasRegion",
@@ -76982,6 +77138,468 @@
         "source": "packages/types/src/CanvasTextureResolver.ts"
       },
       "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:32fc0091686450e5045d0f4a6a843a2bd52bb4c8c8f164b6dab494806b039822",
+            "line": 1,
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts",
+            "id": "binding:[\"@flighthq/scene2d-canvas\",\"packages/scene2d-canvas/src/canvasTextureView.ts\",9]",
+            "kind": "import",
+            "name": "createMatrix3",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "createMatrix3",
+            "kind": "dependency",
+            "module": {
+              "name": "Matrix3",
+              "packageName": "@flighthq/geometry",
+              "source": "packages/geometry/src/matrix3.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:58053a293a7df6c257e8935da18cee9facdbb0c37046d2148232094a2805f59f",
+            "line": 2,
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts",
+            "id": "binding:[\"@flighthq/scene2d-canvas\",\"packages/scene2d-canvas/src/canvasTextureView.ts\",70]",
+            "kind": "import",
+            "name": "getTextureUvMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getTextureUvMatrix",
+            "kind": "dependency",
+            "module": {
+              "name": "Texture",
+              "packageName": "@flighthq/texture",
+              "source": "packages/texture/src/texture.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:886ee3a3b71c59be848795824e264996686133fa57f56eabbf8e88df1603a9c0",
+            "line": 10,
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts",
+            "id": "binding:[\"@flighthq/scene2d-canvas\",\"packages/scene2d-canvas/src/canvasTextureView.ts\",677]",
+            "kind": "function",
+            "name": "drawCanvasTextureView",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:9c85c35d678e8aa1ce54c84468b4821b1452199a7baef7cc291091a2f7443348",
+            "line": 82,
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts",
+            "id": "binding:[\"@flighthq/scene2d-canvas\",\"packages/scene2d-canvas/src/canvasTextureView.ts\",3601]",
+            "kind": "function",
+            "name": "isCardinalUvTransform",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:790e1f49b9332e99becea3583547f10a2a7cc21dfb4a64fcf74bef9476d0a0ff",
+            "line": 89,
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts",
+            "id": "binding:[\"@flighthq/scene2d-canvas\",\"packages/scene2d-canvas/src/canvasTextureView.ts\",3852]",
+            "kind": "variable",
+            "name": "CARDINAL_EPSILON",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:7e06cde5b7f00f5af8f9f87b319a038574d68a050915c57cdd39fafdbbfd8666",
+            "line": 90,
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts",
+            "id": "binding:[\"@flighthq/scene2d-canvas\",\"packages/scene2d-canvas/src/canvasTextureView.ts\",3884]",
+            "kind": "variable",
+            "name": "textureUvMatrix",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "CanvasTextureView",
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+          },
+          "specifier": "@flighthq/geometry/contract",
+          "target": {
+            "name": "Matrix3",
+            "packageName": "@flighthq/geometry",
+            "source": "packages/geometry/src/matrix3.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "CanvasTextureView",
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+          },
+          "specifier": "@flighthq/texture/contract",
+          "target": {
+            "name": "Texture",
+            "packageName": "@flighthq/texture",
+            "source": "packages/texture/src/texture.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "CanvasTextureView",
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+          },
+          "importedNames": [
+            "Bitmap"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Bitmap",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Bitmap.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "CanvasTextureView",
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+          },
+          "importedNames": [
+            "CompressedImageResource"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "CompressedImageResource",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/CompressedImageResource.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "CanvasTextureView",
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+          },
+          "importedNames": [
+            "ExternalTexture"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ExternalTexture",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ExternalTexture.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "CanvasTextureView",
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+          },
+          "importedNames": [
+            "HostImageSource"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "HostImageSource",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/HostImageSource.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "CanvasTextureView",
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+          },
+          "importedNames": [
+            "ImageResource"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ImageResource",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ImageResource.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "CanvasTextureView",
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+          },
+          "importedNames": [
+            "Matrix3",
+            "Matrix3Like"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Matrix3",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Matrix3.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "CanvasTextureView",
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+          },
+          "importedNames": [
+            "RenderTarget"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "RenderTarget",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RenderTarget.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "CanvasTextureView",
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+          },
+          "importedNames": [
+            "Sampler"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Sampler",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Sampler.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "CanvasTextureView",
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+          },
+          "importedNames": [
+            "Texture2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Texture",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Texture.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "CanvasTextureView",
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+          },
+          "importedNames": [
+            "TextureSource"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "TextureSource",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TextureSource.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "CanvasTextureView",
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+          },
+          "importedNames": [
+            "TextureSourceValue"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "TextureSourceValue",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TextureSourceValue.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "CanvasTextureView",
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+          },
+          "importedNames": [
+            "TextureUvTransform"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "TextureUvTransform",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/TextureUvTransform.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "CanvasTextureView",
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+          },
+          "importedNames": [
+            "Vector2"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Vector2",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Vector2.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "CanvasTextureView",
+            "packageName": "@flighthq/scene2d-canvas",
+            "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+          },
+          "importedNames": [
+            "VoxelGrid"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "VoxelGrid",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/VoxelGrid.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "CanvasTextureView",
+        "packageName": "@flighthq/scene2d-canvas",
+        "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:790e1f49b9332e99becea3583547f10a2a7cc21dfb4a64fcf74bef9476d0a0ff",
+              "line": 89,
+              "packageName": "@flighthq/scene2d-canvas",
+              "source": "packages/scene2d-canvas/src/canvasTextureView.ts",
+              "id": "binding:[\"@flighthq/scene2d-canvas\",\"packages/scene2d-canvas/src/canvasTextureView.ts\",3852]",
+              "kind": "variable",
+              "name": "CARDINAL_EPSILON",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            2
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:7e06cde5b7f00f5af8f9f87b319a038574d68a050915c57cdd39fafdbbfd8666",
+              "line": 90,
+              "packageName": "@flighthq/scene2d-canvas",
+              "source": "packages/scene2d-canvas/src/canvasTextureView.ts",
+              "id": "binding:[\"@flighthq/scene2d-canvas\",\"packages/scene2d-canvas/src/canvasTextureView.ts\",3884]",
+              "kind": "variable",
+              "name": "textureUvMatrix",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            3
+          ]
+        }
+      ]
     },
     {
       "bindings": [
@@ -99450,6 +100068,31 @@
         "name": "Contract",
         "packageName": "@flighthq/protocol",
         "source": "packages/protocol/src/contract.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Contract",
+            "packageName": "@flighthq/registry",
+            "source": "packages/registry/src/contract.ts"
+          },
+          "specifier": "./registryTable.ts",
+          "target": {
+            "name": "RegistryTable",
+            "packageName": "@flighthq/registry",
+            "source": "packages/registry/src/registryTable.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Contract",
+        "packageName": "@flighthq/registry",
+        "source": "packages/registry/src/contract.ts"
       },
       "steps": []
     },
@@ -134417,6 +135060,408 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
+            "fingerprint": "sha256:7f408dbe0b75b5b461040d5c4669763068309d6ae811786b9fae292bc222b751",
+            "line": 1,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene2DPipelineCoverage.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/explainScene2DPipelineCoverage.ts\",9]",
+            "kind": "import",
+            "name": "getNodeRuntime",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getNodeRuntime",
+            "kind": "dependency",
+            "module": {
+              "name": "Node",
+              "packageName": "@flighthq/node",
+              "source": "packages/node/src/node.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:f19857a6d813ebe8cc3d79bbf0ec5e667478ca1163dc398458b0b28b33e8e453",
+            "line": 2,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene2DPipelineCoverage.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/explainScene2DPipelineCoverage.ts\",67]",
+            "kind": "import",
+            "name": "getKindMapKeys",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getKindMapKeys",
+            "kind": "dependency",
+            "module": {
+              "name": "RegistryTable",
+              "packageName": "@flighthq/registry",
+              "source": "packages/registry/src/registryTable.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:eeca9234cc6b57efae158bd0c7a582050cdc21ae0bab9fb988c84adfd17bf838",
+            "line": 5,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene2DPipelineCoverage.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/explainScene2DPipelineCoverage.ts\",242]",
+            "kind": "import",
+            "name": "getRenderStateRuntime",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getRenderStateRuntime",
+            "kind": "dependency",
+            "module": {
+              "name": "RenderState",
+              "packageName": "@flighthq/render",
+              "source": "packages/render/src/renderState.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:1b26fd5c740913b6831ba20dd75f2f26fb9a838ae34b44650405b527d6374000",
+            "line": 7,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene2DPipelineCoverage.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/explainScene2DPipelineCoverage.ts\",308]",
+            "kind": "function",
+            "name": "explainScene2DPipelineCoverage",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:c0bf96ec051024aa7e92462ee992d5eafdfd87ad1f9b0db70175defc88678a3e",
+            "line": 34,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene2DPipelineCoverage.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/explainScene2DPipelineCoverage.ts\",1130]",
+            "kind": "function",
+            "name": "collectUsedKinds",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ExplainScene2DPipelineCoverage",
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene2DPipelineCoverage.ts"
+          },
+          "specifier": "./renderState.ts",
+          "target": {
+            "name": "RenderState",
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/renderState.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ExplainScene2DPipelineCoverage",
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene2DPipelineCoverage.ts"
+          },
+          "specifier": "@flighthq/node/contract",
+          "target": {
+            "name": "Node",
+            "packageName": "@flighthq/node",
+            "source": "packages/node/src/node.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ExplainScene2DPipelineCoverage",
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene2DPipelineCoverage.ts"
+          },
+          "specifier": "@flighthq/registry/contract",
+          "target": {
+            "name": "RegistryTable",
+            "packageName": "@flighthq/registry",
+            "source": "packages/registry/src/registryTable.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ExplainScene2DPipelineCoverage",
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene2DPipelineCoverage.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "ExplainScene2DPipelineCoverage",
+        "packageName": "@flighthq/render",
+        "source": "packages/render/src/explainScene2DPipelineCoverage.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:7f408dbe0b75b5b461040d5c4669763068309d6ae811786b9fae292bc222b751",
+            "line": 1,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene3DPipelineCoverage.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/explainScene3DPipelineCoverage.ts\",9]",
+            "kind": "import",
+            "name": "getNodeRuntime",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getNodeRuntime",
+            "kind": "dependency",
+            "module": {
+              "name": "Node",
+              "packageName": "@flighthq/node",
+              "source": "packages/node/src/node.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:f19857a6d813ebe8cc3d79bbf0ec5e667478ca1163dc398458b0b28b33e8e453",
+            "line": 2,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene3DPipelineCoverage.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/explainScene3DPipelineCoverage.ts\",67]",
+            "kind": "import",
+            "name": "getKindMapKeys",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getKindMapKeys",
+            "kind": "dependency",
+            "module": {
+              "name": "RegistryTable",
+              "packageName": "@flighthq/registry",
+              "source": "packages/registry/src/registryTable.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:f66dba964d91a7e88729cfda8d871b99ad58b0b8f35c58df3094c5571a96fdf8",
+            "line": 10,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene3DPipelineCoverage.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/explainScene3DPipelineCoverage.ts\",262]",
+            "kind": "import",
+            "name": "StandardMaterialKind",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "StandardMaterialKind",
+            "kind": "dependency",
+            "module": {
+              "name": "Contract",
+              "packageName": "@flighthq/types",
+              "source": "packages/types/src/contract.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:eeca9234cc6b57efae158bd0c7a582050cdc21ae0bab9fb988c84adfd17bf838",
+            "line": 12,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene3DPipelineCoverage.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/explainScene3DPipelineCoverage.ts\",328]",
+            "kind": "import",
+            "name": "getRenderStateRuntime",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getRenderStateRuntime",
+            "kind": "dependency",
+            "module": {
+              "name": "RenderState",
+              "packageName": "@flighthq/render",
+              "source": "packages/render/src/renderState.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:1c903c0bd156716dcc163e2a0ae8468a4c6bcbf00fa86e1af518a09897fd516c",
+            "line": 16,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene3DPipelineCoverage.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/explainScene3DPipelineCoverage.ts\",571]",
+            "kind": "function",
+            "name": "explainScene3DPipelineCoverage",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:a7969f8f9cea3bd5a384e590063a7cd1dce5101f972e3e08286b6405fea31c62",
+            "line": 73,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene3DPipelineCoverage.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/explainScene3DPipelineCoverage.ts\",2355]",
+            "kind": "function",
+            "name": "collectUsed3DKinds",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ExplainScene3DPipelineCoverage",
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene3DPipelineCoverage.ts"
+          },
+          "specifier": "./renderState.ts",
+          "target": {
+            "name": "RenderState",
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/renderState.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ExplainScene3DPipelineCoverage",
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene3DPipelineCoverage.ts"
+          },
+          "specifier": "@flighthq/node/contract",
+          "target": {
+            "name": "Node",
+            "packageName": "@flighthq/node",
+            "source": "packages/node/src/node.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ExplainScene3DPipelineCoverage",
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene3DPipelineCoverage.ts"
+          },
+          "specifier": "@flighthq/registry/contract",
+          "target": {
+            "name": "RegistryTable",
+            "packageName": "@flighthq/registry",
+            "source": "packages/registry/src/registryTable.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ExplainScene3DPipelineCoverage",
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/explainScene3DPipelineCoverage.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "ExplainScene3DPipelineCoverage",
+        "packageName": "@flighthq/render",
+        "source": "packages/render/src/explainScene3DPipelineCoverage.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
             "fingerprint": "sha256:029e0b44e9260a860d54b30b5cd17b105f940f51d20398c4786f70724b4606cd",
             "line": 3,
             "packageName": "@flighthq/shape",
@@ -165433,7 +166478,7 @@
           "declaration": "variable",
           "path": [
             "declarations",
-            2
+            3
           ]
         }
       ]
@@ -167963,6 +169008,31 @@
         "name": "Index",
         "packageName": "@flighthq/protocol",
         "source": "packages/protocol/src/index.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Index",
+            "packageName": "@flighthq/registry",
+            "source": "packages/registry/src/index.ts"
+          },
+          "specifier": "./registryTable.ts",
+          "target": {
+            "name": "RegistryTable",
+            "packageName": "@flighthq/registry",
+            "source": "packages/registry/src/registryTable.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Index",
+        "packageName": "@flighthq/registry",
+        "source": "packages/registry/src/index.ts"
       },
       "steps": []
     },
@@ -214513,6 +215583,177 @@
         "name": "MenuSignals",
         "packageName": "@flighthq/types",
         "source": "packages/types/src/MenuSignals.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:c8c140086d891a9afea0cd9f57802b1bffdfc98d064bbc24f1ed1b768c6c5b20",
+            "line": 20,
+            "packageName": "@flighthq/scene2d-dom",
+            "source": "packages/scene2d-dom/src/mergeDomRenderOptions.ts",
+            "id": "binding:[\"@flighthq/scene2d-dom\",\"packages/scene2d-dom/src/mergeDomRenderOptions.ts\",980]",
+            "kind": "function",
+            "name": "mergeDomRenderOptions",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MergeDomRenderOptions",
+            "packageName": "@flighthq/scene2d-dom",
+            "source": "packages/scene2d-dom/src/mergeDomRenderOptions.ts"
+          },
+          "importedNames": [
+            "CanvasShapeCommand",
+            "CanvasShapeHandler"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "CanvasShapeRegistry",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/CanvasShapeRegistry.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MergeDomRenderOptions",
+            "packageName": "@flighthq/scene2d-dom",
+            "source": "packages/scene2d-dom/src/mergeDomRenderOptions.ts"
+          },
+          "importedNames": [
+            "DomRenderOptions"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "DomRenderOptions",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/DomRenderOptions.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MergeDomRenderOptions",
+            "packageName": "@flighthq/scene2d-dom",
+            "source": "packages/scene2d-dom/src/mergeDomRenderOptions.ts"
+          },
+          "importedNames": [
+            "DomTextureResolver"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "DomTextureResolver",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/DomTextureResolver.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MergeDomRenderOptions",
+            "packageName": "@flighthq/scene2d-dom",
+            "source": "packages/scene2d-dom/src/mergeDomRenderOptions.ts"
+          },
+          "importedNames": [
+            "EffectPaddingResolver"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "EffectPadding",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/EffectPadding.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MergeDomRenderOptions",
+            "packageName": "@flighthq/scene2d-dom",
+            "source": "packages/scene2d-dom/src/mergeDomRenderOptions.ts"
+          },
+          "importedNames": [
+            "Kind"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MergeDomRenderOptions",
+            "packageName": "@flighthq/scene2d-dom",
+            "source": "packages/scene2d-dom/src/mergeDomRenderOptions.ts"
+          },
+          "importedNames": [
+            "NodeRenderer"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "NodeRenderer",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/NodeRenderer.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MergeDomRenderOptions",
+            "packageName": "@flighthq/scene2d-dom",
+            "source": "packages/scene2d-dom/src/mergeDomRenderOptions.ts"
+          },
+          "importedNames": [
+            "Scene3DGraphSyncPolicy",
+            "StrokeTessellator"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "RenderState",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RenderState.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MergeDomRenderOptions",
+            "packageName": "@flighthq/scene2d-dom",
+            "source": "packages/scene2d-dom/src/mergeDomRenderOptions.ts"
+          },
+          "importedNames": [
+            "ShapeRasterizer"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ShapeRasterizer",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ShapeRasterizer.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "MergeDomRenderOptions",
+        "packageName": "@flighthq/scene2d-dom",
+        "source": "packages/scene2d-dom/src/mergeDomRenderOptions.ts"
       },
       "steps": []
     },
@@ -264321,6 +265562,195 @@
       "steps": []
     },
     {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:99e88952c06a5628990c0b49e03d1e7344103da89a9ab431ca607db5fc59f30d",
+            "line": 3,
+            "packageName": "@flighthq/registry",
+            "source": "packages/registry/src/registryTable.ts",
+            "id": "binding:[\"@flighthq/registry\",\"packages/registry/src/registryTable.ts\",108]",
+            "kind": "function",
+            "name": "concatKindMap",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:d4322e2d56c29bb58683fc40d940a588acfc2db5450cbaec958a12a0aa625801",
+            "line": 11,
+            "packageName": "@flighthq/registry",
+            "source": "packages/registry/src/registryTable.ts",
+            "id": "binding:[\"@flighthq/registry\",\"packages/registry/src/registryTable.ts\",343]",
+            "kind": "function",
+            "name": "createOrdinalTable",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:f19857a6d813ebe8cc3d79bbf0ec5e667478ca1163dc398458b0b28b33e8e453",
+            "line": 17,
+            "packageName": "@flighthq/registry",
+            "source": "packages/registry/src/registryTable.ts",
+            "id": "binding:[\"@flighthq/registry\",\"packages/registry/src/registryTable.ts\",546]",
+            "kind": "function",
+            "name": "getKindMapKeys",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:8831619ecbd0eed1efe6609e67a949a8cd47e79a6c054216a49893bcb1973d58",
+            "line": 23,
+            "packageName": "@flighthq/registry",
+            "source": "packages/registry/src/registryTable.ts",
+            "id": "binding:[\"@flighthq/registry\",\"packages/registry/src/registryTable.ts\",713]",
+            "kind": "function",
+            "name": "getOrdinalTableEntry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:8d15dfc3665389615c603e25d0c6036ad17c9fd4046299c8ff65ee96858b646a",
+            "line": 28,
+            "packageName": "@flighthq/registry",
+            "source": "packages/registry/src/registryTable.ts",
+            "id": "binding:[\"@flighthq/registry\",\"packages/registry/src/registryTable.ts\",949]",
+            "kind": "function",
+            "name": "withKindMapEntry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:5aaa97ae4fc5e0215fb18c8e67399d0307bc6e0b4c80bf2050322f861c15c074",
+            "line": 34,
+            "packageName": "@flighthq/registry",
+            "source": "packages/registry/src/registryTable.ts",
+            "id": "binding:[\"@flighthq/registry\",\"packages/registry/src/registryTable.ts\",1129]",
+            "kind": "function",
+            "name": "withoutKindMapEntry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "RegistryTable",
+            "packageName": "@flighthq/registry",
+            "source": "packages/registry/src/registryTable.ts"
+          },
+          "importedNames": [
+            "Kind"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "RegistryTable",
+            "packageName": "@flighthq/registry",
+            "source": "packages/registry/src/registryTable.ts"
+          },
+          "importedNames": [
+            "NonEntityCreateResult"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "NonEntityCreateResult",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/NonEntityCreateResult.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "RegistryTable",
+            "packageName": "@flighthq/registry",
+            "source": "packages/registry/src/registryTable.ts"
+          },
+          "importedNames": [
+            "OrdinalTable"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "RegistryTable",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/RegistryTable.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "RegistryTable",
+        "packageName": "@flighthq/registry",
+        "source": "packages/registry/src/registryTable.ts"
+      },
+      "steps": []
+    },
+    {
       "bindings": [],
       "dependencies": [
         {
@@ -268109,6 +269539,238 @@
           ]
         }
       ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8d15dfc3665389615c603e25d0c6036ad17c9fd4046299c8ff65ee96858b646a",
+            "line": 1,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/renderer.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/renderer.ts\",9]",
+            "kind": "import",
+            "name": "withKindMapEntry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "withKindMapEntry",
+            "kind": "dependency",
+            "module": {
+              "name": "RegistryTable",
+              "packageName": "@flighthq/registry",
+              "source": "packages/registry/src/registryTable.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:eeca9234cc6b57efae158bd0c7a582050cdc21ae0bab9fb988c84adfd17bf838",
+            "line": 4,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/renderer.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/renderer.ts\",178]",
+            "kind": "import",
+            "name": "getRenderStateRuntime",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "getRenderStateRuntime",
+            "kind": "dependency",
+            "module": {
+              "name": "RenderState",
+              "packageName": "@flighthq/render",
+              "source": "packages/render/src/renderState.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:b47f37cc0b630056407287b89846b761b6737f51f256bdbcb7357ebdd9b2b133",
+            "line": 8,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/renderer.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/renderer.ts\",443]",
+            "kind": "function",
+            "name": "copyAllRenderersFromRenderState",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:6f1e55f3c0276e59ee02d20cde534d58855b153984a4ad31935a952893697874",
+            "line": 13,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/renderer.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/renderer.ts\",701]",
+            "kind": "function",
+            "name": "copyRenderersFromRenderState",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:241dd4fe4fbe12149882e9c3f9c89ebeb464557bc0e3f454882dc903162a84a2",
+            "line": 36,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/renderer.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/renderer.ts\",1834]",
+            "kind": "function",
+            "name": "copyRenderStateRegistrations",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:6e7d6eb9a523aadccaf1c53dbefaa6a39fd4e78420dbb303e2a387b256e2942e",
+            "line": 50,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/renderer.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/renderer.ts\",2893]",
+            "kind": "function",
+            "name": "noopRendererData",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:e6a134c9abdfc9aa39d3560ea32c9a5c3047a479802ef45783e2ebd6195c70a9",
+            "line": 54,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/renderer.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/renderer.ts\",3006]",
+            "kind": "function",
+            "name": "registerNodeRenderer",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:269be964aad65971bab0fae961ad6410cff4c05e4e6a61cc76a9d30621eee56e",
+            "line": 65,
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/renderer.ts",
+            "id": "binding:[\"@flighthq/render\",\"packages/render/src/renderer.ts\",3681]",
+            "kind": "function",
+            "name": "registerNodeRenderers",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Renderer",
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/renderer.ts"
+          },
+          "specifier": "./renderState.ts",
+          "target": {
+            "name": "RenderState",
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/renderState.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Renderer",
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/renderer.ts"
+          },
+          "specifier": "@flighthq/registry/contract",
+          "target": {
+            "name": "RegistryTable",
+            "packageName": "@flighthq/registry",
+            "source": "packages/registry/src/registryTable.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Renderer",
+            "packageName": "@flighthq/render",
+            "source": "packages/render/src/renderer.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Contract",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/contract.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Renderer",
+        "packageName": "@flighthq/render",
+        "source": "packages/render/src/renderer.ts"
+      },
+      "steps": []
     },
     {
       "bindings": [],
@@ -293674,6 +295336,352 @@
         "source": "packages/types/src/ShapeCommandSchema.ts"
       },
       "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:8d15dfc3665389615c603e25d0c6036ad17c9fd4046299c8ff65ee96858b646a",
+            "line": 1,
+            "packageName": "@flighthq/shape-formats",
+            "source": "packages/shape-formats/src/shapeCommandSchemas.ts",
+            "id": "binding:[\"@flighthq/shape-formats\",\"packages/shape-formats/src/shapeCommandSchemas.ts\",9]",
+            "kind": "import",
+            "name": "withKindMapEntry",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "withKindMapEntry",
+            "kind": "dependency",
+            "module": {
+              "name": "RegistryTable",
+              "packageName": "@flighthq/registry",
+              "source": "packages/registry/src/registryTable.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:64de4f493563c7fc4ad4cd738da2acdd8ab792e6f36d0a8c43600766b3acb89f",
+            "line": 4,
+            "packageName": "@flighthq/shape-formats",
+            "source": "packages/shape-formats/src/shapeCommandSchemas.ts",
+            "id": "binding:[\"@flighthq/shape-formats\",\"packages/shape-formats/src/shapeCommandSchemas.ts\",193]",
+            "kind": "function",
+            "name": "createDefaultShapeCommandSchemas",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:6c72aaa4c9f224738a3cc1019325d6a26480ff8d8fba407072ca2b93f198db1c",
+            "line": 22,
+            "packageName": "@flighthq/shape-formats",
+            "source": "packages/shape-formats/src/shapeCommandSchemas.ts",
+            "id": "binding:[\"@flighthq/shape-formats\",\"packages/shape-formats/src/shapeCommandSchemas.ts\",809]",
+            "kind": "variable",
+            "name": "gradientArguments",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:320d4ff84263030cf3e55b49ee56cefd2fe18019bec5bf1634b9f36aaa6d8125",
+            "line": 33,
+            "packageName": "@flighthq/shape-formats",
+            "source": "packages/shape-formats/src/shapeCommandSchemas.ts",
+            "id": "binding:[\"@flighthq/shape-formats\",\"packages/shape-formats/src/shapeCommandSchemas.ts\",1179]",
+            "kind": "variable",
+            "name": "textureArguments",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:99e09cb71a73284a58d22f5c58a08611539d84e455c12cc796759088367c4a76",
+            "line": 38,
+            "packageName": "@flighthq/shape-formats",
+            "source": "packages/shape-formats/src/shapeCommandSchemas.ts",
+            "id": "binding:[\"@flighthq/shape-formats\",\"packages/shape-formats/src/shapeCommandSchemas.ts\",1321]",
+            "kind": "variable",
+            "name": "SHAPE_COMMAND_SCHEMA_ARGUMENTS",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 2
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:84215a8205dd89430898e92f17662f6641c2669c9c383993614e648b229c088e",
+            "line": 111,
+            "packageName": "@flighthq/shape-formats",
+            "source": "packages/shape-formats/src/shapeCommandSchemas.ts",
+            "id": "binding:[\"@flighthq/shape-formats\",\"packages/shape-formats/src/shapeCommandSchemas.ts\",3967]",
+            "kind": "variable",
+            "name": "defaultShapeCommandSchemas",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 3
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:a829ef5804c99acd6eea088595a1c00743514cf8da2ca0acbb21c0d76ff5bd2a",
+            "line": 113,
+            "packageName": "@flighthq/shape-formats",
+            "source": "packages/shape-formats/src/shapeCommandSchemas.ts",
+            "id": "binding:[\"@flighthq/shape-formats\",\"packages/shape-formats/src/shapeCommandSchemas.ts\",4081]",
+            "kind": "function",
+            "name": "argument",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:1c600362d3b9eb9009fec5a5ba7807e3dc9a326b3c7d431790f83657fe8bd4f6",
+            "line": 117,
+            "packageName": "@flighthq/shape-formats",
+            "source": "packages/shape-formats/src/shapeCommandSchemas.ts",
+            "id": "binding:[\"@flighthq/shape-formats\",\"packages/shape-formats/src/shapeCommandSchemas.ts\",4213]",
+            "kind": "function",
+            "name": "definition",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ShapeCommandSchemas",
+            "packageName": "@flighthq/shape-formats",
+            "source": "packages/shape-formats/src/shapeCommandSchemas.ts"
+          },
+          "specifier": "@flighthq/registry/contract",
+          "target": {
+            "name": "RegistryTable",
+            "packageName": "@flighthq/registry",
+            "source": "packages/registry/src/registryTable.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ShapeCommandSchemas",
+            "packageName": "@flighthq/shape-formats",
+            "source": "packages/shape-formats/src/shapeCommandSchemas.ts"
+          },
+          "importedNames": [
+            "Kind"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ShapeCommandSchemas",
+            "packageName": "@flighthq/shape-formats",
+            "source": "packages/shape-formats/src/shapeCommandSchemas.ts"
+          },
+          "importedNames": [
+            "ShapeCommandKey",
+            "ShapeCommandRegistry"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ShapeCommand",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ShapeCommand.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ShapeCommandSchemas",
+            "packageName": "@flighthq/shape-formats",
+            "source": "packages/shape-formats/src/shapeCommandSchemas.ts"
+          },
+          "importedNames": [
+            "ShapeCommandSchema",
+            "ShapeCommandSchemaArgument",
+            "ShapeCommandSchemaArgumentType"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "ShapeCommandSchema",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/ShapeCommandSchema.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "ShapeCommandSchemas",
+        "packageName": "@flighthq/shape-formats",
+        "source": "packages/shape-formats/src/shapeCommandSchemas.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:6c72aaa4c9f224738a3cc1019325d6a26480ff8d8fba407072ca2b93f198db1c",
+              "line": 22,
+              "packageName": "@flighthq/shape-formats",
+              "source": "packages/shape-formats/src/shapeCommandSchemas.ts",
+              "id": "binding:[\"@flighthq/shape-formats\",\"packages/shape-formats/src/shapeCommandSchemas.ts\",809]",
+              "kind": "variable",
+              "name": "gradientArguments",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            2
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:320d4ff84263030cf3e55b49ee56cefd2fe18019bec5bf1634b9f36aaa6d8125",
+              "line": 33,
+              "packageName": "@flighthq/shape-formats",
+              "source": "packages/shape-formats/src/shapeCommandSchemas.ts",
+              "id": "binding:[\"@flighthq/shape-formats\",\"packages/shape-formats/src/shapeCommandSchemas.ts\",1179]",
+              "kind": "variable",
+              "name": "textureArguments",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            3
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:99e09cb71a73284a58d22f5c58a08611539d84e455c12cc796759088367c4a76",
+              "line": 38,
+              "packageName": "@flighthq/shape-formats",
+              "source": "packages/shape-formats/src/shapeCommandSchemas.ts",
+              "id": "binding:[\"@flighthq/shape-formats\",\"packages/shape-formats/src/shapeCommandSchemas.ts\",1321]",
+              "kind": "variable",
+              "name": "SHAPE_COMMAND_SCHEMA_ARGUMENTS",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            4
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:84215a8205dd89430898e92f17662f6641c2669c9c383993614e648b229c088e",
+              "line": 111,
+              "packageName": "@flighthq/shape-formats",
+              "source": "packages/shape-formats/src/shapeCommandSchemas.ts",
+              "id": "binding:[\"@flighthq/shape-formats\",\"packages/shape-formats/src/shapeCommandSchemas.ts\",3967]",
+              "kind": "variable",
+              "name": "defaultShapeCommandSchemas",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            5
+          ]
+        }
+      ]
     },
     {
       "bindings": [

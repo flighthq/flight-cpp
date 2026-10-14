@@ -905,7 +905,7 @@
       "code": "dependency-refused",
       "module": "packages/effects-canvas/src/canvasEffectRegistry.ts",
       "package": "@flighthq/effects-canvas",
-      "reason": "dependency @flighthq/registry/contract was refused for @flighthq/registry/packages/registry/src/registryTable.ts",
+      "reason": "dependency @flighthq/scene2d-canvas/contract was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts",
       "stage": "dependency"
     },
     {
@@ -1269,7 +1269,7 @@
       "code": "dependency-refused",
       "module": "packages/effects-gl/src/glEffectRegistry.ts",
       "package": "@flighthq/effects-gl",
-      "reason": "dependency @flighthq/registry/contract was refused for @flighthq/registry/packages/registry/src/registryTable.ts",
+      "reason": "dependency @flighthq/render-gl/contract was refused for @flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
       "stage": "dependency"
     },
     {
@@ -3710,29 +3710,6 @@
     },
     {
       "code": "dependency-refused",
-      "module": "packages/registry/src/contract.ts",
-      "package": "@flighthq/registry",
-      "reason": "dependency ./registryTable.ts was refused for @flighthq/registry/packages/registry/src/registryTable.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/registry/src/index.ts",
-      "package": "@flighthq/registry",
-      "reason": "dependency ./registryTable.ts was refused for @flighthq/registry/packages/registry/src/registryTable.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 11,
-      "module": "packages/registry/src/registryTable.ts",
-      "package": "@flighthq/registry",
-      "reason": "cpp emission failed for @flighthq/registry/packages/registry/src/registryTable.ts: an array of [null] cannot be passed where the element union is [T, null]: the target's container is parameterized by its element type, so this would need a different container, and building one would copy the array and change the identity the source passes. Write the copy explicitly, or declare the position over the element union the value has",
-      "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
       "module": "packages/render/src/contract.ts",
       "package": "@flighthq/render",
       "reason": "dependency ./enableColorAdjustments.ts was refused for @flighthq/render/packages/render/src/enableColorAdjustments.ts",
@@ -3762,13 +3739,6 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
-      "module": "packages/render/src/explainScene2DPipelineCoverage.ts",
-      "package": "@flighthq/render",
-      "reason": "dependency @flighthq/registry/contract was refused for @flighthq/registry/packages/registry/src/registryTable.ts",
-      "stage": "dependency"
-    },
-    {
       "code": "unsupported-ir",
       "column": 1,
       "line": 28,
@@ -3776,13 +3746,6 @@
       "package": "@flighthq/render",
       "reason": "cpp emission failed for @flighthq/render/packages/render/src/explainScene2DRender.ts: the asserted row from flight::types::NodeAny to flight::Ref<flight::types::HasAppearance> reads alpha and visible, which the source type does not declare, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as HasAppearance, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that declares alpha and visible -- construct HasAppearance explicitly, then type the retaining slot and every accessor result as HasAppearance wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::types::NodeAny. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
       "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/render/src/explainScene3DPipelineCoverage.ts",
-      "package": "@flighthq/render",
-      "reason": "dependency @flighthq/registry/contract was refused for @flighthq/registry/packages/registry/src/registryTable.ts",
-      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -3860,13 +3823,6 @@
       "package": "@flighthq/render",
       "reason": "cpp emission failed for @flighthq/render/packages/render/src/renderTarget.ts: property length on a C++ variant requires proven union member access",
       "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/render/src/renderer.ts",
-      "package": "@flighthq/render",
-      "reason": "dependency @flighthq/registry/contract was refused for @flighthq/registry/packages/registry/src/registryTable.ts",
-      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -4509,13 +4465,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 17,
+      "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts: member get on optional C++ storage requires proven present payload: nothing proved the payload present, so the read would unpack storage that may be holding absence. Guard the receiver, read it through an optional chain, or narrow it into a present local first; the compiler will not call value() without that proof. Where the storage carries BOTH null and undefined, a strict test reaches only one of them -- `x !== null` leaves undefined and `x !== undefined` leaves null -- so the guard that proves presence is the loose `x != null`, or a local bound from the storage and tested the same way",
-      "stage": "emission"
+      "reason": "dependency ./canvasTextureResolver.ts was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -4550,22 +4504,18 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 19,
+      "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasFillPattern.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasFillPattern.ts: C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame -> flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each reaches a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the emitter does -- or provide that runtime contract",
-      "stage": "emission"
+      "reason": "dependency ./canvasTextureResolver.ts was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
+      "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 11,
+      "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasImageTextureResolver.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasImageTextureResolver.ts: contextual C++ union conversion requires equivalent source union evidence: target optionalSingle carriers [flight::host_sdl::ImageSource] from binary source optionalSingle carriers [flight::types::HostImageSource]. Narrow or convert the source expression so each of its alternatives names exactly one destination union alternative. The carrier lists show which alternatives lack an exact carrier; preserve the declared collection or member union alias before flow expansion. For a Map or WeakMap lookup followed by a rebind, ensure every rebound member already has the declared value owner member's carrier -- a Readonly structural view does not become a mutable nominal Ref.",
-      "stage": "emission"
+      "reason": "dependency ./canvasTextureResolver.ts was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -4584,13 +4534,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 17,
+      "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasParticleEmitter2D.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasParticleEmitter2D.ts: C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame -> flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each reaches a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the emitter does -- or provide that runtime contract",
-      "stage": "emission"
+      "reason": "dependency ./canvasRenderState.ts was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -4598,7 +4546,7 @@
       "line": 16,
       "module": "packages/scene2d-canvas/src/canvasQuadBatch.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasQuadBatch.ts: C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame -> flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each reaches a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the emitter does -- or provide that runtime contract",
+      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasQuadBatch.ts: contextual nullable interface conversion from Material2D to Material follows TypeScript interface heritage, but flight-cpp stores those declarations in independent flight::Ref<flight::types::Material2D> and flight::Ref<flight::types::Material> owner types: each interface struct is emitted flattened, so the heritage is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would claim C++ inheritance the emitted interface structs do not have, materializing the target would replace object identity, and a structural row would change the declared result carrier. Preserve the exact source owner in the declared result and explicitly represent both owners where the branches merge, or add an owner-preserving interface-heritage carrier to the runtime contract. Declaring the destination as the derived interface where the concrete type is known -- or converting where the type is still concrete rather than widening it through a nullable union -- avoids the boundary altogether; closing it at the carrier needs either that runtime carrier or interface structs emitted with the heritage as a C++ base relation.",
       "stage": "emission"
     },
     {
@@ -4682,13 +4630,11 @@
       "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 30,
+      "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasScale9Sprite.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasScale9Sprite.ts: C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame -> flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each reaches a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the emitter does -- or provide that runtime contract",
-      "stage": "emission"
+      "reason": "dependency ./canvasNode2D.ts was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasNode2D.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -4737,13 +4683,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 16,
+      "code": "dependency-refused",
       "module": "packages/scene2d-canvas/src/canvasSprite.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasSprite.ts: C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame -> flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each reaches a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the emitter does -- or provide that runtime contract",
-      "stage": "emission"
+      "reason": "dependency ./canvasNode2D.ts was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasNode2D.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -4760,11 +4704,13 @@
       "stage": "dependency"
     },
     {
-      "code": "dependency-refused",
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 33,
       "module": "packages/scene2d-canvas/src/canvasTextLabel.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "dependency ./canvasNode2D.ts was refused for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasNode2D.ts",
-      "stage": "dependency"
+      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextLabel.ts: contextual optionalSingle construction requires expression type evidence",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -4775,20 +4721,9 @@
     },
     {
       "code": "unsupported-ir",
-      "column": 1,
-      "line": 39,
       "module": "packages/scene2d-canvas/src/canvasTextureResolver.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts: contextual union callable value type std::function<std::optional<void>(flight::types::RenderRegistryTable, flight::String)> agrees with no alternative's signature: the destination holds [std::function<void(flight::types::RenderRegistryTable, flight::String)>]. A callable is a represented domain, so the obstacle is that the destination's signature cannot call this one. Declare the value's parameters so the destination's signature supplies them, and its result as one the destination holds",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 10,
-      "module": "packages/scene2d-canvas/src/canvasTextureView.ts",
-      "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/types/packages/types/src/Texture.ts: contextual union value type flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Texture2D>>>> is not a represented runtime domain: the value's type resembles an alternative but is not the declaration it names. Pass the declared type, or declare the destination union over the type the value has",
+      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts: runtime external symbol binding plan is incomplete (missing: [value], HostImageSource[type], HostImageSource[value])",
       "stage": "emission"
     },
     {
@@ -4797,7 +4732,7 @@
       "line": 12,
       "module": "packages/scene2d-canvas/src/canvasTextureWindowSource.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts: C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame -> flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each reaches a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the emitter does -- or provide that runtime contract",
+      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts: contextual union value type HostImageSource is not a represented runtime domain",
       "stage": "emission"
     },
     {
@@ -4806,7 +4741,7 @@
       "line": 14,
       "module": "packages/scene2d-canvas/src/canvasTilemap.ts",
       "package": "@flighthq/scene2d-canvas",
-      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTilemap.ts: C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame -> flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each reaches a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the emitter does -- or provide that runtime contract",
+      "reason": "cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTilemap.ts: contextual nullable interface conversion from Material2D to Material follows TypeScript interface heritage, but flight-cpp stores those declarations in independent flight::Ref<flight::types::Material2D> and flight::Ref<flight::types::Material> owner types: each interface struct is emitted flattened, so the heritage is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would claim C++ inheritance the emitted interface structs do not have, materializing the target would replace object identity, and a structural row would change the declared result carrier. Preserve the exact source owner in the declared result and explicitly represent both owners where the branches merge, or add an owner-preserving interface-heritage carrier to the runtime contract. Declaring the destination as the derived interface where the concrete type is known -- or converting where the type is still concrete rather than widening it through a nullable union -- avoids the boundary altogether; closing it at the carrier needs either that runtime carrier or interface structs emitted with the heritage as a C++ base relation.",
       "stage": "emission"
     },
     {
@@ -4857,7 +4792,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-dom/src/contract.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "dependency ./domBitmapTextureResolver was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/domBitmapTextureResolver.ts",
+      "reason": "dependency ./domBitmapTextureResolver.ts was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/domBitmapTextureResolver.ts",
       "stage": "dependency"
     },
     {
@@ -4905,7 +4840,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-dom/src/domHtmlView.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "dependency ./domStyle was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/domStyle.ts",
+      "reason": "dependency ./domStyle.ts was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/domStyle.ts",
       "stage": "dependency"
     },
     {
@@ -4929,10 +4864,10 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 21,
+      "line": 18,
       "module": "packages/scene2d-dom/src/domNode2D.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domNode2D.ts: contextual C++ union conversion requires equivalent source union evidence: target optionalSingle carriers [flight::Array<flight::Ref<data_enabled_kind_name_entity_runtime_key_alpha_visible_blend_mode_clip_material_material_data_pivot_x_pivot_y_rotation_scale_x_scale_y_skew_x_skew_y_x_y_aa74c89858c783f4>>] from property source optionalSingle carriers [flight::Array<flight::types::NodeOf<flight::Ref<flight::types::Node2DTraits>>>]. Narrow or convert the source expression so each of its alternatives names exactly one destination union alternative. The carrier lists show which alternatives lack an exact carrier; preserve the declared collection or member union alias before flow expansion. For a Map or WeakMap lookup followed by a rebind, ensure every rebound member already has the declared value owner member's carrier -- a Readonly structural view does not become a mutable nominal Ref.",
+      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domNode2D.ts: the asserted row from flight::types::NodeAny to the unresolved asserted row reads members the source type does not declare, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as the unresolved asserted row, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that declares them -- construct the unresolved asserted row explicitly, then type the retaining slot and every accessor result as the unresolved asserted row wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::types::NodeAny. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
       "stage": "emission"
     },
     {
@@ -4945,7 +4880,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 40,
+      "line": 38,
       "module": "packages/scene2d-dom/src/domRenderState.ts",
       "package": "@flighthq/scene2d-dom",
       "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domRenderState.ts: a reference assertion from flight::Ref<flight::types::RenderStateRuntime> to flight::Ref<flight::types::DomRenderStateRuntime> has no heritage to cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage",
@@ -4964,7 +4899,7 @@
       "line": 37,
       "module": "packages/scene2d-dom/src/domScale9Shape.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domScale9Shape.ts: the asserted row from flight::Ref<flight::types::RendererData> to flight::Ref<DomScale9ShapeData> reads canvas and context, which the source type does not declare, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as DomScale9ShapeData, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that declares canvas and context -- construct DomScale9ShapeData explicitly, then type the retaining slot and every accessor result as DomScale9ShapeData wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::RendererData>. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
+      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domScale9Shape.ts: contextual optionalSingle construction requires expression type evidence",
       "stage": "emission"
     },
     {
@@ -4973,7 +4908,7 @@
       "line": 28,
       "module": "packages/scene2d-dom/src/domScale9Sprite.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domScale9Sprite.ts: the asserted row from flight::Ref<flight::types::RendererData> to flight::Ref<DomScale9SpriteData> reads element and pieces, which the source type does not declare, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as DomScale9SpriteData, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that declares element and pieces -- construct DomScale9SpriteData explicitly, then type the retaining slot and every accessor result as DomScale9SpriteData wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::RendererData>. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
+      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domScale9Sprite.ts: C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame -> flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each reaches a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the emitter does -- or provide that runtime contract",
       "stage": "emission"
     },
     {
@@ -4982,17 +4917,15 @@
       "line": 31,
       "module": "packages/scene2d-dom/src/domShape.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domShape.ts: the asserted row from flight::Ref<flight::types::RendererData> to flight::Ref<DomShapeData> reads canvas and context, which the source type does not declare, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as DomShapeData, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that declares canvas and context -- construct DomShapeData explicitly, then type the retaining slot and every accessor result as DomShapeData wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::RendererData>. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
+      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domShape.ts: contextual optionalSingle construction requires expression type evidence",
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 15,
+      "code": "dependency-refused",
       "module": "packages/scene2d-dom/src/domShapeRasterizer.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domShapeRasterizer.ts: contextual multiVariant construction requires expression type evidence",
-      "stage": "emission"
+      "reason": "dependency ./domRenderState.ts was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/domRenderState.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
@@ -5005,7 +4938,7 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-dom/src/domStyle.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "dependency ./domRenderState was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/domRenderState.ts",
+      "reason": "dependency ./domRenderState.ts was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/domRenderState.ts",
       "stage": "dependency"
     },
     {
@@ -5016,30 +4949,26 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 29,
+      "code": "dependency-refused",
       "module": "packages/scene2d-dom/src/domTextInput.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domTextInput.ts: the asserted row from flight::Ref<flight::types::RendererData> to flight::Ref<DomTextInputData> reads div, which the source type does not declare, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as DomTextInputData, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that declares div -- construct DomTextInputData explicitly, then type the retaining slot and every accessor result as DomTextInputData wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::RendererData>. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
-      "stage": "emission"
+      "reason": "dependency ./domRichText.ts was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/domRichText.ts",
+      "stage": "dependency"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 41,
+      "code": "dependency-refused",
       "module": "packages/scene2d-dom/src/domTextLabel.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domTextLabel.ts: the asserted row from flight::Ref<flight::types::RendererData> to flight::Ref<DomTextData> reads div, which the source type does not declare, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as DomTextData, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that declares div -- construct DomTextData explicitly, then type the retaining slot and every accessor result as DomTextData wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::RendererData>. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
-      "stage": "emission"
+      "reason": "dependency ./domStyle.ts was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/domStyle.ts",
+      "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 20,
+      "line": 7,
       "module": "packages/scene2d-dom/src/domTextureResolver.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domTextureResolver.ts: C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame -> flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each reaches a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the emitter does -- or provide that runtime contract",
+      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/domTextureResolver.ts: C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (Map | ReadonlyMap -> flight::Map<flight::String, flight::types::DomTextureResolver>); give the domains distinguishable key, element, or member types so each reaches a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the emitter does -- or provide that runtime contract",
       "stage": "emission"
     },
     {
@@ -5053,15 +4982,24 @@
       "code": "dependency-refused",
       "module": "packages/scene2d-dom/src/explainDomTextureResolution.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "dependency ./domRenderState was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/domRenderState.ts",
+      "reason": "dependency ./domRenderState.ts was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/domRenderState.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/scene2d-dom/src/index.ts",
       "package": "@flighthq/scene2d-dom",
-      "reason": "dependency ./contract was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+      "reason": "dependency ./domBitmapTextureResolver.ts was refused for @flighthq/scene2d-dom/packages/scene2d-dom/src/domBitmapTextureResolver.ts",
       "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 14,
+      "line": 73,
+      "module": "packages/scene2d-dom/src/scene2DDomPipeline.ts",
+      "package": "@flighthq/scene2d-dom",
+      "reason": "cpp emission failed for @flighthq/scene2d-dom/packages/scene2d-dom/src/scene2DDomPipeline.ts: structural row conversion requires a resolved source shape that contains every target member",
+      "stage": "emission"
     },
     {
       "code": "dependency-refused",
@@ -7009,16 +6947,16 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-gl/src/glMeshMaterialRegistry.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "dependency @flighthq/registry/contract was refused for @flighthq/registry/packages/registry/src/registryTable.ts",
+      "reason": "dependency @flighthq/render-gl/contract was refused for @flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
       "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 243,
+      "line": 295,
       "module": "packages/scene3d-gl/src/glMeshProgram.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts: type assertion target must identify exactly one C++ variant alternative: target T against [flight::Ref<flight::types::GlMeshProgram>]",
+      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts: type assertion target must identify exactly one C++ variant alternative: target flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material3D>>>> against [flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>]; the value holds the target through an alternative whose members already satisfy it, but the two are separate flattened C++ structs with no base relation between them, so there is no narrowing to follow -- a CLASS heritage pair narrows here, because those structs really do inherit. Assert to the alternative the value actually holds and read this target's members from it, or declare the slot as this target where the concrete type is known",
       "stage": "emission"
     },
     {
@@ -7045,13 +6983,11 @@
       "stage": "emission"
     },
     {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 195,
+      "code": "dependency-refused",
       "module": "packages/scene3d-gl/src/glParticleEmitter3D.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glParticleEmitter3D.ts: a structural assertion from the readonly row Readonly<NodeAny> to the writable row ParticleEmitter3D claims mutation the source refused: a readonly row never becomes writable, because the boundary the value came through said its subject must not be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the readonly row where the value is only read, or declare the source -- its parameter, slot, or accessor result -- as the writable type where that object may really be mutated. Choosing between those two repairs is the question this assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME OWNER that the mutating paths must write needs a mutable-source accessor returning the full writable owner from the typed runtime slot, with the readonly accessor kept for reads, because the capability has to exist on the storage and accessor that establish those cells; a NODE that the read paths only traverse and never mutate needs the two authorities separated instead, with a readonly view on every read path and a separate mutable entry point for the paths that really mutate, because laundering a writable node out of a readonly boundary grants mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained row carries; neither adds cells to a row that does not declare them. Making only that boundary writable is insufficient here: the source owner does not declare EntityRuntimeKey, alpha, blendMode, data, position, rotation, scale and visible, so it has no cells for the asserted row to mutate. Declare both the storage slot and the accessor result as the full writable ParticleEmitter3D row where initialization establishes those cells, rather than widening Readonly<NodeAny> at the use site.",
-      "stage": "emission"
+      "reason": "dependency @flighthq/render-gl/contract was refused for @flighthq/render-gl/packages/render-gl/src/glDraw.ts",
+      "stage": "dependency"
     },
     {
       "code": "dependency-refused",
@@ -7100,7 +7036,7 @@
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 148,
+      "line": 152,
       "module": "packages/scene3d-gl/src/glScene3DRuntime.ts",
       "package": "@flighthq/scene3d-gl",
       "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glScene3DRuntime.ts: flight-cpp WeakMap<object, object> typed views require the runtime overload flight::checked_weak_map_view<Key, Value>(flight::WeakMap<flight::Ref<void>, flight::ErasedRef>&)",
@@ -7125,7 +7061,7 @@
     {
       "code": "unsupported-ir",
       "column": 14,
-      "line": 344,
+      "line": 352,
       "module": "packages/scene3d-gl/src/glShadedBuiltInModifiers.ts",
       "package": "@flighthq/scene3d-gl",
       "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts: the asserted row from flight::Ref<flight::types::Modifier> to flight::Ref<flight::types::ToonModifier> reads smoothness and steps, which the source type does not declare, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as ToonModifier, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that declares smoothness and steps -- construct ToonModifier explicitly, then type the retaining slot and every accessor result as ToonModifier wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::Modifier>. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
@@ -7144,16 +7080,16 @@
       "code": "dependency-refused",
       "module": "packages/scene3d-gl/src/glShadedModifierSnippet.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "dependency @flighthq/registry/contract was refused for @flighthq/registry/packages/registry/src/registryTable.ts",
+      "reason": "dependency @flighthq/render-gl/contract was refused for @flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
       "stage": "dependency"
     },
     {
       "code": "unsupported-ir",
       "column": 1,
-      "line": 511,
+      "line": 520,
       "module": "packages/scene3d-gl/src/glShadedPrelude.ts",
       "package": "@flighthq/scene3d-gl",
-      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glShadedPrelude.ts: the asserted row from flight::Ref<flight::types::ModifierDefinition> to flight::Ref<flight::types::GlModifierSnippet> reads bind, contribution and declarations, which the source type does not declare, and a structural owner binds the members and storage representations of the type the object was first reached as, so a member the source's own declaration lacks or carries differently has no compatible cell to answer the read. Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain indices, keys, or tokens into storage that remains typed as GlModifierSnippet, rather than storing an erased reference and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery contract that validates and returns the exact owner before dispatch. Declare the source as a type that declares bind, contribution and declarations -- construct GlModifierSnippet explicitly, then type the retaining slot and every accessor result as GlModifierSnippet wherever that concrete owner is known; changing only the accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past flight::Ref<flight::types::ModifierDefinition>. The compiler will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.",
+      "reason": "cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glShadedPrelude.ts: an instanceof test against Map needs the operand's union to name it or to carry the erased arm; this union does neither, so nothing tells the target which kind is being asked about",
       "stage": "emission"
     },
     {
@@ -8117,13 +8053,6 @@
       "module": "packages/shape-formats/src/index.ts",
       "package": "@flighthq/shape-formats",
       "reason": "dependency ./contract.ts was refused for @flighthq/shape-formats/packages/shape-formats/src/contract.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/shape-formats/src/shapeCommandSchemas.ts",
-      "package": "@flighthq/shape-formats",
-      "reason": "dependency @flighthq/registry/contract was refused for @flighthq/registry/packages/registry/src/registryTable.ts",
       "stage": "dependency"
     },
     {

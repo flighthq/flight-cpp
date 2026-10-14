@@ -11,6 +11,7 @@
 #include <flight/structural_ref.hpp>
 #include <optional>
 #include <random>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -78,7 +79,7 @@ inline void apply_vignette_effect_to_canvas(flight::StructuralRef<flight::RowRea
   ctx.set_transform(w, 0.0, 0.0, h, 0.0, 0.0);
   (ctx.global_composite_operation = flight::String("multiply"));
   (ctx.filter = flight::String("none"));
-  (ctx.fill_style = gradient);
+  (ctx.fill_style = std::variant<flight::CanvasGradient, flight::CanvasPattern, flight::String>{std::in_place_type<flight::CanvasGradient>, gradient});
   ctx.fill_rect(0.0, 0.0, 1.0, 1.0);
   ctx.restore();
 }

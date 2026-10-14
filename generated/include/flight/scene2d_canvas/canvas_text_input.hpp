@@ -9,6 +9,7 @@
 #include <flight/weak_map.hpp>
 #include <optional>
 #include <random>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -96,7 +97,7 @@ inline void draw_canvas_text_input_overlay(flight::Ref<flight::types::CanvasRend
   context.clip();
   flight::textinput::get_text_input_selection_rectangles(selection_rectangles, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>(layout.value())));
   if ((static_cast<double>(selection_rectangles.size()) > 0.0)) {
-    (context.fill_style = flight::color::compute_rgba_css_string(input.value()->selection_color));
+    (context.fill_style = std::variant<flight::CanvasGradient, flight::CanvasPattern, flight::String>{std::in_place_type<flight::String>, flight::color::compute_rgba_css_string(input.value()->selection_color)});
     (context.global_alpha = flight::minimum(1.0, (render_proxy->alpha * input.value()->selection_alpha)));
     for (auto rect : selection_rectangles) {
       context.fill_rect((rect->x - scroll_xoffset), (rect->y - scroll_yoffset), rect->width, rect->height);
@@ -105,7 +106,7 @@ inline void draw_canvas_text_input_overlay(flight::Ref<flight::types::CanvasRend
   if ((input.value()->focused && (flight::textinput::get_text_input_selection_begin_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source))) == flight::textinput::get_text_input_selection_end_index(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)))))) {
     if (get_caret_visible(source, input.value()->focused)) {
       flight::textinput::get_text_input_caret_rectangle(caret_rectangle, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RichText>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichText>>>>(source)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>(layout.value())));
-      (context.fill_style = flight::color::compute_rgba_css_string(input.value()->caret_color));
+      (context.fill_style = std::variant<flight::CanvasGradient, flight::CanvasPattern, flight::String>{std::in_place_type<flight::String>, flight::color::compute_rgba_css_string(input.value()->caret_color)});
       (context.global_alpha = render_proxy->alpha);
       context.fill_rect((caret_rectangle->x - scroll_xoffset), (caret_rectangle->y - scroll_yoffset), caret_width, caret_rectangle->height);
     }

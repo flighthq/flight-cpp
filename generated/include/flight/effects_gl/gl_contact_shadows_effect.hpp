@@ -34,12 +34,7 @@ namespace flight::effects_gl {
 
 #ifndef FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_GL_SAMPLES_INTENSITY_BIAS_RADIUS_2E396971C457AFF5
 #define FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_GL_SAMPLES_INTENSITY_BIAS_RADIUS_2E396971C457AFF5
-struct samples_intensity_bias_radius_2e396971c457aff5 : public flight::ReferenceEnabled {
-  std::optional<double> samples;
-  std::optional<double> intensity;
-  std::optional<double> bias;
-  std::optional<double> radius;
-};
+using samples_intensity_bias_radius_2e396971c457aff5 = flight::effects::samples_intensity_bias_radius_2e396971c457aff5;
 #endif // FLIGHT_COMPILER_ANONYMOUS__FLIGHTHQ_EFFECTS_GL_SAMPLES_INTENSITY_BIAS_RADIUS_2E396971C457AFF5
 
 inline void apply_contact_shadows_effect_to_gl(flight::Ref<flight::types::GlRenderState> state, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlTextureRenderTarget>>>> source, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlTextureRenderTarget>>>> dest, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ContactShadowsEffect>>>> effect) {

@@ -26,6 +26,7 @@ namespace flight::types { struct HostImageCapability; }
 namespace flight::types { struct ImageResource; }
 namespace flight::types { struct RendererData; }
 namespace flight::types { struct Surface; }
+namespace flight::types { struct TextureSource; }
 namespace flight::types { template <typename Traits> struct Node; }
 
 #include <flight/entity/entity.hpp>

@@ -3,14 +3,14 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: variable (binding) -- source line 344
+//   missing: variable (binding) -- source line 352
 //   missing: variable (binding) -- source line 45
-//   missing: variable (binding) -- source line 377
-//   missing: variable (binding) -- source line 97
-//   missing: variable (binding) -- source line 150
-//   missing: variable (binding) -- source line 189
-//   missing: variable (binding) -- source line 243
-//   missing: variable (binding) -- source line 288
+//   missing: variable (binding) -- source line 385
+//   missing: variable (binding) -- source line 99
+//   missing: variable (binding) -- source line 156
+//   missing: variable (binding) -- source line 195
+//   missing: variable (binding) -- source line 251
+//   missing: variable (binding) -- source line 296
 #include <flight/host_sdl/webgl.hpp>
 #include <flight/structural_ref.hpp>
 #include <optional>
@@ -47,7 +47,7 @@ namespace flight::types { struct VertexDisplaceModifier; }
 namespace flight::scene3d_gl {
 
 
-// NOT GENERATED: variable (binding) -- source line 344
+// NOT GENERATED: variable (binding) -- source line 352
 // refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
@@ -124,14 +124,16 @@ inline void bind_gl_modifier_texture(flight::StructuralRef<flight::RowReadonly<f
 //     bind(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void {
 //       const animated = modifier as Readonly<AnimatedNormalModifier>;
 //       if (animated.map === null) return;
+//       const map = animated.map;
 //       const gl = context.state.gl;
 //       const suffix = `_${context.index}`;
-//       bindGlModifierTexture(context, animated.map, `u_animNormalMap${suffix}`);
+//       bindGlModifierTexture(context, map, `u_animNormalMap${suffix}`);
 //       const scroll = animated.scroll;
 //       gl.uniform2f(gl.getUniformLocation(context.program, `u_animNormalScroll${suffix}`), scroll.x, scroll.y);
 //       gl.uniform1f(gl.getUniformLocation(context.program, `u_animNormalStrength${suffix}`), animated.strength ?? 1);
 //       if (animated.secondaryMap !== undefined) {
-//         bindGlModifierTexture(context, animated.secondaryMap, `u_animNormalMap2${suffix}`);
+//         const secondaryMap = animated.secondaryMap;
+//         bindGlModifierTexture(context, secondaryMap, `u_animNormalMap2${suffix}`);
 //         const secondary = animated.secondaryScroll ?? scroll;
 //         gl.uniform2f(gl.getUniformLocation(context.program, `u_animNormalScroll2${suffix}`), secondary.x, secondary.y);
 //       }
@@ -190,7 +192,7 @@ inline void bind_gl_modifier_texture(flight::StructuralRef<flight::RowReadonly<f
 // reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.
 
 
-// NOT GENERATED: variable (binding) -- source line 377
+// NOT GENERATED: variable (binding) -- source line 385
 // refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
@@ -202,15 +204,19 @@ inline void bind_gl_modifier_texture(flight::StructuralRef<flight::RowReadonly<f
 //       const suffix = `_${context.index}`;
 //       gl.uniform1f(gl.getUniformLocation(context.program, `u_vDisplaceAmplitude${suffix}`), displace.amplitude);
 //       if (displace.axis !== undefined) {
+//         const axis = displace.axis;
 //         gl.uniform3f(
 //           gl.getUniformLocation(context.program, `u_vDisplaceAxis${suffix}`),
-//           displace.axis.x,
-//           displace.axis.y,
-//           displace.axis.z,
+//           axis.x,
+//           axis.y,
+//           axis.z,
 //         );
 //       }
 //       if (displace.source === VertexDisplaceModifierSource.HeightMap) {
-//         if (displace.map !== undefined) bindGlModifierTexture(context, displace.map, `u_vDisplaceMap${suffix}`);
+//         if (displace.map !== undefined) {
+//           const map = displace.map;
+//           bindGlModifierTexture(context, map, `u_vDisplaceMap${suffix}`);
+//         }
 //       } else {
 //         gl.uniform1f(gl.getUniformLocation(context.program, `u_vDisplaceFrequency${suffix}`), displace.frequency ?? 1);
 //         gl.uniform1f(gl.getUniformLocation(context.program, `u_vDisplaceSpeed${suffix}`), displace.speed ?? 1);
@@ -268,13 +274,17 @@ inline void bind_gl_modifier_texture(flight::StructuralRef<flight::RowReadonly<f
 // materialize a replacement, or add side storage.
 
 inline bool is_emissive_gated(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::EmissiveModifier>>>> modifier) {
-  return (flight::row_get<flight::RowKey<"facing">>(modifier).has_value() && (flight::row_get<flight::RowKey<"facing">>(modifier).value() != flight::types::emissive_modifier_facing->ignore));
+  if (!flight::row_get<flight::RowKey<"facing">>(modifier).has_value()) {
+    return false;
+  }
+  flight::types::EmissiveModifierFacing facing = flight::row_get<flight::RowKey<"facing">>(modifier).value();
+  return (facing != flight::types::emissive_modifier_facing->ignore);
 }
 
 inline flight::types::LinearColor scratch_rgba_flight_value_variable_scratch_u000052_gba_flight_private_5ca4d56c5865e580 = flight::Array{0.0, 0.0, 0.0, 0.0};
 
 
-// NOT GENERATED: variable (binding) -- source line 97
+// NOT GENERATED: variable (binding) -- source line 99
 // refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
@@ -292,9 +302,13 @@ inline flight::types::LinearColor scratch_rgba_flight_value_variable_scratch_u00
 //         scratchRgba[2],
 //       );
 //       gl.uniform1f(gl.getUniformLocation(context.program, `u_emissiveStrength${suffix}`), emissive.strength);
-//       if (emissive.mask !== undefined) bindGlModifierTexture(context, emissive.mask, `u_emissiveMask${suffix}`);
+//       if (emissive.mask !== undefined) {
+//         const mask = emissive.mask;
+//         bindGlModifierTexture(context, mask, `u_emissiveMask${suffix}`);
+//       }
 //       if (isEmissiveGated(emissive)) {
-//         const sign = emissive.facing === EmissiveModifierFacing.AwayFromLight ? -1 : 1;
+//         const facing = emissive.facing;
+//         const sign = facing === EmissiveModifierFacing.AwayFromLight ? -1 : 1;
 //         gl.uniform1f(gl.getUniformLocation(context.program, `u_emissiveFacingSign${suffix}`), sign);
 //         gl.uniform1f(
 //           gl.getUniformLocation(context.program, `u_emissiveFacingSoftness${suffix}`),
@@ -350,7 +364,7 @@ inline flight::types::LinearColor scratch_rgba_flight_value_variable_scratch_u00
 // it, copy or materialize a replacement, or add side storage.
 
 
-// NOT GENERATED: variable (binding) -- source line 150
+// NOT GENERATED: variable (binding) -- source line 156
 // refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
@@ -411,7 +425,7 @@ inline flight::types::LinearColor scratch_rgba_flight_value_variable_scratch_u00
 // will not reinterpret the owner, cast it, copy or materialize a replacement, or add side storage.
 
 
-// NOT GENERATED: variable (binding) -- source line 189
+// NOT GENERATED: variable (binding) -- source line 195
 // refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
@@ -430,8 +444,10 @@ inline flight::types::LinearColor scratch_rgba_flight_value_variable_scratch_u00
 //         scratchRgba[1],
 //         scratchRgba[2],
 //       );
-//       if (dissolve.map !== undefined) bindGlModifierTexture(context, dissolve.map, `u_dissolveMap${suffix}`);
-//       else gl.uniform1f(gl.getUniformLocation(context.program, `u_dissolveScale${suffix}`), dissolve.scale ?? 8);
+//       if (dissolve.map !== undefined) {
+//         const map = dissolve.map;
+//         bindGlModifierTexture(context, map, `u_dissolveMap${suffix}`);
+//       } else gl.uniform1f(gl.getUniformLocation(context.program, `u_dissolveScale${suffix}`), dissolve.scale ?? 8);
 //     },
 //     contribution(modifier: Readonly<Modifier>, index: number): string {
 //       const dissolve = modifier as Readonly<DissolveModifier>;
@@ -488,7 +504,7 @@ inline flight::types::LinearColor scratch_rgba_flight_value_variable_scratch_u00
 // it, copy or materialize a replacement, or add side storage.
 
 
-// NOT GENERATED: variable (binding) -- source line 243
+// NOT GENERATED: variable (binding) -- source line 251
 // refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:
@@ -556,7 +572,7 @@ inline flight::types::LinearColor scratch_rgba_flight_value_variable_scratch_u00
 // copy or materialize a replacement, or add side storage.
 
 
-// NOT GENERATED: variable (binding) -- source line 288
+// NOT GENERATED: variable (binding) -- source line 296
 // refusal: cpp-structural-assertion-owner-unproven [source-portability]
 //
 // The source it stood for:

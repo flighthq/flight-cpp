@@ -198,16 +198,16 @@ struct canvas_shape_commands_color_adjustments_color_adjustment_unsupported_guar
 inline flight::Ref<flight::types::CanvasRenderRegistries> clone_canvas_render_registries(flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::CanvasRenderRegistries>>>> registries) {
   auto out = flight::make_ref<flight::types::CanvasRenderRegistries>(*flight::structural_ref_cast<flight::Ref<flight::types::CanvasRenderRegistries>>(registries));
   if (flight::row_get<flight::RowKey<"canvasShapeCommands">>(registries).has_value()) {
-    (out->canvas_shape_commands = std::optional<flight::Map<flight::String, flight::Ref<flight::types::CanvasShapeCommand<flight::types::ShapeCommandKey>>>>{flight::Map<flight::String, flight::Ref<flight::types::CanvasShapeCommand<flight::types::ShapeCommandKey>>>(flight::row_get<flight::RowKey<"canvasShapeCommands">>(registries).value())});
+    (out->canvas_shape_commands = std::optional<flight::Map<flight::String, flight::Ref<flight::types::CanvasShapeCommand<flight::types::ShapeCommandKey>>>>{flight::Map<flight::String, flight::Ref<flight::types::CanvasShapeCommand<flight::types::ShapeCommandKey>>>(flight::row_get<flight::RowKey<"canvasShapeCommands">>(registries).value()).clone()});
   }
   if (flight::row_get<flight::RowKey<"effectPaddingResolvers">>(registries).has_value()) {
-    (out->effect_padding_resolvers = std::optional<flight::Map<flight::String, flight::types::EffectPaddingResolver>>{flight::Map<flight::String, flight::types::EffectPaddingResolver>(flight::row_get<flight::RowKey<"effectPaddingResolvers">>(registries).value())});
+    (out->effect_padding_resolvers = std::optional<flight::Map<flight::String, flight::types::EffectPaddingResolver>>{flight::Map<flight::String, flight::types::EffectPaddingResolver>(flight::row_get<flight::RowKey<"effectPaddingResolvers">>(registries).value()).clone()});
   }
   if (flight::row_get<flight::RowKey<"materialRenderers">>(registries).has_value()) {
-    (out->material_renderers = std::optional<flight::Map<flight::String, flight::Ref<flight::types::CanvasQuadMaterialRenderer>>>{flight::Map<flight::String, flight::Ref<flight::types::CanvasQuadMaterialRenderer>>(flight::row_get<flight::RowKey<"materialRenderers">>(registries).value())});
+    (out->material_renderers = std::optional<flight::Map<flight::String, flight::Ref<flight::types::CanvasQuadMaterialRenderer>>>{flight::Map<flight::String, flight::Ref<flight::types::CanvasQuadMaterialRenderer>>(flight::row_get<flight::RowKey<"materialRenderers">>(registries).value()).clone()});
   }
-  (out->effects = flight::Map<flight::String, flight::types::CanvasEffectRunner>(flight::row_get<flight::RowKey<"effects">>(registries)));
-  (out->node_renderers = flight::Map<flight::String, flight::Ref<flight::types::NodeRenderer>>(flight::row_get<flight::RowKey<"nodeRenderers">>(registries)));
+  (out->effects = flight::Map<flight::String, flight::types::CanvasEffectRunner>(flight::row_get<flight::RowKey<"effects">>(registries)).clone());
+  (out->node_renderers = flight::Map<flight::String, flight::Ref<flight::types::NodeRenderer>>(flight::row_get<flight::RowKey<"nodeRenderers">>(registries)).clone());
   return out;
 }
 

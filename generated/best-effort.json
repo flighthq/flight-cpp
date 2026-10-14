@@ -6057,7 +6057,6 @@
       },
       "path": "flight/effects_canvas/canvas_effect_registry.hpp",
       "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts"
       ],
       "status": "dependency-incomplete"
@@ -7195,7 +7194,6 @@
       },
       "path": "flight/effects_gl/gl_effect_registry.hpp",
       "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/render-gl/packages/render-gl/src/glRenderState.ts"
       ],
       "status": "dependency-incomplete"
@@ -19713,10 +19711,7 @@
         "source": "packages/registry/src/contract.ts"
       },
       "path": "flight/registry/contract.hpp",
-      "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "consumers": [],
@@ -19726,13 +19721,9 @@
         "source": "packages/registry/src/index.ts"
       },
       "path": "flight/registry/_internal_index.hpp",
-      "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
-      "classification": "source-portability",
       "consumers": [
         "@flighthq/command/packages/command/src/commandBinding.ts",
         "@flighthq/effects-canvas/packages/effects-canvas/src/canvasEffectRegistry.ts",
@@ -19760,7 +19751,7 @@
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommandTable.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/scene2DCanvasPipeline.ts",
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domShapeRasterizer.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/scene2DDomPipeline.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glVelocity.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/scene2DGlPipeline.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/scene2DWgpuPipeline.ts",
@@ -19781,22 +19772,13 @@
         "@flighthq/textureatlas-formats/packages/textureatlas-formats/src/textureAtlasDetect.ts",
         "@flighthq/tokens/packages/tokens/src/flightDocumentSceneTokens.ts"
       ],
-      "declarationFingerprints": [
-        "sha256:3f5b9955283d1e2c17749761541cc8c11db5b69404aef21e50374dde841f1f09",
-        "sha256:76621afb08194b3cdd9425d4f6a22dcc4ef84b0442eba3df65197c0449f93a81",
-        "sha256:a11dc9e11aa2f8c0bebce7a84470d52bd958877d5c6438aaad2f604921991b45",
-        "sha256:c06a76f5b47c027e5914c9e2e4e8570786a07d221e3b681daf657119decdb8be",
-        "sha256:cc95b260ee3b5a75d6257ed605239e971b161dd63308dcaa5db65dfb181584fc",
-        "sha256:dc53dc35281b0613561b648c0c8673b4585e76f9e50144dc31499c0a46807ba9"
-      ],
       "module": {
         "name": "RegistryTable",
         "packageName": "@flighthq/registry",
         "source": "packages/registry/src/registryTable.ts"
       },
       "path": "flight/registry/registry_table.hpp",
-      "rule": "cpp-contextual-array-element-union-narrowing",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -19890,9 +19872,7 @@
         "@flighthq/render/packages/render/src/enableColorAdjustmentGuards.ts",
         "@flighthq/render/packages/render/src/enableColorAdjustments.ts",
         "@flighthq/render/packages/render/src/enableSceneRenderGuards.ts",
-        "@flighthq/render/packages/render/src/explainScene2DPipelineCoverage.ts",
         "@flighthq/render/packages/render/src/explainScene2DRender.ts",
-        "@flighthq/render/packages/render/src/explainScene3DPipelineCoverage.ts",
         "@flighthq/render/packages/render/src/mergeRenderOptions.ts",
         "@flighthq/render/packages/render/src/renderAppearance.ts",
         "@flighthq/render/packages/render/src/renderCache.ts",
@@ -19901,7 +19881,6 @@
         "@flighthq/render/packages/render/src/renderProxyAdapter.ts",
         "@flighthq/render/packages/render/src/renderRegistryGuards.ts",
         "@flighthq/render/packages/render/src/renderTarget.ts",
-        "@flighthq/render/packages/render/src/renderer.ts",
         "@flighthq/render/packages/render/src/sceneRender.ts"
       ],
       "status": "dependency-incomplete"
@@ -19995,10 +19974,7 @@
         "source": "packages/render/src/explainScene2DPipelineCoverage.ts"
       },
       "path": "flight/render/explain_scene2_dpipeline_coverage.hpp",
-      "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "classification": "source-portability",
@@ -20028,10 +20004,7 @@
         "source": "packages/render/src/explainScene3DPipelineCoverage.ts"
       },
       "path": "flight/render/explain_scene3_dpipeline_coverage.hpp",
-      "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -20067,13 +20040,10 @@
       "refusedDependencies": [
         "@flighthq/render/packages/render/src/enableColorAdjustments.ts",
         "@flighthq/render/packages/render/src/enableSceneRenderGuards.ts",
-        "@flighthq/render/packages/render/src/explainScene2DPipelineCoverage.ts",
-        "@flighthq/render/packages/render/src/explainScene3DPipelineCoverage.ts",
         "@flighthq/render/packages/render/src/mergeRenderOptions.ts",
         "@flighthq/render/packages/render/src/renderCache.ts",
         "@flighthq/render/packages/render/src/renderProxy.ts",
         "@flighthq/render/packages/render/src/renderRegistryGuards.ts",
-        "@flighthq/render/packages/render/src/renderer.ts",
         "@flighthq/render/packages/render/src/sceneRender.ts"
       ],
       "status": "dependency-incomplete"
@@ -20410,10 +20380,7 @@
         "source": "packages/render/src/renderer.ts"
       },
       "path": "flight/render/renderer.hpp",
-      "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "consumers": [
@@ -20912,7 +20879,6 @@
       },
       "path": "flight/render_gl/gl_quad_material_registry.hpp",
       "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/render-gl/packages/render-gl/src/glRenderState.ts"
       ],
       "status": "dependency-incomplete"
@@ -21376,7 +21342,6 @@
       },
       "path": "flight/render_gl/gl_texture_resolver.hpp",
       "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/render-gl/packages/render-gl/src/glDraw.ts",
         "@flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
         "@flighthq/render-gl/packages/render-gl/src/glRenderTexture.ts"
@@ -21847,7 +21812,6 @@
       },
       "path": "flight/render_wgpu/wgpu_quad_material_registry.hpp",
       "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts"
       ],
       "status": "dependency-incomplete"
@@ -23188,14 +23152,9 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/contract.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/index.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:c0e9e0be9017d9cb4353abf420318244ddc76206d2e85c1cea7845e9e816513a",
-        "sha256:dc6718c52b375a716a12cae0395014ee0363a2e27dbfffad581229af7675c75f"
       ],
       "module": {
         "name": "CanvasBitmapTextureResolver",
@@ -23203,8 +23162,11 @@
         "source": "packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts"
       },
       "path": "flight/scene2d_canvas/canvas_bitmap_texture_resolver.hpp",
-      "rule": "cpp-member-projection-without-present-storage",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/image/packages/image/src/imageResourceFrom.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
@@ -23304,23 +23266,9 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "target-runtime",
       "consumers": [
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommands.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:140424a944c294cb87a36f1a743d175da858448eee445b521a4bb0026a4875c2",
-        "sha256:2298f4af8e56f3549bf12f6912c60cc04d7461ff75e50f07687a5a1bd144be9f",
-        "sha256:2942f9304cc324a9aff3b91114cf8431e8f013d555cc9273134873bd5eb2c266",
-        "sha256:59ae7287eabc984f4ba0d4163ce52253cb31ad451bf6d4b3268681512847c93e",
-        "sha256:61cdf3f549477e685dc2f55d70915733d5ef13ac1d7c4c1fb5d19042e8c741ed",
-        "sha256:973cc44b4ce52eb2dbd28e2119f5b132cce7a8c038e75398a732388e8c972da8",
-        "sha256:b393015624d633ad06140876c72b94724ecc60ade9f90fc73f6aabb06e7fdd29",
-        "sha256:cdf34e23f6c4b27e1c5b4b0c06b74ffdf6ef316921659b13827ef7891ed8e743",
-        "sha256:ebe581e32f3a38176c4ac38484a0b4d91f99ee0a373adf36a4e438f2af5ede8b",
-        "sha256:f026437163479c6c7d5f23f1ce0be1fe1d84049e2b7fecc4c4fdb7a0d79b910a",
-        "sha256:ff671d8c3f740ff4d26e00d9e8caba27bed644ee5bc8ffcff30ba20181edf6f4"
       ],
       "module": {
         "name": "CanvasFillPattern",
@@ -23328,8 +23276,12 @@
         "source": "packages/scene2d-canvas/src/canvasFillPattern.ts"
       },
       "path": "flight/scene2d_canvas/canvas_fill_pattern.hpp",
-      "rule": "cpp-union-runtime-domains-erased",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts",
+        "@flighthq/surface/packages/surface/src/surface.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
@@ -23345,14 +23297,9 @@
       "status": "emitted"
     },
     {
-      "classification": "source-portability",
       "consumers": [
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/contract.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/index.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:3b5172c9972b095cc7435eafc5b1f99bbbb53934283541b4736abee2064b9feb",
-        "sha256:f80eb6cbe113eb7d911b9342c9e74071cfcb032edc95a7d02807b46c9b903665"
       ],
       "module": {
         "name": "CanvasImageTextureResolver",
@@ -23360,8 +23307,10 @@
         "source": "packages/scene2d-canvas/src/canvasImageTextureResolver.ts"
       },
       "path": "flight/scene2d_canvas/canvas_image_texture_resolver.hpp",
-      "rule": "cpp-contextual-union-inequivalent",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
@@ -23410,15 +23359,10 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "target-runtime",
       "consumers": [
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/contract.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/index.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/scene2DCanvasPipeline.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:cf84d09eea7fefd62d7abc3256e6fa10f7b16a2397a398f436ef564bde73c2b1",
-        "sha256:d31abe92b5538f89356ecf2a71bf9dab0df6e14990e61c2465d9de352e8987dc"
       ],
       "module": {
         "name": "CanvasParticleEmitter2D",
@@ -23426,8 +23370,11 @@
         "source": "packages/scene2d-canvas/src/canvasParticleEmitter2D.ts"
       },
       "path": "flight/scene2d_canvas/canvas_particle_emitter2_d.hpp",
-      "rule": "cpp-union-runtime-domains-erased",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
@@ -23460,7 +23407,7 @@
         "source": "packages/scene2d-canvas/src/canvasQuadBatch.ts"
       },
       "path": "flight/scene2d_canvas/canvas_quad_batch.hpp",
-      "rule": "cpp-union-runtime-domains-erased",
+      "rule": "cpp-contextual-union-interface-heritage-carrier-unrepresented",
       "status": "refused-placeholder"
     },
     {
@@ -23666,7 +23613,6 @@
       },
       "path": "flight/scene2d_canvas/canvas_rich_text.hpp",
       "refusedDependencies": [
-        "@flighthq/render/packages/render/src/renderer.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasNode2D.ts",
         "@flighthq/text/packages/text/src/richText.ts",
         "@flighthq/textlayout/packages/textlayout/src/richTextContent.ts",
@@ -23711,7 +23657,6 @@
       },
       "path": "flight/scene2d_canvas/canvas_scale9_shape.hpp",
       "refusedDependencies": [
-        "@flighthq/render/packages/render/src/renderer.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasNode2D.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasScale9Mapper.ts",
@@ -23720,18 +23665,10 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "target-runtime",
       "consumers": [
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/contract.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/index.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/scene2DCanvasPipeline.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:1248f513d9b0d124c058c82466f99784e7d418bddbbf90a5e5662519d9625885",
-        "sha256:3f8022721dba2bd4ac5c85a54b9332a383325694fb998531077c50bceebbd626",
-        "sha256:7663eaf94ba67038ad86ade41a4c5bb5e861bc8fca4e39bfd81a56aaef34de8c",
-        "sha256:a7c5e0971c72b00d2df545fec5480b9e3d57ff6b7317a4ba535a7557bfb81222",
-        "sha256:b3840e44d369e0ff40124d54426b69176f7cd63b593552641c9d6ab33d933448"
       ],
       "module": {
         "name": "CanvasScale9Sprite",
@@ -23739,8 +23676,13 @@
         "source": "packages/scene2d-canvas/src/canvasScale9Sprite.ts"
       },
       "path": "flight/scene2d_canvas/canvas_scale9_sprite.hpp",
-      "rule": "cpp-union-runtime-domains-erased",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasNode2D.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts",
+        "@flighthq/scene2d/packages/scene2d/src/sprite.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
@@ -23788,7 +23730,6 @@
       },
       "path": "flight/scene2d_canvas/canvas_shape.hpp",
       "refusedDependencies": [
-        "@flighthq/render/packages/render/src/renderer.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasNode2D.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeRegistry.ts"
@@ -23808,7 +23749,6 @@
       },
       "path": "flight/scene2d_canvas/canvas_shape_command_table.hpp",
       "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasShapeCommands.ts"
       ],
       "status": "dependency-incomplete"
@@ -23890,16 +23830,10 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "target-runtime",
       "consumers": [
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/contract.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/index.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/scene2DCanvasPipeline.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:146c79749f911b993e9e2882e8066527d9f7f29fe03c772af115c0af6b6c1465",
-        "sha256:a8857f3f7deb871e9b3c39864531cc628ae7fe34f9aa9d104afd1c6cf335875b",
-        "sha256:ff2f763068b2e993ed9269136f852eb8975e0b5f7f9a16b0e332ad4f2bda1068"
       ],
       "module": {
         "name": "CanvasSprite",
@@ -23907,8 +23841,13 @@
         "source": "packages/scene2d-canvas/src/canvasSprite.ts"
       },
       "path": "flight/scene2d_canvas/canvas_sprite.hpp",
-      "rule": "cpp-union-runtime-domains-erased",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasNode2D.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasRenderState.ts",
+        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
+        "@flighthq/scene2d/packages/scene2d/src/sprite.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "classification": "target-runtime",
@@ -23954,10 +23893,19 @@
       "status": "dependency-incomplete"
     },
     {
+      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/contract.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/index.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/scene2DCanvasPipeline.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:04100e180966f3cef852d723ecf9650df6197a52eac5d19955a2eb98658f817b",
+        "sha256:10db75001a3d25d8b132b98873407146770ec4f5dab71d6bf945c63808bda554",
+        "sha256:1c52625ba73cc60146a2f30960d49e2acff6048dfff247557d88887011f75750",
+        "sha256:4bfdf12a0aa8bb894d497303ec80101e9dc526c7e16a7cbc17f39a5dba9c716e",
+        "sha256:7bc0c1f287057ff3675eac4f7f9cab32dfd4ee5c8af2437042bf0a4350dff045",
+        "sha256:c0e800e089f5d8da45f581b9e836c3de8341f03b5ff2e0392c4e946b51b9b9b7"
       ],
       "module": {
         "name": "CanvasTextLabel",
@@ -23965,13 +23913,8 @@
         "source": "packages/scene2d-canvas/src/canvasTextLabel.ts"
       },
       "path": "flight/scene2d_canvas/canvas_text_label.hpp",
-      "refusedDependencies": [
-        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasNode2D.ts",
-        "@flighthq/text/packages/text/src/textLabel.ts",
-        "@flighthq/textlayout/packages/textlayout/src/textLayout.ts",
-        "@flighthq/textlayout/packages/textlayout/src/textLayoutRuntime.ts"
-      ],
-      "status": "dependency-incomplete"
+      "rule": "cpp-contextual-union-missing-expression-type:optionalSingle",
+      "status": "refused-placeholder"
     },
     {
       "consumers": [
@@ -24010,7 +23953,7 @@
       "status": "dependency-incomplete"
     },
     {
-      "classification": "compiler-restriction",
+      "classification": "target-runtime",
       "consumers": [
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBitmapText.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts",
@@ -24029,13 +23972,14 @@
       ],
       "declarationFingerprints": [
         "sha256:2935d9667fe1a9923b27d50787afa198f62ea0f0b45d6bc682ae0a570df85342",
-        "sha256:4af9d1544368f638e92cc7c1a24245aff8d3907a0733e4fb766c579dda8dacd8",
-        "sha256:549a6687fa385e06d336679f72d8ef737cd8012d34a0cd9c1f03c918304a5883",
+        "sha256:4766e455f672ea3a3abdb5efc0c3a7d0a218131541845cae0b4a790de518e45d",
+        "sha256:556a2e271da03f1219dee7f771ec52f3b1a86186f8f4d21ea618ac778f6ef085",
+        "sha256:8bd6b7a1326cdd97d1654565a77c65d33ce816cfb6bb7853547ab0ef838e1203",
         "sha256:b30aa23bd0e154fc4052a93bdd525387984e8488621f5d51c6cda87b86c67c2a",
         "sha256:b7c8e1d46b4b10fdf625396c4b49d7f0ed58be55458f595661413a4aeba38567",
         "sha256:c22807dba690f3f6a0b4887a106dfa4a3f2e4a57799bf64f1a84fa4114293385",
-        "sha256:e983146aaef9867b1ca8a2bf03580a172486401581fdfefe9697aba72ea0eea7",
-        "sha256:fbcb1c89d23af9313cbca542439412e03ecbd9a0d0d2b750cca35af39f9f61b8"
+        "sha256:df73b123c1b9302c0a0e1d77f85ca929627c142f71957500a849ade9e782719c",
+        "sha256:eb1bcdf808f6ab00dce6f83fedd8c260f243add70339eb84eedbf6ca3d15f0fb"
       ],
       "module": {
         "name": "CanvasTextureResolver",
@@ -24043,11 +23987,10 @@
         "source": "packages/scene2d-canvas/src/canvasTextureResolver.ts"
       },
       "path": "flight/scene2d_canvas/canvas_texture_resolver.hpp",
-      "rule": "cpp-contextual-union-value-type-unrepresented",
+      "rule": "cpp-runtime-external-symbol-binding-incomplete",
       "status": "refused-placeholder"
     },
     {
-      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasSprite.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts",
@@ -24055,23 +23998,16 @@
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domScale9Sprite.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domSprite.ts"
       ],
-      "declarationFingerprints": [
-        "sha256:2a29333aecfbeb29d2abf0659003bc452db01686384d81789ea44be24b30e734",
-        "sha256:a782632a46372f414476257727585388abf9b0db4f8f858cbce5687bdfa61fc9",
-        "sha256:cb6e49e3b482264b4862d02203a0ced649558277f42874a707b02954d02d794a",
-        "sha256:ccb5cf2004152dc3cd700b6860b013bb26c7e2b501258310f332ae96800fd59f"
-      ],
       "module": {
         "name": "CanvasTextureView",
         "packageName": "@flighthq/scene2d-canvas",
         "source": "packages/scene2d-canvas/src/canvasTextureView.ts"
       },
       "path": "flight/scene2d_canvas/canvas_texture_view.hpp",
-      "rule": "cpp-contextual-union-value-type-unrepresented",
-      "status": "refused-placeholder"
+      "status": "emitted"
     },
     {
-      "classification": "target-runtime",
+      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasFillPattern.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasScale9Sprite.ts",
@@ -24079,8 +24015,8 @@
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/contract.ts"
       ],
       "declarationFingerprints": [
-        "sha256:5064bd9535286066bbcd324fdd1fbca1ae9e1b58e13a73937e7c2f1d7207459f",
-        "sha256:5d855d13416d21326af3e42be2b0916d2802beb0d8a2f6139d3b2a75d733d220"
+        "sha256:5d855d13416d21326af3e42be2b0916d2802beb0d8a2f6139d3b2a75d733d220",
+        "sha256:b04d44310beacf434891eb772b9c99471a6a58aba4261eeaa721ba4a733d0a0c"
       ],
       "module": {
         "name": "CanvasTextureWindowSource",
@@ -24088,7 +24024,7 @@
         "source": "packages/scene2d-canvas/src/canvasTextureWindowSource.ts"
       },
       "path": "flight/scene2d_canvas/canvas_texture_window_source.hpp",
-      "rule": "cpp-union-runtime-domains-erased",
+      "rule": "cpp-contextual-union-value-type-unrepresented",
       "status": "refused-placeholder"
     },
     {
@@ -24108,7 +24044,7 @@
         "source": "packages/scene2d-canvas/src/canvasTilemap.ts"
       },
       "path": "flight/scene2d_canvas/canvas_tilemap.hpp",
-      "rule": "cpp-union-runtime-domains-erased",
+      "rule": "cpp-contextual-union-interface-heritage-carrier-unrepresented",
       "status": "refused-placeholder"
     },
     {
@@ -24175,7 +24111,6 @@
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextLabel.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureRenderTarget.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureResolver.ts",
-        "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureView.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTilemap.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/enableCanvasTextureResolverGuards.ts",
@@ -24297,7 +24232,6 @@
       },
       "path": "flight/scene2d_canvas/scene2_dcanvas_pipeline.hpp",
       "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasBitmapText.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasCache.ts",
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasMaterials.ts",
@@ -24316,9 +24250,7 @@
       "status": "dependency-incomplete"
     },
     {
-      "consumers": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts"
-      ],
+      "consumers": [],
       "module": {
         "name": "Contract",
         "packageName": "@flighthq/scene2d-dom",
@@ -24335,6 +24267,7 @@
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domImageTextureResolver.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domNativeText.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domNode2D.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domReconcile.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domRenderState.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domRichText.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domScale9Shape.ts",
@@ -24348,14 +24281,16 @@
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domTextLabel.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domTextureResolver.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/enableDomTextureResolverGuards.ts",
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/explainDomTextureResolution.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/explainDomTextureResolution.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/scene2DDomPipeline.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
       "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:58fd20d3cc71d7b436a9732ecd3f56b9f68bbaa22eca05a1ed14acf1b6a36e39",
@@ -24373,7 +24308,8 @@
     {
       "consumers": [
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domSvgFilter.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domSvgFilter.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts"
       ],
       "module": {
         "name": "DomCSSFilterBinding",
@@ -24389,17 +24325,19 @@
     {
       "classification": "target-runtime",
       "consumers": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/scene2DDomPipeline.ts"
       ],
       "declarationFingerprints": [
-        "sha256:183b30fa2d28221ccfa1380aee88abac4da0beec2dac662454568c925491fe31",
         "sha256:20148024ee33e87a62e63048b3b8ae6b0853a58c882ba7dd40d4922b87c4844c",
-        "sha256:2366a80fb82713ba5e988a778555d5a743e0ef5b1b6e59034356d06079c86b50",
         "sha256:301a09597c456f1c847a8e49934a3d8b125dedb766865bfc9c14f7924d82acb2",
+        "sha256:3107bcbeeafcec3b6d28d682d36163bcb642c56d5f790daaa67c4df16735b046",
+        "sha256:708305ac599784827ef91a01c18122fac01c12c15b5877e421a57a9611642ed5",
         "sha256:8cae500a38211a4e0a7cf023377b7da131f6d9ef8497c4b5d73f79d8442e2761",
         "sha256:9e7821ab477234a85ed5fc8edc7e4501c004c7f457952f79554ce66b703a3a76",
         "sha256:c848217909c4031b22151507ffb2469ff133daa40b068e038db02938518cdc83",
-        "sha256:ec526e54d290c553f84dc6fa7a63c53f203b8c0ca5c4ce42797a666fa7510ff6"
+        "sha256:fc512140784c2b375d9ae91404533fb6411e6c9a052dfcd476846508a0bbf874"
       ],
       "module": {
         "name": "DomCache",
@@ -24413,7 +24351,8 @@
     {
       "classification": "target-runtime",
       "consumers": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:b6a3a25a1151d3b5b295bb2ec26312185814eba9d146a2a054fd8611ed91fcf1",
@@ -24430,6 +24369,7 @@
     },
     {
       "consumers": [
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domClip.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domClipRectangle.ts"
       ],
@@ -24485,7 +24425,9 @@
     },
     {
       "consumers": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/scene2DDomPipeline.ts"
       ],
       "module": {
         "name": "DomHtmlView",
@@ -24500,7 +24442,8 @@
     },
     {
       "consumers": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts"
       ],
       "module": {
         "name": "DomImageSource",
@@ -24513,7 +24456,8 @@
     {
       "classification": "source-portability",
       "consumers": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts"
       ],
       "declarationFingerprints": [
         "sha256:c7c9e22cde0a1ab21a83c580e8a7ff008a10a7b039b4356d47831744dfae1d79",
@@ -24530,7 +24474,8 @@
     },
     {
       "consumers": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts"
       ],
       "module": {
         "name": "DomMaterials",
@@ -24543,14 +24488,16 @@
     {
       "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/scene2DDomPipeline.ts"
       ],
       "declarationFingerprints": [
         "sha256:24c6ab8f6555626e01325dd8551ace0d258e065ff30894d06659466c371d8c75",
-        "sha256:49d5b177e45bff26da614ad2daaf571fafebae166ae38d2791e3818bff833e81",
+        "sha256:301659d74e17baa01b4bd3f9bc6b3ff2a9d0a6c29bc4bbff361e4474972a3b50",
         "sha256:9aec270216e2050c0619f9f179f8a25c2898cf177a45c38bfc16b684dc2ffdd9",
         "sha256:bb5e367e0f240f3ecb131d3f874f724fbf2baa5d60a6717e9f8239d2ebc4ff32",
-        "sha256:d2df3bc2dc74f65de1c501369f3a53f5ef659a0bf8c2bddd0639133d1de1a340",
+        "sha256:f65b743771b7617fe6fd17d3c48bdcb59d23db7bcec4d696fb7a8e27af998e84",
         "sha256:f8c92a07961c92c85f8aea12d54cdb2c235fc3371e5e77e2524d8b18abbec493"
       ],
       "module": {
@@ -24565,12 +24512,14 @@
     {
       "classification": "source-portability",
       "consumers": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/scene2DDomPipeline.ts"
       ],
       "declarationFingerprints": [
-        "sha256:097c0844d67f39921ef42195a918ae6985e91e1ee3dd49c1c1df6990e7d904ce",
-        "sha256:84298993cd0e5c4996145d3d7e608e8353e94cd602e4df58717bb0730cafbb80",
-        "sha256:9caeeab3320e6c2cb5a65ee33c958386946ec31a5f2a2ac01ee8765dec37d4c2"
+        "sha256:372dfbe8c7ff6b3deb2fa8d1d8987372210520abcfaf782d21ca9801aceedf47",
+        "sha256:9caeeab3320e6c2cb5a65ee33c958386946ec31a5f2a2ac01ee8765dec37d4c2",
+        "sha256:cc8429b0385815c3ee6c5174e2dd8fd43cbfa4674ff33152dcac2787d83e3b9a"
       ],
       "module": {
         "name": "DomNode2D",
@@ -24578,12 +24527,13 @@
         "source": "packages/scene2d-dom/src/domNode2D.ts"
       },
       "path": "flight/scene2d_dom/dom_node2_d.hpp",
-      "rule": "cpp-contextual-union-inequivalent",
+      "rule": "cpp-structural-assertion-owner-unproven",
       "status": "refused-placeholder"
     },
     {
       "classification": "target-runtime",
       "consumers": [
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domNode2D.ts"
       ],
       "declarationFingerprints": [
@@ -24614,12 +24564,13 @@
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domShapeRasterizer.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domStyle.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domTextureResolver.ts",
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/explainDomTextureResolution.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/explainDomTextureResolution.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts"
       ],
       "declarationFingerprints": [
-        "sha256:0ce895673c7ac9401df7aad86d85bce862040320db1384435dd43068123ad05d",
         "sha256:2fc73e5182239272c9cf4f7173a306873ba61b60f2e9be2adf1790e39804b8fc",
-        "sha256:eb9bed2a1253dd81c9a8c48b04c3896f04967d0498d472d2644d051efee28668"
+        "sha256:42e0aef2a88e6a6c1ba6583acc3628b1ebba035d425e487a3285ee82e1b04371",
+        "sha256:4ac27d788feab8c5528b1cecf323991f33212037c3a29c1514aa4fea578e8ef2"
       ],
       "module": {
         "name": "DomRenderState",
@@ -24634,25 +24585,27 @@
       "classification": "target-runtime",
       "consumers": [
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domTextInput.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domTextInput.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/scene2DDomPipeline.ts"
       ],
       "declarationFingerprints": [
         "sha256:1818f238349930ebd9eab6d0adedabdc84264fcbb06f21043d36119fb86d051b",
         "sha256:1d8cb47eec72490fe06114f365aab16787fbe01e5c48b43ed96304ede75c84c9",
         "sha256:1d9abdc1baaa3c7079e65426a0481ad09ddc367e15261aa4a52763fcb1b2e39f",
         "sha256:1f4cf7e2e186e9e86b6c5232af0dd08d2696c2c3136b83679ed240871121361e",
+        "sha256:3b15d28a7b43dfcd5e2e003f9c3ddaa60d63cd3db2811d06c657460f2fc7adb2",
         "sha256:40a56dc91f0001fb031ea390b056596d5b4bdececa70ff557e5d513ac651e7fa",
         "sha256:5599d19df4f1a4058483d42131bcc2e865f7be73db5f68fd54b3eecda36e981e",
-        "sha256:5b7fd2b375232cdde515c95db0f8cbbbee2c768dcdf92c3b75ac2ad0c8f2f926",
+        "sha256:5ddee570a564d151897082b33503fab12fc543824ed5e7004ba9863ae5997db2",
         "sha256:6663025736ce01d566accd9be02df00c390f3f1b23fffca8bd414143a3c522a6",
-        "sha256:7e68e5aa2d1030bb467b4b544ce683a921dd57389d15019aadd9aae5e4172b1a",
         "sha256:8a4a2a5c0c3cdf136d70531e90a155a4a4c8aad6ab589b1c77128dc66e92a31e",
         "sha256:8b82500db5f86ebe9b452baeab19077f69a91ccf554ca884e1a8c47a69c260c2",
         "sha256:8f72efb500e8249b91c21bda36943c3d9940e424a991a30a46cd720d8b436e35",
         "sha256:9a686ec6b45510a3c84d748a64e94270e2377d3f37a2dcbd783cad3252eebf8a",
         "sha256:a0aa80db0c4c2913325f2ec0e764ab92e849338e92325fe108f8e351d9571c24",
+        "sha256:a6cbdcc27856a1b934969ad639f8bfc16156315e02edc1dca73daf57aec9a6ce",
         "sha256:ac9452db0e062792fb70b4c80517f68e01118024bfe0a6c1681675455b99fc2c",
-        "sha256:ac9f4b53614d7acec77aa1de3fe1d9346d52e56bb5d9bfe5a427f6ac873da6a5",
         "sha256:d4734d7aae41e6364abda82fc58cdec355f208800339a3c791ea388af9ef128d",
         "sha256:da8edb0cd6b50c6695044e4824adb61cb988125c08aa0cbc8b2214cc09f178e2"
       ],
@@ -24667,6 +24620,7 @@
     },
     {
       "consumers": [
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domScale9Shape.ts"
       ],
       "module": {
@@ -24678,16 +24632,18 @@
       "status": "emitted"
     },
     {
-      "classification": "source-portability",
+      "classification": "compiler-restriction",
       "consumers": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/scene2DDomPipeline.ts"
       ],
       "declarationFingerprints": [
-        "sha256:248b64552e48aea409491b9daa24b77ef2a5cf5cd0d2088d3a554179f4578922",
         "sha256:39ab8a58c51e54e49c559f9cacdb955d08697ade4b4b66e91ba9f4ca49a2e41c",
         "sha256:4969b25f97e52efa072251d5c017d710eee14373305087189de29e5a868173d4",
-        "sha256:52dab30a844cc2279310817714fcca7de70f98c2b0b5b252410e1aeafb933c05",
-        "sha256:c415c49a22d5af773663a18656b3ceed17c5737c0c0a77ff2e757bb928d5ef2b",
+        "sha256:6b3288ee31a6ff5204c42ad26de491d305cb5f500d2844ce4087b9d7f6cdd5b5",
+        "sha256:883e7ad0151e3de01a1a59cabb7f9838fd959778203c09577dd5e67fe27fe20c",
+        "sha256:a7872d05089081d027c231ead9dbee2e3eb42948d52bd2e1c7d841245aa58ee0",
         "sha256:d2205f7ac535aa98cc3d1c28ee9af37a8ecac0cc37f5f2b535cdd8a56b31107d",
         "sha256:ffe6ddf1336fc015470bed4a63af24b8d1a0354cc5027cb1308c99f3de786832"
       ],
@@ -24697,21 +24653,23 @@
         "source": "packages/scene2d-dom/src/domScale9Shape.ts"
       },
       "path": "flight/scene2d_dom/dom_scale9_shape.hpp",
-      "rule": "cpp-structural-assertion-owner-unproven",
+      "rule": "cpp-contextual-union-missing-expression-type:optionalSingle",
       "status": "refused-placeholder"
     },
     {
-      "classification": "source-portability",
+      "classification": "target-runtime",
       "consumers": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/scene2DDomPipeline.ts"
       ],
       "declarationFingerprints": [
-        "sha256:3866fee09eafa375ceebb554d12bc6e5255f9e6648023d3885913eb4f24d925c",
         "sha256:6d6bb98e9d720f8626ce564be42acb747f18dc099945066916226cc3a882b21b",
         "sha256:7bd6580a090550de83728aa84f779169aab55f876fa386c444334ba83fd334ea",
-        "sha256:8d5ffb0cf7344ad4e78cb563688693e6b44885777df1b540037c5bbaf7d6eef3",
         "sha256:a7c5e0971c72b00d2df545fec5480b9e3d57ff6b7317a4ba535a7557bfb81222",
-        "sha256:b8fd350900093c9cb30e99966e7ca6cce8ac07b08310dab6f7046621e70a9b75"
+        "sha256:b4b7793e505610be4fe6f6b702c54dc98dfc762c920cb611eeeb139d92fe0a47",
+        "sha256:babb657c391e29e520b1785457b77bddb02899445d5cf9dd980fcfb3bffc7f78",
+        "sha256:f6f54e48d490f472a7a7b3737227e2d201afa52c299a7f3f059e3d2e810b778b"
       ],
       "module": {
         "name": "DomScale9Sprite",
@@ -24719,30 +24677,7 @@
         "source": "packages/scene2d-dom/src/domScale9Sprite.ts"
       },
       "path": "flight/scene2d_dom/dom_scale9_sprite.hpp",
-      "rule": "cpp-structural-assertion-owner-unproven",
-      "status": "refused-placeholder"
-    },
-    {
-      "classification": "source-portability",
-      "consumers": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domScale9Shape.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:52c749723f1d9191b23ef8b2dde2c0d42f0b8911a24588cfb82e139d0a333e12",
-        "sha256:557d6d0876e26f8f1454bd87dcf5dc0337226ffdd5c36bd0644ef6ec8b8fa54c",
-        "sha256:ad4ace9b23482cef724a74957e534bdc62e1795008456a63d0b5af3dd9cda70b",
-        "sha256:bae6191fef5305c109612274585501c69542c5c211189548e79173573ab075e9",
-        "sha256:cc8796388fd165371f50d921a1dacbff834584699e835f4b57e9b033ee9f25fe",
-        "sha256:d828f9886af43d582c98d988e185dc54ed9c21b4ff5381b721b2f087c6ca54ba"
-      ],
-      "module": {
-        "name": "DomShape",
-        "packageName": "@flighthq/scene2d-dom",
-        "source": "packages/scene2d-dom/src/domShape.ts"
-      },
-      "path": "flight/scene2d_dom/dom_shape.hpp",
-      "rule": "cpp-structural-assertion-owner-unproven",
+      "rule": "cpp-union-runtime-domains-erased",
       "status": "refused-placeholder"
     },
     {
@@ -24750,12 +24685,32 @@
       "consumers": [
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domScale9Shape.ts",
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domShape.ts",
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/scene2DDomPipeline.ts"
       ],
       "declarationFingerprints": [
-        "sha256:7ab5acb026c01c1da978b0deaae742cf77fdd6b75e97f972559b796e6711e1b6",
-        "sha256:c4e3f858caa5ac84eba968079759943194ceae0fd392c4e704f93163dc5810a1"
+        "sha256:0ae57f4a857b6babf0138960ba0fc97ea92fc8f7aa8de493ba2b590e06c082f8",
+        "sha256:2d6fe186bdec3f4820329cbd70905533609326cd86f99b669b7f2b4e786c1ea5",
+        "sha256:ad4ace9b23482cef724a74957e534bdc62e1795008456a63d0b5af3dd9cda70b",
+        "sha256:cc8796388fd165371f50d921a1dacbff834584699e835f4b57e9b033ee9f25fe",
+        "sha256:d828f9886af43d582c98d988e185dc54ed9c21b4ff5381b721b2f087c6ca54ba",
+        "sha256:fd5e41e449f15b643d556355a5b50ca0a7f13feb98cb96459366da392128c928"
+      ],
+      "module": {
+        "name": "DomShape",
+        "packageName": "@flighthq/scene2d-dom",
+        "source": "packages/scene2d-dom/src/domShape.ts"
+      },
+      "path": "flight/scene2d_dom/dom_shape.hpp",
+      "rule": "cpp-contextual-union-missing-expression-type:optionalSingle",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domScale9Shape.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domShape.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts"
       ],
       "module": {
         "name": "DomShapeRasterizer",
@@ -24763,23 +24718,27 @@
         "source": "packages/scene2d-dom/src/domShapeRasterizer.ts"
       },
       "path": "flight/scene2d_dom/dom_shape_rasterizer.hpp",
-      "rule": "cpp-contextual-union-missing-expression-type:multiVariant",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domRenderState.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "classification": "target-runtime",
       "consumers": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/scene2DDomPipeline.ts"
       ],
       "declarationFingerprints": [
         "sha256:0a46931af93f0ee852614ff0c95829e2433fd543753ff000840bfc791fab0310",
+        "sha256:156760d2bc9537eec5d9a45f951bbbf97eac275b3f00bf113bfc7fc0aaae98c7",
         "sha256:2180145f1675889252748fdbd3167143272be14979444a181d10c29eefaa0906",
         "sha256:48f2efdbaa3bd43c7f436820ff81fd301ee998b43db0f693a1da44eb804fb1a0",
         "sha256:57f1c0de06aa71f46b9c93124068d56d940906edcacebc112b288cf9477acb94",
-        "sha256:8feacb48282a1c68785dd58bff2c4653bfd92c74f1115c0df3554222b9bdc006",
         "sha256:94e84717344941ca63441ee01b393434acfbb2526ca34e134d19fd6cdb6de9dd",
+        "sha256:ae42ac89360e82908d7df7258fee1a264564219e97da6111580cfe5f2e238588",
         "sha256:c327765564b3dd98f8e2f2b484e346136c302f9bfabaaf58770d241480a866ca",
-        "sha256:cafb3fa4b612e6702e80f39eafaf079e5d63f3bb75dd479fa07ad664c5f260c7",
         "sha256:ff2f763068b2e993ed9269136f852eb8975e0b5f7f9a16b0e332ad4f2bda1068"
       ],
       "module": {
@@ -24864,18 +24823,9 @@
       "status": "emitted"
     },
     {
-      "classification": "source-portability",
       "consumers": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:556ee6d6b91b3887ac17cd86e3d7bf8c5736183cbb96bd7df1c4f4e0ea38566b",
-        "sha256:627e543dd4cbd85b271f4b84c4baa38832eddf73382a8d9265b43ebc19fa38e9",
-        "sha256:98e3cff6a4bd511e0a35d173b998358ccdae41d696e3f9d151870cd03e707fc8",
-        "sha256:ac99eb2d4b11fcddd45a83e9e5427f9c4726bb1068fd850575acea730cf11f62",
-        "sha256:d7b3e4482781ef21fa5f2e57d9e5ab804540837e0e2c99a8e6bf938c9870dc7a",
-        "sha256:e11ee3cd9656865259b7b3b1fe7dc2f15aa1a9c7d3f64b69e85da1582bfbdfd6",
-        "sha256:fe6efde5d8a6b9491f132f17354dbeb2ad9931b8435a620f3190f039dcadf4fb"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts"
       ],
       "module": {
         "name": "DomTextInput",
@@ -24883,22 +24833,20 @@
         "source": "packages/scene2d-dom/src/domTextInput.ts"
       },
       "path": "flight/scene2d_dom/dom_text_input.hpp",
-      "rule": "cpp-structural-assertion-owner-unproven",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domRichText.ts",
+        "@flighthq/text/packages/text/src/richText.ts",
+        "@flighthq/textinput/packages/textinput/src/textInput.ts",
+        "@flighthq/textinput/packages/textinput/src/textInputEditing.ts",
+        "@flighthq/textlayout/packages/textlayout/src/richTextMetrics.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
-      "classification": "source-portability",
       "consumers": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:0fc045e000e4f2c2b088b7b4d39091f057477c776afe43d1c78e152b188432e0",
-        "sha256:42df72de9d5448f1cbc62d645b0785c870e09859193f989b5c2a13f57aafec88",
-        "sha256:5d57d77a18330754a171640193e2fd6ee0f3bc889a53613ff17bf4a95676df46",
-        "sha256:6087c8a8156f19f64a93425187d25a78aa7dc56f2e82b08b2b8b4115c0a91d73",
-        "sha256:8b82500db5f86ebe9b452baeab19077f69a91ccf554ca884e1a8c47a69c260c2",
-        "sha256:9418289e9d903cb40586fcdbf50fe6e6c6d80fe9601431ada9dd80a9559bba08",
-        "sha256:9a686ec6b45510a3c84d748a64e94270e2377d3f37a2dcbd783cad3252eebf8a"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/scene2DDomPipeline.ts"
       ],
       "module": {
         "name": "DomTextLabel",
@@ -24906,8 +24854,13 @@
         "source": "packages/scene2d-dom/src/domTextLabel.ts"
       },
       "path": "flight/scene2d_dom/dom_text_label.hpp",
-      "rule": "cpp-structural-assertion-owner-unproven",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domStyle.ts",
+        "@flighthq/text/packages/text/src/textLabel.ts",
+        "@flighthq/textlayout/packages/textlayout/src/textLayout.ts",
+        "@flighthq/textlayout/packages/textlayout/src/textLayoutRuntime.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "classification": "target-runtime",
@@ -24916,11 +24869,12 @@
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domBitmapTextureResolver.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domImageTextureResolver.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domScale9Sprite.ts",
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domSprite.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domSprite.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts"
       ],
       "declarationFingerprints": [
-        "sha256:cdfd205a6f9848152bb836c4d11d9275eca8673766a493e427e920d93d8dfc61",
-        "sha256:da7cede7653fc7da20fd4b9b4b90a76420488a1dcf6a6f06e6c75e9b449f8ac8"
+        "sha256:0d3d533e06766ac03391df04b6f59d2e92bd2ca57162bceeb3d71c412ae69d36",
+        "sha256:4821b544e817bff337b82eede1fefd70dcb3eb307e8f5ee7428776991a5d85c5"
       ],
       "module": {
         "name": "DomTextureResolver",
@@ -24949,7 +24903,8 @@
     },
     {
       "consumers": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts"
       ],
       "module": {
         "name": "EnableDomTextureResolverGuards",
@@ -24964,7 +24919,8 @@
     },
     {
       "consumers": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts"
       ],
       "module": {
         "name": "ExplainDomTextureResolution",
@@ -24986,11 +24942,63 @@
       },
       "path": "flight/scene2d_dom/_internal_index.hpp",
       "refusedDependencies": [
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domBitmapTextureResolver.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domCSSFilterBinding.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domCache.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domClip.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domHtmlView.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domImageTextureResolver.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domNativeText.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domNode2D.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domRenderState.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domRichText.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domScale9Shape.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domScale9Sprite.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domShape.ts",
         "@flighthq/scene2d-dom/packages/scene2d-dom/src/domShapeRasterizer.ts",
-        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domSvgFilter.ts"
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domSprite.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domSvgFilter.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domTextInput.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domTextLabel.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/domTextureResolver.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/enableDomTextureResolverGuards.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/explainDomTextureResolution.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/scene2DDomPipeline.ts"
       ],
       "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts"
+      ],
+      "module": {
+        "name": "MergeDomRenderOptions",
+        "packageName": "@flighthq/scene2d-dom",
+        "source": "packages/scene2d-dom/src/mergeDomRenderOptions.ts"
+      },
+      "path": "flight/scene2d_dom/merge_dom_render_options.hpp",
+      "status": "emitted"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/contract.ts",
+        "@flighthq/scene2d-dom/packages/scene2d-dom/src/index.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:6c0268f238834f4d99327fffc46ea3f4f376e5058d09e5d3130a4eaa4a452655",
+        "sha256:af11389935072298593c526c5ef01fc7fbc071e8b5d342fdcd994d7723a75fb6",
+        "sha256:e417e25e371dfbcb886e4c9f6afb3c81782477a85e6cdb144845c6f9eeee487e"
+      ],
+      "module": {
+        "name": "Scene2DDomPipeline",
+        "packageName": "@flighthq/scene2d-dom",
+        "source": "packages/scene2d-dom/src/scene2DDomPipeline.ts"
+      },
+      "path": "flight/scene2d_dom/scene2_ddom_pipeline.hpp",
+      "rule": "cpp-structural-row-widening-unproven",
+      "status": "refused-placeholder"
     },
     {
       "consumers": [],
@@ -27154,7 +27162,6 @@
         "@flighthq/render/packages/render/src/renderCache.ts",
         "@flighthq/render/packages/render/src/renderProxy.ts",
         "@flighthq/render/packages/render/src/renderTarget.ts",
-        "@flighthq/render/packages/render/src/renderer.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glNode2D.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glQuadBatchWriter.ts"
       ],
@@ -27856,7 +27863,6 @@
       },
       "path": "flight/scene2d_gl/scene2_dgl_pipeline.hpp",
       "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/render-gl/packages/render-gl/src/contract.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glBitmapText.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/glCache.ts",
@@ -28190,7 +28196,6 @@
       },
       "path": "flight/scene2d_wgpu/scene2_dwgpu_pipeline.hpp",
       "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/render-wgpu/packages/render-wgpu/src/wgpuRenderState.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuBitmapText.ts",
         "@flighthq/scene2d-wgpu/packages/scene2d-wgpu/src/wgpuCache.ts",
@@ -31791,7 +31796,9 @@
       "path": "flight/scene3d_gl/enable_gl_scene3_ddeform_guards.hpp",
       "refusedDependencies": [
         "@flighthq/log/packages/log/src/log.ts",
-        "@flighthq/scene3d-gl/packages/scene3d-gl/src/glScene3DRuntime.ts"
+        "@flighthq/mesh/packages/mesh/src/meshGeometry.ts",
+        "@flighthq/scene3d-gl/packages/scene3d-gl/src/glScene3DRuntime.ts",
+        "@flighthq/scene3d/packages/scene3d/src/mesh.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -32218,13 +32225,12 @@
       },
       "path": "flight/scene3d_gl/gl_mesh_material_registry.hpp",
       "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/render-gl/packages/render-gl/src/glRenderState.ts"
       ],
       "status": "dependency-incomplete"
     },
     {
-      "classification": "source-portability",
+      "classification": "compiler-restriction",
       "consumers": [
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/contract.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/glBlinnPhongMeshMaterialRenderer.ts",
@@ -32259,6 +32265,7 @@
       "declarationFingerprints": [
         "sha256:0146193eb7c6f3c14b788e6cc42a790bafdacdd2260488b598bb84665a845845",
         "sha256:0837c5c9345897ba55d5ac15c0060f78b92844a06f182713f8084abaee29f3a6",
+        "sha256:282ecdecf4775b8a01975f335ad050283dcf946674c41f39d120843396e6def8",
         "sha256:2c0b078d8ebaad082b63150c2278608c835c2130fe10778400017baa63f9839b",
         "sha256:39ae334630cb8dbfae24555ca47d3895459e24f4f409ea3699869087edce1cde",
         "sha256:458560c0b2e89bc217eeecb966830928d586620025e899c2673d7f4054e48913",
@@ -32268,7 +32275,6 @@
         "sha256:661a1c042f7dba81b532a1eafe0bb0fbbcf3825cb7107984c68df3868a0e5ce2",
         "sha256:7ec0093380078c6b68d4cd16830927cfff5d04fd30b479f68ddb11adf0602114",
         "sha256:80bea3fb5adb7fa0040e984d3b0fac73e73faf9d298ad53aa06539fcd2297edf",
-        "sha256:82b82340e9d54e084ca477adec28d43967bae2b2cc885d8b02662799b4cf4d26",
         "sha256:8912afaa4e06c265ba167f308e4eabf06796b32b7b2ee8af1fd1585755ae6ef4",
         "sha256:aa1f7e2147713d026937f0d00774b8293528c7ae6481f05c4093eb55ab9b882a",
         "sha256:b47d154450ac67b4fba694d754c23b5ff6a6d59808afcc59b8ffcc72fc2909db",
@@ -32321,6 +32327,7 @@
       },
       "path": "flight/scene3d_gl/gl_mesh_upload.hpp",
       "refusedDependencies": [
+        "@flighthq/mesh/packages/mesh/src/meshGeometry.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/glScene3DRuntime.ts"
       ],
       "status": "dependency-incomplete"
@@ -32346,29 +32353,9 @@
       "status": "refused-placeholder"
     },
     {
-      "classification": "source-portability",
       "consumers": [
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/contract.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/index.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:062287a88309c1b9c323c499e0a9ccb975b3eb6dae0f6d1fbbfbc351208c5a46",
-        "sha256:08beefa8050125bf888ad61c9597b8dbefa3a4fc5e87a9fcecd82ce973df1b8d",
-        "sha256:1865809e2c06a1515b46af87dae38c94286bd44df1aa82ea35058e751c35fc1c",
-        "sha256:1dd44bd54b0592c4334cecb47a455087f42dbb5ecfcbbc945261c0241bc3df59",
-        "sha256:331c957f76992ee2e608056db0543bbf6a0906c33281cf6257a487a544bcfd4a",
-        "sha256:3c86d24d8a418e6ecd1d33a68afa8820afb6ca6cea4938be0a6ce85145a3d8a9",
-        "sha256:55401c090739df924af40769e0539c258de943090597866b630f2102dd1d6d83",
-        "sha256:5e8ea90496d6e5233599db9f1c78e077da8ead657aa640cc99309750b213fdeb",
-        "sha256:76bd8152d44b802cf5e32ed9a09fe43cf2ad19bc25219f78c23bb990dcd22dc6",
-        "sha256:7be6f1cb80fe5abc9fd7af5ae4404d8b584f5cf29b70f5e436849b6a516d001c",
-        "sha256:8b1217587c32d798fdcdb6c4ca743d0eaae13a20b562718d2f272b95d153fd69",
-        "sha256:d3d456c095ec22283d80d4b4db460cc2e2c5b6ef3d11013d955d7833ddd4ef11",
-        "sha256:d49c4b0f68d39c78bffc0910777f191d9efe6f20f82027b86b026d69adcf8079",
-        "sha256:de1337eb0f2c58b97b5cf7fe86c72a6325d1831a3b7f816608a9329cc7f4c166",
-        "sha256:e6b329f0d258959cdbf0bf54fa39493ff26a00945a5a7c622dee673bbfe6e171",
-        "sha256:f75d4f13a867ba970eaf050df09b63acd96b0d29ff1fa6242897445e6cd073e0",
-        "sha256:fe6bb5a132704b8db8312e5b9add441f5f1fcff360d3ee099183962cee23ff86"
       ],
       "module": {
         "name": "GlParticleEmitter3D",
@@ -32376,8 +32363,14 @@
         "source": "packages/scene3d-gl/src/glParticleEmitter3D.ts"
       },
       "path": "flight/scene3d_gl/gl_particle_emitter3_d.hpp",
-      "rule": "cpp-structural-assertion-writable-capability-unproven",
-      "status": "refused-placeholder"
+      "refusedDependencies": [
+        "@flighthq/render-gl/packages/render-gl/src/glDraw.ts",
+        "@flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
+        "@flighthq/render-gl/packages/render-gl/src/glTextureResolver.ts",
+        "@flighthq/render/packages/render/src/sceneRender.ts",
+        "@flighthq/scene3d-gl/packages/scene3d-gl/src/glViewportAspect.ts"
+      ],
+      "status": "dependency-incomplete"
     },
     {
       "consumers": [
@@ -32400,7 +32393,6 @@
       },
       "path": "flight/scene3d_gl/gl_pbr_extension_registry.hpp",
       "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/render-gl/packages/render-gl/src/glRenderState.ts",
         "@flighthq/render-gl/packages/render-gl/src/glTextureResolver.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/glPbrStandardBlock.ts",
@@ -32554,9 +32546,9 @@
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/renderGlScene3D.ts"
       ],
       "declarationFingerprints": [
+        "sha256:2d7ea301c191bc68ba366db7bcdd3f385ded746777fa47e55423ac68bc63465e",
         "sha256:3ec2856da3215d01ba07810c727fc00dfd0423418a27edf56f189a287b489e8e",
         "sha256:56efa62a991a195bf9adbeaef0a11f8bb0f0a3a1aedb24a21ec94542aa490acc",
-        "sha256:884955c3ed619883e9fdbbeeb9f73c04d8c5d30a6995eafdc13a1c3fcb2993be",
         "sha256:8a8fd731cea7470adbf38351d1a82622552ec7d8aa805fe5017214dfa6899631",
         "sha256:9ac83b2258775610e28be723cd0d3b54d3cb3dafd2e0d5ed4110887ed11e8816",
         "sha256:ea38529dc9d3ee53925045cdd4619056b93b683d1d0011a2f3f4186a83d65bc4",
@@ -32630,18 +32622,18 @@
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/scene3DGlPipeline.ts"
       ],
       "declarationFingerprints": [
-        "sha256:0ed336dc1e110b6716ca583d207b65e34019bf8c6114521d0ac807d1b5579787",
+        "sha256:0807b37a6078dbf78b69a112ab0bb0ad2a51a9f7ee5fb78ae9d03274335b5227",
         "sha256:28d02bed06221afdf246334474ddb343674c0b627de693842c25a63ecaf0cfac",
         "sha256:2e6f4b999f940bd446582fda571e5107eb8612bbb0765ac8a8d61013770fc44f",
+        "sha256:32e7853d4e33cc3c8e21f6ee874d01da248e98c6719858c8af4aec49c23d0382",
+        "sha256:36616a7af2ab2a8712bdd9747552fc77feda64f4d59bc026be495b215a77ac31",
         "sha256:3fce62cfd4fc42ebbf481d6f693513fc4812497892ad394bbf5f5046d574148d",
-        "sha256:6ba67a566c3dddf7a10a415899dbe7061517b85a2d9566a6593ad6bf4d79d8d1",
-        "sha256:6e3061cecfec15f5831d5652e1995cad101066c87177492a8ec49a9feb5e361a",
+        "sha256:6a313eda47a27604a5ad1ade369c94b346b84c28680b70a8e335ea3938e5b799",
         "sha256:70c4c404a510e56a5f97710001dfa84a100295b87502d867b89ed4b6ca37bf15",
         "sha256:714e0c7628477e9ea01e6b05a8f9afa350d0b6d616563a928401402f98843b1e",
-        "sha256:91a139bc97d8b909ef0f65d6cd7276c987802f7c7ef53664b2a8ab4ec64b3ba6",
         "sha256:ec088ba80830b9376a18dacc2290cc69bf06b01cc18937ece4090b9678b2675b",
         "sha256:ef5fa35b45a0f4f38704830c3987b472e4ae655b9998ad705c07795f3ad08ebc",
-        "sha256:f556cc6b99acfe6d06941dbed69576c0dfcbce4b282cad00b5a775eea45d57d6"
+        "sha256:fcb3ea800a8a40cff51f609b11424428a4142e552e785e687a511d82347aaba7"
       ],
       "module": {
         "name": "GlShadedBuiltInModifiers",
@@ -32692,7 +32684,6 @@
       },
       "path": "flight/scene3d_gl/gl_shaded_modifier_snippet.hpp",
       "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/render-gl/packages/render-gl/src/glRenderState.ts"
       ],
       "status": "dependency-incomplete"
@@ -32724,7 +32715,7 @@
         "source": "packages/scene3d-gl/src/glShadedPrelude.ts"
       },
       "path": "flight/scene3d_gl/gl_shaded_prelude.hpp",
-      "rule": "cpp-structural-assertion-owner-unproven",
+      "rule": "cpp-instanceof-member-unresolved",
       "status": "refused-placeholder"
     },
     {
@@ -32737,14 +32728,14 @@
         "sha256:09dc25af3a476e12141cde510f9a3f23d0d113870f0b589b1f73c2c6f6cd4fd2",
         "sha256:1511a22a247929199af67b947543a807d36e75b9de8fa8b438e258c7f5a61b00",
         "sha256:1ae6518a116eb6ae239343d34a96492a9512a39535114fed1ce08865a62d87ff",
-        "sha256:231904d08f1ac1ac3ce3155cdf66f0e17573caa0ac595752503d87fed3e6cdff",
+        "sha256:2de23f6eacfc5cd76fb5c9863bc679434246f0f1d200efb70f0b5885bab1f71a",
         "sha256:417820b5c2f86e2022b22677487222db4a550251fc650fceb0ce21880f78dbef",
+        "sha256:51d99aa9c8a7b432cb8a24bc80cabba0c914f92a4f9475be3965de09ae168d01",
         "sha256:6012c8d44e65c97c2b87f8fe4972271defdc981bc53cf95fa1daa88516dee041",
         "sha256:6cbbbb3e3a26bb538eaaacbeed6f9e0bfc4788b473591559535f70a5b1729421",
         "sha256:6e6044b1805d102d26c0eb17b7aa622f290184a9c5de055da30326509d7f4192",
         "sha256:6eb7e5025d58dbb5e469220fe0bf6eb664f4e5ee9b56a6546129652ace80a42d",
-        "sha256:9237aac894e4e45c81668a68fe9d4ce6943664ce72a54aa36de7822ef1f42eef",
-        "sha256:de2cff6e83799a2c736998ec54b584e9ec1f144b2356d9c03e37daf10f0953f8",
+        "sha256:a467ca40a2bfc81c6906c6c1a20216a5c0ae4bbebefc6240e59a0025ccd81871",
         "sha256:e6209fda224fb8e861f4236d4f3015fd68ce6cf2e08665b12109642ccb0fa331"
       ],
       "module": {
@@ -33073,7 +33064,8 @@
       "path": "flight/scene3d_gl/prepare_gl_scene3_dforward_lights.hpp",
       "refusedDependencies": [
         "@flighthq/lighting/packages/lighting/src/sceneForwardLights.ts",
-        "@flighthq/render/packages/render/src/sceneRender.ts"
+        "@flighthq/render/packages/render/src/sceneRender.ts",
+        "@flighthq/scene3d/packages/scene3d/src/sceneNodeBounds.ts"
       ],
       "status": "dependency-incomplete"
     },
@@ -33167,7 +33159,6 @@
       },
       "path": "flight/scene3d_gl/scene3_dgl_pipeline.hpp",
       "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts",
         "@flighthq/scene2d-gl/packages/scene2d-gl/src/scene2DGlPipeline.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/anisotropyPbrGlExtension.ts",
         "@flighthq/scene3d-gl/packages/scene3d-gl/src/clearcoatPbrGlExtension.ts",
@@ -36082,7 +36073,6 @@
       },
       "path": "flight/shape_formats/contract.hpp",
       "refusedDependencies": [
-        "@flighthq/shape-formats/packages/shape-formats/src/shapeCommandSchemas.ts",
         "@flighthq/shape-formats/packages/shape-formats/src/shapeJson.ts"
       ],
       "status": "dependency-incomplete"
@@ -36111,10 +36101,7 @@
         "source": "packages/shape-formats/src/shapeCommandSchemas.ts"
       },
       "path": "flight/shape_formats/shape_command_schemas.hpp",
-      "refusedDependencies": [
-        "@flighthq/registry/packages/registry/src/registryTable.ts"
-      ],
-      "status": "dependency-incomplete"
+      "status": "emitted"
     },
     {
       "classification": "source-portability",
@@ -36133,8 +36120,8 @@
         "sha256:72e3183d2805c22df5ff3328c64a079dbffc24319911f6e5b9a6040f8b2cc6ac",
         "sha256:76cceff9ec05834227425027cbb737f6049c9d476ab4a89e754a25a39e78932d",
         "sha256:978e6b590c40cac42119d6d8311912fa285edccd1477c8e9b22837c22326548f",
-        "sha256:aab70011944141f9d69cf44791fbe4f99a0498ce0407a5c3822780d39f26989c",
         "sha256:b86e3786f11137df8cdbfed8c15657859be157e4ee7c70ff947c2e0db6f0955d",
+        "sha256:c4d05fc0c8fbf6e646807cf413fa27aa5f9f38c58340179436434c2c7ee6a9fe",
         "sha256:ca50ce1920cf3044ada25207ee718929ff3dd6793b771250b5befabb6a8fee24",
         "sha256:d2b541960d68f2581c5956f5f8c4d6a43031a32e6a2a628331f7362cfa3737a2",
         "sha256:f2d8c6cba6ee7fe77aa310f21575e81861d0473b75d12b068a49d76b60c0e7c1"

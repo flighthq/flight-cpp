@@ -33,6 +33,14 @@ repro above fails as shown. With the callback's return annotated, `(): T | null 
 
 ## Carrying workaround
 
-None yet. A type-only source patch, annotating the callback's return as `T | null`, would lower it with
-no runtime difference. Registry cannot move alone at this pin anyway (see the registry move report), so the
-patch belongs to that coordinated move.
+The source patch [`registry-ordinal-table-nullable-entries`](../../source-patches/registry-ordinal-table-nullable-entries.patch)
+annotates the callback's return:
+
+```ts
+return { entries: vocabulary.map((): T | null => null), vocabulary };
+```
+
+The annotation is type-only: the callback, the fresh array (one `null` per vocabulary entry) and the returned
+object are the same at runtime. It is carried with the registry renderer group's coordinated regeneration. On
+the live base, `@flighthq/registry` is 3/3 modules emitted with no refusal records: `registryTable.ts`, `contract`
+and `index` are all emitted, and all 3 headers compile.

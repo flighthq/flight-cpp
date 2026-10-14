@@ -1231,6 +1231,8 @@ cc_library(
         "include/flight/scene2d_dom/dom_transform.hpp",
         "include/flight/scene2d_dom/enable_dom_texture_resolver_guards.hpp",
         "include/flight/scene2d_dom/explain_dom_texture_resolution.hpp",
+        "include/flight/scene2d_dom/merge_dom_render_options.hpp",
+        "include/flight/scene2d_dom/scene2_ddom_pipeline.hpp",
         "include/flight/scene2d_formats/_internal_index.hpp",
         "include/flight/scene2d_formats/_internal_test_helper.hpp",
         "include/flight/scene2d_formats/contract.hpp",

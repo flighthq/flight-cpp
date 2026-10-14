@@ -59,7 +59,7 @@ inline void present_gl_render_target(flight::Ref<flight::types::GlRenderState> s
     flight::render_gl::draw_gl_linear_to_srgb_pass(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlTextureRenderTarget>>>>>(target), dest.value());
     return;
   }
-  flight::render_gl::draw_gl_fullscreen_pass(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlFullscreenProgram>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlFullscreenProgram>>>>(get_gl_copy_program(state))), flight::Array<flight::host_sdl::WebGlTexture>{flight::row_get<flight::RowKey<"texture">>(target)}, dest.value(), noop_flight_value_variable__u00004e__u00004f__u00004f__u000050__flight_private_982dbe858775bb49);
+  flight::render_gl::draw_gl_fullscreen_pass(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlFullscreenProgram>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlFullscreenProgram>>>>(get_gl_copy_program(state))), flight::Array<flight::host_sdl::WebGlTexture>{flight::row_get<flight::RowKey<"texture">>(target)}, dest.value(), [contextual_callable = noop_flight_value_variable__u00004e__u00004f__u00004f__u000050__flight_private_982dbe858775bb49](flight::host_sdl::WebGl2Context contextual_callable_argument0, flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlFullscreenProgram>>>> contextual_callable_argument1) -> void { contextual_callable(); });
 }
 
 } // namespace flight::render_gl

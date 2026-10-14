@@ -9,6 +9,7 @@
 #include <functional>
 #include <optional>
 #include <random>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -150,11 +151,11 @@ inline void draw_canvas_rich_text_field(flight::Ref<flight::types::CanvasRenderS
   const double field_w = flight::textlayout::compute_text_bounds_width(flight::structural_ref_cast<flight::types::TextBoundsSpec>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichTextData>>>>(data)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>(result)));
   const double field_h = flight::textlayout::compute_text_bounds_height(flight::structural_ref_cast<flight::types::TextBoundsSpec>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RichTextData>>>>(data)), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>(result)));
   if (data->background) {
-    context_capture.update_binding([&](auto& binding_value) { return (binding_value.fill_style = flight::color::compute_rgba_css_string(data->background_color)); });
+    context_capture.update_binding([&](auto& binding_value) { return (binding_value.fill_style = std::variant<flight::CanvasGradient, flight::CanvasPattern, flight::String>{std::in_place_type<flight::String>, flight::color::compute_rgba_css_string(data->background_color)}); });
     context_capture.read_binding().fill_rect(0.0, 0.0, field_w, field_h);
   }
   if (data->border) {
-    context_capture.update_binding([&](auto& binding_value) { return (binding_value.stroke_style = flight::color::compute_rgba_css_string(data->border_color)); });
+    context_capture.update_binding([&](auto& binding_value) { return (binding_value.stroke_style = std::variant<flight::CanvasGradient, flight::CanvasPattern, flight::String>{std::in_place_type<flight::String>, flight::color::compute_rgba_css_string(data->border_color)}); });
     context_capture.update_binding([&](auto& binding_value) { return (binding_value.line_width = 1.0); });
     context_capture.read_binding().stroke_rect(0.0, 0.0, field_w, field_h);
   }
@@ -170,7 +171,7 @@ inline void draw_canvas_rich_text_field(flight::Ref<flight::types::CanvasRenderS
   context_capture.read_binding().clip();
   if ((flight::row_get<flight::RowKey<"data">>(source)->selectable && (flight::row_get<flight::RowKey<"selectionBeginIndex">>(rich_text_runtime) != flight::row_get<flight::RowKey<"selectionEndIndex">>(rich_text_runtime)))) {
     flight::textlayout::get_rich_text_selection_rectangles(rich_text_selection_rectangles, flight::row_get<flight::RowKey<"selectionBeginIndex">>(rich_text_runtime), flight::row_get<flight::RowKey<"selectionEndIndex">>(rich_text_runtime), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::TextLayoutResult>>>>(result)));
-    context_capture.update_binding([&](auto& binding_value) { return (binding_value.fill_style = selection_color); });
+    context_capture.update_binding([&](auto& binding_value) { return (binding_value.fill_style = std::variant<flight::CanvasGradient, flight::CanvasPattern, flight::String>{std::in_place_type<flight::String>, selection_color}); });
     context_capture.update_binding([&](auto& binding_value) { return (binding_value.global_alpha = flight::minimum(1.0, (render_proxy->alpha * selection_alpha))); });
     for (auto rectangle : rich_text_selection_rectangles) {
       context_capture.read_binding().fill_rect((rectangle->x - scroll_xoffset), (rectangle->y - scroll_yoffset), rectangle->width, rectangle->height);
@@ -185,7 +186,7 @@ inline void draw_canvas_rich_text_field(flight::Ref<flight::types::CanvasRenderS
       continue;
     }
     context_capture.update_binding([&](auto& binding_value) { return (binding_value.font = flight::text::compute_text_format_font_string(group->format)); });
-    context_capture.update_binding([&](auto& binding_value) { return (binding_value.fill_style = flight::color::compute_rgba_css_string(([&]() -> double { auto nullish_coalesce_left = group->format->color; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return data->text_color; }()))); });
+    context_capture.update_binding([&](auto& binding_value) { return (binding_value.fill_style = std::variant<flight::CanvasGradient, flight::CanvasPattern, flight::String>{std::in_place_type<flight::String>, flight::color::compute_rgba_css_string(([&]() -> double { auto nullish_coalesce_left = group->format->color; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return data->text_color; }()))}); });
     const flight::String slice = text.substring(group->start_index, group->end_index);
     const double x = (group->offset_x - scroll_xoffset);
     const double y = ((group->offset_y + group->ascent) - scroll_yoffset);
@@ -198,7 +199,7 @@ inline void draw_canvas_rich_text_field(flight::Ref<flight::types::CanvasRenderS
     const flight::String line_color = flight::color::compute_rgba_css_string(([&]() -> double { auto nullish_coalesce_left = group->format->color; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return data->text_color; }()));
     const double line_width = flight::maximum(1.0, (([&]() -> double { auto nullish_coalesce_left = group->format->size; if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value(); return 12.0; }()) / 16.0));
     if (flight::to_boolean(([&]() -> std::optional<bool> { auto logical_or_value = group->format->underline; if (flight::to_boolean(logical_or_value)) return logical_or_value.value(); return group->format->strikethrough; }()))) {
-      context_capture.update_binding([&](auto& binding_value) { return (binding_value.stroke_style = line_color); });
+      context_capture.update_binding([&](auto& binding_value) { return (binding_value.stroke_style = std::variant<flight::CanvasGradient, flight::CanvasPattern, flight::String>{std::in_place_type<flight::String>, line_color}); });
       context_capture.update_binding([&](auto& binding_value) { return (binding_value.line_width = line_width); });
       if (flight::to_boolean(group->format->underline)) {
         context_capture.read_binding().begin_path();

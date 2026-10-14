@@ -11,7 +11,6 @@
 #include <cstdint>
 #include <flight/any.hpp>
 #include <flight/canvas_2d.hpp>
-#include <flight/host_sdl/image.hpp>
 #include <flight/string.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -41,6 +40,7 @@ namespace flight::types { template <typename K> struct CanvasShapeCommand; }
 #include <flight/types/canvas_shape_draw_state.hpp>
 #include <flight/types/canvas_shape_registry.hpp>
 #include <flight/types/canvas_texture_resolver.hpp>
+#include <flight/types/host_image_source.hpp>
 #include <flight/types/matrix.hpp>
 #include <flight/types/shape_bounds.hpp>
 #include <flight/types/shape_command.hpp>

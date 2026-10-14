@@ -11,7 +11,7 @@
 
 // Declared here, for the replacement to supply:
 //   interface DomRichTextData { div: HTMLDivElement | null } -- :34
-//   function createDomRichTextData(_state: RenderState, _source: Renderable): DomRichTextData -- :38
+//   function createDomRichTextData(_state: RenderState, _source: NodeAny): DomRichTextData -- :38
 //   let _measureCtx: CanvasRenderingContext2D | null -- :44
 //   function getMeasureCtx(): CanvasRenderingContext2D | null -- :46
 //   function drawDomRichText(state: DomRenderState, renderProxy: RenderProxy2D): void -- :53
@@ -27,18 +27,18 @@
 //   const _richTextSelectionRectangles: { ... }[] -- :238
 //   let _domTextInputOverlay: DomTextInputOverlay | null -- :239
 //   function registerDomTextInputOverlay(overlay: DomTextInputOverlay): void -- :241
-//   const defaultDomRichTextRenderer: Scene2DRenderer -- :245
+//   const domRichTextRenderer: Scene2DRenderer -- :245
 
 // Imported by this module, which the replacement likely needs:
-//   { computeRgbHexString, computeRgbaCssString } from '@flighthq/color/contract'
+//   { computeRgbaCssString } from '@flighthq/color/contract'
 //   { allocateEntity, finishEntity } from '@flighthq/entity/contract'
 //   { computeTextFormatFontString } from '@flighthq/text/contract'
 //   { getRichTextPasswordCharacter, getRichTextRuntime } from '@flighthq/text/contract'
 //   { computeRichTextContent, computeTextBoundsHeight, computeTextBoundsWidth, computeTextLayout, getRichTextContent, getRichTextScrollYOffset, getRichTextSelectionRectangles, getTextLayoutResult } from '@flighthq/textlayout/contract'
-//   type { DomRenderState, DomTextInputOverlay, EntityConstruction, RenderProxy2D, RenderState, Renderable, RendererData, RichText, RichTextRuntime, Scene2DRenderer, TextFormat, TextLabelRuntime } from '@flighthq/types/contract'
-//   { getDomFontAscentCached, setDomFontAscentCached } from './domFontSource'
-//   { applyDomStyle, prepareDomElement, setDomRendererElement } from './domStyle'
-//   { escapeDomHtmlString } from './domTextHelpers'
+//   type { DomRenderState, DomTextInputOverlay, EntityConstruction, RenderProxy2D, RenderState, NodeAny, RendererData, RichText, RichTextRuntime, Scene2DRenderer, TextFormat, TextLabelRuntime } from '@flighthq/types/contract'
+//   { getDomFontAscentCached, setDomFontAscentCached } from './domFontSource.ts'
+//   { applyDomStyle, prepareDomElement, setDomRendererElement } from './domStyle.ts'
+//   { escapeDomHtmlString } from './domTextHelpers.ts'
 //   type { Entity } from '@flighthq/types/contract'
 //   type { Adjustment } from '@flighthq/types/contract'
 //   type { ColorScaleBias } from '@flighthq/types/contract'
@@ -47,14 +47,14 @@
 //   type { NodeRuntime } from '@flighthq/types/contract'
 //   type { BlendMode } from '@flighthq/types/contract'
 //   type { ClipRegion } from '@flighthq/types/contract'
-//   type { Material } from '@flighthq/types/contract'
+//   type { Material2D } from '@flighthq/types/contract'
 //   type { MaterialData } from '@flighthq/types/contract'
 //   type { InteractionSignals } from '@flighthq/types/contract'
 //   type { NodeSignals } from '@flighthq/types/contract'
 //   type { NodeInteractionState } from '@flighthq/types/contract'
 //   type { Matrix } from '@flighthq/types/contract'
 //   type { Rectangle } from '@flighthq/types/contract'
-//   type { BoundsNodeAny } from '@flighthq/types/contract'
+//   type { BoundsNode } from '@flighthq/types/contract'
 //   type { Scene2D } from '@flighthq/types/contract'
 //   type { TextLabel } from '@flighthq/types/contract'
 //   type { TextMeasureFunction } from '@flighthq/types/contract'
@@ -64,7 +64,9 @@
 //   type { RichTextContent } from '@flighthq/types/contract'
 //   type { TextFieldSignals } from '@flighthq/types/contract'
 //   type { RenderProxy } from '@flighthq/types/contract'
-//   type { Renderer } from '@flighthq/types/contract'
+//   type { Material } from '@flighthq/types/contract'
+//   type { NodeRenderer } from '@flighthq/types/contract'
+//   type { Node2D } from '@flighthq/types/contract'
 //   type { Node } from '@flighthq/types/contract'
 //   type { NodeData } from '@flighthq/types/contract'
 //   type { Node2DData } from '@flighthq/types/contract'
@@ -82,7 +84,6 @@
 //   type { FontVariation } from '@flighthq/types/contract'
 //   type { TextFormatAlign } from '@flighthq/types/contract'
 //   type { TextFormatListMarker } from '@flighthq/types/contract'
-//   type { Node2D } from '@flighthq/types/contract'
 
 namespace flight::scene2d_dom {
 

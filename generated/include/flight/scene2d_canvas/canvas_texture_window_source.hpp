@@ -14,6 +14,7 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 #include <flight/types/canvas_texture_resolver.hpp>
 
 namespace flight::types { struct Bitmap; }
+namespace flight::types { struct CanvasBitmapElementCacheEntry; }
 namespace flight::types { struct CanvasSurface; }
 namespace flight::types { struct CanvasTextureResolvers; }
 namespace flight::types { struct CompressedImageResource; }
@@ -40,13 +41,13 @@ inline flight::Ref<flight::types::Vector2> texture_window_view_size = flight::ma
 
 
 // NOT GENERATED: function resolveCanvasTextureWindowSource -- source line 12
-// refusal: cpp-union-runtime-domains-erased [target-runtime]
+// refusal: cpp-contextual-union-value-type-unrepresented [compiler-restriction]
 //
 // The source it stood for:
 //   export function resolveCanvasTextureWindowSource(
 //     resolvers: CanvasTextureResolvers,
 //     texture: Readonly<Texture>,
-//   ): CanvasImageSource | null {
+//   ): HostImageSource | null {
 //     if (texture.dimension !== '2d') return null;
 //     const image = texture.source;
 //     const source = resolveCanvasTexture(resolvers, texture);
@@ -126,11 +127,7 @@ inline flight::Ref<flight::types::Vector2> texture_window_view_size = flight::ma
 //     return element;
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts: C++
-// runtime contract maps distinct union domains to one carrier without a discriminator or checked projection
-// (HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame ->
-// flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each reaches
-// a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the
-// emitter does -- or provide that runtime contract
+// cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextureWindowSource.ts:
+// contextual union value type HostImageSource is not a represented runtime domain
 
 } // namespace flight::scene2d_canvas

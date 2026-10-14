@@ -8,6 +8,7 @@
 #include <functional>
 #include <optional>
 #include <random>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -54,7 +55,7 @@ inline void clear_canvas_render_pass_target(flight::StructuralRef<flight::RowRea
     context.clear_rect(0.0, 0.0, flight::row_get<flight::RowKey<"width">>(target), flight::row_get<flight::RowKey<"height">>(target));
     return;
   }
-  (context.fill_style = canvas_clear_color_string(rgba.value()));
+  (context.fill_style = std::variant<flight::CanvasGradient, flight::CanvasPattern, flight::String>{std::in_place_type<flight::String>, canvas_clear_color_string(rgba.value())});
   context.fill_rect(0.0, 0.0, flight::row_get<flight::RowKey<"width">>(target), flight::row_get<flight::RowKey<"height">>(target));
 }
 

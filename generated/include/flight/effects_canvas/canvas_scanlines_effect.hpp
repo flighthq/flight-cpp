@@ -10,6 +10,7 @@
 #include <flight/structural_ref.hpp>
 #include <optional>
 #include <random>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -57,7 +58,7 @@ inline void apply_scanlines_effect_to_canvas(flight::StructuralRef<flight::RowRe
   (ctx.filter = flight::String("none"));
   const double dark = (1.0 - intensity);
   const double channel = flight::round((dark * 255.0));
-  (ctx.fill_style = flight::String("rgb(") + flight::to_string(channel) + flight::String(",") + flight::to_string(channel) + flight::String(",") + flight::to_string(channel) + flight::String(")"));
+  (ctx.fill_style = std::variant<flight::CanvasGradient, flight::CanvasPattern, flight::String>{std::in_place_type<flight::String>, flight::String("rgb(") + flight::to_string(channel) + flight::String(",") + flight::to_string(channel) + flight::String(",") + flight::to_string(channel) + flight::String(")")});
   {
     double y = 0.0;
     while ((y < h)) {

@@ -1225,6 +1225,8 @@ set(FLIGHT_SDK_GENERATED_HEADERS
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/scene2d_dom/dom_transform.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/scene2d_dom/enable_dom_texture_resolver_guards.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/scene2d_dom/explain_dom_texture_resolution.hpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../include/flight/scene2d_dom/merge_dom_render_options.hpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../include/flight/scene2d_dom/scene2_ddom_pipeline.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/scene2d_formats/_internal_index.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/scene2d_formats/_internal_test_helper.hpp"
   "${CMAKE_CURRENT_LIST_DIR}/../include/flight/scene2d_formats/contract.hpp"

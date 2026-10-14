@@ -4,7 +4,6 @@
 #include <cstdint>
 #include <flight/any.hpp>
 #include <flight/canvas_2d.hpp>
-#include <flight/host_sdl/image.hpp>
 #include <flight/structural_ref.hpp>
 #include <flight/types/shape_command.hpp>
 #include <functional>

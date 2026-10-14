@@ -47,7 +47,7 @@ using flight::types::SpriteRenderer;
 
 
 // NOT GENERATED: function drawCanvasTilemap -- source line 14
-// refusal: cpp-union-runtime-domains-erased [target-runtime]
+// refusal: cpp-contextual-union-interface-heritage-carrier-unrepresented [target-runtime]
 //
 // The source it stood for:
 //   export function drawCanvasTilemap(state: CanvasRenderState, tilemapNode: RenderProxy2D): void {
@@ -104,12 +104,18 @@ using flight::types::SpriteRenderer;
 //     if (!smoothing) setCanvasImageSmoothing(state, true);
 //   }
 //   
-// cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTilemap.ts: C++ runtime
-// contract maps distinct union domains to one carrier without a discriminator or checked projection
-// (HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame ->
-// flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each reaches
-// a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the
-// emitter does -- or provide that runtime contract
+// cpp emission failed for @flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTilemap.ts: contextual
+// nullable interface conversion from Material2D to Material follows TypeScript interface heritage, but
+// flight-cpp stores those declarations in independent flight::Ref<flight::types::Material2D> and
+// flight::Ref<flight::types::Material> owner types: each interface struct is emitted flattened, so the heritage
+// is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would claim C++
+// inheritance the emitted interface structs do not have, materializing the target would replace object identity,
+// and a structural row would change the declared result carrier. Preserve the exact source owner in the declared
+// result and explicitly represent both owners where the branches merge, or add an owner-preserving
+// interface-heritage carrier to the runtime contract. Declaring the destination as the derived interface where
+// the concrete type is known -- or converting where the type is still concrete rather than widening it through a
+// nullable union -- avoids the boundary altogether; closing it at the carrier needs either that runtime carrier
+// or interface structs emitted with the heritage as a C++ base relation.
 
 inline flight::Ref<flight::types::SpriteRenderer> canvas_tilemap_renderer = flight::make_ref<flight::types::SpriteRenderer>(flight::types::SpriteRenderer{.create_data = flight::render::noop_renderer_data, .submit = draw_canvas_tilemap});
 

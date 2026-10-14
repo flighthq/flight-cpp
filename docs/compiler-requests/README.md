@@ -131,7 +131,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [`registerAssetLoader` stores a readonly adapter as a writable one (Flight source)](readonly-adapter-stored-as-writable.md) —
   `@flighthq/assets` `registerAssetLoader`; an upstream source question, no workaround.
 - [A fresh array of `null` assigned to a nullable element union](fresh-null-array-into-nullable-element-union.md) —
-  `@flighthq/registry` `createOrdinalTable`; a type-only source patch would carry it.
+  `@flighthq/registry` `createOrdinalTable`; carried by the type-only source patch `registry-ordinal-table-nullable-entries` in the registry renderer group regeneration (registry 3/3 emitted).
 - [A numeric enum value is widened to a `number` union in flow](numeric-enum-flow-widened-to-number-union.md) —
   refuses `@flighthq/debug` `debug.ts` (`enableDebug`); no workaround.
 - [Nullable storage of an imported alias is spelled by its expansion](nullable-alias-storage-spelled-by-expansion.md) —

@@ -3,15 +3,16 @@
 
 // PARTIAL: the C++ emitter refused declarations in this module. Everything else compiled, and each
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
-//   missing: function ensureGlScene3DProgram -- source line 243
-//   missing: function isGlMeshAlphaCoverage -- source line 297
+//   missing: function isGlMeshAlphaCoverage -- source line 295
 //   missing: function bindGlInstancePalette -- source line 65
 //   missing: function bindGlInstanceColorPalette -- source line 47
-//   missing: function uploadGlMeshDrawAlpha -- source line 365
+//   missing: function uploadGlMeshDrawAlpha -- source line 363
 //   missing: function bindGlUvTransform -- source line 89
 //   missing: function drawGlMeshSubset -- source line 119
+#include <flight/erased_ref.hpp>
 #include <flight/host_sdl/webgl.hpp>
 #include <flight/structural_ref.hpp>
+#include <functional>
 #include <optional>
 #include <flight/runtime.hpp>
 
@@ -76,39 +77,23 @@ inline void destroy_gl_mesh_program(flight::Ref<flight::types::GlRenderState> st
   state->gl.delete_program(flight::row_get<flight::RowKey<"program">>(program));
 }
 
-
-// NOT GENERATED: function ensureGlScene3DProgram -- source line 243
-// refusal: cpp-type-assertion-unidentified [source-portability]
-//
-// The source it stood for:
-//   export function ensureGlScene3DProgram<T extends GlMeshProgram>(
-//     state: GlRenderState,
-//     key: string,
-//     compile: (gl: GlContext) => T,
-//   ): T {
-//     const runtime = getGlScene3DRuntime(state);
-//     let program = runtime.programCache.get(key);
-//     if (program === undefined) {
-//       program = compile(state.gl);
-//       runtime.programCache.set(key, program);
-//     }
-//     return program as T;
-//   }
-//   
-//   // The HAS_UV_TRANSFORM define-key predicate every map-sampling family shares: true only when the
-//   // material's primary map is bound (an image is present, so it is actually sampled) AND carries a
-//   // non-identity uv transform. Gating on both keeps an untiled or unbound surface on the identity shader
-//   // variant, so it never pays for the uv-transform uniform or the extra vertex multiply.
-// cpp emission failed for @flighthq/scene3d-gl/packages/scene3d-gl/src/glMeshProgram.ts: type assertion target
-// must identify exactly one C++ variant alternative: target T against
-// [flight::Ref<flight::types::GlMeshProgram>]
+template <typename T>
+inline T ensure_gl_scene3_dprogram(flight::Ref<flight::types::GlRenderState> state, flight::String key, std::function<T(flight::host_sdl::WebGl2Context)> compile) {
+  auto runtime = flight::scene3d_gl::get_gl_scene3_druntime(state);
+  if (runtime->program_cache.has(key)) {
+    return flight::erased_ref_as<typename T::element_type>(runtime->program_cache.get(key));
+  }
+  T program = compile(state->gl);
+  runtime->program_cache.set(key, program);
+  return program;
+}
 
 inline bool has_gl_uv_transform(std::optional<flight::types::TextureLike> texture) {
   return ((texture.has_value() && flight::texture::has_texture_source(texture.value())) && flight::texture::has_texture_uv_transform(texture.value()));
 }
 
 
-// NOT GENERATED: function isGlMeshAlphaCoverage -- source line 297
+// NOT GENERATED: function isGlMeshAlphaCoverage -- source line 295
 // refusal: cpp-type-assertion-unidentified [compiler-restriction]
 //
 // The source it stood for:
@@ -202,7 +187,7 @@ inline const double instance_color_palette_texture_unit = 15.0;
 inline const flight::String gl_instance_vertex_declarations_glsl = flight::String("\nuniform highp sampler2D u_instancePalette;\nuniform highp sampler2D u_instanceColorPalette;\n\n// One linear RGBA texel per instance. A batch carrying no per-instance colours uploads opaque white, so\n// this is an identity multiply there and the families need no second program variant for the tinted case.\nvec4 instanceColor() {\n  int id = gl_InstanceID;\n  int w = textureSize(u_instanceColorPalette, 0).x;\n  return texelFetch(u_instanceColorPalette, ivec2(id % w, id / w), 0);\n}\n\nmat4 instanceModelMatrix() {\n  int x = gl_InstanceID * 4;\n  int w = textureSize(u_instancePalette, 0).x;\n  return mat4(\n    texelFetch(u_instancePalette, ivec2(x % w, x / w), 0),\n    texelFetch(u_instancePalette, ivec2((x + 1) % w, (x + 1) / w), 0),\n    texelFetch(u_instancePalette, ivec2((x + 2) % w, (x + 2) / w), 0),\n    texelFetch(u_instancePalette, ivec2((x + 3) % w, (x + 3) / w), 0)\n  );\n}\n");
 
 
-// NOT GENERATED: function uploadGlMeshDrawAlpha -- source line 365
+// NOT GENERATED: function uploadGlMeshDrawAlpha -- source line 363
 // refusal: cpp-external-binding-missing-optional-domain [compiler-restriction]
 //
 // The source it stood for:

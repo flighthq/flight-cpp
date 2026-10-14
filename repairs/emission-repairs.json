@@ -13672,6 +13672,30 @@
       "expires": "when the emitter gives a null fallback into nullable structural storage that storage's absent state"
     },
     {
+      "id": "render-state-generic-null-clip-hooks-default",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/render/render_state.hpp",
+      "from": "flight::row_set<flight::RowKey<\"displayObjectClipHooks\">>(state, nullptr);",
+      "to": "flight::row_set<flight::RowKey<\"displayObjectClipHooks\">>(state, std::nullopt);",
+      "sourceDeclaration": "packages/render/src/renderState.ts -- initializeRenderStateFields: state.displayObjectClipHooks = null;",
+      "diagnostic": "none: compiles, then stores an engaged null pointer that readers test with has_value(); createRenderState then destroyRenderState segfaults in tests/generated_render_state_test.cpp",
+      "defect": "Inside initializeRenderStateFields<State> the write goes through `state: EntityConstruction<State>`, a mapped type over the type parameter, and the emitter writes TypeScript null as nullptr, engaging the member's std::optional around a null pointer that every emitted reader tests with has_value(). compiler-generic-receiver-null-write fixes the bare type-parameter receiver (the runtime writes in initializeRenderStateRuntime) but not this mapped-type receiver, so these two sites remain repaired. See docs/compiler-requests/generic-receiver-null-write-engages-optional.md.",
+      "expectedWhen": "always",
+      "expires": "when a null written through a mapped type over a type parameter (EntityConstruction<State>) produces the member's absent state; sdk:check fails if this repair matches no header."
+    },
+    {
+      "id": "render-state-generic-null-clip-hooks-fallback",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/render/render_state.hpp",
+      "from": "? nullptr : std::get<0>(display_object_clip_hooks))",
+      "to": "? std::nullopt : std::optional{std::get<0>(display_object_clip_hooks)})",
+      "sourceDeclaration": "packages/render/src/renderState.ts -- initializeRenderStateFields: state.displayObjectClipHooks = displayObjectClipHooks == null ? null : displayObjectClipHooks;",
+      "diagnostic": "none: compiles, then stores an engaged null pointer that readers test with has_value(); createRenderState then destroyRenderState segfaults in tests/generated_render_state_test.cpp",
+      "defect": "Inside initializeRenderStateFields<State> the write goes through `state: EntityConstruction<State>`, a mapped type over the type parameter, and the emitter writes TypeScript null as nullptr, engaging the member's std::optional around a null pointer that every emitted reader tests with has_value(). compiler-generic-receiver-null-write fixes the bare type-parameter receiver (the runtime writes in initializeRenderStateRuntime) but not this mapped-type receiver, so these two sites remain repaired. See docs/compiler-requests/generic-receiver-null-write-engages-optional.md.",
+      "expectedWhen": "always",
+      "expires": "when a null written through a mapped type over a type parameter (EntityConstruction<State>) produces the member's absent state; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "requirement-codegen-row-write-array-projection",
       "kind": "project-array-at-row-write",
       "appliesTo": "flight/requirement_codegen/requirement_codegen.hpp",

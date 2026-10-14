@@ -10,6 +10,7 @@
 #include <flight/structural_ref.hpp>
 #include <optional>
 #include <random>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -68,7 +69,7 @@ inline void apply_film_grain_effect_to_canvas(flight::StructuralRef<flight::RowR
             {
               (s = flight::bitwise_and(((s * 1103515245.0) + 12345.0), 2147483647.0));
               const double v = std::floor(((s / 2147483647.0) * 255.0));
-              (nctx.fill_style = flight::String("rgb(") + flight::to_string(v) + flight::String(",") + flight::to_string(v) + flight::String(",") + flight::to_string(v) + flight::String(")"));
+              (nctx.fill_style = std::variant<flight::CanvasGradient, flight::CanvasPattern, flight::String>{std::in_place_type<flight::String>, flight::String("rgb(") + flight::to_string(v) + flight::String(",") + flight::to_string(v) + flight::String(",") + flight::to_string(v) + flight::String(")")});
               nctx.fill_rect((x * size), (y * size), size, size);
             }
             (x += 1.0);
@@ -87,7 +88,7 @@ inline void apply_film_grain_effect_to_canvas(flight::StructuralRef<flight::RowR
   (ctx.global_alpha = flight::maximum(0.0, flight::minimum(1.0, intensity)));
   std::optional<flight::CanvasPattern> pattern = ctx.create_pattern(noise->canvas, flight::String("repeat"));
   if (pattern.has_value()) {
-    (ctx.fill_style = pattern.value());
+    (ctx.fill_style = std::variant<flight::CanvasGradient, flight::CanvasPattern, flight::String>{std::in_place_type<flight::CanvasPattern>, pattern.value()});
     ctx.fill_rect(0.0, 0.0, flight::row_get<flight::RowKey<"width">>(dest), flight::row_get<flight::RowKey<"height">>(dest));
   }
   ctx.restore();

@@ -8,6 +8,7 @@
 #include <flight/structural_ref.hpp>
 #include <optional>
 #include <random>
+#include <variant>
 #include <flight/runtime.hpp>
 
 static_assert(flight::runtime_contract.compiler_contract == "flight-runtime-contract/2", "Flight compiler/runtime contract mismatch");
@@ -74,7 +75,7 @@ inline void draw_canvas_inverted_tinted_alpha_mask(flight::StructuralRef<flight:
   (ctx.global_composite_operation = flight::String("source-over"));
   (ctx.filter = flight::String("none"));
   ctx.clear_rect(0.0, 0.0, flight::row_get<flight::RowKey<"width">>(dest), flight::row_get<flight::RowKey<"height">>(dest));
-  (ctx.fill_style = css_rgba_from_color_flight_value_function_css_u000052_gba_u000046_rom_u000043_olor_flight_private_73b39a071c71c9db(color, flight::minimum(1.0, (alpha * strength))));
+  (ctx.fill_style = std::variant<flight::CanvasGradient, flight::CanvasPattern, flight::String>{std::in_place_type<flight::String>, css_rgba_from_color_flight_value_function_css_u000052_gba_u000046_rom_u000043_olor_flight_private_73b39a071c71c9db(color, flight::minimum(1.0, (alpha * strength)))});
   ctx.fill_rect(0.0, 0.0, flight::row_get<flight::RowKey<"width">>(dest), flight::row_get<flight::RowKey<"height">>(dest));
   (ctx.global_composite_operation = flight::String("destination-out"));
   ctx.draw_image(flight::row_get<flight::RowKey<"canvas">>(source), offset_x.value(), offset_y.value());
@@ -91,7 +92,7 @@ inline void draw_canvas_tinted_alpha_mask(flight::StructuralRef<flight::RowReado
   ctx.clear_rect(0.0, 0.0, flight::row_get<flight::RowKey<"width">>(dest), flight::row_get<flight::RowKey<"height">>(dest));
   ctx.draw_image(flight::row_get<flight::RowKey<"canvas">>(source), 0.0, 0.0);
   (ctx.global_composite_operation = flight::String("source-in"));
-  (ctx.fill_style = css_rgba_from_color_flight_value_function_css_u000052_gba_u000046_rom_u000043_olor_flight_private_73b39a071c71c9db(color, (alpha * strength)));
+  (ctx.fill_style = std::variant<flight::CanvasGradient, flight::CanvasPattern, flight::String>{std::in_place_type<flight::String>, css_rgba_from_color_flight_value_function_css_u000052_gba_u000046_rom_u000043_olor_flight_private_73b39a071c71c9db(color, (alpha * strength))});
   ctx.fill_rect(0.0, 0.0, flight::row_get<flight::RowKey<"width">>(dest), flight::row_get<flight::RowKey<"height">>(dest));
   ctx.restore();
 }
