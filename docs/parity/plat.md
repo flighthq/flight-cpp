@@ -1281,6 +1281,23 @@ Upstream carries per-package records at `flight/agents/packages/sensors/`: `stat
   `it.each`, no `test.each` and no loop-generated row; and the tier column, which read `none`, is corrected to
   `ready`.
 
+A CORRECTIVE RE-AUDIT CHECKED THESE ADDITIONS AGAINST THE PACKAGE'S WHOLE INVENTORY and found that one of them
+  was not load-bearing. The enumeration first, because the protocol depends on it: @flighthq/sensors has exactly ONE
+  registered test file (this one), one label, NO compiler request naming it, and no pinned divergence -- so unlike
+  @flighthq/input there was no duplication possible and nothing to contradict. It is recorded because the same step
+  is where the earlier input units failed.
+
+  * The CONSTRUCTOR additions are load-bearing, DEMONSTRATED rather than asserted: the two ambient-light defaults
+    mutations SURVIVE against the file with those cases removed and are killed with them present.
+  * The PROBE additions were NOT. Re-running the battery over the whole inventory showed a probe reading the WRONG
+    entry surviving BOTH with and without that case, for all six probes: asserting only that each probe returns true
+    passes for a probe that read a sibling's entry, because the fixture said yes to everything. That is a measured
+    hole, so the case is STRENGTHENED rather than removed -- the provider now refuses ONE entry at a time and the
+    probe for that entry must be the one that changes, leaving the other eight unaffected. All six wrong-entry
+    mutations are now killed, each by a failing check.
+
+  So the count stands at sixteen mutations killed before, plus six probe mutations that now bite.
+
   Sixteen mutations re-run WITH TARGET-DIFF CONFIRMATION, all sixteen killed. Two of them are the ambient-light
   accuracy and interval defaults, which could not have been killed before the constructors above were covered.
 

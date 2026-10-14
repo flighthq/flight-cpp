@@ -248,7 +248,16 @@ struct SensorsHost {
   std::function<void(MotionRow, RotationRow)> motion;
   bool motion_supported = true;
   bool orientation_supported = true;
+  // One refusal per probe, so a probe can be shown to read ITS OWN entry: refusing a single entry must change
+  // exactly one answer. A fixture that carried only an aggregate flag would let a probe reading the wrong entry
+  // pass, which the mutation battery demonstrated before this was added.
+  bool refuse_ambient_light = false;
   bool refuse_barometer = false;
+  bool refuse_gravity = false;
+  bool refuse_gyroscope = false;
+  bool refuse_linear_acceleration = false;
+  bool refuse_magnetometer = false;
+  bool refuse_proximity = false;
 
   flight::Ref<types::HostSensorsCapability> capability = flight::make_ref<types::HostSensorsCapability>();
 
@@ -281,13 +290,13 @@ struct SensorsHost {
     capability->is_orientation_supported = [this]() { return orientation_supported; };
     // All NINE probes the module exposes, each answering for its own entry: a fixture that wired only some
     // would leave the rest reading a slot the row does not carry.
-    capability->is_ambient_light_supported = []() { return true; };
+    capability->is_ambient_light_supported = [this]() { return !refuse_ambient_light; };
     capability->is_barometer_supported = [this]() { return !refuse_barometer; };
-    capability->is_gravity_supported = []() { return true; };
-    capability->is_gyroscope_supported = []() { return true; };
-    capability->is_linear_acceleration_supported = []() { return true; };
-    capability->is_magnetometer_supported = []() { return true; };
-    capability->is_proximity_supported = []() { return true; };
+    capability->is_gravity_supported = [this]() { return !refuse_gravity; };
+    capability->is_gyroscope_supported = [this]() { return !refuse_gyroscope; };
+    capability->is_linear_acceleration_supported = [this]() { return !refuse_linear_acceleration; };
+    capability->is_magnetometer_supported = [this]() { return !refuse_magnetometer; };
+    capability->is_proximity_supported = [this]() { return !refuse_proximity; };
   }
 
   flight::StructuralRef<HostSchema> row() {
@@ -456,13 +465,40 @@ void test_every_capability_probe_reads_its_own_provider_entry() {
   check(sensors_ns::has_proximity_sensor(host.row()), "hasProximitySensor reads isProximitySupported");
   check(sensors_ns::is_sensors_supported(host.row()), "and isSensorsSupported reads its own capability");
 
-  // Each probe answers for ITS entry: a provider that refuses one of them is not reported as refusing the
-  // others, which is what a test reading a single shared flag would get wrong.
-  SensorsHost refusing;
-  refusing.refuse_barometer = true;
-  check(!sensors_ns::has_barometer(refusing.row()),
-        "a provider refusing the barometer says so");
-  check(sensors_ns::has_gyroscope(refusing.row()), "while its OTHER entries are unaffected");
+  // Each probe answers for ITS OWN entry. Asserting only that every probe returns true would pass for a probe
+  // that read a SIBLING's entry -- the mutation battery showed exactly that for all six of the probes added
+  // here -- so the provider refuses ONE entry at a time and the probe for it must be the one that changes,
+  // leaving the other eight unaffected.
+  struct Case {
+    const char* label;
+    void (*set)(SensorsHost&);
+    bool (*read)(SensorsHost&);
+  };
+  const Case cases[] = {
+      {"ambient light", [](SensorsHost& h) { h.refuse_ambient_light = true; },
+       [](SensorsHost& h) { return sensors_ns::has_ambient_light_sensor(h.row()); }},
+      {"barometer", [](SensorsHost& h) { h.refuse_barometer = true; },
+       [](SensorsHost& h) { return sensors_ns::has_barometer(h.row()); }},
+      {"gravity", [](SensorsHost& h) { h.refuse_gravity = true; },
+       [](SensorsHost& h) { return sensors_ns::has_gravity_sensor(h.row()); }},
+      {"gyroscope", [](SensorsHost& h) { h.refuse_gyroscope = true; },
+       [](SensorsHost& h) { return sensors_ns::has_gyroscope(h.row()); }},
+      {"linear acceleration", [](SensorsHost& h) { h.refuse_linear_acceleration = true; },
+       [](SensorsHost& h) { return sensors_ns::has_linear_acceleration_sensor(h.row()); }},
+      {"magnetometer", [](SensorsHost& h) { h.refuse_magnetometer = true; },
+       [](SensorsHost& h) { return sensors_ns::has_magnetometer(h.row()); }},
+      {"proximity", [](SensorsHost& h) { h.refuse_proximity = true; },
+       [](SensorsHost& h) { return sensors_ns::has_proximity_sensor(h.row()); }},
+  };
+  for (const auto& entry : cases) {
+    SensorsHost refusing;
+    entry.set(refusing);
+    check(!entry.read(refusing), std::string("a provider refusing the ") + entry.label +
+                                      " is reported as refusing it, so that probe reads its own entry");
+    check(sensors_ns::has_accelerometer(refusing.row()) && sensors_ns::has_orientation_sensor(refusing.row()) &&
+              sensors_ns::is_sensors_supported(refusing.row()),
+          std::string("while the other probes are unaffected by the ") + entry.label + " refusal");
+  }
 }
 
 } // namespace
