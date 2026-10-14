@@ -206,6 +206,18 @@ void test_omitted_options_hand_the_provider_the_same_object_every_time() {
         "while a caller-supplied options object is forwarded as itself, not replaced by the empty default");
 }
 
+// The module's own default, verified INDEPENDENTLY rather than only through the identity of the row a
+// provider receives: the shared `_emptyOptions` is a public value, and what makes it a correct default is
+// that every option it carries is ABSENT -- a provider reading one sees no preference rather than a zero.
+void test_the_shared_empty_options_default_carries_no_preferences() {
+  check(flight::geolocation::empty_options != nullptr, "the shared empty-options default exists");
+
+  check(!flight::geolocation::empty_options->enable_high_accuracy.has_value() &&
+            !flight::geolocation::empty_options->timeout_ms.has_value() &&
+            !flight::geolocation::empty_options->maximum_age_ms.has_value(),
+        "and every option it carries is absent, so omitting options asks for no preference at all");
+}
+
 // --- The watch lifecycle -------------------------------------------------------------------------------------
 
 void test_watching_delivers_positions_and_returns_the_providers_id() {
@@ -333,6 +345,7 @@ int main() {
   test_the_result_arm_carries_the_position_and_a_null_reason();
 
   test_omitted_options_hand_the_provider_the_same_object_every_time();
+  test_the_shared_empty_options_default_carries_no_preferences();
 
   test_watching_delivers_positions_and_returns_the_providers_id();
   test_watching_delivers_the_error_reason_it_is_given();

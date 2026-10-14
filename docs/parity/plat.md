@@ -107,7 +107,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/webcam` | 2 | 1 | 1 | none | none | 2 / 0 |
 | `@flighthq/midi` | 7 | 5 | 40 | dedicated | none | 5 / 2 |
 | `@flighthq/sensors` | 3 | 2 | 67 | dedicated | ready | 3 / 0 |
-| `@flighthq/geolocation` | 4 | 2 | 13 | dedicated | none | 4 / 0 |
+| `@flighthq/geolocation` | 4 | 2 | 13 | dedicated | ready | 4 / 0 |
 | `@flighthq/haptics` | 3 | 1 | 19 | dedicated | none | 3 / 0 |
 | `@flighthq/device` | 3 | 1 | 12 | dedicated | none | 3 / 0 |
 | `@flighthq/screen` | 3 | 1 | 46 | none | none | 3 / 0 |
@@ -1273,6 +1273,21 @@ Upstream carries per-package records at `flight/agents/packages/geolocation/`: `
   the value written is the absent one, so a fresh entity carries no attached runtime (the same thing
   `entity/clone.test.ts` asserts of a fresh clone). No compiler request was filed for this package.
 
+  A LATER re-audit mapped all 13 upstream cases mechanically and re-ran the battery with target-diff confirmation.
+  The count is 13 -- 8 plus 5 -- with no `it.each`, `test.each` or looped row; every named case maps to a block
+  here; and the constants are compared as LITERALS rather than by identity to a module value.
+
+  THE DISPOSE-CLEARS AUDIT IS NOT APPLICABLE, stated with its evidence: this package has no dispose at all and its
+  four headers contain ZERO `clear_signal` calls, so there is no clearing to observe independently of a detach.
+  That audit found real holes in shortcut, mediasession and power.
+
+  ONE DEFAULT IS NOW VERIFIED INDEPENDENTLY rather than only through the identity of the row a provider receives:
+  `_emptyOptions` is a public value, and what makes it a correct default is that EVERY option it carries is absent,
+  so omitting options asks for no preference rather than asking for a zero. A case asserts that directly, and a new
+  mutation that gives the shared default a preference is killed by it.
+
+  The tier column read `none` and is corrected to `ready`. Thirteen mutations re-run WITH TARGET-DIFF CONFIRMATION:
+  all thirteen killed.
 ### Local generation status
 
 4 of 4 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
