@@ -99,7 +99,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/interaction` | 19 | 17 | 212 | dedicated | none | 8 / 11 |
 | `@flighthq/gui` | 20 | 18 | 115 | none | none | 16 / 4 |
 | `@flighthq/layout` | 8 | 7 | 73 | dedicated | none | 5 / 3 |
-| `@flighthq/accessibility` | 3 | 1 | 6 | dedicated | none | 3 / 0 |
+| `@flighthq/accessibility` | 3 | 1 | 6 | dedicated | ready | 3 / 0 |
 | `@flighthq/audio` | 8 | 6 | 109 | none | none | 5 / 3 |
 | `@flighthq/media` | 7 | 5 | 127 | none | none | 5 / 2 |
 | `@flighthq/mediasession` | 3 | 1 | 19 | dedicated | ready | 3 / 0 |
@@ -728,6 +728,24 @@ the recovered object for that reason. The same table has no key for `Accessibili
 `valueMin`/`valueMax`/`valueNow` numeric range. Recorded rather than worked around: deciding whether those keys
 should exist is a table-generation question, not this package's.
 
+  A LATER re-audit mechanically mapped the six upstream cases and re-ran the battery with target-diff confirmation.
+  The outcome is a VERIFICATION plus a metadata fix; no behavioral change was warranted and none was made.
+
+  * ALL SIX CASES ARE REAL PARITY -- this package has no override and no stubs, so there is no stub-backed case to
+    separate out, unlike `@flighthq/notification` where ten of thirty-eight are declared stubs.
+  * Each of the six functions is a one-line forward over a distinct host entry, and each is covered by its own block:
+    `announceAccessibility` (with the `polite` default supplied when liveness is omitted, and an explicit liveness
+    passed through), `clearAccessibilityTree`, `destroyAccessibility`, `removeAccessibilityNode`,
+    `setAccessibilityFocus` and `setAccessibilityNode`.
+  * DISPOSE-CLEARS IS NOT APPLICABLE, with evidence: the module contains ZERO `clear_signal` calls, and it has no
+    dispose at all.
+  * There is no absence case in this package's suite and no edge semantics, so those audits have nothing to apply to;
+    the one optional (`announce`'s liveness) is asserted by its VALUE with the default supplied, not by truthiness.
+  * The tier column read `none` and is corrected to `ready`.
+  * Nine mutations against the module, every one confirmed to differ at its target, ALL NINE KILLED BY FAILING
+    CHECKS -- none needed a crash to be detected, which is the more informative form. Two of them route a function to
+    a DIFFERENT real host entry rather than to an unset one, so the wrong answer comes back instead of an abort; the
+    file catches both.
 ### Local generation status
 
 16 of 20 modules emitted, 4 refused; 20 refusing modules (4 of them refusal roots). Read from the committed generated tree, not from the pin above.
