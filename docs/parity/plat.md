@@ -1776,46 +1776,6 @@ Upstream carries per-package records at `flight/agents/packages/tray/`: `status.
 
 ### Existing CTest coverage
 
-- `flight_cpp.generated_notification` — `tests/generated_notification_test.cpp` (dedicated), NEW. This package is
-  NOT a clean emission, and that shapes what parity can mean here. The emitter refuses `notification.ts` itself
-  (`unsupported-ir`, "Object.assign requires one closed callable-object target and an exact compatible object
-  literal source", filed as `object-assign-onto-structural-record`), so `contract.ts` and `index.ts` fall with it as
-  dependency-refused, and the tree ships a hand-written override recorded as
-  `notification-subscription-lifecycle` with status **partial**. The generated header is therefore not a usable
-  module and the test runs against the OVERRIDE, which is why the tier is `partial` rather than `ready`.
-
-  Covered, over the override's real implementation: the eight host routing calls, each dispatching through the
-  exact capability trait and returning the provider's own outcome — asserted BY IDENTITY where the upstream case
-  uses `resolves.toBe(outcome)`, so a version that rebuilt the outcome instead of forwarding it fails; the two
-  resource constructors, including the empty-string tag default and the caller's request and schedule carried BY
-  IDENTITY; `releaseNotificationAttachment`, where a rejected release becomes `operation-failed` rather than
-  escaping; the `closeNotification` and `cancelScheduledNotification` state machines (no bound handler is
-  `operation-failed`; a successful handler marks the resource so the next call is `already-closed` /
-  `already-cancelled` and the handler never runs twice; a FAILED close does not mark it, so a retry still reaches
-  the handler); both initializers called DIRECTLY, not only through their constructors; and the five subscription
-  factories with their five detach wrappers, which report `not-attached` before an attach.
-
-  NOT covered, deliberately: the five `attachNotification*Subscription` and five `disposeNotification*Subscription`
-  wrappers are STUBS in the override — the header says so, every attach reports `operation-failed` with
-  `attachFailed: true` and every dispose reports `already-disposed`. Their real behaviour depends on
-  `createNotificationSubscription`, `attachNotificationSubscription` and `disposeNotificationSubscription`, the three
-  functions the emitter REFUSED and the override marks `NOT GENERATED`. Asserting the stubs would certify a stub as
-  parity, which this repository forbids, so those ten functions are left uncovered and their upstream cases are
-  unreachable rather than passing.
-
-  Thirteen mutations against the override, all thirteen killed: the `already-closed` and `already-cancelled`
-  reasons, a missing binding reported as success, a close that does not mark the resource closed, a close that never
-  succeeds, a cancel that does not mark, the tag default, the title written from the id, a failed release reported
-  as `ok`, the close-all outcome rebuilt instead of forwarded, the permission query routed to the request entry, the
-  detach reason, and the scheduled initializer dropping the request. One SURVIVED the first run and was a real hole
-  rather than an equivalence: `createNotificationResource` resolves an omitted tag to the empty string BEFORE it
-  calls the initializer, so the initializer's own default was never reached through the constructor. The direct
-  initializer case was added for it and it is killed. No equivalence was found on this surface and none is claimed.
-
-  No compiler request was filed by this unit: the refusals and the three malformed emitted forms this override
-  documents are already filed (the override's own `reason` names them), and the package is correctly recorded as
-  partial rather than presented as shippable.
-
 ### Local generation status
 
 3 of 4 modules emitted, 1 refused; 4 refusing modules (1 of them refusal roots). Read from the committed generated tree, not from the pin above.
@@ -1869,7 +1829,45 @@ Upstream carries per-package records at `flight/agents/packages/notification/`: 
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+- `flight_cpp.generated_notification` — `tests/generated_notification_test.cpp` (dedicated), NEW. This package is
+  NOT a clean emission, and that shapes what parity can mean here. The emitter refuses `notification.ts` itself
+  (`unsupported-ir`, "Object.assign requires one closed callable-object target and an exact compatible object
+  literal source", filed as `object-assign-onto-structural-record`), so `contract.ts` and `index.ts` fall with it as
+  dependency-refused, and the tree ships a hand-written override recorded as
+  `notification-subscription-lifecycle` with status **partial**. The generated header is therefore not a usable
+  module and the test runs against the OVERRIDE, which is why the tier is `partial` rather than `ready`.
+
+  Covered, over the override's real implementation: the eight host routing calls, each dispatching through the
+  exact capability trait and returning the provider's own outcome — asserted BY IDENTITY where the upstream case
+  uses `resolves.toBe(outcome)`, so a version that rebuilt the outcome instead of forwarding it fails; the two
+  resource constructors, including the empty-string tag default and the caller's request and schedule carried BY
+  IDENTITY; `releaseNotificationAttachment`, where a rejected release becomes `operation-failed` rather than
+  escaping; the `closeNotification` and `cancelScheduledNotification` state machines (no bound handler is
+  `operation-failed`; a successful handler marks the resource so the next call is `already-closed` /
+  `already-cancelled` and the handler never runs twice; a FAILED close does not mark it, so a retry still reaches
+  the handler); both initializers called DIRECTLY, not only through their constructors; and the five subscription
+  factories with their five detach wrappers, which report `not-attached` before an attach.
+
+  NOT covered, deliberately: the five `attachNotification*Subscription` and five `disposeNotification*Subscription`
+  wrappers are STUBS in the override — the header says so, every attach reports `operation-failed` with
+  `attachFailed: true` and every dispose reports `already-disposed`. Their real behaviour depends on
+  `createNotificationSubscription`, `attachNotificationSubscription` and `disposeNotificationSubscription`, the three
+  functions the emitter REFUSED and the override marks `NOT GENERATED`. Asserting the stubs would certify a stub as
+  parity, which this repository forbids, so those ten functions are left uncovered and their upstream cases are
+  unreachable rather than passing.
+
+  Thirteen mutations against the override, all thirteen killed: the `already-closed` and `already-cancelled`
+  reasons, a missing binding reported as success, a close that does not mark the resource closed, a close that never
+  succeeds, a cancel that does not mark, the tag default, the title written from the id, a failed release reported
+  as `ok`, the close-all outcome rebuilt instead of forwarded, the permission query routed to the request entry, the
+  detach reason, and the scheduled initializer dropping the request. One SURVIVED the first run and was a real hole
+  rather than an equivalence: `createNotificationResource` resolves an omitted tag to the empty string BEFORE it
+  calls the initializer, so the initializer's own default was never reached through the constructor. The direct
+  initializer case was added for it and it is killed. No equivalence was found on this surface and none is claimed.
+
+  No compiler request was filed by this unit: the refusals and the three malformed emitted forms this override
+  documents are already filed (the override's own `reason` names them), and the package is correctly recorded as
+  partial rather than presented as shippable.
 
 ### Local generation status
 
@@ -1993,6 +1991,22 @@ Upstream carries per-package records at `flight/agents/packages/shortcut/`: `sta
 ### Existing CTest coverage
 
 **Dedicated.** `tests/generated_shortcut_test.cpp` is registered as `flight_cpp.generated_shortcut` (label `pkg:shortcut`) and includes a header of this package directly, so the package is covered by a test named for it. The earlier claim that no local test reaches this package was wrong.
+
+- `flight_cpp.generated_shortcut_accelerator` — `tests/generated_shortcut_accelerator_test.cpp` (dedicated), also
+  registered as `flight_cpp.generated_shortcut_accelerator` with label `pkg:shortcut`, and it includes
+  `<flight/shortcut/shortcut.hpp>` directly. It covers the emitted ACCELERATOR module, which the test above does not
+  reach: chord parsing, alias resolution and canonical key naming, the input-independent normalized modifier order,
+  the separator rule that keeps `CommandOrControl++` and `CommandOrControl+-` parseable as the Plus and Minus keys,
+  the out-object contract (cleared and refilled in place and returned by identity; untouched when the parse fails),
+  the per-platform display form with CommandOrControl resolved before the label, the label tables, equality and
+  conflict, and every rejection reason with the token that caused it. Seven mutations against the emitted accelerator
+  header, all seven with teeth: the canonical modifier order with Alt and Shift transposed 2 failures, a separator
+  that always separates 5, `copyParsed` not clearing `out` 1, the conflict probe answering with the query's spelling
+  1, equality comparing raw input 3, the macOS display using a separator 5, and the modifier read clearing `out`
+  before it knows the parse failed 1 -- plus one observationally equivalent mutation, the early return in
+  `formatNormalized` removed, which changes nothing because joining a one-element array with `'+'` yields that
+  element. This entry was recorded late: the test has been registered and in the tree, but the coverage paragraph
+  never reached this file until a lineage audit found it missing.
 
 ### Local generation status
 
