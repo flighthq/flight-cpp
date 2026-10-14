@@ -118,6 +118,20 @@ bool has_accelerator(const flight::Ref<Item>& node, const char* accelerator) {
   return false;
 }
 
+// has_accelerator answers "is this string anywhere in the tree", which is enough to prove a value is
+// PRESENT but not that it is on the right item: two items may legitimately carry the same string, and
+// a mutant that moves an accelerator from one to the other keeps it present. find_by_id ties the
+// assertion to the named item.
+flight::Ref<Item> find_by_id(const flight::Ref<Item>& node, const char* id) {
+  if (node->id.has_value() && node->id.value() == String(id)) return node;
+  if (node->submenu.has_value()) {
+    for (const auto& child : node->submenu.value()) {
+      if (auto found = find_by_id(child, id)) return found;
+    }
+  }
+  return nullptr;
+}
+
 }  // namespace
 
 int main() {
@@ -500,6 +514,69 @@ int main() {
 
     answer = false;
     check(!flight::menu::set_app_menu(host, items), "a refused install is reported as false");
+  }
+
+  // ACCELERATOR AND LABEL VALUES. Upstream's own menu-templates.test.ts asserts only that an
+  // accelerator is DEFINED (`expect(quit?.accelerator).toBeDefined()`), never which one it is, so
+  // neither that fixture nor this suite could tell a wrong accelerator from the right one. Five
+  // mutations survived the whole suite on that account -- the quit accelerator, Redo losing its
+  // Shift, Save As losing its Shift, toggleFullscreen, and zoomIn -- plus the Help item's label.
+  // The strings below are the ones the pinned source defines, read from
+  // packages/menu/src/menu-templates.ts, not from the emitted header.
+  {
+    const auto app = flight::menu::create_default_app_menu_template(String("Flight"));
+    const auto quit = find_by_id(app, "quit");
+    const auto hide = find_by_id(app, "hide");
+    check(quit && text(quit->accelerator) == "CmdOrCtrl+Q",
+          "the app menu's Quit carries the accelerator the source defines");
+    check(hide && text(hide->accelerator) == "CmdOrCtrl+H",
+          "and Hide carries its own, so moving one to the other is caught");
+    check(quit && text(quit->label) == "Quit Flight" && hide && text(hide->label) == "Hide Flight",
+          "and both interpolate the application name into their labels");
+
+    const auto edit = flight::menu::create_default_edit_menu_template();
+    const auto redo = find_by_id(edit, "redo");
+    check(redo && text(redo->accelerator) == "Shift+CmdOrCtrl+Z",
+          "the Edit menu's Redo keeps the Shift its accelerator requires");
+
+    const auto file = flight::menu::create_default_file_menu_template();
+    const auto save_as = find_by_id(file, "saveFileAs");
+    check(save_as && text(save_as->accelerator) == "Shift+CmdOrCtrl+S",
+          "and Save As stays Shift-distinguished from Save");
+
+    const auto view = flight::menu::create_default_view_menu_template();
+    const auto fullscreen = find_by_id(view, "toggleFullscreen");
+    const auto zoom_in = find_by_id(view, "zoomIn");
+    check(fullscreen && text(fullscreen->accelerator) == "F11",
+          "Toggle Full Screen uses the function key the source names");
+    check(zoom_in && text(zoom_in->accelerator) == "CmdOrCtrl+Plus",
+          "and Zoom In is Plus, not the '=' key");
+
+    const auto help = flight::menu::create_default_help_menu_template();
+    const auto help_item = find_by_id(help, "help");
+    check(help_item && text(help_item->label) == "Search",
+          "the Help menu's item is labelled Search");
+  }
+
+  // A SHARED SUBMENU OBJECT IS A DAG, NOT A CYCLE. The validator keeps a `seen` set and unwinds it on
+  // the way back out, so the SAME template object may appear twice as siblings -- it is not its own
+  // ancestor. Dropping that unwind left the whole suite passing while making the second visit throw
+  // "cyclic submenu reference detected": a legal template falsely rejected. The existing cycle case
+  // (a submenu containing its own ancestor) still throws and is asserted above.
+  {
+    auto shared = container("submenu", flight::Array<flight::Ref<Item>>{item("normal", "Leaf")});
+    shared->id = String("shared");
+    auto root = container("submenu", flight::Array<flight::Ref<Item>>{shared, shared});
+    root->id = String("root");
+    bool threw = false;
+    std::optional<String> error;
+    try {
+      error = flight::menu::validate_menu_item_template(ItemRow(root));
+    } catch (...) {
+      threw = true;
+    }
+    check(!threw, "a submenu object shared by two siblings does not throw");
+    check(!error.has_value(), "and it validates as a legal DAG rather than a cycle");
   }
 
   if (failures == 0) std::cout << "generated menu: all checks passed\n";
