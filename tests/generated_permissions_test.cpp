@@ -1,10 +1,17 @@
 // Focused behavior tests for @flighthq/permissions.
 //
 // The package emits whole at a627849 -- 3/3 modules, no refusals, no override -- and is `assisted`
-// because one existing emission repair (`conditional-absent-branch-optional`) touches it. Every case is
-// ported from the module's own upstream suites (getPermissionStates, requestPermission,
-// geolocationDelegation), which are the specification, and the emphasis is the two things those suites
-// exist for:
+// because one existing emission repair (`conditional-absent-branch-optional`) touches it.
+//
+// FIVE upstream suites specify this package, with 49 cases between them, and this header used to name only
+// three of the five and count none of them -- `getPermissionState.test.ts` (14 cases) and
+// `permission.test.ts` (3 named-export cases) were not mentioned at all. All five are now enumerated in
+// docs/permissions-fixture-coverage.md:
+//
+//   getPermissionStates.test.ts 6   requestPermission.test.ts 17   getPermissionState.test.ts 14
+//   geolocationDelegation.test.ts 9   permission.test.ts 3 (the three named exports)
+//
+// The emphasis is the two things the suites exist for:
 //
 //   * the BATCH: owners are captured before any work starts, so a provider transition during one result
 //     cannot redirect a later entry; the result keeps input order and repeated names even when the work
@@ -12,6 +19,20 @@
 //   * HOST IDENTITY: each name routes to its own operation-tight provider -- a repeated MIDI name goes to
 //     the MIDI capability, the geolocation prompt belongs to the geolocation capability, and a name with
 //     no request route never reaches any provider.
+//
+// THREE DEFECTS FOUND BY A LATER AUDIT OF THIS FILE, and one of them is why the audit was asked for: the
+// pass summary used to be printed about ninety lines BEFORE the end, so every assertion below it could fail
+// while the run still emitted "all checks passed". The assertions in that region were added by the previous
+// arc to close a coverage gap, and their verification was therefore worthless as evidence -- a grep for the
+// banner passes either way. The banner is now the last statement; the region is pinned by mutations that
+// fail only it, and they are caught.
+//
+// The other two:
+//   1. THE STORAGE PERSISTENCE REQUEST projection had NO coverage. Two mutations of its body survived the
+//      whole suite, which is how the gap was found. Its six upstream rows are now asserted, mirroring the
+//      query table.
+//   2. AN ABSENT GEOLOCATION PROVIDER was unasserted: a mutation rewriting that arm's reason to
+//      operation-failed survived. Now covered.
 #include <flight/executor.hpp>
 #include <flight/permissions/permission.hpp>
 
@@ -286,6 +307,19 @@ int main() {
           "and none of those names reached a provider");
   }
 
+  // An absent geolocation provider is reported as runtime-unavailable, not as a denial and not by
+  // silently succeeding. A mutation rewriting this arm's reason to operation-failed survived the suite
+  // before this case existed, which is how the gap was found.
+  {
+    const auto outcome = flight::permissions::request_permission(
+                             flight::make_ref<Permissions>(), std::nullopt, std::nullopt,
+                             String("geolocation"))
+                             .get();
+    check(request_reason(outcome) == "runtime-unavailable",
+          "a geolocation request with no geolocation provider reports runtime-unavailable");
+    check(outcome.index() == 0, "as a reason-only outcome, with no state invented for it");
+  }
+
   // The notification query projects the host's permission vocabulary into Flight's.
   {
     auto host = flight::make_ref<Permissions>();
@@ -393,6 +427,96 @@ int main() {
                              .get();
     if (!check(query_reason(outcome) == "unsupported",
                "a storage query with no persistence owner reports unsupported")) {
+      return 1;
+    }
+  }
+
+  // THE STORAGE PERSISTENCE REQUEST projection. This is the REQUEST-side sibling of the query table above,
+  // and it had NO coverage at all: two mutations of its body were written for this audit and both SURVIVED
+  // the whole suite, which is how the gap was found rather than guessed. The rows are the upstream table.
+  // The first row is the same proof in the request vocabulary that the query table's first row is in the
+  // query one: an owner reporting 'persistent' with permissionState 'prompt' must project to reason
+  // 'granted' with state 'granted'. The projection decides; it does not read the owner's state back.
+  {
+    struct RequestRow {
+      const char* owner_outcome;
+      std::optional<const char*> owner_state;
+      const char* expected_reason;
+      std::optional<const char*> expected_state;
+      bool has_state_key;
+      const char* message;
+    };
+    const RequestRow rows[] = {
+        {"persistent", "prompt", "granted", "granted", true,
+         "a 'persistent' request owner projects to granted/granted whatever permissionState it reported"},
+        {"operation-failed", "denied", "operation-failed", std::nullopt, false,
+         "an 'operation-failed' request owner projects to a reason with no state invented for it"},
+        {"best-effort", "granted", "best-effort", "granted", true,
+         "a best-effort request owner carries a granted state through"},
+        {"best-effort", "denied", "best-effort", "denied", true,
+         "a best-effort request owner carries a denied state through"},
+        {"best-effort", "prompt", "best-effort", "prompt", true,
+         "a best-effort request owner carries a prompt state through"},
+        {"best-effort", std::nullopt, "best-effort", std::nullopt, true,
+         "a best-effort request owner with NO state keeps an absent state rather than inventing one"},
+    };
+
+    for (const auto& row : rows) {
+      auto persistence = flight::make_ref<flight::types::StoragePersistenceOutcome>();
+      persistence->outcome = String(row.owner_outcome);
+      if (row.owner_state.has_value()) {
+        persistence->permission_state = String(row.owner_state.value());
+      }
+
+      int requests = 0;
+      auto request_owner = flight::make_ref<flight::types::HostPreferencesPersistenceRequestCapability>();
+      request_owner->request_persistence = [&persistence, &requests]() {
+        ++requests;
+        return flight::Task<flight::Ref<flight::types::StoragePersistenceOutcome>>::resolve(persistence);
+      };
+
+      const auto outcome = flight::permissions::request_permission(
+                               flight::make_ref<Permissions>(), request_owner, std::nullopt,
+                               String("persistent-storage"))
+                               .get();
+      if (!check(requests == 1, "the persistence request owner is asked exactly once per request")) {
+        return 1;
+      }
+      if (!check(request_reason(outcome) == row.expected_reason, row.message)) {
+        return 1;
+      }
+      const bool has_state_key = outcome.index() != 0;
+      if (!check(has_state_key == row.has_state_key, row.message)) {
+        return 1;
+      }
+      const auto state = outcome.index() == 1
+                             ? std::optional<std::string>(std::get<1>(outcome)->state.to_utf8())
+                         : outcome.index() == 2
+                             ? std::get<2>(outcome)->state.has_value()
+                                   ? std::optional<std::string>(std::get<2>(outcome)->state.value().to_utf8())
+                                   : std::nullopt
+                             : std::nullopt;
+      if (!check(state.has_value() == row.expected_state.has_value() &&
+                     (!state.has_value() || state.value() == row.expected_state.value()),
+                 row.message)) {
+        return 1;
+      }
+    }
+  }
+
+  // An absent persistence-REQUEST owner is reported as unsupported. Upstream's case also asserts the
+  // QUERY owner is not consulted; on this surface that half is structural rather than behavioural -- the
+  // request entry point has no query-owner parameter at all, so there is nothing to cross into.
+  {
+    const auto outcome = flight::permissions::request_permission(
+                             flight::make_ref<Permissions>(), std::nullopt, std::nullopt,
+                             String("persistent-storage"))
+                             .get();
+    if (!check(request_reason(outcome) == "unsupported",
+               "a storage request with no persistence-request owner reports unsupported")) {
+      return 1;
+    }
+    if (!check(outcome.index() == 0, "as a reason-only outcome, with no state invented for it")) {
       return 1;
     }
   }
