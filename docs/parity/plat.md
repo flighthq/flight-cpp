@@ -109,7 +109,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/sensors` | 3 | 2 | 67 | dedicated | ready | 3 / 0 |
 | `@flighthq/geolocation` | 4 | 2 | 13 | dedicated | ready | 4 / 0 |
 | `@flighthq/haptics` | 3 | 1 | 19 | dedicated | ready | 3 / 0 |
-| `@flighthq/device` | 3 | 1 | 12 | dedicated | none | 3 / 0 |
+| `@flighthq/device` | 3 | 1 | 12 | dedicated | ready | 3 / 0 |
 | `@flighthq/screen` | 3 | 1 | 46 | none | none | 3 / 0 |
 | `@flighthq/power` | 3 | 1 | 31 | dedicated | assisted | 3 / 0 |
 | `@flighthq/clipboard` | 3 | 1 | 31 | none | none | 3 / 0 |
@@ -1418,6 +1418,27 @@ Upstream carries per-package records at `flight/agents/packages/device/`: `statu
 
   No compiler request was filed for this package.
 
+  A LATER re-audit mechanically mapped all 12 upstream cases and re-ran the battery with target-diff confirmation and
+  with PROVIDER-CALL-REACHABILITY mutants added. The outcome is a VERIFICATION plus a metadata fix; no behavioral
+  change was warranted and none was made.
+
+  * Every named case maps to a block, the count is 12, and there is no `it.each`, `test.each` or looped row.
+  * Each constructor and each read is verified INDEPENDENTLY: four separate blocks for the four descriptors (so one
+    sentinel cannot stand in for its siblings), and five for the five reads, each asserting its own values and the
+    identity of the object it returns.
+  * DISPOSE-CLEARS IS NOT APPLICABLE, with evidence: this package has no dispose and its three headers contain ZERO
+    `clear_signal` calls.
+  * OPTIONAL PRESENCE VERSUS TRUTHINESS is likewise not applicable, and that is a property of the module rather than
+    an omission here: every value this package returns is a descriptor struct with plain fields, or the id String --
+    there is no optional slot to read as a boolean, apart from the entity runtime key which these constructors do not
+    allocate. The absence case (the R3 boundary) is recorded in the test as a measured compile error rather than as
+    a runtime check, for the reason the note there gives.
+  * Repeated-event distinguishability is not applicable: no entry point here has edge semantics.
+  * The tier column read `none` and is corrected to `ready`.
+  * TWENTY mutations against the module, every one confirmed to differ at its target, ALL TWENTY KILLED. Five of
+    them are CALL-REACHABILITY mutants added in this pass rather than result mutants -- the provider never consulted
+    at all for the capabilities read, the display metrics, the info, the insets and the id -- and each is caught,
+    which a test asserting only return values would fail.
 ### Local generation status
 
 3 of 3 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
