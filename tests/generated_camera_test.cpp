@@ -6,10 +6,11 @@
 // ownership and cache transitions, picking round-trips, culling, frustum-corner mutation,
 // reflection, shadow fitting, and degenerate matrices.
 //
-// MUTATION SENSITIVITY, measured 2026-10-13: four one-at-a-time implementation mutations were
-// compiled and run, then restored. The suite killed reversed 2D view rotation, removed anchored-
-// zoom X compensation, inverted inverse-cache success handling, and a frustum override that wrote
-// the Y result into X.
+// MUTATION SENSITIVITY, measured 2026-10-13: eleven one-at-a-time audit mutations were diffed,
+// compiled, run, and restored. The frozen suite killed six; the five survivors identified the
+// default-value, kind-predicate, guard-lifecycle, and near-clip assertions added below. The amended
+// suite kills all eleven, in addition to the earlier rotation, anchored-zoom, cache, and frustum-
+// assignment probes.
 #include <flight/camera/contract.hpp>
 #include <flight/geometry/aabb.hpp>
 #include <flight/geometry/bounding_sphere.hpp>
@@ -85,6 +86,10 @@ void set_standard_view(const flight::Ref<types::Camera3D>& value) {
 }
 
 void camera2d_projection_viewport_and_failures() {
+  const auto default_value = camera::create_camera2_d();
+  check(default_value->zoom == 1.0,
+        "Camera2D construction defaults omitted zoom to one");
+
   const double rotation = std::numbers::pi / 5.0;
   const auto options = flight::make_ref<types::Camera2DOptions>(
       types::Camera2DOptions{
@@ -164,6 +169,14 @@ void camera2d_projection_viewport_and_failures() {
 }
 
 void projection_ownership_and_camera3d_state() {
+  const auto default_perspective_options =
+      flight::make_ref<types::PerspectiveProjectionOptions>(
+          types::PerspectiveProjectionOptions{.fov_y = 1.0});
+  const auto default_perspective = camera::create_perspective_projection(
+      readonly(default_perspective_options));
+  check(default_perspective->aspect == 1.0,
+        "perspective construction defaults omitted aspect to one");
+
   const auto projection = perspective(1.0, 1.0);
   const auto value = camera3d(projection);
   check(std::holds_alternative<flight::Ref<types::PerspectiveProjection>>(
@@ -225,6 +238,53 @@ void projection_ownership_and_camera3d_state() {
   source->m.set_index(0.0, 9.0);
   check(raw->matrix->m.get_index(0.0) == 2.5,
         "later source-matrix mutation cannot retarget a raw projection");
+
+  const auto orthographic_options =
+      flight::make_ref<types::OrthographicProjectionOptions>(
+          types::OrthographicProjectionOptions{
+              .half_height = 2.0,
+              .half_width = 3.0,
+          });
+  const auto orthographic = camera::create_orthographic_projection(
+      readonly(orthographic_options));
+  const types::Projection orthographic_projection{orthographic};
+  const types::Projection perspective_projection{projection};
+  const types::Projection raw_projection{raw};
+  check(camera::is_orthographic_projection(orthographic_projection) &&
+            !camera::is_orthographic_projection(perspective_projection) &&
+            camera::is_perspective_projection(perspective_projection) &&
+            !camera::is_perspective_projection(raw_projection) &&
+            camera::is_raw_projection(raw_projection) &&
+            !camera::is_raw_projection(orthographic_projection),
+        "projection kind predicates discriminate all three variant alternatives");
+
+  const auto clip_plane = geometry::create_plane(0.0, 1.0, 0.0, -2.0);
+  const auto clipped_options = flight::make_ref<types::Camera3DOptions>(
+      types::Camera3DOptions{
+          .far = 100.0,
+          .near = 0.1,
+          .near_clip_plane =
+              std::variant<flight::Ref<types::Plane>, flight::Null,
+                           flight::Undefined>{
+                  std::in_place_type<flight::Ref<types::Plane>>, clip_plane},
+          .projection = types::Projection{projection},
+      });
+  const auto clipped = camera::create_camera3_d(readonly(clipped_options));
+  check(clipped->near_clip_plane.has_value() &&
+            clipped->near_clip_plane.value() == clip_plane,
+        "camera construction retains a supplied near-clip plane identity");
+}
+
+void camera_guard_lifecycle() {
+  camera::disable_camera_guards();
+  check(!camera::are_camera_guards_enabled(),
+        "camera guards begin the explicit lifecycle disabled");
+  camera::enable_camera_guards();
+  check(camera::are_camera_guards_enabled(),
+        "enabling camera guards updates their public state");
+  camera::disable_camera_guards();
+  check(!camera::are_camera_guards_enabled(),
+        "disabling camera guards restores their public state");
 }
 
 void picking_culling_corners_and_depth() {
@@ -368,6 +428,7 @@ int main() {
   projection_ownership_and_camera3d_state();
   picking_culling_corners_and_depth();
   reflection_and_shadow_transitions();
+  camera_guard_lifecycle();
 
   if (failures != 0) {
     std::cerr << failures << " camera parity assertion(s) failed\n";
