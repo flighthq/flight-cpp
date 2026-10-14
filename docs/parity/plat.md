@@ -108,7 +108,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/midi` | 7 | 5 | 40 | dedicated | none | 5 / 2 |
 | `@flighthq/sensors` | 3 | 2 | 67 | dedicated | ready | 3 / 0 |
 | `@flighthq/geolocation` | 4 | 2 | 13 | dedicated | ready | 4 / 0 |
-| `@flighthq/haptics` | 3 | 1 | 19 | dedicated | none | 3 / 0 |
+| `@flighthq/haptics` | 3 | 1 | 19 | dedicated | ready | 3 / 0 |
 | `@flighthq/device` | 3 | 1 | 12 | dedicated | none | 3 / 0 |
 | `@flighthq/screen` | 3 | 1 | 46 | none | none | 3 / 0 |
 | `@flighthq/power` | 3 | 1 | 31 | dedicated | assisted | 3 / 0 |
@@ -1342,6 +1342,20 @@ Upstream carries per-package records at `flight/agents/packages/haptics/`: `stat
   optional `prepare` chain lowers correctly: `row_get` on the optional member answers `has_value()` and the emitted
   guard reads it, so the absence is silent rather than a dereference.
 
+  A LATER re-audit mechanically mapped all 19 upstream cases and re-ran the battery with target-diff confirmation.
+  The outcome is a VERIFICATION plus a metadata fix; no behavioral change was warranted and none was made.
+
+  * THE DISPOSE-CLEARS AUDIT IS NOT APPLICABLE, stated with its evidence: this package has no dispose and its three
+    headers contain ZERO `clear_signal` calls. That audit found real holes in shortcut, mediasession and power.
+  * Every named case maps to a block, and the count is 19 with no `it.each`, `test.each` or looped row.
+  * The defaults and option arms are verified INDEPENDENTLY rather than inferred from shared identity: the impact
+    intensity is asserted PRESENT and then compared to the literal 1, the waveform repeat likewise to -1, an
+    explicit intensity to 0.25, and each capability flag is asserted on its own rather than through the object.
+    Optional presence is asserted separately from the value, so a present-false cannot be read as absent.
+  * The tier column read `none` and is corrected to `ready`.
+  * Seventeen mutations against the module, every one confirmed to differ from its target: all seventeen killed,
+    including three added here for CALL REACHABILITY -- a provider that is not consulted at all for the
+    capabilities read, for the notification and for the selection, each of which the file catches.
 ### Local generation status
 
 3 of 3 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
