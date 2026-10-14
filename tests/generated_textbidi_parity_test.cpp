@@ -186,6 +186,13 @@ int main() {
                 "LRE embeds at level 2 inside an RTL paragraph (X3)");
   expect_levels(u"ab" + RLE + HEBREW + PDF + u"cd", "auto", {0, 0, 0, 1, 1, 1, 1, 0, 0, 0},
                 "RLE embeds at level 1 inside an LTR paragraph (X2)");
+  // RLE inside an RTL paragraph is where nextOdd's ODD-FORCING becomes observable: the embedding is
+  // pushed to next_odd(1) = 3, and L content in an odd-level run is then raised once more to 4 by
+  // I1/I2. Every other embedding fixture here starts from an even paragraph level, where
+  // `level + 1` and `bitwise_or(level + 1, 1)` agree -- so a nextOdd that merely incremented left the
+  // whole suite passing until this case existed.
+  expect_levels(HEBREW + RLE + u"abc" + PDF + HEBREW, "auto", {1, 1, 1, 1, 1, 4, 4, 4, 1, 1, 1, 1, 1},
+                "an RLE inside an RTL paragraph forces the embedding odd, and L content rises again (X2/I1)");
   expect_levels(u"hello " + HEBREW + u" world", "rtl",
                 {2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2},
                 "an explicit rtl base raises the paragraph level");
@@ -212,6 +219,14 @@ int main() {
   expect_levels(HEBREW + FSI + u"ab" + PDI + HEBREW, "auto",
                 {1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1},
                 "FSI scores LTR content and resolves as LRI (X5c)");
+  // The paragraph level is derived by P2/P3, which SKIP everything between an isolate initiator and
+  // its matching PDI. Every isolate fixture above has a strong character OUTSIDE the isolate before
+  // the isolate begins, so the skip never changed the answer and a paragraph scan that looked inside
+  // isolates left the suite passing. Here the ONLY strong text is inside the isolate, so the two
+  // disagree: skipping it leaves no strong character at all and the base is 0, while looking inside
+  // derives 1 from the Hebrew. Constructed from the rule rather than quoted from upstream.
+  expect_levels(LRI + HEBREW + PDI, "auto", {0, 3, 3, 3, 3, 0},
+                "the paragraph level skips text inside an isolate, so a lone isolated R stays base 0 (P2/P3)");
   expect_levels(u"abc!?@def", "auto", {0, 0, 0, 0, 0, 0, 0, 0, 0},
                 "neutrals between same-direction strong types resolve via N1 (LTR)");
   expect_levels(HEBREW + u"!?" + HEBREW, "auto", {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
