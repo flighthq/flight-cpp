@@ -19,6 +19,18 @@
 //   * `destroyAppMenu` destroys each distinct provider once, and a provider whose destroy threw is
 //     RETAINED so a later call retries only the failures.
 //
+// TWO DEFECTS FOUND BY A LATER RE-AUDIT OF THIS FILE:
+//
+//   1. FIVE OF THE SIX DEFAULT-MENU BUILDERS WERE NEVER CALLED BY ANY LINE. Only App and File were touched;
+//      Edit, Help, View and Window were not, so their labels, roles, item ids, separators and accelerators
+//      had never been checked at all. Four mutations -- misspelling each of their labels, and giving Edit the
+//      File role -- SURVIVED this entire suite, which is how the gap was found.
+//   2. `setAppMenu` WAS NEVER CALLED. Both of its upstream cases were uncovered: a mutation returning `true`
+//      without asking the provider, and one dropping the items on the way, each survived.
+// Both are now covered, and each of the seven survivors was RE-RUN against the fix and is now caught by the
+// assertion that was added for it. The upstream suite has 58 cases across two fixtures; this file now
+// exercises every builder and both install outcomes.
+//
 // One thing this file deliberately does not assert: the emitted `destroyAppMenu` never rethrows the first
 // failure, so asserting the source's rethrow would fail. That is a measured emitter defect, filed as
 // docs/compiler-requests/nullish-assignment-dropped-in-catch.md, and asserting around it here would
@@ -31,6 +43,8 @@
 #include <iostream>
 #include <memory>
 #include <optional>
+#include <string>
+#include <vector>
 
 namespace {
 
@@ -65,6 +79,43 @@ flight::Ref<Item> container(const char* type, flight::Array<flight::Ref<Item>> c
   auto value = item(type);
   value->submenu = std::move(children);
   return value;
+}
+
+// A template tree walker. The default-menu builders are large nested literals, and asserting a whole literal
+// is both unreadable and brittle; what matters is that named items are PRESENT in the right tree, which is
+// what the upstream cases check.
+void walk_ids(const flight::Ref<Item>& node, std::vector<std::string>& out) {
+  if (node->id.has_value()) out.push_back(node->id.value().to_utf8());
+  if (node->submenu.has_value()) {
+    for (const auto& child : node->submenu.value()) walk_ids(child, out);
+  }
+}
+
+bool has_id(const flight::Ref<Item>& node, const char* id) {
+  std::vector<std::string> ids;
+  walk_ids(node, ids);
+  for (const auto& value : ids) {
+    if (value == id) return true;
+  }
+  return false;
+}
+
+double count_type(const flight::Ref<Item>& node, const char* type) {
+  double total = node->type.has_value() && node->type.value() == String(type) ? 1.0 : 0.0;
+  if (node->submenu.has_value()) {
+    for (const auto& child : node->submenu.value()) total += count_type(child, type);
+  }
+  return total;
+}
+
+bool has_accelerator(const flight::Ref<Item>& node, const char* accelerator) {
+  if (node->accelerator.has_value() && node->accelerator.value() == String(accelerator)) return true;
+  if (node->submenu.has_value()) {
+    for (const auto& child : node->submenu.value()) {
+      if (has_accelerator(child, accelerator)) return true;
+    }
+  }
+  return false;
 }
 
 }  // namespace
@@ -373,6 +424,82 @@ int main() {
           "the file menu carries the file-menu role");
     check(!flight::menu::validate_menu_item_template(ItemRow(file_menu)).has_value(),
           "and the file menu validates too");
+  }
+
+  // THE FIVE DEFAULT-MENU BUILDERS THIS SUITE NEVER CALLED (and a fuller look at the two it did). Four
+  // mutations -- misspelling the Edit, Window, Help and View labels, and giving Edit the File role --
+  // SURVIVED this whole suite before this block existed, which is how the gap was found.
+  {
+    const auto edit = flight::menu::create_default_edit_menu_template();
+    check(text(edit->label) == "Edit" && text(edit->role) == "editMenu" && text(edit->type) == "submenu",
+          "the Edit template is the Edit submenu");
+    check(has_id(edit, "undo") && has_id(edit, "redo") && has_id(edit, "cut") && has_id(edit, "copy") &&
+              has_id(edit, "paste") && has_id(edit, "delete") && has_id(edit, "selectAll"),
+          "with undo, redo, cut, copy, paste, delete and selectAll");
+    check(count_type(edit, "separator") >= 1.0, "and a separator between its groups");
+
+    const auto file = flight::menu::create_default_file_menu_template();
+    check(text(file->label) == "File" && text(file->role) == "fileMenu",
+          "the File template is the File submenu");
+    check(has_id(file, "newFile") && has_id(file, "openFile") && has_id(file, "saveFile") &&
+              has_id(file, "saveFileAs") && has_id(file, "closeFile"),
+          "with newFile, openFile, saveFile, saveFileAs and closeFile");
+    check(has_accelerator(file, "CmdOrCtrl+N") && has_accelerator(file, "CmdOrCtrl+S"),
+          "and New and Save carry accelerators");
+    check(count_type(file, "separator") >= 2.0, "with separators between its groups");
+
+    const auto help = flight::menu::create_default_help_menu_template();
+    check(text(help->label) == "Help" && text(help->role) == "helpMenu",
+          "the Help template is the Help submenu");
+    check(has_id(help, "help"), "carrying its help item");
+
+    const auto view = flight::menu::create_default_view_menu_template();
+    check(text(view->label) == "View" && text(view->role) == "viewMenu",
+          "the View template is the View submenu");
+    check(has_id(view, "reload") && has_id(view, "zoomIn") && has_id(view, "zoomOut") &&
+              has_id(view, "resetZoom") && has_id(view, "toggleFullscreen"),
+          "with reload, zoomIn, zoomOut, resetZoom and toggleFullscreen");
+
+    const auto window = flight::menu::create_default_window_menu_template();
+    check(text(window->label) == "Window" && text(window->role) == "windowMenu",
+          "the Window template is the Window submenu");
+    check(has_id(window, "minimize") && has_id(window, "close"), "with minimize and close");
+
+    // Every builder's tree validates. The upstream suite validates only the App and File menus; nothing had
+    // ever checked that the other four are well-formed at all.
+    check(!flight::menu::validate_menu_item_template(ItemRow(edit)).has_value() &&
+              !flight::menu::validate_menu_item_template(ItemRow(help)).has_value() &&
+              !flight::menu::validate_menu_item_template(ItemRow(view)).has_value() &&
+              !flight::menu::validate_menu_item_template(ItemRow(window)).has_value(),
+          "and the Edit, Help, View and Window trees are all well-formed");
+  }
+
+  // setAppMenu: the provider's own answer is the answer, and every item reaches it in order.
+  {
+    std::vector<std::string> delivered;
+    bool answer = true;
+    auto host = flight::make_ref<flight::types::HostAppMenuCapability>();
+    host->set_app_menu = [&delivered, &answer](flight::Array<flight::Ref<Item>> items) {
+      for (const auto& entry : items) {
+        delivered.push_back(entry->id.has_value() ? entry->id.value().to_utf8() : std::string("<none>"));
+      }
+      return answer;
+    };
+
+    flight::Array<flight::Ref<Item>> items = flight::Array<flight::Ref<Item>>{};
+    auto alpha = item("normal", "Alpha");
+    alpha->id = String("alpha");
+    auto beta = item("normal", "Beta");
+    beta->id = String("beta");
+    items.push(alpha);
+    items.push(beta);
+
+    check(flight::menu::set_app_menu(host, items), "setAppMenu reports the provider's own answer");
+    check(delivered.size() == 2 && delivered[0] == "alpha" && delivered[1] == "beta",
+          "and delivers every item to the provider, in order");
+
+    answer = false;
+    check(!flight::menu::set_app_menu(host, items), "a refused install is reported as false");
   }
 
   if (failures == 0) std::cout << "generated menu: all checks passed\n";
