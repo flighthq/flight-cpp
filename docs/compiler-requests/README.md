@@ -79,6 +79,8 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 
 ## Active requests without a compiler patch
 
+- [A fresh object literal asserted to a type parameter has no C++ owner to become](fresh-literal-asserted-to-type-parameter.md) —
+  `@flighthq/tray` `invokeUpdate` (`cpp-reference-assertion-without-heritage`): the asserted value is a new literal, so no heritage proof applies. The unrefused `{ outcome } as Result` branch emits `make_ref<Result>(Result{...})`, which cannot instantiate for a variant. Sound lowering needs exact-shape alternative selection at instantiation.
 - [A caught value written into an `unknown` member needs an `Any` that can hold it](caught-value-into-unknown-member.md) —
   `@flighthq/tray` `destroyTrayRuntime` (`cpp-contextual-union-missing-expression-type:optionalSingle`): `flight::Any` has no caught-exception form, so the refusal is correct. This needs a runtime capability, not evidence. A second blocker sits behind it: a narrowed single-arm struct against a coalesced arm.
 - [A generic union alias must not template an arm that does not use its type parameter](generic-alias-non-dependent-anonymous-arms.md) —

@@ -99,6 +99,9 @@ Tray's `destroyTrayRuntime` stops separately at
 `cpp-contextual-union-missing-expression-type:optionalSingle`, where a caught value is written into an
 `unknown` member; that runtime-carrier boundary is tracked in
 [caught-value-into-unknown-member.md](caught-value-into-unknown-member.md).
+Tray's `invokeUpdate` stops at `cpp-reference-assertion-without-heritage`, where a fresh literal is
+asserted to a type parameter; that heritage-proof boundary is tracked in
+[fresh-literal-asserted-to-type-parameter.md](fresh-literal-asserted-to-type-parameter.md).
 
 ## Root cause and carried compiler patch
 
