@@ -435,6 +435,14 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_interaction_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_interaction COMMAND flight_cpp_generated_interaction_tests)
 
+add_executable(flight_cpp_generated_scene2d_display_object_tests generated_scene2d_display_object_test.cpp)
+target_include_directories(
+  flight_cpp_generated_scene2d_display_object_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_scene2d_display_object_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_scene2d_display_object COMMAND flight_cpp_generated_scene2d_display_object_tests)
+
 add_executable(flight_cpp_generated_intl_cache_tests generated_intl_cache_test.cpp)
 target_include_directories(
   flight_cpp_generated_intl_cache_tests
@@ -1372,6 +1380,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_scene3d_resources scene3d-re
 flight_cpp_package_test_labels(flight_cpp.generated_mesh mesh)
 flight_cpp_package_test_labels(flight_cpp.generated_skeleton3d skeleton3d)
 flight_cpp_package_test_labels(flight_cpp.generated_interaction interaction)
+flight_cpp_package_test_labels(flight_cpp.generated_scene2d_display_object scene2d)
 flight_cpp_package_test_labels(flight_cpp.generated_intl_cache intl)
 flight_cpp_package_test_labels(flight_cpp.generated_image_test_helper image)
 flight_cpp_package_test_labels(flight_cpp.generated_image image)

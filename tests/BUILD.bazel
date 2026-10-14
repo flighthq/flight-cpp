@@ -425,6 +425,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_scene2d_display_object_test",
+    srcs = ["generated_scene2d_display_object_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_input_test",
     srcs = ["generated_input_test.cpp"],
     size = "small",
@@ -1181,6 +1188,7 @@ test_suite(
         ":generated_importdiagnostics_test",
         ":generated_ipc_test",
         ":generated_interaction_test",
+        ":generated_scene2d_display_object_test",
         ":generated_input_test",
         ":generated_input_manager_test",
         ":generated_input_state_test",
