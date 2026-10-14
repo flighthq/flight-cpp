@@ -6,9 +6,9 @@ diff --git a/packages/scene2d-canvas/src/canvasTextureResolver.ts b/packages/sce
  import { getRenderStateRuntime } from '@flighthq/render/contract';
 -import { getTextureSourceKind } from '@flighthq/texture/contract';
  import type {
-   CanvasRenderSurface,
-   CanvasRenderSurfaceCreator,
-@@ -88,8 +87,9 @@ export function resolveCanvasTexture(
+   CanvasSurface,
+   CanvasTextureResolver,
+@@ -92,8 +91,9 @@ export function resolveCanvasTexture(
    texture: Readonly<Texture>,
  ): CanvasImageSource | null {
    if (texture.dimension !== '2d') return null;
