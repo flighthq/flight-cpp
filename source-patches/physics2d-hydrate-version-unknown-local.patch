@@ -1,0 +1,12 @@
+diff --git a/packages/physics2d/src/world.ts b/packages/physics2d/src/world.ts
+--- a/packages/physics2d/src/world.ts
++++ b/packages/physics2d/src/world.ts
+@@ -280,7 +280,7 @@
+ // partially downgraded by a runtime that cannot know their semantics.
+ export function hydratePhysics2DWorld(world: Physics2DWorld): boolean {
+   assertPhysics2DWorldNotStepping(world);
+-  const serializedVersion = (world as unknown as { version?: unknown }).version;
++  const serializedVersion: unknown = world.version;
+   const version = serializedVersion === undefined ? 0 : serializedVersion;
+   if (!Number.isSafeInteger(version) || (version as number) < 0 || (version as number) > Physics2DWorldVersion) {
+     return false;

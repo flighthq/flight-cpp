@@ -69,6 +69,11 @@ checked owner recovery above is the fix. The ABI's two functions are declared wi
 link (overrides/manifest.json, physics2d-abi-variant-shape-encoding). The joint validator throws, as recorded in
 physics2d-step-validation-refusals. Nothing substitutes zeros or common-field-only behavior.
 
-The same module also refuses `world.ts` `hydratePhysics2DWorld` (line 281) on the undeclared-member form at the
-top of this request: `(world as unknown as { version?: unknown }).version` reads a serialized `version` that
-`Physics2DWorld` does not declare.
+The same module also refuses `world.ts` `hydratePhysics2DWorld` (line 283), on a near relative of this form.
+`(world as unknown as { version?: unknown }).version` asserts the world to a row whose `version` is optional and
+`unknown`. `Physics2DWorld` does declare `version: number`, so the member exists; what the emitter refuses is that
+the asserted row re-types it ("optionality or value representation is not representation-equivalent to the source
+type's cells"). The assertion exists so the read also tolerates a serialized world that predates the field. It reads
+the same property as `world.version`, and a native `Physics2DWorld` always stores that member as a number.
+[`physics2d-hydrate-version-unknown-local`](../../source-patches/manifest.json) carries it as
+`const serializedVersion: unknown = world.version`.
