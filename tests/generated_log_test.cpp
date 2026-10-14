@@ -84,6 +84,73 @@ int main() {
     return 1;
   }
 
+  // mergeSpanFields PRECEDENCE, added for a MEASURED HOLE: a mutation that inverted the record arm's
+  // data-wins rule SURVIVED the whole suite, because no case gave a span field and a data field the same
+  // key. The rule is the source's -- `{ ...spanFields, ...data }` assigns data AFTER the span fields -- and
+  // within the span fields a LATER span wins, because they are accumulated oldest-first.
+  {
+    flight::Record<flight::String, flight::Any> first = {};
+    first.set(flight::String("shared"), flight::Any(flight::String("first-span")));
+    first.set(flight::String("only-first"), flight::Any(flight::String("first")));
+    flight::Record<flight::String, flight::Any> second = {};
+    second.set(flight::String("shared"), flight::Any(flight::String("second-span")));
+    second.set(flight::String("only-second"), flight::Any(flight::String("second")));
+    auto data = flight::Record<flight::String, flight::Any>{};
+    data.set(flight::String("shared"), flight::Any(flight::String("data")));
+
+    const auto span_a = flight::log::create_log_span(flight::String("a"), first);
+    const auto span_b = flight::log::create_log_span(flight::String("b"), second);
+    flight::log::enter_log_span(span_a);
+    flight::log::enter_log_span(span_b);
+    const auto merged = flight::log::merge_span_fields(
+        flight::types::LogData{std::in_place_type<flight::Record<flight::String, flight::Any>>, data},
+        std::nullopt);
+    flight::log::exit_log_span(span_b);
+    flight::log::exit_log_span(span_a);
+
+    const auto merged_fields = std::get<flight::Record<flight::String, flight::Any>>(merged);
+    const auto shared = merged_fields.get(flight::String("shared"));
+    if (!check(shared.has_value() && shared.value().as_string() == flight::String("data"),
+               "mergeSpanFields: a DATA field wins over a span field on the same key") ||
+        !check(merged_fields.get(flight::String("only-first")).has_value() &&
+                   merged_fields.get(flight::String("only-second")).has_value(),
+               "and every span's own fields survive the merge")) {
+      return 1;
+    }
+  }
+
+  // createChildLogContext: the parent's fields are merged FIRST and the caller's win on collision, and the
+  // channel falls back to the parent's only when the caller omits it. Added for a MEASURED hole -- the
+  // emitted body declared an empty record and dropped the merge entirely, so every child context carried no
+  // fields, and this function was covered by no test at all.
+  {
+    flight::Record<flight::String, flight::Any> parent_fields = {};
+    parent_fields.set(flight::String("a"), flight::Any(flight::String("parent")));
+    parent_fields.set(flight::String("b"), flight::Any(flight::String("parent")));
+    const auto parent = flight::log::create_log_context(flight::String("parent-channel"), parent_fields);
+
+    flight::Record<flight::String, flight::Any> child_fields = {};
+    child_fields.set(flight::String("b"), flight::Any(flight::String("child")));
+    child_fields.set(flight::String("c"), flight::Any(flight::String("child")));
+    const auto child = flight::log::create_child_log_context(parent, child_fields);
+
+    if (!check(child->fields.get(flight::String("a")).has_value() &&
+                   child->fields.get(flight::String("a")).value().as_string() == flight::String("parent"),
+               "createChildLogContext keeps the parent's fields the caller did not override") ||
+        !check(child->fields.get(flight::String("b")).has_value() &&
+                   child->fields.get(flight::String("b")).value().as_string() == flight::String("child"),
+               "and the caller's field wins on collision") ||
+        !check(child->fields.get(flight::String("c")).has_value(),
+               "and the caller's own new field is present") ||
+        !check(child->channel.has_value() && child->channel.value() == flight::String("parent-channel"),
+               "and the channel is inherited when the caller omits it") ||
+        !check(parent->fields.get(flight::String("b")).has_value() &&
+                   parent->fields.get(flight::String("b")).value().as_string() == flight::String("parent"),
+               "and the PARENT's own fields are not mutated")) {
+      return 1;
+    }
+  }
+
   flight::log::clear_log_sinks();
   return 0;
 }
