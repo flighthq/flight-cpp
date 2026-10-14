@@ -3634,14 +3634,14 @@
       "code": "dependency-refused",
       "module": "packages/picking/src/contract.ts",
       "package": "@flighthq/picking",
-      "reason": "dependency ./pickScene3D was refused for @flighthq/picking/packages/picking/src/pickScene3D.ts",
+      "reason": "dependency ./pickScene3D.ts was refused for @flighthq/picking/packages/picking/src/pickScene3D.ts",
       "stage": "dependency"
     },
     {
       "code": "dependency-refused",
       "module": "packages/picking/src/index.ts",
       "package": "@flighthq/picking",
-      "reason": "dependency ./contract was refused for @flighthq/picking/packages/picking/src/contract.ts",
+      "reason": "dependency ./contract.ts was refused for @flighthq/picking/packages/picking/src/contract.ts",
       "stage": "dependency"
     },
     {
@@ -3659,7 +3659,7 @@
       "line": 13,
       "module": "packages/picking/src/sceneHitAttributes.ts",
       "package": "@flighthq/picking",
-      "reason": "cpp emission failed for @flighthq/picking/packages/picking/src/sceneHitAttributes.ts: contextual nullable interface conversion from SpecularGlossinessPbrMaterial to Material follows TypeScript interface heritage, but flight-cpp stores those declarations in independent flight::Ref<flight::types::SpecularGlossinessPbrMaterial> and flight::Ref<flight::types::Material> owner types: each interface struct is emitted flattened, so the heritage is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would claim C++ inheritance the emitted interface structs do not have, materializing the target would replace object identity, and a structural row would change the declared result carrier. Preserve the exact source owner in the declared result and explicitly represent both owners where the branches merge, or add an owner-preserving interface-heritage carrier to the runtime contract. Declaring the destination as the derived interface where the concrete type is known -- or converting where the type is still concrete rather than widening it through a nullable union -- avoids the boundary altogether; closing it at the carrier needs either that runtime carrier or interface structs emitted with the heritage as a C++ base relation.",
+      "reason": "cpp emission failed for @flighthq/picking/packages/picking/src/sceneHitAttributes.ts: contextual nullable interface conversion from Material3D to Material follows TypeScript interface heritage, but flight-cpp stores those declarations in independent flight::Ref<flight::types::Material3D> and flight::Ref<flight::types::Material> owner types: each interface struct is emitted flattened, so the heritage is not a C++ base relation and no pointer cast exists to follow. A native pointer cast would claim C++ inheritance the emitted interface structs do not have, materializing the target would replace object identity, and a structural row would change the declared result carrier. Preserve the exact source owner in the declared result and explicitly represent both owners where the branches merge, or add an owner-preserving interface-heritage carrier to the runtime contract. Declaring the destination as the derived interface where the concrete type is known -- or converting where the type is still concrete rather than widening it through a nullable union -- avoids the boundary altogether; closing it at the carrier needs either that runtime carrier or interface structs emitted with the heritage as a C++ base relation.",
       "stage": "emission"
     },
     {
