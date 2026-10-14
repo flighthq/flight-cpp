@@ -1,5 +1,4 @@
 diff --git a/packages/scene3d-gl/src/enableGlPbrExtensionGuards.ts b/packages/scene3d-gl/src/enableGlPbrExtensionGuards.ts
-index a8fd1ca..4dd51e7 100644
 --- a/packages/scene3d-gl/src/enableGlPbrExtensionGuards.ts
 +++ b/packages/scene3d-gl/src/enableGlPbrExtensionGuards.ts
 @@ -1,5 +1,5 @@
@@ -8,7 +7,7 @@ index a8fd1ca..4dd51e7 100644
 +import type { GlPbrExtensionIssue, GlRenderState, PbrExtensionValue } from '@flighthq/types/contract';
  import { LogLevel } from '@flighthq/types/contract';
  
- import { explainGlPbrExtensions } from './glPbrExtensionRegistry';
+ import { explainGlPbrExtensions } from './glPbrExtensionRegistry.ts';
 @@ -30,7 +30,7 @@ function getGlPbrExtensionIssueMessage(issue: Readonly<GlPbrExtensionIssue>): st
    }
  }
@@ -19,7 +18,6 @@ index a8fd1ca..4dd51e7 100644
    for (let i = 0; i < issues.length; i++) {
      const issue = issues[i];
 diff --git a/packages/scene3d-gl/src/glPbrExtensionRegistry.ts b/packages/scene3d-gl/src/glPbrExtensionRegistry.ts
-index 9a65195..6812b58 100644
 --- a/packages/scene3d-gl/src/glPbrExtensionRegistry.ts
 +++ b/packages/scene3d-gl/src/glPbrExtensionRegistry.ts
 @@ -14,7 +14,7 @@ import type {
@@ -29,18 +27,18 @@ index 9a65195..6812b58 100644
 -  PbrExtension,
 +  PbrExtensionValue,
  } from '@flighthq/types/contract';
- import { RegistryEntryState } from '@flighthq/types/contract';
  
-@@ -24,7 +24,7 @@ import { getGlScene3DRuntime } from './glScene3DRuntime';
+ import { isGlTextureReady } from './glPbrStandardBlock.ts';
+@@ -23,7 +23,7 @@ import { getGlScene3DRuntime } from './glScene3DRuntime.ts';
  export function bindGlPbrExtensions(
    state: GlRenderState,
    program: WebGLProgram,
 -  extensions: readonly PbrExtension[],
 +  extensions: readonly PbrExtensionValue[],
  ): boolean {
-   const entries = getGlRenderStateRuntime(state).registries.pbrExtensions.entries;
+   const entries = getGlRenderStateRuntime(state).registries.pbrExtensions;
    const context = createGlPbrExtensionBindContext(state, program);
-@@ -38,7 +38,7 @@ export function bindGlPbrExtensions(
+@@ -37,7 +37,7 @@ export function bindGlPbrExtensions(
  
  export function explainGlPbrExtensions(
    state: GlRenderState,
@@ -49,7 +47,7 @@ index 9a65195..6812b58 100644
  ): readonly GlPbrExtensionIssue[] {
    const issues: GlPbrExtensionIssue[] = [];
    const kinds = new Set<Kind>();
-@@ -101,7 +101,7 @@ export function registerGlPbrExtension(
+@@ -99,7 +99,7 @@ export function registerGlPbrExtension(
  
  export function resolveGlPbrExtensionContributions(
    state: GlRenderState,
@@ -57,36 +55,34 @@ index 9a65195..6812b58 100644
 +  extensions: readonly PbrExtensionValue[],
  ): readonly GlPbrExtensionShaderContribution[] | null {
    if (explainGlPbrExtensions(state, extensions).length > 0) return null;
-   const entries = getGlRenderStateRuntime(state).registries.pbrExtensions.entries;
+   const entries = getGlRenderStateRuntime(state).registries.pbrExtensions;
 diff --git a/packages/types/src/ExtendedPbrMaterial.ts b/packages/types/src/ExtendedPbrMaterial.ts
-index 85d4b3c..d79146f 100644
 --- a/packages/types/src/ExtendedPbrMaterial.ts
 +++ b/packages/types/src/ExtendedPbrMaterial.ts
-@@ -1,4 +1,4 @@
--import type { PbrExtension } from './PbrExtension';
-+import type { PbrExtensionValue } from './PbrExtension';
- import type { StandardPbrMaterialProperties } from './StandardPbrMaterial';
- import type { SurfaceMaterial } from './SurfaceMaterial';
+@@ -1,12 +1,12 @@
+ import type { Material3D } from './Material3D.ts';
+-import type { PbrExtension } from './PbrExtension.ts';
++import type { PbrExtensionValue } from './PbrExtension.ts';
+ import type { StandardPbrMaterialProperties } from './StandardPbrMaterial.ts';
  
-@@ -6,7 +6,7 @@ import type { SurfaceMaterial } from './SurfaceMaterial';
+ // Metallic-roughness PBR plus an ordered set of independently registered contributions. Extension
  // order is semantic: backends compose shader source and bind inputs in this order after rejecting
  // duplicate kinds. The standard member is a property block, never a nested material Entity.
- export interface ExtendedPbrMaterial extends SurfaceMaterial {
+ export interface ExtendedPbrMaterial extends Material3D {
 -  extensions: readonly PbrExtension[];
 +  extensions: readonly PbrExtensionValue[];
    readonly kind: 'ExtendedPbrMaterial';
    standard: StandardPbrMaterialProperties;
  }
 diff --git a/packages/types/src/GlPbrExtensionRegistration.ts b/packages/types/src/GlPbrExtensionRegistration.ts
-index 5e3b1f6..01bb26c 100644
 --- a/packages/types/src/GlPbrExtensionRegistration.ts
 +++ b/packages/types/src/GlPbrExtensionRegistration.ts
 @@ -1,15 +1,15 @@
- import type { GlPbrExtensionBindContext } from './GlPbrExtensionBindContext';
- import type { GlPbrExtensionShaderContext } from './GlPbrExtensionShaderContext';
- import type { GlPbrExtensionShaderContribution } from './GlPbrExtensionShaderContribution';
--import type { PbrExtension } from './PbrExtension';
-+import type { PbrExtensionValue } from './PbrExtension';
+ import type { GlPbrExtensionBindContext } from './GlPbrExtensionBindContext.ts';
+ import type { GlPbrExtensionShaderContext } from './GlPbrExtensionShaderContext.ts';
+ import type { GlPbrExtensionShaderContribution } from './GlPbrExtensionShaderContribution.ts';
+-import type { PbrExtension } from './PbrExtension.ts';
++import type { PbrExtensionValue } from './PbrExtension.ts';
  
  // GL realization for one open PbrExtension kind. Registrations are installed explicitly per render
  // state; replacing one advances the registry version so compiled program identities cannot go stale.
@@ -102,14 +98,18 @@ index 5e3b1f6..01bb26c 100644
 +  isSupported(extension: Readonly<PbrExtensionValue>): boolean;
  }
 diff --git a/packages/types/src/GlScene3DRuntime.ts b/packages/types/src/GlScene3DRuntime.ts
-index eac4841..3bb37c7 100644
 --- a/packages/types/src/GlScene3DRuntime.ts
 +++ b/packages/types/src/GlScene3DRuntime.ts
-@@ -9,2 +9,2 @@
--import type { PbrExtension } from './PbrExtension';
-+import type { PbrExtensionValue } from './PbrExtension';
- import type { Scene3DLightBlock } from './Scene3DLightBlock';
-@@ -124,7 +124,7 @@ export interface GlScene3DRuntime {
+@@ -8,7 +8,7 @@ import type { Matrix4 } from './Matrix4.ts';
+ import type { Mesh } from './Mesh.ts';
+ import type { MeshGeometry } from './MeshGeometry.ts';
+ import type { Node3D } from './Node3D.ts';
+-import type { PbrExtension } from './PbrExtension.ts';
++import type { PbrExtensionValue } from './PbrExtension.ts';
+ import type { Scene3DLightBlock } from './Scene3DLightBlock.ts';
+ import type { Scene3DLightsLike } from './Scene3DLights.ts';
+ import type { Scene3DRenderProxy } from './Scene3DRenderProxy.ts';
+@@ -164,7 +164,7 @@ export interface GlScene3DRuntime {
    forwardLightSelectionGuard?: ((lights: Readonly<Scene3DLightsLike>) => void) | null;
    opaqueDrawList: GlScene3DDrawEntry[];
    opaquePool: GlScene3DDrawEntry[];
@@ -117,32 +117,33 @@ index eac4841..3bb37c7 100644
 +  pbrExtensionGuard?: ((extensions: readonly PbrExtensionValue[]) => void) | null;
    pbrTransmissionSceneColor: GlPbrTransmissionSceneColor | null;
    programCache: Map<string, GlMeshProgram>;
-   shadow: GlScene3DShadow | null;
+   // Teardown callbacks contributed by lazily-created optional resources (the IBL bake programs, the
 diff --git a/packages/types/src/PbrExtension.ts b/packages/types/src/PbrExtension.ts
-index 209e372..3e715cc 100644
 --- a/packages/types/src/PbrExtension.ts
 +++ b/packages/types/src/PbrExtension.ts
 @@ -1,4 +1,11 @@
- import type { Entity, Kind } from './Entity';
-+import type { AnisotropyPbrExtension } from './AnisotropyPbrExtension';
-+import type { ClearcoatPbrExtension } from './ClearcoatPbrExtension';
-+import type { IridescencePbrExtension } from './IridescencePbrExtension';
-+import type { SheenPbrExtension } from './SheenPbrExtension';
-+import type { SpecularPbrExtension } from './SpecularPbrExtension';
-+import type { TransmissionVolumePbrExtension } from './TransmissionVolumePbrExtension';
-+import type { WrappedDiffusePbrExtension } from './WrappedDiffusePbrExtension';
++import type { AnisotropyPbrExtension } from './AnisotropyPbrExtension.ts';
++import type { ClearcoatPbrExtension } from './ClearcoatPbrExtension.ts';
+ import type { Entity, Kind } from './Entity.ts';
++import type { IridescencePbrExtension } from './IridescencePbrExtension.ts';
++import type { SheenPbrExtension } from './SheenPbrExtension.ts';
++import type { SpecularPbrExtension } from './SpecularPbrExtension.ts';
++import type { TransmissionVolumePbrExtension } from './TransmissionVolumePbrExtension.ts';
++import type { WrappedDiffusePbrExtension } from './WrappedDiffusePbrExtension.ts';
  
  // Mesh UV channel selected independently by each PBR texture input. The canonical mesh layout
  // currently exposes uv0 and uv1; extending the vertex contract grows this union deliberately.
-@@ -9,3 +16,17 @@ export type PbrUvSet = 0 | 1;
+@@ -9,3 +16,20 @@ export type PbrUvSet = 0 | 1;
  export interface PbrExtension extends Entity {
    readonly kind: Kind;
  }
 +
-+// The open PbrExtension arm keeps vendor extensions accepted, while the redundant built-in arms
-+// retain their concrete owners across heterogeneous extension storage on invariant native targets.
-+// Every built-in arm already extends PbrExtension, so this union does not change the TypeScript value
-+// domain or JavaScript representation.
++// The value union the storage and every GL boundary carry. Each built-in interface already extends
++// PbrExtension, so this accepts exactly the same values as PbrExtension -- including arbitrary vendor
++// extensions, through the open arm -- while naming the built-ins as redundant arms beside it. That is
++// what lets a registration read its own concrete fields from a declared arm instead of asserting them
++// back out of the open base, which the emitter cannot do because it flattens interface heritage into
++// independent owners.
 +export type PbrExtensionValue =
 +  | PbrExtension
 +  | AnisotropyPbrExtension
@@ -152,3 +153,4 @@ index 209e372..3e715cc 100644
 +  | SpecularPbrExtension
 +  | TransmissionVolumePbrExtension
 +  | WrappedDiffusePbrExtension;
++

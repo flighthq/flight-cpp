@@ -1414,22 +1414,20 @@
       "id": "pbr-extension-concrete-value-arms",
       "dependency": "flight",
       "patch": "pbr-extension-concrete-value-arms.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/types/src/PbrExtension.ts, ExtendedPbrMaterial.ts, GlPbrExtensionRegistration.ts, GlScene3DRuntime.ts plus packages/scene3d-gl/src/glPbrExtensionRegistry.ts and enableGlPbrExtensionGuards.ts",
       "package": "@flighthq/scene3d-gl",
       "answers": "refusal",
       "refusal": "the asserted row from flight::Ref<flight::types::PbrExtension>",
-      "rewrite": "Names the seven built-in PBR extension interfaces as redundant arms beside the open PbrExtension arm, then carries that semantically identical value union through ExtendedPbrMaterial storage, GL registrations, runtime guards, and extension dispatch.",
+      "rewrite": "Re-derived 2026-10-14 from docs/compiler-requests/pbr-extension-concrete-value-arms.md against the live pin. The drift since 7e2fc7d was only the .ts import specifiers, exactly as the request measured. Adds PbrExtensionValue to packages/types/src/PbrExtension.ts -- the open PbrExtension arm plus the seven built-in interfaces as redundant arms beside it -- and carries it through storage and the GL boundaries: ExtendedPbrMaterial.extensions, the three GlPbrExtensionRegistration boundaries (bind, createShaderContribution, isSupported), GlScene3DRuntime.pbrExtensionGuard, and the three glPbrExtensionRegistry entry points plus warnGlPbrExtensionIssues. The registration modules themselves are unchanged.",
       "equivalence": "Every named built-in interface already extends PbrExtension, so PbrExtensionValue accepts exactly the same TypeScript values as PbrExtension, including arbitrary vendor extensions through the original open arm. Type aliases and redundant union arms erase from JavaScript; extension objects, arrays, registration callbacks, ordering, duplicate detection, shader composition, binding, and identity are unchanged.",
       "whyNotUpstreamFirst": "The source API deliberately remains vendor-extensible, while the pinned C++ emitter flattens an object first retained through the open base arm and cannot recover its built-in fields later. Redundant exact arms are a target-neutral statement of owners already in the value domain and preserve the open public contract.",
       "unblocks": "Retains Anisotropy, Clearcoat, Iridescence, Sheen, Specular, TransmissionVolume, and WrappedDiffuse extension owners through real ExtendedPbrMaterial arrays and the GL registry callbacks so their existing upstream shader and texture-binding implementations can emit.",
       "expires": "when heterogeneous structural storage preserves checked concrete owner identity through open base-interface arms, or Flight adopts the explicit value union upstream.",
       "appliedOn": "2026-10-08",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "GL",
-        "reason": "context drift: the patched code still exists (11/14 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "rebasedOn": "2026-10-14",
+      "verification": "Applied in manifest order; the seven per-registration refusals are cleared (measured on a full generation run, see the batch report), each registration then held back only by glPbrExtensionRegistry.ts through glScene3DRuntime.ts. The composition requirement is met in the same commit: the active scene3d-gl-erased-program-cache patch carried the unrewritten pbrExtensionGuard line as context, and its context is refreshed here so the full stack still applies in order."
     },
     {
       "id": "scene3d-gl-erased-upload-cache",
@@ -1464,7 +1462,7 @@
       "refusal": "type assertion target must identify exactly one C++ variant alternative: target T against [flight::Ref<flight::types::GlMeshProgram>]",
       "rewrite": "Types the heterogeneous shared program cache as Map<string, object>, returns a checked generic view on a cache hit, and recovers the concrete GlMeshProgram owner while destroying cached programs.",
       "equivalence": "Generic arguments and assertions erase in JavaScript. The same cache object, string key, compiled program object, and compile-once policy remain; has followed synchronously by get cannot observe an intervening mutation. Destruction still visits every cached value once, deletes the same underlying WebGLProgram, clears the same map, and retains no replacement objects or side storage.",
-      "verification": "The matching compiler regression emits checked generic and concrete ErasedRef recovery and passes the native syntax gate. Patch-stack composition is verified against the pinned Flight and compiler revisions before generation.",
+      "verification": "The matching compiler regression emits checked generic and concrete ErasedRef recovery and passes the native syntax gate. Patch-stack composition is verified against the pinned Flight and compiler revisions before generation. CONTEXT REFRESHED 2026-10-14, atomically with pbr-extension-concrete-value-arms: this patch's packages/types/src/GlScene3DRuntime.ts hunk carried the unrewritten `pbrExtensionGuard?: ((extensions: readonly PbrExtension[]) => void) | null;` line as context, so the PBR patch made it fail. The context line is now the rewritten PbrExtensionValue form and nothing else changed -- the patch's added lines are byte-identical to the original (10 vs 10, checked mechanically), so its semantics are untouched. Both patches land in the same commit so the stack never passes through a state where the active patch does not apply.",
       "whyNotUpstreamFirst": "The shared cache intentionally stores several extended program record shapes under family-namespaced keys. The target-neutral object boundary accurately states that heterogeneity while the checked consumer assertions preserve each exact owner for native emission.",
       "unblocks": "Clears glMeshProgram's generic cache refusal so unlit, shaded, classic, toon, PBR, custom-shader, shadow, matcap, debug, and wireframe programs can share the real upstream state cache.",
       "expires": "when heterogeneous Map storage preserves constrained generic owners automatically, or Flight adopts this explicit erased cache boundary upstream.",

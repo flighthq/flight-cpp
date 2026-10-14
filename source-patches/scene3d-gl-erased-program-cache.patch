@@ -46,7 +46,7 @@ diff --git a/packages/types/src/GlScene3DRuntime.ts b/packages/types/src/GlScene
 +++ b/packages/types/src/GlScene3DRuntime.ts
 @@ -166,7 +166,7 @@ export interface GlScene3DRuntime {
    opaquePool: GlScene3DDrawEntry[];
-   pbrExtensionGuard?: ((extensions: readonly PbrExtension[]) => void) | null;
+   pbrExtensionGuard?: ((extensions: readonly PbrExtensionValue[]) => void) | null;
    pbrTransmissionSceneColor: GlPbrTransmissionSceneColor | null;
 -  programCache: Map<string, GlMeshProgram>;
 +  programCache: Map<string, object>;
