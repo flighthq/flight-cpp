@@ -137,6 +137,10 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   the three renamed PBR renderers cannot widen their concrete flattened owners to `Readonly<Material3D>` merely
   so `glPbrStandardBlock.ts` can read `alphaMode`. A scalar entry point keeps the existing object-taking helper,
   shares one implementation and preserves every define-key flag. The carrying GL patch is still pending.
+- [Shadow traversal must retain checked mesh capabilities through branch flow](scene3d-gl-shadow-checked-capability-flow.md) —
+  `glShadowMap.ts` must narrow heterogeneous nodes to meshes and meshes to instanced meshes without assertions
+  or a redundant nullable owner carrier. One current-pin rewrite supersedes the two pending shadow patches,
+  preserves rigid, skinned and instanced drawing, and emits the complete header with zero focused refusals.
 - [Quadbatch needs one retained owner across specialized construction boundaries](quadbatch-owner-and-contextual-construction.md) —
   flattened Node2D/runtime/signal owners and contextual factories omit ten declarations; the native
   adapter preserves batch, runtime, buffer-view, atlas, material and signal identities explicitly.
