@@ -11,10 +11,13 @@ static_assert(flight::runtime_contract.cpp_abi == 1, "Flight C++ runtime ABI mis
 
 namespace flight::types { struct Entity; }
 namespace flight::types { struct SignalScope; }
+namespace flight::types { template <typename T> struct Signal; }
 namespace flight::types { template <typename T> struct SignalConnection; }
+namespace flight::types { template <typename T> struct SignalData; }
 
 #include <flight/entity/entity.hpp>
 #include <flight/types/entity.hpp>
+#include <flight/types/signal.hpp>
 #include <flight/types/signal_connection.hpp>
 #include <flight/types/signal_scope.hpp>
 #include <flight/signals/connection.hpp>
@@ -22,6 +25,8 @@ namespace flight::types { template <typename T> struct SignalConnection; }
 namespace flight::signals {
 
 using flight::types::SignalConnection;
+
+using flight::types::Signal;
 
 inline void disconnect_signal_scope(flight::Ref<flight::types::SignalScope> scope) {
   flight::Array<std::shared_ptr<flight::types::SignalConnection<std::function<void(flight::Array<flight::Any>)>>>> members = scope->connections;

@@ -194,6 +194,7 @@
         "flight/signals/connection.hpp",
         "flight/signals/emitter.hpp",
         "flight/signals/safe.hpp",
+        "flight/signals/scope.hpp",
         "flight/signals/signal.hpp",
         "flight/signals/slot.hpp",
         "flight/signals/throttle.hpp"
