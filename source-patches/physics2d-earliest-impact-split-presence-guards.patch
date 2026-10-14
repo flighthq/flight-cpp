@@ -1,0 +1,13 @@
+diff --git a/packages/physics2d/src/step.ts b/packages/physics2d/src/step.ts
+--- a/packages/physics2d/src/step.ts
++++ b/packages/physics2d/src/step.ts
+@@ -1084,7 +1084,8 @@
+   if (bodyA === null || bodyB === null) return;
+   const colliderA = bodyA.colliders[getPhysics2DStepScratch().ccdImpactColliderA];
+   const colliderB = bodyB.colliders[getPhysics2DStepScratch().ccdImpactColliderB];
+-  if (colliderA === undefined || colliderB === undefined) return;
++  if (colliderA === undefined) return;
++  if (colliderB === undefined) return;
+   const contact = createPhysics2DImpactContact(world, bodyA, bodyB, colliderA, colliderB);
+   if (!contact.enabled || contact.sensor) return;
+   if (bodyA.type !== 'static') {

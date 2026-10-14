@@ -809,6 +809,35 @@ int main() {
   check(!represented_union_view.set(flight::String("name"), flight::Any(1.0)) &&
             std::holds_alternative<flight::Undefined>(represented_union->name),
         "a dynamic write still refuses a value outside every union arm");
+  // `row[key]` with a key known only at run time, read as the stated member type.
+  unrepresented->height = 7.5;
+  const auto keyed_row = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<TestUnrepresentedMember>>>>(unrepresented);
+  check(flight::row_get<double>(keyed_row, flight::String("height")) == 7.5, "a runtime key reads the live member");
+  unrepresented->height = -1.0;
+  check(flight::row_get<double>(keyed_row, flight::String("height")) == -1.0, "and sees a later write to it");
+  check(flight::row_get<flight::Any>(keyed_row, flight::String("height")) == flight::Any(-1.0),
+        "read as Any, it is the member's erased value");
+  bool wrong_type_refused = false;
+  try {
+    static_cast<void>(flight::row_get<bool>(keyed_row, flight::String("height")));
+  } catch (const flight::BadAnyAccess&) {
+    wrong_type_refused = true;
+  }
+  check(wrong_type_refused, "a member of another type is refused, not coerced");
+  bool absent_refused = false;
+  try {
+    static_cast<void>(flight::row_get<double>(keyed_row, flight::String("depth")));
+  } catch (const flight::BadAnyAccess&) {
+    absent_refused = true;
+  }
+  check(absent_refused, "a key the row does not have reads undefined and is refused, not defaulted");
+  bool keyed_unrepresented_reported = false;
+  try {
+    static_cast<void>(flight::row_get<double>(keyed_row, flight::String("value")));
+  } catch (const flight::UnrepresentedProperty&) {
+    keyed_unrepresented_reported = true;
+  }
+  check(keyed_unrepresented_reported, "a member with no erased reading is reported through the keyed read too");
 
   // The same walk over a REAL generated type, so this is not only exercising hand-written fixtures:
   // AmbientLightOptions is emitted from AmbientLightOptions.ts, whose properties are declared

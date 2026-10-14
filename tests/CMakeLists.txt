@@ -1116,6 +1116,46 @@ target_include_directories(
 target_link_libraries(flight_cpp_generated_physics2d_abi_tests PRIVATE Flight::Cpp Flight::SdkPreview)
 add_test(NAME flight_cpp.generated_physics2d_abi COMMAND flight_cpp_generated_physics2d_abi_tests)
 
+add_executable(flight_cpp_generated_physics2d_bodies_tests generated_physics2d_bodies_test.cpp)
+target_include_directories(
+  flight_cpp_generated_physics2d_bodies_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_physics2d_bodies_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_physics2d_bodies COMMAND flight_cpp_generated_physics2d_bodies_tests)
+
+add_executable(flight_cpp_generated_physics2d_world_tests generated_physics2d_world_test.cpp)
+target_include_directories(
+  flight_cpp_generated_physics2d_world_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_physics2d_world_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_physics2d_world COMMAND flight_cpp_generated_physics2d_world_tests)
+
+add_executable(flight_cpp_generated_physics2d_step_tests generated_physics2d_step_test.cpp)
+target_include_directories(
+  flight_cpp_generated_physics2d_step_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_physics2d_step_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_physics2d_step COMMAND flight_cpp_generated_physics2d_step_tests)
+
+add_executable(flight_cpp_generated_physics2d_queries_tests generated_physics2d_queries_test.cpp)
+target_include_directories(
+  flight_cpp_generated_physics2d_queries_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_physics2d_queries_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_physics2d_queries COMMAND flight_cpp_generated_physics2d_queries_tests)
+
+add_executable(flight_cpp_generated_physics2d_boundaries_tests generated_physics2d_boundaries_test.cpp)
+target_include_directories(
+  flight_cpp_generated_physics2d_boundaries_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_physics2d_boundaries_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_physics2d_boundaries COMMAND flight_cpp_generated_physics2d_boundaries_tests)
+
 add_executable(flight_cpp_generated_lifecycle_tests generated_lifecycle_test.cpp)
 target_include_directories(
   flight_cpp_generated_lifecycle_tests
@@ -1534,6 +1574,11 @@ flight_cpp_package_test_labels(flight_cpp.generated_keyboard keyboard signals)
 flight_cpp_package_test_labels(flight_cpp.generated_skeleton2d geometry skeleton2d)
 flight_cpp_package_test_labels(flight_cpp.generated_spine_binary_reader skeleton2d-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_physics2d_abi collision physics2d-abi)
+flight_cpp_package_test_labels(flight_cpp.generated_physics2d_queries physics2d)
+flight_cpp_package_test_labels(flight_cpp.generated_physics2d_boundaries physics2d)
+flight_cpp_package_test_labels(flight_cpp.generated_physics2d_step physics2d)
+flight_cpp_package_test_labels(flight_cpp.generated_physics2d_world log physics2d)
+flight_cpp_package_test_labels(flight_cpp.generated_physics2d_bodies physics2d scene2d)
 flight_cpp_package_test_labels(flight_cpp.generated_skeleton2d_formats_registry skeleton2d-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_skeleton2d_formats_spine_binary skeleton2d-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_signals_throttle signals)

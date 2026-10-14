@@ -510,51 +510,50 @@ inline void query_physics2_dshape_cast(flight::Ref<flight::types::Physics2DWorld
     return;
   }
   auto scratch = acquire_physics2_dquery_scratch();
-  std::optional<void> finally_return;
   std::exception_ptr finally_exception_4;
   try {
     flight::physics2d::synchronize_physics2_dbroadphase(world);
-    if (!write_swept_shape_bounds(shape, (dx * max_fraction.value()), (dy * max_fraction.value()), scratch->collider_bounds)) {
-    }
-    world->index->query_spatial_region(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>>(scratch->collider_bounds)), scratch->candidate_bodies);
-    scratch->candidate_bodies.sort(compare_numbers);
-    double best_fraction = std::numeric_limits<double>::infinity();
-    for (auto body_index : scratch->candidate_bodies) {
-      auto body = flight::physics2d::find_physics2_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), body_index);
-      if ((!body.has_value() || !passes_body_filter(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body.value())), filter))) {
-        continue;
-      }
-      {
-        double collider_index = 0.0;
-        while ((collider_index < static_cast<double>(body.value()->colliders.size()))) {
-          {
-            auto collider = body.value()->colliders.element(collider_index);
-            if (!passes_collider_filter(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>(collider)), filter)) {
-              (collider_index += 1.0);
-              continue;
-            }
-            if (!flight::collision::sweep_collision_shape2_d(shape, dx, dy, collider->world, 0.0, 0.0, scratch->time_of_impact, max_fraction.value())) {
-              {
+    if (write_swept_shape_bounds(shape, (dx * max_fraction.value()), (dy * max_fraction.value()), scratch->collider_bounds)) {
+      world->index->query_spatial_region(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::SpatialAabb2D>>>>(scratch->collider_bounds)), scratch->candidate_bodies);
+      scratch->candidate_bodies.sort(compare_numbers);
+      double best_fraction = std::numeric_limits<double>::infinity();
+      for (auto body_index : scratch->candidate_bodies) {
+        auto body = flight::physics2d::find_physics2_dbody(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)), body_index);
+        if ((!body.has_value() || !passes_body_filter(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>>(body.value())), filter))) {
+          continue;
+        }
+        {
+          double collider_index = 0.0;
+          while ((collider_index < static_cast<double>(body.value()->colliders.size()))) {
+            {
+              auto collider = body.value()->colliders.element(collider_index);
+              if (!passes_collider_filter(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DCollider>>>>(collider)), filter)) {
                 (collider_index += 1.0);
                 continue;
               }
+              if (!flight::collision::sweep_collision_shape2_d(shape, dx, dy, collider->world, 0.0, 0.0, scratch->time_of_impact, max_fraction.value())) {
+                {
+                  (collider_index += 1.0);
+                  continue;
+                }
+              }
+              if ((scratch->time_of_impact->fraction >= best_fraction)) {
+                (collider_index += 1.0);
+                continue;
+              }
+              (best_fraction = scratch->time_of_impact->fraction);
+              (out->hit = true);
+              (out->body = std::optional<flight::Ref<flight::types::RigidBody2D>>{body.value()});
+              (out->collider = std::optional<flight::Ref<flight::types::Physics2DCollider>>{collider});
+              (out->collider_index = collider_index);
+              (out->fraction = scratch->time_of_impact->fraction);
+              (out->x = scratch->time_of_impact->x);
+              (out->y = scratch->time_of_impact->y);
+              (out->normal_x = scratch->time_of_impact->normal_x);
+              (out->normal_y = scratch->time_of_impact->normal_y);
             }
-            if ((scratch->time_of_impact->fraction >= best_fraction)) {
-              (collider_index += 1.0);
-              continue;
-            }
-            (best_fraction = scratch->time_of_impact->fraction);
-            (out->hit = true);
-            (out->body = std::optional<flight::Ref<flight::types::RigidBody2D>>{body.value()});
-            (out->collider = std::optional<flight::Ref<flight::types::Physics2DCollider>>{collider});
-            (out->collider_index = collider_index);
-            (out->fraction = scratch->time_of_impact->fraction);
-            (out->x = scratch->time_of_impact->x);
-            (out->y = scratch->time_of_impact->y);
-            (out->normal_x = scratch->time_of_impact->normal_x);
-            (out->normal_y = scratch->time_of_impact->normal_y);
+            (collider_index += 1.0);
           }
-          (collider_index += 1.0);
         }
       }
     }
@@ -564,7 +563,6 @@ inline void query_physics2_dshape_cast(flight::Ref<flight::types::Physics2DWorld
   }
   release_physics2_dquery_scratch(scratch);
   if (finally_exception_4) std::rethrow_exception(finally_exception_4);
-  if (finally_return.has_value()) return finally_return.value();
 }
 
 } // namespace flight::physics2d

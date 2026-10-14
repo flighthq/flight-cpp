@@ -1,0 +1,51 @@
+diff --git a/packages/physics2d/src/step.ts b/packages/physics2d/src/step.ts
+--- a/packages/physics2d/src/step.ts
++++ b/packages/physics2d/src/step.ts
+@@ -500,11 +500,12 @@
+       const restitution = contact.restitution;
+       const enabled = contact.enabled;
+       const sensor = contact.sensor;
++      let hookCompleted = false;
+       try {
+         preSolve(world, contact);
+-      } catch (error) {
+-        restorePhysics2DContactHookFields(contact, friction, restitution, enabled, sensor);
+-        throw error;
++        hookCompleted = true;
++      } finally {
++        if (!hookCompleted) restorePhysics2DContactHookFields(contact, friction, restitution, enabled, sensor);
+       }
+       if (!isPhysics2DContactValid(contact)) {
+         restorePhysics2DContactHookFields(contact, friction, restitution, enabled, sensor);
+@@ -671,11 +672,12 @@
+       const restitution = contact.restitution;
+       const enabled = contact.enabled;
+       const sensor = contact.sensor;
++      let hookCompleted = false;
+       try {
+         postSolve(world, contact);
+-      } catch (error) {
+-        restorePhysics2DContactHookFields(contact, friction, restitution, enabled, sensor);
+-        throw error;
++        hookCompleted = true;
++      } finally {
++        if (!hookCompleted) restorePhysics2DContactHookFields(contact, friction, restitution, enabled, sensor);
+       }
+       if (!isPhysics2DContactValid(contact)) {
+         restorePhysics2DContactHookFields(contact, friction, restitution, enabled, sensor);
+@@ -1183,11 +1185,12 @@
+   const restitution = contact.restitution;
+   const enabled = contact.enabled;
+   const sensor = contact.sensor;
++  let hookCompleted = false;
+   try {
+     preSolve(world, contact);
+-  } catch (error) {
+-    restorePhysics2DContactHookFields(contact, friction, restitution, enabled, sensor);
+-    throw error;
++    hookCompleted = true;
++  } finally {
++    if (!hookCompleted) restorePhysics2DContactHookFields(contact, friction, restitution, enabled, sensor);
+   }
+   if (!isPhysics2DContactValid(contact)) {
+     restorePhysics2DContactHookFields(contact, friction, restitution, enabled, sensor);

@@ -1875,6 +1875,28 @@ template <typename Schema>
   return NamedProperties(std::static_pointer_cast<RowOwner>(std::move(owner)));
 }
 
+// `row[key]` for a string key known only at run time, read as the member type the caller states. This
+// is what the emitter writes for `body[key]` where `key` ranges over a closed `as const` list of the
+// row's own member names. The read goes through the row's one owner, as named_properties does, so it
+// sees the object's live members. It is checked rather than permissive: a key the row does not have
+// reads as `undefined`, and that, or a member of another type, throws BadAnyAccess instead of
+// inventing a default.
+template <typename Value, typename Schema>
+[[nodiscard]] Value row_get(const StructuralRef<Schema>& source, const String& key) {
+  const Any value = named_properties(source).get(key);
+  if constexpr (std::same_as<Value, Any>) {
+    return value;
+  } else if constexpr (std::same_as<Value, double>) {
+    return value.as_number();
+  } else if constexpr (std::same_as<Value, bool>) {
+    return value.as_boolean();
+  } else if constexpr (std::same_as<Value, String>) {
+    return value.as_string();
+  } else {
+    static_assert(std::same_as<Value, Any>, "a runtime-keyed row read names a number, boolean, string or Any");
+  }
+}
+
 // Symbol-keyed properties attached to an object, reachable without knowing the object's type.
 //
 // This is the view `Record<symbol, T | undefined>` over an erased object needs. It attaches nothing

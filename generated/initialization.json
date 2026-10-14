@@ -69521,423 +69521,6 @@
       "steps": []
     },
     {
-      "bindings": [
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:90dfa22a1c4b2ff67c0df4a35d34d2a3ff9e2d0d2ecb911a13bd7b3b68edf1a0",
-            "line": 3,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/broadphase.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",89]",
-            "kind": "import",
-            "name": "updatePhysics2DColliderWorldShape",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "updatePhysics2DColliderWorldShape",
-            "kind": "dependency",
-            "module": {
-              "name": "ColliderTransform",
-              "packageName": "@flighthq/physics2d",
-              "source": "packages/physics2d/src/colliderTransform.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 45,
-            "fingerprint": "sha256:3915965148823481bd38293b931c04605060861c659c54e8f0051335b7a6d4c7",
-            "line": 3,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/broadphase.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",124]",
-            "kind": "import",
-            "name": "writePhysics2DColliderBounds",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "writePhysics2DColliderBounds",
-            "kind": "dependency",
-            "module": {
-              "name": "ColliderTransform",
-              "packageName": "@flighthq/physics2d",
-              "source": "packages/physics2d/src/colliderTransform.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:313f8f0cddbac56a4c52736b6c8d422489e438d31a48cb9c828e14b58a25fea5",
-            "line": 8,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/broadphase.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",483]",
-            "kind": "function",
-            "name": "synchronizePhysics2DBroadphase",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:75175035ce32deab1c96b394c9745cb54c1e4c6ce05e70525b5d124a1b29a717",
-            "line": 15,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/broadphase.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",915]",
-            "kind": "function",
-            "name": "synchronizePhysics2DSweptBroadphase",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:207ab563e92523db3dc43bb9344529dbc060502b3d9175cab0be2f1dac373cba",
-            "line": 19,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/broadphase.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",1057]",
-            "kind": "function",
-            "name": "synchronizePhysics2DBroadphaseBounds",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:dc9d35eb4059354b7d4e13d65d3e792c7486dd77b33e55ac96e6de04f9aa4830",
-            "line": 28,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/broadphase.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",1351]",
-            "kind": "function",
-            "name": "synchronizePhysics2DBroadphaseBoundsWithScratch",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:39c3eae81a80e2e53d9e619be0745368f4106886c19d12bd536b72dd89f26080",
-            "line": 102,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/broadphase.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",5064]",
-            "kind": "function",
-            "name": "paddedUpperBound",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "temporal-until-evaluation",
-          "binding": {
-            "column": 7,
-            "fingerprint": "sha256:06549ac2722b11f490ba8544640259fcbe11a5968600582a55459fa7ebd4ae8c",
-            "line": 109,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/broadphase.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",5441]",
-            "kind": "variable",
-            "name": "MAX_SIMULATED_EXTENT",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "evaluation",
-            "step": 0
-          },
-          "kind": "local",
-          "mutation": "immutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:1b45b260599172f38a0baa472d6ce70dfdd69066931b270e6b4eb244d24eaa37",
-            "line": 116,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/broadphase.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",5575]",
-            "kind": "function",
-            "name": "acquirePhysics2DBroadphaseScratch",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:5f1b2865baa52a5f75c9fdcc760fdb1e432cc76a794709fd3f04d11303eaea3e",
-            "line": 120,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/broadphase.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",5738]",
-            "kind": "function",
-            "name": "createPhysics2DBroadphaseScratch",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:d9d8a8c9d9a8e911be581f993e60504d85f953f588442819f492ea3134657166",
-            "line": 127,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/broadphase.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",5939]",
-            "kind": "function",
-            "name": "releasePhysics2DBroadphaseScratch",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "temporal-until-evaluation",
-          "binding": {
-            "column": 7,
-            "fingerprint": "sha256:82e66e54ac15f622c0e9d0cb938038e911c259d489bd68ea0911c400640ffe69",
-            "line": 131,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/broadphase.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",6075]",
-            "kind": "variable",
-            "name": "physics2DBroadphaseScratchPool",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "evaluation",
-            "step": 1
-          },
-          "kind": "local",
-          "mutation": "immutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "Broadphase",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/broadphase.ts"
-          },
-          "specifier": "./colliderTransform.ts",
-          "target": {
-            "name": "ColliderTransform",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/colliderTransform.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "Broadphase",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/broadphase.ts"
-          },
-          "importedNames": [
-            "CollisionBuiltInShape2D"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Collision",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Collision.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "Broadphase",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/broadphase.ts"
-          },
-          "importedNames": [
-            "Physics2DBodyType",
-            "Physics2DCollider",
-            "Physics2DContact",
-            "Physics2DContactEvents",
-            "Physics2DContactHooks",
-            "Physics2DJoint",
-            "Physics2DJointEvents",
-            "Physics2DJointKind",
-            "Physics2DJointSolver",
-            "Physics2DSolverConfig",
-            "Physics2DWorld",
-            "RigidBody2D"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Physics2D",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Physics2D.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "Broadphase",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/broadphase.ts"
-          },
-          "importedNames": [
-            "SpatialAabb2D",
-            "SpatialIndexBackend2D",
-            "SpatialObjectId",
-            "SpatialPair"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Spatial",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Spatial.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "Broadphase",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/broadphase.ts"
-          },
-          "importedNames": [
-            "SpatialIndexingExplanation"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "SpatialIndexing",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/SpatialIndexing.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "Broadphase",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/broadphase.ts"
-      },
-      "steps": [
-        {
-          "action": "initialize",
-          "bindings": [
-            {
-              "column": 7,
-              "fingerprint": "sha256:06549ac2722b11f490ba8544640259fcbe11a5968600582a55459fa7ebd4ae8c",
-              "line": 109,
-              "packageName": "@flighthq/physics2d",
-              "source": "packages/physics2d/src/broadphase.ts",
-              "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",5441]",
-              "kind": "variable",
-              "name": "MAX_SIMULATED_EXTENT",
-              "scope": "module",
-              "space": "value"
-            }
-          ],
-          "completion": "abrupt-stops-module-evaluation",
-          "declaration": "variable",
-          "path": [
-            "declarations",
-            5
-          ]
-        },
-        {
-          "action": "initialize",
-          "bindings": [
-            {
-              "column": 7,
-              "fingerprint": "sha256:82e66e54ac15f622c0e9d0cb938038e911c259d489bd68ea0911c400640ffe69",
-              "line": 131,
-              "packageName": "@flighthq/physics2d",
-              "source": "packages/physics2d/src/broadphase.ts",
-              "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",6075]",
-              "kind": "variable",
-              "name": "physics2DBroadphaseScratchPool",
-              "scope": "module",
-              "space": "value"
-            }
-          ],
-          "completion": "abrupt-stops-module-evaluation",
-          "declaration": "variable",
-          "path": [
-            "declarations",
-            10
-          ]
-        }
-      ]
-    },
-    {
       "bindings": [],
       "dependencies": [
         {
@@ -88094,353 +87677,6 @@
         "name": "CollideContactManifold2D",
         "packageName": "@flighthq/collision",
         "source": "packages/collision/src/collideContactManifold2D.ts"
-      },
-      "steps": []
-    },
-    {
-      "bindings": [
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
-            "line": 1,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",9]",
-            "kind": "import",
-            "name": "allocateEntity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "allocateEntity",
-            "kind": "dependency",
-            "module": {
-              "name": "Entity",
-              "packageName": "@flighthq/entity",
-              "source": "packages/entity/src/entity.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 26,
-            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
-            "line": 1,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",25]",
-            "kind": "import",
-            "name": "finishEntity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "finishEntity",
-            "kind": "dependency",
-            "module": {
-              "name": "Entity",
-              "packageName": "@flighthq/entity",
-              "source": "packages/entity/src/entity.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:6207fdfd85f02ee0055a1df9234988babaf502f7df25713bd89f105824b79cd2",
-            "line": 20,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",666]",
-            "kind": "function",
-            "name": "createPhysics2DColliderWorldShape",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:4b0690efcd1d872ccf0b456d9bdb1f41f709bc910b4e769707738e933ce3cb25",
-            "line": 63,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",2363]",
-            "kind": "function",
-            "name": "initializeCollisionCapsule2D",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:2bb5ae961a82b79da87ac1abbd856f9bcc7fd2bd2832d6cc193dc176791612a1",
-            "line": 80,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",2695]",
-            "kind": "function",
-            "name": "initializeCollisionCircle2D",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:3ba72241879e03ed8df17729e72f3bf019367e2f282be44376f0cdbfc460b263",
-            "line": 93,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",2959]",
-            "kind": "function",
-            "name": "initializeCollisionObb2D",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:8594fdfcb466e20817498338801998e30f3359f7c978a9ce83b5d85f17c940b4",
-            "line": 110,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",3293]",
-            "kind": "function",
-            "name": "initializeCollisionPoint2D",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:0217183e67860fa45bd3427543c9ab615ac06f0cd4c0c519449ade6841021bdb",
-            "line": 121,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",3512]",
-            "kind": "function",
-            "name": "initializeCollisionPolygon2D",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:4d129e11373fcb27260ad9e904d8f73ffe27467f30fefb553f14a252a507ddce",
-            "line": 130,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",3730]",
-            "kind": "function",
-            "name": "initializeCollisionSegment2D",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:90dfa22a1c4b2ff67c0df4a35d34d2a3ff9e2d0d2ecb911a13bd7b3b68edf1a0",
-            "line": 153,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",4664]",
-            "kind": "function",
-            "name": "updatePhysics2DColliderWorldShape",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:3915965148823481bd38293b931c04605060861c659c54e8f0051335b7a6d4c7",
-            "line": 231,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/colliderTransform.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",7833]",
-            "kind": "function",
-            "name": "writePhysics2DColliderBounds",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "ColliderTransform",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/colliderTransform.ts"
-          },
-          "specifier": "@flighthq/entity/contract",
-          "target": {
-            "name": "Entity",
-            "packageName": "@flighthq/entity",
-            "source": "packages/entity/src/entity.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "ColliderTransform",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/colliderTransform.ts"
-          },
-          "importedNames": [
-            "CollisionAabb2D",
-            "CollisionBuiltInShape2D",
-            "CollisionCapsule2D",
-            "CollisionCircle2D",
-            "CollisionObb2D",
-            "CollisionPoint2D",
-            "CollisionPolygon2D",
-            "CollisionSegment2D"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Collision",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Collision.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "ColliderTransform",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/colliderTransform.ts"
-          },
-          "importedNames": [
-            "Entity",
-            "EntityConstruction"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Entity",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Entity.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "ColliderTransform",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/colliderTransform.ts"
-          },
-          "importedNames": [
-            "Physics2DBodyType",
-            "Physics2DCollider",
-            "Physics2DCollisionFilter",
-            "Physics2DMaterial",
-            "RigidBody2D"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Physics2D",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Physics2D.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "ColliderTransform",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/colliderTransform.ts"
-          },
-          "importedNames": [
-            "SpatialAabb2D"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Spatial",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Spatial.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "ColliderTransform",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/colliderTransform.ts"
       },
       "steps": []
     },
@@ -134121,133 +133357,6 @@
         "name": "ExplainPathMorphCreation",
         "packageName": "@flighthq/path",
         "source": "packages/path/src/explainPathMorphCreation.ts"
-      },
-      "steps": []
-    },
-    {
-      "bindings": [
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:c4975304bfb981226150737ba9b756704f2b0d1bfc273777dfb6740cc6389583",
-            "line": 18,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/explainPhysics2DCollision.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/explainPhysics2DCollision.ts\",1278]",
-            "kind": "function",
-            "name": "explainPhysics2DCollision",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:4acbb721ea178e60f69b9570f7960c3357ad7f66260a102a7899e3de74a92c5e",
-            "line": 36,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/explainPhysics2DCollision.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/explainPhysics2DCollision.ts\",2084]",
-            "kind": "function",
-            "name": "isPhysics2DContactSupportedKind",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "ExplainPhysics2DCollision",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/explainPhysics2DCollision.ts"
-          },
-          "importedNames": [
-            "CollisionAabb2D",
-            "CollisionBuiltInShape2D",
-            "CollisionCapsule2D",
-            "CollisionCircle2D",
-            "CollisionObb2D",
-            "CollisionPoint2D",
-            "CollisionPolygon2D",
-            "CollisionSegment2D",
-            "CollisionShapeKind2D"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Collision",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Collision.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "ExplainPhysics2DCollision",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/explainPhysics2DCollision.ts"
-          },
-          "importedNames": [
-            "Physics2DBodyType",
-            "Physics2DCollider",
-            "Physics2DCollisionExplanation",
-            "Physics2DCollisionFilter",
-            "Physics2DContact",
-            "Physics2DContactEvents",
-            "Physics2DContactHooks",
-            "Physics2DJoint",
-            "Physics2DJointEvents",
-            "Physics2DJointKind",
-            "Physics2DJointSolver",
-            "Physics2DMaterial",
-            "Physics2DSolverConfig",
-            "Physics2DWorld",
-            "RigidBody2D"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Physics2D",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Physics2D.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "ExplainPhysics2DCollision",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/explainPhysics2DCollision.ts"
-          },
-          "importedNames": [
-            "SpatialIndexBackend2D"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Spatial",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Spatial.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "ExplainPhysics2DCollision",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/explainPhysics2DCollision.ts"
       },
       "steps": []
     },
@@ -188737,121 +187846,6 @@
           "access": "available-after-instantiation",
           "binding": {
             "column": 17,
-            "fingerprint": "sha256:363aadbca3d711e0fb749e0fca778442ce5a3c3cf905bf1269c5ecef104b1d7f",
-            "line": 4,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/jointCollisionSuppression.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointCollisionSuppression.ts\",172]",
-            "kind": "function",
-            "name": "isPhysics2DPairJointSuppressed",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:a03fb68fbc7689afa8df0214509e6b52eb5c8d936e681dd3cafaf94507d113aa",
-            "line": 14,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/jointCollisionSuppression.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointCollisionSuppression.ts\",831]",
-            "kind": "function",
-            "name": "rebuildPhysics2DJointCollisionSuppressions",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "JointCollisionSuppression",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/jointCollisionSuppression.ts"
-          },
-          "importedNames": [
-            "CollisionBuiltInShape2D"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Collision",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Collision.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "JointCollisionSuppression",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/jointCollisionSuppression.ts"
-          },
-          "importedNames": [
-            "Physics2DContact",
-            "Physics2DContactEvents",
-            "Physics2DContactHooks",
-            "Physics2DJoint",
-            "Physics2DJointEvents",
-            "Physics2DJointKind",
-            "Physics2DJointReaction",
-            "Physics2DJointSolver",
-            "Physics2DSolverConfig",
-            "Physics2DWorld",
-            "RigidBody2D"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Physics2D",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Physics2D.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "JointCollisionSuppression",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/jointCollisionSuppression.ts"
-          },
-          "importedNames": [
-            "SpatialIndexBackend2D"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Spatial",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Spatial.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "JointCollisionSuppression",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/jointCollisionSuppression.ts"
-      },
-      "steps": []
-    },
-    {
-      "bindings": [
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
             "fingerprint": "sha256:a08fb2709a274bbc5c5df6b36e021c5a08c32360c371eaf470722d68ebb9430c",
             "line": 5,
             "packageName": "@flighthq/physics3d",
@@ -190703,303 +189697,6 @@
         "source": "packages/physics3d/src/jointReaction.ts"
       },
       "steps": []
-    },
-    {
-      "bindings": [
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
-            "line": 1,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/jointReactions.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointReactions.ts\",9]",
-            "kind": "import",
-            "name": "allocateEntity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "allocateEntity",
-            "kind": "dependency",
-            "module": {
-              "name": "Entity",
-              "packageName": "@flighthq/entity",
-              "source": "packages/entity/src/entity.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 26,
-            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
-            "line": 1,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/jointReactions.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointReactions.ts\",25]",
-            "kind": "import",
-            "name": "finishEntity",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "finishEntity",
-            "kind": "dependency",
-            "module": {
-              "name": "Entity",
-              "packageName": "@flighthq/entity",
-              "source": "packages/entity/src/entity.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:238fb83ae0d0937e38981ea4f918f784dfcfa7179ba9e2fe7258bae4feff7d0e",
-            "line": 9,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/jointReactions.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointReactions.ts\",224]",
-            "kind": "function",
-            "name": "createPhysics2DJointReaction",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:57cf7f20f282ff25bd577b6ab050e3f3be2bc790f6fb68af507305c030f16294",
-            "line": 16,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/jointReactions.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointReactions.ts\",494]",
-            "kind": "function",
-            "name": "initializePhysics2DJointReaction",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:f5aafae81c1888b2edc2e29e756ecabfedcd0b11eb97a732720b09ca51a8ad85",
-            "line": 37,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/jointReactions.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointReactions.ts\",1810]",
-            "kind": "function",
-            "name": "writePhysics2DJointReaction",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "JointReactions",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/jointReactions.ts"
-          },
-          "specifier": "@flighthq/entity/contract",
-          "target": {
-            "name": "Entity",
-            "packageName": "@flighthq/entity",
-            "source": "packages/entity/src/entity.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "JointReactions",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/jointReactions.ts"
-          },
-          "importedNames": [
-            "CollisionBuiltInShape2D"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Collision",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Collision.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "JointReactions",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/jointReactions.ts"
-          },
-          "importedNames": [
-            "Entity",
-            "EntityConstruction"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Entity",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Entity.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "JointReactions",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/jointReactions.ts"
-          },
-          "importedNames": [
-            "Physics2DContact",
-            "Physics2DContactEvents",
-            "Physics2DContactHooks",
-            "Physics2DJoint",
-            "Physics2DJointEvents",
-            "Physics2DJointKind",
-            "Physics2DJointReaction",
-            "Physics2DJointSolver",
-            "Physics2DSolverConfig",
-            "Physics2DWorld",
-            "RigidBody2D"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Physics2D",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Physics2D.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "JointReactions",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/jointReactions.ts"
-          },
-          "importedNames": [
-            "SpatialIndexBackend2D"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Spatial",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Spatial.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "JointReactions",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/jointReactions.ts"
-      },
-      "steps": []
-    },
-    {
-      "bindings": [
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:f36c0e9319ccdd00d3c85389c0adcc47c1eae68f268a7ce9fd98d2823878de16",
-            "line": 34,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/jointRows.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointRows.ts\",2624]",
-            "kind": "function",
-            "name": "writePhysics2DSoftRowParameters",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "temporal-until-evaluation",
-          "binding": {
-            "column": 7,
-            "fingerprint": "sha256:fcd875d8feb1f6816391d74a447396c4b6442967ed287a8a08c4e580a96ea5a0",
-            "line": 60,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/jointRows.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointRows.ts\",3362]",
-            "kind": "variable",
-            "name": "TAU",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "evaluation",
-            "step": 0
-          },
-          "kind": "local",
-          "mutation": "immutable"
-        }
-      ],
-      "dependencies": [],
-      "module": {
-        "name": "JointRows",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/jointRows.ts"
-      },
-      "steps": [
-        {
-          "action": "initialize",
-          "bindings": [
-            {
-              "column": 7,
-              "fingerprint": "sha256:fcd875d8feb1f6816391d74a447396c4b6442967ed287a8a08c4e580a96ea5a0",
-              "line": 60,
-              "packageName": "@flighthq/physics2d",
-              "source": "packages/physics2d/src/jointRows.ts",
-              "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointRows.ts\",3362]",
-              "kind": "variable",
-              "name": "TAU",
-              "scope": "module",
-              "space": "value"
-            }
-          ],
-          "completion": "abrupt-stops-module-evaluation",
-          "declaration": "variable",
-          "path": [
-            "declarations",
-            1
-          ]
-        }
-      ]
     },
     {
       "bindings": [
@@ -204709,235 +203406,6 @@
     {
       "bindings": [
         {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:2fee76cf7e2bfb963385cdc2140499ea03de49745e2f058fa4b16abaa12a643e",
-            "line": 14,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/massProperties.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/massProperties.ts\",941]",
-            "kind": "function",
-            "name": "computePhysics2DColliderMassData",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:d97d7f8cdcf9fde02bcf230592e5412cc0269a6ff64453882de43668f5f1063a",
-            "line": 93,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/massProperties.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/massProperties.ts\",4723]",
-            "kind": "function",
-            "name": "updateRigidBody2DMassData",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:77afcaf13072bddf9ecf871a3440b7d14c7717a2100c2f07551258a4b9166217",
-            "line": 102,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/massProperties.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/massProperties.ts\",4962]",
-            "kind": "function",
-            "name": "updateRigidBody2DMassDataWithScratch",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:eda6bc8c0b38cc6e620d9acb1e73ad60aceb229d0dfe1110acae2739a96298da",
-            "line": 142,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/massProperties.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/massProperties.ts\",6658]",
-            "kind": "function",
-            "name": "writePolygonMassData",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:ac5bf88fc40296885152b95d26265a47e748033a141914a65b74cd6ed9b8916a",
-            "line": 190,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/massProperties.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/massProperties.ts\",8146]",
-            "kind": "function",
-            "name": "acquirePhysics2DMassScratch",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:06c48562502e797a8d9d0f09e78bb4749544a103687208336f9537b8ba8f35ae",
-            "line": 194,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/massProperties.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/massProperties.ts\",8301]",
-            "kind": "function",
-            "name": "releasePhysics2DMassScratch",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "temporal-until-evaluation",
-          "binding": {
-            "column": 7,
-            "fingerprint": "sha256:cdccb6d47d99d8cfb2efdd2dcfed430e930152966974d74d3db88a1491d48d45",
-            "line": 198,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/massProperties.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/massProperties.ts\",8416]",
-            "kind": "variable",
-            "name": "physics2DMassScratchPool",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "evaluation",
-            "step": 0
-          },
-          "kind": "local",
-          "mutation": "immutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "MassProperties",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/massProperties.ts"
-          },
-          "importedNames": [
-            "CollisionAabb2D",
-            "CollisionBuiltInShape2D",
-            "CollisionCapsule2D",
-            "CollisionCircle2D",
-            "CollisionObb2D",
-            "CollisionPoint2D",
-            "CollisionPolygon2D",
-            "CollisionSegment2D"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Collision",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Collision.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "MassProperties",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/massProperties.ts"
-          },
-          "importedNames": [
-            "Physics2DBodyType",
-            "Physics2DCollider",
-            "Physics2DCollisionFilter",
-            "Physics2DMassData",
-            "Physics2DMaterial",
-            "RigidBody2D"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Physics2D",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Physics2D.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "MassProperties",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/massProperties.ts"
-      },
-      "steps": [
-        {
-          "action": "initialize",
-          "bindings": [
-            {
-              "column": 7,
-              "fingerprint": "sha256:cdccb6d47d99d8cfb2efdd2dcfed430e930152966974d74d3db88a1491d48d45",
-              "line": 198,
-              "packageName": "@flighthq/physics2d",
-              "source": "packages/physics2d/src/massProperties.ts",
-              "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/massProperties.ts\",8416]",
-              "kind": "variable",
-              "name": "physics2DMassScratchPool",
-              "scope": "module",
-              "space": "value"
-            }
-          ],
-          "completion": "abrupt-stops-module-evaluation",
-          "declaration": "variable",
-          "path": [
-            "declarations",
-            6
-          ]
-        }
-      ]
-    },
-    {
-      "bindings": [
-        {
           "access": "dependency-live",
           "binding": {
             "column": 10,
@@ -206331,59 +204799,6 @@
         "name": "Material",
         "packageName": "@flighthq/materials",
         "source": "packages/materials/src/material.ts"
-      },
-      "steps": []
-    },
-    {
-      "bindings": [
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:ce68de565d680aecf12f876b3c7dfc8127a48c07162c2c1a3c0ba8852dffbe4b",
-            "line": 5,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/material.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/material.ts\",367]",
-            "kind": "function",
-            "name": "mixPhysics2DFriction",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:232963b8e186220ef21e564ae9763e98096f8ac879b1a1118564a19519b46e25",
-            "line": 11,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/material.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/material.ts\",692]",
-            "kind": "function",
-            "name": "mixPhysics2DRestitution",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        }
-      ],
-      "dependencies": [],
-      "module": {
-        "name": "Material",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/material.ts"
       },
       "steps": []
     },
@@ -229599,191 +228014,6 @@
           "access": "dependency-live",
           "binding": {
             "column": 10,
-            "fingerprint": "sha256:67a8b2b1d6111f2c0b9edfddc14a81dcf885f7e0fd13fd266d8259c03f3eeb33",
-            "line": 1,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/nodeSync.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/nodeSync.ts\",9]",
-            "kind": "import",
-            "name": "RAD_TO_DEG",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "RAD_TO_DEG",
-            "kind": "dependency",
-            "module": {
-              "name": "Constants",
-              "packageName": "@flighthq/math",
-              "source": "packages/math/src/constants.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
-            "fingerprint": "sha256:00f42af2ba92cef551f03f96048ece16804b17eb62a495cbfcd136e83e373455",
-            "line": 2,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/nodeSync.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/nodeSync.ts\",63]",
-            "kind": "import",
-            "name": "invalidateNodeLocalTransform",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "imported": "invalidateNodeLocalTransform",
-            "kind": "dependency",
-            "module": {
-              "name": "Revision",
-              "packageName": "@flighthq/node",
-              "source": "packages/node/src/revision.ts"
-            }
-          },
-          "kind": "import",
-          "mutation": "read-only"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:99722d4befc3a945e61aa87421cf78c191ba62b7355d93f3131cb504ce36f809",
-            "line": 8,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/nodeSync.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/nodeSync.ts\",507]",
-            "kind": "function",
-            "name": "syncPhysics2DBodyToNode2D",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "NodeSync",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/nodeSync.ts"
-          },
-          "specifier": "@flighthq/math/contract",
-          "target": {
-            "name": "Constants",
-            "packageName": "@flighthq/math",
-            "source": "packages/math/src/constants.ts"
-          }
-        },
-        {
-          "evaluation": "runtime",
-          "importer": {
-            "name": "NodeSync",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/nodeSync.ts"
-          },
-          "specifier": "@flighthq/node/contract",
-          "target": {
-            "name": "Revision",
-            "packageName": "@flighthq/node",
-            "source": "packages/node/src/revision.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "NodeSync",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/nodeSync.ts"
-          },
-          "importedNames": [
-            "CollisionBuiltInShape2D"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Collision",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Collision.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "NodeSync",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/nodeSync.ts"
-          },
-          "importedNames": [
-            "Node",
-            "NodeOf"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Node",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Node.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "NodeSync",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/nodeSync.ts"
-          },
-          "importedNames": [
-            "Node2D",
-            "Node2DTraits"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Node2D",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Node2D.ts"
-          }
-        },
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "NodeSync",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/nodeSync.ts"
-          },
-          "importedNames": [
-            "Physics2DBodyType",
-            "Physics2DCollider",
-            "RigidBody2D"
-          ],
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Physics2D",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Physics2D.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "NodeSync",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/nodeSync.ts"
-      },
-      "steps": []
-    },
-    {
-      "bindings": [
-        {
-          "access": "dependency-live",
-          "binding": {
-            "column": 10,
             "fingerprint": "sha256:00f42af2ba92cef551f03f96048ece16804b17eb62a495cbfcd136e83e373455",
             "line": 1,
             "packageName": "@flighthq/physics3d",
@@ -235092,251 +233322,6 @@
         "source": "packages/types/src/OutlineEffect.ts"
       },
       "steps": []
-    },
-    {
-      "bindings": [
-        {
-          "access": "temporal-until-evaluation",
-          "binding": {
-            "column": 14,
-            "fingerprint": "sha256:2b7239b06ba40fceece5d07a4b0865c0b7edf427b27825498546dcad2d507588",
-            "line": 7,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/ownership.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",484]",
-            "kind": "variable",
-            "name": "physics2DBodyOwners",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "evaluation",
-            "step": 0
-          },
-          "kind": "local",
-          "mutation": "immutable"
-        },
-        {
-          "access": "temporal-until-evaluation",
-          "binding": {
-            "column": 14,
-            "fingerprint": "sha256:a8ca63a05a7ef4dffe393dd9bd0cc68499f7a6caf9cf731285b88d28664cb963",
-            "line": 8,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/ownership.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",563]",
-            "kind": "variable",
-            "name": "physics2DColliderOwners",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "evaluation",
-            "step": 1
-          },
-          "kind": "local",
-          "mutation": "immutable"
-        },
-        {
-          "access": "temporal-until-evaluation",
-          "binding": {
-            "column": 14,
-            "fingerprint": "sha256:81b6ba4b71b3a966e5a72acd96ebb253d654ce57822f60406cbb9b4f7ac802ee",
-            "line": 9,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/ownership.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",649]",
-            "kind": "variable",
-            "name": "physics2DJointOwners",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "evaluation",
-            "step": 2
-          },
-          "kind": "local",
-          "mutation": "immutable"
-        },
-        {
-          "access": "temporal-until-evaluation",
-          "binding": {
-            "column": 14,
-            "fingerprint": "sha256:0d4737071b470d19168e710a5e24a6aa2b12592400d133574e4c4803f8897faa",
-            "line": 15,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/ownership.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",1128]",
-            "kind": "variable",
-            "name": "steppingPhysics2DWorlds",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "evaluation",
-            "step": 3
-          },
-          "kind": "local",
-          "mutation": "immutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:36abe2362b4f4d9c479ef27a918e50336ae927a8ba4360c5cd7d19171536ab34",
-            "line": 17,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/ownership.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",1202]",
-            "kind": "function",
-            "name": "assertPhysics2DBodyNotStepping",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        },
-        {
-          "access": "available-after-instantiation",
-          "binding": {
-            "column": 17,
-            "fingerprint": "sha256:fd5e801abe9454c49959ee7c43b282a13c60a116d312538fd75c016e00f01f37",
-            "line": 22,
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/ownership.ts",
-            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",1418]",
-            "kind": "function",
-            "name": "assertPhysics2DWorldNotStepping",
-            "scope": "module",
-            "space": "value"
-          },
-          "initialization": {
-            "kind": "instantiation",
-            "value": "function"
-          },
-          "kind": "local",
-          "mutation": "mutable"
-        }
-      ],
-      "dependencies": [
-        {
-          "evaluation": "type-only",
-          "importer": {
-            "name": "Ownership",
-            "packageName": "@flighthq/physics2d",
-            "source": "packages/physics2d/src/ownership.ts"
-          },
-          "specifier": "@flighthq/types/contract",
-          "target": {
-            "name": "Physics2D",
-            "packageName": "@flighthq/types",
-            "source": "packages/types/src/Physics2D.ts"
-          }
-        }
-      ],
-      "module": {
-        "name": "Ownership",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/ownership.ts"
-      },
-      "steps": [
-        {
-          "action": "initialize",
-          "bindings": [
-            {
-              "column": 14,
-              "fingerprint": "sha256:2b7239b06ba40fceece5d07a4b0865c0b7edf427b27825498546dcad2d507588",
-              "line": 7,
-              "packageName": "@flighthq/physics2d",
-              "source": "packages/physics2d/src/ownership.ts",
-              "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",484]",
-              "kind": "variable",
-              "name": "physics2DBodyOwners",
-              "scope": "module",
-              "space": "value"
-            }
-          ],
-          "completion": "abrupt-stops-module-evaluation",
-          "declaration": "variable",
-          "path": [
-            "declarations",
-            0
-          ]
-        },
-        {
-          "action": "initialize",
-          "bindings": [
-            {
-              "column": 14,
-              "fingerprint": "sha256:a8ca63a05a7ef4dffe393dd9bd0cc68499f7a6caf9cf731285b88d28664cb963",
-              "line": 8,
-              "packageName": "@flighthq/physics2d",
-              "source": "packages/physics2d/src/ownership.ts",
-              "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",563]",
-              "kind": "variable",
-              "name": "physics2DColliderOwners",
-              "scope": "module",
-              "space": "value"
-            }
-          ],
-          "completion": "abrupt-stops-module-evaluation",
-          "declaration": "variable",
-          "path": [
-            "declarations",
-            1
-          ]
-        },
-        {
-          "action": "initialize",
-          "bindings": [
-            {
-              "column": 14,
-              "fingerprint": "sha256:81b6ba4b71b3a966e5a72acd96ebb253d654ce57822f60406cbb9b4f7ac802ee",
-              "line": 9,
-              "packageName": "@flighthq/physics2d",
-              "source": "packages/physics2d/src/ownership.ts",
-              "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",649]",
-              "kind": "variable",
-              "name": "physics2DJointOwners",
-              "scope": "module",
-              "space": "value"
-            }
-          ],
-          "completion": "abrupt-stops-module-evaluation",
-          "declaration": "variable",
-          "path": [
-            "declarations",
-            2
-          ]
-        },
-        {
-          "action": "initialize",
-          "bindings": [
-            {
-              "column": 14,
-              "fingerprint": "sha256:0d4737071b470d19168e710a5e24a6aa2b12592400d133574e4c4803f8897faa",
-              "line": 15,
-              "packageName": "@flighthq/physics2d",
-              "source": "packages/physics2d/src/ownership.ts",
-              "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",1128]",
-              "kind": "variable",
-              "name": "steppingPhysics2DWorlds",
-              "scope": "module",
-              "space": "value"
-            }
-          ],
-          "completion": "abrupt-stops-module-evaluation",
-          "declaration": "variable",
-          "path": [
-            "declarations",
-            3
-          ]
-        }
-      ]
     },
     {
       "bindings": [
@@ -379714,6 +377699,2021 @@
           "path": [
             "declarations",
             2
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:90dfa22a1c4b2ff67c0df4a35d34d2a3ff9e2d0d2ecb911a13bd7b3b68edf1a0",
+            "line": 3,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/broadphase.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",89]",
+            "kind": "import",
+            "name": "updatePhysics2DColliderWorldShape",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "updatePhysics2DColliderWorldShape",
+            "kind": "dependency",
+            "module": {
+              "name": "ColliderTransform",
+              "packageName": "@flighthq/physics2d",
+              "source": "packages/physics2d/src/colliderTransform.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 45,
+            "fingerprint": "sha256:3915965148823481bd38293b931c04605060861c659c54e8f0051335b7a6d4c7",
+            "line": 3,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/broadphase.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",124]",
+            "kind": "import",
+            "name": "writePhysics2DColliderBounds",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "writePhysics2DColliderBounds",
+            "kind": "dependency",
+            "module": {
+              "name": "ColliderTransform",
+              "packageName": "@flighthq/physics2d",
+              "source": "packages/physics2d/src/colliderTransform.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:313f8f0cddbac56a4c52736b6c8d422489e438d31a48cb9c828e14b58a25fea5",
+            "line": 8,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/broadphase.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",483]",
+            "kind": "function",
+            "name": "synchronizePhysics2DBroadphase",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:75175035ce32deab1c96b394c9745cb54c1e4c6ce05e70525b5d124a1b29a717",
+            "line": 15,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/broadphase.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",915]",
+            "kind": "function",
+            "name": "synchronizePhysics2DSweptBroadphase",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:207ab563e92523db3dc43bb9344529dbc060502b3d9175cab0be2f1dac373cba",
+            "line": 19,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/broadphase.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",1057]",
+            "kind": "function",
+            "name": "synchronizePhysics2DBroadphaseBounds",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:dc9d35eb4059354b7d4e13d65d3e792c7486dd77b33e55ac96e6de04f9aa4830",
+            "line": 28,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/broadphase.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",1351]",
+            "kind": "function",
+            "name": "synchronizePhysics2DBroadphaseBoundsWithScratch",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:39c3eae81a80e2e53d9e619be0745368f4106886c19d12bd536b72dd89f26080",
+            "line": 102,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/broadphase.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",5064]",
+            "kind": "function",
+            "name": "paddedUpperBound",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:06549ac2722b11f490ba8544640259fcbe11a5968600582a55459fa7ebd4ae8c",
+            "line": 109,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/broadphase.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",5441]",
+            "kind": "variable",
+            "name": "MAX_SIMULATED_EXTENT",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:1b45b260599172f38a0baa472d6ce70dfdd69066931b270e6b4eb244d24eaa37",
+            "line": 116,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/broadphase.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",5575]",
+            "kind": "function",
+            "name": "acquirePhysics2DBroadphaseScratch",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:5f1b2865baa52a5f75c9fdcc760fdb1e432cc76a794709fd3f04d11303eaea3e",
+            "line": 120,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/broadphase.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",5738]",
+            "kind": "function",
+            "name": "createPhysics2DBroadphaseScratch",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:d9d8a8c9d9a8e911be581f993e60504d85f953f588442819f492ea3134657166",
+            "line": 127,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/broadphase.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",5939]",
+            "kind": "function",
+            "name": "releasePhysics2DBroadphaseScratch",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:82e66e54ac15f622c0e9d0cb938038e911c259d489bd68ea0911c400640ffe69",
+            "line": 131,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/broadphase.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",6075]",
+            "kind": "variable",
+            "name": "physics2DBroadphaseScratchPool",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "Broadphase",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/broadphase.ts"
+          },
+          "specifier": "./colliderTransform.ts",
+          "target": {
+            "name": "ColliderTransform",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/colliderTransform.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Broadphase",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/broadphase.ts"
+          },
+          "importedNames": [
+            "CollisionBuiltInShape2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Collision",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Collision.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Broadphase",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/broadphase.ts"
+          },
+          "importedNames": [
+            "Physics2DBodyType",
+            "Physics2DCollider",
+            "Physics2DContact",
+            "Physics2DContactEvents",
+            "Physics2DContactHooks",
+            "Physics2DJoint",
+            "Physics2DJointEvents",
+            "Physics2DJointKind",
+            "Physics2DJointSolver",
+            "Physics2DSolverConfig",
+            "Physics2DWorld",
+            "RigidBody2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Physics2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Physics2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Broadphase",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/broadphase.ts"
+          },
+          "importedNames": [
+            "SpatialAabb2D",
+            "SpatialIndexBackend2D",
+            "SpatialObjectId",
+            "SpatialPair"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Spatial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Spatial.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Broadphase",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/broadphase.ts"
+          },
+          "importedNames": [
+            "SpatialIndexingExplanation"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "SpatialIndexing",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/SpatialIndexing.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Broadphase",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/broadphase.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:06549ac2722b11f490ba8544640259fcbe11a5968600582a55459fa7ebd4ae8c",
+              "line": 109,
+              "packageName": "@flighthq/physics2d",
+              "source": "packages/physics2d/src/broadphase.ts",
+              "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",5441]",
+              "kind": "variable",
+              "name": "MAX_SIMULATED_EXTENT",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            5
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:82e66e54ac15f622c0e9d0cb938038e911c259d489bd68ea0911c400640ffe69",
+              "line": 131,
+              "packageName": "@flighthq/physics2d",
+              "source": "packages/physics2d/src/broadphase.ts",
+              "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/broadphase.ts\",6075]",
+              "kind": "variable",
+              "name": "physics2DBroadphaseScratchPool",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            10
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
+            "line": 1,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/colliderTransform.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",9]",
+            "kind": "import",
+            "name": "allocateEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "allocateEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 26,
+            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
+            "line": 1,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/colliderTransform.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",25]",
+            "kind": "import",
+            "name": "finishEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "finishEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:6207fdfd85f02ee0055a1df9234988babaf502f7df25713bd89f105824b79cd2",
+            "line": 20,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/colliderTransform.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",666]",
+            "kind": "function",
+            "name": "createPhysics2DColliderWorldShape",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:4b0690efcd1d872ccf0b456d9bdb1f41f709bc910b4e769707738e933ce3cb25",
+            "line": 63,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/colliderTransform.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",2363]",
+            "kind": "function",
+            "name": "initializeCollisionCapsule2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:2bb5ae961a82b79da87ac1abbd856f9bcc7fd2bd2832d6cc193dc176791612a1",
+            "line": 80,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/colliderTransform.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",2695]",
+            "kind": "function",
+            "name": "initializeCollisionCircle2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:3ba72241879e03ed8df17729e72f3bf019367e2f282be44376f0cdbfc460b263",
+            "line": 93,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/colliderTransform.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",2959]",
+            "kind": "function",
+            "name": "initializeCollisionObb2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:8594fdfcb466e20817498338801998e30f3359f7c978a9ce83b5d85f17c940b4",
+            "line": 110,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/colliderTransform.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",3293]",
+            "kind": "function",
+            "name": "initializeCollisionPoint2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:0217183e67860fa45bd3427543c9ab615ac06f0cd4c0c519449ade6841021bdb",
+            "line": 121,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/colliderTransform.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",3512]",
+            "kind": "function",
+            "name": "initializeCollisionPolygon2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:4d129e11373fcb27260ad9e904d8f73ffe27467f30fefb553f14a252a507ddce",
+            "line": 130,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/colliderTransform.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",3730]",
+            "kind": "function",
+            "name": "initializeCollisionSegment2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:90dfa22a1c4b2ff67c0df4a35d34d2a3ff9e2d0d2ecb911a13bd7b3b68edf1a0",
+            "line": 153,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/colliderTransform.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",4664]",
+            "kind": "function",
+            "name": "updatePhysics2DColliderWorldShape",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:3915965148823481bd38293b931c04605060861c659c54e8f0051335b7a6d4c7",
+            "line": 231,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/colliderTransform.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/colliderTransform.ts\",7833]",
+            "kind": "function",
+            "name": "writePhysics2DColliderBounds",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "ColliderTransform",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/colliderTransform.ts"
+          },
+          "specifier": "@flighthq/entity/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/entity",
+            "source": "packages/entity/src/entity.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ColliderTransform",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/colliderTransform.ts"
+          },
+          "importedNames": [
+            "CollisionAabb2D",
+            "CollisionBuiltInShape2D",
+            "CollisionCapsule2D",
+            "CollisionCircle2D",
+            "CollisionObb2D",
+            "CollisionPoint2D",
+            "CollisionPolygon2D",
+            "CollisionSegment2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Collision",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Collision.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ColliderTransform",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/colliderTransform.ts"
+          },
+          "importedNames": [
+            "Entity",
+            "EntityConstruction"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ColliderTransform",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/colliderTransform.ts"
+          },
+          "importedNames": [
+            "Physics2DBodyType",
+            "Physics2DCollider",
+            "Physics2DCollisionFilter",
+            "Physics2DMaterial",
+            "RigidBody2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Physics2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Physics2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ColliderTransform",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/colliderTransform.ts"
+          },
+          "importedNames": [
+            "SpatialAabb2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Spatial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Spatial.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "ColliderTransform",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/colliderTransform.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:c4975304bfb981226150737ba9b756704f2b0d1bfc273777dfb6740cc6389583",
+            "line": 18,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/explainPhysics2DCollision.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/explainPhysics2DCollision.ts\",1278]",
+            "kind": "function",
+            "name": "explainPhysics2DCollision",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:4acbb721ea178e60f69b9570f7960c3357ad7f66260a102a7899e3de74a92c5e",
+            "line": 36,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/explainPhysics2DCollision.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/explainPhysics2DCollision.ts\",2084]",
+            "kind": "function",
+            "name": "isPhysics2DContactSupportedKind",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ExplainPhysics2DCollision",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/explainPhysics2DCollision.ts"
+          },
+          "importedNames": [
+            "CollisionAabb2D",
+            "CollisionBuiltInShape2D",
+            "CollisionCapsule2D",
+            "CollisionCircle2D",
+            "CollisionObb2D",
+            "CollisionPoint2D",
+            "CollisionPolygon2D",
+            "CollisionSegment2D",
+            "CollisionShapeKind2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Collision",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Collision.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ExplainPhysics2DCollision",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/explainPhysics2DCollision.ts"
+          },
+          "importedNames": [
+            "Physics2DBodyType",
+            "Physics2DCollider",
+            "Physics2DCollisionExplanation",
+            "Physics2DCollisionFilter",
+            "Physics2DContact",
+            "Physics2DContactEvents",
+            "Physics2DContactHooks",
+            "Physics2DJoint",
+            "Physics2DJointEvents",
+            "Physics2DJointKind",
+            "Physics2DJointSolver",
+            "Physics2DMaterial",
+            "Physics2DSolverConfig",
+            "Physics2DWorld",
+            "RigidBody2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Physics2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Physics2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "ExplainPhysics2DCollision",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/explainPhysics2DCollision.ts"
+          },
+          "importedNames": [
+            "SpatialIndexBackend2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Spatial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Spatial.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "ExplainPhysics2DCollision",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/explainPhysics2DCollision.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:363aadbca3d711e0fb749e0fca778442ce5a3c3cf905bf1269c5ecef104b1d7f",
+            "line": 4,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/jointCollisionSuppression.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointCollisionSuppression.ts\",172]",
+            "kind": "function",
+            "name": "isPhysics2DPairJointSuppressed",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:a03fb68fbc7689afa8df0214509e6b52eb5c8d936e681dd3cafaf94507d113aa",
+            "line": 14,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/jointCollisionSuppression.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointCollisionSuppression.ts\",831]",
+            "kind": "function",
+            "name": "rebuildPhysics2DJointCollisionSuppressions",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "JointCollisionSuppression",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/jointCollisionSuppression.ts"
+          },
+          "importedNames": [
+            "CollisionBuiltInShape2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Collision",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Collision.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "JointCollisionSuppression",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/jointCollisionSuppression.ts"
+          },
+          "importedNames": [
+            "Physics2DContact",
+            "Physics2DContactEvents",
+            "Physics2DContactHooks",
+            "Physics2DJoint",
+            "Physics2DJointEvents",
+            "Physics2DJointKind",
+            "Physics2DJointReaction",
+            "Physics2DJointSolver",
+            "Physics2DSolverConfig",
+            "Physics2DWorld",
+            "RigidBody2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Physics2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Physics2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "JointCollisionSuppression",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/jointCollisionSuppression.ts"
+          },
+          "importedNames": [
+            "SpatialIndexBackend2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Spatial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Spatial.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "JointCollisionSuppression",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/jointCollisionSuppression.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:e9ce4fe9ad3c23a3f0889179feb11934787ad8bffe34d8e664c93d3a2d1d5b46",
+            "line": 1,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/jointReactions.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointReactions.ts\",9]",
+            "kind": "import",
+            "name": "allocateEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "allocateEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 26,
+            "fingerprint": "sha256:6d44af5ed0291e503b1e8c6ad198418f00e8a69d87b3a54acc4dc7ca7f7484d1",
+            "line": 1,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/jointReactions.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointReactions.ts\",25]",
+            "kind": "import",
+            "name": "finishEntity",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "finishEntity",
+            "kind": "dependency",
+            "module": {
+              "name": "Entity",
+              "packageName": "@flighthq/entity",
+              "source": "packages/entity/src/entity.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:238fb83ae0d0937e38981ea4f918f784dfcfa7179ba9e2fe7258bae4feff7d0e",
+            "line": 9,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/jointReactions.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointReactions.ts\",224]",
+            "kind": "function",
+            "name": "createPhysics2DJointReaction",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:57cf7f20f282ff25bd577b6ab050e3f3be2bc790f6fb68af507305c030f16294",
+            "line": 16,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/jointReactions.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointReactions.ts\",494]",
+            "kind": "function",
+            "name": "initializePhysics2DJointReaction",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:f5aafae81c1888b2edc2e29e756ecabfedcd0b11eb97a732720b09ca51a8ad85",
+            "line": 37,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/jointReactions.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointReactions.ts\",1810]",
+            "kind": "function",
+            "name": "writePhysics2DJointReaction",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "JointReactions",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/jointReactions.ts"
+          },
+          "specifier": "@flighthq/entity/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/entity",
+            "source": "packages/entity/src/entity.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "JointReactions",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/jointReactions.ts"
+          },
+          "importedNames": [
+            "CollisionBuiltInShape2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Collision",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Collision.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "JointReactions",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/jointReactions.ts"
+          },
+          "importedNames": [
+            "Entity",
+            "EntityConstruction"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Entity",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Entity.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "JointReactions",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/jointReactions.ts"
+          },
+          "importedNames": [
+            "Physics2DContact",
+            "Physics2DContactEvents",
+            "Physics2DContactHooks",
+            "Physics2DJoint",
+            "Physics2DJointEvents",
+            "Physics2DJointKind",
+            "Physics2DJointReaction",
+            "Physics2DJointSolver",
+            "Physics2DSolverConfig",
+            "Physics2DWorld",
+            "RigidBody2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Physics2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Physics2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "JointReactions",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/jointReactions.ts"
+          },
+          "importedNames": [
+            "SpatialIndexBackend2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Spatial",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Spatial.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "JointReactions",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/jointReactions.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:f36c0e9319ccdd00d3c85389c0adcc47c1eae68f268a7ce9fd98d2823878de16",
+            "line": 34,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/jointRows.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointRows.ts\",2624]",
+            "kind": "function",
+            "name": "writePhysics2DSoftRowParameters",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:fcd875d8feb1f6816391d74a447396c4b6442967ed287a8a08c4e580a96ea5a0",
+            "line": 60,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/jointRows.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointRows.ts\",3362]",
+            "kind": "variable",
+            "name": "TAU",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [],
+      "module": {
+        "name": "JointRows",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/jointRows.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:fcd875d8feb1f6816391d74a447396c4b6442967ed287a8a08c4e580a96ea5a0",
+              "line": 60,
+              "packageName": "@flighthq/physics2d",
+              "source": "packages/physics2d/src/jointRows.ts",
+              "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/jointRows.ts\",3362]",
+              "kind": "variable",
+              "name": "TAU",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:2fee76cf7e2bfb963385cdc2140499ea03de49745e2f058fa4b16abaa12a643e",
+            "line": 14,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/massProperties.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/massProperties.ts\",941]",
+            "kind": "function",
+            "name": "computePhysics2DColliderMassData",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:d97d7f8cdcf9fde02bcf230592e5412cc0269a6ff64453882de43668f5f1063a",
+            "line": 93,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/massProperties.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/massProperties.ts\",4723]",
+            "kind": "function",
+            "name": "updateRigidBody2DMassData",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:77afcaf13072bddf9ecf871a3440b7d14c7717a2100c2f07551258a4b9166217",
+            "line": 102,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/massProperties.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/massProperties.ts\",4962]",
+            "kind": "function",
+            "name": "updateRigidBody2DMassDataWithScratch",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:eda6bc8c0b38cc6e620d9acb1e73ad60aceb229d0dfe1110acae2739a96298da",
+            "line": 142,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/massProperties.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/massProperties.ts\",6658]",
+            "kind": "function",
+            "name": "writePolygonMassData",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:ac5bf88fc40296885152b95d26265a47e748033a141914a65b74cd6ed9b8916a",
+            "line": 190,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/massProperties.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/massProperties.ts\",8146]",
+            "kind": "function",
+            "name": "acquirePhysics2DMassScratch",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:06c48562502e797a8d9d0f09e78bb4749544a103687208336f9537b8ba8f35ae",
+            "line": 194,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/massProperties.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/massProperties.ts\",8301]",
+            "kind": "function",
+            "name": "releasePhysics2DMassScratch",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 7,
+            "fingerprint": "sha256:cdccb6d47d99d8cfb2efdd2dcfed430e930152966974d74d3db88a1491d48d45",
+            "line": 198,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/massProperties.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/massProperties.ts\",8416]",
+            "kind": "variable",
+            "name": "physics2DMassScratchPool",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MassProperties",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/massProperties.ts"
+          },
+          "importedNames": [
+            "CollisionAabb2D",
+            "CollisionBuiltInShape2D",
+            "CollisionCapsule2D",
+            "CollisionCircle2D",
+            "CollisionObb2D",
+            "CollisionPoint2D",
+            "CollisionPolygon2D",
+            "CollisionSegment2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Collision",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Collision.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "MassProperties",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/massProperties.ts"
+          },
+          "importedNames": [
+            "Physics2DBodyType",
+            "Physics2DCollider",
+            "Physics2DCollisionFilter",
+            "Physics2DMassData",
+            "Physics2DMaterial",
+            "RigidBody2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Physics2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Physics2D.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "MassProperties",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/massProperties.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 7,
+              "fingerprint": "sha256:cdccb6d47d99d8cfb2efdd2dcfed430e930152966974d74d3db88a1491d48d45",
+              "line": 198,
+              "packageName": "@flighthq/physics2d",
+              "source": "packages/physics2d/src/massProperties.ts",
+              "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/massProperties.ts\",8416]",
+              "kind": "variable",
+              "name": "physics2DMassScratchPool",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "bindings": [
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:ce68de565d680aecf12f876b3c7dfc8127a48c07162c2c1a3c0ba8852dffbe4b",
+            "line": 5,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/material.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/material.ts\",367]",
+            "kind": "function",
+            "name": "mixPhysics2DFriction",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:232963b8e186220ef21e564ae9763e98096f8ac879b1a1118564a19519b46e25",
+            "line": 11,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/material.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/material.ts\",692]",
+            "kind": "function",
+            "name": "mixPhysics2DRestitution",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [],
+      "module": {
+        "name": "Material",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/material.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:67a8b2b1d6111f2c0b9edfddc14a81dcf885f7e0fd13fd266d8259c03f3eeb33",
+            "line": 1,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/nodeSync.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/nodeSync.ts\",9]",
+            "kind": "import",
+            "name": "RAD_TO_DEG",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "RAD_TO_DEG",
+            "kind": "dependency",
+            "module": {
+              "name": "Constants",
+              "packageName": "@flighthq/math",
+              "source": "packages/math/src/constants.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "dependency-live",
+          "binding": {
+            "column": 10,
+            "fingerprint": "sha256:00f42af2ba92cef551f03f96048ece16804b17eb62a495cbfcd136e83e373455",
+            "line": 2,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/nodeSync.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/nodeSync.ts\",63]",
+            "kind": "import",
+            "name": "invalidateNodeLocalTransform",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "imported": "invalidateNodeLocalTransform",
+            "kind": "dependency",
+            "module": {
+              "name": "Revision",
+              "packageName": "@flighthq/node",
+              "source": "packages/node/src/revision.ts"
+            }
+          },
+          "kind": "import",
+          "mutation": "read-only"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:99722d4befc3a945e61aa87421cf78c191ba62b7355d93f3131cb504ce36f809",
+            "line": 8,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/nodeSync.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/nodeSync.ts\",507]",
+            "kind": "function",
+            "name": "syncPhysics2DBodyToNode2D",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "NodeSync",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/nodeSync.ts"
+          },
+          "specifier": "@flighthq/math/contract",
+          "target": {
+            "name": "Constants",
+            "packageName": "@flighthq/math",
+            "source": "packages/math/src/constants.ts"
+          }
+        },
+        {
+          "evaluation": "runtime",
+          "importer": {
+            "name": "NodeSync",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/nodeSync.ts"
+          },
+          "specifier": "@flighthq/node/contract",
+          "target": {
+            "name": "Revision",
+            "packageName": "@flighthq/node",
+            "source": "packages/node/src/revision.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "NodeSync",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/nodeSync.ts"
+          },
+          "importedNames": [
+            "CollisionBuiltInShape2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Collision",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Collision.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "NodeSync",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/nodeSync.ts"
+          },
+          "importedNames": [
+            "Node",
+            "NodeOf"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Node",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Node.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "NodeSync",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/nodeSync.ts"
+          },
+          "importedNames": [
+            "Node2D",
+            "Node2DTraits"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Node2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Node2D.ts"
+          }
+        },
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "NodeSync",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/nodeSync.ts"
+          },
+          "importedNames": [
+            "Physics2DBodyType",
+            "Physics2DCollider",
+            "RigidBody2D"
+          ],
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Physics2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Physics2D.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "NodeSync",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/nodeSync.ts"
+      },
+      "steps": []
+    },
+    {
+      "bindings": [
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:2b7239b06ba40fceece5d07a4b0865c0b7edf427b27825498546dcad2d507588",
+            "line": 7,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/ownership.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",484]",
+            "kind": "variable",
+            "name": "physics2DBodyOwners",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 0
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:a8ca63a05a7ef4dffe393dd9bd0cc68499f7a6caf9cf731285b88d28664cb963",
+            "line": 8,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/ownership.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",563]",
+            "kind": "variable",
+            "name": "physics2DColliderOwners",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 1
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:81b6ba4b71b3a966e5a72acd96ebb253d654ce57822f60406cbb9b4f7ac802ee",
+            "line": 9,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/ownership.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",649]",
+            "kind": "variable",
+            "name": "physics2DJointOwners",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 2
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "temporal-until-evaluation",
+          "binding": {
+            "column": 14,
+            "fingerprint": "sha256:0d4737071b470d19168e710a5e24a6aa2b12592400d133574e4c4803f8897faa",
+            "line": 15,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/ownership.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",1128]",
+            "kind": "variable",
+            "name": "steppingPhysics2DWorlds",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "evaluation",
+            "step": 3
+          },
+          "kind": "local",
+          "mutation": "immutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:36abe2362b4f4d9c479ef27a918e50336ae927a8ba4360c5cd7d19171536ab34",
+            "line": 17,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/ownership.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",1202]",
+            "kind": "function",
+            "name": "assertPhysics2DBodyNotStepping",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        },
+        {
+          "access": "available-after-instantiation",
+          "binding": {
+            "column": 17,
+            "fingerprint": "sha256:fd5e801abe9454c49959ee7c43b282a13c60a116d312538fd75c016e00f01f37",
+            "line": 22,
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/ownership.ts",
+            "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",1418]",
+            "kind": "function",
+            "name": "assertPhysics2DWorldNotStepping",
+            "scope": "module",
+            "space": "value"
+          },
+          "initialization": {
+            "kind": "instantiation",
+            "value": "function"
+          },
+          "kind": "local",
+          "mutation": "mutable"
+        }
+      ],
+      "dependencies": [
+        {
+          "evaluation": "type-only",
+          "importer": {
+            "name": "Ownership",
+            "packageName": "@flighthq/physics2d",
+            "source": "packages/physics2d/src/ownership.ts"
+          },
+          "specifier": "@flighthq/types/contract",
+          "target": {
+            "name": "Physics2D",
+            "packageName": "@flighthq/types",
+            "source": "packages/types/src/Physics2D.ts"
+          }
+        }
+      ],
+      "module": {
+        "name": "Ownership",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/ownership.ts"
+      },
+      "steps": [
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:2b7239b06ba40fceece5d07a4b0865c0b7edf427b27825498546dcad2d507588",
+              "line": 7,
+              "packageName": "@flighthq/physics2d",
+              "source": "packages/physics2d/src/ownership.ts",
+              "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",484]",
+              "kind": "variable",
+              "name": "physics2DBodyOwners",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            0
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:a8ca63a05a7ef4dffe393dd9bd0cc68499f7a6caf9cf731285b88d28664cb963",
+              "line": 8,
+              "packageName": "@flighthq/physics2d",
+              "source": "packages/physics2d/src/ownership.ts",
+              "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",563]",
+              "kind": "variable",
+              "name": "physics2DColliderOwners",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            1
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:81b6ba4b71b3a966e5a72acd96ebb253d654ce57822f60406cbb9b4f7ac802ee",
+              "line": 9,
+              "packageName": "@flighthq/physics2d",
+              "source": "packages/physics2d/src/ownership.ts",
+              "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",649]",
+              "kind": "variable",
+              "name": "physics2DJointOwners",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            2
+          ]
+        },
+        {
+          "action": "initialize",
+          "bindings": [
+            {
+              "column": 14,
+              "fingerprint": "sha256:0d4737071b470d19168e710a5e24a6aa2b12592400d133574e4c4803f8897faa",
+              "line": 15,
+              "packageName": "@flighthq/physics2d",
+              "source": "packages/physics2d/src/ownership.ts",
+              "id": "binding:[\"@flighthq/physics2d\",\"packages/physics2d/src/ownership.ts\",1128]",
+              "kind": "variable",
+              "name": "steppingPhysics2DWorlds",
+              "scope": "module",
+              "space": "value"
+            }
+          ],
+          "completion": "abrupt-stops-module-evaluation",
+          "declaration": "variable",
+          "path": [
+            "declarations",
+            3
           ]
         }
       ]

@@ -415,7 +415,7 @@ inline bool remove_physics2_dbody(flight::Ref<flight::types::Physics2DWorld> wor
   world->index->remove_spatial_object(flight::row_get<flight::RowKey<"index">>(body));
   flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::RigidBody2D>>>> mutable_body = flight::structural_ref_cast<flight::Ref<flight::types::RigidBody2D>>(body);
   flight::row_set<flight::RowKey<"index">>(mutable_body, -1.0);
-  flight::physics2d::physics2_dbody_owners.erase(mutable_body);
+  flight::physics2d::physics2_dbody_owners.erase(flight::structural_ref_cast<flight::Ref<flight::types::RigidBody2D>>(body));
   return true;
 }
 

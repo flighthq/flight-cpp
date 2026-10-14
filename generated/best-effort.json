@@ -17453,617 +17453,6 @@
       "status": "emitted"
     },
     {
-      "consumers": [
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts",
-        "@flighthq/physics2d/packages/physics2d/src/step.ts",
-        "@flighthq/physics2d/packages/physics2d/src/world.ts",
-        "@flighthq/physics2d/packages/physics2d/src/worldQueries.ts"
-      ],
-      "module": {
-        "name": "Broadphase",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/broadphase.ts"
-      },
-      "path": "flight/physics2d/broadphase.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/physics2d/packages/physics2d/src/broadphase.ts",
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts",
-        "@flighthq/physics2d/packages/physics2d/src/step.ts",
-        "@flighthq/physics2d/packages/physics2d/src/world.ts",
-        "@flighthq/physics2d/packages/physics2d/src/worldQueries.ts"
-      ],
-      "module": {
-        "name": "ColliderTransform",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/colliderTransform.ts"
-      },
-      "path": "flight/physics2d/collider_transform.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [],
-      "module": {
-        "name": "Contract",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/contract.ts"
-      },
-      "path": "flight/physics2d/contract.hpp",
-      "refusedDependencies": [
-        "@flighthq/physics2d/packages/physics2d/src/debugGeometry.ts",
-        "@flighthq/physics2d/packages/physics2d/src/enablePhysics2DGuards.ts",
-        "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DJoints.ts",
-        "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DStep.ts",
-        "@flighthq/physics2d/packages/physics2d/src/islands.ts",
-        "@flighthq/physics2d/packages/physics2d/src/jointFactories.ts",
-        "@flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
-        "@flighthq/physics2d/packages/physics2d/src/joints.ts",
-        "@flighthq/physics2d/packages/physics2d/src/registerBuiltInPhysics2DJointSolvers.ts",
-        "@flighthq/physics2d/packages/physics2d/src/solver.ts",
-        "@flighthq/physics2d/packages/physics2d/src/step.ts",
-        "@flighthq/physics2d/packages/physics2d/src/stepValidation.ts",
-        "@flighthq/physics2d/packages/physics2d/src/world.ts",
-        "@flighthq/physics2d/packages/physics2d/src/worldQueries.ts"
-      ],
-      "status": "dependency-incomplete"
-    },
-    {
-      "classification": "source-portability",
-      "consumers": [
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:02458940ef4a168576dc5a68889690afcda836116b311115d0fbda01b922a0fc",
-        "sha256:1957969fda92026a3112f4777bd39c591e77f372ddc06501161880ff44ffabf0",
-        "sha256:39ea80d2a985950c7742c1a44c7dc319db1a0eb61f980a5dbb08285a4b8bc12e",
-        "sha256:3b1c5e04515a990816499cb2cfe294eb6064c375546ebcdbed1c4434267f6dd4",
-        "sha256:4d97155d347f7c46c189fd09515bf564b3d5ece5a8588cfb9eafd9aa693d196c",
-        "sha256:57848843e2143ff5856153482b4a3f21fe61ac1f97c6a4e6b0f710f825c75f81",
-        "sha256:8c4ccf2e216040c0557788f538995654ed5b0d0fd053bba41c702b0f2bafb676",
-        "sha256:98fdb4e04d0d2dec9d4e6f718625adab9fa4d5f99354a9eb0ccd6118d0044c1f",
-        "sha256:b900ef03d94ecc1a33a385ff980940203d76021a6d99bc6f1758b712aefd37b9",
-        "sha256:df8bc54939d0a8ec51cd6c9633a3cce666979bd8dbdd2c972ff343d1365fa956",
-        "sha256:e6096271f5847e3f6225d40d62ed197e4fd8d031f72e01242c5ce21ddc310d0e"
-      ],
-      "module": {
-        "name": "DebugGeometry",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/debugGeometry.ts"
-      },
-      "path": "flight/physics2d/debug_geometry.hpp",
-      "rule": "cpp-structural-assertion-writable-capability-unproven",
-      "status": "refused-placeholder"
-    },
-    {
-      "consumers": [
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts"
-      ],
-      "module": {
-        "name": "EnablePhysics2DGuards",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/enablePhysics2DGuards.ts"
-      },
-      "path": "flight/physics2d/enable_physics2_dguards.hpp",
-      "refusedDependencies": [
-        "@flighthq/log/packages/log/src/log.ts",
-        "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DJoints.ts",
-        "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DStep.ts",
-        "@flighthq/physics2d/packages/physics2d/src/step.ts"
-      ],
-      "status": "dependency-incomplete"
-    },
-    {
-      "consumers": [
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/enablePhysics2DGuards.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts"
-      ],
-      "module": {
-        "name": "ExplainPhysics2DCollision",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/explainPhysics2DCollision.ts"
-      },
-      "path": "flight/physics2d/explain_physics2_dcollision.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/enablePhysics2DGuards.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts"
-      ],
-      "module": {
-        "name": "ExplainPhysics2DJoints",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/explainPhysics2DJoints.ts"
-      },
-      "path": "flight/physics2d/explain_physics2_djoints.hpp",
-      "refusedDependencies": [
-        "@flighthq/physics2d/packages/physics2d/src/world.ts"
-      ],
-      "status": "dependency-incomplete"
-    },
-    {
-      "consumers": [
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/enablePhysics2DGuards.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts"
-      ],
-      "module": {
-        "name": "ExplainPhysics2DStep",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/explainPhysics2DStep.ts"
-      },
-      "path": "flight/physics2d/explain_physics2_dstep.hpp",
-      "refusedDependencies": [
-        "@flighthq/physics2d/packages/physics2d/src/stepValidation.ts"
-      ],
-      "status": "dependency-incomplete"
-    },
-    {
-      "consumers": [],
-      "module": {
-        "name": "Index",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/index.ts"
-      },
-      "path": "flight/physics2d/_internal_index.hpp",
-      "refusedDependencies": [
-        "@flighthq/physics2d/packages/physics2d/src/debugGeometry.ts",
-        "@flighthq/physics2d/packages/physics2d/src/enablePhysics2DGuards.ts",
-        "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DJoints.ts",
-        "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DStep.ts",
-        "@flighthq/physics2d/packages/physics2d/src/islands.ts",
-        "@flighthq/physics2d/packages/physics2d/src/jointFactories.ts",
-        "@flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
-        "@flighthq/physics2d/packages/physics2d/src/joints.ts",
-        "@flighthq/physics2d/packages/physics2d/src/registerBuiltInPhysics2DJointSolvers.ts",
-        "@flighthq/physics2d/packages/physics2d/src/solver.ts",
-        "@flighthq/physics2d/packages/physics2d/src/step.ts",
-        "@flighthq/physics2d/packages/physics2d/src/stepValidation.ts",
-        "@flighthq/physics2d/packages/physics2d/src/world.ts",
-        "@flighthq/physics2d/packages/physics2d/src/worldQueries.ts"
-      ],
-      "status": "dependency-incomplete"
-    },
-    {
-      "consumers": [
-        "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts",
-        "@flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
-        "@flighthq/physics2d/packages/physics2d/src/solver.ts",
-        "@flighthq/physics2d/packages/physics2d/src/step.ts"
-      ],
-      "module": {
-        "name": "Islands",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/islands.ts"
-      },
-      "path": "flight/physics2d/islands.hpp",
-      "refusedDependencies": [
-        "@flighthq/physics2d/packages/physics2d/src/world.ts"
-      ],
-      "status": "dependency-incomplete"
-    },
-    {
-      "consumers": [
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts",
-        "@flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
-        "@flighthq/physics2d/packages/physics2d/src/step.ts",
-        "@flighthq/physics2d/packages/physics2d/src/world.ts"
-      ],
-      "module": {
-        "name": "JointCollisionSuppression",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/jointCollisionSuppression.ts"
-      },
-      "path": "flight/physics2d/joint_collision_suppression.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts"
-      ],
-      "module": {
-        "name": "JointFactories",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/jointFactories.ts"
-      },
-      "path": "flight/physics2d/joint_factories.hpp",
-      "refusedDependencies": [
-        "@flighthq/physics2d/packages/physics2d/src/joints.ts"
-      ],
-      "status": "dependency-incomplete"
-    },
-    {
-      "consumers": [
-        "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts",
-        "@flighthq/physics2d/packages/physics2d/src/step.ts"
-      ],
-      "module": {
-        "name": "JointReactions",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/jointReactions.ts"
-      },
-      "path": "flight/physics2d/joint_reactions.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts",
-        "@flighthq/physics2d/packages/physics2d/src/registerBuiltInPhysics2DJointSolvers.ts",
-        "@flighthq/physics2d/packages/physics2d/src/step.ts"
-      ],
-      "module": {
-        "name": "JointRegistry",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/jointRegistry.ts"
-      },
-      "path": "flight/physics2d/joint_registry.hpp",
-      "refusedDependencies": [
-        "@flighthq/physics2d/packages/physics2d/src/islands.ts",
-        "@flighthq/physics2d/packages/physics2d/src/world.ts"
-      ],
-      "status": "dependency-incomplete"
-    },
-    {
-      "consumers": [
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts",
-        "@flighthq/physics2d/packages/physics2d/src/joints.ts"
-      ],
-      "module": {
-        "name": "JointRows",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/jointRows.ts"
-      },
-      "path": "flight/physics2d/joint_rows.hpp",
-      "status": "emitted"
-    },
-    {
-      "classification": "target-runtime",
-      "consumers": [
-        "@flighthq/physics2d-abi/packages/physics2d-abi/src/physics2DAbiCommand.ts",
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts",
-        "@flighthq/physics2d/packages/physics2d/src/jointFactories.ts",
-        "@flighthq/physics2d/packages/physics2d/src/registerBuiltInPhysics2DJointSolvers.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:0b15fb40def96e1b05a365f932fecafca9986f000a4ab9410c538fc53021dddb",
-        "sha256:14269db57f9aee220440a4230babeea34c82543bee46329f7095559bf3af1f80",
-        "sha256:1ab62a8e36a47314e4959d8b8d4a5dde30ec4b5fa2aa83ea78f8ba3aad96a222",
-        "sha256:1da8348f6f59ed4243262118970060d9f1f471612808019b88607b8f52cd9393",
-        "sha256:20d24f68f05e8a21ef6fae9272420b28ac2f16f4760b52b3bd99eba8491f9b16",
-        "sha256:214ac96be587d0c4bf3cb3796eff3603315d47e3158f4497e97cf285719df57a",
-        "sha256:21529f84d8507a89fcde1ee22cd2436a527cc83e41a91f07e5a461b4a9d7f224",
-        "sha256:2ff6d95a3005d697421580bcb70305cb1490ca9892a842f07d80060b69c1aacc",
-        "sha256:37d2adbde64e16f6a8ec1dd55c0df6b8b5994fb2e2d443ef9ef55cdb874d3aa6",
-        "sha256:41b50f73590523d2a8fbfbca1868d66055858c3d1042744033068d05be5a7560",
-        "sha256:4be5b3006ea911ea04a794bc7131c8d593324b732fec6337f511de9782a15b32",
-        "sha256:4c4c8f1bb1a8c0edaa1695f4141859493c3966184075d98f9bc6488784f065d4",
-        "sha256:4e7f7bba817f4812154960a98586057de1a8a8d6ff17b6658e013ba7c019f271",
-        "sha256:4ed34f3a30289a6b02eeee40acbb12e73c7579342fff8f6a3180bb7792b42363",
-        "sha256:50bac4046eb47ef51360d8285153ea6212fa63faf6cac59d20b424441a249427",
-        "sha256:57fd6ec28795a0ed1655d7e6cd92186e2792c413286bec7b4d89dcf56e5cdd7b",
-        "sha256:59e8415f8df806a9f943a0e270cd9b128e60f02a6452e869e050bab77256a003",
-        "sha256:6f2103005ca5b528155920cb825719995e904a629cba40ac868b0924c4759525",
-        "sha256:7755be3f002567f9f896afb093f70f010bb95763efd159ecca284603ffff7c7e",
-        "sha256:81de67d7020a8e868d99c38e950f674982a525da5b6c7ea84677bce285844d79",
-        "sha256:84678b879709589abc3c1bd3465bf80d2a474ddc0ae6bebaa39952b8357c124b",
-        "sha256:884aeed7b44380fcbd33aebdc101f3ce98bc103c0e2cf1c8b22d53843a999177",
-        "sha256:89a1c5d3f67c41116ad13449cb2ba40a9f7c7ec98f022bda08432210730e52fa",
-        "sha256:9523e0afa4f50437c616379cb5119746caea8577b61450792ebc13498a01e407",
-        "sha256:9bfa9cb24132659d946a15298cf944c671b255300ede7bd78f4ed32bb1da2189",
-        "sha256:9daf6c94364355104eda7435834892982da4cc6ba032043b3140c0738e233749",
-        "sha256:a2bea8145f40ad1f147d93c85a8540c616d67432f8cb5972a69ea15bd1cf5588",
-        "sha256:af501ed18f8fc11659542451df9bc6937cb3f4667e04e349564ffab485622258",
-        "sha256:b3c87093b86723a5fa4d1f0ebce1f4eb0cb609f93205a7b0982e043f6dcdb3cd",
-        "sha256:b88263a924077507a8e665b6c54fd9be7bf6a7cceaec2582f9b5b8516e184cff",
-        "sha256:c8c07fcf42297bc78ede82a13656b11cbb51da2eadfdceff34a2f55cfe2eeb0c",
-        "sha256:d7d86e7f834e5d5c104dda97c81530e81d7588d82529163109569326c2e1c5de",
-        "sha256:e1e743e238332bf11030f59baab173f0cc627e7346fd628ae3715390f83c639a",
-        "sha256:ea9b4723c2acb82d24860b96dc8e15f0d162add691e1730d75ce2e10b9149494",
-        "sha256:f03af9a3be829df22e0333ac7d0dc1b9b1b625b41fb27a92747aa0045a37f157",
-        "sha256:f3b02501ad345a694f2dabda77dcc62a8d3990e499d24b8043671e3704351fa8"
-      ],
-      "module": {
-        "name": "Joints",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/joints.ts"
-      },
-      "path": "flight/physics2d/joints.hpp",
-      "rule": "cpp-reference-assertion-without-heritage",
-      "status": "refused-placeholder"
-    },
-    {
-      "consumers": [
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts",
-        "@flighthq/physics2d/packages/physics2d/src/world.ts"
-      ],
-      "module": {
-        "name": "MassProperties",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/massProperties.ts"
-      },
-      "path": "flight/physics2d/mass_properties.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts",
-        "@flighthq/physics2d/packages/physics2d/src/step.ts"
-      ],
-      "module": {
-        "name": "Material",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/material.ts"
-      },
-      "path": "flight/physics2d/material.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts"
-      ],
-      "module": {
-        "name": "NodeSync",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/nodeSync.ts"
-      },
-      "path": "flight/physics2d/node_sync.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts",
-        "@flighthq/physics2d/packages/physics2d/src/islands.ts",
-        "@flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
-        "@flighthq/physics2d/packages/physics2d/src/step.ts",
-        "@flighthq/physics2d/packages/physics2d/src/world.ts"
-      ],
-      "module": {
-        "name": "Ownership",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/ownership.ts"
-      },
-      "path": "flight/physics2d/ownership.hpp",
-      "status": "emitted"
-    },
-    {
-      "consumers": [
-        "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts"
-      ],
-      "module": {
-        "name": "RegisterBuiltInPhysics2DJointSolvers",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/registerBuiltInPhysics2DJointSolvers.ts"
-      },
-      "path": "flight/physics2d/register_built_in_physics2_djoint_solvers.hpp",
-      "refusedDependencies": [
-        "@flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
-        "@flighthq/physics2d/packages/physics2d/src/joints.ts"
-      ],
-      "status": "dependency-incomplete"
-    },
-    {
-      "consumers": [
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts",
-        "@flighthq/physics2d/packages/physics2d/src/joints.ts",
-        "@flighthq/physics2d/packages/physics2d/src/step.ts"
-      ],
-      "module": {
-        "name": "Solver",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/solver.ts"
-      },
-      "path": "flight/physics2d/solver.hpp",
-      "refusedDependencies": [
-        "@flighthq/physics2d/packages/physics2d/src/islands.ts",
-        "@flighthq/physics2d/packages/physics2d/src/world.ts"
-      ],
-      "status": "dependency-incomplete"
-    },
-    {
-      "classification": "source-portability",
-      "consumers": [
-        "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/enablePhysics2DGuards.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:0375673d3a8979f8d6c61b9baaa1b17fb494f2754c29e53ff5386b726f70829f",
-        "sha256:0a414320d096daae86b2080aa32956584dc33817540f1b9ae75e83f7818c26f4",
-        "sha256:115b743a31735a91a5bdbf51ca54d4cc35ee3f84182b2616109340b5e933b307",
-        "sha256:1470275d30390159faf3f21c84a0d2639488169a4077367cf76dda8bd2d4f67e",
-        "sha256:1564666f4cf7cf9b8e6b1dc3258bb279769b4c8fb196d3788e4a320b959b1e91",
-        "sha256:159395023c1b0cfaeff05d4b84c6a3be70f6f8214bd5573621399d0505bdec8f",
-        "sha256:161261d70dfd4ecebda2a64e7b9d485b88c7c00db3e5432185cc9c5691e14710",
-        "sha256:175f2fd64670306f8c6a3c11397616d1bdd2ba7c052779b148c58a8c729cf185",
-        "sha256:19ded3cdeadd96146357e9ae2c79dcf597c90db3148d7a80132681488d89d12d",
-        "sha256:1e52aeb2a8fad8b84c6b71bf3216c767f4507450c14f7cc6293b1d9c3c863eb5",
-        "sha256:2719775de6955e9b928734883396ecabde65163ef0db5fe9b493ccb8b90f06c7",
-        "sha256:28e05cccc9f88754d3fc6eaf7f396b6310af4e66cd8824fe22c71357a5fc6a35",
-        "sha256:354f125b5fdf5742add80964ee0207cbb8f8a7271130515d45758d32f15a1164",
-        "sha256:3a340fb23b9515626f6d9f74cc2ff5656e3794af40a7798c0a4e10ca983f20fe",
-        "sha256:3fd69c376f66989a6b7a20726d37d1d3fe588ec63936b5b1ecfd5f86a424eb16",
-        "sha256:3fd7b62ca4def233f3a17ab6faabc9be3003a4d1047db5a21de411d8eeeed061",
-        "sha256:46af0480b921b5c21b47b46fa49f7e9cea4af35cac4595c85b09597f760b59c1",
-        "sha256:482c13725344217580198d719597598cfb6aeadf8cb27a5b2af7ffd5c7bf00f3",
-        "sha256:4bed1737fc7871885a4944f25753d815c861630fc62c536e5e94555deef27707",
-        "sha256:4c84e7c525c9d8d3f101a362510463b86ba03ab986e55eedd451129154ca18e1",
-        "sha256:52808c7ac4ef0d7c4eaeba007ea230f9b4b770b74289abe1c48f4bdb86f7cc7b",
-        "sha256:5923705f42ece067bf00141580adfd3b39e8b1263b5d06d6e7d9c9bb155f6121",
-        "sha256:604054fd9a703d369dafc3c1232d13dc9b62a7b15a6ea0fefe489e4956cccec5",
-        "sha256:61b6cc40cbae5d25879a32f9ce676db76da408a6fab3eba0cf927aa1dcb5b503",
-        "sha256:76334ee16cdededd208c8bb4f8326fd7cafec11f02f83416259959a12ddeca7b",
-        "sha256:81111d87be1bff4ed89d22e6136b25b09a720a528800215b939d1c0ad4b60d1d",
-        "sha256:82c92002b65c573fc59c5ed5e146be293c162f7f2224e3ffb72bd199d358f0a7",
-        "sha256:88e65f2be4f90479286910473f3c706dd36bb8170d268a0c24e6e4e317c6292f",
-        "sha256:9981c70b6b1ef03e784c224a4c162d7ac228073039c0e0e881055e99f786b5cb",
-        "sha256:9b0ebcca6a5259dab539e1569a6d63eec3a04f92dff9f6ca8a9c7c8820676205",
-        "sha256:a56f35dec95985064d05ee763fe96572fc7ed15429c3bb857641cf8eec961bc3",
-        "sha256:a77a6be1380427dc1b0778e4b466e0c098be6fc2cbb4f1f5e74242e250421e6e",
-        "sha256:b2259db399bac9b7a954d409482311403d6fa14d575ce74bce2ace602f70b985",
-        "sha256:b3332b014bfa45ad1f4f8d6eda66ec014fdc993628ea013e79e71ce439395b6d",
-        "sha256:b863558dbd5ec8d228b10d6368174585049f053f8c502731565fb79ca0a42474",
-        "sha256:c1c8ddcdfd1b730d80b8b6516e2c7776183d6e4e44dbed208117e1879f981a85",
-        "sha256:c486e0575644f17e68fc78876ae45eb6f47dd366120172503b905a9d1525a56b",
-        "sha256:c5794d5be8d6984a23c9e17ff1dffccb1ceeb37f67d205089ee4c2a62a9a0fb8",
-        "sha256:c8b5744eaa6dff94f7bd5688af49bcbe97fcab54f64549731553d58b38376831",
-        "sha256:cac21d62511be0beb5674405dd6c155e2083957ec9bcf76b83924c2e8db3b03d",
-        "sha256:ced404f65399edd03e8f9314dccc7fd4388f78d7aaabe7e7eb994b5348edd42d",
-        "sha256:d099796f017e13ff70b4403b905aa647e945e8bde99f513ad8150eb527002a47",
-        "sha256:d0b848d343f999f9ae741b58979a0d26c955db29e416ff1246d7f60193f3b4ee",
-        "sha256:dee5a8f6bbe805714832ed4469dfbe2fd5f49542310fb0bbee0079252c9405e5",
-        "sha256:e73bd6163f9dd8f7e16174392249e2dcb300f63d01d79ea161cdb71ef5e61770",
-        "sha256:ec83512c7c15c4b4cd9075758093534b2753c8608d599d63de70ba1315e9763f",
-        "sha256:ef84ee5604b2180e80613c044b695ee3a7e66d996177729817d9f837a3ba5e2d",
-        "sha256:f033b15bccdb6292f69f0193fcc3b4a2dbba4c8df0c6dee54076f5e5b8c99917",
-        "sha256:f13fb27a55b0e0bd145e175f97ff479ed3a076b5c40d479cfc86223956288e0d",
-        "sha256:fed465cd2eece8f7e86a3a31db2d4371dde9235a57bcd3d8f1427ad00ef84934"
-      ],
-      "module": {
-        "name": "Step",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/step.ts"
-      },
-      "path": "flight/physics2d/step.hpp",
-      "rule": "cpp-contextual-union-inequivalent",
-      "status": "refused-placeholder"
-    },
-    {
-      "classification": "compiler-restriction",
-      "consumers": [
-        "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DStep.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts",
-        "@flighthq/physics2d/packages/physics2d/src/step.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:04b8dd1b4479e27559b8bf9229958027791608eba3df98b821d9e367f35c4fb4",
-        "sha256:4b7c80ee42110aed6485cf8d97f68fd8a078dfb18e01ef9bcfc5bd6e5f33e886",
-        "sha256:5782d11ee4b72a60a5659f320ca0579b9ddd8ef6737190ca063792407b069f7d",
-        "sha256:7737884427941aae4ed24a4ee26de6d5761026e23a8105a342daf1236b239d5d",
-        "sha256:82cd87aa2f540fea5367bd161e4cd9b403f84e43d36b7b43bdb5a6baa4b69de1",
-        "sha256:830b2834c8637d9673bb795a0ea9a91ebf54cb0de809b4fcb046b24bf6a0046a",
-        "sha256:889ef5c74650ea3a864cfeeb46a96b4fadc93daf4c46e0cd40ee302c53cfa8fd",
-        "sha256:9a6bc39b3c3aa955ec7f66d6ad02054273213c61bd9f5b30c70a4b7e716b6d78",
-        "sha256:a6dcf8decea97971cf82145cfd7c2f49fbf1402fc1304dd1526ec7725ea87cf1",
-        "sha256:c02eda8bbd0ac440939c6db65534331a502930e863577d433b989f5bbf8c1966",
-        "sha256:cf15ce73bed85e34298af1921d5dbe515a4d6bc41576830b5e2f3aa43f67646d",
-        "sha256:e46ba529fdc4fce180ba98917ef04a0259c6aac43cfbfcc4bcfcd40724e68b8c",
-        "sha256:f079266a97c50d54cda6745a2281a143d9f8dfe4fa88727241ed2d927a314dbe",
-        "sha256:fa07758eff52fec58f43ddb4352b3e5dffd11566457fb9c84eeade32b97e4c50"
-      ],
-      "module": {
-        "name": "StepValidation",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/stepValidation.ts"
-      },
-      "path": "flight/physics2d/step_validation.hpp",
-      "status": "refused-placeholder"
-    },
-    {
-      "classification": "compiler-restriction",
-      "consumers": [
-        "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/debugGeometry.ts",
-        "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DJoints.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts",
-        "@flighthq/physics2d/packages/physics2d/src/islands.ts",
-        "@flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
-        "@flighthq/physics2d/packages/physics2d/src/joints.ts",
-        "@flighthq/physics2d/packages/physics2d/src/solver.ts",
-        "@flighthq/physics2d/packages/physics2d/src/step.ts",
-        "@flighthq/physics2d/packages/physics2d/src/worldQueries.ts"
-      ],
-      "declarationFingerprints": [
-        "sha256:1c20c4afe06e844c01031a6de63deaf1d8915afe2bc43b135da27a246013e01f",
-        "sha256:1f5a1061e550ea94e355e16924b032fb09625328b7dc25494215acb030a558c2",
-        "sha256:24c9ad1129099f3f46909515a624f5292b73d93d93efbf9d5a946979305b3050",
-        "sha256:3a571d2b3bc9abc0a190dc80c6e36b9912c962367b7b488d9c2c1aa771983daa",
-        "sha256:3ba0ef476d4b4fc5e6a5a05fd31071be3e821b88ef970f7821a4892dca506337",
-        "sha256:419a489481e469433736501ccedcd97ac23dd593edde42dcabe599bbd34503d7",
-        "sha256:44eec07d62f7421b965ac1305341f3c02db3e193b413a9a5eb4f1e577e073777",
-        "sha256:49bfa99dff27f9ee0c4f5d158db405c4831cd294294230830749672eed4027a5",
-        "sha256:4d6c6678be28d2f7d80d4100b37f701a0c3c9ac63dc84d5c934eb3a5682f7be9",
-        "sha256:4e57461b00a5a2532b1fed553e365958fad0d486004333e99f74601c4faf39ff",
-        "sha256:4fe277db59c434826246a0d4939dc786f27faeddd695b347fd4e6475c96b6ea6",
-        "sha256:53c0e1aa7fe0c77d426545c76ba88992972352c03938f18f9db59e89a55a5654",
-        "sha256:5f38b0b344c96169d1ae51eb01bba00792f56884450fe5aff7655deceea33976",
-        "sha256:608f1e485ca17ea2c5966a8ffe1c5b1dac3d5fda9dda329738eb4b1e7be6bf93",
-        "sha256:60e26718fc1c9ed4ee78beb1331f7c2f4b8beb26d203cbf7c1e5dc6b4ba52d0c",
-        "sha256:60e3e5e749ab9686f5aaeb8d309949a1d01a7d562068d1a9db003c8e29f8eea5",
-        "sha256:8ca5abb674feb88a088da7bdef139afd1d8734223e50fa15ddd7a530a3d94a45",
-        "sha256:8ce0289370a9fd424d8dfbb4cd3a0f7ebdbd83183ed796bdfe274bc671412f13",
-        "sha256:8d228814ad6a608570fc58c305efe159b2591f8f71700289f36c92504127c0dd",
-        "sha256:942ee024a7a575dd196a86d78b0cfada2bbc0dd397bdb4a6b244d0fef9bc1da0",
-        "sha256:a2f93f59bbfeda46ec5e9e78700c3dbd7e4908852a74a7134f1d89db92770480",
-        "sha256:a3ca266240e6ccb658daf5ef906ba7ca8f6e3fdb0663bc0c25a8c5057135ece5",
-        "sha256:a47ccf72d535af90449614f1ef2f9c3de34adeb18d244ed94149a71adf9d32f4",
-        "sha256:ac62618fdfe0f13ce93801cc8fbdc57a557ac22e4ce9fec52a8464d10ecc0c8b",
-        "sha256:b98d6f50aa8f365a926e3d119576ed8c7fda335b40692e21abd91d29da3a4c2a",
-        "sha256:bc73d0ec225aab8d2f83ace92ed21c4bd10485d1a8e8d6c2063f7accba4532a0",
-        "sha256:c506a182f7cb4ba35c3240e0289255d5a5ecfc567af40065ef9df9a192da377d",
-        "sha256:ca3c70b67377bc54fc0822bec48845841d3a5b4b2cc65ac376d56bb0739c306f",
-        "sha256:cb1af498b7c8096cf99b4694f9484cf8f71a30dd75335af337757dc5ebf12107",
-        "sha256:d5e68f663b07ded22e9ce37ae2740a1d7dc595be7b7f7558bf95e60ccfe89c46",
-        "sha256:dc6275487c682b839dda830656b9760cc0f0727caad3d9fd72a0377675afc02c",
-        "sha256:f9d301826f759fbfb36908b0046e7327836c2ea0516fd17b1f1e660e954a1da1"
-      ],
-      "module": {
-        "name": "World",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/world.ts"
-      },
-      "path": "flight/physics2d/world.hpp",
-      "rule": "cpp-contextual-union-inequivalent",
-      "status": "refused-placeholder"
-    },
-    {
-      "consumers": [
-        "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
-        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
-        "@flighthq/physics2d/packages/physics2d/src/index.ts"
-      ],
-      "module": {
-        "name": "WorldQueries",
-        "packageName": "@flighthq/physics2d",
-        "source": "packages/physics2d/src/worldQueries.ts"
-      },
-      "path": "flight/physics2d/world_queries.hpp",
-      "refusedDependencies": [
-        "@flighthq/collision/packages/collision/src/sweepCollisionShape2D.ts",
-        "@flighthq/physics2d/packages/physics2d/src/world.ts"
-      ],
-      "status": "dependency-incomplete"
-    },
-    {
       "consumers": [],
       "module": {
         "name": "Contract",
@@ -64832,6 +64221,571 @@
       },
       "path": "flight/xml/xml_query.hpp",
       "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
+        "@flighthq/physics2d/packages/physics2d/src/step.ts",
+        "@flighthq/physics2d/packages/physics2d/src/world.ts",
+        "@flighthq/physics2d/packages/physics2d/src/worldQueries.ts"
+      ],
+      "module": {
+        "name": "Broadphase",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/broadphase.ts"
+      },
+      "path": "flight/physics2d/broadphase.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d/packages/physics2d/src/broadphase.ts",
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
+        "@flighthq/physics2d/packages/physics2d/src/step.ts",
+        "@flighthq/physics2d/packages/physics2d/src/world.ts",
+        "@flighthq/physics2d/packages/physics2d/src/worldQueries.ts"
+      ],
+      "module": {
+        "name": "ColliderTransform",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/colliderTransform.ts"
+      },
+      "path": "flight/physics2d/collider_transform.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [],
+      "module": {
+        "name": "Contract",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/contract.ts"
+      },
+      "path": "flight/physics2d/contract.hpp",
+      "refusedDependencies": [
+        "@flighthq/physics2d/packages/physics2d/src/debugGeometry.ts",
+        "@flighthq/physics2d/packages/physics2d/src/enablePhysics2DGuards.ts",
+        "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DJoints.ts",
+        "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DStep.ts",
+        "@flighthq/physics2d/packages/physics2d/src/islands.ts",
+        "@flighthq/physics2d/packages/physics2d/src/jointFactories.ts",
+        "@flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
+        "@flighthq/physics2d/packages/physics2d/src/joints.ts",
+        "@flighthq/physics2d/packages/physics2d/src/registerBuiltInPhysics2DJointSolvers.ts",
+        "@flighthq/physics2d/packages/physics2d/src/solver.ts",
+        "@flighthq/physics2d/packages/physics2d/src/step.ts",
+        "@flighthq/physics2d/packages/physics2d/src/stepValidation.ts",
+        "@flighthq/physics2d/packages/physics2d/src/world.ts",
+        "@flighthq/physics2d/packages/physics2d/src/worldQueries.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "source-portability",
+      "consumers": [
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:02458940ef4a168576dc5a68889690afcda836116b311115d0fbda01b922a0fc",
+        "sha256:1957969fda92026a3112f4777bd39c591e77f372ddc06501161880ff44ffabf0",
+        "sha256:39ea80d2a985950c7742c1a44c7dc319db1a0eb61f980a5dbb08285a4b8bc12e",
+        "sha256:3b1c5e04515a990816499cb2cfe294eb6064c375546ebcdbed1c4434267f6dd4",
+        "sha256:4d97155d347f7c46c189fd09515bf564b3d5ece5a8588cfb9eafd9aa693d196c",
+        "sha256:57848843e2143ff5856153482b4a3f21fe61ac1f97c6a4e6b0f710f825c75f81",
+        "sha256:8c4ccf2e216040c0557788f538995654ed5b0d0fd053bba41c702b0f2bafb676",
+        "sha256:98fdb4e04d0d2dec9d4e6f718625adab9fa4d5f99354a9eb0ccd6118d0044c1f",
+        "sha256:b900ef03d94ecc1a33a385ff980940203d76021a6d99bc6f1758b712aefd37b9",
+        "sha256:df8bc54939d0a8ec51cd6c9633a3cce666979bd8dbdd2c972ff343d1365fa956",
+        "sha256:e6096271f5847e3f6225d40d62ed197e4fd8d031f72e01242c5ce21ddc310d0e"
+      ],
+      "module": {
+        "name": "DebugGeometry",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/debugGeometry.ts"
+      },
+      "path": "flight/physics2d/debug_geometry.hpp",
+      "rule": "cpp-structural-assertion-writable-capability-unproven",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts"
+      ],
+      "module": {
+        "name": "EnablePhysics2DGuards",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/enablePhysics2DGuards.ts"
+      },
+      "path": "flight/physics2d/enable_physics2_dguards.hpp",
+      "refusedDependencies": [
+        "@flighthq/log/packages/log/src/log.ts",
+        "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DJoints.ts",
+        "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DStep.ts",
+        "@flighthq/physics2d/packages/physics2d/src/step.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/enablePhysics2DGuards.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts"
+      ],
+      "module": {
+        "name": "ExplainPhysics2DCollision",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/explainPhysics2DCollision.ts"
+      },
+      "path": "flight/physics2d/explain_physics2_dcollision.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/enablePhysics2DGuards.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts"
+      ],
+      "module": {
+        "name": "ExplainPhysics2DJoints",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/explainPhysics2DJoints.ts"
+      },
+      "path": "flight/physics2d/explain_physics2_djoints.hpp",
+      "refusedDependencies": [
+        "@flighthq/physics2d/packages/physics2d/src/world.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/enablePhysics2DGuards.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts"
+      ],
+      "module": {
+        "name": "ExplainPhysics2DStep",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/explainPhysics2DStep.ts"
+      },
+      "path": "flight/physics2d/explain_physics2_dstep.hpp",
+      "refusedDependencies": [
+        "@flighthq/physics2d/packages/physics2d/src/stepValidation.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [],
+      "module": {
+        "name": "Index",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/index.ts"
+      },
+      "path": "flight/physics2d/_internal_index.hpp",
+      "refusedDependencies": [
+        "@flighthq/physics2d/packages/physics2d/src/debugGeometry.ts",
+        "@flighthq/physics2d/packages/physics2d/src/enablePhysics2DGuards.ts",
+        "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DJoints.ts",
+        "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DStep.ts",
+        "@flighthq/physics2d/packages/physics2d/src/islands.ts",
+        "@flighthq/physics2d/packages/physics2d/src/jointFactories.ts",
+        "@flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
+        "@flighthq/physics2d/packages/physics2d/src/joints.ts",
+        "@flighthq/physics2d/packages/physics2d/src/registerBuiltInPhysics2DJointSolvers.ts",
+        "@flighthq/physics2d/packages/physics2d/src/solver.ts",
+        "@flighthq/physics2d/packages/physics2d/src/step.ts",
+        "@flighthq/physics2d/packages/physics2d/src/stepValidation.ts",
+        "@flighthq/physics2d/packages/physics2d/src/world.ts",
+        "@flighthq/physics2d/packages/physics2d/src/worldQueries.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
+        "@flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
+        "@flighthq/physics2d/packages/physics2d/src/solver.ts",
+        "@flighthq/physics2d/packages/physics2d/src/step.ts"
+      ],
+      "module": {
+        "name": "Islands",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/islands.ts"
+      },
+      "path": "flight/physics2d/islands.hpp",
+      "refusedDependencies": [
+        "@flighthq/physics2d/packages/physics2d/src/world.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
+        "@flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
+        "@flighthq/physics2d/packages/physics2d/src/step.ts",
+        "@flighthq/physics2d/packages/physics2d/src/world.ts"
+      ],
+      "module": {
+        "name": "JointCollisionSuppression",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/jointCollisionSuppression.ts"
+      },
+      "path": "flight/physics2d/joint_collision_suppression.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts"
+      ],
+      "module": {
+        "name": "JointFactories",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/jointFactories.ts"
+      },
+      "path": "flight/physics2d/joint_factories.hpp",
+      "refusedDependencies": [
+        "@flighthq/physics2d/packages/physics2d/src/joints.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
+        "@flighthq/physics2d/packages/physics2d/src/step.ts"
+      ],
+      "module": {
+        "name": "JointReactions",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/jointReactions.ts"
+      },
+      "path": "flight/physics2d/joint_reactions.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
+        "@flighthq/physics2d/packages/physics2d/src/registerBuiltInPhysics2DJointSolvers.ts",
+        "@flighthq/physics2d/packages/physics2d/src/step.ts"
+      ],
+      "module": {
+        "name": "JointRegistry",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/jointRegistry.ts"
+      },
+      "path": "flight/physics2d/joint_registry.hpp",
+      "refusedDependencies": [
+        "@flighthq/physics2d/packages/physics2d/src/islands.ts",
+        "@flighthq/physics2d/packages/physics2d/src/world.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
+        "@flighthq/physics2d/packages/physics2d/src/joints.ts"
+      ],
+      "module": {
+        "name": "JointRows",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/jointRows.ts"
+      },
+      "path": "flight/physics2d/joint_rows.hpp",
+      "status": "emitted"
+    },
+    {
+      "classification": "target-runtime",
+      "consumers": [
+        "@flighthq/physics2d-abi/packages/physics2d-abi/src/physics2DAbiCommand.ts",
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
+        "@flighthq/physics2d/packages/physics2d/src/jointFactories.ts",
+        "@flighthq/physics2d/packages/physics2d/src/registerBuiltInPhysics2DJointSolvers.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:0b15fb40def96e1b05a365f932fecafca9986f000a4ab9410c538fc53021dddb",
+        "sha256:14269db57f9aee220440a4230babeea34c82543bee46329f7095559bf3af1f80",
+        "sha256:1ab62a8e36a47314e4959d8b8d4a5dde30ec4b5fa2aa83ea78f8ba3aad96a222",
+        "sha256:1da8348f6f59ed4243262118970060d9f1f471612808019b88607b8f52cd9393",
+        "sha256:20d24f68f05e8a21ef6fae9272420b28ac2f16f4760b52b3bd99eba8491f9b16",
+        "sha256:214ac96be587d0c4bf3cb3796eff3603315d47e3158f4497e97cf285719df57a",
+        "sha256:21529f84d8507a89fcde1ee22cd2436a527cc83e41a91f07e5a461b4a9d7f224",
+        "sha256:2ff6d95a3005d697421580bcb70305cb1490ca9892a842f07d80060b69c1aacc",
+        "sha256:37d2adbde64e16f6a8ec1dd55c0df6b8b5994fb2e2d443ef9ef55cdb874d3aa6",
+        "sha256:41b50f73590523d2a8fbfbca1868d66055858c3d1042744033068d05be5a7560",
+        "sha256:4be5b3006ea911ea04a794bc7131c8d593324b732fec6337f511de9782a15b32",
+        "sha256:4c4c8f1bb1a8c0edaa1695f4141859493c3966184075d98f9bc6488784f065d4",
+        "sha256:4e7f7bba817f4812154960a98586057de1a8a8d6ff17b6658e013ba7c019f271",
+        "sha256:4ed34f3a30289a6b02eeee40acbb12e73c7579342fff8f6a3180bb7792b42363",
+        "sha256:50bac4046eb47ef51360d8285153ea6212fa63faf6cac59d20b424441a249427",
+        "sha256:57fd6ec28795a0ed1655d7e6cd92186e2792c413286bec7b4d89dcf56e5cdd7b",
+        "sha256:59e8415f8df806a9f943a0e270cd9b128e60f02a6452e869e050bab77256a003",
+        "sha256:6f2103005ca5b528155920cb825719995e904a629cba40ac868b0924c4759525",
+        "sha256:7755be3f002567f9f896afb093f70f010bb95763efd159ecca284603ffff7c7e",
+        "sha256:81de67d7020a8e868d99c38e950f674982a525da5b6c7ea84677bce285844d79",
+        "sha256:84678b879709589abc3c1bd3465bf80d2a474ddc0ae6bebaa39952b8357c124b",
+        "sha256:884aeed7b44380fcbd33aebdc101f3ce98bc103c0e2cf1c8b22d53843a999177",
+        "sha256:89a1c5d3f67c41116ad13449cb2ba40a9f7c7ec98f022bda08432210730e52fa",
+        "sha256:9523e0afa4f50437c616379cb5119746caea8577b61450792ebc13498a01e407",
+        "sha256:9bfa9cb24132659d946a15298cf944c671b255300ede7bd78f4ed32bb1da2189",
+        "sha256:9daf6c94364355104eda7435834892982da4cc6ba032043b3140c0738e233749",
+        "sha256:a2bea8145f40ad1f147d93c85a8540c616d67432f8cb5972a69ea15bd1cf5588",
+        "sha256:af501ed18f8fc11659542451df9bc6937cb3f4667e04e349564ffab485622258",
+        "sha256:b3c87093b86723a5fa4d1f0ebce1f4eb0cb609f93205a7b0982e043f6dcdb3cd",
+        "sha256:b88263a924077507a8e665b6c54fd9be7bf6a7cceaec2582f9b5b8516e184cff",
+        "sha256:c8c07fcf42297bc78ede82a13656b11cbb51da2eadfdceff34a2f55cfe2eeb0c",
+        "sha256:d7d86e7f834e5d5c104dda97c81530e81d7588d82529163109569326c2e1c5de",
+        "sha256:e1e743e238332bf11030f59baab173f0cc627e7346fd628ae3715390f83c639a",
+        "sha256:ea9b4723c2acb82d24860b96dc8e15f0d162add691e1730d75ce2e10b9149494",
+        "sha256:f03af9a3be829df22e0333ac7d0dc1b9b1b625b41fb27a92747aa0045a37f157",
+        "sha256:f3b02501ad345a694f2dabda77dcc62a8d3990e499d24b8043671e3704351fa8"
+      ],
+      "module": {
+        "name": "Joints",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/joints.ts"
+      },
+      "path": "flight/physics2d/joints.hpp",
+      "rule": "cpp-reference-assertion-without-heritage",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
+        "@flighthq/physics2d/packages/physics2d/src/world.ts"
+      ],
+      "module": {
+        "name": "MassProperties",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/massProperties.ts"
+      },
+      "path": "flight/physics2d/mass_properties.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
+        "@flighthq/physics2d/packages/physics2d/src/step.ts"
+      ],
+      "module": {
+        "name": "Material",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/material.ts"
+      },
+      "path": "flight/physics2d/material.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts"
+      ],
+      "module": {
+        "name": "NodeSync",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/nodeSync.ts"
+      },
+      "path": "flight/physics2d/node_sync.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
+        "@flighthq/physics2d/packages/physics2d/src/islands.ts",
+        "@flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
+        "@flighthq/physics2d/packages/physics2d/src/step.ts",
+        "@flighthq/physics2d/packages/physics2d/src/world.ts"
+      ],
+      "module": {
+        "name": "Ownership",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/ownership.ts"
+      },
+      "path": "flight/physics2d/ownership.hpp",
+      "status": "emitted"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts"
+      ],
+      "module": {
+        "name": "RegisterBuiltInPhysics2DJointSolvers",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/registerBuiltInPhysics2DJointSolvers.ts"
+      },
+      "path": "flight/physics2d/register_built_in_physics2_djoint_solvers.hpp",
+      "refusedDependencies": [
+        "@flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
+        "@flighthq/physics2d/packages/physics2d/src/joints.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
+        "@flighthq/physics2d/packages/physics2d/src/joints.ts",
+        "@flighthq/physics2d/packages/physics2d/src/step.ts"
+      ],
+      "module": {
+        "name": "Solver",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/solver.ts"
+      },
+      "path": "flight/physics2d/solver.hpp",
+      "refusedDependencies": [
+        "@flighthq/physics2d/packages/physics2d/src/islands.ts",
+        "@flighthq/physics2d/packages/physics2d/src/world.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/enablePhysics2DGuards.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts"
+      ],
+      "module": {
+        "name": "Step",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/step.ts"
+      },
+      "path": "flight/physics2d/step.hpp",
+      "refusedDependencies": [
+        "@flighthq/collision/packages/collision/src/sweepCollisionShape2D.ts",
+        "@flighthq/physics2d/packages/physics2d/src/islands.ts",
+        "@flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
+        "@flighthq/physics2d/packages/physics2d/src/solver.ts",
+        "@flighthq/physics2d/packages/physics2d/src/stepValidation.ts",
+        "@flighthq/physics2d/packages/physics2d/src/world.ts"
+      ],
+      "status": "dependency-incomplete"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DStep.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
+        "@flighthq/physics2d/packages/physics2d/src/step.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:04b8dd1b4479e27559b8bf9229958027791608eba3df98b821d9e367f35c4fb4",
+        "sha256:4b7c80ee42110aed6485cf8d97f68fd8a078dfb18e01ef9bcfc5bd6e5f33e886",
+        "sha256:5782d11ee4b72a60a5659f320ca0579b9ddd8ef6737190ca063792407b069f7d",
+        "sha256:7737884427941aae4ed24a4ee26de6d5761026e23a8105a342daf1236b239d5d",
+        "sha256:82cd87aa2f540fea5367bd161e4cd9b403f84e43d36b7b43bdb5a6baa4b69de1",
+        "sha256:830b2834c8637d9673bb795a0ea9a91ebf54cb0de809b4fcb046b24bf6a0046a",
+        "sha256:889ef5c74650ea3a864cfeeb46a96b4fadc93daf4c46e0cd40ee302c53cfa8fd",
+        "sha256:9a6bc39b3c3aa955ec7f66d6ad02054273213c61bd9f5b30c70a4b7e716b6d78",
+        "sha256:a6dcf8decea97971cf82145cfd7c2f49fbf1402fc1304dd1526ec7725ea87cf1",
+        "sha256:c02eda8bbd0ac440939c6db65534331a502930e863577d433b989f5bbf8c1966",
+        "sha256:cf15ce73bed85e34298af1921d5dbe515a4d6bc41576830b5e2f3aa43f67646d",
+        "sha256:e46ba529fdc4fce180ba98917ef04a0259c6aac43cfbfcc4bcfcd40724e68b8c",
+        "sha256:f079266a97c50d54cda6745a2281a143d9f8dfe4fa88727241ed2d927a314dbe",
+        "sha256:fa07758eff52fec58f43ddb4352b3e5dffd11566457fb9c84eeade32b97e4c50"
+      ],
+      "module": {
+        "name": "StepValidation",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/stepValidation.ts"
+      },
+      "path": "flight/physics2d/step_validation.hpp",
+      "status": "refused-placeholder"
+    },
+    {
+      "classification": "compiler-restriction",
+      "consumers": [
+        "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/debugGeometry.ts",
+        "@flighthq/physics2d/packages/physics2d/src/explainPhysics2DJoints.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts",
+        "@flighthq/physics2d/packages/physics2d/src/islands.ts",
+        "@flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
+        "@flighthq/physics2d/packages/physics2d/src/joints.ts",
+        "@flighthq/physics2d/packages/physics2d/src/solver.ts",
+        "@flighthq/physics2d/packages/physics2d/src/step.ts",
+        "@flighthq/physics2d/packages/physics2d/src/worldQueries.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:1c20c4afe06e844c01031a6de63deaf1d8915afe2bc43b135da27a246013e01f",
+        "sha256:1f5a1061e550ea94e355e16924b032fb09625328b7dc25494215acb030a558c2",
+        "sha256:24c9ad1129099f3f46909515a624f5292b73d93d93efbf9d5a946979305b3050",
+        "sha256:3a571d2b3bc9abc0a190dc80c6e36b9912c962367b7b488d9c2c1aa771983daa",
+        "sha256:3ba0ef476d4b4fc5e6a5a05fd31071be3e821b88ef970f7821a4892dca506337",
+        "sha256:419a489481e469433736501ccedcd97ac23dd593edde42dcabe599bbd34503d7",
+        "sha256:44eec07d62f7421b965ac1305341f3c02db3e193b413a9a5eb4f1e577e073777",
+        "sha256:49bfa99dff27f9ee0c4f5d158db405c4831cd294294230830749672eed4027a5",
+        "sha256:4d6c6678be28d2f7d80d4100b37f701a0c3c9ac63dc84d5c934eb3a5682f7be9",
+        "sha256:4e57461b00a5a2532b1fed553e365958fad0d486004333e99f74601c4faf39ff",
+        "sha256:4fe277db59c434826246a0d4939dc786f27faeddd695b347fd4e6475c96b6ea6",
+        "sha256:53c0e1aa7fe0c77d426545c76ba88992972352c03938f18f9db59e89a55a5654",
+        "sha256:5f38b0b344c96169d1ae51eb01bba00792f56884450fe5aff7655deceea33976",
+        "sha256:608f1e485ca17ea2c5966a8ffe1c5b1dac3d5fda9dda329738eb4b1e7be6bf93",
+        "sha256:60e26718fc1c9ed4ee78beb1331f7c2f4b8beb26d203cbf7c1e5dc6b4ba52d0c",
+        "sha256:60e3e5e749ab9686f5aaeb8d309949a1d01a7d562068d1a9db003c8e29f8eea5",
+        "sha256:646bfb593ac6386d3ff7a0215308d74b12a2ff11a1badc8e226ef4e8eb238480",
+        "sha256:8ca5abb674feb88a088da7bdef139afd1d8734223e50fa15ddd7a530a3d94a45",
+        "sha256:8ce0289370a9fd424d8dfbb4cd3a0f7ebdbd83183ed796bdfe274bc671412f13",
+        "sha256:942ee024a7a575dd196a86d78b0cfada2bbc0dd397bdb4a6b244d0fef9bc1da0",
+        "sha256:a2f93f59bbfeda46ec5e9e78700c3dbd7e4908852a74a7134f1d89db92770480",
+        "sha256:a3ca266240e6ccb658daf5ef906ba7ca8f6e3fdb0663bc0c25a8c5057135ece5",
+        "sha256:a47ccf72d535af90449614f1ef2f9c3de34adeb18d244ed94149a71adf9d32f4",
+        "sha256:ac62618fdfe0f13ce93801cc8fbdc57a557ac22e4ce9fec52a8464d10ecc0c8b",
+        "sha256:b98d6f50aa8f365a926e3d119576ed8c7fda335b40692e21abd91d29da3a4c2a",
+        "sha256:bc73d0ec225aab8d2f83ace92ed21c4bd10485d1a8e8d6c2063f7accba4532a0",
+        "sha256:c506a182f7cb4ba35c3240e0289255d5a5ecfc567af40065ef9df9a192da377d",
+        "sha256:ca3c70b67377bc54fc0822bec48845841d3a5b4b2cc65ac376d56bb0739c306f",
+        "sha256:cb1af498b7c8096cf99b4694f9484cf8f71a30dd75335af337757dc5ebf12107",
+        "sha256:d5e68f663b07ded22e9ce37ae2740a1d7dc595be7b7f7558bf95e60ccfe89c46",
+        "sha256:dc6275487c682b839dda830656b9760cc0f0727caad3d9fd72a0377675afc02c",
+        "sha256:f9d301826f759fbfb36908b0046e7327836c2ea0516fd17b1f1e660e954a1da1"
+      ],
+      "module": {
+        "name": "World",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/world.ts"
+      },
+      "path": "flight/physics2d/world.hpp",
+      "rule": "cpp-contextual-union-inequivalent",
+      "status": "refused-placeholder"
+    },
+    {
+      "consumers": [
+        "@flighthq/physics2d-abi/packages/physics2d-abi/src/referencePhysics2DAbi.ts",
+        "@flighthq/physics2d/packages/physics2d/src/contract.ts",
+        "@flighthq/physics2d/packages/physics2d/src/index.ts"
+      ],
+      "module": {
+        "name": "WorldQueries",
+        "packageName": "@flighthq/physics2d",
+        "source": "packages/physics2d/src/worldQueries.ts"
+      },
+      "path": "flight/physics2d/world_queries.hpp",
+      "refusedDependencies": [
+        "@flighthq/collision/packages/collision/src/sweepCollisionShape2D.ts",
+        "@flighthq/physics2d/packages/physics2d/src/world.ts"
+      ],
+      "status": "dependency-incomplete"
     }
   ],
   "schema": "flight-compiler-best-effort/1"

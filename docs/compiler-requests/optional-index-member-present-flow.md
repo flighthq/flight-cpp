@@ -164,3 +164,36 @@ header records that its own body cannot compile.
 
 Carrying workaround: `@flighthq/useragent` supplies the refused function and replaces this one body in
 `overrides/include/flight/useragent/`, keeping every other emitted line verbatim.
+
+## Disjunctive absence guard: `a === undefined || b === undefined`
+
+A guard that returns when *either* of two indexed locals is absent proves both present afterwards. The
+emitter keeps the presence of neither. Each optional is then passed as itself where a present value is
+required: no refusal, and a header that does not compile.
+
+Measured at flight-compiler `2b687ea` with this repository's 44 compiler patches applied. Both modules emit.
+The call site differs only in the guard:
+
+```ts
+export interface Item { weight: number; }
+export interface Holder { items: Item[]; }
+function total(a: Readonly<Item>, b: Readonly<Item>): number { return a.weight + b.weight; }
+
+export function pairWeight(holder: Holder, i: number, j: number): number {
+  const a = holder.items[i];
+  const b = holder.items[j];
+  if (a === undefined || b === undefined) return -1;
+  return total(a, b);
+}
+```
+
+```cpp
+// disjunctive guard: the optionals themselves
+return total(… StructuralRef<RowWritable<RowOf<Ref<Item>>>>(a) …, … (b) …);
+// two guards, `if (a === undefined) return -1; if (b === undefined) return -1;`: the payloads
+return total_c(… StructuralRef<RowWritable<RowOf<Ref<ItemC>>>>(a.value()) …, … (b.value()) …);
+```
+
+`@flighthq/physics2d` `step.ts` `resolveEarliestPhysics2DImpact` (line 1084) has this guard over two colliders
+read by index. It is carried by `physics2d-earliest-impact-split-presence-guards`, which writes the two guards
+separately, in the same order, with the same early return.

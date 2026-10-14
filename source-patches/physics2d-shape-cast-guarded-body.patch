@@ -1,0 +1,67 @@
+diff --git a/packages/physics2d/src/worldQueries.ts b/packages/physics2d/src/worldQueries.ts
+--- a/packages/physics2d/src/worldQueries.ts
++++ b/packages/physics2d/src/worldQueries.ts
+@@ -271,35 +271,36 @@
+   const scratch = acquirePhysics2DQueryScratch();
+   try {
+     synchronizePhysics2DBroadphase(world);
+-    if (!writeSweptShapeBounds(shape, dx * maxFraction, dy * maxFraction, scratch.colliderBounds)) return;
+-    world.index.querySpatialRegion(scratch.colliderBounds, scratch.candidateBodies);
+-    scratch.candidateBodies.sort(compareNumbers);
++    if (writeSweptShapeBounds(shape, dx * maxFraction, dy * maxFraction, scratch.colliderBounds)) {
++      world.index.querySpatialRegion(scratch.colliderBounds, scratch.candidateBodies);
++      scratch.candidateBodies.sort(compareNumbers);
+ 
+-    let bestFraction = Number.POSITIVE_INFINITY;
+-    for (const bodyIndex of scratch.candidateBodies) {
+-      const body = findPhysics2DBody(world, bodyIndex);
+-      if (body === null || !passesBodyFilter(body, filter)) continue;
+-      for (let colliderIndex = 0; colliderIndex < body.colliders.length; colliderIndex += 1) {
+-        const collider = body.colliders[colliderIndex];
+-        if (!passesColliderFilter(collider, filter)) continue;
+-        // The collider is stationary for the duration of the cast: this is a question about the world as
+-        // it stands, not a prediction of where it will be after the next step.
+-        if (!sweepCollisionShape2D(shape, dx, dy, collider.world, 0, 0, scratch.timeOfImpact, maxFraction)) {
+-          continue;
++      let bestFraction = Number.POSITIVE_INFINITY;
++      for (const bodyIndex of scratch.candidateBodies) {
++        const body = findPhysics2DBody(world, bodyIndex);
++        if (body === null || !passesBodyFilter(body, filter)) continue;
++        for (let colliderIndex = 0; colliderIndex < body.colliders.length; colliderIndex += 1) {
++          const collider = body.colliders[colliderIndex];
++          if (!passesColliderFilter(collider, filter)) continue;
++          // The collider is stationary for the duration of the cast: this is a question about the world as
++          // it stands, not a prediction of where it will be after the next step.
++          if (!sweepCollisionShape2D(shape, dx, dy, collider.world, 0, 0, scratch.timeOfImpact, maxFraction)) {
++            continue;
++          }
++          // Strictly less, so the first candidate at a given fraction keeps the slot and the sorted order
++          // above is what decides a tie.
++          if (scratch.timeOfImpact.fraction >= bestFraction) continue;
++          bestFraction = scratch.timeOfImpact.fraction;
++          out.hit = true;
++          out.body = body;
++          out.collider = collider;
++          out.colliderIndex = colliderIndex;
++          out.fraction = scratch.timeOfImpact.fraction;
++          out.x = scratch.timeOfImpact.x;
++          out.y = scratch.timeOfImpact.y;
++          out.normalX = scratch.timeOfImpact.normalX;
++          out.normalY = scratch.timeOfImpact.normalY;
+         }
+-        // Strictly less, so the first candidate at a given fraction keeps the slot and the sorted order
+-        // above is what decides a tie.
+-        if (scratch.timeOfImpact.fraction >= bestFraction) continue;
+-        bestFraction = scratch.timeOfImpact.fraction;
+-        out.hit = true;
+-        out.body = body;
+-        out.collider = collider;
+-        out.colliderIndex = colliderIndex;
+-        out.fraction = scratch.timeOfImpact.fraction;
+-        out.x = scratch.timeOfImpact.x;
+-        out.y = scratch.timeOfImpact.y;
+-        out.normalX = scratch.timeOfImpact.normalX;
+-        out.normalY = scratch.timeOfImpact.normalY;
+       }
+     }
+   } finally {

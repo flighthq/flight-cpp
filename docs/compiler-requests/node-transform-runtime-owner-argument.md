@@ -94,3 +94,12 @@ Unblocking needs a runtime decision:
   node constructor.
 
 Either is a runtime-ABI and construction change across node and scene2d/scene3d, not a node-local repair.
+
+## Further site: physics2d nodeSync (measured 2026-10-14)
+
+`@flighthq/physics2d` `nodeSync.ts` `syncPhysics2DBodyToNode2D` writes `x`, `y` and `rotation`, then calls
+`invalidateNodeLocalTransform(node)`. Node's helper cannot recover a native owner from the merged `Node2D` row
+(a static assertion), so the physics2d-node-transform-invalidation override projects to the `Node<Node2DTraits>`
+base row first. That projection compiles, but recovering the owner throws `std::bad_cast` at run time on the
+only `Node2D` the SDK constructs, scene2d's `createDisplayObject`, which has no native `Node` owner. The override
+is therefore recorded as `partial`, and its four upstream cases are written but not run.

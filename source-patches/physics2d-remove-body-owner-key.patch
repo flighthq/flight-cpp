@@ -1,0 +1,13 @@
+diff --git a/packages/physics2d/src/world.ts b/packages/physics2d/src/world.ts
+index 16debb93..4a531893 100644
+--- a/packages/physics2d/src/world.ts
++++ b/packages/physics2d/src/world.ts
+@@ -468,7 +468,7 @@ export function removePhysics2DBody(world: Physics2DWorld, body: Readonly<RigidB
+   world.index.removeSpatialObject(body.index);
+   const mutableBody = body as RigidBody2D;
+   mutableBody.index = -1;
+-  physics2DBodyOwners.delete(mutableBody);
++  physics2DBodyOwners.delete(body as RigidBody2D);
+   return true;
+ }
+ 
