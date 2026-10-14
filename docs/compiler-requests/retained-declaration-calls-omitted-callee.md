@@ -202,3 +202,18 @@ Three of the package's seven headers fail, so `@flighthq/media` is partial with 
 `videoChannel` fixture -- 29 upstream cases -- is unreachable at this pin. Measured on the emission alone,
 with no override and no patch. The omitted function is `getElement`, whose own refusal reason is separate;
 this request is only about its retained callers.
+
+## Ninth measured site: `@flighthq/log` -- the omission is in a dependency, and it makes logging throw
+
+`packages/log/src/log.ts` refuses its module-local `_mergeSpanFields` while retaining `logInfo`, `logError`,
+and `logDebug`, whose emitted bodies pass their resolved data through it. `merge_span_fields` is defined
+nowhere in the emitted tree. Unlike the earlier sites, this header compiles and fails at runtime:
+
+```text
+libc++abi: terminating due to uncaught exception of type flight::Error:
+  flight::log::merge_span_fields was not generated for this profile
+```
+
+Every retained logger therefore throws instead of logging, and packages whose behavior is observed through
+the log become unobservable. This site strengthens the propagation requirement: compile-time failures are
+loud, while a retained call to an omitted callee that still compiles remains silent until execution.
