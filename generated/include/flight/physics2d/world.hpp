@@ -5,10 +5,8 @@
 // omission is marked NOT GENERATED below with the reason. This file is NOT complete.
 //   missing: function createPhysics2DCollider -- source line 177
 //   missing: function invalidatePhysics2DCollider -- source line 399
-//   missing: function hydratePhysics2DWorld -- source line 281
 #include <cmath>
 #include <cstdint>
-#include <flight/any.hpp>
 #include <flight/number.hpp>
 #include <flight/structural_ref.hpp>
 #include <functional>
@@ -617,54 +615,40 @@ inline bool set_physics2_dbody_type(flight::Ref<flight::types::Physics2DWorld> w
 
 inline const double physics2_dworld_version = 2.0;
 
-
-// NOT GENERATED: function hydratePhysics2DWorld -- source line 281
-// refusal: cpp-structural-assertion-owner-unproven [source-portability]
-//
-// The source it stood for:
-//   export function hydratePhysics2DWorld(world: Physics2DWorld): boolean {
-//     assertPhysics2DWorldNotStepping(world);
-//     const serializedVersion = (world as unknown as { version?: unknown }).version;
-//     const version = serializedVersion === undefined ? 0 : serializedVersion;
-//     if (!Number.isSafeInteger(version) || (version as number) < 0 || (version as number) > Physics2DWorldVersion) {
-//       return false;
-//     }
-//     if (version === Physics2DWorldVersion) return true;
-//   
-//     const defaults = createPhysics2DSolverConfig();
-//     if (world.config.continuousCollision === undefined) {
-//       world.config.continuousCollision = defaults.continuousCollision;
-//     }
-//     if (world.config.maxCcdSubsteps === undefined) world.config.maxCcdSubsteps = defaults.maxCcdSubsteps;
-//     if (world.config.maxCcdRotationSubsteps === undefined) {
-//       world.config.maxCcdRotationSubsteps = defaults.maxCcdRotationSubsteps;
-//     }
-//     for (const body of world.bodies) {
-//       if (body.fixedRotation === undefined) body.fixedRotation = false;
-//       if (body.bullet === undefined) body.bullet = false;
-//       if (body.sleepEnabled === undefined) body.sleepEnabled = true;
-//     }
-//     world.version = Physics2DWorldVersion;
-//     return true;
-//   }
-//   
-// cpp emission failed for @flighthq/physics2d/packages/physics2d/src/world.ts: the asserted row from
-// flight::Ref<flight::types::Physics2DWorld> to flight::Ref<version_87d974f2b1584416> reads version, whose
-// optionality or value representation is not representation-equivalent to the source type's cells, and a
-// structural owner binds the members and storage representations of the type the object was first reached as, so
-// a member the source's own declaration lacks or carries differently has no compatible cell to answer the read.
-// Reading the value back from retained storage does not recover a wider owner: an assertion cannot add those
-// cells, change their representation, or prove which concrete owner was stored. Preserve the concrete owner in
-// the source type through every storage, callback, and accessor boundary. For reusable scratch storage, retain
-// indices, keys, or tokens into storage that remains typed as object, rather than storing an erased reference
-// and asserting it back; an identity map, tag, sort key, or registry key carried beside the reference identifies
-// an entry but does not prove its owner. If heterogeneous storage is intentional, give it a checked recovery
-// contract that validates and returns the exact owner before dispatch. Declare the source as a type that carries
-// version with the asserted optionality and value representation -- construct object explicitly, then type the
-// retaining slot and every accessor result as object wherever that concrete owner is known; changing only the
-// accessor result cannot recover a wider owner after a base-typed slot erased it -- rather than asserting past
-// flight::Ref<flight::types::Physics2DWorld>. The compiler will not reinterpret the owner, cast it, copy or
-// materialize a replacement, or add side storage.
+inline bool hydrate_physics2_dworld(flight::Ref<flight::types::Physics2DWorld> world) {
+  flight::physics2d::assert_physics2_dworld_not_stepping(flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Physics2DWorld>>>>(world)));
+  const std::optional<double> serialized_version = static_cast<std::optional<double>>(world->version);
+  const double version = (!serialized_version.has_value() ? 0.0 : serialized_version.value());
+  if (((!flight::is_safe_integer(version) || (version < 0.0)) || (version > physics2_dworld_version))) {
+    return false;
+  }
+  if ((version == physics2_dworld_version)) {
+    return true;
+  }
+  auto defaults = create_physics2_dsolver_config();
+  if (false) {
+    (world->config->continuous_collision = defaults->continuous_collision);
+  }
+  if (false) {
+    (world->config->max_ccd_substeps = defaults->max_ccd_substeps);
+  }
+  if (false) {
+    (world->config->max_ccd_rotation_substeps = defaults->max_ccd_rotation_substeps);
+  }
+  for (auto body : world->bodies) {
+    if (false) {
+      (body->fixed_rotation = false);
+    }
+    if (false) {
+      (body->bullet = false);
+    }
+    if (false) {
+      (body->sleep_enabled = true);
+    }
+  }
+  (world->version = physics2_dworld_version);
+  return true;
+}
 
 inline void initialize_physics2_dworld(flight::types::EntityConstruction<flight::Ref<flight::types::Physics2DWorld>> out, flight::Ref<flight::types::Physics2DSolverConfig> config, double gravity_x, double gravity_y, flight::Ref<flight::types::SpatialIndexBackend2D> index) {
   flight::row_set<flight::RowKey<"bodies">>(out, flight::Array<flight::Ref<flight::types::RigidBody2D>>{});

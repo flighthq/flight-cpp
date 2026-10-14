@@ -6059,6 +6059,90 @@
       "id": "log-buffered-sink-state-explicit-guard",
       "module": "packages/log/src/log.ts",
       "package": "@flighthq/log"
+    },
+    {
+      "dependency": "flight",
+      "digest": "1165b747e65ed42c54752a90953c97318f9e6aa925e9c4d099fefb6bdfa96722",
+      "id": "particles-forces-case-early-exit-guards",
+      "module": "packages/particles/src/applyParticleForces.ts",
+      "package": "@flighthq/particles"
+    },
+    {
+      "dependency": "flight",
+      "digest": "bfd2435e9ecf7a62e2e02d470ffc3bcc4383a7860490373d1c58608f514caead",
+      "id": "requirement-codegen-expand-requirements-nominal-copy",
+      "module": "packages/requirement-codegen/src/requirementCodegen.ts",
+      "package": "@flighthq/requirement-codegen"
+    },
+    {
+      "dependency": "flight",
+      "digest": "ab38b6d4591b75668b914a196ead648bd984e73e24a810ac2e6d91d9adb1efd0",
+      "id": "textureatlas-formats-starling-optional-attributes",
+      "module": "packages/textureatlas-formats/src/textureAtlasStarlingParse.ts",
+      "package": "@flighthq/textureatlas-formats"
+    },
+    {
+      "dependency": "flight",
+      "digest": "b18e2d15d31a8f586fffab064649e5cd6fbcc874802aff1d992c6f9693e1cf59",
+      "id": "bitmap-clone-typed-array-slice",
+      "module": "packages/bitmap/src/bitmap.ts",
+      "package": "@flighthq/bitmap"
+    },
+    {
+      "dependency": "flight",
+      "digest": "5fb73bf431eb4bfc0b7cc379be12708e83643a3dda4d2843d949f0046798bbe9",
+      "id": "physics2d-collider-bounds-spatial-aabb",
+      "module": "packages/physics2d/src/colliderTransform.ts",
+      "package": "@flighthq/physics2d"
+    },
+    {
+      "dependency": "flight",
+      "digest": "1cd35686350973ec5c454d8dac4a7dc2f5b568f34150d2ba59a7b3c35861e2bb",
+      "id": "physics2d-area-less-overlap-whole-shapes",
+      "module": "packages/physics2d/src/step.ts",
+      "package": "@flighthq/physics2d"
+    },
+    {
+      "dependency": "flight",
+      "digest": "7c4553f9df97a35fb9dca42f4b78203aa6a0ec3760c0b075d4018ac2e151fc67",
+      "id": "physics2d-default-collision-filter-annotation",
+      "module": "packages/physics2d/src/step.ts",
+      "package": "@flighthq/physics2d"
+    },
+    {
+      "dependency": "flight",
+      "digest": "a0f13bdf5d10de24f8089c6a7a87e9336e7f2b108f81abb7c3eedb7237910593",
+      "id": "physics2d-remove-body-owner-key",
+      "module": "packages/physics2d/src/world.ts",
+      "package": "@flighthq/physics2d"
+    },
+    {
+      "dependency": "flight",
+      "digest": "b99c5c86d8c4f6956ee8652164164392ddddda4eeaa97109a2756181d96d58cd",
+      "id": "physics2d-earliest-impact-split-presence-guards",
+      "module": "packages/physics2d/src/step.ts",
+      "package": "@flighthq/physics2d"
+    },
+    {
+      "dependency": "flight",
+      "digest": "581a1584e1ce2c10683f3b0d07174e3edf92d727cd8b6b92c1e1e9ac999ffd6b",
+      "id": "physics2d-shape-cast-guarded-body",
+      "module": "packages/physics2d/src/worldQueries.ts",
+      "package": "@flighthq/physics2d"
+    },
+    {
+      "dependency": "flight",
+      "digest": "27705a3a64db2c347e63334e91310962481fd543b9c66d00aff5a12e6a26f396",
+      "id": "physics2d-contact-hook-restore-finally",
+      "module": "packages/physics2d/src/step.ts",
+      "package": "@flighthq/physics2d"
+    },
+    {
+      "dependency": "flight",
+      "digest": "6251112caa81bcade663baf0b63a07fc3b836ad60d5b6279a5682826bd97fe01",
+      "id": "physics2d-hydrate-version-declared-read",
+      "module": "packages/physics2d/src/world.ts",
+      "package": "@flighthq/physics2d"
     }
   ],
   "duplicateStructuralStructAliases": {
