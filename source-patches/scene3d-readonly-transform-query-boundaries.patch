@@ -40,7 +40,7 @@ diff --git a/packages/node/src/nodeTransform3d.ts b/packages/node/src/nodeTransf
    ensureNodeWorldMatrix4(target);
    return getTransform3DRuntime(target).worldMatrix4!;
  }
-@@ -144,7 +148,7 @@ export function syncNodeTransform3DFromMatrix4<Traits extends object>(target: Tr
+@@ -145,7 +149,7 @@ export function syncNodeTransform3DFromMatrix4<Traits extends object>(target: Tr
  }
  
  function recomputeLocalTransform3D<Traits extends object>(
@@ -49,7 +49,7 @@ diff --git a/packages/node/src/nodeTransform3d.ts b/packages/node/src/nodeTransf
    runtime: NodeRuntime<Traits> & HasTransform3DRuntime,
  ): void {
    if (runtime.localMatrix4 === null) runtime.localMatrix4 = createMatrix4();
-@@ -154,7 +158,7 @@ function recomputeLocalTransform3D<Traits extends object>(
+@@ -156,7 +160,7 @@ function recomputeLocalTransform3D<Traits extends object>(
  }
  
  function recomputeWorldTransform3D<Traits extends object>(
@@ -58,7 +58,7 @@ diff --git a/packages/node/src/nodeTransform3d.ts b/packages/node/src/nodeTransf
    runtime: NodeRuntime<Traits> & HasTransform3DRuntime,
    parentRuntime?: Readonly<NodeRuntime<Traits> & HasTransform3DRuntime>,
  ): void {
-@@ -177,7 +181,7 @@ interface Transform3DRuntimeOwner<Traits extends object> {
+@@ -179,7 +183,7 @@ interface Transform3DRuntimeOwner<Traits extends object> {
  }
  
  function getTransform3DRuntime<Traits extends object>(
@@ -70,7 +70,7 @@ diff --git a/packages/node/src/nodeTransform3d.ts b/packages/node/src/nodeTransf
 diff --git a/packages/scene3d-gl/src/glParticleEmitter3D.ts b/packages/scene3d-gl/src/glParticleEmitter3D.ts
 --- a/packages/scene3d-gl/src/glParticleEmitter3D.ts
 +++ b/packages/scene3d-gl/src/glParticleEmitter3D.ts
-@@ -12,7 +12,6 @@ import type {
+@@ -11,13 +11,12 @@ import type {
    GlContext,
    Camera3D,
    GlRenderState,
@@ -78,7 +78,13 @@ diff --git a/packages/scene3d-gl/src/glParticleEmitter3D.ts b/packages/scene3d-g
    NodeAny,
    ParticleBlendMode,
    ParticleEmitter3D,
-@@ -176,11 +175,11 @@ function compileParticle3DShader(gl: GlContext): GlParticle3DShader {
+   ParticleEmitterData,
+   Scene3DLightsLike,
+   Node3D,
+ } from '@flighthq/types/contract';
+ import { BlendMode, ParticleEmitter3DKind, TextureAtlasRotation } from '@flighthq/types/contract';
+ 
+@@ -172,11 +171,11 @@ function compileParticle3DShader(gl: GlContext): GlParticle3DShader {
  }
  
  function ensureParticle3DShader(state: GlRenderState): GlParticle3DShader {
