@@ -63,3 +63,44 @@ target-pointer comparison would invent an equality JavaScript does not have.
 
 This one header blocks all four `@flighthq/debug` headers, because `debug.ts` imports
 `enableColorAdjustmentGuards` through render's contract.
+
+## Second site: `@flighthq/log`'s LogSink -- identity is required for registry idempotence
+
+`packages/log/src/log.ts` declares `LogSink` as a function type and keeps sinks in an array that is mutated by
+identity:
+
+```ts
+export function addLogSink(sink: LogSink): void {
+  if (_sinks.includes(sink)) return;   // reference equality
+  _sinks.push(sink);
+}
+export function removeLogSink(sink: LogSink): boolean {
+  const idx = _sinks.indexOf(sink);    // reference equality
+  ...
+}
+```
+
+The emitter spells the alias as `std::function` (`generated/include/flight/types/log.hpp` line 27) and, more
+damagingly, spells the PARAMETERS of the functions that carry a sink as `std::function` too -- for example
+`set_log_sink` takes
+`std::optional<std::function<void(StructuralRef<RowReadonly<RowOf<Ref<LogEntry>>>>>)>`. A `flight::Function`
+handed to a `std::function` parameter is copied into a new heap object, and storing it back into the sink array
+constructs a SECOND `Function::State`. The identity is destroyed by that round trip, so registration stops being
+idempotent and removal stops finding its target.
+
+Measured, not argued: with the parameter respelled to `flight::types::LogSink`, the project's own assertion
+`a generated handle or sink registry lost callable identity` turns from FAIL to PASS, with no other change. The
+run-time symptom is exactly the erasure this request is about, one step removed -- it is not a comparison that
+throws, it is an identity that is silently lost before the comparison happens.
+
+The override `log-module-qualification-and-operators` therefore retains the REF spelling of `LogSink`
+(`flight::Function<void(flight::Ref<LogEntry>)>`) against an emission that now consistently produces the ROW
+spelling, and the two cannot be reconciled by re-spelling call sites. Deciding which one the runtime
+standardises on is a representation choice with semantic consequences, so it was escalated rather than taken.
+Note that `LogFormatter` is deliberately NOT respelled: formatters are never compared, so they need no identity,
+and the override leaves them as `std::function`.
+
+This request closes when emitted function values that are compared by identity keep it through erasure -- here,
+when a `LogSink` parameter is emitted as a `flight::Function` rather than a `std::function`. Until then the
+override has to carry the REF spelling, and the ROW spelling the emitter produces is a second site of the same
+defect rather than a new one.
