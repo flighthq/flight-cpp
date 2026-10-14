@@ -436,6 +436,13 @@ int main() {
     check(ua::parse_user_agent_engine(op_opt) == String("webkit") &&
               ua::parse_user_agent_engine_version(op_opt, String("webkit")).length() > 0.0,
           "and so is Opera on iOS under the OPT token");
+
+    // An iPad UA hosting a Chrome token: the iPad branch is what decides, so the embedded CriOS token
+    // never reaches the blink family.
+    check(ua::parse_user_agent_engine(String("Mozilla/5.0 (iPad; CPU OS 17_4 like Mac OS X) "
+                                             "AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/120.0.0.0 "
+                                             "Mobile/15E148 Safari/604.1")) == String("webkit"),
+          "and a CriOS token inside an iPad UA is WebKit, decided by the iPad token");
   }
 
   // parseUserAgentVersion's own edge cases: the vocabulary answers per requested name, so a UA that
