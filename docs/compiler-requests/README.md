@@ -123,6 +123,20 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   owner back out of retained storage. Carried by the `canvas-render-state-runtime-owner-and-initialization`
   patch, which declares the exact owner beside the type and reaches it through declared accessors; that patch
   carries a `pendingRebase` marker on the 2D lane, so the module still refuses at the live base.
+- [An open 3D material path must retain each concrete material owner](material3d-concrete-value-path.md) —
+  the current `Material3D` mesh, proxy, draw-list and renderer boundaries erase sixteen built-in owners before
+  their GL binders assert them back. The current-pin replacement is an open `Material3DValue` union propagated
+  through the renamed `gl*MeshMaterialRenderer.ts` files; `StandardMaterial` is now 2D and is deliberately not
+  an arm. This is the request-first specification for the pending `material-concrete-value-path` patch.
+- [Open modifier stacks and registries must retain concrete value owners](modifier-concrete-value-path.md) —
+  `Modifier` stacks erase eight built-in descriptor owners, while `ModifierDefinition` registries erase the GL
+  and WGPU snippet callbacks stored in them. The exact replacement is `ModifierValue` plus
+  `ModifierDefinitionValue` across types, shading and the renamed `glShadedMeshMaterialRenderer.ts`, with a
+  branch for the independent vertex-direction fallback. The carrying source patch is still pending on GL.
+- [PBR define-key construction needs only the alpha-mode scalar](scene3d-gl-pbr-alpha-mode-boundary.md) —
+  the three renamed PBR renderers cannot widen their concrete flattened owners to `Readonly<Material3D>` merely
+  so `glPbrStandardBlock.ts` can read `alphaMode`. A scalar entry point keeps the existing object-taking helper,
+  shares one implementation and preserves every define-key flag. The carrying GL patch is still pending.
 - [Quadbatch needs one retained owner across specialized construction boundaries](quadbatch-owner-and-contextual-construction.md) —
   flattened Node2D/runtime/signal owners and contextual factories omit ten declarations; the native
   adapter preserves batch, runtime, buffer-view, atlas, material and signal identities explicitly.
