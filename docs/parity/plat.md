@@ -475,57 +475,38 @@ Upstream carries per-package records at `flight/agents/packages/input/`: `status
   key-repeat timer's contract — the callback runs immediately on press, again after the delay, then every interval
   until stop(), and a new start cancels what the previous one left behind — driven by pumping a queue rather than by
   waiting.
-A LATER unit DISCHARGED PART OF THE DEFERRAL that entry records. Mapping inputManager.test.ts's 63 cases
-  mechanically showed the module's STATE half was covered by NEITHER local test -- between them they called exactly
-  one manager function -- so the constructors, the frame boundary, the `connectInputStateToInputManager` transitions,
-  the `is_`/`was_` queries and the gamepad name maps are now covered. The transitions are driven THROUGH the
-  connection rather than by writing into the state, so a connect that dropped a transition fails: a held key is not
-  re-pressed by its own auto-repeat, a press-and-release inside one frame reports BOTH edges, `pointercancel` clears
-  a pointer's buttons wholesale, and a gamepad's index is part of its key so a button on one gamepad leaves another
-  alone.
+TWO LATER RE-AUDIT UNITS MADE THE SAME MISTAKE ON THIS PACKAGE, and both are corrected here rather than left
+  standing. Each mapped the upstream cases against only SOME of the package's four local test files -- the two that
+  looked relevant -- concluded that surface was uncovered, and ADDED DUPLICATE COVERAGE to this manager test. Both
+  additions have been REMOVED and this file is back to the dead zones it was written for.
 
-  TWO MEASURED DIVERGENCES, each handled differently and neither worked around silently:
+  * The STATE HALF (constructors, frame boundary, the `connectInputStateToInputManager` transitions, the `is_`/`was_`
+    queries, the gamepad name maps) was already covered by `tests/generated_input_state_test.cpp`, whose
+    twenty-four cases include the frame boundary that clears edges but not held state, per-pointer bitmasks,
+    per-device gamepad buttons and axes, pointer cancel, the disabled-manager gate, and the name maps.
+  * The SIX INGRESS ATTACHMENT FAMILIES were already covered by `tests/generated_input_binding_test.cpp`, all
+    fifteen upstream ingress cases plus attach options forwarded including their absence and relative-pointer,
+    wheel and text ingress with no state effect. The mutants that appeared to justify the duplicate kill against
+    the BINDING test instead, and more thoroughly: removing `detach`'s release fails NINE assertions there against
+    the duplicate's four.
 
-  * The DISPOSER `connectInputStateToInputManager` returns is UNREACHABLE. Calling it aborts with `callable identity
-    is unavailable after std::function erasure` -- the filed `local-handler-callable-identity.md`, where a handler
-    connected from a local closure cannot be disconnected by its own cleanup closure because the emitted
-    `std::function` erased the identity the disconnect compares. The upstream case `returns a disposer that stops
-    tracking` is therefore not covered, and the test says so rather than asserting a throw.
+  ONE OF THOSE UNITS ALSO MADE A CHANGE THAT BROKE A REGISTERED TEST, and it is REVERTED. It "fixed" the bounds
+  read in this module's override so an out-of-range gamepad index returns null instead of throwing -- which is what
+  the source does, but the divergence is ALREADY FILED as `docs/compiler-requests/out-of-range-array-index-widened-to-null.md`
+  and is deliberately PINNED by `generated_input_state_test.cpp`'s `test_out_of_range_index_divergence`, whose note
+  says the checks flip when the compiler fix lands. The override is restored to its original `element` read and that
+  test passes again. A divergence that is filed and pinned is not a defect to fix in an override; fixing it there
+  makes two registered tests disagree.
 
-  * The gamepad NAME MAPS were FIXED, in the override that already supplies this module. The emitter lowers the
-    source's out-of-range-tolerant index read as the BOUNDS-CHECKED `element`, which throws
-    `flight::Array index is outside the array` where the source returns null -- and the upstream case is literally
-    `returns null for an out-of-range index`. One line each, `get(index).value_or(std::nullopt)`, with the reason in
-    the file. This is the same correction already applied to `app_loop.hpp` for the same lowering.
+  UNCHANGED AND STILL TRUE, so it is kept: the DISPOSER `connectInputStateToInputManager` returns is UNREACHABLE --
+  calling it aborts with `callable identity is unavailable after std::function erasure`, the filed
+  `local-handler-callable-identity.md` -- and that upstream case stays uncovered, with the reason in the test.
 
-  Eleven mutations against the override, every one confirmed to differ at its target, ALL ELEVEN DETECTED -- ten by
-  failing checks and one by CRASH (restoring the bounds-checked read, which aborts exactly as the fix prevents). One
-  of them found a real hole: the frame boundary's GAMEPAD clear was unasserted, because only the KEYBOARD edges were
-  re-checked after a frame, and a case was added for it.
+  THE LESSON, recorded because both units failed this way: a mapping that reads SOME of a package's test files and
+  reports a gap is worse than no mapping at all, because it produces confident duplicate work -- and in one case a
+  "fix" that contradicted a filed request. Enumerate and open EVERY test file registered to a package, by name,
+  BEFORE mapping anything.
 
-  A THIRD UNIT'S CLAIM TO HAVE CLOSED THE INGRESS SEAM WAS WRONG, and it is corrected here rather than left
-  standing. That unit mapped the upstream ingress cases against `generated_input_test.cpp` and
-  `generated_input_manager_test.cpp` only, concluded the six attachment families were uncovered, and added coverage
-  for them to the manager test. THEY WERE ALREADY COVERED, by `generated_input_binding_test.cpp` -- the fourth input
-  test file, which this package's own entry above describes and which the unit's mapping simply did not read. The
-  duplicate block has been REMOVED from the manager test, and the mutants that appeared to justify it kill against the
-  BINDING test instead, which is where that coverage lives and where it is more complete: removing `detach`'s release
-  fails NINE assertions there against the duplicate's four.
-
-  The binding test covers all fifteen upstream ingress cases: the six `attach*` families, the six `detach*` families,
-  and the three explicit-ingress cases (each exact source identity through all six families, cleanup pinned to the
-  originating backend so the borrowed source is never destroyed, and the old origin released once when a different
-  one replaces it). It also covers what the duplicate did not: attach options forwarded including their absence, and
-  relative-pointer, wheel and text ingress forwarded with no state effect.
-
-  The lesson is recorded because it is a re-audit failure of exactly the kind these re-audits exist to catch: a
-  mapping that reads SOME of a package's test files and reports a gap is worse than no mapping, because it produces
-  confident duplicate work. The count of test files for a package, not just the ones that look relevant, is part of
-  the mapping.
-
-  THE DISPOSER REMAINS UNCOVERED and is not worked around: `connectInputStateToInputManager`'s returned disposer
-  still aborts under `local-handler-callable-identity.md`, and the test keeps that case explicitly uncovered until the
-  compiler/runtime fix lands.
 - `flight_cpp.generated_input_manager` — `tests/generated_input_manager_test.cpp` (dedicated), added by the unit that
   audited this package for the half the timer test does not reach: the axis and radial stick dead zones, ported from
   `inputManager.test.ts`'s own cases for them. The axis maps a value inside `[-deadZone, deadZone]` to 0 and rescales
