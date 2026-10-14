@@ -1,4 +1,7 @@
-// Runtime completion of the generated partial shape module.
+// Faithful subset of the generated partial shape module. The flattened C++
+// owners cannot represent ShapeRuntime or recover MorphShape from Shape, and
+// there is no emitted owner for PartialNode<Shape>; those branches remain
+// explicit override debt in overrides/manifest.json.
 #pragma once
 
 #include <optional>
@@ -17,8 +20,7 @@ inline flight::Ref<flight::types::ShapeData> create_shape_data() {
   });
 }
 
-template <typename Options>
-inline flight::Ref<flight::types::ShapeData> create_shape_data(Options&&) {
+inline flight::Ref<flight::types::ShapeData> create_shape_data(std::nullopt_t) {
   return create_shape_data();
 }
 
@@ -47,27 +49,33 @@ inline flight::Ref<flight::types::Shape> make_shape() {
   });
 }
 
-template <typename Options>
-inline flight::Ref<flight::types::Shape> create_shape(Options&&) {
-  return make_shape();
-}
-
 inline flight::Ref<flight::types::Shape> create_shape() {
   return make_shape();
 }
 
-inline void clear_shape_commands(flight::Ref<flight::types::Shape> shape) {
+inline flight::Ref<flight::types::Shape> create_shape(std::nullopt_t) {
+  return make_shape();
+}
+
+inline void clear_shape_commands(const flight::Ref<flight::types::Shape>& shape) {
   shape->data->commands.clear();
   flight::node::invalidate_content(shape);
 }
 
-inline void copy_shape_commands(flight::Ref<flight::types::Shape> out,
-                                flight::Ref<flight::types::Shape> source) {
-  if (out != source) out->data->commands = source->data->commands;
+inline void copy_shape_commands(const flight::Ref<flight::types::Shape>& out,
+                                const flight::Ref<flight::types::Shape>& source) {
+  auto& commands = out->data->commands;
+  const auto& source_commands = source->data->commands;
+  if (commands.identity() != source_commands.identity()) {
+    commands.resize(source_commands.size());
+    for (std::size_t index = 0; index < source_commands.size(); ++index) {
+      commands[index] = source_commands[index];
+    }
+  }
   flight::node::invalidate_content(out);
 }
 
-inline double get_shape_command_count(flight::Ref<flight::types::Shape> source) {
+inline double get_shape_command_count(const flight::Ref<flight::types::Shape>& source) {
   const auto& commands = source->data->commands;
   double count = 0.0;
   std::size_t index = 0;
@@ -83,7 +91,7 @@ inline double get_shape_command_count(flight::Ref<flight::types::Shape> source) 
   return count;
 }
 
-inline bool is_shape_empty(flight::Ref<flight::types::Shape> source) {
+inline bool is_shape_empty(const flight::Ref<flight::types::Shape>& source) {
   return source->data->commands.empty();
 }
 
