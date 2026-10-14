@@ -1,7 +1,8 @@
-// Focused native parity for the generated @flighthq/collision pointContainment3D module.
-// The current emitter now supplies the complete module, so these checks retire its stale override
-// while pinning exact shape owners, point argument order, closed-form inclusive boundaries, convex
-// scratch reuse, and hull-before-probe GJK dispatch.
+// Focused native parity for @flighthq/collision. The current emitter now supplies the complete
+// pointContainment3D module, so these checks retire its stale override while pinning exact shape
+// owners, point argument order, closed-form inclusive boundaries, convex scratch reuse, and
+// hull-before-probe GJK dispatch. Measured public sweep contracts extend the package row without
+// claiming that this one executable ports the entire upstream corpus.
 //
 // MUTATION SENSITIVITY, measured 2026-10-14 against 14 isolated one-at-a-time edits to the
 // generated header: all anchors matched exactly once (the argument swap validated each of its two
@@ -10,11 +11,18 @@
 // probe-coordinate, GJK argument-order, and empty-hull mutants failed their focused assertions.
 // Replacing the convex point-array binding failed its identity assertion before a later abort. Every
 // generated edit was restored after measurement.
+//
+// The full-package re-audit retained that floor and compiled seven additional isolated shadow-header
+// mutants without editing generated or override output. Convex kind dispatch, inclusive sphere
+// boundary, latest-array scratch rebinding, degenerate sweep validation, shape-A contact-coordinate
+// sign, reversed-argument normal, and failure-output clearing mutations produced 4/1/1/1/2/1/2
+// focused assertion failures, respectively; every mutant was discarded after its run.
 #include <flight/collision/point_containment3_d.hpp>
 #include <flight/collision/sweep_collision_shape2_d.hpp>
 
 #include <cmath>
 #include <iostream>
+#include <limits>
 #include <string>
 #include <utility>
 #include <vector>
@@ -30,6 +38,7 @@ using Capsule3D = types::x0_y0_z0_x1_y1_z1_radius_kind_3ca9ada7b527e64b;
 using Cone3D = types::apex_x_apex_y_apex_z_base_x_base_y_base_z_radius_kind_21c650ad310bf539;
 using Convex3D = types::points_kind_35a8f5f2a3a8bd66;
 using Cylinder3D = types::x0_y0_z0_x1_y1_z1_radius_kind_aef60734fa17cff8;
+using Point2D = types::x_y_kind_35ad667397176b0f;
 using Sphere3D = types::x_y_z_radius_kind_b0bc53ca3f0e8006;
 
 int failures = 0;
@@ -44,6 +53,15 @@ template <typename Value>
 types::CollisionBuiltInShape3D built_in_shape(Value value) {
   using Ref = flight::Ref<Value>;
   return types::CollisionBuiltInShape3D{
+      std::in_place_type<Ref>,
+      flight::make_ref<Value>(std::move(value)),
+  };
+}
+
+template <typename Value>
+types::CollisionBuiltInShape2D built_in_shape2_d(Value value) {
+  using Ref = flight::Ref<Value>;
+  return types::CollisionBuiltInShape2D{
       std::in_place_type<Ref>,
       flight::make_ref<Value>(std::move(value)),
   };
@@ -278,6 +296,20 @@ void check_point_containment3_d() {
         "convex GJK contains an interior point");
   check(!collision::get_collision_shape_contains_point3_d(convex, 1.1, 0.0, 0.0),
         "convex GJK excludes an exterior point");
+  const flight::Array<double> tetra_points{
+      0.0, 0.0, 0.0,
+      1.0, 0.0, 0.0,
+      0.0, 1.0, 0.0,
+      0.0, 0.0, 1.0,
+  };
+  const auto tetra = built_in_shape(Convex3D{
+      .points = tetra_points,
+      .kind = flight::String("convex"),
+  });
+  check(collision::get_collision_shape_contains_point3_d(tetra, 0.1, 0.1, 0.1),
+        "convex GJK contains a point inside a tetrahedron");
+  check(!collision::get_collision_shape_contains_point3_d(tetra, 0.9, 0.9, 0.9),
+        "convex GJK rejects a tetrahedron bounding-box corner");
   const auto empty_convex = built_in_shape(Convex3D{
       .points = flight::Array<double>{},
       .kind = flight::String("convex"),
@@ -285,48 +317,152 @@ void check_point_containment3_d() {
   check(!collision::get_collision_shape_contains_point3_d(
             empty_convex, 0.0, 0.0, 0.0),
         "empty convex hull returns false before GJK");
+
+  const flight::Array<double> large_tetra_points{
+      0.0, 0.0, 0.0,
+      10.0, 0.0, 0.0,
+      0.0, 10.0, 0.0,
+      0.0, 0.0, 10.0,
+  };
+  const auto large_tetra = built_in_shape(Convex3D{
+      .points = large_tetra_points,
+      .kind = flight::String("convex"),
+  });
+  check(collision::get_collision_shape_contains_point3_d(large_tetra, 2.0, 2.0, 2.0),
+        "first convex query reads the caller's larger hull");
+  check(!collision::get_collision_shape_contains_point3_d(tetra, 2.0, 2.0, 2.0),
+        "second convex query does not retain the first caller hull");
+  check(collision::scratch_hull->points.identity() == tetra_points.identity(),
+        "convex scratch rebinds to the latest caller point-array owner");
+}
+
+void check_sweep_collision_shape2_d() {
+  using collision::SweepAabb2D;
+  using collision::SweepCircle2D;
+
+  auto out = collision::create_collision_time_of_impact2_d();
+  check(out->fraction == 0.0 && out->x == 0.0 && out->y == 0.0 &&
+            out->normal_x == 0.0 && out->normal_y == 0.0,
+        "sweep output starts in the reusable miss state");
+
+  const auto moving_circle = built_in_shape2_d(SweepCircle2D{
+      .x = 0.0,
+      .y = 0.0,
+      .radius = 1.0,
+      .kind = flight::String("circle"),
+  });
+  const auto fixed_circle = built_in_shape2_d(SweepCircle2D{
+      .x = 5.0,
+      .y = 0.0,
+      .radius = 1.0,
+      .kind = flight::String("circle"),
+  });
+  check(!collision::sweep_collision_shape2_d(
+            moving_circle, 0.0, 0.0, fixed_circle, 0.0, 0.0, out),
+        "separated stationary circles have no time of impact");
+  check(collision::sweep_collision_shape2_d(
+            moving_circle, 10.0, 0.0, fixed_circle, 0.0, 0.0, out),
+        "public sweep dispatch reaches the exact circle solver");
+  check(std::abs(out->fraction - 0.3) <= 1e-12 && out->normal_x == -1.0 &&
+            out->normal_y == 0.0 && out->x == 4.0 && out->y == 0.0,
+        "circle sweep preserves fraction, normal, and shape-A contact coordinates");
+
+  out->fraction = 9.0;
+  out->x = 9.0;
+  out->y = 9.0;
+  out->normal_x = 9.0;
+  out->normal_y = 9.0;
+  check(!collision::sweep_collision_shape2_d(
+            moving_circle, 10.0, 0.0, fixed_circle, 0.0, 0.0, out, 0.2),
+        "sweep honours maxFraction");
+  check(out->fraction == 0.0 && out->x == 0.0 && out->y == 0.0 &&
+            out->normal_x == 0.0 && out->normal_y == 0.0,
+        "a maxFraction miss clears reused sweep output");
+
+  const auto fixed_box = built_in_shape2_d(SweepAabb2D{
+      .min_x = 5.0,
+      .min_y = 5.0,
+      .max_x = 7.0,
+      .max_y = 7.0,
+      .kind = flight::String("aabb"),
+  });
+  const auto face_circle = built_in_shape2_d(SweepCircle2D{
+      .x = 0.0,
+      .y = 6.0,
+      .radius = 1.0,
+      .kind = flight::String("circle"),
+  });
+  check(collision::sweep_collision_shape2_d(
+            face_circle, 10.0, 0.0, fixed_box, 0.0, 0.0, out),
+        "circle-to-box sweep reaches polygon-face dispatch");
+  check(std::abs(out->fraction - 0.4) <= 1e-12 && out->normal_x == -1.0 &&
+            out->normal_y == 0.0 && out->x == 5.0 && out->y == 6.0,
+        "circle-to-box sweep writes the exact face hit on shape A");
+  check(collision::sweep_collision_shape2_d(
+            fixed_box, 0.0, 0.0, face_circle, 10.0, 0.0, out),
+        "reversed box-to-circle sweep remains reachable");
+  check(std::abs(out->fraction - 0.4) <= 1e-12 && out->normal_x == 1.0 &&
+            out->normal_y == 0.0 && out->x == 5.0 && out->y == 6.0,
+        "reversed sweep flips the normal while keeping the hit on shape A");
+
+  const auto overlapping_circle = built_in_shape2_d(SweepCircle2D{
+      .x = 1.0,
+      .y = 0.0,
+      .radius = 1.0,
+      .kind = flight::String("circle"),
+  });
+  check(collision::sweep_collision_shape2_d(
+            moving_circle, 1.0, 0.0, overlapping_circle, 0.0, 0.0, out),
+        "an initially overlapping pair reports a zero-fraction hit");
+  check(out->fraction == 0.0 && out->normal_x == -1.0,
+        "initial-overlap sweep keeps the ordered shape-A normal");
+  const auto touching_circle = built_in_shape2_d(SweepCircle2D{
+      .x = 2.0,
+      .y = 0.0,
+      .radius = 1.0,
+      .kind = flight::String("circle"),
+  });
+  check(!collision::sweep_collision_shape2_d(
+            moving_circle, -1.0, 0.0, touching_circle, 0.0, 0.0, out),
+        "a touching pair moving apart has no future impact");
+
+  const auto unsupported_point = built_in_shape2_d(Point2D{
+      .x = 0.0,
+      .y = 0.0,
+      .kind = flight::String("point"),
+  });
+  out->fraction = 9.0;
+  out->x = 9.0;
+  out->normal_x = 9.0;
+  check(!collision::sweep_collision_shape2_d(
+            unsupported_point, 1.0, 0.0, fixed_circle, 0.0, 0.0, out),
+        "unsupported area-less sweep input fails closed");
+  check(out->fraction == 0.0 && out->x == 0.0 && out->normal_x == 0.0,
+        "unsupported input clears reused sweep output");
+  const auto degenerate_circle = built_in_shape2_d(SweepCircle2D{
+      .x = 0.0,
+      .y = 0.0,
+      .radius = 0.0,
+      .kind = flight::String("circle"),
+  });
+  check(!collision::sweep_collision_shape2_d(
+            degenerate_circle, 10.0, 0.0, fixed_circle, 0.0, 0.0, out),
+        "zero-radius sweep input is rejected as degenerate");
+  check(!collision::sweep_collision_shape2_d(
+            moving_circle,
+            std::numeric_limits<double>::quiet_NaN(),
+            0.0,
+            fixed_circle,
+            0.0,
+            0.0,
+            out),
+        "non-finite sweep motion fails closed");
 }
 
 } // namespace
 
 int main() {
   check_point_containment3_d();
-  if (failures != 0) return 1;
-
-  using flight::collision::SweepCircle2D;
-
-  auto a = flight::make_ref<SweepCircle2D>(SweepCircle2D{
-      .x = 0.0,
-      .y = 0.0,
-      .radius = 1.0,
-      .kind = flight::String("circle"),
-  });
-  auto b = flight::make_ref<SweepCircle2D>(SweepCircle2D{
-      .x = 5.0,
-      .y = 0.0,
-      .radius = 1.0,
-      .kind = flight::String("circle"),
-  });
-  flight::types::CollisionBuiltInShape2D shape_a = a;
-  flight::types::CollisionBuiltInShape2D shape_b = b;
-  auto out = flight::collision::create_collision_time_of_impact2_d();
-
-  if (flight::collision::sweep_collision_shape2_d(
-          shape_a, 0.0, 0.0, shape_b, 0.0, 0.0, out)) {
-    // The committed generated tree predates the source patch. Keep the regression visible as skipped
-    // until the regeneration lane lands; the same executable proceeds to the live probe afterwards.
-    std::cerr << "waiting for regenerated shape_contact2_d.hpp\n";
-    return 77;
-  }
-
-  if (!flight::collision::sweep_collision_shape2_d(
-          shape_a, 10.0, 0.0, shape_b, 0.0, 0.0, out)) {
-    std::cerr << "continuous circle solver was not reachable through the public sweep\n";
-    return 1;
-  }
-  if (std::abs(out->fraction - 0.3) > 1e-12) {
-    std::cerr << "public sweep returned the wrong continuous hit fraction: " << out->fraction << '\n';
-    return 1;
-  }
-  return 0;
+  check_sweep_collision_shape2_d();
+  return failures == 0 ? 0 : 1;
 }

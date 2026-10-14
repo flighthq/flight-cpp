@@ -91,14 +91,14 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/statechart` | 5 | 3 | 39 | dedicated | none | 5 / 0 |
 | `@flighthq/physics2d` | 26 | 25 | 457 | dedicated | none | 21 / 5 |
 | `@flighthq/physics2d-abi` | 8 | 6 | 85 | none | none | 6 / 2 |
-| `@flighthq/collision` | 38 | 37 | 500 | dedicated | none | 32 / 6 |
+| `@flighthq/collision` | 38 | 37 | 517 | dedicated | none | 32 / 6 |
 | `@flighthq/spatial` | 11 | 9 | 148 | dedicated | none | 10 / 1 |
 
 `upstream modules` counts the `.ts` files under `packages/<name>/src`; the generated manifest
 counts its own `sourceModules`, and the two differ where declaration files or generated outputs
 are involved.
 
-**21** packages, **307** upstream test files, **3769** cases.
+**21** packages, **307** upstream test files, **3786** cases.
 6 of 21 packages are reached by at least one local CTest executable.
 6 by a test dedicated to the package: `animation`, `motionpath`, `clock`, `statechart`, `collision`, `spatial`.
 
@@ -993,19 +993,26 @@ None declared. The package ships no `flight.environment` declaration, so it is e
 | `src/manifold3D.test.ts` | 4 | `clearCollisionManifold3D`, `createCollisionManifold3D`, `initializeCollisionManifold3D` |
 | `src/pointContainment2D.test.ts` | 12 | `getCollisionShapeContainsPoint2D` |
 | `src/pointContainment3D.test.ts` | 12 | `getCollisionShapeContainsPoint3D` |
-| `src/raycastCollisionShape2D.test.ts` | 9 | `createCollisionRaycastHit2D`, `initializeCollisionRaycastHit2D`, `raycastCollisionShape2D` |
+| `src/raycastCollisionShape2D.test.ts` | 15 | `createCollisionRaycastHit2D`, `initializeCollisionRaycastHit2D`, `raycastCollisionShape2D` |
 | `src/raycastCollisionShape3D.test.ts` | 28 | `createCollisionRaycastHit3D`, `initializeCollisionRaycastHit3D`, `raycastCollisionShape3D` |
 | `src/registerBuiltInCollisionPairTests2D.test.ts` | 3 | `registerBuiltInCollisionPairTests2D` |
 | `src/registerBuiltInCollisionPairTests3D.test.ts` | 4 | `registerBuiltInCollisionPairTests3D` |
 | `src/segmentCollision2D.test.ts` | 32 | `testSegmentAabbCollision2D`, `testSegmentCapsuleCollision2D`, `testSegmentCircleCollision2D`, `testSegmentObbCollision2D`, `testSegmentPolygonCollision2D`, `testSegmentSegmentCollision2D` |
-| `src/shapeCollision2D.test.ts` | 43 | `testAabbAabbCollision2D`, `testAabbObbCollision2D`, `testAabbPolygonCollision2D`, `testCircleAabbCollision2D`, `testCircleCircleCollision2D`, `testCircleObbCollision2D`, `testCirclePolygonCollision2D`, `testObbObbCollision2D`, `testObbPolygonCollision2D`, `testPolygonPolygonCollision2D` |
+| `src/shapeCollision2D.test.ts` | 50 | `testAabbAabbCollision2D`, `testAabbObbCollision2D`, `testAabbPolygonCollision2D`, `testCircleAabbCollision2D`, `testCircleCircleCollision2D`, `testCircleObbCollision2D`, `testCirclePolygonCollision2D`, `testObbObbCollision2D`, `testObbPolygonCollision2D`, `testPolygonPolygonCollision2D` |
 | `src/shapeCollision3D.test.ts` | 26 | `shapeCollision3D agreement with the generic support floor`, `testAabbAabbCollision3D`, `testBoxBoxCollision3D`, `testCapsuleCapsuleCollision3D`, `testSphereAabbCollision3D`, `testSphereBoxCollision3D`, `testSphereCapsuleCollision3D`, `testSphereSphereCollision3D` |
 | `src/shapeContact2D.test.ts` | 31 | `collideAabbAabbContactManifold2D`, `collideAabbObbContactManifold2D`, `collideAabbPolygonContactManifold2D`, `collideCircleAabbContactManifold2D`, `collideCircleCircleContactManifold2D`, `collideCircleObbContactManifold2D`, `collideCirclePolygonContactManifold2D`, `collideObbObbContactManifold2D`, `collideObbPolygonContactManifold2D`, `collidePolygonPolygonContactManifold2D` |
-| `src/sweepCollisionShape2D.test.ts` | 9 | `createCollisionTimeOfImpact2D`, `initializeCollisionTimeOfImpact2D`, `sweepCollisionShape2D` |
+| `src/sweepCollisionShape2D.test.ts` | 13 | `createCollisionTimeOfImpact2D`, `initializeCollisionTimeOfImpact2D`, `sweepCollisionShape2D` |
 | `src/sweepCollisionShape3D.test.ts` | 21 | `createCollisionTimeOfImpact3D`, `initializeCollisionTimeOfImpact3D`, `sweepCollisionShape3D` |
 | `src/testCollision2D.test.ts` | 11 | `setCollisionTestGuard2D`, `testCollision2D` |
 | `src/testCollision3D.test.ts` | 9 | `setCollisionTestGuard3D`, `testCollision3D` |
 | `src/triangleMesh3D.test.ts` | 19 | … `collideCollisionHeightfield3D`, `collideCollisionTriangleMesh3D`, `createCollisionHeightfield3D`, `createCollisionTriangleMesh3D`, `getCollisionHeightfieldValidationStatus3D`, `getCollisionTriangleMeshValidationStatus3D`, `initializeCollisionHeightfield3D`, `initializeCollisionTriangleMesh3D`, `invalidateCollisionHeightfield3D`, `invalidateCollisionTriangleMesh3D`, `raycastCollisionHeightfield3D`, `raycastCollisionTriangleMesh3D` (+4 more describe blocks in the file) |
+
+The 2026-10-14 parity re-audit parsed all 37 test files at the pinned revision and mapped 503 test
+declarations to 517 executed cases. Three `it.each` tables account for the difference: six exact
+raycast-kind rows, seven invalid-OBB rows, and four seeded capsule-sweep batches. The earlier 500-case
+total omitted those three declarations and every row they expand, so the lane and per-file totals
+above now use executed cases. The dedicated CTest classification means this package has its own
+target; it does not claim that all 517 upstream cases have been ported.
 
 Upstream carries per-package records at `flight/agents/packages/collision/`: `status.md`, `assessment.md`, `review.md`, `charter.md`.
 
@@ -1024,6 +1031,19 @@ Upstream carries per-package records at `flight/agents/packages/collision/`: `st
   making the circle boundary exclusive 2, making the box corner exclusive 1, accepting degenerate polygons 1 — and the sixth,
   halving the edge scale, is unitable only if a face index may equal the documented 2^25 limit, which no valid index does.
   Scoped compile: **38 of 38 headers compile**, the whole package, which no other ANIM package manages.
+
+The focused test directly maps all 12 `pointContainment3D` cases, including tetrahedron-versus-bounds
+and consecutive caller-array scratch rebinding. It also maps the sweep output initializer, exact
+circle dispatch, circle/polygon and reversed argument ordering, `maxFraction`, initial-overlap and
+touching boundaries, and unsupported/non-finite failure gates. The example exercises several 2D
+shape-pair dispatches and manifold output. The other upstream cases remain corpus evidence, not
+native parity claims.
+
+Seven additional one-at-a-time shadow-header mutations compiled during this audit and were all
+killed by the focused target: convex kind dispatch (4 failures), inclusive sphere boundary (1),
+latest-array scratch rebinding (1), degenerate sweep validation (1), shape-A contact-coordinate sign
+(2), reversed-argument normal (1), and failure-output clearing (2). The shadow copies were discarded;
+no generated or override output was edited.
 
 ### Local generation status
 
@@ -1092,7 +1112,7 @@ None declared. The package ships no `flight.environment` declaration, so it is e
 
 A further 5 examples are in that inventory whose subject is a package in this lane, and are listed as awaiting a faithful SDL port: `flowstates`, `movieclip`, `particles`, `spring`, `tween`. The mapping is by example name, or by an import of the package where the name differs (`flowstates` imports `@flighthq/flow`); the 30 other examples whose imports go through the `@flighthq/sdk` barrel are not attributed to any lane here.
 
-This lane's largest upstream suites are `skeleton2d-formats` (533 cases), `collision` (500 cases), `physics2d` (457 cases).
+This lane's largest upstream suites are `skeleton2d-formats` (533 cases), `collision` (517 cases), `physics2d` (457 cases).
 Only the ported examples above have a local counterpart, so the rest of the lane is backed by upstream tests alone.
 
 ### Upstream functional scenes
