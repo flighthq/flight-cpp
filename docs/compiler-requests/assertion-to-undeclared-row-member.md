@@ -75,5 +75,5 @@ The same module also refuses `world.ts` `hydratePhysics2DWorld` (line 283), on a
 the asserted row re-types it ("optionality or value representation is not representation-equivalent to the source
 type's cells"). The assertion exists so the read also tolerates a serialized world that predates the field. It reads
 the same property as `world.version`, and a native `Physics2DWorld` always stores that member as a number.
-[`physics2d-hydrate-version-unknown-local`](../../source-patches/manifest.json) carries it as
-`const serializedVersion: unknown = world.version`.
+[`physics2d-hydrate-version-declared-read`](../../source-patches/manifest.json) carries it as
+`const serializedVersion: number | undefined = world.version`.
