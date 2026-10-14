@@ -387,6 +387,40 @@ add_test(
 )
 
 add_executable(
+  flight_cpp_generated_gizmo_tests
+  generated_gizmo_test.cpp
+)
+target_include_directories(
+  flight_cpp_generated_gizmo_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_gizmo_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(
+  NAME flight_cpp.generated_gizmo
+  COMMAND flight_cpp_generated_gizmo_tests
+)
+
+add_executable(
+  flight_cpp_generated_selection_tests
+  generated_selection_test.cpp
+)
+target_include_directories(
+  flight_cpp_generated_selection_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(
+  flight_cpp_generated_selection_tests
+  PRIVATE Flight::Cpp Flight::SdkPreview
+)
+add_test(
+  NAME flight_cpp.generated_selection
+  COMMAND flight_cpp_generated_selection_tests
+)
+
+add_executable(
   flight_cpp_generated_spritesheet_formats_tests
   generated_spritesheet_formats_test.cpp
 )
@@ -1551,6 +1585,8 @@ flight_cpp_package_test_labels(flight_cpp.generated_textureatlas textureatlas)
 flight_cpp_package_test_labels(flight_cpp.generated_textureatlas_formats textureatlas textureatlas-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_tilemap tilemap)
 flight_cpp_package_test_labels(flight_cpp.generated_tilemap_formats tilemap-formats)
+flight_cpp_package_test_labels(flight_cpp.generated_gizmo gizmo)
+flight_cpp_package_test_labels(flight_cpp.generated_selection selection)
 flight_cpp_package_test_labels(flight_cpp.generated_spritesheet_formats spritesheet-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_spritesheet signals spritesheet)
 flight_cpp_package_test_labels(flight_cpp.generated_materials materials)

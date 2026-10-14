@@ -228,6 +228,48 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_bitmap_test",
+    srcs = ["generated_bitmap_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_camera_test",
+    srcs = ["generated_camera_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_camera_controls_test",
+    srcs = ["generated_camera_controls_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_clip_test",
+    srcs = ["generated_clip_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_physics3d_test",
+    srcs = ["generated_physics3d_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
+    name = "generated_physics3d_abi_test",
+    srcs = ["generated_physics3d_abi_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_spritesheet_formats_test",
     srcs = ["generated_spritesheet_formats_test.cpp"],
     size = "small",
@@ -1467,6 +1509,12 @@ test_suite(
         ":generated_textureatlas_formats_test",
         ":generated_tilemap_test",
         ":generated_tilemap_formats_test",
+        ":generated_bitmap_test",
+        ":generated_camera_test",
+        ":generated_camera_controls_test",
+        ":generated_clip_test",
+        ":generated_physics3d_test",
+        ":generated_physics3d_abi_test",
         ":generated_spritesheet_formats_test",
         ":generated_updater_test",
         ":generated_useragent_test",
