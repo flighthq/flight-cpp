@@ -95,7 +95,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/platform` | 3 | 1 | 37 | dedicated | none | 3 / 0 |
 | `@flighthq/lifecycle` | 3 | 2 | 44 | dedicated | none | 2 / 1 |
 | `@flighthq/input` | 3 | 2 | 66 | dedicated | none | 3 / 0 |
-| `@flighthq/keyboard` | 3 | 1 | 23 | dedicated | none | 3 / 0 |
+| `@flighthq/keyboard` | 3 | 1 | 23 | dedicated | ready | 3 / 0 |
 | `@flighthq/interaction` | 19 | 17 | 212 | dedicated | none | 8 / 11 |
 | `@flighthq/gui` | 20 | 18 | 115 | none | none | 16 / 4 |
 | `@flighthq/layout` | 8 | 7 | 73 | dedicated | none | 5 / 3 |
@@ -616,6 +616,24 @@ axis for this package; the axes below are the ones it actually declares.
 
 No other local test, example, or benchmark includes a header of this package.
 
+  A LATER re-audit mechanically mapped the 23 upstream cases and re-ran the battery with target-diff confirmation. The
+  outcome is a VERIFICATION plus a metadata fix; no behavioral change was warranted and none was made.
+
+  * Every named case maps to a block, the count is 23, and there is no `it.each`, `test.each`, `%#` table or looped row.
+  * DISPOSE-CLEARING SEPARATELY FROM DETACH IS NOT APPLICABLE, and here the evidence is stronger than an absent
+    symbol: `disposeSoftKeyboard`'s ENTIRE BODY is the `detachSoftKeyboard` call, and the module contains zero
+    `clear_signal` calls. There is no clearing step that a detach could mask.
+  * Sequence distinguishability is covered: the file asserts that a change which does not cross the visible boundary
+    or does not MOVE the height fires NOTHING, so the edge signals are distinguished from a level rather than only
+    exercised on transitions -- the case `@flighthq/connectivity` needed added.
+  * The module's shared `scratch` out-object is asserted not to alias a caller's object, which is the presence/identity
+    question this package raises; the one optional it carries (`announce`-style defaults are not present here, but
+    `SoftKeyboardInfo`'s fields are) is read by value, not by truthiness.
+  * No absence case exists in this suite, so that audit has nothing to apply to.
+  * The tier column read `none` and is corrected to `ready`.
+  * Fifteen mutations against the module, every one confirmed to differ at its target, ALL FIFTEEN DETECTED --
+    fourteen by failing checks and one by CRASH. The crash is the acquisition-failure guard: removing it lets a failed
+    acquisition reach the subscription record and dereference an empty optional, which aborts rather than answering.
 ### Local generation status
 
 3 of 3 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
