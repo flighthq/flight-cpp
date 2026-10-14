@@ -100,7 +100,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/gui` | 20 | 18 | 115 | none | none | 16 / 4 |
 | `@flighthq/layout` | 8 | 7 | 73 | dedicated | none | 5 / 3 |
 | `@flighthq/accessibility` | 3 | 1 | 6 | dedicated | ready | 3 / 0 |
-| `@flighthq/audio` | 8 | 6 | 109 | none | none | 5 / 3 |
+| `@flighthq/audio` | 8 | 6 | 109 | dedicated | none | 5 / 3 |
 | `@flighthq/media` | 7 | 5 | 127 | none | none | 5 / 2 |
 | `@flighthq/mediasession` | 3 | 1 | 19 | dedicated | ready | 3 / 0 |
 | `@flighthq/video` | 5 | 3 | 79 | dedicated | none | 4 / 1 |
@@ -112,7 +112,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/device` | 3 | 1 | 12 | dedicated | ready | 3 / 0 |
 | `@flighthq/screen` | 3 | 1 | 46 | none | none | 3 / 0 |
 | `@flighthq/power` | 3 | 1 | 31 | dedicated | assisted | 3 / 0 |
-| `@flighthq/clipboard` | 3 | 1 | 31 | none | none | 3 / 0 |
+| `@flighthq/clipboard` | 3 | 1 | 31 | dedicated | none | 3 / 0 |
 | `@flighthq/dialog` | 5 | 3 | 23 | dedicated | none | 4 / 1 |
 | `@flighthq/menu` | 4 | 2 | 58 | dedicated | none | 3 / 1 |
 | `@flighthq/tray` | 4 | 2 | 31 | none | none | 3 / 1 |
@@ -121,9 +121,9 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/share` | 3 | 2 | 14 | dedicated | assisted | 2 / 1 |
 | `@flighthq/shortcut` | 4 | 2 | 27 | dedicated | none | 3 / 1 |
 | `@flighthq/shell` | 3 | 1 | 14 | dedicated | ready | 3 / 0 |
-| `@flighthq/ipc` | 3 | 1 | 12 | none | none | 3 / 0 |
+| `@flighthq/ipc` | 3 | 1 | 12 | dedicated | none | 3 / 0 |
 | `@flighthq/protocol` | 3 | 2 | 23 | dedicated | ready | 3 / 0 |
-| `@flighthq/permissions` | 3 | 5 | 31 | none | none | 3 / 0 |
+| `@flighthq/permissions` | 3 | 5 | 31 | dedicated | none | 3 / 0 |
 | `@flighthq/filesystem` | 3 | 1 | 48 | incidental | none | 2 / 1 |
 | `@flighthq/preferences` | 4 | 2 | 45 | dedicated | partial | 3 / 1 |
 | `@flighthq/updater` | 3 | 1 | 6 | dedicated | assisted | 2 / 1 |
@@ -928,7 +928,7 @@ Upstream carries per-package records at `flight/agents/packages/audio/`: `status
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+**Dedicated.** `tests/generated_audio_test.cpp` is registered as `flight_cpp.generated_audio` (label `pkg:audio`) and includes `flight/audio/audio_resource_from.hpp` and `flight/audio/audio_resource_reference.hpp` directly, so this package is reached by a test named for it. Two further registered tests reach the package incidentally: `flight_cpp.generated_audio_parity` and `flight_cpp.generated_media_parity`. The earlier claim that no local test reaches it was wrong.
 
 ### Local generation status
 
@@ -1689,7 +1689,7 @@ Upstream carries per-package records at `flight/agents/packages/clipboard/`: `st
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+**Dedicated.** `tests/generated_clipboard_test.cpp` is registered as `flight_cpp.generated_clipboard` (label `pkg:clipboard`) and includes `flight/clipboard/clipboard.hpp` directly, so this package is reached by a test named for it. The earlier claim that no local test reaches it was wrong.
 
 ### Local generation status
 
@@ -2059,7 +2059,7 @@ Upstream carries per-package records at `flight/agents/packages/ipc/`: `status.m
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+**Dedicated.** `tests/generated_ipc_test.cpp` is registered as `flight_cpp.generated_ipc` (label `pkg:ipc`) and includes `flight/ipc/ipc.hpp` directly, so this package is reached by a test named for it. The earlier claim that no local test reaches it was wrong.
 
 ### Local generation status
 
@@ -2166,7 +2166,7 @@ Upstream carries per-package records at `flight/agents/packages/permissions/`: `
 
 ### Existing CTest coverage
 
-None. No local test, example, or benchmark includes a header of this package.
+**Dedicated.** `tests/generated_permissions_test.cpp` is registered as `flight_cpp.generated_permissions` (label `pkg:permissions`) and includes `flight/permissions/permission.hpp` directly, so this package is reached by a test named for it. The earlier claim that no local test reaches it was wrong.
 
 ### Local generation status
 
