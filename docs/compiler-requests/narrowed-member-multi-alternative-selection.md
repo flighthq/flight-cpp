@@ -95,6 +95,11 @@ so no patch is carried. The `tween-stagger-origin-selection` override supplies i
 `std::variant<double, flight::String>`: each literal test selects the string alternative holding that
 literal, and the final branch reads the numeric alternative.
 
+Tray's `destroyTrayRuntime` stops separately at
+`cpp-contextual-union-missing-expression-type:optionalSingle`, where a caught value is written into an
+`unknown` member; that runtime-carrier boundary is tracked in
+[caught-value-into-unknown-member.md](caught-value-into-unknown-member.md).
+
 ## Root cause and carried compiler patch
 
 The refusal concealed an unsound complement calculation. `TrayCreateCapabilityResult` stores the

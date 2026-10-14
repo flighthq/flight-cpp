@@ -79,6 +79,8 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 
 ## Active requests without a compiler patch
 
+- [A caught value written into an `unknown` member needs an `Any` that can hold it](caught-value-into-unknown-member.md) —
+  `@flighthq/tray` `destroyTrayRuntime` (`cpp-contextual-union-missing-expression-type:optionalSingle`): `flight::Any` has no caught-exception form, so the refusal is correct. This needs a runtime capability, not evidence. A second blocker sits behind it: a narrowed single-arm struct against a coalesced arm.
 - [A generic union alias must not template an arm that does not use its type parameter](generic-alias-non-dependent-anonymous-arms.md) —
   `@flighthq/tray` `createTrayIcon` (`cpp-contextual-union-inequivalent`): `TrayCreateResult<Tray>` re-emits the provider-failure arms as templated twins, so the value's own struct is no alternative of the declared return. No workaround carried: no identity-preserving conversion exists, and the emission fix renames 91 structs in 23 headers across 9 packages.
 
