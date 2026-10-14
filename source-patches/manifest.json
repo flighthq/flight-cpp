@@ -2362,7 +2362,7 @@
       "id": "canvas-texture-resolver-void-miss-callback",
       "dependency": "flight",
       "patch": "canvas-texture-resolver-void-miss-callback.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene2d-canvas/src/canvasTextureResolver.ts",
       "package": "@flighthq/scene2d-canvas",
       "answers": "refusal",
@@ -2374,11 +2374,8 @@
       "unblocks": "Emits the shared Canvas texture resolver used by render state, bitmap and image sources, render textures, fill patterns, Canvas materials, and the Scene2D Canvas pipeline.",
       "expires": "when Flight adopts the explicit void wrapper upstream, or flight-compiler contextualizes expression-bodied callbacks assigned to void-returning nullable callable fields.",
       "appliedOn": "2026-10-09",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "2D",
-        "reason": "applies only with reduced context (git apply -C1) at the new pin; regenerate the patch text against it and confirm the hunk still lands on the intended expression"
-      }
+      "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "rebasedOn": "2026-10-14"
     },
     {
       "id": "canvas-texture-resolver-present-registry",
