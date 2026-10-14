@@ -4083,6 +4083,23 @@
       "unblocks": "Allows the directional shadow depth pass to traverse a heterogeneous Node3D tree, keep the checked mesh and instanced owners through the branch flow, and emit gl_shadow_map.hpp complete.",
       "expires": "when Flight adopts typed shadow mesh and instance predicates plus compiler-representable lazy program flow upstream, or when flight-compiler can preserve the same checked owners and presence evidence from the original source without casts or materialization.",
       "appliedOn": "2026-10-14"
+    },
+    {
+      "id": "compiler-shadow-checked-capability-flow",
+      "dependency": "flight-compiler",
+      "patch": "compiler-shadow-checked-capability-flow.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppShadowCheckedCapabilityFlow.test.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "diagnostic",
+      "refusal": "the asserted row from a heterogeneous node owner to flight::Ref<Mesh> reads geometry, which the source type does not declare, and a structural owner binds the members and storage representations of the type the object was first reached as -- cpp-structural-assertion-owner-unproven, classified source-portability",
+      "rewrite": "No emission change. Adds a focused compiler regression lowering both halves of the shadow capability crossing: the asserted form, and the same reads behind typed pre-erasure predicates.",
+      "equivalence": "The emitted C++ is unchanged: a test module and nothing else.",
+      "verification": "2 cases, both passing at the pinned compiler and over the composed stack: (1) the asserted form refuses with rule cpp-structural-assertion-owner-unproven, classification source-portability, naming the node-to-Mesh pair and the undeclared geometry read; (2) the predicated form emits with the narrowed owner reaching the instance read (mesh->instance_count == 0.0) and no flight::Any or reinterpret_cast. MEASURED AND NOT ASSERTED: structural_ref_cast does appear once in case 2, at the predicate CALL, because this fixture stand-in narrows to a synthesized anonymous owner rather than the declared Mesh; the third form the request names (the nullable alias) emits here rather than refusing, for the same stand-in reason. Both claims belong to the real node graph and the batch generation evidence, not to a synthetic fixture, so neither is asserted.",
+      "whyNotUpstreamFirst": "A regression guard for the pinned compiler and for the source patch carried beside it.",
+      "unblocks": "Evidence for @flighthq/scene3d-gl glShadowMap.ts, whose node and instanced assertions are replaced by typed predicates.",
+      "expires": "when flight-compiler preserves the checked owners and presence evidence from the original source without casts, or Flight adopts typed shadow predicates upstream.",
+      "appliedOn": "2026-10-14"
     }
   ]
 }

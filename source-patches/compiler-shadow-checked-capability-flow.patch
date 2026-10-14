@@ -1,0 +1,145 @@
+diff --git a/packages/compiler-backend-cpp/src/cppShadowCheckedCapabilityFlow.test.ts b/packages/compiler-backend-cpp/src/cppShadowCheckedCapabilityFlow.test.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppShadowCheckedCapabilityFlow.test.ts
+@@ -0,0 +1,140 @@
++// Focused fixture for docs/compiler-requests/scene3d-gl-shadow-checked-capability-flow.md.
++//
++// The module lowers both halves of the shadow traversal's capability crossing, so the refusal and the
++// repair are pinned together rather than inferred from one "emission failed":
++//
++//   BEFORE  the traversal asserts a heterogeneous node to Mesh and then to InstancedMesh. The rule is
++//           cpp-structural-assertion-owner-unproven, classified source-portability, and it names the
++//           pair: the retained node owner does not declare the members the assertion reads.
++//   AFTER   the same reads behind typed pre-erasure predicates. The guard narrows the ORIGINAL owner, so
++//           the emitted guard and the instance reads carry the narrowed owner with no Any, no
++//           structural_ref_cast and no reinterpretation.
++//
++// ONE THING MEASURED AND DELIBERATELY NOT ASSERTED. The request also describes an older intermediate
++// spelling -- `const instancedMesh = isShadowInstancedMesh(mesh) ? mesh : null` -- that it says was
++// refused as cpp-contextual-union-value-type-unrepresented. Lowered here, that form EMITS: the refusal
++// depends on the real @flighthq/types node and mesh owners being flattened interface heritage, and this
++// fixture's stand-in owners are already independent interfaces, so the nullable union between them is
++// representable. Closing that gap would mean reconstructing the real node graph, which belongs to the
++// package's own generation, not to a compiler fixture. So the alias form is not asserted either way
++// here; the request's claim about it rests on the real owners and the batch's generation evidence.
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { isBackendEmissionFailure } from '../../compiler-emission/src/index.js';
++import { lowerTypeScriptSources } from '../../compiler-semantic/src/index.js';
++import { createCppCompilerBackend } from './cppCompilerBackend.js';
++
++function captureBackendEmissionFailure(run: () => unknown) {
++  try {
++    run();
++  } catch (error) {
++    if (isBackendEmissionFailure(error)) return error;
++    throw error;
++  }
++  throw new Error('expected C++ emission to refuse and it did not');
++}
++
++// Stand-in owners: a heterogeneous node, a geometry-bearing mesh, and an instanced mesh that extends it.
++// The real packages declare these through interface heritage the emitter flattens; what matters here is
++// that the node owner does NOT declare the members the assertion reads.
++const PROVIDER = `export interface Traits {}
++export interface Node<Traits> { readonly name: string }
++export type NodeAny = Node<Traits>;
++export interface MeshGeometry { readonly vertexCount: number }
++export interface Mesh { readonly geometry: MeshGeometry | null }
++export interface InstancedMesh extends Mesh {
++  readonly instanceCount: number;
++  readonly instanceMatrices: readonly number[];
++}`;
++
++const ASSERTED = `import type { InstancedMesh, Mesh, NodeAny } from '@flighthq/geometry/contract';
++function isShadowInstancedMesh(mesh: Readonly<Mesh>): boolean {
++  return 'instanceMatrices' in mesh;
++}
++export function before(node: NodeAny): number {
++  const mesh = node as unknown as Mesh;
++  if (mesh.geometry == null) return 0;
++  const instanced = isShadowInstancedMesh(mesh);
++  if (instanced && (mesh as unknown as InstancedMesh).instanceCount === 0) return 0;
++  return 1;
++}`;
++
++const PREDICATED = `import type { InstancedMesh, Mesh, MeshGeometry, NodeAny } from '@flighthq/geometry/contract';
++function isShadowMesh(node: NodeAny): node is Mesh {
++  const candidate: { readonly geometry?: MeshGeometry | null } = node;
++  return candidate.geometry != null;
++}
++function isShadowInstancedMesh(mesh: Readonly<Mesh>): mesh is Readonly<InstancedMesh> {
++  return 'instanceMatrices' in mesh;
++}
++export function after(node: NodeAny): number {
++  if (!isShadowMesh(node)) return 0;
++  const mesh = node;
++  const instanced = isShadowInstancedMesh(mesh);
++  if (instanced && mesh.instanceCount === 0) return 0;
++  return 1;
++}`;
++
++function lower(body: string) {
++  const moduleResolution = {
++    edges: [
++      {
++        specifier: '@flighthq/geometry/contract',
++        target: { packageName: '@flighthq/geometry', source: 'packages/geometry/src/contract.ts' },
++      },
++    ],
++    schema: 'flight-compiler-module-resolution/1',
++  };
++  const source = (packageName: string, pathName: string, text: string) => ({
++    packageName,
++    sourceFile: ts.createSourceFile(`/flight/${pathName}`, text, ts.ScriptTarget.Latest, true),
++    upstreamDirectory: '/flight',
++  });
++  const results = lowerTypeScriptSources(
++    [
++      source('@flighthq/geometry', 'packages/geometry/src/contract.ts', PROVIDER),
++      source('@flighthq/scene3d-gl', 'packages/scene3d-gl/src/glShadowMap.ts', body),
++    ],
++    moduleResolution,
++  );
++  const session = createCppCompilerBackend().createEmissionSession!({
++    moduleResolution,
++    modules: results.map((result) => result.module),
++    options: { runtimeProfile: 'flight-cpp' },
++  });
++  return { session, module: results[1]!.module };
++}
++
++function emitContents(body: string): string {
++  const { session, module } = lower(body);
++  return session.emitModule(module)[0]!.contents;
++}
++
++describe('a shadow traversal that asserts its node capabilities', () => {
++  it('refuses the asserted node-to-mesh owner under cpp-structural-assertion-owner-unproven', () => {
++    const { session, module } = lower(ASSERTED);
++    const failure = captureBackendEmissionFailure(() => session.emitModule(module));
++    expect(failure.rule).toBe('cpp-structural-assertion-owner-unproven');
++    expect(failure.classification).toBe('source-portability');
++    // The pair, in the emitter's own spelling: the retained node owner cannot answer the mesh read.
++    expect(failure.message).toContain('from flighthq_geometry::NodeAny');
++    expect(failure.message).toContain('to flight::Ref<flighthq_geometry::Mesh>');
++    expect(failure.message).toContain('reads geometry, which the source type does not declare');
++  });
++
++  it('emits the same reads behind typed predicates, with the narrowed owner at the reads', () => {
++    const contents = emitContents(PREDICATED);
++    // The narrowed owner is what the instance read goes through: the member reaches the emitted code as
++    // a direct member read on the narrowed mesh, not as a read through a recovered or materialized owner.
++    expect(contents).toContain('mesh->instance_count == 0.0');
++    expect(contents).not.toContain('flight::Any');
++    expect(contents).not.toContain('reinterpret_cast');
++    // NOT asserted, and why: `structural_ref_cast` DOES appear once here, at the predicate CALL, because
++    // this fixture's stand-in owners are independent interfaces -- so `node is Mesh` narrows to a
++    // synthesized anonymous owner rather than to the declared Mesh. That cast is an artifact of the
++    // stand-in shape; with the real flattened node and mesh owners the predicate narrows to the declared
++    // target and the cast does not arise. Asserting its absence here would need the real node graph, so
++    // the claim rests on the batch's generation evidence instead.
++  });
++});
