@@ -426,8 +426,8 @@ export function planPackageMerge({ candidateRoot, committedRoot, movingTogether 
   manifest.emissionRepairs = mergeRepairRecords(committedManifest.emissionRepairs, candidateManifest.emissionRepairs, inPrefix);
   manifest.sourcePatches = replaceRowsInPlace(
     committedManifest.sourcePatches ?? [],
-    (patch) => patch.package === packageName,
-    (candidateManifest.sourcePatches ?? []).filter((patch) => patch.package === packageName),
+    (patch) => patchNamesPackage(patch, packageName),
+    (candidateManifest.sourcePatches ?? []).filter((patch) => patchNamesPackage(patch, packageName)),
   );
   const aliases = committedManifest.duplicateStructuralStructAliases;
   const aliasFiles = mergeFileList(aliases.files, candidateManifest.duplicateStructuralStructAliases.files, inPrefix);
@@ -892,7 +892,9 @@ export function planPackageRetirement({
       committedManifest.emissionRepairs[index].files.length === 0 ||
       !committedManifest.emissionRepairs[index].files.every(inPrefix),
   );
-  manifest.sourcePatches = (committedManifest.sourcePatches ?? []).filter((patch) => patch.package !== packageName);
+  manifest.sourcePatches = (committedManifest.sourcePatches ?? []).filter(
+    (patch) => !patchNamesPackage(patch, packageName),
+  );
   const aliases = committedManifest.duplicateStructuralStructAliases;
   const aliasFiles = aliases.files.filter(keep);
   manifest.duplicateStructuralStructAliases = {
@@ -1107,6 +1109,18 @@ export function mergeSortedRows(rows, belongs, replacement, compare) {
 
 // Same, for ledgers with no sort order: the replacement takes the old rows' positions one for one, and
 // any surplus follows the last of them (or is appended when the package had none).
+// The packages an applied-patch record belongs to. A patch that rewrites modules of two packages declares both in
+// one label, "@flighthq/types and @flighthq/registry", and the inventory copies that label. Matching it exactly
+// against one package name never succeeds, so a scoped run of either package could neither refresh nor retire the
+// record; it has to belong to each package it names.
+export function patchLabelPackages(label) {
+  return String(label ?? '').split(' and ').map((name) => name.trim()).filter((name) => name.length > 0);
+}
+
+function patchNamesPackage(patch, packageName) {
+  return patchLabelPackages(patch.package).includes(packageName);
+}
+
 export function replaceRowsInPlace(rows, belongs, replacement) {
   const result = [];
   let next = 0;

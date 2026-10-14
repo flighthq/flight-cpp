@@ -21,6 +21,7 @@ import {
   packageHeaders,
   parseJobs,
   parsePackageArguments,
+  patchLabelPackages,
   planPackageMerge,
   planPackageRetirement,
   readmeWithProvenance,
@@ -182,6 +183,34 @@ describe('ordered ledgers reinsert where a full run puts them', () => {
 });
 
 describe('scoped merge', () => {
+  test('an applied-patch record labelled with two packages belongs to each of them', () => {
+    assert.deepEqual(patchLabelPackages('@flighthq/types and @flighthq/registry'), ['@flighthq/types', '@flighthq/registry']);
+    assert.deepEqual(patchLabelPackages('@flighthq/math'), ['@flighthq/math']);
+    assert.deepEqual(patchLabelPackages(undefined), []);
+  });
+
+  test('a scoped merge refreshes a combined-label patch record and retires one the candidate no longer applies', () => {
+    const committed = copyTree('combined-label-committed');
+    const candidate = copyTree('combined-label-candidate');
+    const target = '@flighthq/math';
+    const live = { dependency: 'flight', id: 'combined-live', module: 'packages/math/src/x.ts', package: `${target} and @flighthq/types` };
+    const stale = { dependency: 'flight', id: 'combined-stale', module: 'packages/types/src/y.ts', package: `@flighthq/types and ${target}` };
+    const unrelated = { dependency: 'flight', digest: 'kept', id: 'combined-unrelated', module: 'packages/types/src/z.ts', package: '@flighthq/types and @flighthq/geometry' };
+    editJson(committed, 'manifest.json', (value) => {
+      value.sourcePatches = [...(value.sourcePatches ?? []), { ...live, digest: 'old' }, { ...stale, digest: 'stale' }, unrelated];
+    });
+    editJson(candidate, 'manifest.json', (value) => {
+      // The candidate generation applied the live patch at a new digest and no longer applies the stale one.
+      value.sourcePatches = [...(value.sourcePatches ?? []), { ...live, digest: 'new' }, unrelated];
+    });
+
+    const plan = planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName: target });
+    const merged = JSON.parse(plan.writes.get('manifest.json')).sourcePatches;
+    assert.deepEqual(merged.find((patch) => patch.id === 'combined-live'), { ...live, digest: 'new' });
+    assert.equal(merged.find((patch) => patch.id === 'combined-stale'), undefined);
+    assert.deepEqual(merged.find((patch) => patch.id === 'combined-unrelated'), unrelated);
+  });
+
   test('merging the committed tree into itself changes nothing, for every package', () => {
     for (const package_ of packages) {
       const plan = planPackageMerge({ candidateRoot: generated, committedRoot: generated, packageName: package_ });
@@ -748,6 +777,19 @@ describe('package retirement', () => {
   test('the fixture has a package nothing uses', () => {
     assert.ok(leaf !== undefined);
     assert.ok(packageHeaders(generated, leaf).length > 0, leaf);
+  });
+
+  test('a retirement removes a combined-label patch record that names the retired package', () => {
+    const committed = copyTree('retire-combined-label');
+    const named = { dependency: 'flight', digest: 'd', id: 'combined-retired', module: 'packages/x/src/x.ts', package: `@flighthq/types and ${leaf}` };
+    const other = { dependency: 'flight', digest: 'd', id: 'combined-other', module: 'packages/y/src/y.ts', package: '@flighthq/types and @flighthq/geometry' };
+    editJson(committed, 'manifest.json', (value) => {
+      value.sourcePatches = [...(value.sourcePatches ?? []), named, other];
+    });
+    const plan = retire(committed, leaf);
+    const sourcePatches = JSON.parse(plan.writes.get('manifest.json')).sourcePatches;
+    assert.equal(sourcePatches.find((patch) => patch.id === 'combined-retired'), undefined);
+    assert.deepEqual(sourcePatches.find((patch) => patch.id === 'combined-other'), other);
   });
 
   test('a retirement removes exactly the package and keeps every other row byte for byte', () => {

@@ -5461,13 +5461,6 @@
     },
     {
       "dependency": "flight",
-      "digest": "98dc3f376c319923e1593d7d8ec37d6fefafea03323429a93eb455f16f141559",
-      "id": "registry-export-named-entry-arms",
-      "module": "packages/types/src/RegistryTable.ts",
-      "package": "@flighthq/types and @flighthq/registry"
-    },
-    {
-      "dependency": "flight",
       "digest": "caab1ba591d714d912d61f12747e27176e3f4143f0f2c9bef309e5ca2114466a",
       "id": "texture-preserve-source-value-owners",
       "module": "packages/texture/src/texture.ts",
