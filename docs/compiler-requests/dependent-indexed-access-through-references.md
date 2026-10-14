@@ -53,3 +53,33 @@ member through the generated key table that rows already read members through. T
 
 The table is derived from the `RowKey<"…">` spellings the emitter writes. The keys these sites need, `outcome` and
 `kind`, are already in it, so the table does not change.
+
+## Carried change
+
+- **Runtime:** `flight::indexed_member_t<T, RowKey<"key">>` in `include/flight/structural_ref.hpp`. It is a type
+  trait with no behavior. `tests/indexed_member_test.cpp` checks that it resolves:
+  - a Tray result variant;
+  - `Ref<Material>` and `Ref<BlinnPhongMaterial>`;
+  - a structural row;
+  - an optional member, keeping its storage.
+
+  The same test checks that it resolves to nothing for:
+  - alternatives that disagree on the member's type;
+  - an alternative without the member;
+  - a key the type lacks;
+  - a non-object type;
+  - an optional member in one alternative and a required one in another.
+- **Compiler:**
+  [`compiler-dependent-indexed-access-carrier.patch`](../../source-patches/compiler-dependent-indexed-access-carrier.patch)
+  emits that trait where the proof gate already allowed the old spelling. Seven upstream test expectations change
+  to it. Upstream's own fixtures instantiate `MemberOf<flight::Ref<...>>`, which the old spelling could not resolve.
+  Fixtures are in `cppDependentIndexedAccess.test.ts`.
+
+Measured:
+- the emitted `f<U>` and `f<Ref<Obj>>` above, and upstream's `MemberOf` instantiations, compile and run natively;
+- the backend suite has no new failures;
+- a scratch regeneration of `@flighthq/tray` changes only `invoke_read`'s signature. Its three
+  `no matching function` errors are gone, and its instantiations now stop only at the call to `invoke_update`, which
+  is still refused ([fresh-literal-asserted-to-type-parameter.md](fresh-literal-asserted-to-type-parameter.md)).
+
+`@flighthq/materials` is not regenerated here. `get_material_of_kind` changes on its owner's next regeneration.

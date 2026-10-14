@@ -1364,6 +1364,46 @@ class StructuralRef {
   bool subject_proven_ = false;
 };
 
+namespace detail {
+
+template <typename Type, typename Key>
+struct indexed_member {
+  using type = generated_row_member_t<Key, Type>;
+};
+
+template <typename Type, typename Key>
+struct indexed_member<std::shared_ptr<Type>, Key> : indexed_member<Type, Key> {};
+
+template <typename Schema, typename Key>
+struct indexed_member<StructuralRef<Schema>, Key> {
+  using type = schema_member_t<Key, Schema>;
+};
+
+// Every alternative must store the member as the same C++ type, or there is no one type to name. A union whose
+// alternatives disagree -- `string` in one, `number` in another -- is TypeScript's union of member types, which
+// is a different carrier, so it resolves to nothing rather than to the first alternative's answer.
+template <typename First, typename... Rest, typename Key>
+struct indexed_member<std::variant<First, Rest...>, Key> {
+  using first = typename indexed_member<First, Key>::type;
+  using type = std::conditional_t<(std::same_as<first, typename indexed_member<Rest, Key>::type> && ...), first, void>;
+};
+
+template <typename Type, typename Key>
+struct checked_indexed_member {
+  using type = typename indexed_member<Type, Key>::type;
+  static_assert(!std::is_void_v<type>,
+                "indexed access T[K]: the instantiated type does not store this member as one C++ type");
+};
+
+} // namespace detail
+
+// `T['key']` for a type parameter, resolved at instantiation. A type argument for an object type is a `Ref` to
+// it, a structural row, or a variant of those -- never the struct itself -- so the member is read through the
+// reference, the row's schema, or every alternative alike, by the same generated key table rows read members
+// through. The result is the member's declared storage, `std::optional` included.
+template <typename Type, typename Key>
+using indexed_member_t = typename detail::checked_indexed_member<Type, Key>::type;
+
 template <typename Key, typename Value>
 struct RowField {
   using key_type = Key;

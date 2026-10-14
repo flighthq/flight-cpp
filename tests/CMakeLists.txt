@@ -57,6 +57,12 @@ target_link_libraries(flight_cpp_merged_row_tests PRIVATE Flight::Cpp Flight::Sd
 flight_cpp_set_project_warnings(flight_cpp_merged_row_tests)
 add_test(NAME flight_cpp.merged_row COMMAND flight_cpp_merged_row_tests)
 
+# `T['key']` for a type parameter: the indexed-member trait the compiler emits, against the generated table.
+add_executable(flight_cpp_indexed_member_tests indexed_member_test.cpp)
+target_link_libraries(flight_cpp_indexed_member_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+flight_cpp_set_project_warnings(flight_cpp_indexed_member_tests)
+add_test(NAME flight_cpp.indexed_member COMMAND flight_cpp_indexed_member_tests)
+
 add_executable(flight_cpp_task_resolve_domain_tests task_resolve_domain_test.cpp)
 target_link_libraries(flight_cpp_task_resolve_domain_tests PRIVATE Flight::Cpp)
 flight_cpp_set_project_warnings(flight_cpp_task_resolve_domain_tests)
@@ -1354,6 +1360,7 @@ endfunction()
 
 flight_cpp_package_test_labels(flight_cpp.structural_row types)
 flight_cpp_package_test_labels(flight_cpp.merged_row app entity types)
+flight_cpp_package_test_labels(flight_cpp.indexed_member types)
 flight_cpp_package_test_labels(flight_cpp.generated_collision collision)
 flight_cpp_package_test_labels(flight_cpp.generated_collision_shapes collision)
 flight_cpp_package_test_labels(flight_cpp.generated_registry registry)

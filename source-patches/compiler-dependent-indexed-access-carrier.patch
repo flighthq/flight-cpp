@@ -1,0 +1,140 @@
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+index fd9670d..e812d74 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -48709,11 +48709,10 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
+     const emitted = emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' });
+ 
+     expect(result.diagnostics).toEqual([]);
+-    // A type parameter has no shape to resolve, so the member's type has to be spelled directly. The
+-    // construct is not new -- the runtime writes `remove_cvref_t<decltype(declval<Object&>().member)>`
+-    // in generated_row_member -- and without it a generic alias reading a member's type cannot be
+-    // emitted at all, even though nothing instantiates it.
+-    expect(emitted.contents).toContain('std::remove_cvref_t<decltype(std::declval<Type&>().dimension)>');
++    // A type parameter has no shape to resolve, so the member's type is resolved at instantiation. A type
++    // argument for an object type is a Ref, a row or a variant of them, never the struct, so the runtime reads
++    // the member through that carrier by the key table rows already use.
++    expect(emitted.contents).toContain('flight::indexed_member_t<Type, flight::RowKey<"dimension">>');
+   });
+ 
+   it('proves a dependent member read on every inhabited constraint branch', () => {
+@@ -48737,21 +48736,21 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
+     // may be written, an inherited one through the base an interface extends, and a union member through
+     // every branch the alias expands to. All five spell the same construct, because the proof decides
+     // whether the construct may be written and never what it says.
+-    expect(emitted.contents.match(/std::remove_cvref_t<decltype\(std::declval<Type&>\(\)\./gu)).toHaveLength(5);
++    expect(emitted.contents.match(/flight::indexed_member_t<Type, flight::RowKey</gu)).toHaveLength(5);
+     expect(emitted.contents).toContain(
+-      'using RequiredMember = std::remove_cvref_t<decltype(std::declval<Type&>().dimension)>;',
++      'using RequiredMember = flight::indexed_member_t<Type, flight::RowKey<"dimension">>;',
+     );
+     expect(emitted.contents).toContain(
+-      'using OptionalMember = std::remove_cvref_t<decltype(std::declval<Type&>().dimension)>;',
++      'using OptionalMember = flight::indexed_member_t<Type, flight::RowKey<"dimension">>;',
+     );
+     expect(emitted.contents).toContain(
+-      'using ReadonlyMember = std::remove_cvref_t<decltype(std::declval<Type&>().dimension)>;',
++      'using ReadonlyMember = flight::indexed_member_t<Type, flight::RowKey<"dimension">>;',
+     );
+     expect(emitted.contents).toContain(
+-      'using InheritedMember = std::remove_cvref_t<decltype(std::declval<Type&>().label)>;',
++      'using InheritedMember = flight::indexed_member_t<Type, flight::RowKey<"label">>;',
+     );
+     expect(emitted.contents).toContain(
+-      'using CommonMember = std::remove_cvref_t<decltype(std::declval<Type&>().dimension)>;',
++      'using CommonMember = flight::indexed_member_t<Type, flight::RowKey<"dimension">>;',
+     );
+   });
+ 
+@@ -48770,7 +48769,7 @@ export function omitKeys<Key extends keyof Provider>(): Omit<Provider, Key> {
+     // refuse, because `T extends { k: string }` says the member exists and not what it is. Both
+     // instantiations reach the one template below, each carrying its own member.
+     expect(emitted.contents).toContain(
+-      'using MemberOf = std::remove_cvref_t<decltype(std::declval<Type&>().dimension)>;',
++      'using MemberOf = flight::indexed_member_t<Type, flight::RowKey<"dimension">>;',
+     );
+     expect(emitted.contents.match(/using (Numeric|Textual)Dimension = MemberOf</gu)).toHaveLength(2);
+     expect(emitted.contents).toContain('double dimension;');
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 43e6bda..3a23e0a 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -9638,9 +9638,9 @@ function emitCppStructuralRowReferenceTypeCpp(
+   return `flight::StructuralRef<${emitCppStructuralRowSchemaTypeCpp(representation, context)}>`;
+ }
+ 
+-// The member type of a dependent parameter, spelled the way the runtime already spells it. `remove_cvref_t`
+-// makes an optional member and a plain one agree, because an optional member's C++ storage is the target's
+-// spelling of `U | undefined` rather than `U`.
++// The member type of a dependent parameter, spelled the way the runtime reads members: through the reference,
++// row or variant the type argument is, to the member's declared storage (an optional member's storage is the
++// target's spelling of `U | undefined`).
+ //
+ // The dependent form is emitted only where the member is PROVEN on every inhabited branch of the
+ // parameter's constraint, because the instantiation is not visible here. An unproven key does not fail
+@@ -9673,9 +9673,12 @@ function emitCppDependentIndexedAccessCpp(
+     );
+   }
+   const objectType = emitType(type.object, context);
+-  context.includes.add('type_traits');
+-  context.includes.add('utility');
+-  return `std::remove_cvref_t<decltype(std::declval<${objectType}&>().${safeCppName(key)})>`;
++  // A type argument for an object type is a `Ref`, a structural row, or a variant of them -- never the struct
++  // itself -- so a member access on the parameter does not compile for any of them. The runtime reads the member
++  // through whichever carrier the instantiation supplies, by the generated key table rows already use, and
++  // refuses an instantiation whose alternatives do not agree on one member type.
++  context.includes.add('flight/structural_ref.hpp');
++  return `flight::indexed_member_t<${objectType}, flight::RowKey<${JSON.stringify(key)}>>`;
+ }
+ 
+ // Whether every value the constraint admits has the literal member `key`, so that a dependent member read
+diff --git a/packages/compiler-backend-cpp/src/cppDependentIndexedAccess.test.ts b/packages/compiler-backend-cpp/src/cppDependentIndexedAccess.test.ts
+new file mode 100644
+index 0000000..45f13f2
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppDependentIndexedAccess.test.ts
+@@ -0,0 +1,44 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/x/src/x.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/x', upstreamDirectory: '/flight' });
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++describe("a dependent T['key'] is read through the type argument's carrier", () => {
++  it("spells @flighthq/tray invokeRead's failure parameter so a union result instantiates", () => {
++    const emitted = emit(`export type U = { readonly outcome: 'updated' } | { readonly error?: unknown; readonly outcome: 'image-update-failed' };
++      export function f<Result extends { readonly outcome: string }>(failure: Result['outcome']): Result['outcome'] { return failure; }
++      export function useU(): string { return f<U>('image-update-failed'); }`);
++    expect(emitted).toContain(
++      'inline flight::indexed_member_t<Result, flight::RowKey<"outcome">> f(flight::indexed_member_t<Result, flight::RowKey<"outcome">> failure) {',
++    );
++    expect(emitted).toContain('#include <flight/structural_ref.hpp>');
++    expect(emitted).not.toContain('std::declval<Result&>()');
++  });
++
++  it("spells @flighthq/materials getMaterialOfKind's kind parameter the same way", () => {
++    const emitted = emit(`export interface Material { kind: string; name: string | null }
++      export function getMaterialOfKind<T extends Material>(material: Readonly<Material> | null, kind: T['kind']): boolean {
++        return material !== null && material.kind === kind;
++      }`);
++    expect(emitted).toContain('flight::indexed_member_t<T, flight::RowKey<"kind">> kind');
++  });
++
++  it('keys the trait by the source member name, which the generated table maps to the C++ member', () => {
++    const emitted = emit(`export function f<Result extends { readonly failureReason: string }>(reason: Result['failureReason']): void {}`);
++    expect(emitted).toContain('flight::indexed_member_t<Result, flight::RowKey<"failureReason">> reason');
++  });
++
++  it('still refuses a key a constraint branch does not carry', () => {
++    expect(() =>
++      emit(`interface Plain { dimension: '2d' } interface Depth { depth: number }
++        export type Narrowed<Type extends Plain | Depth> = Type['dimension'];`),
++    ).toThrow(/is not a member of every inhabited constraint branch/);
++  });
++});

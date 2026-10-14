@@ -3987,6 +3987,23 @@
       "unblocks": "The `return result` in @flighthq/tray destroyTrayRuntime once the caught-value capability lands; the upstream backend test above. No Tray declaration emits from this alone.",
       "expires": "when upstream matches a narrowed binding to the destination slot of its stored carrier (docs/compiler-requests/narrowed-coalesced-arm-into-wider-union.md).",
       "appliedOn": "2026-10-14"
+    },
+    {
+      "id": "compiler-dependent-indexed-access-carrier",
+      "dependency": "flight-compiler",
+      "patch": "compiler-dependent-indexed-access-carrier.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "not a refusal: an instantiation failure. A dependent `T['key']` was emitted as `std::remove_cvref_t<decltype(std::declval<T&>().key)>`. A type argument for an object type is a Ref, a structural row or a variant of them, never the struct, so every instantiation fails (`no member named 'outcome' in std::variant<...>` / in std::shared_ptr). @flighthq/tray invokeRead's three callers fail with `no matching function for call to 'invoke_read'`; @flighthq/materials getMaterialOfKind cannot be instantiated for its documented `T = Ref<BlinnPhongMaterial>`. Upstream's own fixtures instantiate `MemberOf<flight::Ref<...>>`, which this spelling cannot resolve either.",
+      "rewrite": "emitCppDependentIndexedAccessCpp keeps its proof gate (the key is a member of every inhabited constraint branch) and emits `flight::indexed_member_t<T, flight::RowKey<\"key\">>`. The runtime trait (include/flight/structural_ref.hpp) reads the member through a Ref, a structural row's schema, or every alternative of a variant, by the generated key table; alternatives that disagree on the member's C++ type, or lack it, are a compile-time error. Seven upstream test expectations change to the new spelling.",
+      "equivalence": "The result is the instantiation's own member storage type, exactly what the old spelling named for a by-value struct; it is still not rewritten to the constraint's member type. A union's member type is answered only when every alternative stores the same C++ type, otherwise compilation fails rather than answering from one alternative.",
+      "verification": "New cppDependentIndexedAccess.test.ts: 4 pass (tray invokeRead parameter, materials getMaterialOfKind parameter, source-name key, unproven key still refused); the 7 upstream 'dependent member' tests pass with updated expectations. compiler-backend-cpp suite -j2 on top of compiler-narrowed-coalesced-arm-slot: 46 failures, all pre-existing, none new. Native: tests/indexed_member_test.cpp (CTest flight_cpp.indexed_member) checks a tray result variant, Ref<Material>, Ref<BlinnPhongMaterial>, a structural row and an optional member, and that disagreeing, missing, non-object and optional-versus-required cases resolve to nothing; the emitted f<U>/f<Ref<Obj>> and upstream's MemberOf instantiations compile and run. Scratch regeneration of @flighthq/tray changes only tray.hpp's invoke_read signature: its three 'no matching function' errors are gone, and its instantiations now stop only at the call to the still-refused invoke_update. Tray rows not committed; materials not regenerated.",
+      "whyNotUpstreamFirst": "Every dependent indexed access in the SDK fails at instantiation; upstream receives docs/compiler-requests/dependent-indexed-access-through-references.md.",
+      "unblocks": "@flighthq/tray invokeRead (pending invokeUpdate); @flighthq/materials getMaterialOfKind on its owner's next regeneration.",
+      "expires": "when upstream reads a dependent indexed access through the type argument's carrier (docs/compiler-requests/dependent-indexed-access-through-references.md).",
+      "appliedOn": "2026-10-14"
     }
   ]
 }

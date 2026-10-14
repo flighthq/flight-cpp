@@ -92,6 +92,16 @@ cc_test(
 )
 
 cc_test(
+    name = "indexed_member_test",
+    srcs = ["indexed_member_test.cpp"],
+    size = "small",
+    deps = [
+        "//:cpp",
+        "//:sdk_preview",
+    ],
+)
+
+cc_test(
     name = "caught_exception_test",
     srcs = ["caught_exception_test.cpp"],
     size = "small",
