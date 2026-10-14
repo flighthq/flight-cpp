@@ -4174,6 +4174,23 @@
       "unblocks": "Practical regeneration of the renderer packages (registry, render, render-gl, render-wgpu, effects, scene2d/scene3d renderers); output unchanged.",
       "expires": "when upstream memoizes the exported-type owner lookup (docs/compiler-requests/exported-type-owner-lookup-uncached.md).",
       "appliedOn": "2026-10-14"
+    },
+    {
+      "id": "registry-ordinal-table-nullable-entries",
+      "dependency": "flight",
+      "patch": "registry-ordinal-table-nullable-entries.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/registry/src/registryTable.ts",
+      "package": "@flighthq/registry",
+      "answers": "refusal",
+      "refusal": "an array of [null] cannot be passed where the element union is [T, null]",
+      "rewrite": "Annotates createOrdinalTable's map callback return as `T | null`: `vocabulary.map((): T | null => null)`, so the fresh entries array is created at the declared element type `(T | null)[]` instead of TypeScript's inferred `null[]`.",
+      "equivalence": "A type annotation only: the callback, the array it builds (one null per vocabulary entry, fresh, with no other holder) and the returned object are identical at runtime. Absence, identity, ordering and exceptions are unchanged.",
+      "verification": "Validated by the source-patches owner at the a627849 pin: the patch applies cleanly in manifest order and its target line matches the pin byte for byte. Registry-group regeneration, measured by the Registry contributor on their pre-reset tree (tag registry-pre-live-regeneration-20261014 == 2a1dddb1): @flighthq/registry goes from 2/3 to 3/3 modules emitted (registryTable.ts, contract, index), all 3 headers compile at -j2, the registryTable refusal leaves refusals.json, and tests/generated_registry_test.cpp passes. The live-base confirmation is the batch sdk:check.",
+      "whyNotUpstreamFirst": "registryTable.ts is refused wholesale on this one expression, which refuses registry's contract and index and blocks the registry renderer group's coordinated move; upstream receives docs/compiler-requests/fresh-null-array-into-nullable-element-union.md.",
+      "unblocks": "@flighthq/registry registryTable.ts, contract.ts and index.ts, and through them render's renderer.ts and the group's Registry dependency.",
+      "expires": "when flight-compiler builds a fresh array at its contextual element union (docs/compiler-requests/fresh-null-array-into-nullable-element-union.md), or upstream annotates the callback.",
+      "appliedOn": "2026-10-14"
     }
   ]
 }

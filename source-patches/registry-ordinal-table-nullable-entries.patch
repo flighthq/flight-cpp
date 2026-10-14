@@ -1,0 +1,12 @@
+diff --git a/packages/registry/src/registryTable.ts b/packages/registry/src/registryTable.ts
+--- a/packages/registry/src/registryTable.ts
++++ b/packages/registry/src/registryTable.ts
+@@ -11,7 +11,7 @@
+ export function createOrdinalTable<T>(
+   vocabulary: readonly Kind[],
+ ): NonEntityCreateResult<OrdinalTable<T>, 'descriptor'> {
+-  return { entries: vocabulary.map(() => null), vocabulary };
++  return { entries: vocabulary.map((): T | null => null), vocabulary };
+ }
+ 
+ export function getKindMapKeys(out: Kind[], map: ReadonlyMap<Kind, unknown>): void {
