@@ -20,26 +20,51 @@ return state[EntityRuntimeKey] as CanvasRenderStateRuntime;
 
 ## Upstream shape
 
-`packages/scene2d-canvas/src/canvasRenderState.ts`, at the pin:
+`packages/scene2d-canvas/src/canvasRenderState.ts` at the pin (`a627849`), the functions that refuse:
 
 ```ts
-export function createCanvasRenderState(
-  registries: Readonly<CanvasRenderRegistries>,
-  canvasTextureResolvers: CanvasTextureResolvers,
-  options: Partial<CanvasRenderOptions> = {},
-): CanvasRenderState {
+export function createCanvasRenderState(options: Readonly<CanvasRenderStateOptions> = {}): CanvasRenderState {
   const state = _createRenderState({
     pixelRatio: options.pixelRatio ?? 1,
-    renderTransform2D: options.renderTransform ?? createMatrix(),
     roundPixels: options.roundPixels ?? false,
     sceneGraphSyncPolicy: options.sceneGraphSyncPolicy,
   }) as CanvasRenderState;
-  // ...writes state.registries through a structural assert...
+  // ...applyBlendMode and the CSS-filter slot...
+  const registries = buildCanvasRenderRegistries(options);
+  const canvasTextureResolvers = options.canvasTextureResolvers ?? createCanvasTextureResolvers(options.canvasHost!);
   const runtime = createCanvasRenderStateRuntime(registries, canvasTextureResolvers);
+  if (options.canvasHost !== undefined) runtime.canvasHost = options.canvasHost;
   state[EntityRuntimeKey] = runtime;
+  (state as { registries: Readonly<CanvasRenderRegistries> }).registries = runtime.registries;
+  // ...
+  return state;
+}
+
+export function createCanvasRenderStateRuntime(
+  registries: Readonly<CanvasRenderRegistries>,
+  canvasTextureResolvers: CanvasTextureResolvers,
+): CanvasRenderStateRuntime {
+  const runtime = createRenderStateRuntime() as CanvasRenderStateRuntime;
+  runtime.registries = cloneCanvasRenderRegistries(registries);
   // ...
 }
+
+export function getCanvasRenderStateRuntime(state: CanvasRenderState): CanvasRenderStateRuntime {
+  return state[EntityRuntimeKey] as CanvasRenderStateRuntime;
+}
 ```
+
+Three details of this shape are load-bearing, and an earlier draft of this document got all three wrong
+by taking its excerpt from the patch text instead of from the pin:
+
+- `createCanvasRenderState` takes **one** parameter, `Readonly<CanvasRenderStateOptions>`. There is no
+  `(registries, canvasTextureResolvers, options)` signature and no exported `CanvasRenderStateInitialization`
+  interface; the registries are derived inside through the module-local `buildCanvasRenderRegistries`.
+- There is no `renderTransform2D` field at this pin.
+- The state's `registries` field is neither the caller's object nor a freshly built one: it is assigned
+  **from the runtime aggregate** (`runtime.registries`). The source comments why — the field must be a read
+  view of the same aggregate the runtime holds, or the offscreen factories that derive a pipeline from it
+  would snapshot an empty policy.
 
 The rewrite is already intended by the source: `CanvasRenderState extends RenderState`, and the runtime
 slot is `EntityRuntimeKey`, which upstream accesses through the same symbol. Nothing here is a
@@ -83,9 +108,10 @@ carries today.
 
 ## Carried workaround
 
-`source-patches/canvas-render-state-runtime-owner-and-initialization.patch` (`dependent: flight`,
+`source-patches/canvas-render-state-runtime-owner-and-initialization.patch` (`dependency: flight`,
 `baseCommit 7e2fc7df`, package `@flighthq/scene2d-canvas`). Target-neutral TypeScript; no public factory
-signature changes. It replaces each asserting expression with a declared owner:
+signature changes. It replaces each asserting expression with a declared owner — five replacements, against
+the pin shape above:
 
 | asserting target expression | replacement |
 | --- | --- |
@@ -93,23 +119,44 @@ signature changes. It replaces each asserting expression with a declared owner:
 | `createRenderStateRuntime() as CanvasRenderStateRuntime` | `initializeRenderStateRuntime<CanvasRenderStateRuntime, CanvasRenderRegistries>({} as CanvasRenderStateRuntime, runtimeRegistries)` |
 | `state[EntityRuntimeKey] = runtime` | `writeCanvasRenderStateRuntimeOwner(state, runtime)` |
 | `state[EntityRuntimeKey] as CanvasRenderStateRuntime` | `readCanvasRenderStateRuntimeOwner(state)` |
-| `(state as { registries: ... }).registries = registries` | `state.registries = registries` |
+| `(state as { registries: Readonly<CanvasRenderRegistries> }).registries = runtime.registries` | `state.registries = runtime.registries` |
+
+Note the fifth row carries `runtime.registries`, not `registries`: the assignment is already reading the
+runtime aggregate at the pin, and the rewrite only removes the structural assert around it.
 
 It adds to `packages/types/src/CanvasRenderState.ts` the computed-symbol cell on the interface plus the two
-accessor functions beside it, so the owner is declared rather than asserted. It also gives
-`createCanvasRenderState` an explicit `CanvasRenderStateInitialization` overload instead of
-`Partial<CanvasRenderOptions>`.
+accessor functions beside it, so the owner is declared rather than asserted.
 
-The two helpers it leans on — `createDerivedRenderStateConstruction` and `initializeRenderStateRuntime` —
-are a **temporary generic render initializer** that exists only because the emitter flattens the heritage.
-They are not a second owner; they are the same allocation constructed through a declared type argument.
+**The two helpers are not this patch's.** `createDerivedRenderStateConstruction` and
+`initializeRenderStateRuntime` are defined by the **sibling** carried patch
+`render-state-runtime-owner-and-initialization` (module `packages/render/src/renderState.ts`, package
+`@flighthq/render-gl`, `baseCommit a627849`, `pendingRebase: none` — so it **is** applied at the live base).
+Their signatures are:
+
+```ts
+export function createDerivedRenderStateConstruction<State extends RenderState>(
+  obj: RenderStateInitialization | undefined,
+): EntityConstruction<State>;
+
+export function initializeRenderStateRuntime<
+  Runtime extends RenderStateRuntime,
+  Registries extends RenderRegistries,
+>(runtime: Runtime, registries: Registries): Runtime;
+```
+
+They are a **temporary generic render initializer** that exists only because the emitter flattens the
+heritage. They are not a second owner; they are the same allocation constructed through a declared type
+argument. Both requests should be read together: this one cannot be applied without that one.
 
 ### Equivalence
 
 State and runtime each retain **one allocation**; the same field values are written in the same order; the
 same `EntityRuntimeKey` attachment is made. Base fields are still initialized before Canvas fields. The
-registry spread still produces one shallow derived registry. Nothing observable — absence, reference
-identity, equality, ordering, exception shape or task settlement — changes.
+runtime still holds one shallow derived registry copy (`cloneCanvasRenderRegistries` at the pin, the spread
+in the rewrite — the same shallow derivation), and the state's `registries` field still points at **that
+aggregate** rather than at the caller's object, which is the property the source comment protects.
+Nothing observable — absence, reference identity, equality, ordering, exception shape or task settlement —
+changes.
 
 ### Expiry
 
@@ -119,9 +166,15 @@ upstream.
 
 ### Status
 
-The patch carries a `pendingRebase` marker: context drift since `a627849` on the 2D lane (10 of 14 removed
+The patch was authored against `baseCommit 7e2fc7df` by the 2D lane (10 of 14 removed
 lines still present, surrounding source changed). It is **not currently applied**, which is why the module
 still refuses at the live base. Rebasing the hunks is the source-patch lane's work, not this request's.
+
+That authoring revision is also why this document's first draft misstated the pin shape: it took its
+excerpt from the patch's own context, which is `7e2fc7df`-era source, instead of reading the live checkout.
+The excerpt above is the live `a627849` source, and the three differences from the earlier draft
+(one `Readonly<CanvasRenderStateOptions>` parameter, no `renderTransform2D`, registries taken from the
+runtime aggregate) are listed under **Upstream shape** so the correction is visible rather than silent.
 
 ## Focused test
 

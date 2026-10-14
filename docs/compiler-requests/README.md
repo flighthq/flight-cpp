@@ -122,7 +122,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   relationships flatten into independent owners, and the `state[EntityRuntimeKey]` read then asserts a wider
   owner back out of retained storage. Carried by the `canvas-render-state-runtime-owner-and-initialization`
   patch, which declares the exact owner beside the type and reaches it through declared accessors; that patch
-  carries a `pendingRebase` marker on the 2D lane, so the module still refuses at the live base.
+  carries a `pendingRebase` marker on the 2D lane, so the module still refuses at the live base, and its
+  `createDerivedRenderStateConstruction` / `initializeRenderStateRuntime` helpers come from the applied
+  sibling `render-state-runtime-owner-and-initialization` patch — the two are read together.
 - [An open 3D material path must retain each concrete material owner](material3d-concrete-value-path.md) —
   the current `Material3D` mesh, proxy, draw-list and renderer boundaries erase sixteen built-in owners before
   their GL binders assert them back. The current-pin replacement is an open `Material3DValue` union propagated
