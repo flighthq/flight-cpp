@@ -100,6 +100,15 @@ CheckOutcome reason_outcome(const char* reason) {
       flight::types::reason_01523507f7b21613{.reason = String(reason)}))};
 }
 
+// An arm that carries an update AND an arbitrary reason. The union's update arm is a plain struct, so a
+// reason the source does not list can be put beside an update -- which is the only way to reach the
+// listing check without the missing-update guard answering first.
+CheckOutcome arm_with_reason_and_update(const char* reason, flight::Ref<Update> update) {
+  return CheckOutcome{UpdateArm(flight::make_ref<flight::types::reason_update_457a6ef5d21e9081>(
+      flight::types::reason_update_457a6ef5d21e9081{
+          .reason = String(reason), .update = std::move(update)}))};
+}
+
 CheckOutcome downloaded_outcome(flight::Ref<Update> update) {
   return CheckOutcome{UpdateArm(flight::make_ref<flight::types::reason_update_457a6ef5d21e9081>(
       flight::types::reason_update_457a6ef5d21e9081{
@@ -333,6 +342,39 @@ int main() {
     check(outcome == flight::updater::install_ok && owner_state->installs.size() == 1 &&
               other_state->installs.empty(),
           "so the handle still installs through the provider that owns it, not the refused one");
+  }
+
+  // --- Cases added by the mutation battery, which found three holes and one equivalence ------------
+  //
+  // Four mutations survived the first run. Three were real holes, closed here; the fourth is an
+  // equivalence, stated in the parity doc rather than papered over with a case.
+  //
+  // 1. The module's constants were asserted by IDENTITY to the constant, and a mutated REASON TEXT still
+  //    satisfies that -- both sides move together. So the constants' own values were never pinned.
+  {
+    check(reason_of(flight::updater::check_in_progress) == String("check-in-progress"),
+          "the check-in-progress constant carries its own reason text");
+    check(reason_of(flight::updater::not_available) == String("not-available"),
+          "as does not-available");
+    check(reason_of(flight::updater::operation_failed) == String("operation-failed"),
+          "and operation-failed");
+    check(flight::updater::install_ok->reason == String("ok"),
+          "while the install-side constants carry theirs too");
+    check(flight::updater::install_operation_failed->reason == String("operation-failed"),
+          "including the install-side failure, the same word on a different carrier");
+  }
+
+  // 2. An arm carrying an UPDATE but a reason the source does not list is operation-failed. The existing
+  //    cases reach an unlisted reason only through the reason-only arm, where the absent update makes the
+  //    same answer arrive by a second route -- so the listing check itself was untested.
+  {
+    auto state = std::make_shared<Backend>();
+    state->on_check = [] { return arm_with_reason_and_update("something-else", downloaded_update()); };
+    const auto host = backend(state);
+
+    const auto outcome = flight::updater::check_for_app_update(host).get();
+    check(reason_of(outcome) == String("operation-failed") && outcome.index() == 1,
+          "an unlisted reason is operation-failed EVEN when the arm carries an update");
   }
 
   if (failures == 0) std::cout << "generated updater: all checks passed\n";

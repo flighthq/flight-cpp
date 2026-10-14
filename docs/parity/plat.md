@@ -126,7 +126,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/permissions` | 3 | 5 | 31 | none | none | 3 / 0 |
 | `@flighthq/filesystem` | 3 | 1 | 48 | incidental | none | 2 / 1 |
 | `@flighthq/preferences` | 4 | 2 | 45 | dedicated | partial | 3 / 1 |
-| `@flighthq/updater` | 3 | 1 | 6 | dedicated | none | 2 / 1 |
+| `@flighthq/updater` | 3 | 1 | 6 | dedicated | assisted | 2 / 1 |
 | `@flighthq/useragent` | 4 | 2 | 104 | dedicated | none | 3 / 1 |
 | `@flighthq/connectivity` | 3 | 1 | 17 | dedicated | none | 2 / 1 |
 
@@ -2030,7 +2030,34 @@ Upstream carries per-package records at `flight/agents/packages/updater/`: `stat
 
 ### Existing CTest coverage
 
-- `flight_cpp.generated_updater` — `tests/generated_updater_test.cpp` (dedicated)
+- `flight_cpp.generated_updater` — `tests/generated_updater_test.cpp` (dedicated), PRE-EXISTING. The coverage column
+  already counted it; the TIER column read `none` until this unit changed it to `assisted`. The test was written for
+  this repository before this unit and is not one I added; it runs green at this pin. The package ships a COMPLETE
+  hand-written override with no stubs -- the emitter refuses `checkForAppUpdate` under
+  `cpp-contextual-union-inequivalent` and the constants under a structural-row projection, which is why it exists.
+
+  This unit added the MUTATION BATTERY the file had none of. Sixteen mutations against the override: fourteen
+  killed by failing checks, one detected by the mutant ABORTING, and one proved EQUIVALENT. No unexplained
+  survivor.
+
+  Three mutations SURVIVED the first run and all three were real holes, closed by ADDING cases:
+  * the module's constants were asserted by IDENTITY to the constant, and a mutated reason TEXT still satisfies
+    that -- both sides move together -- so no constant's own value was pinned. That is worth noting as a pattern:
+    an identity assertion against a constant does not pin the constant. The check-in-progress and
+    install-operation-failed reasons are now asserted directly.
+  * an arm carrying an UPDATE but an unlisted reason was never fed, because the existing cases reach an unlisted
+    reason only through the reason-only arm -- where the absent update makes the same answer arrive by a second
+    route, masking the listing check itself.
+  * the ownership guard's crash-detected mutant is recorded as a crash rather than a failing check: with
+    `downloadOwners.set` removed, a second install finds no origin and throws.
+
+  The fourth survivor is reported as an EQUIVALENCE, PROVED rather than assumed: removing the
+  `!update.has_value()` guard changes nothing observable, because a reason-only arm whose reason is exactly
+  `downloaded` yields `operation-failed` either way -- the guard answers directly, and without it `update.value()`
+  throws and the surrounding `catch (...)` answers the same. Measured on both the original and the mutant: both
+  return `operation-failed`. So no case was invented for it.
+
+  No compiler request was filed by this unit; the refusals are named in the override's own entries.
 
 ### Local generation status
 
