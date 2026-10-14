@@ -106,7 +106,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/video` | 5 | 3 | 79 | dedicated | none | 4 / 1 |
 | `@flighthq/webcam` | 2 | 1 | 1 | none | none | 2 / 0 |
 | `@flighthq/midi` | 7 | 5 | 40 | dedicated | none | 5 / 2 |
-| `@flighthq/sensors` | 3 | 2 | 67 | dedicated | none | 3 / 0 |
+| `@flighthq/sensors` | 3 | 2 | 67 | dedicated | ready | 3 / 0 |
 | `@flighthq/geolocation` | 4 | 2 | 13 | dedicated | none | 4 / 0 |
 | `@flighthq/haptics` | 3 | 1 | 19 | dedicated | none | 3 / 0 |
 | `@flighthq/device` | 3 | 1 | 12 | dedicated | none | 3 / 0 |
@@ -1176,6 +1176,42 @@ Upstream carries per-package records at `flight/agents/packages/sensors/`: `stat
   four half-angle products vanishes, so the terms only all matter together. That was a hole in this file rather than
   an equivalence, so `test_every_axis_at_a_quarter_turn_product_is_not_the_identity` was added for it, and it is
   killed. No equivalence was found on this surface and none is claimed.
+
+  A LATER re-audit mapped all 67 upstream cases mechanically against the file and CORRECTED AN OVERCLAIM IN IT. The
+  entry above says the constructors and probes are covered; mapped case by case, THREE of the seven reading
+  constructors and SIX of the nine capability probes were referenced NOWHERE: `createAmbientLightReading`,
+  `createPressureReading`, `createProximityReading`, and the ambient-light, barometer, gravity, gyroscope,
+  linear-acceleration, magnetometer and proximity probes. The file exercised `createQuaternionReading`,
+  `createMotionReading`, `createOrientationReading`, `createRotationRateReading`, `hasAccelerometer`,
+  `hasOrientationSensor` and `isSensorsSupported`, which is what the summary was generalised from.
+
+  All of them are covered now, by ADDING cases: each constructor's own declared sentinels (the `-1` "not yet
+  reported" interval and timestamp, the `-1` distance and altitude, and a `near` that starts FALSE, which is a real
+  answer rather than an absence), and each probe reading ITS OWN provider entry -- with a provider that refuses the
+  barometer asserted to leave the OTHER entries unaffected, so a probe reading one shared flag would fail.
+
+  The seven initializers are deliberately NOT added as separate cases, and that is a reasoned equivalence rather
+  than an omission: unlike `@flighthq/protocol`, where the initializer takes the argument a constructor's `??`
+  default would otherwise hide, every `initialize_*Reading` here takes ONLY the construction -- the constructor adds
+  allocation and nothing else -- so the constructor cases exercise the initializer completely.
+
+  The dispose-clears audit is NOT APPLICABLE to this package, stated with its evidence rather than assumed: the
+  module contains ZERO `clear_signal` calls and `disposeSensors` is a one-line `detachSensors`, so there is no
+  clearing to observe independently. That audit found real holes in `@flighthq/shortcut`, `@flighthq/mediasession`
+  and `@flighthq/power`; this package has nothing of the kind.
+
+  Audited and passing: the constants are compared as LITERALS (`9.80665`, the `-1.0` sentinels, the `unknown`
+  accuracy, the identity quaternion) rather than by identity to a module-owned value; the case count is 67 with no
+  `it.each`, no `test.each` and no loop-generated row; and the tier column, which read `none`, is corrected to
+  `ready`.
+
+  Sixteen mutations re-run WITH TARGET-DIFF CONFIRMATION, all sixteen killed. Two of them are the ambient-light
+  accuracy and interval defaults, which could not have been killed before the constructors above were covered.
+
+  ONE PROCESS NOTE, recorded because it produced a false reading: the first run of that battery was launched while
+  this file was still being edited, and its compiles read a half-written test -- two mutations reported COMPILE-FAIL
+  that compile clean against the finished file. A battery that runs concurrently with edits to the file it compiles
+  is not evidence, and that run was discarded rather than reconciled.
 
 ### Local generation status
 

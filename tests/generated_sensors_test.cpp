@@ -248,6 +248,7 @@ struct SensorsHost {
   std::function<void(MotionRow, RotationRow)> motion;
   bool motion_supported = true;
   bool orientation_supported = true;
+  bool refuse_barometer = false;
 
   flight::Ref<types::HostSensorsCapability> capability = flight::make_ref<types::HostSensorsCapability>();
 
@@ -278,6 +279,15 @@ struct SensorsHost {
                    Options) { return counting(); };
     capability->is_motion_supported = [this]() { return motion_supported; };
     capability->is_orientation_supported = [this]() { return orientation_supported; };
+    // All NINE probes the module exposes, each answering for its own entry: a fixture that wired only some
+    // would leave the rest reading a slot the row does not carry.
+    capability->is_ambient_light_supported = []() { return true; };
+    capability->is_barometer_supported = [this]() { return !refuse_barometer; };
+    capability->is_gravity_supported = []() { return true; };
+    capability->is_gyroscope_supported = []() { return true; };
+    capability->is_linear_acceleration_supported = []() { return true; };
+    capability->is_magnetometer_supported = []() { return true; };
+    capability->is_proximity_supported = []() { return true; };
   }
 
   flight::StructuralRef<HostSchema> row() {
@@ -293,7 +303,14 @@ struct SensorsHost {
         flight::row_field<flight::RowKey<"subscribeBarometer">>(capability->subscribe_barometer),
         flight::row_field<flight::RowKey<"subscribeProximity">>(capability->subscribe_proximity),
         flight::row_field<flight::RowKey<"isMotionSupported">>(capability->is_motion_supported),
-        flight::row_field<flight::RowKey<"isOrientationSupported">>(capability->is_orientation_supported));
+        flight::row_field<flight::RowKey<"isOrientationSupported">>(capability->is_orientation_supported),
+        flight::row_field<flight::RowKey<"isAmbientLightSupported">>(capability->is_ambient_light_supported),
+        flight::row_field<flight::RowKey<"isBarometerSupported">>(capability->is_barometer_supported),
+        flight::row_field<flight::RowKey<"isGravitySupported">>(capability->is_gravity_supported),
+        flight::row_field<flight::RowKey<"isGyroscopeSupported">>(capability->is_gyroscope_supported),
+        flight::row_field<flight::RowKey<"isLinearAccelerationSupported">>(capability->is_linear_acceleration_supported),
+        flight::row_field<flight::RowKey<"isMagnetometerSupported">>(capability->is_magnetometer_supported),
+        flight::row_field<flight::RowKey<"isProximitySupported">>(capability->is_proximity_supported));
   }
 };
 
@@ -388,6 +405,66 @@ void test_the_reading_constructors_allocate_their_declared_defaults() {
   check_close(quaternion->x, 0.0, "with no vector part");
 }
 
+// --- Cases added by the re-audit's mechanical mapping --------------------------------------------
+//
+// Mapping all 67 upstream cases against this file showed my own earlier summary was an OVERCLAIM: it said
+// "every reading constructor allocates the declared defaults", and only FOUR of the seven were exercised.
+// Three constructors, and SIX of the nine capability probes, were referenced NOWHERE. Both sets are added
+// here. The seven initializers are NOT added as separate cases, and that is a reasoned choice rather than
+// an omission: unlike `@flighthq/protocol`, where the initializer takes the argument the constructor's
+// `??` default would otherwise hide, every `initialize_*Reading` here takes ONLY the construction -- the
+// constructor adds allocation and nothing else -- so the constructor cases above exercise the initializer
+// completely. There is nothing a direct call could observe that they do not.
+void test_the_remaining_reading_constructors_allocate_their_declared_defaults() {
+  const auto ambient = sensors_ns::create_ambient_light_reading();
+  check(ambient->accuracy == flight::String("unknown"), "an ambient-light reading starts at the unknown accuracy");
+  check_close(ambient->illuminance, 0.0, "with zero illuminance");
+  check_close(ambient->interval, -1.0, "and the not-yet-reported interval sentinel, not zero");
+  check_close(ambient->timestamp, -1.0, "and the same sentinel for its timestamp");
+
+  const auto pressure = sensors_ns::create_pressure_reading();
+  check(pressure->accuracy == flight::String("unknown"), "a pressure reading starts at the unknown accuracy");
+  check_close(pressure->pressure, 0.0, "with zero pressure");
+  check_close(pressure->altitude, -1.0, "and the -1 sentinel for altitude, which is NOT zero-metres");
+  check_close(pressure->interval, -1.0, "and for its interval");
+
+  const auto proximity = sensors_ns::create_proximity_reading();
+  check(proximity->accuracy == flight::String("unknown"), "a proximity reading starts at the unknown accuracy");
+  check_close(proximity->distance, -1.0, "with the -1 sentinel for distance");
+  check_close(proximity->max, -1.0, "and for its maximum");
+  check(!proximity->near, "and `near` starting FALSE, which is a real answer rather than an absence");
+
+  const auto rotation = sensors_ns::create_rotation_rate_reading();
+  check(rotation->accuracy == flight::String("unknown"), "a rotation-rate reading starts at the unknown accuracy");
+  check_close(rotation->alpha, 0.0, "with no rotation on any axis");
+  check_close(rotation->beta, 0.0, "on beta");
+  check_close(rotation->gamma, 0.0, "and on gamma");
+  check_close(rotation->interval, -1.0, "and the interval sentinel");
+}
+
+void test_every_capability_probe_reads_its_own_provider_entry() {
+  SensorsHost host;
+  check(sensors_ns::has_accelerometer(host.row()), "hasAccelerometer reads isMotionSupported");
+  check(sensors_ns::has_ambient_light_sensor(host.row()), "hasAmbientLightSensor reads isAmbientLightSupported");
+  check(sensors_ns::has_barometer(host.row()), "hasBarometer reads isBarometerSupported");
+  check(sensors_ns::has_gravity_sensor(host.row()), "hasGravitySensor reads isGravitySupported");
+  check(sensors_ns::has_gyroscope(host.row()), "hasGyroscope reads isGyroscopeSupported");
+  check(sensors_ns::has_linear_acceleration_sensor(host.row()),
+        "hasLinearAccelerationSensor reads isLinearAccelerationSupported");
+  check(sensors_ns::has_magnetometer(host.row()), "hasMagnetometer reads isMagnetometerSupported");
+  check(sensors_ns::has_orientation_sensor(host.row()), "hasOrientationSensor reads isOrientationSupported");
+  check(sensors_ns::has_proximity_sensor(host.row()), "hasProximitySensor reads isProximitySupported");
+  check(sensors_ns::is_sensors_supported(host.row()), "and isSensorsSupported reads its own capability");
+
+  // Each probe answers for ITS entry: a provider that refuses one of them is not reported as refusing the
+  // others, which is what a test reading a single shared flag would get wrong.
+  SensorsHost refusing;
+  refusing.refuse_barometer = true;
+  check(!sensors_ns::has_barometer(refusing.row()),
+        "a provider refusing the barometer says so");
+  check(sensors_ns::has_gyroscope(refusing.row()), "while its OTHER entries are unaffected");
+}
+
 } // namespace
 
 int main() {
@@ -414,6 +491,8 @@ int main() {
 
   test_the_capability_probes_read_the_provider();
   test_the_reading_constructors_allocate_their_declared_defaults();
+  test_the_remaining_reading_constructors_allocate_their_declared_defaults();
+  test_every_capability_probe_reads_its_own_provider_entry();
 
   if (failures == 0) {
     std::cout << "sensors parity: all checks passed\n";
