@@ -17,6 +17,27 @@
 #include <flight/audio/audio_decode_slot.hpp>
 #include <flight/audio/audio_format.hpp>
 #include <flight/abort.hpp>
+// RE-AUDIT FINDINGS (this suite is otherwise unchanged).
+//
+// REACHABILITY: a mechanical export map put 6 exports at zero call sites, and tracing the MODULE showed all
+// six are called internally (create_audio_resource_failure, initialize_audio_resource,
+// initialize_embedded_audio_resource_reference, initialize_external_audio_resource_reference,
+// resolve_audio_decode_slot, select_audio_resource_source). So NO emitted export is uncovered -- the trace
+// turned six apparent gaps into zero. The map ran with a positive control (120 flight::audio:: call sites).
+//
+// NOT AFFECTED BY THE LOG DEFECT: `@flighthq/log`'s retained loggers call an omitted `merge_span_fields`
+// that makes logging THROW at run time on this profile, which makes any log-observed behaviour unobservable.
+// This suite has NO log dependence at all -- audio's headers never include or call `flight::log` -- so no
+// assertion here is affected. That is stated as a measured absence rather than assumed.
+//
+// ONE SURVIVOR, KILLED: the upstream `findAudioResourceReferenceByName` case looks up only the SECOND entry,
+// so a scan starting at index 1 satisfied it -- and a mutation that skipped the first entry SURVIVED the
+// whole suite. Finding the first entry is the same contract and is now pinned; the mutation is re-run
+// against the fix and caught.
+//
+// The two override modules' repaired state writes were mutated directly (clearing the recorded failure, and
+// inverting the failed-state test) and both are caught, which is what makes the earlier repair load-bearing
+// rather than merely present.
 #include <flight/audio/audio_resource.hpp>
 #include <flight/audio/audio_resource_from.hpp>
 #include <flight/array_buffer.hpp>
@@ -757,6 +778,15 @@ int main() {
     check(found.has_value() && std::get<flight::Ref<flight::types::EmbeddedAudioResourceReference>>(found.value()) ==
                                   loop,
           "reference: a named lookup returns the reference carrying that name");
+    // The upstream case looks up only the SECOND entry, so a scan that started at index 1 would satisfy it
+    // -- and did: a mutation skipping the first entry SURVIVED the whole suite. "Returns the reference
+    // carrying that name" covers the first entry too, so it is pinned here.
+    const auto first_found =
+        flight::audio::find_audio_resource_reference_by_name(references, flight::String("intro"));
+    check(first_found.has_value() &&
+              std::get<flight::Ref<flight::types::EmbeddedAudioResourceReference>>(first_found.value()) ==
+                  intro,
+          "reference: a named lookup finds the FIRST entry too, not only later ones");
     check(!flight::audio::find_audio_resource_reference_by_name(references, flight::String("missing")).has_value(),
           "reference: a name the document does not carry finds nothing");
     check(!flight::audio::find_audio_resource_reference_by_name(
