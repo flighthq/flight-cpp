@@ -1607,7 +1607,7 @@
       "id": "scene3d-gl-stable-modifier-property-reads",
       "dependency": "flight",
       "patch": "scene3d-gl-stable-modifier-property-reads.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene3d-gl/src/glShadedBuiltInModifiers.ts",
       "package": "@flighthq/scene3d-gl",
       "answers": "refusal",
@@ -1619,11 +1619,8 @@
       "unblocks": "Allows real built-in shaded GL modifiers to consume guarded optional textures, axes, and facing modes after their concrete readonly owners are recovered from ModifierValue.",
       "expires": "when flight-compiler propagates present-storage evidence to repeated nested property receivers after a checker-proven guard, or Flight adopts stable local reads at these sites.",
       "appliedOn": "2026-10-09",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "GL",
-        "reason": "applies only with reduced context (git apply -C1) at the new pin; regenerate the patch text against it and confirm the hunk still lands on the intended expression"
-      }
+      "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "rebasedOn": "2026-10-14"
     },
     {
       "id": "scene3d-gl-stable-fog-mode-reads",

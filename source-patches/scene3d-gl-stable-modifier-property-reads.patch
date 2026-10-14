@@ -1,9 +1,8 @@
 diff --git a/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts b/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts
-index 0bd2ef8..943d0ad 100644
 --- a/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts
 +++ b/packages/scene3d-gl/src/glShadedBuiltInModifiers.ts
-@@ -48,14 +48,16 @@ export const animatedNormalGlModifierSnippet: GlModifierSnippet = {
-   bind(modifier: ReadonlyModifierValue, context: Readonly<GlModifierBindContext>): void {
+@@ -47,14 +47,16 @@ export const animatedNormalGlModifierSnippet: GlModifierSnippet = {
+   bind(modifier: Readonly<Modifier>, context: Readonly<GlModifierBindContext>): void {
      const animated = modifier as Readonly<AnimatedNormalModifier>;
      if (animated.map === null) return;
 +    const map = animated.map;
@@ -21,7 +20,7 @@ index 0bd2ef8..943d0ad 100644
        const secondary = animated.secondaryScroll ?? scroll;
        gl.uniform2f(gl.getUniformLocation(context.program, `u_animNormalScroll2${suffix}`), secondary.x, secondary.y);
      }
-@@ -109,9 +111,13 @@ export const emissiveGlModifierSnippet: GlModifierSnippet = {
+@@ -108,9 +110,13 @@ export const emissiveGlModifierSnippet: GlModifierSnippet = {
        scratchRgba[2],
      );
      gl.uniform1f(gl.getUniformLocation(context.program, `u_emissiveStrength${suffix}`), emissive.strength);
@@ -37,7 +36,7 @@ index 0bd2ef8..943d0ad 100644
        gl.uniform1f(gl.getUniformLocation(context.program, `u_emissiveFacingSign${suffix}`), sign);
        gl.uniform1f(
          gl.getUniformLocation(context.program, `u_emissiveFacingSoftness${suffix}`),
-@@ -202,8 +208,10 @@ export const dissolveGlModifierSnippet: GlModifierSnippet = {
+@@ -201,8 +207,10 @@ export const dissolveGlModifierSnippet: GlModifierSnippet = {
        scratchRgba[1],
        scratchRgba[2],
      );
@@ -48,9 +47,9 @@ index 0bd2ef8..943d0ad 100644
 +      bindGlModifierTexture(context, map, `u_dissolveMap${suffix}`);
 +    } else gl.uniform1f(gl.getUniformLocation(context.program, `u_dissolveScale${suffix}`), dissolve.scale ?? 8);
    },
-   contribution(modifier: ReadonlyModifierValue, index: number): string {
+   contribution(modifier: Readonly<Modifier>, index: number): string {
      const dissolve = modifier as Readonly<DissolveModifier>;
-@@ -380,15 +388,19 @@ export const vertexDisplaceGlModifierSnippet: GlModifierSnippet = {
+@@ -382,15 +390,19 @@ export const vertexDisplaceGlModifierSnippet: GlModifierSnippet = {
      const suffix = `_${context.index}`;
      gl.uniform1f(gl.getUniformLocation(context.program, `u_vDisplaceAmplitude${suffix}`), displace.amplitude);
      if (displace.axis !== undefined) {
@@ -74,10 +73,14 @@ index 0bd2ef8..943d0ad 100644
      } else {
        gl.uniform1f(gl.getUniformLocation(context.program, `u_vDisplaceFrequency${suffix}`), displace.frequency ?? 1);
        gl.uniform1f(gl.getUniformLocation(context.program, `u_vDisplaceSpeed${suffix}`), displace.speed ?? 1);
-@@ -466,3 +478,5 @@ function bindGlModifierTexture(
+@@ -461,7 +473,9 @@ function bindGlModifierTexture(
+ }
+ 
  function isEmissiveGated(modifier: Readonly<EmissiveModifier>): boolean {
 -  return modifier.facing !== undefined && modifier.facing !== EmissiveModifierFacing.Ignore;
 +  if (modifier.facing === undefined) return false;
 +  const facing = modifier.facing;
 +  return facing !== EmissiveModifierFacing.Ignore;
  }
+ 
+ const scratchRgba: LinearColor = [0, 0, 0, 0];
