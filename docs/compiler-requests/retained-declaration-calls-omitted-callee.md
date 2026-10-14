@@ -185,3 +185,20 @@ including the generated module, while retaining dependency overrides, produces e
 name failures in addition to the separate partial-row carrier failures. The quadbatch override supplies
 the omitted signal accessor and keeps the three retained callers, so this site expires when omission
 propagation or an emitted placeholder makes the unoverridden partial module compile.
+
+## Eighth measured site: `@flighthq/media` -- and it costs the same module twice over
+
+`packages/media/src/videoChannel.ts` refuses its module-local `getElement` (source line 170, marked
+`NOT GENERATED` in `generated/include/flight/media/video_channel.hpp`) and retains `playVideoResource`, whose
+emitted body calls it. `get_element` is declared nowhere in the emitted tree.
+
+```text
+flight/media/video_channel.hpp: use of undeclared identifier 'get_element'
+flight/media/_internal_index.hpp: use of undeclared identifier 'get_element'
+flight/media/contract.hpp:       use of undeclared identifier 'get_element'
+```
+
+Three of the package's seven headers fail, so `@flighthq/media` is partial with 4/7 compiling and the whole
+`videoChannel` fixture -- 29 upstream cases -- is unreachable at this pin. Measured on the emission alone,
+with no override and no patch. The omitted function is `getElement`, whose own refusal reason is separate;
+this request is only about its retained callers.
