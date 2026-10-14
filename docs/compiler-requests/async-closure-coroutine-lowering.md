@@ -71,3 +71,58 @@ So lowering async closures alone does not let `attachTrayEvent` emit; it also ne
 
 None. `@flighthq/tray` is `partial` with no header compiling; this is one of the refusals inventoried
 read-only for it, and no source patch rewrites the closures.
+
+## Carried compiler patch
+
+[`compiler-async-closure-coroutine.patch`](../../source-patches/compiler-async-closure-coroutine.patch) with the runtime
+`flight::retain_closure` (`include/flight/task.hpp`).
+
+A coroutine lambda's frame does not copy the lambda's captures. It reads them through the closure object, so
+dropping the closure while the coroutine is suspended leaves the frame reading released memory. That happens when
+`then` drops its callback, or when an object's async method is still suspended after the object is gone. The
+closure is therefore held in a shared owner, created where the closure is created. Each call goes through
+`retain_closure`, which keeps that owner alive for the life of the call's coroutine frame and returns the same task,
+with no added scheduling step:
+
+```cpp
+[async_closure = std::make_shared<const std::function<flight::Task<void>()>>([=]() -> flight::Task<void> {
+  log.push(flight::String("before"));
+  co_await tail;
+  log.push(flight::String("after"));
+  co_return;
+})]() -> flight::Task<void> { return flight::retain_closure((*async_closure)(), async_closure); }
+```
+
+**Scope.** Lowered:
+- async arrows and function expressions, expression-bodied or block-bodied;
+- async object-literal methods.
+
+Still refused, because they have no single callable type to hold:
+- generic async closures;
+- rest or pack parameters;
+- `this`.
+
+The catch representation and thrown-value identity are untouched.
+
+**Verification.**
+- `cppAsyncClosure.test.ts`: 7 fixtures.
+- One upstream test that pinned the refusal now asserts the lowering.
+- The backend suite has no new failures.
+- `tests/async_closure_test.cpp` runs the emitted code verbatim and checks:
+  - ordering through `then`;
+  - a shared binding across calls;
+  - an expression arrow;
+  - a closure dropped while suspended keeps its capture alive and releases it after settlement;
+  - an object method outlives its object.
+
+  A mutant without `retain_closure` fails the lifetime check.
+
+**Measured on `@flighthq/tray`** (scratch, not committed):
+- `queueAnimationWrite` now emits and adds no compile errors;
+- `attachTrayEvent` stops next at the caught-value refusal above;
+- `startTrayIconAnimation` stops first at its own contextual-union refusal.
+
+**Self-reference boundary.** `attachTrayEvent`'s release literal refers to itself
+(`const release = { async release() { … release.released … } }`). Sync closures already capture `release` by value
+inside its own initializer, before it is assigned. That is pre-existing capture behaviour and is not changed here,
+so the shape is not claimed to work.

@@ -18,6 +18,13 @@ cc_test(
 )
 
 cc_test(
+    name = "async_closure_test",
+    srcs = ["async_closure_test.cpp"],
+    size = "small",
+    deps = ["//:cpp"],
+)
+
+cc_test(
     name = "upstream_math_geometry_parity_test",
     srcs = [
         "generated/upstream_math_geometry_parity.cpp",

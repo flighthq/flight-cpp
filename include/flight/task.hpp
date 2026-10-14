@@ -101,8 +101,15 @@ class CoroutineOwner {
     if (coroutine_) coroutine_.destroy();
   }
 
+  // Keeps an object alive for as long as the coroutine frame exists. An async closure's coroutine frame points
+  // into the closure that started it -- its captures are members of that closure, not copies in the frame -- so
+  // the closure must outlive every suspension. Members are destroyed after the destructor body, so the frame is
+  // always destroyed first and never sees a released closure.
+  void retain(std::shared_ptr<const void> retained) { retained_.push_back(std::move(retained)); }
+
  private:
   std::coroutine_handle<> coroutine_;
+  std::vector<std::shared_ptr<const void>> retained_;
 };
 
 template <typename Value>
@@ -416,6 +423,9 @@ class Task {
     std::shared_ptr<detail::CoroutineOwner> source_owner_;
     std::shared_ptr<detail::TaskState<Value>> state_;
   };
+
+  template <typename Retained>
+  friend Task<Retained> retain_closure(Task<Retained> task, std::shared_ptr<const void> closure);
 
   Task(const Task&) noexcept = default;
   Task(Task&&) noexcept = default;
@@ -917,6 +927,16 @@ struct Task<Value>::promise_type : detail::TaskPromiseResult<Value> {
   std::shared_ptr<Executor> executor_;
   std::weak_ptr<detail::CoroutineOwner> owner_;
 };
+
+// The task an async closure returned, with the closure kept alive for the life of its coroutine frame. The
+// compiler holds the closure in a shared owner and calls it through this, so a callback that `then` drops after
+// starting it, or an object whose async method is still suspended when the object goes away, cannot leave the
+// frame reading released captures. The task is returned unchanged: same state, same settlement, no extra step.
+template <typename Value>
+[[nodiscard]] Task<Value> retain_closure(Task<Value> task, std::shared_ptr<const void> closure) {
+  if (task.owner_) task.owner_->retain(std::move(closure));
+  return task;
+}
 
 template <typename Value>
 [[nodiscard]] Task<Array<Value>> all_tasks(const Array<Task<Value>>& tasks) {

@@ -4004,6 +4004,23 @@
       "unblocks": "@flighthq/tray invokeRead (pending invokeUpdate); @flighthq/materials getMaterialOfKind on its owner's next regeneration.",
       "expires": "when upstream reads a dependent indexed access through the type argument's carrier (docs/compiler-requests/dependent-indexed-access-through-references.md).",
       "appliedOn": "2026-10-14"
+    },
+    {
+      "id": "compiler-async-closure-coroutine",
+      "dependency": "flight-compiler",
+      "patch": "compiler-async-closure-coroutine.patch",
+      "baseCommit": "2b687eaf6b631e0fa4d7d6e18dad93b845f99633",
+      "module": "packages/compiler-backend-cpp/src/cppCompilerBackend.ts",
+      "package": "@flighthq/compiler-backend-cpp",
+      "answers": "refusal",
+      "refusal": "`async closures require C++ coroutine lowering` for every async arrow, function expression and object-literal method, while a module-level async function lowers. @flighthq/tray attachTrayEvent (async release method) and queueAnimationWrite (async callback to then).",
+      "rewrite": "An async closure with a fixed callable type (no type parameters, rest or pack parameters, or `this`) is emitted as a coroutine lambda `-> flight::Task<T>` with co_return/co_await, held in `std::make_shared<const std::function<Task<T>(Params)>>` created where the closure is created; the closure the source sees is an outer lambda with the same parameters that calls it through `flight::retain_closure(task, holder)`. Other async closures stay refused. One upstream test expectation that pinned the refusal now asserts the lowering.",
+      "equivalence": "A coroutine lambda's frame reads captures through the closure object, so the closure must outlive every suspension. retain_closure (include/flight/task.hpp) attaches the holder to the task's CoroutineOwner, which destroys the frame before releasing it, and returns the same task: eager start, same settlement, no added scheduling step. Captures are taken where the closure is created, with the same value/shared-cell plan as sync closures. Thrown values and the catch representation are unchanged.",
+      "verification": "New cppAsyncClosure.test.ts: 7 pass; the 4 positives (then callback, object method, expression arrow, shared mutable capture) fail without the patch, and 3 negatives (generic, rest parameter, this) are refused both ways. The updated upstream test passes. compiler-backend-cpp suite at -j2 on top of compiler-dependent-indexed-access-carrier: the same 46 pre-existing failures, none new. Native: tests/async_closure_test.cpp (CTest flight_cpp.async_closure) runs the emitted code verbatim: then-callback ordering and settlement, shared binding across calls, expression arrow, a closure dropped while suspended keeps its capture alive and releases it after, and an object method keeps running after its object is gone. A mutant without retain_closure fails the lifetime check. Existing Task-using generated tests (clipboard, ipc, filesystem, permissions) still pass. Scratch regeneration of @flighthq/tray: queueAnimationWrite now emits and adds no compile errors; attachTrayEvent's first refusal becomes the parked caught-value-into-unknown gap; the four headers keep the same errors (calls to the three still-refused functions). Tray rows not committed.",
+      "whyNotUpstreamFirst": "Async callbacks and async methods are common SDK shapes; upstream receives docs/compiler-requests/async-closure-coroutine-lowering.md.",
+      "unblocks": "@flighthq/tray queueAnimationWrite; attachTrayEvent's async release once the caught-value capability exists (its release literal is also self-referential, which sync closures already capture before initialization).",
+      "expires": "when upstream lowers async closures to coroutines that keep their closure alive (docs/compiler-requests/async-closure-coroutine-lowering.md).",
+      "appliedOn": "2026-10-14"
     }
   ]
 }

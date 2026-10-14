@@ -36,6 +36,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 | [`compiler-coalesced-union-member-narrowing.patch`](../../source-patches/compiler-coalesced-union-member-narrowing.patch) | [A member-presence narrow must select across every alternative that carries the member](narrowed-member-multi-alternative-selection.md) |
 | [`compiler-narrowed-coalesced-arm-slot.patch`](../../source-patches/compiler-narrowed-coalesced-arm-slot.patch) | [A binding narrowed to one coalesced arm must enter a wider union as the slot it is stored in](narrowed-coalesced-arm-into-wider-union.md) |
 | [`compiler-dependent-indexed-access-carrier.patch`](../../source-patches/compiler-dependent-indexed-access-carrier.patch) | [`T['key']` on a type parameter must read the member through the type argument's carrier](dependent-indexed-access-through-references.md) |
+| [`compiler-async-closure-coroutine.patch`](../../source-patches/compiler-async-closure-coroutine.patch) | [An async closure needs the coroutine lowering a module-level function gets](async-closure-coroutine-lowering.md) |
 | [`compiler-dependent-erased-object-recovery-template.patch`](../../source-patches/compiler-dependent-erased-object-recovery-template.patch) | [Dependent erased-object recovery needs a template disambiguator](dependent-erased-object-recovery-template.md) |
 | [`compiler-dependent-indexed-access-reference-carrier.patch`](../../source-patches/compiler-dependent-indexed-access-reference-carrier.patch) | [Dependent indexed access must read through the reference carrier](dependent-indexed-access-reference-carrier.md) |
 | [`compiler-contextual-imported-union-owner.patch`](../../source-patches/compiler-contextual-imported-union-owner.patch) | [Contextual construction of an imported union](compiler-contextual-imported-union-owner.md) |
@@ -230,9 +231,6 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `tray-create-result-and-runtime-owner`, which names the create-result arms once and narrows the
   entity's runtime slot, advancing the refusal to a member-presence narrow (`'error' in result`) that is
   still refused.
-- [An async closure needs the coroutine lowering a module-level function gets](async-closure-coroutine-lowering.md) —
-  an `async release()` inside an object literal and an `async () =>` handed to `then` are both refused;
-  three functions in `@flighthq/tray`. No workaround carried.
 - [A union-member test needs the binding's carrier to still be a variant](union-member-test-without-variant-binding.md) —
   fires on the *shared* helper of two families, so one rule holds ten notification functions and
   `startTrayIconAnimation`; reduction attempts are recorded because four of them reached a neighbouring
@@ -489,5 +487,7 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `@flighthq/tray` `destroyTrayRuntime` `return result`, and an upstream backend test failing at the pin. Carried by the `compiler-narrowed-coalesced-arm-slot` patch; `destroyTrayRuntime` stays blocked by the caught-value capability.
 - [`T['key']` on a type parameter must read the member through the type argument's carrier](dependent-indexed-access-through-references.md) —
   `@flighthq/tray` `invokeRead` (and `invokeUpdate`), and `@flighthq/materials` `getMaterialOfKind`: `decltype(std::declval<T&>().key)` could not instantiate for any `Ref` or variant. Carried by the `compiler-dependent-indexed-access-carrier` patch and `flight::indexed_member_t`.
+- [An async closure needs the coroutine lowering a module-level function gets](async-closure-coroutine-lowering.md) —
+  `@flighthq/tray` `queueAnimationWrite` and `attachTrayEvent`'s async release. Carried by the `compiler-async-closure-coroutine` patch and `flight::retain_closure`; `attachTrayEvent` stays blocked by the caught-value capability.
 - [An out-of-range indexed array read must widen to `null`](out-of-range-array-index-widened-to-null.md) —
   `@flighthq/input` array indexing throws where TypeScript returns `null`; no workaround is carried.

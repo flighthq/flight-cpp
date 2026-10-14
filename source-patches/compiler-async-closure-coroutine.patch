@@ -1,0 +1,203 @@
+diff --git a/packages/compiler-backend-cpp/src/cppAsyncClosure.test.ts b/packages/compiler-backend-cpp/src/cppAsyncClosure.test.ts
+new file mode 100644
+index 0000000..d7f0cfc
+--- /dev/null
++++ b/packages/compiler-backend-cpp/src/cppAsyncClosure.test.ts
+@@ -0,0 +1,75 @@
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++
++import { lowerTypeScriptSource } from '../../compiler-semantic/src/index.js';
++import { emitIrModuleCpp } from './cppCompilerBackend.js';
++
++function emit(source: string): string {
++  const sourceFile = ts.createSourceFile('/flight/packages/x/src/x.ts', source, ts.ScriptTarget.Latest, true);
++  const result = lowerTypeScriptSource(sourceFile, { packageName: '@flighthq/x', upstreamDirectory: '/flight' });
++  return emitIrModuleCpp(result.module, { runtimeProfile: 'flight-cpp' }).contents;
++}
++
++// The coroutine lambda is held in a shared owner made where the closure is made, and every call hands that owner
++// to flight::retain_closure, which keeps it alive for the call's coroutine frame.
++describe('async closures lower to coroutines that keep their closure alive', () => {
++  it('lowers an async callback handed to then', () => {
++    const emitted = emit(`export function chain(tail: Promise<void>, log: string[]): Promise<void> {
++      return tail.then(async () => { log.push('before'); await tail; log.push('after'); });
++    }`);
++    expect(emitted).toContain(
++      'return tail.then([async_closure = std::make_shared<const std::function<flight::Task<void>()>>([=]() -> flight::Task<void> {',
++    );
++    expect(emitted).toContain('co_await tail;');
++    expect(emitted).toContain(
++      '})]() -> flight::Task<void> { return flight::retain_closure((*async_closure)(), async_closure); });',
++    );
++    expect(emitted).toContain('#include <coroutine>');
++  });
++
++  it('lowers an async object method with the callable type its member declares', () => {
++    const emitted = emit(`export interface Box { value: string }
++      export interface Holder { box: Box; read(): Promise<string> }
++      export function holder(box: Box, gate: Promise<void>): Holder {
++        return { box, async read(): Promise<string> { await gate; return box.value; } };
++      }`);
++    expect(emitted).toContain('std::function<flight::Task<flight::String>()> read;');
++    expect(emitted).toContain('.read = [async_closure = std::make_shared<const std::function<flight::Task<flight::String>()>>(');
++    expect(emitted).toContain('co_return box->value;');
++  });
++
++  it('lowers an expression-bodied async arrow with its parameters forwarded', () => {
++    const emitted = emit(`export function doubler(): (x: number) => Promise<number> { return async (x: number) => x * 2; }`);
++    expect(emitted).toContain('co_return (x * 2.0);');
++    expect(emitted).toContain(
++      '](double x) -> flight::Task<double> { return flight::retain_closure((*async_closure)(x), async_closure); };',
++    );
++  });
++
++  it('keeps a shared mutable capture in its binding cell', () => {
++    const emitted = emit(`export function counter(gate: Promise<void>): () => Promise<number> {
++      let n = 0;
++      return async () => { n += 1; await gate; return n; };
++    }`);
++    expect(emitted).toContain('const auto n_capture = flight::make_binding_cell(double{0.0});');
++    expect(emitted).toContain('co_return n_capture.read_binding();');
++  });
++
++  it('refuses a generic async closure, which has no single callable type to keep alive', () => {
++    expect(() =>
++      emit(`export function f(): <T>(value: T) => Promise<T> { return async <T>(value: T): Promise<T> => value; }`),
++    ).toThrow(/async closures require C\+\+ coroutine lowering/);
++  });
++
++  it('refuses an async closure with a rest parameter', () => {
++    expect(() =>
++      emit(`export function f(): (...values: number[]) => Promise<number> { return async (...values: number[]) => values.length; }`),
++    ).toThrow(/async closures require C\+\+ coroutine lowering/);
++  });
++
++  it('refuses an async closure that uses this', () => {
++    expect(() =>
++      emit(`export class C { value = 1; make(): () => Promise<number> { return async () => this.value; } }`),
++    ).toThrow(/async closures require C\+\+ coroutine lowering/);
++  });
++});
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+index e812d74..853a5a0 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.test.ts
+@@ -27781,12 +27781,14 @@ int main() {
+     expect(emitted.contents).toContain('std::vector<std::string>');
+   });
+ 
+-  it('emits async closure rejection as emission failure', () => {
++  it('emits an async closure as a coroutine that keeps its closure alive', () => {
+     const result = lower(
+       'async-closure.ts',
+       'export function make(): () => Promise<number> { return async (): Promise<number> => { return 1; }; }',
+     );
+-    expect(() => emitIrModuleCpp(result.module)).toThrow('async closures');
++    const emitted = emitIrModuleCpp(result.module);
++    expect(emitted.contents).toContain('co_return 1.0;');
++    expect(emitted.contents).toContain('flight::retain_closure((*async_closure)(), async_closure)');
+   });
+ 
+   it('emits element access on arrays with static_cast<size_t>', () => {
+diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+index 3a23e0a..351d1f4 100644
+--- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
++++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
+@@ -5222,7 +5222,19 @@ function emitExpression(
+         : `${object}[static_cast<size_t>(${index})]`;
+     }
+     case 'function': {
+-      if (expression.async) emissionError(context, 'async closures require C++ coroutine lowering');
++      if (expression.async) {
++        // An async closure is a coroutine whose frame points into the closure that started it, so it is
++        // emitted only where that closure can be given one fixed callable type to keep alive (see
++        // emitCppAsyncClosureCpp). A generic closure, a rest or pack parameter, or a `this` capture has no such
++        // type, and stays refused.
++        if (
++          expression.typeParameters.length > 0 ||
++          expression.parameters.some((parameter) => parameter.rest || parameter.dependentCallablePack) ||
++          irFunctionExpressionUsesThisCpp(expression)
++        ) {
++          emissionError(context, 'async closures require C++ coroutine lowering');
++        }
++      }
+       const expectedCallable =
+         (expectedType ? getCppClosedCallableType(expectedType, context, new Set()) : undefined) ??
+         (expectedType ? getCppCallableObjectIrTypeCpp(expectedType, context, new Set())?.callable : undefined);
+@@ -5255,7 +5267,7 @@ function emitExpression(
+           context.anonymousStructTypeParameters,
+           expression.typeParameters,
+         ),
+-        async: false,
++        async: expression.async,
+         bindingTypes,
+         defaultedParameterIds: new Set([
+           ...context.defaultedParameterIds,
+@@ -5310,6 +5322,12 @@ function emitExpression(
+       // the lambda so deduction cannot split the shared carrier back into its branch-local spellings.
+       const returnUnion = getIrUnionTypeCpp(returns, functionContext, new Set());
+       const lambdaReturn = returnUnion ? ` -> ${emitUnionTypeCpp(returnUnion, functionContext)}` : '';
++      if (expression.async) {
++        return emitCppAsyncClosureCpp(expression, parameters, params, capture, returns, functionContext, [
++          ...ignoredContextualParameterDiscards,
++          ...emitParameterInitializersCpp(parameters, functionContext),
++        ]);
++      }
+       if (
+         expression.expression &&
+         functionContext.defaultedParameterIds.size === 0 &&
+@@ -18624,6 +18642,53 @@ function getCppCoalescedNarrowedMemberValueSlotCpp(
+   return destinations.length === 1 ? destinations[0] : undefined;
+ }
+ 
++// An async closure, lowered to a coroutine that cannot outlive what it reads.
++//
++// A coroutine lambda's frame does not copy the lambda's captures: it keeps a pointer to the closure object and
++// reads them through it. Any owner that drops the closure while the coroutine is suspended -- `then` once it has
++// started the callback, an object whose async method is mid-await when the object goes -- leaves the frame
++// reading released memory. So the coroutine lambda is held in a shared owner created when the closure is
++// created, and each call hands that owner to `flight::retain_closure`, which keeps it alive exactly as long as
++// the call's coroutine frame. The call's task is returned unchanged: it starts eagerly and settles when the body
++// completes, as the module-level async function does, with no additional scheduling step.
++//
++// Captures are taken where the closure is created, as for any closure: the inner lambda is constructed in the
++// outer one's capture initializer. The outer callable has the same parameters and result, so it is assignable
++// wherever the inner one would have been.
++function emitCppAsyncClosureCpp(
++  expression: Readonly<Extract<IrExpression, { kind: 'function' }>>,
++  parameters: readonly Readonly<IrParameter>[],
++  params: readonly string[],
++  capture: string,
++  returns: Readonly<IrType>,
++  context: EmitContext,
++  prologue: readonly string[],
++): string {
++  context.includes.add('coroutine');
++  context.includes.add('functional');
++  context.includes.add('memory');
++  context.includes.add('flight/task.hpp');
++  const resultType = emitType(returns, context);
++  const parameterTypes = params.map((parameter) => {
++    const separator = parameter.lastIndexOf(' ');
++    return parameter.slice(0, separator);
++  });
++  if (parameterTypes.some((type) => type === 'auto' || type.includes('&&...'))) {
++    emissionError(context, 'async closures require C++ coroutine lowering');
++  }
++  const argumentNames = params.map((parameter) => parameter.slice(parameter.lastIndexOf(' ') + 1));
++  const awaited = getIrTaskAwaitedTypeCpp(returns, context);
++  const body = expression.expression
++    ? !(awaited.kind === 'primitive' && awaited.name === 'void')
++      ? [`co_return ${emitExpression(expression.expression, context, awaited)};`]
++      : [`${emitExpression(expression.expression, context)};`, 'co_return;']
++    : [...emitStatements(expression.body, context), ...emitImplicitCompletionCpp(expression.body, context)];
++  const inner = `${capture}(${params.join(', ')}) -> ${resultType} {\n${indentSourceLines([...prologue, ...body]).join('\n')}\n}`;
++  const holder = getGeneratedTargetName('asyncClosure', context);
++  const signature = `std::function<${resultType}(${parameterTypes.join(', ')})>`;
++  return `[${holder} = std::make_shared<const ${signature}>(${inner})](${params.join(', ')}) -> ${resultType} { return flight::retain_closure((*${holder})(${argumentNames.join(', ')}), ${holder}); }`;
++}
++
+ function getCppContextualUnionSubsetSlotsCpp(
+   expressionPlan: ReturnType<typeof getCppUnionRepresentationPlan>,
+   plan: ReturnType<typeof getCppUnionRepresentationPlan>,

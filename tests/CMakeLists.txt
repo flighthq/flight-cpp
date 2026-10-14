@@ -9,6 +9,11 @@ target_link_libraries(flight_cpp_nullish_or_tests PRIVATE Flight::Cpp)
 flight_cpp_set_project_warnings(flight_cpp_nullish_or_tests)
 add_test(NAME flight_cpp.nullish_or COMMAND flight_cpp_nullish_or_tests)
 
+add_executable(flight_cpp_async_closure_tests async_closure_test.cpp)
+target_link_libraries(flight_cpp_async_closure_tests PRIVATE Flight::Cpp)
+flight_cpp_set_project_warnings(flight_cpp_async_closure_tests)
+add_test(NAME flight_cpp.async_closure COMMAND flight_cpp_async_closure_tests)
+
 add_executable(
   flight_cpp_upstream_math_geometry_parity_tests
   generated/upstream_math_geometry_parity.cpp
