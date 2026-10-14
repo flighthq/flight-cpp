@@ -132,6 +132,12 @@ int main() {
           "backend: intlSegmenterAvailable is false (upstream: true on a host with Intl.Segmenter)");
     check(explanation->available == false,
           "backend: the bundled provider reports itself UNAVAILABLE, not faked (upstream: true)");
+    // The tie upstream states: explainTextSegmenterBackend reports `intlSegmenterAvailable:
+    // hasIntlSegmenter()`, so the field IS the probe's answer rather than a second constant that
+    // happens to agree. Pin the tie, not just the value -- a probe that reported a capability this
+    // profile lacks left every assertion above still passing, because explain named the constant.
+    check(explanation->intl_segmenter_available == flight::textsegment::has_intl_segmenter(),
+          "backend: intlSegmenterAvailable is the Intl probe's own answer, not a second constant");
   }
 
   {
