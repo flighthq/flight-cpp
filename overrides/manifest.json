@@ -574,22 +574,6 @@
       "authoredOn": "2026-10-04"
     },
     {
-      "id": "collision-point-containment3d-variant-dispatch",
-      "path": "flight/collision/point_containment3_d.hpp",
-      "package": "@flighthq/collision",
-      "status": "complete",
-      "supplies": "packages/collision/src/pointContainment3D.ts",
-      "remaining": "None in the supplied module at this pin.",
-      "derivedFrom": "fb257cc4d751bbb823a4a6aeb62d02bc574c6ae2e035bb7cb6c13b523dcd8292",
-      "reason": "The compiler refused the entire module because every point-containment branch depends on member access through a kind-discriminated CollisionBuiltInShape3D union.",
-      "change": "Supplies the complete sphere, AABB, oriented box, capsule, cylinder, cone, and convex-hull containment dispatcher. Convex containment reuses retained scratch owners and the package's GJK support-overlap query.",
-      "equivalence": "Distance, local quaternion rotation, clamped axis projection, finite-cylinder cap tests, cone radius interpolation, and all boundary-inclusive comparisons match the source. Scratch shapes keep stable owner identity and are fully rewritten before each GJK query.",
-      "whyNotAPatchOrRepair": "A repair cannot supply a wholly refused behavioral module. The TypeScript is the natural discriminated-union formulation and should not be duplicated per nominal carrier solely for this emitter.",
-      "unblocks": "The wholly refused containment module and its consumers as part of the collision package gain from 18/38 to 35/38.",
-      "expires": "when the compiler can emit a whole module whose built-in shape union is narrowed by kind throughout its geometric branches.",
-      "authoredOn": "2026-10-04"
-    },
-    {
       "id": "collision-sweep2d-continuous-convex-dispatch",
       "path": "flight/collision/sweep_collision_shape2_d.hpp",
       "package": "@flighthq/collision",

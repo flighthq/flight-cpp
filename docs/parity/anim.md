@@ -1028,7 +1028,7 @@ Upstream carries per-package records at `flight/agents/packages/collision/`: `st
 ### Local generation status
 
 32 of 38 modules emitted, 6 refused; 21 refusing modules (6 of them refusal roots). Read from the committed generated tree, not from the pin above.
- Hand-written overrides shadow generated headers here: `collision-face3d-kind-dispatch`, `collision-support2d-exact-shape-registry`, `collision-support3d-exact-shape-registry`, `collision-enable-guards-structural-validation`, `collision-point-containment3d-variant-dispatch`, `collision-sweep2d-continuous-convex-dispatch`, `collision-triangle-mesh3d-retained-acceleration`.
+ Hand-written overrides shadow generated headers here: `collision-face3d-kind-dispatch`, `collision-support2d-exact-shape-registry`, `collision-support3d-exact-shape-registry`, `collision-enable-guards-structural-validation`, `collision-sweep2d-continuous-convex-dispatch`, `collision-triangle-mesh3d-retained-acceleration`.
 
 ### Web-only exclusions
 
