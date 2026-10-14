@@ -442,8 +442,22 @@ int main() {
     fire(first);
     fire(second);
     check(changes == 2, "after which no host delivers");
+    // Both of these are the fixture's own idempotency cases, and until now they were CALLED BUT NOT
+    // OBSERVED -- the release count was read two lines earlier and never again, so an implementation whose
+    // detach forgot the subscription would have released a second time here in silence. A mutation that
+    // drops the map erase survived every assertion in this file for exactly that reason.
     clipboard::detach_clipboard_watch(watch);
-    clipboard::detach_clipboard_watch(clipboard::create_clipboard_watch());
+    check(second->releases == 2,
+          "a second detach releases NOTHING more, because the first forgot the subscription it held");
+    // A watch that was never attached has nothing to release and must still be safe.
+    bool never_attached_threw = false;
+    try {
+      clipboard::detach_clipboard_watch(clipboard::create_clipboard_watch());
+    } catch (...) {
+      never_attached_threw = true;
+    }
+    check(!never_attached_threw, "detaching a watch that was never attached is safe and releases nothing");
+    check(second->releases == 2, "and touches no host at all");
 
     // dispose detaches and deliberately leaves the signal alone: the module has no clearSignal for it.
     const auto third = std::make_shared<ChangeState>();
