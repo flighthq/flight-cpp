@@ -1068,7 +1068,7 @@
       "path": "flight/shape/shape_commands.hpp",
       "package": "@flighthq/shape",
       "status": "complete",
-      "derivedFrom": "ebbcc24eaa9c49a69612b5b04fe1b9960068ef55a51d77d55cf7c0274034a5b0",
+      "derivedFrom": "623ee091757c8ed14b165a0045c4ff193d6b52f63faab3cdc157f50ceef7b5c7",
       "reason": "The emitter cannot pass the flattened Shape owner to the generic Node<Node2DTraits> invalidation helper, and C++ cannot place a required color parameter after the defaulted thickness parameter.",
       "change": "Invalidates the Shape's exact NodeRuntime counters directly and represents the leading TypeScript default as an explicit optional argument so the subsequent required color remains callable.",
       "equivalence": "Every command still appends the same tokens and increments both local-content and local-bounds generations with unsigned wrapping. Passing nullopt for thickness retains the source default of one.",
@@ -1076,7 +1076,7 @@
       "unblocks": "shape_commands.hpp compiles independently.",
       "remaining": "C++ callers must spell nullopt when using the default thickness before the required color.",
       "expires": "when flattened derived-node arguments project to Node helpers and required-after-default parameters lower through a target-safe wrapper.",
-      "authoredOn": "2026-10-06"
+      "authoredOn": "2026-10-14"
     },
     {
       "id": "shape-bounds-cursor-and-handler",

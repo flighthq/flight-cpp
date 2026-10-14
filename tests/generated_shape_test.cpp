@@ -1,14 +1,20 @@
-// Focused native parity for the supported @flighthq/shape shape.ts subset at Flight a627849.
-// The suite covers default construction, command-array identity, element copying, valid-stream
-// counting, and node revision invalidation. Partial-node options, ShapeRuntime bounds methods,
-// malformed command streams, and MorphShape paint bindings remain explicit override debt.
+// Focused native parity for the supported @flighthq/shape shape.ts and shapeCommands.ts subsets at
+// Flight a627849. The suite covers default construction, command-array identity, element copying,
+// valid-stream counting, command encoding/defaults, path expansion, and node revision invalidation.
+// Partial-node options, ShapeRuntime bounds methods, malformed command streams, and MorphShape paint
+// bindings remain explicit override debt.
 //
 // MUTATION SENSITIVITY, measured 2026-10-14 against isolated one-at-a-time override changes:
 // five mutants produced 3/3/3/2/1 failures for array assignment in place of element copying,
 // an inverted array-identity guard, omitted copy invalidation, a false visibility default, and
 // omitted command clearing, respectively. Each mutant was restored before the next measurement.
+// Five shapeCommands mutants produced 5/1/2/1/2 failures for omitted bounds invalidation, a zero
+// default thickness, rejection of a valid polygon, forced two-segment quarter arcs, and invalidating
+// an elliptical-arc no-op. Each mutant was likewise restored before the next measurement.
 #include <flight/shape/shape.hpp>
+#include <flight/shape/shape_commands.hpp>
 
+#include <cmath>
 #include <iostream>
 #include <optional>
 #include <string>
@@ -47,6 +53,16 @@ bool is_string(const Token& token, const char* expected) {
 bool is_number(const Token& token, double expected) {
   return token.has_value() && std::holds_alternative<double>(token.value()) &&
          std::get<double>(token.value()) == expected;
+}
+
+bool is_near_number(const Token& token, double expected) {
+  return token.has_value() && std::holds_alternative<double>(token.value()) &&
+         std::abs(std::get<double>(token.value()) - expected) < 1e-12;
+}
+
+bool is_bool(const Token& token, bool expected) {
+  return token.has_value() && std::holds_alternative<bool>(token.value()) &&
+         std::get<bool>(token.value()) == expected;
 }
 
 void check_shape_defaults(const flight::Ref<types::Shape>& value,
@@ -196,15 +212,135 @@ void clear_count_and_empty() {
         "clear invalidates local content and bounds exactly once");
 }
 
+void command_defaults_and_invalidation() {
+  const auto value = shape::create_shape();
+  const auto& runtime = value->entity_runtime_key.value();
+
+  shape::append_shape_begin_fill(value, 0x123456);
+  check(value->data->commands.size() == 4 &&
+            is_string(value->data->commands[0], "beginFill") &&
+            is_number(value->data->commands[1], 2.0) &&
+            is_number(value->data->commands[2], 0x123456) &&
+            is_number(value->data->commands[3], 1.0),
+        "beginFill appends its key, arity, color, and default alpha in order");
+  check(runtime->local_content_id == 1.0 && runtime->local_bounds_id == 1.0,
+        "beginFill invalidates both Shape node revisions exactly once");
+
+  runtime->local_content_id = 4294967295.0;
+  runtime->local_bounds_id = 4294967295.0;
+  shape::append_shape_line_style(value, std::nullopt, 0xabcdef);
+  check(value->data->commands.size() == 14 &&
+            is_string(value->data->commands[4], "lineStyle") &&
+            is_number(value->data->commands[5], 8.0) &&
+            is_number(value->data->commands[6], 1.0) &&
+            is_number(value->data->commands[7], 0xabcdef) &&
+            is_number(value->data->commands[8], 1.0) &&
+            is_bool(value->data->commands[9], false) &&
+            is_string(value->data->commands[10], "normal") &&
+            is_string(value->data->commands[11], "none") &&
+            is_string(value->data->commands[12], "round") &&
+            is_number(value->data->commands[13], 3.0),
+        "lineStyle preserves every source default after the explicit nullopt boundary");
+  check(runtime->local_content_id == 0.0 && runtime->local_bounds_id == 0.0,
+        "Shape command invalidation wraps both revisions as unsigned 32-bit values");
+
+  const auto unbound = shape::create_shape();
+  unbound->entity_runtime_key = std::nullopt;
+  bool threw = false;
+  try {
+    shape::append_shape_begin_fill(unbound, 7.0);
+  } catch (const flight::Error& error) {
+    threw = error.message() ==
+            flight::String("Cannot invalidate a Shape without its node runtime");
+  }
+  check(threw && unbound->data->commands.size() == 4,
+        "an unbound Shape fails loudly at invalidation after preserving the source append order");
+}
+
+void polygon_and_arc_expansion() {
+  const auto short_polygon = shape::create_shape();
+  shape::append_shape_polygon(short_polygon, flight::Array<double>{0.0, 0.0});
+  check(short_polygon->data->commands.empty() &&
+            short_polygon->entity_runtime_key.value()->local_content_id == 0.0 &&
+            short_polygon->entity_runtime_key.value()->local_bounds_id == 0.0,
+        "a polygon with fewer than two points is a command and invalidation no-op");
+
+  const flight::Array<double> points{0.0, 1.0, 10.0, 11.0, 20.0, 21.0};
+  const auto polygon = shape::create_shape();
+  shape::append_shape_polygon(polygon, points);
+  check(polygon->data->commands.size() == 16 &&
+            is_string(polygon->data->commands[0], "moveTo") &&
+            is_number(polygon->data->commands[2], 0.0) &&
+            is_number(polygon->data->commands[3], 1.0) &&
+            is_string(polygon->data->commands[4], "lineTo") &&
+            is_number(polygon->data->commands[6], 10.0) &&
+            is_number(polygon->data->commands[7], 11.0) &&
+            is_string(polygon->data->commands[8], "lineTo") &&
+            is_number(polygon->data->commands[10], 20.0) &&
+            is_number(polygon->data->commands[11], 21.0) &&
+            is_string(polygon->data->commands[12], "lineTo") &&
+            is_number(polygon->data->commands[14], 0.0) &&
+            is_number(polygon->data->commands[15], 1.0),
+        "polygon expands each point and closes back to the first point");
+  check(polygon->entity_runtime_key.value()->local_content_id == 1.0 &&
+            polygon->entity_runtime_key.value()->local_bounds_id == 1.0,
+        "polygon expansion invalidates both revisions once rather than per emitted segment");
+
+  const auto polyline = shape::create_shape();
+  shape::append_shape_polyline(polyline, points);
+  check(polyline->data->commands.size() == 12 &&
+            is_string(polyline->data->commands[0], "moveTo") &&
+            is_string(polyline->data->commands[4], "lineTo") &&
+            is_string(polyline->data->commands[8], "lineTo") &&
+            is_number(polyline->data->commands[10], 20.0) &&
+            is_number(polyline->data->commands[11], 21.0),
+        "polyline expands the same points without a closing segment");
+
+  const auto arc = shape::create_shape();
+  shape::append_shape_arc(arc, 10.0, 20.0, 2.0, 0.0,
+                          flight::pi / 2.0);
+  check(arc->data->commands.size() == 12 &&
+            is_string(arc->data->commands[0], "moveTo") &&
+            is_near_number(arc->data->commands[2], 12.0) &&
+            is_near_number(arc->data->commands[3], 20.0) &&
+            is_string(arc->data->commands[4], "cubicCurveTo") &&
+            is_number(arc->data->commands[5], 6.0) &&
+            is_near_number(arc->data->commands[10], 10.0) &&
+            is_near_number(arc->data->commands[11], 22.0),
+        "a quarter arc expands to one cubic with exact start and end points");
+  check(arc->entity_runtime_key.value()->local_content_id == 1.0 &&
+            arc->entity_runtime_key.value()->local_bounds_id == 1.0,
+        "arc expansion invalidates both revisions exactly once");
+
+  const auto elliptical = shape::create_shape();
+  shape::append_shape_elliptical_arc_to(elliptical, 2.0, 3.0, 0.0,
+                                        false, true, 0.0, 0.0);
+  check(elliptical->data->commands.empty() &&
+            elliptical->entity_runtime_key.value()->local_content_id == 0.0 &&
+            elliptical->entity_runtime_key.value()->local_bounds_id == 0.0,
+        "an elliptical arc whose endpoint equals the current pen is a full no-op");
+  shape::append_shape_elliptical_arc_to(elliptical, 0.0, 3.0, 0.0,
+                                        false, true, 4.0, 5.0);
+  check(elliptical->data->commands.size() == 4 &&
+            is_string(elliptical->data->commands[0], "lineTo") &&
+            is_number(elliptical->data->commands[2], 4.0) &&
+            is_number(elliptical->data->commands[3], 5.0) &&
+            elliptical->entity_runtime_key.value()->local_content_id == 1.0 &&
+            elliptical->entity_runtime_key.value()->local_bounds_id == 1.0,
+        "a zero-radius elliptical arc falls back to lineTo and invalidates once");
+}
+
 }  // namespace
 
 int main() {
   construction_defaults_and_identity();
   copy_preserves_destination_identity();
   clear_count_and_empty();
+  command_defaults_and_invalidation();
+  polygon_and_arc_expansion();
 
   if (failures == 0) {
-    std::cout << "shape construction and command ownership match the supported Flight subset\n";
+    std::cout << "shape construction, command ownership, and command emission match the supported Flight subset\n";
   }
   return failures == 0 ? 0 : 1;
 }
