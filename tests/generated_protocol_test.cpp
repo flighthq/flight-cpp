@@ -174,6 +174,18 @@ int main() {
               String("flight://open/file?name=a%20b"),
           "the path is normalized and query components are encoded, with an empty key dropped");
 
+    // The SEPARATOR between query pairs. Every case above carries at most one entry once the empty key
+    // is dropped, and a one-element join never emits a separator -- so joining with "," instead of "&"
+    // left the whole suite passing.
+    const auto two_keys = flight::make_ref<Parsed>();
+    two_keys->scheme = String("flight");
+    two_keys->path = String("/open");
+    two_keys->query.set(String("a"), String("1"));
+    two_keys->query.set(String("b"), String("2"));
+    check(flight::protocol::create_protocol_url(PartialParsedRow(two_keys)) ==
+              String("flight:/open?a=1&b=2"),
+          "two query entries are joined with an ampersand");
+
     const auto authority_free = flight::make_ref<Parsed>();
     authority_free->scheme = String("flight");
     authority_free->path = String("/open");
@@ -212,6 +224,19 @@ int main() {
     const auto plus = flight::protocol::parse_protocol_url(String("flight:/open?q=a+b"));
     check(plus.has_value() && text(plus.value()->query.get(String("q"))) == "a b",
           "a plus in a query value decodes to a space");
+
+    // An EMPTY fragment -- the token between two separators, which has no `=` at all -- must be dropped
+    // rather than entered under an empty key. No case above produces one, so the guard that drops it was
+    // never exercised: keeping it was invisible.
+    const auto empty_fragment = flight::protocol::parse_protocol_url(String("flight:/open?a=1&&b=2"));
+    check(empty_fragment.has_value(), "a URL carrying an empty query fragment still parses");
+    if (empty_fragment.has_value()) {
+      check(!empty_fragment.value()->query.has(String("")),
+            "and the empty fragment does not become an empty query key");
+      check(text(empty_fragment.value()->query.get(String("a"))) == "1" &&
+                text(empty_fragment.value()->query.get(String("b"))) == "2",
+            "while the real pairs around it are unaffected");
+    }
   }
 
   // isValidProtocolScheme: grammar accepted, reserved and malformed rejected.
@@ -322,6 +347,18 @@ int main() {
     check(!flight::protocol::unregister_protocol_schemes(unregistration_host, unregistration_batch),
           "the unregistration batch aggregates the same way");
     check(unregister_calls.size() == 2.0, "attempting every entry");
+
+    // The unregistration batch's OWN validity gate. The batch above is two VALID schemes -- one of which
+    // the provider refuses -- so the gate never returns false and removing it entirely was invisible.
+    // The registration batch's gate is covered; this one was not.
+    flight::Array<String> unregistration_invalid = flight::Array<String>{};
+    unregistration_invalid.push(String("flight"));
+    unregistration_invalid.push(String("https"));
+    const std::size_t unregister_calls_before = unregister_calls.size();
+    check(!flight::protocol::unregister_protocol_schemes(unregistration_host, unregistration_invalid),
+          "an unregistration batch containing a reserved scheme fails");
+    check(unregister_calls.size() == unregister_calls_before,
+          "and the provider is never reached for any entry in it");
   }
 
   // --- Cases added by the mutation battery, which found four holes and two unexercised entry points ----
