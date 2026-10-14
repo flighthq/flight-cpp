@@ -1,8 +1,9 @@
-// Focused native parity for the supported @flighthq/shape shape.ts and shapeCommands.ts subsets at
-// Flight a627849. The suite covers default construction, command-array identity, element copying,
-// valid-stream counting, command encoding/defaults, path expansion, and node revision invalidation.
-// Partial-node options, ShapeRuntime bounds methods, malformed command streams, and MorphShape paint
-// bindings remain explicit override debt.
+// Focused native parity for the supported @flighthq/shape shape.ts, shapeCommands.ts, and
+// shapeStrokeOutline.ts subsets at Flight a627849. The suite covers default construction,
+// command-array identity, element copying, valid-stream counting, command encoding/defaults, path
+// expansion, stroke-outline routing, and node revision invalidation. Partial-node options,
+// ShapeRuntime bounds methods, malformed command streams, and MorphShape paint bindings remain
+// explicit override debt.
 //
 // MUTATION SENSITIVITY, measured 2026-10-14 against isolated one-at-a-time override changes:
 // five mutants produced 3/3/3/2/1 failures for array assignment in place of element copying,
@@ -11,11 +12,16 @@
 // Five shapeCommands mutants produced 5/1/2/1/2 failures for omitted bounds invalidation, a zero
 // default thickness, rejection of a valid polygon, forced two-segment quarter arcs, and invalidating
 // an elliptical-arc no-op. Each mutant was likewise restored before the next measurement.
+// Six shapeStrokeOutline mutants produced 3/3/1/1/1/1 failures for wrong MOVE_TO X and Y operands,
+// accepting a one-segment return, tightening closure epsilon, omitting texture fallback, and omitting
+// style-span flush. Each mutant was restored before the next measurement.
 #include <flight/shape/shape.hpp>
 #include <flight/shape/shape_commands.hpp>
+#include <flight/shape/shape_stroke_outline.hpp>
 
 #include <cmath>
 #include <iostream>
+#include <memory>
 #include <optional>
 #include <string>
 #include <variant>
@@ -63,6 +69,22 @@ bool is_near_number(const Token& token, double expected) {
 bool is_bool(const Token& token, bool expected) {
   return token.has_value() && std::holds_alternative<bool>(token.value()) &&
          std::get<bool>(token.value()) == expected;
+}
+
+template <typename Type>
+auto readonly(const std::shared_ptr<Type>& value) {
+  using View = flight::StructuralRef<
+      flight::RowReadonly<flight::RowOf<flight::Ref<Type>>>>;
+  return flight::structural_ref_cast<View>(value);
+}
+
+flight::Ref<types::Path> make_path(flight::Array<double> commands,
+                                   flight::Array<double> data) {
+  return flight::make_ref<types::Path>(types::Path{
+      .commands = commands,
+      .data = data,
+      .winding = flight::String("nonZero"),
+  });
 }
 
 void check_shape_defaults(const flight::Ref<types::Shape>& value,
@@ -330,6 +352,125 @@ void polygon_and_arc_expansion() {
         "a zero-radius elliptical arc falls back to lineTo and invalidates once");
 }
 
+void stroke_outline_regions_and_fallbacks() {
+  const auto open = shape::create_shape();
+  shape::append_shape_line_style(open, 8.0, 0x123456ff, 0.5, false,
+                                 flight::String("normal"),
+                                 flight::String("square"),
+                                 flight::String("bevel"), 4.0);
+  shape::append_shape_move_to(open, 0.0, 0.0);
+  shape::append_shape_line_to(open, 20.0, 0.0);
+  const auto open_regions =
+      shape::get_shape_stroke_outline_regions(open->data->commands);
+  check(open_regions.has_value() && open_regions->size() == 1 &&
+            open_regions->element(0.0)->color == 0x123456ff &&
+            open_regions->element(0.0)->alpha == 0.5 &&
+            !open_regions->element(0.0)->path->commands.empty() &&
+            !open_regions->element(0.0)->path->data.empty(),
+        "a solid open stroke becomes one non-empty fill region with its color and alpha");
+
+  const auto arc = shape::create_shape();
+  shape::append_shape_line_style(arc, 8.0, 0x123456ff);
+  shape::append_shape_move_to(arc, 0.0, 0.0);
+  shape::append_shape_elliptical_arc_to(arc, 50.0, 25.0, 0.0, false,
+                                        true, 100.0, 0.0);
+  const auto arc_regions =
+      shape::get_shape_stroke_outline_regions(arc->data->commands);
+  check(arc_regions.has_value() && arc_regions->size() == 1 &&
+            !arc_regions->element(0.0)->path->commands.empty(),
+        "an open elliptical arc becomes one fillable stroke outline");
+
+  const auto closed = shape::create_shape();
+  shape::append_shape_line_style(closed, 8.0, 0x000000ff);
+  shape::append_shape_rectangle(closed, 0.0, 0.0, 20.0, 10.0);
+  check(!shape::get_shape_stroke_outline_regions(closed->data->commands)
+             .has_value(),
+        "a geometrically closed stroke defers to the renderer fallback");
+
+  const flight::Array<Token> gradient{
+      string_token("lineGradientStyle"), number_token(1.0),
+      number_token(0.0)};
+  const flight::Array<Token> texture{
+      string_token("lineTextureStyle"), number_token(1.0),
+      number_token(0.0)};
+  check(!shape::get_shape_stroke_outline_regions(gradient).has_value() &&
+            !shape::get_shape_stroke_outline_regions(texture).has_value(),
+        "gradient and texture strokes both defer before outline construction");
+
+  const auto disabled = shape::create_shape();
+  shape::append_shape_line_style(disabled, 0.0, 0xabcdef);
+  shape::append_shape_move_to(disabled, 1.0, 2.0);
+  shape::append_shape_line_to(disabled, 3.0, 4.0);
+  const auto disabled_regions =
+      shape::get_shape_stroke_outline_regions(disabled->data->commands);
+  check(disabled_regions.has_value() && disabled_regions->empty(),
+        "a zero-width lineStyle disables outline collection without forcing fallback");
+
+  const auto spans = shape::create_shape();
+  shape::append_shape_line_style(spans, 2.0, 0x111111, 0.25);
+  shape::append_shape_move_to(spans, 0.0, 0.0);
+  shape::append_shape_line_to(spans, 10.0, 0.0);
+  shape::append_shape_line_style(spans, 3.0, 0x222222, 0.75);
+  shape::append_shape_move_to(spans, 20.0, 0.0);
+  shape::append_shape_line_to(spans, 30.0, 0.0);
+  const auto span_regions =
+      shape::get_shape_stroke_outline_regions(spans->data->commands);
+  check(span_regions.has_value() && span_regions->size() == 2 &&
+            span_regions->element(0.0)->color == 0x111111 &&
+            span_regions->element(0.0)->alpha == 0.25 &&
+            span_regions->element(1.0)->color == 0x222222 &&
+            span_regions->element(1.0)->alpha == 0.75,
+        "a new lineStyle flushes the previous span before collecting the next one");
+
+  const auto seeded = shape::create_shape();
+  shape::append_shape_move_to(seeded, 7.0, 9.0);
+  shape::append_shape_line_style(seeded, 2.0, 0x333333);
+  shape::append_shape_line_to(seeded, 20.0, 9.0);
+  const auto seeded_regions =
+      shape::get_shape_stroke_outline_regions(seeded->data->commands);
+  check(seeded_regions.has_value() && seeded_regions->size() == 1 &&
+            !seeded_regions->element(0.0)->path->commands.empty(),
+        "a stroke span beginning with lineTo seeds its centerline from the running pen");
+}
+
+void stroke_centerline_closure() {
+  const double move = types::path_command->move_to;
+  const double wide_move = types::path_command->wide_move_to;
+  const double line = types::path_command->line_to;
+  const double close = types::path_command->close;
+
+  const auto near_closed = make_path(
+      flight::Array<double>{move, line, line},
+      flight::Array<double>{10.0, 20.0, 30.0, 20.0,
+                            10.0 + 0.5e-6, 20.0 - 0.5e-6});
+  check(shape::is_centerline_closed(readonly(near_closed)),
+        "two segments returning within epsilon close a centerline");
+
+  const auto one_segment = make_path(
+      flight::Array<double>{move, line},
+      flight::Array<double>{10.0, 20.0, 10.0, 20.0});
+  check(!shape::is_centerline_closed(readonly(one_segment)),
+        "one zero-area return segment does not form a closed centerline");
+
+  const auto completed_before_move = make_path(
+      flight::Array<double>{move, line, line, move},
+      flight::Array<double>{3.0, 4.0, 8.0, 4.0, 3.0, 4.0, 50.0, 60.0});
+  check(shape::is_centerline_closed(readonly(completed_before_move)),
+        "closure is detected before a following subpath resets its start");
+
+  const auto wide_closed = make_path(
+      flight::Array<double>{wide_move, line, line},
+      flight::Array<double>{-1.0, -2.0, 12.0, 21.0, 30.0, 21.0,
+                            12.0, 21.0});
+  check(shape::is_centerline_closed(readonly(wide_closed)),
+        "wideMoveTo uses its trailing coordinate pair as the subpath start");
+
+  const auto explicit_close = make_path(flight::Array<double>{close},
+                                        flight::Array<double>{});
+  check(shape::is_centerline_closed(readonly(explicit_close)),
+        "an explicit close verb always closes the centerline");
+}
+
 }  // namespace
 
 int main() {
@@ -338,9 +479,11 @@ int main() {
   clear_count_and_empty();
   command_defaults_and_invalidation();
   polygon_and_arc_expansion();
+  stroke_outline_regions_and_fallbacks();
+  stroke_centerline_closure();
 
   if (failures == 0) {
-    std::cout << "shape construction, command ownership, and command emission match the supported Flight subset\n";
+    std::cout << "shape construction, command emission, and stroke outlines match the supported Flight subset\n";
   }
   return failures == 0 ? 0 : 1;
 }

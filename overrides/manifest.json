@@ -1115,15 +1115,15 @@
       "package": "@flighthq/shape",
       "status": "complete",
       "supplies": "packages/shape/src/shapeStrokeOutline.ts",
-      "derivedFrom": "1ced9d9d2de83f3dbb3b939639312915fbd95c728482310d961b6140928b06d7",
+      "derivedFrom": "77c80baf1e9ba95a60efdebd39361c8d2fa1a532f1cb6d0a509050a9d935694b",
       "reason": "The emitter nests BindingCell::rebind calls for chained TypeScript assignment even though rebind returns void.",
       "change": "Evaluates each path coordinate once and performs the two source assignments as separate rebind operations.",
-      "equivalence": "Subpath-start and last-point cells receive the same x and y values in the same order with no duplicate data access.",
+      "equivalence": "For MOVE_TO and WIDE_MOVE_TO, each trailing coordinate is read once, assigned to its subpath-start cell, then assigned to its last-point cell, preserving the source chained-assignment values and right-to-left write order.",
       "whyNotAPatchOrRepair": "A declaration repair cannot replace the invalid void expression, and the chained assignment is valid portable TypeScript.",
       "unblocks": "shape_stroke_outline.hpp compiles independently.",
       "remaining": "None in this module.",
       "expires": "when chained assignment through captured binding cells lowers as sequenced writes.",
-      "authoredOn": "2026-10-06"
+      "authoredOn": "2026-10-14"
     },
     {
       "id": "physics3d-collider-variant-bounds",
