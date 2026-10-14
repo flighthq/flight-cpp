@@ -1,12 +1,18 @@
 diff --git a/packages/scene2d-canvas/src/canvasTextLabel.ts b/packages/scene2d-canvas/src/canvasTextLabel.ts
 --- a/packages/scene2d-canvas/src/canvasTextLabel.ts
 +++ b/packages/scene2d-canvas/src/canvasTextLabel.ts
-@@ -24,2 +24,4 @@ interface CanvasTextLabelData extends RendererData {
+@@ -20,6 +20,8 @@ import { setCanvasTransform } from './canvasTransform.ts';
  
+ interface CanvasTextLabelData extends RendererData {
+   lastContentId: number;
 +const canvasTextLabelContentIds = new WeakMap<RendererData, number>();
 +
- function createCanvasTextLabelData(_state: CanvasRenderState, _source: Renderable): RendererData {
-@@ -43,4 +45,5 @@ export function drawCanvasTextLabel(state: CanvasRenderState, renderProxy: RenderProxy2D): void {
+ }
+ 
+ function createCanvasTextLabelData(_state: CanvasRenderState, _source: NodeAny): RendererData {
+@@ -41,8 +43,9 @@ export function drawCanvasTextLabel(state: CanvasRenderState, renderProxy: Rende
+   setCanvasTransform(state, context, renderProxy.transform2D);
+ 
    const version = getNodeLocalContentRevision(source);
 -  const textData = renderProxy.rendererData as CanvasTextLabelData | null;
 -  const needsLayout = textData === null || version !== textData.lastContentId;
@@ -14,8 +20,14 @@ diff --git a/packages/scene2d-canvas/src/canvasTextLabel.ts b/packages/scene2d-c
 +  const lastContentId = textData === null ? undefined : canvasTextLabelContentIds.get(textData);
 +  const needsLayout = lastContentId === undefined || version !== lastContentId;
  
-@@ -62,3 +65,3 @@ export function drawCanvasTextLabel(state: CanvasRenderState, renderProxy: RenderProxy2D): void {
+   const result = getTextLayoutResult(getTextLabelRuntime(source) as TextLabelRuntime);
+   if (needsLayout) {
+@@ -60,7 +63,7 @@ export function drawCanvasTextLabel(state: CanvasRenderState, renderProxy: Rende
+       verticalAlign: source.data.autoSize === 'none' ? source.data.verticalAlign : 'top',
+     });
  
 -    if (textData !== null) textData.lastContentId = version;
 +    if (textData !== null) canvasTextLabelContentIds.set(textData, version);
    }
+ 
+   context.textBaseline = 'alphabetic';

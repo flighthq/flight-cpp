@@ -3134,7 +3134,7 @@
       "id": "scene2d-canvas-text-label-base-cache",
       "dependency": "flight",
       "patch": "scene2d-canvas-text-label-base-cache.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene2d-canvas/src/canvasTextLabel.ts",
       "package": "@flighthq/scene2d-canvas",
       "answers": "refusal",
@@ -3146,11 +3146,8 @@
       "unblocks": "Restores the real Canvas text-label measurement and draw path without replacing it with console text or inventing a native label implementation.",
       "expires": "when RendererData storage retains an exact checked derived-owner recovery contract upstream or Flight adopts the base-owner-keyed revision cache.",
       "appliedOn": "2026-10-09",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "2D",
-        "reason": "context drift: the patched code still exists (3/3 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "rebasedOn": "2026-10-14"
     },
     {
       "id": "compiler-readonly-view-argument-substitution",
