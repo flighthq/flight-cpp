@@ -1,0 +1,144 @@
+diff --git a/packages/scene3d-gl/src/glShadowMap.test.ts b/packages/scene3d-gl/src/glShadowMap.test.ts
+--- a/packages/scene3d-gl/src/glShadowMap.test.ts
++++ b/packages/scene3d-gl/src/glShadowMap.test.ts
+@@ -398,4 +398,20 @@ describe('renderGlScene3DShadowMap', () => {
+     expect(gl.calls.filter((call) => call.name === 'drawElements')).toHaveLength(1);
+     expect(gl.calls.filter((call) => call.name === 'drawElementsInstanced')).toHaveLength(0);
+   });
++
++  // The runtime witness for the typed mesh guard, which the rewrite moved from an assertion to a
++  // predicate. A descendant carrying no geometry is skipped before any upload or draw, and the rigid
++  // mesh behind it still produces exactly one non-instanced draw -- so the guard skips the right nodes
++  // without skipping the caster behind them.
++  it('skips a non-mesh descendant and still draws the rigid caster behind it', () => {
++    const { state, gl } = makeShadowState();
++    const scene = createNode3D(Node3DKind);
++    addNodeChild(scene, createNode3D(Node3DKind));
++    addNodeChild(scene, createMesh(createBoxMeshGeometry(), [null]));
++
++    renderGlScene3DShadowMap(state, scene, makeShadowCamera(), SHADOW_LIGHT);
++
++    expect(gl.calls.filter((call) => call.name === 'drawElements')).toHaveLength(1);
++    expect(gl.calls.filter((call) => call.name === 'drawElementsInstanced')).toHaveLength(0);
++  });
+ });
+diff --git a/packages/scene3d-gl/src/glShadowMap.ts b/packages/scene3d-gl/src/glShadowMap.ts
+--- a/packages/scene3d-gl/src/glShadowMap.ts
++++ b/packages/scene3d-gl/src/glShadowMap.ts
+@@ -10,8 +10,11 @@ import type {
+   GlRenderState,
+   InstancedMesh,
+   Mesh,
++  MeshGeometry,
++  Matrix4,
+   Node3D,
+   Node3DTraits,
++  NodeOf,
+   GlMeshProgram,
+ } from '@flighthq/types/contract';
+ import { DIRECTIONAL_SHADOW_MAP_SIZE, MAX_DIRECTIONAL_SHADOW_PCF_RADIUS } from '@flighthq/types/contract';
+@@ -61,7 +64,7 @@ export function renderGlScene3DShadowMap(
+   const normalBiasWorld =
+     directionalLight.normalBias *
+     getOrthographicProjectionTexelSize(shadowCamera.projection, target.width, target.height);
+-  const matrix = previousShadow?.matrix ?? createMatrix4();
++  const matrix: Matrix4 = previousShadow?.matrix ?? createMatrix4();
+   getCamera3DViewProjectionMatrix4(matrix, shadowCamera, 1);
+ 
+   // Skinned casters exist only when the scene opted into skinning; without it there is no depth skin
+@@ -96,8 +99,8 @@ export function renderGlScene3DShadowMap(
+   let boundProgram: GlMeshProgram | null = null;
+   forEachNodeDescendant<Node3DTraits>(scene, (node) => {
+     // A drawable node carries geometry (structural, like prepareScene3DRender's mesh test).
+-    const mesh = node as unknown as Mesh;
+-    if (mesh.geometry == null) return;
++    if (!isShadowMesh(node)) return;
++    const mesh = node;
+ 
+     // The caster is already at its CURRENT pose when this pass runs: the app drives prepareScene3DMorph +
+     // prepareScene3DSkinning before prepareScene3DRender, so morph is blended into geometry.vertices and the
+@@ -111,20 +114,27 @@ export function renderGlScene3DShadowMap(
+     // model's authoring scale, that copy can be orders of magnitude the wrong size and flood the map,
+     // shadowing the whole scene. A batch with no live instances casts nothing.
+     const instanced = isShadowInstancedMesh(mesh);
+-    if (instanced && (mesh as unknown as InstancedMesh).instanceCount === 0) return;
++    if (instanced && mesh.instanceCount === 0) return;
+ 
+     const skinned = skinFeature !== null && !instanced && mesh.skin != null && hasMeshGeometrySkin(mesh.geometry);
+-    const program = instanced
+-      ? (instancedProgram ??= ensureGlScene3DProgram(
+-          state,
+-          'shadow:depth:instanced',
+-          compileShadowDepthInstancedProgram,
+-        ))
+-      : skinned
+-        ? (skinnedProgram ??= ensureGlScene3DProgram(state, 'shadow:depth:skin', (gl) =>
+-            compileShadowDepthSkinnedProgram(gl, skinFeature!.vertexDeclarationsGlsl),
+-          ))
+-        : rigidProgram;
++    // Resolved through explicit null-checked branches rather than a nested `??=`: the coalescing
++    // expression leaves `.program` on absence-carrying storage, where the later read has no present
++    // proof. The branches are that expression's control flow written out, and each still compiles its
++    // variant lazily on first use.
++    let program = rigidProgram;
++    if (instanced) {
++      if (instancedProgram === null) {
++        instancedProgram = ensureGlScene3DProgram(state, 'shadow:depth:instanced', compileShadowDepthInstancedProgram);
++      }
++      program = instancedProgram;
++    } else if (skinned) {
++      if (skinnedProgram === null) {
++        skinnedProgram = ensureGlScene3DProgram(state, 'shadow:depth:skin', (gl) =>
++          compileShadowDepthSkinnedProgram(gl, skinFeature!.vertexDeclarationsGlsl),
++        );
++      }
++      program = skinnedProgram;
++    }
+     if (program !== boundProgram) {
+       gl.useProgram(program.program);
+       gl.uniformMatrix4fv(program.locViewProjection, false, matrix.m);
+@@ -136,7 +146,8 @@ export function renderGlScene3DShadowMap(
+       // Upload the mesh's bone palette into the shared RGBA32F skin texture and bind it, exactly as
+       // drawGlMeshSubset does for the forward pass, so the depth deformation matches the shaded one.
+       skinFeature!.bindShadowSkinPalette(state, mesh.skin!.skeleton.jointMatrices);
+-      gl.uniform1i(program.locJointTexture ?? null, SKIN_PALETTE_TEXTURE_UNIT);
++      const jointTextureLocation: WebGLUniformLocation | null = program.locJointTexture ?? null;
++      gl.uniform1i(jointTextureLocation, SKIN_PALETTE_TEXTURE_UNIT);
+     }
+ 
+     // gpuSkinned = skinned: a skinned draw uploads the static bind pose (the shader deforms it via the
+@@ -144,9 +155,8 @@ export function renderGlScene3DShadowMap(
+     const upload = ensureGlMeshUpload(state, mesh.geometry, skinned);
+     gl.bindVertexArray(upload.vao);
+     if (instanced) {
+-      const instancedMesh = mesh as unknown as InstancedMesh;
+-      const count = instancedMesh.instanceCount;
+-      bindGlInstancePalette(state, program, flattenShadowInstanceMatrices(instancedMesh), count);
++      const count = mesh.instanceCount;
++      bindGlInstancePalette(state, program, flattenShadowInstanceMatrices(mesh), count);
+       if (upload.indexBuffer !== null) {
+         gl.drawElementsInstanced(upload.primitiveMode, upload.indexCount, upload.indexType, 0, count);
+       } else {
+@@ -230,9 +240,20 @@ function compileShadowDepthInstancedProgram(gl: GlContext): GlMeshProgram {
+   };
+ }
+ 
++// True for a drawable caster. Structural, matching prepareScene3DRender's own mesh test: the test is a
++// predicate rather than an assertion so the traversal keeps the owner it already holds. The emitter
++// flattens interface heritage into independent owners, so `node as unknown as Mesh` asks C++ for a cast
++// between two unrelated owners that no runtime check backs; the predicate costs the same read and keeps
++// the original owner, which is what the rest of the pass consumes.
++function isShadowMesh(node: NodeOf<Node3DTraits>): node is Mesh {
++  const candidate: { readonly geometry?: MeshGeometry | null } = node;
++  return candidate.geometry != null;
++}
++
+ // Structural, matching prepareScene3DRender's own instanced test, so the depth pass and the forward pass
+-// agree on what an instanced caster is without importing a kind check.
+-function isShadowInstancedMesh(mesh: Readonly<Mesh>): boolean {
++// agree on what an instanced caster is without importing a kind check. A predicate for the same reason:
++// the narrower owner is the one the instance reads need, and a predicate proves it without a cast.
++function isShadowInstancedMesh(mesh: Readonly<Mesh>): mesh is Readonly<InstancedMesh> {
+   return 'instanceMatrices' in mesh;
+ }
+ 

@@ -1774,28 +1774,6 @@
       "appliedOn": "2026-10-13"
     },
     {
-      "id": "scene3d-gl-shadow-node-capabilities",
-      "dependency": "flight",
-      "patch": "scene3d-gl-shadow-node-capabilities.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/scene3d-gl/src/glShadowMap.ts",
-      "package": "@flighthq/scene3d-gl",
-      "answers": "refusal",
-      "refusal": "shadow traversal asserts heterogeneous Node3D values to Mesh and InstancedMesh owners without a checked native projection",
-      "rewrite": "Uses typed pre-erasure geometry and instance capability predicates to retain exact owners, gives the existing matrix and optional uniform-location coalescing exact destinations, carries the checked instanced owner through draw selection, and spells the same lazy program selection as presence-proven branches.",
-      "equivalence": "The mesh and instanced guards perform the same property tests that previously selected each draw path. The Matrix4 and WebGLUniformLocation annotations name the exact types the existing coalescing expressions already produce, and explicit program-cache branches implement the same nullish lazy initialization as the prior conditional assignments. The same preorder nodes, zero-instance skip, skin decision, program variants, matrices, palettes, uploads, draw counts, and GL calls remain; only unchecked owner assertions and implicit absence proofs are removed.",
-      "verification": "The full patch stack composes and a focused strict TypeScript program reports no glShadowMap error; full Scene3D GL regeneration validates native capability recovery, followed by generated-header compilation.",
-      "whyNotUpstreamFirst": "Flight's backend-neutral Scene3D render walk already uses checked structural mesh predicates, while the shadow twin still asserted concrete node owners. Applying the same checked pattern before any unknown erasure is a target-neutral consistency and const-correctness fix.",
-      "unblocks": "Allows the upstream scene3d example's real directional shadow pass to traverse rigid, skinned, and instanced casters without invented native casts.",
-      "expires": "when Flight adopts checked mesh and instanced-mesh shadow predicates upstream, or native heterogeneous node traversal retains concrete owners automatically.",
-      "appliedOn": "2026-10-08",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "GL",
-        "reason": "context drift: the patched code still exists (12/14 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
-    },
-    {
       "id": "scene-nodeof-traversal-capabilities",
       "dependency": "flight",
       "patch": "scene-nodeof-traversal-capabilities.patch",
@@ -2535,28 +2513,6 @@
       "unblocks": "Restores the real particle-atlas calls to resolveGlTexture and texture dimension helpers, allowing renderGlScene3D and scene3DGlPipeline to retain the upstream particle renderer.",
       "expires": "when flight-compiler uses exact structural shape proof to choose concrete values entering readonly structural-view unions upstream.",
       "appliedOn": "2026-10-09"
-    },
-    {
-      "id": "scene3d-gl-shadow-instanced-flow",
-      "dependency": "flight",
-      "patch": "scene3d-gl-shadow-instanced-flow.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/scene3d-gl/src/glShadowMap.ts",
-      "package": "@flighthq/scene3d-gl",
-      "answers": "refusal",
-      "refusal": "contextual union value type flight::Ref<flight::types::Mesh> is not a represented runtime domain",
-      "rewrite": "Keeps the existing checked InstancedMesh predicate as boolean flow evidence and reads the narrowed mesh inside its guarded branches, instead of first storing the same owner in a new nullable Mesh-or-InstancedMesh carrier.",
-      "equivalence": "The same instanceMatrices property test controls the zero-count exit, program variant, palette upload, and instanced draw. The mesh reference, instance count, matrices, skin exclusion, program cache operations, upload, and GL calls are unchanged; only the transient nullable alias is removed, so no owner is cast, copied, materialized, or replaced.",
-      "verification": "The full Flight patch stack applies and reverses cleanly, and the patched source passes the compiler's TypeScript semantic lowering during focused native generation. That generation emits glShadowMap alongside glMeshProgram (2/2) with zero refusals, and the real PBR material registration, extended and standard renderers, renderGlScene3D, and scene3DGlPipeline emit together (5/5) with zero refusals.",
-      "whyNotUpstreamFirst": "This target-neutral control-flow spelling preserves the checked source predicate and avoids asking the native backend to construct a redundant nullable union between flattened interface owners.",
-      "unblocks": "Restores the real directional shadow pass for rigid, skinned, and instanced meshes without an invented native mesh carrier.",
-      "expires": "when Flight keeps the checked instance predicate as branch flow upstream or flight-compiler preserves the predicate-refined owner through nullable conditional construction.",
-      "appliedOn": "2026-10-09",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "GL",
-        "reason": "most of the patched lines were rewritten upstream (2/7 removed lines still present); re-derive from the current source or drop if the refusal is gone"
-      }
     },
     {
       "id": "compiler-structural-union-exact-native-owner",
@@ -4110,6 +4066,23 @@
       "appliedOn": "2026-10-08",
       "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
       "rebasedOn": "2026-10-14"
+    },
+    {
+      "id": "scene3d-gl-shadow-checked-capability-flow",
+      "dependency": "flight",
+      "patch": "scene3d-gl-shadow-checked-capability-flow.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/scene3d-gl/src/glShadowMap.ts",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "cpp-structural-assertion-owner-unproven [source-portability]: the retained Mesh owner does not declare instanceColors, instanceCount, instanceMatrices or version and carries an incompatible EntityRuntimeKey, so the shadow traversal cannot recover InstancedMesh from it",
+      "rewrite": "Re-authored 2026-10-14 as ONE current-pin change from docs/compiler-requests/scene3d-gl-shadow-checked-capability-flow.md, superseding scene3d-gl-shadow-node-capabilities and scene3d-gl-shadow-instanced-flow. The two old workarounds are not independent fixes: the second is the branch-flow form the first requires once a typed instance predicate exists, so applying either alone is not a valid current-pin state, and the intermediate nullable Mesh | InstancedMesh alias they implied is itself refused. This replacement keeps both checks typed BEFORE erasure and lets the predicate evidence narrow the original owner: isShadowMesh(node: NodeOf<Node3DTraits>): node is Mesh replaces `node as unknown as Mesh`, and isShadowInstancedMesh(mesh: Readonly<Mesh>): mesh is Readonly<InstancedMesh> replaces the boolean helper, so the zero-instance guard, the palette upload and the instanced draw all read the narrowed owner. The three exact-carrier spellings the module also needs are included: the shadow matrix coalescing destination typed Matrix4; the nested program-selection `??=` replaced by explicit null-checked branches assigning one GlMeshProgram local; and the locJointTexture destination typed WebGLUniformLocation | null before uniform1i. glShadowMap.test.ts gains the runtime witness for the mesh guard: a non-mesh descendant before an ordinary rigid mesh, asserting the rigid caster still produces exactly one non-instanced draw.",
+      "equivalence": "The traversal visits the same descendants in the same preorder. The mesh guard performs the same `geometry != null` read that followed the old Node3D assertion, so a node without geometry is still skipped and a geometry-bearing node follows the same draw path; the instance guard performs the same `instanceMatrices in mesh` test; that one result still controls the zero-instance exit, skin exclusion, program variant, palette upload and instanced draw. For every accepted caster the same object supplies its geometry, world matrix, skin, instance count and instance matrices; rigid, skinned and instanced programs keep the same keys and compile lazily on the same first use, with the explicit null checks being the control-flow expansion of the former `??=` assignments. The Matrix4 and WebGLUniformLocation annotations erase in JavaScript. No caster, matrix, palette or GL owner is cast, copied, reallocated, materialized or moved to side storage.",
+      "verification": "Applied in manifest order; the module emits with no refusal (measured on a full generation run, see the batch report). The two capability paths are proven separately by the focused compiler fixtures carried in compiler-shadow-checked-capability-flow, and the package behaviour by glShadowMap.test.ts: the retained three-instance case (one drawElementsInstanced with count 3 and no rigid draw), the zero-live-instance case, the ordinary rigid control, and the new non-mesh-descendant case.",
+      "whyNotUpstreamFirst": "This is a source-portability rewrite: it needs no new runtime operation and emits no Any, unchecked structural cast, copied row or replacement owner. Upstream receives the request describing typed pre-erasure predicates and compiler-representable lazy program flow.",
+      "unblocks": "Allows the directional shadow depth pass to traverse a heterogeneous Node3D tree, keep the checked mesh and instanced owners through the branch flow, and emit gl_shadow_map.hpp complete.",
+      "expires": "when Flight adopts typed shadow mesh and instance predicates plus compiler-representable lazy program flow upstream, or when flight-compiler can preserve the same checked owners and presence evidence from the original source without casts or materialization.",
+      "appliedOn": "2026-10-14"
     }
   ]
 }
