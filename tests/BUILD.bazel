@@ -208,6 +208,26 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_tilemap_test",
+    srcs = ["generated_tilemap_test.cpp"],
+    size = "small",
+    deps = [
+        "//:cpp",
+        "//:sdk_preview",
+    ],
+)
+
+cc_test(
+    name = "generated_tilemap_formats_test",
+    srcs = ["generated_tilemap_formats_test.cpp"],
+    size = "small",
+    deps = [
+        "//:cpp",
+        "//:sdk_preview",
+    ],
+)
+
+cc_test(
     name = "generated_spritesheet_formats_test",
     srcs = ["generated_spritesheet_formats_test.cpp"],
     size = "small",
@@ -1445,6 +1465,8 @@ test_suite(
         ":generated_texture_formats_test",
         ":generated_textureatlas_test",
         ":generated_textureatlas_formats_test",
+        ":generated_tilemap_test",
+        ":generated_tilemap_formats_test",
         ":generated_spritesheet_formats_test",
         ":generated_updater_test",
         ":generated_useragent_test",
