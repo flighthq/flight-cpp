@@ -1397,7 +1397,7 @@
       "id": "scene3d-gl-uniform-location-locals",
       "dependency": "flight",
       "patch": "scene3d-gl-uniform-location-locals.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene3d-gl/src/glClassicPrelude.ts, glDebugPrelude.ts, glMatcapPrelude.ts, glPbrProgramCache.ts, glShadowMap.ts, glToonPrelude.ts, glUnlitPrelude.ts, and glWireframePrelude.ts",
       "package": "@flighthq/scene3d-gl",
       "answers": "refusal",
@@ -1409,11 +1409,8 @@
       "unblocks": "Emits the classic, debug, matcap, PBR, shadow, toon, unlit, and wireframe program builders that real upstream Scene3D material renderers require.",
       "expires": "when flight-compiler contextually stores represented optional external call results directly in object fields, or Flight adopts the equivalent immutable-local form upstream.",
       "appliedOn": "2026-10-08",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "GL",
-        "reason": "context drift: the patched code still exists (88/88 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "rebasedOn": "2026-10-14"
     },
     {
       "id": "pbr-extension-concrete-value-arms",
