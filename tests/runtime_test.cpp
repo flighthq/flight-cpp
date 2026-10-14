@@ -220,11 +220,14 @@ void test_locale_compare() {
 // that test asserts the difference.
 // `x.name = null` on a three-state member.
 //
-// TypeScript assigns the bare literal and the emitter lowers it to `nullptr`, so a
-// `variant<Value, Null, Undefined>` needs an alternative constructible from `std::nullptr_t`. `Any`
-// already carried that conversion, so giving `Null` the same one makes the two agree rather than
-// inventing a rule -- and the pair of assertions that matter are that `nullptr` selects NULL and not
-// Undefined, since collapsing those two is the absence change this runtime exists to prevent.
+// The emitter does NOT lower a source `null` to a bare `nullptr`. It emits an explicit arm --
+// `variant<Value, Null, Undefined>{std::in_place_type<flight::Null>, flight::null}`, which the
+// compiler's own `carries the mixed-absence optional as a dual-sentinel variant absent state` fixture
+// asserts -- and the bare form is not merely unused, it is UNSPELLABLE: `nullptr` converts to `String`
+// through its implicit `const char*` constructor and to `Null` through its implicit `std::nullptr_t`
+// one at the same rank, so the variant's converting constructor has no unique winner and C++ rejects
+// it. The assertions that matter are that the in-place Null arm selects NULL and not Undefined, since
+// collapsing those two is the absence change this runtime exists to prevent.
 // Indexing an Array with an ABSENT index.
 //
 // `arr[undefined]` is `undefined` in JavaScript -- not an error, and not element zero. The emitter reaches
@@ -267,9 +270,11 @@ void test_nullish_variant_strict_equality() {
         "a number carrier compares by value, NaN never equal, null never 0");
 }
 
-void test_null_from_nullptr() {
-  std::variant<flight::String, flight::Null, flight::Undefined> value = nullptr;
-  check(std::holds_alternative<flight::Null>(value), "nullptr selects the Null alternative");
+void test_null_carrier_selects_the_null_arm() {
+  std::variant<flight::String, flight::Null, flight::Undefined> value =
+      std::variant<flight::String, flight::Null, flight::Undefined>{std::in_place_type<flight::Null>,
+                                                                   flight::null};
+  check(std::holds_alternative<flight::Null>(value), "the in-place Null arm selects the Null alternative");
   check(!std::holds_alternative<flight::Undefined>(value), "and NOT Undefined, which is a different state");
 
   std::variant<flight::String, flight::Null, flight::Undefined> absent = flight::undefined;
@@ -4045,7 +4050,7 @@ int main() {
   test_array();
   test_array_get_optional_index();
   test_array_is_array_optional_payload();
-  test_null_from_nullptr();
+  test_null_carrier_selects_the_null_arm();
   test_nullish_variant_strict_equality();
   test_structural_ref_from_variant();
   test_array_of();
