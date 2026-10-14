@@ -144,3 +144,61 @@ That is the whole reason the override exists, and it means the promotion decisio
 choosing a spelling: the module can be made to COMPILE with the emitter's row spelling, but the project's own
 tests pin callable identity through the REF spelling, and the two disagree. Recorded here rather than resolved
 by weakening either side.
+
+## Fourth pass: the Ref-preserving adaptation satisfies the identity assertion
+
+Manager approved the Ref-preserving bounded adaptation and REJECTED row-spelling standardization. This pass
+implements it, within the Log override and Log tests only. Analysis first, because the framing in my third pass
+was wrong in a way that mattered:
+
+### The identity loss was NOT the row spelling -- it was an emitted `std::function`
+
+I had concluded the row spelling loses callable identity. It does not. `flight::Function::identity()` is
+`state_.get()`, independent of the signature. The actual cause, found by experiment:
+
+`set_log_sink` is EMITTED with a parameter of type
+`std::optional<std::function<void(StructuralRef<RowReadonly<RowOf<Ref<LogEntry>>>>>)>` -- a **`std::function`**,
+not `flight::types::LogSink`. A `flight::Function` handed to a `std::function` parameter is copied into a NEW
+heap object, and the `std::function` is then stored back into an `Array<LogSink>`, constructing a SECOND
+`Function::State`. The identity is destroyed by that round trip, not by any spelling choice.
+
+Evidence: with the row-spelled alias, the repaired module, the converted tests AND that one parameter respelled
+to `std::optional<flight::types::LogSink>`, `tests/generated_log_test.cpp` PASSES as written, including
+"a generated handle or sink registry lost callable identity".
+
+### What the assertion protects
+
+A sink stored through a generated entity member (`MemoryLogSink::sink`), then registered, still compares
+IDENTICAL to the original. That is the property `addLogSink`'s idempotence and `removeLogSink`'s targeted
+removal depend on: registration twice must not stack duplicates, and removal must erase exactly the registered
+object. JavaScript gives this for free through function reference equality; C++ needs a carrier that preserves
+it across copies, which is why the committed override respells `LogSink` as `flight::Function` and leaves
+`LogFormatter` as `std::function` -- formatters are never compared, so they need no identity.
+
+### The bounded adaptation, measured
+
+| change | count | scope |
+| --- | --- | --- |
+| sink lambdas retyped to `Ref<LogEntry>` | 9 | Log override |
+| formatter lambdas LEFT row-spelled | 3 | Log override (correctly unchanged) |
+| `sink(...)` / `target(...)` call sites respelled | 4 | Log override |
+| row-local initialised from `entry` | 3 | Log override |
+| redundant casts removed | 2 | Log override |
+| `set_log_sink` parameter respelled | 1 | Log override |
+| **tests, types override, any other package** | **0** | untouched |
+
+The tests are unmodified and pass as written; the console refusal is preserved; `derivedFrom` re-derivation and
+the manifest entry update are still outstanding. One finding worth carrying: I initially retyped the FORMATTER
+lambdas too, and the committed override proves that is wrong -- identity is needed only for sinks.
+
+### Remaining boundary: the log* family's data parameter (4 errors in the sinks test)
+
+`tests/generated_log_levels_and_sinks_test.cpp` still fails to BUILD. The tests pass
+`flight::makeRef<LogData>(...)`, while the emitted `log`, `log_debug`, `log_error`, `log_info`, `log_verbose`
+and `log_warn` take a three-arm VALUE variant (`function<LogData()>` / `Record` / `String`); the committed
+override used a two-arm Ref variant. Porting the 13 bodies is NOT mechanical, and the reason is the important
+part: the committed override's `merge_span_fields` is a **`NotImplementedInThisProfile` variadic stub** that
+accepts whatever it is handed and throws at conversion -- which is precisely why every log call was unobservable
+before this unit. A REAL `merge_span_fields` takes a `LogData` value, so the ported bodies need a working
+dereference of `Ref<LogData>` that this pass did not establish. Attempted, reverted, and recorded rather than
+half-landed.
