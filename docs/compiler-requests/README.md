@@ -135,6 +135,9 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   refuses `@flighthq/debug` `debug.ts` (`enableDebug`); no workaround.
 - [Nullable storage of an imported alias is spelled by its expansion](nullable-alias-storage-spelled-by-expansion.md) —
   `@flighthq/debug` `install_debug_sink` under the LogSink override; no workaround yet.
+- [Package-scoped pin moves must reject consumers of removed headers](missing-material-value-generated-header.md) —
+  the current-pin types row removed `material_value.hpp` while old-pin Scene3D consumers remain;
+  mixed-inventory verification must reject that unresolved include closure.
 - [`@flighthq/log` native-compile defect inventory](log-native-compile-defects.md) — fifteen emitter
   defects make log.hpp fail clang once the console refusal is set aside; the log override stubs twelve
   functions with throws, so log parity is not honest.
