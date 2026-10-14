@@ -747,12 +747,18 @@ int main() {
     // back -- and each write carries the chunk's own bytes, not a shared or truncated buffer.
     std::vector<std::vector<int>> written;
     String seen_path;
+    // What the sink RECEIVED, held onto past the call. flight::Uint8Array is a view over a shared
+    // ArrayBuffer, so copying it shares storage: if the runtime handed the sink the producer's own array
+    // instead of a copy, mutating the producer afterwards is visible here. `slice(0)` is exactly the
+    // insulation, and the runtime pins that `slice` copies while a plain copy shares.
+    flight::Uint8Array received;
     auto host = flight::make_ref<Host>();
-    host->open_file_write_stream = [&written, &seen_path](
+    host->open_file_write_stream = [&written, &seen_path, &received](
                                        String path, std::optional<flight::AbortSignal>) {
       seen_path = path;
       flight::WritableStreamSink<flight::Uint8Array> sink;
-      sink.write = [&written](const flight::Uint8Array& chunk) {
+      sink.write = [&written, &received](const flight::Uint8Array& chunk) {
+        received = chunk;
         std::vector<int> bytes;
         for (std::size_t i = 0; i < chunk.length(); ++i) bytes.push_back(static_cast<int>(chunk[i]));
         written.push_back(bytes);
@@ -782,6 +788,14 @@ int main() {
         !check(written.size() == 2 && written[0] == std::vector<int>{4} &&
                    written[1] == std::vector<int>{6, 8},
                "and streamed each chunk's own bytes, in order and undivided")) {
+      return 1;
+    }
+
+    // Now mutate the producer's own array. The sink kept what it received, and that must NOT move -- the
+    // chunk it was handed was a copy, not a second view onto the caller's buffer.
+    queue[1][0] = 99;
+    if (!check(received.length() == 2 && received[0] == 6 && received[1] == 8,
+               "and the sink's copy is insulated from later mutation of the producer's array")) {
       return 1;
     }
   }
