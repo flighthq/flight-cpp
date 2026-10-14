@@ -1,8 +1,7 @@
 diff --git a/packages/scene3d-gl/src/glParticleEmitter3D.ts b/packages/scene3d-gl/src/glParticleEmitter3D.ts
-index eea4bff..d03e668 100644
 --- a/packages/scene3d-gl/src/glParticleEmitter3D.ts
 +++ b/packages/scene3d-gl/src/glParticleEmitter3D.ts
-@@ -191,11 +191,9 @@ function ensureInstanceCapacity(shader: GlParticle3DShader, gl: GlContext, count
+@@ -192,11 +192,9 @@ function ensureInstanceCapacity(shader: GlParticle3DShader, gl: GlContext, count
    gl.bufferData(gl.ARRAY_BUFFER, newSize * 4, gl.DYNAMIC_DRAW);
  }
  
@@ -16,7 +15,7 @@ index eea4bff..d03e668 100644
    const children = getNodeRuntime(node).children;
    if (children !== null) {
      for (let i = 0; i < children.length; i++) {
-@@ -204,6 +202,10 @@ function collectParticleEmitter3DNodes(node: Readonly<NodeAny>, out: ParticleEmi
+@@ -205,6 +203,10 @@ function collectParticleEmitter3DNodes(node: Readonly<NodeAny>, out: ParticleEmi
    }
  }
  
@@ -27,11 +26,10 @@ index eea4bff..d03e668 100644
  // ParticleBlendMode uses serialized lowercase spellings; translate them to the canonical fixed-function
  // BlendMode family so particles and surface meshes share render-gl's one overridable realization table.
  // Assumes gl.BLEND is already enabled.
-@@ -437,5 +439,5 @@ export function drawGlScene3DParticleEmitter3Ds(
-   invalidateGlRenderStateCache(state);
+@@ -445,5 +447,5 @@ export function registerGlParticleEmitter3DPass(state: GlRenderState): void {
+   registries.passes = passes != null ? [...passes, drawGlScene3DParticleEmitter3Ds] : [drawGlScene3DParticleEmitter3Ds];
  }
  
 -const emitterScratch: ParticleEmitter3D[] = [];
 +const emitterScratch: Readonly<ParticleEmitter3D>[] = [];
  const shaderCache = new WeakMap<GlRenderState, GlParticle3DShader>();
-

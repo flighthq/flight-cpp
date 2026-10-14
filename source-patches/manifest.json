@@ -1762,7 +1762,7 @@
       "id": "scene3d-gl-particle-capability-guard",
       "dependency": "flight",
       "patch": "scene3d-gl-particle-capability-guard.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene3d-gl/src/glParticleEmitter3D.ts",
       "package": "@flighthq/scene3d-gl",
       "answers": "refusal",
@@ -1774,11 +1774,8 @@
       "unblocks": "Allows the real SDL WebGL particle traversal and instanced quad draw path to retain readonly emitter ownership without a native cast.",
       "expires": "when Flight adopts the capability predicate upstream, or the native compiler retains checked concrete node owners through heterogeneous traversal automatically.",
       "appliedOn": "2026-10-08",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "GL",
-        "reason": "applies only with reduced context (git apply -C1) at the new pin; regenerate the patch text against it and confirm the hunk still lands on the intended expression"
-      }
+      "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "rebasedOn": "2026-10-14"
     },
     {
       "id": "scene3d-concrete-node-construction",
