@@ -396,6 +396,80 @@ int main() {
           "reinterpreting the value");
   }
 
+  // THE REMAINING UPSTREAM CASES. Each uses the fixture's own input, because these are ports rather than
+  // new probes: an assertion that only resembles the case is how a fixture case quietly stops being
+  // covered.
+  {
+    // A Linux UA carrying NO architecture token is undetectable -- distinct from a UA that is not Linux at
+    // all, and the case the empty answer actually has to hold for.
+    check(ua::parse_user_agent_arch(String("Mozilla/5.0 (X11; Linux) AppleWebKit/537.36")) == String("") &&
+              ua::parse_user_agent_arch(String("SomeCustomBrowser/1.0")) == String(""),
+          "a Linux UA with no arch token is undetectable, like any other unknown UA");
+
+    // Plain desktop Chrome is Blink, with no Edge or Opera token in sight.
+    const String plain_chrome("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like "
+                              "Gecko) Chrome/120.0.0.0 Safari/537.36");
+    check(ua::parse_user_agent_engine(plain_chrome) == String("blink"),
+          "a plain Chrome UA with no Edge or Opera token is Blink");
+    check(ua::parse_user_agent_engine_version(plain_chrome, String("blink")) == String("120.0.0.0"),
+          "and its version is the Chrome/ token");
+
+    // The Chrome version WITHOUT an OPR/ token ahead of it -- the OPR/ case pins the precedence, this one
+    // pins that the Chrome/ fallback is reachable at all.
+    const String chrome_only("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like "
+                             "Gecko) Chrome/120.0.6099.109 Safari/537.36");
+    check(ua::parse_user_agent_engine_version(chrome_only, String("blink")) == String("120.0.6099.109"),
+          "and the Chrome/ version is read when nothing outranks it");
+    check(ua::parse_user_agent_engine_version(String(""), String("gecko")) == String(""),
+          "an empty UA has no engine version, even for a known engine");
+
+    // Opera's own iOS tokens: OPiOS and OPT are two more WebKit-in-a-product-token spellings, and neither
+    // contains the blink family's `edg`.
+    const String ios_prefix("Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 "
+                            "(KHTML, like Gecko) ");
+    const String op_ios = ios_prefix +
+                          String("OPiOS/9.2.0.11256 Mobile/15E148 Safari/9537.53");
+    const String op_opt = ios_prefix + String("Version/17.0 OPT/3.6.1 Mobile/15E148 Safari/604.1");
+    check(ua::parse_user_agent_engine(op_ios) == String("webkit") &&
+              ua::parse_user_agent_engine_version(op_ios, String("webkit")).length() > 0.0,
+          "Opera on iOS under OPiOS is WebKit, with a version from the WebKit tokens");
+    check(ua::parse_user_agent_engine(op_opt) == String("webkit") &&
+              ua::parse_user_agent_engine_version(op_opt, String("webkit")).length() > 0.0,
+          "and so is Opera on iOS under the OPT token");
+  }
+
+  // parseUserAgentVersion's own edge cases: the vocabulary answers per requested name, so a UA that
+  // describes one platform answers nothing when asked for another.
+  {
+    const String win("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
+    check(ua::parse_user_agent_version(win, String("windows")) == String("10.0") &&
+              ua::parse_user_agent_version(win, String("macos")) == String("") &&
+              ua::parse_user_agent_version(win, String("ios")) == String(""),
+          "a Windows UA answers its own version and nothing for the names it does not describe");
+
+    // The iPad UA says "like Mac OS X", which is exactly the string a macOS pattern would match -- so this
+    // is the case that fails if the two vocabularies share a pattern that is not name-gated.
+    const String ipad("Mozilla/5.0 (iPad; CPU OS 17_4 like Mac OS X) AppleWebKit/605.1.15");
+    check(ua::parse_user_agent_version(ipad, String("macos")) == String("") &&
+              ua::parse_user_agent_version(ipad, String("ios")) == String("17.4"),
+          "an iPad UA that says 'like Mac OS X' answers ios, never macos");
+
+    check(ua::parse_user_agent_version(String(""), String("windows")) == String(""),
+          "an empty UA has no version even for a known name");
+    check(ua::parse_user_agent_version(String("some-native-host/1.0"), String("web")) == String(""),
+          "and the web fallback name has no version either");
+  }
+
+  {
+    // A classic iPad UA, longer than the tablet case above and carrying its own Version/ and Mobile/
+    // tokens: the iPad token still wins, so the extra tokens do not tip it to a phone.
+    const String classic_ipad(
+        "Mozilla/5.0 (iPad; CPU OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) "
+        "Version/17.4 Mobile/15E148 Safari/604.1");
+    check(ua::parse_user_agent_form_factor(classic_ipad, 5.0) == String("Tablet"),
+          "a classic iPad UA with its own Version/ and Mobile/ tokens is still a Tablet");
+  }
+
   if (failures == 0) std::cout << "generated useragent: all checks passed\n";
   return failures == 0 ? 0 : 1;
 }
