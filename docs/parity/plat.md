@@ -503,24 +503,25 @@ A LATER unit DISCHARGED PART OF THE DEFERRAL that entry records. Mapping inputMa
   of them found a real hole: the frame boundary's GAMEPAD clear was unasserted, because only the KEYBOARD edges were
   re-checked after a frame, and a case was added for it.
 
-  A THIRD UNIT CLOSED THE INGRESS SEAM, which the two paragraphs above named as still uncovered. The seam is a
-  `HostInputIngressCapability` row -- six attach slots -- so the file builds a recording host of the same shape every
-  other package's fixture is, and drives the behaviour through the sink the host is handed. Now covered:
+  A THIRD UNIT'S CLAIM TO HAVE CLOSED THE INGRESS SEAM WAS WRONG, and it is corrected here rather than left
+  standing. That unit mapped the upstream ingress cases against `generated_input_test.cpp` and
+  `generated_input_manager_test.cpp` only, concluded the six attachment families were uncovered, and added coverage
+  for them to the manager test. THEY WERE ALREADY COVERED, by `generated_input_binding_test.cpp` -- the fourth input
+  test file, which this package's own entry above describes and which the unit's mapping simply did not read. The
+  duplicate block has been REMOVED from the manager test, and the mutants that appeared to justify it kill against the
+  BINDING test instead, which is where that coverage lives and where it is more complete: removing `detach`'s release
+  fails NINE assertions there against the duplicate's four.
 
-  * EACH FAMILY reaches exactly its OWN host slot, is handed the EXACT source it was given, and shares the manager's
-    ONE sink rather than minting its own -- a family cannot strand a sink.
-  * DETACH runs the release its own origin answered with and nothing else: detaching one family leaves the others
-    attached, and a second detach runs nothing because the binding is gone.
-  * REATTACHING the same source and family through a DIFFERENT host releases the PRIOR origin exactly once and
-    detaches the replacement -- the origin-pinning the upstream suite names -- while cleanup stays pinned to the
-    origin that recorded it, since a detach is given only the manager and the source.
-  * THE SINK delivers into the manager's signal only while `enabled` is true: it publishes, stops when the manager is
-    disabled, and resumes when it is enabled again.
+  The binding test covers all fifteen upstream ingress cases: the six `attach*` families, the six `detach*` families,
+  and the three explicit-ingress cases (each exact source identity through all six families, cleanup pinned to the
+  originating backend so the borrowed source is never destroyed, and the old origin released once when a different
+  one replaces it). It also covers what the duplicate did not: attach options forwarded including their absence, and
+  relative-pointer, wheel and text ingress forwarded with no state effect.
 
-  Nine mutations against the seam, every one confirmed to differ at its target, ALL NINE KILLED BY FAILING CHECKS:
-  a family routed to its sibling's slot, the binding not recorded, reattach not releasing the old, detach not
-  releasing, detach not forgetting, a disabled manager still delivering, the sink not cached per manager, the source
-  identity dropped, and a detach clearing the wrong kind.
+  The lesson is recorded because it is a re-audit failure of exactly the kind these re-audits exist to catch: a
+  mapping that reads SOME of a package's test files and reports a gap is worse than no mapping, because it produces
+  confident duplicate work. The count of test files for a package, not just the ones that look relevant, is part of
+  the mapping.
 
   THE DISPOSER REMAINS UNCOVERED and is not worked around: `connectInputStateToInputManager`'s returned disposer
   still aborts under `local-handler-callable-identity.md`, and the test keeps that case explicitly uncovered until the
