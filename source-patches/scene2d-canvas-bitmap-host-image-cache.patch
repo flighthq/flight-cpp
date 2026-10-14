@@ -1,15 +1,18 @@
 diff --git a/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts b/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts
 --- a/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts
 +++ b/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts
-@@ -4,6 +4,7 @@ import type {
+@@ -2,6 +2,7 @@ import { createImageResourceFromBitmap } from '@flighthq/image/contract';
+ import { getTextureSource } from '@flighthq/texture/contract';
+ import type {
    Bitmap,
 +  CanvasTextureResolver,
    CanvasTextureResolvers,
    HostImageCapability,
    HostImageSource,
-   Texture,
- } from '@flighthq/types/contract';
-@@ -18,23 +18,27 @@ export function registerCanvasBitmapTextureResolver(
+@@ -15,9 +16,9 @@ export function registerCanvasBitmapTextureResolver(
+   hostImage: Readonly<HostImageCapability>,
+   resolvers: CanvasTextureResolvers,
+ ): void {
 -  registerCanvasTextureResolver(resolvers, BitmapTextureSourceKind, (r, texture) =>
 -    resolveCanvasBitmapTexture(hostImage, r, texture),
 -  );
@@ -19,10 +22,7 @@ diff --git a/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts b/packag
  }
  
  function resolveCanvasBitmapTexture(
-   hostImage: Readonly<HostImageCapability>,
-   resolvers: CanvasTextureResolvers,
-   texture: Readonly<Texture>,
- ): HostImageSource | null {
+@@ -28,13 +29,17 @@ function resolveCanvasBitmapTexture(
    const bitmap = getTextureSource(texture) as Readonly<Bitmap> | null;
    if (bitmap === null) return null;
  
@@ -33,13 +33,12 @@ diff --git a/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts b/packag
 -    if (image === null) return null;
 -    entry = { element: image.source as HTMLCanvasElement, version: bitmap.version };
 -    cache.set(bitmap, entry);
--  }
--  return entry.element;
 +  let cache = resolvers.bitmapElementCache;
 +  if (cache === undefined) {
 +    cache = new WeakMap();
 +    resolvers.bitmapElementCache = cache;
-+  }
+   }
+-  return entry.element;
 +  const entry = cache.get(bitmap);
 +  if (entry !== undefined && entry.version === bitmap.version) return entry.element;
 +
@@ -52,7 +51,8 @@ diff --git a/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts b/packag
 diff --git a/packages/types/src/CanvasTextureResolver.ts b/packages/types/src/CanvasTextureResolver.ts
 --- a/packages/types/src/CanvasTextureResolver.ts
 +++ b/packages/types/src/CanvasTextureResolver.ts
-@@ -21,10 +21,15 @@ export type CanvasTextureResolver = (
+@@ -23,13 +23,18 @@ export type CanvasTextureResolver = (
+ //
  // A resolver that genuinely needs a render state — a render-target texture belongs to the state that
  // owns the target — captures that state when it is registered.
 +export interface CanvasBitmapElementCacheEntry {
@@ -61,7 +61,7 @@ diff --git a/packages/types/src/CanvasTextureResolver.ts b/packages/types/src/Ca
 +}
 +
  export interface CanvasTextureResolvers extends Entity {
-   readonly surfaceCreator: Readonly<CanvasRenderSurfaceCreator>;
+   readonly canvasHost: Readonly<HostCanvasCapability>;
    // Undefined until the first explicit registration, so a bundle only retains the backing realizations
    // it installs.
    registry?: Map<TextureSourceKind, CanvasTextureResolver> | null;
@@ -69,3 +69,5 @@ diff --git a/packages/types/src/CanvasTextureResolver.ts b/packages/types/src/Ca
 -  bitmapElementCache?: WeakMap<Bitmap, { element: HTMLCanvasElement; version: number }>;
 +  bitmapElementCache?: WeakMap<Bitmap, CanvasBitmapElementCacheEntry>;
    // A Texture uv window materialized as a standalone canvas for pattern fills. Identity windows return
+   // their backing source directly and never enter this cache.
+   textureWindowElementCache?: WeakMap<
