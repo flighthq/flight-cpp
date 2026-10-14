@@ -24,6 +24,19 @@
 // `flight/types/renderer.hpp` and that header is absent. (This header previously pointed at "the note
 // at the end of this file"; no such note existed, so the pointer was replaced with the measured cause.)
 // The dialog-package semantics are therefore covered here instead.
+//
+// INVENTORY AND RE-AUDIT. Three upstream fixtures specify this package and this file exercises all of them:
+// dialog.test.ts (8 cases -- the message family), fileDialog.test.ts (10), mediaDialog.test.ts (5): 23 cases.
+//
+// A re-audit found one uncovered arm. `showCaptureVideoDialog` was called only WITHOUT options, so its
+// options-present arm was never exercised and a mutation forwarding absence unconditionally SURVIVED the
+// whole suite. The upstream case calls it WITH options and additionally checks that the decoded duration
+// survives the round trip; both are now asserted, and the mutation is re-run against the fix and caught.
+//
+// One export is NOT called from this file and is NOT uncovered: `initializeFileDialogHandle` appears at no
+// call site here, but `createFileDialogHandle` calls it from inside the module, and mutating its body is
+// caught. A mechanical export map that reports "zero call sites" is reporting on the TEST, not on coverage.
+// The same map is worth reading with that in mind anywhere it is used.
 #include <flight/dialog/dialog.hpp>
 #include <flight/dialog/file_dialog.hpp>
 #include <flight/dialog/media_dialog.hpp>
@@ -245,6 +258,37 @@ int main() {
               video_result,
           "the video capture dialog answers with the provider's result");
     check(video_options.has_value() && !video_options.value(), "with absence forwarded");
+
+    // The video-capture dialog WITH options, which this suite never exercised: only the absence arm was
+    // called, so a mutation always forwarding absence SURVIVED it. The upstream case also checks that the
+    // decoded duration survives the round trip, which needs the SELECTED arm rather than a cancellation.
+    auto video_options_value = flight::make_ref<VideoOptions>();
+    static_cast<void>(flight::dialog::show_capture_video_dialog(video_host, video_options_value).get());
+    check(video_options.has_value() && video_options.value(),
+          "the video capture dialog forwards the caller's options, not absence");
+
+    auto decoded = flight::make_ref<flight::types::DialogVideo>();
+    decoded->duration = 2.5;
+    decoded->data_url = String("data:video/mp4;base64,AA==");
+    decoded->mime_type = String("video/mp4");
+    auto selected_video = flight::make_ref<flight::types::outcome_video_82b4b9471207f533>();
+    selected_video->outcome = String("selected");
+    selected_video->video = decoded;
+    auto decoding_host = flight::make_ref<flight::types::HostVideoCaptureDialogCapability>();
+    decoding_host->capture =
+        [selected_video](std::optional<flight::StructuralRef<
+                             flight::RowReadonly<flight::RowOf<flight::Ref<VideoOptions>>>>>) {
+          return flight::Task<flight::types::VideoCaptureDialogResult>::resolve(
+              flight::types::VideoCaptureDialogResult{
+                  std::in_place_type<flight::Ref<flight::types::outcome_video_82b4b9471207f533>>,
+                  selected_video});
+        };
+    const auto decoded_result =
+        flight::dialog::show_capture_video_dialog(decoding_host, video_options_value).get();
+    check(decoded_result.index() == 0 &&
+              std::get<flight::Ref<flight::types::outcome_video_82b4b9471207f533>>(decoded_result)
+                      ->video->duration == 2.5,
+          "and preserves the decoded video duration the provider reported");
 
     auto image_options_value = flight::make_ref<ImageOptions>();
     image_options_value->signal = flight::AbortSignal{};
