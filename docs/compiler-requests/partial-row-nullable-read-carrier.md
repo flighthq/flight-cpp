@@ -40,6 +40,55 @@ return std::get<flight::String>(optional_property);
 Clang rejects both `holds_alternative` calls and the `std::get` because `optional_property` is an
 `std::optional`, not a variant. The five numeric nullable fields emit the same mismatch.
 
+### Why the two lowerings disagree, in one function
+
+The same function shows both lowerings side by side, which pins the cause. `x`, `y`, `width`,
+`height` and `id` are `number` (non-nullable) and they coalesce correctly, consuming the optional
+carrier the read actually produced:
+
+```cpp
+const double x = ([&]() -> double {
+  auto nullish_coalesce_left = flight::row_get<flight::RowKey<"x">>(source);
+  if (nullish_coalesce_left.has_value()) return nullish_coalesce_left.value();
+  return 0.0;
+}());
+```
+
+`name`, `originalHeight`, `originalWidth`, `pageName`, `pivotX` and `pivotY` are `T | null` and they
+take the variant path. The operand is the same partial read in every case, so the two paths cannot
+both be right: **the `??` lowering is selected by the coalesce's RESULT type (`T | null` picks the
+variant path) instead of by the OPERAND's carrier** (`Partial<T>` reads are `std::optional<T>`). It
+is only when the two disagree -- a nullable property read from a partial row -- that the emitted
+`holds_alternative` has no matching overload.
+
+A bounded search of the emitted tree confirms this is one function and not a class of them: of the
+sites emitting `holds_alternative<flight::Undefined>(optional_property)`, only the six whose
+enclosing function takes a `RowPartial` are affected, and all six are in `set_texture_atlas_region`.
+The others read a complete `RowOf<T>` row, where a `T | null | undefined` property really is a
+variant and the variant path is correct.
+
+### Reproducer
+
+The defect is in the emitter's OUTPUT, so this must reach the **generated** file rather than the
+header name: a `textureatlas-region-nullable-partial-read` override now shadows
+`flight/textureatlas/texture_atlas_region.hpp` on the normal include path, so compiling the header
+name succeeds and reproduces nothing. Compile the generated path directly:
+
+```
+printf '#include "generated/include/flight/textureatlas/texture_atlas_region.hpp"\nint main(){return 0;}\n' > /tmp/probe.cpp
+c++ -std=c++20 -fsyntax-only -Ioverrides/include -Igenerated/include -Iinclude /tmp/probe.cpp
+```
+
+```
+generated/include/flight/textureatlas/texture_atlas_region.hpp:290:271:
+    error: no matching function for call to 'holds_alternative'
+libcxx/include/variant:1324:52: note: candidate template ignored:
+    could not match 'variant' against 'std::optional'
+```
+
+The note is the whole defect in one line: the lowering asks for a `variant` and is handed an
+`std::optional`.
+
 For this nullish-coalescing use, source `null` and `undefined` intentionally have the same result.
 The correct lowering can therefore consume the actual optional carrier directly: return its payload
 when present and `std::nullopt` otherwise. A more general read that must distinguish null from

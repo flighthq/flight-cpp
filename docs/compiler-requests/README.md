@@ -136,6 +136,11 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   refuses `@flighthq/debug` `debug.ts` (`enableDebug`); no workaround.
 - [Nullable storage of an imported alias is spelled by its expansion](nullable-alias-storage-spelled-by-expansion.md) —
   `@flighthq/debug` `install_debug_sink` under the LogSink override; no workaround yet.
+- [Nullable fields read through `Partial<T>` use the wrong storage domain](partial-row-nullable-read-carrier.md) —
+  `??` picks its lowering from the RESULT type, so a `T | null` property read from a partial row emits
+  variant operations against an `std::optional`; `set_texture_atlas_region` fails clang at
+  `texture_atlas_region.hpp:290`. `@flighthq/textureatlas` is carried by the
+  `textureatlas-region-nullable-partial-read` override; the emitter defect itself is unpatched.
 - [Package-scoped pin moves must reject consumers of removed headers](missing-material-value-generated-header.md) —
   the current-pin types row removed `material_value.hpp` while old-pin Scene3D consumers remain;
   mixed-inventory verification must reject that unresolved include closure.
