@@ -132,3 +132,13 @@ assertions between a base and a derived runtime or node type, the fifth on a str
 Because `@flighthq/movieclip` reaches scene2d, this is also the dependency blocker behind that package's
 `spritesheetTimelineSource.ts`. The engine `@flighthq/movieclip` drives -- `@flighthq/timeline` -- is unaffected: all
 three of its modules emit.
+Also the physics2d joint solvers and debug draw at a627849 (measured 2026-10-14). `Physics2DWorld.joints` stores
+`Ref<Physics2DJoint>`. Each of the nine built-in solvers in `joints.ts` (`physics2DDistanceJointSolver` through
+`physics2DGearJointSolver`), and `debugGeometry.ts` `writeJoint` (for `Physics2DMouseJoint`'s target), refines the
+stored joint to its concrete interface by `kind` before reading the derived members. That is this request's base
+to derived direction. A scratch inventory that gave the nine joint structs their declared `Physics2DJoint` base
+(the emission-repair shape of [interface-heritage-widening](interface-heritage-widening.md)) leaves `joints.ts`'s
+solver bindings refused and `debug_geometry.hpp` failing exactly as before. Heritage supplies the widening, but a
+refinement still needs a checked, owner-preserving view, and `flight::ReferenceEnabled` is an empty,
+non-polymorphic aggregate base. Solver dispatch and joint drawing therefore wait on the runtime/compiler decision
+this request describes. Nothing is carried.

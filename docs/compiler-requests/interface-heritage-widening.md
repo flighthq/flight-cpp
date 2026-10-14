@@ -119,3 +119,18 @@ Copying the `binding` and `uid` prefix into a second object, or storing `handle`
 break the source's single runtime identity and live-cell semantics. This site therefore needs the same
 declared-interface heritage rule: one owner with the inherited `EntityRuntime` cells and the additional
 `handle` cell. The surface package carries that exact shape locally until generated type heritage does.
+## physics2d joint factories (measured 2026-10-14, not carried)
+
+`@flighthq/physics2d` `jointFactories.ts` builds each concrete joint with
+`allocateEntity<Physics2DDistanceJoint>()` (and the eight others), then passes the construction to
+`initJointBase(out: Physics2DJoint, …)`. The nine joint structs in `flight/types/physics2_d.hpp` repeat
+`Physics2DJoint`'s 18 members as an exact prefix, the shape the adjustments and command repairs respell, and a
+scratch inventory with that heritage restored was measured. Heritage alone does not make `joint_factories.hpp`
+compile. The argument is a writable structural view of the derived owner,
+`StructuralRef<RowWritable<RowOf<shared_ptr<Physics2DDistanceJoint>>>>`, and the parameter is the nominal
+`Ref<Physics2DJoint>`; the runtime has no view-to-base-owner conversion (compare
+[asserted-writable-local-as-map-key](asserted-writable-local-as-map-key.md)). Carrying the factories therefore
+needs a `flight/types` heritage repair shared by every consumer of those structs, plus a runtime StructuralRef
+conversion. Both are cross-package decisions, and neither was made here. Even with both, the factories' joints
+could be stored and read only as `Physics2DJoint`, because solving or drawing them is the refinement boundary in
+[flattened-interface-refinement-identity](flattened-interface-refinement-identity.md).
