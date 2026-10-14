@@ -239,6 +239,16 @@ target_link_libraries(
 )
 add_test(NAME flight_cpp.generated_clip COMMAND flight_cpp_generated_clip_tests)
 
+# Additive edge coverage relative to the integrated generated_clip test. Keeping this as a
+# separate target lets the live ownership/composition baseline remain byte-for-byte unchanged.
+add_executable(flight_cpp_generated_clip_edge_tests generated_clip_edge_test.cpp)
+target_include_directories(
+  flight_cpp_generated_clip_edge_tests
+  BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include"
+)
+target_link_libraries(flight_cpp_generated_clip_edge_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+add_test(NAME flight_cpp.generated_clip_edge COMMAND flight_cpp_generated_clip_edge_tests)
+
 add_executable(flight_cpp_generated_camera_tests generated_camera_test.cpp)
 target_include_directories(
   flight_cpp_generated_camera_tests
@@ -1485,6 +1495,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_texture texture types)
 flight_cpp_package_test_labels(flight_cpp.generated_bitmap bitmap)
 flight_cpp_package_test_labels(flight_cpp.generated_texture_formats texture-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_clip clip)
+flight_cpp_package_test_labels(flight_cpp.generated_clip_edge clip)
 flight_cpp_package_test_labels(flight_cpp.generated_camera camera geometry)
 flight_cpp_package_test_labels(flight_cpp.generated_entity entity)
 flight_cpp_package_test_labels(flight_cpp.generated_camera_controls camera camera-controls geometry)
