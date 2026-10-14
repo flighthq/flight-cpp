@@ -113,6 +113,34 @@ int main() {
           "and it carries the source's own failure reason");
   }
 
+  {
+    // The middle call the upstream fixture makes, which is a different claim from the two above: a
+    // capability that RESOLVES the reason-only arm has its own reason passed through unchanged. That is
+    // what "preserves shared query outcomes" means -- the wrapper must not rewrite a reason the capability
+    // supplied, and only a THROWN capability produces the synthesized `operation-failed`.
+    int calls = 0;
+    auto unsupported = flight::make_ref<QueryFailure>();
+    unsupported->reason = String("unsupported");
+
+    auto host = flight::make_ref<HostPermission>();
+    host->get_permission = [&calls, unsupported]() {
+      ++calls;
+      return flight::Task<PermissionQueryOutcome>::resolve(
+          PermissionQueryOutcome{std::in_place_type<flight::Ref<QueryFailure>>, unsupported});
+    };
+
+    PermissionQueryOutcome observed;
+    bool rejected = false;
+    const auto driven = await_permission(host, observed, rejected);
+    executor->run_until_idle();
+    const auto* got = std::get_if<flight::Ref<QueryFailure>>(&observed);
+    check(!rejected, "a capability that resolves the failure arm does not reject the task either");
+    check(got != nullptr && *got == unsupported, "the wrapper answers the capability's own outcome object");
+    check(got != nullptr && (*got)->reason == String("unsupported"),
+          "and keeps the reason the capability gave, rather than synthesizing operation-failed");
+    check(calls == 1, "and one query is exactly one provider call");
+  }
+
   // The access resource state: absent, then retained, then replaced.
   {
     auto access = flight::make_ref<flight::types::MidiAccess>();
@@ -141,6 +169,21 @@ int main() {
     check(replaced.has_value() && replaced.value() != previous, "and it is a different state object");
     check(replaced.has_value() && replaced.value()->operations == replacement_operations,
           "carrying the operations of the second retain");
+  }
+
+  // "returns only state retained for the EXACT access identity": a different access must not answer for
+  // one that was retained. The absent-before-retain check above uses the retained access itself, so it
+  // cannot see this -- an implementation keying by anything but identity would still pass it.
+  {
+    auto retained = flight::make_ref<flight::types::MidiAccess>();
+    auto other = flight::make_ref<flight::types::MidiAccess>();
+    flight::midi::retain_midi_access_resource_state(
+        retained, flight::make_ref<flight::types::MidiAccessResourceOperations>());
+    const auto state = flight::midi::get_midi_access_resource_state(retained);
+    check(state.has_value() && !state.value()->disposed,
+          "a retained access reports its own state as live");
+    check(!flight::midi::get_midi_access_resource_state(other).has_value(),
+          "and a second access is not answered for, however alike the two are");
   }
 
   // Port resource states: one arm per port kind, keyed by the port value.
@@ -197,7 +240,10 @@ int main() {
     check(input_key != output_key, "the input and output ports are distinct port keys");
 
     // Retaining the input port again replaces its state.
-    const auto previous = *input_arm;
+    // Guarded, not dereferenced outright: when the arm is missing the checks above have already recorded
+    // the failure, and a null dereference here would abort the process mid-suite and hide every later
+    // assertion behind it. A mutation that removes the state lookup was observed to do exactly that.
+    const auto previous = input_arm != nullptr ? *input_arm : nullptr;
     auto second_operations = flight::make_ref<flight::types::MidiInputPortResourceOperations>();
     flight::midi::retain_midi_input_port_resource_state(input_port, second_operations);
     const auto replaced = flight::midi::get_midi_port_resource_state(input_key);
@@ -209,6 +255,48 @@ int main() {
     check(replaced_arm != nullptr && *replaced_arm != previous, "and replaces the stored state");
     check(replaced_arm != nullptr && (*replaced_arm)->operations == second_operations,
           "with the second retain's operations");
+
+    // The case title's own claim: distinct port IDENTITIES with MATCHING METADATA must not collapse. Two
+    // same-kind ports carrying byte-identical diagnostic fields are still two keys, which is what separates
+    // identity keying from a value key. The input/output pair above cannot show this -- they differ in kind.
+    const auto twin = [](const String& id) {
+      auto port = flight::make_ref<flight::types::MidiInputPort>();
+      port->id = id;
+      port->manufacturer = std::optional<String>{String("same-maker")};
+      port->name = std::optional<String>{String("same-name")};
+      port->type = String("input");
+      port->version = std::optional<String>{String("1.2.3")};
+      return port;
+    };
+    auto first_twin = twin(String("same"));
+    auto second_twin = twin(String("same"));
+    auto twin_operations = flight::make_ref<flight::types::MidiInputPortResourceOperations>();
+    flight::midi::retain_midi_input_port_resource_state(first_twin, twin_operations);
+    flight::midi::retain_midi_input_port_resource_state(second_twin, twin_operations);
+    const auto first_key = flight::types::MidiPort{
+        std::in_place_type<flight::Ref<flight::types::MidiInputPort>>, first_twin};
+    const auto second_key = flight::types::MidiPort{
+        std::in_place_type<flight::Ref<flight::types::MidiInputPort>>, second_twin};
+    const auto first_state = flight::midi::get_midi_port_resource_state(first_key);
+    const auto second_state = flight::midi::get_midi_port_resource_state(second_key);
+    check(first_state.has_value() && second_state.has_value(),
+          "two ports with identical metadata each retain their own state");
+    check(flight::midi::get_midi_port_resource_state(
+              flight::types::MidiPort{std::in_place_type<flight::Ref<flight::types::MidiInputPort>>,
+                                      first_twin}) !=
+              flight::midi::get_midi_port_resource_state(
+                  flight::types::MidiPort{std::in_place_type<flight::Ref<flight::types::MidiInputPort>>,
+                                          second_twin}),
+          "and their states are not the same state, so identity was not collapsed into a value key");
+
+    // The output arm has no input-message ledger at all -- `stateSubscriptions` is the only subscription
+    // set it carries, and it is empty.
+    const auto* output_ledger =
+        output_state.has_value()
+            ? std::get_if<flight::Ref<flight::midi::MidiOutputPortResourceState>>(&output_state.value())
+            : nullptr;
+    check(output_ledger != nullptr && count_of((*output_ledger)->state_subscriptions) == 0.0,
+          "the output port carries an empty state-subscription set and no message ledger");
   }
 
   if (failures == 0) std::cout << "generated midi: all checks passed\n";
