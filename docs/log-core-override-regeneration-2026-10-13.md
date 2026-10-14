@@ -249,3 +249,55 @@ The one further spelling, in the same class: `createFilterLogSink`'s predicate t
 * **Media**: the guard pair's assertions were replaced by a boundary note for the same reason. Restored, and
   the two mutations that had survived with "no test able to distinguish them" (`enable` never installing the
   guard, `disable` never clearing it) are now CAUGHT.
+
+## Mutation audit of the promoted override
+
+Thirteen mutations across the named surface, each scoped to one function body with its anchor confirmed against
+the target before the result was read. Eleven caught on the first pass; the two that were not produced the
+findings below. All thirteen are now caught.
+
+### Two measured holes, both closed
+
+**`createChildLogContext` DROPPED ITS FIELD MERGE ENTIRELY.** The source is
+`const merged = { ...parent.fields, ...fields }`; the emitted body declared an empty record and assigned
+nothing, so every child context carried NO fields, ignoring both the parent's and the caller's. My own earlier
+pass had "fixed" this function by typing the empty initializer -- which preserved the bug. The function was
+referenced by no test at all, which is why it survived promotion. Repaired faithfully (a fresh record, because
+`flight::Record` SHARES storage on copy and copying the parent's would alias it), and a case now pins the
+parent's fields surviving, the caller's winning on collision, the new field appearing, the channel being
+inherited when omitted, and the PARENT being left unmutated.
+
+**`mergeSpanFields`' record-arm precedence was untested.** A mutation inverting the source's data-wins rule
+survived the whole suite, because no case gave a span field and a data field the same key. A case now enters
+two spans that collide with each other and with a data record, and asserts the source's rule: data wins over
+spans, and every span's own fields survive.
+
+### The rest of the battery
+
+| # | mutation | result |
+| --- | --- | --- |
+| M2 | the string arm stops letting a field named `msg` win | caught |
+| M3 | a merge with no fields rebuilds the value instead of returning it | caught |
+| M4 | `mergeContextFields` precedence inverted | caught |
+| M5 | a provider `LogData` is never called | caught |
+| M6 | sink registration stops deduplicating by identity | caught |
+| M7 | sink removal stops erasing what it found | caught |
+| M9 | `initializeLogEntity` stops setting the runtime key | caught |
+| M10 | `serializeLogError`'s failure guard inverted | caught |
+| M11 | the JSON formatter stamps a level that is not the entry's | caught |
+| M12 | the buffered sink flushes one entry early | caught |
+| M14 | `logInfoWith` gates on the wrong level | caught |
+| M1 | `mergeSpanFields` record-arm precedence inverted | caught (after the new precedence case) |
+| M8 | `createChildLogContext` drops the merge | caught (after the new child-context case) |
+
+No crashes and no true equivalences were found: every mutation was caught by a printed `FAIL` line, which is
+the stronger signal. `createConsoleCaptureSink` was not touched or simulated; the console object-argument path
+remains refused and the tier remains `partial`.
+
+### A process note that cost a fix
+
+The first battery run MIS-TARGETED M8 (its anchor named text I had since repaired) and the harness's
+`git checkout` reverted the override to the commit -- which did not yet contain the child-context repair. The
+fix was lost mid-run and the suite failed. That is the known hazard of running a harness that resets files
+against uncommitted work; committing first is the rule, and I had not applied it. Both repairs and both new
+cases are committed before any further battery.
