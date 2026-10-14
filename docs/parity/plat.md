@@ -1381,6 +1381,26 @@ Upstream carries per-package records at `flight/agents/packages/geolocation/`: `
 
   The tier column read `none` and is corrected to `ready`. Thirteen mutations re-run WITH TARGET-DIFF CONFIRMATION:
   all thirteen killed.
+  A CORRECTIVE AUDIT AGAINST THE AUTHORITATIVE INTEGRATED BASELINE (Foreman supplied it as 3ea8e991; this checkout's
+  file is byte-for-byte that 369-line test) found NOTHING to change, and the three-axis inventory is what says so:
+
+  * EVERY REGISTERED TEST: `@flighthq/geolocation` has exactly one (`flight_cpp.generated_geolocation`,
+    `tests/generated_geolocation_test.cpp`), and no other local test includes a geolocation header at all. There is no
+    second file to duplicate against -- unlike `@flighthq/input`, where the same check was skipped twice and produced
+    duplicated coverage.
+  * PINNED DIVERGENCES: none are asserted in this suite. One compiler request names geolocation --
+    `capability-method-presence-check-lowered-as-constant.md`, the constant-false `typeof x !== 'function'` lowering
+    that `promptForGeolocationAccess` also carries -- and it is a KNOWN, FILED divergence. The suite asserts the arm
+    the emitted guard does implement (an ABSENT provider is `runtime-unavailable`); the unset-method-on-a-present-
+    provider arm is the request's subject and is deliberately NOT asserted here, because asserting it would pin the
+    defect and asserting the source's answer would fail.
+  * LIVE INTEGRATED STATE: identical to this file, so the mapping above is against the live content and not a stale
+    local copy.
+
+  Eleven mutations re-run against the authoritative suite, every one confirmed to differ at its target, ALL ELEVEN
+  KILLED. The RETAIN TEST is applied to this unit's one addition: the empty-options-carries-a-preference mutation
+  SURVIVES against the file with that case removed from main and is killed with it present, so the case is
+  load-bearing rather than decorative and is retained. Nothing was added, because no mutant survived the full suite.
 ### Local generation status
 
 4 of 4 modules emitted, 0 refused; 0 refusing modules (0 of them refusal roots). Read from the committed generated tree, not from the pin above.
