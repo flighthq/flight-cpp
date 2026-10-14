@@ -1,10 +1,10 @@
 diff --git a/packages/scene2d-canvas/src/canvasTextureResolver.ts b/packages/scene2d-canvas/src/canvasTextureResolver.ts
 --- a/packages/scene2d-canvas/src/canvasTextureResolver.ts
 +++ b/packages/scene2d-canvas/src/canvasTextureResolver.ts
-@@ -20,7 +20,10 @@ export function acquireCanvasTextureResolverSurface(
-   options: Readonly<CanvasRenderSurfaceOptions>,
- ): CanvasRenderSurface | null {
-   const surface = acquireCanvasRenderSurface(resolvers.surfaceCreator, options);
+@@ -21,7 +21,10 @@ export function acquireCanvasTextureResolverSurface(
+   height: number,
+ ): CanvasSurface | null {
+   const surface = acquireCanvasSurface(resolvers.canvasHost, width, height);
 -  if (surface !== null) _ownedSurfaces.get(resolvers)?.add(surface);
 +  if (surface !== null) {
 +    const surfaces = _ownedSurfaces.get(resolvers);
@@ -13,8 +13,7 @@ diff --git a/packages/scene2d-canvas/src/canvasTextureResolver.ts b/packages/sce
    return surface;
  }
  
-@@ -37,8 +40,8 @@ export function acquireCanvasTextureResolverSurface(
- // The closure reads the emitter at call time, so the order against enabling guards does not matter.
+@@ -39,7 +42,7 @@ export function acquireCanvasTextureResolverSurface(
  export function connectCanvasTextureResolverMisses(resolvers: CanvasTextureResolvers, state: RenderState): void {
    const runtime = getRenderStateRuntime(state);
    resolvers.registryMiss = (registry, kind): void => {
@@ -23,12 +22,9 @@ diff --git a/packages/scene2d-canvas/src/canvasTextureResolver.ts b/packages/sce
    };
  }
  
-@@ -53,10 +56,11 @@ export function createCanvasTextureResolvers(
- export function destroyCanvasTextureResolvers(resolvers: CanvasTextureResolvers): void {
-   const surfaces = _ownedSurfaces.get(resolvers);
-   if (surfaces === undefined) return;
+@@ -55,7 +58,8 @@ export function destroyCanvasTextureResolvers(resolvers: CanvasTextureResolvers)
    _ownedSurfaces.delete(resolvers);
-   for (const surface of surfaces) destroyCanvasRenderSurface(surface);
+   for (const surface of surfaces) destroyCanvasSurfaceOwned(surface);
    surfaces.clear();
 -  resolvers.registry?.clear();
 +  const registry = resolvers.registry;
@@ -36,12 +32,7 @@ diff --git a/packages/scene2d-canvas/src/canvasTextureResolver.ts b/packages/sce
    resolvers.registry = null;
    resolvers.registryMiss = null;
  }
-@@ -91,15 +95,24 @@ export function registerCanvasTextureResolver(
- export function resolveCanvasTexture(
-   resolvers: CanvasTextureResolvers,
-   texture: Readonly<Texture>,
- ): CanvasImageSource | null {
-   if (texture.dimension !== '2d') return null;
+@@ -95,9 +99,18 @@ export function resolveCanvasTexture(
    const source = texture.source;
    if (source === null) return null;
    const sourceKind = source.kind;
@@ -62,4 +53,3 @@ diff --git a/packages/scene2d-canvas/src/canvasTextureResolver.ts b/packages/sce
      return null;
    }
    return resolver(resolvers, texture);
- }

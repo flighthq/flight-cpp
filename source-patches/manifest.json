@@ -2414,7 +2414,7 @@
       "id": "canvas-texture-resolver-explicit-optional-receivers",
       "dependency": "flight",
       "patch": "canvas-texture-resolver-explicit-optional-receivers.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene2d-canvas/src/canvasTextureResolver.ts",
       "package": "@flighthq/scene2d-canvas",
       "answers": "refusal",
@@ -2426,11 +2426,8 @@
       "unblocks": "Completes the shared Canvas texture resolver control flow without unchecked optional payload extraction.",
       "expires": "when Flight adopts explicit receiver guards upstream, or flight-compiler preserves exact present-domain evidence through these optional-chain receiver forms.",
       "appliedOn": "2026-10-09",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "2D",
-        "reason": "context drift: the patched code still exists (5/5 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "rebasedOn": "2026-10-14"
     },
     {
       "id": "canvas-texture-resolver-host-image-result",
