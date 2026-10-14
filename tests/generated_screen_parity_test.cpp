@@ -15,6 +15,21 @@
 //   * the SCRATCH ARRAY -- the derived screen queries share one module-level array, so the host is
 //     handed the same array identity on every call. That is asserted by identity, not by content.
 
+// INVENTORY AND RE-AUDIT. screen.test.ts has 46 cases. Four are the upstream `out aliases the input` cases
+// (10, 12, 44, 46), which are UNREACHABLE here and recorded in place with their exact compile-time boundary
+// -- they are the subject of docs/compiler-requests/named-input-and-anonymous-output-carriers-cannot-alias.md.
+//
+// A re-audit found NINE further cases unexercised: a mechanical export map showed nine functions at zero call
+// sites in this file, and a trace of the MODULE showed they are called from nowhere there either -- unlike
+// copyScreenInfo, the four initializers, rectCenter, fillDefaultScreenInfo and the two detaches, which the
+// module itself calls and which are therefore NOT uncovered. Four mutations of those nine SURVIVED the whole
+// suite, which is how the gap was confirmed rather than inferred. All nine are now covered: the permission-
+// change and signals attach/create/detach/dispose lifecycles, the three-way event routing, and the cursor
+// and detail entry points. Each of the four survivors was re-run against the fix and is caught by the
+// assertion written for it.
+//
+// The detector was validated with a positive control (the file contains 33 flight::screen:: call sites), so a
+// zero from it means the name is absent rather than that the pattern is blind.
 #include <flight/screen/screen.hpp>
 #include <flight/types/screen.hpp>
 #include <flight/types/screen_mode.hpp>
@@ -398,6 +413,147 @@ int main() {
     const auto out2 = flight::screen::create_screen_info();
     flight::screen::get_screen_nearest_rect(host2, make_rect(10.0, 10.0, 20.0, 20.0), out2);
     check_close(out2->id, 1.0, "nearestRect: a fully-containing screen is preferred");
+  }
+
+  // THE NINE EXPORTS THIS SUITE NEVER CALLED. A mechanical map found them at zero call sites, and a trace
+  // of the MODULE showed they are not called internally either -- unlike copyScreenInfo, the four
+  // initializers, rectCenter, fillDefaultScreenInfo and the two detaches, which the module itself calls and
+  // are therefore NOT uncovered. Four mutations of these nine SURVIVED the whole suite, which is how the gap
+  // was confirmed rather than inferred. The upstream cases are attached 1-2, create 5-6, dispose 13-14 and
+  // the three cursor/detail entry points 25, 26, 42.
+  {
+    using ScreenView = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ScreenInfo>>>>;
+    using EventView = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::ScreenChangeEvent>>>>;
+
+    // createScreenPermissionChange / createScreenSignals: entities whose signals exist and are EMPTY.
+    const auto permission_change = flight::screen::create_screen_permission_change();
+    check(static_cast<bool>(permission_change->on_change),
+          "createScreenPermissionChange creates an entity carrying its permission signal");
+    const auto signals = flight::screen::create_screen_signals();
+    check(static_cast<bool>(signals->on_screen_added) && static_cast<bool>(signals->on_screen_metrics_changed) &&
+              static_cast<bool>(signals->on_screen_removed),
+          "createScreenSignals creates an entity carrying all three signals");
+    check(signals->on_screen_added != signals->on_screen_removed,
+          "which are three INDEPENDENT signals, not one shared three times");
+
+    // attachScreenPermissionChange: the host's own permission states reach the entity's signal.
+    std::function<void(flight::types::ScreenPermissionState)> emit_permission;
+    auto permission_host = flight::make_ref<flight::types::HostScreenPermissionChangeCapability>();
+    permission_host->subscribe =
+        [&emit_permission](std::function<void(flight::types::ScreenPermissionState)> listener) {
+          emit_permission = listener;
+          return std::function<void()>([]() {});
+        };
+    std::vector<std::string> states;
+    flight::signals::connect_signal<std::function<void(flight::types::ScreenPermissionState)>>(
+        permission_change->on_change,
+        std::function<void(flight::types::ScreenPermissionState)>(
+            [&states](flight::types::ScreenPermissionState state) { states.push_back(state.to_utf8()); }));
+    flight::screen::attach_screen_permission_change(permission_host, permission_change);
+    check(static_cast<bool>(emit_permission), "attachScreenPermissionChange subscribes to the supplied host");
+    if (emit_permission) emit_permission(flight::String("granted"));
+    check(states.size() == 1 && states[0] == "granted",
+          "and the host's permission state reaches the entity's signal");
+
+    // attachScreenSignals: each event kind routes to ITS OWN signal, with the event and the screen intact.
+    int unsubscribes = 0;
+    std::function<void(EventView)> emit_change;
+    auto change_host = flight::make_ref<flight::types::HostScreenChangeCapability>();
+    change_host->subscribe = [&emit_change, &unsubscribes](std::function<void(EventView)> listener) {
+      emit_change = listener;
+      return std::function<void()>([&unsubscribes]() { ++unsubscribes; });
+    };
+    const auto routed = flight::screen::create_screen_signals();
+    double added_id = -1.0;
+    double removed_id = -1.0;
+    std::string metrics_kind;
+    flight::signals::connect_signal<std::function<void(ScreenView)>>(
+        routed->on_screen_added, std::function<void(ScreenView)>([&added_id](ScreenView screen) {
+          added_id = flight::row_get<flight::RowKey<"id">>(screen);
+        }));
+    flight::signals::connect_signal<std::function<void(ScreenView)>>(
+        routed->on_screen_removed, std::function<void(ScreenView)>([&removed_id](ScreenView screen) {
+          removed_id = flight::row_get<flight::RowKey<"id">>(screen);
+        }));
+    flight::signals::connect_signal<std::function<void(EventView)>>(
+        routed->on_screen_metrics_changed, std::function<void(EventView)>([&metrics_kind](EventView event) {
+          metrics_kind = flight::row_get<flight::RowKey<"kind">>(event).to_utf8();
+        }));
+    flight::screen::attach_screen_signals(change_host, routed);
+    check(static_cast<bool>(emit_change), "attachScreenSignals subscribes to the supplied host");
+
+    const auto seven = make_screen(7, 100, 200, 800, 600);
+    auto added_event = flight::make_ref<flight::types::ScreenChangeEvent>();
+    added_event->kind = flight::String("ScreenAdded");
+    added_event->screen = seven;
+    auto removed_event = flight::make_ref<flight::types::ScreenChangeEvent>();
+    removed_event->kind = flight::String("ScreenRemoved");
+    removed_event->screen = seven;
+    auto metrics_event = flight::make_ref<flight::types::ScreenChangeEvent>();
+    metrics_event->kind = flight::String("ScreenMetricsChanged");
+    metrics_event->screen = seven;
+    if (emit_change) {
+      emit_change(added_event);
+      emit_change(removed_event);
+      emit_change(metrics_event);
+    }
+    check_close(added_id, 7.0, "a ScreenAdded event reaches onScreenAdded with its screen");
+    check_close(removed_id, 7.0, "a ScreenRemoved event reaches onScreenRemoved with its screen");
+    check(metrics_kind == "ScreenMetricsChanged",
+          "and a ScreenMetricsChanged event reaches onScreenMetricsChanged rather than either screen signal");
+
+    // detachScreenSignals: releases ONCE and stays repeatable.
+    flight::screen::detach_screen_signals(routed);
+    check(unsubscribes == 1, "detachScreenSignals unsubscribes the attachment exactly once");
+    flight::screen::detach_screen_signals(routed);
+    check(unsubscribes == 1, "and a second detach releases nothing more");
+
+    // disposeScreenSignals: detaches the host AND clears every signal. Clearing is observed by emitting
+    // directly on the signal afterwards: a listener that still fires was not cleared.
+    auto cleared = flight::screen::create_screen_signals();
+    int delivered = 0;
+    flight::signals::connect_signal<std::function<void(ScreenView)>>(
+        cleared->on_screen_added, std::function<void(ScreenView)>([&delivered](ScreenView) { ++delivered; }));
+    flight::signals::connect_signal<std::function<void(ScreenView)>>(
+        cleared->on_screen_removed, std::function<void(ScreenView)>([&delivered](ScreenView) { ++delivered; }));
+    const int before = unsubscribes;
+    flight::screen::attach_screen_signals(change_host, cleared);
+    flight::screen::dispose_screen_signals(cleared);
+    check(unsubscribes == before + 1, "disposeScreenSignals detaches the host");
+    flight::signals::emit_signal<std::function<void(ScreenView)>>(cleared->on_screen_added, seven);
+    flight::signals::emit_signal<std::function<void(ScreenView)>>(cleared->on_screen_removed, seven);
+    check(delivered == 0, "and clears every signal, so a later emit reaches no listener");
+
+    // getScreenCursorScreen: the host cursor position resolves to its nearest screen.
+    RecordingQuery cursor_state;
+    // The upstream fixture's createSeparatedScreens, so the cursor at (340, 25) lies INSIDE screen 2
+    // rather than in the gap between two wider screens.
+    cursor_state.screens = {make_screen(1, 0, 0, 100, 100), make_screen(2, 300, 0, 100, 100)};
+    cursor_state.cursor = out_point(340.0, 25.0);
+    const auto query = query_host(cursor_state);
+    const auto cursor_out = flight::screen::create_screen_info();
+    const auto cursor_result = flight::screen::get_screen_cursor_screen(query, cursor_out);
+    check(cursor_result == cursor_out, "getScreenCursorScreen returns the caller's own object");
+    check_close(cursor_out->id, 2, "and resolves the host cursor position to the nearest screen");
+
+    // getScreenDetailPermission / requestScreenDetails: the host's own answer, and one call each.
+    int permission_queries = 0;
+    int detail_requests = 0;
+    auto details = flight::make_ref<flight::types::HostScreenDetailsCapability>();
+    details->query_permission = [&permission_queries]() {
+      ++permission_queries;
+      return flight::Task<flight::types::ScreenPermissionState>::resolve(flight::String("granted"));
+    };
+    details->request = [&detail_requests]() {
+      ++detail_requests;
+      return flight::Task<bool>::resolve(true);
+    };
+    check(flight::screen::get_screen_detail_permission(details).get() == flight::String("granted"),
+          "getScreenDetailPermission answers the host's own permission state");
+    check(permission_queries == 1, "after asking the host once");
+    check(flight::screen::request_screen_details(details).get(),
+          "requestScreenDetails answers the host's own grant");
+    check(detail_requests == 1, "after asking the host once");
   }
 
   return failures == 0 ? 0 : 1;
