@@ -1,7 +1,7 @@
 diff --git a/packages/scene3d-gl/src/glMeshProgram.ts b/packages/scene3d-gl/src/glMeshProgram.ts
 --- a/packages/scene3d-gl/src/glMeshProgram.ts
 +++ b/packages/scene3d-gl/src/glMeshProgram.ts
-@@ -280,12 +280,10 @@ export function ensureGlScene3DProgram<T extends GlMeshProgram>(
+@@ -246,12 +246,10 @@ export function ensureGlScene3DProgram<T extends GlMeshProgram>(
    compile: (gl: GlContext) => T,
  ): T {
    const runtime = getGlScene3DRuntime(state);
@@ -21,15 +21,15 @@ diff --git a/packages/scene3d-gl/src/glMeshProgram.ts b/packages/scene3d-gl/src/
 diff --git a/packages/scene3d-gl/src/glScene3DRuntime.ts b/packages/scene3d-gl/src/glScene3DRuntime.ts
 --- a/packages/scene3d-gl/src/glScene3DRuntime.ts
 +++ b/packages/scene3d-gl/src/glScene3DRuntime.ts
-@@ -6,6 +6,7 @@ import {
+@@ -4,6 +4,7 @@ import {
+   destroyGlSkinPaletteTexture,
  } from '@flighthq/render-gl/contract';
  import type {
 +  GlMeshProgram,
    GlScene3DRuntime,
+   GlMeshUpload,
    GlRenderState,
-   GlRenderStateRuntime,
-   GlSkinPaletteTexture,
-@@ -28,7 +29,10 @@ export function destroyGlScene3DRuntime(state: GlRenderState): void {
+@@ -37,7 +38,10 @@ export function destroyGlScene3DRuntime(state: GlRenderState): void {
    if (scene === undefined) return;
    const gl = state.gl;
  
@@ -44,12 +44,12 @@ diff --git a/packages/scene3d-gl/src/glScene3DRuntime.ts b/packages/scene3d-gl/s
 diff --git a/packages/types/src/GlScene3DRuntime.ts b/packages/types/src/GlScene3DRuntime.ts
 --- a/packages/types/src/GlScene3DRuntime.ts
 +++ b/packages/types/src/GlScene3DRuntime.ts
-@@ -127,7 +127,7 @@ export interface GlScene3DRuntime {
+@@ -166,7 +166,7 @@ export interface GlScene3DRuntime {
    opaquePool: GlScene3DDrawEntry[];
-   pbrExtensionGuard?: ((extensions: readonly PbrExtensionValue[]) => void) | null;
+   pbrExtensionGuard?: ((extensions: readonly PbrExtension[]) => void) | null;
    pbrTransmissionSceneColor: GlPbrTransmissionSceneColor | null;
 -  programCache: Map<string, GlMeshProgram>;
 +  programCache: Map<string, object>;
-   shadow: GlScene3DShadow | null;
-   shadowTarget: GlTextureRenderTarget | null;
-   // The per-state GPU skin bone-palette data texture (RGBA32F), created lazily by ensureGlSkinPalette on
+   // Teardown callbacks contributed by lazily-created optional resources (the IBL bake programs, the
+   // skybox). destroyGlScene3DRuntime iterates these instead of importing each module's destroy
+   // function, which is what lets the whole environment chain shake out of a scene that never bakes.
