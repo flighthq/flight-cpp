@@ -83,6 +83,66 @@ Two facts make this more than an emitter change:
   [caught-value-into-unknown-member.md](caught-value-into-unknown-member.md), and it blocks this function
   independently.
 
+## Design analysis (no patch carried)
+
+### The selection rule must be exact key-set equality
+
+The literal has to become the alternative of `Result` whose complete key set equals the literal's keys. A
+superset alternative that merely *admits* the literal (its extra keys are optional) is the wrong answer, because
+the emitter lowers a member-presence test as an alternative test:
+- `'error' in result` is `result.index() == 0`; see
+  [narrowed-member-multi-alternative-selection.md](narrowed-member-multi-alternative-selection.md).
+- `{ outcome: 'tray-destroyed' }` built as the `{ error?, outcome }` struct would answer `'error' in` with `true`.
+- Node answers `false`.
+
+Under exact equality, both of `invokeUpdate`'s literals select uniquely for `TrayImageUpdateResult`:
+- `{ outcome }` selects the `{ outcome }` struct;
+- `{ error, outcome }` selects the `{ error?, outcome }` struct.
+
+Zero or several equal key sets must fail at instantiation.
+
+### A struct's exact key set cannot be read from C++ itself
+
+The selection happens at instantiation, where only the C++ types are available. Measured on the committed generated
+tree, emitted object structs have these bases:
+
+| Base | Structs |
+| --- | ---: |
+| `flight::ReferenceEnabled` (empty) | 3848 |
+| `flight::types::NodeRuntime<...>` | 59 |
+| `flight::types::Entity` | 32 |
+| `flight::types::GlFullscreenProgram` | 7 |
+| others | a handful |
+
+Many bases carry data members, so a struct's keys include inherited ones. C++20 cannot enumerate a class's bases.
+Aggregate field-count probes (`S{ {}, any... }`) count only the struct's own members when the base is braced. When
+it is not braced, brace elision folds an aggregate base's members into the same count. Either way, inherited keys
+cannot be told apart from own keys, so a probe would accept a struct whose inherited members the literal does not
+have. Designated-initializer viability checks only that the literal's keys exist (in declaration order), not that
+nothing else does. No pure C++ census is sound.
+
+### Sound facilities, and why each is cross-cutting
+
+1. **Emitter-side key metadata.** The emitter knows each struct's exact key set from the IR, inheritance included,
+   and can emit it beside the struct as a trait specialization:
+   `flight::detail::object_keys<S>` lists the TS names, each marked required or optional. A runtime
+   `flight::construct_asserted<Result>(keys, assign)` then selects the unique alternative with an equal key set,
+   assigns each member from values evaluated once in source order, and fails to compile on zero or several
+   matches.
+
+   This is sound. It adds text to every emitted object struct (about 3,960 at this pin), so it changes every generated row and
+   only takes effect after a coordinated regeneration rooted at `@flighthq/types`.
+2. **A census rendered into `flight/sdk/structural_members.hpp`** by parsing emitted and override headers for each
+   struct's members and bases. It needs no row regeneration, but it broadens the shared table and depends on
+   text-parsing C++ declarations, templates and inheritance chains. That is excluded here.
+
+### Independent blocker
+
+`invokeUpdate`'s catch branch writes the caught value into `error?: unknown`
+([caught-value-into-unknown-member.md](caught-value-into-unknown-member.md)). That is not authorized, so
+`invokeUpdate` does not emit even with facility 1 in place. Only its `{ outcome: 'tray-destroyed' } as Result`
+branch, which is the one that currently emits code that cannot instantiate, would be fixed.
+
 ## Affected modules
 
 `@flighthq/tray` `invokeUpdate` and its ten callers (`setTrayIcon`, `displayTrayBalloon`, `popupTrayContextMenu`,
