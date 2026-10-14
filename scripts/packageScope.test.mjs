@@ -542,6 +542,42 @@ describe('mixed-pin transition', () => {
     const tampered = verifyMixedInventory({ candidateRoot: candidate, committedRoot: committed });
     assert.deepEqual(tampered.failed.map((entry) => entry.package), [target]);
   });
+
+  test('sdk:check reports a row whose move would strand another row as failed, and still judges the rows after it', () => {
+    const committed = copyTree('verify-orphan-committed');
+    const candidate = candidateAt('verify-orphan-candidate', NEW);
+    const later = '@flighthq/xml';
+    for (const name of [target, later]) {
+      applyPackageMerge(planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName: name }), committed);
+    }
+    // At the pin, math no longer has the angle module camera-controls imports at its recorded revision.
+    editJson(candidate, 'initialization.json', (value) => {
+      value.entries = value.entries.filter((entry) => !(entry.packageName === target && entry.source.endsWith('/angle.ts')));
+      value.modules = value.modules.filter((row) => !(row.module.packageName === target && row.module.source.endsWith('/angle.ts')));
+    });
+    rmSync(path.join(candidate, 'include', 'flight', 'math', 'angle.hpp'));
+    const [header] = packageHeaders(committed, later);
+    appendTo(committed, `include/${header}`, '\n// hand edit\n');
+
+    const verdict = verifyMixedInventory({ candidateRoot: candidate, committedRoot: committed });
+    assert.deepEqual(verdict.failed.map((entry) => entry.package), [target, later]);
+    const [stranding, tampered] = verdict.failed;
+    assert.match(stranding.reason, /^@flighthq\/math cannot move alone: .*@flighthq\/camera-controls \(uses flight\/math\/angle\.hpp, packages\/math\/src\/angle\.ts\)/su);
+    assert.deepEqual(stranding.files, []);
+    assert.ok(tampered.files.includes(`include/${header}`));
+    assert.deepEqual(verdict.reproduced, []);
+    assert.equal(verdict.pending.length, packages.length - 2);
+  });
+
+  test('sdk:check still aborts on a refusal that is about the inventory, not one row', () => {
+    const committed = copyTree('verify-abort-committed');
+    const candidate = candidateAt('verify-abort-candidate', NEW);
+    applyPackageMerge(planPackageMerge({ candidateRoot: candidate, committedRoot: committed, packageName: target }), committed);
+    editJson(candidate, 'manifest.json', (value) => {
+      value.compiler.revision = 'c'.repeat(40);
+    });
+    assert.throws(() => verifyMixedInventory({ candidateRoot: candidate, committedRoot: committed }), /compiler differs/u);
+  });
 });
 
 describe('binding-profile transition', () => {

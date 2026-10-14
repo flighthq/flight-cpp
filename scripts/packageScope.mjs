@@ -578,6 +578,10 @@ export function planPackageMerge({ candidateRoot, committedRoot, movingTogether 
   };
 }
 
+// The one refusal that is about a single row rather than the inventory: the move would strand another row.
+// verifyMixedInventory reports it as that row's failure; everything else planPackageMerge throws still aborts.
+export class OrphanedDependentsError extends Error {}
+
 function assertNoOrphanedDependents({ candidateRoot, committedRoot, exempt, packageName }) {
   const read = (root, file) => JSON.parse(readFileSync(path.join(root, file), 'utf8'));
   const key = (module) => `${module.packageName}\0${module.source}`;
@@ -623,7 +627,7 @@ function assertNoOrphanedDependents({ candidateRoot, committedRoot, exempt, pack
   const detail = [...orphans]
     .sort(([left], [right]) => compareText(left, right))
     .map(([dependent, missing]) => `${dependent} (uses ${[...missing].sort(compareText).join(', ')})`);
-  throw new Error(
+  throw new OrphanedDependentsError(
     `${packageName} cannot move alone: at the candidate revision it no longer has modules or headers that other packages ` +
       `still use at their recorded revision: ${detail.join('; ')}. Move them together, in the same change, or leave ` +
       `${packageName} where it is.`,
@@ -1042,8 +1046,9 @@ function declarationsTargeting(declarations, packageName, prefix, namespace) {
 // cannot be reproduced at this pin at all; it is listed as pending, the transition's outstanding work, and
 // is neither failed nor silently passed. The binding profiles are judged the same way: a row is reproduced
 // only under the profiles it records, so a row whose record was refreshed without regenerating it claims
-// the current profiles and FAILS here rather than passing as pending. Shared artifacts are compared only in
-// the uniform form.
+// the current profiles and FAILS here rather than passing as pending. A row whose move the candidate would
+// refuse because it strands another row fails with that refusal as its reason, and the rows after it are
+// still judged. Shared artifacts are compared only in the uniform form.
 export function verifyMixedInventory({ candidateRoot, committedRoot }) {
   const read = (root, file) => JSON.parse(readFileSync(path.join(root, file), 'utf8'));
   const committed = read(committedRoot, 'manifest.json');
@@ -1068,7 +1073,14 @@ export function verifyMixedInventory({ candidateRoot, committedRoot }) {
       result.failed.push({ files: ['manifest.json'], package: row.package, reason: 'no longer generated at this pin' });
       continue;
     }
-    const plan = planPackageMerge({ candidateRoot, committedRoot, packageName: row.package });
+    let plan;
+    try {
+      plan = planPackageMerge({ candidateRoot, committedRoot, packageName: row.package });
+    } catch (error) {
+      if (!(error instanceof OrphanedDependentsError)) throw error;
+      result.failed.push({ files: [], package: row.package, reason: error.message });
+      continue;
+    }
     if (plan.writes.size > 0) result.failed.push({ files: [...plan.writes.keys()], package: row.package });
     else result.reproduced.push(row.package);
     result.problems.push(...plan.problems);
