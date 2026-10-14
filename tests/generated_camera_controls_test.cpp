@@ -4,10 +4,10 @@
 // ordered inputs, clamps, damping and wrapped angles, reset/snap lifecycle, framing failures, shake
 // activation/reset, and the invariant that an updated 3D controller centers its subject on screen.
 //
-// MUTATION SENSITIVITY, measured 2026-10-13: four one-at-a-time generated-header mutations were
-// compiled and run, then restored. The suite killed reversed follow deadzone correction, orbit pan
-// using stale current azimuth, fly damping without shortest-arc wrapping, and omitted empty-sphere
-// framing validation.
+// MUTATION SENSITIVITY, measured 2026-10-13: sixteen one-at-a-time audit mutations were diffed,
+// compiled, run, and restored. The frozen suite killed ten; the six survivors identified only the
+// default-value, repeated-frame, exact-eye, and default-padding assertions added below. The amended
+// suite kills all sixteen; the earlier follow, pan, damping, and framing probes remain documented.
 #include <flight/camera/contract.hpp>
 #include <flight/camera_controls/contract.hpp>
 #include <flight/geometry/contract.hpp>
@@ -142,6 +142,14 @@ void follow_deadzone_damping_bounds_and_edge_time() {
 }
 
 void fly_ownership_ordering_clamps_and_view() {
+  const auto defaults = controls::create_fly_camera_controller();
+  check(defaults->yaw == 0.0 && defaults->pitch == 0.0 &&
+            defaults->goal_yaw == defaults->yaw &&
+            defaults->goal_pitch == defaults->pitch &&
+            defaults->max_pitch < std::numbers::pi / 2.0 &&
+            defaults->min_pitch > -std::numbers::pi / 2.0,
+        "fly construction applies bounded angular defaults with current equal to goal");
+
   const auto seed_position = geometry::create_vector3(1.0, 2.0, 3.0);
   auto options = flight::make_ref<types::FlyCameraControllerOptions>();
   options->max_pitch = 0.5;
@@ -237,6 +245,16 @@ void fly_ownership_ordering_clamps_and_view() {
 }
 
 void orbit_ownership_ordering_clamps_and_view() {
+  const auto defaults = controls::create_orbit_camera_controller();
+  check(defaults->distance == 10.0 && defaults->azimuth == 0.0 &&
+            defaults->polar == 0.0 &&
+            defaults->goal_distance == defaults->distance &&
+            defaults->goal_azimuth == defaults->azimuth &&
+            defaults->goal_polar == defaults->polar &&
+            defaults->max_polar < std::numbers::pi / 2.0 &&
+            defaults->min_polar > -std::numbers::pi / 2.0,
+        "orbit construction applies bounded defaults with current equal to goal");
+
   const auto seed_target = geometry::create_vector3(1.0, 2.0, 3.0);
   auto options = flight::make_ref<types::OrbitCameraControllerOptions>();
   options->azimuth = 0.0;
@@ -312,6 +330,24 @@ void orbit_ownership_ordering_clamps_and_view() {
             1.0) &&
             std::abs(ndc->x) <= tolerance && std::abs(ndc->y) <= tolerance,
         "orbit update centers its owned target on screen");
+  const auto expected_camera = camera3d();
+  const double cos_polar = std::cos(source->polar);
+  const auto expected_eye = geometry::create_vector3(
+      source->target->x + source->distance * std::sin(source->azimuth) * cos_polar,
+      source->target->y + source->distance * std::sin(source->polar),
+      source->target->z + source->distance * std::cos(source->azimuth) * cos_polar);
+  const auto world_up = geometry::create_vector3(0.0, 1.0, 0.0);
+  camera::set_camera3_dview_matrix4_from_look_at(
+      expected_camera, readonly(expected_eye), readonly(source->target),
+      readonly(world_up));
+  bool exact_view = true;
+  for (double index = 0.0; index < 16.0; index += 1.0) {
+    exact_view = exact_view &&
+        std::abs(value->view->m.get_index(index) -
+                 expected_camera->view->m.get_index(index)) <= tolerance;
+  }
+  check(exact_view,
+        "orbit update writes the exact eye-side look-at matrix to the supplied camera");
 
   source->goal_azimuth = -0.4;
   source->goal_polar = 2.0;
@@ -363,6 +399,11 @@ void framing_success_and_failure_boundaries() {
   check_close(controller->goal_distance,
               2.0 / std::sin(std::numbers::pi / 4.0),
               "perspective framing uses the limiting half field of view");
+  check_close(
+      controls::get_perspective_projection_frame_distance_to_sphere(
+          readonly(perspective_projection), 2.0, 1.0),
+      2.0 / std::sin(std::numbers::pi / 4.0),
+      "direct perspective framing defaults omitted padding to one");
 
   const auto ortho_projection = orthographic();
   check(controls::frame_orbit_camera_controller_to_sphere(
@@ -405,6 +446,13 @@ void framing_success_and_failure_boundaries() {
 }
 
 void shake_activation_decay_reset_and_bounds() {
+  const auto defaults = controls::create_camera_shake();
+  check(defaults->decay == 1.5 && defaults->frequency == 15.0 &&
+            defaults->translation_amplitude == 0.5 &&
+            defaults->rotation_amplitude == 3.0 &&
+            defaults->trauma == 0.0 && defaults->time == 0.0,
+        "shake construction applies every documented omitted-option default");
+
   auto options = flight::make_ref<types::CameraShakeOptions>();
   options->decay = 2.0;
   options->frequency = 20.0;
@@ -444,6 +492,16 @@ void shake_activation_decay_reset_and_bounds() {
   check(twin_offset->x == offset->x && twin_offset->y == offset->y &&
             twin_offset->rotation_z == offset->rotation_z,
         "shake output is deterministic for equal state and time");
+
+  auto repeated_options = flight::make_ref<types::CameraShakeOptions>();
+  repeated_options->decay = 0.0;
+  const auto repeated = controls::create_camera_shake(readonly(repeated_options));
+  const auto repeated_offset = controls::create_camera_shake_offset();
+  controls::add_camera_shake_trauma(repeated, 1.0);
+  controls::update_camera_shake(repeated, 0.01, repeated_offset);
+  controls::update_camera_shake(repeated, 0.02, repeated_offset);
+  check_close(repeated->time, 0.03,
+              "shake time accumulates across repeated frames");
 
   controls::reset_camera_shake(shake);
   controls::update_camera_shake(shake, 0.016, offset);
