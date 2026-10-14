@@ -142,3 +142,17 @@ solver bindings refused and `debug_geometry.hpp` failing exactly as before. Heri
 refinement still needs a checked, owner-preserving view, and `flight::ReferenceEnabled` is an empty,
 non-polymorphic aggregate base. Solver dispatch and joint drawing therefore wait on the runtime/compiler decision
 this request describes. Nothing is carried.
+
+## One user decision across loader, signals and Physics2D
+
+This request and [generic-owner-into-widest-container](generic-owner-into-widest-container.md) are the same
+missing capability seen from two sides. In both, one object has to be reachable through two distinct emitted C++
+owner types without a copy, and recovered from the wider one with its identity intact. Here it is a declared
+interface refinement (base to derived); there it is a generic handle stored as its widest instantiation.
+
+The Manager has ruled that this is a user decision, not fleet work. Until it is made:
+- Physics2D stays honestly partial: no solver dispatch, joint factories or joint drawing natively, and factories
+  are not landed alone.
+- signals keeps `connectSignalTracked` refused.
+- The loader residual named in that decision waits on it too. Its measured doc is not on this base, so it is named
+  here rather than linked.

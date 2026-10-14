@@ -129,3 +129,14 @@ The tween overrides do not build a view. They use the one instantiation the mana
 for every tween, so there is only ever one object and its identity is never split: the handle the caller
 holds is the element of the manager's list. What is lost is the static `T` of the handle, not any runtime
 state -- every field the source reads is the same field. A typed `Tween<T>` handle still needs this request.
+
+## One user decision across loader, signals and Physics2D
+
+This request and [flattened-interface-refinement-identity](flattened-interface-refinement-identity.md) are the
+same missing capability seen from two sides: one object reachable through two distinct emitted C++ owner types
+without a copy, and recovered from the wider one with its identity intact. Here it is a generic handle stored as
+its widest instantiation; there it is a declared interface refinement, which blocks Physics2D's joint solvers,
+factories and debug drawing (measured in that request and in
+[interface-heritage-widening](interface-heritage-widening.md)). The Manager has ruled that this is a user decision,
+not fleet work. The loader residual named in that decision waits on it as well; its measured doc is not on this
+base.

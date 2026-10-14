@@ -134,3 +134,15 @@ needs a `flight/types` heritage repair shared by every consumer of those structs
 conversion. Both are cross-package decisions, and neither was made here. Even with both, the factories' joints
 could be stored and read only as `Physics2DJoint`, because solving or drawing them is the refinement boundary in
 [flattened-interface-refinement-identity](flattened-interface-refinement-identity.md).
+
+### Integration's runtime fix 515dd054 (read 2026-10-14; rebased there as eb53e4a7, not on this base)
+
+That commit lets a base-typed structural view built *from a typed pointer* to an object that already derives from
+the base in C++ keep and return that object, so `structural_ref_cast<Ref<Base>>` of such a view recovers the very
+carrier instead of throwing `bad_cast`. Every other view, and any request for a type other than the view's own
+subject, keeps the exact-owner check. Measured against the Physics2D factory boundary above, it supplies neither
+piece:
+- No conversion from an existing `StructuralRef<RowWritable<RowOf<shared_ptr<Derived>>>>` (the factories'
+  `EntityConstruction`) to `Ref<Base>`.
+- No checked base-to-derived refinement.
+- It presupposes real C++ inheritance, which the nine joint structs do not have.
