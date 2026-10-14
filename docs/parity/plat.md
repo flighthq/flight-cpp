@@ -1435,6 +1435,33 @@ Upstream carries per-package records at `flight/agents/packages/power/`: `status
   `nullopt`, so clearing one is indistinguishable from not touching it. It would differ only for a caller that
   re-initialized an entity already carrying a signal, which no emitted call site does.
 
+  A LATER re-audit re-ran the battery with target-diff confirmation and found ONE more hole, of the vacuity class.
+
+  * `disposePower`'s CLEARING was unasserted, and the paragraph above did not notice because the battery never
+    mutated it. The `after_dispose == 0` check cannot see the clearing: `fire` reaches the entity only through the
+    host registration that dispose REMOVED, so it reaches nobody whether or not the signals were cleared --
+    measured, removing ALL NINE `clearSignal` calls from `disposePower` leaves the whole suite passing. Closed by a
+    case that emits STRAIGHT AT the signal, not through the host: a listener is connected, one direct emission is
+    made and observed, then dispose runs and the SAME direct emission must reach nobody. That is the clearing and
+    nothing else, and it kills the mutation.
+
+  * The seventeenth mutation's EQUIVALENCE is now PROVED rather than asserted. The claim was that dropping a
+    `row_set` from `initializePower` is unobservable. Measured: a freshly allocated `Power`, BEFORE any initializer
+    runs, already reports `has_value() == false` for every one of the nine slots, so those nine
+    `row_set(..., std::nullopt)` calls are no-ops on the only construction the initializer is ever handed.
+    Following from that, the file's own "createPower leaves all nine signals unallocated" assertion holds for that
+    same reason and is therefore vacuous WITH RESPECT TO initializePower -- it documents the contract, and it is
+    not evidence that the initializer writes anything.
+
+  * Audits that PASSED, each checked rather than assumed. The module's constants are pinned by LITERAL, not by
+    identity: the polling interval is compared to `5000.0`, `1234.0` and `1.0`, so the identity-versus-literal
+    masking that bit `@flighthq/updater` has no analogue here. The charging-edge sequences DO deliver repeats -- two
+    consecutive events with the same `is_charging` assert `charged == 1`, "a repeat of the same charging state is
+    not an edge" -- so an edge is distinguished from a level, which is the case `@flighthq/connectivity` needed
+    added. The case count is 31, with no `it.each`, no `test.each` and no loop-generated row.
+
+  Eighteen mutations now, every one confirmed to differ from the original: seventeen killed and the one above
+  PROVED equivalent.
 ### Local generation status
 
 3 of 3 modules emitted, 0 refused. The tier is ASSISTED rather than ready: the module needs three carried source

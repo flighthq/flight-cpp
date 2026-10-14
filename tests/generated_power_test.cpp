@@ -408,6 +408,30 @@ int main() {
     fire(kept_change);
     check(after_dispose == 0 && kept_deliveries == 1,
           "dispose clears the entity's signals, so a later connection receives nothing");
+
+    // The SIGNALS THEMSELVES are cleared, observed independently of the detach -- because the check above
+    // cannot see it. `fire` reaches the entity only through the host registration that dispose removed, so
+    // it reaches nobody whether or not the signals were cleared: removing ALL NINE clearSignal calls from
+    // disposePower leaves that assertion passing. Connecting a listener is what makes a signal carry data,
+    // and clearing is what takes it away, so the pair below is the clearing and nothing else.
+    // The emission below goes STRAIGHT at the signal, not through the host, so no detach can mask it: the
+    // listener is connected before dispose and the same emission is made after it.
+    int direct = 0;
+    const auto cleared = power::create_power();
+    power::enable_power_signals(cleared);
+    connect(cleared->on_change.value(), [&direct](StatusView) { ++direct; });
+    flight::signals::emit_signal<std::function<void(StatusView)>>(
+        cleared->on_change.value(), StatusView(flight::make_ref<PowerStatus>()));
+    if (!check(direct == 1, "a direct emission reaches the listener connected before dispose")) {
+      return 1;
+    }
+    power::dispose_power(cleared);
+    flight::signals::emit_signal<std::function<void(StatusView)>>(
+        cleared->on_change.value(), StatusView(flight::make_ref<PowerStatus>()));
+    if (!check(direct == 1,
+               "and the SAME direct emission reaches nobody after dispose, so the signal itself was cleared")) {
+      return 1;
+    }
   }
 
   // destroyPowerKeepAwake: alias-safe final release. The two hosts below genuinely share one provider,
