@@ -68,6 +68,7 @@ struct MockDevice {
   int create_source_calls = 0;
   int destroy_source_calls = 0;
   int start_source_calls = 0;
+  std::vector<std::pair<double, double>> gain_calls;
   int stop_source_calls = 0;
   std::map<double, std::function<void()>> on_ended;
 };
@@ -97,7 +98,9 @@ flight::Ref<flight::types::HostAudioDeviceCapability> mock_backend(MockDevice& s
     }
   };
   backend->resume_device = [](double) {};
-  backend->set_source_gain = [](double, double) {};
+  backend->set_source_gain = [&state](double source, double value) {
+    state.gain_calls.emplace_back(source, value);
+  };
   backend->set_source_pan = [](double, double) {};
   backend->set_source_playback_rate = [](double, double) {};
   backend->start_source = [&state](double, double, double) { state.start_source_calls += 1; };
@@ -292,6 +295,30 @@ int main() {
 
     flight::media::set_audio_channel_gain(channel, 0.25);
     check_close(channel->gain, 0.25, "audio: setting the gain stores it");
+    // Added for MEASURED holes: the upstream case also asserts the provider CALL, and the source guards it
+    // with `runtime !== undefined && sourceHandle !== INVALID_SOURCE && !muted`. Only the STORED gain was
+    // checked here, so three mutations survived -- never consulting the provider, and reaching it while
+    // muted, and while the source was inactive.
+    // playAudioResource already set the initial gain through the host, so what THIS call adds is measured
+    // from a cleared log.
+    state.gain_calls.clear();
+    flight::media::set_audio_channel_gain(channel, 0.375);
+    check(state.gain_calls.size() == 1 && state.gain_calls[0].second == 0.375,
+          "audio: the gain reaches the host with the requested value");
+    check(state.gain_calls.size() == 1 &&
+              state.gain_calls[0].first == flight::media::get_audio_channel_source_handle(channel),
+          "against the channel's own source handle");
+
+    // The source's MUTED guard on that call, added for a measured hole. `setAudioChannelMuted` itself
+    // pushes the mute through as a gain of 0, so the log is cleared AFTER muting and what is measured is
+    // what the subsequent gain change adds: nothing, because the channel is muted.
+    flight::media::set_audio_channel_muted(channel, true);
+    state.gain_calls.clear();
+    flight::media::set_audio_channel_gain(channel, 0.5);
+    check(state.gain_calls.empty(), "audio: a MUTED channel stores the gain without reaching the host");
+    check_close(channel->gain, 0.5, "and still stores it");
+    flight::media::set_audio_channel_muted(channel, false);
+
     check_close(flight::media::set_audio_channel_pan(channel, 5.0), 1.0,
                 "audio: pan clamps to the hard-right bound");
     check_close(flight::media::set_audio_channel_pan(channel, -5.0), -1.0,
@@ -299,6 +326,21 @@ int main() {
     check_close(channel->pan, -1.0, "audio: the clamped pan is what the channel keeps");
 
     // Muting is a flag, not a pause: it must not disturb the playing state.
+    // The source's INACTIVE-source guard, added for a measured hole. A SEPARATE channel is used: pausing
+    // this one would break the playing-state assertion below.
+    {
+      MockDevice idle_state;
+      const auto idle_backend = mock_backend(idle_state);
+      const auto idle = play(idle_backend);
+      flight::media::pause_audio_channel(idle);
+      check(flight::media::get_audio_channel_source_handle(idle) == 0.0,
+            "audio: a paused channel has the invalid source sentinel");
+      idle_state.gain_calls.clear();
+      flight::media::set_audio_channel_gain(idle, 0.75);
+      check(idle_state.gain_calls.empty(),
+            "audio: an INACTIVE source stores the gain without reaching the host");
+    }
+
     check(flight::media::set_audio_channel_muted(channel, true), "audio: muting reports the new state");
     check(flight::media::is_audio_channel_muted(channel), "audio: a muted channel reads as muted");
     check(channel->state == flight::String("playing"), "audio: muting does not pause the channel");
