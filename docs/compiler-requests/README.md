@@ -80,6 +80,8 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 
 ## Active requests without a compiler patch
 
+- [`T['key']` on a type parameter must read the member through the type argument's carrier](dependent-indexed-access-through-references.md) —
+  `@flighthq/tray` `invokeRead` and `invokeUpdate` (`Result['outcome']`), and `@flighthq/materials` `getMaterialOfKind` (`T['kind']`). The emitted `decltype(std::declval<T&>().key)` cannot instantiate for a `Ref` or a variant.
 - [A fresh object literal asserted to a type parameter has no C++ owner to become](fresh-literal-asserted-to-type-parameter.md) —
   `@flighthq/tray` `invokeUpdate` (`cpp-reference-assertion-without-heritage`): the asserted value is a new literal, so no heritage proof applies. The unrefused `{ outcome } as Result` branch emits `make_ref<Result>(Result{...})`, which cannot instantiate for a variant. Sound lowering needs exact-shape alternative selection at instantiation.
 - [A caught value written into an `unknown` member needs an `Any` that can hold it](caught-value-into-unknown-member.md) —
