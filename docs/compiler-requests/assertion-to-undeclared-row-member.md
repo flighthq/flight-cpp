@@ -76,4 +76,11 @@ the asserted row re-types it ("optionality or value representation is not repres
 type's cells"). The assertion exists so the read also tolerates a serialized world that predates the field. It reads
 the same property as `world.version`, and a native `Physics2DWorld` always stores that member as a number.
 [`physics2d-hydrate-version-declared-read`](../../source-patches/manifest.json) carries it as
-`const serializedVersion: number | undefined = world.version`.
+`const serializedVersion = world.version as number | undefined`, with the `(version as number)` identity casts
+dropped. Two neighbouring spellings were measured in the same reduction, and each hits a separate lowering
+defect:
+- an `unknown`-typed local turns `version as number` into `Any::as_number()` on what it stored as a `double`;
+- a `number | undefined`-annotated local initialized from the present member turns `=== undefined` into
+  `serialized_version.value().has_value()`, a presence test on the payload.
+Neither compiles. The `as number | undefined` form and an `unknown` local narrowed by `typeof` both emit correct
+code.

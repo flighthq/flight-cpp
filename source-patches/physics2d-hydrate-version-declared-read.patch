@@ -6,7 +6,7 @@ diff --git a/packages/physics2d/src/world.ts b/packages/physics2d/src/world.ts
  export function hydratePhysics2DWorld(world: Physics2DWorld): boolean {
    assertPhysics2DWorldNotStepping(world);
 -  const serializedVersion = (world as unknown as { version?: unknown }).version;
-+  const serializedVersion: number | undefined = world.version;
++  const serializedVersion = world.version as number | undefined;
    const version = serializedVersion === undefined ? 0 : serializedVersion;
 -  if (!Number.isSafeInteger(version) || (version as number) < 0 || (version as number) > Physics2DWorldVersion) {
 +  if (!Number.isSafeInteger(version) || version < 0 || version > Physics2DWorldVersion) {
