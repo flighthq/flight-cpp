@@ -1355,27 +1355,6 @@
       "appliedOn": "2026-10-08"
     },
     {
-      "id": "material-concrete-value-path",
-      "dependency": "flight",
-      "patch": "material-concrete-value-path.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/types/src/MaterialValue.ts, Mesh.ts, InstancedMesh.ts, Billboard.ts, GlMeshMaterialRenderer.ts, Scene3DRenderProxy.ts, and GlScene3DRuntime.ts; packages/scene3d constructors; packages/scene3d-gl material dispatch and built-in renderers",
-      "package": "@flighthq/scene3d-gl",
-      "answers": "refusal",
-      "refusal": "against [flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>]",
-      "rewrite": "Introduces an open MaterialValue union with redundant exact arms for every built-in material, retains it through mesh and billboard storage, GL renderer callbacks, render proxies, draw-entry pools, material resolution, bind dispatch, and sort keys, constructs fallback objects as StandardMaterial owners, and declares alphaMode/blendMode as optional capabilities on the open Material arm so duck-typed reads need no flattened base-row assertion.",
-      "equivalence": "Every built-in arm already extends Material and the original Material arm remains, so MaterialValue accepts exactly the same TypeScript values, including vendor kinds. The optional capability declarations add no required fields and emit no JavaScript; SurfaceMaterial continues to require both fields. All changed annotations erase, and the same arrays, objects, entries, renderer functions, fallback objects, alphaMode reads, blendMode reads, identities, and evaluation order remain.",
-      "whyNotUpstreamFirst": "The public material family deliberately stays open, while flattened native interface owners cannot recover a built-in material after it first enters the base Material carrier. Redundant exact arms plus optional open-material capabilities are target-neutral descriptions of the existing value domain and duck-typed reads, avoiding an unchecked native cast or replacement material.",
-      "unblocks": "Carries real CustomShader, Depth, ExtendedPbr, Matcap, Normal, SpecularGlossinessPbr, StandardPbr, VertexColor, Wireframe, and texture-bearing material owners from createMesh through the GL registry to their upstream binder implementations, while removing object erasure in the pooled draw path.",
-      "expires": "when heterogeneous structural storage preserves checked concrete owner identity through open base-interface arms and readonly partial capability views across those arms emit directly, or Flight adopts the explicit value union.",
-      "appliedOn": "2026-10-08",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "GL",
-        "reason": "target file(s) renamed or removed upstream (packages/scene3d-gl/src/blinnPhongGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/customShaderGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/depthGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/emissiveGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/lambertGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/matcapGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/normalGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/phongGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/shadedGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/specularGlossinessPbrGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/standardPbrGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/toonGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/unlitGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/vertexColorGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/wireframeGlMeshMaterialRenderer.ts; a4f7bffd6 refactor(renderers): rename renderer consts for consistent naming); rewrite against the new layout or drop if the refusal is gone"
-      }
-    },
-    {
       "id": "texture-like-concrete-value-arms",
       "dependency": "flight",
       "patch": "texture-like-concrete-value-arms.patch",
@@ -1551,28 +1530,6 @@
       "unblocks": "Allows the opt-in production deform guard to inspect the real MeshRuntime without erasing the mesh owner or bypassing runtime identity.",
       "expires": "when Flight uses getMeshRuntime at this call site upstream, or flattened interface heritage can preserve the exact runtime owner without an assertion.",
       "appliedOn": "2026-10-08"
-    },
-    {
-      "id": "modifier-concrete-value-path",
-      "dependency": "flight",
-      "patch": "modifier-concrete-value-path.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/types modifier value and definition contracts; packages/shading modifier registry and stack helpers; packages/scene3d-gl shaded modifier compilation and binding",
-      "package": "@flighthq/scene3d-gl",
-      "answers": "refusal",
-      "refusal": "built-in modifier and backend snippet owners are erased to Modifier and ModifierDefinition before their concrete fields and GL callbacks are read, and the vertex-displacement direction coalesce combines its optional Vector3Like owner with a fresh anonymous default owner",
-      "rewrite": "Introduces open ModifierValue and ModifierDefinitionValue unions with redundant built-in and backend arms, carries those declared unions through ShadedMaterial storage, stack helpers, the shared registry, and GL compile/bind callbacks, and branches the optional displacement direction into the same default or present uniform upload without forming a heterogeneous owner union.",
-      "equivalence": "The open Modifier and ModifierDefinition arms remain, so the TypeScript value domains still accept every vendor kind and definition. All new unions and annotations erase in JavaScript: the same modifier objects, arrays, registry Map, definitions, callback functions, ordering, cache keys, shader source, uniform uploads, and replacement semantics remain, with no copy, cast, materialized row, or side storage. Vertex displacement still reads direction once after frequency and speed, resolves the same uniform location once, and uploads either the same present x/y/z values or the same absent default 1/0/0 values; only the unobserved temporary default object allocation is eliminated.",
-      "verification": "The patch composes after the complete Flight source-patch stack. The compiler's checked exact-owner union regression covers concrete and nullable recovery beside an open base arm; full Scene3D GL regeneration verifies the shaded built-in modifier and prelude roots before generated-header compilation.",
-      "whyNotUpstreamFirst": "The public modifier and definition families intentionally remain open, while flattened native interface owners cannot recover a built-in descriptor or backend snippet after it first enters the base carrier. Redundant exact arms are a target-neutral description of values already accepted by those APIs.",
-      "unblocks": "Carries AnimatedNormal, Dissolve, Emissive, EnvReflect, Fog, Rim, Toon, and VertexDisplace owners into their real upstream GL binders, and retains GlModifierSnippet owners through the shared registry for shaded program assembly.",
-      "expires": "when heterogeneous structural storage preserves checked concrete modifier and backend-definition owners through open base-interface arms, or Flight adopts the explicit value unions upstream.",
-      "appliedOn": "2026-10-09",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "GL",
-        "reason": "target file(s) renamed or removed upstream (packages/scene3d-gl/src/shadedGlMeshMaterialRenderer.ts; a4f7bffd6 refactor(renderers): rename renderer consts for consistent naming); rewrite against the new layout or drop if the refusal is gone"
-      }
     },
     {
       "id": "scene3d-gl-stable-modifier-property-reads",
@@ -1939,28 +1896,6 @@
       "unblocks": "Targets the nine direct Scene3D package refusals remaining after Node and Mesh reach complete native closure, including the real mesh/material, billboard, animation, skin, morph, and instance paths needed by the upstream examples.",
       "expires": "when Flight preserves Node3D and Mesh owners through these construction/storage boundaries and uses representable structured diagnostic values upstream, or flight-compiler can retain the same checked owners and erased array value automatically.",
       "appliedOn": "2026-10-12"
-    },
-    {
-      "id": "scene3d-gl-pbr-alpha-mode-boundary",
-      "dependency": "flight",
-      "patch": "scene3d-gl-pbr-alpha-mode-boundary.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/scene3d-gl/src/glPbrStandardBlock.ts and the ExtendedPbr, SpecularGlossinessPbr, and StandardPbr GL material renderers",
-      "package": "@flighthq/scene3d-gl",
-      "answers": "refusal",
-      "refusal": "three concrete PBR owners cannot widen to a separate flattened Readonly<SurfaceMaterial> row only so the define-key builder can read alphaMode",
-      "rewrite": "Adds a scalar-alpha-mode entry point to the existing define-key builder and has each concrete renderer pass the alphaMode value it already owns; the original SurfaceMaterial entry point remains for existing callers and both paths share the same resolved implementation.",
-      "equivalence": "Each renderer reads the same alphaMode property at the same bind point, applies the same opaque fallback for null, and produces the identical define-key flags from the same standard block and texture readiness checks. The original helper keeps its signature and preserves its baseColorMap-before-alphaMode property-read order. No shader source, cache key, material identity, texture binding, uniform, extension contribution, draw call, or public contract changes.",
-      "verification": "The complete patch stack composes; focused native regeneration must emit the shared define-key builder and all three PBR renderers with zero direct refusals before full Scene3D-GL regeneration and generated-header compilation.",
-      "whyNotUpstreamFirst": "The helper only needs the closed MaterialAlphaMode scalar, while accepting the whole open SurfaceMaterial hierarchy forces native flattened owners through a fictitious base-row conversion. A scalar overload is a target-neutral internal API boundary and avoids casts or copied materials.",
-      "unblocks": "Removes the repeated PBR-to-SurfaceMaterial owner widening from the real metallic-roughness, specular-glossiness, and extension-composed material bind paths.",
-      "expires": "when Flight's native structural interface heritage preserves checked derived-to-base owner conversion, or Flight adopts the scalar alpha-mode helper upstream.",
-      "appliedOn": "2026-10-08",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "GL",
-        "reason": "target file(s) renamed or removed upstream (packages/scene3d-gl/src/extendedPbrGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/specularGlossinessPbrGlMeshMaterialRenderer.ts, packages/scene3d-gl/src/standardPbrGlMeshMaterialRenderer.ts; a4f7bffd6 refactor(renderers): rename renderer consts for consistent naming); rewrite against the new layout or drop if the refusal is gone"
-      }
     },
     {
       "id": "scene3d-gl-lazy-uniform-location-boundaries",
@@ -4118,6 +4053,25 @@
       "unblocks": "Evidence for @flighthq/scene2d-canvas canvasRenderState.ts, whose base-to-derived owner assertions and entity-runtime symbol read are replaced by the declared-owner form this fixture pins.",
       "expires": "when the pinned compiler preserves derived render-owner heritage or provides the declared initializer upstream and the asserted half of the fixture no longer refuses, at which point the fixture is a stale guard rather than a regression test.",
       "appliedOn": "2026-10-14"
+    },
+    {
+      "id": "material-concrete-value-path",
+      "dependency": "flight",
+      "patch": "material-concrete-value-path.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/types/src/MaterialValue.ts, Mesh.ts, InstancedMesh.ts, Billboard.ts, GlMeshMaterialRenderer.ts, Scene3DRenderProxy.ts, and GlScene3DRuntime.ts; packages/scene3d constructors; packages/scene3d-gl material dispatch and built-in renderers",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "against [flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Material>>>>]",
+      "rewrite": "Re-authored 2026-10-14 from docs/compiler-requests/material3d-concrete-value-path.md against the current pin, which had renamed every target renderer and required a different union. New packages/types/src/Material3DValue.ts declares the OPEN Material3D arm plus the sixteen built-in interfaces as redundant arms beside it -- StandardMaterial is deliberately not an arm, because at this pin it extends Material2D with the incompatible MaterialDimensionKey phantom -- exported through contract.ts and index.ts. The union is carried through the positional material arrays (Mesh, InstancedMesh, Billboard and the three scene3d constructors), the renderer bind boundary, the per-draw proxy, the pooled draw entry (whose object placeholders become their already-declared exact types: ColorScaleBias, GlMeshMaterialRenderer, Mesh, MeshSubset, Matrix4, readonly number[]), the material registry, glMeshProgram (whose Material-to-Material3D assertion is removed rather than rewritten), renderGlScene3D (subset resolution, pooled entries, bind runs, proxies and sort keys, with the fallback constant left in the open arm), and all sixteen renamed renderers. glExtendedPbrMeshMaterialRenderer needs no edit: its bind has no annotation and is contextually typed from the interface.",
+      "equivalence": "Every built-in arm already extends Material and the original Material arm remains, so MaterialValue accepts exactly the same TypeScript values, including vendor kinds. The optional capability declarations add no required fields and emit no JavaScript; SurfaceMaterial continues to require both fields. All changed annotations erase, and the same arrays, objects, entries, renderer functions, fallback objects, alphaMode reads, blendMode reads, identities, and evaluation order remain.",
+      "whyNotUpstreamFirst": "The public material family deliberately stays open, while flattened native interface owners cannot recover a built-in material after it first enters the base Material carrier. Redundant exact arms plus optional open-material capabilities are target-neutral descriptions of the existing value domain and duck-typed reads, avoiding an unchecked native cast or replacement material.",
+      "unblocks": "Carries real CustomShader, Depth, ExtendedPbr, Matcap, Normal, SpecularGlossinessPbr, StandardPbr, VertexColor, Wireframe, and texture-bearing material owners from createMesh through the GL registry to their upstream binder implementations, while removing object erasure in the pooled draw path.",
+      "expires": "when heterogeneous structural storage preserves checked concrete owner identity through open base-interface arms and readonly partial capability views across those arms emit directly, or Flight adopts the explicit value union.",
+      "appliedOn": "2026-10-08",
+      "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "rebasedOn": "2026-10-14",
+      "verification": "MANIFEST POSITION IS LOAD-BEARING and is the approved sequencing. This rewrite edits the shared type layout that seven already-active patches read: pbr-extension-concrete-value-arms, scene3d-gl-erased-upload-cache and scene3d-gl-erased-program-cache (packages/types/src/GlScene3DRuntime.ts), scene3d-concrete-node-construction (Mesh.ts, InstancedMesh.ts, packages/scene3d/*), scene3d-exact-owner-boundaries (packages/scene3d/*), scene3d-gl-lazy-uniform-location-boundaries (glMeshProgram.ts) and node3d-named-runtime-carriers (Mesh.ts, InstancedMesh.ts). Measured: applying it at its original early position stopped all seven from applying; those seven are left byte-untouched here and this entry is placed AFTER them, so only Material itself is re-anchored against the composed tree. The re-anchor is verified: its 70 added lines are byte-identical to the authored form, and the one hunk the original could not carry at this position -- it extended `import type { MeshGeometry } from ...`, which erased-upload-cache has already removed by here -- is replaced by an insertion of `import type { MeshSubset } from './MeshGeometry.ts';`, which is the same import set the earlier position would have produced."
     }
   ]
 }

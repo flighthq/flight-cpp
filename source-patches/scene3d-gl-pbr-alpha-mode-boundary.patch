@@ -1,126 +1,100 @@
-diff --git a/packages/scene3d-gl/src/glPbrStandardBlock.ts b/packages/scene3d-gl/src/glPbrStandardBlock.ts
---- a/packages/scene3d-gl/src/glPbrStandardBlock.ts
-+++ b/packages/scene3d-gl/src/glPbrStandardBlock.ts
-@@ -4,6 +4,7 @@ import { hasTextureUvTransform } from '@flighthq/texture/contract';
- import type {
-   LinearColor,
-   GlRenderState,
-+  MaterialAlphaMode,
-   StandardPbrMaterialProperties,
-   SurfaceMaterial,
-   Texture,
-@@ -109,6 +110,24 @@ export function buildGlPbrStandardDefineKey(
- ): GlPbrDefineKey {
-   const baseColorMap = standard?.baseColorMap ?? null;
-   const alphaMode = surface?.alphaMode ?? 'opaque';
-+  return buildGlPbrStandardDefineKeyResolved(state, standard, baseColorMap, alphaMode);
-+}
-+
-+export function buildGlPbrStandardDefineKeyForAlphaMode(
-+  state: GlRenderState,
-+  standard: Readonly<StandardPbrMaterialProperties> | null,
-+  alphaMode: MaterialAlphaMode,
-+): GlPbrDefineKey {
-+  const baseColorMap = standard?.baseColorMap ?? null;
-+  return buildGlPbrStandardDefineKeyResolved(state, standard, baseColorMap, alphaMode);
-+}
-+
-+function buildGlPbrStandardDefineKeyResolved(
-+  state: GlRenderState,
-+  standard: Readonly<StandardPbrMaterialProperties> | null,
-+  baseColorMap: Readonly<Texture> | null,
-+  alphaMode: MaterialAlphaMode,
-+): GlPbrDefineKey {
-   return {
-     alphaMaskEnabled: alphaMode === 'mask',
-     // An opaque material ignores coverage (SurfaceMaterial contract), so it must not sample the alpha
-diff --git a/packages/scene3d-gl/src/extendedPbrGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/extendedPbrGlMeshMaterialRenderer.ts
---- a/packages/scene3d-gl/src/extendedPbrGlMeshMaterialRenderer.ts
-+++ b/packages/scene3d-gl/src/extendedPbrGlMeshMaterialRenderer.ts
-@@ -6,7 +6,10 @@ import { registerGlMeshMaterialRenderer } from './glMeshMaterialRegistry';
- import { beginGlMeshDraw, drawGlMeshSubset, setGlMeshCameraPosition, setGlMeshViewProjection } from './glMeshProgram';
- import { bindGlPbrExtensions, resolveGlPbrExtensionContributions } from './glPbrExtensionRegistry';
- import { ensureGlPbrProgram } from './glPbrProgramCache';
--import { bindGlPbrStandardBlock, buildGlPbrStandardDefineKey } from './glPbrStandardBlock';
-+import {
-+  bindGlPbrStandardBlock,
-+  buildGlPbrStandardDefineKeyForAlphaMode,
-+} from './glPbrStandardBlock';
- import { getGlScene3DRuntime } from './glScene3DRuntime';
+diff --git a/packages/scene3d-gl/src/glExtendedPbrMeshMaterialRenderer.ts b/packages/scene3d-gl/src/glExtendedPbrMeshMaterialRenderer.ts
+--- a/packages/scene3d-gl/src/glExtendedPbrMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/glExtendedPbrMeshMaterialRenderer.ts
+@@ -11,7 +11,7 @@ import {
+ } from './glMeshProgram.ts';
+ import { bindGlPbrExtensions, resolveGlPbrExtensionContributions } from './glPbrExtensionRegistry.ts';
+ import { ensureGlPbrProgram } from './glPbrProgramCache.ts';
+-import { bindGlPbrStandardBlock, buildGlPbrStandardDefineKey } from './glPbrStandardBlock.ts';
++import { bindGlPbrStandardBlock, buildGlPbrStandardDefineKeyForAlphaMode } from './glPbrStandardBlock.ts';
+ import { getGlScene3DRuntime } from './glScene3DRuntime.ts';
  
- export const extendedPbrGlMeshMaterialRenderer: GlMeshMaterialRenderer = {
-@@ -22,7 +25,11 @@ export const extendedPbrGlMeshMaterialRenderer: GlMeshMaterialRenderer = {
+ export const glExtendedPbrMeshMaterialRenderer: GlMeshMaterialRenderer = {
+@@ -27,7 +27,7 @@ export const glExtendedPbrMeshMaterialRenderer: GlMeshMaterialRenderer = {
      }
      const program = ensureGlPbrProgram(
        state,
 -      buildGlPbrStandardDefineKey(state, extended?.standard ?? null, extended),
-+      buildGlPbrStandardDefineKeyForAlphaMode(
-+        state,
-+        extended?.standard ?? null,
-+        extended?.alphaMode ?? 'opaque',
-+      ),
++      buildGlPbrStandardDefineKeyForAlphaMode(state, extended?.standard ?? null, extended?.alphaMode ?? 'opaque'),
        contributions,
      );
      beginGlMeshDraw(state, program, extended?.doubleSided ?? false);
-diff --git a/packages/scene3d-gl/src/specularGlossinessPbrGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/specularGlossinessPbrGlMeshMaterialRenderer.ts
---- a/packages/scene3d-gl/src/specularGlossinessPbrGlMeshMaterialRenderer.ts
-+++ b/packages/scene3d-gl/src/specularGlossinessPbrGlMeshMaterialRenderer.ts
-@@ -17,7 +17,10 @@ import { bindGlMeshLightBlock } from './glLitProgram';
- import { registerGlMeshMaterialRenderer } from './glMeshMaterialRegistry';
- import { beginGlMeshDraw, drawGlMeshSubset, setGlMeshCameraPosition, setGlMeshViewProjection } from './glMeshProgram';
- import { ensureGlPbrProgram } from './glPbrProgramCache';
--import { bindGlPbrStandardBlock, buildGlPbrStandardDefineKey } from './glPbrStandardBlock';
-+import {
-+  bindGlPbrStandardBlock,
-+  buildGlPbrStandardDefineKeyForAlphaMode,
-+} from './glPbrStandardBlock';
- import { getGlScene3DRuntime } from './glScene3DRuntime';
+diff --git a/packages/scene3d-gl/src/glPbrStandardBlock.ts b/packages/scene3d-gl/src/glPbrStandardBlock.ts
+--- a/packages/scene3d-gl/src/glPbrStandardBlock.ts
++++ b/packages/scene3d-gl/src/glPbrStandardBlock.ts
+@@ -9,6 +9,7 @@ import type {
+   Texture,
+   GlPbrDefineKey,
+   GlPbrProgram,
++  MaterialAlphaMode,
+ } from '@flighthq/types/contract';
+ 
+ import { bindGlUvTransform } from './glMeshProgram.ts';
+@@ -106,9 +107,24 @@ export function buildGlPbrStandardDefineKey(
+   state: GlRenderState,
+   standard: Readonly<StandardPbrMaterialProperties> | null,
+   surface: Readonly<Material3D> | null,
++): GlPbrDefineKey {
++  return buildGlPbrStandardDefineKeyForAlphaMode(state, standard, surface?.alphaMode ?? 'opaque');
++}
++
++// The scalar boundary for the concrete renderers. StandardPbrMaterial, SpecularGlossinessPbrMaterial
++// and ExtendedPbrMaterial all widen to Material3D in TypeScript, but the emitter flattens each into an
++// independent owner with no identity-preserving derived-to-base conversion, so passing the material
++// would refuse. The callee needs the closed alpha-mode value, not material identity, so the exact
++// local boundary is that scalar. Each caller reads the same field at the same synchronous bind
++// boundary and applies the same 'opaque' fallback for a null material; these are Flight entities with
++// data fields, not accessor-backed host objects, so moving the side-effect-free read to argument
++// construction introduces no observable getter order.
++export function buildGlPbrStandardDefineKeyForAlphaMode(
++  state: GlRenderState,
++  standard: Readonly<StandardPbrMaterialProperties> | null,
++  alphaMode: MaterialAlphaMode,
+ ): GlPbrDefineKey {
+   const baseColorMap = standard?.baseColorMap ?? null;
+-  const alphaMode = surface?.alphaMode ?? 'opaque';
+   return {
+     alphaMaskEnabled: alphaMode === 'mask',
+     // An opaque material ignores coverage (Material3D contract), so it must not sample the alpha
+diff --git a/packages/scene3d-gl/src/glSpecularGlossinessPbrMeshMaterialRenderer.ts b/packages/scene3d-gl/src/glSpecularGlossinessPbrMeshMaterialRenderer.ts
+--- a/packages/scene3d-gl/src/glSpecularGlossinessPbrMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/glSpecularGlossinessPbrMeshMaterialRenderer.ts
+@@ -22,7 +22,7 @@ import {
+   setGlMeshViewProjection,
+ } from './glMeshProgram.ts';
+ import { ensureGlPbrProgram } from './glPbrProgramCache.ts';
+-import { bindGlPbrStandardBlock, buildGlPbrStandardDefineKey } from './glPbrStandardBlock.ts';
++import { bindGlPbrStandardBlock, buildGlPbrStandardDefineKeyForAlphaMode } from './glPbrStandardBlock.ts';
+ import { getGlScene3DRuntime } from './glScene3DRuntime.ts';
  
  // The built-in SpecularGlossiness forward-lit mesh-material renderer (legacy KHR_materials_
-@@ -53,7 +56,14 @@ export const specularGlossinessPbrGlMeshMaterialRenderer: GlMeshMaterialRenderer
+@@ -58,7 +58,7 @@ export const glSpecularGlossinessPbrMeshMaterialRenderer: GlMeshMaterialRenderer
      const gl = state.gl;
      const specGloss = material as Readonly<SpecularGlossinessPbrMaterial> | null;
      const standard = specGloss !== null ? convertSpecularGlossinessToStandard(specGloss) : null;
 -    const program = ensureGlPbrProgram(state, buildGlPbrStandardDefineKey(state, standard, specGloss));
-+    const program = ensureGlPbrProgram(
-+      state,
-+      buildGlPbrStandardDefineKeyForAlphaMode(
-+        state,
-+        standard,
-+        specGloss?.alphaMode ?? 'opaque',
-+      ),
-+    );
++    const program = ensureGlPbrProgram(state, buildGlPbrStandardDefineKeyForAlphaMode(state, standard, specGloss?.alphaMode ?? 'opaque'));
      beginGlMeshDraw(state, program, specGloss !== null && specGloss.doubleSided);
  
      setGlMeshViewProjection(state, program.locViewProjection, camera);
-diff --git a/packages/scene3d-gl/src/standardPbrGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/standardPbrGlMeshMaterialRenderer.ts
---- a/packages/scene3d-gl/src/standardPbrGlMeshMaterialRenderer.ts
-+++ b/packages/scene3d-gl/src/standardPbrGlMeshMaterialRenderer.ts
-@@ -12,7 +12,10 @@ import type {
- import { bindGlMeshLightBlock } from './glLitProgram';
- import { beginGlMeshDraw, drawGlMeshSubset, setGlMeshCameraPosition, setGlMeshViewProjection } from './glMeshProgram';
- import { ensureGlPbrProgram } from './glPbrProgramCache';
--import { bindGlPbrStandardBlock, buildGlPbrStandardDefineKey } from './glPbrStandardBlock';
-+import {
-+  bindGlPbrStandardBlock,
-+  buildGlPbrStandardDefineKeyForAlphaMode,
-+} from './glPbrStandardBlock';
- import { getGlScene3DRuntime } from './glScene3DRuntime';
+diff --git a/packages/scene3d-gl/src/glStandardPbrMeshMaterialRenderer.ts b/packages/scene3d-gl/src/glStandardPbrMeshMaterialRenderer.ts
+--- a/packages/scene3d-gl/src/glStandardPbrMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/glStandardPbrMeshMaterialRenderer.ts
+@@ -17,7 +17,7 @@ import {
+   setGlMeshViewProjection,
+ } from './glMeshProgram.ts';
+ import { ensureGlPbrProgram } from './glPbrProgramCache.ts';
+-import { bindGlPbrStandardBlock, buildGlPbrStandardDefineKey } from './glPbrStandardBlock.ts';
++import { bindGlPbrStandardBlock, buildGlPbrStandardDefineKeyForAlphaMode } from './glPbrStandardBlock.ts';
+ import { getGlScene3DRuntime } from './glScene3DRuntime.ts';
  
  // The built-in StandardPbr forward-lit mesh-material renderer (GlMeshMaterialRenderer for
-@@ -34,7 +37,14 @@ export const standardPbrGlMeshMaterialRenderer: GlMeshMaterialRenderer = {
+@@ -39,7 +39,7 @@ export const glStandardPbrMeshMaterialRenderer: GlMeshMaterialRenderer = {
    ): void {
      const gl = state.gl;
      const pbr = material as Readonly<StandardPbrMaterial> | null;
 -    const program = ensureGlPbrProgram(state, buildGlPbrStandardDefineKey(state, pbr, pbr));
-+    const program = ensureGlPbrProgram(
-+      state,
-+      buildGlPbrStandardDefineKeyForAlphaMode(
-+        state,
-+        pbr,
-+        pbr?.alphaMode ?? 'opaque',
-+      ),
-+    );
++    const program = ensureGlPbrProgram(state, buildGlPbrStandardDefineKeyForAlphaMode(state, pbr, pbr?.alphaMode ?? 'opaque'));
      beginGlMeshDraw(state, program, pbr !== null && pbr.doubleSided);
  
      setGlMeshViewProjection(state, program.locViewProjection, camera);

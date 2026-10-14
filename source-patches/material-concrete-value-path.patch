@@ -1,452 +1,552 @@
-diff --git a/packages/scene3d-gl/src/blinnPhongGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/blinnPhongGlMeshMaterialRenderer.ts
-index 14e353f..11ac85d 100644
---- a/packages/scene3d-gl/src/blinnPhongGlMeshMaterialRenderer.ts
-+++ b/packages/scene3d-gl/src/blinnPhongGlMeshMaterialRenderer.ts
-@@ -8,3 +8,3 @@ import type {
+diff --git a/packages/scene3d-gl/src/glBlinnPhongMeshMaterialRenderer.ts b/packages/scene3d-gl/src/glBlinnPhongMeshMaterialRenderer.ts
+--- a/packages/scene3d-gl/src/glBlinnPhongMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/glBlinnPhongMeshMaterialRenderer.ts
+@@ -6,7 +6,7 @@ import type {
+   Camera3D,
+   GlMeshMaterialRenderer,
    GlRenderState,
 -  Material,
-+  MaterialValue,
++  Material3DValue,
    MeshGeometry,
-@@ -41,3 +41,3 @@ export const blinnPhongGlMeshMaterialRenderer: GlMeshMaterialRenderer = {
-     state: GlRenderState,
--    material: Readonly<Material> | null,
-+    material: Readonly<MaterialValue> | null,
-     lights: Readonly<Scene3DLightBlock>,
-diff --git a/packages/scene3d-gl/src/customShaderGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/customShaderGlMeshMaterialRenderer.ts
-index 790766b..7fe5e21 100644
---- a/packages/scene3d-gl/src/customShaderGlMeshMaterialRenderer.ts
-+++ b/packages/scene3d-gl/src/customShaderGlMeshMaterialRenderer.ts
-@@ -9,3 +9,3 @@ import type {
-   GlRenderState,
--  Material,
-+  MaterialValue,
-   MeshGeometry,
-@@ -45,3 +45,3 @@ export const customShaderGlMeshMaterialRenderer: GlMeshMaterialRenderer = {
-     state: GlRenderState,
--    material: Readonly<Material> | null,
-+    material: Readonly<MaterialValue> | null,
-     _lights: Readonly<Scene3DLightBlock>,
-diff --git a/packages/scene3d-gl/src/depthGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/depthGlMeshMaterialRenderer.ts
-index 6444237..7c0817a 100644
---- a/packages/scene3d-gl/src/depthGlMeshMaterialRenderer.ts
-+++ b/packages/scene3d-gl/src/depthGlMeshMaterialRenderer.ts
-@@ -5,3 +5,3 @@ import type {
-   GlRenderState,
--  Material,
-+  MaterialValue,
-   MeshGeometry,
-@@ -26,3 +26,3 @@ export const depthGlMeshMaterialRenderer: GlMeshMaterialRenderer = {
-     state: GlRenderState,
--    material: Readonly<Material> | null,
-+    material: Readonly<MaterialValue> | null,
-     _lights: Readonly<Scene3DLightBlock>,
-diff --git a/packages/scene3d-gl/src/emissiveGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/emissiveGlMeshMaterialRenderer.ts
-index 9838b02..8317020 100644
---- a/packages/scene3d-gl/src/emissiveGlMeshMaterialRenderer.ts
-+++ b/packages/scene3d-gl/src/emissiveGlMeshMaterialRenderer.ts
-@@ -8,3 +8,3 @@ import type {
-   GlRenderState,
--  Material,
-+  MaterialValue,
-   MeshGeometry,
-@@ -34,3 +34,3 @@ export const emissiveGlMeshMaterialRenderer: GlMeshMaterialRenderer = {
-     state: GlRenderState,
--    material: Readonly<Material> | null,
-+    material: Readonly<MaterialValue> | null,
-     _lights: Readonly<Scene3DLightBlock>,
-diff --git a/packages/scene3d-gl/src/glMeshMaterialRegistry.ts b/packages/scene3d-gl/src/glMeshMaterialRegistry.ts
-index ff4cf31..f4439e3 100644
---- a/packages/scene3d-gl/src/glMeshMaterialRegistry.ts
-+++ b/packages/scene3d-gl/src/glMeshMaterialRegistry.ts
-@@ -2,3 +2,3 @@ import { withRegistryTableEntry } from '@flighthq/registry/contract';
- import { getGlRenderStateRuntime } from '@flighthq/render-gl/contract';
--import type { GlMeshMaterialRenderer, GlRenderState, Kind, Material } from '@flighthq/types/contract';
-+import type { GlMeshMaterialRenderer, GlRenderState, Kind, MaterialValue } from '@flighthq/types/contract';
- import { RegistryEntryState, StandardMaterialKind } from '@flighthq/types/contract';
-@@ -36,3 +36,3 @@ export function resolveGlMeshMaterialRenderer(
-   state: GlRenderState,
--  material: Readonly<Material> | null,
-+  material: Readonly<MaterialValue> | null,
- ): GlMeshMaterialRenderer | null {
-diff --git a/packages/scene3d-gl/src/glMeshProgram.ts b/packages/scene3d-gl/src/glMeshProgram.ts
-index c19a6e1..1b7a43b 100644
---- a/packages/scene3d-gl/src/glMeshProgram.ts
-+++ b/packages/scene3d-gl/src/glMeshProgram.ts
-@@ -9,7 +9,6 @@ import type {
-   GlRenderState,
--  Material,
-+  MaterialValue,
-   MeshGeometry,
+   Scene3DLightBlock,
    Scene3DRenderProxy,
--  SurfaceMaterial,
-   TextureLike,
- } from '@flighthq/types/contract';
-@@ -332,4 +332,4 @@ export function setGlMeshViewProjection(
- // registry falls back to anyway.
--function isGlMeshAlphaCoverage(material: Readonly<Material> | null): boolean {
--  return material !== null && (material as Readonly<SurfaceMaterial>).alphaMode === 'blend';
-+function isGlMeshAlphaCoverage(material: Readonly<MaterialValue> | null): boolean {
-+  return material !== null && material.alphaMode === 'blend';
- }
-@@ -470,3 +470,3 @@ export function uploadGlMeshDrawAlpha(
-   alpha: number,
--  material: Readonly<Material> | null,
-+  material: Readonly<MaterialValue> | null,
- ): void {
-diff --git a/packages/scene3d-gl/src/lambertGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/lambertGlMeshMaterialRenderer.ts
-index 06707f5..a6d0383 100644
---- a/packages/scene3d-gl/src/lambertGlMeshMaterialRenderer.ts
-+++ b/packages/scene3d-gl/src/lambertGlMeshMaterialRenderer.ts
-@@ -8,3 +8,3 @@ import type {
+@@ -39,7 +39,7 @@ import { getGlScene3DRuntime } from './glScene3DRuntime.ts';
+ export const glBlinnPhongMeshMaterialRenderer: GlMeshMaterialRenderer = {
+   bind(
+     state: GlRenderState,
+-    material: Readonly<Material> | null,
++    material: Readonly<Material3DValue> | null,
+     lights: Readonly<Scene3DLightBlock>,
+     camera: Readonly<Camera3D>,
+   ): void {
+diff --git a/packages/scene3d-gl/src/glCustomShaderMeshMaterialRenderer.ts b/packages/scene3d-gl/src/glCustomShaderMeshMaterialRenderer.ts
+--- a/packages/scene3d-gl/src/glCustomShaderMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/glCustomShaderMeshMaterialRenderer.ts
+@@ -7,7 +7,7 @@ import type {
+   CustomShaderMaterial,
+   GlMeshMaterialRenderer,
+   GlRenderState,
+-  Material,
++  Material3DValue,
+   MeshGeometry,
+   Scene3DLightBlock,
+   Scene3DRenderProxy,
+@@ -43,7 +43,7 @@ interface GlCustomShaderProgram extends GlMeshProgram {
+ export const glCustomShaderMeshMaterialRenderer: GlMeshMaterialRenderer = {
+   bind(
+     state: GlRenderState,
+-    material: Readonly<Material> | null,
++    material: Readonly<Material3DValue> | null,
+     _lights: Readonly<Scene3DLightBlock>,
+     camera: Readonly<Camera3D>,
+   ): void {
+diff --git a/packages/scene3d-gl/src/glDepthMeshMaterialRenderer.ts b/packages/scene3d-gl/src/glDepthMeshMaterialRenderer.ts
+--- a/packages/scene3d-gl/src/glDepthMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/glDepthMeshMaterialRenderer.ts
+@@ -3,7 +3,7 @@ import type {
+   DepthMaterial,
+   GlMeshMaterialRenderer,
+   GlRenderState,
+-  Material,
++  Material3DValue,
+   MeshGeometry,
+   Scene3DLightBlock,
+   Scene3DRenderProxy,
+@@ -24,7 +24,7 @@ import { getGlScene3DRuntime } from './glScene3DRuntime.ts';
+ export const glDepthMeshMaterialRenderer: GlMeshMaterialRenderer = {
+   bind(
+     state: GlRenderState,
+-    material: Readonly<Material> | null,
++    material: Readonly<Material3DValue> | null,
+     _lights: Readonly<Scene3DLightBlock>,
+     camera: Readonly<Camera3D>,
+   ): void {
+diff --git a/packages/scene3d-gl/src/glEmissiveMeshMaterialRenderer.ts b/packages/scene3d-gl/src/glEmissiveMeshMaterialRenderer.ts
+--- a/packages/scene3d-gl/src/glEmissiveMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/glEmissiveMeshMaterialRenderer.ts
+@@ -6,7 +6,7 @@ import type {
+   EmissiveMaterial,
+   GlMeshMaterialRenderer,
+   GlRenderState,
+-  Material,
++  Material3DValue,
+   MeshGeometry,
+   Scene3DLightBlock,
+   Scene3DRenderProxy,
+@@ -32,7 +32,7 @@ import { bindGlUnlitSurface, ensureGlUnlitProgram } from './glUnlitPrelude.ts';
+ export const glEmissiveMeshMaterialRenderer: GlMeshMaterialRenderer = {
+   bind(
+     state: GlRenderState,
+-    material: Readonly<Material> | null,
++    material: Readonly<Material3DValue> | null,
+     _lights: Readonly<Scene3DLightBlock>,
+     camera: Readonly<Camera3D>,
+   ): void {
+diff --git a/packages/scene3d-gl/src/glLambertMeshMaterialRenderer.ts b/packages/scene3d-gl/src/glLambertMeshMaterialRenderer.ts
+--- a/packages/scene3d-gl/src/glLambertMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/glLambertMeshMaterialRenderer.ts
+@@ -6,7 +6,7 @@ import type {
+   GlMeshMaterialRenderer,
+   GlRenderState,
    LambertMaterial,
 -  Material,
-+  MaterialValue,
++  Material3DValue,
    MeshGeometry,
-@@ -38,3 +38,3 @@ export const lambertGlMeshMaterialRenderer: GlMeshMaterialRenderer = {
+   Scene3DLightBlock,
+   Scene3DRenderProxy,
+@@ -36,7 +36,7 @@ import { getGlScene3DRuntime } from './glScene3DRuntime.ts';
+ export const glLambertMeshMaterialRenderer: GlMeshMaterialRenderer = {
+   bind(
      state: GlRenderState,
 -    material: Readonly<Material> | null,
-+    material: Readonly<MaterialValue> | null,
++    material: Readonly<Material3DValue> | null,
      lights: Readonly<Scene3DLightBlock>,
-diff --git a/packages/scene3d-gl/src/matcapGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/matcapGlMeshMaterialRenderer.ts
-index 39f4dc9..a4877b4 100644
---- a/packages/scene3d-gl/src/matcapGlMeshMaterialRenderer.ts
-+++ b/packages/scene3d-gl/src/matcapGlMeshMaterialRenderer.ts
-@@ -8,3 +8,3 @@ import type {
+     camera: Readonly<Camera3D>,
+   ): void {
+diff --git a/packages/scene3d-gl/src/glMatcapMeshMaterialRenderer.ts b/packages/scene3d-gl/src/glMatcapMeshMaterialRenderer.ts
+--- a/packages/scene3d-gl/src/glMatcapMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/glMatcapMeshMaterialRenderer.ts
+@@ -6,7 +6,7 @@ import type {
+   GlMeshMaterialRenderer,
+   GlRenderState,
    MatcapMaterial,
 -  Material,
-+  MaterialValue,
++  Material3DValue,
    MeshGeometry,
-@@ -30,3 +30,3 @@ export const matcapGlMeshMaterialRenderer: GlMeshMaterialRenderer = {
+   Scene3DLightBlock,
+   Scene3DRenderProxy,
+@@ -28,7 +28,7 @@ import { getGlScene3DRuntime } from './glScene3DRuntime.ts';
+ export const glMatcapMeshMaterialRenderer: GlMeshMaterialRenderer = {
+   bind(
      state: GlRenderState,
 -    material: Readonly<Material> | null,
-+    material: Readonly<MaterialValue> | null,
++    material: Readonly<Material3DValue> | null,
      _lights: Readonly<Scene3DLightBlock>,
-diff --git a/packages/scene3d-gl/src/normalGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/normalGlMeshMaterialRenderer.ts
-index edbbce1..dd0b5d1 100644
---- a/packages/scene3d-gl/src/normalGlMeshMaterialRenderer.ts
-+++ b/packages/scene3d-gl/src/normalGlMeshMaterialRenderer.ts
-@@ -5,3 +5,3 @@ import type {
+     camera: Readonly<Camera3D>,
+   ): void {
+diff --git a/packages/scene3d-gl/src/glMeshMaterialRegistry.ts b/packages/scene3d-gl/src/glMeshMaterialRegistry.ts
+--- a/packages/scene3d-gl/src/glMeshMaterialRegistry.ts
++++ b/packages/scene3d-gl/src/glMeshMaterialRegistry.ts
+@@ -1,6 +1,6 @@
+ import { withKindMapEntry } from '@flighthq/registry/contract';
+ import { getGlRenderStateRuntime } from '@flighthq/render-gl/contract';
+-import type { GlMeshMaterialRenderer, GlRenderState, Kind, Material } from '@flighthq/types/contract';
++import type { GlMeshMaterialRenderer, GlRenderState, Kind, Material3DValue } from '@flighthq/types/contract';
+ import { StandardMaterialKind } from '@flighthq/types/contract';
+ 
+ // Returns the 3D mesh-material renderer registered for a kind on this state, or null. The 3D scene
+@@ -30,7 +30,7 @@ export function registerGlMeshMaterialRenderer(
+ // through registration). Reads the shared materialRenderers table with a typed narrowing cast.
+ export function resolveGlMeshMaterialRenderer(
+   state: GlRenderState,
+-  material: Readonly<Material> | null,
++  material: Readonly<Material3DValue> | null,
+ ): GlMeshMaterialRenderer | null {
+   const table = getGlRenderStateRuntime(state).registries.materialRenderers;
+   if (material !== null) {
+diff --git a/packages/scene3d-gl/src/glMeshProgram.ts b/packages/scene3d-gl/src/glMeshProgram.ts
+--- a/packages/scene3d-gl/src/glMeshProgram.ts
++++ b/packages/scene3d-gl/src/glMeshProgram.ts
+@@ -8,7 +8,7 @@ import type {
+   GlMeshProgram,
+   Camera3D,
    GlRenderState,
 -  Material,
-+  MaterialValue,
++  Material3DValue,
    MeshGeometry,
-@@ -28,3 +28,3 @@ export const normalGlMeshMaterialRenderer: GlMeshMaterialRenderer = {
-     state: GlRenderState,
--    material: Readonly<Material> | null,
-+    material: Readonly<MaterialValue> | null,
-     _lights: Readonly<Scene3DLightBlock>,
-diff --git a/packages/scene3d-gl/src/phongGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/phongGlMeshMaterialRenderer.ts
-index 553f08a..c01a8d5 100644
---- a/packages/scene3d-gl/src/phongGlMeshMaterialRenderer.ts
-+++ b/packages/scene3d-gl/src/phongGlMeshMaterialRenderer.ts
-@@ -7,3 +7,3 @@ import type {
+   Scene3DRenderProxy,
+   Material3D,
+@@ -367,8 +367,8 @@ export function setGlMeshViewProjection(
+ // that: 'opaque' ignores the material's alpha entirely and 'mask' resolves to fully-opaque at its
+ // cutoff. A material with no surface trailer (or none at all) is treated as opaque, which is what the
+ // registry falls back to anyway.
+-function isGlMeshAlphaCoverage(material: Readonly<Material> | null): boolean {
+-  return material !== null && (material as Readonly<Material3D>).alphaMode === 'blend';
++function isGlMeshAlphaCoverage(material: Readonly<Material3DValue> | null): boolean {
++  return material !== null && material.alphaMode === 'blend';
+ }
+ 
+ // Vertex-scene2d GLSL every map-sampling family interpolates into its vertex body ahead of `main`: the
+@@ -439,7 +439,7 @@ export function uploadGlMeshDrawAlpha(
+   gl: GlContext,
+   program: Readonly<GlMeshProgram>,
+   alpha: number,
+-  material: Readonly<Material> | null,
++  material: Readonly<Material3DValue> | null,
+ ): void {
+   const location: WebGLUniformLocation | null = resolveGlObjectAlphaLocation(gl, program);
+   if (location !== null) gl.uniform1f(location, alpha);
+diff --git a/packages/scene3d-gl/src/glNormalMeshMaterialRenderer.ts b/packages/scene3d-gl/src/glNormalMeshMaterialRenderer.ts
+--- a/packages/scene3d-gl/src/glNormalMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/glNormalMeshMaterialRenderer.ts
+@@ -3,7 +3,7 @@ import type {
+   Camera3D,
+   GlMeshMaterialRenderer,
    GlRenderState,
 -  Material,
-+  MaterialValue,
++  Material3DValue,
    MeshGeometry,
-@@ -39,3 +39,3 @@ export const phongGlMeshMaterialRenderer: GlMeshMaterialRenderer = {
+   NormalMaterial,
+   Scene3DLightBlock,
+@@ -26,7 +26,7 @@ import { getGlScene3DRuntime } from './glScene3DRuntime.ts';
+ export const glNormalMeshMaterialRenderer: GlMeshMaterialRenderer = {
+   bind(
      state: GlRenderState,
 -    material: Readonly<Material> | null,
-+    material: Readonly<MaterialValue> | null,
++    material: Readonly<Material3DValue> | null,
+     _lights: Readonly<Scene3DLightBlock>,
+     camera: Readonly<Camera3D>,
+   ): void {
+diff --git a/packages/scene3d-gl/src/glPhongMeshMaterialRenderer.ts b/packages/scene3d-gl/src/glPhongMeshMaterialRenderer.ts
+--- a/packages/scene3d-gl/src/glPhongMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/glPhongMeshMaterialRenderer.ts
+@@ -5,7 +5,7 @@ import type {
+   Camera3D,
+   GlMeshMaterialRenderer,
+   GlRenderState,
+-  Material,
++  Material3DValue,
+   MeshGeometry,
+   PhongMaterial,
+   Scene3DLightBlock,
+@@ -37,7 +37,7 @@ import { getGlScene3DRuntime } from './glScene3DRuntime.ts';
+ export const glPhongMeshMaterialRenderer: GlMeshMaterialRenderer = {
+   bind(
+     state: GlRenderState,
+-    material: Readonly<Material> | null,
++    material: Readonly<Material3DValue> | null,
      lights: Readonly<Scene3DLightBlock>,
+     camera: Readonly<Camera3D>,
+   ): void {
+diff --git a/packages/scene3d-gl/src/glShadedMeshMaterialRenderer.ts b/packages/scene3d-gl/src/glShadedMeshMaterialRenderer.ts
+--- a/packages/scene3d-gl/src/glShadedMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/glShadedMeshMaterialRenderer.ts
+@@ -9,7 +9,7 @@ import type {
+   GlShadedDefineKey,
+   GlShadedProgram,
+   LinearColor,
+-  Material,
++  Material3DValue,
+   MeshGeometry,
+   Modifier,
+   Scene3DLightBlock,
+@@ -43,7 +43,7 @@ import { ensureGlShadedProgram } from './glShadedPrelude.ts';
+ export const glShadedMeshMaterialRenderer: GlMeshMaterialRenderer = {
+   bind(
+     state: GlRenderState,
+-    material: Readonly<Material> | null,
++    material: Readonly<Material3DValue> | null,
+     lights: Readonly<Scene3DLightBlock>,
+     camera: Readonly<Camera3D>,
+   ): void {
+diff --git a/packages/scene3d-gl/src/glSpecularGlossinessPbrMeshMaterialRenderer.ts b/packages/scene3d-gl/src/glSpecularGlossinessPbrMeshMaterialRenderer.ts
+--- a/packages/scene3d-gl/src/glSpecularGlossinessPbrMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/glSpecularGlossinessPbrMeshMaterialRenderer.ts
+@@ -4,7 +4,7 @@ import type {
+   Camera3D,
+   GlMeshMaterialRenderer,
+   GlRenderState,
+-  Material,
++  Material3DValue,
+   MeshGeometry,
+   Scene3DLightBlock,
+   Scene3DRenderProxy,
+@@ -51,7 +51,7 @@ import { getGlScene3DRuntime } from './glScene3DRuntime.ts';
+ export const glSpecularGlossinessPbrMeshMaterialRenderer: GlMeshMaterialRenderer = {
+   bind(
+     state: GlRenderState,
+-    material: Readonly<Material> | null,
++    material: Readonly<Material3DValue> | null,
+     lights: Readonly<Scene3DLightBlock>,
+     camera: Readonly<Camera3D>,
+   ): void {
+diff --git a/packages/scene3d-gl/src/glStandardPbrMeshMaterialRenderer.ts b/packages/scene3d-gl/src/glStandardPbrMeshMaterialRenderer.ts
+--- a/packages/scene3d-gl/src/glStandardPbrMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/glStandardPbrMeshMaterialRenderer.ts
+@@ -2,7 +2,7 @@ import type {
+   Camera3D,
+   GlMeshMaterialRenderer,
+   GlRenderState,
+-  Material,
++  Material3DValue,
+   MeshGeometry,
+   Scene3DLightBlock,
+   Scene3DRenderProxy,
+@@ -33,7 +33,7 @@ import { getGlScene3DRuntime } from './glScene3DRuntime.ts';
+ export const glStandardPbrMeshMaterialRenderer: GlMeshMaterialRenderer = {
+   bind(
+     state: GlRenderState,
+-    material: Readonly<Material> | null,
++    material: Readonly<Material3DValue> | null,
+     lights: Readonly<Scene3DLightBlock>,
+     camera: Readonly<Camera3D>,
+   ): void {
+diff --git a/packages/scene3d-gl/src/glToonMeshMaterialRenderer.ts b/packages/scene3d-gl/src/glToonMeshMaterialRenderer.ts
+--- a/packages/scene3d-gl/src/glToonMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/glToonMeshMaterialRenderer.ts
+@@ -5,7 +5,7 @@ import type {
+   Camera3D,
+   GlMeshMaterialRenderer,
+   GlRenderState,
+-  Material,
++  Material3DValue,
+   MeshGeometry,
+   Scene3DLightBlock,
+   Scene3DRenderProxy,
+@@ -41,7 +41,7 @@ import { ensureGlToonProgram } from './glToonPrelude.ts';
+ export const glToonMeshMaterialRenderer: GlMeshMaterialRenderer = {
+   bind(
+     state: GlRenderState,
+-    material: Readonly<Material> | null,
++    material: Readonly<Material3DValue> | null,
+     lights: Readonly<Scene3DLightBlock>,
+     camera: Readonly<Camera3D>,
+   ): void {
+diff --git a/packages/scene3d-gl/src/glUnlitMeshMaterialRenderer.ts b/packages/scene3d-gl/src/glUnlitMeshMaterialRenderer.ts
+--- a/packages/scene3d-gl/src/glUnlitMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/glUnlitMeshMaterialRenderer.ts
+@@ -5,7 +5,7 @@ import type {
+   Camera3D,
+   GlMeshMaterialRenderer,
+   GlRenderState,
+-  Material,
++  Material3DValue,
+   MeshGeometry,
+   Scene3DLightBlock,
+   Scene3DRenderProxy,
+@@ -32,7 +32,7 @@ import { bindGlUnlitSurface, ensureGlUnlitProgram } from './glUnlitPrelude.ts';
+ export const glUnlitMeshMaterialRenderer: GlMeshMaterialRenderer = {
+   bind(
+     state: GlRenderState,
+-    material: Readonly<Material> | null,
++    material: Readonly<Material3DValue> | null,
+     _lights: Readonly<Scene3DLightBlock>,
+     camera: Readonly<Camera3D>,
+   ): void {
+diff --git a/packages/scene3d-gl/src/glVertexColorMeshMaterialRenderer.ts b/packages/scene3d-gl/src/glVertexColorMeshMaterialRenderer.ts
+--- a/packages/scene3d-gl/src/glVertexColorMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/glVertexColorMeshMaterialRenderer.ts
+@@ -4,7 +4,7 @@ import type {
+   Camera3D,
+   GlMeshMaterialRenderer,
+   GlRenderState,
+-  Material,
++  Material3DValue,
+   MeshGeometry,
+   Scene3DLightBlock,
+   Scene3DRenderProxy,
+@@ -26,7 +26,7 @@ import { bindGlUnlitSurface, ensureGlUnlitProgram } from './glUnlitPrelude.ts';
+ export const glVertexColorMeshMaterialRenderer: GlMeshMaterialRenderer = {
+   bind(
+     state: GlRenderState,
+-    material: Readonly<Material> | null,
++    material: Readonly<Material3DValue> | null,
+     _lights: Readonly<Scene3DLightBlock>,
+     camera: Readonly<Camera3D>,
+   ): void {
+diff --git a/packages/scene3d-gl/src/glWireframeMeshMaterialRenderer.ts b/packages/scene3d-gl/src/glWireframeMeshMaterialRenderer.ts
+--- a/packages/scene3d-gl/src/glWireframeMeshMaterialRenderer.ts
++++ b/packages/scene3d-gl/src/glWireframeMeshMaterialRenderer.ts
+@@ -4,7 +4,7 @@ import type {
+   Camera3D,
+   GlMeshMaterialRenderer,
+   GlRenderState,
+-  Material,
++  Material3DValue,
+   MeshGeometry,
+   Scene3DLightBlock,
+   Scene3DRenderProxy,
+@@ -27,7 +27,7 @@ import { ensureGlWireframeUpload } from './glWireframeUpload.ts';
+ export const glWireframeMeshMaterialRenderer: GlMeshMaterialRenderer = {
+   bind(
+     state: GlRenderState,
+-    material: Readonly<Material> | null,
++    material: Readonly<Material3DValue> | null,
+     _lights: Readonly<Scene3DLightBlock>,
+     camera: Readonly<Camera3D>,
+   ): void {
 diff --git a/packages/scene3d-gl/src/renderGlScene3D.ts b/packages/scene3d-gl/src/renderGlScene3D.ts
-index ab3dc3a..b8dd423 100644
 --- a/packages/scene3d-gl/src/renderGlScene3D.ts
 +++ b/packages/scene3d-gl/src/renderGlScene3D.ts
-@@ -14,3 +14,2 @@ import type {
-   Camera3D,
--  ColorScaleBias,
-   GlScene3DForwardLightList,
-@@ -21,3 +20,3 @@ import type {
-   LinearColor,
--  Material,
-+  MaterialValue,
-   Matrix3,
-@@ -25,3 +24,2 @@ import type {
-   Mesh,
--  MeshSubset,
-   Scene3DLightsLike,
-@@ -30,3 +28,3 @@ import type {
+@@ -30,6 +30,7 @@ import type {
+   Node3D,
    Scene3DRenderProxy,
-+  StandardMaterial,
--  SurfaceMaterial,
+   Material3D,
++  Material3DValue,
    GlScene3DDrawEntry,
-@@ -170,3 +169,3 @@ export function renderGlScene3D(
+ } from '@flighthq/types/contract';
+ import { BlendMode, StandardMaterialKind, MAX_FORWARD_LIGHTS } from '@flighthq/types/contract';
+@@ -173,7 +174,7 @@ export function renderGlScene3D(
+   if (opaqueDrawList.length > 1) opaqueDrawList.sort(compareOpaqueEntriesBySortKey);
+ 
    // Pass 1: opaque + mask subsets sorted by material. No blending; depth-write on (set by bind).
--  let boundMaterial: Readonly<Material> | null | undefined = undefined;
-+  let boundMaterial: Readonly<MaterialValue> | null = null;
+-  let boundMaterial: Readonly<Material3D> | null | undefined = undefined;
++  let boundMaterial: Readonly<Material3DValue> | null | undefined = undefined;
    let boundLightBlock: Readonly<Scene3DLightBlock> | null = null;
-@@ -179,4 +178,4 @@ export function renderGlScene3D(
-   for (let i = 0; i < opaqueDrawList.length; i++) {
--    const entry = opaqueDrawList[i] as DrawEntry;
--    const worldMatrix = entry.worldMatrix as Matrix4;
-+    const entry = opaqueDrawList[i];
-+    const worldMatrix = entry.worldMatrix;
-     setMatrix3NormalFromMatrix4(scratchNormalMatrix, worldMatrix);
-@@ -231,3 +230,3 @@ export function renderGlScene3D(
--    boundMaterial = undefined;
-+    boundMaterial = null;
-     boundLightBlock = null;
-     boundRenderer = null;
-@@ -238,4 +237,4 @@ export function renderGlScene3D(
-     for (let i = 0; i < blendedDrawList.length; i++) {
--      const entry = blendedDrawList[i] as DrawEntry;
--      const worldMatrix = entry.worldMatrix as Matrix4;
-+      const entry = blendedDrawList[i];
-+      const worldMatrix = entry.worldMatrix;
-       setMatrix3NormalFromMatrix4(scratchNormalMatrix, worldMatrix);
-@@ -364,4 +363,4 @@ export function renderGlScene3D(
- // requiring an import of SurfaceMaterial here.
--function isBlendedMaterial(material: Readonly<Material>): boolean {
--  return (material as Readonly<SurfaceMaterial>).alphaMode === 'blend';
-+function isBlendedMaterial(material: Readonly<MaterialValue>): boolean {
-+  return material.alphaMode === 'blend';
+   let boundRenderer: GlMeshMaterialRenderer | null = null;
+   let boundSkinned: boolean | undefined = undefined;
+@@ -364,7 +365,7 @@ export function renderGlScene3D(
+ // kinds that do not carry a Material3D trailer) go through the opaque pass. Reads alphaMode
+ // via structural duck-typing so any Material3D subtype triggers the blended pass without
+ // requiring an import of Material3D here.
+-function isBlendedMaterial(material: Readonly<Material3D>): boolean {
++function isBlendedMaterial(material: Readonly<Material3DValue>): boolean {
+   return material.alphaMode === 'blend';
  }
-@@ -375,6 +374,5 @@ function isBlendedMaterial(material: Readonly<Material>): boolean {
+ 
+@@ -375,10 +376,9 @@ function isBlendedMaterial(material: Readonly<Material3D>): boolean {
+ // premultiplied color (GL_MESH_FRAGMENT_TAIL), so one table composites every material correctly. A faded
+ // opaque/masked material uses Normal because blendMode is only meaningful when the material itself
  // declares alphaMode 'blend'.
 -function applyGlSurfaceBlendMode(state: GlRenderState, material: Readonly<Material>): void {
--  const surface = material as Readonly<SurfaceMaterial>;
-+function applyGlSurfaceBlendMode(state: GlRenderState, material: Readonly<MaterialValue>): void {
+-  const surface = material as Readonly<Material3D>;
++function applyGlSurfaceBlendMode(state: GlRenderState, material: Readonly<Material3DValue>): void {
    const blendMode =
 -    surface.alphaMode === 'blend' && typeof surface.blendMode === 'string' ? surface.blendMode : BlendMode.Normal;
-+    material.alphaMode === 'blend' ? resolveAuthoredBlendMode(material.blendMode) : BlendMode.Normal;
++    material.alphaMode === 'blend' && typeof material.blendMode === 'string' ? material.blendMode : BlendMode.Normal;
    if (state.applyBlendMode === null) enableGlBlendModeSupport(state);
-@@ -389,3 +388,3 @@ function hasExcessForwardLights(lights: Readonly<Scene3DLightsLike>): boolean {
+   state.applyBlendMode!(state, blendMode);
+ }
+@@ -389,7 +389,7 @@ function hasExcessForwardLights(lights: Readonly<Scene3DLightsLike>): boolean {
+ 
+ // Resolves the Material for a subset index: the positional materials[i] entry, or null when the
  // slot is absent/null (the registry then falls back to StandardMaterialKind, or skips the subset).
--function resolveSubsetMaterial(mesh: Readonly<Mesh>, subsetIndex: number): Readonly<Material> | null {
-+function resolveSubsetMaterial(mesh: Readonly<Mesh>, subsetIndex: number): Readonly<MaterialValue> | null {
+-function resolveSubsetMaterial(mesh: Readonly<Mesh>, subsetIndex: number): Readonly<Material3D> | null {
++function resolveSubsetMaterial(mesh: Readonly<Mesh>, subsetIndex: number): Readonly<Material3DValue> | null {
    const materials = mesh.materials;
-@@ -400,17 +399 @@ function compareBlendedEntriesDescending(a: GlScene3DDrawEntry, b: GlScene3DDraw
--// Typed alias for cast-free access inside renderGlScene3D; GlScene3DDrawEntry uses `object` fields for
--// the header to remain free of scene-gl-internal types.
--interface DrawEntry {
--  alpha: number;
--  colorMatrix: readonly number[] | null;
--  colorScaleBias: Readonly<ColorScaleBias> | null;
--  depth: number;
--  lightBlock: Readonly<Scene3DLightBlock>;
--  material: Readonly<Material>;
--  mesh: Mesh;
--  renderer: GlMeshMaterialRenderer;
--  sortKey: number;
--  subset: Readonly<MeshSubset>;
--  worldMatrix: Readonly<Matrix4>;
--}
--
- // Takes from the per-runtime pool or allocates a fresh entry.
-@@ -445 +428,3 @@ function createDrawEntry(): GlScene3DDrawEntry {
-+const PROXY_DEFAULT_MATERIAL: StandardMaterial = { kind: StandardMaterialKind };
-+
- // The reused per-draw proxy handed to a renderer's draw. Owned by renderGlScene3D, valid only for the
-@@ -451,3 +436,3 @@ const proxy: Scene3DRenderProxy = {
-   normalMatrices: null,
--  material: { kind: StandardMaterialKind } as Material,
-+  material: PROXY_DEFAULT_MATERIAL,
-   normalMatrix: createMatrix3() as Matrix3,
-@@ -459,4 +444,4 @@ const proxy: Scene3DRenderProxy = {
- // no concrete material; the renderer treats a default/null material as its untextured defaults.
--const DEFAULT_MATERIAL = { kind: StandardMaterialKind } as Material;
-+const DEFAULT_MATERIAL: StandardMaterial = { kind: StandardMaterialKind };
--
-+
- // Assigns a stable integer to each unique (renderer, material) pair within one frame. Entries with
-@@ -465,5 +450,5 @@ const DEFAULT_MATERIAL = { kind: StandardMaterialKind } as Material;
- let sortKeyCounter = 0;
--const sortKeyMap = new Map<object, number>();
-+const sortKeyMap = new Map<GlMeshMaterialRenderer | Readonly<MaterialValue>, number>();
--
-+
--function acquireSortKey(renderer: object, material: object): number {
-+function acquireSortKey(renderer: GlMeshMaterialRenderer, material: Readonly<MaterialValue>): number {
-   let rk = sortKeyMap.get(renderer);
-@@ -517,3 +500,3 @@ function resolveInstancedMeshSubsetMaterial(
+   return subsetIndex < materials.length ? materials[subsetIndex] : null;
+ }
+@@ -407,7 +407,7 @@ interface DrawEntry {
+   colorScaleBias: Readonly<ColorScaleBias> | null;
+   depth: number;
+   lightBlock: Readonly<Scene3DLightBlock>;
+-  material: Readonly<Material3D>;
++  material: Readonly<Material3DValue>;
+   mesh: Mesh;
+   renderer: GlMeshMaterialRenderer;
+   sortKey: number;
+@@ -526,7 +526,7 @@ function flattenInstancedMeshMatrices(mesh: Readonly<InstancedMesh>): Float32Arr
+ function resolveInstancedMeshSubsetMaterial(
+   mesh: Readonly<InstancedMesh>,
    subsetIndex: number,
--): Readonly<Material> | null {
-+): Readonly<MaterialValue> | null {
+-): Readonly<Material3D> | null {
++): Readonly<Material3DValue> | null {
    return subsetIndex < mesh.materials.length ? mesh.materials[subsetIndex] : null;
-diff --git a/packages/scene3d-gl/src/shadedGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/shadedGlMeshMaterialRenderer.ts
-index fbcd2c3..a5847ea 100644
---- a/packages/scene3d-gl/src/shadedGlMeshMaterialRenderer.ts
-+++ b/packages/scene3d-gl/src/shadedGlMeshMaterialRenderer.ts
-@@ -11,3 +11,3 @@ import type {
-   LinearColor,
--  Material,
-+  MaterialValue,
-   MeshGeometry,
-@@ -45,3 +45,3 @@ export const shadedGlMeshMaterialRenderer: GlMeshMaterialRenderer = {
-     state: GlRenderState,
--    material: Readonly<Material> | null,
-+    material: Readonly<MaterialValue> | null,
-     lights: Readonly<Scene3DLightBlock>,
-diff --git a/packages/scene3d-gl/src/specularGlossinessPbrGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/specularGlossinessPbrGlMeshMaterialRenderer.ts
-index e8156b6..9510fef 100644
---- a/packages/scene3d-gl/src/specularGlossinessPbrGlMeshMaterialRenderer.ts
-+++ b/packages/scene3d-gl/src/specularGlossinessPbrGlMeshMaterialRenderer.ts
-@@ -6,3 +6,3 @@ import type {
-   GlRenderState,
--  Material,
-+  MaterialValue,
-   MeshGeometry,
-@@ -48,3 +48,3 @@ export const specularGlossinessPbrGlMeshMaterialRenderer: GlMeshMaterialRenderer
-     state: GlRenderState,
--    material: Readonly<Material> | null,
-+    material: Readonly<MaterialValue> | null,
-     lights: Readonly<Scene3DLightBlock>,
-diff --git a/packages/scene3d-gl/src/standardPbrGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/standardPbrGlMeshMaterialRenderer.ts
-index 03cdbda..ed42250 100644
---- a/packages/scene3d-gl/src/standardPbrGlMeshMaterialRenderer.ts
-+++ b/packages/scene3d-gl/src/standardPbrGlMeshMaterialRenderer.ts
-@@ -4,3 +4,3 @@ import type {
-   GlRenderState,
--  Material,
-+  MaterialValue,
-   MeshGeometry,
-@@ -30,3 +30,3 @@ export const standardPbrGlMeshMaterialRenderer: GlMeshMaterialRenderer = {
-     state: GlRenderState,
--    material: Readonly<Material> | null,
-+    material: Readonly<MaterialValue> | null,
-     lights: Readonly<Scene3DLightBlock>,
-diff --git a/packages/scene3d-gl/src/toonGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/toonGlMeshMaterialRenderer.ts
-index d76cf04..d1bfd74 100644
---- a/packages/scene3d-gl/src/toonGlMeshMaterialRenderer.ts
-+++ b/packages/scene3d-gl/src/toonGlMeshMaterialRenderer.ts
-@@ -7,3 +7,3 @@ import type {
-   GlRenderState,
--  Material,
-+  MaterialValue,
-   MeshGeometry,
-@@ -43,3 +43,3 @@ export const toonGlMeshMaterialRenderer: GlMeshMaterialRenderer = {
-     state: GlRenderState,
--    material: Readonly<Material> | null,
-+    material: Readonly<MaterialValue> | null,
-     lights: Readonly<Scene3DLightBlock>,
-diff --git a/packages/scene3d-gl/src/unlitGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/unlitGlMeshMaterialRenderer.ts
-index 6dcc379..bf4a06f 100644
---- a/packages/scene3d-gl/src/unlitGlMeshMaterialRenderer.ts
-+++ b/packages/scene3d-gl/src/unlitGlMeshMaterialRenderer.ts
-@@ -7,3 +7,3 @@ import type {
-   GlRenderState,
--  Material,
-+  MaterialValue,
-   MeshGeometry,
-@@ -34,3 +34,3 @@ export const unlitGlMeshMaterialRenderer: GlMeshMaterialRenderer = {
-     state: GlRenderState,
--    material: Readonly<Material> | null,
-+    material: Readonly<MaterialValue> | null,
-     _lights: Readonly<Scene3DLightBlock>,
-diff --git a/packages/scene3d-gl/src/vertexColorGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/vertexColorGlMeshMaterialRenderer.ts
-index 2920ecf3..5260cd3 100644
---- a/packages/scene3d-gl/src/vertexColorGlMeshMaterialRenderer.ts
-+++ b/packages/scene3d-gl/src/vertexColorGlMeshMaterialRenderer.ts
-@@ -6,3 +6,3 @@ import type {
-   GlRenderState,
--  Material,
-+  MaterialValue,
-   MeshGeometry,
-@@ -28,3 +28,3 @@ export const vertexColorGlMeshMaterialRenderer: GlMeshMaterialRenderer = {
-     state: GlRenderState,
--    material: Readonly<Material> | null,
-+    material: Readonly<MaterialValue> | null,
-     _lights: Readonly<Scene3DLightBlock>,
-diff --git a/packages/scene3d-gl/src/wireframeGlMeshMaterialRenderer.ts b/packages/scene3d-gl/src/wireframeGlMeshMaterialRenderer.ts
-index ad189c5..db9832c 100644
---- a/packages/scene3d-gl/src/wireframeGlMeshMaterialRenderer.ts
-+++ b/packages/scene3d-gl/src/wireframeGlMeshMaterialRenderer.ts
-@@ -6,3 +6,3 @@ import type {
-   GlRenderState,
--  Material,
-+  MaterialValue,
-   MeshGeometry,
-@@ -34,3 +34,3 @@ export const wireframeGlMeshMaterialRenderer: GlMeshMaterialRenderer = {
-     state: GlRenderState,
--    material: Readonly<Material> | null,
-+    material: Readonly<MaterialValue> | null,
-     _lights: Readonly<Scene3DLightBlock>,
+ }
+ 
 diff --git a/packages/scene3d/src/billboard.ts b/packages/scene3d/src/billboard.ts
-index ad32465..9daa9d9 100644
 --- a/packages/scene3d/src/billboard.ts
 +++ b/packages/scene3d/src/billboard.ts
-@@ -6,3 +6,3 @@ import type {
+@@ -5,7 +5,7 @@ import type {
+   BillboardMode,
+   BillboardRuntime,
    Kind,
--  Material,
-+  MaterialValue,
+-  Material3D,
++  Material3DValue,
    MeshGeometry,
-@@ -32,3 +32,3 @@ export function createBillboard(
+   NodeSignals,
+   Node3D,
+@@ -33,7 +33,7 @@ export { BillboardKind } from '@flighthq/types/contract';
+ // translation and scale the facing pass preserves.
+ export function createBillboard(
    geometry: MeshGeometry,
--  materials: (Material | null)[],
-+  materials: (MaterialValue | null)[],
+-  materials: (Material3D | null)[],
++  materials: (Material3DValue | null)[],
    mode: BillboardMode = 'full',
+   kind: Kind = BillboardKind,
+   obj?: Readonly<Partial<Pick<Node3D, 'alpha' | 'enabled' | 'name' | 'visible'>>>,
 diff --git a/packages/scene3d/src/instancedMesh.ts b/packages/scene3d/src/instancedMesh.ts
-index b2cd262..d7ee457 100644
 --- a/packages/scene3d/src/instancedMesh.ts
 +++ b/packages/scene3d/src/instancedMesh.ts
-@@ -12,3 +12,3 @@ import type {
+@@ -9,7 +9,7 @@ import type {
+   InstancedMeshRuntime,
+   InstancedMeshSignals,
    Kind,
--  Material,
-+  MaterialValue,
+-  Material3D,
++  Material3DValue,
    Matrix4,
-@@ -108,3 +108,3 @@ export function createInstancedMesh(
+   MeshGeometry,
+ } from '@flighthq/types/contract';
+@@ -105,7 +105,7 @@ export function computeInstancedMeshLocalBoundsAabb(out: Aabb, source: Readonly<
+  */
+ export function createInstancedMesh(
    geometry: MeshGeometry,
--  materials: (Material | null)[],
-+  materials: (MaterialValue | null)[],
+-  materials: (Material3D | null)[],
++  materials: (Material3DValue | null)[],
    capacity?: number,
+   kind: Kind = InstancedMeshKind,
+ ): InstancedMesh {
 diff --git a/packages/scene3d/src/mesh.ts b/packages/scene3d/src/mesh.ts
-index dccacd6..08058d1 100644
 --- a/packages/scene3d/src/mesh.ts
 +++ b/packages/scene3d/src/mesh.ts
-@@ -11,3 +11,3 @@ import type {
+@@ -10,7 +10,7 @@ import {
+ } from '@flighthq/node/contract';
+ import type {
    Kind,
--  Material,
-+  MaterialValue,
+-  Material3D,
++  Material3DValue,
    Mesh,
-@@ -59,3 +59,3 @@ export function createMesh(
+   MeshDeformer,
+   MeshGeometry,
+@@ -65,7 +65,7 @@ export function cloneMesh(source: Readonly<Mesh>): Mesh {
+ // `geometry` and `materials` are stored by reference, not copied.
+ export function createMesh(
    geometry: MeshGeometry,
--  materials: (Material | null)[],
-+  materials: (MaterialValue | null)[],
+-  materials: (Material3D | null)[],
++  materials: (Material3DValue | null)[],
    kind: Kind = MeshKind,
+   obj?: Readonly<Partial<Pick<Node3D, 'alpha' | 'enabled' | 'name' | 'visible'>>>,
+ ): Mesh {
 diff --git a/packages/types/src/Billboard.ts b/packages/types/src/Billboard.ts
-index c14bf21..d8a07bc 100644
 --- a/packages/types/src/Billboard.ts
 +++ b/packages/types/src/Billboard.ts
-@@ -1,2 +1,2 @@
--import type { Material } from './Material';
-+import type { MaterialValue } from './MaterialValue';
- import type { MeshGeometry } from './MeshGeometry';
-@@ -6,3 +6,3 @@ export interface Billboard extends Node3D {
+@@ -1,10 +1,10 @@
+-import type { Material3D } from './Material3D.ts';
++import type { Material3DValue } from './Material3DValue.ts';
+ import type { MeshGeometry } from './MeshGeometry.ts';
+ import type { Node3D, Node3DRuntime } from './Node3D.ts';
+ export type BillboardMode = 'axisY' | 'full' | 'screenAligned';
+ export interface Billboard extends Node3D {
    geometry: MeshGeometry;
--  materials: (Material | null)[];
-+  materials: (MaterialValue | null)[];
+-  materials: (Material3D | null)[];
++  materials: (Material3DValue | null)[];
    mode: BillboardMode;
+ }
+ export type BillboardRuntime = Node3DRuntime;
 diff --git a/packages/types/src/GlMeshMaterialRenderer.ts b/packages/types/src/GlMeshMaterialRenderer.ts
-index b11efa8..72c0e91 100644
 --- a/packages/types/src/GlMeshMaterialRenderer.ts
 +++ b/packages/types/src/GlMeshMaterialRenderer.ts
-@@ -2,3 +2,3 @@ import type { Camera3D } from './Camera3D';
- import type { GlRenderState } from './GlRenderState';
--import type { Material } from './Material';
-+import type { MaterialValue } from './MaterialValue';
- import type { MeshGeometry } from './MeshGeometry';
-@@ -31,3 +31,3 @@ export interface GlMeshMaterialRenderer {
+@@ -1,6 +1,6 @@
+ import type { Camera3D } from './Camera3D.ts';
+ import type { GlRenderState } from './GlRenderState.ts';
+-import type { Material } from './Material.ts';
++import type { Material3DValue } from './Material3DValue.ts';
+ import type { MeshGeometry } from './MeshGeometry.ts';
+ import type { Scene3DLightBlock } from './Scene3DLightBlock.ts';
+ import type { Scene3DRenderProxy } from './Scene3DRenderProxy.ts';
+@@ -29,7 +29,7 @@ export interface GlMeshMaterialRenderer {
+   // this material.
+   bind(
      state: GlRenderState,
 -    material: Readonly<Material> | null,
-+    material: Readonly<MaterialValue> | null,
++    material: Readonly<Material3DValue> | null,
      lights: Readonly<Scene3DLightBlock>,
+     camera: Readonly<Camera3D>,
+   ): void;
 diff --git a/packages/types/src/GlScene3DRuntime.ts b/packages/types/src/GlScene3DRuntime.ts
-index eac4841..72bd054 100644
 --- a/packages/types/src/GlScene3DRuntime.ts
 +++ b/packages/types/src/GlScene3DRuntime.ts
-@@ -1 +1,3 @@
-+import type { ColorScaleBias } from './ColorScaleBias';
-+import type { GlMeshMaterialRenderer } from './GlMeshMaterialRenderer';
- import type { GlMeshProgram } from './GlMeshProgram';
-@@ -6,4 +8,5 @@ import type { GlSkinPaletteTexture } from './GlSkinPaletteTexture';
- import type { Matrix4 } from './Matrix4';
-+import type { MaterialValue } from './MaterialValue';
- import type { Mesh } from './Mesh';
--import type { MeshGeometry } from './MeshGeometry';
-+import type { MeshGeometry, MeshSubset } from './MeshGeometry';
- import type { PbrExtension } from './PbrExtension';
-@@ -47,12 +50,12 @@ export interface GlScene3DDrawEntry {
+@@ -6,6 +6,7 @@ import type { GlTextureRenderTarget } from './GlRenderTarget.ts';
+ import type { GlSkinPaletteTexture } from './GlSkinPaletteTexture.ts';
+ import type { Matrix4 } from './Matrix4.ts';
+ import type { Mesh } from './Mesh.ts';
++import type { MeshSubset } from './MeshGeometry.ts';
+ import type { Node3D } from './Node3D.ts';
+ import type { PbrExtensionValue } from './PbrExtension.ts';
+ import type { Scene3DLightBlock } from './Scene3DLightBlock.ts';
+@@ -47,16 +48,16 @@ export interface GlScene3DIbl {
+ // passes; the pool is never exposed outside renderGlScene3D.
+ export interface GlScene3DDrawEntry {
    alpha: number;
 -  colorMatrix: object | null;
 -  colorScaleBias: object | null;
@@ -458,7 +558,7 @@ index eac4841..72bd054 100644
 -  mesh: object;
 -  renderer: object;
 +  lightBlock: Readonly<Scene3DLightBlock>;
-+  material: Readonly<MaterialValue>;
++  material: Readonly<Material3DValue>;
 +  mesh: Mesh;
 +  renderer: GlMeshMaterialRenderer;
    sortKey: number;
@@ -467,63 +567,64 @@ index eac4841..72bd054 100644
 +  subset: Readonly<MeshSubset>;
 +  worldMatrix: Readonly<Matrix4>;
  }
+ 
+ // scene-gl's per-GlRenderState private state: the mesh-material program cache (keyed by family +
 diff --git a/packages/types/src/InstancedMesh.ts b/packages/types/src/InstancedMesh.ts
-index 1d31818..afd4a8c 100644
 --- a/packages/types/src/InstancedMesh.ts
 +++ b/packages/types/src/InstancedMesh.ts
-@@ -2,3 +2,3 @@ import type { Aabb } from './Aabb';
- import type { InstancedMeshSignals } from './InstancedMeshSignals';
--import type { Material } from './Material';
-+import type { MaterialValue } from './MaterialValue';
- import type { Matrix4 } from './Matrix4';
-@@ -11,3 +11,3 @@ export interface InstancedMesh extends Node3D {
+@@ -1,7 +1,7 @@
+ import type { Aabb } from './Aabb.ts';
+ import type { EntityRuntimeKey } from './Entity.ts';
+ import type { InstancedMeshSignals } from './InstancedMeshSignals.ts';
+-import type { Material3D } from './Material3D.ts';
++import type { Material3DValue } from './Material3DValue.ts';
+ import type { Matrix4 } from './Matrix4.ts';
+ import type { MeshGeometry } from './MeshGeometry.ts';
+ import type { Node3D, Node3DRuntime } from './Node3D.ts';
+@@ -11,7 +11,7 @@ export interface InstancedMesh extends Node3D {
+   instanceColors: Uint32Array<ArrayBuffer> | null;
+   instanceCount: number;
    instanceMatrices: Matrix4[];
--  materials: (Material | null)[];
-+  materials: (MaterialValue | null)[];
+-  materials: (Material3D | null)[];
++  materials: (Material3DValue | null)[];
    version: number;
-diff --git a/packages/types/src/Material.ts b/packages/types/src/Material.ts
---- a/packages/types/src/Material.ts
-+++ b/packages/types/src/Material.ts
-@@ -17,4 +17,8 @@ export interface Material extends Entity {
- export interface Material extends Entity {
-   readonly kind: Kind;
-+  // Optional capabilities used by surface-aware backends; non-surface and vendor materials may omit them.
-+  // SurfaceMaterial makes both required. Keeping them here preserves open-kind duck typing without a cast.
-+  alphaMode?: 'blend' | 'mask' | 'opaque';
-+  blendMode?: string;
-   // The authored material name — an importer preserves the source file's material identity here
-   // (an MTL `newmtl`, a glTF `material.name`, a 3DS material chunk), so a material stays
-diff --git a/packages/types/src/MaterialValue.ts b/packages/types/src/MaterialValue.ts
+ }
+ // The cull subsystem's slot on the InstancedMesh node runtime. `instanceLocalBounds` is the union, in
+diff --git a/packages/types/src/Material3DValue.ts b/packages/types/src/Material3DValue.ts
 new file mode 100644
-index 0000000..f9ba745
 --- /dev/null
-+++ b/packages/types/src/MaterialValue.ts
-@@ -0,0 +1,42 @@
-+import type { BlinnPhongMaterial } from './BlinnPhongMaterial';
-+import type { CustomShaderMaterial } from './CustomShaderMaterial';
-+import type { DepthMaterial } from './DepthMaterial';
-+import type { EmissiveMaterial } from './EmissiveMaterial';
-+import type { ExtendedPbrMaterial } from './ExtendedPbrMaterial';
-+import type { LambertMaterial } from './LambertMaterial';
-+import type { Material } from './Material';
-+import type { MatcapMaterial } from './MatcapMaterial';
-+import type { NormalMaterial } from './NormalMaterial';
-+import type { PhongMaterial } from './PhongMaterial';
-+import type { ShadedMaterial } from './ShadedMaterial';
-+import type { SpecularGlossinessPbrMaterial } from './SpecularGlossinessPbrMaterial';
-+import type { StandardMaterial } from './StandardMaterial';
-+import type { StandardPbrMaterial } from './StandardPbrMaterial';
-+import type { ToonMaterial } from './ToonMaterial';
-+import type { UnlitMaterial } from './UnlitMaterial';
-+import type { VertexColorMaterial } from './VertexColorMaterial';
-+import type { WireframeMaterial } from './WireframeMaterial';
++++ b/packages/types/src/Material3DValue.ts
+@@ -0,0 +1,46 @@
++import type { BlinnPhongMaterial } from './BlinnPhongMaterial.ts';
++import type { CustomShaderMaterial } from './CustomShaderMaterial.ts';
++import type { DepthMaterial } from './DepthMaterial.ts';
++import type { EmissiveMaterial } from './EmissiveMaterial.ts';
++import type { ExtendedPbrMaterial } from './ExtendedPbrMaterial.ts';
++import type { LambertMaterial } from './LambertMaterial.ts';
++import type { MatcapMaterial } from './MatcapMaterial.ts';
++import type { Material3D } from './Material3D.ts';
++import type { NormalMaterial } from './NormalMaterial.ts';
++import type { PhongMaterial } from './PhongMaterial.ts';
++import type { ShadedMaterial } from './ShadedMaterial.ts';
++import type { SpecularGlossinessPbrMaterial } from './SpecularGlossinessPbrMaterial.ts';
++import type { StandardPbrMaterial } from './StandardPbrMaterial.ts';
++import type { ToonMaterial } from './ToonMaterial.ts';
++import type { UnlitMaterial } from './UnlitMaterial.ts';
++import type { VertexColorMaterial } from './VertexColorMaterial.ts';
++import type { WireframeMaterial } from './WireframeMaterial.ts';
 +
-+// The open Material arm keeps vendor kinds accepted, while the redundant built-in arms retain their
-+// concrete owners across heterogeneous scene storage on invariant native targets. Every named arm
-+// already extends Material, so this union does not change the TypeScript value domain or JavaScript
-+// representation.
-+export type MaterialValue =
-+  | Material
++// The 3D material family is open: vendor materials implement Material3D, while the built-ins extend it
++// with their own maps, scalars and literal kinds. Storing the values through the flattened Material3D
++// owner alone discards which native owner was stored, so a renderer that reads a built-in's fields
++// asserts them back out of a carrier the emitter must flatten into an unrelated owner. Naming the
++// built-ins as redundant arms BESIDE the open one keeps the same TypeScript value domain -- every arm
++// already extends Material3D, so vendor kinds stay accepted through the open arm -- while giving the
++// exact-owner union rule one concrete owner to select.
++//
++// StandardMaterial is deliberately NOT an arm: at this pin it extends Material2D with the incompatible
++// MaterialDimensionKey phantom, so admitting it would let a 2D material reach a 3D mesh.
++export type Material3DValue =
++  | Material3D
 +  | BlinnPhongMaterial
 +  | CustomShaderMaterial
 +  | DepthMaterial
@@ -535,53 +636,69 @@ index 0000000..f9ba745
 +  | PhongMaterial
 +  | ShadedMaterial
 +  | SpecularGlossinessPbrMaterial
-+  | StandardMaterial
 +  | StandardPbrMaterial
 +  | ToonMaterial
 +  | UnlitMaterial
 +  | VertexColorMaterial
 +  | WireframeMaterial;
 diff --git a/packages/types/src/Mesh.ts b/packages/types/src/Mesh.ts
-index 8d3489b..e2c8979 100644
 --- a/packages/types/src/Mesh.ts
 +++ b/packages/types/src/Mesh.ts
-@@ -1,3 +1,3 @@
- import type { Aabb } from './Aabb';
--import type { Material } from './Material';
-+import type { MaterialValue } from './MaterialValue';
- import type { MeshGeometry } from './MeshGeometry';
-@@ -27,3 +27,3 @@ export interface Mesh extends Node3D {
+@@ -1,6 +1,6 @@
+ import type { Aabb } from './Aabb.ts';
+ import type { EntityRuntimeKey } from './Entity.ts';
+-import type { Material3D } from './Material3D.ts';
++import type { Material3DValue } from './Material3DValue.ts';
+ import type { MeshGeometry } from './MeshGeometry.ts';
+ import type { MeshMorph } from './MorphTarget.ts';
+ import type { Node3D, Node3DRuntime } from './Node3D.ts';
+@@ -27,7 +27,7 @@ import type { Skin } from './Skin.ts';
+ export interface Mesh extends Node3D {
+   [EntityRuntimeKey]: MeshRuntime | undefined;
    geometry: MeshGeometry;
--  materials: (Material | null)[];
-+  materials: (MaterialValue | null)[];
+-  materials: (Material3D | null)[];
++  materials: (Material3DValue | null)[];
    morph?: MeshMorph | null;
+   skin?: Skin | null;
+ }
 diff --git a/packages/types/src/Scene3DRenderProxy.ts b/packages/types/src/Scene3DRenderProxy.ts
-index facb3c2..69c2ac4 100644
 --- a/packages/types/src/Scene3DRenderProxy.ts
 +++ b/packages/types/src/Scene3DRenderProxy.ts
-@@ -1,3 +1,3 @@
- import type { ColorScaleBias } from './ColorScaleBias';
--import type { Material } from './Material';
-+import type { MaterialValue } from './MaterialValue';
- import type { Matrix3 } from './Matrix3';
-@@ -57,3 +57,3 @@ export interface Scene3DRenderProxy {
+@@ -1,5 +1,5 @@
+ import type { ColorScaleBias } from './ColorScaleBias.ts';
+-import type { Material3D } from './Material3D.ts';
++import type { Material3DValue } from './Material3DValue.ts';
+ import type { Matrix3 } from './Matrix3.ts';
+ import type { Matrix4 } from './Matrix4.ts';
+ import type { MeshSubset } from './MeshGeometry.ts';
+@@ -55,7 +55,7 @@ export interface Scene3DRenderProxy {
+   // a normal is a covector and does not follow the pose matrix under non-uniform joint scale; a renderer
+   // reads it as `proxy.normalMatrices ?? null` and falls back to its rigid path when absent.
    normalMatrices?: Readonly<Float32Array> | null;
--  material: Readonly<Material>;
-+  material: Readonly<MaterialValue>;
+-  material: Readonly<Material3D>;
++  material: Readonly<Material3DValue>;
    normalMatrix: Readonly<Matrix3>;
+   subset: Readonly<MeshSubset>;
+   worldMatrix: Readonly<Matrix4>;
 diff --git a/packages/types/src/contract.ts b/packages/types/src/contract.ts
-index 64a0790..60a5290 100644
 --- a/packages/types/src/contract.ts
 +++ b/packages/types/src/contract.ts
-@@ -446,2 +446,3 @@ export * from './MatcapMaterial';
- export * from './Material';
-+export * from './MaterialValue';
- export * from './MaterialConversionExplanation';
+@@ -780,6 +780,7 @@ export * from './BitmapFingerprint.ts';
+ export * from './BitmapHistogram.ts';
+ export * from './Material2D.ts';
+ export * from './Material3D.ts';
++export * from './Material3DValue.ts';
+ export * from './Material3DOptions.ts';
+ export * from './BitmapMismatch.ts';
+ export * from './BitmapRegion.ts';
 diff --git a/packages/types/src/index.ts b/packages/types/src/index.ts
-index 4ce2758..72c111e 100644
 --- a/packages/types/src/index.ts
 +++ b/packages/types/src/index.ts
-@@ -434,2 +434,3 @@ export * from './MatcapMaterial';
- export * from './Material';
-+export * from './MaterialValue';
- export * from './MaterialConversionExplanation';
+@@ -754,6 +754,7 @@ export * from './BitmapFingerprint.ts';
+ export * from './BitmapHistogram.ts';
+ export * from './Material2D.ts';
+ export * from './Material3D.ts';
++export * from './Material3DValue.ts';
+ export * from './Material3DOptions.ts';
+ export * from './BitmapMismatch.ts';
+ export * from './BitmapRegion.ts';
