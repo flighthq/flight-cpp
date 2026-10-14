@@ -405,6 +405,40 @@ int main() {
     check(propagated, "a rejecting capability rejects the caller's task, which the module does not catch");
   }
 
+  // FOUR EXPORTED FUNCTIONS THE EARLIER PASS NEVER CALLED. The upstream suite has one "is exported" case
+  // per name, and a name exercised nowhere proves nothing about it -- these four were referenced by no line
+  // of this file, so every claim about them was unwitnessed. `readClipboardRTF` is the one worth calling
+  // out: it reads the row key `readRTF`, which is a DIFFERENT key from the `hasFormat`-based `has*` pair,
+  // so a module that wired it to the html key or to `hasFormat` would have gone unnoticed.
+  {
+    const auto state = std::make_shared<Backend>();
+    const auto formats = formats_of(state);
+    const auto text = text_of(state);
+
+    check(clipboard::write_clipboard_html(formats, String("<b>html</b>")).get(), "an html write lands");
+    check(clipboard::write_clipboard_rtf(formats, String("{\\rtf1 rich}")).get(), "and an rtf write lands");
+    // The fake keeps the SET of present formats apart from the writes, so a format has to be present before
+    // it can be read back -- that is the fake's own contract, matching the upstream backend's.
+    state->formats.push_back(String("application/x-flight"));
+    check(clipboard::write_clipboard_format(formats, String("application/x-flight"), String("custom")).get(),
+          "and a custom-format write lands");
+
+    check(clipboard::read_clipboard_html(formats).get() == String("<b>html</b>"),
+          "readClipboardHtml reads the provider's html through the formats slot");
+    check(clipboard::read_clipboard_rtf(formats).get() == String("{\\rtf1 rich}"),
+          "readClipboardRTF reads the provider's rtf through its own readRTF key");
+    check(clipboard::read_clipboard_format(formats, String("application/x-flight")).get() == String("custom"),
+          "readClipboardFormat reads the provider's data for the format it was given");
+    check(!state->format_reads.empty() && state->format_reads.back() == String("application/x-flight"),
+          "and passes the requested format through unaltered");
+
+    // hasClipboardText, in both directions: a provider that has text and one that does not.
+    check(clipboard::write_clipboard_text(text, String("plain")).get(), "a text write lands");
+    check(clipboard::has_clipboard_text(text).get(), "hasClipboardText reports the provider's yes");
+    state->text_present = false;
+    check(!clipboard::has_clipboard_text(text).get(), "and its no, rather than answering from the payload");
+  }
+
   // Lifecycle: the watch's subscription is pinned to the host it was attached to, released before a new
   // one is taken even when that host is different, and never delivers from a released listener.
   {
