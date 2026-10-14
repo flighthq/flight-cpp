@@ -56,6 +56,17 @@ callable. The statement-level lowering exists; nothing about these bodies differ
 attach/dispose path was checked for it and does **not** contain an async closure — every `async` there is
 a module-level function, which lowers — so this request has one package behind it, not two.
 
+## Independent blocker on the same sites
+
+Measured on a reproduction of `attachTrayEvent`'s shape, at the pin with every carried patch:
+- **With the async method** (and a `catch` that does not read its binding): refused with this request's message.
+- **Without any async closure,** `catch (error) { return { error, outcome: 'subscription-failed' }; }` is still refused
+  (`contextual optionalSingle construction requires expression type evidence`). The release body has the same
+  `{ error, outcome: 'release-failed' }`. That is
+  [caught-value-into-unknown-member.md](caught-value-into-unknown-member.md), a runtime `flight::Any` capability.
+
+So lowering async closures alone does not let `attachTrayEvent` emit; it also needs that capability.
+
 ## Carrying workaround
 
 None. `@flighthq/tray` is `partial` with no header compiling; this is one of the refusals inventoried
