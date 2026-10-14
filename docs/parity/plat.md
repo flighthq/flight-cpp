@@ -1729,6 +1729,18 @@ Upstream carries per-package records at `flight/agents/packages/share/`: `status
 
   Two mutations SURVIVED the first run and both were real holes rather than equivalences, so two cases were ADDED to
   the existing file rather than worked around:
+
+  A LATER unit did the full mechanical case accounting the parcel asked for, and it CORRECTED THE CASE COUNT ABOVE and
+  found two more holes. The upstream files hold FOURTEEN plain cases PLUS THREE `it.each` TABLES -- 3 rows of
+  `hasShareContentFields`, then 2 accept rows and 4 reject rows of `isShareFileValid`, so 23 assertions in all. Those
+  two describes are PARAMETERIZED-ONLY and were absent from the earlier accounting, which counted `it(` and `test(`
+  alone. Treated as a hypothesis rather than as proof, the earlier "14 cases" line is an undercount of the suite.
+
+  Two of the reject-table rows were never tried here and both were confirmed holes by mutation: a file with an empty
+  `mimeType`, and one with an empty `name`. Dropping either requirement from `isShareFileValid` went UNNOTICED against
+  this file. The accept table's second row is an EMPTY payload (`data:,`), also untried, and it is the boundary a
+  future "the payload must not be empty" change would break. All three rows are now cases, and each is killed by the
+  mutation that would violate it.
   * `shareContentFieldPresent`'s OPTIONAL overload was only ever reached with an ABSENT value or a present NON-EMPTY
     one, so dropping its emptiness test went unnoticed. A present-but-empty optional field is exactly what the
     source's `field !== undefined && field !== ''` excludes.

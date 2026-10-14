@@ -280,5 +280,30 @@ int main() {
     return 1;
   }
 
+  // --- The PARAMETERIZED rows the mechanical accounting found missing ------------------------------
+  //
+  // The upstream suite's isShareFileValid cases are `it.each` TABLES, and two of those tables' rows were
+  // never tried here: an empty `mimeType` and an empty `name` are both among the REJECTS upstream, and a
+  // confirmed mutation battery shows dropping either requirement goes unnoticed against this file. The
+  // accept table's second row is an EMPTY payload (`data:,`), which upstream accepts because only the
+  // scheme and a comma are required -- also untried, and the boundary a future "must not be empty" change
+  // would break.
+  {
+    const auto empty_mime = flight::make_ref<ShareFile>(
+        ShareFile{.name = String("x.txt"), .mime_type = String(""), .data_url = String("data:text/plain,x")});
+    const auto empty_name = flight::make_ref<ShareFile>(
+        ShareFile{.name = String(""), .mime_type = String("text/plain"), .data_url = String("data:text/plain,x")});
+    const auto empty_payload = flight::make_ref<ShareFile>(
+        ShareFile{.name = String("x.txt"), .mime_type = String("text/plain"), .data_url = String("data:,")});
+
+    if (!check(!flight::share::is_share_file_valid(empty_mime),
+               "a file with an empty mime type is invalid") ||
+        !check(!flight::share::is_share_file_valid(empty_name), "and so is one with an empty name") ||
+        !check(flight::share::is_share_file_valid(empty_payload),
+               "while an EMPTY payload is valid, since only the scheme and a comma are required")) {
+      return 1;
+    }
+  }
+
   return 0;
 }
