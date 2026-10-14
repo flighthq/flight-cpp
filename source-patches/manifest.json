@@ -451,7 +451,7 @@
       "id": "scene2d-dom-runtime-accessor",
       "dependency": "flight",
       "patch": "scene2d-dom-runtime-accessor.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/scene2d-dom/src/domRenderState.ts",
       "package": "@flighthq/scene2d-dom",
       "answers": "diagnostic",
@@ -462,11 +462,8 @@
       "unblocks": "Removes the shared symbol-subscript and optional-base cast root from dom_render_state.hpp and its DOM render consumers.",
       "expires": "when symbol-keyed reads and runtime assertions retain the derived runtime owner, or Flight adopts this owner-side declaration and accessor.",
       "appliedOn": "2026-10-06",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "2D",
-        "reason": "context drift: the patched code still exists (2/2 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "rebasedOn": "2026-10-14"
     },
     {
       "id": "scene-document-yaml-nominal-line-owners",

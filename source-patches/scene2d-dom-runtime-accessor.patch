@@ -1,15 +1,15 @@
 diff --git a/packages/scene2d-dom/src/domRenderState.ts b/packages/scene2d-dom/src/domRenderState.ts
-index da76613..2bde6bf 100644
 --- a/packages/scene2d-dom/src/domRenderState.ts
 +++ b/packages/scene2d-dom/src/domRenderState.ts
-@@ -2,5 +2,5 @@ import { createMatrix } from '@flighthq/geometry/contract';
+@@ -1,6 +1,6 @@
  import { createRenderState as _createRenderState, createRenderStateRuntime } from '@flighthq/render/contract';
  import type { DomRenderOptions, DomRenderState, DomRenderStateRuntime } from '@flighthq/types/contract';
 -import { EntityRuntimeKey } from '@flighthq/types/contract';
 +import { EntityRuntimeKey, readDomRenderStateRuntimeOwner } from '@flighthq/types/contract';
  
  export function createDomRenderState(element: HTMLElement, options: Partial<DomRenderOptions> = {}): DomRenderState {
-@@ -57,5 +58,5 @@ export function createDomRenderStateRuntime(): DomRenderStateRuntime {
+   const state = _createRenderState({
+@@ -60,5 +60,5 @@ export function createDomRenderStateRuntime(options: Partial<DomRenderOptions> =
  // Resolves the package-private DOM runtime attached to a DomRenderState. Mutable by design: the render
  // path writes its fields every frame.
  export function getDomRenderStateRuntime(state: DomRenderState): DomRenderStateRuntime {
@@ -17,24 +17,17 @@ index da76613..2bde6bf 100644
 +  return readDomRenderStateRuntimeOwner(state);
  }
 diff --git a/packages/types/src/DomRenderState.ts b/packages/types/src/DomRenderState.ts
-index 195d932..975e93e 100644
 --- a/packages/types/src/DomRenderState.ts
 +++ b/packages/types/src/DomRenderState.ts
-@@ -1,5 +1,6 @@
- import type { Bitmap } from './Bitmap';
- import type { BlendMode } from './BlendMode';
-+import { EntityRuntimeKey } from './Entity';
- import type { DomScene2DRectangle } from './DomScene2DRectangle';
- import type { DomTextureResolver } from './DomTextureResolver';
- import type { KeyedTable, SlotTable } from './RegistryTable';
-@@ -9,5 +10,6 @@ import type { ShapeRasterizer } from './ShapeRasterizer';
+@@ -9,6 +9,7 @@ import type { PathWinding } from './ShapeCommand.ts';
+ import type { ShapeRasterizer } from './ShapeRasterizer.ts';
  
  export interface DomRenderState extends RenderState {
 +  [EntityRuntimeKey]: DomRenderStateRuntime | undefined;
    applyBlendMode: ((element: HTMLElement, blendMode: BlendMode | null) => void) | null;
    // Optional CSS-filter resolver. Installed by enableDomCssFilterSupport; null (and tree-shaken)
    // until then, keeping the binding lookup and its module out of filter-free bundles.
-@@ -57,5 +59,9 @@ export interface DomRenderStateRuntime extends RenderStateRuntime {
+@@ -51,6 +52,10 @@ export interface DomRenderStateRuntime extends RenderStateRuntime {
    domOrderList: RenderProxy2D[];
  }
  
@@ -44,3 +37,9 @@ index 195d932..975e93e 100644
 +
  // DOM contour clip via CSS clip-path. Unlike Gl/Wgpu stencil, the DOM realizes a path clip as a
  // `clip-path` on the masked element(s). Crisp (vector), honors winding via `clip-rule`. Replaces the
+ // former domMask bounding-rectangle approximation for path clips.
+@@ -72,3 +77,4 @@ export type DomClipEntry = DomClipContourEntry | DomScene2DRectangle;
+ export interface DomClipHooks {
+   apply(state: DomRenderState, data: RenderProxy2D): void;
+ }
++import { EntityRuntimeKey } from './Entity';
