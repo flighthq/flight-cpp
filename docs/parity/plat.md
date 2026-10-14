@@ -128,7 +128,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/preferences` | 4 | 2 | 45 | dedicated | partial | 3 / 1 |
 | `@flighthq/updater` | 3 | 1 | 6 | dedicated | assisted | 2 / 1 |
 | `@flighthq/useragent` | 4 | 2 | 104 | dedicated | none | 3 / 1 |
-| `@flighthq/connectivity` | 3 | 1 | 17 | dedicated | none | 2 / 1 |
+| `@flighthq/connectivity` | 3 | 1 | 17 | dedicated | assisted | 2 / 1 |
 
 `upstream modules` counts the `.ts` files under `packages/<name>/src`; the generated manifest
 counts its own `sourceModules`, and the two differ where declaration files or generated outputs
@@ -2114,7 +2114,34 @@ Upstream carries per-package records at `flight/agents/packages/connectivity/`: 
 
 ### Existing CTest coverage
 
-- `flight_cpp.generated_connectivity` — `tests/generated_connectivity_test.cpp` (dedicated)
+- `flight_cpp.generated_connectivity` — `tests/generated_connectivity_test.cpp` (dedicated), PRE-EXISTING. The
+  coverage column already counted it; the TIER column read `none` until this unit changed it to `assisted`. The test
+  was written for this repository before this unit and is not one I added; it runs green at this pin. The package
+  ships a hand-written override whose own header says it is NOT complete: the emitter refuses `attachConnectivity`
+  under `cpp-member-projection-without-present-storage [compiler-restriction]`, and that one function is supplied
+  over the generated tree. There are no stubs.
+
+  This unit added the MUTATION BATTERY the file had none of. Thirteen mutations against the override, all thirteen
+  detected (each confirmed to actually DIFFER from the original before being judged). The killed set covers:
+  `attachConnectivity` not detaching first, the `onChange` publication removed, the online/offline signals swapped,
+  the connection-type and metered captures not updated, the metered change not emitted, a rejected subscription
+  reported as success, the subscription not recorded, `detachConnectivity` not forgetting, `disposeConnectivity`
+  leaving one signal live, and `hasConnectivityStatusChanged` dropping the `metered` term and again made a
+  conjunction.
+
+  Two mutations SURVIVED the first run and were the SAME hole, closed by ADDING one case. The test delivers three
+  host events that each CHANGE the online value, and the fixture's `online` is a `std::optional<bool>` that starts
+  as `nullopt`, so BOTH the true event and the false event differ from the attach-time capture. A capture that is
+  never updated therefore still produces exactly one online and one offline, and the edge semantics LOOK pinned
+  while they are not. The added case delivers a REPEAT of the same online value and asserts the edge signals do not
+  re-fire -- which is what separates an edge from a level. Both mutants are killed by it.
+
+  The measurement is recorded because the first reading was misleading: a standalone probe with a plain `bool
+  online = false` showed the mutants changing the counters (1/1 versus 1/0), which is what a mutation SHOULD do --
+  but the real fixture starts at `nullopt` and hid them. Worth noting as a pattern: when a mutation survives, check
+  whether the fixture's INPUT SEQUENCE can distinguish it at all, not only whether the assertion looks right.
+
+  No compiler request was filed by this unit; the refusal is named in the override's own header and manifest entry.
 
 ### Local generation status
 

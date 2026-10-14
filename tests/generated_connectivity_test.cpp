@@ -150,6 +150,23 @@ int main() {
     return 1;
   }
 
+  // A REPEAT of the same online value must not re-fire the edge signals. The mutation battery found this
+  // unasserted: every event above CHANGES the value, and because the fixture's `online` starts as nullopt,
+  // both a true event and a false event differ from the attach-time capture -- so a capture that is never
+  // updated still produces exactly one online and one offline, and the edge semantics look pinned when
+  // they are not. A repeated value is what separates an edge from a level.
+  {
+    const int online_before = online_events;
+    const int offline_before = offline_events;
+    online = false;   // the value the event above already delivered
+    host_listener();
+    host_listener();
+    if (!check(online_events == online_before && offline_events == offline_before,
+               "a repeated online value re-fired the online/offline edge signals")) {
+      return 1;
+    }
+  }
+
   static_cast<void>(flight::connectivity::attach_connectivity(
       status_provider, change_provider, connectivity));
   flight::connectivity::detach_connectivity(connectivity);
