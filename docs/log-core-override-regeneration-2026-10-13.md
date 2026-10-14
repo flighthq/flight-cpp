@@ -65,3 +65,41 @@ This is not a supply-a-few-functions job. Re-deriving the override means writing
 emitter defect classes, each of which must preserve the source's merge order, absence semantics and entry
 identity -- and each repair so far has unmasked another. It is bounded and mechanical, but it is larger than
 one pass, and the count moving 9 -> 12 while five were repaired is the measurement that says so.
+
+## Second pass: bounded progress, and the compiler's error cap
+
+Approved by foreman as a deliberate multi-pass unit. Working from the regenerated current-pin state, nine
+functions were repaired by hand; the live override is unchanged and the package is not regressed (probe: 0
+errors with the committed overrides, `pkg:compile` 3/3, both log tests PASS). The repaired header is parked at
+`docs/log-override-wip.hpp`, deliberately OUTSIDE `overrides/include/` so it cannot shadow anything, and it
+does NOT compile yet.
+
+### A measurement correction that matters for planning
+
+An earlier note in this file said "20 errors" and that the count did not fall. Part of that was an artifact:
+clang stops at 20 errors by default, so the number was a CAP and the 9 -> 12 function movement was measured
+through it. With `-ferror-limit=0` the true count is **21**, and it now reads **17** after the repairs below.
+Any future measurement here must pass `-ferror-limit=0`; the default view is misleading in exactly the
+direction that matters.
+
+### Repairs made (all faithful to log.ts)
+
+| function | defect | repair |
+| --- | --- | --- |
+| `mergeContextFields`, `mergeSpanFields` | the spread merge was DROPPED entirely, and the string arm was a designated initializer on a non-aggregate variant | the merge is restored with the source's precedence: `{ msg: data, ...fields }` assigns fields AFTER msg so a field named `msg` wins; `{ ...fields, ...data }` assigns data AFTER fields so DATA wins. Absence is preserved: no fields means the input is returned unchanged. |
+| `operationFailureMessage` | `error_if() != nullptr` -- `flight::Ref` converts to bool, so the comparison degraded to `bool != nullptr` | test the `Ref<Error>` directly; `String(value)` becomes `Any::as_string()` |
+| `serializeLogError` | the same bool guard, plus `to_string(Any)` (no such overload) and an `Any& = Record` assignment | guard on the Ref; `Any::external(...)` where a Record is stored |
+| `exitLogSpan` | `span_stack.index_of(span)` -- the array holds `Ref<LogSpan>`, the parameter is its row view | `structural_ref_cast<Ref<LogSpan>>` at the call |
+| `createJsonLogFormatter` | an initializer list as one arm of a ternary | the two arms are built into a named Record first |
+| `initializeLogEntity` | declared to RETURN `StructuralRef<RowMerge<...>>`, which no call site can accept | returns `Type` -- the same object it was given, which is what the source's `value as Type & Entity` means |
+| `createBufferedLogSink`, `createFileLogSink` | `handle` used by closures declared BEFORE it. JS captures the BINDING; C++ needs the declaration first | `handle` hoisted and the closures capture it by reference (`[=, &handle]`), leaving every other capture by copy |
+| `createChildLogContext` | `auto merged = {}` -- an empty braced initializer cannot deduce | typed as `Record<String, Any>` |
+
+### What remains (17 errors, 9 functions)
+
+`redactPath` (`in` operator, and `NamedProperties` where a Record is wanted), `applySerializers` (`in`), the two
+`Json::stringify` call sites (a designated initializer where the template must deduce a Value), one `log_debug`
+call shape, `optional<Ref<LogSignals>>` construction, the `defaultJsonFormatter` global's lambda, and
+`_writeConsoleCaptureEntry` -- which IS called, from `createConsoleLogSink`, and is the one remaining emitter
+omission. That last one is the console object-argument path the unit keeps refused pending a user decision, so
+it is supplied or stubbed only with that decision.
