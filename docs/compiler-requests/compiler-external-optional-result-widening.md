@@ -48,3 +48,12 @@ extension-presence probe.
 [`compiler-external-optional-result-widening.patch`](../../source-patches/compiler-external-optional-result-widening.patch)
 defers exact manifest carriers to represented-union conversion and selects null/undefined alternatives
 directly. It expires when upstream handles optional external results as source unions.
+
+## Not covered: an inferred mutable local
+
+The applied patch handles an immutable result stored into the dual-sentinel cell. At `a627849`,
+`glMeshProgram.ts` resolves its lazy caches through `let loc = program.locX; if (loc === undefined) { loc =
+gl.getUniformLocation(…) }`, a local inferred from the three-state cell that then receives the two-state
+result. It refuses with `external binding storage std::optional<flight::host_sdl::WebGlUniformLocation> requires
+one unresolved optional value domain`. See
+[the lazy uniform-location request](scene3d-gl-lazy-uniform-location-boundaries.md).

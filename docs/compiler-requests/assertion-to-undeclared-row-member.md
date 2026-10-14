@@ -84,3 +84,8 @@ defect:
   `serialized_version.value().has_value()`, a presence test on the payload.
 Neither compiles. The `as number | undefined` form and an `unknown` local narrowed by `typeof` both emit correct
 code.
+
+Also refused at `a627849`: the seven built-in GL PBR extension registrations in `@flighthq/scene3d-gl`
+(`anisotropy`, `clearcoat`, `iridescence`, `sheen`, `specular`, `transmissionVolume`, `wrappedDiffuse`). Each
+asserts `Readonly<PbrExtension>` to its concrete interface. The pending `pbr-extension-concrete-value-arms`
+patch retains the owners instead; see [its request](pbr-extension-concrete-value-arms.md).

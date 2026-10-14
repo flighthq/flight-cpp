@@ -143,6 +143,27 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
   `glShadowMap.ts` must narrow heterogeneous nodes to meshes and meshes to instanced meshes without assertions
   or a redundant nullable owner carrier. One current-pin rewrite supersedes the two pending shadow patches,
   preserves rigid, skinned and instanced drawing, and emits the complete header with zero focused refusals.
+- [The Scene3D GL upload cache must state its erasure at the storage boundary](scene3d-gl-erased-upload-cache.md) —
+  the source half of the applied `compiler-erased-ref-weak-map-view` patch. At `a627849`, `glScene3DRuntime.ts`
+  still asserts the typed map through a mutable nullable local, so the `checked_weak_map_view` refusal persists.
+  The re-derived rewrite clears it (measured), with the module then stopping on a `??=` result. The pending GL
+  patch also regenerates `@flighthq/types`.
+- [PBR extension storage must retain each built-in extension owner](pbr-extension-concrete-value-arms.md) —
+  the seven built-in GL extension registrations assert `PbrExtension` back to their concrete interface. The
+  open `PbrExtensionValue` union clears all seven refusals at the pin (measured: 39 → 46 emitted modules with
+  the upload-cache rewrite). Re-landing it also requires refreshing one context line of the active
+  `scene3d-gl-erased-program-cache` patch.
+- [Lazy uniform-location caches must keep their three states through a mutable local](scene3d-gl-lazy-uniform-location-boundaries.md) —
+  `glMeshProgram.ts`'s seven `let loc = program.locX; if (loc === undefined)` caches refuse with `external
+  binding storage … requires one unresolved optional value domain`, behind `material-concrete-value-path`.
+  Field-specific resolvers clear each measured site; the pending GL patch must be re-derived site by site.
+- [The single default material is already upstream](scene3d-gl-single-default-material.md) —
+  `renderGlScene3D.ts` now has one full-trailer `Readonly<Material3D>` placeholder, so the pending
+  `scene3d-gl-single-default-material` patch's same-carrier refusal cannot arise. Recommended for the
+  source-patch lane's obsolete list.
+- [The result of `??=` is present](nullish-assignment-result-presence.md) — a local bound from
+  `slot ??= value` keeps the slot's optional carrier, so the first member read refuses for lack of a presence
+  proof. Carried per site in scene2d-canvas; uncarried in `glScene3DRuntime.ts` `addGlScene3DResourceCleanup`.
 - [Quadbatch needs one retained owner across specialized construction boundaries](quadbatch-owner-and-contextual-construction.md) —
   flattened Node2D/runtime/signal owners and contextual factories omit ten declarations; the native
   adapter preserves batch, runtime, buffer-view, atlas, material and signal identities explicitly.

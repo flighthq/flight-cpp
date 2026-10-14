@@ -35,3 +35,10 @@ the shared runtime boundary and recovers `MeshGeometry`/`GlMeshUpload` at typed 
 [`compiler-erased-ref-weak-map-view.patch`](../../source-patches/compiler-erased-ref-weak-map-view.patch)
 removes the terminal refusal after the existing key/value proof. It expires when the upstream emitter
 uses `checked_weak_map_view` for proven reference domains.
+
+## The source half at `a627849`
+
+At the current pin, the scene3d-gl refusal persists because the source still reaches the map through a mutable
+nullable local asserted out of the erased context slot, not through an immutable local view. The pending
+source half is specified, re-derived and measured in
+[the Scene3D GL upload cache request](scene3d-gl-erased-upload-cache.md).
