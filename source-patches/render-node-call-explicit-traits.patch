@@ -1,0 +1,49 @@
+diff --git a/packages/render/src/renderTarget.ts b/packages/render/src/renderTarget.ts
+--- a/packages/render/src/renderTarget.ts
++++ b/packages/render/src/renderTarget.ts
+@@ -3,6 +3,7 @@ import { getNodeLocalMatrix } from '@flighthq/node/contract';
+ import type {
+   MatrixLike,
+   Node2D,
++  Node2DTraits,
+   RectangleLike,
+   EffectPadding,
+   RenderTargetAxes,
+@@ -55,7 +56,7 @@ export function computeScene2DRenderTargetTransform(
+   contentX: number = 0,
+   contentY: number = 0,
+ ): void {
+-  const localTransform = getNodeLocalMatrix(source);
++  const localTransform = getNodeLocalMatrix<Node2DTraits>(source);
+   inverseMatrix(_tempInvLocal, localTransform);
+   _tempTranslation.a = 1;
+   _tempTranslation.b = 0;
+diff --git a/packages/render/src/renderTransform2d.ts b/packages/render/src/renderTransform2d.ts
+--- a/packages/render/src/renderTransform2d.ts
++++ b/packages/render/src/renderTransform2d.ts
+@@ -1,6 +1,6 @@
+ import { copyMatrix, multiplyMatrix } from '@flighthq/geometry/contract';
+ import { getNodeLocalMatrix, getNodeLocalTransformRevision } from '@flighthq/node/contract';
+-import type { HasTransform2D, Node, RenderProxy2D, RenderState } from '@flighthq/types/contract';
++import type { HasTransform2D, Node, Node2DTraits, RenderProxy2D, RenderState } from '@flighthq/types/contract';
+ 
+ import { getRenderStateRuntime } from './renderState.ts';
+ 
+@@ -9,7 +9,7 @@ export function updateRenderProxy2DTransform(
+   data: RenderProxy2D,
+   parentData?: RenderProxy2D,
+ ): boolean {
+-  const localTransformId = getNodeLocalTransformRevision(data.source as Node);
++  const localTransformId = getNodeLocalTransformRevision<Node2DTraits>(data.source as Node);
+   const parentDirty =
+     parentData !== undefined && parentData.transformFrameId === getRenderStateRuntime(state).currentFrameId;
+   // The refresh policy deliberately re-reads every live transform each walk. That includes the
+@@ -27,7 +27,7 @@ export function updateRenderProxy2DTransform(
+ }
+ 
+ function recalculateRenderTransform2D(state: RenderState, data: RenderProxy2D, parentData?: RenderProxy2D): void {
+-  const transform2D = getNodeLocalMatrix(data.source as Node & HasTransform2D);
++  const transform2D = getNodeLocalMatrix<Node2DTraits>(data.source as Node & HasTransform2D);
+   const parentTransform2D = parentData !== undefined ? parentData.transform2D : null;
+   if (parentTransform2D !== null) {
+     multiplyMatrix(data.transform2D, parentTransform2D, transform2D);

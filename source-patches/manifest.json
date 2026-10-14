@@ -4100,6 +4100,23 @@
       "unblocks": "Evidence for @flighthq/scene3d-gl glShadowMap.ts, whose node and instanced assertions are replaced by typed predicates.",
       "expires": "when flight-compiler preserves the checked owners and presence evidence from the original source without casts, or Flight adopts typed shadow predicates upstream.",
       "appliedOn": "2026-10-14"
+    },
+    {
+      "id": "render-node-call-explicit-traits",
+      "dependency": "flight",
+      "patch": "render-node-call-explicit-traits.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/render/src/renderTarget.ts and packages/render/src/renderTransform2d.ts",
+      "package": "@flighthq/render",
+      "answers": "diagnostic",
+      "refusal": "render_target.hpp:96 no matching function for call to get_node_local_matrix (could not match flight::RowMerge against flight::RowOf), and render_transform2d.hpp:55 and :67 use of undeclared identifier Traits",
+      "rewrite": "Names the trait TypeScript was already inferring at the live node-transform calls, following the carried particleemitter-node-matrix-direct-emitter precedent. THREE call sites, not the two the request names: getNodeLocalMatrix<Node2DTraits>(source) in renderTarget.ts; getNodeLocalTransformRevision<Node2DTraits>(data.source as Node) and getNodeLocalMatrix<Node2DTraits>(data.source as Node & HasTransform2D) in renderTransform2d.ts. The request describes the second renderTransform2d face as another getNodeLocalMatrix; the emitted header proves it is getNodeLocalTransformRevision, a different node call with the same defect. Node2DTraits is added to each type import (Node2D stays; it is still renderTarget.ts parameter type). No runtime change: a type argument erases in JavaScript.",
+      "equivalence": "The generic argument erases: the same call reads the same node row with the same arguments and returns the same Matrix, and nothing else in either function changes. The trait is the one TypeScript already inferred from Node2D and from the Node & HasTransform2D intersection respectively, so the instantiation is the same one the type checker had, now written where the emitter can see it.",
+      "verification": "Measured on a scratch @flighthq/render-scoped regeneration (node scripts/sdkGeneration.mjs --package=@flighthq/render --output=<scratch>, exit 0, 243 patches applied): BOTH named diagnostics reach zero. render_target.hpp goes from 1 to 0 occurrences of the get_node_local_matrix no-matching-function error, and render_transform2d.hpp from 2 to 0 occurrences of the undeclared-Traits error; the emitted calls now read get_node_local_matrix<flight::Ref<flight::types::Node2DTraits>>(source) and get_node_local_transform_revision<flight::Ref<flight::types::Node2DTraits>>(...). The control, node/bounds_rectangle.hpp, carries the same unrelated error set as the two patched headers when compiled against that scratch tree -- the scratch closure types tree misses GlScene3DPass -- which is what identifies those remaining errors as a scratch-scope artifact rather than this change. NO COMPILER FIXTURE IS CARRIED, measured rather than assumed: lowering either shape in the compiler fixture harness refuses with cpp-runtime-external-symbol-binding-incomplete, because the shape needs the real @flighthq/node transform contract, an external symbol with a binding plan, that a synthetic fixture cannot declare. The real emitted C++ checked above is the stronger evidence.",
+      "whyNotUpstreamFirst": "The emitter has no C++ name for a trait TypeScript inferred and does not write one for a non-template scope; naming it at the source is the smallest repair, and the repository already carries it for the particleemitter calls. The compiler-side request is filed as docs/compiler-requests/node-call-trait-absent-from-scope.md.",
+      "unblocks": "@flighthq/render renderTarget.ts and renderTransform2d.ts, and every header that reaches them.",
+      "expires": "when flight-compiler derives the concrete trait from the inference site and writes it, or refuses the site instead of emitting a call it cannot instantiate.",
+      "appliedOn": "2026-10-14"
     }
   ]
 }
