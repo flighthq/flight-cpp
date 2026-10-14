@@ -33,7 +33,7 @@ diff --git a/packages/scene2d-canvas/src/canvasBitmapTextureResolver.ts b/packag
 +} from '@flighthq/types/contract';
  import { BitmapTextureSourceKind } from '@flighthq/types/contract';
  
- import { registerCanvasTextureResolver } from './canvasTextureResolver';
+ import { registerCanvasTextureResolver } from './canvasTextureResolver.ts';
 @@ -18,7 +24,7 @@ function resolveCanvasBitmapTexture(
    hostImage: Readonly<HostImageCapability>,
    resolvers: CanvasTextureResolvers,
@@ -52,7 +52,7 @@ diff --git a/packages/scene2d-canvas/src/canvasImageTextureResolver.ts b/package
 +import type { CanvasTextureResolvers, HostImageSource, ImageResource, Texture } from '@flighthq/types/contract';
  import { ImageTextureSourceKind } from '@flighthq/types/contract';
  
- import { registerCanvasTextureResolver } from './canvasTextureResolver';
+ import { registerCanvasTextureResolver } from './canvasTextureResolver.ts';
 @@ -11,6 +11,6 @@ export function registerCanvasImageTextureResolver(resolvers: CanvasTextureResol
  function resolveCanvasImageTexture(
    _resolvers: CanvasTextureResolvers,
@@ -84,14 +84,15 @@ diff --git a/packages/scene2d-canvas/src/canvasTextureView.ts b/packages/scene2d
 diff --git a/packages/scene2d-canvas/src/canvasTextureWindowSource.ts b/packages/scene2d-canvas/src/canvasTextureWindowSource.ts
 --- a/packages/scene2d-canvas/src/canvasTextureWindowSource.ts
 +++ b/packages/scene2d-canvas/src/canvasTextureWindowSource.ts
-@@ -1,5 +1,5 @@
+@@ -1,6 +1,6 @@
+ import { getSurfaceHandle } from '@flighthq/surface/contract';
  import { getTextureHeight, getTextureViewSize, getTextureWidth } from '@flighthq/texture/contract';
 -import type { CanvasTextureResolvers, Texture } from '@flighthq/types/contract';
 +import type { CanvasTextureResolvers, HostImageSource, Texture } from '@flighthq/types/contract';
  
- import { acquireCanvasTextureResolverSurface, resolveCanvasTexture } from './canvasTextureResolver';
- import { drawCanvasTextureView } from './canvasTextureView';
-@@ -11,7 +11,7 @@ import { drawCanvasTextureView } from './canvasTextureView';
+ import { acquireCanvasTextureResolverSurface, resolveCanvasTexture } from './canvasTextureResolver.ts';
+ import { drawCanvasTextureView } from './canvasTextureView.ts';
+@@ -12,7 +12,7 @@ import { drawCanvasTextureView } from './canvasTextureView.ts';
  export function resolveCanvasTextureWindowSource(
    resolvers: CanvasTextureResolvers,
    texture: Readonly<Texture>,
@@ -103,13 +104,7 @@ diff --git a/packages/scene2d-canvas/src/canvasTextureWindowSource.ts b/packages
 diff --git a/packages/types/src/CanvasShapeDrawState.ts b/packages/types/src/CanvasShapeDrawState.ts
 --- a/packages/types/src/CanvasShapeDrawState.ts
 +++ b/packages/types/src/CanvasShapeDrawState.ts
-@@ -1,4 +1,5 @@
- import type { CanvasTextureResolvers } from './CanvasTextureResolver';
-+import type { HostImageSource } from './HostImageSource';
- import type { Matrix } from './Matrix';
- import type { LineScaleMode } from './ShapeCommand';
- 
-@@ -22,7 +23,7 @@ export interface CanvasShapeDrawState {
+@@ -22,8 +22,9 @@ export interface CanvasShapeDrawState {
    subpathStartX: number;
    subpathStartY: number;
    windingRule: CanvasFillRule;
@@ -118,3 +113,5 @@ diff --git a/packages/types/src/CanvasShapeDrawState.ts b/packages/types/src/Can
    bitmapW: number;
    bitmapH: number;
    flush: () => void;
+ }
++import type { HostImageSource } from './HostImageSource';
