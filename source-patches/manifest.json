@@ -4091,6 +4091,25 @@
       "appliedOn": "2026-10-09",
       "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
       "rebasedOn": "2026-10-14"
+    },
+    {
+      "id": "scene3d-gl-pbr-alpha-mode-boundary",
+      "dependency": "flight",
+      "patch": "scene3d-gl-pbr-alpha-mode-boundary.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/scene3d-gl/src/glPbrStandardBlock.ts and the ExtendedPbr, SpecularGlossinessPbr, and StandardPbr GL material renderers",
+      "package": "@flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "three concrete PBR owners cannot widen to a separate flattened Readonly<SurfaceMaterial> row only so the define-key builder can read alphaMode",
+      "rewrite": "Re-authored 2026-10-14 from docs/compiler-requests/scene3d-gl-pbr-alpha-mode-boundary.md, against the renamed renderer targets. glPbrStandardBlock keeps its whole-material entry point and gains a scalar entry point, buildGlPbrStandardDefineKeyForAlphaMode, with both routing through the single implementation that stays the one owner of alphaMaskEnabled, the opaque alpha-map gate, the five readiness flags and the UV-transform gate. The three concrete renderers -- StandardPbr, SpecularGlossinessPbr and ExtendedPbr -- pass the closed MaterialAlphaMode scalar with the same opaque fallback and their existing standard block and extension contributions.",
+      "equivalence": "Each renderer reads the same alphaMode property at the same bind point, applies the same opaque fallback for null, and produces the identical define-key flags from the same standard block and texture readiness checks. The original helper keeps its signature and preserves its baseColorMap-before-alphaMode property-read order. No shader source, cache key, material identity, texture binding, uniform, extension contribution, draw call, or public contract changes.",
+      "verification": "MANIFEST POSITION: placed after material-concrete-value-path, as its request requires, because the concrete renderers it edits only carry their exact owners once the material value path is applied. Applied in that position the whole chain applies. Equivalence as the request states it: each renderer reads the same alphaMode at the same synchronous bind boundary with the same opaque fallback, the shared implementation receives the identical standard block, base-colour map and alpha mode and calls isGlTextureReady on the same slots in the same order, so the program-cache key, shader defines, source, bindings, UV transform and draw calls are unchanged and the scalar carries no reference identity.",
+      "whyNotUpstreamFirst": "The helper only needs the closed MaterialAlphaMode scalar, while accepting the whole open SurfaceMaterial hierarchy forces native flattened owners through a fictitious base-row conversion. A scalar overload is a target-neutral internal API boundary and avoids casts or copied materials.",
+      "unblocks": "Removes the repeated PBR-to-SurfaceMaterial owner widening from the real metallic-roughness, specular-glossiness, and extension-composed material bind paths.",
+      "expires": "when Flight's native structural interface heritage preserves checked derived-to-base owner conversion, or Flight adopts the scalar alpha-mode helper upstream.",
+      "appliedOn": "2026-10-08",
+      "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "rebasedOn": "2026-10-14"
     }
   ]
 }
