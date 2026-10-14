@@ -102,7 +102,7 @@ upstream package map, which groups packages differently and would put, for insta
 | `@flighthq/accessibility` | 3 | 1 | 6 | dedicated | none | 3 / 0 |
 | `@flighthq/audio` | 8 | 6 | 109 | none | none | 5 / 3 |
 | `@flighthq/media` | 7 | 5 | 127 | none | none | 5 / 2 |
-| `@flighthq/mediasession` | 3 | 1 | 19 | dedicated | none | 3 / 0 |
+| `@flighthq/mediasession` | 3 | 1 | 19 | dedicated | ready | 3 / 0 |
 | `@flighthq/video` | 5 | 3 | 79 | dedicated | none | 4 / 1 |
 | `@flighthq/webcam` | 2 | 1 | 1 | none | none | 2 / 0 |
 | `@flighthq/midi` | 7 | 5 | 40 | dedicated | none | 5 / 2 |
@@ -912,9 +912,9 @@ Upstream carries per-package records at `flight/agents/packages/mediasession/`: 
 ### Existing CTest coverage
 
 - `flight_cpp.generated_mediasession` — `tests/generated_mediasession_test.cpp` (dedicated), PRE-EXISTING (the roll-up
-  row above read "none" until this unit corrected it). It already ports all 19 upstream cases across the ten emitted
-  functions and calls every one of them: attach (forwards the provider's action and details, a null subscription is a
-  truthful refusal, reattaching releases the prior origin), detach (released exactly once; a throwing unsubscribe
+  row above read "none" until this unit corrected it). It covers most of the 19 upstream cases across the ten emitted
+  functions: attach (forwards the provider's action and details, a null subscription is a truthful refusal), detach
+  (released exactly once; a throwing unsubscribe
   keeps its entry so a later detach retries the SAME origin, and the entry is released only after a successful one),
   dispose (clears the signal even when the detach throws, propagating the original), destroy (distinct providers once
   each in insertion order, an aliased subject through both slots destroyed once, the sibling still attempted after
@@ -938,6 +938,27 @@ Upstream carries per-package records at `flight/agents/packages/mediasession/`: 
   asserts the signal is live before dispose, and only then asserts it is cleared, so the clearing is the thing under
   test; the mutation that removes it now fails the check. This is the same weakness found in `@flighthq/shortcut`'s
   dispose block and fixed the same way.
+
+  A LATER unit did the full mechanical upstream case accounting and a further eighteen mutations, and it CORRECTED AN
+  OVERCLAIM IN THE PARAGRAPH ABOVE. That paragraph said the file "ports all 19 upstream cases ... reattaching
+  releases the prior origin". The battery disproved it: removing `detach` from the front of `attach` went UNNOTICED,
+  so re-attaching while already attached was never exercised -- the file attached, detached, and attached again,
+  which never leaves a live prior origin to release. That clause is struck above.
+
+  The accounting found three more uncovered semantics, all parameter/boundary cases the upstream suite states and the
+  file does not exercise:
+  * `none` is a member of the playback-state union, and the file only ever passed `playing` and an invalid `buffering`,
+    so dropping `none` from the membership test went unnoticed;
+  * a position EQUAL to the duration is valid, because the algorithm rejects only a position PAST it, and the file
+    never used that boundary;
+  * a ZERO position is valid, because only a negative one is rejected, and the file never used that boundary either.
+
+  All four are closed by ADDING cases, never by weakening a check: the re-attach case attaches TWICE while attached
+  and asserts the prior origin's unsubscribe ran; the `none` case is written as a caught assertion so a version that
+  classifies it as invalid REPORTS rather than aborts; the two boundary cases assert the accepted answers. The
+  eighteen mutations are all detected, each confirmed to actually differ from the original -- sixteen by failing
+  checks and two by the mutant ABORTING (the two that strip the constructor's action or its signal, which break every
+  later use).
 
 ### Local generation status
 

@@ -132,6 +132,27 @@ int main() {
           "the same signal attaches once the provider answers");
     flight::mediasession::detach_media_session_action(signal);
     check(unsubscribe_calls == 1, "and its own subscription is the one released");
+
+    // Re-attaching must RELEASE the prior origin before subscribing the replacement. Without this the
+    // mutation battery showed that an attach which only ADDS a subscription goes unnoticed: the first
+    // origin is left live and its unsubscribe is never run.
+    const int before_reattach = unsubscribe_calls;
+    if (!check(flight::mediasession::attach_media_session_action(capability, signal),
+               "attaching again to a fresh origin succeeds")) {
+      return 1;
+    }
+    if (!check(flight::mediasession::attach_media_session_action(capability, signal),
+               "and RE-attaching while attached succeeds")) {
+      return 1;
+    }
+    if (!check(unsubscribe_calls == before_reattach + 1,
+               "re-attaching released the prior origin before subscribing the replacement")) {
+      return 1;
+    }
+    flight::mediasession::detach_media_session_action(signal);
+    if (!check(unsubscribe_calls == before_reattach + 2, "and the final detach releases the replacement")) {
+      return 1;
+    }
   }
 
   // detach: releases exactly once, and a throwing unsubscribe keeps its entry for a retry
@@ -353,6 +374,26 @@ int main() {
     check(reason_of(flight::mediasession::set_media_session_playback_state(commands, String("playing"))) == "ok",
           "a valid playback state reaches the provider");
     check(calls == 1, "exactly once");
+
+    // "none" is one of the THREE members of the union, not a fourth thing that happens to be spelled
+    // differently: the mutation battery found this unasserted, so dropping `none` from the guard's
+    // membership test looked harmless.
+    // Reported as a check rather than left to throw: a version that classified `none` as invalid would
+    // abort here, which is detection but says nothing about WHY. This says it.
+    bool none_threw = false;
+    std::string none_message;
+    try {
+      static_cast<void>(flight::mediasession::set_media_session_playback_state(commands, String("none")));
+    } catch (const std::exception& error) {
+      none_threw = true;
+      none_message = error.what();
+    }
+    if (!check(!none_threw, ("`none` is a member of the union and is accepted" + none_message).c_str())) {
+      return 1;
+    }
+    if (!check(calls == 2, "and it reached the provider rather than being classified away")) {
+      return 1;
+    }
   }
 
   // setPositionState: classified locally, provider untouched for each invalid case
@@ -396,6 +437,21 @@ int main() {
               "invalid-duration",
           "classification happens before the provider call");
     check(calls == 1, "and the provider count is unchanged");
+
+    // The two boundaries the algorithm ACCEPTS. Only a position PAST the duration is rejected, and only a
+    // NEGATIVE position is; the mutation battery found both boundaries unasserted, so an off-by-one at
+    // either (`>` becoming `>=`, or `< 0` becoming `<= 0`) went unnoticed.
+    if (!check(classify(120.0, 120.0, 1.0) == "ok",
+               "a position EQUAL to the duration is valid, because only one PAST it is rejected")) {
+      return 1;
+    }
+    if (!check(classify(120.0, 0.0, 1.0) == "ok",
+               "and a zero position is valid, because only a negative one is rejected")) {
+      return 1;
+    }
+    if (!check(calls == 3, "so both reached the provider rather than being classified away")) {
+      return 1;
+    }
   }
 
   // metadata and clear commands forward straight through
