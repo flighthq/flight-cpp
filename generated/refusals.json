@@ -3272,6 +3272,126 @@
     },
     {
       "code": "dependency-refused",
+      "module": "packages/physics2d/src/contract.ts",
+      "package": "@flighthq/physics2d",
+      "reason": "dependency ./debugGeometry.ts was refused for @flighthq/physics2d/packages/physics2d/src/debugGeometry.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 228,
+      "module": "packages/physics2d/src/debugGeometry.ts",
+      "package": "@flighthq/physics2d",
+      "reason": "cpp emission failed for @flighthq/physics2d/packages/physics2d/src/debugGeometry.ts: a structural assertion from the readonly row Readonly<Physics2DJoint> to the writable row Physics2DMouseJoint claims mutation the source refused: a readonly row never becomes writable, because the boundary the value came through said its subject must not be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the readonly row where the value is only read, or declare the source -- its parameter, slot, or accessor result -- as the writable type where that object may really be mutated. Choosing between those two repairs is the question this assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME OWNER that the mutating paths must write needs a mutable-source accessor returning the full writable owner from the typed runtime slot, with the readonly accessor kept for reads, because the capability has to exist on the storage and accessor that establish those cells; a NODE that the read paths only traverse and never mutate needs the two authorities separated instead, with a readonly view on every read path and a separate mutable entry point for the paths that really mutate, because laundering a writable node out of a readonly boundary grants mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained row carries; neither adds cells to a row that does not declare them. Making only that boundary writable is insufficient here: the source owner does not declare dampingRatio, frequencyHz, maxForce, targetX and targetY, so it has no cells for the asserted row to mutate. Declare both the storage slot and the accessor result as the full writable Physics2DMouseJoint row where initialization establishes those cells, rather than widening Readonly<Physics2DJoint> at the use site.",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/physics2d/src/enablePhysics2DGuards.ts",
+      "package": "@flighthq/physics2d",
+      "reason": "dependency @flighthq/log/contract was refused for @flighthq/log/packages/log/src/log.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/physics2d/src/explainPhysics2DJoints.ts",
+      "package": "@flighthq/physics2d",
+      "reason": "dependency ./world.ts was refused for @flighthq/physics2d/packages/physics2d/src/world.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/physics2d/src/explainPhysics2DStep.ts",
+      "package": "@flighthq/physics2d",
+      "reason": "dependency ./stepValidation.ts was refused for @flighthq/physics2d/packages/physics2d/src/stepValidation.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/physics2d/src/index.ts",
+      "package": "@flighthq/physics2d",
+      "reason": "dependency ./debugGeometry.ts was refused for @flighthq/physics2d/packages/physics2d/src/debugGeometry.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/physics2d/src/islands.ts",
+      "package": "@flighthq/physics2d",
+      "reason": "dependency ./world.ts was refused for @flighthq/physics2d/packages/physics2d/src/world.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/physics2d/src/jointFactories.ts",
+      "package": "@flighthq/physics2d",
+      "reason": "dependency ./joints.ts was refused for @flighthq/physics2d/packages/physics2d/src/joints.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/physics2d/src/jointRegistry.ts",
+      "package": "@flighthq/physics2d",
+      "reason": "dependency ./islands.ts was refused for @flighthq/physics2d/packages/physics2d/src/islands.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 14,
+      "line": 141,
+      "module": "packages/physics2d/src/joints.ts",
+      "package": "@flighthq/physics2d",
+      "reason": "cpp emission failed for @flighthq/physics2d/packages/physics2d/src/joints.ts: a reference assertion from flight::Ref<flight::types::Physics2DJoint> to flight::Ref<flight::types::Physics2DGearJoint> has no heritage to cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/physics2d/src/registerBuiltInPhysics2DJointSolvers.ts",
+      "package": "@flighthq/physics2d",
+      "reason": "dependency ./jointRegistry.ts was refused for @flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/physics2d/src/solver.ts",
+      "package": "@flighthq/physics2d",
+      "reason": "dependency ./islands.ts was refused for @flighthq/physics2d/packages/physics2d/src/islands.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/physics2d/src/step.ts",
+      "package": "@flighthq/physics2d",
+      "reason": "dependency ./islands.ts was refused for @flighthq/physics2d/packages/physics2d/src/islands.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 185,
+      "module": "packages/physics2d/src/stepValidation.ts",
+      "package": "@flighthq/physics2d",
+      "reason": "cpp emission failed for @flighthq/physics2d/packages/physics2d/src/stepValidation.ts: object key iteration requires closed key evidence",
+      "stage": "emission"
+    },
+    {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 177,
+      "module": "packages/physics2d/src/world.ts",
+      "package": "@flighthq/physics2d",
+      "reason": "cpp emission failed for @flighthq/types/packages/types/src/Collision.ts: contextual C++ union conversion requires equivalent source union evidence: target multiVariant carriers [flight::Ref<x_y_half_w_half_h_rotation_kind_8ffcea5c657a2268>, flight::Ref<x0_y0_x1_y1_radius_kind_768ba062d07f3ff6>, flight::Ref<x_y_radius_kind_90fbb3b4c4569518>, flight::Ref<x_y_kind_35ad667397176b0f>, flight::Ref<points_kind_9b00ebdad27cdb4e>, flight::Ref<x0_y0_x1_y1_kind_d4f616534491406f>, flight::Ref<min_x_min_y_max_x_max_y_kind_329d6080b4f31db4>] from call source multiVariant carriers [flight::Ref<min_x_min_y_max_x_max_y_kind_entity_runtime_key_8652b094a37f5790>, flight::Ref<x0_y0_x1_y1_radius_kind_entity_runtime_key_e2f4613b62661d3f>, flight::Ref<x_y_radius_kind_entity_runtime_key_628baa569a764312>, flight::Ref<x_y_half_w_half_h_rotation_kind_entity_runtime_key_7f79022dfcbe3081>, flight::Ref<x_y_kind_entity_runtime_key_664771d89d313ec4>, flight::Ref<points_kind_entity_runtime_key_5f691728dbca8874>, flight::Ref<x0_y0_x1_y1_kind_entity_runtime_key_e57d6e698afb8dd5>]. Every semantic alternative pairs uniquely, but the source stores it in a distinct intersection owner rather than the destination arm. Those generated owners are sibling C++ types, not a base relation: an unchecked cast would retype the object, while copying or materializing it would change identity. Keep both APIs on the same declared arm owner, introduce one shared nominal arm owner, or add an identity-preserving runtime view.",
+      "stage": "emission"
+    },
+    {
+      "code": "dependency-refused",
+      "module": "packages/physics2d/src/worldQueries.ts",
+      "package": "@flighthq/physics2d",
+      "reason": "dependency ./world.ts was refused for @flighthq/physics2d/packages/physics2d/src/world.ts",
+      "stage": "dependency"
+    },
+    {
+      "code": "dependency-refused",
       "module": "packages/physics2d-abi/src/contract.ts",
       "package": "@flighthq/physics2d-abi",
       "reason": "dependency ./physics2DAbiCommand.ts was refused for @flighthq/physics2d-abi/packages/physics2d-abi/src/physics2DAbiCommand.ts",
@@ -9849,126 +9969,6 @@
       "package": "@flighthq/video",
       "reason": "cpp emission failed for @flighthq/video/packages/video/src/videoResourceFrom.ts: C++ runtime contract maps distinct union domains to one carrier without a discriminator or checked projection (HTMLImageElement | HTMLVideoElement | ImageBitmap | OffscreenCanvas | SVGImageElement | VideoFrame -> flight::host_sdl::ImageSource); give the domains distinguishable key, element, or member types so each reaches a carrier of its own -- a union of two declarations that differ only in name is one carrier whatever the emitter does -- or provide that runtime contract",
       "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/physics2d/src/contract.ts",
-      "package": "@flighthq/physics2d",
-      "reason": "dependency ./debugGeometry.ts was refused for @flighthq/physics2d/packages/physics2d/src/debugGeometry.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 228,
-      "module": "packages/physics2d/src/debugGeometry.ts",
-      "package": "@flighthq/physics2d",
-      "reason": "cpp emission failed for @flighthq/physics2d/packages/physics2d/src/debugGeometry.ts: a structural assertion from the readonly row Readonly<Physics2DJoint> to the writable row Physics2DMouseJoint claims mutation the source refused: a readonly row never becomes writable, because the boundary the value came through said its subject must not be mutated through it, and no cast, copy, or re-view can carry a capability the source withheld. Assert to the readonly row where the value is only read, or declare the source -- its parameter, slot, or accessor result -- as the writable type where that object may really be mutated. Choosing between those two repairs is the question this assertion was answering, so ask it of the value's ROLE rather than of its spelling: a RUNTIME OWNER that the mutating paths must write needs a mutable-source accessor returning the full writable owner from the typed runtime slot, with the readonly accessor kept for reads, because the capability has to exist on the storage and accessor that establish those cells; a NODE that the read paths only traverse and never mutate needs the two authorities separated instead, with a readonly view on every read path and a separate mutable entry point for the paths that really mutate, because laundering a writable node out of a readonly boundary grants mutation no caller asked for. Both repairs keep the exact Traits or generic specialization the retained row carries; neither adds cells to a row that does not declare them. Making only that boundary writable is insufficient here: the source owner does not declare dampingRatio, frequencyHz, maxForce, targetX and targetY, so it has no cells for the asserted row to mutate. Declare both the storage slot and the accessor result as the full writable Physics2DMouseJoint row where initialization establishes those cells, rather than widening Readonly<Physics2DJoint> at the use site.",
-      "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/physics2d/src/enablePhysics2DGuards.ts",
-      "package": "@flighthq/physics2d",
-      "reason": "dependency @flighthq/log/contract was refused for @flighthq/log/packages/log/src/log.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/physics2d/src/explainPhysics2DJoints.ts",
-      "package": "@flighthq/physics2d",
-      "reason": "dependency ./world.ts was refused for @flighthq/physics2d/packages/physics2d/src/world.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/physics2d/src/explainPhysics2DStep.ts",
-      "package": "@flighthq/physics2d",
-      "reason": "dependency ./stepValidation.ts was refused for @flighthq/physics2d/packages/physics2d/src/stepValidation.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/physics2d/src/index.ts",
-      "package": "@flighthq/physics2d",
-      "reason": "dependency ./debugGeometry.ts was refused for @flighthq/physics2d/packages/physics2d/src/debugGeometry.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/physics2d/src/islands.ts",
-      "package": "@flighthq/physics2d",
-      "reason": "dependency ./world.ts was refused for @flighthq/physics2d/packages/physics2d/src/world.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/physics2d/src/jointFactories.ts",
-      "package": "@flighthq/physics2d",
-      "reason": "dependency ./joints.ts was refused for @flighthq/physics2d/packages/physics2d/src/joints.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/physics2d/src/jointRegistry.ts",
-      "package": "@flighthq/physics2d",
-      "reason": "dependency ./islands.ts was refused for @flighthq/physics2d/packages/physics2d/src/islands.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 14,
-      "line": 141,
-      "module": "packages/physics2d/src/joints.ts",
-      "package": "@flighthq/physics2d",
-      "reason": "cpp emission failed for @flighthq/physics2d/packages/physics2d/src/joints.ts: a reference assertion from flight::Ref<flight::types::Physics2DJoint> to flight::Ref<flight::types::Physics2DGearJoint> has no heritage to cast along: the declarations share no emitted C++ class-heritage path (source interface and intersection relationships flatten into independent owners), and the source carrier does not retain a checked dynamic owner that can recover the target. Keep the exact declared owner at the API boundary, or add a runtime contract that validates and recovers the target owner; the compiler will not use a native pointer cast, materialize a replacement row, or invent side storage",
-      "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/physics2d/src/registerBuiltInPhysics2DJointSolvers.ts",
-      "package": "@flighthq/physics2d",
-      "reason": "dependency ./jointRegistry.ts was refused for @flighthq/physics2d/packages/physics2d/src/jointRegistry.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/physics2d/src/solver.ts",
-      "package": "@flighthq/physics2d",
-      "reason": "dependency ./islands.ts was refused for @flighthq/physics2d/packages/physics2d/src/islands.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/physics2d/src/step.ts",
-      "package": "@flighthq/physics2d",
-      "reason": "dependency ./islands.ts was refused for @flighthq/physics2d/packages/physics2d/src/islands.ts",
-      "stage": "dependency"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 185,
-      "module": "packages/physics2d/src/stepValidation.ts",
-      "package": "@flighthq/physics2d",
-      "reason": "cpp emission failed for @flighthq/physics2d/packages/physics2d/src/stepValidation.ts: object key iteration requires closed key evidence",
-      "stage": "emission"
-    },
-    {
-      "code": "unsupported-ir",
-      "column": 1,
-      "line": 177,
-      "module": "packages/physics2d/src/world.ts",
-      "package": "@flighthq/physics2d",
-      "reason": "cpp emission failed for @flighthq/types/packages/types/src/Collision.ts: contextual C++ union conversion requires equivalent source union evidence: target multiVariant carriers [flight::Ref<x_y_half_w_half_h_rotation_kind_8ffcea5c657a2268>, flight::Ref<x0_y0_x1_y1_radius_kind_768ba062d07f3ff6>, flight::Ref<x_y_radius_kind_90fbb3b4c4569518>, flight::Ref<x_y_kind_35ad667397176b0f>, flight::Ref<points_kind_9b00ebdad27cdb4e>, flight::Ref<x0_y0_x1_y1_kind_d4f616534491406f>, flight::Ref<min_x_min_y_max_x_max_y_kind_329d6080b4f31db4>] from call source multiVariant carriers [flight::Ref<min_x_min_y_max_x_max_y_kind_entity_runtime_key_8652b094a37f5790>, flight::Ref<x0_y0_x1_y1_radius_kind_entity_runtime_key_e2f4613b62661d3f>, flight::Ref<x_y_radius_kind_entity_runtime_key_628baa569a764312>, flight::Ref<x_y_half_w_half_h_rotation_kind_entity_runtime_key_7f79022dfcbe3081>, flight::Ref<x_y_kind_entity_runtime_key_664771d89d313ec4>, flight::Ref<points_kind_entity_runtime_key_5f691728dbca8874>, flight::Ref<x0_y0_x1_y1_kind_entity_runtime_key_e57d6e698afb8dd5>]. Every semantic alternative pairs uniquely, but the source stores it in a distinct intersection owner rather than the destination arm. Those generated owners are sibling C++ types, not a base relation: an unchecked cast would retype the object, while copying or materializing it would change identity. Keep both APIs on the same declared arm owner, introduce one shared nominal arm owner, or add an identity-preserving runtime view.",
-      "stage": "emission"
-    },
-    {
-      "code": "dependency-refused",
-      "module": "packages/physics2d/src/worldQueries.ts",
-      "package": "@flighthq/physics2d",
-      "reason": "dependency ./world.ts was refused for @flighthq/physics2d/packages/physics2d/src/world.ts",
-      "stage": "dependency"
     }
   ]
 }
