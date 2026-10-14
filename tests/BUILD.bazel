@@ -456,6 +456,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_effect_padding_test",
+    srcs = ["generated_effect_padding_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_input_test",
     srcs = ["generated_input_test.cpp"],
     size = "small",
@@ -1221,6 +1228,7 @@ test_suite(
         ":generated_interaction_test",
         ":generated_scene2d_display_object_test",
         ":generated_effect_interpolation_test",
+        ":generated_effect_padding_test",
         ":generated_input_test",
         ":generated_input_manager_test",
         ":generated_input_state_test",
