@@ -2014,28 +2014,6 @@
       }
     },
     {
-      "id": "scene3d-readonly-transform-query-boundaries",
-      "dependency": "flight",
-      "patch": "scene3d-readonly-transform-query-boundaries.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
-      "module": "packages/node/src/nodeTransform3d.ts and packages/scene3d-gl/src/glParticleEmitter3D.ts",
-      "package": "@flighthq/node and @flighthq/scene3d-gl",
-      "answers": "refusal",
-      "refusal": "the readonly ParticleEmitter3D draw owner is asserted through unknown to a writable Node3D solely to query its lazily maintained world matrix, and the inferred mutable shader-cache local loses the WeakMap's declared GlParticle3DShader owner when rebound after a miss",
-      "rewrite": "Declares the local/world matrix ensure and query chain as accepting readonly transform-node owners while retaining mutable access to the exact hidden runtime cache, passes the readonly particle emitter directly to getNodeWorldMatrix4, and separates the declared cached shader lookup from the declared compiled shader miss result.",
-      "equivalence": "The matrix query follows the same parent chain, reads the same transform fields and revision ids, allocates the same matrix caches when absent, writes the same hidden runtime slots, and returns the identical world Matrix4 object. Readonly applies only to the public node carrier; cache mutation remains explicit through its exact runtime owner. A cache hit returns the same shader immediately; a miss compiles exactly once, stores that identical shader under the same state key, and returns it. Particle coordinates, world-space handling, traversal, draw order, and GL calls are unchanged.",
-      "verification": "The complete patch stack must compose, focused glParticleEmitter3D regeneration must emit the module with zero omissions/refusals, and focused renderGlScene3D regeneration must retain the real particle draw dependency path.",
-      "whyNotUpstreamFirst": "World-matrix ensure/get operations are logical queries whose only writes are internal derived-state caches. Expressing their input as readonly is a target-neutral const-correctness repair, and naming the hit and miss values independently preserves the cache's already-declared owner without a target-specific conversion.",
-      "unblocks": "Allows the real Scene3D GL particle traversal and instanced billboard draw to retain its shader owner and resolve current hierarchical transforms without a readonly-to-writable structural assertion.",
-      "expires": "when Flight declares its transform cache queries readonly and retains declared cache owners upstream, or flight-compiler can distinguish hidden cache mutation from public node write authority and preserve the WeakMap value owner through a rebound local automatically.",
-      "appliedOn": "2026-10-09",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "GL",
-        "reason": "re-measured 2026-10-14: the hunks in nodeTransform3d.ts cannot be re-anchored at this patch's own manifest position -- its last hunk annotates getTransform3DRuntime(target: Transform3DRuntimeOwner<Traits>), a signature that does not exist until node-exact-capability-runtimes/node-exact-runtime-helper-boundaries have applied, which are later in the stack. Re-deriving at that later state produces a patch that does not apply at its own position. Left pending rather than stretched."
-      }
-    },
-    {
       "id": "node3d-named-runtime-carriers",
       "dependency": "flight",
       "patch": "node3d-named-runtime-carriers.patch",
@@ -3005,6 +2983,25 @@
       "unblocks": "Removes the last three direct Node package refusals, clearing all 21 Node modules beneath hierarchy, traversal, bounds, scene preparation, Canvas Scene2D, and WebGL Scene3D consumers.",
       "expires": "when flight-compiler can project computed members from a structural row through its concrete nominal conjunct automatically, or Flight adopts explicit exact-runtime accessors upstream.",
       "appliedOn": "2026-10-08"
+    },
+    {
+      "id": "scene3d-readonly-transform-query-boundaries",
+      "dependency": "flight",
+      "patch": "scene3d-readonly-transform-query-boundaries.patch",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
+      "module": "packages/node/src/nodeTransform3d.ts and packages/scene3d-gl/src/glParticleEmitter3D.ts",
+      "package": "@flighthq/node and @flighthq/scene3d-gl",
+      "answers": "refusal",
+      "refusal": "the readonly ParticleEmitter3D draw owner is asserted through unknown to a writable Node3D solely to query its lazily maintained world matrix, and the inferred mutable shader-cache local loses the WeakMap's declared GlParticle3DShader owner when rebound after a miss",
+      "rewrite": "Declares the local/world matrix ensure and query chain as accepting readonly transform-node owners while retaining mutable access to the exact hidden runtime cache, passes the readonly particle emitter directly to getNodeWorldMatrix4, and separates the declared cached shader lookup from the declared compiled shader miss result.",
+      "equivalence": "The matrix query follows the same parent chain, reads the same transform fields and revision ids, allocates the same matrix caches when absent, writes the same hidden runtime slots, and returns the identical world Matrix4 object. Readonly applies only to the public node carrier; cache mutation remains explicit through its exact runtime owner. A cache hit returns the same shader immediately; a miss compiles exactly once, stores that identical shader under the same state key, and returns it. Particle coordinates, world-space handling, traversal, draw order, and GL calls are unchanged.",
+      "verification": "Moved after node-exact-capability-runtimes and node-exact-runtime-helper-boundaries on 2026-10-14, content unchanged: its last hunk annotates getTransform3DRuntime(target: Transform3DRuntimeOwner<Traits>), a signature that does not exist until those two have applied, so no faithful rebase existed at the old position (index 118) and the rebase was withheld. Re-derived at the new position with the rewrite byte-identical (added lines identical to the original, checked mechanically). Measured with a full generation run before and after the move: the whole flight chain applies in the moved order (167 applied, 0 failures, pending 11 -> 10); @flighthq/node is unchanged (21/21 emitted, 0 refused, the same 3 refusal records), so both moved-over entries keep their focused result; and the refusal this entry names -- \"a structural assertion from the readonly row Readonly<ParticleEmitter3D> to the writable row Node3D claims mutation the source refused\" -- is GONE from glParticleEmitter3D.ts. What remains at that module is a CASCADE: \"dependency @flighthq/render-gl/contract was refused for glDraw.ts\". So the module emits no longer for its own reason but still cannot emit until render-gl/contract does; the tree went 2541 -> 2542 modules emitted and 607 -> 606 refusals. The original note here required the module to regenerate with zero refusals; that is now known to be a later dependency and is recorded as measured rather than left as a claim.",
+      "whyNotUpstreamFirst": "World-matrix ensure/get operations are logical queries whose only writes are internal derived-state caches. Expressing their input as readonly is a target-neutral const-correctness repair, and naming the hit and miss values independently preserves the cache's already-declared owner without a target-specific conversion.",
+      "unblocks": "Allows the real Scene3D GL particle traversal and instanced billboard draw to retain its shader owner and resolve current hierarchical transforms without a readonly-to-writable structural assertion.",
+      "expires": "when Flight declares its transform cache queries readonly and retains declared cache owners upstream, or flight-compiler can distinguish hidden cache mutation from public node write authority and preserve the WeakMap value owner through a rebound local automatically.",
+      "appliedOn": "2026-10-09",
+      "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "rebasedOn": "2026-10-14"
     },
     {
       "id": "node-bounds-validity-explicit-carrier",
