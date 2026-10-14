@@ -742,5 +742,182 @@ int main() {
     }
   }
 
+  {
+    // writeBinaryFileChunks streams EVERY chunk, in order, through the writer the explicit provider handed
+    // back -- and each write carries the chunk's own bytes, not a shared or truncated buffer.
+    std::vector<std::vector<int>> written;
+    String seen_path;
+    auto host = flight::make_ref<Host>();
+    host->open_file_write_stream = [&written, &seen_path](
+                                       String path, std::optional<flight::AbortSignal>) {
+      seen_path = path;
+      flight::WritableStreamSink<flight::Uint8Array> sink;
+      sink.write = [&written](const flight::Uint8Array& chunk) {
+        std::vector<int> bytes;
+        for (std::size_t i = 0; i < chunk.length(); ++i) bytes.push_back(static_cast<int>(chunk[i]));
+        written.push_back(bytes);
+        return flight::Task<void>::resolve();
+      };
+      sink.close = [] { return flight::Task<void>::resolve(); };
+      sink.abort = [](flight::AbortReason) { return flight::Task<void>::resolve(); };
+      return flight::Task<std::optional<flight::WritableStream<flight::Uint8Array>>>::resolve(
+          std::optional<flight::WritableStream<flight::Uint8Array>>{
+              flight::WritableStream<flight::Uint8Array>{sink}});
+    };
+
+    std::vector<flight::Uint8Array> queue{flight::Uint8Array{4}, flight::Uint8Array{6, 8}};
+    auto cursor = std::make_shared<std::size_t>(0);
+    flight::AsyncIterable<flight::Uint8Array> chunks([&queue, cursor] {
+      if (*cursor >= queue.size()) {
+        return flight::Task<std::optional<flight::Uint8Array>>::resolve(std::nullopt);
+      }
+      return flight::Task<std::optional<flight::Uint8Array>>::resolve(
+          std::optional<flight::Uint8Array>{queue[(*cursor)++]});
+    });
+
+    const auto streamed =
+        flight::filesystem::write_binary_file_chunks(host, String("chunks/target.bin"), chunks).get();
+    if (!check(streamed, "writeBinaryFileChunks resolves true when every chunk is written") ||
+        !check(seen_path == String("chunks/target.bin"), "and opened the path it was given") ||
+        !check(written.size() == 2 && written[0] == std::vector<int>{4} &&
+                   written[1] == std::vector<int>{6, 8},
+               "and streamed each chunk's own bytes, in order and undivided")) {
+      return 1;
+    }
+  }
+
+  {
+    // writeBinaryFileChunks: a write that aborts the caller's signal rejects with THAT abort reason, and the
+    // writer's own abort carries the caller's reason. The reason is the observable that tells the
+    // abort-listener path apart from the catch's fallback `writer.abort()` below, which carries an EMPTY
+    // reason -- without it the two paths would be indistinguishable.
+    //
+    // Deliberately NOT asserted here: that the writer is not `close()`d on this path. The runtime's
+    // `WritableStreamDefaultWriter::close()` returns early once `abort()` has set `closed`, so it never
+    // reaches the sink and no assertion can observe whether the call was made. A mutation that adds the
+    // call survives as an EQUIVALENT mutant, which is recorded rather than papered over with a
+    // can-never-fail check.
+    const auto reason = String("cancel chunks");
+    int abort_calls = 0;
+    std::optional<flight::AbortReason> observed_reason;
+    flight::AbortController controller;
+    auto host = flight::make_ref<Host>();
+    host->open_file_write_stream = [&](String, std::optional<flight::AbortSignal>) {
+      flight::WritableStreamSink<flight::Uint8Array> sink;
+      sink.write = [&](const flight::Uint8Array&) -> flight::Task<void> {
+        controller.abort(reason);
+        throw flight::AbortError(flight::AbortReason(reason));
+      };
+      sink.abort = [&abort_calls, &observed_reason](flight::AbortReason value) {
+        ++abort_calls;
+        observed_reason = value;
+        return flight::Task<void>::resolve();
+      };
+      return flight::Task<std::optional<flight::WritableStream<flight::Uint8Array>>>::resolve(
+          std::optional<flight::WritableStream<flight::Uint8Array>>{
+              flight::WritableStream<flight::Uint8Array>{sink}});
+    };
+
+    std::vector<flight::Uint8Array> queue{flight::Uint8Array{9}};
+    auto cursor = std::make_shared<std::size_t>(0);
+    flight::AsyncIterable<flight::Uint8Array> chunks([&queue, cursor] {
+      if (*cursor >= queue.size()) {
+        return flight::Task<std::optional<flight::Uint8Array>>::resolve(std::nullopt);
+      }
+      return flight::Task<std::optional<flight::Uint8Array>>::resolve(
+          std::optional<flight::Uint8Array>{queue[(*cursor)++]});
+    });
+
+    std::optional<String> rejected_with;
+    try {
+      static_cast<void>(flight::filesystem::write_binary_file_chunks(host, String("chunks/target.bin"),
+                                                                     chunks, controller.signal)
+                            .get());
+    } catch (const flight::AbortError& error) {
+      rejected_with = error.reason().get<String>();
+    } catch (...) {
+    }
+    if (!check(rejected_with.has_value() && rejected_with.value() == reason,
+               "writeBinaryFileChunks rejects with the caller's own abort reason") ||
+        !check(abort_calls == 1 && observed_reason.has_value() &&
+                   observed_reason.value().get<String>() == reason,
+               "and aborted its owned writer once, with that same reason")) {
+      return 1;
+    }
+  }
+
+  {
+    // writeBinaryFileChunks, the OTHER failure shape: a write that fails WITHOUT aborting is converted to a
+    // documented false rather than escaping as a rejection, and the writer is still aborted -- with the
+    // catch's EMPTY reason, since no abort listener ever ran. This is the branch the source's own comment
+    // calls out ("the TypeScript catch deliberately converts non-abort stream failures to false"), and it is
+    // what makes the empty-reason distinction above observable in both directions.
+    int abort_calls = 0;
+    std::optional<flight::AbortReason> observed_reason;
+    auto host = flight::make_ref<Host>();
+    host->open_file_write_stream = [&](String, std::optional<flight::AbortSignal>) {
+      flight::WritableStreamSink<flight::Uint8Array> sink;
+      sink.write = [](const flight::Uint8Array&) -> flight::Task<void> {
+        throw std::runtime_error("disk went away");
+      };
+      sink.abort = [&abort_calls, &observed_reason](flight::AbortReason value) {
+        ++abort_calls;
+        observed_reason = value;
+        return flight::Task<void>::resolve();
+      };
+      return flight::Task<std::optional<flight::WritableStream<flight::Uint8Array>>>::resolve(
+          std::optional<flight::WritableStream<flight::Uint8Array>>{
+              flight::WritableStream<flight::Uint8Array>{sink}});
+    };
+
+    std::vector<flight::Uint8Array> queue{flight::Uint8Array{12}};
+    auto cursor = std::make_shared<std::size_t>(0);
+    flight::AsyncIterable<flight::Uint8Array> chunks([&queue, cursor] {
+      if (*cursor >= queue.size()) {
+        return flight::Task<std::optional<flight::Uint8Array>>::resolve(std::nullopt);
+      }
+      return flight::Task<std::optional<flight::Uint8Array>>::resolve(
+          std::optional<flight::Uint8Array>{queue[(*cursor)++]});
+    });
+
+    bool threw = false;
+    bool resolved_false = false;
+    try {
+      resolved_false =
+          !flight::filesystem::write_binary_file_chunks(host, String("chunks/target.bin"), chunks,
+                                                        flight::AbortController{}.signal)
+               .get();
+    } catch (...) {
+      threw = true;
+    }
+    if (!check(!threw, "a non-abort write failure does not escape as a rejection") ||
+        !check(resolved_false, "and is converted to the documented false") ||
+        !check(abort_calls == 1 && observed_reason.has_value() &&
+                   !observed_reason.value().has_value(),
+               "and the writer is aborted with the catch's own EMPTY reason")) {
+      return 1;
+    }
+  }
+
+  {
+    // writeBinaryFileChunks: when the provider omits openFileWriteStream there is no writer to own, and the
+    // function reports the documented false without touching a chunk.
+    auto host = flight::make_ref<Host>();
+    std::vector<flight::Uint8Array> queue{flight::Uint8Array{3}};
+    auto cursor = std::make_shared<std::size_t>(0);
+    flight::AsyncIterable<flight::Uint8Array> chunks([&queue, cursor] {
+      if (*cursor >= queue.size()) {
+        return flight::Task<std::optional<flight::Uint8Array>>::resolve(std::nullopt);
+      }
+      return flight::Task<std::optional<flight::Uint8Array>>::resolve(
+          std::optional<flight::Uint8Array>{queue[(*cursor)++]});
+    });
+    if (!check(!flight::filesystem::write_binary_file_chunks(host, String("chunks/target.bin"), chunks).get(),
+               "writeBinaryFileChunks resolves false when the provider omits the write stream") ||
+        !check(*cursor == 0, "and never pulls a chunk")) {
+      return 1;
+    }
+  }
+
   return failures == 0 ? 0 : 1;
 }
