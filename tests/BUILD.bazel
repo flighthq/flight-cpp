@@ -280,6 +280,13 @@ cc_test(
 )
 
 cc_test(
+    name = "generated_picking_test",
+    srcs = ["generated_picking_test.cpp"],
+    size = "small",
+    deps = ["//:cpp", "//:sdk_preview"],
+)
+
+cc_test(
     name = "generated_spritesheet_formats_test",
     srcs = ["generated_spritesheet_formats_test.cpp"],
     size = "small",
@@ -1526,6 +1533,7 @@ test_suite(
         ":generated_clip_test",
         ":generated_physics3d_test",
         ":generated_physics3d_abi_test",
+        ":generated_picking_test",
         ":generated_spritesheet_formats_test",
         ":generated_updater_test",
         ":generated_useragent_test",

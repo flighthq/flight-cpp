@@ -460,7 +460,7 @@ pick_scene3_dall_with_ray3_d(
         auto slot = out_array.get(static_cast<double>(count));
         if (!slot.has_value()) {
           slot = create_scene3_dhit();
-          out_array.element(static_cast<double>(count)) = slot.value();
+          out_array.push(slot.value());
         }
         copy_scene3_dhit(slot.value(), hit);
         ++count;
