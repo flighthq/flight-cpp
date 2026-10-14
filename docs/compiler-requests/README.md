@@ -115,6 +115,14 @@ Every `source-patches/compiler-*.patch` entry is mapped exactly once below.
 - [A typed readonly callback needs to retain its derived owner](readonly-callback-derived-owner-recovery.md) —
   Scene2D's Sprite bounds hook loses both the exact Sprite node and its SpriteRuntime slot after the
   generic Node2D callback boundary; carried by the source patch `scene2d-sprite-exact-runtime-runner`.
+- [A derived render owner asserted from its base has no heritage to cast along](canvas-render-state-owner-asserted-without-heritage.md) —
+  `@flighthq/scene2d-canvas` `canvasRenderState.ts`, both constructors and the runtime accessor
+  (`cpp-reference-assertion-without-heritage`): `createRenderState(...) as CanvasRenderState` and
+  `createRenderStateRuntime() as CanvasRenderStateRuntime` have no heritage to cast along because interface
+  relationships flatten into independent owners, and the `state[EntityRuntimeKey]` read then asserts a wider
+  owner back out of retained storage. Carried by the `canvas-render-state-runtime-owner-and-initialization`
+  patch, which declares the exact owner beside the type and reaches it through declared accessors; that patch
+  carries a `pendingRebase` marker on the 2D lane, so the module still refuses at the live base.
 - [Quadbatch needs one retained owner across specialized construction boundaries](quadbatch-owner-and-contextual-construction.md) —
   flattened Node2D/runtime/signal owners and contextual factories omit ten declarations; the native
   adapter preserves batch, runtime, buffer-view, atlas, material and signal identities explicitly.
