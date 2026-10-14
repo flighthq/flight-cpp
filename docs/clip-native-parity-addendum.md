@@ -143,5 +143,6 @@ optional/default behavior, and guard paths without changing generated or overrid
 - `@flighthq/clip` baseline package compile: 4/4 headers passed independently;
 - package tier: assisted and shippable, 4/4 emitted and compiled, zero overrides;
 - standalone clean runs: both the exact live source and the additive source passed; and
-- CMake focused target: `flight_cpp_generated_clip_edge_tests` built at `-j2` and passed.
-
+- CMake focused target: `flight_cpp_generated_clip_edge_tests` built at `-j2` and passed;
+- `node --test ./scripts/packageScope.test.mjs`: 53/53 tests passed; and
+- `node scripts/buildHealth.mjs`: CMake and Bazel agree on all 92 executable test sources.
