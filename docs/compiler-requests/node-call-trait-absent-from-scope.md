@@ -145,10 +145,15 @@ Three sites total: one in `renderTarget.ts`, two in `renderTransform2d.ts`. The 
 one an earlier draft of this document omitted, and it is not optional — builder7 measured that giving only
 the matrix call its trait leaves line 67 failing on the revision call.
 
-Stated as the specification, not as a verified result: whether the emitter then writes the concrete trait
-rather than the bare name must be confirmed by regenerating the `@flighthq/render` closure after the patch
-is written. I did not run a regeneration for this document (docs-only), and the precedent's own evidence is
-that the rewrite is what made the particleemitter calls instantiate.
+**This workaround is now carried, and it matches the three sites above exactly.**
+`source-patches/render-node-call-explicit-traits.patch` (builder7, `baseCommit a627849`, `pendingRebase:
+none` — so it applies at the live base) rewrites precisely these three call sites, adding the `Node2DTraits`
+import. Earlier text here said no patch was carried; that was true when written and is not now.
+
+Whether the emitter then writes the concrete trait rather than the bare name is confirmed by regenerating
+the `@flighthq/render` closure — which the regeneration runs, not this document. I did not run one
+(docs-only). The precedent's own evidence is that the rewrite is what made the particleemitter calls
+instantiate.
 
 ### Equivalence
 
