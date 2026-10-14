@@ -2439,7 +2439,7 @@
       "id": "canvas-texture-resolver-host-image-result",
       "dependency": "flight",
       "patch": "canvas-texture-resolver-host-image-result.patch",
-      "baseCommit": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "baseCommit": "a62784923f3be814463286c9fb28edfe6ab15789",
       "module": "packages/types/src/CanvasTextureResolver.ts and packages/scene2d-canvas/src/canvasTextureResolver.ts",
       "package": "@flighthq/scene2d-canvas",
       "answers": "refusal",
@@ -2451,11 +2451,8 @@
       "unblocks": "Gives Canvas bitmap, image, render-target, window, and pattern resolvers one faithful SDL drawable handle result without fake DOM alternatives.",
       "expires": "when Flight uses HostImageSource at these host seams upstream, or flight-compiler retains the exact CanvasImageSource external binding through imported callable and cache declarations.",
       "appliedOn": "2026-10-09",
-      "pendingRebase": {
-        "since": "a62784923f3be814463286c9fb28edfe6ab15789",
-        "lane": "2D",
-        "reason": "context drift: the patched code still exists (3/3 removed lines still present) but surrounding source changed or an earlier patch in the stack is pending; rebase the hunks"
-      }
+      "rebasedFrom": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+      "rebasedOn": "2026-10-14"
     },
     {
       "id": "compiler-exact-variant-owner-priority",
