@@ -84,3 +84,31 @@ question; `sdk:check` fails if it matches no header.
 
 The request is filed rather than patched because the fix belongs in the lowering: a repair has to be told
 each receiver, and 29 sites across 15 packages is 15 declarations that should not exist.
+
+## The measurement behind the table
+
+Compiled and run against the runtime at this pin, so the presence semantics are a result rather than a
+reading of the headers:
+
+```cpp
+#include <flight/record.hpp>
+#include <flight/runtime.hpp>
+int main() {
+  flight::Record<flight::String, flight::Any> obj;
+  obj.set(flight::String("value"), flight::Any(1.0));
+  obj.set(flight::String("undefinedValue"), flight::Any());  // present, value undefined
+  const flight::String absent("absent");
+  const flight::String present_undefined("undefinedValue");
+  // has() reports existence; the Any's own test reports definedness.
+  return (!obj.has(absent) && obj.has(present_undefined) &&
+          !(obj.get(absent).has_value() && obj.get(absent)->has_value()) &&
+          !(obj.get(present_undefined).has_value() && obj.get(present_undefined)->has_value()))
+             ? 0
+             : 1;
+}
+```
+
+```
+absent            : has=0 get-engaged=0 any-defined=0
+present-undefined : has=1 get-engaged=1 any-defined=0
+```
