@@ -59,7 +59,6 @@ index ceacee1..e84d5bf 100644
 +  return 'geometry' in node && node.geometry != null;
 +}
 diff --git a/packages/scene3d/src/sceneKindUsage.ts b/packages/scene3d/src/sceneKindUsage.ts
-index 81ab57a..849be56 100644
 --- a/packages/scene3d/src/sceneKindUsage.ts
 +++ b/packages/scene3d/src/sceneKindUsage.ts
 @@ -2,16 +2,15 @@ import { allocateEntity, finishEntity } from '@flighthq/entity/contract';
@@ -67,14 +66,13 @@ index 81ab57a..849be56 100644
  import type {
    EntityConstruction,
 -  Material,
--  Modifier,
--  Node3D,
 +  Mesh,
+   Modifier,
+-  Node3D,
 +  Node3DTraits,
 +  NodeOf,
    Scene3D,
    Scene3DKindUsage,
-+  ShadedMaterial,
  } from '@flighthq/types/contract';
  import { ImageTextureSourceKind } from '@flighthq/types/contract';
  
@@ -100,10 +98,8 @@ index 81ab57a..849be56 100644
        addScene3DUsedKind(out.materialKinds, material.kind);
        // Structural, like isMesh: any material family carrying a `modifiers` stack is walked, including
        // a custom kind, without a per-kind table that would drift as families are added.
--      const modifiers = (material as Readonly<Partial<{ modifiers: readonly Modifier[] }>>).modifiers;
--      if (modifiers === undefined) continue;
-+      if (!isModifierMaterial(material)) continue;
-+      const modifiers = material.modifiers;
+       const modifiers = (material as Readonly<Partial<{ modifiers: readonly Modifier[] }>>).modifiers;
+       if (modifiers === undefined) continue;
        for (let m = 0; m < modifiers.length; m++) addScene3DUsedKind(out.modifierKinds, modifiers[m].kind);
      }
    };
@@ -115,14 +111,10 @@ index 81ab57a..849be56 100644
  
    for (let i = 0; i < scene.resources.length; i++) {
      const resource = scene.resources[i];
-@@ -70,6 +67,14 @@ export function getScene3DKindUsage(out: Scene3DKindUsage, scene: Readonly<Scene
+@@ -70,6 +67,10 @@ export function getScene3DKindUsage(out: Scene3DKindUsage, scene: Readonly<Scene
    out.textureSourceKinds.sort();
  }
  
-+function isModifierMaterial(material: Readonly<{ kind: string }>): material is Readonly<ShadedMaterial> {
-+  return 'modifiers' in material;
-+}
-+
 +function isSceneMesh(node: Readonly<NodeOf<Node3DTraits>>): node is Readonly<Mesh> {
 +  return 'geometry' in node && node.geometry != null;
 +}

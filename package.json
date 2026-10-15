@@ -71,6 +71,7 @@
     "structural:oracle": "node ./scripts/structuralProxyOracle.mjs",
     "text-encoder:oracle": "node ./scripts/textEncoderOracle.mjs",
     "uri:oracle": "node ./scripts/uriOracle.mjs",
-    "web-types:oracle": "node ./scripts/webTypesOracle.mjs"
+    "web-types:oracle": "node ./scripts/webTypesOracle.mjs",
+    "scene3d-kind-usage:oracle": "node ./scripts/scene3dKindUsageOracle.mjs"
   }
 }

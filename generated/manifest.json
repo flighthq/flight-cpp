@@ -1702,9 +1702,7 @@
       "id": "scene2d-formats-unqualified-node-names"
     },
     {
-      "files": [
-        "flight/scene3d/scene_document.hpp"
-      ],
+      "files": [],
       "id": "scene3d-unqualified-node-names"
     },
     {
@@ -2806,9 +2804,7 @@
       "id": "mesh-unqualified-geometry-names"
     },
     {
-      "files": [
-        "flight/scene3d/scene_document.hpp"
-      ],
+      "files": [],
       "id": "scene3d-unqualified-geometry-names"
     },
     {
@@ -5292,10 +5288,10 @@
     },
     {
       "dependency": "flight",
-      "digest": "e80816253df8001eb96e1e5ee3119d6ef35f1df8bcc8522e062a3b1559405dea",
-      "id": "scene3d-exact-owner-boundaries",
-      "module": "Scene3D node traits/construction, billboards, meshes, animation, document assembly, appearance, instance colors, and opt-in diagnostics",
-      "package": "@flighthq/scene3d and @flighthq/types"
+      "digest": "7cb9363a577bc455343230bddb77a0bfded1db4119687ffb0f11d5eb6c441fdd",
+      "id": "scene3d-material-value-enumeration",
+      "module": "packages/scene3d/src/sceneMaterial.ts",
+      "package": "@flighthq/scene3d"
     },
     {
       "dependency": "flight",
@@ -5313,14 +5309,7 @@
     },
     {
       "dependency": "flight",
-      "digest": "667ddb1ae427b2a1799a3fe7bcb987b696e04327a291161ba764fc0ada990129",
-      "id": "scene3d-material-value-enumeration",
-      "module": "packages/scene3d/src/sceneMaterial.ts",
-      "package": "@flighthq/scene3d"
-    },
-    {
-      "dependency": "flight",
-      "digest": "8ebff7e3c896f85bb991f95635bd060fd50add1ab5b202904e7826f0338cdad6",
+      "digest": "2279c341e5e6beddd294ffd1331140acc2204bb4cfd38e4fcac69a6442196b72",
       "id": "scene3d-document-light-values",
       "module": "packages/types/src/LightValue.ts and Scene3DDocument.ts",
       "package": "@flighthq/scene3d"
@@ -5341,7 +5330,7 @@
     },
     {
       "dependency": "flight",
-      "digest": "4f3cb1ef9aa8ec781a28717dfc1278f836d8193d932ea631dd190d5816885425",
+      "digest": "55cc99271fc9f2ba3a42c3816a4bf42420a3e9ba5aa0a53637458d860b4d800e",
       "id": "scene3d-exact-runtime-owner",
       "module": "packages/types/src/Node3D.ts and packages/scene3d/src/sceneNode.ts",
       "package": "@flighthq/scene3d"
@@ -5355,10 +5344,17 @@
     },
     {
       "dependency": "flight",
-      "digest": "94f4209f7cbe7c276292ce18a21d6c0bacc6f1f99d248cc89b90ae0f9fdaaf5f",
+      "digest": "8c2836c6b2baee42bd58f33e7ba243cd387fb0639a418a10647526dba5895e6b",
       "id": "scene3d-concrete-node-construction",
       "module": "packages/types Mesh and InstancedMesh runtime slots; packages/scene3d node, mesh, instanced-mesh, and billboard construction",
       "package": "@flighthq/scene3d"
+    },
+    {
+      "dependency": "flight",
+      "digest": "a7ca8d936cd6033f1ccff021ca8c3b63180a0c24b868dc436e94147f5bb0d680",
+      "id": "scene-nodeof-traversal-capabilities",
+      "module": "packages/node traversal and visitor contracts; Scene2D kind usage; Scene3D cloning, kind/material enumeration, bounds, and culling",
+      "package": "@flighthq/node and @flighthq/scene2d and @flighthq/scene3d"
     },
     {
       "dependency": "flight",
@@ -5369,10 +5365,10 @@
     },
     {
       "dependency": "flight",
-      "digest": "03a613561e5c951e32da2d617ffaca22640034c9c9443c3742d6f644d47de426",
-      "id": "scene-nodeof-traversal-capabilities",
-      "module": "packages/node traversal and visitor contracts; Scene2D kind usage; Scene3D cloning, kind/material enumeration, bounds, and culling",
-      "package": "@flighthq/node, @flighthq/scene2d, @flighthq/scene3d"
+      "digest": "ccc4f61cdf5933761b8a5ba27aa3a72fed5673750d4557f387fbe93fedb29e07",
+      "id": "scene3d-mesh-capability-presence",
+      "module": "Scene3D subtree cloning, morph preparation, kind discovery, and bounds/culling guards",
+      "package": "@flighthq/scene3d"
     },
     {
       "dependency": "flight",
@@ -5432,10 +5428,10 @@
     },
     {
       "dependency": "flight",
-      "digest": "ccc4f61cdf5933761b8a5ba27aa3a72fed5673750d4557f387fbe93fedb29e07",
-      "id": "scene3d-mesh-capability-presence",
-      "module": "Scene3D subtree cloning, morph preparation, kind discovery, and bounds/culling guards",
-      "package": "@flighthq/scene3d"
+      "digest": "e80816253df8001eb96e1e5ee3119d6ef35f1df8bcc8522e062a3b1559405dea",
+      "id": "scene3d-exact-owner-boundaries",
+      "module": "Scene3D node traits/construction, billboards, meshes, animation, document assembly, appearance, instance colors, and opt-in diagnostics",
+      "package": "@flighthq/scene3d and @flighthq/types"
     },
     {
       "dependency": "flight",
@@ -5963,7 +5959,6 @@
       "flight/scene2d_wgpu/wgpu_color_adjustment_material_feature.hpp",
       "flight/scene2d_wgpu/wgpu_particle_emitter2_d.hpp",
       "flight/scene2d_wgpu/wgpu_quad_batch_writer.hpp",
-      "flight/scene3d/scene_kind_usage.hpp",
       "flight/scene3d_formats/gltf_parse.hpp",
       "flight/scene3d_formats/gltf_punctual_lights.hpp",
       "flight/scene3d_formats/md5_parse.hpp",
@@ -6200,7 +6195,6 @@
       "flight/scene2d_formats/svg_use_element.hpp",
       "flight/scene2d_resources/load_scene2_daudio_resources.hpp",
       "flight/scene2d_resources/load_scene2_dimage_resources.hpp",
-      "flight/scene3d/scene_document.hpp",
       "flight/scene3d_formats/awd2_parse.hpp",
       "flight/scene3d_formats/collada_material.hpp",
       "flight/scene3d_formats/collada_parse.hpp",
@@ -7602,14 +7596,14 @@
       "sourceModules": 33
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/scene3d",
       "cppNamespace": "flight::scene3d",
-      "emittedModules": 20,
+      "emittedModules": 19,
       "package": "@flighthq/scene3d",
-      "refusedModules": 1,
+      "refusedModules": 2,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 21
@@ -8288,8 +8282,8 @@
   },
   "summary": {
     "packages": 153,
-    "emittedModules": 2471,
-    "refusedModules": 605,
+    "emittedModules": 2470,
+    "refusedModules": 606,
     "sourceModules": 3076
   }
 }

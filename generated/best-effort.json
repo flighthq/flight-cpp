@@ -28941,6 +28941,7 @@
         "@flighthq/scene3d/packages/scene3d/src/prepareScene3DMorph.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneAnimation.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocument.ts",
+        "@flighthq/scene3d/packages/scene3d/src/sceneKindUsage.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneNodeBounds.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneNodeCulling.ts"
       ],
@@ -28978,6 +28979,7 @@
         "@flighthq/scene3d/packages/scene3d/src/prepareScene3DMorph.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneAnimation.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneDocument.ts",
+        "@flighthq/scene3d/packages/scene3d/src/sceneKindUsage.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneNodeBounds.ts",
         "@flighthq/scene3d/packages/scene3d/src/sceneNodeCulling.ts"
       ],
@@ -29118,9 +29120,17 @@
       "status": "emitted"
     },
     {
+      "classification": "source-portability",
       "consumers": [
         "@flighthq/scene3d/packages/scene3d/src/contract.ts",
         "@flighthq/scene3d/packages/scene3d/src/index.ts"
+      ],
+      "declarationFingerprints": [
+        "sha256:3916fd2c848a00a5319af459665f352c7ef949835b443f2ba6b2fca74c4f7028",
+        "sha256:6f53b62f16f39fe41f42a63159a25f861fd66401e93183d8ffde2a553cb37803",
+        "sha256:9a203507d8b774bab732bfd6c9f426bde3be64a9d1b02578bcf9b61838d8c760",
+        "sha256:d6b5fe8813f0321c2aec2ea1514b0b6122305165b6f0937841295adb673460b2",
+        "sha256:e7149c40f4e2e65c01d93bbab3a1dbb1e0810fc50fabba119d9bacf91fd8c691"
       ],
       "module": {
         "name": "SceneKindUsage",
@@ -29128,7 +29138,8 @@
         "source": "packages/scene3d/src/sceneKindUsage.ts"
       },
       "path": "flight/scene3d/scene_kind_usage.hpp",
-      "status": "emitted"
+      "rule": "cpp-type-assertion-unidentified",
+      "status": "refused-placeholder"
     },
     {
       "consumers": [

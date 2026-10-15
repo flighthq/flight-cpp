@@ -6129,6 +6129,15 @@
       "stage": "emission"
     },
     {
+      "code": "unsupported-ir",
+      "column": 1,
+      "line": 29,
+      "module": "packages/scene3d/src/sceneKindUsage.ts",
+      "package": "@flighthq/scene3d",
+      "reason": "cpp emission failed for @flighthq/scene3d/packages/scene3d/src/sceneKindUsage.ts: type assertion target must identify exactly one C++ variant alternative: target flight::StructuralRef<flight::RowReadonly<flight::RowPartial<flight::RowOf<flight::Ref<modifiers_0674ff936f9e0017>>>>> against [flight::Ref<flight::types::SpecularGlossinessPbrMaterial>, flight::Ref<flight::types::VertexColorMaterial>, flight::Ref<flight::types::UnlitMaterial>, flight::Ref<flight::types::StandardPbrMaterial>, flight::Ref<flight::types::CustomShaderMaterial>, flight::Ref<flight::types::BlinnPhongMaterial>, flight::Ref<flight::types::LambertMaterial>, flight::Ref<flight::types::DepthMaterial>, flight::Ref<flight::types::ToonMaterial>, flight::Ref<flight::types::PhongMaterial>, flight::Ref<flight::types::ExtendedPbrMaterial>, flight::Ref<flight::types::Material3D>, flight::Ref<flight::types::EmissiveMaterial>, flight::Ref<flight::types::NormalMaterial>, flight::Ref<flight::types::MatcapMaterial>, flight::Ref<flight::types::ShadedMaterial>, flight::Ref<flight::types::WireframeMaterial>]",
+      "stage": "emission"
+    },
+    {
       "code": "dependency-refused",
       "module": "packages/scene3d/src/sceneNodeBounds.ts",
       "package": "@flighthq/scene3d",
