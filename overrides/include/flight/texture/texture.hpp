@@ -698,6 +698,8 @@ using CreateTextureCubeVariantOptions =
     flight::types::CreateTextureCubeOptions;
 using CreateTexture2DOptionsRow = flight::StructuralRef<flight::RowReadonly<
     flight::RowOf<flight::Ref<flight::types::CreateTexture2DOptions>>>>;
+using CreateTextureCubeOptionsRow = flight::StructuralRef<flight::RowReadonly<
+    flight::RowOf<flight::Ref<flight::types::CreateTextureCubeOptions>>>>;
 
 template <typename Options>
 inline flight::Ref<color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_2af05f464e1f33ea>
@@ -723,8 +725,11 @@ create_common_texture_fields_from(const std::optional<std::shared_ptr<Options>>&
           .version = version});
 }
 
+template <typename OptionsRow>
+  requires(std::same_as<OptionsRow, CreateTexture2DOptionsRow> ||
+           std::same_as<OptionsRow, CreateTextureCubeOptionsRow>)
 inline flight::Ref<color_space_flip_x_flip_y_sampler_uv_offset_uv_rotation_uv_scale_version_2af05f464e1f33ea>
-create_common_texture_fields_from(const std::optional<CreateTexture2DOptionsRow>& opts) {
+create_common_texture_fields_from(const std::optional<OptionsRow>& opts) {
   const auto color_space = opts
       ? flight::row_get<flight::RowKey<"colorSpace">>(*opts)
       : std::optional<flight::String>{};
@@ -943,6 +948,22 @@ inline flight::Ref<TextureCube> create_texture(flight::Ref<CreateTextureCubeVari
   }
   Texture texture{std::in_place_type<flight::Ref<TextureCube>>, out};
   attach_texture_to_flat_resource(texture, opts->resource);
+  return out;
+}
+
+// Read the generated cube-options row through its existing readonly cells.
+inline flight::Ref<TextureCube> create_texture(CreateTextureCubeOptionsRow opts) {
+  const auto common = create_common_texture_fields_from(
+      std::optional<CreateTextureCubeOptionsRow>{opts});
+  auto out = flight::make_ref<TextureCube>();
+  out->entity_runtime_key = std::nullopt;
+  apply_common_texture_fields_to_owner(out, common);
+  out->dimension = flight::String("cube");
+  const auto sources = flight::row_get<flight::RowKey<"sources">>(opts);
+  out->sources = sources ? sources->slice() : flight::Array<std::optional<TextureSourceValue>>{
+      std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt};
+  Texture texture{std::in_place_type<flight::Ref<TextureCube>>, out};
+  attach_texture_to_resource(texture, flight::row_get<flight::RowKey<"resource">>(opts));
   return out;
 }
 

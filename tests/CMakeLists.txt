@@ -240,6 +240,11 @@ target_link_libraries(
 )
 add_test(NAME flight_cpp.generated_texture COMMAND flight_cpp_generated_texture_tests)
 
+add_executable(flight_cpp_generated_texture_options_row_tests generated_texture_options_row_test.cpp)
+target_link_libraries(flight_cpp_generated_texture_options_row_tests PRIVATE Flight::Cpp Flight::SdkPreview)
+flight_cpp_set_project_warnings(flight_cpp_generated_texture_options_row_tests)
+add_test(NAME flight_cpp.generated_texture_options_row COMMAND flight_cpp_generated_texture_options_row_tests)
+
 add_executable(flight_cpp_generated_bitmap_tests generated_bitmap_test.cpp)
 target_include_directories(flight_cpp_generated_bitmap_tests BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include")
 target_link_libraries(flight_cpp_generated_bitmap_tests PRIVATE Flight::Cpp Flight::SdkPreview)
@@ -1599,6 +1604,7 @@ flight_cpp_package_test_labels(flight_cpp.generated_render_scene2d_coverage rend
 flight_cpp_package_test_labels(flight_cpp.generated_canvas_render_state_owner render types)
 flight_cpp_package_test_labels(flight_cpp.generated_canvas_texture_resolver scene2d-canvas)
 flight_cpp_package_test_labels(flight_cpp.generated_texture texture types)
+flight_cpp_package_test_labels(flight_cpp.generated_texture_options_row texture types)
 flight_cpp_package_test_labels(flight_cpp.generated_bitmap bitmap)
 flight_cpp_package_test_labels(flight_cpp.generated_texture_formats texture-formats)
 flight_cpp_package_test_labels(flight_cpp.generated_clip clip)
