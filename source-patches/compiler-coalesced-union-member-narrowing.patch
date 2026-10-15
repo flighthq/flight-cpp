@@ -3,7 +3,7 @@ new file mode 100644
 index 0000000..55afe6a
 --- /dev/null
 +++ b/packages/compiler-backend-cpp/src/cppCoalescedUnionMemberNarrowing.test.ts
-@@ -0,0 +1,90 @@
+@@ -0,0 +1,113 @@
 +import ts from 'typescript';
 +import { describe, expect, it } from 'vitest';
 +
@@ -93,12 +93,35 @@ index 0000000..55afe6a
 +    );
 +    expect(emitted).not.toContain('std::get<');
 +  });
++  it('projects the arm a member aliases, when the alias is what the variant slot holds', () => {
++    // `A` is an alias of `Embedded`, so the slot's own member node is `A` while the discriminant test names
++    // `Embedded`. The two render as one C++ alternative but are not the same node, so the complement cannot
++    // subtract the tested member by identity. Subtracting nothing would leave that member in the complement,
++    // claiming every alternative still reachable and handing the destination the whole variant where its
++    // parameter takes one arm.
++    const emitted = body(
++      `interface Base { name: string | null; state: string }
++      export interface Embedded extends Base { kind: 'Embedded'; bytes: number }
++      export interface External extends Base { kind: 'External'; uri: string; basePath: string | null }
++      type A = Embedded;
++      export type Ref = A | External;
++      function decode(bytes: number): Promise<string | null> { return Promise.resolve(null); }
++      function take(ref: Readonly<External>): Promise<string | null> { return Promise.resolve(null); }
++      export async function f(ref: Ref, signal: number): Promise<string | null> {
++        const decoded = ref.kind === 'Embedded' ? await decode(ref.bytes) : await take(ref);
++        return decoded;
++      }`,
++      'f',
++    );
++    expect(emitted).toContain('std::get<0>(ref)');
++    expect(emitted).not.toContain('take(ref)');
++  });
 +});
 diff --git a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 index c591cde..f38122f 100644
 --- a/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
 +++ b/packages/compiler-backend-cpp/src/cppCompilerBackend.ts
-@@ -16105,9 +16105,15 @@ function getCppUnionMemberComplementTypeCpp(
+@@ -16105,9 +16105,19 @@ function getCppUnionMemberComplementTypeCpp(
        slot.sourceAlternatives.some((member) => isDeepStrictEqual(member, evidence.member)),
    );
    if (selected.length !== 1) return undefined;
@@ -107,17 +130,21 @@ index c591cde..f38122f 100644
 -    .flatMap((slot) => slot.sourceAlternatives);
 +  // A slot can hold several source members that share one C++ type -- `{ outcome: 'created' }` and
 +  // `{ outcome: 'cancelled' }` are one struct. A test that excluded one of them excluded only that member,
-+  // not the slot: the others stay reachable and must stay in the complement. When the test cannot be tied
-+  // to one of the slot's own members, it cannot say which of them it excluded, so no narrowing is claimed.
++  // not the slot: the others stay reachable and must stay in the complement.
 +  const siblings = selected[0]!.sourceAlternatives.filter((member) => !isDeepStrictEqual(member, evidence.member));
-+  if (siblings.length === selected[0]!.sourceAlternatives.length && siblings.length > 1) return undefined;
++  // Nothing was subtracted, so the test could not be tied to one of the slot's own members. That happens when
++  // the test's member is the same C++ type by another node: an imported reference to a declared member is not
++  // the declaration's own node, so deep equality does not hold. Subtracting nothing would leave the excluded
++  // member IN the complement -- a false narrowing that claims the test excluded nothing, and would hand the
++  // emitter a union still holding the member the test proved absent. Decline rather than claim a complement.
++  if (siblings.length === selected[0]!.sourceAlternatives.length) return undefined;
 +  const remaining: Readonly<IrType>[] = plan.valueSlots.flatMap((slot) =>
 +    slot === selected[0] ? siblings : slot.sourceAlternatives,
 +  );
    return createIrTypeEvidenceUnionCpp([
      ...remaining,
      ...union.types.filter((member) => member.kind === 'null' || member.kind === 'undefined'),
-@@ -17009,6 +17015,29 @@ function emitCppNarrowedUnionValueCpp(
+@@ -17009,6 +17019,29 @@ function emitCppNarrowedUnionValueCpp(
        return matches.length === 1 ? matches[0] : undefined;
      });
      const uniqueAlternatives = new Set(selectedAlternatives);
