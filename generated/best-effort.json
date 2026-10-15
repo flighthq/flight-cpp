@@ -54693,6 +54693,7 @@
         "@flighthq/scene2d-canvas/packages/scene2d-canvas/src/canvasTextMeasure.ts",
         "@flighthq/shortcut/packages/shortcut/src/shortcutExplicitDependency.ts",
         "@flighthq/swf/packages/swf/src/swfTagRegistry.ts",
+        "@flighthq/texture-formats/packages/texture-formats/src/byteReader.ts",
         "@flighthq/types/packages/types/src/contract.ts",
         "@flighthq/types/packages/types/src/index.ts"
       ],
