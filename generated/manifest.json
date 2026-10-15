@@ -328,6 +328,7 @@
     },
     {
       "files": [
+        "flight/bitmaptext/bitmap_text.hpp",
         "flight/command/command.hpp",
         "flight/gizmo/node2d_gizmo_features.hpp",
         "flight/gui/button_controller.hpp",
@@ -3264,22 +3265,15 @@
       "id": "text-markup-unqualified-textlayout-names"
     },
     {
-      "files": [
-        "flight/bitmaptext/bitmap_text.hpp",
-        "flight/bitmaptext/update_bitmap_text.hpp"
-      ],
+      "files": [],
       "id": "bitmaptext-unqualified-geometry-names"
     },
     {
-      "files": [
-        "flight/bitmaptext/update_bitmap_text.hpp"
-      ],
+      "files": [],
       "id": "bitmaptext-unqualified-node-names"
     },
     {
-      "files": [
-        "flight/bitmaptext/update_bitmap_text.hpp"
-      ],
+      "files": [],
       "id": "bitmaptext-unqualified-textureatlas-names"
     },
     {
@@ -3689,9 +3683,7 @@
       "id": "bitmapfont-formats-json-private-object-name"
     },
     {
-      "files": [
-        "flight/bitmaptext/update_bitmap_text.hpp"
-      ],
+      "files": [],
       "id": "bitmaptext-update-atlas-reference-access"
     },
     {
@@ -3725,21 +3717,15 @@
       "id": "animation-layer-stack-channel-array-row-write"
     },
     {
-      "files": [
-        "flight/bitmaptext/update_bitmap_text.hpp"
-      ],
+      "files": [],
       "id": "bitmaptext-update-metrics-row-view"
     },
     {
-      "files": [
-        "flight/bitmaptext/update_bitmap_text.hpp"
-      ],
+      "files": [],
       "id": "bitmaptext-update-wrap-width-narrowing"
     },
     {
-      "files": [
-        "flight/bitmaptext/update_bitmap_text.hpp"
-      ],
+      "files": [],
       "id": "bitmaptext-update-exact-runtime-invalidation"
     },
     {
@@ -6032,7 +6018,6 @@
   },
   "canonicalPackageLocalIncludes": {
     "files": [
-      "flight/bitmaptext/update_bitmap_text.hpp",
       "flight/effects_wgpu/wgpu_bevel_effect.hpp",
       "flight/effects_wgpu/wgpu_bitmap_displacement_effect.hpp",
       "flight/effects_wgpu/wgpu_blend_effect.hpp",
@@ -6368,14 +6353,14 @@
       "sourceModules": 11
     },
     {
-      "bindingProfileSet": "sha256:0a2183634245fa5f44e24c7d7c885f934624a2130d5fb4f6649fc9a1932ba335",
+      "bindingProfileSet": "sha256:070fadeb2a079809e8f46c9c1e64d8daf796b8fe8682247181b0d7d502005bdb",
       "cppIncludePrefix": "flight/bitmaptext",
       "cppNamespace": "flight::bitmaptext",
       "emittedModules": 3,
       "package": "@flighthq/bitmaptext",
       "refusedModules": 3,
       "source": {
-        "revision": "7e2fc7df5378313ceaf21ba8d6ef39cc18a6f4ad",
+        "revision": "a62784923f3be814463286c9fb28edfe6ab15789",
         "version": "0.5.0"
       },
       "sourceModules": 6
