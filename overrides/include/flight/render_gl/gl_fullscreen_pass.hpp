@@ -240,7 +240,9 @@ inline void draw_gl_fullscreen_pass(flight::Ref<flight::types::GlRenderState> st
   using TargetRow = flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlRenderTarget>>>>;
   std::optional<TargetRow> target;
   if constexpr (!std::is_same_v<Dest, std::nullopt_t>) {
-    if (dest.has_value()) target = flight::structural_ref_cast<TargetRow>(dest.value());
+    if constexpr (requires { dest.has_value(); }) {
+      if (dest.has_value()) target = flight::structural_ref_cast<TargetRow>(dest.value());
+    } else if (flight::to_boolean(dest)) target = flight::structural_ref_cast<TargetRow>(dest);
   }
   const auto row = flight::structural_ref_cast<ProgramRow>(program);
   std::function<void(flight::host_sdl::WebGl2Context, ProgramRow)> callback =
@@ -288,13 +290,17 @@ inline void clear_gl_depth_stencil(flight::host_sdl::WebGl2Context gl, std::opti
 
 template <typename Target, typename Clear>
 inline void clear_gl_render_target(const Target& target, const Clear& clear) {
-  const auto gl = flight::row_get<flight::RowKey<"gl">>(target);
+  const auto target_view = [&]() {
+    if constexpr (requires { target.shared_owner(); }) return target;
+    else return flight::StructuralRef<flight::RowReadonly<flight::RowOf<Target>>>(target);
+  }();
+  const auto gl = flight::row_get<flight::RowKey<"gl">>(target_view);
   gl.bind_framebuffer(
-      gl.framebuffer, flight::row_get<flight::RowKey<"framebuffer">>(target));
+      gl.framebuffer, flight::row_get<flight::RowKey<"framebuffer">>(target_view));
   gl.viewport(
       0, 0,
-      static_cast<int>(flight::row_get<flight::RowKey<"width">>(target)),
-      static_cast<int>(flight::row_get<flight::RowKey<"height">>(target)));
+      static_cast<int>(flight::row_get<flight::RowKey<"width">>(target_view)),
+      static_cast<int>(flight::row_get<flight::RowKey<"height">>(target_view)));
   const bool scissor_was = gl.is_enabled(gl.scissor_test);
   if (scissor_was) gl.disable(gl.scissor_test);
   const auto color = flight::row_get<flight::RowKey<"color">>(clear);
@@ -303,7 +309,7 @@ inline void clear_gl_render_target(const Target& target, const Clear& clear) {
       clear_rgba_flight_value_variable__u00005f_clear_u000052_gba_flight_private_3bff80139ea97607.set_index(component, color.value().element(component));
     }
     const double attachments =
-        flight::row_get<flight::RowKey<"colorAttachments">>(target);
+        flight::row_get<flight::RowKey<"colorAttachments">>(target_view);
     for (double index = 0.0; index < attachments; index += 1.0) {
       gl.clear_bufferfv(gl.color, static_cast<int>(index), clear_rgba_flight_value_variable__u00005f_clear_u000052_gba_flight_private_3bff80139ea97607);
     }

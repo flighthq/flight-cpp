@@ -63,7 +63,7 @@ inline flight::Ref<flight::types::GlMeshMaterialRenderer> gl_standard_pbr_mesh_m
   if (!program.has_value()) {
     return;
   }
-  flight::scene3d_gl::draw_gl_mesh_subset(state, flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::GlMeshProgram>>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::GlMeshProgram>>>>(program.value())), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DRenderProxy>>>>>(proxy), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(geometry));
+  flight::scene3d_gl::draw_gl_mesh_subset(state, program.value(), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::Scene3DRenderProxy>>>>>(proxy), flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::Ref<flight::types::MeshGeometry>>>>>(geometry));
 }});
 
 } // namespace flight::scene3d_gl
