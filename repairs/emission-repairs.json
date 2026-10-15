@@ -9060,6 +9060,18 @@
       "expires": "when structural-record materialization consistently uses normalized emitted C++ member names; sdk:check fails if this repair matches no header."
     },
     {
+      "id": "texture-cube-sampler-preserves-readonly",
+      "kind": "respell-reference-member-access",
+      "appliesTo": "flight/texture/cube_texture.hpp",
+      "from": "flight::structural_ref_cast<flight::StructuralRef<flight::RowReadonly<flight::RowOf<flight::types::SamplerLike>>>>(flight::StructuralRef<flight::RowWritable<flight::RowOf<flight::Ref<flight::types::Sampler>>>>(flight::row_get<flight::RowKey<\"sampler\">>(opts.value()).value()))",
+      "to": "flight::row_get<flight::RowKey<\"sampler\">>(opts.value()).value()",
+      "sourceDeclaration": "packages/texture/src/cubeTexture.ts -- createCubeTexture guards opts.sampler and passes that same Readonly<SamplerLike> view to cloneSampler, whose parameter is also Readonly<SamplerLike>",
+      "diagnostic": "cannot construct a writable Sampler StructuralRef from the readonly opts.sampler view",
+      "defect": "The guarded-readonly-optional-helper-call lowering round-trips an already-readonly structural view through RowWritable before passing it to a helper with the identical readonly parameter type. Removing the intermediate writable carrier preserves the same row owner, cloneSampler call and result without granting mutation authority.",
+      "expectedWhen": "always",
+      "expires": "when a guarded present optional readonly structural row passes to an identically readonly helper parameter without a writable round trip; sdk:check fails if this repair matches no header."
+    },
+    {
       "id": "skeleton3d-mesh-joints-exact-geometry-owner",
       "kind": "respell-reference-member-access",
       "appliesTo": "flight/skeleton3d/skin_mesh_geometry.hpp",

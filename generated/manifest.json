@@ -4584,6 +4584,12 @@
         "flight/bitmapfont/bitmap_font_glyph_source.hpp"
       ],
       "id": "bitmapfont-declare-refused-initialize-glyph-source"
+    },
+    {
+      "files": [
+        "flight/texture/cube_texture.hpp"
+      ],
+      "id": "texture-cube-sampler-preserves-readonly"
     }
   ],
   "sourcePatches": [
