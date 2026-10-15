@@ -104,10 +104,10 @@ template <typename Value>
               std::optional<double>{roughness})));
 }
 
-[[nodiscard]] flight::Array<std::optional<flight::types::MaterialValue>>
+[[nodiscard]] flight::Array<std::optional<flight::types::Material3DValue>>
 material_list(const flight::Ref<flight::types::StandardPbrMaterial>& material) {
-  return {std::optional<flight::types::MaterialValue>{
-      flight::types::MaterialValue{
+  return {std::optional<flight::types::Material3DValue>{
+      flight::types::Material3DValue{
           std::in_place_type<flight::Ref<flight::types::StandardPbrMaterial>>,
           material}}};
 }
@@ -272,11 +272,10 @@ class Scene3DExample final {
         scene_(create_scene()) {
     gl_.make_current();
 
-    auto render_options = flight::make_ref<flight::types::GlRenderOptions>();
+    auto render_options = flight::make_ref<flight::types::GlRenderStateOptions>(
+        *flight::scene3d_gl::gl_scene3_drender_preset);
     render_options->pixel_ratio = 1.0;
-    state_ = flight::render_gl::create_gl_render_state(
-        gl_, flight::scene3d_gl::default_scene3_dgl_render_registries,
-        render_options);
+    state_ = flight::render_gl::create_gl_render_state(gl_, readonly(render_options));
 
     auto effect_options = flight::make_ref<flight::types::EffectStateOptions>();
     effect_options->sample_count = 4.0;
@@ -466,7 +465,7 @@ class Scene3DExample final {
     clear->colors = std::nullopt;
     clear->depth = 1.0;
     clear->stencil = std::nullopt;
-    auto pass = flight::effects_gl::begin_gl_effect_state(
+    auto pass = flight::effects_gl::begin_gl_effect_pass(
         state_, pipeline_, readonly(clear), flight::String("linear"));
     require_no_gl_error("effects target setup");
     gl_.depth_mask(true);
@@ -476,11 +475,11 @@ class Scene3DExample final {
         pass, readonly(scene_.root), readonly(scene_.camera),
         readonly(scene_.lights));
     require_no_gl_error("main Scene3D pass");
-    flight::effects_gl::end_gl_effect_state(
+    flight::effects_gl::end_gl_effect_pass(
         pass, pipeline_,
         flight::Array<std::variant<
             flight::Ref<flight::types::Adjustment>,
-            flight::Ref<flight::types::RenderEffect>>>{});
+            flight::Ref<flight::types::Effect>>>{});
     require_no_gl_error("effects presentation");
     ++rendered_frames_;
 

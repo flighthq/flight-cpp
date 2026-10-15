@@ -184,6 +184,14 @@ target_link_libraries(
 )
 add_test(NAME flight_cpp.generated_render_state COMMAND flight_cpp_generated_render_state_tests)
 
+if(TARGET Flight::HostSdlGl)
+  add_executable(flight_cpp_generated_gl_registries_tests generated_gl_registries_test.cpp)
+  target_include_directories(flight_cpp_generated_gl_registries_tests BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/overrides/include")
+  target_link_libraries(flight_cpp_generated_gl_registries_tests PRIVATE Flight::Cpp Flight::SdkPreview Flight::HostSdlGl)
+  add_test(NAME flight_cpp.generated_gl_registries COMMAND flight_cpp_generated_gl_registries_tests)
+  set_tests_properties(flight_cpp.generated_gl_registries PROPERTIES LABELS "pkg:render-gl;pkg:types")
+endif()
+
 add_executable(
   flight_cpp_generated_render_scene2d_coverage_tests
   generated_render_scene2d_coverage_test.cpp

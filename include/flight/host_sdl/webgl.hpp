@@ -504,6 +504,18 @@ class FLIGHT_HOST_SDL_GL_API WebGl2Context final {
       int draw_buffer,
       const Int32Array& values,
       std::size_t source_offset = 0) const;
+  void clear_bufferfv(std::uint32_t buffer, int draw_buffer, const Float32Array& values,
+      std::optional<std::size_t> source_offset) const {
+    clear_bufferfv(buffer, draw_buffer, values, source_offset.value_or(0));
+  }
+  void clear_bufferfv(std::uint32_t buffer, int draw_buffer, const Array<double>& values,
+      std::optional<std::size_t> source_offset) const {
+    clear_bufferfv(buffer, draw_buffer, values, source_offset.value_or(0));
+  }
+  void clear_bufferiv(std::uint32_t buffer, int draw_buffer, const Int32Array& values,
+      std::optional<std::size_t> source_offset) const {
+    clear_bufferiv(buffer, draw_buffer, values, source_offset.value_or(0));
+  }
   void clear_depth(float depth) const;
   void color_mask(bool red, bool green, bool blue, bool alpha) const;
   void compile_shader(const std::optional<WebGlShader>& shader) const;
